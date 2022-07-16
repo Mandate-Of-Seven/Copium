@@ -1,0 +1,9 @@
+{
+    "Version": "1.1",
+    "Data": {
+        "Source": "c:\\users\\flesh\\desktop\\gam-200\\engine\\core-engine\\module.ixx",
+        "ProvidedModule": "Module",
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}
