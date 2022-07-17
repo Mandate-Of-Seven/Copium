@@ -1,62 +1,142 @@
+/*!***************************************************************************************
+\file			inspector.cpp
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			17/07/2022
+
+\brief
+    Defines Window::Inspector namespace with ImGui functions for displaying and
+    interacting with the window.
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 #include "inspector.h"
+
+
+#define BUTTON_HEIGHT 0.05 //Percent
+#define BUTTON_WIDTH .6 //Percent
 
 namespace Window
 {
 
 	namespace Inspector
 	{
+        bool isOpen;
         GameObject* selectedGameObject;
+        bool isAddingComponent = false;
+
+        void AlignForWidth(float width, float alignment = 0.5f)
+        {
+            ImGuiStyle& style = ImGui::GetStyle();
+            float avail = ImGui::GetContentRegionAvail().x;
+            float off = (avail - width) * alignment;
+            if (off > 0.0f)
+                ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
+        }
 
         void init()
         {
             selectedGameObject = nullptr;
+            ImGuiIO& io = ImGui::GetIO();
+            io.Fonts->AddFontFromFileTTF("assets\\fonts\\bahnschrift.ttf", 32.f);
+            isOpen = true;
         }
 
         ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 		void update()
 		{
-            static float f = 0.0f;
-            static int counter = 0;
-            ImGui::Begin("Inspector");                      // Create a window called "Hello, world!" and append into it.
+            if (!isOpen)
+                return;
+
+            if (!ImGui::Begin("Inspector", &isOpen)) 
+            {
+
+                ImGui::End();
+                return;
+            }                   // Create a window called "Hello, world!" and append into it.
             if (selectedGameObject)                             // If there is a selectedGameObject
             {
+
                 Transform trans{ selectedGameObject->Trans() };
                 Vector2 position = trans.Position();
                 Vector2 rotation = trans.Rotation();
                 Vector2 scale = trans.Scale();
-
-                //ImGui::LabelText("x:","   ");
-                //ImGui::SameLine();
                 if (ImGui::CollapsingHeader("Transform"))
                 {
-                    ImGui::Text("Position");
-                    if (ImGui::BeginTable("split", 2))
+                    if (ImGui::BeginTable("split", 3))
                     {
+                        ImGui::TableNextColumn();
+                        ImGui::Text("Position");
+
                         ImGui::TableNextColumn();
                         ImGui::PushItemWidth(-1);
                         ImGui::Text("X"); ImGui::SameLine();
-                        ImGui::InputDouble("x", &position.x);
+                        ImGui::InputDouble("posx", &position.x);
                         ImGui::PopItemWidth();
 
                         ImGui::TableNextColumn();
                         ImGui::PushItemWidth(-1);
                         ImGui::Text("Y"); ImGui::SameLine();
-                        ImGui::InputDouble("y", &position.y);
+                        ImGui::InputDouble("posy", &position.y);
+                        ImGui::PopItemWidth();
+
+                        ImGui::TableNextColumn();
+                        ImGui::Text("Rotation");
+
+                        ImGui::TableNextColumn();
+                        ImGui::PushItemWidth(-1);
+                        ImGui::Text("X"); ImGui::SameLine();
+                        ImGui::InputDouble("rotx", &rotation.x);
+                        ImGui::PopItemWidth();
+
+                        ImGui::TableNextColumn();
+                        ImGui::PushItemWidth(-1);
+                        ImGui::Text("Y"); ImGui::SameLine();
+                        ImGui::InputDouble("roty", &rotation.y);
+                        ImGui::PopItemWidth();
+
+                        ImGui::TableNextColumn();
+                        ImGui::Text("Scale");
+
+                        ImGui::TableNextColumn();
+                        ImGui::PushItemWidth(-1);
+                        ImGui::Text("X"); ImGui::SameLine();
+                        ImGui::InputDouble("scalex", &scale.x);
+                        ImGui::PopItemWidth();
+
+                        ImGui::TableNextColumn();
+                        ImGui::PushItemWidth(-1);
+                        ImGui::Text("Y"); ImGui::SameLine();
+                        ImGui::InputDouble("scaley", &scale.y);
                         ImGui::PopItemWidth();
                         ImGui::EndTable();
                     }
                 }
                 selectedGameObject->Trans({position, rotation, scale});
-                //ImGui::Text("This is some useful text.");   // Display some text (you can use a format strings too)
-                //ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-                //ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-                //if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                    //counter++;
-                //ImGui::SameLine();
-                //ImGui::Text("counter = %d", counter);
-                //ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+                ImVec2 buttonSize = ImGui::GetWindowSize();
+                buttonSize.x *= BUTTON_WIDTH;
+                buttonSize.y *= BUTTON_HEIGHT;
+                AlignForWidth(buttonSize.x);
+                if (ImGui::Button("Add Component", buttonSize)) {
+                    isAddingComponent = true;
+                }
             }
             ImGui::End();
+
+            if (isAddingComponent)
+            {
+                ImGui::Begin("Add Component",&isAddingComponent);
+                AlignForWidth(ImGui::GetWindowSize().x);
+                char buff[7]{' '};
+                ImGui::PushItemWidth(-1);
+                ImGui::InputText("Search", buff,7);
+                ImGui::PopItemWidth();
+                ImGui::End();
+            }
 		}
 	}
 }

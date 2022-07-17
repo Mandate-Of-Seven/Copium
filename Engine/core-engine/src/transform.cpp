@@ -1,20 +1,17 @@
 ﻿/*!***************************************************************************************
-****
 \file			transform.cpp
-\project		
+\project
 \author			Zacharie Hong
-\co-authors		// DELETE IF NOT APPLICABLE
 
 \par			Course: GAM200
-\par			Section: 
-\date			//DATE LAST MODIFIED
+\par			Section:
+\date			17/07/2022
 
 \brief
-	// BRIEF DESCRIPTION OF FILE PURPOSE
+	Defines Transform Class to be added to GameObjects and its member functions
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
-******************************************************************************************
-****/
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 
 
 //INCLUDES

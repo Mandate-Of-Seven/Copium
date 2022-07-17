@@ -1,20 +1,17 @@
 ﻿/*!***************************************************************************************
-****
-\file			
-\project		
-\author			
-\co-authors		// DELETE IF NOT APPLICABLE
+\file			game-object.cpp
+\project
+\author			Zacharie Hong
 
 \par			Course: GAM200
-\par			Section: 
-\date			//DATE LAST MODIFIED
+\par			Section:
+\date			17/07/2022
 
 \brief
-	// BRIEF DESCRIPTION OF FILE PURPOSE
+    Defines GameObject Class and member functions
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
-******************************************************************************************
-****/
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 
 
 //INCLUDES

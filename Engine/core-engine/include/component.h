@@ -1,8 +1,23 @@
+/*!***************************************************************************************
+\file			component.h
+\project        
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			17/07/2022
+
+\brief
+    Declares Component Class to be added to GameObjects and its member functions
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 #pragma once
 
-#ifndef HEADER_COMPONENT
+#ifndef COMPONENT_H
 
-#define HEADER_COMPONENT
+#define COMPONENT_H
 //INCLUDES
 #include <glm/vec2.hpp> //Vec2
 
@@ -13,20 +28,33 @@ using ComponentID = unsigned char;
 class Component
 {
 private:
-
     ComponentID id;
 public:
+    /***************************************************************************/
+    /*!
+    \brief
+        Function called when component is removed or deleted from GameObject
+    */
+    /**************************************************************************/
     virtual void destroy();
+    /***************************************************************************/
+    /*!
+    \brief
+        Getter for component id
+    \return
+        Id of this component
+    */
+    /**************************************************************************/
     ComponentID const ID();
 protected:
+    /***************************************************************************/
+    /*!
+    \brief
+        Hidden base class default constructor to prevent creation and force
+        derived classes from inheriting
+    */
+    /**************************************************************************/
     Component();
 };
 
-class Collider : public Component
-{
-public:
-    Collider();
-    virtual void collide();
-};
-
-#endif // !HEADER_COMPONENT
+#endif // !COMPONENT_H

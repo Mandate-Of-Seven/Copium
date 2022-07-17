@@ -1,26 +1,23 @@
 ﻿/*!***************************************************************************************
-****
 \file			transform.h
-\project		
+\project
 \author			Zacharie Hong
-\co-authors		// DELETE IF NOT APPLICABLE
 
 \par			Course: GAM200
-\par			Section: 
-\date			16/07/2022
+\par			Section:
+\date			17/07/2022
 
 \brief
-	// BRIEF DESCRIPTION OF FILE PURPOSE
+    Declares Transform Class to be added to GameObjects and its member functions
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
-******************************************************************************************
-****/
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 
 #pragma once
 
-#ifndef HEADER_TRANSFORM
+#ifndef TRANSFORM_H
 
-#define HEADER_TRANSFORM
+#define TRANSFORM_H
 
 //INCLUDES
 #include <glm/vec2.hpp> //Vec2
@@ -41,20 +38,85 @@ private:
     std::list<Transform*> childList;
 
 public:
+    /***************************************************************************/
+    /*!
+    \brief
+        Default constructor, position and rotations to 0, scale to 1, and parent
+        to nullptr
+    */
+    /**************************************************************************/
     Transform();
+
+    /***************************************************************************/
+    /*!
+    \brief
+        Constructor that takes in position, rotations,scale to 1, and initializes
+        parent to nullptr
+    */
+    /**************************************************************************/
     Transform(Vector2 _position, Vector2 _rotation = {0,0}, Vector2 _scale = {1,1});
 
+    /***************************************************************************/
+    /*!
+    \brief
+        Getter for Position
+    \return
+        Position of transform
+    */
+    /**************************************************************************/
     Vector2 const Position();
 
+    /***************************************************************************/
+    /*!
+    \brief
+        Setter for Position
+    \param _position
+        Position to set for transform
+    */
+    /**************************************************************************/
     void Position(Vector2 _position);
 
+
+    /***************************************************************************/
+    /*!
+    \brief
+        Getter for Rotation
+    \return
+        Rotation of transform
+    */
+    /**************************************************************************/
     Vector2 const Rotation();
 
+
+    /***************************************************************************/
+    /*!
+    \brief
+        Setter for Rotation
+    \param _rotation
+        Rotation to set for transform
+    */
+    /**************************************************************************/
     void Rotation(Vector2 _rotation);
 
+    /***************************************************************************/
+    /*!
+    \brief
+        Getter for Scale
+    \return
+        Scale of transform
+    */
+    /**************************************************************************/
     Vector2 const Scale();
 
+    /***************************************************************************/
+    /*!
+    \brief
+        Setter for Scale
+    \param _rotation
+        Scale to set for transform
+    */
+    /**************************************************************************/
     void Scale(Vector2 _scale);
 };
 
-#endif // !HEADER_TRANSFORM
+#endif // !TRANSFORM_H

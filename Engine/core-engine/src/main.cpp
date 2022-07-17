@@ -15,9 +15,9 @@ an OpenGL context and implement a game loop.
 #include <glapp.h>
 #include <iostream>
 
-#include <imgui_impl_opengl3.h>
-#include <imgui_impl_glfw.h>
 #include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 
 #include "inspector.h"
 
@@ -32,6 +32,7 @@ static void init();
 static void cleanup();
 
 
+ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 /*                                                      function definitions
 ----------------------------------------------------------------------------- */
@@ -52,8 +53,6 @@ int main() {
   init();
 
   //imgui
-
-
   ImGui::CreateContext();
   ImGuiIO& io = ImGui::GetIO(); (void)io;
   ImGui::StyleColorsDark();
@@ -61,15 +60,12 @@ int main() {
   ImGui_ImplOpenGL3_Init("#version 330");
 
 
+  Window::Inspector::init();
+  Window::Inspector::selectedGameObject = new GameObject();
 
   // Our state
   bool show_demo_window = true;
   bool show_another_window = false;
-
-  Window::Inspector::init();
-
-  Window::Inspector::selectedGameObject = new GameObject();
-
   // Part 2
   while (!glfwWindowShouldClose(GLHelper::ptr_window)) {
 
@@ -81,21 +77,13 @@ int main() {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
-
     // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-    if (show_demo_window)
-        ImGui::ShowDemoWindow(&show_demo_window);
-    Window::Inspector::update();
 
-    // 3. Show another simple window.
-    if (show_another_window)
-    {
-        ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-        ImGui::Text("Hello from another window!");
-        if (ImGui::Button("Close Me"))
-            show_another_window = false;
-        ImGui::End();
-    }
+    Window::Inspector::update();
+    ImGui::ShowDemoWindow(&show_demo_window);
+
+
+   
 
     // Part 2b
     draw();
@@ -108,12 +96,6 @@ int main() {
   // Part 3
   cleanup();
 }
-
-static void glfw_error_callback(int error, const char* description)
-{
-    fprintf(stderr, "Glfw Error %d: %s\n", error, description);
-}
-
 
 /*  _________________________________________________________________________ */
 /*! update
@@ -145,10 +127,13 @@ Uses GLHelper::GLFWWindow* to get handle to OpenGL context.
 */
 static void draw() {
   // Part 1
+
+
   GLApp::draw();
 
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
   // Part 2: swap buffers: front <-> back
   glfwSwapBuffers(GLHelper::ptr_window);
 }
