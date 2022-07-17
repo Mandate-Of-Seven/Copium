@@ -166,8 +166,8 @@ static void update() {
 
 
   //testing
-  auto [x, y] = Input::getMousePosition();
-  std::cout << "Mouse Pos:" << x << "," << y << std::endl;
+  //auto [x, y] = Input::getMousePosition();
+  //std::cout << "Mouse Pos:" << x << "," << y << std::endl;
   //std::cout<< "Is Shift Button Held:" << Input::isMouseButtonPressed(GLFW_KEY_LEFT_SHIFT) << std::endl;
   
   // Part 2
