@@ -57,6 +57,9 @@
     <ClCompile Include="src\glhelper.cpp">
       <Filter>Source Files\openGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\renderer.cpp">
+      <Filter>Source Files\openGL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\glapp.h">
@@ -94,6 +97,9 @@
     </ClInclude>
     <ClInclude Include="..\imgui\imgui_impl_opengl3_loader.h">
       <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderer.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
