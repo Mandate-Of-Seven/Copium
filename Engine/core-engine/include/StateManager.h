@@ -1,13 +1,13 @@
 /*!***************************************************************************************
 ****
 \file			StateManager.h
-\project		?
+\project		
 \author			Matthew Lau
 \co-authors		
 
-\par			Course: CSD????
-\par			Section: ?
-\date			12-7-2022
+\par			Course: GAM200
+\par			Section: 
+\date			12/07/2022
 
 \brief
 	Contains:
@@ -18,8 +18,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************
 ****/
 #pragma once
-#ifndef STATEMANAGER_HEADER
-#define STATEMANAGER_HEADER
+#ifndef STATEMANAGER_H
+#define STATEMANAGER_H
 
 #include <iostream>
 
@@ -38,30 +38,45 @@ using gsFNPTR = void(*)();
 extern gsFNPTR gsLoad, gsInit, gsUpdate, gsDraw, gsFree, gsUnload;
 extern int gsCurrent, gsPrevious, gsNext;
 
-/*!*****************************************************************************
-Initialize the state manager with specified state.
+/*******************************************************************************
+/*!
+\brief
+	Initialize the state manager with specified state.
 
-@param [in] initialState
-The game state the game will begin on
+\param _initialState
+	The initial game state that the application is to start in.
 
-@return void
-*******************************************************************************/
-void initStateManager(int initialState);
+\return 
+	void
+*/
+/*******************************************************************************/
+void init_statemanager(int _initialState);
 
-/*!*****************************************************************************
-Update the gs function pointers to point to the specified game state's functions.
-Note: If a new game state is added to the game, please add a switch case to the function definition
+/*******************************************************************************
+/*!
+\brief
+	Update the gs function pointers to point to the specified game state's functions.
+	Note: If a new game state is added to the game, please add a switch case to the function definition
 
-@return void
-*******************************************************************************/
-void updateStateManager();
+\return
+	void
+*/
+/*******************************************************************************/
+void update_statemanager();
 
-/*!*****************************************************************************
-Change the game state to the specified game state
+/*******************************************************************************
+/*!
+\brief
+	Change the game state to the specified game state
 
-@return void
-*******************************************************************************/
-void changeGameState(GameState nextGameState);
+\param _nextGameState
+	The game state to change to.
+
+\return 
+	void
+*/
+/*******************************************************************************/
+void change_gamestate(GameState _nextGameState);
 
 /*
 //Trying out something new - ignore for now pls

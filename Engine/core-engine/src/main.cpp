@@ -20,7 +20,7 @@ an OpenGL context and implement a game loop.
 #include "imgui_impl_opengl3.h"
 
 //State Manager
-#include "StateManager.h"
+#include "statemanager.h"
 
 
 
@@ -56,7 +56,7 @@ int main() {
 
   // Part 1
   init();
-  initStateManager(gsTest);
+  init_statemanager(gsTest);
   glfwSetKeyCallback(GLHelper::ptr_window, quitKeyCallback);
   //imgui
 
@@ -80,7 +80,7 @@ int main() {
         gsNext = gsCurrent;
     }
     else {
-        updateStateManager();
+        update_statemanager();
         //gsLoad();                 //LOAD STATE
     }
     
@@ -264,7 +264,7 @@ void cleanup() {
 
 void quitKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
-        changeGameState(gsQuit);
+        change_gamestate(gsQuit);
         std::cout << "Q was pressed\n";
     }
 }

@@ -57,10 +57,10 @@
     <ClCompile Include="src\glhelper.cpp">
       <Filter>Source Files\openGL</Filter>
     </ClCompile>
-    <ClCompile Include="src\StateManager.cpp">
+    <ClCompile Include="src\statemanager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\gsSandbox.cpp">
+    <ClCompile Include="src\gamestate-sandbox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -101,10 +101,10 @@
     <ClInclude Include="..\imgui\imgui_impl_opengl3_loader.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="include\StateManager.h">
+    <ClInclude Include="include\statemanager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\gsSandbox.h">
+    <ClInclude Include="include\gamestate-sandbox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

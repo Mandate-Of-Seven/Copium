@@ -1,47 +1,57 @@
 /*!***************************************************************************************
 ****
 \file			StateManager.cpp
-\project		?
+\project		
 \author			Matthew Lau
 \co-authors		
 
-\par			Course: CSD????
-\par			Section: ?
-\date			12-7-2022
+\par			Course: GAM200
+\par			Section: 
+\date			12/07/2022
 
 \brief
-	Contains definitions for the functions and variables that manage the game states.
+	Contains:
+		1. Declarations of functions and extern variables that allow for the management of Game States
+		2. Enums for all the Game States
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************
 ****/
-#include "StateManager.h"
+#include "statemanager.h"
 
 gsFNPTR gsLoad = nullptr, gsInit = nullptr, gsUpdate = nullptr, 
 		gsDraw = nullptr, gsFree = nullptr, gsUnload = nullptr;
 
 int gsCurrent = 0, gsPrevious = 0, gsNext = 0;
 
-/*!*****************************************************************************
-Initialize the state manager with specified state.
+/*******************************************************************************
+/*!
+\brief
+	Initialize the state manager with specified state.
 
-@param [in] initialState
-The game state the game should begin on
+\param _initialState
+	The initial game state that the application is to start in.
 
-@return void
-*******************************************************************************/
-void initStateManager(int initialState) {
-	gsCurrent = gsPrevious = gsNext = initialState;
-	std::cout << "State Manager Initialised...\n" << "Current State ID: " << initialState << std::endl;
+\return
+	void
+*/
+/*******************************************************************************/
+void init_statemanager(int _initialState) {
+	gsCurrent = gsPrevious = gsNext = _initialState;
+	std::cout << "State Manager Initialised...\n" << "Current State ID: " << _initialState << std::endl;
 }
 
-/*!*****************************************************************************
-Update the gs function pointers to point to the specified game state's functions
-Note: If a new game state is added to the game, please add a switch case in here
+/*******************************************************************************
+/*!
+\brief
+	Update the gs function pointers to point to the specified game state's functions.
+	Note: If a new game state is added to the game, please add a switch case to the function definition
 
-@return void
-*******************************************************************************/
-void updateStateManager() {
+\return
+	void
+*/
+/*******************************************************************************/
+void update_statemanager() {
 	std::cout << "Updating State Manager...\n";
 	switch (gsCurrent) {
 		case(gsTest):
@@ -50,14 +60,18 @@ void updateStateManager() {
 
 }
 
-/*!*****************************************************************************
-Change the game state to the specified game state
+/*******************************************************************************
+/*!
+\brief
+	Change the game state to the specified game state
 
-@param [in] nextGameState
-The Game State to change to 
+\param _nextGameState
+	The game state to change to.
 
-@return void
-*******************************************************************************/
-void changeGameState(GameState nextGameState) {
-	gsNext = nextGameState;
+\return
+	void
+*/
+/*******************************************************************************/
+void change_gamestate(GameState _nextGameState) {
+	gsNext = _nextGameState;
 }

@@ -1,5 +1,5 @@
 #pragma once
-#include "StateManager.h"
+#include "statemanager.h"
 
 extern int gsCurrent, gsNext, gsPrevious;
 
