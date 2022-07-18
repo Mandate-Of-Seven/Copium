@@ -19,12 +19,22 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define RENDERER_H
 
 #include <glslshader.h>
+#include <array>
 
 // Global variables
 static const GLuint maxQuadCount = 1000;
 static const GLuint maxVertexCount = maxQuadCount * 4;
 static const GLuint maxIndexCount = maxQuadCount * 6;
 static const GLuint maxTextures = 32;
+
+// A Vertex contains information about a vertex that is used for rendering
+struct Vertex
+{
+	glm::vec3 pos;		// Position of vertex
+	glm::vec4 color;	// Color of vertex
+	glm::vec2 textCoord;// Texture coordinate of vertex
+	float texID;		// Texture index
+};
 
 // Renders objects in the game / scene
 class Renderer //(Inherits from the Component Class)
@@ -167,7 +177,7 @@ private:
 	static GLint drawCount; // The amount of draw calls
 	static GLint quadCount; // The amount of quads drawn
 
-	static std::array<GLuint, maxTextures> textureSlots;
+	std::array<GLuint, maxTextures> textureSlots;
 	GLuint textureSlotIndex = 1;
 
 	GLSLShader shaderProgram; // Shader program to use
@@ -175,6 +185,12 @@ private:
 	GLuint vertexBufferID; // Handle to Vertex Buffer Object
 	GLuint indexBufferID; // Handle to Index Buffer
 	GLuint indexCount; // Number of elements in the object
+
+	GLuint whiteTexture = 0;
+	GLuint whiteTextureSlot = 0;
+
+	Vertex * quadBuffer = nullptr;
+	Vertex * quadBufferPtr = nullptr;
 };
 
 #endif // !RENDERER_H
