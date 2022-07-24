@@ -22,14 +22,11 @@
     <Filter Include="Source Files\openGL">
       <UniqueIdentifier>{27f8db79-9387-41e7-8722-5c51c7fe5f1d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\windows">
-      <UniqueIdentifier>{1df68d46-f32f-4796-80f5-728496eba43e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\windows">
-      <UniqueIdentifier>{b6825e86-834c-46ce-8d1f-a7e4deb62504}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\glslshader.cpp">
       <Filter>Source Files\openGL</Filter>
     </ClCompile>
@@ -39,10 +36,22 @@
     <ClCompile Include="src\glhelper.cpp">
       <Filter>Source Files\openGL</Filter>
     </ClCompile>
-    <ClCompile Include="src\inspector.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\renderer.cpp">
+      <Filter>Source Files\openGL</Filter>
     </ClCompile>
     <ClCompile Include="src\component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game-object.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\windows-input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\inspector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\imgui\imgui.cpp">
@@ -66,15 +75,6 @@
     <ClCompile Include="src\imgui\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game-object.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\transform.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\glapp.h">
@@ -86,16 +86,25 @@
     <ClInclude Include="include\glslshader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\windows-input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\inspector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\component.h">
+    <ClInclude Include="include\input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\game-object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\transform.h">
+    <ClInclude Include="include\component.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

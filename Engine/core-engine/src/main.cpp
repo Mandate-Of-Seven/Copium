@@ -20,6 +20,7 @@ an OpenGL context and implement a game loop.
 #include <imgui_impl_opengl3.h>
 
 #include "inspector.h"
+#include "input.h"
 
 /*                                                   type declarations
 ----------------------------------------------------------------------------- */
@@ -110,6 +111,12 @@ static void update() {
   // Part 1
   glfwPollEvents();
 
+
+  //testing
+  //auto [x, y] = Input::getMousePosition();
+  //std::cout << "Mouse Pos:" << x << "," << y << std::endl;
+  //std::cout<< "Is Shift Button Held:" << Input::isMouseButtonPressed(GLFW_KEY_LEFT_SHIFT) << std::endl;
+  
   // Part 2
   GLHelper::update_time(1.0);
   

@@ -6,7 +6,7 @@
 This file implements functionality useful and necessary to build OpenGL
 applications including use of external APIs such as GLFW to create a
 window and start up an OpenGL context and to extract function pointers
-to OpenGL implementations.
+to OpenGL implementations. 
 
 *//*__________________________________________________________________________*/
 
@@ -22,7 +22,8 @@ to OpenGL implementations.
 /*                                                   objects with file scope
 ----------------------------------------------------------------------------- */
 
-void GLApp::init() {
+void GLApp::init() 
+{
 	// Part 1 : Clear the colorbuffer with RGBA value in glClearColor ...
 	glClearColor(0.f, 1.f, 0.f, 1.f);
 
@@ -34,7 +35,8 @@ void GLApp::init() {
 	mdl.setup_shdrpgm();
 }
 
-void GLApp::update() {
+void GLApp::update() 
+{
 	
 	static GLfloat color;
 
