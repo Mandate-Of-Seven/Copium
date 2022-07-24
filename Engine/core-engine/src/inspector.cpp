@@ -120,6 +120,16 @@ namespace Window
                 ImVec2 buttonSize = ImGui::GetWindowSize();
                 buttonSize.x *= BUTTON_WIDTH;
                 buttonSize.y *= BUTTON_HEIGHT;
+
+                for (Component *component : selectedGameObject->Components())
+                {
+                    if (ImGui::CollapsingHeader(component->Name().c_str()))
+                    {
+
+                    }
+                    
+                }
+
                 AlignForWidth(buttonSize.x);
                 if (ImGui::Button("Add Component", buttonSize)) {
                     isAddingComponent = true;

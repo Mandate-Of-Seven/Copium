@@ -20,6 +20,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define COMPONENT_H
 //INCLUDES
 #include <glm/vec2.hpp> //Vec2
+#include <string>
 
 //USING
 using ComponentID = unsigned char;
@@ -28,6 +29,7 @@ using ComponentID = unsigned char;
 class Component
 {
 private:
+    std::string name = "Component";
     ComponentID id;
 public:
     /***************************************************************************/
@@ -46,6 +48,8 @@ public:
     */
     /**************************************************************************/
     ComponentID const ID();
+
+    std::string Name();
 protected:
     /***************************************************************************/
     /*!
