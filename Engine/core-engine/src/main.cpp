@@ -70,6 +70,12 @@ int main() {
   // Our state
   bool show_demo_window = true;
   bool show_another_window = false;
+
+    // Enable run-time memory check for debug purposes
+    #if defined(DEBUG) | defined(_DEBUG)
+        _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    #endif
+
   // Part 2
   while (!glfwWindowShouldClose(GLHelper::ptr_window) && gsCurrent != gsQuit) {
 
