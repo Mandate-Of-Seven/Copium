@@ -11,8 +11,8 @@
 
 \brief
 	Contains:
-		1. Declarations of functions and extern variables that allow for the management of Game States
-		2. Enums for all the Game States
+		1. Declarations of functions and extern variables that allow for the management of Engine States
+		2. Enums for all the Engine States
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************
@@ -22,79 +22,44 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define STATEMANAGER_H
 
 #include <iostream>
+#include <string>
 
-//GAMESTATE ID - int type
-enum GameState {
-	gsTest = 0,
-	gsQuit, 
-	gsRestart,
-	gsSandbox
+enum EngineState {
+	esIdle = 0,
+	esActive,
+	esQuit,
+	esRestart
 };
 
-//Alias for Game State Function ptrs
-using gsFNPTR = void(*)();
-
-//Extern variables
-extern gsFNPTR gsLoad, gsInit, gsUpdate, gsDraw, gsFree, gsUnload;
-extern int gsCurrent, gsPrevious, gsNext;
+extern int esCurrent;
 
 /*******************************************************************************
 /*!
+*
 \brief
-	Initialize the state manager with specified state.
+	Initialise Engine State Manager with specified initial state
 
 \param _initialState
-	The initial game state that the application is to start in.
-
-\return 
-	void
-*/
-/*******************************************************************************/
-void init_statemanager(int _initialState);
-
-/*******************************************************************************
-/*!
-\brief
-	Update the gs function pointers to point to the specified game state's functions.
-	Note: If a new game state is added to the game, please add a switch case to the function definition
+	The initial state the engine is to start on
 
 \return
 	void
 */
 /*******************************************************************************/
-void update_statemanager();
-
+void init_statemanager(EngineState _initialState);
 /*******************************************************************************
 /*!
+*
 \brief
-	Change the game state to the specified game state
+	Change the Engine's state to a specified state
 
-\param _nextGameState
-	The game state to change to.
+\param _nextState
+	The new state that the engine is to change to
 
-\return 
+\return
 	void
 */
 /*******************************************************************************/
-void change_gamestate(GameState _nextGameState);
+void change_enginestate(EngineState _nextState);
 
-/*
-//Trying out something new - ignore for now pls
-class GSM {
-	int current, next, previous;
-
-	GSM(){}
-	GSM(int initialState){}
-};
-
-GSM::GSM() {
-	printf("Game State Manager default init\n");
-
-}
-
-GSM::GSM(int initialState) {
-	printf("Game State Manager initialised to state %d", initialState);
-	current = next = previous = initialState;
-}
-*/
 #endif

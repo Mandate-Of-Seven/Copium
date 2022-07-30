@@ -11,67 +11,47 @@
 
 \brief
 	Contains:
-		1. Declarations of functions and extern variables that allow for the management of Game States
-		2. Enums for all the Game States
+		1. Declarations of functions and extern variables that allow for the management of Engine States
+		2. Enums for all the Engine States
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************
 ****/
 #include "statemanager.h"
 
-gsFNPTR gsLoad = nullptr, gsInit = nullptr, gsUpdate = nullptr, 
-		gsDraw = nullptr, gsFree = nullptr, gsUnload = nullptr;
-
-int gsCurrent = 0, gsPrevious = 0, gsNext = 0;
+int esCurrent, esNext, esPrevious;
 
 /*******************************************************************************
 /*!
+* 
 \brief
-	Initialize the state manager with specified state.
+	Initialise Engine State Manager with specified initial state
 
 \param _initialState
-	The initial game state that the application is to start in.
+	The initial state the engine is to start on
 
 \return
 	void
 */
 /*******************************************************************************/
-void init_statemanager(int _initialState) {
-	gsCurrent = gsPrevious = gsNext = _initialState;
-	std::cout << "State Manager Initialised...\n" << "Current State ID: " << _initialState << std::endl;
+void init_statemanager(EngineState _initialState) {
+	esCurrent = esNext = _initialState;
+	std::cout << "Engine State ID: " << _initialState << std::endl;
 }
 
 /*******************************************************************************
 /*!
+*
 \brief
-	Update the gs function pointers to point to the specified game state's functions.
-	Note: If a new game state is added to the game, please add a switch case to the function definition
+	Change the Engine's state to a specified state
+
+\param _nextState
+	The new state that the engine is to change to
 
 \return
 	void
 */
 /*******************************************************************************/
-void update_statemanager() {
-	std::cout << "Updating State Manager...\n";
-	switch (gsCurrent) {
-		case(gsTest):
-			break;
-	}
-
-}
-
-/*******************************************************************************
-/*!
-\brief
-	Change the game state to the specified game state
-
-\param _nextGameState
-	The game state to change to.
-
-\return
-	void
-*/
-/*******************************************************************************/
-void change_gamestate(GameState _nextGameState) {
-	gsNext = _nextGameState;
+void change_enginestate(EngineState _nextState) {
+	esCurrent = _nextState;
 }

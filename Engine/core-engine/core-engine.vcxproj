@@ -94,6 +94,8 @@
     <ClCompile Include="src\glslshader.cpp" />
     <ClCompile Include="src\gamestate-sandbox.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\scene.cpp" />
+    <ClCompile Include="src\scenemanager.cpp" />
     <ClCompile Include="src\statemanager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +112,8 @@
     <ClInclude Include="include\glhelper.h" />
     <ClInclude Include="include\glslshader.h" />
     <ClInclude Include="include\gamestate-sandbox.h" />
+    <ClInclude Include="include\scene.h" />
+    <ClInclude Include="include\scenemanager.h" />
     <ClInclude Include="include\statemanager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
