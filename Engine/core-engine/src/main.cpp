@@ -110,8 +110,8 @@ int main() {
 
                                  
                                  
-                    //SM.updateScene();         //UPDATE STATE         
-                    //SM.drawScene();           //DRAW STATE
+                    SM.updateScene();         //UPDATE STATE         
+                    SM.drawScene();           //DRAW STATE
 
                     update();
 
@@ -169,7 +169,7 @@ static void update() {
     GLHelper::update_time(1.0);
   
     // Part 3
-    GLApp::update();
+    //GLApp::update();
 
     // Start the Dear ImGui frame
     ImGui_ImplOpenGL3_NewFrame();
@@ -197,7 +197,7 @@ static void draw() {
     // Part 1
 
 
-    GLApp::draw();
+    //GLApp::draw();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -215,12 +215,10 @@ The OpenGL context initialization stuff is abstracted away in GLHelper::init.
 The specific initialization of OpenGL state and geometry data is
 abstracted away in GLApp::init
 */
-static void init() 
-{
-    // Part 1
-    if (!GLHelper::init(2400, 1350, "Tutorial 1")) {
-    std::cout << "Unable to create OpenGL context" << std::endl;
-    std::exit(EXIT_FAILURE);
+static void init() {
+    if (!GLHelper::init(1920, 1080, "Engine")) {
+        std::cout << "Unable to create OpenGL context" << std::endl;
+        std::exit(EXIT_FAILURE);
     }
 
     engineInput = new WindowsInput();
@@ -241,7 +239,7 @@ static void init()
     GLHelper::print_specs();
 
     // Part 3
-    GLApp::init();
+    //GLApp::init();
 }
 
 /*  _________________________________________________________________________ */

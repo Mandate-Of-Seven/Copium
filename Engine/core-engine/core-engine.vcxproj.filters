@@ -132,4 +132,8 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\shaders\shader-glsl.frag" />
+    <None Include="Assets\shaders\shader-glsl.vert" />
+  </ItemGroup>
 </Project>

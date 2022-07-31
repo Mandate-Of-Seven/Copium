@@ -19,12 +19,46 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define RENDERER_H
 
 #include <glslshader.h>
+#include <array>
 
 // Global variables
 static const GLuint maxQuadCount = 1000;
 static const GLuint maxVertexCount = maxQuadCount * 4;
 static const GLuint maxIndexCount = maxQuadCount * 6;
 static const GLuint maxTextures = 32;
+
+// A Vertex contains information about a vertex that is used for rendering
+struct Vertex
+{
+	glm::vec3 pos;		// Position of vertex
+	glm::vec4 color;	// Color of vertex
+	glm::vec2 textCoord;// Texture coordinate of vertex
+	float texID;		// Texture index
+};
+
+// The RenderData contains data about the Renderer and its buffers
+struct RenderData
+{
+	GLuint drawCount = 0; // The amount of draw calls
+	GLuint quadCount = 0; // The amount of quads drawn
+
+	std::array<GLuint, maxTextures> textureSlots;
+	GLuint textureSlotIndex = 1; // Initializes with 1
+
+	GLSLShader shaderProgram; // Shader program to use
+	GLuint vertexArrayID = 0; // Handle to Vertex Array Object
+	GLuint vertexBufferID = 0; // Handle to Vertex Buffer Object
+	GLuint indexBufferID = 0; // Handle to Index Buffer
+	GLuint indexCount = 0; // Number of elements in the object
+
+	GLuint whiteTexture = 0;
+	GLuint whiteTextureSlot = 0;
+
+	Vertex * quadBuffer = nullptr;
+	Vertex * quadBufferPtr = nullptr;
+};
+
+static RenderData s_Data;
 
 // Renders objects in the game / scene
 class Renderer //(Inherits from the Component Class)
@@ -40,7 +74,7 @@ public:
 		the elements of the object to be used for rendering
 	*/
 	/**************************************************************************/
-	Renderer(); // Initializes the renderer by storing a handle to VAO
+	static void init(); // Initializes the renderer by storing a handle to VAO
 
 	/***************************************************************************/
 	/*!
@@ -49,7 +83,7 @@ public:
 		rendering system when exiting
 	*/
 	/**************************************************************************/
-	~Renderer();
+	static void shutdown();
 
 	// Member Functions
 
@@ -116,7 +150,7 @@ public:
 		The draw count
 	*/
 	/**************************************************************************/
-	static const GLint& GetDrawCount() { return drawCount; }
+	//static const GLint & GetDrawCount() { return drawCount; }
 
 	/***************************************************************************/
 	/*!
@@ -128,7 +162,7 @@ public:
 		The draw count
 	*/
 	/**************************************************************************/
-	static const GLint & SetDrawCount(const GLint& count) { drawCount = count; }
+	//static const GLint & SetDrawCount(const GLint& count) { return drawCount = count; }
 
 	/***************************************************************************/
 	/*!
@@ -138,7 +172,7 @@ public:
 		The quad count
 	*/
 	/**************************************************************************/
-	static const GLint& GetQuadCount() { return quadCount; }
+	//static const GLint & GetQuadCount() { return quadCount; }
 
 	/***************************************************************************/
 	/*!
@@ -150,7 +184,7 @@ public:
 		The quad count
 	*/
 	/**************************************************************************/
-	static const GLint & SetQuadCount(const GLint & count) { quadCount = count; }
+	//static const GLint & SetQuadCount(const GLint & count) { return quadCount = count; }
 
 	/***************************************************************************/
 	/*!
@@ -158,23 +192,11 @@ public:
 		Resets the number of draw and quad count
 	*/
 	/**************************************************************************/
-	static void ResetStats() { drawCount = quadCount = 0; }
+	static void reset_stats() { s_Data.drawCount = s_Data.quadCount = 0; };
 
 private:
 	// Properties (Variables)
 	bool enabled; // Is the renderer enabled
-
-	static GLint drawCount; // The amount of draw calls
-	static GLint quadCount; // The amount of quads drawn
-
-	static std::array<GLuint, maxTextures> textureSlots;
-	GLuint textureSlotIndex = 1;
-
-	GLSLShader shaderProgram; // Shader program to use
-	GLuint vertexArrayID; // Handle to Vertex Array Object
-	GLuint vertexBufferID; // Handle to Vertex Buffer Object
-	GLuint indexBufferID; // Handle to Index Buffer
-	GLuint indexCount; // Number of elements in the object
 };
 
 #endif // !RENDERER_H

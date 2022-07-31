@@ -92,4 +92,16 @@ public:
 	*/
 	/*******************************************************************************/
 	void unloadScene() override;
+
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Initializes the shader program of the application for the Sandbox Scene
+
+	\return
+		void
+	*/
+	/*******************************************************************************/
+	void setupShaderProgram();
 };
