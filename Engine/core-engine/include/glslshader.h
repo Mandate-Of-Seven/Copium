@@ -1,7 +1,7 @@
 /* !
 @file    glslshader.h
 @author  pghali@digipen.edu
-@date    06/11/2016
+@date    06/13/2016
 
 Note: The contents of this file must not be updated by students. Otherwise,
 something that works for you will not work for me. If you want something to be
@@ -12,7 +12,7 @@ This file contains the declaration of class GLSLShader that encapsulates the
 functionality required to load shader source; compile shader source; link
 shader objects into a program object, validate program object; log msesages
 from compiling linking, and validation steps; install program object in
-appropriate shaders; and pass uniform variables from the client to the
+appropriate shaders; and pass uniform variables from the client to the 
 program object.
 
 *//*__________________________________________________________________________*/
@@ -26,18 +26,25 @@ program object.
 ----------------------------------------------------------------------------- */
 #include <GL/glew.h> // for access to OpenGL API declarations 
 #include <glm/glm.hpp>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <cstdlib>
 #include <string>
 #include <vector>
-
+#include <map>
 
 /*  _________________________________________________________________________ */
-class GLSLShader {
-  /*! GLSLShader class.
-  */
+class GLSLShader
+/*! GLSLShader class.
+*/
+{
 public:
-
+   
   // default ctor required to initialize GLSLShader object to safe state
-  GLSLShader() : pgm_handle(0), is_linked(GL_FALSE) { /* empty by design */ }
+  GLSLShader() : pgm_handle(0), is_linked(GL_FALSE) {
+  }
 
   // This function not only compiles individual shader sources but links
   // multiple shader objects to create an exectuable shader program.
@@ -51,7 +58,7 @@ public:
   // Link() will create a shader executable program. This is followed by a call
   // to Validate() ensuring the program can execute in the current OpenGL state.
   GLboolean CompileLinkValidate(std::vector<std::pair<GLenum, std::string>>);
-
+  
   // This function does the following:
   // 1) Create a shader program object if one doesn't exist
   // 2) Using first parameter, create a shader object
@@ -116,7 +123,7 @@ public:
   // But, if users decide to forego the use of the layout qualifier, they'll
   // instead use this function to provide the association between a generic
   // vertex attribute index with a named attribute variable.
-  void BindAttribLocation(GLuint index, GLchar const* name);
+  void BindAttribLocation(GLuint index, GLchar const *name);
 
   // Use an OpenGL API function to dynamically associate a fragment shader 
   // index location that a user-defined out variable will write to.
@@ -124,7 +131,7 @@ public:
   // association in sample code. Instead, we statically assigned a location
   // for an out variable using the layout qualifier. However, this function
   // will be called by users if they forego the use of the layour qualifier.
-  void BindFragDataLocation(GLuint color_number, GLchar const* name);
+  void BindFragDataLocation(GLuint color_number, GLchar const *name);
 
   // as the name implies, this function deletes a program object
   void DeleteShaderProgram();
@@ -133,17 +140,17 @@ public:
   // overloading or templates
   // Therefore, we need a family of functions to specify values of uniform
   // variables of different types for the current program object
-  void SetUniform(GLchar const* name, GLboolean val);
-  void SetUniform(GLchar const* name, GLint val);
-  void SetUniform(GLchar const* name, GLfloat val);
-  void SetUniform(GLchar const* name, GLfloat x, GLfloat y);
-  void SetUniform(GLchar const* name, GLfloat x, GLfloat y, GLfloat z);
-  void SetUniform(GLchar const* name, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
-  void SetUniform(GLchar const* name, glm::vec2 const& val);
-  void SetUniform(GLchar const* name, glm::vec3 const& val);
-  void SetUniform(GLchar const* name, glm::vec4 const& val);
-  void SetUniform(GLchar const* name, glm::mat3 const& val);
-  void SetUniform(GLchar const* name, glm::mat4 const& val);
+  void SetUniform(GLchar const *name, GLboolean val);
+  void SetUniform(GLchar const *name, GLint val);
+  void SetUniform(GLchar const *name, GLfloat val);
+  void SetUniform(GLchar const *name, GLfloat x, GLfloat y);
+  void SetUniform(GLchar const *name, GLfloat x, GLfloat y, GLfloat z);
+  void SetUniform(GLchar const *name, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+  void SetUniform(GLchar const *name, glm::vec2 const& val);
+  void SetUniform(GLchar const *name, glm::vec3 const& val);
+  void SetUniform(GLchar const *name, glm::vec4 const& val);
+  void SetUniform(GLchar const *name, glm::mat3 const& val);
+  void SetUniform(GLchar const *name, glm::mat4 const& val);
 
   // display the list of active vertex attributes used by vertex shader
   void PrintActiveAttribs() const;
@@ -170,8 +177,8 @@ private:
 private:
   // use OpenGL API to return the location of an uniform variable with
   // name "name" using program handle encapsulated by object of this class type
-  GLint GetUniformLocation(GLchar const* name);
-
+  GLint GetUniformLocation(GLchar const *name);
+  
   // return true if file (given in relative path) exists, false otherwise
   GLboolean FileExists(std::string const& file_name);
 };

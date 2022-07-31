@@ -63,7 +63,7 @@ void GLApp::draw() {
 	// Printing to Windows Title Bar
 	std::stringstream sstr;
 	sstr << std::fixed << std::setprecision(2) << GLHelper::title 
-		<< " | " "Sean Ngo" << " | " << GLHelper::fps;
+		<< " | " "Beta" << " | " << GLHelper::fps;
 	glfwSetWindowTitle(GLHelper::ptr_window, sstr.str().c_str());
 }
 
@@ -152,8 +152,8 @@ void GLModel::setup_vao()
 void GLModel::setup_shdrpgm()
 {
 	std::vector<std::pair<GLenum, std::string>> shdr_files;
-	shdr_files.emplace_back(std::make_pair(GL_VERTEX_SHADER, "../shaders/my-tutorial-1.vert"));
-	shdr_files.emplace_back(std::make_pair(GL_FRAGMENT_SHADER, "../shaders/my-tutorial-1.frag"));
+	shdr_files.emplace_back(std::make_pair(GL_VERTEX_SHADER, "../core-engine/Assets/shaders/shader-glsl.vert"));
+	shdr_files.emplace_back(std::make_pair(GL_FRAGMENT_SHADER, "../core-engine/Assets/shaders/shader-glsl.frag"));
 	shdr_pgm.CompileLinkValidate(shdr_files);
 
 	if (GL_FALSE == shdr_pgm.IsLinked())
