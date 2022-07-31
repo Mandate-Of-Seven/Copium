@@ -38,6 +38,11 @@ private:
     std::list<Transform*> childList;
 
 public:
+    void* operator new(size_t count) = delete;
+    void* operator new[](size_t count) = delete;
+    void operator delete(void*) = delete;
+    void operator delete(void*, size_t) = delete;
+
     /***************************************************************************/
     /*!
     \brief

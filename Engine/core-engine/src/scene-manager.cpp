@@ -19,7 +19,7 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************
 ****/
-#include "scenemanager.h"
+#include "scene-manager.h"
 
 //Ctors and Dtor
 SceneManager::SceneManager() : current(0), next(0), previous(0), numberOfScenes(0), currentScene(nullptr) {
@@ -29,10 +29,12 @@ SceneManager::~SceneManager() {
 	for (size_t i{ 0 }; i < numberOfScenes; ++i) {
 		if (scenes[i]) {
 			delete scenes[i];
-			scenes[i] = nullptr;
 		}
-
 	}
+	scenes.clear();
+	numberOfScenes = 0;
+	std::cout << "Scene Manager Destructor called\n";
+	std::cout << "Scenes left: " << numberOfScenes << std::endl;
 }
 
 void SceneManager::addScene(Scene* _newScene) {

@@ -85,4 +85,6 @@ class WindowsInput : public Input
 		*/
 		/**************************************************************************/
 		virtual float getMouseYImpl() override;
+
+		~WindowsInput();
 };

@@ -99,9 +99,9 @@
     <ClCompile Include="src\inspector.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\renderer.cpp" />
+    <ClCompile Include="src\scene-manager.cpp" />
     <ClCompile Include="src\scene.cpp" />
-    <ClCompile Include="src\scenemanager.cpp" />
-    <ClCompile Include="src\StateManager.cpp" />
+    <ClCompile Include="src\state-manager.cpp" />
     <ClCompile Include="src\transform.cpp" />
     <ClCompile Include="src\windows-input.cpp" />
   </ItemGroup>
@@ -116,8 +116,8 @@
     <ClInclude Include="include\inspector.h" />
     <ClInclude Include="include\renderer.h" />
     <ClInclude Include="include\scene.h" />
-    <ClInclude Include="include\scenemanager.h" />
-    <ClInclude Include="include\StateManager.h" />
+    <ClInclude Include="include\scene-manager.h" />
+    <ClInclude Include="include\state-manager.h" />
     <ClInclude Include="include\transform.h" />
     <ClInclude Include="include\windows-input.h" />
   </ItemGroup>

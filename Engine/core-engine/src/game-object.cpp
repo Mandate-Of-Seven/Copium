@@ -32,6 +32,15 @@ GameObject::GameObject()
 
 }
 
+GameObject::~GameObject()
+{
+    for (Component* pComponent: components)
+    {
+        delete pComponent;
+    }
+    components.clear();
+}
+
 std::list<Component*>& GameObject::Components()
 {
     return components;

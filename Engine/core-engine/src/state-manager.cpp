@@ -17,7 +17,7 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************
 ****/
-#include "statemanager.h"
+#include "state-manager.h"
 
 int esCurrent, esNext, esPrevious;
 

@@ -20,7 +20,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************
 ****/
 #pragma once
-#include "statemanager.h"
+#include "state-manager.h"
 #include "scene.h"
 
 class SceneSandbox : public Scene {

@@ -2,7 +2,6 @@
 #include <glhelper.h>
 #include <GLFW/glfw3.h>  
 
-Input* Input::inputInstance = new WindowsInput();
 
 
 bool WindowsInput::isKeyPressedImpl(int keycode)
