@@ -236,7 +236,6 @@ static void init()
 
     Window::Inspector::init();
     Window::Inspector::selectedGameObject = new GameObject();
-    Window::Inspector::selectedGameObject->addComponent(new Component());
 
     // Part 2
     GLHelper::print_specs();

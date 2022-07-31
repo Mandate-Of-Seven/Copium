@@ -34,10 +34,10 @@ using GameObjectID = unsigned long;
 class GameObject
 {
 private:
-    GameObjectID id;
-    std::list<Component*> components;
-    std::string name;
-    Transform trans;
+    GameObjectID id;                    //Global ID for gameObjects
+    std::list<Component*> components;   //Components for gameObject
+    std::string name;                   //Name of gameObject
+    Transform trans;                    //Transform of gameObject
 public:
     GameObject& operator=(GameObject&) = delete;
 
@@ -61,7 +61,7 @@ public:
         Scale of transform to initialize with
     */
     /**************************************************************************/
-    GameObject(Vector2 _position, Vector2 _rotation, Vector2 _scale);
+    GameObject(Vector3 _position, Vector3 _rotation, Vector3 _scale);
 
     /***************************************************************************/
     /*!
@@ -72,6 +72,16 @@ public:
     */
     /**************************************************************************/
     void addComponent(Component* component);
+
+    /***************************************************************************/
+    /*!
+    \brief
+        Appends a new component by taking in component type to components list
+    \param componentType
+        Type of component to append to components list
+    */
+    /**************************************************************************/
+    void addComponent(Component::Type componentType);
 
     /***************************************************************************/
     /*!

@@ -20,20 +20,20 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #define TRANSFORM_H
 
 //INCLUDES
-#include <glm/vec2.hpp> //Vec2
+#include <glm/vec3.hpp> //Vec3
 #include <list>
 
 //USING
-using Vector2 = glm::dvec2;
+using Vector3 = glm::dvec3;
 
 class Transform;
 
 class Transform final
 {
 private:
-    Vector2 position;
-    Vector2 rotation;
-    Vector2 scale;
+    Vector3 position;
+    Vector3 rotation;
+    Vector3 scale;
     Transform* parent;
     std::list<Transform*> childList;
 
@@ -59,7 +59,7 @@ public:
         parent to nullptr
     */
     /**************************************************************************/
-    Transform(Vector2 _position, Vector2 _rotation = {0,0}, Vector2 _scale = {1,1});
+    Transform(Vector3 _position, Vector3 _rotation = {0,0,0}, Vector3 _scale = {1,1,1});
 
     /***************************************************************************/
     /*!
@@ -69,7 +69,7 @@ public:
         Position of transform
     */
     /**************************************************************************/
-    Vector2 const Position();
+    Vector3 const Position();
 
     /***************************************************************************/
     /*!
@@ -79,7 +79,7 @@ public:
         Position to set for transform
     */
     /**************************************************************************/
-    void Position(Vector2 _position);
+    void Position(Vector3 _position);
 
 
     /***************************************************************************/
@@ -90,7 +90,7 @@ public:
         Rotation of transform
     */
     /**************************************************************************/
-    Vector2 const Rotation();
+    Vector3 const Rotation();
 
 
     /***************************************************************************/
@@ -101,7 +101,7 @@ public:
         Rotation to set for transform
     */
     /**************************************************************************/
-    void Rotation(Vector2 _rotation);
+    void Rotation(Vector3 _rotation);
 
     /***************************************************************************/
     /*!
@@ -111,7 +111,7 @@ public:
         Scale of transform
     */
     /**************************************************************************/
-    Vector2 const Scale();
+    Vector3 const Scale();
 
     /***************************************************************************/
     /*!
@@ -121,7 +121,7 @@ public:
         Scale to set for transform
     */
     /**************************************************************************/
-    void Scale(Vector2 _scale);
+    void Scale(Vector3 _scale);
 };
 
 #endif // !TRANSFORM_H

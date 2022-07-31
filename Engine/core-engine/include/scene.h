@@ -19,8 +19,7 @@
 	Note: load, init, free and unload functions MUST be defined by scene sub-classes
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
-******************************************************************************************
-****/
+******************************************************************************************/
 #pragma once
 #ifndef SCENE_H
 #define SCENE_H

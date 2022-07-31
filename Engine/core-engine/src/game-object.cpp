@@ -47,7 +47,7 @@ std::list<Component*>& GameObject::Components()
 }
 
 GameObject::GameObject
-(Vector2 _position, Vector2 _rotation = { 0,0 }, Vector2 _scale = { 1,1 }) 
+(Vector3 _position, Vector3 _rotation = { 0,0,0 }, Vector3 _scale = { 1,1,1 }) 
     : name{ defaultGameObjName }
 {
 
@@ -56,6 +56,28 @@ GameObject::GameObject
 void GameObject::addComponent(Component* component)
 {
     components.push_back(component);
+}
+
+
+void GameObject::addComponent(Component::Type componentType)
+{
+    switch (componentType)
+    {
+    case Component::Animator:
+        components.push_back(new AnimatorComponent());
+        break;
+    case Component::Collider:
+        components.push_back(new ColliderComponent());
+        break;
+    case Component::Renderer:
+        components.push_back(new RendererComponent());
+        break;
+    case Component::Script:
+        components.push_back(new ScriptComponent());
+        break;
+    default:
+        break;
+    }
 }
 
 void GameObject::deleteComponent(Component* component)

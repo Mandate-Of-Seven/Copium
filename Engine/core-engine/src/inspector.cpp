@@ -62,16 +62,15 @@ namespace Window
                 ImGui::End();
                 return;
             }
-            if (selectedGameObject)                             // If there is a selectedGameObject
+            if (selectedGameObject)
             {
-
                 Transform trans{ selectedGameObject->Trans() };
-                Vector2 position = trans.Position();
-                Vector2 rotation = trans.Rotation();
-                Vector2 scale = trans.Scale();
+                Vector3 position = trans.Position();
+                Vector3 rotation = trans.Rotation();
+                Vector3 scale = trans.Scale();
                 if (ImGui::CollapsingHeader("Transform"))
                 {
-                    if (ImGui::BeginTable("split", 3))
+                    if (ImGui::BeginTable("split", 4))
                     {
                         ImGui::TableNextColumn();
                         ImGui::Text("Position");
@@ -86,6 +85,12 @@ namespace Window
                         ImGui::PushItemWidth(-1);
                         ImGui::Text("Y"); ImGui::SameLine();
                         ImGui::InputDouble("posy", &position.y);
+                        ImGui::PopItemWidth();
+
+                        ImGui::TableNextColumn();
+                        ImGui::PushItemWidth(-1);
+                        ImGui::Text("Z"); ImGui::SameLine();
+                        ImGui::InputDouble("posz", &position.z);
                         ImGui::PopItemWidth();
 
                         ImGui::TableNextColumn();
@@ -104,6 +109,12 @@ namespace Window
                         ImGui::PopItemWidth();
 
                         ImGui::TableNextColumn();
+                        ImGui::PushItemWidth(-1);
+                        ImGui::Text("Z"); ImGui::SameLine();
+                        ImGui::InputDouble("rotz", &rotation.z);
+                        ImGui::PopItemWidth();
+
+                        ImGui::TableNextColumn();
                         ImGui::Text("Scale");
 
                         ImGui::TableNextColumn();
@@ -117,6 +128,12 @@ namespace Window
                         ImGui::Text("Y"); ImGui::SameLine();
                         ImGui::InputDouble("scaley", &scale.y);
                         ImGui::PopItemWidth();
+
+                        ImGui::TableNextColumn();
+                        ImGui::PushItemWidth(-1);
+                        ImGui::Text("Z"); ImGui::SameLine();
+                        ImGui::InputDouble("scalez", &scale.z);
+                        ImGui::PopItemWidth();
                         ImGui::EndTable();
                     }
                 }
@@ -129,9 +146,8 @@ namespace Window
                 {
                     if (ImGui::CollapsingHeader(component->Name().c_str()))
                     {
-
+                        
                     }
-                    
                 }
 
                 AlignForWidth(buttonSize.x);
@@ -149,6 +165,16 @@ namespace Window
                 ImGui::PushItemWidth(-1);
                 ImGui::InputText("Search", buff,7);
                 ImGui::PopItemWidth();
+                ImVec2 buttonSize = ImGui::GetWindowSize();
+                buttonSize.y *= BUTTON_HEIGHT;
+                std::map<Component::Type, const std::string>::iterator it;
+                for (it = Component::componentMap.begin(); it != Component::componentMap.end(); it++)
+                {
+                    if (ImGui::Button(it->second.c_str(), buttonSize)) {
+                        selectedGameObject->addComponent(it->first);
+                    }
+                }
+
                 ImGui::End();
             }
 		}

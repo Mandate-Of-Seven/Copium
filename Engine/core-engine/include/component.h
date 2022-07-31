@@ -21,17 +21,26 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 //INCLUDES
 #include <glm/vec2.hpp> //Vec2
 #include <string>
+#include <map>
 
 //USING
 using ComponentID = unsigned char;
 
 
+
 class Component
 {
-private:
-    std::string name = "Component";
-    ComponentID id;
 public:
+    enum Type       // Types of Components
+    {
+        Animator,
+        Collider,
+        Renderer,
+        Script
+    };
+
+    static std::map<Type, const std::string> componentMap; // Declared map to link Component::Type and its name
+
     /***************************************************************************/
     /*!
     \brief
@@ -49,7 +58,9 @@ public:
     /**************************************************************************/
     ComponentID const ID();
 
-    std::string Name();
+    const std::string Name();
+protected:
+    const std::string name;
 
     /***************************************************************************/
     /*!
@@ -59,7 +70,74 @@ public:
     */
     /**************************************************************************/
     Component();
+
+    /***************************************************************************/
+    /*!
+    \brief
+        Hidden constructor that is called by derived classes to determine name
+        and type
+    */
+    /**************************************************************************/
+    Component(Component::Type _componentType);
+
+private:
+    ComponentID id;                     //Id of component, local to gameObject
+    Type componentType;                 //Type of component
+    const bool allowMultiple = false;   //Can gameObjects only have one of this Component?
+};
+
+class ColliderComponent: public Component
+{
+public:
+    /***************************************************************************/
+    /*!
+    \brief
+        Default constructor for collider Components
+    */
+    /**************************************************************************/
+    ColliderComponent();
 protected:
 };
+
+class AnimatorComponent : public Component
+{
+public:
+    /***************************************************************************/
+    /*!
+    \brief
+        Default constructor for animator Components
+    */
+    /**************************************************************************/
+    AnimatorComponent();
+protected:
+};
+
+class RendererComponent : public Component
+{
+public:
+    /***************************************************************************/
+    /*!
+    \brief
+        Default constructor for renderer Components
+    */
+    /**************************************************************************/
+    RendererComponent();
+protected:
+};
+
+class ScriptComponent : public Component
+{
+public:
+    /***************************************************************************/
+    /*!
+    \brief
+        Default constructor for script Components
+    */
+    /**************************************************************************/
+    ScriptComponent();
+protected:
+};
+
+
 
 #endif // !COMPONENT_H
