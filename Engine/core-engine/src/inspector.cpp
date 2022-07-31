@@ -46,18 +46,21 @@ namespace Window
             isOpen = true;
         }
 
+
         ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 		void update()
 		{
             if (!isOpen)
                 return;
 
+            
+
             if (!ImGui::Begin("Inspector", &isOpen)) 
             {
 
                 ImGui::End();
                 return;
-            }                   // Create a window called "Hello, world!" and append into it.
+            }
             if (selectedGameObject)                             // If there is a selectedGameObject
             {
 
@@ -120,6 +123,16 @@ namespace Window
                 ImVec2 buttonSize = ImGui::GetWindowSize();
                 buttonSize.x *= BUTTON_WIDTH;
                 buttonSize.y *= BUTTON_HEIGHT;
+
+                for (Component *component : selectedGameObject->Components())
+                {
+                    if (ImGui::CollapsingHeader(component->Name().c_str()))
+                    {
+
+                    }
+                    
+                }
+
                 AlignForWidth(buttonSize.x);
                 if (ImGui::Button("Add Component", buttonSize)) {
                     isAddingComponent = true;

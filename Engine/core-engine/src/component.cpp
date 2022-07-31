@@ -19,4 +19,7 @@ Component::Component() {}
 
 void Component::destroy(){}
 
+
 ComponentID const Component::ID(){return id;}
+
+std::string Component::Name() { return name; }

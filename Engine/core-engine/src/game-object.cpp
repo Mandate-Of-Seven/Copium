@@ -32,10 +32,16 @@ GameObject::GameObject()
 
 }
 
+std::list<Component*>& GameObject::Components()
+{
+    return components;
+}
+
 GameObject::GameObject
 (Vector2 _position, Vector2 _rotation = { 0,0 }, Vector2 _scale = { 1,1 }) 
     : name{ defaultGameObjName }
 {
+
 }
 
 void GameObject::addComponent(Component* component)
