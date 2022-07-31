@@ -85,6 +85,7 @@
   <ItemGroup>
     <ClCompile Include="src\component.cpp" />
     <ClCompile Include="src\game-object.cpp" />
+    <ClCompile Include="src\gamestate-sandbox.cpp" />
     <ClCompile Include="src\glapp.cpp" />
     <ClCompile Include="src\glhelper.cpp" />
     <ClCompile Include="src\glslshader.cpp" />
@@ -98,6 +99,7 @@
     <ClCompile Include="src\inspector.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\renderer.cpp" />
+    <ClCompile Include="src\StateManager.cpp" />
     <ClCompile Include="src\transform.cpp" />
     <ClCompile Include="src\windows-input.cpp" />
   </ItemGroup>

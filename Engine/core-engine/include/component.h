@@ -50,7 +50,7 @@ public:
     ComponentID const ID();
 
     std::string Name();
-protected:
+
     /***************************************************************************/
     /*!
     \brief
@@ -59,6 +59,7 @@ protected:
     */
     /**************************************************************************/
     Component();
+protected:
 };
 
 #endif // !COMPONENT_H
