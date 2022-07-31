@@ -21,6 +21,18 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 class Input
 {
 	public:
+		
+		/***************************************************************************/
+		/*!
+		\brief
+			Deletes the input system instance, CALLED AT END OF PROGRAM
+		*/
+		/**************************************************************************/
+		static void destroy()
+		{
+			delete inputInstance;
+		}
+
 		/***************************************************************************/
 		/*!
 		\brief
@@ -86,7 +98,6 @@ class Input
 		*/
 		/**************************************************************************/
 		static bool getMouseY() { return inputInstance->getMouseYImpl(); }
-
 	protected:
 		/***************************************************************************/
 		/*!

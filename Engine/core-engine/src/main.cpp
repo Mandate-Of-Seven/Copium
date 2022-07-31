@@ -30,9 +30,9 @@ namespace
 {
     // Our state
     bool show_demo_window = true;
-    Input* engineInput;
 }
 
+Input* Input::inputInstance = new WindowsInput();
 
 
 /*                                                   type declarations
@@ -221,8 +221,6 @@ static void init() {
         std::exit(EXIT_FAILURE);
     }
 
-    engineInput = new WindowsInput();
-
 
     //imgui
     ImGui::CreateContext();
@@ -256,14 +254,13 @@ void cleanup()
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
-    delete engineInput;
     // Part 1
     GLApp::cleanup();
 
     // Part 2
     GLHelper::cleanup();
     delete Window::Inspector::selectedGameObject;
-
+    Input::destroy();
 }
 
 void quitKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) 
