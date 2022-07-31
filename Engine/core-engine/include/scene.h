@@ -1,6 +1,6 @@
 /*!***************************************************************************************
 ****
-\file			gamestate-sandbox.h
+\file			scene.h
 \project
 \author			Matthew Lau
 \co-authors
@@ -10,9 +10,11 @@
 \date			28/07/2022
 
 \brief
-	Contains declarations for the Sandbox Scene which inherits from Scene class.
+	Contains declarations for the Scene class.
 	The Scene contains:
-		1. load, init, update, draw, free, unload functions
+		1. load, init, update, draw, free, unload function
+		2. string containing the filename of the file in which the scene data is stored on
+		3. Data pertaining to the game objects in the scene
 
 	Note: load, init, free and unload functions MUST be defined by scene sub-classes
 
@@ -20,76 +22,112 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************
 ****/
 #pragma once
-#include "statemanager.h"
-#include "scene.h"
+#ifndef SCENE_H
+#define SCENE_H
 
-class SceneSandbox : public Scene {
+#include <iostream>
+#include <string>
+
+class Scene {
 public:
-	SceneSandbox(std::string& _filepath);
+	Scene(std::string& _filepath);
 	/*******************************************************************************
 	/*!
 	*
 	\brief
-		LOAD function for Sandbox Scene
+		LOAD function for the scene
 
 	\return
 		void
 	*/
 	/*******************************************************************************/
-	void loadScene() override;
+	virtual void loadScene() = 0;
 	/*******************************************************************************
 	/*!
 	*
 	\brief
-		INIT function for Sandbox Scene
+		INIT function for the scene
 
 	\return
 		void
 	*/
 	/*******************************************************************************/
-	void initScene() override;
+	virtual void initScene() = 0;
 	/*******************************************************************************
 	/*!
 	*
 	\brief
-		UPDATE function for Sandbox Scene
+		UPDATE function for the scene
 
 	\return
 		void
 	*/
 	/*******************************************************************************/
-	void updateScene() override;
+	virtual void updateScene();
 	/*******************************************************************************
 	/*!
 	*
 	\brief
-		DRAW function for Sandbox Scene
+		DRAW function for the scene
 
 	\return
 		void
 	*/
 	/*******************************************************************************/
-	void drawScene() override;
+	virtual void drawScene();
 	/*******************************************************************************
 	/*!
 	*
 	\brief
-		FREE function for Sandbox Scene
+		FREE function for the scene
 
 	\return
 		void
 	*/
 	/*******************************************************************************/
-	void freeScene() override;
+	virtual void freeScene() = 0;
 	/*******************************************************************************
 	/*!
 	*
 	\brief
-		UNLOAD function for Sandbox Scene
+		UNLOAD function for the scene
 
 	\return
 		void
 	*/
 	/*******************************************************************************/
-	void unloadScene() override;
+	virtual void unloadScene() = 0;
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Accessor for the filename of the file that contains this scene's data
+
+	\return
+		the filename of the file that contains this scene's data
+	*/
+	/*******************************************************************************/
+	std::string getFilename();
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Sets the filename of the file that contains this scene's data
+
+	\param	_newFilename
+		the new filename to be set
+		
+
+	\return
+		void
+	*/
+	/*******************************************************************************/
+	void setFilename(std::string& _newFilename);
+private:
+	std::string& filename;
+	//add vector of game objs here
 };
+
+
+
+#endif SCENE_H
