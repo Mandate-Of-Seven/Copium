@@ -21,6 +21,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ****/
 #include "gamestate-sandbox.h"
 
+<<<<<<< Updated upstream
 #include <glhelper.h>
 #include <renderer.h>
 #include <input.h>
@@ -30,13 +31,19 @@ GLfloat movement_x = 0.f, movement_y = 0.f;
 
 
 SceneSandbox::SceneSandbox(std::string& _filepath) : Scene(_filepath) {
+=======
+SceneSandbox::SceneSandbox(std::string& _filepath) : Scene(_filepath) 
+{
+>>>>>>> Stashed changes
 
 }
 
-void SceneSandbox::loadScene() {
+void SceneSandbox::load_scene() 
+{
 	std::cout << "load sandbox" << std::endl;
 }
-void SceneSandbox::initScene() {
+void SceneSandbox::init_scene() 
+{
 	std::cout << "init sandbox" << std::endl;
 
 	glClearColor(1.f, 1.f, 1.f, 1.f);
@@ -55,8 +62,13 @@ void SceneSandbox::initScene() {
 	// Init Renderer
 	Renderer::init();
 }
+<<<<<<< Updated upstream
 
 void SceneSandbox::updateScene() {
+=======
+void SceneSandbox::update_scene() 
+{
+>>>>>>> Stashed changes
 	std::cout << "update sandbox" << std::endl;
 
 	if (Input::isKeyPressed(GLFW_KEY_A))
@@ -71,8 +83,13 @@ void SceneSandbox::updateScene() {
 
 	glClearColor(1.f, 1.f, 1.f, 1.f);
 }
+<<<<<<< Updated upstream
 
 void SceneSandbox::drawScene() {
+=======
+void SceneSandbox::draw_scene() 
+{
+>>>>>>> Stashed changes
 	std::cout << "draw sandbox" << std::endl;
 
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -98,10 +115,12 @@ void SceneSandbox::drawScene() {
 
 	s_Data.shaderProgram.UnUse();
 }
-void SceneSandbox::freeScene() {
+void SceneSandbox::free_scene() 
+{
 	std::cout << "free sandbox" << std::endl;
 }
-void SceneSandbox::unloadScene() {
+void SceneSandbox::unload_scene() 
+{
 	std::cout << "unload sandbox" << std::endl;
 
 	Renderer::shutdown();

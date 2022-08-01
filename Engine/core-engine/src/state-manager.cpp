@@ -34,7 +34,8 @@ int esCurrent, esNext, esPrevious;
 	void
 */
 /*******************************************************************************/
-void init_statemanager(EngineState _initialState) {
+void init_statemanager(EngineState _initialState) 
+{
 	esCurrent = esNext = _initialState;
 	std::cout << "Engine State ID: " << _initialState << std::endl;
 }
@@ -52,6 +53,7 @@ void init_statemanager(EngineState _initialState) {
 	void
 */
 /*******************************************************************************/
-void change_enginestate(EngineState _nextState) {
+void change_enginestate(EngineState _nextState) 
+{
 	esCurrent = _nextState;
 }

@@ -27,9 +27,15 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <iostream>
 #include <string>
 
-class Scene {
+class Scene 
+{
 public:
 	Scene(std::string& _filepath);
+
+	Scene() = delete;
+	Scene(Scene&) = delete;
+	Scene& operator=(Scene&) = delete;
+
 	/*******************************************************************************
 	/*!
 	*
@@ -40,7 +46,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	virtual void loadScene() = 0;
+	virtual void load_scene() = 0;
 	/*******************************************************************************
 	/*!
 	*
@@ -51,7 +57,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	virtual void initScene() = 0;
+	virtual void init_scene() = 0;
 	/*******************************************************************************
 	/*!
 	*
@@ -62,7 +68,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	virtual void updateScene();
+	virtual void update_scene();
 	/*******************************************************************************
 	/*!
 	*
@@ -73,7 +79,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	virtual void drawScene();
+	virtual void draw_scene();
 	/*******************************************************************************
 	/*!
 	*
@@ -84,7 +90,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	virtual void freeScene() = 0;
+	virtual void free_scene() = 0;
 	/*******************************************************************************
 	/*!
 	*
@@ -95,7 +101,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	virtual void unloadScene() = 0;
+	virtual void unload_scene() = 0;
 	/*******************************************************************************
 	/*!
 	*
@@ -106,7 +112,7 @@ public:
 		the filename of the file that contains this scene's data
 	*/
 	/*******************************************************************************/
-	std::string getFilename();
+	std::string get_filename() const;
 	/*******************************************************************************
 	/*!
 	*
@@ -121,7 +127,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	void setFilename(std::string& _newFilename);
+	void set_filename(std::string& _newFilename);
 private:
 	std::string& filename;
 	//add vector of game objs here

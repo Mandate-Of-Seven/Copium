@@ -23,9 +23,14 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "state-manager.h"
 #include "scene.h"
 
-class SceneSandbox : public Scene {
+class SceneSandbox : public Scene 
+{
 public:
 	SceneSandbox(std::string& _filepath);
+	SceneSandbox() = delete;
+	SceneSandbox(SceneSandbox&) = delete;
+	SceneSandbox& operator=(SceneSandbox&) = delete;
+
 	/*******************************************************************************
 	/*!
 	*
@@ -36,7 +41,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	void loadScene() override;
+	void load_scene() override;
 	/*******************************************************************************
 	/*!
 	*
@@ -47,7 +52,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	void initScene() override;
+	void init_scene() override;
 	/*******************************************************************************
 	/*!
 	*
@@ -58,7 +63,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	void updateScene() override;
+	void update_scene() override;
 	/*******************************************************************************
 	/*!
 	*
@@ -69,7 +74,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	void drawScene() override;
+	void draw_scene() override;
 	/*******************************************************************************
 	/*!
 	*
@@ -80,7 +85,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	void freeScene() override;
+	void free_scene() override;
 	/*******************************************************************************
 	/*!
 	*
@@ -91,6 +96,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
+<<<<<<< Updated upstream
 	void unloadScene() override;
 
 	/*******************************************************************************
@@ -104,4 +110,7 @@ public:
 	*/
 	/*******************************************************************************/
 	void setupShaderProgram();
+=======
+	void unload_scene() override;
+>>>>>>> Stashed changes
 };

@@ -21,19 +21,19 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ****/
 #include "scene.h"
 
-Scene::Scene(std::string& _filepath) : filename(_filepath) {
+Scene::Scene(std::string& _filepath) : filename(_filepath) 
+{
 
 }
-void Scene::updateScene() {
+
+void Scene::update_scene() 
+{
 	std::cout << "scene updated by default\n";
 }
-void Scene::drawScene() {
+void Scene::draw_scene() 
+{
 	std::cout << "scene drawn by default\n";
 }
 
-std::string Scene::getFilename() {
-	return filename;
-}
-void Scene::setFilename(std::string& _newFilename) {
-	filename = _newFilename;
-}
+std::string Scene::get_filename() const {return filename;}
+void Scene::set_filename(std::string& _newFilename) {filename = _newFilename;}
