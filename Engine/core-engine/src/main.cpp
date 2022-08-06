@@ -71,7 +71,7 @@ int main() {
     init();
     init_statemanager(esActive);
     glfwSetKeyCallback(GLHelper::ptr_window, quitKeyCallback);
-  
+    //glfwSetKeyCallback(GLHelper::ptr_window, Input::keyCallback);
 
 
     // Enable run-time memory check for debug purposes 

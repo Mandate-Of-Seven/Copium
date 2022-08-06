@@ -16,6 +16,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #pragma once
 #include <utility> 
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 //Checks for mouse or keyboard inputs
 class Input
@@ -98,6 +100,33 @@ class Input
 		*/
 		/**************************************************************************/
 		static bool getMouseY() { return inputInstance->getMouseYImpl(); }
+
+		/***************************************************************************/
+		/*!
+		\brief
+			This function is called when keyboard buttons are pressed.
+		 Param window
+			Handle to window that is receiving event
+
+		 Param key
+			the keyboard key that was pressed or released
+
+		 Param scancode
+			Platform-specific scancode of the key
+
+		 Param int
+			GLFW_PRESS, GLFW_REPEAT or GLFW_RELEASE
+			action will be GLFW_KEY_UNKNOWN if GLFW lacks a key token for it,
+			for example E-mail and Play keys.
+
+		 Param mods
+			bit-field describing which modifier keys (shift, alt, control)
+			were held down
+		*/
+		/**************************************************************************/
+		static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+
 	protected:
 		/***************************************************************************/
 		/*!
