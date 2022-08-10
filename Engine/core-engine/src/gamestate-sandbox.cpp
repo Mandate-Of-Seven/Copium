@@ -21,26 +21,33 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ****/
 #include "gamestate-sandbox.h"
 
-<<<<<<< Updated upstream
 #include <glhelper.h>
 #include <renderer.h>
 #include <input.h>
 
 // Global variables
 GLfloat movement_x = 0.f, movement_y = 0.f;
+Vector3 v1(1, 2, 3);
+GameObject g1(v1, v1, v1);
 
-
-SceneSandbox::SceneSandbox(std::string& _filepath) : Scene(_filepath) {
-=======
 SceneSandbox::SceneSandbox(std::string& _filepath) : Scene(_filepath) 
 {
->>>>>>> Stashed changes
 
 }
 
 void SceneSandbox::load_scene() 
 {
 	std::cout << "load sandbox" << std::endl;
+	deserialize_scene("sandbox.dat", this);
+	std::cout << "Number of Game Objects deserialised: " << this->get_gameobjcount() << std::endl;
+	for (size_t i{ 0 }; i < this->get_gameobjcount(); ++i)
+	{
+		GameObject* tmp = this->get_gameobjectvector()[i];
+		std::cout << "Game Object ID: " << tmp->get_id() << std::endl;
+		std::cout << "Game Object Name: " << tmp->get_name() << std::endl;
+		Transform t(tmp->Trans());
+		std::cout << "Position: " << t.Position()[0] << ',' << t.Position()[1] << ',' << t.Position()[2] << std::endl;
+	}
 }
 void SceneSandbox::init_scene() 
 {
@@ -61,15 +68,13 @@ void SceneSandbox::init_scene()
 
 	// Init Renderer
 	Renderer::init();
-}
-<<<<<<< Updated upstream
 
-void SceneSandbox::updateScene() {
-=======
+	
+	//this->get_gameobjectvector().push_back(&g1);
+
+}
 void SceneSandbox::update_scene() 
 {
->>>>>>> Stashed changes
-	std::cout << "update sandbox" << std::endl;
 
 	if (Input::isKeyPressed(GLFW_KEY_A))
 		movement_x -= GLHelper::delta_time;
@@ -79,19 +84,12 @@ void SceneSandbox::update_scene()
 	if (Input::isKeyPressed(GLFW_KEY_W))
 		movement_y += GLHelper::delta_time;
 	else if (Input::isKeyPressed(GLFW_KEY_S))
-		movement_y -= GLHelper::delta_time;
+		movement_y -= GLHelper::delta_time;		
 
 	glClearColor(1.f, 1.f, 1.f, 1.f);
 }
-<<<<<<< Updated upstream
-
-void SceneSandbox::drawScene() {
-=======
 void SceneSandbox::draw_scene() 
 {
->>>>>>> Stashed changes
-	std::cout << "draw sandbox" << std::endl;
-
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	s_Data.shaderProgram.Use();
@@ -118,11 +116,15 @@ void SceneSandbox::draw_scene()
 void SceneSandbox::free_scene() 
 {
 	std::cout << "free sandbox" << std::endl;
+	//for(size_t i{ 0 }; i < this->get_gameobjcount(); ++i)
+	//{
+	//}
 }
 void SceneSandbox::unload_scene() 
 {
 	std::cout << "unload sandbox" << std::endl;
-
+	std::cout << "does file exist: " << does_file_exist("sandbox.dat") << std::endl;
+	//serialize_scene("sandbox.dat", this);
 	Renderer::shutdown();
 }
 

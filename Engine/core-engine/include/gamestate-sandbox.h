@@ -22,6 +22,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #pragma once
 #include "state-manager.h"
 #include "scene.h"
+#include "scene-serializer.h"
 
 class SceneSandbox : public Scene 
 {
@@ -96,8 +97,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-<<<<<<< Updated upstream
-	void unloadScene() override;
+	void unload_scene() override;
 
 	/*******************************************************************************
 	/*!
@@ -110,7 +110,6 @@ public:
 	*/
 	/*******************************************************************************/
 	void setupShaderProgram();
-=======
-	void unload_scene() override;
->>>>>>> Stashed changes
+	
+
 };

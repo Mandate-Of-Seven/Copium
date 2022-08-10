@@ -25,6 +25,18 @@ Scene::Scene(std::string& _filepath) : filename(_filepath)
 {
 
 }
+Scene::~Scene()
+{
+	for (size_t i{ 0 }; i < gameObjects.size(); ++i)
+	{
+		if (gameObjects[i])
+		{
+			delete gameObjects[i];
+			gameObjects[i] = nullptr;
+		}
+		
+	}
+}
 
 void Scene::update_scene() 
 {
@@ -37,3 +49,10 @@ void Scene::draw_scene()
 
 std::string Scene::get_filename() const {return filename;}
 void Scene::set_filename(std::string& _newFilename) {filename = _newFilename;}
+size_t Scene::get_gameobjcount() const { return gameObjects.size(); }
+std::vector<GameObject*>& Scene::get_gameobjectvector() { return gameObjects;}
+GameObject* Scene::add_gameobject(GameObject* _gameObj) 
+{
+	gameObjects.push_back(_gameObj);
+	return _gameObj;
+}

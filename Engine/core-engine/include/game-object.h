@@ -115,6 +115,58 @@ public:
     /**************************************************************************/
     Transform const Trans();
 
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Sets the name of the GameObject
+
+    \param	_name
+        string containing the GameObject's new name
+
+    \return
+        void
+    */
+    /*******************************************************************************/
+    void set_name(const std::string& _name);
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Gets the GameObject's name
+
+    \return
+        reference to a string that contains the name of the GameObject
+    */
+    /*******************************************************************************/
+    std::string& get_name();
+
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Sets the ID of the GameObject
+
+    \param	_id
+        the new ID to be set
+
+    \return
+        void
+    */
+    /*******************************************************************************/
+    void set_id(GameObjectID& _id);
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Gets the ID of the GameObject
+
+    \return
+        the ID of the GameObject
+    */
+    /*******************************************************************************/
+    GameObjectID get_id() const;
+
     /***************************************************************************/
     /*!
     \brief

@@ -48,7 +48,7 @@ std::list<Component*>& GameObject::Components()
 
 GameObject::GameObject
 (Vector3 _position, Vector3 _rotation = { 0,0,0 }, Vector3 _scale = { 1,1,1 }) 
-    : name{ defaultGameObjName }
+    : name{ defaultGameObjName }, id{0}
 {
 
 }
@@ -95,3 +95,9 @@ void GameObject::deleteComponent(Component* component)
 void GameObject::Trans(Transform _trans) {trans = _trans;}
 
 Transform const GameObject::Trans(){return trans;}
+
+void GameObject::set_name(const std::string& _name){ name = _name; }
+std::string& GameObject::get_name(){ return name; }
+
+void GameObject::set_id(GameObjectID& _id) { id = _id; }
+GameObjectID GameObject::get_id() const { return id; }

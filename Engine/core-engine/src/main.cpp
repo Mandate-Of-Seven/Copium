@@ -26,6 +26,8 @@ an OpenGL context and implement a game loop.
 #include "state-manager.h"
 #include "scene-manager.h"
 
+#include "scene-serializer.h"
+
 namespace
 {
     // Our state
@@ -82,23 +84,18 @@ int main() {
     SceneManager SM;
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
-<<<<<<< Updated upstream
-    SM.addScene(sandboxScene);
-    std::cout << "Number of scenes: " << SM.getSceneCount() << std::endl;
-    SM.changeScene(0);
+
 
     // Engine Loop
     while (!glfwWindowShouldClose(GLHelper::ptr_window) && esCurrent != esQuit) {
-=======
-    SM.add_scene(sandboxScene);
-    std::cout << "Number of scenes: " << SM.get_scenecount() << std::endl;
-    SM.change_scene(0);
->>>>>>> Stashed changes
+
+        SM.add_scene(sandboxScene);
+        std::cout << "Number of scenes: " << SM.get_scenecount() << std::endl;
+        SM.change_scene(0);
 
         if (esCurrent == esActive) {
             std::cout << "scene active" << std::endl;
 
-<<<<<<< Updated upstream
             while (SM.current != gsQuit) {
                 //If game state is not set to restart, update the state manager and load in the next game state
                 if (SM.current == gsRestart) {
@@ -107,80 +104,46 @@ int main() {
                 }
                 else {
                     //checks for change in scene
-                    SM.loadScene();             //LOAD STATE
-                }    
-        
-                                   
-                SM.initScene();                 //INIT STATE
-=======
-        while (SM.current != gsQuit) {
-            //If game state is not set to restart, update the state manager and load in the next game state
-            if (SM.current == gsRestart) {
-                SM.current = SM.previous;
-                SM.next = SM.current;
-            }
-            else {
-                //checks for change in scene
-                SM.load_scene();             //LOAD STATE
-            }    
-        
-                                   
-            SM.init_scene();                 //INIT STATE
->>>>>>> Stashed changes
+                    SM.load_scene();             //LOAD STATE
+                }
+
+
+                SM.init_scene();                 //INIT STATE
 
                 while (SM.current == SM.next) {
 
-                                 
-                                 
-<<<<<<< Updated upstream
-                    SM.updateScene();         //UPDATE STATE         
-                    SM.drawScene();           //DRAW STATE
-=======
-                //SM.updateScene();         //UPDATE STATE         
-                //SM.drawScene();           //DRAW STATE
 
-                update();
 
-                //Check for engine close
-                if (esCurrent == esQuit) {
-                    SM.change_scene(gsQuit);
-                }
-
->>>>>>> Stashed changes
+                    SM.update_scene();         //UPDATE STATE         
+                    SM.draw_scene();           //DRAW STATE
+                    //SM.updateScene();         //UPDATE STATE         
+                    //SM.drawScene();           //DRAW STATE
 
                     update();
 
                     //Check for engine close
                     if (esCurrent == esQuit) {
-                        SM.changeScene(gsQuit);
+                        SM.change_scene(gsQuit);
                     }
 
                     draw();
                 }
 
-                                   
-<<<<<<< Updated upstream
-                SM.freeScene();                 //FREE STATE
-=======
-            SM.free_scene();                 //FREE STATE
->>>>>>> Stashed changes
+
+
+                SM.free_scene();                 //FREE STATE
 
                 if (SM.next != gsRestart) {
-                                
-<<<<<<< Updated upstream
-                    SM.unloadScene();           //UNLOAD STATE
+
+                    SM.unload_scene();           //UNLOAD STATE
                 }
                 SM.previous = SM.current;
                 SM.current = SM.next;
-=======
-                SM.unload_scene();           //UNLOAD STATE
-            }
-            SM.previous = SM.current;
-            SM.current = SM.next;
->>>>>>> Stashed changes
-            
-            }
 
+
+
+
+            }
         }
     }
 
