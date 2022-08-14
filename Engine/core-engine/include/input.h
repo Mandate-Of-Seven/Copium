@@ -105,6 +105,7 @@ class Input
 		/*!
 		\brief
 			This function is called when keyboard buttons are pressed.
+
 		 Param window
 			Handle to window that is receiving event
 
@@ -114,7 +115,7 @@ class Input
 		 Param scancode
 			Platform-specific scancode of the key
 
-		 Param int
+		 Param action
 			GLFW_PRESS, GLFW_REPEAT or GLFW_RELEASE
 			action will be GLFW_KEY_UNKNOWN if GLFW lacks a key token for it,
 			for example E-mail and Play keys.
@@ -125,6 +126,64 @@ class Input
 		*/
 		/**************************************************************************/
 		static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			This function is called when mouse buttons are pressed.
+
+		 Param window
+			Handle to window that is receiving event
+
+		 Param button
+			the mouse button that was pressed or released
+			GLFW_MOUSE_BUTTON_LEFT and GLFW_MOUSE_BUTTON_RIGHT specifying left and right
+
+		 Param action
+			action is either GLFW_PRESS or GLFW_RELEASE
+
+		 Param mods
+			bit-field describing which modifier keys (shift, alt, control)
+			were held down
+		*/
+		/**************************************************************************/
+		static void mousebuttonCallback(GLFWwindow* window, int button, int action, int mods);
+
+
+		/***************************************************************************/
+		/*!
+		\brief
+			This function is called when the user scrolls, whether with a mouse wheel or
+			touchpad gesture. Although the function receives 2D scroll offsets, a simple
+			mouse scroll wheel, being vertical, provides offsets only along the Y-axis.
+
+		 Param window
+			Handle to window that is receiving event
+
+		 Param xOffset
+			Scroll offset along X-axis
+
+		 Param yOffset
+			Scroll offset along Y-axis
+		*/
+		static void mousescrollCallback(GLFWwindow* window, double xOffset, double yOffset);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			This functions receives the cursor position, measured in screen coordinates 
+			but relative to the top-left corner of the window client area.
+
+		 Param window
+			Handle to window that is receiving event
+
+		 Param xPos
+			new cursor x-coordinate, relative to the left edge of the client area
+
+		 Param yPos
+			new cursor y-coordinate, relative to the top edge of the client area
+		*/
+		static void mouseposCallback(GLFWwindow* window, double xPos, double yPos);
 
 
 	protected:

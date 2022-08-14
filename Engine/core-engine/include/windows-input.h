@@ -34,7 +34,7 @@ class WindowsInput : public Input
 		/***************************************************************************/
 		/*!
 		\brief
-			Checks if the given key is being held
+			Checks if the given key is being held (DOESNT WORK YET)
 		\param keycode
 			the key to check for
 		\return

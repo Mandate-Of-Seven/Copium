@@ -81,3 +81,49 @@ void Input::keyCallback(GLFWwindow* window, int key, int scancode, int action, i
         std::cout << "some Key released" << std::endl;
     }
 }
+
+void Input::mousebuttonCallback(GLFWwindow* window, int button, int action, int mods)
+{
+    switch (button) 
+    {
+        case GLFW_MOUSE_BUTTON_LEFT:
+        #ifdef _DEBUG
+                std::cout << "Left mouse button ";
+        #endif
+        break;
+
+        case GLFW_MOUSE_BUTTON_RIGHT:
+        #ifdef _DEBUG
+                std::cout << "Right mouse button ";
+        #endif
+        break;
+    }
+    switch (action) 
+    {
+        case GLFW_PRESS:
+        #ifdef _DEBUG
+                std::cout << "pressed!!!" << std::endl;
+        #endif
+        break;
+
+        case GLFW_RELEASE:
+        #ifdef _DEBUG
+                std::cout << "released!!!" << std::endl;
+        #endif
+        break;
+    }
+}
+
+void Input::mousescrollCallback(GLFWwindow* window, double xOffset, double yOffset)
+{
+    #ifdef _DEBUG
+        std::cout << "Mouse scroll wheel offset: (" << xOffset << ", " << yOffset << ")" << std::endl;
+    #endif
+}
+
+void Input::mouseposCallback(GLFWwindow* window, double xPos, double yPos)
+{
+    #ifdef _DEBUG
+        std::cout << "Mouse cursor position: (" << xPos << ", " << yPos << ")" << std::endl;
+    #endif
+}

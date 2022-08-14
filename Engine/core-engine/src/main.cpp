@@ -72,7 +72,9 @@ int main() {
     init_statemanager(esActive);
     glfwSetKeyCallback(GLHelper::ptr_window, quitKeyCallback);
     //glfwSetKeyCallback(GLHelper::ptr_window, Input::keyCallback);
-
+    //glfwSetMouseButtonCallback(GLHelper::ptr_window, Input::mousebuttonCallback);
+    //glfwSetScrollCallback(GLHelper::ptr_window, Input::mousescrollCallback);
+    //glfwSetCursorPosCallback(GLHelper::ptr_window, Input::mouseposCallback);
 
     // Enable run-time memory check for debug purposes 
     #if defined(DEBUG) | defined(_DEBUG)
