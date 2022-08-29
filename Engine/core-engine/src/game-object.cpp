@@ -16,6 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 //INCLUDES
 
+#include "pch.h"
 #include "game-object.h"
 
 //USING

@@ -16,6 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 //INCLUDES
 
+#include "pch.h"
 #include "transform.h"
 
 Transform::Transform() : position{0}, rotation{0}, scale{1}, parent{nullptr}{}

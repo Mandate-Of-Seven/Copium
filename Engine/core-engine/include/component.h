@@ -26,8 +26,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 //USING
 using ComponentID = unsigned char;
 
-
-
 class Component
 {
 public:

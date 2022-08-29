@@ -11,16 +11,15 @@ an OpenGL context and implement a game loop.
 /*                                                                   includes
 ----------------------------------------------------------------------------- */
 // Extension loader library's header must be included before GLFW's header!!!
+#include "pch.h"
 #include <glhelper.h>
 #include <glapp.h>
-#include <iostream>
 
-#include <imgui.h>
-#include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl3.h>
+//PRECOMPILED HEADERS(Commonly used external libraries)
 
 #include "inspector.h"
 #include "windows-input.h"
+#include "scripting.h"
 
 //State Manager
 #include "state-manager.h"
@@ -85,7 +84,11 @@ int main() {
     SM.addScene(sandboxScene);
     std::cout << "Number of scenes: " << SM.getSceneCount() << std::endl;
     SM.changeScene(0);
-
+    Engine::ScriptingEngine::init();
+    //Engine::Script *yolo;
+    //yolo = new Engine::Script("PlayerMovement");
+    //yolo->generate();
+    //delete yolo;
     // Engine Loop
     while (!glfwWindowShouldClose(GLHelper::ptr_window) && esCurrent != esQuit) {
 
@@ -158,7 +161,7 @@ static void update() {
     // Part 1
     glfwPollEvents();
 
-
+    ;
 
     //testing
     //auto [x, y] = Input::getMousePosition();
@@ -216,6 +219,7 @@ The specific initialization of OpenGL state and geometry data is
 abstracted away in GLApp::init
 */
 static void init() {
+
     if (!GLHelper::init(1920, 1080, "Engine")) {
         std::cout << "Unable to create OpenGL context" << std::endl;
         std::exit(EXIT_FAILURE);

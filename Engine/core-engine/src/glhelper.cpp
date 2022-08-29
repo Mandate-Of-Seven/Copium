@@ -12,8 +12,8 @@ pointers to OpenGL implementations.
 
 /*                                                                   includes
 ----------------------------------------------------------------------------- */
+#include "pch.h"
 #include <glhelper.h>
-#include <iostream>
 
 /*                                                   objects with file scope
 ----------------------------------------------------------------------------- */

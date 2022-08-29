@@ -20,10 +20,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #define TRANSFORM_H
 
 //INCLUDES
-#include <glm/vec3.hpp> //Vec3
-#include <list>
+#include "pch.h"
 
-//USING
 using Vector3 = glm::dvec3;
 
 class Transform;

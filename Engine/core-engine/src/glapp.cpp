@@ -12,12 +12,9 @@ to OpenGL implementations.
 
 /*                                                                   includes
 ----------------------------------------------------------------------------- */
+#include "pch.h"
 #include <glapp.h>
 #include <glhelper.h>
-#include <array>
-#include <iostream>
-#include <sstream>
-#include <iomanip>
 
 /*                                                   objects with file scope
 ----------------------------------------------------------------------------- */

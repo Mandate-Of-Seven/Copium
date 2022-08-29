@@ -13,8 +13,8 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
+#include "pch.h"
 #include "component.h"
-#include <iostream>
 
 
 std::map<Component::Type, const std::string> Component::componentMap
