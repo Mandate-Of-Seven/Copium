@@ -29,6 +29,8 @@
 #   define M_Assert(Expr, Msg) ;
 #endif
 
+#define PRINT(str) std::cout << str << std::endl
+
 static void __M_Assert(std::string expr_str, bool expr, std::string file, int line, std::string msg)
 {
     if (!expr)

@@ -35,10 +35,10 @@ SceneSandbox::SceneSandbox(std::string& _filepath) : Scene(_filepath) {
 }
 
 void SceneSandbox::loadScene() {
-	std::cout << "load sandbox" << std::endl;
+	//std::cout << "load sandbox" << std::endl;
 }
 void SceneSandbox::initScene() {
-	std::cout << "init sandbox" << std::endl;
+	//std::cout << "init sandbox" << std::endl;
 
 	glClearColor(1.f, 1.f, 1.f, 1.f);
 
@@ -58,7 +58,7 @@ void SceneSandbox::initScene() {
 }
 
 void SceneSandbox::updateScene() {
-	std::cout << "update sandbox" << std::endl;
+	//std::cout << "update sandbox" << std::endl;
 
 	if (Input::isKeyPressed(GLFW_KEY_A))
 		movement_x -= GLHelper::delta_time;
@@ -74,7 +74,7 @@ void SceneSandbox::updateScene() {
 }
 
 void SceneSandbox::drawScene() {
-	std::cout << "draw sandbox" << std::endl;
+	//std::cout << "draw sandbox" << std::endl;
 
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -100,10 +100,10 @@ void SceneSandbox::drawScene() {
 	s_Data.shaderProgram.UnUse();
 }
 void SceneSandbox::freeScene() {
-	std::cout << "free sandbox" << std::endl;
+	//std::cout << "free sandbox" << std::endl;
 }
 void SceneSandbox::unloadScene() {
-	std::cout << "unload sandbox" << std::endl;
+	//std::cout << "unload sandbox" << std::endl;
 
 	Renderer::shutdown();
 }

@@ -2,7 +2,6 @@
 #include "pch.h"
 #include "scripting.h"
 
-#include <cstdio>
 
 std::string scriptTmpDirectory = "..\\lib\\scripts\\src\\stash\\";
 
@@ -14,7 +13,7 @@ namespace Engine
 {
 	namespace
 	{
-		void line(std::string str, std::ostream& oStream, int tabsCount = 0);
+		void line(const std::string& str, std::ostream& oStream, int tabsCount = 0);
 		std::pair<std::string, std::string> getNameType(const std::string&);
 		void strip(std::string&);
 		void removeExtraSpaces(std::string&);
@@ -40,37 +39,11 @@ namespace Engine
 	Script::Script(const std::filesystem::path& absolutePath)
 	{
 		name = absolutePath.stem().string();
-		populateVariablesFromHeader();
 	}
 
 	Script::~Script()
 	{
 
-	}
-
-	void Script::populateVariablesFromHeader()
-	{
-		std::ifstream headerFile{ scriptTmpDirectory + name + ".h"};
-		std::string buffer;
-		bool start{false};
-		while (std::getline(headerFile, buffer))
-		{
-			if (start)
-			{
-				if (buffer.find_first_of("}") != std::string::npos)
-					break;
-				strip(buffer);
-				variables.insert(getNameType(buffer));
-				std::cout << "VARIABLE: " << buffer << std::endl;
-			}
-			else if (buffer.find_first_of("{") != std::string::npos)
-				start = true;
-		}
-		headerFile.close();
-	}
-
-	void Script::populateVariablesFromSource()
-	{
 	}
 
 	std::map<std::string, std::list<Script*>> scriptInstances;
@@ -98,48 +71,86 @@ namespace Engine
 	void Script::generate()
 	{
 		std::ifstream scriptFile(scriptsFolder + name + ".cpp");
+		std::ofstream scriptSource(scriptTmpDirectory + name + ".cpp");
 
-		std::string content{ CONTENT(scriptFile)};
-		removeExtraSpaces(content);
+		// Creating a directory
+		if (!std::filesystem::exists(scriptTmpDirectory))
+			std::filesystem::create_directory(scriptTmpDirectory);
+
+		line("#include \"" + name + "\.h\"", scriptSource);
 
 		std::string buffer;
-		size_t openCount{};
-		size_t pos = content.find("class " + name);
+		size_t openCount{};																																																																	
 
-		M_Assert(pos != std::string::npos, "class " + name + " not found in script!");
+		std::regex exprClassStartPos("class\\s+" + name + ".+\\s*\\{");
 
-		pos = content.find('{', pos);
-
-		M_Assert(pos != std::string::npos, "Brackets for class " + name + " not found!");
-
-		++openCount;
-		std::string::iterator contentIt{ content.begin() + pos + 1};
-		while (contentIt != content.end() && openCount != 0)
+		std::smatch searchMatches;
+		char ch;
+		while (scriptFile.get(ch))
 		{
-			char ch{ *contentIt };
-			switch (ch)
+			if (!searchMatches.size())
 			{
-				case '{':
+				buffer += ch;
+				if (std::regex_search(buffer, searchMatches, exprClassStartPos))
 				{
-					variables.insert(getNameType(buffer));
-					++openCount;
+					line(buffer.substr(0, buffer.rfind("class")), scriptSource);
 					buffer.clear();
-					break;
+					++openCount;
 				}
+			}
+			else if (openCount)
+			{
+				switch (ch)
+				{
+				case ';':
+					if (openCount == 1)
+					{
+						strip(buffer);
+						scriptSource << name << "::" << buffer << ';' << std::endl;
+						variables.insert(getNameType(buffer));
+						buffer.clear();
+					}
+					else
+					{
+						buffer += ch;
+					}
+					break;
+				case '{':
+					if (openCount == 1)
+					{
+						strip(buffer);
+						scriptSource << name << "::" << buffer << '{' << std::endl;
+						variables.insert(getNameType(buffer));
+						buffer.clear();
+					}
+					else
+					{
+						buffer += ch;
+					}
+					++openCount;
+					break;
 				case '}':
 					--openCount;
-				case ';':
-					buffer.clear();
+					if (openCount == 1)
+					{
+						scriptSource << buffer << '}' << std::endl;
+						buffer.clear();
+					}
+					else
+					{
+						buffer += ch;
+					}
 					break;
 				default:
 					buffer += ch;
+				}
 			}
-			++contentIt;
 		}
+
 		scriptFile.close();
+		scriptSource.close();
 
 		std::ofstream scriptHeader(scriptTmpDirectory + name + ".h");
-
 		line("#include <scripting.h>\n", scriptHeader);
 		line("class " + name + ": public Engine::Script\n{", scriptHeader);
 		nameToTypeMap::iterator nameTypeMapIt{ variables.begin()};
@@ -158,7 +169,7 @@ namespace Engine
 
 	namespace
 	{
-		void line(std::string str, std::ostream& oStream, int tabsCount)
+		void line(const std::string& str, std::ostream& oStream, int tabsCount)
 		{
 			std::string buffer;
 			for (int i{}; i < tabsCount; ++i)
@@ -170,7 +181,6 @@ namespace Engine
 		std::pair<std::string, std::string> getNameType(const std::string& str)
 		{
 			std::string buffer{ str };
-			strip(buffer);
 			removeExtraSpaces(buffer);
 			size_t spacePos = buffer.find_first_of(' ');
 			std::string type = buffer.substr(0, spacePos);

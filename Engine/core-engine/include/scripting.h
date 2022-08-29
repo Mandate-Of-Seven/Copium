@@ -28,8 +28,6 @@ namespace Engine
 		Script(const std::filesystem::path& absolutePath);
 		~Script();
 		void generate();
-		void populateVariablesFromHeader();
-		void populateVariablesFromSource();
 	protected:
 		std::string name;
 		nameToTypeMap variables;
