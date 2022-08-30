@@ -66,10 +66,10 @@
     <ClCompile Include="src\component.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\scripting.cpp">
+    <ClCompile Include="src\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\pch.cpp">
+    <ClCompile Include="src\imgui\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\imgui\imgui.cpp">
@@ -90,7 +90,7 @@
     <ClCompile Include="src\imgui\imgui_tables.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\imgui\imgui_widgets.cpp">
+    <ClCompile Include="src\scriptingEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -137,10 +137,10 @@
     <ClInclude Include="include\state-manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\scripting.h">
+    <ClInclude Include="include\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\pch.h">
+    <ClInclude Include="include\scriptingEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
