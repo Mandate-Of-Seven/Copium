@@ -1,9 +1,11 @@
 #include "PlayerMovement.h"
 #include <scripting.h>
 
+int playerHealth = 10;
 
-PlayerMovement::int hello = 1;
-PlayerMovement::void yolo(float yessir){
+
+int PlayerMovement ::hello = 1;
+void PlayerMovement::yolo(float yessir){
 
 		int deranged{0};
 		while (deranged < 10)
@@ -11,19 +13,28 @@ PlayerMovement::void yolo(float yessir){
 			++deranged;
 		}
 	}
-PlayerMovement::void hello(){
+void PlayerMovement::hello(){
+
+		if (true)
+			int hello = 0;
+	}
+void PlayerMovement::awake(){
 
 
 	}
-PlayerMovement::void awake(){
+void PlayerMovement::start(){
 
 
 	}
-PlayerMovement::void start(){
+void PlayerMovement::update(){
 
 
 	}
-PlayerMovement::void update(){
 
 
-	 }
+
+
+void outside()
+{
+
+}

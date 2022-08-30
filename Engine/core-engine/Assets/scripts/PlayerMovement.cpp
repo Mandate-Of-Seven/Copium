@@ -1,5 +1,7 @@
 #include <scripting.h>
 
+int playerHealth = 10;
+
 class PlayerMovement: public Engine::Script
 {
 	int hello = 1;
@@ -15,7 +17,8 @@ class PlayerMovement: public Engine::Script
 
 	void hello()
 	{
-
+		if (true)
+			int hello = 0;
 	}
 
 	void awake()
@@ -34,3 +37,8 @@ class PlayerMovement: public Engine::Script
 	}
 
 };
+
+void outside()
+{
+
+}

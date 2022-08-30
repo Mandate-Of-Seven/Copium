@@ -106,8 +106,9 @@ namespace Engine
 					if (openCount == 1)
 					{
 						strip(buffer);
-						scriptSource << name << "::" << buffer << ';' << std::endl;
-						variables.insert(getNameType(buffer));
+						std::pair<std::string, std::string> nameType{ getNameType(buffer) };
+						scriptSource << nameType.second << ' ' << name << " ::" << nameType.first << ';' << std::endl;
+						variables.insert(nameType);
 						buffer.clear();
 					}
 					else
@@ -119,8 +120,9 @@ namespace Engine
 					if (openCount == 1)
 					{
 						strip(buffer);
-						scriptSource << name << "::" << buffer << '{' << std::endl;
-						variables.insert(getNameType(buffer));
+						std::pair<std::string, std::string> nameType{ getNameType(buffer) };
+						line(nameType.second + ' ' + name + "::" + nameType.first + '{', scriptSource);
+						variables.insert(nameType);
 						buffer.clear();
 					}
 					else
@@ -145,8 +147,13 @@ namespace Engine
 					buffer += ch;
 				}
 			}
+			else
+			{
+				buffer += ch;
+			}
 		}
-
+		std::regex exprBracketColon{ "^\\}\\s*;" };
+		scriptSource << std::regex_replace(buffer, exprBracketColon, "") << std::endl;
 		scriptFile.close();
 		scriptSource.close();
 
