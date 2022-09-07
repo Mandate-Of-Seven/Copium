@@ -21,6 +21,7 @@ an OpenGL context and implement a game loop.
 
 #include "inspector.h"
 #include "windows-input.h"
+#include "logging.h"
 
 //State Manager
 #include "state-manager.h"
@@ -237,6 +238,16 @@ static void init() {
 
     // Part 2
     GLHelper::print_specs();
+
+    Log::init();
+    Console_Critical("Test 1");
+    Console_Error("Test 2");
+    Console_Warn("What happens");
+    Console_Info("Hello");
+    Console_Trace("Goodbye");
+
+    float i = 3.142834;
+    Log::getConsoleLogger()->warn("File: {}\n",i);
 
     // Part 3
     //GLApp::init();

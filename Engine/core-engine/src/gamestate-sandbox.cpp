@@ -57,7 +57,7 @@ void SceneSandbox::initScene() {
 }
 
 void SceneSandbox::updateScene() {
-	std::cout << "update sandbox" << std::endl;
+	//std::cout << "update sandbox" << std::endl;
 
 	if (Input::isKeyPressed(GLFW_KEY_A))
 		movement_x -= GLHelper::delta_time;
@@ -73,7 +73,7 @@ void SceneSandbox::updateScene() {
 }
 
 void SceneSandbox::drawScene() {
-	std::cout << "draw sandbox" << std::endl;
+	//std::cout << "draw sandbox" << std::endl;
 
 	glClear(GL_COLOR_BUFFER_BIT);
 
