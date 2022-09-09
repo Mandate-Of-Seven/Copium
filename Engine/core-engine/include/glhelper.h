@@ -27,7 +27,7 @@ struct GLHelper
   /*! GLHelper structure to encapsulate initialization stuff ...
   */
 {
-  static bool init(GLint w, GLint h, std::string t);
+  static bool init(GLint w, GLint h, std::string t); // (Should be moved to graphics)
   static void cleanup();
 
   // callbacks ...
@@ -39,7 +39,7 @@ struct GLHelper
   static void mousescroll_cb(GLFWwindow *pwin, double xoffset, double yoffset);
   static void mousepos_cb(GLFWwindow *pwin, double xpos, double ypos);
 
-  static void update_time(double fpsCalcInt = 1.0);
+  static void update_time(double fpsCalcInt = 1.0); // (Should be moved to core engine)
 
   static void print_specs();
 
