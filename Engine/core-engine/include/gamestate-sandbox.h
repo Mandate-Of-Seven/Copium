@@ -104,4 +104,5 @@ public:
 	*/
 	/*******************************************************************************/
 	void setupShaderProgram();
+	void setupShaderProgram2();
 };

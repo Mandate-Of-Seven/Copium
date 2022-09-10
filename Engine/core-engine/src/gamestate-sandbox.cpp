@@ -22,14 +22,11 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "gamestate-sandbox.h"
 
 #include <glhelper.h>
+#include <graphics.h>
 #include <renderer.h>
 #include <input.h>
 
 using namespace Copium::Graphics;
-
-// Global variables
-GLfloat movement_x = 0.f, movement_y = 0.f;
-
 
 SceneSandbox::SceneSandbox(std::string& _filepath) : Scene(_filepath) 
 {
@@ -44,50 +41,56 @@ void SceneSandbox::initScene()
 {
 	std::cout << "init sandbox" << std::endl;
 
-	glClearColor(1.f, 1.f, 1.f, 1.f);
+	// Call shader program
+	setupShaderProgram2();
 
-	glViewport(0, 0, GLHelper::width, GLHelper::height);
+	//glClearColor(1.f, 1.f, 1.f, 1.f);
 
-	s_Data.shaderProgram.Use();
+	//glViewport(0, 0, GLHelper::width, GLHelper::height);
+
+	// Init Renderer
+	Renderer::init();
+
+	// Init Graphics System 
+	// (In the future should be stored in a vector container and looped initialised)
+	graphics.init();
+
+	/*s_Data.shaderProgram.Use();
 	GLuint loc = glGetUniformLocation(s_Data.shaderProgram.GetHandle(), "uTextures");
 	GLint samplers[maxTextures];
 
 	for (GLuint i = 0; i < maxTextures; i++)
 		samplers[i] = i;
 
-	glUniform1iv(loc, maxTextures, samplers);
+	glUniform1iv(loc, maxTextures, samplers);*/
 
-	// Init Renderer
-	//Renderer::init();
+	//graphics.shaderProgram.Use();
+	GLuint loc = glGetUniformLocation(graphics.shaderProgram.GetHandle(), "uTextures");
+	GLint samplers[maxTextures];
+
+	for (GLuint i = 0; i < maxTextures; i++)
+		samplers[i] = i;
+
+	glUniform1iv(loc, maxTextures, samplers);
 }
 
 void SceneSandbox::updateScene() 
 {
 	//std::cout << "update sandbox" << std::endl;
 
-	if (Input::isKeyPressed(GLFW_KEY_A))
-		movement_x -= GLHelper::delta_time;
-	else if (Input::isKeyPressed(GLFW_KEY_D))
-		movement_x += GLHelper::delta_time;
-
-	if (Input::isKeyPressed(GLFW_KEY_W))
-		movement_y += GLHelper::delta_time;
-	else if (Input::isKeyPressed(GLFW_KEY_S))
-		movement_y -= GLHelper::delta_time;
-
-	glClearColor(1.f, 1.f, 1.f, 1.f);
+	// Update Graphics system
+	graphics.update();
 }
 
 void SceneSandbox::drawScene() 
 {
 	//std::cout << "draw sandbox" << std::endl;
 
-	glClear(GL_COLOR_BUFFER_BIT);
-
+	/*glClear(GL_COLOR_BUFFER_BIT);
 
 	s_Data.shaderProgram.Use();
 
-	/*Renderer::reset_stats();
+	Renderer::reset_stats();
 
 	Renderer::begin_batch();
 
@@ -96,15 +99,16 @@ void SceneSandbox::drawScene()
 		for (GLfloat x = -10.f; x < 10.f; x += 0.25f)
 		{
 			glm::vec4 color = { (x + 10) / 20.f, 0.2f, (y + 10) / 20.f, 1.f };
-			Renderer::draw_quad({ x + movement_x,y + movement_y}, { 0.1f, 0.1f }, color);
+			Renderer::draw_quad({ x, y}, { 0.1f, 0.1f }, color);
 		}
 	}
 
 	Renderer::end_batch();
 
-	Renderer::flush();*/
+	Renderer::flush();
 
-	s_Data.shaderProgram.UnUse();
+	s_Data.shaderProgram.UnUse();*/
+
 }
 void SceneSandbox::freeScene() 
 {
@@ -114,7 +118,9 @@ void SceneSandbox::unloadScene()
 {
 	std::cout << "unload sandbox" << std::endl;
 
-	//Renderer::shutdown();
+	Renderer::shutdown();
+
+	graphics.exit();
 }
 
 void SceneSandbox::setupShaderProgram()
@@ -128,6 +134,21 @@ void SceneSandbox::setupShaderProgram()
 	{
 		std::cout << "Unable to compile/link/validate shader programs\n";
 		std::cout << s_Data.shaderProgram.GetLog() << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+}
+
+void SceneSandbox::setupShaderProgram2()
+{
+	std::vector<std::pair<GLenum, std::string>> shdr_files;
+	shdr_files.emplace_back(std::make_pair(GL_VERTEX_SHADER, "../core-engine/Assets/shaders/shader-glsl.vert"));
+	shdr_files.emplace_back(std::make_pair(GL_FRAGMENT_SHADER, "../core-engine/Assets/shaders/shader-glsl.frag"));
+	graphics.shaderProgram.CompileLinkValidate(shdr_files);
+
+	if (GL_FALSE == graphics.shaderProgram.IsLinked())
+	{
+		std::cout << "Unable to compile/link/validate shader programs\n";
+		std::cout << graphics.shaderProgram.GetLog() << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 }

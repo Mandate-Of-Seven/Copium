@@ -63,9 +63,7 @@ namespace Copium::Graphics
 
 		glCreateBuffers(1, &s_Data.indexBufferID);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Data.indexBufferID);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-		//glNamedBufferStorage(s_Data.indexBufferID, sizeof(indices), indices, GL_DYNAMIC_STORAGE_BIT);
+		glNamedBufferStorage(s_Data.indexBufferID, sizeof(indices), indices, GL_DYNAMIC_STORAGE_BIT);
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &s_Data.whiteTexture);
 		glBindTexture(GL_TEXTURE_2D, s_Data.whiteTexture);

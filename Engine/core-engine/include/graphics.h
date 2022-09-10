@@ -17,10 +17,11 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
-#include <GLFW/glfw3.h>
 #include <glslshader.h>
+#include <GLFW/glfw3.h>
 #include <string>
-#include <list>
+#include <array>
+#include <vector>
 #include "vertex-types.h"
 
 namespace Copium::Graphics
@@ -39,6 +40,13 @@ namespace Copium::Graphics
 		// Create a vertex buffer for the sprites
 		void init_geometry();
 
+		// Batch Rendering
+		void begin_batch();
+
+		void flush();
+
+		void end_batch();
+
 		// Load assets into the game
 		void load_assets();
 
@@ -54,6 +62,8 @@ namespace Copium::Graphics
 		// Draw the world
 		void draw_world();
 
+		void draw_quad(const glm::vec2 & position, const glm::vec2 & size, const glm::vec4 & color);
+
 	public:
 
 		/* Camera view / Scene View *****************************************************/
@@ -63,7 +73,7 @@ namespace Copium::Graphics
 
 		/* Stored Texture Assets ********************************************************/
 
-		std::list <GLuint> textureSlots[32];
+		std::array<GLuint, 32> textureSlots;
 		GLuint textureSlotIndex = 1; // Initializes with 1
 		GLuint whiteTexture = 0;
 		GLuint whiteTextureSlot = 0;
@@ -78,8 +88,9 @@ namespace Copium::Graphics
 		GLuint indexBufferID = 0; // Handle to Index Buffer
 		GLuint indexCount = 0; // Number of elements in the object
 
-		Vertex* quadBuffer = nullptr;
-		Vertex* quadBufferPtr = nullptr;
+		//std::vector<Vertex> * quadBuffer;
+		Vertex * quadBuffer = nullptr;
+		Vertex * quadBufferPtr = nullptr;
 
 		/* Projections & Matrices *******************************************************/
 		glm::mat4 projMatrix;
@@ -89,6 +100,8 @@ namespace Copium::Graphics
 		/* Shaders **********************************************************************/
 		GLSLShader shaderProgram; // Shader program to use
 	};
+
+	static Graphics graphics;
 }
 
 #endif GRAPHICS_H
