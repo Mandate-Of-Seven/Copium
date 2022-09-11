@@ -167,9 +167,28 @@ public:
 	/*******************************************************************************/
 	GameObject* add_gameobject(GameObject* _gameObj);
 
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Removes a gameobject from the scene. 
+		Note: The gameobject must be dynamically allocated
+		Note: If the gameobject has children, all children are removed from the scene
+
+	\param	_gameObj
+		pointer to the GameObject that is to be removed from the scene
+
+	\return
+		if removal is successful, return true
+		if removal is unsuccessful, return false
+	*/
+	/*******************************************************************************/
+	bool remove_gameobject(GameObject* _gameObj);
+
+
 private:
 	std::string& filename;
-	std::vector<GameObject*> gameObjects;
+	std::vector<GameObject*> gameObjects;	//Vector should be in order
 };
 
 

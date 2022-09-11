@@ -56,3 +56,47 @@ GameObject* Scene::add_gameobject(GameObject* _gameObj)
 	gameObjects.push_back(_gameObj);
 	return _gameObj;
 }
+bool Scene::remove_gameobject(GameObject* _gameObj)
+{
+	//Look for specified game object in scene
+	for (size_t i{0}; i < get_gameobjectvector().size(); ++i)
+	{
+		GameObject* g = get_gameobjectvector()[i];
+		
+		if (g != _gameObj)
+			continue;
+		else
+		{
+			if (g->has_parent())
+			{
+				GameObject* p = g->get_parent();
+				p->childList().remove(g); 
+				gameObjects.erase(gameObjects.begin() + i);
+				gameObjects.shrink_to_fit();
+
+			}
+			else
+			{
+
+				if (g->is_parent())
+				{
+					for (GameObject* c : g->childList())
+					{
+						delete c;
+						c = nullptr;
+					}
+
+				}
+
+				delete g;
+				g = nullptr; 
+			}
+
+			return true;
+		}
+
+
+	}
+
+	return false;
+}

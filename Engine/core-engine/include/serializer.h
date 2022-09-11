@@ -1,6 +1,6 @@
 /*!***************************************************************************************
 ****
-\file			scene-serializer.h
+\file			serializer.h
 \project
 \author			Matthew Lau
 \co-authors
@@ -23,8 +23,33 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "game-object.h"
 #include "scene.h"
 #include "transform.h"
+#include <rapidjson/prettywriter.h>
+#include <math-library.h>
 
 extern std::string prefix;
+
+class Serializer 
+{
+public:
+	template <typename T>
+	bool serialize(std::ofstream& _ofs, const T& _obj)
+	{
+		rapidjson::PrettyWriter<rapidjson::StringBuffer> w(sb);
+		//bool result = _obj.serialize(w);
+		bool result = T::serialize(w, _obj);
+		std::string json(sb.GetString(), sb.GetSize());
+		_ofs << json;
+		std::cout << "serializer serialize called\n";
+		return false;
+	}
+	template <typename T, typename Writer>
+	bool deserialize(std::ifstream& _ifs, const T& _obj, Writer& _writer)
+	{
+		return false;
+	}
+private:
+	rapidjson::StringBuffer sb;
+};
 
 /*******************************************************************************
 /*!
@@ -61,7 +86,7 @@ int serialize_scene(const std::string& _filename, Scene* _scene);
 	void
 */
 /*******************************************************************************/
-void serialize_trans(std::ofstream& _filestream, const Transform& _trans);
+void serialize_transform(std::ofstream& _filestream, const Transform& _trans);
 
 /*******************************************************************************
 /*!
@@ -93,7 +118,7 @@ int deserialize_scene(const std::string& _filename, Scene* _scene);
 
 \return
 	if file exists, return true
-	if file does not exist, return false
+	if file does not exist, return false 
 */
 /*******************************************************************************/
 bool does_file_exist(const std::string& _filename);

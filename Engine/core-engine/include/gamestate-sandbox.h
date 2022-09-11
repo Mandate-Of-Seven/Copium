@@ -22,7 +22,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #pragma once
 #include "state-manager.h"
 #include "scene.h"
-#include "scene-serializer.h"
+#include "serializer.h"
+#include "math-library.h"
 
 class SceneSandbox : public Scene 
 {

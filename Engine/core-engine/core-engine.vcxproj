@@ -47,8 +47,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)lib\imgui;$(ProjectDir)include;$(SolutionDir)lib\glfw-3.3.7.bin.WIN32\include;$(SolutionDir)lib\glew-2.2.0\include;$(SolutionDir)lib\glm-0.9.9.8;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)lib\glfw-3.3.7.bin.WIN32\include;$(SolutionDir)lib\glew-2.2.0\include;$(SolutionDir)lib\glm-0.9.9.8;$(SolutionDir)lib;$(SolutionDir)lib\imgui;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\glfw-3.3.7.bin.WIN32\lib-vc2019;$(SolutionDir)lib\glew-2.2.0\lib\Release\Win32;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(SolutionDir)lib\glm-0.9.9.8;$(SolutionDir)lib\glew-2.2.0\include;$(SolutionDir)lib\glfw-3.3.7.bin.WIN32\include;$(ProjectDir)include;$(SolutionDir)lib\imgui;$(IncludePath);$(SolutionDir)lib\rapidjson</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -57,8 +60,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\include\rapidjson;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -84,6 +86,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\component.cpp" />
+    <ClCompile Include="src\frameratecontroller.cpp" />
     <ClCompile Include="src\game-object.cpp" />
     <ClCompile Include="src\gamestate-sandbox.cpp" />
     <ClCompile Include="src\glapp.cpp" />
@@ -98,16 +101,18 @@
     <ClCompile Include="src\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\inspector.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\math-library.cpp" />
     <ClCompile Include="src\renderer.cpp" />
     <ClCompile Include="src\scene-manager.cpp" />
     <ClCompile Include="src\scene.cpp" />
-    <ClCompile Include="src\scene-serializer.cpp" />
+    <ClCompile Include="src\serializer.cpp" />
     <ClCompile Include="src\state-manager.cpp" />
     <ClCompile Include="src\transform.cpp" />
     <ClCompile Include="src\windows-input.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\component.h" />
+    <ClInclude Include="include\frameratecontroller.h" />
     <ClInclude Include="include\game-object.h" />
     <ClInclude Include="include\gamestate-sandbox.h" />
     <ClInclude Include="include\glapp.h" />
@@ -115,10 +120,11 @@
     <ClInclude Include="include\glslshader.h" />
     <ClInclude Include="include\input.h" />
     <ClInclude Include="include\inspector.h" />
+    <ClInclude Include="include\math-library.h" />
     <ClInclude Include="include\renderer.h" />
     <ClInclude Include="include\scene.h" />
     <ClInclude Include="include\scene-manager.h" />
-    <ClInclude Include="include\scene-serializer.h" />
+    <ClInclude Include="include\serializer.h" />
     <ClInclude Include="include\state-manager.h" />
     <ClInclude Include="include\transform.h" />
     <ClInclude Include="include\windows-input.h" />

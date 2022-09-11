@@ -25,8 +25,8 @@ an OpenGL context and implement a game loop.
 //State Manager
 #include "state-manager.h"
 #include "scene-manager.h"
-
-#include "scene-serializer.h"
+#include "serializer.h"
+#include "frameratecontroller.h"
 
 namespace
 {
@@ -82,6 +82,7 @@ int main() {
     #endif
 
     SceneManager SM;
+    FrameRateController frc(100.0);
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
 
@@ -90,7 +91,7 @@ int main() {
     while (!glfwWindowShouldClose(GLHelper::ptr_window) && esCurrent != esQuit) {
 
         SM.add_scene(sandboxScene);
-        std::cout << "Number of scenes: " << SM.get_scenecount() << std::endl;
+        //std::cout << "Number of scenes: " << SM.get_scenecount() << std::endl;
         SM.change_scene(0);
 
         if (esCurrent == esActive) {
@@ -112,13 +113,10 @@ int main() {
 
                 while (SM.current == SM.next) {
 
-
+                    frc.start();
 
                     SM.update_scene();         //UPDATE STATE         
                     SM.draw_scene();           //DRAW STATE
-                    //SM.updateScene();         //UPDATE STATE         
-                    //SM.drawScene();           //DRAW STATE
-
                     update();
 
                     //Check for engine close
@@ -127,6 +125,9 @@ int main() {
                     }
 
                     draw();
+
+                    frc.end();
+                    
                 }
 
 
@@ -150,6 +151,7 @@ int main() {
 
     // Part 3
     cleanup();
+    std::cout << sandboxScene << std::endl;
 
     std::cout << "Engine Closing...\n";
 }
@@ -175,7 +177,7 @@ static void update() {
     //std::cout<< "Is Shift Button Held:" << Input::isMouseButtonPressed(GLFW_KEY_LEFT_SHIFT) << std::endl;
   
     // Part 2
-    GLHelper::update_time(1.0);
+    //GLHelper::update_time(1.0);
   
     // Part 3
     //GLApp::update();

@@ -38,6 +38,8 @@ private:
     std::list<Component*> components;   //Components for gameObject
     std::string name;                   //Name of gameObject
     Transform trans;                    //Transform of gameObject
+    GameObject* parent;                 //Pointer to this gameObject's parent
+    std::list<GameObject*> children;    //List of pointers to this gameObject's children
 public:
     GameObject& operator=(GameObject&) = delete;
 
@@ -166,6 +168,71 @@ public:
     */
     /*******************************************************************************/
     GameObjectID get_id() const;
+
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Check if the game object is a parent
+
+    \return
+        if gameobject is a parent, return true
+        if gameobject is not a parent, return false
+    */
+    /*******************************************************************************/
+    bool is_parent() const;
+
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Check if the game object has a parent
+
+    \return
+        if gameobject has a parent, return true
+        if gameobject does not have a parent, return false
+    */
+    /*******************************************************************************/
+    bool has_parent() const;
+
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Accessor for this game object's parent (if any)
+
+    \return
+        pointer to the parent game object
+        if this game object does not have a parent, returns nullptr
+    */
+    /*******************************************************************************/
+    GameObject* get_parent();
+
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Returns a list that contains pointers to this game object's children
+
+    \return
+        reference to the list containing the pointers to this game object's children
+    */
+    /*******************************************************************************/
+    std::list<GameObject*>& childList();
+
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Attach a child to this game object
+
+    \return
+        if specified child game object is valid, return true
+        if specified child game object is not valid, return false
+    */
+    /*******************************************************************************/
+    bool attach_child(GameObject* _child);
+
 
     /***************************************************************************/
     /*!
