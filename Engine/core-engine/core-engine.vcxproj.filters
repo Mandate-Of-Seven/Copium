@@ -110,6 +110,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\frameratecontroller.cpp">
+    <ClCompile Include="src\logging.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -188,6 +189,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\frameratecontroller.h">
+    <ClInclude Include="include\logging.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

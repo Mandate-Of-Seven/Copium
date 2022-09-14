@@ -21,6 +21,7 @@ an OpenGL context and implement a game loop.
 #include "windows-input.h"
 #include "scriptingEngine.h"
 #include "scripting.h"
+#include "logging.h"
 
 //State Manager
 #include "state-manager.h"
@@ -78,6 +79,10 @@ int main() {
     init();
     init_statemanager(esActive);
     glfwSetKeyCallback(GLHelper::ptr_window, quitKeyCallback);
+    //glfwSetKeyCallback(GLHelper::ptr_window, Input::keyCallback);
+    //glfwSetMouseButtonCallback(GLHelper::ptr_window, Input::mousebuttonCallback);
+    //glfwSetScrollCallback(GLHelper::ptr_window, Input::mousescrollCallback);
+    glfwSetCursorPosCallback(GLHelper::ptr_window, Input::mouseposCallback);
 
     // Enable run-time memory check for debug purposes 
     #if defined(DEBUG) | defined(_DEBUG)
@@ -263,6 +268,17 @@ static void init() {
 
     // Part 2
     GLHelper::print_specs();
+
+    Log::init();
+    Console_Critical("Test 1");
+    Console_Error("Test 2");
+    Console_Warn("What happens");
+    Console_Info("Hello");
+    Console_Trace("Goodbye");
+
+    //spdlog::info("File test");
+    //File_Warn("Hello{}",3);
+
 
     // Part 3
     //GLApp::init();
