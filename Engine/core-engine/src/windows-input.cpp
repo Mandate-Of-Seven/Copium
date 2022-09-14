@@ -124,6 +124,6 @@ void Input::mousescrollCallback(GLFWwindow* window, double xOffset, double yOffs
 void Input::mouseposCallback(GLFWwindow* window, double xPos, double yPos)
 {
     #ifdef _DEBUG
-        std::cout << "Mouse cursor position: (" << xPos << ", " << yPos << ")" << std::endl;
+        //std::cout << "Mouse cursor position: (" << xPos << ", " << yPos << ")" << std::endl;
     #endif
 }
