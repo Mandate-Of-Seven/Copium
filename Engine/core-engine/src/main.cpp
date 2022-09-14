@@ -19,16 +19,24 @@ an OpenGL context and implement a game loop.
 
 #include "inspector.h"
 #include "windows-input.h"
+#include "scriptingEngine.h"
 #include "scripting.h"
 
 //State Manager
 #include "state-manager.h"
 #include "scene-manager.h"
+#include <thread>
+
+//Systems
+#include "message-system.h"
+#include "SAMPLE_RECEIVER.h"
 
 namespace
 {
     // Our state
     bool show_demo_window = true;
+    float recompileTimer = 0;
+    Copium::Message::MessageSystem messageSystem;
 }
 
 Input* Input::inputInstance = new WindowsInput();
@@ -65,59 +73,60 @@ Indicates how the program existed. Normal exit is signaled by a return value of
 Note that the C++ compiler will insert a return 0 statement if one is missing.
 */
 int main() {
-
-    // Part 1
     init();
     init_statemanager(esActive);
     glfwSetKeyCallback(GLHelper::ptr_window, quitKeyCallback);
-  
-
 
     // Enable run-time memory check for debug purposes 
     #if defined(DEBUG) | defined(_DEBUG)
         _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     #endif
-
+    Copium::Message::DUMMY_RECEIVER dummy12;
+    Copium::Message::DUMMY_RECEIVER dummy122;
+    messageSystem.init();
+    messageSystem.dispatch(Copium::Message::MESSAGE_TYPE::MOUSE_CLICKED);
     SceneManager SM;
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
     SM.addScene(sandboxScene);
     std::cout << "Number of scenes: " << SM.getSceneCount() << std::endl;
-    SM.changeScene(0);
-    Engine::ScriptingEngine::init();
-    //Engine::Script *yolo;
-    //yolo = new Engine::Script("PlayerMovement");
-    //yolo->generate();
+    SM.changeScene(0);;
+    //ScriptComponent* script = new ScriptComponent("CSharpTesting", PROJECT_PATH);
+    //GameObject* gameObj = new GameObject();
+    //script->Awake();
+
+    Copium::ScriptingEngine::init();
+    std::thread recompileThread(Copium::ScriptingEngine::tryRecompileDll);
+    //ScriptComponent *yolo;
+    //yolo = new ScriptComponent("PlayerMovement");
     //delete yolo;
     // Engine Loop
     while (!glfwWindowShouldClose(GLHelper::ptr_window) && esCurrent != esQuit) {
-
         if (esCurrent == esActive) {
             std::cout << "scene active" << std::endl;
-
             while (SM.current != gsQuit) {
                 //If game state is not set to restart, update the state manager and load in the next game state
                 if (SM.current == gsRestart) {
                     SM.current = SM.previous;
                     SM.next = SM.current;
                 }
-                else {
+                else 
+                {
                     //checks for change in scene
                     SM.loadScene();             //LOAD STATE
-                }    
-        
+                }
                                    
                 SM.initScene();                 //INIT STATE
 
                 while (SM.current == SM.next) {
-
-                                 
-                                 
                     SM.updateScene();         //UPDATE STATE         
                     SM.drawScene();           //DRAW STATE
 
                     update();
-
+                    Copium::ScriptingEngine::trySwapDll(recompileThread);
+                    //float gcHeapSize = (float)mono_gc_get_heap_size();
+                    //float gcUsageSize = (float)mono_gc_get_used_size();
+                    //PRINT("GC Heap Info (Used/Avaliable): " << (gcUsageSize / 1024.0f) << " " << gcHeapSize / 1024.0f);
                     //Check for engine close
                     if (esCurrent == esQuit) {
                         SM.changeScene(gsQuit);
@@ -140,11 +149,14 @@ int main() {
 
         }
     }
-
+    #if _DEBUG
+    recompileThread.detach();
+    #else
+    recompileThread.join();
+    #endif
 
     // Part 3
     cleanup();
-
     std::cout << "Engine Closing...\n";
 }
 
@@ -260,7 +272,7 @@ void cleanup()
     ImGui::DestroyContext();
     // Part 1
     GLApp::cleanup();
-
+    Copium::ScriptingEngine::shutdown();
     // Part 2
     GLHelper::cleanup();
     delete Window::Inspector::selectedGameObject;

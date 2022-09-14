@@ -1,45 +1,46 @@
-#pragma once
-#include "pch.h"
-#include <string>
-#include <filesystem>
+#include "component.h"
+#include <mono/metadata/assembly.h>
 
-#define SCRIPT_START(NAME) class NAME : public Engine::Script{ public: NAME();
+class ScriptComponent;
 
-#define SCRIPT_END(NAME) };NAME::NAME() :Script(__FILE__)\
-	{std::string className{ typeid(*this).name() + 6 };}
-
-
-#define PUBLIC public:
-#define PRIVATE private:
-#define PROTECTED protected:
-
-namespace Engine
+class ScriptComponent final : public Component
 {
-	
-	class Script
-	{
-		using nameToTypeMap = std::map<std::string, std::string>;
-	public:
-		Script() = delete;
-		Script& operator= (const Script&) = delete;
-		Script(const Script&) = delete;
+public:
+    /***************************************************************************/
+    /*!
+    \brief
+        Default constructor for script Components
+    */
+    /**************************************************************************/
+    ScriptComponent() = delete;
 
-		Script(const std::string& name);
-		Script(const std::filesystem::path& absolutePath);
-		~Script();
-		void generate();
-	protected:
-		std::string name;
-		nameToTypeMap variables;
-	};
+    ScriptComponent(const std::string& _name);
 
-	class ScriptingEngine
-	{
-	public:
-		static void init();
-		static void shutdown();
-		static void updateScriptsDll();
-		static void generate();
-		static ScriptingEngine* instance;
-	};
-}
+    const std::string& Name();
+
+    void Name(const std::string&);
+
+    void Awake();
+
+    void Start();
+
+    void Update();
+
+    void LateUpdate();
+
+    void OnCollisionEnter();
+
+    void refreshMethods();
+
+private:
+
+    std::string name;
+    MonoClass* monoClass;
+    MonoObject* instance;
+    MonoMethod* csAwake;
+    MonoMethod* csStart;
+    MonoMethod* csUpdate;
+    MonoMethod* csLateUpdate;
+    MonoMethod* csOnCollisionEnter;
+
+};

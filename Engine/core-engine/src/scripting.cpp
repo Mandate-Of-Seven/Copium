@@ -1,213 +1,59 @@
-
 #include "pch.h"
 #include "scripting.h"
+#include "scriptingEngine.h"
 
+#define DEFAULT_SCRIPT_NAME "NewScript"
+#include <mono/jit/jit.h>
 
-std::string scriptTmpDirectory = "..\\lib\\scripts\\src\\stash\\";
-
-std::string scriptsFolder{ "Assets\\scripts\\" };
-
-#define CONTENT(file) (std::istreambuf_iterator<char>(file)),(std::istreambuf_iterator<char>())
-
-namespace Engine
+ScriptComponent::ScriptComponent(const std::string& _name)
+	: name{ _name }, Component(Type::Script)
 {
-	namespace
-	{
-		void line(const std::string& str, std::ostream& oStream, int tabsCount = 0);
-		std::pair<std::string, std::string> getNameType(const std::string&);
-		void strip(std::string&);
-		void removeExtraSpaces(std::string&);
-		std::list<Script*> scripts;
-	}
-	ScriptingEngine* ScriptingEngine::instance{new ScriptingEngine()};
 
-	Script::Script(const std::string& _name)
-	{
-		std::ofstream scriptFile(scriptsFolder + _name + ".cpp");
-		scriptFile <<
-			"#include <scripting.h>\n\n" <<
-			"class " << _name << ": public Engine::Script\n" <<
-			"{\n" <<
-				"\n\tvoid awake()\n\t{\n\n\t}\n" <<
-				"\n\tvoid start()\n\t{\n\n\t}\n" <<
-				"\n\tvoid update()\n\t{\n\n\t}\n" <<
-			"\n};";
-		name = _name;
-		scriptFile.close();
-	}
+}
 
-	Script::Script(const std::filesystem::path& absolutePath)
-	{
-		name = absolutePath.stem().string();
-	}
+void ScriptComponent::refreshMethods()
+{
+	monoClass = Copium::ScriptingEngine::loadMonoClass(name);
+	instance = Copium::ScriptingEngine::newScriptInstance(monoClass);
+	csAwake = mono_class_get_method_from_name(monoClass, "Awake", 0);
+	csStart = mono_class_get_method_from_name(monoClass, "Start", 0);
+	csUpdate = mono_class_get_method_from_name(monoClass, "Update", 0);
+	csLateUpdate = mono_class_get_method_from_name(monoClass, "LateUpdate", 0);
+	csOnCollisionEnter = mono_class_get_method_from_name(monoClass, "OnCollisionEnter", 0);
+	mono_runtime_object_init(instance);
+}
 
-	Script::~Script()
-	{
+const std::string& ScriptComponent::Name()
+{
+	return name;
+}
 
-	}
+void ScriptComponent::Name(const std::string& _name)
+{
+	name = _name;
+}
 
-	std::map<std::string, std::list<Script*>> scriptInstances;
+void ScriptComponent::Awake()
+{
+	mono_runtime_invoke(csAwake, instance, nullptr, nullptr);
+}
 
-	void ScriptingEngine::init()
-	{
-		//LOAD Existing scripts
-		std::filesystem::recursive_directory_iterator dirIt{ scriptsFolder };
-		for (const std::filesystem::directory_entry& dirEntry : dirIt)
-		{
-			if (dirEntry.path().extension() == ".cpp")
-			{
-				Script* script = new Script(dirEntry.path().stem());
-				script->generate();
-				scripts.push_back(script);
-				std::cout << "DIRECTORY: " << dirEntry << std::endl;
-			}
-		}
-	}
+void ScriptComponent::Start()
+{
+	mono_runtime_invoke(csStart, instance, nullptr, nullptr);
+}
 
-	void ScriptingEngine::shutdown()
-	{
-	}
+void ScriptComponent::Update()
+{
+	mono_runtime_invoke(csUpdate, instance, nullptr, nullptr);
+}
 
-	void Script::generate()
-	{
-		std::ifstream scriptFile(scriptsFolder + name + ".cpp");
-		std::ofstream scriptSource(scriptTmpDirectory + name + ".cpp");
+void ScriptComponent::LateUpdate()
+{
+	mono_runtime_invoke(csLateUpdate, instance, nullptr, nullptr);
+}
 
-		// Creating a directory
-		if (!std::filesystem::exists(scriptTmpDirectory))
-			std::filesystem::create_directory(scriptTmpDirectory);
-
-		line("#include \"" + name + "\.h\"", scriptSource);
-
-		std::string buffer;
-		size_t openCount{};																																																																	
-
-		std::regex exprClassStartPos("class\\s+" + name + ".+\\s*\\{");
-
-		std::smatch searchMatches;
-		char ch;
-		while (scriptFile.get(ch))
-		{
-			if (!searchMatches.size())
-			{
-				buffer += ch;
-				if (std::regex_search(buffer, searchMatches, exprClassStartPos))
-				{
-					line(buffer.substr(0, buffer.rfind("class")), scriptSource);
-					buffer.clear();
-					++openCount;
-				}
-			}
-			else if (openCount)
-			{
-				switch (ch)
-				{
-				case ';':
-					if (openCount == 1)
-					{
-						strip(buffer);
-						std::pair<std::string, std::string> nameType{ getNameType(buffer) };
-						scriptSource << nameType.second << ' ' << name << " ::" << nameType.first << ';' << std::endl;
-						variables.insert(nameType);
-						buffer.clear();
-					}
-					else
-					{
-						buffer += ch;
-					}
-					break;
-				case '{':
-					if (openCount == 1)
-					{
-						strip(buffer);
-						std::pair<std::string, std::string> nameType{ getNameType(buffer) };
-						line(nameType.second + ' ' + name + "::" + nameType.first + '{', scriptSource);
-						variables.insert(nameType);
-						buffer.clear();
-					}
-					else
-					{
-						buffer += ch;
-					}
-					++openCount;
-					break;
-				case '}':
-					--openCount;
-					if (openCount == 1)
-					{
-						scriptSource << buffer << '}' << std::endl;
-						buffer.clear();
-					}
-					else
-					{
-						buffer += ch;
-					}
-					break;
-				default:
-					buffer += ch;
-				}
-			}
-			else
-			{
-				buffer += ch;
-			}
-		}
-		std::regex exprBracketColon{ "^\\}\\s*;" };
-		scriptSource << std::regex_replace(buffer, exprBracketColon, "") << std::endl;
-		scriptFile.close();
-		scriptSource.close();
-
-		std::ofstream scriptHeader(scriptTmpDirectory + name + ".h");
-		line("#include <scripting.h>\n", scriptHeader);
-		line("class " + name + ": public Engine::Script\n{", scriptHeader);
-		nameToTypeMap::iterator nameTypeMapIt{ variables.begin()};
-		while (nameTypeMapIt != variables.end())
-		{
-			line
-			(
-				nameTypeMapIt->second + ' ' + nameTypeMapIt->first + ';',
-				scriptHeader, 1
-			);
-			++nameTypeMapIt;
-		}
-		line("}", scriptHeader);
-		scriptHeader.close();
-	}
-
-	namespace
-	{
-		void line(const std::string& str, std::ostream& oStream, int tabsCount)
-		{
-			std::string buffer;
-			for (int i{}; i < tabsCount; ++i)
-				oStream << '\t';
-			oStream << str << std::endl;
-		}
-
-
-		std::pair<std::string, std::string> getNameType(const std::string& str)
-		{
-			std::string buffer{ str };
-			removeExtraSpaces(buffer);
-			size_t spacePos = buffer.find_first_of(' ');
-			std::string type = buffer.substr(0, spacePos);
-			std::string name = buffer.substr(spacePos + 1);
-			return { name ,type };
-		}
-
-		void strip(std::string& str)
-		{
-			std::regex exprStartWhitespace("^\\s+");
-			std::regex exprEndWhitespace("\\s+$");
-
-			str = std::regex_replace(str, exprStartWhitespace, "");
-			str = std::regex_replace(str, exprEndWhitespace, "");
-		}
-
-		void removeExtraSpaces(std::string& str)
-		{
-			std::regex exprWhitespace("\\s+");
-			str = std::regex_replace(str, exprWhitespace, " ");
-		}
-	}
+void ScriptComponent::OnCollisionEnter()
+{
+	mono_runtime_invoke(csOnCollisionEnter, instance, nullptr, nullptr);
 }

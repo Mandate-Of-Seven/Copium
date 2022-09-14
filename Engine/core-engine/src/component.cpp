@@ -22,22 +22,22 @@ std::map<Component::Type, const std::string> Component::componentMap
     {Type::Animator,"Animator"},
     {Type::Collider,"Collider"},
     {Type::Renderer,"Renderer"},
-    {Type::Script,"Script"}
+    {Type::Script,"New Script"}
 };
 
-Component::Component(Component::Type _componentType) : componentType(_componentType), name{ componentMap[_componentType]} {}
+Component::Component(Component::Type _componentType) : componentType(_componentType) {}
 
 void Component::destroy(){}
 
-
 ComponentID const Component::ID(){return id;}
 
-const std::string Component::Name() { return name; }
+ColliderComponent::ColliderComponent() :Component(Type::Collider) { std::cout << "COLLIDER CONS" << std::endl; }
 
-ColliderComponent::ColliderComponent() :Component(Type::Collider) { std::cout << "NAME: " << name << std::endl; }
+RendererComponent::RendererComponent() :Component(Type::Renderer) { std::cout << "RENDERER CONS" << std::endl; }
 
-RendererComponent::RendererComponent() :Component(Type::Renderer) { std::cout << "NAME: " << name << std::endl; }
+AnimatorComponent::AnimatorComponent() :Component(Type::Animator) { std::cout << "ANIMATOR CONS" << std::endl; }
 
-AnimatorComponent::AnimatorComponent() :Component(Type::Animator) { std::cout << "NAME: " << name << std::endl; }
-
-ScriptComponent::ScriptComponent() :Component(Type::Script) { std::cout << "NAME: " << name << std::endl; }
+const std::string& Component::Name()
+{
+    return componentMap[componentType];
+}

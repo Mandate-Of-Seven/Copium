@@ -82,7 +82,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(SolutionDir)lib\imgui\include;$(ProjectDir)include;$(SolutionDir)lib\glfw-3.3.8.bin.WIN64\include;$(SolutionDir)lib\glew-2.2.0\include;$(SolutionDir)lib\glm-0.9.9.8;$(SolutionDir)lib\mono\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\imgui\lib;$(SolutionDir)lib\glfw-3.3.8.bin.WIN64\lib-vc2019;$(SolutionDir)lib\glew-2.2.0\lib\Release\x64;$(SolutionDir)lib\mono\lib\mono\Debug;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)lib\imgui\lib;$(SolutionDir)lib\glfw-3.3.8.bin.WIN64\lib-vc2019;$(SolutionDir)lib\glew-2.2.0\lib\Release\x64;$(SolutionDir)lib\mono\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -117,7 +117,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;glfw3dll.lib;libgcmonosgen.lib;libmini-sgen.lib;libmonoruntime-sgen.lib;libmono-static-sgen.lib;libmonoutils.lib;mono-2.0-sgen.lib;MonoPosixHelper.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;glfw3dll.lib;mono-2.0-sgen.lib;ws2_32.lib;version.lib;bcrypt.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -182,20 +182,30 @@
     </ClCompile>
     <ClCompile Include="src\inspector.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\messageSystem.cpp" />
     <ClCompile Include="src\renderer.cpp" />
+    <ClCompile Include="src\SAMPLE_RECEIVER.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="src\scene-manager.cpp" />
     <ClCompile Include="src\scene.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\scripting.cpp" />
     <ClCompile Include="src\scriptingEngine.cpp" />
     <ClCompile Include="src\state-manager.cpp" />
+    <ClCompile Include="src\system-interface.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="src\transform.cpp" />
     <ClCompile Include="src\windows-input.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\compiler.h" />
     <ClInclude Include="include\component.h" />
+    <ClInclude Include="include\file-path.h" />
     <ClInclude Include="include\game-object.h" />
     <ClInclude Include="include\gamestate-sandbox.h" />
     <ClInclude Include="include\glapp.h" />
@@ -203,12 +213,17 @@
     <ClInclude Include="include\glslshader.h" />
     <ClInclude Include="include\input.h" />
     <ClInclude Include="include\inspector.h" />
+    <ClInclude Include="include\message-system.h" />
+    <ClInclude Include="include\message-types.h" />
     <ClInclude Include="include\pch.h" />
     <ClInclude Include="include\renderer.h" />
+    <ClInclude Include="include\SAMPLE_RECEIVER.h" />
     <ClInclude Include="include\scene.h" />
     <ClInclude Include="include\scene-manager.h" />
+    <ClInclude Include="include\scripting.h" />
     <ClInclude Include="include\scriptingEngine.h" />
     <ClInclude Include="include\state-manager.h" />
+    <ClInclude Include="include\system-interface.h" />
     <ClInclude Include="include\transform.h" />
     <ClInclude Include="include\windows-input.h" />
   </ItemGroup>

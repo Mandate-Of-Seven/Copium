@@ -73,9 +73,9 @@ void GameObject::addComponent(Component::Type componentType)
     case Component::Renderer:
         components.push_back(new RendererComponent());
         break;
-    case Component::Script:
-        components.push_back(new ScriptComponent());
-        break;
+    //case Component::Script:
+    //    components.push_back(new ScriptComponent());
+        //break;
     default:
         break;
     }

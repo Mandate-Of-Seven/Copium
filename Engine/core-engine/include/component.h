@@ -19,7 +19,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #define COMPONENT_H
 //INCLUDES
-#include <glm/vec2.hpp> //Vec2
+#include <glm/vec2.hpp> //Vec2 //RMB TO CHANGE TO OWN MATH LIB
 #include <string>
 #include <map>
 
@@ -56,9 +56,8 @@ public:
     /**************************************************************************/
     ComponentID const ID();
 
-    const std::string Name();
+    const std::string& Name();
 protected:
-    const std::string name;
 
     /***************************************************************************/
     /*!
@@ -123,18 +122,6 @@ public:
 protected:
 };
 
-class ScriptComponent : public Component
-{
-public:
-    /***************************************************************************/
-    /*!
-    \brief
-        Default constructor for script Components
-    */
-    /**************************************************************************/
-    ScriptComponent();
-protected:
-};
 
 
 
