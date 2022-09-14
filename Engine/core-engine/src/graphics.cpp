@@ -14,7 +14,7 @@
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
-
+#include "pch.h"
 #include <graphics.h>
 #include <renderer.h>
 #include <vector>

@@ -70,7 +70,7 @@ void SceneSandbox::init_scene()
 	std::cout << "init sandbox" << std::endl;
 
 	// Call shader program
-	setupShaderProgram2();
+	setup_shader_program2();
 
 	//glClearColor(1.f, 1.f, 1.f, 1.f);
 
@@ -122,7 +122,7 @@ void SceneSandbox::init_scene()
 
 }
 
-void SceneSandbox::updateScene() 
+void SceneSandbox::update_scene() 
 {
 	//std::cout << "update sandbox" << std::endl;
 
@@ -130,7 +130,7 @@ void SceneSandbox::updateScene()
 	graphics.update();
 }
 
-void SceneSandbox::drawScene() 
+void SceneSandbox::draw_scene() 
 {
 	//std::cout << "draw sandbox" << std::endl;
 
