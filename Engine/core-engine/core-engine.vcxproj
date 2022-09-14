@@ -181,6 +181,7 @@
     <ClCompile Include="src\imgui\imgui_widgets.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\graphics.cpp" />
     <ClCompile Include="src\inspector.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\math-library.cpp" />
@@ -215,6 +216,7 @@
     <ClInclude Include="include\glapp.h" />
     <ClInclude Include="include\glhelper.h" />
     <ClInclude Include="include\glslshader.h" />
+    <ClInclude Include="include\graphics.h" />
     <ClInclude Include="include\input.h" />
     <ClInclude Include="include\inspector.h" />
     <ClInclude Include="include\math-library.h" />
@@ -231,6 +233,7 @@
     <ClInclude Include="include\state-manager.h" />
     <ClInclude Include="include\system-interface.h" />
     <ClInclude Include="include\transform.h" />
+    <ClInclude Include="include\vertex-types.h" />
     <ClInclude Include="include\windows-input.h" />
   </ItemGroup>
   <ItemGroup>
