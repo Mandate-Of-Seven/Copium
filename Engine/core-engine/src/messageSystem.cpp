@@ -12,7 +12,7 @@ namespace Copium::Message
 
     void MessageSystem::init() 
     {
-        for (int i = 0; i < int(MESSAGE_TYPE::NONE); ++i)
+        for (int i = 0; i < int(MESSAGE_TYPE::MT_NONE); ++i)
         {
             messageTypeListeners.insert({ MESSAGE_TYPE(i),std::vector<IReceiver*>() });
         }

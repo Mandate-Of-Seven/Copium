@@ -1,15 +1,15 @@
 #pragma once
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
-#include "spdlog/spdlog.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
-#include "spdlog/sinks/basic_file_sink.h"
-#include "spdlog/sinks/ostream_sink.h"
-#include "spdlog/sinks/rotating_file_sink.h" // support for rotating file logging
+#include "pch.h"
+
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/sinks/ostream_sink.h>
+#include <spdlog/sinks/rotating_file_sink.h> // support for rotating file logging
 
 #include <memory>
-#include <string>
-#include <iostream>
 
 class Log
 {

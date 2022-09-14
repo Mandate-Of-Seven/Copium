@@ -91,14 +91,14 @@ int main() {
     Copium::Message::DUMMY_RECEIVER dummy12;
     Copium::Message::DUMMY_RECEIVER dummy122;
     messageSystem.init();
-    messageSystem.dispatch(Copium::Message::MESSAGE_TYPE::MOUSE_CLICKED);
+    messageSystem.dispatch(Copium::Message::MESSAGE_TYPE::MT_MOUSE_CLICKED);
     SceneManager SM;
     FrameRateController frc(100.0);
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
 
-    Copium::ScriptingEngine::init();
-    std::thread recompileThread(Copium::ScriptingEngine::tryRecompileDll);
+    //Copium::ScriptingEngine::init();
+    //std::thread recompileThread(Copium::ScriptingEngine::tryRecompileDll);
     //ScriptComponent *yolo;
     //yolo = new ScriptComponent("PlayerMovement");
     //delete yolo;
@@ -133,11 +133,7 @@ int main() {
                     SM.update_scene();         //UPDATE STATE         
                     SM.draw_scene();           //DRAW STATE
                     update();
-                    Copium::ScriptingEngine::trySwapDll(recompileThread);
-                    //float gcHeapSize = (float)mono_gc_get_heap_size();
-                    //float gcUsageSize = (float)mono_gc_get_used_size();
-                    //PRINT("GC Heap Info (Used/Avaliable): " << (gcUsageSize / 1024.0f) << " " << gcHeapSize / 1024.0f);
-                    //Check for engine close
+                    //Copium::ScriptingEngine::trySwapDll(recompileThread);
                     if (esCurrent == esQuit) {
                         SM.change_scene(gsQuit);
                     }
@@ -165,16 +161,15 @@ int main() {
             }
         }
     }
+    //recompileThread.join();
     #if _DEBUG
-    recompileThread.detach();
+    //recompileThread.detach();
     #else
     recompileThread.join();
     #endif
 
-    // Part 3
     cleanup();
-    std::cout << sandboxScene << std::endl;
-
+    //delete sandboxScene;
     std::cout << "Engine Closing...\n";
 }
 
@@ -300,7 +295,7 @@ void cleanup()
     ImGui::DestroyContext();
     // Part 1
     GLApp::cleanup();
-    Copium::ScriptingEngine::shutdown();
+    //Copium::ScriptingEngine::shutdown();
     // Part 2
     GLHelper::cleanup();
     delete Window::Inspector::selectedGameObject;

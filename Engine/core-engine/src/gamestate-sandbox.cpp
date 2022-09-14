@@ -101,9 +101,6 @@ void SceneSandbox::init_scene()
 
 	glUniform1iv(loc, maxTextures, samplers);
 
-	// Init Renderer
-	Renderer::init();
-
 	//Serialization Testingf
 	this->get_gameobjectvector().push_back(new GameObject(v2,v2,v2));
 	this->get_gameobjectvector().push_back(new GameObject(v1,v1,v1));
