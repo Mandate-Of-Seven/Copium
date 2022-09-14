@@ -22,19 +22,82 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 #include "scene.h"
 
-Scene::Scene(std::string& _filepath) : filename(_filepath) {
+Scene::Scene(std::string& _filepath) : filename(_filepath) 
+{
 
 }
-void Scene::updateScene() {
+Scene::~Scene()
+{
+	for (size_t i{ 0 }; i < gameObjects.size(); ++i)
+	{
+		if (gameObjects[i])
+		{
+			delete gameObjects[i];
+			gameObjects[i] = nullptr;
+		}
+		
+	}
+}
+
+void Scene::update_scene() 
+{
 	std::cout << "scene updated by default\n";
 }
-void Scene::drawScene() {
+void Scene::draw_scene() 
+{
 	std::cout << "scene drawn by default\n";
 }
 
-std::string Scene::getFilename() {
-	return filename;
+std::string Scene::get_filename() const {return filename;}
+void Scene::set_filename(std::string& _newFilename) {filename = _newFilename;}
+size_t Scene::get_gameobjcount() const { return gameObjects.size(); }
+std::vector<GameObject*>& Scene::get_gameobjectvector() { return gameObjects;}
+GameObject* Scene::add_gameobject(GameObject* _gameObj) 
+{
+	gameObjects.push_back(_gameObj);
+	return _gameObj;
 }
-void Scene::setFilename(std::string& _newFilename) {
-	filename = _newFilename;
+bool Scene::remove_gameobject(GameObject* _gameObj)
+{
+	//Look for specified game object in scene
+	for (size_t i{0}; i < get_gameobjectvector().size(); ++i)
+	{
+		GameObject* g = get_gameobjectvector()[i];
+		
+		if (g != _gameObj)
+			continue;
+		else
+		{
+			if (g->has_parent())
+			{
+				GameObject* p = g->get_parent();
+				p->childList().remove(g); 
+				gameObjects.erase(gameObjects.begin() + i);
+				gameObjects.shrink_to_fit();
+
+			}
+			else
+			{
+
+				if (g->is_parent())
+				{
+					for (GameObject* c : g->childList())
+					{
+						delete c;
+						c = nullptr;
+					}
+
+				}
+
+				delete g;
+				g = nullptr; 
+			}
+
+			return true;
+		}
+
+
+	}
+
+	return false;
 }

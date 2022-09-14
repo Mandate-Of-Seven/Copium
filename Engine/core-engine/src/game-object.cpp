@@ -28,7 +28,7 @@ namespace
 
 
 GameObject::GameObject()
-    : name{ defaultGameObjName }, id{0}
+    : name{ defaultGameObjName }, id{0}, parent{nullptr}
 {
 
 }
@@ -40,6 +40,7 @@ GameObject::~GameObject()
         delete pComponent;
     }
     components.clear();
+    children.clear();
 }
 
 std::list<Component*>& GameObject::Components()
@@ -49,7 +50,7 @@ std::list<Component*>& GameObject::Components()
 
 GameObject::GameObject
 (Vector3 _position, Vector3 _rotation = { 0,0,0 }, Vector3 _scale = { 1,1,1 }) 
-    : name{ defaultGameObjName }
+    : name{ defaultGameObjName }, id{0}, trans(_position, _rotation, _scale), parent{nullptr}
 {
 
 }
@@ -96,3 +97,41 @@ void GameObject::deleteComponent(Component* component)
 void GameObject::Trans(Transform _trans) {trans = _trans;}
 
 Transform const GameObject::Trans(){return trans;}
+
+void GameObject::set_name(const std::string& _name){ name = _name; }
+std::string& GameObject::get_name(){ return name; }
+
+void GameObject::set_id(GameObjectID& _id) { id = _id; }
+GameObjectID GameObject::get_id() const { return id; }
+
+bool GameObject::is_parent() const 
+{
+    if (children.size())
+        return true;
+    else
+        return false;
+}
+bool GameObject::has_parent() const
+{
+    if (parent)
+        return true;
+    else
+        return false;
+}
+GameObject* GameObject::get_parent() { return parent; }
+
+std::list<GameObject*>& GameObject::childList()
+{
+    return children;
+}
+
+bool GameObject::attach_child(GameObject* _child)
+{
+    if (!_child)
+        return false;
+
+    children.push_back(_child);
+    _child->parent = this;
+    return true;
+
+}

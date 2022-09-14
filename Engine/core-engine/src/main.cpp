@@ -30,6 +30,8 @@ an OpenGL context and implement a game loop.
 //Systems
 #include "message-system.h"
 #include "SAMPLE_RECEIVER.h"
+#include "serializer.h"
+#include "frameratecontroller.h"
 
 namespace
 {
@@ -86,14 +88,9 @@ int main() {
     messageSystem.init();
     messageSystem.dispatch(Copium::Message::MESSAGE_TYPE::MOUSE_CLICKED);
     SceneManager SM;
+    FrameRateController frc(100.0);
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
-    SM.addScene(sandboxScene);
-    std::cout << "Number of scenes: " << SM.getSceneCount() << std::endl;
-    SM.changeScene(0);;
-    //ScriptComponent* script = new ScriptComponent("CSharpTesting", PROJECT_PATH);
-    //GameObject* gameObj = new GameObject();
-    //script->Awake();
 
     Copium::ScriptingEngine::init();
     std::thread recompileThread(Copium::ScriptingEngine::tryRecompileDll);
@@ -102,6 +99,11 @@ int main() {
     //delete yolo;
     // Engine Loop
     while (!glfwWindowShouldClose(GLHelper::ptr_window) && esCurrent != esQuit) {
+
+        SM.add_scene(sandboxScene);
+        //std::cout << "Number of scenes: " << SM.get_scenecount() << std::endl;
+        SM.change_scene(0);
+
         if (esCurrent == esActive) {
             std::cout << "scene active" << std::endl;
             while (SM.current != gsQuit) {
@@ -113,15 +115,18 @@ int main() {
                 else 
                 {
                     //checks for change in scene
-                    SM.loadScene();             //LOAD STATE
+                    SM.load_scene();             //LOAD STATE
                 }
-                                   
-                SM.initScene();                 //INIT STATE
+
+
+                SM.init_scene();                 //INIT STATE
 
                 while (SM.current == SM.next) {
-                    SM.updateScene();         //UPDATE STATE         
-                    SM.drawScene();           //DRAW STATE
 
+                    frc.start();
+
+                    SM.update_scene();         //UPDATE STATE         
+                    SM.draw_scene();           //DRAW STATE
                     update();
                     Copium::ScriptingEngine::trySwapDll(recompileThread);
                     //float gcHeapSize = (float)mono_gc_get_heap_size();
@@ -129,24 +134,30 @@ int main() {
                     //PRINT("GC Heap Info (Used/Avaliable): " << (gcUsageSize / 1024.0f) << " " << gcHeapSize / 1024.0f);
                     //Check for engine close
                     if (esCurrent == esQuit) {
-                        SM.changeScene(gsQuit);
+                        SM.change_scene(gsQuit);
                     }
 
                     draw();
+
+                    frc.end();
+                    
                 }
 
-                                   
-                SM.freeScene();                 //FREE STATE
+
+
+                SM.free_scene();                 //FREE STATE
 
                 if (SM.next != gsRestart) {
-                                
-                    SM.unloadScene();           //UNLOAD STATE
+
+                    SM.unload_scene();           //UNLOAD STATE
                 }
                 SM.previous = SM.current;
                 SM.current = SM.next;
-            
-            }
 
+
+
+
+            }
         }
     }
     #if _DEBUG
@@ -157,6 +168,8 @@ int main() {
 
     // Part 3
     cleanup();
+    std::cout << sandboxScene << std::endl;
+
     std::cout << "Engine Closing...\n";
 }
 
@@ -181,7 +194,7 @@ static void update() {
     //std::cout<< "Is Shift Button Held:" << Input::isMouseButtonPressed(GLFW_KEY_LEFT_SHIFT) << std::endl;
   
     // Part 2
-    GLHelper::update_time(1.0);
+    //GLHelper::update_time(1.0);
   
     // Part 3
     //GLApp::update();

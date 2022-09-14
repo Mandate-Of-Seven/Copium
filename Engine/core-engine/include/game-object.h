@@ -38,6 +38,8 @@ private:
     std::list<Component*> components;   //Components for gameObject
     std::string name;                   //Name of gameObject
     Transform trans;                    //Transform of gameObject
+    GameObject* parent;                 //Pointer to this gameObject's parent
+    std::list<GameObject*> children;    //List of pointers to this gameObject's children
 public:
     GameObject& operator=(GameObject&) = delete;
 
@@ -114,6 +116,123 @@ public:
     */
     /**************************************************************************/
     Transform const Trans();
+
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Sets the name of the GameObject
+
+    \param	_name
+        string containing the GameObject's new name
+
+    \return
+        void
+    */
+    /*******************************************************************************/
+    void set_name(const std::string& _name);
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Gets the GameObject's name
+
+    \return
+        reference to a string that contains the name of the GameObject
+    */
+    /*******************************************************************************/
+    std::string& get_name();
+
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Sets the ID of the GameObject
+
+    \param	_id
+        the new ID to be set
+
+    \return
+        void
+    */
+    /*******************************************************************************/
+    void set_id(GameObjectID& _id);
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Gets the ID of the GameObject
+
+    \return
+        the ID of the GameObject
+    */
+    /*******************************************************************************/
+    GameObjectID get_id() const;
+
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Check if the game object is a parent
+
+    \return
+        if gameobject is a parent, return true
+        if gameobject is not a parent, return false
+    */
+    /*******************************************************************************/
+    bool is_parent() const;
+
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Check if the game object has a parent
+
+    \return
+        if gameobject has a parent, return true
+        if gameobject does not have a parent, return false
+    */
+    /*******************************************************************************/
+    bool has_parent() const;
+
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Accessor for this game object's parent (if any)
+
+    \return
+        pointer to the parent game object
+        if this game object does not have a parent, returns nullptr
+    */
+    /*******************************************************************************/
+    GameObject* get_parent();
+
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Returns a list that contains pointers to this game object's children
+
+    \return
+        reference to the list containing the pointers to this game object's children
+    */
+    /*******************************************************************************/
+    std::list<GameObject*>& childList();
+
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Attach a child to this game object
+
+    \return
+        if specified child game object is valid, return true
+        if specified child game object is not valid, return false
+    */
+    /*******************************************************************************/
+    bool attach_child(GameObject* _child);
+
 
     /***************************************************************************/
     /*!

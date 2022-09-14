@@ -24,7 +24,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <iostream>
 #include <string>
 
-enum EngineState {
+enum EngineState 
+{
 	esIdle = 0,
 	esActive,
 	esQuit,

@@ -23,10 +23,12 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "scene-manager.h"
 
 //Ctors and Dtor
-SceneManager::SceneManager() : current(0), next(0), previous(0), numberOfScenes(0), currentScene(nullptr) {
+SceneManager::SceneManager() : current(0), next(0), previous(0), numberOfScenes(0), currentScene(nullptr) 
+{
 	
 }
-SceneManager::~SceneManager() {
+SceneManager::~SceneManager() 
+{
 	for (size_t i{ 0 }; i < numberOfScenes; ++i) {
 		if (scenes[i]) {
 			delete scenes[i];
@@ -38,11 +40,13 @@ SceneManager::~SceneManager() {
 	std::cout << "Scenes left: " << numberOfScenes << std::endl;
 }
 
-void SceneManager::addScene(Scene* _newScene) {
+void SceneManager::add_scene(Scene* _newScene) 
+{
 	scenes.push_back(_newScene);
 	numberOfScenes++;
 }
-bool SceneManager::changeScene(int _id) {
+bool SceneManager::change_scene(int _id) 
+{
 	if (_id > (numberOfScenes - 1) || _id < gsQuit) {
 		std::cout << "Invalid scene ID, change terminated\n";
 		return false;
@@ -55,36 +59,38 @@ bool SceneManager::changeScene(int _id) {
 	next = _id;
 	return true;
 }
-Scene* SceneManager::getCurrentScene() {
-	return currentScene;
-}
-int SceneManager::getSceneCount() const {
-	return numberOfScenes;
-}
+Scene* SceneManager::get_currentscene() {return currentScene;}
+int SceneManager::get_scenecount() const {return numberOfScenes;}
 
 //Scene State Functions
-void SceneManager::loadScene() {
+void SceneManager::load_scene() 
+{
 	if(currentScene)
-		currentScene->loadScene();
+		currentScene->load_scene();
 }
-void SceneManager::initScene() {
+void SceneManager::init_scene() 
+{
 	if(currentScene)
-		currentScene->initScene();
+		currentScene->init_scene();
 }
-void SceneManager::updateScene() {
+void SceneManager::update_scene() 
+{
 	if (currentScene)
-		currentScene->updateScene();
+		currentScene->update_scene();
 }
-void SceneManager::drawScene() {
+void SceneManager::draw_scene() 
+{
 	if (currentScene)
-		currentScene->drawScene();
+		currentScene->draw_scene();
 }
-void SceneManager::freeScene() {
+void SceneManager::free_scene() 
+{
 	if (currentScene)
-		currentScene->freeScene();
+		currentScene->free_scene();
 }
-void SceneManager::unloadScene() {
+void SceneManager::unload_scene() 
+{
 	if (currentScene)
-		currentScene->unloadScene();
+		currentScene->unload_scene();
 }
 

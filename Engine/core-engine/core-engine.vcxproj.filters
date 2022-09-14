@@ -103,6 +103,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\system-interface.cpp">
+    <ClCompile Include="src\serializer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math-library.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\frameratecontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -174,6 +183,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\file-path.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\serializer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math-library.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\frameratecontroller.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -26,10 +26,19 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include <iostream>
 #include <string>
+#include <vector>
+#include <game-object.h>
 
-class Scene {
+class Scene 
+{
 public:
 	Scene(std::string& _filepath);
+
+	Scene() = delete;
+	Scene(Scene&) = delete;
+	Scene& operator=(Scene&) = delete;
+	~Scene();
+
 	/*******************************************************************************
 	/*!
 	*
@@ -40,7 +49,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	virtual void loadScene() = 0;
+	virtual void load_scene() = 0;
 	/*******************************************************************************
 	/*!
 	*
@@ -51,7 +60,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	virtual void initScene() = 0;
+	virtual void init_scene() = 0;
 	/*******************************************************************************
 	/*!
 	*
@@ -62,7 +71,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	virtual void updateScene();
+	virtual void update_scene();
 	/*******************************************************************************
 	/*!
 	*
@@ -73,7 +82,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	virtual void drawScene();
+	virtual void draw_scene();
 	/*******************************************************************************
 	/*!
 	*
@@ -84,7 +93,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	virtual void freeScene() = 0;
+	virtual void free_scene() = 0;
 	/*******************************************************************************
 	/*!
 	*
@@ -95,7 +104,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	virtual void unloadScene() = 0;
+	virtual void unload_scene() = 0;
 	/*******************************************************************************
 	/*!
 	*
@@ -106,7 +115,7 @@ public:
 		the filename of the file that contains this scene's data
 	*/
 	/*******************************************************************************/
-	std::string getFilename();
+	std::string get_filename() const;
 	/*******************************************************************************
 	/*!
 	*
@@ -116,15 +125,70 @@ public:
 	\param	_newFilename
 		the new filename to be set
 		
-
 	\return
 		void
 	*/
 	/*******************************************************************************/
-	void setFilename(std::string& _newFilename);
+	void set_filename(std::string& _newFilename);
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Gets the number of game objects attached to the scene
+
+	\return
+		number of game objects attached to the scene
+	*/
+	/*******************************************************************************/
+	size_t get_gameobjcount() const;
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Returns reference to the GameObject* vector
+
+	\return
+		reference to the GameObject* vector
+	*/
+	/*******************************************************************************/
+	std::vector<GameObject*>& get_gameobjectvector();
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Adds a GameObject to the scene
+
+	\param	_gameObj
+		pointer to the GameObject that is to be added to the scene
+
+	\return
+		pointer to the newly added GameObject
+	*/
+	/*******************************************************************************/
+	GameObject* add_gameobject(GameObject* _gameObj);
+
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Removes a gameobject from the scene. 
+		Note: The gameobject must be dynamically allocated
+		Note: If the gameobject has children, all children are removed from the scene
+
+	\param	_gameObj
+		pointer to the GameObject that is to be removed from the scene
+
+	\return
+		if removal is successful, return true
+		if removal is unsuccessful, return false
+	*/
+	/*******************************************************************************/
+	bool remove_gameobject(GameObject* _gameObj);
+
+
 private:
 	std::string& filename;
-	//add vector of game objs here
+	std::vector<GameObject*> gameObjects;	//Vector should be in order
 };
 
 
