@@ -1,3 +1,5 @@
+
+#include "pch.h"
 #include "frameratecontroller.h"
 
 FrameRateController::FrameRateController(double _maxFPS) :

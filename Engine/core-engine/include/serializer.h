@@ -35,8 +35,8 @@ public:
 	bool serialize(std::ofstream& _ofs, const T& _obj)
 	{
 		rapidjson::PrettyWriter<rapidjson::StringBuffer> w(sb);
-		//bool result = _obj.serialize(w);
-		bool result = T::serialize(w, _obj);
+		bool result = _obj.serialize(w);
+		//bool result = T::serialize(w, _obj);
 		std::string json(sb.GetString(), sb.GetSize());
 		_ofs << json;
 		std::cout << "serializer serialize called\n";
