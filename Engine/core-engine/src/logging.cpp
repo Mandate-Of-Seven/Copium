@@ -1,24 +1,13 @@
 #include "logging.h"
 
 std::shared_ptr<spdlog::logger> Log::consoleLogger;
+//std::shared_ptr<spdlog::logger> ostream_logger;
 
 void Log::init()
 {
-    auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-    console_sink->set_level(spdlog::level::trace);
-    console_sink->set_pattern("[%T] [%^%l%$] %v");
-
-    auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/multisink.txt", true);
-    file_sink->set_level(spdlog::level::warn);
-    file_sink->set_pattern("[source %s] [function %!] [line %#] [%H:%M:%S] %n:  %v");
-
-    spdlog::sinks_init_list sink_list = { file_sink, console_sink };
-
-
-	//spdlog::set_pattern("%^[%T] %n: %v%$");
-    spdlog::set_pattern("[source %s] [function %!] [line %#] %v");
-	consoleLogger = std::make_shared<spdlog::logger>("multi_sink", sink_list.begin(), sink_list.end());
-
+	spdlog::set_pattern("%^[%T] %n: %v%$");
+	consoleLogger = spdlog::stdout_color_mt("GameEngine");
+	consoleLogger->set_level(spdlog::level::trace);
 }
 
 std::string Log::toString(std::string msg)
@@ -34,26 +23,9 @@ std::string Log::toString(std::string msg)
     }
     spdlog::set_default_logger(ostream_logger);
     spdlog::trace(msg);
-    std::string text = _oss.str();
-    std::cout << text << std::endl;
+    std::string test = _oss.str();
+    std::cout << test << std::endl;
 
-    return text;
+    return test;
 }
 
-void Log::test()
-{
-    auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-    console_sink->set_level(spdlog::level::warn);
-    console_sink->set_pattern("[multi_sink_example] [%^%l%$] %v");
-
-    auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/multisink.txt", true);
-    file_sink->set_level(spdlog::level::trace);
-
-    spdlog::sinks_init_list sink_list = { file_sink, console_sink };
-
-    spdlog::logger logger("multi_sink", sink_list.begin(), sink_list.end());
-    logger.set_level(spdlog::level::trace);
-    logger.warn("this should appear in both console and file");
-    logger.info("this message should not appear in the console, only in the file");
-    spdlog::set_default_logger(std::make_shared<spdlog::logger>("multi_sink", spdlog::sinks_init_list({ console_sink, file_sink })));
-}

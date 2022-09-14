@@ -75,7 +75,7 @@ int main() {
     //glfwSetKeyCallback(GLHelper::ptr_window, Input::keyCallback);
     //glfwSetMouseButtonCallback(GLHelper::ptr_window, Input::mousebuttonCallback);
     //glfwSetScrollCallback(GLHelper::ptr_window, Input::mousescrollCallback);
-    glfwSetCursorPosCallback(GLHelper::ptr_window, Input::mouseposCallback);
+    //glfwSetCursorPosCallback(GLHelper::ptr_window, Input::mouseposCallback);
 
     // Enable run-time memory check for debug purposes 
     #if defined(DEBUG) | defined(_DEBUG)
@@ -246,9 +246,8 @@ static void init() {
     Console_Info("Hello");
     Console_Trace("Goodbye");
 
-    //spdlog::info("File test");
-    //File_Warn("Hello{}",3);
-
+    float i = 3.142834;
+    Log::getConsoleLogger()->warn("File: {}\n",i);
 
     // Part 3
     //GLApp::init();
