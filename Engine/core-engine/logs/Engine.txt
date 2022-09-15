@@ -1,3 +1,0 @@
-[source ] [function ] [line ] [13:07:02] multi_sink:  Test 1
-[source ] [function ] [line ] [13:07:02] multi_sink:  Test 2
-[source ] [function ] [line ] [13:07:02] multi_sink:  What happens

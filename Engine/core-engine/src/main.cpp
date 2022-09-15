@@ -19,14 +19,13 @@ an OpenGL context and implement a game loop.
 
 #include "inspector.h"
 #include "windows-input.h"
-#include "scriptingEngine.h"
+#include "scripting-system.h"
 #include "scripting.h"
 #include "logging.h"
 
 //State Manager
 #include "state-manager.h"
 #include "scene-manager.h"
-#include <thread>
 
 //Systems
 #include "message-system.h"
@@ -40,6 +39,7 @@ namespace
     bool show_demo_window = true;
     float recompileTimer = 0;
     Copium::Message::MessageSystem messageSystem;
+    //Copium::Scripting::ScriptingSystem scriptingSystem;
 }
 
 Input* Input::inputInstance = new WindowsInput();
@@ -81,7 +81,7 @@ int main() {
     glfwSetKeyCallback(GLHelper::ptr_window, quitKeyCallback);
     //glfwSetKeyCallback(GLHelper::ptr_window, Input::keyCallback);
     //glfwSetMouseButtonCallback(GLHelper::ptr_window, Input::mousebuttonCallback);
-    //glfwSetScrollCallback(GLHelper::ptr_window, Input::mousescrollCallback);
+    ////glfwSetScrollCallback(GLHelper::ptr_window, Input::mousescrollCallback);
     glfwSetCursorPosCallback(GLHelper::ptr_window, Input::mouseposCallback);
 
     // Enable run-time memory check for debug purposes 
@@ -97,8 +97,7 @@ int main() {
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
 
-    //Copium::ScriptingEngine::init();
-    //std::thread recompileThread(Copium::ScriptingEngine::tryRecompileDll);
+    //scriptingSystem.init();
     //ScriptComponent *yolo;
     //yolo = new ScriptComponent("PlayerMovement");
     //delete yolo;
@@ -133,7 +132,6 @@ int main() {
                     SM.update_scene();         //UPDATE STATE         
                     SM.draw_scene();           //DRAW STATE
                     update();
-                    //Copium::ScriptingEngine::trySwapDll(recompileThread);
                     if (esCurrent == esQuit) {
                         SM.change_scene(gsQuit);
                     }
@@ -161,12 +159,6 @@ int main() {
             }
         }
     }
-    //recompileThread.join();
-    #if _DEBUG
-    //recompileThread.detach();
-    #else
-    recompileThread.join();
-    #endif
 
     cleanup();
     //delete sandboxScene;
@@ -186,8 +178,6 @@ static void update() {
     // Part 1
     glfwPollEvents();
 
-    ;
-
     //testing
     //auto [x, y] = Input::getMousePosition();
     //std::cout << "Mouse Pos:" << x << "," << y << std::endl;
@@ -195,9 +185,6 @@ static void update() {
   
     // Part 2
     //GLHelper::update_time(1.0);
-  
-    // Part 3
-    //GLApp::update();
 
     // Start the Dear ImGui frame
     ImGui_ImplOpenGL3_NewFrame();
@@ -295,7 +282,6 @@ void cleanup()
     ImGui::DestroyContext();
     // Part 1
     GLApp::cleanup();
-    //Copium::ScriptingEngine::shutdown();
     // Part 2
     GLHelper::cleanup();
     delete Window::Inspector::selectedGameObject;

@@ -5,7 +5,7 @@
 
 #define RECOMPILE_SCRIPTS_COOLDOWN 2.f
 
-namespace Copium::ScriptingEngine::Compiler
+namespace Copium::Scripting::Compiler
 {
 
 	namespace fs = std::filesystem;

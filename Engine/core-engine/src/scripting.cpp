@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "scripting.h"
-#include "scriptingEngine.h"
 
 #define DEFAULT_SCRIPT_NAME "NewScript"
 #include <mono/jit/jit.h>
@@ -13,8 +12,8 @@ ScriptComponent::ScriptComponent(const std::string& _name)
 
 void ScriptComponent::refreshMethods()
 {
-	monoClass = Copium::ScriptingEngine::loadMonoClass(name);
-	instance = Copium::ScriptingEngine::newScriptInstance(monoClass);
+	//monoClass = Copium::ScriptingEngine::loadMonoClass(name);
+	//instance = Copium::ScriptingEngine::newScriptInstance(monoClass);
 	csAwake = mono_class_get_method_from_name(monoClass, "Awake", 0);
 	csStart = mono_class_get_method_from_name(monoClass, "Start", 0);
 	csUpdate = mono_class_get_method_from_name(monoClass, "Update", 0);
