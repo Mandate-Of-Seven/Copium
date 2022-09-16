@@ -163,6 +163,7 @@
     <ClInclude Include="include\scripting.h" />
     <ClInclude Include="include\scripting-system.h" />
     <ClInclude Include="include\serializer.h" />
+    <ClInclude Include="include\sprite.h" />
     <ClInclude Include="include\state-manager.h" />
     <ClInclude Include="include\system-interface.h" />
     <ClInclude Include="include\transform.h" />

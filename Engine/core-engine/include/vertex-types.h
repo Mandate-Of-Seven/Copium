@@ -12,11 +12,12 @@
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
-#pragma once
+#ifndef VERTEX_TYPES_H
+#define VERTEX_TYPES_H
 
 #include <glm/glm.hpp>
 
-namespace Copium::Graphics 
+namespace Copium::Graphics
 {
 	// A Vertex contains information about a vertex that is used for rendering
 	struct Vertex
@@ -28,3 +29,4 @@ namespace Copium::Graphics
 	};
 
 }
+#endif // !VERTEX_TYPES_H

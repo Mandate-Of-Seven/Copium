@@ -20,12 +20,18 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <glslshader.h>
 #include <GLFW/glfw3.h>
 #include <string>
-#include <array>
 #include <vector>
 #include "vertex-types.h"
+#include <sprite-renderer.h>
 
 namespace Copium::Graphics
 {
+	// Global variables
+	static const GLuint maxQuadCount = 100;
+	static const GLuint maxVertexCount = maxQuadCount * 4;
+	static const GLuint maxIndexCount = maxQuadCount * 6;
+	static const GLuint maxTextures = 32;
+
 	class Graphics // Inherits from System
 	{
 	public:
@@ -39,13 +45,6 @@ namespace Copium::Graphics
 
 		// Create a vertex buffer for the sprites
 		void init_geometry();
-
-		// Batch Rendering
-		void begin_batch();
-
-		void flush();
-
-		void end_batch();
 
 		// Load assets into the game
 		void load_assets();
@@ -62,18 +61,30 @@ namespace Copium::Graphics
 		// Draw the world
 		void draw_world();
 
+		// Batch Rendering
+		void batch_render();
+
+		void begin_batch();
+
+		void flush();
+
+		void end_batch();
+
+		// Quad Creation
 		void draw_quad(const glm::vec2 & position, const glm::vec2 & size, const glm::vec4 & color);
+
+		void draw_quad(const glm::vec2& position, const glm::vec2& size, int textureID);
 
 	public:
 
 		/* Camera view / Scene View *****************************************************/
-		// [Camera Here]
+		// [Camera Here] (Should be a component instead?)
 		int sceneWidth;
 		int sceneHeight;
 
 		/* Stored Texture Assets ********************************************************/
 
-		std::array<GLuint, 32> textureSlots;
+		std::vector<GLuint> textureSlots;
 		GLuint textureSlotIndex = 1; // Initializes with 1
 		GLuint whiteTexture = 0;
 		GLuint whiteTextureSlot = 0;
@@ -99,6 +110,9 @@ namespace Copium::Graphics
 
 		/* Shaders **********************************************************************/
 		GLSLShader shaderProgram; // Shader program to use
+
+		/* Stored Information ***********************************************************/
+		std::vector<Copium::Component::SpriteRenderer*> sprites;
 	};
 
 	static Graphics graphics;

@@ -110,5 +110,4 @@ public:
 	*/
 	/*******************************************************************************/
 	void setup_shader_program();
-	void setup_shader_program2();
 };

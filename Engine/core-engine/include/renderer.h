@@ -15,6 +15,9 @@
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
+
+/* DEPRECIATED */
+
 #ifndef RENDERER_H
 #define RENDERER_H
 
@@ -24,11 +27,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium::Graphics 
 {
-	// Global variables
-	static const GLuint maxQuadCount = 100;
-	static const GLuint maxVertexCount = maxQuadCount * 4;
-	static const GLuint maxIndexCount = maxQuadCount * 6;
-	static const GLuint maxTextures = 32;
 
 	// The RenderData contains data about the Renderer and its buffers
 	struct RenderData
