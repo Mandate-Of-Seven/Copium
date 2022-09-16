@@ -22,7 +22,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <pch.h>
 #include "gamestate-sandbox.h"
 
-#include <glhelper.h>
+#include <windows-system.h>
 #include <graphics.h>
 #include <renderer.h>
 #include <input.h>
@@ -38,7 +38,6 @@ GameObject g1(v2, v1, v1);
 GameObject g2(v1, v1, v2);
 
 Serializer ss;
-
 
 using namespace Copium::Graphics;
 
@@ -68,9 +67,6 @@ void SceneSandbox::load_scene()
 void SceneSandbox::init_scene() 
 {
 	std::cout << "init sandbox" << std::endl;
-
-	// Call shader program
-	setup_shader_program();
 
 	// Init Graphics System 
 	// (In the future should be stored in a vector container and looped initialised)
@@ -138,19 +134,4 @@ void SceneSandbox::unload_scene()
 	ss.serialize(os, tester);
 
 	graphics.exit();
-}
-
-void SceneSandbox::setup_shader_program()
-{
-	std::vector<std::pair<GLenum, std::string>> shdr_files;
-	shdr_files.emplace_back(std::make_pair(GL_VERTEX_SHADER, "../core-engine/Assets/shaders/shader-glsl.vert"));
-	shdr_files.emplace_back(std::make_pair(GL_FRAGMENT_SHADER, "../core-engine/Assets/shaders/shader-glsl.frag"));
-	graphics.shaderProgram.CompileLinkValidate(shdr_files);
-
-	if (GL_FALSE == graphics.shaderProgram.IsLinked())
-	{
-		std::cout << "Unable to compile/link/validate shader programs\n";
-		std::cout << graphics.shaderProgram.GetLog() << std::endl;
-		std::exit(EXIT_FAILURE);
-	}
 }

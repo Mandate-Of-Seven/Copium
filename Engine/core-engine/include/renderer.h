@@ -28,33 +28,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 namespace Copium::Graphics 
 {
 
-	// The RenderData contains data about the Renderer and its buffers
-	struct RenderData
-	{
-		GLuint drawCount = 0; // The amount of draw calls
-		GLuint quadCount = 0; // The amount of quads drawn
-
-		std::array<GLuint, maxTextures> textureSlots;
-		GLuint textureSlotIndex = 1; // Initializes with 1
-
-		GLSLShader shaderProgram; // Shader program to use
-		GLuint vertexArrayID = 0; // Handle to Vertex Array Object
-		GLuint vertexBufferID = 0; // Handle to Vertex Buffer Object
-		GLuint indexBufferID = 0; // Handle to Index Buffer
-		GLuint indexCount = 0; // Number of elements in the object
-
-		GLuint whiteTexture = 0;
-		GLuint whiteTextureSlot = 0;
-
-		Vertex* quadBuffer = nullptr;
-		Vertex* quadBufferPtr = nullptr;
-	};
-
-	static RenderData s_Data;
-
 	// Renders objects in the game / scene
-
-	// Should be Sprite and only contains data and not the function to render and draw objects (should be in graphics system)
+	// Checks objects that have the Renderer component 
 	class Renderer //(Inherits from the Component Class) 
 	{
 	public:
@@ -68,7 +43,7 @@ namespace Copium::Graphics
 			the elements of the object to be used for rendering
 		*/
 		/**************************************************************************/
-		static void init(); // Initializes the renderer by storing a handle to VAO
+		void init(); // Initializes the renderer by storing a handle to VAO
 
 		/***************************************************************************/
 		/*!
@@ -77,7 +52,7 @@ namespace Copium::Graphics
 			rendering system when exiting
 		*/
 		/**************************************************************************/
-		static void shutdown();
+		void shutdown();
 
 		// Member Functions
 
@@ -88,7 +63,7 @@ namespace Copium::Graphics
 			rendering
 		*/
 		/**************************************************************************/
-		static void begin_batch();
+		void begin_batch();
 
 		/***************************************************************************/
 		/*!
@@ -96,7 +71,7 @@ namespace Copium::Graphics
 			Flushes the buffer and renders the remaining draw calls
 		*/
 		/**************************************************************************/
-		static void flush();
+		void flush();
 
 		/***************************************************************************/
 		/*!
@@ -104,7 +79,7 @@ namespace Copium::Graphics
 			Ends the batch by clearing the buffer
 		*/
 		/**************************************************************************/
-		static void end_batch();
+		void end_batch();
 
 		/***************************************************************************/
 		/*!
@@ -118,7 +93,7 @@ namespace Copium::Graphics
 			The color of the quad
 		*/
 		/**************************************************************************/
-		static void draw_quad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
+		void draw_quad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
 
 		/***************************************************************************/
 		/*!
@@ -132,7 +107,7 @@ namespace Copium::Graphics
 			The index of the texture to be used
 		*/
 		/**************************************************************************/
-		static void draw_quad(const glm::vec2& position, const glm::vec2& size, int textureID);
+		void draw_quad(const glm::vec2& position, const glm::vec2& size, int textureID);
 
 		// Accessing Properties
 
@@ -144,7 +119,7 @@ namespace Copium::Graphics
 			The draw count
 		*/
 		/**************************************************************************/
-		//static const GLint & GetDrawCount() { return drawCount; }
+		//const GLint & GetDrawCount() { return drawCount; }
 
 		/***************************************************************************/
 		/*!
@@ -156,7 +131,7 @@ namespace Copium::Graphics
 			The draw count
 		*/
 		/**************************************************************************/
-		//static const GLint & SetDrawCount(const GLint& count) { return drawCount = count; }
+		//const GLint & SetDrawCount(const GLint& count) { return drawCount = count; }
 
 		/***************************************************************************/
 		/*!
@@ -166,7 +141,7 @@ namespace Copium::Graphics
 			The quad count
 		*/
 		/**************************************************************************/
-		//static const GLint & GetQuadCount() { return quadCount; }
+		//const GLint & GetQuadCount() { return quadCount; }
 
 		/***************************************************************************/
 		/*!
@@ -178,7 +153,7 @@ namespace Copium::Graphics
 			The quad count
 		*/
 		/**************************************************************************/
-		//static const GLint & SetQuadCount(const GLint & count) { return quadCount = count; }
+		//const GLint & SetQuadCount(const GLint & count) { return quadCount = count; }
 
 		/***************************************************************************/
 		/*!
@@ -186,12 +161,26 @@ namespace Copium::Graphics
 			Resets the number of draw and quad count
 		*/
 		/**************************************************************************/
-		static void reset_stats() { s_Data.drawCount = s_Data.quadCount = 0; };
+		//void reset_stats() { s_Data.drawCount = s_Data.quadCount = 0; };
 
 	private:
-		// Properties (Variables)
-		bool enabled; // Is the renderer enabled
+
+		/* Render Data ******************************************************************/
+
+		GLuint drawCount = 0; // The amount of draw calls
+		GLuint quadCount = 0; // The amount of quads drawn
+
+		GLuint vertexArrayID = 0; // Handle to Vertex Array Object
+		GLuint vertexBufferID = 0; // Handle to Vertex Buffer Object
+		GLuint indexBufferID = 0; // Handle to Index Buffer
+		GLuint indexCount = 0; // Number of elements in the object
+
+		//std::vector<Vertex> * quadBuffer;
+		Vertex * quadBuffer = nullptr;
+		Vertex * quadBufferPtr = nullptr;
 	};
+
+	static Renderer renderer;
 }
 
 #endif // !RENDERER_H

@@ -12,7 +12,7 @@ an OpenGL context and implement a game loop.
 ----------------------------------------------------------------------------- */
 // Extension loader library's header must be included before GLFW's header!!!
 #include "pch.h"
-#include <glhelper.h>
+#include <windows-system.h>
 #include <glapp.h>
 
 //PRECOMPILED HEADERS(Commonly used external libraries)
@@ -32,6 +32,7 @@ an OpenGL context and implement a game loop.
 #include "SAMPLE_RECEIVER.h"
 #include "serializer.h"
 #include "frameratecontroller.h"
+#include "graphics.h"
 
 namespace
 {
@@ -41,6 +42,9 @@ namespace
     Copium::Message::MessageSystem messageSystem;
     //Copium::Scripting::ScriptingSystem scriptingSystem;
 }
+
+// Bean:: Remove after including namespace
+using namespace Copium;
 
 Input* Input::inputInstance = new WindowsInput();
 
@@ -78,11 +82,11 @@ Note that the C++ compiler will insert a return 0 statement if one is missing.
 int main() {
     init();
     init_statemanager(esActive);
-    glfwSetKeyCallback(GLHelper::ptr_window, quitKeyCallback);
+    glfwSetKeyCallback(windowsSystem.get_window(), quitKeyCallback);
     //glfwSetKeyCallback(GLHelper::ptr_window, Input::keyCallback);
     //glfwSetMouseButtonCallback(GLHelper::ptr_window, Input::mousebuttonCallback);
-    ////glfwSetScrollCallback(GLHelper::ptr_window, Input::mousescrollCallback);
-    glfwSetCursorPosCallback(GLHelper::ptr_window, Input::mouseposCallback);
+    //glfwSetScrollCallback(GLHelper::ptr_window, Input::mousescrollCallback);
+    //glfwSetCursorPosCallback(GLHelper::ptr_window, Input::mouseposCallback);
 
     // Enable run-time memory check for debug purposes 
     #if defined(DEBUG) | defined(_DEBUG)
@@ -102,7 +106,7 @@ int main() {
     //yolo = new ScriptComponent("PlayerMovement");
     //delete yolo;
     // Engine Loop
-    while (!glfwWindowShouldClose(GLHelper::ptr_window) && esCurrent != esQuit) {
+    while (!glfwWindowShouldClose(windowsSystem.get_window()) && esCurrent != esQuit) {
 
         SM.add_scene(sandboxScene);
         //std::cout << "Number of scenes: " << SM.get_scenecount() << std::endl;
@@ -166,6 +170,42 @@ int main() {
 }
 
 /*  _________________________________________________________________________ */
+/*! init
+@param none
+@return none
+
+The OpenGL context initialization stuff is abstracted away in GLHelper::init.
+The specific initialization of OpenGL state and geometry data is
+abstracted away in GLApp::init
+*/
+static void init()
+{
+    // Bean: This should be handles by ISystem
+    windowsSystem.init(1600, 900, "Copium");
+
+    //imgui
+    ImGui::CreateContext();
+    ImGuiIO & io = ImGui::GetIO(); (void) io;
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(windowsSystem.get_window(), true);
+    ImGui_ImplOpenGL3_Init("#version 330");
+
+
+    Window::Inspector::init();
+    Window::Inspector::selectedGameObject = new GameObject();
+
+    Log::init();
+    Console_Critical("Test 1");
+    Console_Error("Test 2");
+    Console_Warn("What happens");
+    Console_Info("Hello");
+    Console_Trace("Goodbye");
+
+    //spdlog::info("File test");
+    //File_Warn("Hello{}",3);
+}
+
+/*  _________________________________________________________________________ */
 /*! update
 @param none
 @return none
@@ -174,17 +214,15 @@ Uses GLHelper::GLFWWindow* to get handle to OpenGL context.
 For now, there are no objects to animate nor keyboard, mouse button click,
 mouse movement, and mouse scroller events to be processed.
 */
-static void update() {
-    // Part 1
-    glfwPollEvents();
+static void update()
+{
+    // Bean: This should be handles by ISystem
+    windowsSystem.update();
 
     //testing
     //auto [x, y] = Input::getMousePosition();
     //std::cout << "Mouse Pos:" << x << "," << y << std::endl;
     //std::cout<< "Is Shift Button Held:" << Input::isMouseButtonPressed(GLFW_KEY_LEFT_SHIFT) << std::endl;
-  
-    // Part 2
-    //GLHelper::update_time(1.0);
 
     // Start the Dear ImGui frame
     ImGui_ImplOpenGL3_NewFrame();
@@ -208,62 +246,14 @@ static void update() {
 Call application to draw and then swap front and back frame buffers ...
 Uses GLHelper::GLFWWindow* to get handle to OpenGL context.
 */
-static void draw() {
-    // Part 1
-
-
-    //GLApp::draw();
+static void draw() 
+{
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-    // Part 2: swap buffers: front <-> back
-    glfwSwapBuffers(GLHelper::ptr_window);
-}
-
-/*  _________________________________________________________________________ */
-/*! init
-@param none
-@return none
-
-The OpenGL context initialization stuff is abstracted away in GLHelper::init.
-The specific initialization of OpenGL state and geometry data is
-abstracted away in GLApp::init
-*/
-static void init() {
-    if (!GLHelper::init(1600, 900, "Engine")) {
-        std::cout << "Unable to create OpenGL context" << std::endl;
-        std::exit(EXIT_FAILURE);
-    }
-
-
-    //imgui
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    ImGui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(GLHelper::ptr_window, true);
-    ImGui_ImplOpenGL3_Init("#version 330");
-
-
-    Window::Inspector::init();
-    Window::Inspector::selectedGameObject = new GameObject();
-
-    // Part 2
-    GLHelper::print_specs();
-
-    Log::init();
-    Console_Critical("Test 1");
-    Console_Error("Test 2");
-    Console_Warn("What happens");
-    Console_Info("Hello");
-    Console_Trace("Goodbye");
-
-    //spdlog::info("File test");
-    //File_Warn("Hello{}",3);
-
-
-    // Part 3
-    //GLApp::init();
+    // Bean: This should be handles by ISystem
+    windowsSystem.draw();
 }
 
 /*  _________________________________________________________________________ */
@@ -282,8 +272,7 @@ void cleanup()
     ImGui::DestroyContext();
     // Part 1
     GLApp::cleanup();
-    // Part 2
-    GLHelper::cleanup();
+
     delete Window::Inspector::selectedGameObject;
     Input::destroy();
 }

@@ -1,5 +1,5 @@
 /*!***************************************************************************************
-\file			sprite.h
+\file			sprite-renderer.h
 \project
 \author			Sean Ngo
 
@@ -17,7 +17,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define SPRITE_RENDERER_H
 
 #include <glm/glm.hpp>
-#include <component.h>
+#include <renderer.h>
 #include <cstring>
 
 namespace Copium::Component
@@ -26,7 +26,7 @@ namespace Copium::Component
 	class Texture;
 
 	// Depends on Transform
-	class SpriteRenderer final
+	class SpriteRenderer final : public Graphics::Renderer
 	{
 	public:
 		// Serialization inherited from Component

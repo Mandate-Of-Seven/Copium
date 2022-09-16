@@ -30,7 +30,7 @@
     <ClCompile Include="src\glapp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\glhelper.cpp">
+    <ClCompile Include="src\windows-system.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\glslshader.cpp">
@@ -125,7 +125,7 @@
     <ClInclude Include="include\glapp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\glhelper.h">
+    <ClInclude Include="include\windows-system.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\glslshader.h">

@@ -90,7 +90,7 @@
     <ClCompile Include="src\game-object.cpp" />
     <ClCompile Include="src\gamestate-sandbox.cpp" />
     <ClCompile Include="src\glapp.cpp" />
-    <ClCompile Include="src\glhelper.cpp" />
+    <ClCompile Include="src\windows-system.cpp" />
     <ClCompile Include="src\glslshader.cpp" />
     <ClCompile Include="src\graphics.cpp" />
     <ClCompile Include="src\imgui\imgui.cpp">
@@ -146,7 +146,7 @@
     <ClInclude Include="include\game-object.h" />
     <ClInclude Include="include\gamestate-sandbox.h" />
     <ClInclude Include="include\glapp.h" />
-    <ClInclude Include="include\glhelper.h" />
+    <ClInclude Include="include\windows-system.h" />
     <ClInclude Include="include\glslshader.h" />
     <ClInclude Include="include\graphics.h" />
     <ClInclude Include="include\input.h" />
@@ -163,7 +163,6 @@
     <ClInclude Include="include\scripting.h" />
     <ClInclude Include="include\scripting-system.h" />
     <ClInclude Include="include\serializer.h" />
-    <ClInclude Include="include\sprite.h" />
     <ClInclude Include="include\state-manager.h" />
     <ClInclude Include="include\system-interface.h" />
     <ClInclude Include="include\transform.h" />
