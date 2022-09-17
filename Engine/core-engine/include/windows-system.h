@@ -42,7 +42,6 @@ namespace Copium
 		static void framebuffer_size_callback(GLFWwindow * _window, int _width, int _height);
 
 		// Get and Set Functions
-
 		void set_window_dimensions(int _width, int _height) { screenWidth = _width; screenHeight = _height; }
 
 		std::string get_title() { return title; }

@@ -20,8 +20,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "system-interface.h"
 #include <glslshader.h>
 #include <GLFW/glfw3.h>
-#include <string>
-#include <vector>
 #include "vertex-types.h"
 #include <sprite-renderer.h>
 
@@ -75,9 +73,9 @@ namespace Copium::Graphics
 
 	public:
 		/* Camera View / Scene View *****************************************************/
-		// [Camera Here] (Should be a component instead?)
-		int sceneWidth;
-		int sceneHeight;
+		// [Camera Here] (Bean: Should be a component instead?)
+		static int sceneWidth;
+		static int sceneHeight;
 
 		/* Stored Texture Assets ********************************************************/
 		std::vector<GLuint> textureSlots;

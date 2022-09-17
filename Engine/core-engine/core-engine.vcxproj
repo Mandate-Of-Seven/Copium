@@ -86,6 +86,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\component.cpp" />
+    <ClCompile Include="src\editor-layer.cpp" />
+    <ClCompile Include="src\editor-sceneview.cpp" />
+    <ClCompile Include="src\framebuffer.cpp" />
     <ClCompile Include="src\frameratecontroller.cpp" />
     <ClCompile Include="src\game-object.cpp" />
     <ClCompile Include="src\gamestate-sandbox.cpp" />
@@ -141,7 +144,10 @@
   <ItemGroup>
     <ClInclude Include="include\compiler.h" />
     <ClInclude Include="include\component.h" />
+    <ClInclude Include="include\editor-layer.h" />
+    <ClInclude Include="include\editor-sceneview.h" />
     <ClInclude Include="include\file-path.h" />
+    <ClInclude Include="include\framebuffer.h" />
     <ClInclude Include="include\frameratecontroller.h" />
     <ClInclude Include="include\game-object.h" />
     <ClInclude Include="include\gamestate-sandbox.h" />

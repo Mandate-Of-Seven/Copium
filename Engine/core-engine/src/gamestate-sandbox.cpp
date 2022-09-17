@@ -72,15 +72,6 @@ void SceneSandbox::init_scene()
 	// (In the future should be stored in a vector container and looped initialised)
 	graphics.init();
 
-	graphics.shaderProgram.Use();
-	GLuint loc = glGetUniformLocation(graphics.shaderProgram.GetHandle(), "uTextures");
-	GLint samplers[maxTextures];
-
-	for (GLuint i = 0; i < maxTextures; i++)
-		samplers[i] = i;
-
-	glUniform1iv(loc, maxTextures, samplers);
-
 	//Serialization Testingf
 	this->get_gameobjectvector().push_back(new GameObject(v2,v2,v2));
 	this->get_gameobjectvector().push_back(new GameObject(v1,v1,v1));
@@ -96,7 +87,6 @@ void SceneSandbox::init_scene()
 
 	Copium::Math::Vec2 b1(1,1);
 	std::cout << b1/2;
-
 }
 
 void SceneSandbox::update_scene() 
@@ -133,5 +123,6 @@ void SceneSandbox::unload_scene()
 	Copium::Math::Vec2 tester(3, 4);
 	ss.serialize(os, tester);
 
+	// Bean: This should be handles by ISystem
 	graphics.exit();
 }

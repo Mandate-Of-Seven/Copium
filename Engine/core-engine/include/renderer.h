@@ -163,6 +163,8 @@ namespace Copium::Graphics
 		/**************************************************************************/
 		//void reset_stats() { s_Data.drawCount = s_Data.quadCount = 0; };
 
+		GLuint & get_vertex_array_id() { return vertexArrayID; }
+
 	private:
 
 		/* Render Data ******************************************************************/
@@ -175,7 +177,6 @@ namespace Copium::Graphics
 		GLuint indexBufferID = 0; // Handle to Index Buffer
 		GLuint indexCount = 0; // Number of elements in the object
 
-		//std::vector<Vertex> * quadBuffer;
 		Vertex * quadBuffer = nullptr;
 		Vertex * quadBufferPtr = nullptr;
 	};

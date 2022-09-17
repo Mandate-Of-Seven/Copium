@@ -95,6 +95,12 @@ namespace Copium
 
     void WindowsSystem::draw()
     {
+        // Printing to Windows Title Bar
+        std::stringstream sstr;
+        sstr << std::fixed << std::setprecision(2) << title << " | FPS: " << GLHelper::fps 
+            << " | Resolution: " << screenWidth << " by " << screenHeight;
+        glfwSetWindowTitle(window, sstr.str().c_str());
+
         glfwSwapBuffers(window);
     }
 

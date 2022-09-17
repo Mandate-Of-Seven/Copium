@@ -36,6 +36,9 @@ namespace Copium::Component
 		glm::vec2 const get_position() { return position; }
 		void const set_position(glm::vec2 _position) { position = _position; }
 
+		glm::vec3 const get_rotation() { return rotation; }
+		void const set_rotation(glm::vec3 _rotation) { rotation = _rotation; }
+
 		glm::vec2 const get_size() { return size; }
 		void const set_size(glm::vec2 _size) { size = _size; }
 
@@ -51,6 +54,7 @@ namespace Copium::Component
 		Transform* transform; // The transform of this sprite ( Bean: it refer to the component in the gameobject )
 
 		glm::vec2 position; // Temporary variable to access the position
+		glm::vec3 rotation; // Temporary variable for the rotation of the sprite
 		glm::vec2 size; // The size of the sprite in pixels ( Bean: different from the scale of the gameobject )
 		glm::vec4 color; // The blended color of this sprite
 	};

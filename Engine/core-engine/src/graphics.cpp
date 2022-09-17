@@ -16,6 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 #include "pch.h"
 #include <graphics.h>
+#include <framebuffer.h>
 #include <renderer.h>
 #include <input.h>
 #include <windows-system.h>
@@ -25,6 +26,9 @@ namespace Copium::Graphics
 	using Copium::WindowsSystem;
 
 	// Global variables
+	/*int Graphics::sceneWidth;
+	int Graphics::sceneHeight;*/
+
 	GLfloat movement_x = 0.f, movement_y = 0.f;
 
 	void Graphics::init()
@@ -32,19 +36,31 @@ namespace Copium::Graphics
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 
 		// Initialise Viewport
-		sceneWidth = 1280;
-		sceneHeight = 720;
-		glViewport((windowsSystem.get_window_width() - sceneWidth) / 2, (windowsSystem.get_window_height() - sceneHeight) / 2, sceneWidth, sceneHeight);
+		//sceneWidth = 1280;
+		//sceneHeight = 720;
+		//glViewport((windowsSystem.get_window_width() - sceneWidth) / 2, (windowsSystem.get_window_height() - sceneHeight) / 2, sceneWidth, sceneHeight);
+		glViewport(0, 0, windowsSystem.get_window_width(), windowsSystem.get_window_height());
 
 		// Setup Shaders
 		setup_shader_program();
 
 		// Initialise Renderer
 		renderer.init();
+
+		// Bind textures to fragment shader
+		shaderProgram.Use();
+		GLuint loc = glGetUniformLocation(shaderProgram.GetHandle(), "uTextures");
+		GLint samplers[maxTextures];
+
+		for (GLuint i = 0; i < maxTextures; i++)
+			samplers[i] = i;
+
+		glUniform1iv(loc, maxTextures, samplers);
 	}
 
 	void Graphics::update()
 	{
+		glClearColor(1.f, 1.f, 1.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		if (Input::isKeyPressed(GLFW_KEY_A))
@@ -87,7 +103,7 @@ namespace Copium::Graphics
 		{
 			PRINT("Number of sprites: " << sprites.size());
 		}
-
+		
 		draw_world();
 	}
 
@@ -159,6 +175,10 @@ namespace Copium::Graphics
 		// Include a loop of draw calls
 
 		// One draw call
+		framebuffer.bind();
+
+		glClearColor(0.7f, 0.7f, 0.7f, 1.f);
+		glClear(GL_COLOR_BUFFER_BIT);
 
 		renderer.begin_batch();
 
@@ -183,6 +203,8 @@ namespace Copium::Graphics
 		renderer.end_batch();
 
 		renderer.flush();
+
+		framebuffer.unbind();
 
 		shaderProgram.UnUse();
 	}
