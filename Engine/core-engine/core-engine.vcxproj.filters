@@ -66,9 +66,6 @@
     <ClCompile Include="src\component.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\pch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\imgui\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -90,22 +87,13 @@
     <ClCompile Include="src\imgui\imgui_tables.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\scripting-system.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\scripting.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SAMPLE_RECEIVER.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\message-system.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\system-interface.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\frameratecontroller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math-library.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\serializer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\graphics.cpp">
@@ -114,10 +102,25 @@
     <ClCompile Include="src\logging.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\math-library.cpp">
+    <ClCompile Include="src\message-system.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\serializer.cpp">
+    <ClCompile Include="src\SAMPLE_RECEIVER.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scripting.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scripting-system.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\system-interface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game-object-factory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -164,28 +167,16 @@
     <ClInclude Include="include\state-manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\pch.h">
+    <ClInclude Include="include\frameratecontroller.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\scripting-system.h">
+    <ClInclude Include="include\math-library.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\scripting.h">
+    <ClInclude Include="include\serializer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\compiler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\system-interface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SAMPLE_RECEIVER.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\message-system.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\message-types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\file-path.h">
@@ -194,19 +185,34 @@
     <ClInclude Include="include\graphics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\frameratecontroller.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\math-library.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\logging.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\serializer.h">
+    <ClInclude Include="include\message-system.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\message-types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAMPLE_RECEIVER.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scripting.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scripting-system.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\system-interface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\vertex-types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\game-object-factory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\copium-core.h">

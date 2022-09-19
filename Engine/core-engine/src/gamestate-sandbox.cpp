@@ -37,7 +37,7 @@ Copium::Math::Vec2 vv(1, 10);
 GameObject g1(v2, v1, v1);
 GameObject g2(v1, v1, v2);
 
-Serializer ss;
+//Serializer ss;
 
 
 using namespace Copium::Graphics;
@@ -50,19 +50,12 @@ SceneSandbox::SceneSandbox(std::string& _filepath) : Scene(_filepath)
 void SceneSandbox::load_scene() 
 {
 	std::cout << "load sandbox" << std::endl;
-	/*
-	deserialize_scene("sandbox.dat", this);
-	std::cout << "Number of Game Objects deserialised: " << this->get_gameobjcount() << std::endl;
-	for (size_t i{ 0 }; i < this->get_gameobjcount(); ++i)
-	{
-		GameObject* tmp = this->get_gameobjectvector()[i];
-		std::cout << "Game Object ID: " << tmp->get_id() << std::endl;
-		std::cout << "Game Object Name: " << tmp->get_name() << std::endl;
-		Transform t(tmp->Trans());
-		std::cout << "Position: " << t.Position()[0] << ',' << t.Position()[1] << ',' << t.Position()[2] << std::endl;
-	}*/
+	//std::string filepath("Data\\sandbox.json");
+	//JsonSerializer js(filepath);
+	//Copium::Math::Vec2 alpha;
+	//load(js, alpha);
 
-
+	//std::cout << alpha;
 
 }
 void SceneSandbox::init_scene() 
@@ -158,22 +151,12 @@ void SceneSandbox::draw_scene()
 void SceneSandbox::free_scene() 
 {
 	std::cout << "free sandbox" << std::endl;
-	//for(size_t i{ 0 }; i < this->get_gameobjcount(); ++i)
-	//{
-	//}
+
 }
 
 void SceneSandbox::unload_scene() 
 {
 	std::cout << "unload sandbox" << std::endl;
-	std::cout << "does file exist: " << does_file_exist("sandbox.dat") << std::endl;
-	serialize_scene("sandbox.dat", this);
-	//JSON
-	std::ofstream os("Data\\sandbox.json", std::ios::out);
-	if (!os)
-		std::cout << "file not open\n";
-	Copium::Math::Vec2 tester(3, 4);
-	ss.serialize(os, tester);
 	Renderer::shutdown();
 
 	graphics.exit();

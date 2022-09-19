@@ -32,7 +32,6 @@ an OpenGL context and implement a game loop.
 #include "SAMPLE_RECEIVER.h"
 #include "serializer.h"
 #include "frameratecontroller.h"
-
 namespace
 {
     // Our state
@@ -55,8 +54,8 @@ static void update();
 static void init();
 static void cleanup();
 
-void quitKeyCallback(GLFWwindow*, int, int, int, int);
-
+void quit_key_callback(GLFWwindow*, int, int, int, int);
+bool load_config(std::string& _filename, GLint& _w, GLint& _h);
 
 ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -78,7 +77,7 @@ Note that the C++ compiler will insert a return 0 statement if one is missing.
 int main() {
     init();
     init_statemanager(esActive);
-    glfwSetKeyCallback(GLHelper::ptr_window, quitKeyCallback);
+    glfwSetKeyCallback(GLHelper::ptr_window, quit_key_callback);
     //glfwSetKeyCallback(GLHelper::ptr_window, Input::keyCallback);
     //glfwSetMouseButtonCallback(GLHelper::ptr_window, Input::mousebuttonCallback);
     ////glfwSetScrollCallback(GLHelper::ptr_window, Input::mousescrollCallback);
@@ -232,7 +231,16 @@ The specific initialization of OpenGL state and geometry data is
 abstracted away in GLApp::init
 */
 static void init() {
-    if (!GLHelper::init(1600, 900, "Engine")) {
+
+    // Load config data from config file
+    GLint width{}, height{};
+    std::string configFile("Data\\config.json");
+    if (!load_config(configFile, width, height)) {
+        std::cout << "Load config failed\n";
+        std::exit(EXIT_FAILURE);
+    }
+
+    if (!GLHelper::init(width, height, "Engine")) {
         std::cout << "Unable to create OpenGL context" << std::endl;
         std::exit(EXIT_FAILURE);
     }
@@ -289,7 +297,7 @@ void cleanup()
     Input::destroy();
 }
 
-void quitKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) 
+void quit_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) 
 {
     if (key == GLFW_KEY_Q && action == GLFW_PRESS) 
     {
@@ -297,5 +305,35 @@ void quitKeyCallback(GLFWwindow* window, int key, int scancode, int action, int 
         change_enginestate(esQuit);
         std::cout << "Q was pressed" << std::endl;
     }
+}
+
+bool load_config(std::string& _filename, GLint& _w, GLint& _h)
+{
+    std::ifstream ifs(_filename);
+    if (!ifs)
+    {
+        std::cout << "Error opening config json file!\n";
+        return false;
+    }
+    rapidjson::IStreamWrapper isw(ifs);
+    rapidjson::Document doc;
+    doc.ParseStream(isw);
+    if (doc.HasMember("Width"))
+    {
+        _w = doc["Width"].GetInt();
+    }
+    else {
+        return false;
+    }
+    if (doc.HasMember("Height"))
+    {
+        _h = doc["Height"].GetInt();
+    }
+    else {
+        return false;
+    }
+    std::cout << "Loading from config...\n" << "Window Width:" << _w << '\n'
+        << "Window Height:" << _h << std::endl;
+    return true;
 }
 

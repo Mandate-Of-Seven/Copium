@@ -188,6 +188,7 @@ public:
 
 private:
 	std::string& filename;
+	std::string name;
 	std::vector<GameObject*> gameObjects;	//Vector should be in order
 };
 
