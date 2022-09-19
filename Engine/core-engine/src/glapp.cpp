@@ -14,10 +14,12 @@ to OpenGL implementations.
 ----------------------------------------------------------------------------- */
 #include "pch.h"
 #include <glapp.h>
-#include <glhelper.h>
+#include <windows-system.h>
 
 /*                                                   objects with file scope
 ----------------------------------------------------------------------------- */
+
+using namespace Copium;
 
 void GLApp::init() 
 {
@@ -25,7 +27,7 @@ void GLApp::init()
 	glClearColor(0.f, 1.f, 0.f, 1.f);
 
 	// Part 2 : Use the entire window as viewport ...
-	glViewport(0, 0, GLHelper::width, GLHelper::height);
+	glViewport(0, 0, windowsSystem.get_window_width(), windowsSystem.get_window_height());
 
 	// Part 3 : Initialise VAO and create shader program
 	mdl.setup_vao();
@@ -58,10 +60,10 @@ void GLApp::draw() {
 	mdl.draw();
 	
 	// Printing to Windows Title Bar
-	std::stringstream sstr;
-	sstr << std::fixed << std::setprecision(2) << GLHelper::title 
+	/*std::stringstream sstr;
+	sstr << std::fixed << std::setprecision(2) << windowsSystem.get_title()
 		<< " | " "Beta" << " | " << GLHelper::fps;
-	glfwSetWindowTitle(GLHelper::ptr_window, sstr.str().c_str());
+	glfwSetWindowTitle(Copium::window, sstr.str().c_str());*/
 }
 
 void GLApp::cleanup() {

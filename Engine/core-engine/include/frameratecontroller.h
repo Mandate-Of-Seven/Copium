@@ -16,7 +16,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************/
 #ifndef FRAMERATECONTROLLER_H
 #define FRAMERATECONTROLLER_H
-#include "glhelper.h"
 
 class FrameRateController {
 public:

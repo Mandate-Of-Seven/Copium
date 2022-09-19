@@ -17,15 +17,20 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
+#include "system-interface.h"
 #include <glslshader.h>
 #include <GLFW/glfw3.h>
-#include <string>
-#include <array>
-#include <vector>
 #include "vertex-types.h"
+#include <sprite-renderer.h>
 
 namespace Copium::Graphics
 {
+	// Global variables
+	static const GLuint maxQuadCount = 100; // Number of sprites per batch
+	static const GLuint maxVertexCount = maxQuadCount * 4;
+	static const GLuint maxIndexCount = maxQuadCount * 6;
+	static const GLuint maxTextures = 32;
+
 	class Graphics // Inherits from System
 	{
 	public:
@@ -35,23 +40,15 @@ namespace Copium::Graphics
 
 		void exit();
 
+		std::vector<GLuint> & get_texture_slots() { return textureSlots; }
+		GLuint & get_texture_slot_index() { return textureSlotIndex; }
+		GLuint & get_white_texture() { return whiteTexture; }
+		GLuint & get_white_texture_slot() { return whiteTextureSlot; }
+
 	private:
 
-		// Create a vertex buffer for the sprites
-		void init_geometry();
-
-		// Batch Rendering
-		void begin_batch();
-
-		void flush();
-
-		void end_batch();
-
-		// Load assets into the game
-		void load_assets();
-
-		// Load a texture into the game
-		void load_texture(const std::string& filename);
+		// Setup default shaders for the graphics system
+		void setup_shader_program();
 
 		// Setup default world, view and projection matrices (May include orthographic)
 		void setup_matrices();
@@ -62,35 +59,29 @@ namespace Copium::Graphics
 		// Draw the world
 		void draw_world();
 
-		void draw_quad(const glm::vec2 & position, const glm::vec2 & size, const glm::vec4 & color);
+		// Batch Rendering
+		void batch_render();
+
+		// Create a vertex buffer for the sprites
+		void init_geometry();
+
+		// Load assets into the game
+		void load_assets();
+
+		// Load a texture into the game
+		void load_texture(const std::string & filename);
 
 	public:
-
-		/* Camera view / Scene View *****************************************************/
-		// [Camera Here]
-		int sceneWidth;
-		int sceneHeight;
+		/* Camera View / Scene View *****************************************************/
+		// [Camera Here] (Bean: Should be a component instead?)
+		static int sceneWidth;
+		static int sceneHeight;
 
 		/* Stored Texture Assets ********************************************************/
-
-		std::array<GLuint, 32> textureSlots;
+		std::vector<GLuint> textureSlots;
 		GLuint textureSlotIndex = 1; // Initializes with 1
 		GLuint whiteTexture = 0;
 		GLuint whiteTextureSlot = 0;
-
-		/* Render Data ******************************************************************/
-
-		GLuint drawCount = 0; // The amount of draw calls
-		GLuint quadCount = 0; // The amount of quads drawn
-
-		GLuint vertexArrayID = 0; // Handle to Vertex Array Object
-		GLuint vertexBufferID = 0; // Handle to Vertex Buffer Object
-		GLuint indexBufferID = 0; // Handle to Index Buffer
-		GLuint indexCount = 0; // Number of elements in the object
-
-		//std::vector<Vertex> * quadBuffer;
-		Vertex * quadBuffer = nullptr;
-		Vertex * quadBufferPtr = nullptr;
 
 		/* Projections & Matrices *******************************************************/
 		glm::mat4 projMatrix;
@@ -99,6 +90,9 @@ namespace Copium::Graphics
 
 		/* Shaders **********************************************************************/
 		GLSLShader shaderProgram; // Shader program to use
+
+		/* Stored Information ***********************************************************/
+		std::vector<Copium::Component::SpriteRenderer *> sprites;
 	};
 
 	static Graphics graphics;

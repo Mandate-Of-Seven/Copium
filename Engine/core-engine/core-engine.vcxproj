@@ -86,11 +86,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\component.cpp" />
+    <ClCompile Include="src\editor-layer.cpp" />
+    <ClCompile Include="src\editor-sceneview.cpp" />
+    <ClCompile Include="src\framebuffer.cpp" />
     <ClCompile Include="src\frameratecontroller.cpp" />
     <ClCompile Include="src\game-object.cpp" />
     <ClCompile Include="src\gamestate-sandbox.cpp" />
     <ClCompile Include="src\glapp.cpp" />
-    <ClCompile Include="src\glhelper.cpp" />
+    <ClCompile Include="src\windows-system.cpp" />
     <ClCompile Include="src\glslshader.cpp" />
     <ClCompile Include="src\graphics.cpp" />
     <ClCompile Include="src\imgui\imgui.cpp">
@@ -142,12 +145,15 @@
     <ClInclude Include="include\compiler.h" />
     <ClInclude Include="include\component.h" />
     <ClInclude Include="include\copium-core.h" />
+    <ClInclude Include="include\editor-layer.h" />
+    <ClInclude Include="include\editor-sceneview.h" />
     <ClInclude Include="include\file-path.h" />
+    <ClInclude Include="include\framebuffer.h" />
     <ClInclude Include="include\frameratecontroller.h" />
     <ClInclude Include="include\game-object.h" />
     <ClInclude Include="include\gamestate-sandbox.h" />
     <ClInclude Include="include\glapp.h" />
-    <ClInclude Include="include\glhelper.h" />
+    <ClInclude Include="include\windows-system.h" />
     <ClInclude Include="include\glslshader.h" />
     <ClInclude Include="include\graphics.h" />
     <ClInclude Include="include\input.h" />

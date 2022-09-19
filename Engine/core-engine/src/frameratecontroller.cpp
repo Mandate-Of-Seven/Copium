@@ -1,6 +1,10 @@
 
 #include "pch.h"
 #include "frameratecontroller.h"
+#include "windows-system.h"
+
+// Bean: remove after encapsulating the namespace
+using namespace Copium;
 
 FrameRateController::FrameRateController(double _maxFPS) :
 	frameCount{0}, maxFrameRate{ _maxFPS }, frameRate{ _maxFPS }, minFrameTime{ 1 / _maxFPS },

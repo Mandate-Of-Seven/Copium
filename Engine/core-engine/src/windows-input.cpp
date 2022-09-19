@@ -1,56 +1,56 @@
 
 #include "pch.h"
 #include "windows-input.h"
-#include <glhelper.h>
-#include <GLFW/glfw3.h>  
+#include "windows-system.h"
 #include <input.h>
 #include <iostream>
 
+using namespace Copium;
 
 bool WindowsInput::isKeyPressedImpl(int keycode)
 {
-    auto& window = GLHelper::ptr_window;
-    auto state = glfwGetKey(window,keycode);
+    auto& window = *windowsSystem.get_window();
+    auto state = glfwGetKey(&window,keycode);
     return state == GLFW_PRESS;
 }
 
 //currently doesnt work
 bool WindowsInput::isKeyHeldImpl(int keycode)
 {
-    auto& window = GLHelper::ptr_window;
-    auto state = glfwGetKey(window, keycode);
+    auto& window = *windowsSystem.get_window();
+    auto state = glfwGetKey(&window, keycode);
     return state == GLFW_REPEAT;
 }
 
 bool WindowsInput::isMouseButtonPressedImpl(int button)
 {
-    auto& window = GLHelper::ptr_window;
-    auto state = glfwGetMouseButton(window, button);
+    auto& window = *windowsSystem.get_window();
+    auto state = glfwGetMouseButton(&window, button);
     return state == GLFW_PRESS;
 }
 
 std::pair<float, float> WindowsInput::getMousePositionImpl()
 {
-    auto& window = GLHelper::ptr_window;
+    auto& window = *windowsSystem.get_window();
     double xPos, yPos;
-    glfwGetCursorPos(window, &xPos, &yPos);
+    glfwGetCursorPos(&window, &xPos, &yPos);
 
     if (xPos < 0)
     {
         xPos = 0;
     }
-    else if (xPos > GLHelper::width)
+    else if (xPos > windowsSystem.get_window_width())
     {
-        xPos = GLHelper::width;
+        xPos = windowsSystem.get_window_width();
     }
 
     if (yPos < 0)
     {
         yPos = 0;
     }
-    else if (yPos > GLHelper::height)
+    else if (yPos > windowsSystem.get_window_height())
     {
-        yPos = GLHelper::height;
+        yPos = windowsSystem.get_window_height();
     }
 
     return { (float)xPos , (float)yPos };
