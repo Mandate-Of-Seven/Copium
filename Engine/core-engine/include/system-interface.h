@@ -4,10 +4,27 @@
 
 #define SYSTEM_INTERFACE_H
 
-#define CLASS_SYSTEM(TYPE) class TYPE : public ISystem, public Singleton<TYPE>
+/**************************************************************************/
+/*!
+  \brief
+    Macro to define start of the class to abstract implementation of Singleton
+    and ISystem into a single call
+  \param TYPE
+    Class name
+*/
+/**************************************************************************/
+#define CLASS_SYSTEM(TYPE) class TYPE final : public ISystem, public Singleton<TYPE>
 
 namespace Copium
 {
+    /**************************************************************************/
+    /*!
+      \brief
+        Type based Singleton, restrict instantiating a Singleton of same types
+        so it is suitable for single-instance classes like the different
+        systems
+    */
+    /**************************************************************************/
     //Derived Class = T
     template <typename T>
     class Singleton
@@ -16,19 +33,34 @@ namespace Copium
         Singleton<T>(Singleton<T>& other)   = delete;
         void operator=(const Singleton<T>&) = delete;
 
-        Singleton<T>()
-        {
-            static bool exists{false};
-            if (exists)
-            {
-                PRINT("Singleton of " << typeid(T).name() << " already exists!");
-                abort();
-            }
-            PRINT("Singleton of " << typeid(T).name() << " created!");
-            exists = true;
+    /**************************************************************************/
+    /*!
+      \brief
+        Gets the unique instance of type T and returns it as a pointer
+
+      \return
+        Pointer to unique class T.
+    */
+    /**************************************************************************/
+        static T* Instance()
+        {   
+            static T instance;
+            return &instance;
+        }
+    protected:
+        Singleton<T>() 
+        { 
+            PRINT("SINGLETON OF " << typeid(T).name() << " CREATED!");
         }
     };
 
+
+    /**************************************************************************/
+    /*!
+      \brief
+        Pure virtual class for systems to implement
+    */
+    /**************************************************************************/
     class ISystem
     {
     public:

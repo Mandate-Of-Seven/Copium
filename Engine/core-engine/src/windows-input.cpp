@@ -119,7 +119,7 @@ void Input::mousebuttonCallback(GLFWwindow* window, int button, int action, int 
 void Input::mousescrollCallback(GLFWwindow* window, double xOffset, double yOffset)
 {
     #ifdef _DEBUG
-        std::cout << "Mouse scroll wheel offset: (" << xOffset << ", " << yOffset << ")" << std::endl;
+        //std::cout << "Mouse scroll wheel offset: (" << xOffset << ", " << yOffset << ")" << std::endl;
     #endif
 }
 

@@ -28,7 +28,7 @@ an OpenGL context and implement a game loop.
 #include "scene-manager.h"
 
 //Systems
-#include "message-system.h"
+#include "copium-core.h"
 #include "SAMPLE_RECEIVER.h"
 #include "serializer.h"
 #include "frameratecontroller.h"
@@ -38,8 +38,8 @@ namespace
     // Our state
     bool show_demo_window = true;
     float recompileTimer = 0;
-    Copium::Message::MessageSystem messageSystem;
-    //Copium::Scripting::ScriptingSystem scriptingSystem;
+    Copium::CopiumCore& copiumCore{ *Copium::CopiumCore::Instance()};
+    Copium::Message::MessageSystem& messageSystem{ *Copium::Message::MessageSystem::Instance() };
 }
 
 Input* Input::inputInstance = new WindowsInput();
@@ -82,7 +82,7 @@ int main() {
     //glfwSetKeyCallback(GLHelper::ptr_window, Input::keyCallback);
     //glfwSetMouseButtonCallback(GLHelper::ptr_window, Input::mousebuttonCallback);
     ////glfwSetScrollCallback(GLHelper::ptr_window, Input::mousescrollCallback);
-    glfwSetCursorPosCallback(GLHelper::ptr_window, Input::mouseposCallback);
+    //glfwSetCursorPosCallback(GLHelper::ptr_window, Input::mouseposCallback);
 
     // Enable run-time memory check for debug purposes 
     #if defined(DEBUG) | defined(_DEBUG)
@@ -90,14 +90,13 @@ int main() {
     #endif
     Copium::Message::DUMMY_RECEIVER dummy12;
     Copium::Message::DUMMY_RECEIVER dummy122;
-    messageSystem.init();
+    copiumCore.init();
     messageSystem.dispatch(Copium::Message::MESSAGE_TYPE::MT_MOUSE_CLICKED);
     SceneManager SM;
     FrameRateController frc(100.0);
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
 
-    //scriptingSystem.init();
     //ScriptComponent *yolo;
     //yolo = new ScriptComponent("PlayerMovement");
     //delete yolo;
@@ -131,6 +130,7 @@ int main() {
 
                     SM.update_scene();         //UPDATE STATE         
                     SM.draw_scene();           //DRAW STATE
+                    copiumCore.update();
                     update();
                     if (esCurrent == esQuit) {
                         SM.change_scene(gsQuit);
@@ -160,6 +160,7 @@ int main() {
         }
     }
 
+    copiumCore.exit();
     cleanup();
     //delete sandboxScene;
     std::cout << "Engine Closing...\n";

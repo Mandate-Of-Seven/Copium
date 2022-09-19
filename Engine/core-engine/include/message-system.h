@@ -18,31 +18,63 @@ namespace Copium::Message
     CLASS_SYSTEM(MessageSystem)
     {
     public:
-        void init();
-        void update();
-        void exit();
 
         MessageSystem();
 
-        static void subscribe(MESSAGE_TYPE mType, IReceiver* pReceiver)
-        {
-            messageTypeListeners[mType].push_back(pReceiver);
-        }
+        /**************************************************************************/
+        /*!
+          \brief
+            Iterates through MESSAGE_TYPE in message-types.h and stores them as
+            a key to empty vectors a std::map named messageTypeListeners
+        */
+        /**************************************************************************/
+        void init();
 
+        /**************************************************************************/
+        /*!
+          \brief
+            Handles all the messages sent out by iterating through each message type
+            key and its receivers and calling their handleMessage function.
+        */
+        /**************************************************************************/
+        void update();
 
-        static void dispatch(MESSAGE_TYPE mType)
-        {
-            using typeToListeners = std::pair<MESSAGE_TYPE, std::vector<IReceiver*>>;
+        /**************************************************************************/
+        /*!
+          \brief
+            Cleanup the system for exit
+        */
+        /**************************************************************************/
+        void exit();
+
+        /**************************************************************************/
+        /*!
+          \brief
+            Subscribes IReceiver to a type of message
+          \param mType
+            Type of message
+          \param pReceiver
+            Receiver to be subscribed
             
-            for (IReceiver* receiver : messageTypeListeners[mType])
-            {
-                receiver->handleMessage(mType);
-            }
-            messageTypeListeners.clear();
-        }
+        */
+        /**************************************************************************/
+        void subscribe(MESSAGE_TYPE mType, IReceiver * pReceiver);
+
+        /**************************************************************************/
+        /*!
+        * NOTE PARTIAL IMPLEMENTATION ONLY, right now when an event is dispatched,
+        * it is handled immediately
+          \brief
+            Dispatches a type of message for update to handle with the receivers
+          \param mType
+            Type of message dispatched
+
+        */
+        /**************************************************************************/
+        void dispatch(MESSAGE_TYPE mType);
 
     private:
-        static std::map<MESSAGE_TYPE, std::vector<IReceiver*>> messageTypeListeners;
+        std::map<MESSAGE_TYPE, std::vector<IReceiver*>> messageTypeListeners;
     };
 }
 

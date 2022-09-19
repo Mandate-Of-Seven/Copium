@@ -209,6 +209,9 @@
     <ClInclude Include="include\vertex-types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\copium-core.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\shaders\shader-glsl.frag" />

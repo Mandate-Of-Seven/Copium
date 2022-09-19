@@ -3,14 +3,30 @@
 
 namespace Copium::Message
 {
-    std::map<MESSAGE_TYPE, std::vector<IReceiver*>> MessageSystem::messageTypeListeners{};
 
-    MessageSystem::MessageSystem()
+    MessageSystem::MessageSystem() 
     {
-        
+
     }
 
-    void MessageSystem::init() 
+    void Message::MessageSystem::subscribe(MESSAGE_TYPE mType, IReceiver* pReceiver)
+    {
+        messageTypeListeners[mType].push_back(pReceiver);
+    }
+
+
+    void MessageSystem::dispatch(MESSAGE_TYPE mType)
+    {
+        using typeToListeners = std::pair<MESSAGE_TYPE, std::vector<IReceiver*>>;
+
+        for (IReceiver* receiver : messageTypeListeners[mType])
+        {
+            receiver->handleMessage(mType);
+        }
+        messageTypeListeners.clear();
+    }
+
+    void MessageSystem::init()
     {
         for (int i = 0; i < int(MESSAGE_TYPE::MT_NONE); ++i)
         {

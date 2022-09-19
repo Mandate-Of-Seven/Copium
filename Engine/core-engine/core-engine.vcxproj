@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClInclude Include="include\compiler.h" />
     <ClInclude Include="include\component.h" />
+    <ClInclude Include="include\copium-core.h" />
     <ClInclude Include="include\file-path.h" />
     <ClInclude Include="include\frameratecontroller.h" />
     <ClInclude Include="include\game-object.h" />

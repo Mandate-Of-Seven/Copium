@@ -5,7 +5,7 @@ namespace Copium::Message
 
     DUMMY_RECEIVER::DUMMY_RECEIVER()
     {
-        MessageSystem::subscribe(MESSAGE_TYPE::MT_MOUSE_CLICKED,this);
+        MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_MOUSE_CLICKED,this);
     }
 
     void DUMMY_RECEIVER::handleMessage(Message::MESSAGE_TYPE mType)
