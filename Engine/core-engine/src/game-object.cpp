@@ -135,3 +135,23 @@ bool GameObject::attach_child(GameObject* _child)
     return true;
 
 }
+
+bool GameObject::deserialize(rapidjson::Value& _value) {
+    if (!_value.HasMember("ID"))
+        return false;
+    
+     id = _value["ID"].GetInt();
+
+    if (!_value.HasMember("Name"))
+        return false;
+   
+    name = _value["Name"].GetString();
+
+    if (!_value.HasMember("PID"))
+        return false;
+
+    parentid = _value["PID"].GetInt();
+
+    return true;
+}
+

@@ -24,32 +24,51 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "scene.h"
 #include "transform.h"
 #include <rapidjson/prettywriter.h>
-#include <math-library.h>
-
+#include <rapidjson/document.h>
+#include <rapidjson/istreamwrapper.h>
+#include <rttr/type>
 extern std::string prefix;
 
+// Ignore, work in progress
 class Serializer 
 {
 public:
-	template <typename T>
-	bool serialize(std::ofstream& _ofs, const T& _obj)
-	{
-		rapidjson::PrettyWriter<rapidjson::StringBuffer> w(sb);
-		bool result = _obj.serialize(w);
-		//bool result = T::serialize(w, _obj);
-		std::string json(sb.GetString(), sb.GetSize());
-		_ofs << json;
-		std::cout << "serializer serialize called\n";
-		return false;
-	}
-	template <typename T, typename Writer>
-	bool deserialize(std::ifstream& _ifs, const T& _obj, Writer& _writer)
-	{
-		return false;
-	}
+	virtual void read_int(int64_t& _int) = 0;
+	virtual void read_double(double& _double) = 0;
+	virtual void read_float(float& _float) = 0;
+	virtual void read_string(std::string& _str) = 0;
+
+
 private:
 	rapidjson::StringBuffer sb;
 };
+
+class JsonSerializer
+{
+public:
+	JsonSerializer(const std::string& _filename);
+	~JsonSerializer();
+	void read_int(int64_t& _int);
+	void read_double(double& _double);
+	void read_float(float& _float);
+	void read_string(std::string& _str);
+public:
+	rapidjson::Document document;
+	rapidjson::IStreamWrapper* isw;
+	std::ifstream file;
+};
+
+
+template <typename T>
+bool load(JsonSerializer& _serializer, T& _obj)
+{
+	return _obj.deserialize(_serializer);
+}
+
+void stream_read(Serializer& _s, int64_t& _i);
+void stream_read(Serializer& _s, double& _d);
+
+
 
 /*******************************************************************************
 /*!
@@ -68,7 +87,7 @@ private:
 	if serialization is smooth, returns 0
 */
 /*******************************************************************************/
-int serialize_scene(const std::string& _filename, Scene* _scene);
+//int serialize_scene(const std::string& _filename, Scene* _scene);
 
 /*******************************************************************************
 /*!
@@ -86,7 +105,7 @@ int serialize_scene(const std::string& _filename, Scene* _scene);
 	void
 */
 /*******************************************************************************/
-void serialize_transform(std::ofstream& _filestream, const Transform& _trans);
+//void serialize_transform(std::ofstream& _filestream, const Transform& _trans);
 
 /*******************************************************************************
 /*!
@@ -105,7 +124,7 @@ void serialize_transform(std::ofstream& _filestream, const Transform& _trans);
 	if deserialization is smooth, returns 0
 */
 /*******************************************************************************/
-int deserialize_scene(const std::string& _filename, Scene* _scene);
+//int deserialize_scene(const std::string& _filename, Scene* _scene);
 
 /*******************************************************************************
 /*!
@@ -121,6 +140,5 @@ int deserialize_scene(const std::string& _filename, Scene* _scene);
 	if file does not exist, return false 
 */
 /*******************************************************************************/
-bool does_file_exist(const std::string& _filename);
-
+//bool does_file_exist(const std::string& _filename);
 #endif SERIALIZER_H

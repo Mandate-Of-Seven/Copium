@@ -33,11 +33,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "SAMPLE_RECEIVER.h"
 #include "serializer.h"
 #include "frameratecontroller.h"
-#include "graphics.h"
-
-// Bean:: Remove after including namespace
-using namespace Copium;
-
 namespace
 {
     // Our state
@@ -55,15 +50,25 @@ static void update();
 static void init();
 static void cleanup();
 
-void quitKeyCallback(GLFWwindow*, int, int, int, int);
+void quit_key_callback(GLFWwindow*, int, int, int, int);
+bool load_config(std::string& _filename, GLint& _w, GLint& _h);
 
-/***************************************************************************/
-/*!
-\brief
-    Indicates how the program existed. Normal exit is signaled by a return 
-    value of 0. Abnormal termination is signaled by a non-zero return value.
-    Note that the C++ compiler will insert a return 0 statement if one is 
-    missing.
+ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+
+
+/*                                                      function definitions
+----------------------------------------------------------------------------- */
+/*  _________________________________________________________________________ */
+/*! main
+
+@param none
+
+@return int
+
+Indicates how the program existed. Normal exit is signaled by a return value of
+0. Abnormal termination is signaled by a non-zero return value.
+Note that the C++ compiler will insert a return 0 statement if one is missing.
 */
 /**************************************************************************/
 int main() 
@@ -234,7 +239,7 @@ void cleanup()
     Input::destroy();
 }
 
-void quitKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) 
+void quit_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) 
 {
     if (key == GLFW_KEY_Q && action == GLFW_PRESS) 
     {
@@ -242,5 +247,35 @@ void quitKeyCallback(GLFWwindow* window, int key, int scancode, int action, int 
         change_enginestate(esQuit);
         std::cout << "Q was pressed" << std::endl;
     }
+}
+
+bool load_config(std::string& _filename, GLint& _w, GLint& _h)
+{
+    std::ifstream ifs(_filename);
+    if (!ifs)
+    {
+        std::cout << "Error opening config json file!\n";
+        return false;
+    }
+    rapidjson::IStreamWrapper isw(ifs);
+    rapidjson::Document doc;
+    doc.ParseStream(isw);
+    if (doc.HasMember("Width"))
+    {
+        _w = doc["Width"].GetInt();
+    }
+    else {
+        return false;
+    }
+    if (doc.HasMember("Height"))
+    {
+        _h = doc["Height"].GetInt();
+    }
+    else {
+        return false;
+    }
+    std::cout << "Loading from config...\n" << "Window Width:" << _w << '\n'
+        << "Window Height:" << _h << std::endl;
+    return true;
 }
 

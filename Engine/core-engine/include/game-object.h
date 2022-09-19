@@ -26,6 +26,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include "component.h"
 #include "transform.h"
+#include <rapidjson/document.h>
 
 //USING
 
@@ -35,6 +36,7 @@ class GameObject
 {
 private:
     GameObjectID id;                    //Global ID for gameObjects
+    int parentid;
     std::list<Component*> components;   //Components for gameObject
     std::string name;                   //Name of gameObject
     Transform trans;                    //Transform of gameObject
@@ -232,6 +234,19 @@ public:
     */
     /*******************************************************************************/
     bool attach_child(GameObject* _child);
+
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Deserialize GameObject data from rapidJson value and populate this GameObject with the data
+
+    \return
+        if deserialization was successful, return true
+        if deserialization was unsuccessful, return false
+    */
+    /*******************************************************************************/
+    bool deserialize(rapidjson::Value& _value);
 
 
     /***************************************************************************/

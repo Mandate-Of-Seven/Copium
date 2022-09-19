@@ -16,9 +16,10 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************/
 #include "pch.h"
 #include "serializer.h"
-
+#include <rttr/registration>
 std::string prefix("Data\\");
 
+/*
 int serialize_scene(const std::string& _filename, Scene* _scene) 
 {	
 	std::cout << "Scene save initiated....................\n";
@@ -381,3 +382,59 @@ bool does_file_exist(const std::string& _filename)
 	}
 
 }
+*/
+JsonSerializer::JsonSerializer(const std::string& _filename) : isw{nullptr} {
+	std::cout << "Json Serializer default ctor...\n";
+	file.open(_filename);
+	if (!file)
+	{
+		std::cout << "error opening file\n";
+		return;
+	}
+
+	isw = new rapidjson::IStreamWrapper(file);
+	if (!isw) {
+		std::cout << "error allocating memory for istreamwrapper\n";
+		return;
+	}
+	if (document.ParseStream<rapidjson::kParseStopWhenDoneFlag>(*isw).HasParseError()) {
+		std::cout << "parsing error!!\n";
+		return;
+	}
+
+	std::cout << "Parsing complete!!\n" << "Json Serializer Ready\n";
+}
+JsonSerializer::~JsonSerializer()
+{
+	file.close();
+	if (isw)
+		delete isw;
+
+}
+
+void JsonSerializer::read_int(int64_t& _int)
+{
+	_int = document["i"].GetInt64();
+}
+void JsonSerializer::read_double(double& _double)
+{
+	_double = document["d"].GetDouble();
+}
+void JsonSerializer::read_float(float& _float)
+{
+	_float = document["f"].GetFloat();
+} 
+void JsonSerializer::read_string(std::string& _str)
+{
+	_str = document["str"].GetString();
+}
+
+void stream_read(Serializer& _s, double& _d)
+{
+	_s.read_double(_d);
+}
+void stream_read(Serializer& _s, int64_t& _i)
+{
+	_s.read_int(_i);
+}
+
