@@ -53,10 +53,6 @@ static void cleanup();
 void quit_key_callback(GLFWwindow*, int, int, int, int);
 bool load_config(std::string& _filename, GLint& _w, GLint& _h);
 
-ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
-
-
 /*                                                      function definitions
 ----------------------------------------------------------------------------- */
 /*  _________________________________________________________________________ */
@@ -77,7 +73,7 @@ int main()
 
     init_statemanager(esActive);
 
-    glfwSetKeyCallback(windowsSystem.get_window(), quitKeyCallback);
+    glfwSetKeyCallback(Copium::windowsSystem.get_window(), quit_key_callback);
     //glfwSetKeyCallback(GLHelper::ptr_window, Input::keyCallback);
     //glfwSetMouseButtonCallback(GLHelper::ptr_window, Input::mousebuttonCallback);
     //glfwSetScrollCallback(GLHelper::ptr_window, Input::mousescrollCallback);
@@ -102,7 +98,7 @@ int main()
     //delete yolo;
 
     // Engine Loop
-    while (!glfwWindowShouldClose(windowsSystem.get_window()) && esCurrent != esQuit) 
+    while (!glfwWindowShouldClose(Copium::windowsSystem.get_window()) && esCurrent != esQuit)
     {
         SM.add_scene(sandboxScene);
         //std::cout << "Number of scenes: " << SM.get_scenecount() << std::endl;
@@ -170,10 +166,10 @@ int main()
 static void init()
 {
     // Bean: This should be handles by ISystem (with regards to the "System" itself)
-    windowsSystem.init(1600, 900, "Copium");
+    Copium::windowsSystem.init(1600, 900, "Copium");
 
     // Bean: This initialises the imgui, which i think should also be handled by ISystem
-    Editor::editor.init();
+    Copium::Editor::editor.init();
 
     Log::init();
     Console_Critical("Test 1");
@@ -197,10 +193,10 @@ static void init()
 static void update()
 {
     // Bean: This should be handles by ISystem
-    windowsSystem.update();
+    Copium::windowsSystem.update();
 
     // Bean: This should be handles by ISystem
-    Editor::editor.update();
+    Copium::Editor::editor.update();
 
     //testing
     //auto [x, y] = Input::getMousePosition();
@@ -218,10 +214,10 @@ static void update()
 static void draw() 
 {
     // Bean: This should be handles by ISystem
-    Editor::editor.draw();
+    Copium::Editor::editor.draw();
     
     // Bean: This should be handles by ISystem
-    windowsSystem.draw();
+    Copium::windowsSystem.draw();
 }
 
 /***************************************************************************/
@@ -234,7 +230,7 @@ static void draw()
 void cleanup() 
 {
     // Bean: This should be handles by ISystem
-    Editor::editor.exit();
+    Copium::Editor::editor.exit();
 
     Input::destroy();
 }
