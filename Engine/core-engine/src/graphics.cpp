@@ -26,8 +26,8 @@ namespace Copium::Graphics
 	using Copium::WindowsSystem;
 
 	// Global variables
-	/*int Graphics::sceneWidth;
-	int Graphics::sceneHeight;*/
+	int Graphics::sceneWidth;
+	int Graphics::sceneHeight;
 
 	GLfloat movement_x = 0.f, movement_y = 0.f;
 
