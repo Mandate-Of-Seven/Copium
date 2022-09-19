@@ -23,7 +23,10 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 class Input
 {
 	public:
-		
+		short* keys;
+
+		virtual void Init() = 0;
+
 		/***************************************************************************/
 		/*!
 		\brief
@@ -32,7 +35,13 @@ class Input
 		/**************************************************************************/
 		static void destroy()
 		{
+			delete[] inputInstance->keys;
 			delete inputInstance;
+		}
+
+		static Input* getInputInstance()
+		{
+			return inputInstance;
 		}
 
 		/***************************************************************************/

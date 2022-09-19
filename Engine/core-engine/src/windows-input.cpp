@@ -7,19 +7,40 @@
 #include <iostream>
 
 
+void WindowsInput::Init()
+{
+    getInputInstance()->keys = new short[400];
+    for (int i = 0; i < 400; i++)
+    {
+        getInputInstance()->keys[i] = 0;
+    }
+    std::cout << "Init was called" << std::endl;
+}
+
 bool WindowsInput::isKeyPressedImpl(int keycode)
 {
     auto& window = GLHelper::ptr_window;
     auto state = glfwGetKey(window,keycode);
-    return state == GLFW_PRESS;
+    if (getInputInstance()->keys[keycode]== GLFW_PRESS)
+    {
+        std::cout << getInputInstance()->keys[keycode] << "  " << std::endl;
+        getInputInstance()->keys[keycode] = 0;
+        return true;
+    }
+    return false;
 }
 
-//currently doesnt work
 bool WindowsInput::isKeyHeldImpl(int keycode)
 {
     auto& window = GLHelper::ptr_window;
     auto state = glfwGetKey(window, keycode);
-    return state == GLFW_REPEAT;
+    if (getInputInstance()->keys[keycode] == GLFW_REPEAT || getInputInstance()->keys[keycode] == GLFW_PRESS)
+    {
+        std::cout << getInputInstance()->keys[keycode] << "  " << std::endl;
+        getInputInstance()->keys[keycode] = 0;
+        return true;
+    }
+    return false;
 }
 
 bool WindowsInput::isMouseButtonPressedImpl(int button)
@@ -70,17 +91,20 @@ float WindowsInput::getMouseYImpl()
 
 void Input::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_Q && action == GLFW_PRESS)
+    if (action == GLFW_PRESS)
     {
-        std::cout << "Q Key pressed" << std::endl;
+        getInputInstance()->keys[key] = GLFW_PRESS;
+        std::cout<<key << " some Key pressed" << std::endl;
     }
     else if (action == GLFW_REPEAT)
     {
-        std::cout << "some Key repeatedly pressed" << std::endl;
+        getInputInstance()->keys[key] = GLFW_REPEAT;
+        std::cout << key<< " some Key repeatedly pressed" << std::endl;
     }
     else if (action == GLFW_RELEASE)
     {
-        std::cout << "some Key released" << std::endl;
+        getInputInstance()->keys[key] = GLFW_RELEASE;
+        std::cout<< key << " some Key released" << std::endl;
     }
 }
 

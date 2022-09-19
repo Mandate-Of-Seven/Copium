@@ -55,7 +55,7 @@ static void update();
 static void init();
 static void cleanup();
 
-void quitKeyCallback(GLFWwindow*, int, int, int, int);
+void quitEngine();
 
 
 ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -78,10 +78,12 @@ Note that the C++ compiler will insert a return 0 statement if one is missing.
 int main() {
     init();
     init_statemanager(esActive);
-    glfwSetKeyCallback(GLHelper::ptr_window, quitKeyCallback);
-    //glfwSetKeyCallback(GLHelper::ptr_window, Input::keyCallback);
+    //glfwSetKeyCallback(GLHelper::ptr_window, quitKeyCallback);
+    
+    Input::getInputInstance()->Init();
+    glfwSetKeyCallback(GLHelper::ptr_window, Input::keyCallback);
     //glfwSetMouseButtonCallback(GLHelper::ptr_window, Input::mousebuttonCallback);
-    ////glfwSetScrollCallback(GLHelper::ptr_window, Input::mousescrollCallback);
+    //glfwSetScrollCallback(GLHelper::ptr_window, Input::mousescrollCallback);
     //glfwSetCursorPosCallback(GLHelper::ptr_window, Input::mouseposCallback);
 
     // Enable run-time memory check for debug purposes 
@@ -160,6 +162,7 @@ int main() {
         }
     }
 
+
     copiumCore.exit();
     cleanup();
     //delete sandboxScene;
@@ -178,6 +181,8 @@ mouse movement, and mouse scroller events to be processed.
 static void update() {
     // Part 1
     glfwPollEvents();
+
+    quitEngine();
 
     //testing
     //auto [x, y] = Input::getMousePosition();
@@ -257,7 +262,6 @@ static void init() {
     Console_Error("Test 2");
     Console_Warn("What happens");
     Console_Info("Hello");
-    Console_Trace("Goodbye");
 
     //spdlog::info("File test");
     //File_Warn("Hello{}",3);
@@ -289,9 +293,9 @@ void cleanup()
     Input::destroy();
 }
 
-void quitKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) 
+void quitEngine() 
 {
-    if (key == GLFW_KEY_Q && action == GLFW_PRESS) 
+    if (Input::isKeyPressed(GLFW_KEY_Q))
     {
 
         change_enginestate(esQuit);

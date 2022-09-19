@@ -14,6 +14,7 @@ pointers to OpenGL implementations.
 ----------------------------------------------------------------------------- */
 #include "pch.h"
 #include <glhelper.h>
+#include "input.h"
 
 /*                                                   objects with file scope
 ----------------------------------------------------------------------------- */
@@ -81,10 +82,15 @@ bool GLHelper::init(GLint w, GLint h, std::string t) {
   glfwMakeContextCurrent(GLHelper::ptr_window);
 
   glfwSetFramebufferSizeCallback(GLHelper::ptr_window, GLHelper::fbsize_cb);
-  glfwSetKeyCallback(GLHelper::ptr_window, GLHelper::key_cb);
-  glfwSetMouseButtonCallback(GLHelper::ptr_window, GLHelper::mousebutton_cb);
-  glfwSetCursorPosCallback(GLHelper::ptr_window, GLHelper::mousepos_cb);
-  glfwSetScrollCallback(GLHelper::ptr_window, GLHelper::mousescroll_cb);
+  //glfwSetKeyCallback(GLHelper::ptr_window, GLHelper::key_cb);
+  //glfwSetMouseButtonCallback(GLHelper::ptr_window, GLHelper::mousebutton_cb);
+  //glfwSetCursorPosCallback(GLHelper::ptr_window, GLHelper::mousepos_cb);
+  //glfwSetScrollCallback(GLHelper::ptr_window, GLHelper::mousescroll_cb);
+
+  //glfwSetKeyCallback(GLHelper::ptr_window, Input::keyCallback);
+  glfwSetMouseButtonCallback(GLHelper::ptr_window, Input::mousebuttonCallback);
+  glfwSetScrollCallback(GLHelper::ptr_window, Input::mousescrollCallback);
+  glfwSetCursorPosCallback(GLHelper::ptr_window, Input::mouseposCallback);
 
   // this is the default setting ...
   glfwSetInputMode(GLHelper::ptr_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
