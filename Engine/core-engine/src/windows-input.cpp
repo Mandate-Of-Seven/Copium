@@ -10,17 +10,20 @@ using namespace Copium;
 void WindowsInput::Init()
 {
     getInputInstance()->keys = new short[400];
+    getInputInstance()->mouseButtons = new short[2];
     for (int i = 0; i < 400; i++)
     {
         getInputInstance()->keys[i] = 0;
     }
-    std::cout << "Init was called" << std::endl;
+    glfwSetKeyCallback(Copium::windowsSystem.get_window(), Input::keyCallback);
+    glfwSetMouseButtonCallback(Copium::windowsSystem.get_window(), Input::mousebuttonCallback);
+    glfwSetScrollCallback(Copium::windowsSystem.get_window(), Input::mousescrollCallback);
+    glfwSetCursorPosCallback(Copium::windowsSystem.get_window(), Input::mouseposCallback);
+    std::cout << "Input init was called" << std::endl;
 }
 
 bool WindowsInput::isKeyPressedImpl(int keycode)
 {
-    auto& window = *windowsSystem.get_window();
-    auto state = glfwGetKey(&window,keycode);
     if (getInputInstance()->keys[keycode]== GLFW_PRESS)
     {
         std::cout << getInputInstance()->keys[keycode] << "  " << std::endl;
@@ -32,12 +35,10 @@ bool WindowsInput::isKeyPressedImpl(int keycode)
 
 bool WindowsInput::isKeyHeldImpl(int keycode)
 {
-    auto& window = *windowsSystem.get_window();
-    auto state = glfwGetKey(&window, keycode);
     if (getInputInstance()->keys[keycode] == GLFW_REPEAT || getInputInstance()->keys[keycode] == GLFW_PRESS)
     {
         std::cout << getInputInstance()->keys[keycode] << "  " << std::endl;
-        getInputInstance()->keys[keycode] = 0;
+        //getInputInstance()->keys[keycode] = 0;
         return true;
     }
     return false;
@@ -47,7 +48,12 @@ bool WindowsInput::isMouseButtonPressedImpl(int button)
 {
     auto& window = *windowsSystem.get_window();
     auto state = glfwGetMouseButton(&window, button);
-    return state == GLFW_PRESS;
+    if (getInputInstance()->mouseButtons[button])
+    {
+        getInputInstance()->mouseButtons[button] = 0;
+        return true;
+    }
+    return false;
 }
 
 std::pair<float, float> WindowsInput::getMousePositionImpl()
@@ -110,34 +116,40 @@ void Input::keyCallback(GLFWwindow* window, int key, int scancode, int action, i
 
 void Input::mousebuttonCallback(GLFWwindow* window, int button, int action, int mods)
 {
+    int target = 0;
     switch (button) 
     {
         case GLFW_MOUSE_BUTTON_LEFT:
-        #ifdef _DEBUG
-                std::cout << "Left mouse button ";
+            target = GLFW_MOUSE_BUTTON_LEFT;
+        #ifdef _DEBUG               
+            std::cout << "Left mouse button ";
         #endif
         break;
 
         case GLFW_MOUSE_BUTTON_RIGHT:
-        #ifdef _DEBUG
-                std::cout << "Right mouse button ";
+            target = GLFW_MOUSE_BUTTON_RIGHT;
+        #ifdef _DEBUG           
+            std::cout << "Right mouse button ";
         #endif
         break;
     }
     switch (action) 
     {
         case GLFW_PRESS:
+            getInputInstance()->mouseButtons[target] = 1;
         #ifdef _DEBUG
-                std::cout << "pressed!!!" << std::endl;
+            std::cout << "pressed!!!" << std::endl;
         #endif
         break;
 
         case GLFW_RELEASE:
+            getInputInstance()->mouseButtons[target] = 0;
         #ifdef _DEBUG
-                std::cout << "released!!!" << std::endl;
+            std::cout << "released!!!" << std::endl;
         #endif
         break;
     }
+    
 }
 
 void Input::mousescrollCallback(GLFWwindow* window, double xOffset, double yOffset)

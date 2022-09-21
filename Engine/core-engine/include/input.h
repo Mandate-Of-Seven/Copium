@@ -24,6 +24,7 @@ class Input
 {
 	public:
 		short* keys;
+		short* mouseButtons;
 
 		virtual void Init() = 0;
 
@@ -36,6 +37,7 @@ class Input
 		static void destroy()
 		{
 			delete[] inputInstance->keys;
+			delete[] inputInstance->mouseButtons;
 			delete inputInstance;
 		}
 

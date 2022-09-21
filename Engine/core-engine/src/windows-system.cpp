@@ -17,6 +17,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 #include "pch.h"
 #include <windows-system.h>
+#include <input.h>
 
 namespace Copium
 {
@@ -63,7 +64,7 @@ namespace Copium
         glfwMakeContextCurrent(window);
 
         glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-        
+
         // this is the default setting ...
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 

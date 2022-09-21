@@ -70,14 +70,7 @@ Note that the C++ compiler will insert a return 0 statement if one is missing.
 int main() 
 {
     init();
-    Input::getInputInstance()->Init();
     init_statemanager(esActive);
-
-    //glfwSetKeyCallback(Copium::windowsSystem.get_window(), quit_key_callback);
-    glfwSetKeyCallback(Copium::windowsSystem.get_window(), Input::keyCallback);
-    //glfwSetMouseButtonCallback(GLHelper::ptr_window, Input::mousebuttonCallback);
-    //glfwSetScrollCallback(GLHelper::ptr_window, Input::mousescrollCallback);
-    //glfwSetCursorPosCallback(GLHelper::ptr_window, Input::mouseposCallback);
 
     // Enable run-time memory check for debug purposes 
     #if defined(DEBUG) | defined(_DEBUG)
@@ -92,7 +85,6 @@ int main()
     FrameRateController frc(100.0);
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
-
     //ScriptComponent *yolo;
     //yolo = new ScriptComponent("PlayerMovement");
     //delete yolo;
@@ -168,6 +160,8 @@ static void init()
     // Bean: This should be handles by ISystem (with regards to the "System" itself)
     Copium::windowsSystem.init(1600, 900, "Copium");
 
+    Input::getInputInstance()->Init();
+
     // Bean: This initialises the imgui, which i think should also be handled by ISystem
     Copium::Editor::editor.init();
 
@@ -178,8 +172,6 @@ static void init()
     Console_Info("Hello");
     Console_Trace("Goodbye");
 
-    //spdlog::info("File test");
-    //File_Warn("Hello{}",3);
 }
 
 /***************************************************************************/
