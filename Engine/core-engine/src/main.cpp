@@ -50,7 +50,7 @@ static void update();
 static void init();
 static void cleanup();
 
-void quit_key_callback(GLFWwindow*, int, int, int, int);
+void quitEngine();
 bool load_config(std::string& _filename, GLint& _w, GLint& _h);
 
 /*                                                      function definitions
@@ -70,11 +70,11 @@ Note that the C++ compiler will insert a return 0 statement if one is missing.
 int main() 
 {
     init();
-
+    Input::getInputInstance()->Init();
     init_statemanager(esActive);
 
-    glfwSetKeyCallback(Copium::windowsSystem.get_window(), quit_key_callback);
-    //glfwSetKeyCallback(GLHelper::ptr_window, Input::keyCallback);
+    //glfwSetKeyCallback(Copium::windowsSystem.get_window(), quit_key_callback);
+    glfwSetKeyCallback(Copium::windowsSystem.get_window(), Input::keyCallback);
     //glfwSetMouseButtonCallback(GLHelper::ptr_window, Input::mousebuttonCallback);
     //glfwSetScrollCallback(GLHelper::ptr_window, Input::mousescrollCallback);
     //glfwSetCursorPosCallback(GLHelper::ptr_window, Input::mouseposCallback);
@@ -198,10 +198,7 @@ static void update()
     // Bean: This should be handles by ISystem
     Copium::Editor::editor.update();
 
-    //testing
-    //auto [x, y] = Input::getMousePosition();
-    //std::cout << "Mouse Pos:" << x << "," << y << std::endl;
-    //std::cout<< "Is Shift Button Held:" << Input::isMouseButtonPressed(GLFW_KEY_LEFT_SHIFT) << std::endl;
+    quitEngine();
 }
 
 /***************************************************************************/
@@ -235,9 +232,9 @@ void cleanup()
     Input::destroy();
 }
 
-void quit_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) 
+void quitEngine() 
 {
-    if (key == GLFW_KEY_Q && action == GLFW_PRESS) 
+    if (Input::isKeyPressed(GLFW_KEY_Q)) 
     {
 
         change_enginestate(esQuit);
