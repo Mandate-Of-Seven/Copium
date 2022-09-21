@@ -5,7 +5,7 @@
 
 \par			Course: GAM200
 \par			Section:
-\date			17/07/2022
+\date			21/09/2022
 
 \brief
 	This file holds the declaration of the Renderer class. The Renderer renders all 
@@ -15,9 +15,6 @@
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
-
-/* DEPRECIATED */
-
 #ifndef RENDERER_H
 #define RENDERER_H
 
@@ -27,6 +24,14 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium::Graphics 
 {
+	enum RenderType
+	{
+		WORLD,
+		DEBUG
+	};
+
+	// Forward declare
+	class GraphicsSystem;
 
 	// Renders objects in the game / scene
 	// Checks objects that have the Renderer component 
@@ -43,7 +48,7 @@ namespace Copium::Graphics
 			the elements of the object to be used for rendering
 		*/
 		/**************************************************************************/
-		void init(); // Initializes the renderer by storing a handle to VAO
+		void init(RenderType _type); // Initializes the renderer by storing a handle to VAO
 
 		/***************************************************************************/
 		/*!
@@ -55,6 +60,22 @@ namespace Copium::Graphics
 		void shutdown();
 
 		// Member Functions
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Setup the quad's vertex array object along with its data
+		*/
+		/**************************************************************************/
+		void setup_quad_vao();
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Setup the line's vertex array object along with its data
+		*/
+		/**************************************************************************/
+		void setup_line_vao();
 
 		/***************************************************************************/
 		/*!
@@ -93,7 +114,7 @@ namespace Copium::Graphics
 			The color of the quad
 		*/
 		/**************************************************************************/
-		void draw_quad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
+		void draw_quad(const glm::vec2& _position, const glm::vec2& _size, const glm::vec4& _color);
 
 		/***************************************************************************/
 		/*!
@@ -107,7 +128,21 @@ namespace Copium::Graphics
 			The index of the texture to be used
 		*/
 		/**************************************************************************/
-		void draw_quad(const glm::vec2& position, const glm::vec2& size, int textureID);
+		void draw_quad(const glm::vec2& _position, const glm::vec2& _size, int _textureID);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Draws a line onto the game window
+		\param position0
+			The starting position of the line
+		\param position1
+			The ending position of the line
+		\param color
+			The color of the line
+		*/
+		/**************************************************************************/
+		void draw_line(const glm::vec2& _position0, const glm::vec2& _position1, const glm::vec4& _color);
 
 		// Accessing Properties
 
@@ -163,7 +198,8 @@ namespace Copium::Graphics
 		/**************************************************************************/
 		//void reset_stats() { s_Data.drawCount = s_Data.quadCount = 0; };
 
-		GLuint & get_vertex_array_id() { return vertexArrayID; }
+		GLuint & get_quad_vao_id() { return quadVertexArrayID; }
+		GLuint & get_line_vao_id() { return lineVertexArrayID; }
 
 	private:
 
@@ -171,17 +207,28 @@ namespace Copium::Graphics
 
 		GLuint drawCount = 0; // The amount of draw calls
 		GLuint quadCount = 0; // The amount of quads drawn
+		GLuint lineCount = 0; // The amount of lines drawn
 
-		GLuint vertexArrayID = 0; // Handle to Vertex Array Object
-		GLuint vertexBufferID = 0; // Handle to Vertex Buffer Object
-		GLuint indexBufferID = 0; // Handle to Index Buffer
-		GLuint indexCount = 0; // Number of elements in the object
+		//GLuint vertexArrayID = 0; // Handle to Vertex Array Object
 
-		Vertex * quadBuffer = nullptr;
-		Vertex * quadBufferPtr = nullptr;
+		GLuint quadVertexArrayID = 0; // Handle to Quad Vertex Array Object
+		GLuint lineVertexArrayID = 0; // Handle to Line Vertex Array Object
+
+		GLuint quadVertexBufferID = 0; // Handle to Quad Vertex Buffer Object
+		GLuint quadIndexBufferID = 0; // Handle to Quad Index Buffer
+		GLuint quadIndexCount = 0; // Number of elements in the Quad object
+
+		GLuint lineVertexBufferID = 0; // Handle to Line Vertex Buffer Object
+		GLuint lineIndexCount = 0; // Number of elements in the Line object
+
+		QuadVertex* quadBuffer = nullptr;
+		QuadVertex* quadBufferPtr = nullptr;
+
+		LineVertex* lineBuffer = nullptr;
+		LineVertex* lineBufferPtr = nullptr;
+
+		GraphicsSystem* graphics;
 	};
-
-	static Renderer renderer;
 }
 
 #endif // !RENDERER_H

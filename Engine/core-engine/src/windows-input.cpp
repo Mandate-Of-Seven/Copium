@@ -36,8 +36,8 @@ bool WindowsInput::isKeyHeldImpl(int keycode)
     auto state = glfwGetKey(&window, keycode);
     if (getInputInstance()->keys[keycode] == GLFW_REPEAT || getInputInstance()->keys[keycode] == GLFW_PRESS)
     {
-        std::cout << getInputInstance()->keys[keycode] << "  " << std::endl;
-        getInputInstance()->keys[keycode] = 0;
+        //std::cout << getInputInstance()->keys[keycode] << "  " << std::endl;
+        //getInputInstance()->keys[keycode] = 0;
         return true;
     }
     return false;

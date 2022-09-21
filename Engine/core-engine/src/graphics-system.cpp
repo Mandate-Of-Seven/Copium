@@ -8,14 +8,14 @@
 \date			07/09/2022
 
 \brief
-	This file holds the definition of the Graphics class. The Graphic system handles
+	This file holds the definition of the GraphicsSystem class. The Graphic system handles
 	various sub-systems which includes asset loading, matrice calculations and rendering.
 	Components and objects which require rendering would refer to this class.
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
-#include <graphics.h>
+#include <graphics-system.h>
 #include <framebuffer.h>
 #include <renderer.h>
 #include <input.h>
@@ -25,27 +25,22 @@ namespace Copium::Graphics
 {
 	using Copium::WindowsSystem;
 
-	// Global variables
-	int Graphics::sceneWidth;
-	int Graphics::sceneHeight;
-
 	GLfloat movement_x = 0.f, movement_y = 0.f;
 
-	void Graphics::init()
+	void GraphicsSystem::init()
 	{
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 
 		// Initialise Viewport
-		//sceneWidth = 1280;
-		//sceneHeight = 720;
-		//glViewport((windowsSystem.get_window_width() - sceneWidth) / 2, (windowsSystem.get_window_height() - sceneHeight) / 2, sceneWidth, sceneHeight);
 		glViewport(0, 0, windowsSystem.get_window_width(), windowsSystem.get_window_height());
 
 		// Setup Shaders
 		setup_shader_program();
 
-		// Initialise Renderer
-		renderer.init();
+		// Initialise Sub systems
+		renderer.init(WORLD);
+		debugRenderer.init(DEBUG);
+		framebuffer.init();
 
 		// Bind textures to fragment shader
 		shaderProgram.Use();
@@ -58,26 +53,23 @@ namespace Copium::Graphics
 		glUniform1iv(loc, maxTextures, samplers);
 	}
 
-	void Graphics::update()
+	void GraphicsSystem::update()
 	{
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		if (Input::isKeyPressed(GLFW_KEY_A))
+		if (Input::isKeyHeld(GLFW_KEY_A))
 			movement_x -= GLHelper::delta_time;
-		else if (Input::isKeyPressed(GLFW_KEY_D))
+		else if (Input::isKeyHeld(GLFW_KEY_D))
 			movement_x += GLHelper::delta_time;
 
-		if (Input::isKeyPressed(GLFW_KEY_W))
+		if (Input::isKeyHeld(GLFW_KEY_W))
 			movement_y += GLHelper::delta_time;
-		else if (Input::isKeyPressed(GLFW_KEY_S))
+		else if (Input::isKeyHeld(GLFW_KEY_S))
 			movement_y -= GLHelper::delta_time;
 
-		static float time = 0.f;
-		static bool hasPressed = false;
-		if (Input::isKeyPressed(GLFW_KEY_T) && time < 1.f && !hasPressed)
+		if (Input::isKeyPressed(GLFW_KEY_T))
 		{
-			//hasPressed = true;
 			Copium::Component::SpriteRenderer* sprite = new Copium::Component::SpriteRenderer;
 			glm::vec2 pos = { Input::getMousePosition().first - windowsSystem.get_window_width() / 2, Input::getMousePosition().second - windowsSystem.get_window_height() / 2};
 			pos.x /= 80.f;
@@ -89,33 +81,28 @@ namespace Copium::Graphics
 			sprite->set_color(glm::vec4(0.8f, 0.2f, 0.6f, 1.f));
 			sprites.push_back(sprite);
 		}
-		else if (hasPressed && time < 0.2f)
-		{
-			time += GLHelper::delta_time;
-		}
-		else if (time > 0.2f)
-		{
-			time = 0.f;
-			hasPressed = false;
-		}
 
 		if (Input::isKeyPressed(GLFW_KEY_Y))
 		{
 			PRINT("Number of sprites: " << sprites.size());
 		}
 		
-		draw_world();
+		setup_matrices();
+
+		batch_render();
 	}
 
-	void Graphics::exit()
+	void GraphicsSystem::exit()
 	{
 		renderer.shutdown();
+		debugRenderer.shutdown();
+		framebuffer.exit();
 
 		for (Copium::Component::SpriteRenderer * s : sprites)
 			delete s;
 	}
 
-	void Graphics::init_geometry()
+	void GraphicsSystem::init_geometry()
 	{
 		
 	}
@@ -133,7 +120,7 @@ namespace Copium::Graphics
 	}
 
 	// Setup default shaders for the graphics system
-	void Graphics::setup_shader_program()
+	void GraphicsSystem::setup_shader_program()
 	{
 		std::vector<std::pair<GLenum, std::string>> shdr_files;
 		shdr_files.emplace_back(std::make_pair(GL_VERTEX_SHADER, "../core-engine/Assets/shaders/shader-glsl.vert"));
@@ -149,26 +136,71 @@ namespace Copium::Graphics
 	}
 
 	// Setup default world, view and projection matrices (May include orthographic)
-	void Graphics::setup_matrices()
+	void GraphicsSystem::setup_matrices()
 	{
 
 	}
 
 	// Draw the debug data
-	void Graphics::draw_debug_info()
+	void GraphicsSystem::draw_debug_info()
 	{
+		debugRenderer.begin_batch();
 
+		// Reference all debug info in the world and draw
+		for (size_t i = 0; i < sprites.size(); i++)
+		{
+			/*PRINT(i + 1 << " : Sprite Data: " << sprites[i].pos.x << "," << sprites[i].pos.y
+				<< "\t Size: " << sprites[i].size.x << "," << sprites[i].size.y);*/
+
+			glm::vec2 pos = { sprites[i]->get_position().x + movement_x, sprites[i]->get_position().y + movement_y };
+
+			glm::vec4 color = { 0.3f, 1.f, 0.3f, 1.f };
+
+			glm::vec2 pos0 = glm::vec2(pos.x - sprites[i]->get_size().x / 2, pos.y - sprites[i]->get_size().y / 2);
+			glm::vec2 pos1 = glm::vec2(pos.x + sprites[i]->get_size().x / 2, pos.y - sprites[i]->get_size().y / 2);
+			glm::vec2 pos2 = glm::vec2(pos.x + sprites[i]->get_size().x / 2, pos.y + sprites[i]->get_size().y / 2);
+			glm::vec2 pos3 = glm::vec2(pos.x - sprites[i]->get_size().x / 2, pos.y + sprites[i]->get_size().y / 2);
+
+			debugRenderer.draw_line(pos0, pos1, color);
+			debugRenderer.draw_line(pos1, pos2, color);
+			debugRenderer.draw_line(pos2, pos3, color);
+			debugRenderer.draw_line(pos3, pos0, color);
+		}
+
+		debugRenderer.end_batch();
+
+		debugRenderer.flush();
 	}
 
 	// Draw the world
-	void Graphics::draw_world()
+	void GraphicsSystem::draw_world()
 	{
-		setup_matrices();
+		renderer.begin_batch();
 
-		batch_render();
+		// Reference all sprites in the world and draw
+		// Overflowing sprites gets pushed to next draw call ( Which means dynamic 0.0 )
+		for (int i = 0; i < 10; i++)
+		{
+			glm::vec4 color = { 0.5f, 0.2f, 0.2f, 1.f };
+			renderer.draw_quad({ i + movement_x, i + movement_y }, { 0.09f, 0.16f }, color);
+		}
+
+		for (size_t i = 0; i < sprites.size(); i++)
+		{
+			/*PRINT(i + 1 << " : Sprite Data: " << sprites[i].pos.x << "," << sprites[i].pos.y
+				<< "\t Size: " << sprites[i].size.x << "," << sprites[i].size.y);*/
+
+			glm::vec2 pos = { sprites[i]->get_position().x + movement_x, sprites[i]->get_position().y + movement_y };
+
+			renderer.draw_quad(pos, sprites[i]->get_size(), sprites[i]->get_color());
+		}
+
+		renderer.end_batch();
+
+		renderer.flush();
 	}
 
-	void Graphics::batch_render()
+	void GraphicsSystem::batch_render()
 	{
 		shaderProgram.Use();
 
@@ -180,29 +212,9 @@ namespace Copium::Graphics
 		glClearColor(0.7f, 0.7f, 0.7f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		renderer.begin_batch();
+		draw_world();
 
-		// Reference all sprites in the world and draw
-		// Overflowing sprites gets pushed to next draw call ( Which means dynamic 0.0 )
-		for (int i = 0; i < 10; i++)
-		{
-			glm::vec4 color = { 0.5f, 0.2f, 0.2f, 1.f };
-			renderer.draw_quad({ i + movement_x, i + movement_y }, { 0.045f, 0.08f }, color);
-		}
-
-		for (size_t i = 0; i < sprites.size(); i++)
-		{
-			/*PRINT(i + 1 << " : Sprite Data: " << sprites[i].pos.x << "," << sprites[i].pos.y
-				<< "\t Size: " << sprites[i].size.x << "," << sprites[i].size.y);*/
-
-			glm::vec2 pos = { sprites[i]->get_position().x + movement_x, sprites[i]->get_position().y + movement_y};
-
-			renderer.draw_quad(pos, sprites[i]->get_size(), sprites[i]->get_color());
-		}
-
-		renderer.end_batch();
-
-		renderer.flush();
+		draw_debug_info();
 
 		framebuffer.unbind();
 

@@ -96,7 +96,7 @@
     <ClCompile Include="src\glapp.cpp" />
     <ClCompile Include="src\windows-system.cpp" />
     <ClCompile Include="src\glslshader.cpp" />
-    <ClCompile Include="src\graphics.cpp" />
+    <ClCompile Include="src\graphics-system.cpp" />
     <ClCompile Include="src\imgui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -157,7 +157,7 @@
     <ClInclude Include="include\glapp.h" />
     <ClInclude Include="include\windows-system.h" />
     <ClInclude Include="include\glslshader.h" />
-    <ClInclude Include="include\graphics.h" />
+    <ClInclude Include="include\graphics-system.h" />
     <ClInclude Include="include\input.h" />
     <ClInclude Include="include\inspector.h" />
     <ClInclude Include="include\logging.h" />

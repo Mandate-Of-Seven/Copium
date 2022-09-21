@@ -14,26 +14,29 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 #include "pch.h"
 #include "framebuffer.h"
+#include "graphics-system.h"
 
 namespace Copium::Graphics
 {
 	void Framebuffer::init()
 	{
-		if (renderer.get_vertex_array_id())
+		graphics = GraphicsSystem::Instance();
+
+		if (graphics->renderer.get_quad_vao_id())
 			exit();
 
 		// Temporary get the viewport dimensions
 		/*GLint viewportProperties[4]{ 0 };
 		glGetIntegerv(GL_VIEWPORT, viewportProperties);*/
 
-		glCreateFramebuffers(1, &renderer.get_vertex_array_id());
-		glBindFramebuffer(GL_FRAMEBUFFER, renderer.get_vertex_array_id());
+		glCreateFramebuffers(1, &graphics->renderer.get_quad_vao_id());
+		glBindFramebuffer(GL_FRAMEBUFFER, graphics->renderer.get_quad_vao_id());
 
 		// Creating the color attachment
 		glCreateTextures(GL_TEXTURE_2D, 1, &colorAttachment);
 		glBindTexture(GL_TEXTURE_2D, colorAttachment);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, sceneWidth,
-			sceneHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, graphics->sceneWidth,
+			graphics->sceneHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -43,8 +46,8 @@ namespace Copium::Graphics
 		// Creating the depth and stencil attachment
 		glCreateTextures(GL_TEXTURE_2D, 1, &depthAttachment);
 		glBindTexture(GL_TEXTURE_2D, depthAttachment);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, sceneWidth,
-			sceneHeight, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, nullptr);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, graphics->sceneWidth,
+			graphics->sceneHeight, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, nullptr);
 
 		// Attaching depth and stencil attachment onto framebuffer
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthAttachment, 0);
@@ -76,8 +79,8 @@ namespace Copium::Graphics
 
 	void Framebuffer::bind()
 	{
-		glViewport(0, 0, sceneWidth, sceneHeight);
-		glBindFramebuffer(GL_FRAMEBUFFER, renderer.get_vertex_array_id());
+		glViewport(0, 0, graphics->sceneWidth, graphics->sceneHeight);
+		glBindFramebuffer(GL_FRAMEBUFFER, graphics->renderer.get_quad_vao_id());
 	}
 
 	void Framebuffer::unbind()
@@ -87,15 +90,15 @@ namespace Copium::Graphics
 
 	void Framebuffer::resize(GLuint _width, GLuint _height)
 	{
-		sceneWidth = _width;
-		sceneHeight = _height;
+		graphics->sceneWidth = _width;
+		graphics->sceneHeight = _height;
 
 		init();
 	}
 
 	void Framebuffer::exit()
 	{
-		glDeleteFramebuffers(1, &renderer.get_vertex_array_id());
+		glDeleteFramebuffers(1, &graphics->renderer.get_quad_vao_id());
 		glDeleteTextures(1, &colorAttachment);
 		glDeleteTextures(1, &depthAttachment);
 	}

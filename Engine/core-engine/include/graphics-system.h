@@ -14,14 +14,16 @@
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
-#ifndef GRAPHICS_H
-#define GRAPHICS_H
+#ifndef GRAPHICS_SYSTEM_H
+#define GRAPHICS_SYSTEM_H
 
 #include "system-interface.h"
 #include <glslshader.h>
 #include <GLFW/glfw3.h>
 #include "vertex-types.h"
 #include <sprite-renderer.h>
+#include <framebuffer.h>
+#include <renderer.h>
 
 namespace Copium::Graphics
 {
@@ -31,7 +33,7 @@ namespace Copium::Graphics
 	static const GLuint maxIndexCount = maxQuadCount * 6;
 	static const GLuint maxTextures = 32;
 
-	class Graphics // Inherits from System
+	CLASS_SYSTEM(GraphicsSystem) // Inherits from System
 	{
 	public:
 		void init();
@@ -74,8 +76,8 @@ namespace Copium::Graphics
 	public:
 		/* Camera View / Scene View *****************************************************/
 		// [Camera Here] (Bean: Should be a component instead?)
-		static int sceneWidth;
-		static int sceneHeight;
+		GLuint sceneWidth;
+		GLuint sceneHeight;
 
 		/* Stored Texture Assets ********************************************************/
 		std::vector<GLuint> textureSlots;
@@ -93,9 +95,12 @@ namespace Copium::Graphics
 
 		/* Stored Information ***********************************************************/
 		std::vector<Copium::Component::SpriteRenderer *> sprites;
+
+		Renderer renderer;
+		Renderer debugRenderer;
+		Framebuffer framebuffer;
 	};
 
-	static Graphics graphics;
 }
 
-#endif GRAPHICS_H
+#endif GRAPHICS_SYSTEM_H

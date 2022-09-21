@@ -15,11 +15,14 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
-#include "graphics.h"
+#include <GL/glew.h>
 
 namespace Copium::Graphics
 {
-	class Framebuffer : public Graphics// Inherits from Graphics
+	// Forward declare
+	class GraphicsSystem;
+
+	class Framebuffer
 	{
 	public:
 		void init();
@@ -38,9 +41,8 @@ namespace Copium::Graphics
 
 		GLuint colorAttachment = 0;
 		GLuint depthAttachment = 0;
+
+		GraphicsSystem * graphics;
 	};
-
-	static Framebuffer framebuffer;
-
 }
 #endif // !FRAMEBUFFER_H
