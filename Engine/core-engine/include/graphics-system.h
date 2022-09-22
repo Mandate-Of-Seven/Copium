@@ -29,8 +29,10 @@ namespace Copium::Graphics
 {
 	// Global variables
 	static const GLuint maxQuadCount = 100; // Number of sprites per batch
+	static const GLuint maxLineCount = 100; // Number of lines per batch
 	static const GLuint maxVertexCount = maxQuadCount * 4;
 	static const GLuint maxIndexCount = maxQuadCount * 6;
+	static const GLuint maxLineVertexCount = maxLineCount * 2;
 	static const GLuint maxTextures = 32;
 
 	CLASS_SYSTEM(GraphicsSystem) // Inherits from System
@@ -50,7 +52,7 @@ namespace Copium::Graphics
 	private:
 
 		// Setup default shaders for the graphics system
-		void setup_shader_program();
+		void setup_shader_program(std::string vtx_shdr, std::string frg_shdr);
 
 		// Setup default world, view and projection matrices (May include orthographic)
 		void setup_matrices();
@@ -91,14 +93,15 @@ namespace Copium::Graphics
 		glm::mat4 viewProjMatrix;
 
 		/* Shaders **********************************************************************/
-		GLSLShader shaderProgram; // Shader program to use
+		GLSLShader shaderProgram[2]; // Shader program to use
 
 		/* Stored Information ***********************************************************/
 		std::vector<Copium::Component::SpriteRenderer *> sprites;
 
 		Renderer renderer;
-		Renderer debugRenderer;
 		Framebuffer framebuffer;
+
+		bool debugMode;
 	};
 
 }

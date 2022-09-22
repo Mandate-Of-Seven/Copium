@@ -155,6 +155,7 @@
     <ClInclude Include="include\game-object.h" />
     <ClInclude Include="include\gamestate-sandbox.h" />
     <ClInclude Include="include\glapp.h" />
+    <ClInclude Include="include\stb_image.h" />
     <ClInclude Include="include\windows-system.h" />
     <ClInclude Include="include\glslshader.h" />
     <ClInclude Include="include\graphics-system.h" />
@@ -179,6 +180,8 @@
     <ClInclude Include="include\windows-input.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\shaders\line-shader-glsl.frag" />
+    <None Include="Assets\shaders\line-shader-glsl.vert" />
     <None Include="Assets\shaders\shader-glsl.frag" />
     <None Include="Assets\shaders\shader-glsl.vert" />
   </ItemGroup>

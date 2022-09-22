@@ -29,6 +29,10 @@ namespace Copium::Editor
 		//imgui
 		ImGui::CreateContext();
 		ImGuiIO & io = ImGui::GetIO(); (void) io;
+
+		// Only move window from title bar
+		io.ConfigWindowsMoveFromTitleBarOnly = true;
+		
 		ImGui::StyleColorsDark();
 		ImGui_ImplGlfw_InitForOpenGL(windowsSystem.get_window(), true);
 		ImGui_ImplOpenGL3_Init("#version 330");

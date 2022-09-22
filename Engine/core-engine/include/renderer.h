@@ -24,11 +24,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium::Graphics 
 {
-	enum RenderType
-	{
-		WORLD,
-		DEBUG
-	};
 
 	// Forward declare
 	class GraphicsSystem;
@@ -48,7 +43,7 @@ namespace Copium::Graphics
 			the elements of the object to be used for rendering
 		*/
 		/**************************************************************************/
-		void init(RenderType _type); // Initializes the renderer by storing a handle to VAO
+		void init(); // Initializes the renderer by storing a handle to VAO
 
 		/***************************************************************************/
 		/*!
@@ -129,6 +124,22 @@ namespace Copium::Graphics
 		*/
 		/**************************************************************************/
 		void draw_quad(const glm::vec2& _position, const glm::vec2& _size, int _textureID);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Draws the quad onto the game window
+		\param transform
+			The transform of the quad
+		\param position
+			The position of the quad
+		\param size
+			The size of the quad
+		\param color
+			The color of the quad
+		*/
+		/**************************************************************************/
+		void draw_quad(const glm::mat4& _transform, const glm::vec2& _position, const glm::vec2& _size, const glm::vec4& _color);
 
 		/***************************************************************************/
 		/*!
@@ -219,10 +230,7 @@ namespace Copium::Graphics
 		GLuint quadIndexCount = 0; // Number of elements in the Quad object
 
 		GLuint lineVertexBufferID = 0; // Handle to Line Vertex Buffer Object
-		GLuint lineIndexBufferID = 0; // Handle to Line Index Buffer
-		GLuint lineIndexCount = 0; // Number of elements in the Line object
-		
-		RenderType type;
+		GLuint lineVertexCount = 0; // Number of elements in the Line object
 
 		QuadVertex* quadBuffer = nullptr;
 		QuadVertex* quadBufferPtr = nullptr;

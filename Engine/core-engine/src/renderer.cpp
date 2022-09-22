@@ -21,17 +21,15 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium::Graphics
 {
-	void Renderer::init(RenderType _type)
+	void Renderer::init()
 	{
 		graphics = GraphicsSystem::Instance();
-		
-		type = _type;
-
-		// Setup Quad Vertex Array Object
-		setup_quad_vao();
 
 		// Setup Line Vertex Array Object
 		setup_line_vao();
+
+		// Setup Quad Vertex Array Object
+		setup_quad_vao();
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &graphics->whiteTexture);
 		glBindTexture(GL_TEXTURE_2D, graphics->whiteTexture);
@@ -62,23 +60,24 @@ namespace Copium::Graphics
 
 		// Quad Buffer Object
 		glCreateBuffers(1, &quadVertexBufferID);
-		glBindBuffer(GL_ARRAY_BUFFER, quadVertexBufferID);
-
 		glNamedBufferData(quadVertexBufferID, maxVertexCount * sizeof(QuadVertex), nullptr, GL_DYNAMIC_DRAW);
+		glVertexArrayVertexBuffer(quadVertexArrayID, 0, quadVertexBufferID, 0, sizeof(QuadVertex));
 
 		glEnableVertexArrayAttrib(quadVertexBufferID, 0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (const void*)offsetof(QuadVertex, pos));
+		glVertexAttribFormat(0, 3, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, pos));
+		glVertexAttribBinding(0, 0);
 
 		glEnableVertexArrayAttrib(quadVertexBufferID, 1);
-		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (const void*)offsetof(QuadVertex, color));
+		glVertexAttribFormat(1, 4, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, color));
+		glVertexAttribBinding(1, 0);
 
 		glEnableVertexArrayAttrib(quadVertexBufferID, 2);
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (const void*)offsetof(QuadVertex, textCoord));
+		glVertexAttribFormat(2, 2, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, textCoord));
+		glVertexAttribBinding(2, 0);
 
 		glEnableVertexArrayAttrib(quadVertexBufferID, 3);
-		glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (const void*)offsetof(QuadVertex, texID));
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+		glVertexAttribFormat(3, 1, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, texID));
+		glVertexAttribBinding(3, 0);
 
 		// Element Buffer Object
 		GLushort indices[maxIndexCount];
@@ -107,41 +106,23 @@ namespace Copium::Graphics
 		lineBuffer = new LineVertex[maxVertexCount];
 
 		// Vertex Array Object
-		//glCreateVertexArrays(1, &lineVertexArrayID);
-		//glBindVertexArray(lineVertexArrayID);
+		glCreateVertexArrays(1, &lineVertexArrayID);
+		glBindVertexArray(lineVertexArrayID);
 
 		// Line Buffer Object
 		glCreateBuffers(1, &lineVertexBufferID);
-		glBindBuffer(GL_ARRAY_BUFFER, lineVertexBufferID);
 		glNamedBufferData(lineVertexBufferID, maxVertexCount * sizeof(LineVertex), nullptr, GL_DYNAMIC_DRAW);
+		glVertexArrayVertexBuffer(lineVertexArrayID, 1, lineVertexBufferID, 0, sizeof(LineVertex));
 
-		glEnableVertexArrayAttrib(lineVertexBufferID, 4);
-		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(LineVertex), (const void *) offsetof(LineVertex, pos));
+		glEnableVertexArrayAttrib(lineVertexBufferID, 0);
+		glVertexAttribFormat(0, 3, GL_FLOAT, GL_FALSE, offsetof(LineVertex, pos));
+		glVertexAttribBinding(0, 1);
 
-		glEnableVertexArrayAttrib(lineVertexBufferID, 5);
-		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(LineVertex), (const void *) offsetof(LineVertex, color));
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glEnableVertexArrayAttrib(lineVertexBufferID, 1);
+		glVertexAttribFormat(1, 4, GL_FLOAT, GL_FALSE, offsetof(LineVertex, color));
+		glVertexAttribBinding(1, 1);
 
-		// Element Buffer Object
-		/*GLushort indices[maxIndexCount];
-		GLuint offset = 0;
-		for (GLuint i = 0; i < maxIndexCount; i += 6)
-		{
-			indices[i + 0] = 0 + offset;
-			indices[i + 1] = 1 + offset;
-			indices[i + 2] = 2 + offset;
-			indices[i + 3] = 2 + offset;
-			indices[i + 4] = 3 + offset;
-			indices[i + 5] = 0 + offset;
-
-			offset += 4;
-		}
-
-		glCreateBuffers(1, &quadIndexBufferID);
-		glNamedBufferStorage(quadIndexBufferID, sizeof(indices), indices, GL_DYNAMIC_STORAGE_BIT);
-
-		glVertexArrayElementBuffer(quadVertexArrayID, quadIndexBufferID);
-		glBindVertexArray(0);*/
+		glBindVertexArray(0);
 
 		glLineWidth(1.f);
 	}
@@ -153,7 +134,6 @@ namespace Copium::Graphics
 		glDeleteBuffers(1, &quadVertexBufferID);
 		glDeleteBuffers(1, &lineVertexBufferID);
 		glDeleteBuffers(1, &quadIndexBufferID);
-		glDeleteBuffers(1, &lineIndexBufferID);
 		glDeleteTextures(1, &graphics->whiteTexture);
 
 		delete[] quadBuffer;
@@ -162,8 +142,10 @@ namespace Copium::Graphics
 
 	void Renderer::begin_batch()
 	{
+		quadIndexCount = 0;
 		quadBufferPtr = quadBuffer;
 
+		lineVertexCount = 0;
 		lineBufferPtr = lineBuffer;
 	}
 
@@ -171,35 +153,31 @@ namespace Copium::Graphics
 	{
 		if (quadIndexCount)
 		{
+			graphics->shaderProgram[0].Use();
 			for (GLuint i = 0; i < graphics->textureSlotIndex; i++)
 				glBindTextureUnit(i, graphics->textureSlots[i]);
 
 			glBindVertexArray(quadVertexArrayID);
-			//glDrawElements(GL_TRIANGLES, quadIndexCount, GL_UNSIGNED_SHORT, NULL);
-			if(type == WORLD)
-				glDrawElements(GL_TRIANGLES, quadIndexCount, GL_UNSIGNED_SHORT, NULL);
-			else if(type == DEBUG)
-				glDrawElements(GL_LINE_LOOP, quadIndexCount, GL_UNSIGNED_SHORT, NULL);
-
+			glDrawElements(GL_TRIANGLES, quadIndexCount, GL_UNSIGNED_SHORT, NULL);
 			drawCount++;
 
-			quadIndexCount = 0;
+			
 			graphics->textureSlotIndex = 1;
 			glBindVertexArray(0);
+			graphics->shaderProgram[0].UnUse();
 		}
 
-		if (lineIndexCount)
+		if (lineVertexCount)
 		{
-			glBindVertexArray(quadVertexArrayID);
-			//glBindVertexArray(lineVertexArrayID);
-			//glDrawElements(GL_LINES, lineIndexCount, GL_UNSIGNED_SHORT, NULL);
-			glDrawArrays(GL_LINES, 2, lineIndexCount);
+			graphics->shaderProgram[1].Use();
+			glBindVertexArray(lineVertexArrayID);
+			glDrawArrays(GL_LINES, 0, lineVertexCount);
 
 			drawCount++;
 
-			lineIndexCount = 0;
 			graphics->textureSlotIndex = 1;
 			glBindVertexArray(0);
+			graphics->shaderProgram[1].UnUse();
 		}
 		
 	}
@@ -208,16 +186,22 @@ namespace Copium::Graphics
 	{
 		if (quadIndexCount)
 		{
+			glBindVertexArray(quadVertexArrayID);
 			GLsizeiptr size = (GLuint*)quadBufferPtr - (GLuint*)quadBuffer;
-			glBindBuffer(GL_ARRAY_BUFFER, quadVertexBufferID);
+			//glBindBuffer(GL_ARRAY_BUFFER, quadVertexBufferID);
 			glNamedBufferSubData(quadVertexBufferID, 0, size * 4, quadBuffer);
+			glVertexArrayVertexBuffer(quadVertexArrayID, 0, quadVertexBufferID, 0, sizeof(QuadVertex));
+			glBindVertexArray(0);
 		}
 
-		if (lineIndexCount)
+		if (lineVertexCount)
 		{
+			glBindVertexArray(lineVertexArrayID);
 			GLsizeiptr size = (GLuint*)lineBufferPtr - (GLuint*)lineBuffer;
-			glBindBuffer(GL_ARRAY_BUFFER, lineVertexBufferID);
+			//glBindBuffer(GL_ARRAY_BUFFER, lineVertexBufferID);
 			glNamedBufferSubData(lineVertexBufferID, 0, size * 4, lineBuffer);
+			glVertexArrayVertexBuffer(lineVertexArrayID, 1, lineVertexBufferID, 0, sizeof(LineVertex));
+			glBindVertexArray(0);
 		}
 		
 	}
@@ -233,25 +217,31 @@ namespace Copium::Graphics
 
 		GLfloat textureIndex = 0.f;
 
-		quadBufferPtr->pos = { _position.x, _position.y, 0.0f };
+		glm::vec2 halfsize = { _size.x / 2, _size.y / 2 };
+
+		quadBufferPtr->pos = { _position.x - halfsize.x, _position.y - halfsize.y, 0.0f };
+		//quadBufferPtr->pos = { _position.x, _position.y, 0.0f };
 		quadBufferPtr->color = _color;
 		quadBufferPtr->textCoord = { 0.f, 0.f };
 		quadBufferPtr->texID = textureIndex;
 		quadBufferPtr++;
 
-		quadBufferPtr->pos = { _position.x + _size.x, _position.y, 0.0f };
+		quadBufferPtr->pos = { _position.x + halfsize.x, _position.y - halfsize.y, 0.0f };
+		//quadBufferPtr->pos = { _position.x + _size.x, _position.y, 0.0f };
 		quadBufferPtr->color = _color;
 		quadBufferPtr->textCoord = { 1.f, 0.f };
 		quadBufferPtr->texID = textureIndex;
 		quadBufferPtr++;
 
-		quadBufferPtr->pos = { _position.x + _size.x, _position.y + _size.y, 0.0f };
+		quadBufferPtr->pos = { _position.x + halfsize.x, _position.y + halfsize.y, 0.0f };
+		//quadBufferPtr->pos = { _position.x + _size.x, _position.y + _size.y, 0.0f };
 		quadBufferPtr->color = _color;
 		quadBufferPtr->textCoord = { 1.f, 1.f };
 		quadBufferPtr->texID = textureIndex;
 		quadBufferPtr++;
 
-		quadBufferPtr->pos = { _position.x, _position.y + _size.y, 0.0f };
+		quadBufferPtr->pos = { _position.x - halfsize.x, _position.y + halfsize.y, 0.0f };
+		//quadBufferPtr->pos = { _position.x, _position.y + _size.y, 0.0f };
 		quadBufferPtr->color = _color;
 		quadBufferPtr->textCoord = { 0.f, 1.f };
 		quadBufferPtr->texID = textureIndex;
@@ -290,26 +280,78 @@ namespace Copium::Graphics
 			graphics->textureSlotIndex++;
 		}
 
-		quadBufferPtr->pos = { _position.x, _position.y, 0.0f };
+		glm::vec2 halfsize = { _size.x / 2, _size.y / 2 };
+
+		quadBufferPtr->pos = { _position.x - halfsize.x, _position.y - halfsize.y, 0.0f };
 		quadBufferPtr->color = color;
 		quadBufferPtr->textCoord = { 0.f, 0.f };
 		quadBufferPtr->texID = textureIndex;
 		quadBufferPtr++;
 
-		quadBufferPtr->pos = { _position.x + _size.x, _position.y, 0.0f };
+		quadBufferPtr->pos = { _position.x + halfsize.x, _position.y - halfsize.y, 0.0f };
 		quadBufferPtr->color = color;
 		quadBufferPtr->textCoord = { 1.f, 0.f };
 		quadBufferPtr->texID = textureIndex;
 		quadBufferPtr++;
 
-		quadBufferPtr->pos = { _position.x + _size.x, _position.y + _size.y, 0.0f };
+		quadBufferPtr->pos = { _position.x + halfsize.x, _position.y + halfsize.y, 0.0f };
 		quadBufferPtr->color = color;
 		quadBufferPtr->textCoord = { 1.f, 1.f };
 		quadBufferPtr->texID = textureIndex;
 		quadBufferPtr++;
 
-		quadBufferPtr->pos = { _position.x, _position.y + _size.y, 0.0f };
+		quadBufferPtr->pos = { _position.x - halfsize.x, _position.y + halfsize.y, 0.0f };
 		quadBufferPtr->color = color;
+		quadBufferPtr->textCoord = { 0.f, 1.f };
+		quadBufferPtr->texID = textureIndex;
+		quadBufferPtr++;
+
+		quadIndexCount += 6;
+		quadCount++;
+	}
+
+	void Renderer::draw_quad(const glm::mat4& _transform, const glm::vec2& _position, const glm::vec2& _size, const glm::vec4& _color)
+	{
+
+		if (quadIndexCount >= maxIndexCount)
+		{
+			end_batch();
+			flush();
+			begin_batch();
+		}
+
+		GLfloat textureIndex = 0.f;
+
+		glm::vec2 halfsize = { _size.x / 2, _size.y / 2 };
+
+		quadBufferPtr->pos = _transform * glm::vec4(-halfsize.x, -halfsize.y, 1.f, 1.f);
+		//quadBufferPtr->pos = glm::vec4(_position.x - halfsize.x, _position.y - halfsize.y, 1.f, 1.f);
+		//quadBufferPtr->pos = { _position.x, _position.y, 0.0f };
+		quadBufferPtr->color = _color;
+		quadBufferPtr->textCoord = { 0.f, 0.f };
+		quadBufferPtr->texID = textureIndex;
+		quadBufferPtr++;
+
+		quadBufferPtr->pos = _transform * glm::vec4(halfsize.x, -halfsize.y, 1.f, 1.f);
+		//quadBufferPtr->pos = glm::vec4(_position.x + halfsize.x, _position.y - halfsize.y, 1.f, 1.f);
+		//quadBufferPtr->pos = { _position.x + _size.x, _position.y, 0.0f };
+		quadBufferPtr->color = _color;
+		quadBufferPtr->textCoord = { 1.f, 0.f };
+		quadBufferPtr->texID = textureIndex;
+		quadBufferPtr++;
+
+		quadBufferPtr->pos = _transform * glm::vec4(halfsize.x, halfsize.y, 1.f, 1.f);
+		//quadBufferPtr->pos = glm::vec4(_position.x + halfsize.x, _position.y + halfsize.y, 1.f, 1.f);
+		//quadBufferPtr->pos = { _position.x + _size.x, _position.y + _size.y, 0.0f };
+		quadBufferPtr->color = _color;
+		quadBufferPtr->textCoord = { 1.f, 1.f };
+		quadBufferPtr->texID = textureIndex;
+		quadBufferPtr++;
+
+		quadBufferPtr->pos = _transform * glm::vec4(-halfsize.x, halfsize.y, 1.f, 1.f);
+		//quadBufferPtr->pos = glm::vec4(_position.x - halfsize.x, _position.y + halfsize.y, 1.f, 1.f);
+		//quadBufferPtr->pos = { _position.x, _position.y + _size.y, 0.0f };
+		quadBufferPtr->color = _color;
 		quadBufferPtr->textCoord = { 0.f, 1.f };
 		quadBufferPtr->texID = textureIndex;
 		quadBufferPtr++;
@@ -320,7 +362,7 @@ namespace Copium::Graphics
 
 	void Renderer::draw_line(const glm::vec2& _position0, const glm::vec2& _position1, const glm::vec4& _color)
 	{
-		if (lineIndexCount >= maxIndexCount)
+		if (lineVertexCount >= maxLineCount)
 		{
 			end_batch();
 			flush();
@@ -335,7 +377,6 @@ namespace Copium::Graphics
 		lineBufferPtr->color = _color;
 		lineBufferPtr++;
 
-		lineIndexCount += 2;
-		lineCount++;
+		lineVertexCount += 2;
 	}
 }
