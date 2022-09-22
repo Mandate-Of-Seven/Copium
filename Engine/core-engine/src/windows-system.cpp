@@ -31,6 +31,9 @@ namespace Copium
         screenHeight = _height;
         title = _title;
 
+        std::string config("Data\\config.json");
+        load_config(config, screenWidth, screenHeight);
+
         if (!glfwInit())
         {
             PRINT("GLFW init has failed - abort program!!!");
@@ -51,7 +54,7 @@ namespace Copium
         glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); // window dimensions are NOT static
 
         //GLFWwindow * ptr_window = glfwCreateWindow(_width, _height, _title.c_str(), NULL, NULL);
-        window = glfwCreateWindow(_width, _height, _title.c_str(), NULL, NULL);
+        window = glfwCreateWindow(screenWidth, screenHeight, _title.c_str(), NULL, NULL);
 
         if (!window)
         {
@@ -219,6 +222,36 @@ namespace Copium
             count = 0.0;
             std::cout << "FPS:" << GLHelper::fps << std::endl;
         }
+    }
+
+    bool WindowsSystem::load_config(std::string& _filename, GLint& _w, GLint& _h)
+    {
+        std::ifstream ifs(_filename);
+        if (!ifs)
+        {
+            std::cout << "Error opening config json file!\n";
+            return false;
+        }
+        rapidjson::IStreamWrapper isw(ifs);
+        rapidjson::Document doc;
+        doc.ParseStream(isw);
+        if (doc.HasMember("Width"))
+        {
+            _w = doc["Width"].GetInt();
+        }
+        else {
+            return false;
+        }
+        if (doc.HasMember("Height"))
+        {
+            _h = doc["Height"].GetInt();
+        }
+        else {
+            return false;
+        }
+        std::cout << "Loading from config...\n" << "Window Width:" << _w << '\n'
+            << "Window Height:" << _h << std::endl;
+        return true;
     }
 }
 

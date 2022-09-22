@@ -2,6 +2,7 @@
 #include "system-interface.h"
 #include "scripting-system.h"
 #include "message-system.h"
+#include "sm.h"
 
 namespace Copium
 {
@@ -22,7 +23,8 @@ namespace Copium
 			{
 				//Put in sequence of calls
 				Message::MessageSystem::Instance(),
-				Scripting::ScriptingSystem::Instance()
+				Scripting::ScriptingSystem::Instance(),
+				NewSceneManager::Instance()
 			};
 			for (ISystem* pSystem : systems)
 			{

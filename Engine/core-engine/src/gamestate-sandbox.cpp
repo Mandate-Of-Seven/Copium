@@ -21,6 +21,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 ****/
 #include <pch.h>
 #include "gamestate-sandbox.h"
+#include <game-object-factory.h>
 
 #include <windows-system.h>
 #include <graphics.h>
@@ -47,13 +48,57 @@ SceneSandbox::SceneSandbox(std::string& _filepath) : Scene(_filepath)
 void SceneSandbox::load_scene() 
 {
 	std::cout << "load sandbox" << std::endl;
-	//std::string filepath("Data\\sandbox.json");
-	//JsonSerializer js(filepath);
-	//Copium::Math::Vec2 alpha;
-	//load(js, alpha);
+	//Copium::GameObjectFactory GOF;
+	//GOF.link_to_scene(this);
 
-	//std::cout << alpha;
+	//std::ifstream ifs("Data\\sandbox.json", std::ios::in);
+	//if (!ifs)
+	//{
+	//	std::cout << "Error opening file\n";
+	//	ifs.close();
+	//	return;
+	//}
 
+	//rapidjson::IStreamWrapper isw(ifs);
+	//rapidjson::Document d;
+	//if (d.ParseStream(isw).HasParseError())
+	//{
+	//	std::cout << "Parsing error\n";
+	//	ifs.close();
+	//	return;
+	//}
+
+	//if (d.HasMember("Name"))
+	//	std::cout << "Scene Name: " << d["Name"].GetString() << std::endl;
+
+	//if (!d.HasMember("GameObjects"))
+	//{
+	//	ifs.close();
+	//	return;
+	//}
+
+	//rapidjson::Value& goArr = d["GameObjects"].GetArray();
+	//std::vector<GameObject*> tmpGOARR;
+	//for (rapidjson::Value::ValueIterator iter = goArr.Begin(); iter != goArr.End(); ++iter)
+	//{
+	//	GameObject* tmpGO = GOF.build_gameobject(*iter);
+	//}
+
+	//std::cout << "No. of game objects loaded:" << get_gameobjcount() << std::endl;
+
+
+	//for (size_t i{ 0 }; i < get_gameobjectvector().size(); ++i)
+	//{
+
+	//	std::cout << "GameObject Name:" << get_gameobjectvector()[i]->get_name() << std::endl;
+	//	std::cout << "GameObject ID:" << get_gameobjectvector()[i]->get_id() << std::endl;
+	//	std::cout << "No. of children:" << get_gameobjectvector()[i]->childList().size() << std::endl;
+	//	std::cout << "No. of components:" << get_gameobjectvector()[i]->Components().size() << std::endl;
+	//}
+	//std::cout << "Number of game objects in file: " << tmpGOARR.size() << std::endl;
+
+
+	//ifs.close();
 }
 void SceneSandbox::init_scene() 
 {
@@ -63,21 +108,8 @@ void SceneSandbox::init_scene()
 	// (In the future should be stored in a vector container and looped initialised)
 	graphics.init();
 
-	//Serialization Testingf
-	this->get_gameobjectvector().push_back(new GameObject(v2,v2,v2));
-	this->get_gameobjectvector().push_back(new GameObject(v1,v1,v1));
-	this->get_gameobjectvector().push_back(new GameObject(v2, v2, v1));
-
-	GameObject* dad = get_gameobjectvector()[0];
-	GameObject* kid = get_gameobjectvector()[2];
-	dad->attach_child(kid);
-	GameObjectID g{ 5 };
-	kid->set_id(g);
-
-	dad->set_name("Rex");
-
-	Copium::Math::Vec2 b1(1,1);
-	std::cout << b1/2;
+	//Serialization Testing
+	
 }
 
 void SceneSandbox::update_scene() 
@@ -103,15 +135,9 @@ void SceneSandbox::free_scene()
 void SceneSandbox::unload_scene() 
 {
 	std::cout << "unload sandbox" << std::endl;
-	//std::cout << "does file exist: " << does_file_exist("sandbox.dat") << std::endl;
-	//serialize_scene("sandbox.dat", this);
-	//JSON
-	std::ofstream os("Data\\sandbox.json", std::ios::out);
-	if (!os)
-		std::cout << "file not open\n";
-	Copium::Math::Vec2 tester(3, 4);
-	//ss.serialize(os, tester);
+
 
 	// Bean: This should be handles by ISystem
 	graphics.exit();
+	std::cout << "scene unloaded\n";
 }

@@ -1,0 +1,38 @@
+{
+  "Name": "sandbox",
+  "GameObjects": [
+    {
+      "ID": 1,
+      "Name": "Frank",
+      "PID": 0,
+      "Components": [
+
+      ],
+      "Children": [
+        {
+          "ID": 10,
+          "Name": "Frank Jr",
+          "PID": 1,
+          "Components": [
+
+          ],
+          "Children": [
+
+          ]
+        }
+      ]
+    },
+    {
+      "ID": 2,
+      "Name": "Thanos",
+      "PID": 0,
+      "Components": [
+
+      ],
+      "Children": [
+
+      ]
+    }
+
+  ]
+}

@@ -11,9 +11,8 @@
 
 \brief
 	Contains declarations for the GameObjectFactory class.
-	The GameObjectFactory is responsible for the creation of game objects. These game objects are then linked
-	to their parent scenes.
-	Note: GameObjectFactory inherits from ISystem class
+	The GameObjectFactory is responsible for the creation, management and destruction of game objects.
+	Note: The GameObjectFactory will also place the created gameobjects inside the current scene.
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************
@@ -29,7 +28,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium {
 
-	CLASS_SYSTEM(GameObjectFactory) {
+	class GameObjectFactory {
 		
 	public:
 		GameObjectFactory();
@@ -46,7 +45,10 @@ namespace Copium {
 		*/
 		/*******************************************************************************/
 		GameObject* build_gameobject();
+
+		// Set up for future
 		//GameObject* build_gameobject(prefab);
+
 		/*******************************************************************************
 		/*!
 		*
@@ -59,15 +61,56 @@ namespace Copium {
 		*/
 		/*******************************************************************************/
 		GameObject* build_gameobject(rapidjson::Value& _value);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Link this GameObjectFactory to a Scene object
+			Note: whenever a new scene is loaded in, this function should be called by the SceneManager that
+			owns this GameObjectFactory
 
-		// Do nothing
-		void init();
-		void update();
-		void exit();
+		\param _s
+			Ptr to the Scene that this GameObjectFactory needs to be linked to
+			
+		\return
+			pointer to the new game object
+		*/
+		/*******************************************************************************/
+		void link_to_scene(Scene* _s);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Destroy a gameobject
+
+		\param _go
+			Ptr to the game object that is to be destroyed.
+			Note: the game object must exist in the current scene.
+
+		\return
+			on success, return true
+			on failure, return false
+		*/
+		/*******************************************************************************/
+		bool delete_gameobject(GameObject* _go);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Clones a game object and places the clone into the current scene
+			NOTE: This function does NOT clone the children
+
+		\param _src
+			Ptr to a game object that is to be cloned
+
+		\return
+			pointer to the new game object(clone)
+		*/
+		/*******************************************************************************/
+		GameObject* clone_gameobject(GameObject* _src);
 
 	private:
 		Scene* currentScene;
-
 
 	};
 

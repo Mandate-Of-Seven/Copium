@@ -35,12 +35,7 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
-    for (Component* pComponent: components)
-    {
-        delete pComponent;
-    }
-    components.clear();
-    children.clear();
+    //components.clear();
 }
 
 std::list<Component*>& GameObject::Components()
@@ -132,8 +127,25 @@ bool GameObject::attach_child(GameObject* _child)
 
     children.push_back(_child);
     _child->parent = this;
+    _child->parentid = parentid;
+
+
     return true;
 
+}
+bool GameObject::deattach_child(GameObject* _child)
+{
+    for (std::list<GameObject*>::iterator iter = children.begin(); iter != children.end(); ++iter)
+    {
+        if (*iter == _child)
+        {
+            _child->parent = nullptr;
+            _child->parentid = 0;
+            return true;
+        }
+    }
+
+    return false;
 }
 
 bool GameObject::deserialize(rapidjson::Value& _value) {

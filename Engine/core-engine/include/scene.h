@@ -18,6 +18,10 @@
 
 	Note: load, init, free and unload functions MUST be defined by scene sub-classes
 
+	Contains definitions for NormalScene class which is a derived class from Scene class.
+	Note: this is the latest version of our scene class, use this
+
+
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #pragma once
@@ -185,6 +189,9 @@ public:
 	/*******************************************************************************/
 	bool remove_gameobject(GameObject* _gameObj);
 
+	void set_name(const std::string& _name);
+	std::string get_name() const;
+
 
 private:
 	std::string& filename;
@@ -192,6 +199,82 @@ private:
 	std::vector<GameObject*> gameObjects;	//Vector should be in order
 };
 
+namespace Copium {
+	class NormalScene : public Scene
+	{
+	public:
+		NormalScene(std::string& _filepath);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			LOAD function for a NormalScene
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		void load_scene();
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			INIT function for a NormalScene
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		void init_scene();
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			UPDATE function for a NormalScene
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		void update_scene();
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			DRAW function for a NormalScene
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		void draw_scene();
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			FREE function for a NormalScene
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		void free_scene();
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			UNLOAD function for a NormalScene
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		void unload_scene();
+
+
+
+	};
+}
 
 
 #endif SCENE_H

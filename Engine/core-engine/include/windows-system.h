@@ -21,6 +21,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <GL/glew.h> // for access to OpenGL API declarations 
 #include <GLFW/glfw3.h>
 #include <string>
+#include <rapidjson/document.h>
+#include <rapidjson/istreamwrapper.h>
 
 namespace Copium
 {
@@ -51,6 +53,9 @@ namespace Copium
 		static int get_window_height() { return screenHeight; }
 
 		static GLFWwindow * get_window() { return window; }
+
+		static bool load_config(std::string& _filename, GLint& _w, GLint& _h);
+		
 
 	private:
 		/* Properties of a Window *******************************************************/
