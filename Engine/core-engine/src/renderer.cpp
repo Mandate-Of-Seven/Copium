@@ -25,13 +25,13 @@ namespace Copium::Graphics
 	{
 		graphics = GraphicsSystem::Instance();
 		
+		type = _type;
+
 		// Setup Quad Vertex Array Object
-		if(_type == WORLD)
-			setup_quad_vao();
+		setup_quad_vao();
 
 		// Setup Line Vertex Array Object
-		else if(_type == DEBUG)
-			setup_line_vao();
+		setup_line_vao();
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &graphics->whiteTexture);
 		glBindTexture(GL_TEXTURE_2D, graphics->whiteTexture);
@@ -63,6 +63,7 @@ namespace Copium::Graphics
 		// Quad Buffer Object
 		glCreateBuffers(1, &quadVertexBufferID);
 		glBindBuffer(GL_ARRAY_BUFFER, quadVertexBufferID);
+
 		glNamedBufferData(quadVertexBufferID, maxVertexCount * sizeof(QuadVertex), nullptr, GL_DYNAMIC_DRAW);
 
 		glEnableVertexArrayAttrib(quadVertexBufferID, 0);
@@ -106,20 +107,43 @@ namespace Copium::Graphics
 		lineBuffer = new LineVertex[maxVertexCount];
 
 		// Vertex Array Object
-		glCreateVertexArrays(1, &quadVertexArrayID);
-		glBindVertexArray(quadVertexArrayID);
+		//glCreateVertexArrays(1, &lineVertexArrayID);
+		//glBindVertexArray(lineVertexArrayID);
 
 		// Line Buffer Object
-		glCreateBuffers(1, &quadVertexBufferID);
-		glBindBuffer(GL_ARRAY_BUFFER, quadVertexBufferID);
-		glNamedBufferData(quadVertexBufferID, maxVertexCount * sizeof(LineVertex), nullptr, GL_DYNAMIC_DRAW);
+		glCreateBuffers(1, &lineVertexBufferID);
+		glBindBuffer(GL_ARRAY_BUFFER, lineVertexBufferID);
+		glNamedBufferData(lineVertexBufferID, maxVertexCount * sizeof(LineVertex), nullptr, GL_DYNAMIC_DRAW);
 
-		glEnableVertexArrayAttrib(quadVertexBufferID, 1);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(LineVertex), (const void*)offsetof(LineVertex, pos));
+		glEnableVertexArrayAttrib(lineVertexBufferID, 4);
+		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(LineVertex), (const void *) offsetof(LineVertex, pos));
 
-		glEnableVertexArrayAttrib(quadVertexBufferID, 1);
-		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(LineVertex), (const void*)offsetof(LineVertex, color));
+		glEnableVertexArrayAttrib(lineVertexBufferID, 5);
+		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(LineVertex), (const void *) offsetof(LineVertex, color));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		// Element Buffer Object
+		/*GLushort indices[maxIndexCount];
+		GLuint offset = 0;
+		for (GLuint i = 0; i < maxIndexCount; i += 6)
+		{
+			indices[i + 0] = 0 + offset;
+			indices[i + 1] = 1 + offset;
+			indices[i + 2] = 2 + offset;
+			indices[i + 3] = 2 + offset;
+			indices[i + 4] = 3 + offset;
+			indices[i + 5] = 0 + offset;
+
+			offset += 4;
+		}
+
+		glCreateBuffers(1, &quadIndexBufferID);
+		glNamedBufferStorage(quadIndexBufferID, sizeof(indices), indices, GL_DYNAMIC_STORAGE_BIT);
+
+		glVertexArrayElementBuffer(quadVertexArrayID, quadIndexBufferID);
+		glBindVertexArray(0);*/
+
+		glLineWidth(1.f);
 	}
 
 	void Renderer::shutdown()
@@ -129,6 +153,7 @@ namespace Copium::Graphics
 		glDeleteBuffers(1, &quadVertexBufferID);
 		glDeleteBuffers(1, &lineVertexBufferID);
 		glDeleteBuffers(1, &quadIndexBufferID);
+		glDeleteBuffers(1, &lineIndexBufferID);
 		glDeleteTextures(1, &graphics->whiteTexture);
 
 		delete[] quadBuffer;
@@ -150,7 +175,11 @@ namespace Copium::Graphics
 				glBindTextureUnit(i, graphics->textureSlots[i]);
 
 			glBindVertexArray(quadVertexArrayID);
-			glDrawElements(GL_TRIANGLES, quadIndexCount, GL_UNSIGNED_SHORT, NULL);
+			//glDrawElements(GL_TRIANGLES, quadIndexCount, GL_UNSIGNED_SHORT, NULL);
+			if(type == WORLD)
+				glDrawElements(GL_TRIANGLES, quadIndexCount, GL_UNSIGNED_SHORT, NULL);
+			else if(type == DEBUG)
+				glDrawElements(GL_LINE_LOOP, quadIndexCount, GL_UNSIGNED_SHORT, NULL);
 
 			drawCount++;
 
@@ -161,8 +190,10 @@ namespace Copium::Graphics
 
 		if (lineIndexCount)
 		{
-			glBindVertexArray(lineVertexArrayID);
-			glDrawElements(GL_LINE, lineIndexCount, GL_UNSIGNED_SHORT, NULL);
+			glBindVertexArray(quadVertexArrayID);
+			//glBindVertexArray(lineVertexArrayID);
+			//glDrawElements(GL_LINES, lineIndexCount, GL_UNSIGNED_SHORT, NULL);
+			glDrawArrays(GL_LINES, 2, lineIndexCount);
 
 			drawCount++;
 

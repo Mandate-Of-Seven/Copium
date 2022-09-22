@@ -219,7 +219,10 @@ namespace Copium::Graphics
 		GLuint quadIndexCount = 0; // Number of elements in the Quad object
 
 		GLuint lineVertexBufferID = 0; // Handle to Line Vertex Buffer Object
+		GLuint lineIndexBufferID = 0; // Handle to Line Index Buffer
 		GLuint lineIndexCount = 0; // Number of elements in the Line object
+		
+		RenderType type;
 
 		QuadVertex* quadBuffer = nullptr;
 		QuadVertex* quadBufferPtr = nullptr;

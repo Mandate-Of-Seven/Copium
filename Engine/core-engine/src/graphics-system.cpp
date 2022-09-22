@@ -26,6 +26,7 @@ namespace Copium::Graphics
 	using Copium::WindowsSystem;
 
 	GLfloat movement_x = 0.f, movement_y = 0.f;
+	GLint index = 0;
 
 	void GraphicsSystem::init()
 	{
@@ -51,6 +52,9 @@ namespace Copium::Graphics
 			samplers[i] = i;
 
 		glUniform1iv(loc, maxTextures, samplers);
+
+		loc = glGetUniformLocation(shaderProgram.GetHandle(), "uIndex");
+		glUniform1i(loc, index);
 	}
 
 	void GraphicsSystem::update()
@@ -144,13 +148,14 @@ namespace Copium::Graphics
 	// Draw the debug data
 	void GraphicsSystem::draw_debug_info()
 	{
+		index = 1;
 		debugRenderer.begin_batch();
 
 		// Reference all debug info in the world and draw
 		for (size_t i = 0; i < sprites.size(); i++)
 		{
-			/*PRINT(i + 1 << " : Sprite Data: " << sprites[i].pos.x << "," << sprites[i].pos.y
-				<< "\t Size: " << sprites[i].size.x << "," << sprites[i].size.y);*/
+			/*PRINT(i + 1 << " : Sprite Data: " << sprites[i]->get_position().x << "," << sprites[i]->get_position().y
+				<< "\t Size: " << sprites[i]->get_size().x << "," << sprites[i]->get_size().y);*/
 
 			glm::vec2 pos = { sprites[i]->get_position().x + movement_x, sprites[i]->get_position().y + movement_y };
 
@@ -165,6 +170,20 @@ namespace Copium::Graphics
 			debugRenderer.draw_line(pos1, pos2, color);
 			debugRenderer.draw_line(pos2, pos3, color);
 			debugRenderer.draw_line(pos3, pos0, color);
+
+			/*glm::vec4 color = { 0.3f, 1.f, 0.3f, 1.f };
+
+			glm::vec2 pos0 = glm::vec2(pos.x - sprites[i]->get_size().x / 2, pos.y - sprites[i]->get_size().y / 2);
+			glm::vec2 pos1 = glm::vec2(pos.x + sprites[i]->get_size().x / 2, pos.y - sprites[i]->get_size().y / 2);
+			glm::vec2 pos2 = glm::vec2(pos.x + sprites[i]->get_size().x / 2, pos.y + sprites[i]->get_size().y / 2);
+			glm::vec2 pos3 = glm::vec2(pos.x - sprites[i]->get_size().x / 2, pos.y + sprites[i]->get_size().y / 2);
+
+			renderer.draw_line(pos0, pos1, color);
+			renderer.draw_line(pos1, pos2, color);
+			renderer.draw_line(pos2, pos3, color);
+			renderer.draw_line(pos3, pos0, color);*/
+
+			debugRenderer.draw_quad(pos, sprites[i]->get_size(), color);
 		}
 
 		debugRenderer.end_batch();
@@ -175,11 +194,12 @@ namespace Copium::Graphics
 	// Draw the world
 	void GraphicsSystem::draw_world()
 	{
+		index = 0;
 		renderer.begin_batch();
 
 		// Reference all sprites in the world and draw
 		// Overflowing sprites gets pushed to next draw call ( Which means dynamic 0.0 )
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 1; i++)
 		{
 			glm::vec4 color = { 0.5f, 0.2f, 0.2f, 1.f };
 			renderer.draw_quad({ i + movement_x, i + movement_y }, { 0.09f, 0.16f }, color);
@@ -187,12 +207,24 @@ namespace Copium::Graphics
 
 		for (size_t i = 0; i < sprites.size(); i++)
 		{
-			/*PRINT(i + 1 << " : Sprite Data: " << sprites[i].pos.x << "," << sprites[i].pos.y
-				<< "\t Size: " << sprites[i].size.x << "," << sprites[i].size.y);*/
+			/*PRINT(i + 1 << " : Sprite Data: " << sprites[i]->get_position().x << "," << sprites[i]->get_position().y
+				<< "\t Size: " << sprites[i]->get_size().x << "," << sprites[i]->get_size().y);*/
 
 			glm::vec2 pos = { sprites[i]->get_position().x + movement_x, sprites[i]->get_position().y + movement_y };
 
-			renderer.draw_quad(pos, sprites[i]->get_size(), sprites[i]->get_color());
+			glm::vec4 color = { 0.3f, 1.f, 0.3f, 1.f };
+
+			glm::vec2 pos0 = glm::vec2(pos.x - sprites[i]->get_size().x / 2, pos.y - sprites[i]->get_size().y / 2);
+			glm::vec2 pos1 = glm::vec2(pos.x + sprites[i]->get_size().x / 2, pos.y - sprites[i]->get_size().y / 2);
+			glm::vec2 pos2 = glm::vec2(pos.x + sprites[i]->get_size().x / 2, pos.y + sprites[i]->get_size().y / 2);
+			glm::vec2 pos3 = glm::vec2(pos.x - sprites[i]->get_size().x / 2, pos.y + sprites[i]->get_size().y / 2);
+
+			renderer.draw_line(pos0, pos1, color);
+			renderer.draw_line(pos1, pos2, color);
+			renderer.draw_line(pos2, pos3, color);
+			renderer.draw_line(pos3, pos0, color);
+
+			//renderer.draw_quad(pos, sprites[i]->get_size(), sprites[i]->get_color());
 		}
 
 		renderer.end_batch();
@@ -214,7 +246,7 @@ namespace Copium::Graphics
 
 		draw_world();
 
-		draw_debug_info();
+		//draw_debug_info();
 
 		framebuffer.unbind();
 
