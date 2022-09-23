@@ -6,7 +6,7 @@
 
 \par			Course: GAM200
 \par			Section:
-\date			16/07/2022
+\date			16/09/2022
 
 \brief
 	Contains functions to check if certain mouse or keyboard inputs are detected
@@ -23,10 +23,16 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 class Input
 {
 	public:
-		short* keys;
-		short* mouseButtons;
+		short* keys;//contains the current state of all keys
+		short* mouseButtons;//contains the current state of both mouse buttons
 
-		virtual void Init() = 0;
+		/***************************************************************************/
+		/*!
+		\brief
+			Initialises all the needed variables
+		*/
+		/**************************************************************************/
+		virtual void init() = 0;
 
 		/***************************************************************************/
 		/*!
@@ -41,7 +47,15 @@ class Input
 			delete inputInstance;
 		}
 
-		static Input* getInputInstance()
+		/***************************************************************************/
+		/*!
+		\brief
+			Gets a reference of the input instance
+		\return
+			The input instance
+		*/
+		/**************************************************************************/
+		static Input* get_input_instance()
 		{
 			return inputInstance;
 		}
@@ -56,7 +70,7 @@ class Input
 			true if the key is pressed or false if not
 		*/
 		/**************************************************************************/
-		static bool isKeyPressed(int keycode) { return inputInstance->isKeyPressedImpl(keycode); }
+		static bool is_key_pressed(int keycode) { return inputInstance->is_key_pressed_impl(keycode); }
 
 		/***************************************************************************/
 		/*!
@@ -68,7 +82,7 @@ class Input
 			true if the key is held or false if not
 		*/
 		/**************************************************************************/
-		static bool isKeyHeld(int keycode) { return inputInstance->isKeyHeldImpl(keycode); }
+		static bool is_key_held(int keycode) { return inputInstance->is_key_held_impl(keycode); }
 
 
 		/***************************************************************************/
@@ -81,7 +95,7 @@ class Input
 			true if the key is pressed or false if not
 		*/
 		/**************************************************************************/
-		static bool isMouseButtonPressed(int button) { return inputInstance->isMouseButtonPressedImpl(button); }
+		static bool is_mousebutton_pressed(int button) { return inputInstance->is_mousebutton_pressed_impl(button); }
 
 		/***************************************************************************/
 		/*!
@@ -91,7 +105,7 @@ class Input
 			the mouse position
 		*/
 		/**************************************************************************/
-		static std::pair<float,float> getMousePosition() { return inputInstance->getMousePositionImpl(); }
+		static std::pair<float,float> get_mouse_position() { return inputInstance->get_mouseposition_impl(); }
 
 		/***************************************************************************/
 		/*!
@@ -101,7 +115,7 @@ class Input
 			x coordinate of the mouse cursor
 		*/
 		/**************************************************************************/
-		static bool getMouseX() { return inputInstance->getMouseXImpl(); }
+		static bool get_mouseX() { return inputInstance->get_mouseX_impl(); }
 		/***************************************************************************/
 		/*!
 		\brief
@@ -110,7 +124,7 @@ class Input
 			y coordinate of the mouse cursor
 		*/
 		/**************************************************************************/
-		static bool getMouseY() { return inputInstance->getMouseYImpl(); }
+		static bool get_mouseY() { return inputInstance->get_mouseY_impl(); }
 
 		/***************************************************************************/
 		/*!
@@ -136,7 +150,7 @@ class Input
 			were held down
 		*/
 		/**************************************************************************/
-		static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+		static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 		/***************************************************************************/
 		/*!
@@ -158,7 +172,7 @@ class Input
 			were held down
 		*/
 		/**************************************************************************/
-		static void mousebuttonCallback(GLFWwindow* window, int button, int action, int mods);
+		static void mousebutton_callback(GLFWwindow* window, int button, int action, int mods);
 
 
 		/***************************************************************************/
@@ -177,7 +191,7 @@ class Input
 		 Param yOffset
 			Scroll offset along Y-axis
 		*/
-		static void mousescrollCallback(GLFWwindow* window, double xOffset, double yOffset);
+		static void mousescroll_callback(GLFWwindow* window, double xOffset, double yOffset);
 
 		/***************************************************************************/
 		/*!
@@ -194,56 +208,56 @@ class Input
 		 Param yPos
 			new cursor y-coordinate, relative to the top edge of the client area
 		*/
-		static void mouseposCallback(GLFWwindow* window, double xPos, double yPos);
+		static void mousepos_callback(GLFWwindow* window, double xPos, double yPos);
 
 
 	protected:
 		/***************************************************************************/
 		/*!
 		\brief
-			The implementaion of isKeyPressed - Must be implemented by derived class
+			The implementaion of is_key_pressed - Must be implemented by derived class
 		/**************************************************************************/
-		virtual bool isKeyPressedImpl(int keycode) = 0;
+		virtual bool is_key_pressed_impl(int keycode) = 0;
 
 		/***************************************************************************/
 		/*!
 		\brief
-			The implementaion of isKeyHeld - Must be implemented by derived class
+			The implementaion of is_key_held - Must be implemented by derived class
 		/**************************************************************************/
-		virtual bool isKeyHeldImpl(int keycode) = 0;
+		virtual bool is_key_held_impl(int keycode) = 0;
 
 
 		/***************************************************************************/
 		/*!
 		\brief
-			The implementaion of isMouseButtonPressed - Must be implemented
+			The implementaion of is_mousebutton_pressed - Must be implemented
 													    by derived class
 		/**************************************************************************/
-		virtual bool isMouseButtonPressedImpl(int button) = 0;
+		virtual bool is_mousebutton_pressed_impl(int button) = 0;
 
 		/***************************************************************************/
 		/*!
 		\brief
-			The implementaion of getMousePosition - Must be implemented
+			The implementaion of get_mouse_position - Must be implemented
 													by derived class
 		/**************************************************************************/
-		virtual std::pair<float, float> getMousePositionImpl() = 0;
+		virtual std::pair<float, float> get_mouseposition_impl() = 0;
 
 		/***************************************************************************/
 		/*!
 		\brief
-			The implementaion of getMouseX - Must be implemented
+			The implementaion of get_mouseX - Must be implemented
 											 by derived class
 		/**************************************************************************/
-		virtual float getMouseXImpl() = 0;
+		virtual float get_mouseX_impl() = 0;
 
 		/***************************************************************************/
 		/*!
 		\brief
-			The implementaion of getMouseY - Must be implemented
+			The implementaion of get_mouseY - Must be implemented
 											 by derived class
 		/**************************************************************************/
-		virtual float getMouseYImpl() = 0;
+		virtual float get_mouseY_impl() = 0;
 	private:
 		static Input* inputInstance;
 };

@@ -160,17 +160,17 @@ static void init()
     // Bean: This should be handles by ISystem (with regards to the "System" itself)
     Copium::windowsSystem.init(1600, 900, "Copium");
 
-    Input::getInputInstance()->Init();
+    Input::get_input_instance()->init();
 
     // Bean: This initialises the imgui, which i think should also be handled by ISystem
     Copium::Editor::editor.init();
 
-    Log::init();
-    Console_Critical("Test 1");
-    Console_Error("Test 2");
-    Console_Warn("What happens");
-    Console_Info("Hello");
-    Console_Trace("Goodbye");
+    Copium::Log::init();
+    CONSOLE_CRITICAL("Test 1");
+    CONSOLE_ERROR("Test 2");
+    CONSOLE_WARN("What happens");
+    CONSOLE_INFO("Hello");
+    CONSOLE_TRACE("Goodbye");
 
 }
 
@@ -189,6 +189,8 @@ static void update()
 
     // Bean: This should be handles by ISystem
     Copium::Editor::editor.update();
+
+    
 
     quitEngine();
 }
@@ -226,7 +228,7 @@ void cleanup()
 
 void quitEngine() 
 {
-    if (Input::isKeyPressed(GLFW_KEY_Q)) 
+    if (Input::is_key_pressed(GLFW_KEY_Q)) 
     {
 
         change_enginestate(esQuit);

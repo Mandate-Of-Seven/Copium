@@ -63,23 +63,23 @@ namespace Copium::Graphics
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		if (Input::isKeyPressed(GLFW_KEY_A))
+		if (Input::is_key_pressed(GLFW_KEY_A))
 			movement_x -= GLHelper::delta_time;
-		else if (Input::isKeyPressed(GLFW_KEY_D))
+		else if (Input::is_key_pressed(GLFW_KEY_D))
 			movement_x += GLHelper::delta_time;
 
-		if (Input::isKeyPressed(GLFW_KEY_W))
+		if (Input::is_key_pressed(GLFW_KEY_W))
 			movement_y += GLHelper::delta_time;
-		else if (Input::isKeyPressed(GLFW_KEY_S))
+		else if (Input::is_key_pressed(GLFW_KEY_S))
 			movement_y -= GLHelper::delta_time;
 
 		static float time = 0.f;
 		static bool hasPressed = false;
-		if (Input::isKeyPressed(GLFW_KEY_T) && time < 1.f && !hasPressed)
+		if (Input::is_key_pressed(GLFW_KEY_T) && time < 1.f && !hasPressed)
 		{
 			//hasPressed = true;
 			Copium::Component::SpriteRenderer* sprite = new Copium::Component::SpriteRenderer;
-			glm::vec2 pos = { Input::getMousePosition().first - windowsSystem.get_window_width() / 2, Input::getMousePosition().second - windowsSystem.get_window_height() / 2};
+			glm::vec2 pos = { Input::get_mouse_position().first - windowsSystem.get_window_width() / 2, Input::get_mouse_position().second - windowsSystem.get_window_height() / 2};
 			pos.x /= 80.f;
 			pos.y /= -45.f;
 
@@ -99,7 +99,7 @@ namespace Copium::Graphics
 			hasPressed = false;
 		}
 
-		if (Input::isKeyPressed(GLFW_KEY_Y))
+		if (Input::is_key_pressed(GLFW_KEY_Y))
 		{
 			PRINT("Number of sprites: " << sprites.size());
 		}
