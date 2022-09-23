@@ -388,6 +388,8 @@ namespace Copium::Math
 				m[i][j] = _rhs[i][j];
 			}
 		}
+
+		return *this;
 	}
 
 	Matrix3x3& Matrix3x3::operator*= (const Matrix3x3& _rhs)
