@@ -37,7 +37,10 @@ namespace Copium::Graphics
 
 		GLuint get_color_attachment_id() const { return colorAttachment; }
 
+		GLuint& get_buffer_object_id() { return frameBufferObjectID; }
+
 	private:
+		GLuint frameBufferObjectID = 0;
 
 		GLuint colorAttachment = 0;
 		GLuint depthAttachment = 0;

@@ -207,10 +207,7 @@ namespace Copium::Graphics
 			Resets the number of draw and quad count
 		*/
 		/**************************************************************************/
-		//void reset_stats() { s_Data.drawCount = s_Data.quadCount = 0; };
-
-		GLuint & get_quad_vao_id() { return quadVertexArrayID; }
-		GLuint & get_line_vao_id() { return lineVertexArrayID; }
+		//void reset_stats() { s_Data.drawCount = s_Data.quadCount = 0; };		
 
 	private:
 
@@ -219,8 +216,6 @@ namespace Copium::Graphics
 		GLuint drawCount = 0; // The amount of draw calls
 		GLuint quadCount = 0; // The amount of quads drawn
 		GLuint lineCount = 0; // The amount of lines drawn
-
-		//GLuint vertexArrayID = 0; // Handle to Vertex Array Object
 
 		GLuint quadVertexArrayID = 0; // Handle to Quad Vertex Array Object
 		GLuint lineVertexArrayID = 0; // Handle to Line Vertex Array Object

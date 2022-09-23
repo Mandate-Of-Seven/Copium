@@ -41,7 +41,7 @@ namespace Copium::Graphics
 		GLuint color = 0xffffffff;
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &color);
 
-		graphics->textureSlots.resize(32);
+		graphics->textureSlots.resize(maxTextures);
 		graphics->textureSlots[0] = graphics->whiteTexture;
 
 		for (GLuint i = 1; i < maxTextures; i++)

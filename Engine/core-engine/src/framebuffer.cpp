@@ -22,21 +22,15 @@ namespace Copium::Graphics
 	{
 		graphics = GraphicsSystem::Instance();
 
-		/*if (graphics->renderer.get_quad_vao_id())
-			exit();*/
+		if (get_buffer_object_id())
+		{
+			glDeleteFramebuffers(1, &get_buffer_object_id());
+			glDeleteTextures(1, &colorAttachment);
+			glDeleteTextures(1, &depthAttachment);
+		}
 
-		if (graphics->renderer.get_line_vao_id())
-			exit();
-
-		// Temporary get the viewport dimensions
-		/*GLint viewportProperties[4]{ 0 };
-		glGetIntegerv(GL_VIEWPORT, viewportProperties);*/
-
-		/*glCreateFramebuffers(1, &graphics->renderer.get_quad_vao_id());
-		glBindFramebuffer(GL_FRAMEBUFFER, graphics->renderer.get_quad_vao_id());*/
-		
-		glCreateFramebuffers(1, &graphics->renderer.get_line_vao_id());
-		glBindFramebuffer(GL_FRAMEBUFFER, graphics->renderer.get_line_vao_id());
+		glCreateFramebuffers(1, &get_buffer_object_id());
+		glBindFramebuffer(GL_FRAMEBUFFER, get_buffer_object_id());
 
 		// Creating the color attachment
 		glCreateTextures(GL_TEXTURE_2D, 1, &colorAttachment);
@@ -86,7 +80,7 @@ namespace Copium::Graphics
 	void Framebuffer::bind()
 	{
 		glViewport(0, 0, graphics->sceneWidth, graphics->sceneHeight);
-		glBindFramebuffer(GL_FRAMEBUFFER, graphics->renderer.get_line_vao_id());
+		glBindFramebuffer(GL_FRAMEBUFFER, get_buffer_object_id());
 	}
 
 	void Framebuffer::unbind()
@@ -104,7 +98,7 @@ namespace Copium::Graphics
 
 	void Framebuffer::exit()
 	{
-		glDeleteFramebuffers(1, &graphics->renderer.get_line_vao_id());
+		glDeleteFramebuffers(1, &get_buffer_object_id());
 		glDeleteTextures(1, &colorAttachment);
 		glDeleteTextures(1, &depthAttachment);
 	}
