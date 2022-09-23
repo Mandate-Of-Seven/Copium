@@ -32,14 +32,16 @@ namespace Copium::Graphics
 		setup_quad_vao();
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &graphics->whiteTexture);
-		glBindTexture(GL_TEXTURE_2D, graphics->whiteTexture);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTextureStorage2D(graphics->whiteTexture, 1, GL_RGBA8, 1, 1);
+
+		glTextureParameteri(graphics->whiteTexture, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameteri(graphics->whiteTexture, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		glTextureParameteri(graphics->whiteTexture, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTextureParameteri(graphics->whiteTexture, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 		GLuint color = 0xffffffff;
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &color);
+		glTextureSubImage2D(graphics->whiteTexture, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &color);
 
 		graphics->textureSlots.resize(maxTextures);
 		graphics->textureSlots[0] = graphics->whiteTexture;
@@ -96,8 +98,8 @@ namespace Copium::Graphics
 
 		glCreateBuffers(1, &quadIndexBufferID);
 		glNamedBufferStorage(quadIndexBufferID, sizeof(indices), indices, GL_DYNAMIC_STORAGE_BIT);
-
 		glVertexArrayElementBuffer(quadVertexArrayID, quadIndexBufferID);
+
 		glBindVertexArray(0);
 	}
 
@@ -153,29 +155,33 @@ namespace Copium::Graphics
 	{
 		if (quadIndexCount)
 		{
+			// Alpha blending for transparent objects
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 			graphics->shaderProgram[0].Use();
+			glBindVertexArray(quadVertexArrayID);
+			
 			for (GLuint i = 0; i < graphics->textureSlotIndex; i++)
 				glBindTextureUnit(i, graphics->textureSlots[i]);
 
-			glBindVertexArray(quadVertexArrayID);
 			glDrawElements(GL_TRIANGLES, quadIndexCount, GL_UNSIGNED_SHORT, NULL);
 			drawCount++;
 
-			
 			graphics->textureSlotIndex = 1;
 			glBindVertexArray(0);
 			graphics->shaderProgram[0].UnUse();
+			glDisable(GL_BLEND);
 		}
 
 		if (lineVertexCount)
 		{
 			graphics->shaderProgram[1].Use();
 			glBindVertexArray(lineVertexArrayID);
-			glDrawArrays(GL_LINES, 0, lineVertexCount);
 
+			glDrawArrays(GL_LINES, 0, lineVertexCount);
 			drawCount++;
 
-			graphics->textureSlotIndex = 1;
 			glBindVertexArray(0);
 			graphics->shaderProgram[1].UnUse();
 		}
@@ -188,7 +194,6 @@ namespace Copium::Graphics
 		{
 			glBindVertexArray(quadVertexArrayID);
 			GLsizeiptr size = (GLuint*)quadBufferPtr - (GLuint*)quadBuffer;
-			//glBindBuffer(GL_ARRAY_BUFFER, quadVertexBufferID);
 			glNamedBufferSubData(quadVertexBufferID, 0, size * 4, quadBuffer);
 			glVertexArrayVertexBuffer(quadVertexArrayID, 0, quadVertexBufferID, 0, sizeof(QuadVertex));
 			glBindVertexArray(0);
@@ -198,7 +203,6 @@ namespace Copium::Graphics
 		{
 			glBindVertexArray(lineVertexArrayID);
 			GLsizeiptr size = (GLuint*)lineBufferPtr - (GLuint*)lineBuffer;
-			//glBindBuffer(GL_ARRAY_BUFFER, lineVertexBufferID);
 			glNamedBufferSubData(lineVertexBufferID, 0, size * 4, lineBuffer);
 			glVertexArrayVertexBuffer(lineVertexArrayID, 1, lineVertexBufferID, 0, sizeof(LineVertex));
 			glBindVertexArray(0);
@@ -251,7 +255,7 @@ namespace Copium::Graphics
 		quadCount++;
 	}
 
-	void Renderer::draw_quad(const glm::vec2& _position, const glm::vec2& _size, int _textureID)
+	void Renderer::draw_quad(const glm::vec2& _position, const glm::vec2& _size, GLuint _textureID)
 	{
 		if (quadIndexCount >= maxIndexCount || graphics->textureSlotIndex > maxTextures - 1)
 		{
@@ -279,6 +283,8 @@ namespace Copium::Graphics
 			graphics->textureSlots[graphics->textureSlotIndex] = _textureID;
 			graphics->textureSlotIndex++;
 		}
+
+		//PRINT("Drawing texture: " << _textureID << " at texture slot: " << textureIndex);
 
 		glm::vec2 halfsize = { _size.x / 2, _size.y / 2 };
 
@@ -312,7 +318,6 @@ namespace Copium::Graphics
 
 	void Renderer::draw_quad(const glm::mat4& _transform, const glm::vec2& _position, const glm::vec2& _size, const glm::vec4& _color)
 	{
-
 		if (quadIndexCount >= maxIndexCount)
 		{
 			end_batch();
@@ -352,6 +357,73 @@ namespace Copium::Graphics
 		//quadBufferPtr->pos = glm::vec4(_position.x - halfsize.x, _position.y + halfsize.y, 1.f, 1.f);
 		//quadBufferPtr->pos = { _position.x, _position.y + _size.y, 0.0f };
 		quadBufferPtr->color = _color;
+		quadBufferPtr->textCoord = { 0.f, 1.f };
+		quadBufferPtr->texID = textureIndex;
+		quadBufferPtr++;
+
+		quadIndexCount += 6;
+		quadCount++;
+	}
+
+	void Renderer::draw_quad(const glm::mat4& _transform, const glm::vec2& _position, const glm::vec2& _size, GLuint _textureID)
+	{
+		if (quadIndexCount >= maxIndexCount)
+		{
+			end_batch();
+			flush();
+			begin_batch();
+		}
+
+		glm::vec4 color = { 1.f, 1.f, 1.f, 1.f };
+
+		GLfloat textureIndex = 0.f;
+
+		for (GLuint i = 1; i < graphics->textureSlotIndex; i++)
+		{
+			if (graphics->textureSlots[i] == _textureID)
+			{
+				textureIndex = (GLfloat) i;
+				break;
+			}
+		}
+
+		if (textureIndex == 0.f)
+		{
+			textureIndex = (GLfloat) graphics->textureSlotIndex;
+			graphics->textureSlots[graphics->textureSlotIndex] = _textureID;
+			graphics->textureSlotIndex++;
+		}
+
+		glm::vec2 halfsize = { _size.x / 2, _size.y / 2 };
+
+		quadBufferPtr->pos = _transform * glm::vec4(-halfsize.x, -halfsize.y, 1.f, 1.f);
+		//quadBufferPtr->pos = glm::vec4(_position.x - halfsize.x, _position.y - halfsize.y, 1.f, 1.f);
+		//quadBufferPtr->pos = { _position.x, _position.y, 0.0f };
+		quadBufferPtr->color = color;
+		quadBufferPtr->textCoord = { 0.f, 0.f };
+		quadBufferPtr->texID = textureIndex;
+		quadBufferPtr++;
+
+		quadBufferPtr->pos = _transform * glm::vec4(halfsize.x, -halfsize.y, 1.f, 1.f);
+		//quadBufferPtr->pos = glm::vec4(_position.x + halfsize.x, _position.y - halfsize.y, 1.f, 1.f);
+		//quadBufferPtr->pos = { _position.x + _size.x, _position.y, 0.0f };
+		quadBufferPtr->color = color;
+		quadBufferPtr->textCoord = { 1.f, 0.f };
+		quadBufferPtr->texID = textureIndex;
+		quadBufferPtr++;
+
+		quadBufferPtr->pos = _transform * glm::vec4(halfsize.x, halfsize.y, 1.f, 1.f);
+		//quadBufferPtr->pos = glm::vec4(_position.x + halfsize.x, _position.y + halfsize.y, 1.f, 1.f);
+		//quadBufferPtr->pos = { _position.x + _size.x, _position.y + _size.y, 0.0f };
+		quadBufferPtr->color = color;
+		quadBufferPtr->textCoord = { 1.f, 1.f };
+		quadBufferPtr->texID = textureIndex;
+		quadBufferPtr++;
+
+		quadBufferPtr->pos = _transform * glm::vec4(-halfsize.x, halfsize.y, 1.f, 1.f);
+		//quadBufferPtr->pos = glm::vec4(_position.x - halfsize.x, _position.y + halfsize.y, 1.f, 1.f);
+		//quadBufferPtr->pos = { _position.x, _position.y + _size.y, 0.0f };
+		quadBufferPtr->color = color;
 		quadBufferPtr->textCoord = { 0.f, 1.f };
 		quadBufferPtr->texID = textureIndex;
 		quadBufferPtr++;

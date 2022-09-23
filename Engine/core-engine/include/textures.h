@@ -24,18 +24,22 @@ namespace Copium::Graphics
 	class Texture
 	{
 	public:
-		Texture(GLuint _width, GLuint _height);
 		Texture(const std::string& _filePath);
 		~Texture();
 
 		GLuint get_width() { return width; }
 		GLuint get_height() { return height; }
+		GLuint get_object_id() { return textureObjectID; }
+		std::string& get_file_path() { return filePath; }
 
 	private:
 		std::string filePath;
 		GLuint width = 0;
 		GLuint height = 0;
+		GLuint textureObjectID = 0; // To store the texture
 
+		GLenum internalFormat = 0;
+		GLenum dataFormat = 0;
 	};
 }
 

@@ -37,11 +37,12 @@ namespace Copium::Graphics
 		glViewport(0, 0, windowsSystem.get_window_width(), windowsSystem.get_window_height());
 
 		// Setup Shaders
-		setup_shader_program("../core-engine/Assets/shaders/shader-glsl.vert",
-			"../core-engine/Assets/shaders/shader-glsl.frag");
+		setup_shader_program("Assets/shaders/shader-glsl.vert",
+			"Assets/shaders/shader-glsl.frag");
 
-		setup_shader_program("../core-engine/Assets/shaders/line-shader-glsl.vert",
-			"../core-engine/Assets/shaders/line-shader-glsl.frag");
+		setup_shader_program("Assets/shaders/line-shader-glsl.vert",
+			"Assets/shaders/line-shader-glsl.frag");
+
 
 		// Initialise Sub systems
 		renderer.init();
@@ -56,6 +57,12 @@ namespace Copium::Graphics
 			samplers[i] = i;
 
 		glUniform1iv(loc, maxTextures, samplers);
+		
+		// Bean: Loading of textures to be done somewhere else
+		load_texture("Assets/textures/pizza-sticker.png");
+		load_texture("Assets/textures/cake-sticker.png");
+		load_texture("Assets/textures/muffin-sticker.png");
+		load_texture("Assets/textures/icecream-sticker.png");
 	}
 
 	void GraphicsSystem::update()
@@ -67,7 +74,7 @@ namespace Copium::Graphics
 
 		if (Input::isKeyHeld(GLFW_KEY_A))
 			movement_x -= GLHelper::delta_time;
-		else if (Input::isKeyHeld(GLFW_KEY_D))
+		else if (!Input::isKeyHeld(GLFW_KEY_LEFT_SHIFT) && Input::isKeyHeld(GLFW_KEY_D))
 			movement_x += GLHelper::delta_time;
 
 		if (Input::isKeyHeld(GLFW_KEY_W))
@@ -76,19 +83,30 @@ namespace Copium::Graphics
 			movement_y -= GLHelper::delta_time;
 
 		// Create sprites
-		if (Input::isKeyHeld(GLFW_KEY_C))
+		glm::vec2 mousePos{0}, centreOfScene{0}, mouseScenePos{0}, mouseToNDC{0};
+		if (Input::isKeyPressed(GLFW_KEY_C))
 		{
-			Copium::Component::SpriteRenderer* sprite = new Copium::Component::SpriteRenderer;
-			glm::vec2 pos = { Input::getMousePosition().first - windowsSystem.get_window_width() / 2, Input::getMousePosition().second - windowsSystem.get_window_height() / 2};
-			pos.x /= 80.f;
-			pos.y /= -45.f;
+			SpriteRenderer* sprite = new SpriteRenderer;
+
+			// Mouse to scene view conversion
+			mousePos = { Input::getMousePosition().first , Input::getMousePosition().second };
+			centreOfScene = { scenePosition.x + sceneWidth / 2, scenePosition.y + sceneHeight / 2 };
+			mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
+			mouseToNDC = { mouseScenePos.x / sceneWidth * 2, mouseScenePos.y / sceneHeight * 2 + 0.2f };
+
+			glm::vec2 pos = mouseToNDC;
 
 			sprite->set_position(pos);
 
-			sprite->set_size( glm::vec2(0.1f, 0.1f ));
-			sprite->set_color(glm::vec4(0.8f, 0.2f, 0.6f, 1.f));
+			sprite->set_size( glm::vec2(0.09f, 0.16f ));
+			sprite->set_color(glm::vec4(0.5f, 0.5f, 0.5f, 0.5f));
 			sprites.push_back(sprite);
+			
 		}
+
+		/*PRINT("Mouse position: " << mousePos.x << ", " << mousePos.y);
+		PRINT("Centre position: " << centreOfScene.x << ", " << centreOfScene.y);
+		PRINT("NDC position: " << mouseToNDC.x << ", " << mouseToNDC.y);*/
 
 		if (Input::isKeyPressed(GLFW_KEY_Y))
 		{
@@ -130,7 +148,7 @@ namespace Copium::Graphics
 		renderer.shutdown();
 		framebuffer.exit();
 
-		for (Copium::Component::SpriteRenderer * s : sprites)
+		for (SpriteRenderer * s : sprites)
 			delete s;
 	}
 
@@ -146,9 +164,26 @@ namespace Copium::Graphics
 	}
 
 	// Load a texture into the game
-	void load_texture(const std::string & filename)
+	void GraphicsSystem::load_texture(const std::string & _filePath)
 	{
+		// Check for texture slots
+		M_Assert(textureSlotIndex != maxTextures, "Max textures reached! Replace old textures!!");
 
+		// Generate texture
+		Texture texture(_filePath);
+
+		// Ensure its not a repeated texture
+		for (GLuint i = 1; i < textureSlotIndex; i++)
+		{
+			M_Assert(textureSlots[i] != texture.get_object_id(), "Duplicate textures!!");
+		}
+
+		// Assign the slot to the texture
+		textureSlots[textureSlotIndex++] = texture.get_object_id();
+
+		// Store the texture
+		textures.push_back(texture);
+		//PRINT("Texture: " << texture.get_object_id() << " loaded into slot: " << textureSlotIndex - 1);
 	}
 
 	// Setup default shaders for the graphics system
@@ -267,11 +302,24 @@ namespace Copium::Graphics
 
 		// Reference all sprites in the world and draw
 		// Overflowing sprites gets pushed to next draw call ( Which means dynamic 0.0 )
+		color = { 1.f, 1.f, 1.f, 1.f };
+		renderer.draw_quad({ 0.f, -0.5f }, { 1.6f, 0.1f }, color);
+
+		// Texture sampling
+		for (int i = 1; i < textureSlots.size(); i++)
+		{
+			if (textureSlots[i] == 0)
+				continue;
+
+			renderer.draw_quad({ i * 0.2f - 0.6f, 0.f }, { 0.18f, 0.32f }, textureSlots[i]);
+		}
 
 		for (size_t i = 0; i < sprites.size(); i++)
 		{
 			/*PRINT(i + 1 << " : Sprite Data: " << sprites[i]->get_position().x << "," << sprites[i]->get_position().y
 				<< "\t Size: " << sprites[i]->get_size().x << "," << sprites[i]->get_size().y);*/
+
+			int textureSelector = i % 4 + 1;
 
 			glm::vec2 pos = { sprites[i]->get_position().x + movement_x, sprites[i]->get_position().y + movement_y };
 			glm::vec2 size = { sprites[i]->get_size().x + size_x, sprites[i]->get_size().y + size_y };
@@ -296,8 +344,12 @@ namespace Copium::Graphics
 
 			sprites[i]->set_position(pos);
 			sprites[i]->set_size(size);
+			sprites[i]->bind_texture(&textures[i%3]);
 
-			renderer.draw_quad(transform, sprites[i]->get_position(), sprites[i]->get_size(), sprites[i]->get_color());
+			if(textureSelector == 4)
+				renderer.draw_quad(transform, sprites[i]->get_position(), sprites[i]->get_size(), sprites[i]->get_color());
+			else
+				renderer.draw_quad(transform, sprites[i]->get_position(), sprites[i]->get_size(), sprites[i]->get_texture()->get_object_id());
 		}
 
 		renderer.end_batch();

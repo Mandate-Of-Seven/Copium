@@ -17,19 +17,21 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef GRAPHICS_SYSTEM_H
 #define GRAPHICS_SYSTEM_H
 
-#include "system-interface.h"
 #include <glslshader.h>
 #include <GLFW/glfw3.h>
+
+#include "system-interface.h"
 #include "vertex-types.h"
-#include <sprite-renderer.h>
-#include <framebuffer.h>
-#include <renderer.h>
+#include "sprite-renderer.h"
+#include "framebuffer.h"
+#include "renderer.h"
+#include "textures.h"
 
 namespace Copium::Graphics
 {
 	// Global variables
-	static const GLuint maxQuadCount = 100; // Number of sprites per batch
-	static const GLuint maxLineCount = 100; // Number of lines per batch
+	static const GLuint maxQuadCount = 1000; // Number of sprites per batch
+	static const GLuint maxLineCount = 1000; // Number of lines per batch
 	static const GLuint maxVertexCount = maxQuadCount * 4;
 	static const GLuint maxIndexCount = maxQuadCount * 6;
 	static const GLuint maxLineVertexCount = maxLineCount * 2;
@@ -73,15 +75,17 @@ namespace Copium::Graphics
 		void load_assets();
 
 		// Load a texture into the game
-		void load_texture(const std::string & filename);
+		void load_texture(const std::string & _filePath);
 
 	public:
 		/* Camera View / Scene View *****************************************************/
 		// [Camera Here] (Bean: Should be a component instead?)
 		GLuint sceneWidth;
 		GLuint sceneHeight;
+		glm::vec2 scenePosition;
 
 		/* Stored Texture Assets ********************************************************/
+		std::vector<Texture> textures;
 		std::vector<GLuint> textureSlots;
 		GLuint textureSlotIndex = 1; // Initializes with 1
 		GLuint whiteTexture = 0;
@@ -96,7 +100,7 @@ namespace Copium::Graphics
 		GLSLShader shaderProgram[2]; // Shader program to use
 
 		/* Stored Information ***********************************************************/
-		std::vector<Copium::Component::SpriteRenderer *> sprites;
+		std::vector<SpriteRenderer*> sprites;
 
 		Renderer renderer;
 		Framebuffer framebuffer;

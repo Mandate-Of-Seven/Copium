@@ -123,7 +123,7 @@ namespace Copium::Graphics
 			The index of the texture to be used
 		*/
 		/**************************************************************************/
-		void draw_quad(const glm::vec2& _position, const glm::vec2& _size, int _textureID);
+		void draw_quad(const glm::vec2& _position, const glm::vec2& _size, GLuint _textureID);
 
 		/***************************************************************************/
 		/*!
@@ -140,6 +140,22 @@ namespace Copium::Graphics
 		*/
 		/**************************************************************************/
 		void draw_quad(const glm::mat4& _transform, const glm::vec2& _position, const glm::vec2& _size, const glm::vec4& _color);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Draws the quad onto the game window
+		\param transform
+			The transform of the quad
+		\param position
+			The position of the quad
+		\param size
+			The size of the quad
+		\param textureID
+			The index of the texture to be used
+		*/
+		/**************************************************************************/
+		void draw_quad(const glm::mat4& _transform, const glm::vec2& _position, const glm::vec2& _size, GLuint _textureID);
 
 		/***************************************************************************/
 		/*!

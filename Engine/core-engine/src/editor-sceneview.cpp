@@ -35,7 +35,9 @@ namespace Copium::Editor::SceneView
 		ImGuiWindowFlags window_flags = 0;
 		window_flags |= ImGuiWindowFlags_NoCollapse;
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
+		// Begin
 		ImGui::Begin("Scene View", 0, window_flags);
+		graphics->scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
 
 		char buffer[64];
 		sprintf(buffer, "Sprite Count: %d", (int)graphics->sprites.size());
@@ -53,8 +55,11 @@ namespace Copium::Editor::SceneView
 
 		ImGui::Image((void *) textureID, ImVec2{ viewportSize.x, viewportSize.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
 
+		// End
 		ImGui::End();
 		ImGui::PopStyleVar();
+
+		
 	}
 
 	void exit()

@@ -20,7 +20,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <renderer.h>
 #include <cstring>
 
-namespace Copium::Component
+namespace Copium::Graphics
 {
 	class Transform;
 	class Texture;
@@ -32,6 +32,9 @@ namespace Copium::Component
 		// Serialization inherited from Component
 		std::string const get_name() { return sprite_name; }
 		void const set_name(std::string _name) { sprite_name = _name; }
+
+		void const bind_texture(Texture* _texture) { texture = _texture; }
+		Texture* const get_texture() { return texture; }
 
 		glm::vec2 const get_position() { return position; }
 		void const set_position(glm::vec2 _position) { position = _position; }
@@ -50,7 +53,7 @@ namespace Copium::Component
 		/* Sprite Information ***********************************************************/
 		std::string sprite_name; // Name of sprite
 
-		Texture* texture; // The texture used for this sprite
+		Texture* texture; // The texture used for this sprite ( Bean: May be temporary because we can set a vector of textures in graphics to store all textures)
 		Transform* transform; // The transform of this sprite ( Bean: it refer to the component in the gameobject )
 
 		glm::vec2 position; // Temporary variable to access the position
