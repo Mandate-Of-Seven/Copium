@@ -44,7 +44,7 @@ std::list<Component*>& GameObject::Components()
 }
 
 GameObject::GameObject
-(Vector3 _position, Vector3 _rotation = { 0,0,0 }, Vector3 _scale = { 1,1,1 }) 
+(Copium::Math::Vec3 _position, Copium::Math::Vec3 _rotation = { 0,0,0 }, Copium::Math::Vec3 _scale = { 1,1,1 })
     : name{ defaultGameObjName }, id{0}, trans(_position, _rotation, _scale), parent{nullptr}
 {
 
@@ -91,13 +91,16 @@ void GameObject::deleteComponent(Component* component)
 
 void GameObject::Trans(Transform _trans) {trans = _trans;}
 
-Transform const GameObject::Trans(){return trans;}
+Transform const GameObject::Trans() const {return trans;}
 
 void GameObject::set_name(const std::string& _name){ name = _name; }
-std::string& GameObject::get_name(){ return name; }
+std::string GameObject::get_name() const{ return name; }
 
 void GameObject::set_id(GameObjectID& _id) { id = _id; }
 GameObjectID GameObject::get_id() const { return id; }
+
+void GameObject::set_ppid(GameObjectID& _id) { parentid = _id; }
+GameObjectID GameObject::get_ppid() const { return parentid; }
 
 bool GameObject::is_parent() const 
 {
@@ -114,8 +117,14 @@ bool GameObject::has_parent() const
         return false;
 }
 GameObject* GameObject::get_parent() { return parent; }
+void GameObject::set_parent(GameObject* _parent) { parent = _parent; }
 
-std::list<GameObject*>& GameObject::childList()
+const std::list<GameObject*>& GameObject::childList() const
+{
+    return children;
+}
+
+std::list<GameObject*>& GameObject::mchildList()
 {
     return children;
 }
@@ -126,8 +135,8 @@ bool GameObject::attach_child(GameObject* _child)
         return false;
 
     children.push_back(_child);
-    _child->parent = this;
-    _child->parentid = parentid;
+    _child->set_parent(this);
+    _child->parentid = id;
 
 
     return true;

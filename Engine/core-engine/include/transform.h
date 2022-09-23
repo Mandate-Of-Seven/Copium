@@ -21,17 +21,17 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 //INCLUDES
 #include "pch.h"
-
-using Vector3 = glm::dvec3;
+#include <rapidjson/document.h>
+#include <math-library.h>
 
 class Transform;
 
 class Transform final
 {
 private:
-    Vector3 position;
-    Vector3 rotation;
-    Vector3 scale;
+    Copium::Math::Vec3 position;
+    Copium::Math::Vec3 rotation;
+    Copium::Math::Vec3 scale;
     Transform* parent;
     std::list<Transform*> childList;
 
@@ -57,7 +57,7 @@ public:
         parent to nullptr
     */
     /**************************************************************************/
-    Transform(Vector3 _position, Vector3 _rotation = {0,0,0}, Vector3 _scale = {1,1,1});
+    Transform(Copium::Math::Vec3 _position, Copium::Math::Vec3 _rotation = {0,0,0}, Copium::Math::Vec3 _scale = {1,1,1});
 
     /***************************************************************************/
     /*!
@@ -67,7 +67,16 @@ public:
         Position of transform
     */
     /**************************************************************************/
-    Vector3 const Position();
+    Copium::Math::Vec3 const Position();
+    /***************************************************************************/
+    /*!
+    \brief
+        Gets Position vector and converts it to glm::dvec3
+    \return
+        Position of transform as a glm::dvec3
+    */
+    /**************************************************************************/
+    glm::dvec3 glmPosition() const;
 
     /***************************************************************************/
     /*!
@@ -77,7 +86,7 @@ public:
         Position to set for transform
     */
     /**************************************************************************/
-    void Position(Vector3 _position);
+    void Position(Copium::Math::Vec3 _position);
 
 
     /***************************************************************************/
@@ -88,8 +97,16 @@ public:
         Rotation of transform
     */
     /**************************************************************************/
-    Vector3 const Rotation();
-
+    Copium::Math::Vec3 const Rotation();
+    /***************************************************************************/
+    /*!
+    \brief
+        Gets Rotation vector and converts it to glm::dvec3
+    \return
+        Rotation of transform as a glm::dvec3
+    */
+    /**************************************************************************/
+    glm::dvec3 glmRotation() const;
 
     /***************************************************************************/
     /*!
@@ -99,7 +116,7 @@ public:
         Rotation to set for transform
     */
     /**************************************************************************/
-    void Rotation(Vector3 _rotation);
+    void Rotation(Copium::Math::Vec3 _rotation);
 
     /***************************************************************************/
     /*!
@@ -109,7 +126,16 @@ public:
         Scale of transform
     */
     /**************************************************************************/
-    Vector3 const Scale();
+    Copium::Math::Vec3 const Scale();
+    /***************************************************************************/
+    /*!
+    \brief
+        Gets Scale vector and converts it to glm::dvec3
+    \return
+        Scale of transform as a glm::dvec3
+    */
+    /**************************************************************************/
+    glm::dvec3 glmScale() const;
 
     /***************************************************************************/
     /*!
@@ -119,8 +145,18 @@ public:
         Scale to set for transform
     */
     /**************************************************************************/
-    void Scale(Vector3 _scale);
+    void Scale(Copium::Math::Vec3 _scale);
 
+    /***************************************************************************/
+    /*!
+    \brief
+        Deserializes transform data from a rapidjson::Value
+    \return
+        on success, return true
+        on failure, return false
+    */
+    /**************************************************************************/
+    bool deserialize(rapidjson::Value& _value);
 };
 
 #endif // !TRANSFORM_H

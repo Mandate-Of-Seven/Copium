@@ -63,8 +63,20 @@ namespace Copium {
 		// Debug Purposes
 		std::string str("Data\\sandbox.json");
 		load_scene(str);
+		std::cout << "No. of GameObjects in scene:" << currentScene->get_gameobjcount() << std::endl;
+		gof->clone_gameobject(currentScene->get_gameobjectvector()[0]);
+		std::cout << "No. of GameObjects in scene:" << currentScene->get_gameobjcount() << std::endl;
+
+		std::cout << "name comparison: " << currentScene->get_gameobjectvector()[0]->get_ppid() << '|'
+			<< currentScene->get_gameobjectvector()[3]->get_ppid() << std::endl;
+		std::cout << "New object's id:" << currentScene->get_gameobjectvector()[3]->get_id() << std::endl;
+
+		//currentScene->get_gameobjectvector()[3]->attach_child(currentScene->get_gameobjectvector()[4]);
 
 
+		std::cout << "name comparison: " << currentScene->get_gameobjectvector()[1]->get_ppid() << '|'
+			<< currentScene->get_gameobjectvector()[4]->get_ppid() << std::endl;
+		std::cout << "New object's id:" << currentScene->get_gameobjectvector()[4]->get_id() << std::endl;
 
 	}
 	void NewSceneManager::update()

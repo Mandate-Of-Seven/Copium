@@ -36,7 +36,7 @@ class GameObject
 {
 private:
     GameObjectID id;                    //Global ID for gameObjects
-    int parentid;
+    GameObjectID parentid;
     std::list<Component*> components;   //Components for gameObject
     std::string name;                   //Name of gameObject
     Transform trans;                    //Transform of gameObject
@@ -65,7 +65,7 @@ public:
         Scale of transform to initialize with
     */
     /**************************************************************************/
-    GameObject(Vector3 _position, Vector3 _rotation, Vector3 _scale);
+    GameObject(Copium::Math::Vec3 _position, Copium::Math::Vec3 _rotation, Copium::Math::Vec3 _scale);
 
     /***************************************************************************/
     /*!
@@ -117,7 +117,7 @@ public:
         Return a copy transform of gameObject
     */
     /**************************************************************************/
-    Transform const Trans();
+    Transform const Trans() const;
 
     /*******************************************************************************
     /*!
@@ -143,7 +143,7 @@ public:
         reference to a string that contains the name of the GameObject
     */
     /*******************************************************************************/
-    std::string& get_name();
+    std::string get_name() const;
 
     /*******************************************************************************
     /*!
@@ -209,7 +209,7 @@ public:
     */
     /*******************************************************************************/
     GameObject* get_parent();
-
+    void set_parent(GameObject* _parent);
     /*******************************************************************************
     /*!
     *
@@ -220,7 +220,8 @@ public:
         reference to the list containing the pointers to this game object's children
     */
     /*******************************************************************************/
-    std::list<GameObject*>& childList();
+    const std::list<GameObject*>& childList() const;
+    std::list<GameObject*>& mchildList();
 
     /*******************************************************************************
     /*!
@@ -236,6 +237,9 @@ public:
     bool attach_child(GameObject* _child);
 
     bool deattach_child(GameObject* _child);
+
+    void set_ppid(GameObjectID& _id);
+    GameObjectID get_ppid() const;
 
     /*******************************************************************************
     /*!

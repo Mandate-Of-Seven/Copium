@@ -83,7 +83,7 @@ bool Scene::remove_gameobject(GameObject* _gameObj)
 			if (g->has_parent())
 			{
 				GameObject* p = g->get_parent();
-				p->childList().remove(g); 
+				p->mchildList().remove(g);
 				gameObjects.erase(gameObjects.begin() + i);
 				gameObjects.shrink_to_fit();
 

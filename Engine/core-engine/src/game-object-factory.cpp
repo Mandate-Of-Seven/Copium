@@ -38,7 +38,44 @@ namespace Copium {
 		if (!tmp)
 			return nullptr;
 
+		GameObjectID id = currentScene->get_gameobjcount();
+		tmp->set_id(id);
+		currentScene->add_gameobject(tmp);
+
 		return tmp;
+	}
+	GameObject* GameObjectFactory::build_gameobject(GameObject& _src)
+	{
+		GameObject* go = new GameObject();
+		if (!go)
+			return nullptr;
+		GameObjectID tmpID = currentScene->get_gameobjcount() + 1;
+		GameObjectID tmpPPID{ 0 };
+		go->set_name(_src.get_name());	// Name
+		go->set_id(tmpID);			// ID
+		if (go->has_parent())
+			tmpPPID = _src.get_ppid();
+		go->set_ppid(tmpPPID);		// Parent ID
+		go->Trans(_src.Trans());	// Transform
+
+		currentScene->add_gameobject(go);
+
+		for (std::list<GameObject*>::iterator iter = _src.mchildList().begin(); iter != _src.mchildList().end(); ++iter)
+		{
+			if (!(*iter))
+				continue;
+			std::cout << "adding a child\n";
+			GameObject* cgo = build_gameobject(*(*iter));
+			if (!cgo)
+				break;
+
+			//cgo->set_parent(go);
+			go->attach_child(cgo);
+
+
+		}
+		return go;
+
 	}
 	GameObject* GameObjectFactory::build_gameobject(rapidjson::Value& _value) {
 
@@ -77,13 +114,10 @@ namespace Copium {
 	}
 	GameObject* GameObjectFactory::clone_gameobject(GameObject* _src)
 	{
-		GameObject* tmpGO = new GameObject();
+		GameObject* tmpGO = build_gameobject(*_src);
 		if (!tmpGO)
 			return nullptr;
 
-		tmpGO->set_name(_src->get_name());
-
-		currentScene->add_gameobject(tmpGO);
 		return tmpGO;
 	}
 

@@ -46,6 +46,7 @@ namespace Copium {
 		/*******************************************************************************/
 		GameObject* build_gameobject();
 
+		GameObject* build_gameobject(GameObject& _src);
 		// Set up for future
 		//GameObject* build_gameobject(prefab);
 
