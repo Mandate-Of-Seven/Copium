@@ -18,6 +18,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "windows-system.h"
 #include <input.h>
 #include <iostream>
+#include <logging.h>
 
 using namespace Copium;
 
@@ -29,6 +30,9 @@ void WindowsInput::init()
     {
         get_input_instance()->keys[i] = 0;
     }
+    COPIUM_ASSERT(get_input_instance()->keys == nullptr, "keys was not created properly");
+    COPIUM_ASSERT(get_input_instance()->mouseButtons == nullptr, "mouse keys was not created properly");
+    
     glfwSetKeyCallback(Copium::windowsSystem.get_window(), Input::key_callback);
     glfwSetMouseButtonCallback(Copium::windowsSystem.get_window(), Input::mousebutton_callback);
     glfwSetScrollCallback(Copium::windowsSystem.get_window(), Input::mousescroll_callback);

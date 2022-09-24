@@ -32,7 +32,6 @@ namespace Copium
 
         spdlog::sinks_init_list sink_list = { file_sink, console_sink };
 
-
         //spdlog::set_pattern("%^[%T] %n: %v%$");
         spdlog::set_pattern("[source %s] [function %!] [line %#] %v");
         consoleLogger = std::make_shared<spdlog::logger>("Copium Engine", sink_list.begin(), sink_list.end());
@@ -58,21 +57,34 @@ namespace Copium
         return text;
     }
 
-    void Log::multi_sink()
+    void Log::error_log()
     {
         auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
         console_sink->set_level(spdlog::level::warn);
-        console_sink->set_pattern("[multi_sink_example] [%^%l%$] %v");
+        console_sink->set_pattern("[Error] [%^%l%$] %v");
 
-        auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/multisink.txt", true);
+        auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/Crashes.txt", true);
         file_sink->set_level(spdlog::level::trace);
 
         spdlog::sinks_init_list sink_list = { file_sink, console_sink };
 
-        spdlog::logger logger("multi_sink", sink_list.begin(), sink_list.end());
+        spdlog::logger logger("Error", sink_list.begin(), sink_list.end());
         logger.set_level(spdlog::level::trace);
-        logger.warn("this should appear in both console and file");
-        logger.info("this message should not appear in the console, only in the file");
-        spdlog::set_default_logger(std::make_shared<spdlog::logger>("multi_sink", spdlog::sinks_init_list({ console_sink, file_sink })));
+        spdlog::set_default_logger(std::make_shared<spdlog::logger>("Error", spdlog::sinks_init_list({ console_sink, file_sink })));
+    }
+
+    void Log::assert_to_file(std::string expr_str, bool expr, std::string file, int line, std::string msg)
+    {
+        error_log();
+
+        if (expr)
+        {
+            std::string temp =  "\nCaused By:\t" + expr_str + '\n' +
+                                "Info:\t\t" + msg + '\n' +
+                                "Source:\t\t" + file + " (Line: " + std::to_string(line) + ")\n";
+            FILE_CRITICAL(temp);
+            spdlog::drop("Error");
+            abort();
+        }
     }
 }

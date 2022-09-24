@@ -89,13 +89,13 @@ class WindowsInput : public Input
 		
 		~WindowsInput();
 
-		public:
+	public:
 		/***************************************************************************/
 		/*!
 		\brief
 			Initialises all the needed variables
 		*/
 		/**************************************************************************/
-			void init();
+		void init();
 			
 };

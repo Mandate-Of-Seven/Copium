@@ -45,7 +45,25 @@ namespace Copium
 			Used to log asserts to both file and to the console
 		*/
 		/**************************************************************************/
-		static void multi_sink();
+		static void error_log();
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Checks if the given key is being held (DOESNT WORK YET)
+		\param expr_str
+			The error condition that was true which will be shown
+		\param expr
+			the assert condition
+		\param file
+			the file that caused an error
+		\param line
+			the line that caused an error
+		\param msg
+			the message to display along with the error
+		*/
+		/**************************************************************************/
+		static void assert_to_file(std::string expr_str, bool expr, std::string file, int line, std::string msg);
 
 		/***************************************************************************/
 		/*!
@@ -66,6 +84,7 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		inline static std::shared_ptr<spdlog::logger>& getConsoleLogger() { return consoleLogger; }
+
 	private:
 		static std::shared_ptr<spdlog::logger> consoleLogger;
 
@@ -73,13 +92,38 @@ namespace Copium
 	};
 }
 //User Macros
-#define CONSOLE_CRITICAL(...)		Copium::Log::getConsoleLogger()->critical(__VA_ARGS__); Window::EditorConsole::add_logEntry(__VA_ARGS__);
-#define CONSOLE_ERROR(...)		Copium::Log::getConsoleLogger()->error(__VA_ARGS__); Window::EditorConsole::add_logEntry(__VA_ARGS__);
-#define CONSOLE_WARN(...)		Copium::Log::getConsoleLogger()->warn(__VA_ARGS__); Window::EditorConsole::add_logEntry(__VA_ARGS__);
-#define CONSOLE_INFO(...)		Copium::Log::getConsoleLogger()->info(__VA_ARGS__); Window::EditorConsole::add_logEntry(__VA_ARGS__);
-#define CONSOLE_TRACE(...)		Copium::Log::getConsoleLogger()->trace(__VA_ARGS__); Window::EditorConsole::add_logEntry(__VA_ARGS__);
+#define CONSOLE_CRITICAL(...)															\
+							{															\
+								Copium::Log::getConsoleLogger()->critical(__VA_ARGS__); \
+								Window::EditorConsole::add_logEntry(__VA_ARGS__);		\
+							}
+#define CONSOLE_ERROR(...)																\
+							{															\
+									Copium::Log::getConsoleLogger()->error(__VA_ARGS__);\
+									Window::EditorConsole::add_logEntry(__VA_ARGS__);	\
+							}
+#define CONSOLE_WARN(...)																\
+							{															\
+									Copium::Log::getConsoleLogger()->warn(__VA_ARGS__); \
+									Window::EditorConsole::add_logEntry(__VA_ARGS__);	\
+							}
+#define CONSOLE_INFO(...)																\
+							{															\
+									Copium::Log::getConsoleLogger()->info(__VA_ARGS__); \
+									Window::EditorConsole::add_logEntry(__VA_ARGS__);	\
+							}
+#define CONSOLE_TRACE(...)																\
+							{															\
+									Copium::Log::getConsoleLogger()->trace(__VA_ARGS__);\
+									Window::EditorConsole::add_logEntry(__VA_ARGS__);	\
+							}
 
-#define FILE_WARN(...)		::    spdlog::warn(__VA_ARGS__)
-#define FILE_INFO(...)		::    spdlog::info(__VA_ARGS__)
+#define FILE_CRITICAL(...)		::spdlog::critical(__VA_ARGS__);
+#define FILE_ERROR(...)			::spdlog::error(__VA_ARGS__)
+#define FILE_WARN(...)			::spdlog::warn(__VA_ARGS__)
+#define FILE_INFO(...)			::spdlog::info(__VA_ARGS__)
+
+//enter the condition to trigger the assert, followed by the message you want.
+#define COPIUM_ASSERT(Expr, Msg) Copium::Log::assert_to_file(#Expr, Expr, __FILE__, __LINE__, Msg);
 
 //#define Console_ToString(...)	::Log::to_string(__VA_ARGS__)

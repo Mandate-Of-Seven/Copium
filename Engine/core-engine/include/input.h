@@ -23,8 +23,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 class Input
 {
 	public:
-		short* keys;//contains the current state of all keys
-		short* mouseButtons;//contains the current state of both mouse buttons
+		short* keys =nullptr;//contains the current state of all keys
+		short* mouseButtons = nullptr;//contains the current state of both mouse buttons
 
 		/***************************************************************************/
 		/*!
