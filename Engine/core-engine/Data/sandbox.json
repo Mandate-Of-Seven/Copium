@@ -5,6 +5,23 @@
       "ID": 1,
       "Name": "Frank",
       "PID": 0,
+      "Transform": {
+        "Pos": {
+          "X": 1,
+          "Y": 2,
+          "Z": 10
+        },
+        "Rot": {
+          "X": 1,
+          "Y": 2,
+          "Z": 3
+        },
+        "Scale": {
+          "X": 1,
+          "Y": 2,
+          "Z": 3
+        }
+      },
       "Components": [
 
       ],
@@ -13,6 +30,23 @@
           "ID": 10,
           "Name": "Frank Jr",
           "PID": 1,
+          "Transform": {
+            "Pos": {
+              "X": 1,
+              "Y": 2,
+              "Z": 10
+            },
+            "Rot": {
+              "X": 1,
+              "Y": 2,
+              "Z": 3
+            },
+            "Scale": {
+              "X": 1,
+              "Y": 2,
+              "Z": 3
+            }
+          },
           "Components": [
 
           ],
@@ -26,6 +60,23 @@
       "ID": 2,
       "Name": "Thanos",
       "PID": 0,
+      "Transform": {
+        "Pos": {
+          "X": 1,
+          "Y": 2,
+          "Z": 10
+        },
+        "Rot": {
+          "X": 1,
+          "Y": 2,
+          "Z": 3
+        },
+        "Scale": {
+          "X": 1,
+          "Y": 2,
+          "Z": 3
+        }
+      },
       "Components": [
 
       ],

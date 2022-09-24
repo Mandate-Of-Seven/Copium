@@ -58,10 +58,7 @@ void SceneSandbox::init_scene()
 
 	// Init Graphics System 
 	// (In the future should be stored in a vector container and looped initialised)
-	graphics.init();
-
-	//Serialization Testing
-	
+	graphics.init();	
 }
 
 void SceneSandbox::update_scene() 

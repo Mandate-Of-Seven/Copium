@@ -189,7 +189,30 @@ public:
 	/*******************************************************************************/
 	bool remove_gameobject(GameObject* _gameObj);
 
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Sets the name of this scene
+
+	\param	_name
+		read-only reference to a string containing the new name for this scene
+
+	\return
+		void
+	*/
+	/*******************************************************************************/
 	void set_name(const std::string& _name);
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Gets the name of this scene
+
+	\return
+		string containing the 
+	*/
+	/*******************************************************************************/
 	std::string get_name() const;
 
 

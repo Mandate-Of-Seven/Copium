@@ -2,6 +2,7 @@
 \file			game-object.h
 \project        
 \author			Zacharie Hong
+\co-authors     Matthew Lau
 
 \par			Course: GAM200
 \par			Section:
@@ -97,6 +98,16 @@ public:
     /**************************************************************************/
     void deleteComponent(Component* component);
 
+    /***************************************************************************/
+    /*!
+    \brief
+        Gets a reference to the components list of this game object
+
+    \return 
+        reference to this gameobject's component list
+
+    */
+    /**************************************************************************/
     std::list<Component*>& Components();
 
     /***************************************************************************/
@@ -209,7 +220,32 @@ public:
     */
     /*******************************************************************************/
     GameObject* get_parent();
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Sets the parent of this gameobject
+
+    \param _parent
+         ptr to the gameobject which will become the parent of this game object
+
+    \return
+        void
+    */
+    /*******************************************************************************/
     void set_parent(GameObject* _parent);
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Returns a list that contains pointers to this game object's children (read-only)
+
+    \return
+        reference to the list containing the pointers to this game object's children
+    */
+    /*******************************************************************************/
+    const std::list<GameObject*>& childList() const;
+
     /*******************************************************************************
     /*!
     *
@@ -220,7 +256,6 @@ public:
         reference to the list containing the pointers to this game object's children
     */
     /*******************************************************************************/
-    const std::list<GameObject*>& childList() const;
     std::list<GameObject*>& mchildList();
 
     /*******************************************************************************
@@ -236,9 +271,44 @@ public:
     /*******************************************************************************/
     bool attach_child(GameObject* _child);
 
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Detach a child from this game object. Removes specified child from this game object's childlist.
+        Note: if specified game object is not a child of this game object, returns false
+
+    \return
+        if specified child game object is successfully detached, return true
+        if specified child game object is not a child of this game object, return false
+    */
+    /*******************************************************************************/
     bool deattach_child(GameObject* _child);
 
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Set the parentid of this gameobject
+
+    \param _id
+        reference to a GameObjectID whose value is to be set to this gameobject's parentid
+
+    \return
+        void
+    */
+    /*******************************************************************************/
     void set_ppid(GameObjectID& _id);
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Get the parentid of this gameobject
+
+    \return
+        parent id of this gameobject
+    */
+    /*******************************************************************************/
     GameObjectID get_ppid() const;
 
     /*******************************************************************************

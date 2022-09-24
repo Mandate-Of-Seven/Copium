@@ -150,6 +150,7 @@ bool GameObject::deattach_child(GameObject* _child)
         {
             _child->parent = nullptr;
             _child->parentid = 0;
+            children.erase(iter);
             return true;
         }
     }
@@ -172,6 +173,14 @@ bool GameObject::deserialize(rapidjson::Value& _value) {
         return false;
 
     parentid = _value["PID"].GetInt();
+
+    rapidjson::Value& _t = _value["Transform"].GetObject();
+    trans.deserialize(_t);
+
+
+    //std::cout << trans.Position() << '|' << trans.Rotation() << '|' << trans.Scale() << std::endl;
+
+
 
     return true;
 }
