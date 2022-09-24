@@ -1,19 +1,31 @@
 
 #include "pch.h"
 #include "physics.h"
+#include <graphics.h>
 #include <windows-system.h>
+#include <windows-input.h>
 
 namespace Copium::Physics
 {
 	void Physics::init() 
-	{
-		position = Math::Vec2(0.0, 0.0);
-		velocity = Math::Vec2(0.0, 0.0);
-		acceleration = Math::Vec2(0.0, 0.0);
+	{	
 
 	}
 	void Physics::update()
 	{
-		Update_Pos(GLHelper::delta_time);
+		if (WindowsInput::isKeyPressed(GLFW_KEY_H))
+		{
+			Copium::Component::Collider* box = new Copium::Component::Collider;
+		}
+	}
+	void Physics::exit()
+	{
+
+	}
+	void Physics::update_pos(float dt)
+	{	
+		/*velocity = velocity + (gravity * dt);*/
+		/*position = position + (velocity * dt);
+		printf("%f %f\n", position.x, position.y);*/
 	}
 }
