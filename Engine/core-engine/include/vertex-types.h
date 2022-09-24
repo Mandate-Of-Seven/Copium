@@ -20,12 +20,18 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 namespace Copium::Graphics
 {
 	// A Vertex contains information about a vertex that is used for rendering
-	struct Vertex
+	struct QuadVertex
 	{
 		glm::vec3 pos;		// Position of vertex
 		glm::vec4 color;	// Color of vertex
 		glm::vec2 textCoord;// Texture coordinate of vertex
 		float texID;		// Texture index
+	};
+
+	struct LineVertex
+	{
+		glm::vec3 pos;
+		glm::vec4 color;
 	};
 
 }

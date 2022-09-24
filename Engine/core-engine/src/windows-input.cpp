@@ -7,8 +7,16 @@
 
 using namespace Copium;
 
+// Bean: Temporary for window systems declaration
+namespace
+{
+    Windows::WindowsSystem* windowsSystem = nullptr;
+}
+
 void WindowsInput::Init()
 {
+    windowsSystem = Copium::Windows::WindowsSystem::Instance();
+
     getInputInstance()->keys = new short[400];
     for (int i = 0; i < 400; i++)
     {
@@ -19,7 +27,7 @@ void WindowsInput::Init()
 
 bool WindowsInput::isKeyPressedImpl(int keycode)
 {
-    auto& window = *windowsSystem.get_window();
+    auto& window = *windowsSystem->get_window();
     auto state = glfwGetKey(&window,keycode);
     if (getInputInstance()->keys[keycode]== GLFW_PRESS)
     {
@@ -32,12 +40,12 @@ bool WindowsInput::isKeyPressedImpl(int keycode)
 
 bool WindowsInput::isKeyHeldImpl(int keycode)
 {
-    auto& window = *windowsSystem.get_window();
+    auto& window = *windowsSystem->get_window();
     auto state = glfwGetKey(&window, keycode);
     if (getInputInstance()->keys[keycode] == GLFW_REPEAT || getInputInstance()->keys[keycode] == GLFW_PRESS)
     {
-        std::cout << getInputInstance()->keys[keycode] << "  " << std::endl;
-        getInputInstance()->keys[keycode] = 0;
+        //std::cout << getInputInstance()->keys[keycode] << "  " << std::endl;
+        //getInputInstance()->keys[keycode] = 0;
         return true;
     }
     return false;
@@ -45,14 +53,14 @@ bool WindowsInput::isKeyHeldImpl(int keycode)
 
 bool WindowsInput::isMouseButtonPressedImpl(int button)
 {
-    auto& window = *windowsSystem.get_window();
+    auto& window = *windowsSystem->get_window();
     auto state = glfwGetMouseButton(&window, button);
     return state == GLFW_PRESS;
 }
 
 std::pair<float, float> WindowsInput::getMousePositionImpl()
 {
-    auto& window = *windowsSystem.get_window();
+    auto& window = *windowsSystem->get_window();
     double xPos, yPos;
     glfwGetCursorPos(&window, &xPos, &yPos);
 
@@ -60,18 +68,18 @@ std::pair<float, float> WindowsInput::getMousePositionImpl()
     {
         xPos = 0;
     }
-    else if (xPos > windowsSystem.get_window_width())
+    else if (xPos > windowsSystem->get_window_width())
     {
-        xPos = windowsSystem.get_window_width();
+        xPos = windowsSystem->get_window_width();
     }
 
     if (yPos < 0)
     {
         yPos = 0;
     }
-    else if (yPos > windowsSystem.get_window_height())
+    else if (yPos > windowsSystem->get_window_height())
     {
-        yPos = windowsSystem.get_window_height();
+        yPos = windowsSystem->get_window_height();
     }
 
     return { (float)xPos , (float)yPos };

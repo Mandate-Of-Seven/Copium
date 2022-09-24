@@ -22,9 +22,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <pch.h>
 #include "gamestate-sandbox.h"
 #include <windows-system.h>
-#include <graphics.h>
 #include <physics.h>
-#include <renderer.h>
 #include <input.h>
 #include <serializer.h>
 #include <rapidjson/prettywriter.h>
@@ -36,8 +34,6 @@ Copium::Math::Vec2 vv(1, 10);
 
 GameObject g1(v2, v1, v1);
 GameObject g2(v1, v1, v2);
-
-using namespace Copium::Graphics;
 
 SceneSandbox::SceneSandbox(std::string& _filepath) : Scene(_filepath) 
 {
@@ -58,10 +54,6 @@ void SceneSandbox::load_scene()
 void SceneSandbox::init_scene() 
 {
 	std::cout << "init sandbox" << std::endl;
-
-	// Init Graphics System 
-	// (In the future should be stored in a vector container and looped initialised)
-	graphics.init();
 
 	//Serialization Testingf
 	this->get_gameobjectvector().push_back(new GameObject(v2,v2,v2));
@@ -85,7 +77,6 @@ void SceneSandbox::update_scene()
 	//std::cout << "update sandbox" << std::endl;
 	
 	// Update Graphics system
-	graphics.update();
 	Copium::Physics::physics.update();
 }
 
@@ -115,5 +106,5 @@ void SceneSandbox::unload_scene()
 
 	// Bean: This should be handles by ISystem
 	Copium::Physics::physics.exit();
-	graphics.exit();
+
 }
