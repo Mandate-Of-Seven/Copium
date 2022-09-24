@@ -21,9 +21,9 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 ****/
 #include <pch.h>
 #include "gamestate-sandbox.h"
-
 #include <windows-system.h>
 #include <graphics.h>
+#include <physics.h>
 #include <renderer.h>
 #include <input.h>
 #include <serializer.h>
@@ -83,9 +83,10 @@ void SceneSandbox::init_scene()
 void SceneSandbox::update_scene() 
 {
 	//std::cout << "update sandbox" << std::endl;
-
+	
 	// Update Graphics system
 	graphics.update();
+	Copium::Physics::physics.update();
 }
 
 void SceneSandbox::draw_scene() 
@@ -113,5 +114,6 @@ void SceneSandbox::unload_scene()
 	//ss.serialize(os, tester);
 
 	// Bean: This should be handles by ISystem
+	Copium::Physics::physics.exit();
 	graphics.exit();
 }

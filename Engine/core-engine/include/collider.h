@@ -25,10 +25,12 @@ namespace Copium::Component
 		void const set_acc(Math::Vec2 _acceleration) { acceleration = _acceleration; }
 		void const set_grav(Math::Vec2 _gravity) { gravity = _gravity; }
 		void const set_shape(Shape _objectShape) { objectShape = _objectShape; }
+		void const set_AABB(Math::Vec2 _min, Math::Vec2 _max) { boundingBox.max = _max; boundingBox.min = _min;}
 		Math::Vec2 get_pos() { return position; }
 		Math::Vec2 get_vel() { return velocity; }
 		Shape get_shape() { return objectShape; }
 		Copium::Collision::AABB get_AABB() { return boundingBox; }
+		
 	private:
 		Math::Vec2 position;					//position of object- to be removed
 		Math::Vec2 velocity;					//velocity of object

@@ -145,6 +145,7 @@
     <ClCompile Include="src\windows-input.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\collider.h" />
     <ClInclude Include="include\collision.h" />
     <ClInclude Include="include\compiler.h" />
     <ClInclude Include="include\component.h" />
