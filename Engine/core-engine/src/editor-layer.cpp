@@ -18,6 +18,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "editor-sceneview.h"
 #include "game-object.h"
 #include "inspector.h"
+#include "ConsoleLog.h"
 
 namespace Copium::Editor
 {
@@ -34,6 +35,7 @@ namespace Copium::Editor
 		ImGui_ImplOpenGL3_Init("#version 330");
 
 		Window::Inspector::init();
+		Window::EditorConsole::init();
 		Window::Inspector::selectedGameObject = new GameObject();
 
 		SceneView::init();
@@ -52,6 +54,7 @@ namespace Copium::Editor
 
 		// All the editor layers
 		Window::Inspector::update();
+		Window::EditorConsole::update();
 		SceneView::update();
 
 		ImGui::EndFrame();

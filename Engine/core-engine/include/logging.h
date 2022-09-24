@@ -24,6 +24,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <spdlog/sinks/rotating_file_sink.h> // support for rotating file logging
 
 #include <memory>
+#include "ConsoleLog.h"
 
 namespace Copium 
 {
@@ -72,11 +73,11 @@ namespace Copium
 	};
 }
 //User Macros
-#define CONSOLE_CRITICAL(...)		Copium::Log::getConsoleLogger()->critical(__VA_ARGS__); Copium::Log::to_string(__VA_ARGS__)
-#define CONSOLE_ERROR(...)		Copium::Log::getConsoleLogger()->error(__VA_ARGS__); Copium::Log::to_string(__VA_ARGS__)
-#define CONSOLE_WARN(...)		Copium::Log::getConsoleLogger()->warn(__VA_ARGS__); Copium::Log::to_string(__VA_ARGS__)
-#define CONSOLE_INFO(...)		Copium::Log::getConsoleLogger()->info(__VA_ARGS__); Copium::Log::to_string(__VA_ARGS__)
-#define CONSOLE_TRACE(...)		Copium::Log::getConsoleLogger()->trace(__VA_ARGS__); Copium::Log::to_string(__VA_ARGS__)
+#define CONSOLE_CRITICAL(...)		Copium::Log::getConsoleLogger()->critical(__VA_ARGS__); Window::EditorConsole::add_logEntry(__VA_ARGS__);
+#define CONSOLE_ERROR(...)		Copium::Log::getConsoleLogger()->error(__VA_ARGS__); Window::EditorConsole::add_logEntry(__VA_ARGS__);
+#define CONSOLE_WARN(...)		Copium::Log::getConsoleLogger()->warn(__VA_ARGS__); Window::EditorConsole::add_logEntry(__VA_ARGS__);
+#define CONSOLE_INFO(...)		Copium::Log::getConsoleLogger()->info(__VA_ARGS__); Window::EditorConsole::add_logEntry(__VA_ARGS__);
+#define CONSOLE_TRACE(...)		Copium::Log::getConsoleLogger()->trace(__VA_ARGS__); Window::EditorConsole::add_logEntry(__VA_ARGS__);
 
 #define FILE_WARN(...)		::    spdlog::warn(__VA_ARGS__)
 #define FILE_INFO(...)		::    spdlog::info(__VA_ARGS__)

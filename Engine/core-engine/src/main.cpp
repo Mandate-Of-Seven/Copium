@@ -23,6 +23,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "scripting-system.h"
 #include "scripting.h"
 #include "logging.h"
+#include "ConsoleLog.h"
 
 //State Manager
 #include "state-manager.h"
@@ -161,11 +162,12 @@ static void init()
     Copium::windowsSystem.init(1600, 900, "Copium");
 
     Input::get_input_instance()->init();
+    Copium::Log::init();
 
     // Bean: This initialises the imgui, which i think should also be handled by ISystem
     Copium::Editor::editor.init();
 
-    Copium::Log::init();
+    
     CONSOLE_CRITICAL("Test 1");
     CONSOLE_ERROR("Test 2");
     CONSOLE_WARN("What happens");
@@ -189,7 +191,6 @@ static void update()
 
     // Bean: This should be handles by ISystem
     Copium::Editor::editor.update();
-
     
 
     quitEngine();
