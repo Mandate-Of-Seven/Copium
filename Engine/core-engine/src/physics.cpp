@@ -14,10 +14,10 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
+#include "windows-system.h"
+#include "windows-input.h"
 #include "physics.h"
-#include <graphics.h>
-#include <windows-system.h>
-#include <windows-input.h>
+#include "graphics-system.h"
 
 namespace Copium::Physics
 {
@@ -35,9 +35,9 @@ namespace Copium::Physics
 				glm::vec2 a = { 0.0,0.0 };
 				Copium::Component::Collider* box = new Copium::Component::Collider;
 
-				if (Copium::Graphics::graphics.sprites.size() != 0)
+				if (Copium::Graphics::GraphicsSystem::Instance()->get_sprites().size() != 0)
 				{
-					a = Copium::Graphics::graphics.sprites[0]->get_position();
+					a = Copium::Graphics::GraphicsSystem::Instance()->get_sprites()[0]->get_position();
 				}
 				printf("%f\n", a.x);
 				box->set_pos(Math::Vec2{ 0.0, 0.0 });
@@ -64,7 +64,7 @@ namespace Copium::Physics
 				count = 0;
 			}
 		}
-		update_pos(GLHelper::delta_time);
+		update_pos(Copium::Windows::WindowsSystem::Instance()->get_delta_time());
 	}
 	void Physics::exit()
 	{

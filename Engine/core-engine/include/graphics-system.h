@@ -21,13 +21,12 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "glslshader.h"
 #include "textures.h"
+#include "sprite-renderer.h"
 #include "framebuffer.h"
 #include "renderer.h"
 
 namespace Copium::Graphics
 {
-	// Forward declaration
-	class SpriteRenderer;
 
 	// Global variables
 	static const GLuint maxQuadCount = 1000; // Number of sprites per batch

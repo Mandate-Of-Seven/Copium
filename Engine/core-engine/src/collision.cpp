@@ -15,8 +15,8 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
+#include "windows-system.h"
 #include "collision.h"
-#include <windows-system.h>
 
 namespace Copium::Collision
 {
@@ -28,7 +28,7 @@ namespace Copium::Collision
 			(aabb1.max.y < aabb2.min.y) || (aabb1.min.y > aabb2.max.y)) {
 			//Initialize values to check for collision between moving rectangles
 			Math::Vec2 vB;
-			float tFirst = 0, tLast = GLHelper::delta_time;
+			float tFirst = 0, tLast = Copium::Windows::WindowsSystem::Instance()->get_delta_time();
 
 			vB.x = vel2.x - vel1.x;
 			vB.y = vel2.y - vel1.y;
@@ -141,7 +141,7 @@ namespace Copium::Collision
 		{
 
 			float tFirst = 0;
-			float tLast = GLHelper::delta_time;
+			float tLast = Copium::Windows::WindowsSystem::Instance()->get_delta_time();
 
 			//Object b is moving away from object a on the x axis
 			if (vel2.x < 0)
