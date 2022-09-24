@@ -47,8 +47,9 @@ double FrameRateController::end()
 		frameTime = frameEnd - frameStart;
 
 	}
-	GLHelper::update_time(10.0);
-	frameRate = GLHelper::fps;
+	Windows::WindowsSystem::Instance()->update_time(10.0);
+	//Windows::windowsSystem.update_time(10.0);
+	frameRate = Windows::WindowsSystem::Instance()->get_fps();
 	++frameCount;
-	return GLHelper::fps;
+	return Windows::WindowsSystem::Instance()->get_fps();
 }

@@ -30,21 +30,30 @@ namespace Copium::Graphics
 	{
 	public:
 		// Serialization inherited from Component
+
+		// Accessing Properties
+
+		// Name
 		std::string const get_name() { return sprite_name; }
 		void const set_name(std::string _name) { sprite_name = _name; }
 
+		// Texture
 		void const bind_texture(Texture* _texture) { texture = _texture; }
 		Texture* const get_texture() { return texture; }
 
+		// Position
 		glm::vec2 const get_position() { return position; }
 		void const set_position(glm::vec2 _position) { position = _position; }
 
+		// Rotation
 		glm::vec3 const get_rotation() { return rotation; }
 		void const set_rotation(glm::vec3 _rotation) { rotation = _rotation; }
 
+		// Size
 		glm::vec2 const get_size() { return size; }
 		void const set_size(glm::vec2 _size) { size = _size; }
 
+		// Color
 		glm::vec4 const get_color() { return color; }
 		void const set_color(glm::vec4 _color) { color = _color; }
 

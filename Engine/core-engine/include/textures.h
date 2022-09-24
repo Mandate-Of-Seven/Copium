@@ -16,7 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef TEXTURES_H
 #define TEXTURES_H
 
-#include <GL/glew.h>
+#include <glm/glm.hpp>
 #include <string>
 
 namespace Copium::Graphics
@@ -24,7 +24,21 @@ namespace Copium::Graphics
 	class Texture
 	{
 	public:
+		// Constructors
+		/***************************************************************************/
+		/*!
+		\brief
+			Generates the texture based on the file path using stbi_load
+		*/
+		/***************************************************************************/
 		Texture(const std::string& _filePath);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Delete texture object id
+		*/
+		/***************************************************************************/
 		~Texture();
 
 		GLuint get_width() { return width; }

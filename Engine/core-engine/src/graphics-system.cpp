@@ -15,16 +15,17 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
-#include <graphics-system.h>
-#include <framebuffer.h>
-#include <renderer.h>
-#include <input.h>
-#include <windows-system.h>
+#include "windows-system.h"
+
+#include "graphics-system.h"
+#include "sprite-renderer.h"
+#include "input.h"
 
 namespace Copium::Graphics
 {
-	using Copium::WindowsSystem;
+	using Copium::Windows::WindowsSystem;
 
+	// Temporary global variables
 	GLfloat movement_x = 0.f, movement_y = 0.f;
 	GLfloat size_x = 0.f, size_y = 0.f;
 	GLfloat rotate = 0.f;
@@ -32,9 +33,10 @@ namespace Copium::Graphics
 	void GraphicsSystem::init()
 	{
 		glClearColor(1.f, 1.f, 1.f, 1.f);
-
+		WindowsSystem* windowsSystem = WindowsSystem::Instance();
 		// Initialise Viewport
-		glViewport(0, 0, windowsSystem.get_window_width(), windowsSystem.get_window_height());
+
+		glViewport(0, 0, windowsSystem->get_window_width(), windowsSystem->get_window_height());
 
 		// Setup Shaders
 		setup_shader_program("Assets/shaders/shader-glsl.vert",
@@ -67,20 +69,21 @@ namespace Copium::Graphics
 
 	void GraphicsSystem::update()
 	{
+		double dt = /*windowsSystem.get_delta_time();*/Windows::WindowsSystem::Instance()->get_delta_time();
 		movement_x = movement_y = size_x = size_y = 0;
 
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		if (Input::isKeyHeld(GLFW_KEY_A))
-			movement_x -= GLHelper::delta_time;
+			movement_x -= dt;
 		else if (!Input::isKeyHeld(GLFW_KEY_LEFT_SHIFT) && Input::isKeyHeld(GLFW_KEY_D))
-			movement_x += GLHelper::delta_time;
+			movement_x += dt;
 
 		if (Input::isKeyHeld(GLFW_KEY_W))
-			movement_y += GLHelper::delta_time;
+			movement_y += dt;
 		else if (Input::isKeyHeld(GLFW_KEY_S))
-			movement_y -= GLHelper::delta_time;
+			movement_y -= dt;
 
 		// Create sprites
 		glm::vec2 mousePos{0}, centreOfScene{0}, mouseScenePos{0}, mouseToNDC{0};
@@ -120,22 +123,22 @@ namespace Copium::Graphics
 
 		if (Input::isKeyHeld(GLFW_KEY_Z) && Input::isKeyHeld(GLFW_KEY_LEFT_SHIFT))
 		{
-			size_x -= GLHelper::delta_time;
-			size_y -= GLHelper::delta_time;
+			size_x -= dt;
+			size_y -= dt;
 		}
 		else if (Input::isKeyHeld(GLFW_KEY_Z))
 		{
-			size_x += GLHelper::delta_time;
-			size_y += GLHelper::delta_time;
+			size_x += dt;
+			size_y += dt;
 		}
 
 		if (Input::isKeyHeld(GLFW_KEY_R) && Input::isKeyHeld(GLFW_KEY_LEFT_SHIFT))
 		{
-			rotate -= GLHelper::delta_time * 75;
+			rotate -= dt * 75;
 		}
 		else if (Input::isKeyHeld(GLFW_KEY_R))
 		{
-			rotate += GLHelper::delta_time * 75;
+			rotate += dt * 75;
 		}
 		
 		setup_matrices();
@@ -152,9 +155,35 @@ namespace Copium::Graphics
 			delete s;
 	}
 
-	void GraphicsSystem::init_geometry()
+	// Setup default shaders for the graphics system
+	void GraphicsSystem::setup_shader_program(std::string _vtx_shdr, std::string _frg_shdr)
 	{
-		
+		std::vector<std::pair<GLenum, std::string>> shdr_files;
+		shdr_files.emplace_back(std::make_pair(GL_VERTEX_SHADER, _vtx_shdr));
+		shdr_files.emplace_back(std::make_pair(GL_FRAGMENT_SHADER, _frg_shdr));
+
+		for (int i = 0; i < 2; i++)
+		{
+			if (shaderProgram[i].IsLinked())
+				continue;
+
+			shaderProgram[i].CompileLinkValidate(shdr_files);
+
+			if (GL_FALSE == shaderProgram[i].IsLinked())
+			{
+				PRINT("Unable to compile/link/validate shader programs");
+				PRINT(shaderProgram[i].GetLog());
+				std::exit(EXIT_FAILURE);
+			}
+
+			break;
+		}
+	}
+
+	// Setup default world, view and projection matrices (May include orthographic)
+	void GraphicsSystem::setup_matrices()
+	{
+
 	}
 
 	// Load assets into the game
@@ -185,38 +214,28 @@ namespace Copium::Graphics
 		textures.push_back(texture);
 		//PRINT("Texture: " << texture.get_object_id() << " loaded into slot: " << textureSlotIndex - 1);
 	}
-
-	// Setup default shaders for the graphics system
-	void GraphicsSystem::setup_shader_program(std::string vtx_shdr, std::string frg_shdr)
+	
+	// Renders the objects in the engine in batches
+	void GraphicsSystem::batch_render()
 	{
-		std::vector<std::pair<GLenum, std::string>> shdr_files;
-		shdr_files.emplace_back(std::make_pair(GL_VERTEX_SHADER, vtx_shdr));
-		shdr_files.emplace_back(std::make_pair(GL_FRAGMENT_SHADER, frg_shdr));
+		// Binds the framebuffer
+		framebuffer.bind();
 
-		for (int i = 0; i < 2; i++)
-		{
-			if (shaderProgram[i].IsLinked())
-				continue;
+		// Clear the screen
+		glClearColor(0.f, 0.f, 0.f, 1.f);
+		glClear(GL_COLOR_BUFFER_BIT);
 
-			shaderProgram[i].CompileLinkValidate(shdr_files);
+		// Draw the world using batch rendering
+		draw_world();
 
-			if (GL_FALSE == shaderProgram[i].IsLinked())
-			{
-				PRINT("Unable to compile/link/validate shader programs");
-				PRINT(shaderProgram[i].GetLog());
-				std::exit(EXIT_FAILURE);
-			}
+		if(debugMode)
+			draw_debug_info();
 
-			break;
-		}
+		// Unbind the framebuffer to display renderable
+		// onto the image
+		framebuffer.unbind();
 	}
-
-	// Setup default world, view and projection matrices (May include orthographic)
-	void GraphicsSystem::setup_matrices()
-	{
-
-	}
-
+	
 	// Draw the debug data
 	void GraphicsSystem::draw_debug_info()
 	{
@@ -357,21 +376,4 @@ namespace Copium::Graphics
 		renderer.flush();
 	}
 
-	void GraphicsSystem::batch_render()
-	{
-		// Include a loop of draw calls
-
-		// One draw call
-		framebuffer.bind();
-
-		glClearColor(0.f, 0.f, 0.f, 1.f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		draw_world();
-
-		if(debugMode)
-			draw_debug_info();
-
-		framebuffer.unbind();
-	}
 }

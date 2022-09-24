@@ -19,7 +19,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 //PRECOMPILED HEADERS(Commonly used external libraries)
 #include "windows-system.h"
 #include "windows-input.h"
-#include "editor-layer.h"
+#include "editor-system.h"
 #include "scripting-system.h"
 #include "scripting.h"
 #include "logging.h"
@@ -69,25 +69,19 @@ Note that the C++ compiler will insert a return 0 statement if one is missing.
 /**************************************************************************/
 int main() 
 {
-    init();
-    Input::getInputInstance()->Init();
-    init_statemanager(esActive);
-
-    //glfwSetKeyCallback(Copium::windowsSystem.get_window(), quit_key_callback);
-    glfwSetKeyCallback(Copium::windowsSystem.get_window(), Input::keyCallback);
-    //glfwSetMouseButtonCallback(GLHelper::ptr_window, Input::mousebuttonCallback);
-    //glfwSetScrollCallback(GLHelper::ptr_window, Input::mousescrollCallback);
-    //glfwSetCursorPosCallback(GLHelper::ptr_window, Input::mouseposCallback);
-
     // Enable run-time memory check for debug purposes 
     #if defined(DEBUG) | defined(_DEBUG)
         _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     #endif
 
-    Copium::Message::DUMMY_RECEIVER dummy12;
-    Copium::Message::DUMMY_RECEIVER dummy122;
     copiumCore.init();
-    messageSystem.dispatch(Copium::Message::MESSAGE_TYPE::MT_MOUSE_CLICKED);
+    init();
+
+    Copium::Windows::WindowsSystem* windowsSystem = Copium::Windows::WindowsSystem::Instance();
+
+    //glfwSetKeyCallback(Copium::windowsSystem.get_window(), quit_key_callback);
+    glfwSetKeyCallback(windowsSystem->get_window(), Input::keyCallback);
+
     SceneManager SM;
     FrameRateController frc(100.0);
     std::string str = "blah";
@@ -98,7 +92,7 @@ int main()
     //delete yolo;
 
     // Engine Loop
-    while (!glfwWindowShouldClose(Copium::windowsSystem.get_window()) && esCurrent != esQuit)
+    while (!glfwWindowShouldClose(windowsSystem->get_window()) && esCurrent != esQuit)
     {
         SM.add_scene(sandboxScene);
         //std::cout << "Number of scenes: " << SM.get_scenecount() << std::endl;
@@ -165,12 +159,6 @@ int main()
 /**************************************************************************/
 static void init()
 {
-    // Bean: This should be handles by ISystem (with regards to the "System" itself)
-    Copium::windowsSystem.init(1600, 900, "Copium");
-
-    // Bean: This initialises the imgui, which i think should also be handled by ISystem
-    Copium::Editor::editor.init();
-
     Log::init();
     Console_Critical("Test 1");
     Console_Error("Test 2");
@@ -180,6 +168,13 @@ static void init()
 
     //spdlog::info("File test");
     //File_Warn("Hello{}",3);
+
+    Input::getInputInstance()->Init();
+    init_statemanager(esActive);
+
+    Copium::Message::DUMMY_RECEIVER dummy12;
+    Copium::Message::DUMMY_RECEIVER dummy122;
+    messageSystem.dispatch(Copium::Message::MESSAGE_TYPE::MT_MOUSE_CLICKED);
 }
 
 /***************************************************************************/
@@ -192,12 +187,6 @@ static void init()
 /**************************************************************************/
 static void update()
 {
-    // Bean: This should be handles by ISystem
-    Copium::windowsSystem.update();
-
-    // Bean: This should be handles by ISystem
-    Copium::Editor::editor.update();
-
     quitEngine();
 }
 
@@ -210,11 +199,8 @@ static void update()
 /**************************************************************************/
 static void draw() 
 {
-    // Bean: This should be handles by ISystem
-    Copium::Editor::editor.draw();
-    
-    // Bean: This should be handles by ISystem
-    Copium::windowsSystem.draw();
+    Copium::Editor::EditorSystem::Instance()->draw();
+    Copium::Windows::WindowsSystem::Instance()->draw();
 }
 
 /***************************************************************************/
@@ -226,9 +212,8 @@ static void draw()
 /**************************************************************************/
 void cleanup() 
 {
-    // Bean: This should be handles by ISystem
-    Copium::Editor::editor.exit();
-
+    glfwTerminate(); // Bean: should be in WindowSystem exit once the 
+                     //         exit system is called in reverse order
     Input::destroy();
 }
 

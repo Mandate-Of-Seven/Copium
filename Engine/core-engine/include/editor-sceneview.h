@@ -15,8 +15,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef EDITOR_SCENEVIEW_H
 #define EDITOR_SCENEVIEW_H
 
-#include "editor-layer.h"
-#include <glm/glm.hpp>
+#include "editor-system.h"
 
 namespace Copium::Editor
 {

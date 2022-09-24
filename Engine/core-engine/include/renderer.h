@@ -18,8 +18,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include <glslshader.h>
-#include <array>
 #include "vertex-types.h"
 
 namespace Copium::Graphics 
@@ -33,7 +31,6 @@ namespace Copium::Graphics
 	class Renderer //(Inherits from the Component Class) 
 	{
 	public:
-
 		// Constructors
 		/***************************************************************************/
 		/*!
@@ -42,7 +39,7 @@ namespace Copium::Graphics
 			the vertex array object, vertex buffer object, index buffer and stores
 			the elements of the object to be used for rendering
 		*/
-		/**************************************************************************/
+		/***************************************************************************/
 		void init(); // Initializes the renderer by storing a handle to VAO
 
 		/***************************************************************************/
@@ -51,7 +48,7 @@ namespace Copium::Graphics
 			Flushes the buffer and complete remaining draw calls and shuts down the
 			rendering system when exiting
 		*/
-		/**************************************************************************/
+		/***************************************************************************/
 		void shutdown();
 
 		// Member Functions
@@ -61,7 +58,7 @@ namespace Copium::Graphics
 		\brief
 			Setup the quad's vertex array object along with its data
 		*/
-		/**************************************************************************/
+		/***************************************************************************/
 		void setup_quad_vao();
 
 		/***************************************************************************/
@@ -69,7 +66,7 @@ namespace Copium::Graphics
 		\brief
 			Setup the line's vertex array object along with its data
 		*/
-		/**************************************************************************/
+		/***************************************************************************/
 		void setup_line_vao();
 
 		/***************************************************************************/
@@ -78,7 +75,7 @@ namespace Copium::Graphics
 			Begins batching the draw calls of the renderer into the buffer for
 			rendering
 		*/
-		/**************************************************************************/
+		/***************************************************************************/
 		void begin_batch();
 
 		/***************************************************************************/
@@ -86,7 +83,7 @@ namespace Copium::Graphics
 		\brief
 			Flushes the buffer and renders the remaining draw calls
 		*/
-		/**************************************************************************/
+		/***************************************************************************/
 		void flush();
 
 		/***************************************************************************/
@@ -94,7 +91,7 @@ namespace Copium::Graphics
 		\brief
 			Ends the batch by clearing the buffer
 		*/
-		/**************************************************************************/
+		/***************************************************************************/
 		void end_batch();
 
 		/***************************************************************************/
@@ -108,7 +105,7 @@ namespace Copium::Graphics
 		\param color
 			The color of the quad
 		*/
-		/**************************************************************************/
+		/***************************************************************************/
 		void draw_quad(const glm::vec2& _position, const glm::vec2& _size, const glm::vec4& _color);
 
 		/***************************************************************************/
@@ -122,7 +119,7 @@ namespace Copium::Graphics
 		\param textureID
 			The index of the texture to be used
 		*/
-		/**************************************************************************/
+		/***************************************************************************/
 		void draw_quad(const glm::vec2& _position, const glm::vec2& _size, GLuint _textureID);
 
 		/***************************************************************************/
@@ -138,7 +135,7 @@ namespace Copium::Graphics
 		\param color
 			The color of the quad
 		*/
-		/**************************************************************************/
+		/***************************************************************************/
 		void draw_quad(const glm::mat4& _transform, const glm::vec2& _position, const glm::vec2& _size, const glm::vec4& _color);
 
 		/***************************************************************************/
@@ -154,7 +151,7 @@ namespace Copium::Graphics
 		\param textureID
 			The index of the texture to be used
 		*/
-		/**************************************************************************/
+		/***************************************************************************/
 		void draw_quad(const glm::mat4& _transform, const glm::vec2& _position, const glm::vec2& _size, GLuint _textureID);
 
 		/***************************************************************************/
@@ -168,7 +165,7 @@ namespace Copium::Graphics
 		\param color
 			The color of the line
 		*/
-		/**************************************************************************/
+		/***************************************************************************/
 		void draw_line(const glm::vec2& _position0, const glm::vec2& _position1, const glm::vec4& _color);
 
 		// Accessing Properties
@@ -180,8 +177,8 @@ namespace Copium::Graphics
 		\return
 			The draw count
 		*/
-		/**************************************************************************/
-		//const GLint & GetDrawCount() { return drawCount; }
+		/***************************************************************************/
+		//const GLint& get_draw_count() { return drawCount; }
 
 		/***************************************************************************/
 		/*!
@@ -192,8 +189,8 @@ namespace Copium::Graphics
 		\return
 			The draw count
 		*/
-		/**************************************************************************/
-		//const GLint & SetDrawCount(const GLint& count) { return drawCount = count; }
+		/***************************************************************************/
+		//const GLint& set_draw_count(const GLint& _count) { return drawCount = _count; }
 
 		/***************************************************************************/
 		/*!
@@ -202,8 +199,8 @@ namespace Copium::Graphics
 		\return
 			The quad count
 		*/
-		/**************************************************************************/
-		//const GLint & GetQuadCount() { return quadCount; }
+		/***************************************************************************/
+		//const GLint& get_quad_count() { return quadCount; }
 
 		/***************************************************************************/
 		/*!
@@ -215,15 +212,15 @@ namespace Copium::Graphics
 			The quad count
 		*/
 		/**************************************************************************/
-		//const GLint & SetQuadCount(const GLint & count) { return quadCount = count; }
+		//const GLint& set_quad_count(const GLint& _count) { return quadCount = _count; }
 
 		/***************************************************************************/
 		/*!
 		\brief
-			Resets the number of draw and quad count
+			Resets the number of draw, quad and line count
 		*/
-		/**************************************************************************/
-		//void reset_stats() { s_Data.drawCount = s_Data.quadCount = 0; };		
+		/***************************************************************************/
+		//void reset_stats() { drawCount = quadCount = lineCount = 0; };		
 
 	private:
 
@@ -249,7 +246,7 @@ namespace Copium::Graphics
 		LineVertex* lineBuffer = nullptr;
 		LineVertex* lineBufferPtr = nullptr;
 
-		GraphicsSystem* graphics;
+		GraphicsSystem* graphics; // A pointer to the instance of graphics system
 	};
 }
 

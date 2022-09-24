@@ -17,18 +17,18 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef GRAPHICS_SYSTEM_H
 #define GRAPHICS_SYSTEM_H
 
-#include <glslshader.h>
-#include <GLFW/glfw3.h>
-
 #include "system-interface.h"
-#include "vertex-types.h"
-#include "sprite-renderer.h"
+
+#include "glslshader.h"
+#include "textures.h"
 #include "framebuffer.h"
 #include "renderer.h"
-#include "textures.h"
 
 namespace Copium::Graphics
 {
+	// Forward declaration
+	class SpriteRenderer;
+
 	// Global variables
 	static const GLuint maxQuadCount = 1000; // Number of sprites per batch
 	static const GLuint maxLineCount = 1000; // Number of lines per batch
@@ -40,44 +40,129 @@ namespace Copium::Graphics
 	CLASS_SYSTEM(GraphicsSystem) // Inherits from System
 	{
 	public:
+		// Constructors
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Initialises the graphics system and the viewport
+		*/
+		/***************************************************************************/
 		void init();
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Updates the matrices and rendering of the objects in the engine
+		*/
+		/***************************************************************************/
 		void update();
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Exits the renderer and framebuffer
+		*/
+		/***************************************************************************/
 		void exit();
 
-		std::vector<GLuint> & get_texture_slots() { return textureSlots; }
-		GLuint & get_texture_slot_index() { return textureSlotIndex; }
-		GLuint & get_white_texture() { return whiteTexture; }
-		GLuint & get_white_texture_slot() { return whiteTextureSlot; }
+		// Accessing Properties
 
+		// Scene Properties
+		GLuint const get_scene_width() { return sceneWidth; }
+		void const set_scene_width(GLuint _width) { sceneWidth = _width; }
+
+		GLuint const get_scene_height() { return sceneHeight; }
+		void const set_scene_height(GLuint _height) { sceneHeight = _height; }
+
+		glm::vec2 const get_scene_position() { return scenePosition; }
+		void const set_scene_position(glm::vec2 _position) { scenePosition = _position; }
+
+		// Texture Properties
+		std::vector<GLuint>& const get_texture_slots() { return textureSlots; }
+
+		GLuint const get_texture_slot_index() { return textureSlotIndex; }
+		void const set_texture_slot_index(GLuint _index) { textureSlotIndex = _index; }
+		
+		GLuint& const get_white_texture() { return whiteTexture; }
+		GLuint const get_white_texture_slot() { return whiteTextureSlot; }
+
+		// Data Members
+		GLSLShader* const get_shader_program() { return shaderProgram; }
+		std::vector<SpriteRenderer*> const get_sprites() { return sprites; }
+		Framebuffer get_framebuffer() { return framebuffer; }
+
+#pragma region MemberFunctions
 	private:
+		// Member functions 
+		
+		/***************************************************************************/
+		/*!
+		\brief
+			Setup default shaders for the graphics system and binds the vertex and 
+			fragment shader to the GLSLshader program
+		\param vtx_shdr
+			The vertex shader to bind
+		\param frg_shdr
+			The fragment shader to bind
+		*/
+		/***************************************************************************/
+		void setup_shader_program(std::string _vtx_shdr, std::string _frg_shdr);
 
-		// Setup default shaders for the graphics system
-		void setup_shader_program(std::string vtx_shdr, std::string frg_shdr);
-
-		// Setup default world, view and projection matrices (May include orthographic)
+		/***************************************************************************/
+		/*!
+		\brief
+			Setup default world, view and projection matrices 
+			(May include orthographic)
+		*/
+		/***************************************************************************/
 		void setup_matrices();
-
-		// Draw the debug data
-		void draw_debug_info();
-
-		// Draw the world
-		void draw_world();
-
-		// Batch Rendering
-		void batch_render();
-
-		// Create a vertex buffer for the sprites
-		void init_geometry();
-
-		// Load assets into the game
+		
+		/***************************************************************************/
+		/*!
+		\brief
+			Load assets into the engine
+		*/
+		/***************************************************************************/
 		void load_assets();
 
-		// Load a texture into the game
-		void load_texture(const std::string & _filePath);
+		/***************************************************************************/
+		/*!
+		\brief
+			Loads a texture into the engine
+		\param _filePath
+			The file path to access to load the texture
+		*/
+		/***************************************************************************/
+		void load_texture(const std::string& _filePath);
 
-	public:
+		/***************************************************************************/
+		/*!
+		\brief
+			Renders the objects in the engine in batches
+		*/
+		/***************************************************************************/
+		void batch_render();
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Draw the debug mode of the engine
+		*/
+		/***************************************************************************/
+		void draw_debug_info();
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Draw the "world" of the engine which is the scene view
+		*/
+		/***************************************************************************/
+		void draw_world();
+
+#pragma endregion MemberFunctions
+#pragma region DataMembers
+	private:
 		/* Camera View / Scene View *****************************************************/
 		// [Camera Here] (Bean: Should be a component instead?)
 		GLuint sceneWidth;
@@ -85,7 +170,6 @@ namespace Copium::Graphics
 		glm::vec2 scenePosition;
 
 		/* Stored Texture Assets ********************************************************/
-		std::vector<Texture> textures;
 		std::vector<GLuint> textureSlots;
 		GLuint textureSlotIndex = 1; // Initializes with 1
 		GLuint whiteTexture = 0;
@@ -100,12 +184,14 @@ namespace Copium::Graphics
 		GLSLShader shaderProgram[2]; // Shader program to use
 
 		/* Stored Information ***********************************************************/
+		std::vector<Texture> textures;
 		std::vector<SpriteRenderer*> sprites;
 
 		Renderer renderer;
 		Framebuffer framebuffer;
 
 		bool debugMode;
+#pragma endregion DataMembers
 	};
 
 }

@@ -31,24 +31,25 @@ namespace Copium::Graphics
 		// Setup Quad Vertex Array Object
 		setup_quad_vao();
 
-		glCreateTextures(GL_TEXTURE_2D, 1, &graphics->whiteTexture);
-		glTextureStorage2D(graphics->whiteTexture, 1, GL_RGBA8, 1, 1);
+		GLuint texture = graphics->get_white_texture();
+		glCreateTextures(GL_TEXTURE_2D, 1, &texture);
+		glTextureStorage2D(texture, 1, GL_RGBA8, 1, 1);
 
-		glTextureParameteri(graphics->whiteTexture, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTextureParameteri(graphics->whiteTexture, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTextureParameteri(texture, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameteri(texture, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		glTextureParameteri(graphics->whiteTexture, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTextureParameteri(graphics->whiteTexture, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTextureParameteri(texture, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTextureParameteri(texture, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 		GLuint color = 0xffffffff;
-		glTextureSubImage2D(graphics->whiteTexture, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &color);
+		glTextureSubImage2D(texture, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &color);
 
-		graphics->textureSlots.resize(maxTextures);
-		graphics->textureSlots[0] = graphics->whiteTexture;
+		graphics->get_texture_slots().resize(maxTextures);
+		graphics->get_texture_slots()[0] = texture;
 
 		for (GLuint i = 1; i < maxTextures; i++)
 		{
-			graphics->textureSlots[i] = 0;
+			graphics->get_texture_slots()[i] = 0;
 		}
 	}
 
@@ -136,7 +137,7 @@ namespace Copium::Graphics
 		glDeleteBuffers(1, &quadVertexBufferID);
 		glDeleteBuffers(1, &lineVertexBufferID);
 		glDeleteBuffers(1, &quadIndexBufferID);
-		glDeleteTextures(1, &graphics->whiteTexture);
+		glDeleteTextures(1, &graphics->get_white_texture());
 
 		delete[] quadBuffer;
 		delete[] lineBuffer;
@@ -159,31 +160,31 @@ namespace Copium::Graphics
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			graphics->shaderProgram[0].Use();
+			graphics->get_shader_program()[0].Use();
 			glBindVertexArray(quadVertexArrayID);
 			
-			for (GLuint i = 0; i < graphics->textureSlotIndex; i++)
-				glBindTextureUnit(i, graphics->textureSlots[i]);
+			for (GLuint i = 0; i < graphics->get_texture_slot_index(); i++)
+				glBindTextureUnit(i, graphics->get_texture_slots()[i]);
 
 			glDrawElements(GL_TRIANGLES, quadIndexCount, GL_UNSIGNED_SHORT, NULL);
 			drawCount++;
 
-			graphics->textureSlotIndex = 1;
+			graphics->set_texture_slot_index(1);
 			glBindVertexArray(0);
-			graphics->shaderProgram[0].UnUse();
+			graphics->get_shader_program()[0].UnUse();
 			glDisable(GL_BLEND);
 		}
 
 		if (lineVertexCount)
 		{
-			graphics->shaderProgram[1].Use();
+			graphics->get_shader_program()[1].Use();
 			glBindVertexArray(lineVertexArrayID);
 
 			glDrawArrays(GL_LINES, 0, lineVertexCount);
 			drawCount++;
 
 			glBindVertexArray(0);
-			graphics->shaderProgram[1].UnUse();
+			graphics->get_shader_program()[1].UnUse();
 		}
 		
 	}
@@ -257,7 +258,7 @@ namespace Copium::Graphics
 
 	void Renderer::draw_quad(const glm::vec2& _position, const glm::vec2& _size, GLuint _textureID)
 	{
-		if (quadIndexCount >= maxIndexCount || graphics->textureSlotIndex > maxTextures - 1)
+		if (quadIndexCount >= maxIndexCount || graphics->get_texture_slot_index() > maxTextures - 1)
 		{
 			end_batch();
 			flush();
@@ -268,9 +269,9 @@ namespace Copium::Graphics
 
 		GLfloat textureIndex = 0.f;
 
-		for (GLuint i = 1; i < graphics->textureSlotIndex; i++)
+		for (GLuint i = 1; i < graphics->get_texture_slot_index(); i++)
 		{
-			if (graphics->textureSlots[i] == _textureID)
+			if (graphics->get_texture_slots()[i] == _textureID)
 			{
 				textureIndex = (GLfloat)i;
 				break;
@@ -279,9 +280,9 @@ namespace Copium::Graphics
 
 		if (textureIndex == 0.f)
 		{
-			textureIndex = (GLfloat) graphics->textureSlotIndex;
-			graphics->textureSlots[graphics->textureSlotIndex] = _textureID;
-			graphics->textureSlotIndex++;
+			textureIndex = (GLfloat) graphics->get_texture_slot_index();
+			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _textureID;
+			graphics->set_texture_slot_index(textureIndex + 1);
 		}
 
 		//PRINT("Drawing texture: " << _textureID << " at texture slot: " << textureIndex);
@@ -378,9 +379,9 @@ namespace Copium::Graphics
 
 		GLfloat textureIndex = 0.f;
 
-		for (GLuint i = 1; i < graphics->textureSlotIndex; i++)
+		for (GLuint i = 1; i < graphics->get_texture_slot_index(); i++)
 		{
-			if (graphics->textureSlots[i] == _textureID)
+			if (graphics->get_texture_slots()[i] == _textureID)
 			{
 				textureIndex = (GLfloat) i;
 				break;
@@ -389,9 +390,9 @@ namespace Copium::Graphics
 
 		if (textureIndex == 0.f)
 		{
-			textureIndex = (GLfloat) graphics->textureSlotIndex;
-			graphics->textureSlots[graphics->textureSlotIndex] = _textureID;
-			graphics->textureSlotIndex++;
+			textureIndex = (GLfloat) graphics->get_texture_slot_index();
+			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _textureID;
+			graphics->set_texture_slot_index(textureIndex + 1);
 		}
 
 		glm::vec2 halfsize = { _size.x / 2, _size.y / 2 };

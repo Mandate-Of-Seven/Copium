@@ -14,7 +14,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 #include "pch.h"
 #include "windows-system.h"
-#include "editor-layer.h"
+#include "editor-system.h"
 #include "editor-sceneview.h"
 #include "game-object.h"
 #include "inspector.h"
@@ -24,8 +24,10 @@ namespace Copium::Editor
 	// Our state
 	bool show_demo_window = true;
 
-	void Editor::init()
+	void EditorSystem::init()
 	{
+		Copium::Windows::WindowsSystem* windowsSystem = Copium::Windows::WindowsSystem::Instance();
+
 		//imgui
 		ImGui::CreateContext();
 		ImGuiIO & io = ImGui::GetIO(); (void) io;
@@ -34,7 +36,7 @@ namespace Copium::Editor
 		io.ConfigWindowsMoveFromTitleBarOnly = true;
 		
 		ImGui::StyleColorsDark();
-		ImGui_ImplGlfw_InitForOpenGL(windowsSystem.get_window(), true);
+		ImGui_ImplGlfw_InitForOpenGL(windowsSystem->get_window(), true);
 		ImGui_ImplOpenGL3_Init("#version 330");
 
 		Window::Inspector::init();
@@ -43,7 +45,7 @@ namespace Copium::Editor
 		SceneView::init();
 	}
 
-	void Editor::update()
+	void EditorSystem::update()
 	{
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
@@ -61,13 +63,13 @@ namespace Copium::Editor
 		ImGui::EndFrame();
 	}
 
-	void Editor::draw()
+	void EditorSystem::draw()
 	{
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	}
 
-	void Editor::exit()
+	void EditorSystem::exit()
 	{
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();

@@ -1,7 +1,9 @@
 #pragma once
 #include "system-interface.h"
-#include "scripting-system.h"
+#include "windows-system.h"
 #include "message-system.h"
+#include "editor-system.h"
+#include "scripting-system.h"
 #include "graphics-system.h"
 
 namespace Copium
@@ -22,7 +24,9 @@ namespace Copium
 			systems =
 			{
 				//Put in sequence of calls
+				Windows::WindowsSystem::Instance(),
 				Message::MessageSystem::Instance(),
+				Editor::EditorSystem::Instance(),
 				Scripting::ScriptingSystem::Instance(),
 				Graphics::GraphicsSystem::Instance()
 			};

@@ -26,8 +26,8 @@ namespace Copium::Editor::SceneView
 	void init()
 	{
 		graphics = Copium::Graphics::GraphicsSystem::Instance();
-		graphics->sceneWidth = 1280;
-		graphics->sceneHeight = 720;
+		graphics->set_scene_width(1280);
+		graphics->set_scene_height(720);
 	}
 
 	void update()
@@ -37,20 +37,20 @@ namespace Copium::Editor::SceneView
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
 		// Begin
 		ImGui::Begin("Scene View", 0, window_flags);
-		graphics->scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
+		graphics->set_scene_position(glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y));
 
 		char buffer[64];
-		sprintf(buffer, "Sprite Count: %d", (int)graphics->sprites.size());
+		sprintf(buffer, "Sprite Count: %d", (int)graphics->get_sprites().size());
 		ImGui::Text(buffer);
 
-		GLuint textureID = graphics->framebuffer.get_color_attachment_id();
+		GLuint textureID = graphics->get_framebuffer().get_color_attachment_id();
 
 		ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
 
 		if (viewportSize != *((glm::vec2 *) &viewportEditorSize))
 		{
 			viewportSize = { viewportEditorSize.x, viewportEditorSize.y };
-			graphics->framebuffer.resize(viewportSize.x, viewportSize.y);
+			graphics->get_framebuffer().resize(viewportSize.x, viewportSize.y);
 		}
 
 		ImGui::Image((void *) textureID, ImVec2{ viewportSize.x, viewportSize.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
@@ -58,7 +58,6 @@ namespace Copium::Editor::SceneView
 		// End
 		ImGui::End();
 		ImGui::PopStyleVar();
-
 		
 	}
 

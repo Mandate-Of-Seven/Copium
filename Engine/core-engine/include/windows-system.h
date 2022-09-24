@@ -22,56 +22,127 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <GLFW/glfw3.h>
 #include <string>
 
-namespace Copium
+#include "system-interface.h"
+
+namespace Copium::Windows
 {
-	class WindowsSystem // Inherits from ISystem
+	CLASS_SYSTEM(WindowsSystem)
 	{
 	public:
-		// Setup OpenGL context
-		void init(int _width, int _height, std::string _title);
+		
+		// Constructors
+		/***************************************************************************/
+		/*!
+		\brief
+			Setup OpenGL context and the window
+		*/
+		/***************************************************************************/
+		void init();
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Setup OpenGL context and the window
+		\param _width
+			The width of the window to set to
+		\param _height
+			The height of the window to set to
+		\param _title
+			The title of the window
+		*/
+		/***************************************************************************/
+		void init_system(int _width = 1600, int _height = 900, std::string _title = "Copium");
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Checks for poll events if the window is not closed
+		*/
+		/***************************************************************************/
 		void update();
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Displays the window titles and swap the buffers of the window
+		*/
+		/***************************************************************************/
 		void draw();
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Terminates GLFW
+		*/
+		/***************************************************************************/
 		void exit();
 
+		// Frames and Delta Time
+		/***************************************************************************/
+		/*!
+		\brief
+			Updates the time of the system, it uses the GLFW's time functions to 
+			compute the interval in seconds between each frame and the frames per
+			second every "fps calculated interval" seconds
+		\param _fpsInterval
+			The interval (in seconds) at which fps is to be calculated
+		*/
+		/***************************************************************************/
+		void update_time(double _fpsInterval = 1.0);
+
 		// Callbacks
+		/***************************************************************************/
+		/*!
+		\brief
+			Define the error callback of the windows
+		\param _error
+			The GLFW error code
+		\param _description
+			The description of the error
+		*/
+		/***************************************************************************/
 		static void error_callback(int _error, char const * _description);
 
+		/***************************************************************************/
+		/*!
+		\brief
+			This function is called when the window is resized and receives the new
+			size of the windows in pixels
+		\param _window
+			The handle to window that is being resized
+		\param _width
+			The width to change to
+		\param _height
+			The height to change to
+		*/
+		/***************************************************************************/
 		static void framebuffer_size_callback(GLFWwindow * _window, int _width, int _height);
 
-		// Get and Set Functions
-		void set_window_dimensions(int _width, int _height) { screenWidth = _width; screenHeight = _height; }
+		// Accessing Properties
+
+		void set_window_dimensions(int _width, int _height) { windowWidth = _width; windowHeight = _height; }
 
 		std::string get_title() { return title; }
 
-		static int get_window_width() { return screenWidth; }
+		int get_window_width() { return windowWidth; }
+		int get_window_height() { return windowHeight; }
 
-		static int get_window_height() { return screenHeight; }
+		double const get_fps() { return fps; }
+		double const get_delta_time() { return delta_time; }
 
-		static GLFWwindow * get_window() { return window; }
+		GLFWwindow* get_window() { return window; }
 
 	private:
 		/* Properties of a Window *******************************************************/
 		std::string title;
 
-		static int screenWidth;
-		static int screenHeight;
+		int windowWidth;
+		int windowHeight;
 
-		static GLFWwindow * window;
-	};
+		double fps; // The frames per second of the engine
+		double delta_time; // Time taken to complete most recent engine loop
 
-	static WindowsSystem windowsSystem;
-
-	struct GLHelper
-		/*! GLHelper structure to encapsulate initialization stuff ...
-		*/
-	{
-		static void update_time(double fpsCalcInt = 1.0); // (Should be moved to core engine)
-		
-		static GLdouble fps;
-		static GLdouble delta_time; // time taken to complete most recent game loop
+		GLFWwindow* window;
 	};
 }
 

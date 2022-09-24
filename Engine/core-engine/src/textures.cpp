@@ -14,10 +14,11 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
-#include "textures.h"
-
+#include <GL/glew.h>
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include <stb_image.h>
+
+#include "textures.h"
 
 namespace Copium::Graphics
 {
@@ -30,9 +31,6 @@ namespace Copium::Graphics
 
 		// File cannot be loaded
 		M_Assert(data != NULL, "File cannot be loaded! Check the file path...");
-
-		int x, y, n, ok;
-		ok = stbi_info(_filePath.c_str(), &x, &y, &n);
 			
 		width = (GLuint)iWidth;
 		height = (GLuint)iHeight;
