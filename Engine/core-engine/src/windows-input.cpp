@@ -20,12 +20,14 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <iostream>
 #include <logging.h>
 
+#define MAX_KEYS 400
+#define MAX_MOUSEBUTTONS 5
 using namespace Copium;
 
 void WindowsInput::init()
 {
-    get_input_instance()->keys = new short[400];
-    get_input_instance()->mouseButtons = new short[2];
+    get_input_instance()->keys = new short[MAX_KEYS];
+    get_input_instance()->mouseButtons = new short[MAX_MOUSEBUTTONS];
     for (int i = 0; i < 400; i++)
     {
         get_input_instance()->keys[i] = 0;
@@ -42,6 +44,7 @@ void WindowsInput::init()
 
 bool WindowsInput::is_key_pressed_impl(int keycode)
 {
+    COPIUM_ASSERT((keycode > MAX_KEYS), "Keycode entered is out of range");
     if (get_input_instance()->keys[keycode]== GLFW_PRESS)
     {
         //std::cout << get_input_instance()->keys[keycode] << "  " << std::endl;
@@ -53,6 +56,7 @@ bool WindowsInput::is_key_pressed_impl(int keycode)
 
 bool WindowsInput::is_key_held_impl(int keycode)
 {
+    COPIUM_ASSERT((keycode > MAX_KEYS), "Keycode entered is out of range");
     if (get_input_instance()->keys[keycode] == GLFW_REPEAT || get_input_instance()->keys[keycode] == GLFW_PRESS)
     {
         //get_input_instance()->keys[keycode] = 0;
@@ -63,6 +67,7 @@ bool WindowsInput::is_key_held_impl(int keycode)
 
 bool WindowsInput::is_mousebutton_pressed_impl(int button)
 {
+    COPIUM_ASSERT((button > MAX_MOUSEBUTTONS), "Mouse button entered is out of range");
     auto& window = *windowsSystem.get_window();
     auto state = glfwGetMouseButton(&window, button);
     if (get_input_instance()->mouseButtons[button])
@@ -149,6 +154,27 @@ void Input::mousebutton_callback(GLFWwindow* window, int button, int action, int
             std::cout << "Right mouse button ";
         #endif
         break;
+
+        case GLFW_MOUSE_BUTTON_3:
+            target = GLFW_MOUSE_BUTTON_3;
+        #ifdef _DEBUG           
+                    std::cout << "Middle mouse button ";
+        #endif
+            break;
+
+        case GLFW_MOUSE_BUTTON_4:
+            target = GLFW_MOUSE_BUTTON_4;
+        #ifdef _DEBUG           
+                    std::cout << "Mouse button 4 ";
+        #endif
+            break;
+
+        case GLFW_MOUSE_BUTTON_5:
+            target = GLFW_MOUSE_BUTTON_5;
+        #ifdef _DEBUG           
+                    std::cout << "Mouse button 5 ";
+        #endif
+            break;
     }
     switch (action) 
     {
@@ -172,7 +198,7 @@ void Input::mousebutton_callback(GLFWwindow* window, int button, int action, int
 void Input::mousescroll_callback(GLFWwindow* window, double xOffset, double yOffset)
 {
     #ifdef _DEBUG
-        //std::cout << "Mouse scroll wheel offset: (" << xOffset << ", " << yOffset << ")" << std::endl;
+        std::cout << "Mouse scroll wheel offset: (" << xOffset << ", " << yOffset << ")" << std::endl;
     #endif
 }
 

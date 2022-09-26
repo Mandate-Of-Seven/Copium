@@ -167,11 +167,6 @@ static void init()
     // Bean: This initialises the imgui, which i think should also be handled by ISystem
     Copium::Editor::editor.init();
     
-    CONSOLE_CRITICAL("Test 1");
-    CONSOLE_ERROR("Test 2");
-    CONSOLE_WARN("What happens");
-    CONSOLE_INFO("Hello");
-    CONSOLE_TRACE("Goodbye");
 
     //Uncomment to test asserts
     //COPIUM_ASSERT(1+1==2,"Asserts are working as intended");

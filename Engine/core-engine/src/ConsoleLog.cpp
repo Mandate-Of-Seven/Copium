@@ -14,6 +14,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 #include "pch.h"
 #include "ConsoleLog.h"
+#include "logging.h"
 
 namespace Window
 {
@@ -41,9 +42,13 @@ namespace Window
 			va_start(args, fmt);
 			Buf.appendfv(fmt, args);
 			va_end(args);
-			for (int new_size = Buf.size(); old_size < new_size; old_size++)
-				if (Buf[old_size] == '\n')
-					LineOffsets.push_back(old_size + 1);
+            for (int new_size = Buf.size(); old_size < new_size; old_size++)
+            {
+                if (Buf[old_size] == '\n')
+                {
+                    LineOffsets.push_back(old_size + 1);
+                }
+            }
 		}
 
         void add_logEntry(std::string str)
@@ -92,6 +97,15 @@ namespace Window
                     counter++;
                 }
             }
+            ImGui::SameLine();
+            if (ImGui::SmallButton("[Debug] Testing Win32console"))
+            {
+                CONSOLE_CRITICAL("This is a critical");
+                CONSOLE_ERROR("This is an error");
+                CONSOLE_WARN("This is a warning");
+                CONSOLE_INFO("This is just info");
+                CONSOLE_TRACE("Goodbye");
+            }
 
             // Buttons
             if (ImGui::Button("Options"))
@@ -110,7 +124,6 @@ namespace Window
 
             if (clear)
             {
-                std::cout << Window::EditorConsole::editorLog.keepScrolling;
                 editorLog.Clear();
             }
                 

@@ -36,6 +36,8 @@ namespace Copium
         spdlog::set_pattern("[source %s] [function %!] [line %#] %v");
         consoleLogger = std::make_shared<spdlog::logger>("Copium Engine", sink_list.begin(), sink_list.end());
 
+        COPIUM_ASSERT(!consoleLogger,"Console Logger was not created properly");
+        std::cout << "Logging init was called" << std::endl;
     }
 
     std::string Log::to_string(std::string msg)
@@ -50,11 +52,24 @@ namespace Copium
             ostream_logger->set_level(spdlog::level::trace);
         }
         spdlog::set_default_logger(ostream_logger);
+
+        COPIUM_ASSERT(!ostream_logger, "Output stream Logger was not created properly");
         spdlog::trace(msg);
         std::string text = _oss.str();
         std::cout << text << std::endl;
 
         return text;
+    }
+
+    void Log::create_multiplefile(int fileSize,int fileAmount)
+    {
+        int max_size = fileSize;
+        int max_files = fileAmount;
+        auto logger = spdlog::rotating_logger_mt("rotating_logger", "logs/rotating.txt",
+                                 max_size, max_files);
+
+        COPIUM_ASSERT(!logger, "Multiple file Logger was not created properly");
+        logger->info("The purpose of this is to test the rotating file sink");
     }
 
     void Log::error_log()

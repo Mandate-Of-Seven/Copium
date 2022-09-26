@@ -50,7 +50,7 @@ namespace Copium
 		/***************************************************************************/
 		/*!
 		\brief
-			Checks if the given key is being held (DOESNT WORK YET)
+			Used to stop the engine if the condition is true
 		\param expr_str
 			The error condition that was true which will be shown
 		\param expr
@@ -74,6 +74,18 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		static std::string to_string(std::string msg);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Creates multiple rotating log files
+		\param fileSize
+			the maximum file size
+		\param fileAmount
+			the maximum amount of files
+		*/
+		/**************************************************************************/
+		static void create_multiplefile(int fileSize, int fileAmount);
 
 		/***************************************************************************/
 		/*!
@@ -126,4 +138,4 @@ namespace Copium
 //enter the condition to trigger the assert, followed by the message you want.
 #define COPIUM_ASSERT(Expr, Msg) Copium::Log::assert_to_file(#Expr, Expr, __FILE__, __LINE__, Msg);
 
-//#define Console_ToString(...)	::Log::to_string(__VA_ARGS__)
+#define Console_ToString(...)	::Log::to_string(__VA_ARGS__)
