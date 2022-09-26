@@ -31,8 +31,7 @@ namespace Copium
 				Editor::EditorSystem::Instance(),
 				Scripting::ScriptingSystem::Instance(),
 				Physics::Physics::Instance(),
-				Graphics::GraphicsSystem::Instance()
-				Scripting::ScriptingSystem::Instance(),
+				Graphics::GraphicsSystem::Instance(),
 				NewSceneManager::Instance()
 			};
 			for (ISystem* pSystem : systems)

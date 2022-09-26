@@ -34,7 +34,7 @@ namespace Copium::Windows
         title = _title;
 
         std::string config("Data\\config.json");
-        load_config(config, screenWidth, screenHeight);
+        load_config(config, _width, _height);
 
         if (!glfwInit())
         {
@@ -56,7 +56,7 @@ namespace Copium::Windows
         glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); // window dimensions are NOT static
 
         //GLFWwindow * ptr_window = glfwCreateWindow(_width, _height, _title.c_str(), NULL, NULL);
-        window = glfwCreateWindow(screenWidth, screenHeight, _title.c_str(), NULL, NULL);
+        window = glfwCreateWindow(_width, _height, _title.c_str(), NULL, NULL);
 
         if (!window)
         {
@@ -160,6 +160,38 @@ namespace Copium::Windows
         // use the entire framebuffer as drawing region
         glViewport(0, 0, _width, _height);
         // later, if working in 3D, we'll have to set the projection matrix here ...
+    }
+
+    bool WindowsSystem::load_config(std::string& _filename, GLint& _w, GLint& _h)
+    {
+        std::ifstream ifs(_filename);
+        if (!ifs)
+        {
+            std::cout << "Error opening config json file!\n";
+            return false;
+        }
+        rapidjson::IStreamWrapper isw(ifs);
+        rapidjson::Document doc;
+        doc.ParseStream(isw);
+        if (doc.HasMember("Width"))
+        {
+            _w = doc["Width"].GetInt();
+        }
+        else
+        {
+            return false;
+        }
+        if (doc.HasMember("Height"))
+        {
+            _h = doc["Height"].GetInt();
+        }
+        else
+        {
+            return false;
+        }
+        std::cout << "Loading from config...\n" << "Window Width:" << _w << '\n'
+            << "Window Height:" << _h << std::endl;
+        return true;
     }
 }
 
