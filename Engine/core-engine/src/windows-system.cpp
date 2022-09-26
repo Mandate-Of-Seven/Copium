@@ -13,7 +13,7 @@
     window and start up an OpenGL context and use GLEW to extract function 
     pointers to OpenGL implementations.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 
@@ -32,6 +32,9 @@ namespace Copium::Windows
         windowWidth = _width;
         windowHeight = _height;
         title = _title;
+
+        std::string config("Data\\config.json");
+        load_config(config, screenWidth, screenHeight);
 
         if (!glfwInit())
         {
@@ -53,7 +56,7 @@ namespace Copium::Windows
         glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); // window dimensions are NOT static
 
         //GLFWwindow * ptr_window = glfwCreateWindow(_width, _height, _title.c_str(), NULL, NULL);
-        window = glfwCreateWindow(_width, _height, _title.c_str(), NULL, NULL);
+        window = glfwCreateWindow(screenWidth, screenHeight, _title.c_str(), NULL, NULL);
 
         if (!window)
         {

@@ -27,7 +27,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <rapidjson/document.h>
 #include <rapidjson/istreamwrapper.h>
 #include <rttr/type>
-extern std::string prefix;
 
 // Ignore, work in progress
 class Serializer 
@@ -57,16 +56,6 @@ public:
 	rapidjson::IStreamWrapper* isw;
 	std::ifstream file;
 };
-
-
-template <typename T>
-bool load(JsonSerializer& _serializer, T& _obj)
-{
-	return _obj.deserialize(_serializer);
-}
-
-void stream_read(Serializer& _s, int64_t& _i);
-void stream_read(Serializer& _s, double& _d);
 
 
 

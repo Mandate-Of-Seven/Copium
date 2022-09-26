@@ -21,6 +21,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define BUTTON_HEIGHT 0.05 //Percent
 #define BUTTON_WIDTH .6 //Percent
 
+using Vector3 = glm::dvec3;
+
 namespace Window
 {
 
@@ -66,9 +68,9 @@ namespace Window
             if (selectedGameObject)
             {
                 Transform trans{ selectedGameObject->Trans() };
-                Vector3 position = trans.Position();
-                Vector3 rotation = trans.Rotation();
-                Vector3 scale = trans.Scale();
+                Vector3 position = trans.Position().to_glm();
+                Vector3 rotation = trans.Rotation().to_glm();
+                Vector3 scale = trans.Scale().to_glm();
                 if (ImGui::CollapsingHeader("Transform"))
                 {
                     if (ImGui::BeginTable("split", 4))

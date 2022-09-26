@@ -41,19 +41,21 @@ namespace Copium::Math
 		.property("I", &myint::i);
 	}
 
-	//RTTR_REGISTRATION{
-	//	rttr::registration::class_<myint>("myint")
-	//	.property("MyInt", &myint::i);
-	//}
-
 
 	// Vec2-----------------------------------------
 	// Vec2 Constructors
 	Vec2::Vec2(): x{0.0}, y{0.0} {}
 	Vec2::Vec2(double _x, double _y) : x{_x}, y{_y} {}
+	Vec2::Vec2(glm::dvec2& _v) : x{_v.x}, y{_v.y} {}
 
 	// Vec2 Assignment Operators + Unary Operator
 	Vec2& Vec2::operator= (const Vec2& _rhs)
+	{
+		x = _rhs.x;
+		y = _rhs.y;
+		return *this;
+	}
+	Vec2& Vec2::operator= (const glm::dvec2& _rhs)
 	{
 		x = _rhs.x;
 		y = _rhs.y;
@@ -91,6 +93,10 @@ namespace Copium::Math
 	// Accessor Functions
 	double Vec2::X() const { return x; }
 	double Vec2::Y() const { return y; }
+	glm::dvec2 Vec2::to_glm() const
+	{
+		return glm::vec2(x, y);
+	}
 
 	// Vec2 Binary Operators
 	Vec2 operator+ (const Vec2& _lhs, const Vec2& _rhs)
@@ -152,19 +158,13 @@ namespace Copium::Math
 		_os << "x:" << _v.X() << " " << "y:" << _v.Y() << std::endl;
 		return _os;
 	}
-	bool Vec2::deserialize(JsonSerializer& _serializer)
+	bool Vec2::deserialize(rapidjson::Value& _value	)
 	{
-		std::cout << "deserializing vector 2\n";
-		rapidjson::Value& sceneObject = _serializer.document["Scene"];
-		for (rapidjson::Value::ValueIterator it{ sceneObject.Begin() }; it != sceneObject.End(); ++it)
-		{
-			std::cout << "ID:" << (*it)["ID"].GetInt() << std::endl;
-			std::cout << "Name:" << (*it)["Name"].GetString() << std::endl;
-			rapidjson::GenericObject vec = (*it)["Pos"].GetObject();
-			x = vec["X"].GetDouble();
-			y = vec["Y"].GetDouble();
-		}
-			
+		if (!_value.HasMember("X") || !_value.HasMember("Y"))
+			return false;
+
+		x = _value["X"].GetDouble();
+		y = _value["Y"].GetDouble();
 			
 		return false;
 
@@ -175,9 +175,17 @@ namespace Copium::Math
 	// Vec3 Constructors
 	Vec3::Vec3(): x{0.0}, y{0.0}, z{0.0} {}
 	Vec3::Vec3(double _x, double _y, double _z): x{_x}, y{_y}, z{_z} {}
+	Vec3::Vec3(glm::dvec3& _v): x{_v.x}, y{_v.y}, z{_v.z} {}
 
 	// Vec3 Assignment Operators + Unary Operator
 	Vec3& Vec3::operator= (const Vec3& _rhs)
+	{
+		x = _rhs.x;
+		y = _rhs.y;
+		z = _rhs.z;
+		return *this;
+	}
+	Vec3& Vec3::operator= (const glm::dvec3& _rhs)
 	{
 		x = _rhs.x;
 		y = _rhs.y;
@@ -221,6 +229,12 @@ namespace Copium::Math
 	double Vec3::X() const { return x; }
 	double Vec3::Y() const { return y; }
 	double Vec3::Z() const { return z; }
+
+	glm::dvec3 Vec3::to_glm() const
+	{
+		return glm::vec3(x, y, z);
+	}
+
 
 	// Vec3 Binary Operators
 	Vec3 operator+ (const Vec3& _lhs, const Vec3& _rhs)
@@ -290,16 +304,16 @@ namespace Copium::Math
 		_os << "x:" << _v.X() << " y:" << _v.Y() << " z:" << _v.Z() << std::endl;
 		return _os;
 	}
-	void Vec3::serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& _writer) const
+	bool Vec3::deserialize(rapidjson::Value& _value)
 	{
-		_writer.StartObject();
-		_writer.String("X:");
-		_writer.Double(x);
-		_writer.String("Y:");
-		_writer.Double(y);
-		_writer.String("Z:");
-		_writer.Double(z);
-		_writer.EndObject();
+		if (!_value.HasMember("X") || !_value.HasMember("Y") || !_value.HasMember("Z"))
+			return false;
+
+		x = _value["X"].GetDouble();
+		y = _value["Y"].GetDouble();
+		z = _value["Z"].GetDouble();
+		return true;
+
 	}
 
 
@@ -342,6 +356,16 @@ namespace Copium::Math
 		m[2][2] = _22;
 
 	}
+	Matrix3x3::Matrix3x3(const glm::mat3x3& _rhs)
+	{
+		for (size_t i{ 0 }; i < 3; ++i)
+		{
+			for (size_t j{ 0 }; j < 3; ++j)
+			{
+				m[i][j] = _rhs[i][j];
+			}
+		}
+	}
 
 	Matrix3x3& Matrix3x3::operator= (const Matrix3x3& _rhs)
 	{
@@ -355,6 +379,19 @@ namespace Copium::Math
 
 		return *this;
 	}
+	Matrix3x3& Matrix3x3::operator= (const glm::mat3x3& _rhs)
+	{
+		for (size_t i{ 0 }; i < 3; ++i)
+		{
+			for (size_t j{ 0 }; j < 3; ++j)
+			{
+				m[i][j] = _rhs[i][j];
+			}
+		}
+
+		return *this;
+	}
+
 	Matrix3x3& Matrix3x3::operator*= (const Matrix3x3& _rhs)
 	{
 		Matrix3x3 result;
@@ -383,6 +420,20 @@ namespace Copium::Math
 			}
 		}
 		return result;
+	}
+
+	glm::mat3x3 Matrix3x3::to_glm() const
+	{
+		glm::mat3x3 tmp;
+		for (size_t i{ 0 }; i < 3; ++i)
+		{
+			for (size_t j{ 0 }; j < 3; ++j)
+			{
+				tmp[i][j] = m[i][j];
+			}
+		}
+
+		return tmp;
 	}
 
 	void matrix3x3_identity(Matrix3x3& _mtx) 

@@ -6,6 +6,7 @@
 #include "scripting-system.h"
 #include "physics-system.h"
 #include "graphics-system.h"
+#include "sm.h"
 
 namespace Copium
 {
@@ -31,6 +32,8 @@ namespace Copium
 				Scripting::ScriptingSystem::Instance(),
 				Physics::Physics::Instance(),
 				Graphics::GraphicsSystem::Instance()
+				Scripting::ScriptingSystem::Instance(),
+				NewSceneManager::Instance()
 			};
 			for (ISystem* pSystem : systems)
 			{
