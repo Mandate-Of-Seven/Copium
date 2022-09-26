@@ -16,8 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 *****************************************************************************************/
 #include "math-library.h"
 enum Shape
-{
-	POINT = 0,
+{	DOT,
 	SQUARE
 };
 
@@ -26,8 +25,8 @@ namespace Copium::Collision
 	
 	struct AABB
 	{
-		Math::Vec2 max;
 		Math::Vec2 min;
+		Math::Vec2 max;
 	};
 	/***************************************************************************/
    /*!

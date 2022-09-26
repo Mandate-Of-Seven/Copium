@@ -4,6 +4,7 @@
 #include "message-system.h"
 #include "editor-system.h"
 #include "scripting-system.h"
+#include "physics-system.h"
 #include "graphics-system.h"
 
 namespace Copium
@@ -28,6 +29,7 @@ namespace Copium
 				Message::MessageSystem::Instance(),
 				Editor::EditorSystem::Instance(),
 				Scripting::ScriptingSystem::Instance(),
+				Physics::Physics::Instance(),
 				Graphics::GraphicsSystem::Instance()
 			};
 			for (ISystem* pSystem : systems)

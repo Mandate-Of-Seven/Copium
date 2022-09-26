@@ -22,7 +22,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <pch.h>
 #include "gamestate-sandbox.h"
 #include <windows-system.h>
-#include <physics.h>
 #include <input.h>
 #include <serializer.h>
 #include <rapidjson/prettywriter.h>
@@ -31,7 +30,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 GLfloat movement_x = 0.f, movement_y = 0.f;
 Vector3 v1(1, 2, 3), v2(5,1,10);
 Copium::Math::Vec2 vv(1, 10);
-
 GameObject g1(v2, v1, v1);
 GameObject g2(v1, v1, v2);
 
@@ -54,7 +52,6 @@ void SceneSandbox::load_scene()
 void SceneSandbox::init_scene() 
 {
 	std::cout << "init sandbox" << std::endl;
-
 	//Serialization Testingf
 	this->get_gameobjectvector().push_back(new GameObject(v2,v2,v2));
 	this->get_gameobjectvector().push_back(new GameObject(v1,v1,v1));
@@ -70,6 +67,7 @@ void SceneSandbox::init_scene()
 
 	Copium::Math::Vec2 b1(1,1);
 	std::cout << b1/2;
+	
 }
 
 void SceneSandbox::update_scene() 
@@ -77,7 +75,6 @@ void SceneSandbox::update_scene()
 	//std::cout << "update sandbox" << std::endl;
 	
 	// Update Graphics system
-	Copium::Physics::physics.update();
 }
 
 void SceneSandbox::draw_scene() 
@@ -105,6 +102,5 @@ void SceneSandbox::unload_scene()
 	//ss.serialize(os, tester);
 
 	// Bean: This should be handles by ISystem
-	Copium::Physics::physics.exit();
 
 }

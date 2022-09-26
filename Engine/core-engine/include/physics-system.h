@@ -1,5 +1,5 @@
 /*!***************************************************************************************
-\file			physics.h
+\file			physics-system.h
 \project
 \author			Abdul Hadi
 
@@ -19,8 +19,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 
 namespace Copium::Physics
-{
-	class Physics
+{	
+	const Math::Vec2 gravity = { 0.0,-0.50 };			//gravity affecting all objects that can be affected
+	CLASS_SYSTEM(Physics)
 	{
 	public:
 		void init();
@@ -32,14 +33,19 @@ namespace Copium::Physics
 	/*!
     \brief
 	   Updates position of object based on dt
-    \param dt
-	   The delta time to take
    */
    /**************************************************************************/
-		void update_pos(float dt);
+		void update_pos();
+	/***************************************************************************/
+	/*!
+	\brief
+	   Checks for collision between objects
+	*/
+	/**************************************************************************/
+		void check_collision();
 		
 	public:
-		std::vector<Copium::Component::Collider*> boxes;  //store box component to be able to perform physics
+		std::vector<Copium::Component::RigidBody*> boxes;  //store box component to be able to perform physics
 	};
-	static Physics physics;
+
 }
