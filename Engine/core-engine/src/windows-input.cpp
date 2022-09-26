@@ -14,14 +14,14 @@
 All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
-#include "windows-input.h"
-#include "windows-system.h"
 #include <input.h>
 #include <iostream>
+#include "windows-input.h"
+#include "windows-system.h"
 #include <logging.h>
 
-#define MAX_KEYS 400
-#define MAX_MOUSEBUTTONS 5
+#define COPIUM_MAX_KEYS 400
+#define COPIUM_MAX_MOUSEBUTTONS 5
 using namespace Copium;
 
 // Bean: Temporary for window systems declaration
@@ -32,8 +32,8 @@ namespace
 
 void WindowsInput::init()
 {
-    get_input_instance()->keys = new short[MAX_KEYS];
-    get_input_instance()->mouseButtons = new short[MAX_MOUSEBUTTONS];
+    get_input_instance()->keys = new short[COPIUM_MAX_KEYS];
+    get_input_instance()->mouseButtons = new short[COPIUM_MAX_MOUSEBUTTONS];
     for (int i = 0; i < 400; i++)
     {
         get_input_instance()->keys[i] = 0;
@@ -50,7 +50,7 @@ void WindowsInput::init()
 
 bool WindowsInput::is_key_pressed_impl(int keycode)
 {
-    COPIUM_ASSERT((keycode > MAX_KEYS), "Keycode entered is out of range");
+    COPIUM_ASSERT((keycode > COPIUM_MAX_KEYS), "Keycode entered is out of range");
     if (get_input_instance()->keys[keycode]== GLFW_PRESS)
     {
         //std::cout << get_input_instance()->keys[keycode] << "  " << std::endl;
@@ -62,7 +62,7 @@ bool WindowsInput::is_key_pressed_impl(int keycode)
 
 bool WindowsInput::is_key_held_impl(int keycode)
 {
-    COPIUM_ASSERT((keycode > MAX_KEYS), "Keycode entered is out of range");
+    COPIUM_ASSERT((keycode > COPIUM_MAX_KEYS), "Keycode entered is out of range");
     if (get_input_instance()->keys[keycode] == GLFW_REPEAT || get_input_instance()->keys[keycode] == GLFW_PRESS)
     {
         //get_input_instance()->keys[keycode] = 0;
@@ -73,7 +73,7 @@ bool WindowsInput::is_key_held_impl(int keycode)
 
 bool WindowsInput::is_mousebutton_pressed_impl(int button)
 {
-    COPIUM_ASSERT((button > MAX_MOUSEBUTTONS), "Mouse button entered is out of range");
+    COPIUM_ASSERT((button > COPIUM_MAX_MOUSEBUTTONS), "Mouse button entered is out of range");
     if (get_input_instance()->mouseButtons[button])
     {
         get_input_instance()->mouseButtons[button] = 0;

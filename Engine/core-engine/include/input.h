@@ -15,9 +15,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 
 #pragma once
-#include <utility> 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <utility> 
 
 //Checks for mouse or keyboard inputs
 class Input
@@ -25,6 +25,8 @@ class Input
 	public:
 		short* keys =nullptr;//contains the current state of all keys
 		short* mouseButtons = nullptr;//contains the current state of both mouse buttons
+
+		virtual ~Input() = default;
 
 		/***************************************************************************/
 		/*!

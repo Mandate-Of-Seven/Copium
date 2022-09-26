@@ -77,8 +77,9 @@ int main()
         _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     #endif
 
-    copiumCore.init();
     init();
+    copiumCore.init();
+    
 
     Copium::Windows::WindowsSystem* windowsSystem = Copium::Windows::WindowsSystem::Instance();
 
