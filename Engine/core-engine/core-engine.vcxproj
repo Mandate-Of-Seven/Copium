@@ -94,7 +94,7 @@
     <ClCompile Include="src\game-object-factory.cpp" />
     <ClCompile Include="src\game-object.cpp" />
     <ClCompile Include="src\gamestate-sandbox.cpp" />
-    <ClCompile Include="src\physics.cpp" />
+    <ClCompile Include="src\physics-system.cpp" />
     <ClCompile Include="src\textures.cpp" />
     <ClCompile Include="src\windows-system.cpp" />
     <ClCompile Include="src\glslshader.cpp" />
@@ -158,7 +158,7 @@
     <ClInclude Include="include\game-object-factory.h" />
     <ClInclude Include="include\game-object.h" />
     <ClInclude Include="include\gamestate-sandbox.h" />
-    <ClInclude Include="include\physics.h" />
+    <ClInclude Include="include\physics-system.h" />
     <ClInclude Include="include\textures.h" />
     <ClInclude Include="include\glslshader.h" />
     <ClInclude Include="include\graphics-system.h" />

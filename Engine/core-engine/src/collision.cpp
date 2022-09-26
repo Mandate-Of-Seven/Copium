@@ -25,11 +25,14 @@ namespace Copium::Collision
 		const AABB& aabb2, const Math::Vec2& vel2)
 	{
 		if ((aabb1.max.x < aabb2.min.x) || (aabb1.min.x > aabb2.max.x) ||
-			(aabb1.max.y < aabb2.min.y) || (aabb1.min.y > aabb2.max.y)) {
+			(aabb1.max.y < aabb2.min.y) || (aabb1.min.y > aabb2.max.y))
+			return 0;
+		else
+		{
+
 			//Initialize values to check for collision between moving rectangles
 			Math::Vec2 vB;
-			float tFirst = 0, tLast = Copium::Windows::WindowsSystem::Instance()->get_delta_time();
-
+			double tFirst = 0, tLast = Copium::Windows::WindowsSystem::Instance()->get_delta_time();
 			vB.x = vel2.x - vel1.x;
 			vB.y = vel2.y - vel1.y;
 			//Object b is moving away from object a on the x axis
@@ -43,16 +46,20 @@ namespace Copium::Collision
 				// case 4 1/2
 				if (aabb1.max.x < aabb2.min.x)
 					//tFirst = max((aabb1.min.x - aabb2.max.x) / vB.x, tFirst);
-				if ((aabb1.min.x - aabb2.max.x / vB.x) > tFirst)
 				{
-					tFirst = (aabb1.min.x - aabb2.max.x) / vB.x;
+					if ((aabb1.max.x - aabb2.min.x / vB.x) > tFirst)
+					{
+						tFirst = (aabb1.max.x - aabb2.min.x) / vB.x;
+					}
 				}
 				// case 4 2/2
 				if (aabb1.min.x < aabb2.max.x)
 					//tLast = min((aabb1.min.x - aabb2.max.x) / vB.x, tLast);
-				if ((aabb1.min.x - aabb2.max.x / vB.x) < tLast)
 				{
-					tLast = (aabb1.min.x - aabb2.max.x) / vB.x;
+					if ((aabb1.min.x - aabb2.max.x / vB.x) < tLast)
+					{
+						tLast = (aabb1.min.x - aabb2.max.x) / vB.x;
+					}
 				}
 			}
 			//Object b is moving towards object a on the x axis
@@ -61,16 +68,20 @@ namespace Copium::Collision
 				// case 2 1/2
 				if (aabb1.min.x > aabb2.max.x)
 					//tFirst = max((aabb1.min.x - aabb2.max.x) / vB.x, tFirst);
-				if ((aabb1.min.x - aabb2.max.x / vB.x) > tFirst)
 				{
-					tFirst = (aabb1.min.x - aabb2.max.x) / vB.x;
+					if ((aabb1.min.x - aabb2.max.x / vB.x) > tFirst)
+					{
+						tFirst = (aabb1.min.x - aabb2.max.x) / vB.x;
+					}
 				}
 				//case 2 2/2
 				if (aabb1.max.x > aabb2.min.x)
 					//tLast = min((aabb1.max.x - aabb2.min.x) / vB.x, tLast);
-				if ((aabb1.max.x - aabb2.min.x / vB.x) < tLast)
 				{
-					tLast = (aabb1.max.x - aabb2.min.x) / vB.x;
+					if ((aabb1.max.x - aabb2.min.x / vB.x) < tLast)
+					{
+						tLast = (aabb1.max.x - aabb2.min.x) / vB.x;
+					}
 				}
 				//case 3, b is moving away from a, no collision
 				if (aabb1.max.x < aabb2.min.x)
@@ -89,33 +100,38 @@ namespace Copium::Collision
 				// case 4 1/2
 				if (aabb1.max.y < aabb2.min.y)
 					//tFirst = max((aabb1.max.y - aabb2.min.y) / vB.y, tFirst);
-				if ((aabb1.max.y - aabb2.min.y / vB.y) > tFirst)
 				{
-					tFirst = (aabb1.max.y - aabb2.min.y) / vB.y;
+					if ((aabb1.max.y - aabb2.min.y / vB.y) > tFirst)
+					{
+						tFirst = (aabb1.max.y - aabb2.min.y) / vB.y;
+					}
 				}
 				// case 4 2/2
 				if (aabb1.min.y < aabb2.max.y)
-					//tLast = min((aabb1.min.y - aabb2.max.y) / vB.y, tLast);
-				if ((aabb1.min.y - aabb2.max.y / vB.y) < tLast)
-				{
-					tLast = (aabb1.min.y - aabb2.max.y) / vB.y;
+				{	//tLast = min((aabb1.min.y - aabb2.max.y) / vB.y, tLast);
+					if ((aabb1.min.y - aabb2.max.y / vB.y) < tLast)
+					{
+						tLast = (aabb1.min.y - aabb2.max.y) / vB.y;
+					}
 				}
 			}
-			//Object b is moving away towards object a on the y axis
+			//Object b is moving towards object a on the y axis
 			if (vB.y > 0)
 			{	// case 2 1/2
 				if (aabb1.min.y > aabb2.max.y)
-					//tFirst = max((aabb1.min.y - aabb2.max.y) / vB.y, tFirst);
-				if ((aabb1.min.y - aabb2.max.y / vB.y) > tFirst)
-				{
-					tFirst = (aabb1.min.y - aabb2.max.y) / vB.y;
+				{	//tFirst = max((aabb1.min.y - aabb2.max.y) / vB.y, tFirst);
+					if ((aabb1.min.y - aabb2.max.y / vB.y) > tFirst)
+					{
+						tFirst = (aabb1.min.y - aabb2.max.y) / vB.y;
+					}
 				}
 				//case 2 2/2
 				if (aabb1.max.y > aabb2.min.y)
-					//tLast = min((aabb1.max.y - aabb2.min.y) / vB.y, tLast);
-				if ((aabb1.max.y - aabb2.min.y / vB.y) < tLast)
-				{
-					tLast = (aabb1.max.y - aabb2.min.y) / vB.y;
+				{	//tLast = min((aabb1.max.y - aabb2.min.y) / vB.y, tLast);
+					if ((aabb1.max.y - aabb2.min.y / vB.y) < tLast)
+					{
+						tLast = (aabb1.max.y - aabb2.min.y) / vB.y;
+					}
 				}
 				//case 3, b is moving away from a, no collision
 				if (aabb1.max.y < aabb2.min.y)
@@ -126,11 +142,17 @@ namespace Copium::Collision
 
 			//case 5, no intersection
 			if (tFirst > tLast)
+			{
 				return 0;
+			}
+			else
+			{
+				return 1;
+			}
 		}
-		else
 			//both objects are colliding
 			return 1;
+
 	}
 	bool collision_pointrect(const Math::Vec2& point,
 		const AABB& aabb2, const Math::Vec2& vel2)
@@ -242,7 +264,6 @@ namespace Copium::Collision
 			if (tFirst > tLast)
 				return 0;
 		}
-		else
 			return 1;
 		//both objects are colliding
 	}

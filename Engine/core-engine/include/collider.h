@@ -17,7 +17,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <math-library.h>
 namespace Copium::Component
 {
-    class Collider
+    class RigidBody
     {
 	public:
 		void const set_pos(Math::Vec2 _position) { position = _position; }
@@ -26,10 +26,15 @@ namespace Copium::Component
 		void const set_grav(Math::Vec2 _gravity) { gravity = _gravity; }
 		void const set_shape(Shape _objectShape) { objectShape = _objectShape; }
 		void const set_AABB(Math::Vec2 _min, Math::Vec2 _max) { boundingBox.max = _max; boundingBox.min = _min;}
+		void const set_active(bool _active) { active = _active; }
+		void const set_gravity(bool _gravity) { affectedGravity = _gravity; }
+		bool get_active() { return active; }
+		bool get_gravity() { return affectedGravity; }
 		Math::Vec2 get_pos() { return position; }
 		Math::Vec2 get_vel() { return velocity; }
 		Shape get_shape() { return objectShape; }
 		Copium::Collision::AABB get_AABB() { return boundingBox; }
+		
 		
 	private:
 		Math::Vec2 position;					//position of object- to be removed
@@ -38,5 +43,7 @@ namespace Copium::Component
 		Math::Vec2 gravity;						//gravity affected on the object
 		Shape objectShape;						//Shape of object
 		Copium::Collision::AABB boundingBox;	//bounding box of object
+		bool active = false;                    //is object active?
+		bool affectedGravity;                   //is object affected by gravity?
     };
 }
