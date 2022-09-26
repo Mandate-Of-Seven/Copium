@@ -78,12 +78,12 @@ namespace Copium::Graphics
 		void const set_scene_position(glm::vec2 _position) { scenePosition = _position; }
 
 		// Texture Properties
-		std::vector<GLuint>& const get_texture_slots() { return textureSlots; }
+		std::vector<GLuint>& get_texture_slots() { return textureSlots; }
 
 		GLuint const get_texture_slot_index() { return textureSlotIndex; }
 		void const set_texture_slot_index(GLuint _index) { textureSlotIndex = _index; }
 		
-		GLuint& const get_white_texture() { return whiteTexture; }
+		GLuint& get_white_texture() { return whiteTexture; }
 		GLuint const get_white_texture_slot() { return whiteTextureSlot; }
 
 		// Data Members
@@ -164,9 +164,9 @@ namespace Copium::Graphics
 	private:
 		/* Camera View / Scene View *****************************************************/
 		// [Camera Here] (Bean: Should be a component instead?)
-		GLuint sceneWidth;
-		GLuint sceneHeight;
-		glm::vec2 scenePosition;
+		GLuint sceneWidth = 0;
+		GLuint sceneHeight = 0;
+		glm::vec2 scenePosition{0};
 
 		/* Stored Texture Assets ********************************************************/
 		std::vector<GLuint> textureSlots;
@@ -175,9 +175,9 @@ namespace Copium::Graphics
 		GLuint whiteTextureSlot = 0;
 
 		/* Projections & Matrices *******************************************************/
-		glm::mat4 projMatrix;
-		glm::mat4 viewMatrix;
-		glm::mat4 viewProjMatrix;
+		glm::mat4 projMatrix{0};
+		glm::mat4 viewMatrix{0};
+		glm::mat4 viewProjMatrix{0};
 
 		/* Shaders **********************************************************************/
 		GLSLShader shaderProgram[2]; // Shader program to use
@@ -189,7 +189,7 @@ namespace Copium::Graphics
 		Renderer renderer;
 		Framebuffer framebuffer;
 
-		bool debugMode;
+		bool debugMode = false;
 #pragma endregion DataMembers
 	};
 

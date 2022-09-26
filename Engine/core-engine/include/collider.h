@@ -41,9 +41,9 @@ namespace Copium::Component
 		Math::Vec2 velocity;					//velocity of object
 		Math::Vec2 acceleration;				//acceleration of object
 		Math::Vec2 gravity;						//gravity affected on the object
-		Shape objectShape;						//Shape of object
+		Shape objectShape = SQUARE;				//Shape of object
 		Copium::Collision::AABB boundingBox;	//bounding box of object
 		bool active = false;                    //is object active?
-		bool affectedGravity;                   //is object affected by gravity?
+		bool affectedGravity = false;           //is object affected by gravity?
     };
 }

@@ -97,7 +97,7 @@ namespace Copium::Physics
 	void Physics::update_pos()
 	{
 
-		float dt = Windows::WindowsSystem::Instance()->get_delta_time();
+		float dt = (float)Windows::WindowsSystem::Instance()->get_delta_time();
 		Math::Vec2 velocity;
 		glm::vec2 glmPosition;
 		glm::vec2 glmSize;
@@ -132,7 +132,7 @@ namespace Copium::Physics
 
 	}
 	void Physics::check_collision()
-	{	float dt = Windows::WindowsSystem::Instance()->get_delta_time();
+	{	
 		for (int a = 0; a < boxes.size(); a++)
 		{
 			

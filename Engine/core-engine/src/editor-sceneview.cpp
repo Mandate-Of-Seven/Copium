@@ -50,10 +50,10 @@ namespace Copium::Editor::SceneView
 		if (viewportSize != *((glm::vec2 *) &viewportEditorSize))
 		{
 			viewportSize = { viewportEditorSize.x, viewportEditorSize.y };
-			graphics->get_framebuffer().resize(viewportSize.x, viewportSize.y);
+			graphics->get_framebuffer().resize((GLuint) viewportSize.x, (GLuint) viewportSize.y);
 		}
 
-		ImGui::Image((void *) textureID, ImVec2{ viewportSize.x, viewportSize.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
+		ImGui::Image((void*) (size_t) textureID, ImVec2{ viewportSize.x, viewportSize.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
 
 		// End
 		ImGui::End();

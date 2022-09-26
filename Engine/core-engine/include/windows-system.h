@@ -136,13 +136,13 @@ namespace Copium::Windows
 		/* Properties of a Window *******************************************************/
 		std::string title;
 
-		int windowWidth;
-		int windowHeight;
+		int windowWidth = 0;
+		int windowHeight = 0;
 
-		double fps; // The frames per second of the engine
-		double delta_time; // Time taken to complete most recent engine loop
+		double fps = 0; // The frames per second of the engine
+		double delta_time = 0; // Time taken to complete most recent engine loop
 
-		GLFWwindow* window;
+		GLFWwindow* window = nullptr;
 	};
 }
 

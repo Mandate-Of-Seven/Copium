@@ -69,7 +69,7 @@ namespace Copium::Graphics
 
 	void GraphicsSystem::update()
 	{
-		double dt = /*windowsSystem.get_delta_time();*/Windows::WindowsSystem::Instance()->get_delta_time();
+		GLfloat dt = /*windowsSystem.get_delta_time();*/(GLfloat) Windows::WindowsSystem::Instance()->get_delta_time();
 		movement_x = movement_y = size_x = size_y = 0;
 
 		glClearColor(1.f, 1.f, 1.f, 1.f);
@@ -259,14 +259,14 @@ namespace Copium::Graphics
 
 			float rad = rotate * 3.14159265359f / 180.f;
 
-			glm::mat4 rotate = {
+			glm::mat4 rotation = {
 				glm::vec4(cos(rad), sin(rad), 0.f, 0.f),
 				glm::vec4(-sin(rad), cos(rad), 0.f, 0.f),
 				glm::vec4(0.f, 0.f, 1.f, 0.f),
 				glm::vec4(0.f, 0.f, 0.f, 1.f)
 			};
 
-			glm::mat4 transform = translate * rotate;
+			glm::mat4 transform = translate * rotation;
 
 			glm::vec4 color = { 0.3f, 1.f, 0.3f, 1.f };
 
@@ -352,23 +352,23 @@ namespace Copium::Graphics
 
 			float rad = rotate * 3.14159265359f / 180.f;
 
-			glm::mat4 rotate = {
+			glm::mat4 rotation = {
 				glm::vec4(cos(rad), sin(rad), 0.f, 0.f),
 				glm::vec4(-sin(rad), cos(rad), 0.f, 0.f),
 				glm::vec4(0.f, 0.f, 1.f, 0.f),
 				glm::vec4(0.f, 0.f, 0.f, 1.f)
 			};
 
-			glm::mat4 transform = translate * rotate;
+			glm::mat4 transform = translate * rotation;
 
 			sprites[i]->set_position(pos);
 			sprites[i]->set_size(size);
 			sprites[i]->bind_texture(&textures[i%3]);
 
 			if(textureSelector == 4)
-				renderer.draw_quad(transform, sprites[i]->get_position(), sprites[i]->get_size(), sprites[i]->get_color());
+				renderer.draw_quad(transform, sprites[i]->get_size(), sprites[i]->get_color());
 			else
-				renderer.draw_quad(transform, sprites[i]->get_position(), sprites[i]->get_size(), sprites[i]->get_texture()->get_object_id());
+				renderer.draw_quad(transform, sprites[i]->get_size(), sprites[i]->get_texture()->get_object_id());
 		}
 
 		renderer.end_batch();

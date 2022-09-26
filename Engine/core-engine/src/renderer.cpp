@@ -84,7 +84,7 @@ namespace Copium::Graphics
 
 		// Element Buffer Object
 		GLushort indices[maxIndexCount];
-		GLuint offset = 0;
+		GLushort offset = 0;
 		for (GLuint i = 0; i < maxIndexCount; i += 6)
 		{
 			indices[i + 0] = 0 + offset;
@@ -282,7 +282,7 @@ namespace Copium::Graphics
 		{
 			textureIndex = (GLfloat) graphics->get_texture_slot_index();
 			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _textureID;
-			graphics->set_texture_slot_index(textureIndex + 1);
+			graphics->set_texture_slot_index((GLuint)textureIndex + 1);
 		}
 
 		//PRINT("Drawing texture: " << _textureID << " at texture slot: " << textureIndex);
@@ -321,7 +321,7 @@ namespace Copium::Graphics
 		quadCount++;
 	}
 
-	void Renderer::draw_quad(const glm::mat4& _transform, const glm::vec2& _position, const glm::vec2& _size, const glm::vec4& _color)
+	void Renderer::draw_quad(const glm::mat4& _transform, const glm::vec2& _size, const glm::vec4& _color)
 	{
 		if (quadIndexCount >= maxIndexCount)
 		{
@@ -366,7 +366,7 @@ namespace Copium::Graphics
 		quadCount++;
 	}
 
-	void Renderer::draw_quad(const glm::mat4& _transform, const glm::vec2& _position, const glm::vec2& _size, GLuint _textureID)
+	void Renderer::draw_quad(const glm::mat4& _transform, const glm::vec2& _size, GLuint _textureID)
 	{
 		if (quadIndexCount >= maxIndexCount)
 		{
@@ -392,7 +392,7 @@ namespace Copium::Graphics
 		{
 			textureIndex = (GLfloat) graphics->get_texture_slot_index();
 			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _textureID;
-			graphics->set_texture_slot_index(textureIndex + 1);
+			graphics->set_texture_slot_index((GLuint)textureIndex + 1);
 		}
 
 		glm::vec2 halfsize = { _size.x / 2, _size.y / 2 };

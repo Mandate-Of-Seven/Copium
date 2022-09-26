@@ -27,8 +27,8 @@ void WindowsInput::Init()
 
 bool WindowsInput::isKeyPressedImpl(int keycode)
 {
-    auto& window = *windowsSystem->get_window();
-    auto state = glfwGetKey(&window,keycode);
+    //auto& window = *windowsSystem->get_window();
+    //auto state = glfwGetKey(&window,keycode);
     if (getInputInstance()->keys[keycode]== GLFW_PRESS)
     {
         std::cout << getInputInstance()->keys[keycode] << "  " << std::endl;
@@ -40,8 +40,8 @@ bool WindowsInput::isKeyPressedImpl(int keycode)
 
 bool WindowsInput::isKeyHeldImpl(int keycode)
 {
-    auto& window = *windowsSystem->get_window();
-    auto state = glfwGetKey(&window, keycode);
+    //auto& window = *windowsSystem->get_window();
+    //auto state = glfwGetKey(&window, keycode);
     if (getInputInstance()->keys[keycode] == GLFW_REPEAT || getInputInstance()->keys[keycode] == GLFW_PRESS)
     {
         //std::cout << getInputInstance()->keys[keycode] << "  " << std::endl;
@@ -99,6 +99,7 @@ float WindowsInput::getMouseYImpl()
 
 void Input::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+    (void) mods, scancode, window; // Bean: to prevent warning, remove later
     if (action == GLFW_PRESS)
     {
         getInputInstance()->keys[key] = GLFW_PRESS;
@@ -118,6 +119,7 @@ void Input::keyCallback(GLFWwindow* window, int key, int scancode, int action, i
 
 void Input::mousebuttonCallback(GLFWwindow* window, int button, int action, int mods)
 {
+    (void) mods, window; // Bean: to prevent warning, remove later
     switch (button) 
     {
         case GLFW_MOUSE_BUTTON_LEFT:
@@ -150,14 +152,16 @@ void Input::mousebuttonCallback(GLFWwindow* window, int button, int action, int 
 
 void Input::mousescrollCallback(GLFWwindow* window, double xOffset, double yOffset)
 {
+    (void) window;
     #ifdef _DEBUG
-        //std::cout << "Mouse scroll wheel offset: (" << xOffset << ", " << yOffset << ")" << std::endl;
+        std::cout << "Mouse scroll wheel offset: (" << xOffset << ", " << yOffset << ")" << std::endl;
     #endif
 }
 
 void Input::mouseposCallback(GLFWwindow* window, double xPos, double yPos)
 {
+    (void) window;
     #ifdef _DEBUG
-        //std::cout << "Mouse cursor position: (" << xPos << ", " << yPos << ")" << std::endl;
+        std::cout << "Mouse cursor position: (" << xPos << ", " << yPos << ")" << std::endl;
     #endif
 }
