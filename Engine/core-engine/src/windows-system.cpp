@@ -68,7 +68,7 @@ namespace Copium::Windows
         glfwMakeContextCurrent(window);
 
         glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-        
+
         // this is the default setting ...
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 

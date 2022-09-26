@@ -88,6 +88,7 @@
     <ClCompile Include="src\collision.cpp" />
     <ClCompile Include="src\component.cpp" />
     <ClCompile Include="src\editor-system.cpp" />
+    <ClCompile Include="src\ConsoleLog.cpp" />
     <ClCompile Include="src\editor-sceneview.cpp" />
     <ClCompile Include="src\framebuffer.cpp" />
     <ClCompile Include="src\frameratecontroller.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="include\collision.h" />
     <ClInclude Include="include\compiler.h" />
     <ClInclude Include="include\component.h" />
+    <ClInclude Include="include\ConsoleLog.h" />
     <ClInclude Include="include\copium-core.h" />
     <ClInclude Include="include\editor-system.h" />
     <ClInclude Include="include\editor-sceneview.h" />
