@@ -358,9 +358,9 @@ namespace Copium::Math
 	}
 	Matrix3x3::Matrix3x3(const glm::mat3x3& _rhs)
 	{
-		for (size_t i{ 0 }; i < 3; ++i)
+		for (int i{ 0 }; i < 3; ++i)
 		{
-			for (size_t j{ 0 }; j < 3; ++j)
+			for (int j{ 0 }; j < 3; ++j)
 			{
 				m[i][j] = _rhs[i][j];
 			}
@@ -381,9 +381,9 @@ namespace Copium::Math
 	}
 	Matrix3x3& Matrix3x3::operator= (const glm::mat3x3& _rhs)
 	{
-		for (size_t i{ 0 }; i < 3; ++i)
+		for (int i{ 0 }; i < 3; ++i)
 		{
-			for (size_t j{ 0 }; j < 3; ++j)
+			for (int j{ 0 }; j < 3; ++j)
 			{
 				m[i][j] = _rhs[i][j];
 			}
@@ -425,11 +425,11 @@ namespace Copium::Math
 	glm::mat3x3 Matrix3x3::to_glm() const
 	{
 		glm::mat3x3 tmp;
-		for (size_t i{ 0 }; i < 3; ++i)
+		for (int i{ 0 }; i < 3; ++i)
 		{
-			for (size_t j{ 0 }; j < 3; ++j)
+			for (int j{ 0 }; j < 3; ++j)
 			{
-				tmp[i][j] = m[i][j];
+				tmp[i][j] = (float) m[i][j];
 			}
 		}
 
@@ -469,10 +469,10 @@ namespace Copium::Math
 	{
 		matrix3x3_identity(_mtx);
 
-		_mtx.m[0][0] = cosf(_angle);
-		_mtx.m[0][1] = -sinf(_angle);
-		_mtx.m[1][0] = sinf(_angle);
-		_mtx.m[1][1] = cosf(_angle);
+		_mtx.m[0][0] = cosf((float) _angle);
+		_mtx.m[0][1] = -sinf((float) _angle);
+		_mtx.m[1][0] = sinf((float) _angle);
+		_mtx.m[1][1] = cosf((float) _angle);
 	}
 	void matrix3x3_rotdeg(Matrix3x3& _mtx, double _angle) 
 	{
@@ -481,10 +481,10 @@ namespace Copium::Math
 		//Convert to radian
 		double result = _angle * (PI / 180.0);
 
-		_mtx.m[0][0] = cosf(result);
-		_mtx.m[0][1] = -sinf(result);
-		_mtx.m[1][0] = sinf(result);
-		_mtx.m[1][1] = cosf(result);
+		_mtx.m[0][0] = cosf((float) result);
+		_mtx.m[0][1] = -sinf((float) result);
+		_mtx.m[1][0] = sinf((float) result);
+		_mtx.m[1][1] = cosf((float) result);
 
 	}
 	void matrix3x3_transpose(Matrix3x3& _mtx, const Matrix3x3& _rhs) 

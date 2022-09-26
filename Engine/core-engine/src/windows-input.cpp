@@ -27,7 +27,7 @@ using namespace Copium;
 // Bean: Temporary for window systems declaration
 namespace
 {
-    Windows::WindowsSystem* windowsSystem = nullptr;
+    Windows::WindowsSystem* windowsSystem = Windows::WindowsSystem::Instance();
 }
 
 void WindowsInput::init()
@@ -41,10 +41,10 @@ void WindowsInput::init()
     COPIUM_ASSERT(get_input_instance()->keys == nullptr, "keys was not created properly");
     COPIUM_ASSERT(get_input_instance()->mouseButtons == nullptr, "mouse keys was not created properly");
     
-    glfwSetKeyCallback(Copium::windowsSystem.get_window(), Input::key_callback);
-    glfwSetMouseButtonCallback(Copium::windowsSystem.get_window(), Input::mousebutton_callback);
-    glfwSetScrollCallback(Copium::windowsSystem.get_window(), Input::mousescroll_callback);
-    glfwSetCursorPosCallback(Copium::windowsSystem.get_window(), Input::mousepos_callback);
+    glfwSetKeyCallback(windowsSystem->get_window(), Input::key_callback);
+    glfwSetMouseButtonCallback(windowsSystem->get_window(), Input::mousebutton_callback);
+    glfwSetScrollCallback(windowsSystem->get_window(), Input::mousescroll_callback);
+    glfwSetCursorPosCallback(windowsSystem->get_window(), Input::mousepos_callback);
     std::cout << "Input init was called" << std::endl;
 }
 
@@ -74,8 +74,6 @@ bool WindowsInput::is_key_held_impl(int keycode)
 bool WindowsInput::is_mousebutton_pressed_impl(int button)
 {
     COPIUM_ASSERT((button > MAX_MOUSEBUTTONS), "Mouse button entered is out of range");
-    auto& window = *windowsSystem.get_window();
-    auto state = glfwGetMouseButton(&window, button);
     if (get_input_instance()->mouseButtons[button])
     {
         get_input_instance()->mouseButtons[button] = 0;

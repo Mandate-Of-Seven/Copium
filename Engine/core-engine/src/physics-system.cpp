@@ -29,7 +29,7 @@ namespace Copium::Physics
 	void Physics::update()
 	{
 		static int count = 0;
-		if (Input::isKeyPressed(GLFW_KEY_B) && (boxes.size() < Copium::Graphics::GraphicsSystem::Instance()->get_sprites().size()))
+		if (Input::is_key_pressed(GLFW_KEY_B) && (boxes.size() < Copium::Graphics::GraphicsSystem::Instance()->get_sprites().size()))
 		{
 			glm::vec2 position;
 			glm::vec2 size;
@@ -64,19 +64,19 @@ namespace Copium::Physics
 		}
 		if (boxes.size() > 0)
 		{
-			if (Input::isKeyPressed(GLFW_KEY_I)) // move up
+			if (Input::is_key_pressed(GLFW_KEY_I)) // move up
 			{
 				boxes[0]->set_vel(Math::Vec2{ 0.0,0.5 });
 			}
-			if (Input::isKeyPressed(GLFW_KEY_K)) // move down
+			if (Input::is_key_pressed(GLFW_KEY_K)) // move down
 			{
 				boxes[0]->set_vel(Math::Vec2{ 0.0,-0.5 });
 			}
-			if (Input::isKeyPressed(GLFW_KEY_L)) // move left
+			if (Input::is_key_pressed(GLFW_KEY_L)) // move left
 			{
 				boxes[0]->set_vel(Math::Vec2{ 0.5,0.0 });
 			}
-			 if (Input::isKeyPressed(GLFW_KEY_J)) // move right
+			 if (Input::is_key_pressed(GLFW_KEY_J)) // move right
 			{
 				boxes[0]->set_vel(Math::Vec2{ -0.5,0.0});
 			}

@@ -148,6 +148,7 @@ namespace Copium::Windows
 #ifdef _DEBUG
         std::cerr << "GLFW error: " << _description << std::endl;
 #endif
+        (void) _error;
     }
 
     void WindowsSystem::framebuffer_size_callback(GLFWwindow * _window, int _width, int _height)
@@ -160,6 +161,7 @@ namespace Copium::Windows
         // use the entire framebuffer as drawing region
         glViewport(0, 0, _width, _height);
         // later, if working in 3D, we'll have to set the projection matrix here ...
+        (void) _window;
     }
 
     bool WindowsSystem::load_config(std::string& _filename, GLint& _w, GLint& _h)

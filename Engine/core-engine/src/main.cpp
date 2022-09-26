@@ -70,7 +70,6 @@ Note that the C++ compiler will insert a return 0 statement if one is missing.
 /**************************************************************************/
 int main() 
 {
-    init();
     init_statemanager(esActive);
 
     // Enable run-time memory check for debug purposes 
@@ -84,7 +83,7 @@ int main()
     Copium::Windows::WindowsSystem* windowsSystem = Copium::Windows::WindowsSystem::Instance();
 
     //glfwSetKeyCallback(Copium::windowsSystem.get_window(), quit_key_callback);
-    glfwSetKeyCallback(windowsSystem->get_window(), Input::keyCallback);
+    glfwSetKeyCallback(windowsSystem->get_window(), Input::key_callback);
 
     SceneManager SM;
     FrameRateController frc(100.0);

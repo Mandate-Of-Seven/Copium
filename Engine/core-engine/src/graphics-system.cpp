@@ -75,24 +75,24 @@ namespace Copium::Graphics
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		if (Input::isKeyHeld(GLFW_KEY_A))
+		if (Input::is_key_held(GLFW_KEY_A))
 			movement_x -= dt;
-		else if (!Input::isKeyHeld(GLFW_KEY_LEFT_SHIFT) && Input::isKeyHeld(GLFW_KEY_D))
+		else if (!Input::is_key_held(GLFW_KEY_LEFT_SHIFT) && Input::is_key_held(GLFW_KEY_D))
 			movement_x += dt;
 
-		if (Input::isKeyHeld(GLFW_KEY_W))
+		if (Input::is_key_held(GLFW_KEY_W))
 			movement_y += dt;
-		else if (Input::isKeyHeld(GLFW_KEY_S))
+		else if (Input::is_key_held(GLFW_KEY_S))
 			movement_y -= dt;
 
 		// Create sprites
 		glm::vec2 mousePos{0}, centreOfScene{0}, mouseScenePos{0}, mouseToNDC{0};
-		if (Input::isKeyPressed(GLFW_KEY_C))
+		if (Input::is_key_pressed(GLFW_KEY_C))
 		{
 			SpriteRenderer* sprite = new SpriteRenderer;
 
 			// Mouse to scene view conversion
-			mousePos = { Input::getMousePosition().first , Input::getMousePosition().second };
+			mousePos = { Input::get_mouse_position().first , Input::get_mouse_position().second };
 			centreOfScene = { scenePosition.x + sceneWidth / 2, scenePosition.y + sceneHeight / 2 };
 			mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
 			mouseToNDC = { mouseScenePos.x / sceneWidth * 2, mouseScenePos.y / sceneHeight * 2 + 0.2f };
@@ -111,32 +111,32 @@ namespace Copium::Graphics
 		PRINT("Centre position: " << centreOfScene.x << ", " << centreOfScene.y);
 		PRINT("NDC position: " << mouseToNDC.x << ", " << mouseToNDC.y);*/
 
-		if (Input::isKeyPressed(GLFW_KEY_Y))
+		if (Input::is_key_pressed(GLFW_KEY_Y))
 		{
 			PRINT("Number of sprites: " << sprites.size());
 		}
 
-		if (Input::isKeyHeld(GLFW_KEY_LEFT_SHIFT) && Input::isKeyPressed(GLFW_KEY_D))
+		if (Input::is_key_held(GLFW_KEY_LEFT_SHIFT) && Input::is_key_pressed(GLFW_KEY_D))
 		{
 			debugMode = !debugMode;
 		}
 
-		if (Input::isKeyHeld(GLFW_KEY_Z) && Input::isKeyHeld(GLFW_KEY_LEFT_SHIFT))
+		if (Input::is_key_held(GLFW_KEY_Z) && Input::is_key_held(GLFW_KEY_LEFT_SHIFT))
 		{
 			size_x -= dt;
 			size_y -= dt;
 		}
-		else if (Input::isKeyHeld(GLFW_KEY_Z))
+		else if (Input::is_key_held(GLFW_KEY_Z))
 		{
 			size_x += dt;
 			size_y += dt;
 		}
 
-		if (Input::isKeyHeld(GLFW_KEY_R) && Input::isKeyHeld(GLFW_KEY_LEFT_SHIFT))
+		if (Input::is_key_held(GLFW_KEY_R) && Input::is_key_held(GLFW_KEY_LEFT_SHIFT))
 		{
 			rotate -= dt * 75;
 		}
-		else if (Input::isKeyHeld(GLFW_KEY_R))
+		else if (Input::is_key_held(GLFW_KEY_R))
 		{
 			rotate += dt * 75;
 		}
