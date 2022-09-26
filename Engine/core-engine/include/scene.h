@@ -41,7 +41,7 @@ public:
 	Scene() = delete;
 	Scene(Scene&) = delete;
 	Scene& operator=(Scene&) = delete;
-	~Scene();
+	virtual ~Scene();
 
 	/*******************************************************************************
 	/*!

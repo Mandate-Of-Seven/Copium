@@ -80,10 +80,10 @@ void GameObject::addComponent(Component::Type componentType)
 void GameObject::deleteComponent(Component* component)
 {
     std::list<Component*>::iterator it{ components.begin() };
-    ComponentID id{};
-    while (id != component->ID())
+    ComponentID _id{};
+    while (_id != component->ID())
     {
-        ++id; ++it;
+        ++_id; ++it;
     }
     //std::cout << "Id:" << id << std::endl;
     components.erase(it);

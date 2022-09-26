@@ -38,7 +38,7 @@ namespace Copium {
 		if (!tmp)
 			return nullptr;
 
-		GameObjectID id = currentScene->get_gameobjcount();
+		GameObjectID id = (GameObjectID)currentScene->get_gameobjcount();
 		tmp->set_id(id);
 		currentScene->add_gameobject(tmp);
 
@@ -49,7 +49,7 @@ namespace Copium {
 		GameObject* go = new GameObject();
 		if (!go)
 			return nullptr;
-		GameObjectID tmpID = currentScene->get_gameobjcount() + 1;
+		GameObjectID tmpID = (GameObjectID)currentScene->get_gameobjcount() + 1;
 		GameObjectID tmpPPID{ 0 };
 		go->set_name(_src.get_name());	// Name
 		go->set_id(tmpID);			// ID

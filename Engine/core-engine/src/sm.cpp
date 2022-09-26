@@ -57,8 +57,6 @@ namespace Copium {
 	void NewSceneManager::init()
 	{
 		// Load default scene
-		//std::cout << "sm init\n";
-
 
 		// Debug Purposes
 		std::string str("Data\\sandbox.json");
@@ -74,11 +72,11 @@ namespace Copium {
 	void NewSceneManager::exit()
 	{
 		// unload and free current scene (only if scene is still alive and has not been destructed)
-		if (currentScene) {
-			delete currentScene;
-			currentScene = nullptr;
-			std::cout << "deleting current scene\n";
-		}
+		//if (currentScene) {
+		//	delete currentScene;
+		//	currentScene = nullptr;
+		//	std::cout << "deleting current scene\n";
+		//}
 
 	}
 
@@ -115,7 +113,8 @@ namespace Copium {
 			rapidjson::Value& _gameObjArr = document["GameObjects"].GetArray();
 			for (rapidjson::Value::ValueIterator iter = _gameObjArr.Begin(); iter != _gameObjArr.End(); ++iter)
 			{
-				GameObject* tmpGO = gof->build_gameobject(*iter);
+				GameObject* tmpGO = nullptr;
+				tmpGO = gof->build_gameobject(*iter);
 			}
 		}
 		
@@ -123,12 +122,16 @@ namespace Copium {
 		return true;
 
 	}
-
 	bool NewSceneManager::change_scene(std::string& _newfilepath)
 	{
+		bool result;
+
 		// No scene loaded, therefore cannot change
 		if (!currentScene)
-			return false;
+		{
+			result = load_scene(_newfilepath);
+			return result;
+		}
 
 
 		// offer the option to save before exiting
@@ -136,9 +139,13 @@ namespace Copium {
 
 		// Clear game objects in scene
 		// Deserialize from new file and overwrite other scene data
+		delete currentScene;
+		result = load_scene(_newfilepath);
+		
 
 
 
+		return result;
 
 	}
 }
