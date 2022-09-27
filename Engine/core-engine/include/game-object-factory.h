@@ -46,6 +46,17 @@ namespace Copium {
 		/*******************************************************************************/
 		GameObject* build_gameobject();
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Build a game object that is a copy of specified game object.
+			Note: if the specified game object has a family tree, the whole tree is duplicated.
+
+		\return
+			pointer to the new game object (head of the tree)
+		*/
+		/*******************************************************************************/
 		GameObject* build_gameobject(GameObject& _src);
 		// Set up for future
 		//GameObject* build_gameobject(prefab);

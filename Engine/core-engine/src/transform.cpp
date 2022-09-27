@@ -2,6 +2,7 @@
 \file			transform.cpp
 \project
 \author			Zacharie Hong
+\co-authors		Matthew Lau
 
 \par			Course: GAM200
 \par			Section:

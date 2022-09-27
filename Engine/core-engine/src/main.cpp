@@ -89,7 +89,7 @@ int main()
     copiumCore.init();
     messageSystem.dispatch(Copium::Message::MESSAGE_TYPE::MT_MOUSE_CLICKED);
     SceneManager SM;
-    FrameRateController frc(100.0);
+    Copium::FrameRateController frc(100.0);
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
 
@@ -152,7 +152,6 @@ int main()
 
     copiumCore.exit();
     cleanup();
-    //delete sandboxScene;
     std::cout << "Engine Closing...\n";
 }
 

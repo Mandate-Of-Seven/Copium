@@ -17,19 +17,45 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef FRAMERATECONTROLLER_H
 #define FRAMERATECONTROLLER_H
 
-class FrameRateController {
-public:
-	FrameRateController(double _maxFPS = 60.0);
-	void start();
-	double end();
-private:
-	int frameCount;
-	double frameStart, frameEnd;
-	double minFrameTime;
-	double maxFrameRate;
-	double frameRate;
-	double frameTime;
-};
+namespace Copium {
+	class FrameRateController {
+	public:
+		FrameRateController(double _maxFPS = 60.0);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Start the frame rate controller
+			Note: this function should be called at the start of each game loop
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		void start();
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			End the frame rate controller for the frame. Ensures that the minimum frame time is met.
+			Updates the current frame count, frame rate and frame time of the current frame.
+			Note: this function should be called at the end of each game loop
+
+		\return
+			the currrent FPS
+		*/
+		/*******************************************************************************/
+		double end();
+	private:
+		int frameCount;
+		double frameStart, frameEnd;
+		double minFrameTime;
+		double maxFrameRate;
+		double frameRate;
+		double frameTime;
+	};
+}
+
 
 
 #endif //FRAMERATECONTROLLER_H

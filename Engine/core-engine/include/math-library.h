@@ -148,20 +148,41 @@ namespace Copium::Math
 		Vec2 operator -() const;	
 	
 		// Accessors
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Gets the x coordinate of this Vec2
+
+		\return
+			the x coordinate of this Vec2
+		*/
+		/*******************************************************************************/
 		double X() const;
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Gets the y coordinate of this Vec2
+
+		\return
+			the y coordinate of this Vec2
+		*/
+		/*******************************************************************************/
 		double Y() const;
 
 		/*******************************************************************************
 		/*!
 		*
 		\brief
-			Serialize this Vec2 to a rapidJson PrettyWriter String Buffer
+			Deserialize this Vec2's data from the specified rapidjson Value
 
-		\param _writer
+		\param _value
 			reference to the rapidJson buffer to serialize to
 
 		\return
-			the resultant Vec2
+			on success, return true
+			on failure, return false
 		*/
 		/*******************************************************************************/
 		bool deserialize(rapidjson::Value& _value);
@@ -178,8 +199,10 @@ namespace Copium::Math
 		/*******************************************************************************/
 		glm::dvec2 to_glm() const;
 
-
 		double x, y;
+
+		RTTR_ENABLE();
+
 
 	};
 
@@ -509,21 +532,52 @@ namespace Copium::Math
 		Vec3 operator- () const;
 
 		// Accessors
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Gets the x coordinate of this Vec3
+
+		\return
+			the x coordinate of this Vec3
+		*/
+		/*******************************************************************************/
 		double X() const;
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Gets the y coordinate of this Vec3
+
+		\return
+			the y coordinate of this Vec3
+		*/
+		/*******************************************************************************/
 		double Y() const;
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Gets the z coordinate of this Vec3
+
+		\return
+			the z coordinate of this Vec3
+		*/
+		/*******************************************************************************/
 		double Z() const;
 
 		/*******************************************************************************
 		/*!
 		*
 		\brief
-			Serialize this Vec3 to a rapidJson PrettyWriter String Buffer
+			Deserialize this Vec3's data from the specified rapidjson Value
 
-		\param _writer
+		\param _value
 			reference to the rapidJson buffer to serialize to
 
 		\return
-			void
+			on success, return true
+			on failure, return false
 		*/
 		/*******************************************************************************/
 		bool deserialize(rapidjson::Value& _value);
@@ -542,6 +596,8 @@ namespace Copium::Math
 		glm::dvec3 to_glm() const;
 
 		double x, y, z;
+
+		RTTR_ENABLE();
 	};
 
 	// Vec3 Binary Operators

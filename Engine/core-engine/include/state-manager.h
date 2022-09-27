@@ -1,6 +1,6 @@
 /*!***************************************************************************************
 ****
-\file			StateManager.h
+\file			state-manager.h
 \project		
 \author			Matthew Lau
 \co-authors		

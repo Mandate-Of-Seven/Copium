@@ -10,7 +10,8 @@
 \date			07/08/2022
 
 \brief
-	Contains declarations for functions that are responsible for the serialization and deserialization of scene data.
+	WIP
+	Will contain serialization and deserialization with reflection
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
@@ -28,37 +29,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <rapidjson/istreamwrapper.h>
 #include <rttr/type>
 
-// Ignore, work in progress
-class Serializer 
-{
-public:
-	virtual void read_int(int64_t& _int) = 0;
-	virtual void read_double(double& _double) = 0;
-	virtual void read_float(float& _float) = 0;
-	virtual void read_string(std::string& _str) = 0;
 
-
-private:
-	rapidjson::StringBuffer sb;
-};
-
-class JsonSerializer
-{
-public:
-	JsonSerializer(const std::string& _filename);
-	~JsonSerializer();
-	void read_int(int64_t& _int);
-	void read_double(double& _double);
-	void read_float(float& _float);
-	void read_string(std::string& _str);
-public:
-	rapidjson::Document document;
-	rapidjson::IStreamWrapper* isw;
-	std::ifstream file;
-};
-
-
-
+// Deprecated due to switch to rapidjson instead of Binary
 /*******************************************************************************
 /*!
 *

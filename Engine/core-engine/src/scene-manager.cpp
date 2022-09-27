@@ -1,6 +1,6 @@
 /*!***************************************************************************************
 ****
-\file			scenemanager.cpp
+\file			scene-manager.cpp
 \project
 \author			Matthew Lau
 \co-authors

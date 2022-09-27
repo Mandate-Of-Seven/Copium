@@ -1,6 +1,6 @@
 /*!***************************************************************************************
 ****
-\file			StateManager.cpp
+\file			state-manager.cpp
 \project		
 \author			Matthew Lau
 \co-authors		

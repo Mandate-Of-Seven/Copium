@@ -1,6 +1,6 @@
 /*!***************************************************************************************
 ****
-\file			gamestate-sandbox.h
+\file			gamestate-sandbox.h (deprecated)
 \project
 \author			Matthew Lau
 \co-authors

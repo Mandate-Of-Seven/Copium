@@ -71,13 +71,6 @@ namespace Copium {
 	}
 	void NewSceneManager::exit()
 	{
-		// unload and free current scene (only if scene is still alive and has not been destructed)
-		//if (currentScene) {
-		//	delete currentScene;
-		//	currentScene = nullptr;
-		//	std::cout << "deleting current scene\n";
-		//}
-
 	}
 
 	bool NewSceneManager::load_scene(std::string& _filepath)
