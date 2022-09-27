@@ -34,7 +34,7 @@ namespace Window
 
         void AlignForWidth(float width, float alignment = 0.5f)
         {
-            ImGuiStyle& style = ImGui::GetStyle();
+            //ImGuiStyle& style = ImGui::GetStyle();
             float avail = ImGui::GetContentRegionAvail().x;
             float off = (avail - width) * alignment;
             if (off > 0.0f)
@@ -142,8 +142,8 @@ namespace Window
                 }
                 selectedGameObject->Trans({position, rotation, scale});
                 ImVec2 buttonSize = ImGui::GetWindowSize();
-                buttonSize.x *= BUTTON_WIDTH;
-                buttonSize.y *= BUTTON_HEIGHT;
+                buttonSize.x *= (float) BUTTON_WIDTH;
+                buttonSize.y *= (float) BUTTON_HEIGHT;
 
                 for (Component *component : selectedGameObject->Components())
                 {
@@ -169,7 +169,7 @@ namespace Window
                 ImGui::InputText("Search", buff,7);
                 ImGui::PopItemWidth();
                 ImVec2 buttonSize = ImGui::GetWindowSize();
-                buttonSize.y *= BUTTON_HEIGHT;
+                buttonSize.y *= (float) BUTTON_HEIGHT;
                 std::map<Component::Type, const std::string>::iterator it;
                 for (it = Component::componentMap.begin(); it != Component::componentMap.end(); it++)
                 {

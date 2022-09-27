@@ -1,37 +1,24 @@
 /*!***************************************************************************************
-\file			editor-layer.h
+\file			line-shader-glsl.frag
 \project
 \author			Sean Ngo
 
 \par			Course: GAM200
 \par			Section:
-\date			16/09/2022
+\date			31/07/2022
 
 \brief
-	This file holds the declaration of functions for editor-layer.cpp.
+	This file contains the line fragment shader of the application.
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
-#ifndef EDITOR_LAYER_H
-#define EDITOR_LAYER_H
+#version 450 core
 
-namespace Copium::Editor
+layout (location=0) in vec4 vInterpColor;
+
+layout (location=0) out vec4 fFragColor;
+
+void main()
 {
-	class Editor
-	{
-	public:
-		void init();
-
-		void update();
-
-		void draw();
-
-		void exit();
-
-	private:
-	};
-
-	static Editor editor;
-
+	fFragColor = vInterpColor;
 }
-#endif // !EDITOR_LAYER_H

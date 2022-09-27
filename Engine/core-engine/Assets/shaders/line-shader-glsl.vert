@@ -1,32 +1,26 @@
 /*!***************************************************************************************
-\file			editor-sceneview.h
+\file			line-shader-glsl.vert
 \project
 \author			Sean Ngo
 
 \par			Course: GAM200
 \par			Section:
-\date			16/09/2022
+\date			31/07/2022
 
 \brief
-	This file holds the declaration of functions for editor-sceneview.cpp.
+	This file contains the line vertex shader of the application.
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
-#ifndef EDITOR_SCENEVIEW_H
-#define EDITOR_SCENEVIEW_H
+#version 450 core
 
-#include "editor-system.h"
+layout (location=0) in vec3 aVertexPosition;
+layout (location=1) in vec4 aVertexColor;
 
-namespace Copium::Editor
+layout (location=0) out vec4 vColor;
+
+void main()
 {
-	namespace SceneView
-	{
-		void init();
-
-		void update();
-
-		void exit();
-	};
-
+	vColor				= aVertexColor;
+	gl_Position			= vec4(aVertexPosition, 1.0);
 }
-#endif // !EDITOR_SCENEVIEW_H

@@ -15,44 +15,54 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 #include "windows-system.h"
 #include "editor-sceneview.h"
-
-#include "framebuffer.h"
+#include "graphics-system.h"
 
 namespace Copium::Editor::SceneView
 {
 	// Bean: Temporary global variable
 	glm::vec2 viewportSize;
+	Copium::Graphics::GraphicsSystem* graphics;
 
 	void init()
 	{
-		Copium::Graphics::graphics.sceneWidth = 1280;
-		Copium::Graphics::graphics.sceneHeight = 720;
-		Copium::Graphics::framebuffer.init();
+		graphics = Copium::Graphics::GraphicsSystem::Instance();
+		graphics->set_scene_width(1280);
+		graphics->set_scene_height(720);
 	}
 
 	void update()
 	{
+		ImGuiWindowFlags window_flags = 0;
+		window_flags |= ImGuiWindowFlags_NoCollapse;
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
-		ImGui::Begin("Scene View");
+		// Begin
+		ImGui::Begin("Scene View", 0, window_flags);
+		graphics->set_scene_position(glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y));
 
-		GLuint textureID = Copium::Graphics::framebuffer.get_color_attachment_id();
+		char buffer[64];
+		sprintf(buffer, "Sprite Count: %d", (int)graphics->get_sprites().size());
+		ImGui::Text(buffer);
+
+		GLuint textureID = graphics->get_framebuffer().get_color_attachment_id();
 
 		ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
 
 		if (viewportSize != *((glm::vec2 *) &viewportEditorSize))
 		{
 			viewportSize = { viewportEditorSize.x, viewportEditorSize.y };
-			Copium::Graphics::framebuffer.resize(viewportSize.x, viewportSize.y);
+			graphics->get_framebuffer().resize((GLuint) viewportSize.x, (GLuint) viewportSize.y);
 		}
 
-		ImGui::Image((void *) textureID, ImVec2{ viewportSize.x, viewportSize.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
+		ImGui::Image((void*) (size_t) textureID, ImVec2{ viewportSize.x, viewportSize.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
 
+		// End
 		ImGui::End();
 		ImGui::PopStyleVar();
+		
 	}
 
 	void exit()
 	{
-		Copium::Graphics::framebuffer.exit();
+		
 	}
 }

@@ -24,17 +24,12 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <game-object-factory.h>
 
 #include <windows-system.h>
-#include <graphics.h>
-#include <renderer.h>
 #include <input.h>
 #include <serializer.h>
 #include <rapidjson/prettywriter.h>
 
 // Global variables
 GLfloat movement_x = 0.f, movement_y = 0.f;
-
-
-using namespace Copium::Graphics;
 
 SceneSandbox::SceneSandbox(std::string& _filepath) : Scene(_filepath) 
 {
@@ -48,18 +43,13 @@ void SceneSandbox::load_scene()
 void SceneSandbox::init_scene() 
 {
 	std::cout << "init sandbox" << std::endl;
-
-	// Init Graphics System 
-	// (In the future should be stored in a vector container and looped initialised)
-	graphics.init();	
 }
 
 void SceneSandbox::update_scene() 
 {
 	//std::cout << "update sandbox" << std::endl;
-
+	
 	// Update Graphics system
-	graphics.update();
 }
 
 void SceneSandbox::draw_scene() 
@@ -76,10 +66,5 @@ void SceneSandbox::free_scene()
 
 void SceneSandbox::unload_scene() 
 {
-	std::cout << "unload sandbox" << std::endl;
-
-
-	// Bean: This should be handles by ISystem
-	graphics.exit();
 	std::cout << "scene unloaded\n";
 }

@@ -12,7 +12,7 @@
 \brief
 	Contains definitions for FrameRateController class, its constructor and member functions.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "pch.h"
 #include "frameratecontroller.h"
@@ -38,11 +38,13 @@ namespace Copium {
 			frameTime = frameEnd - frameStart;
 
 		}
-		GLHelper::update_time(10.0);
-		frameRate = GLHelper::fps;
+		Windows::WindowsSystem::Instance()->update_time(10.0);
+		//Windows::windowsSystem.update_time(10.0);
+		frameRate = Windows::WindowsSystem::Instance()->get_fps();
 		++frameCount;
-		return GLHelper::fps;
+		return Windows::WindowsSystem::Instance()->get_fps();
 	}
+
 }
 
 

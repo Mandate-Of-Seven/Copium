@@ -20,7 +20,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <renderer.h>
 #include <cstring>
 
-namespace Copium::Component
+namespace Copium::Graphics
 {
 	class Transform;
 	class Texture;
@@ -30,18 +30,30 @@ namespace Copium::Component
 	{
 	public:
 		// Serialization inherited from Component
+
+		// Accessing Properties
+
+		// Name
 		std::string const get_name() { return sprite_name; }
 		void const set_name(std::string _name) { sprite_name = _name; }
 
+		// Texture
+		void const bind_texture(Texture* _texture) { texture = _texture; }
+		Texture* const get_texture() { return texture; }
+
+		// Position
 		glm::vec2 const get_position() { return position; }
 		void const set_position(glm::vec2 _position) { position = _position; }
 
+		// Rotation
 		glm::vec3 const get_rotation() { return rotation; }
 		void const set_rotation(glm::vec3 _rotation) { rotation = _rotation; }
 
+		// Size
 		glm::vec2 const get_size() { return size; }
 		void const set_size(glm::vec2 _size) { size = _size; }
 
+		// Color
 		glm::vec4 const get_color() { return color; }
 		void const set_color(glm::vec4 _color) { color = _color; }
 
@@ -50,13 +62,13 @@ namespace Copium::Component
 		/* Sprite Information ***********************************************************/
 		std::string sprite_name; // Name of sprite
 
-		Texture* texture; // The texture used for this sprite
-		Transform* transform; // The transform of this sprite ( Bean: it refer to the component in the gameobject )
+		Texture* texture = nullptr; // The texture used for this sprite ( Bean: May be temporary because we can set a vector of textures in graphics to store all textures)
+		Transform* transform = nullptr; // The transform of this sprite ( Bean: it refer to the component in the gameobject )
 
-		glm::vec2 position; // Temporary variable to access the position
-		glm::vec3 rotation; // Temporary variable for the rotation of the sprite
-		glm::vec2 size; // The size of the sprite in pixels ( Bean: different from the scale of the gameobject )
-		glm::vec4 color; // The blended color of this sprite
+		glm::vec2 position{ 0 }; // Temporary variable to access the position
+		glm::vec3 rotation{ 0 }; // Temporary variable for the rotation of the sprite
+		glm::vec2 size{ 0 }; // The size of the sprite in pixels ( Bean: different from the scale of the gameobject )
+		glm::vec4 color{ 0 }; // The blended color of this sprite
 	};
 }
 #endif // !SPRITE_RENDERER_H
