@@ -25,11 +25,9 @@ namespace Copium {
 
 	GameObjectFactory::GameObjectFactory() : currentScene{ nullptr }
 	{
-		std::cout << "Game Object Factory created\n";
 	}
 	GameObjectFactory::~GameObjectFactory()
 	{
-		std::cout << "Game Object Factory destructed\n";
 	}
 
 	GameObject* GameObjectFactory::build_gameobject()
@@ -64,7 +62,7 @@ namespace Copium {
 		{
 			if (!(*iter))
 				continue;
-			std::cout << "adding a child\n";
+			//std::cout << "adding a child\n";
 			GameObject* cgo = build_gameobject(*(*iter));
 			if (!cgo)
 				break;
@@ -93,7 +91,7 @@ namespace Copium {
 		}
 
 		currentScene->add_gameobject(go);			
-		std::cout << "building 1x game object\n";
+		//std::cout << "building 1x game object\n";
 
 		unsigned int childCount{ 0 };
 		// Deserialize children (if any)
