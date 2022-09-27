@@ -21,6 +21,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <GL/glew.h> // for access to OpenGL API declarations 
 #include <GLFW/glfw3.h>
 #include <string>
+#include <rapidjson/document.h>
+#include <rapidjson/istreamwrapper.h>
 
 #include "system-interface.h"
 
@@ -132,17 +134,20 @@ namespace Copium::Windows
 
 		GLFWwindow* get_window() { return window; }
 
+		static bool load_config(std::string& _filename, GLint& _w, GLint& _h);
+		
+
 	private:
 		/* Properties of a Window *******************************************************/
 		std::string title;
 
-		int windowWidth;
-		int windowHeight;
+		int windowWidth = 0;
+		int windowHeight = 0;
 
-		double fps; // The frames per second of the engine
-		double delta_time; // Time taken to complete most recent engine loop
+		double fps = 0; // The frames per second of the engine
+		double delta_time = 0; // Time taken to complete most recent engine loop
 
-		GLFWwindow* window;
+		GLFWwindow* window = nullptr;
 	};
 }
 

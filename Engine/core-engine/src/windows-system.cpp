@@ -13,7 +13,7 @@
     window and start up an OpenGL context and use GLEW to extract function 
     pointers to OpenGL implementations.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 
@@ -32,6 +32,9 @@ namespace Copium::Windows
         windowWidth = _width;
         windowHeight = _height;
         title = _title;
+
+        std::string config("Data\\config.json");
+        load_config(config, _width, _height);
 
         if (!glfwInit())
         {
@@ -65,7 +68,7 @@ namespace Copium::Windows
         glfwMakeContextCurrent(window);
 
         glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-        
+
         // this is the default setting ...
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
@@ -145,6 +148,7 @@ namespace Copium::Windows
 #ifdef _DEBUG
         std::cerr << "GLFW error: " << _description << std::endl;
 #endif
+        (void) _error;
     }
 
     void WindowsSystem::framebuffer_size_callback(GLFWwindow * _window, int _width, int _height)
@@ -157,6 +161,39 @@ namespace Copium::Windows
         // use the entire framebuffer as drawing region
         glViewport(0, 0, _width, _height);
         // later, if working in 3D, we'll have to set the projection matrix here ...
+        (void) _window;
+    }
+
+    bool WindowsSystem::load_config(std::string& _filename, GLint& _w, GLint& _h)
+    {
+        std::ifstream ifs(_filename);
+        if (!ifs)
+        {
+            std::cout << "Error opening config json file!\n";
+            return false;
+        }
+        rapidjson::IStreamWrapper isw(ifs);
+        rapidjson::Document doc;
+        doc.ParseStream(isw);
+        if (doc.HasMember("Width"))
+        {
+            _w = doc["Width"].GetInt();
+        }
+        else
+        {
+            return false;
+        }
+        if (doc.HasMember("Height"))
+        {
+            _h = doc["Height"].GetInt();
+        }
+        else
+        {
+            return false;
+        }
+        std::cout << "Loading from config...\n" << "Window Width:" << _w << '\n'
+            << "Window Height:" << _h << std::endl;
+        return true;
     }
 }
 

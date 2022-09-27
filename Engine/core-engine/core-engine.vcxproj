@@ -88,6 +88,7 @@
     <ClCompile Include="src\collision.cpp" />
     <ClCompile Include="src\component.cpp" />
     <ClCompile Include="src\editor-system.cpp" />
+    <ClCompile Include="src\ConsoleLog.cpp" />
     <ClCompile Include="src\editor-sceneview.cpp" />
     <ClCompile Include="src\framebuffer.cpp" />
     <ClCompile Include="src\frameratecontroller.cpp" />
@@ -96,6 +97,7 @@
     <ClCompile Include="src\gamestate-sandbox.cpp" />
     <ClCompile Include="src\physics-system.cpp" />
     <ClCompile Include="src\textures.cpp" />
+    <ClCompile Include="src\sm.cpp" />
     <ClCompile Include="src\windows-system.cpp" />
     <ClCompile Include="src\glslshader.cpp" />
     <ClCompile Include="src\graphics-system.cpp" />
@@ -149,6 +151,7 @@
     <ClInclude Include="include\collision.h" />
     <ClInclude Include="include\compiler.h" />
     <ClInclude Include="include\component.h" />
+    <ClInclude Include="include\ConsoleLog.h" />
     <ClInclude Include="include\copium-core.h" />
     <ClInclude Include="include\editor-system.h" />
     <ClInclude Include="include\editor-sceneview.h" />
@@ -160,6 +163,8 @@
     <ClInclude Include="include\gamestate-sandbox.h" />
     <ClInclude Include="include\physics-system.h" />
     <ClInclude Include="include\textures.h" />
+    <ClInclude Include="include\sm.h" />
+    <ClInclude Include="include\windows-system.h" />
     <ClInclude Include="include\glslshader.h" />
     <ClInclude Include="include\graphics-system.h" />
     <ClInclude Include="include\input.h" />
@@ -187,6 +192,7 @@
     <None Include="Assets\shaders\line-shader-glsl.vert" />
     <None Include="Assets\shaders\shader-glsl.frag" />
     <None Include="Assets\shaders\shader-glsl.vert" />
+    <None Include="Data\transform.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

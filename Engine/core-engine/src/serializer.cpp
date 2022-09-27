@@ -17,7 +17,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 #include "serializer.h"
 #include <rttr/registration>
-std::string prefix("Data\\");
 
 /*
 int serialize_scene(const std::string& _filename, Scene* _scene) 
@@ -429,12 +428,4 @@ void JsonSerializer::read_string(std::string& _str)
 	_str = document["str"].GetString();
 }
 
-void stream_read(Serializer& _s, double& _d)
-{
-	_s.read_double(_d);
-}
-void stream_read(Serializer& _s, int64_t& _i)
-{
-	_s.read_int(_i);
-}
 

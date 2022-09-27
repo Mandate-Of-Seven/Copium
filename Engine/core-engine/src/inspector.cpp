@@ -21,6 +21,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define BUTTON_HEIGHT 0.05 //Percent
 #define BUTTON_WIDTH .6 //Percent
 
+using Vector3 = glm::dvec3;
+
 namespace Window
 {
 
@@ -32,7 +34,7 @@ namespace Window
 
         void AlignForWidth(float width, float alignment = 0.5f)
         {
-            ImGuiStyle& style = ImGui::GetStyle();
+            //ImGuiStyle& style = ImGui::GetStyle();
             float avail = ImGui::GetContentRegionAvail().x;
             float off = (avail - width) * alignment;
             if (off > 0.0f)
@@ -66,9 +68,9 @@ namespace Window
             if (selectedGameObject)
             {
                 Transform trans{ selectedGameObject->Trans() };
-                Vector3 position = trans.Position();
-                Vector3 rotation = trans.Rotation();
-                Vector3 scale = trans.Scale();
+                Vector3 position = trans.Position().to_glm();
+                Vector3 rotation = trans.Rotation().to_glm();
+                Vector3 scale = trans.Scale().to_glm();
                 if (ImGui::CollapsingHeader("Transform"))
                 {
                     if (ImGui::BeginTable("split", 4))
@@ -140,8 +142,8 @@ namespace Window
                 }
                 selectedGameObject->Trans({position, rotation, scale});
                 ImVec2 buttonSize = ImGui::GetWindowSize();
-                buttonSize.x *= BUTTON_WIDTH;
-                buttonSize.y *= BUTTON_HEIGHT;
+                buttonSize.x *= (float) BUTTON_WIDTH;
+                buttonSize.y *= (float) BUTTON_HEIGHT;
 
                 for (Component *component : selectedGameObject->Components())
                 {
@@ -167,7 +169,7 @@ namespace Window
                 ImGui::InputText("Search", buff,7);
                 ImGui::PopItemWidth();
                 ImVec2 buttonSize = ImGui::GetWindowSize();
-                buttonSize.y *= BUTTON_HEIGHT;
+                buttonSize.y *= (float) BUTTON_HEIGHT;
                 std::map<Component::Type, const std::string>::iterator it;
                 for (it = Component::componentMap.begin(); it != Component::componentMap.end(); it++)
                 {

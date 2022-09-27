@@ -23,6 +23,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "scripting-system.h"
 #include "scripting.h"
 #include "logging.h"
+#include "ConsoleLog.h"
 
 //State Manager
 #include "state-manager.h"
@@ -69,24 +70,26 @@ Note that the C++ compiler will insert a return 0 statement if one is missing.
 /**************************************************************************/
 int main() 
 {
+    init_statemanager(esActive);
+
     // Enable run-time memory check for debug purposes 
     #if defined(DEBUG) | defined(_DEBUG)
         _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     #endif
 
-    copiumCore.init();
     init();
+    copiumCore.init();
+    
 
     Copium::Windows::WindowsSystem* windowsSystem = Copium::Windows::WindowsSystem::Instance();
 
     //glfwSetKeyCallback(Copium::windowsSystem.get_window(), quit_key_callback);
-    glfwSetKeyCallback(windowsSystem->get_window(), Input::keyCallback);
+    glfwSetKeyCallback(windowsSystem->get_window(), Input::key_callback);
 
     SceneManager SM;
     FrameRateController frc(100.0);
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
-
     //ScriptComponent *yolo;
     //yolo = new ScriptComponent("PlayerMovement");
     //delete yolo;
@@ -159,22 +162,12 @@ int main()
 /**************************************************************************/
 static void init()
 {
-    Log::init();
-    Console_Critical("Test 1");
-    Console_Error("Test 2");
-    Console_Warn("What happens");
-    Console_Info("Hello");
-    Console_Trace("Goodbye");
 
-    //spdlog::info("File test");
-    //File_Warn("Hello{}",3);
+    Input::get_input_instance()->init();
+    Copium::Log::init();
 
-    Input::getInputInstance()->Init();
-    init_statemanager(esActive);
-
-    Copium::Message::DUMMY_RECEIVER dummy12;
-    Copium::Message::DUMMY_RECEIVER dummy122;
-    messageSystem.dispatch(Copium::Message::MESSAGE_TYPE::MT_MOUSE_CLICKED);
+    //Uncomment to test asserts
+    //COPIUM_ASSERT(1+1==2,"Asserts are working as intended");
 }
 
 /***************************************************************************/
@@ -219,7 +212,7 @@ void cleanup()
 
 void quitEngine() 
 {
-    if (Input::isKeyPressed(GLFW_KEY_Q)) 
+    if (Input::is_key_pressed(GLFW_KEY_Q)) 
     {
 
         change_enginestate(esQuit);

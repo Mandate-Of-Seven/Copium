@@ -28,6 +28,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <vector>
 #include "gamestate-sandbox.h"
 #include "scene.h"
+#include <system-interface.h>
 
 //GAMESTATE ID - int type
 enum GameState 
@@ -167,6 +168,9 @@ private:
 	std::vector<Scene*> scenes;
 	Scene* currentScene;
 };
+
+
+
 
 
 

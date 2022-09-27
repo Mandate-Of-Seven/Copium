@@ -82,7 +82,7 @@ namespace Copium::Graphics
 		GLuint colorAttachment = 0;
 		GLuint depthAttachment = 0;
 
-		GraphicsSystem * graphics;
+		GraphicsSystem * graphics = nullptr;
 	};
 }
 #endif // !FRAMEBUFFER_H

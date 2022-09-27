@@ -136,7 +136,7 @@ namespace Copium::Graphics
 			The color of the quad
 		*/
 		/***************************************************************************/
-		void draw_quad(const glm::mat4& _transform, const glm::vec2& _position, const glm::vec2& _size, const glm::vec4& _color);
+		void draw_quad(const glm::mat4& _transform, const glm::vec2& _size, const glm::vec4& _color);
 
 		/***************************************************************************/
 		/*!
@@ -152,7 +152,7 @@ namespace Copium::Graphics
 			The index of the texture to be used
 		*/
 		/***************************************************************************/
-		void draw_quad(const glm::mat4& _transform, const glm::vec2& _position, const glm::vec2& _size, GLuint _textureID);
+		void draw_quad(const glm::mat4& _transform, const glm::vec2& _size, GLuint _textureID);
 
 		/***************************************************************************/
 		/*!
@@ -246,7 +246,7 @@ namespace Copium::Graphics
 		LineVertex* lineBuffer = nullptr;
 		LineVertex* lineBufferPtr = nullptr;
 
-		GraphicsSystem* graphics; // A pointer to the instance of graphics system
+		GraphicsSystem* graphics = nullptr; // A pointer to the instance of graphics system
 	};
 }
 

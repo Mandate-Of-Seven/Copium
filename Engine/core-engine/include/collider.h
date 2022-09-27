@@ -41,6 +41,6 @@ namespace Copium::Component
 		Shape objectShape;						//Shape of object
 		Copium::Collision::AABB boundingBox;	//bounding box of object
 		bool active = false;                    //is object active?
-		bool affectedGravity;                   //is object affected by gravity?
+		bool affectedGravity = false;           //is object affected by gravity?
     };
 }

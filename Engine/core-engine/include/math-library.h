@@ -26,9 +26,10 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define MATHLIBRARY_H
 #include <math.h>
 #include <iostream>
-#include <rapidjson/prettywriter.h>
-#include <serializer.h>
 #include <rttr/type>
+#include <rapidjson/document.h>
+#include <glm/vec2.hpp>
+#include <glm/mat3x3.hpp>
 
 namespace Copium::Math 
 {
@@ -37,21 +38,6 @@ namespace Copium::Math
 	class myint {
 	public:
 		int64_t i;
-		bool serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& _writer) const
-		{
-			_writer.Int(i);
-			return false;
-		}
-		void deserialize(JsonSerializer& _s) {
-			std::cout << "Deserialize myint...\n";
-			if (!_s.document.IsObject()) {
-				std::cout << "not obj!\n";
-			}
-
-			i = _s.document["i"].GetInt();
-			std::cout << i << std::endl;
-
-		}
 		RTTR_ENABLE();
 	};
 
@@ -60,6 +46,7 @@ namespace Copium::Math
 		// Constructors
 		Vec2();
 		Vec2(double _x, double _y);
+		Vec2(glm::dvec2& _v);
 
 		// Assignment operators
 		/*******************************************************************************
@@ -69,13 +56,27 @@ namespace Copium::Math
 			= operator overload. Copy the specified Vec2 into this Vec2
 
 		\param _rhs
-			reference to the Vec2 which will be copied into this Vec2
+			read-only reference to the Vec2 which will be copied into this Vec2
 
 		\return
 			reference to this Vec2
 		*/
 		/*******************************************************************************/
 		Vec2& operator= (const Vec2& _rhs);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			= operator overload. Copy the data in a glm::dvec2 into this Vec2
+
+		\param _rhs
+			read-only reference to the glm::dvec2 which will be copied into this Vec2
+
+		\return
+			reference to this Vec2
+		*/
+		/*******************************************************************************/
+		Vec2& operator= (const glm::dvec2& _rhs);
 		/*******************************************************************************
 		/*!
 		*
@@ -163,7 +164,20 @@ namespace Copium::Math
 			the resultant Vec2
 		*/
 		/*******************************************************************************/
-		bool deserialize(JsonSerializer& _serializer);
+		bool deserialize(rapidjson::Value& _value);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Creates a glm::dvec2 and copies the data from this Vec2 into the glm::dvec2
+
+		\return
+			the resulting glm::dvec2
+		*/
+		/*******************************************************************************/
+		glm::dvec2 to_glm() const;
+
 
 		double x, y;
 
@@ -371,6 +385,7 @@ namespace Copium::Math
 	/*******************************************************************************/
 	double vec2_crossproductmag(const Vec2& _v1, const Vec2& _v2);
 
+
 	/*******************************************************************************
 	/*!
 	*
@@ -394,6 +409,7 @@ namespace Copium::Math
 		//Ctors
 		Vec3();
 		Vec3(double _x, double _y, double _z);
+		Vec3(glm::dvec3& _v);
 
 		/*******************************************************************************
 		/*!
@@ -402,13 +418,27 @@ namespace Copium::Math
 			= operator overload. Copy the values in specified Vec3 into this Vec3
 
 		\param _rhs
-			reference to the Vec3 whose values is to be copied
+			read-only reference to the Vec3 whose values is to be copied
 
 		\return
 			reference to this Vec3
 		*/
 		/*******************************************************************************/
 		Vec3& operator= (const Vec3& _rhs);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			= operator overload. Copy the data in a glm::dvec3 into this Vec3
+
+		\param _rhs
+			read-only reference to the glm::dvec3 which will be copied into this Vec3
+
+		\return
+			reference to this Vec3
+		*/
+		/*******************************************************************************/
+		Vec3& operator= (const glm::dvec3& _rhs);
 		/*******************************************************************************
 		/*!
 		*
@@ -496,7 +526,20 @@ namespace Copium::Math
 			void
 		*/
 		/*******************************************************************************/
-		void serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& _writer) const;
+		bool deserialize(rapidjson::Value& _value);
+
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Creates a glm::dvec3 and copies the data from this Vec3 into the glm::dvec3
+
+		\return
+			the resulting glm::dvec3
+		*/
+		/*******************************************************************************/
+		glm::dvec3 to_glm() const;
 
 		double x, y, z;
 	};
@@ -727,6 +770,7 @@ namespace Copium::Math
 		Matrix3x3(double _00, double _01, double _02,
 					double _10, double _11, double _12,
 					double _20, double _21, double _22);
+		Matrix3x3(const glm::mat3x3& _rhs);
 		/*******************************************************************************
 		/*!
 		*
@@ -745,6 +789,20 @@ namespace Copium::Math
 		/*!
 		*
 		\brief
+			Copies the data in the specified glm::mat33 into this Matrix3x3
+
+		\param _rhs
+			the glm::mat3x3 that is to be copied into this Matrix3x3
+
+		\return
+			reference to this Matrix3x3
+		*/
+		/*******************************************************************************/
+		Matrix3x3& operator= (const glm::mat3x3& _rhs);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
 			*= operator overload for Matrix3x3. Compute matrix3x3 multiplication between this matrix and _rhs.
 			Places the result in this matrix. 
 			Note: this matrix is considered the left hand operand of the multiplication.
@@ -757,6 +815,20 @@ namespace Copium::Math
 		*/
 		/*******************************************************************************/
 		Matrix3x3& operator*= (const Matrix3x3& _rhs);
+
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Creates a glm::mat3x3 and copies the data from this Matrix3x3 into the glm::mat3x3
+
+		\return
+			the resulting glm::mat3x3
+		*/
+		/*******************************************************************************/
+		glm::mat3x3 to_glm() const;
+
 		double m[3][3];
 	};
 

@@ -11,7 +11,7 @@
 	This file contains the function definitions for a physics system. It will perform
 	physics and collision on a collider component of an object.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 #include "windows-system.h"
@@ -29,14 +29,14 @@ namespace Copium::Physics
 	void Physics::update()
 	{
 		static int count = 0;
-		if (Input::isKeyPressed(GLFW_KEY_B) && (boxes.size() < Copium::Graphics::GraphicsSystem::Instance()->get_sprites().size()))
+		if (Input::is_key_pressed(GLFW_KEY_B) && (boxes.size() < Copium::Graphics::GraphicsSystem::Instance()->get_sprites().size()))
 		{
 			glm::vec2 position;
 			glm::vec2 size;
 			Math::Vec2 convertedPos;
 			Math::Vec2 convertedSize;
 			size = Copium::Graphics::GraphicsSystem::Instance()->get_sprites()[count]->get_size();
-			convertedSize = { size.x, size.y };
+			convertedSize = Math::Vec2(size.x, size.y);
 			Copium::Component::RigidBody* box = new Copium::Component::RigidBody;
 			position = Copium::Graphics::GraphicsSystem::Instance()->get_sprites()[count]->get_position();
 			convertedPos = { position.x, position.y };
@@ -69,11 +69,11 @@ namespace Copium::Physics
 			{
 				boxes[0]->add_acc(Math::Vec2{ 0.0,0.05 });
 			}
-			if (Input::isKeyPressed(GLFW_KEY_K)) // move down
+			if (Input::is_key_pressed(GLFW_KEY_K)) // move down
 			{
 				boxes[0]->add_acc(Math::Vec2{ 0.0,-0.05 });
 			}
-			if (Input::isKeyPressed(GLFW_KEY_L)) // move left
+			if (Input::is_key_pressed(GLFW_KEY_L)) // move left
 			{
 				boxes[0]->add_acc(Math::Vec2{ 0.05,0.0 });
 			}
@@ -133,7 +133,7 @@ namespace Copium::Physics
 			acceleration = boxes[a]->get_acc();
 			glmPosition = Copium::Graphics::GraphicsSystem::Instance()->get_sprites()[a]->get_position();
 			glmSize = Copium::Graphics::GraphicsSystem::Instance()->get_sprites()[a]->get_size();
-			position = { glmPosition.x, glmPosition.y };
+			position = Math::Vec2(glmPosition.x, glmPosition.y);
 			bound = boxes[a]->get_AABB();
 			if (boxes[a]->get_gravity() == true)
 			{
@@ -171,7 +171,7 @@ namespace Copium::Physics
 			Copium::Collision::AABB bound;
 			velocity = boxes[a]->get_vel();
 			glmPosition = Copium::Graphics::GraphicsSystem::Instance()->get_sprites()[a]->get_position();
-			position = { glmPosition.x, glmPosition.y };
+			position = Math::Vec2(glmPosition.x, glmPosition.y);
 			bound = boxes[a]->get_AABB();
 			if ((Copium::Collision::collision_rectrect(bound, velocity, floor, Math::Vec2{ 0.0,0.0 }) == true))
 			{
