@@ -21,6 +21,7 @@
 
 #include <regex>
 #include <algorithm>
+#include "sound-system.h"
 
 #ifndef NDEBUG
 #   define M_Assert(Expr, Msg) \

@@ -83,7 +83,6 @@ int main()
 
     Copium::Windows::WindowsSystem* windowsSystem = Copium::Windows::WindowsSystem::Instance();
 
-    //glfwSetKeyCallback(Copium::windowsSystem.get_window(), quit_key_callback);
     glfwSetKeyCallback(windowsSystem->get_window(), Input::key_callback);
 
     SceneManager SM;
@@ -166,6 +165,14 @@ static void init()
     Input::get_input_instance()->init();
     Copium::Log::init();
 
+    SoundSystem::init();
+    SoundSystem::CreateSound("./Assets/sounds/reeling.wav", SoundAlias::reeling);
+    SoundSystem::SetVolume(reeling, 0.3f);
+    SoundSystem::CreateSound("./Assets/sounds/zap.wav", SoundAlias::zap);
+    SoundSystem::SetVolume(zap, 0.3f);
+
+    
+
     //Uncomment to test asserts
     //COPIUM_ASSERT(1+1==2,"Asserts are working as intended");
 }
@@ -180,6 +187,16 @@ static void init()
 /**************************************************************************/
 static void update()
 {
+    if (Input::is_key_pressed(GLFW_KEY_1))
+    {
+        SoundSystem::Play(zap, true, false);
+        std::cout << "Zap sound is being played\n";
+    }
+    if (Input::is_key_pressed(GLFW_KEY_2))
+    {
+        SoundSystem::Play(reeling, true, false);
+        std::cout << "Reeling sound is being played\n";
+    }
     quitEngine();
 }
 
