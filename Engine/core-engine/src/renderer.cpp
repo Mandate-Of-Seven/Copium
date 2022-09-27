@@ -53,6 +53,7 @@ namespace Copium::Graphics
 		}
 	}
 
+	// Setup the quads vertex array object
 	void Renderer::setup_quad_vao() 
 	{	
 		quadBuffer = new QuadVertex[maxVertexCount];
@@ -104,6 +105,7 @@ namespace Copium::Graphics
 		glBindVertexArray(0);
 	}
 
+	// Setup the line vertex array object
 	void Renderer::setup_line_vao()
 	{
 		lineBuffer = new LineVertex[maxVertexCount];

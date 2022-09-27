@@ -62,13 +62,13 @@ namespace Copium::Graphics
 		/* Sprite Information ***********************************************************/
 		std::string sprite_name; // Name of sprite
 
-		Texture* texture; // The texture used for this sprite ( Bean: May be temporary because we can set a vector of textures in graphics to store all textures)
-		Transform* transform; // The transform of this sprite ( Bean: it refer to the component in the gameobject )
+		Texture* texture = nullptr; // The texture used for this sprite ( Bean: May be temporary because we can set a vector of textures in graphics to store all textures)
+		Transform* transform = nullptr; // The transform of this sprite ( Bean: it refer to the component in the gameobject )
 
-		glm::vec2 position; // Temporary variable to access the position
-		glm::vec3 rotation; // Temporary variable for the rotation of the sprite
-		glm::vec2 size; // The size of the sprite in pixels ( Bean: different from the scale of the gameobject )
-		glm::vec4 color; // The blended color of this sprite
+		glm::vec2 position{ 0 }; // Temporary variable to access the position
+		glm::vec3 rotation{ 0 }; // Temporary variable for the rotation of the sprite
+		glm::vec2 size{ 0 }; // The size of the sprite in pixels ( Bean: different from the scale of the gameobject )
+		glm::vec4 color{ 0 }; // The blended color of this sprite
 	};
 }
 #endif // !SPRITE_RENDERER_H
