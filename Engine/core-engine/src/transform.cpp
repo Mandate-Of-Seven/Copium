@@ -41,17 +41,17 @@ bool Transform::deserialize(rapidjson::Value& _value)
 	
 	if (!_value.HasMember("Pos"))
 		return false;
-	rapidjson::Value& _v = _value["Pos"].GetObject();
+	rapidjson::Value& _v = _value["Pos"].GetObj();
 	position.deserialize(_v);
 
 	if (!_value.HasMember("Rot"))
 		return false;
-	_v = _value["Rot"].GetObject();
+	_v = _value["Rot"].GetObj();
 	rotation.deserialize(_v);
 
 	if (!_value.HasMember("Scale"))
 		return false;
-	_v = _value["Scale"].GetObject();
+	_v = _value["Scale"].GetObj();
 	scale.deserialize(_v);
 
 	return true;

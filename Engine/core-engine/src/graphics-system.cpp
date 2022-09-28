@@ -196,7 +196,7 @@ namespace Copium::Graphics
 	void GraphicsSystem::load_texture(const std::string & _filePath)
 	{
 		// Check for texture slots
-		M_Assert(textureSlotIndex != maxTextures, "Max textures reached! Replace old textures!!");
+		COPIUM_ASSERT(textureSlotIndex == maxTextures, "Max textures reached! Replace old textures!!");
 
 		// Generate texture
 		Texture texture(_filePath);
@@ -204,7 +204,7 @@ namespace Copium::Graphics
 		// Ensure its not a repeated texture
 		for (GLuint i = 1; i < textureSlotIndex; i++)
 		{
-			M_Assert(textureSlots[i] != texture.get_object_id(), "Duplicate textures!!");
+			COPIUM_ASSERT(textureSlots[i] == texture.get_object_id(), "Duplicate textures!!");
 		}
 
 		// Assign the slot to the texture

@@ -1,7 +1,7 @@
 ﻿/*!***************************************************************************************
 \file			game-object.cpp
 \project
-\author			Zacharie Hong
+\author			Zacharie Hong (50%), Matthew Lau (50%)
 
 \par			Course: GAM200
 \par			Section:
@@ -185,7 +185,7 @@ bool GameObject::deserialize(rapidjson::Value& _value) {
 
     parentid = _value["PID"].GetInt();
 
-    rapidjson::Value& _t = _value["Transform"].GetObject();
+    rapidjson::Value& _t = _value["Transform"].GetObj();
     trans.deserialize(_t);
 
 

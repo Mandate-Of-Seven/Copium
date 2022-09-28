@@ -30,7 +30,7 @@ namespace Copium::Graphics
 		stbi_uc * data = stbi_load(_filePath.c_str(), &iWidth, &iHeight, &channels, 0);
 
 		// File cannot be loaded
-		M_Assert(data != NULL, "File cannot be loaded! Check the file path...");
+		COPIUM_ASSERT(data == NULL, "File cannot be loaded! Check the file path...");
 			
 		width = (GLuint)iWidth;
 		height = (GLuint)iHeight;
@@ -49,7 +49,7 @@ namespace Copium::Graphics
 		}
 
 		// Check if format exists
-		M_Assert(internalFormat & dataFormat, "Format of texture not supported!!");
+		COPIUM_ASSERT(!(internalFormat & dataFormat), "Format of texture not supported!!");
 
 		// Align pixels of each row in memory to "1" (byte-alignment)
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);

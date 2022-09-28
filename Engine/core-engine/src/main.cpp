@@ -22,7 +22,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "editor-system.h"
 #include "scripting-system.h"
 #include "scripting.h"
-#include "logging.h"
 #include "ConsoleLog.h"
 
 //State Manager

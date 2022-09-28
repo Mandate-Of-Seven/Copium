@@ -74,7 +74,7 @@ namespace Copium::Graphics
 		else if (errorId == GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS)
 			PRINT("Any framebuffer attachment is layered, and any populated attachment is not layered, or if all populated color attachments are not from textures of the same target");
 
-		C_Assert(errorId == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!!");
+		COPIUM_ASSERT(errorId != GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!!");
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}

@@ -24,7 +24,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <list>
 #include <vector>
 #include <array>
-#include <glm/vec3.hpp>
 
 //IMGUI
 #include <imgui.h>
@@ -40,31 +39,10 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <regex>
 #include <algorithm>
 
-#ifndef NDEBUG
-#   define C_Assert(Expr, Msg) \
-    _C_Assert(#Expr, Expr, __FILE__, __LINE__, Msg)
-#else
-#   define C_Assert(Expr, Msg) ;
-#endif
+//DEBUGGING
+#include "logging.h"
 
 #define PRINT(str) std::cout << str << std::endl
-
-/**************************************************************************/
-/*!
-    \brief
-        Basic assertion system
-*/
-/**************************************************************************/
-static void _C_Assert(std::string str, bool expr, std::string file, int line, std::string msg)
-{
-    if (!expr)
-    {
-        std::cerr << "Assert failed:\t" << msg << "\n"
-            << "Expected:\t" << str << "\n"
-            << "Source:\t\t" << file << ", line " << line << "\n";
-        abort();
-    }
-}
 
 /**************************************************************************/
 /*!
