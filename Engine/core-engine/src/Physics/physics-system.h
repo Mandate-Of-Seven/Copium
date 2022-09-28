@@ -15,7 +15,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 #include "system-interface.h"
 #include "math-library.h"
-#include "collider.h"
+#include "Physics/collider.h"
 
 
 namespace Copium::Physics

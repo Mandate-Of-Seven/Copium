@@ -1,6 +1,6 @@
 /*!***************************************************************************************
 ****
-\file			math-library.h
+\file			Math/math-library.h
 \project
 \author			Matthew Lau
 \co-authors

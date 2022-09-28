@@ -16,7 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 *****************************************************************************************/
 #include "pch.h"
 #include "windows-system.h"
-#include "collision.h"
+#include "Physics/collision.h"
 
 namespace Copium::Collision
 {

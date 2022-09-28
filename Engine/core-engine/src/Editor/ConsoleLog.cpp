@@ -13,7 +13,7 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
-#include "ConsoleLog.h"
+#include <Editor/ConsoleLog.h>
 #include "logging.h"
 
 namespace Window

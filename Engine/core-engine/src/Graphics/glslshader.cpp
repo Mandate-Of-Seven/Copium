@@ -13,7 +13,7 @@ Please see the class declaration for information about these functions.
 
 *//*__________________________________________________________________________*/
 #include "pch.h"
-#include <glslshader.h>
+#include <Graphics/glslshader.h>
 
 GLint
 GLSLShader::GetUniformLocation(GLchar const *name) {

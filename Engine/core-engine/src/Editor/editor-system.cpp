@@ -14,11 +14,11 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 #include "pch.h"
 #include "windows-system.h"
-#include "editor-system.h"
-#include "editor-sceneview.h"
+#include "Editor/editor-system.h"
+#include "Editor/editor-sceneview.h"
 #include "game-object.h"
 #include "inspector.h"
-#include "ConsoleLog.h"
+#include "Editor/ConsoleLog.h"
 
 namespace Copium::Editor
 {

@@ -47,7 +47,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)lib\imgui\include;$(ProjectDir)include;$(SolutionDir)lib\glfw-3.3.8.bin.WIN64\include;$(SolutionDir)lib\glew-2.2.0\include;$(SolutionDir)lib\glm-0.9.9.8;$(SolutionDir)lib\mono\include;$(SolutionDir)lib;$(SolutionDir)lib\spdlog\include;$(SolutionDir)lib\rapidjson\include;$(SolutionDir)lib\rttr\src;$(SolutionDir)lib\FMOD\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)lib\imgui\include;$(ProjectDir)src;$(SolutionDir)lib\glfw-3.3.8.bin.WIN64\include;$(SolutionDir)lib\glew-2.2.0\include;$(SolutionDir)lib\glm-0.9.9.8;$(SolutionDir)lib\mono\include;$(SolutionDir)lib;$(SolutionDir)lib\spdlog\include;$(SolutionDir)lib\rapidjson\include;$(SolutionDir)lib\rttr\src;$(SolutionDir)lib\FMOD\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\imgui\lib;$(SolutionDir)lib\glfw-3.3.8.bin.WIN64\lib-vc2019;$(SolutionDir)lib\glew-2.2.0\lib\Release\x64;$(SolutionDir)lib\mono\Debug;$(SolutionDir)lib\rttr\lib\Debug;$(SolutionDir)lib\FMOD\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -85,11 +85,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\collision.cpp" />
+    <ClCompile Include="src\Physics\collision.cpp" />
     <ClCompile Include="src\component.cpp" />
-    <ClCompile Include="src\editor-system.cpp" />
-    <ClCompile Include="src\ConsoleLog.cpp" />
-    <ClCompile Include="src\editor-sceneview.cpp" />
+    <ClCompile Include="src\Editor\editor-system.cpp" />
+    <ClCompile Include="src\Editor\ConsoleLog.cpp" />
+    <ClCompile Include="src\Editor\editor-sceneview.cpp" />
     <ClCompile Include="src\framebuffer.cpp" />
     <ClCompile Include="src\frameratecontroller.cpp" />
     <ClCompile Include="src\game-object-factory.cpp" />
@@ -148,46 +148,46 @@
     <ClCompile Include="src\windows-input.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\collider.h" />
-    <ClInclude Include="include\collision.h" />
-    <ClInclude Include="include\compiler.h" />
-    <ClInclude Include="include\component.h" />
-    <ClInclude Include="include\ConsoleLog.h" />
-    <ClInclude Include="include\copium-core.h" />
-    <ClInclude Include="include\editor-system.h" />
-    <ClInclude Include="include\editor-sceneview.h" />
-    <ClInclude Include="include\file-path.h" />
-    <ClInclude Include="include\framebuffer.h" />
-    <ClInclude Include="include\frameratecontroller.h" />
-    <ClInclude Include="include\game-object-factory.h" />
-    <ClInclude Include="include\game-object.h" />
-    <ClInclude Include="include\gamestate-sandbox.h" />
-    <ClInclude Include="include\physics-system.h" />
-    <ClInclude Include="include\sound-system.h" />
-    <ClInclude Include="include\textures.h" />
-    <ClInclude Include="include\sm.h" />
-    <ClInclude Include="include\windows-system.h" />
-    <ClInclude Include="include\glslshader.h" />
-    <ClInclude Include="include\graphics-system.h" />
-    <ClInclude Include="include\input.h" />
-    <ClInclude Include="include\inspector.h" />
-    <ClInclude Include="include\logging.h" />
-    <ClInclude Include="include\math-library.h" />
-    <ClInclude Include="include\message-system.h" />
-    <ClInclude Include="include\message-types.h" />
-    <ClInclude Include="include\pch.h" />
-    <ClInclude Include="include\renderer.h" />
-    <ClInclude Include="include\SAMPLE_RECEIVER.h" />
-    <ClInclude Include="include\scene.h" />
-    <ClInclude Include="include\scene-manager.h" />
-    <ClInclude Include="include\scripting.h" />
-    <ClInclude Include="include\scripting-system.h" />
-    <ClInclude Include="include\serializer.h" />
-    <ClInclude Include="include\state-manager.h" />
-    <ClInclude Include="include\system-interface.h" />
-    <ClInclude Include="include\transform.h" />
-    <ClInclude Include="include\vertex-types.h" />
-    <ClInclude Include="include\windows-input.h" />
+    <ClInclude Include="src\Physics\collider.h" />
+    <ClInclude Include="src\Physics\collision.h" />
+    <ClInclude Include="src\compiler.h" />
+    <ClInclude Include="src\component.h" />
+    <ClInclude Include="src\Editor\ConsoleLog.h" />
+    <ClInclude Include="src\copium-core.h" />
+    <ClInclude Include="src\Editor\editor-system.h" />
+    <ClInclude Include="src\Editor\editor-sceneview.h" />
+    <ClInclude Include="src\file-path.h" />
+    <ClInclude Include="src\framebuffer.h" />
+    <ClInclude Include="src\frameratecontroller.h" />
+    <ClInclude Include="src\game-object-factory.h" />
+    <ClInclude Include="src\game-object.h" />
+    <ClInclude Include="src\gamestate-sandbox.h" />
+    <ClInclude Include="src\physics-system.h" />
+    <ClInclude Include="src\sound-system.h" />
+    <ClInclude Include="src\textures.h" />
+    <ClInclude Include="src\sm.h" />
+    <ClInclude Include="src\windows-system.h" />
+    <ClInclude Include="src\glslshader.h" />
+    <ClInclude Include="src\graphics-system.h" />
+    <ClInclude Include="src\input.h" />
+    <ClInclude Include="src\inspector.h" />
+    <ClInclude Include="src\logging.h" />
+    <ClInclude Include="src\math-library.h" />
+    <ClInclude Include="src\message-system.h" />
+    <ClInclude Include="src\message-types.h" />
+    <ClInclude Include="src\pch.h" />
+    <ClInclude Include="src\renderer.h" />
+    <ClInclude Include="src\SAMPLE_RECEIVER.h" />
+    <ClInclude Include="src\scene.h" />
+    <ClInclude Include="src\scene-manager.h" />
+    <ClInclude Include="src\scripting.h" />
+    <ClInclude Include="src\scripting-system.h" />
+    <ClInclude Include="src\serializer.h" />
+    <ClInclude Include="src\state-manager.h" />
+    <ClInclude Include="src\system-interface.h" />
+    <ClInclude Include="src\transform.h" />
+    <ClInclude Include="src\vertex-types.h" />
+    <ClInclude Include="src\windows-input.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\shaders\line-shader-glsl.frag" />

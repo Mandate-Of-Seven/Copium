@@ -22,7 +22,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 //INCLUDES
 #include "pch.h"
 #include <rapidjson/document.h>
-#include <math-library.h>
+#include <Math/math-library.h>
 
 class Transform;
 

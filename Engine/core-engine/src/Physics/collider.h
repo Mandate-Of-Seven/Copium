@@ -13,7 +13,7 @@
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
-#include <collision.h>
+#include <Physics/collision.h>
 #include <math-library.h>
 namespace Copium::Component
 {
