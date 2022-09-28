@@ -1,7 +1,7 @@
 ﻿/*!***************************************************************************************
 \file			transform.h
 \project
-\author			Zacharie Hong
+\author			Matthew Lau
 
 \par			Course: GAM200
 \par			Section:
