@@ -1,9 +1,7 @@
 /*!***************************************************************************************
-****
 \file			game-object-factory.cpp
 \project
 \author			Matthew Lau
-\co-authors
 
 \par			Course: GAM200
 \par			Section:
@@ -15,8 +13,7 @@
 	Note: The GameObjectFactory will also place the created gameobjects inside the current scene.
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
-******************************************************************************************
-****/
+******************************************************************************************/
 #include <pch.h>
 #include "game-object-factory.h"
 #include <rttr/registration>

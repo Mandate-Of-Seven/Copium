@@ -1,9 +1,7 @@
 /*!***************************************************************************************
-****
 \file			scene.cpp
 \project
 \author			Matthew Lau
-\co-authors
 
 \par			Course: GAM200
 \par			Section:
@@ -20,8 +18,7 @@
 	Note: this is the latest version of our scene class, use this
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
-******************************************************************************************
-****/
+******************************************************************************************/
 #include "pch.h"
 #include "scene.h"
 

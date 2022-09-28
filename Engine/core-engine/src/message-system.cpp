@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			message-system.cpp
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			27/09/2022
+
+\brief
+    This file holds the definition of functions for message-system
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 #include "pch.h"
 #include "message-system.h"
 
@@ -17,8 +32,6 @@ namespace Copium::Message
 
     void MessageSystem::dispatch(MESSAGE_TYPE mType)
     {
-        using typeToListeners = std::pair<MESSAGE_TYPE, std::vector<IReceiver*>>;
-
         for (IReceiver* receiver : messageTypeListeners[mType])
         {
             receiver->handleMessage(mType);
@@ -36,7 +49,10 @@ namespace Copium::Message
 
     void MessageSystem::update()
     {
-
+        for (int i = 0; i < int(MESSAGE_TYPE::MT_NONE); ++i)
+        {
+            messageTypeListeners.insert({ MESSAGE_TYPE(i),std::vector<IReceiver*>() });
+        }
     }
 
     void MessageSystem::exit()

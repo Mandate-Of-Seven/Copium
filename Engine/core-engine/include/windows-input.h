@@ -2,7 +2,6 @@
 \file			windows-input.h
 \project
 \author			Shawn Tanary
-\co-authors		// DELETE IF NOT APPLICABLE
 
 \par			Course: GAM200
 \par			Section:

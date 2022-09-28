@@ -18,6 +18,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include "pch.h"
 #include "game-object.h"
+#include "scripting.h"
+#include "message-system.h"
 
 //USING
 
@@ -62,17 +64,26 @@ void GameObject::addComponent(Component::Type componentType)
     {
     case Component::Animator:
         components.push_back(new AnimatorComponent());
+        PRINT("ADDED ANIMATOR");
         break;
     case Component::Collider:
         components.push_back(new ColliderComponent());
+        PRINT("ADDED COLLIDER");
         break;
     case Component::Renderer:
         components.push_back(new RendererComponent());
+        PRINT("ADDED RENDERER");
         break;
-    //case Component::Script:
-    //    components.push_back(new ScriptComponent());
-        //break;
+    case Component::Script:
+        using namespace Copium::Message;
+        MessageSystem::Instance()->
+            dispatch(MESSAGE_TYPE::MT_ADD_SCRIPT);
+        MESSAGE_CONTAINERS::addScript.name = "NewScript";
+        MESSAGE_CONTAINERS::addScript.gameObj = this;
+        PRINT("ADDED SCRIPT");
+        break;
     default:
+        PRINT("ADDED NOTHING");
         break;
     }
 }

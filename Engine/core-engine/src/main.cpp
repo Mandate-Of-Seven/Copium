@@ -31,7 +31,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 //Systems
 #include "copium-core.h"
-#include "SAMPLE_RECEIVER.h"
 #include "serializer.h"
 #include "frameratecontroller.h"
 namespace
@@ -90,9 +89,6 @@ int main()
     FrameRateController frc(100.0);
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
-    //ScriptComponent *yolo;
-    //yolo = new ScriptComponent("PlayerMovement");
-    //delete yolo;
 
     // Engine Loop
     while (!glfwWindowShouldClose(windowsSystem->get_window()) && esCurrent != esQuit)
@@ -146,10 +142,9 @@ int main()
             }
         }
     }
-
+    messageSystem.dispatch(Copium::Message::MESSAGE_TYPE::MT_ENGINE_EXIT);
     copiumCore.exit();
     cleanup();
-    //delete sandboxScene;
     std::cout << "Engine Closing...\n";
 }
 

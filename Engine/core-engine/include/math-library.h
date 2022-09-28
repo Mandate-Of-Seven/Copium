@@ -1,9 +1,7 @@
 /*!***************************************************************************************
-****
 \file			math-library.h
 \project
 \author			Matthew Lau
-\co-authors
 
 \par			Course: GAM200
 \par			Section:

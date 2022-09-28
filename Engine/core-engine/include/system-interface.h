@@ -1,3 +1,20 @@
+/*!***************************************************************************************
+\file			system-interface.h
+\project
+\author			Zacharie Hong
+\co-authors
+
+\par			Course: GAM200
+\par			Section:
+\date			18/09/2022
+
+\brief
+    Contains declarations for ISystem and Singleton<T> for other systems to inherit
+    off to have single instanced systems and overridden member functions
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #include "pch.h"
 
 #ifndef SYSTEM_INTERFACE_H
@@ -64,8 +81,24 @@ namespace Copium
     class ISystem
     {
     public:
+        /**************************************************************************/
+        /*!
+          \brief
+            Runs when engine starts
+        */
+        /**************************************************************************/
         virtual void init()     = 0;
+        /*!
+          \brief
+            Runs every frame of the engine
+        */
+        /**************************************************************************/
         virtual void update()   = 0;
+        /*!
+          \brief
+            Run when the engine exits
+        */
+        /**************************************************************************/
         virtual void exit()     = 0;
     };
 

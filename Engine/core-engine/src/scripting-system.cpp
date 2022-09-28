@@ -1,10 +1,27 @@
+/*!***************************************************************************************
+****
+\file			scripting-system.cpp
+\project
+\author			Zacharie Hong
+\co-authors
+
+\par			Course: GAM200
+\par			Section:
+\date			27/09/2022
+
+\brief
+	This file contains the function definitions for the scripting system.
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #include "pch.h"
 #include "scripting-system.h"
 #include "compiler.h"
 #include "scripting.h"
-#include "file-path.h"
+#include "file-system.h"
 #include "system-interface.h"
-
+#include "thread-system.h"
 
 #include <Windows.h>
 #include <mono/metadata/mono-config.h>
@@ -13,74 +30,25 @@
 #include <mono/metadata/threads.h>
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <queue>
-#include <thread>
-
-namespace 
-{
-	void initMono();
-	void shutdownMono();
-	void loadScriptFiles();
-	void loadClasses();
-	void tryRecompileDll();
-	std::list<Copium::Scripting::ScriptFile*> scriptFiles;
-}
-
-namespace Mono
-{
-	MonoDomain* rootDomain{ nullptr };		//JIT RUNTIME DOMAIN
-	MonoAssembly* coreAssembly{ nullptr };	//ASSEMBLY OF SCRIPTS.DLL
-	MonoImage* assemblyImage{ nullptr };	//LOADED IMAGE OF SCRIPTS.DLL
-	std::vector<MonoClass*> monoClasses;	//CLASSES INSIDE IMAGE OF SCRIPTS.DLL
-}
 
 namespace Copium::Scripting
 {
 	//ScriptingEngine Namespace Variables
-	std::list<std::filesystem::path> scriptPaths;
+	Copium::Scripting::ScriptingSystem& sS{ *Copium::Scripting::ScriptingSystem::Instance() };
 	bool scriptIsLoaded(const std::filesystem::path&);
 	bool scriptPathExists(const std::filesystem::path& filePath);
 	//ScriptingEngine Namespace Functions
-	MonoAssembly* LoadCSharpAssembly(const std::string& assemblyPath);
+	MonoAssembly* loadAssembly(const std::string& assemblyPath);
 
-	#pragma region Class ScriptFile Definitions
-		ScriptFile::ScriptFile(const std::filesystem::path& _filePath)
-		{
-			filePath = _filePath;
-		}
-
-		void ScriptFile::Modified(bool _modified)
-		{
-			modified = _modified;
-		}
-
-		bool ScriptFile::Modified() const
-		{
-			return modified;
-		}
-
-		void ScriptFile::updateModificationTiming()
-		{
-			struct _stat64i32 statsBuffer;
-			_stat(filePath.string().c_str(), &statsBuffer);
-			if (lastModifiedTime != statsBuffer.st_mtime)
-			{
-				modified = true;
-				lastModifiedTime = statsBuffer.st_mtime;
-			}
-		}
-
-		const std::filesystem::path& ScriptFile::FilePath() const
-		{
-			return filePath;
-		}
-
-
-		void ScriptFile::FilePath(const std::filesystem::path& _filePath)
-		{
-			filePath = _filePath;
-		}
-
+	#pragma region Struct ScriptMethods
+		ScriptClass::ScriptClass(MonoClass* _mClass) : mClass{_mClass}, 
+		mAwake{ mono_class_get_method_from_name(_mClass, "Awake", 0) },
+		mStart{ mono_class_get_method_from_name(_mClass, "Start", 0) },
+		mUpdate{ mono_class_get_method_from_name(_mClass, "Update", 0) },
+		mLateUpdate{ mono_class_get_method_from_name(_mClass, "LateUpdate", 0) },
+		mOnCollisionEnter{ mono_class_get_method_from_name(_mClass, "OnCollisionEnter", 0) }{}
 	#pragma endregion
 
 	// Gets the accessibility level of the given field
@@ -127,89 +95,125 @@ namespace Copium::Scripting
 		return accessibility;
 	}
 
-	void recompileThreadWork()
+	void ScriptingSystem::recompileThreadWork()
 	{
-		while (true)
+		Thread::ThreadSystem& tSys = *Thread::ThreadSystem::Instance();
+		
+		sS.initMono();
+		while (!tSys.Quit())
 		{
-			Sleep(5 * 1000);
-			PRINT("Recompiler Thread looking for new files!");
+			updateScriptFiles();
 			tryRecompileDll();
+			//MonoMethod* printMsgFunc = mono_class_get_method_from_name(mmClasses[2], "PrintMessage", 0);
+			////// Allocate an instance of our class
+			//MonoObject* classInstance = mono_object_new(mAppDomain, mmClasses[2]);
+			//if (classInstance == nullptr)
+			//{
+			//	PRINT("Unable to create class instance");
+			//	// Log error here and abort
+			//}
+			//// Call the parameterless (default) constructor
+			//mono_runtime_object_init(classInstance);
+			//mono_runtime_invoke(printMsgFunc, classInstance, nullptr, nullptr);
+			PRINT("Recompiler Thread looking for new files!");
+			Sleep(5 * 1000);
 		}
+		sS.shutdownMono();
+	}
+
+	ScriptingSystem::ScriptingSystem() :
+		scriptFiles{ Copium::Files::FileSystem::Instance()->getFilesWithExtension(".cs") }
+	{
+
 	}
 
 	void ScriptingSystem::init()
 	{
-		initMono();
-		//static std::thread compilerThread(recompileThreadWork);
+		Thread::ThreadSystem::Instance()->addThread("Compiler Thread",
+			new std::thread(&ScriptingSystem::recompileThreadWork,this));
 	}
 
 	void ScriptingSystem::update()
 	{
-		//Every few seconds check if there was a scriptfile that was added removed or changed
-		//If yes, recompile
-		//One done recompiling, reload DLL
-		//if ()
-		//trySwapDll(recompileThread);
+
 	}
 
 	void ScriptingSystem::exit()
 	{
-		shutdownMono();
-		for (Scripting::ScriptFile* scriptFile : scriptFiles)
-		{
-			delete scriptFile;
-		}
-		scriptFiles.clear();
 	}
 
-	void trySwapDll(std::thread& compilerThread)
+	MonoObject* ScriptingSystem::createMonoObject(MonoClass* mClass)
 	{
-		if (!compilerThread.joinable())
-		{
-			PRINT("WAITING FOR COMPILER");
-			return;
-		}
-		Mono::coreAssembly = LoadCSharpAssembly(
-			std::filesystem::current_path().string() + "\\..\\x64\\Debug\\scripts.dll");
-		Mono::assemblyImage = mono_assembly_get_image(Mono::coreAssembly);
-		loadClasses();
+		return mono_object_new(mAppDomain, mClass);
 	}
 
-
-	// Create cs file and make it inherit from newScript.cs, then create mono class from it so that ScriptComponents can use it
-// to create an instance of the MonoClass
-	MonoClass* loadMonoClass(const std::string& name)
+	std::shared_ptr<ScriptClass> ScriptingSystem::getScriptClass(const char* _name)
 	{
-		for (MonoClass* script : Mono::monoClasses)
+		if (mAssemblyImage == nullptr)
+			return nullptr;
+		for (auto spScriptClass : scriptClasses)
 		{
-			if (mono_class_get_name(script) == name)
+			if (spScriptClass.use_count() == 1)
 			{
-				PRINT(name + " already exists!");
-				return script;
-			}
-			else
-			{
-				PRINT(mono_class_get_name(script));
+				spScriptClass.reset();
+				spScriptClass = std::make_shared<ScriptClass>(mono_class_from_name(mAssemblyImage, "", _name));
+				return spScriptClass;
 			}
 		}
-
-		const std::string scriptPath = FilePath::projectPath + "\\" + name + ".cs";
-		std::ofstream scriptFile(scriptPath);
-
-		scriptFile << "public class " << name << " : NewScript" << std::endl;
-		scriptFile << "{\n\tvoid Start()\n\t{\n\n\t}\n\n\tvoid Update()\n\t{\n\n\t}\n}" << std::endl;
-		scriptFile.close();
-		MonoClass* script = mono_class_from_name(Mono::assemblyImage, "", name.c_str());
-		Mono::monoClasses.push_back(script);
-		return script;
+		scriptClasses.push_back(std::make_shared<ScriptClass>(mono_class_from_name(mAssemblyImage, "", _name)));
+		return scriptClasses.back();
 	}
 
-	MonoObject* newScriptInstance(MonoClass*& monoClass)
+	void ScriptingSystem::initMono()
 	{
-		return mono_object_new(Mono::rootDomain, monoClass);
+		mono_set_assemblies_path("mono");
+		mRootDomain = mono_jit_init("CopiumJITRuntime");
 	}
 
-	MonoAssembly* LoadCSharpAssembly(const std::string& assemblyPath)
+	void ScriptingSystem::shutdownMono()
+	{
+		mono_jit_cleanup(mRootDomain);
+		mRootDomain = nullptr;
+	}
+
+	void ScriptingSystem::createAppDomain()
+	{
+		static char appName[] = "CopiumAppDomain";
+		mAppDomain = mono_domain_create_appdomain(appName, nullptr);
+		mono_domain_set(mAppDomain, false);
+	}
+
+	void ScriptingSystem::unloadAppDomain()
+	{
+		mono_domain_set(mRootDomain, false);
+		mono_domain_unload(mAppDomain);
+		PRINT("DOMAIN UNLOADED");
+		mAppDomain = nullptr;
+	}
+
+	void ScriptingSystem::swapDll()
+	{
+		PRINT("SWAPPING AND LOADING ASSEMBLY...");
+		if (mAppDomain)
+			unloadAppDomain();
+		createAppDomain();
+		mCoreAssembly = loadAssembly(Files::Paths::scriptsAssemblyPath);
+		//mono_assemblies_init();
+		mAssemblyImage = mono_assembly_get_image(mCoreAssembly);
+		//void* propIter = nullptr;
+		//MonoClassField* raw_property = NULL;
+		//raw_property = mono_class_get_fields(mmClasses[0], &propIter);
+		//while (raw_property = mono_class_get_fields(mmClasses[0], &propIter)) {
+		//	std::string name = mono_field_get_name(raw_property);
+		//	if (GetFieldAccessibility(raw_property) & (unsigned char)Accessibility::Public)
+		//	{
+		//		if (GetType(mono_field_get_type(raw_property)) == FieldType::String)
+		//			PRINT("Name: " << name << " Type: String Access: Public");
+		//	}
+		//}
+	}
+
+	MonoAssembly* loadAssembly(const std::string& assemblyPath)
 	{
 		uint32_t fileSize = 0;
 		char* fileData = ReadBytes(assemblyPath, &fileSize);
@@ -235,25 +239,80 @@ namespace Copium::Scripting
 		return assembly;
 	}
 
-	
-
-	bool scriptIsLoaded(const std::filesystem::path& filePath)
+	void ScriptingSystem::updateScriptFiles()
 	{
-		using scriptFileListIter = std::list<ScriptFile*>::iterator;
-		for (scriptFileListIter it = scriptFiles.begin(); it != scriptFiles.end(); ++it)
+		//Check for new files
+		namespace fs = std::filesystem;
+		using scriptFileListIter = std::list<Files::File>::iterator;
+		scriptFileListIter scriptFilesIt = scriptFiles.begin();
+		std::list<Files::File*> maskScriptFiles;
+		maskScriptFiles.resize(scriptFiles.size());
+		for (Files::File& file : scriptFiles)
 		{
-			if ((*it)->FilePath() == filePath) return true;
+			maskScriptFiles.push_back(&file);
 		}
-		return false;
+		for (fs::directory_entry p : fs::recursive_directory_iterator(Files::Paths::projectPath))
+		{
+			const fs::path& pathRef{ p.path() };
+			if (pathRef.extension() != ".cs")
+				continue;
+
+			//Detect new scripts
+			if (!scriptIsLoaded(pathRef))
+			{
+				PRINT("SCRIPT WAS NOT LOADED: " << pathRef.stem().string());
+				scriptFiles.emplace(scriptFilesIt, pathRef);
+			}
+			//Script was already loaded
+			else
+			{
+				PRINT("SCRIPTS ALREADY LOADED: " << pathRef.stem().string());
+				//Set scripts to be masked
+				
+				for (Files::File* scriptFile : maskScriptFiles)
+				{
+					if (scriptFile && *scriptFile == pathRef)
+					{
+						maskScriptFiles.remove(scriptFile);
+						break;
+					}
+				}
+				++scriptFilesIt;
+			}
+		}
+		// Remove deleted scripts using mask
+		for (Files::File* scriptFile : maskScriptFiles)
+		{
+			if (scriptFile != nullptr)
+			{
+				scriptFiles.remove(*scriptFile);
+			}
+		}
 	}
 
-	bool scriptPathExists(const std::filesystem::path& filePath)
+	void ScriptingSystem::tryRecompileDll()
 	{
-		using scriptPathIter = std::list<std::filesystem::path>::const_iterator;
-		for (scriptPathIter it = scriptPaths.begin(); it != scriptPaths.end(); ++it)
+		bool compiling = false;
+		for (Files::File& scriptFile : scriptFiles)
 		{
-			if (*it == filePath)
-				return true;
+			scriptFile.updateModificationTiming();
+			if (scriptFile.Modified() && !compiling)
+			{
+				PRINT(scriptFile.string() << " Changed! ");
+				PRINT("Compiling DLL....");
+				compiling = true;
+				Compiler::compileDll();
+				swapDll();
+			}
+		}
+	}
+
+	bool ScriptingSystem::scriptIsLoaded(const std::filesystem::path& filePath)
+	{
+		using scriptFileListIter = std::list<Files::File>::iterator;
+		for (scriptFileListIter it = scriptFiles.begin(); it != scriptFiles.end(); ++it)
+		{
+			if (*it == filePath) return true;
 		}
 		return false;
 	}
@@ -266,154 +325,5 @@ namespace Copium::Scripting
 	static void NativeLog()
 	{
 		std::cout << "This is a cpp function" << std::endl;
-	}
-
-
-
-
-	////Function
-	//MonoMethod* printMsgFunc = mono_class_get_method_from_name(monoClass, "PrintMessage", 0);
-	//mono_runtime_invoke(printMsgFunc, instance, nullptr, nullptr);
-
-	////Function with params
-	//MonoMethod* printIntsFunc = mono_class_get_method_from_name(monoClass, "PrintInts", 2);
-	//int value = 5; int value1 = 69;
-
-	//void* params[2]{ &value,&value1 };
-	//mono_runtime_invoke(printIntsFunc, instance, params, nullptr);
-
-	//MonoMethod* printCustomMessageFunc = mono_class_get_method_from_name(monoClass, "PrintCustomMessage", 1);
-	//MonoString* str = mono_string_new(Mono::AppDomain, "Hello world from C++!");
-
-	//void* param{str};
-	//mono_runtime_invoke(printCustomMessageFunc, instance, &param, nullptr);
-}
-
-namespace
-{
-	using namespace Copium;
-	using namespace Scripting;
-	void initMono()
-	{
-		loadScriptFiles();
-		mono_set_assemblies_path("mono");
-		Mono::rootDomain = mono_jit_init("CopiumJITRuntime");
-		//tryRecompileDll();
-
-		//void* propIter = nullptr;
-		//MonoClassField* raw_property = NULL;
-		//raw_property = mono_class_get_fields(Mono::monoClasses[0], &propIter);
-		//while (raw_property = mono_class_get_fields(Mono::monoClasses[0], &propIter)) {
-		//	std::string name = mono_field_get_name(raw_property);
-		//	if (GetFieldAccessibility(raw_property) & (unsigned char)Accessibility::Public)
-		//	{
-		//		if (GetType(mono_field_get_type(raw_property)) == FieldType::String)
-		//			PRINT("Name: " << name << " Type: String Access: Public");
-		//	}
-		//}
-
-
-		////Function
-		//MonoMethod* printMsgFunc = mono_class_get_method_from_name(monoClass, "PrintMessage", 0);
-		//mono_runtime_invoke(printMsgFunc, instance, nullptr, nullptr);
-
-		////Function with params
-		//MonoMethod* printIntsFunc = mono_class_get_method_from_name(monoClass, "PrintInts", 2);
-		//int value = 5; int value1 = 69;
-
-		//void* params[2]{ &value,&value1 };
-		//mono_runtime_invoke(printIntsFunc, instance, params, nullptr);
-
-		//MonoMethod* printCustomMessageFunc = mono_class_get_method_from_name(monoClass, "PrintCustomMessage", 1);
-		//MonoString* str = mono_string_new(Mono::AppDomain, "Hello world from C++!");
-
-		//void* param{str};
-		//mono_runtime_invoke(printCustomMessageFunc, instance, &param, nullptr);
-	}
-
-	void loadScriptFiles()
-	{
-		scriptFiles.clear();
-		namespace fs = std::filesystem;
-		for (fs::directory_entry p : fs::recursive_directory_iterator(FilePath::projectPath))
-		{
-			if (p.path().extension() == ".cs")
-				scriptFiles.push_back(new ScriptFile(p.path()));
-		}
-	}
-
-	void loadClasses()
-	{
-		Mono::monoClasses.clear();
-		for (const ScriptFile* scriptFile : scriptFiles)
-		{
-			std::string scriptPath{ scriptFile->FilePath().stem().string() };
-			Mono::monoClasses.push_back(mono_class_from_name(Mono::assemblyImage, "", scriptPath.c_str()));
-		}
-	}
-
-	void shutdownMono()
-	{
-		for (ScriptFile* scriptFile : scriptFiles)
-		{
-			delete scriptFile;
-		}
-		scriptFiles.clear();
-		mono_jit_cleanup(Mono::rootDomain);
-		Mono::rootDomain = nullptr;
-	}
-
-	void tryRecompileDll()
-	{
-		namespace fs = std::filesystem;
-		using scriptFileListIter = std::list<ScriptFile*>::iterator;
-		scriptFileListIter scriptFilesIt = scriptFiles.begin();
-		for (fs::directory_entry p : fs::recursive_directory_iterator(FilePath::projectPath))
-		{
-			const fs::path pathRef{ p.path() };
-			if (pathRef.extension() != "cs")
-				scriptPaths.push_back(pathRef);
-			if (!scriptIsLoaded(pathRef))
-			{
-				scriptFiles.emplace(scriptFilesIt);
-			}
-			++scriptFilesIt;
-		}
-
-		scriptFilesIt = scriptFiles.begin();
-		scriptFileListIter scriptFilesEnd = scriptFiles.end();
-		while (scriptFilesIt != scriptFilesEnd)
-		{
-			if (!scriptPathExists((*scriptFilesIt)->FilePath()))
-			{
-				delete* scriptFilesIt;
-				scriptFiles.erase(scriptFilesIt);
-				scriptFilesEnd = scriptFiles.end();
-				PRINT("Recompiler: Changes Found!");
-			}
-			++scriptFilesIt;
-		}
-
-		//Clear remaining in buffer and files;
-		for (ScriptFile* scriptFile : scriptFiles)
-		{
-			scriptFile->updateModificationTiming();
-		}
-		bool modified = false;
-		for (ScriptFile* scriptFile : scriptFiles)
-		{
-			scriptFile->updateModificationTiming();
-			if (modified)
-			{
-				scriptFile->Modified(false);
-				continue;
-			}
-			if (scriptFile->Modified())
-			{
-				PRINT("RECOMPILING");
-				scriptFile->Modified(false);
-				Compiler::compileDll();
-			}
-		}
 	}
 }

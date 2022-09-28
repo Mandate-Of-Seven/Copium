@@ -1,46 +1,108 @@
+/*!***************************************************************************************
+\file			scripting.h
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			27/09/2022
+
+\brief
+	This file holds the declaration of functions for scripting.cpp
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 #include "component.h"
-#include <mono/metadata/assembly.h>
+#include "message-system.h"
+#include "scripting-system.h"
 
-class ScriptComponent;
+#ifndef SCRIPTING_H
 
-class ScriptComponent final : public Component
+#define SCRIPTING_H
+namespace Copium
 {
-public:
-    /***************************************************************************/
-    /*!
-    \brief
-        Default constructor for script Components
-    */
-    /**************************************************************************/
-    ScriptComponent() = delete;
+    class ScriptComponent final : public Component, public Message::IReceiver
+    {
+    public:
+		/**************************************************************************/
+		/*!
+			\brief
+				Constructs a ScriptComponent based on the scripts name
 
-    ScriptComponent(const std::string& _name);
+			\param _name
+				Name of script to make an instance of
+		*/
+		/**************************************************************************/
+		ScriptComponent(const char* _name);
+		/**************************************************************************/
+		/*!
+			\brief
+				Constructs a ScriptComponent based on a monoclass
 
-    const std::string& Name();
+			\param _mClass
+				Monoclass of script to make an instance of
+		*/
+		/**************************************************************************/
+		ScriptComponent(MonoClass* _mClass);
+		/**************************************************************************/
+		/*!
+			\brief
+				Deconstructor, removes itself from a list of instances
+		*/
+		/**************************************************************************/
+		~ScriptComponent();
+		/**************************************************************************/
+		/*!
+			\brief
+				IReceiver overload to handle a the MT_SCRIPTING_UPDATED message
+			\param mType
+				Type of message
+		*/
+		/**************************************************************************/
+		void handleMessage(Message::MESSAGE_TYPE mType);
+		/**************************************************************************/
+		/*!
+			\brief
+				Function called at the very start of game object.
+		*/
+		/**************************************************************************/
+		void Awake();
+		/**************************************************************************/
+		/*!
+			\brief
+				Function called right after Awake().
+		*/
+		/**************************************************************************/
+		void Start();
+		/**************************************************************************/
+		/*!
+			\brief
+				Function called every frame.
+		*/
+		/**************************************************************************/
+		void Update();
+		/**************************************************************************/
+		/*!
+			\brief
+				Function called every frame after Update().
+		*/
+		/**************************************************************************/
+		void LateUpdate();
+		/**************************************************************************/
+		/*!
+			\brief
+				Function called when object collides with something.
+		*/
+		/**************************************************************************/
+		void OnCollisionEnter();
+	private:
+		std::shared_ptr<Scripting::ScriptClass> spScriptClass;
+		MonoObject* mObject;
+		const std::string name;
+		static std::vector<ScriptComponent*> instances;
+		static Scripting::ScriptingSystem& sS;
+    };
+}
 
-    void Name(const std::string&);
-
-    void Awake();
-
-    void Start();
-
-    void Update();
-
-    void LateUpdate();
-
-    void OnCollisionEnter();
-
-    void refreshMethods();
-
-private:
-
-    std::string name;
-    MonoClass* monoClass;
-    MonoObject* instance;
-    MonoMethod* csAwake;
-    MonoMethod* csStart;
-    MonoMethod* csUpdate;
-    MonoMethod* csLateUpdate;
-    MonoMethod* csOnCollisionEnter;
-
-};
+#endif // !SCRIPTING_H

@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			copium-core.h
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			27/09/2022
+
+\brief
+	This file holds the definitions of functions for copium-core.cpp
+
+All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 #pragma once
 #include "system-interface.h"
 #include "windows-system.h"
@@ -7,6 +22,8 @@
 #include "physics-system.h"
 #include "graphics-system.h"
 #include "sm.h"
+#include "file-system.h"
+#include "thread-system.h"
 
 namespace Copium
 {
@@ -29,10 +46,12 @@ namespace Copium
 				Windows::WindowsSystem::Instance(),
 				Message::MessageSystem::Instance(),
 				Editor::EditorSystem::Instance(),
+				Files::FileSystem::Instance(),
 				Scripting::ScriptingSystem::Instance(),
 				Physics::Physics::Instance(),
 				Graphics::GraphicsSystem::Instance(),
-				NewSceneManager::Instance()
+				NewSceneManager::Instance(),
+				Thread::ThreadSystem::Instance()
 			};
 			for (ISystem* pSystem : systems)
 			{

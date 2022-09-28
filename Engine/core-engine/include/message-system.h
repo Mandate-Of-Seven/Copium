@@ -1,24 +1,49 @@
+/*!***************************************************************************************
+\file			message-system.h
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			27/09/2022
+
+\brief
+    This file holds the declaration of functions for message-system.cpp.
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 #include "system-interface.h"
 #include "message-types.h"
 
 #ifndef MESSAGE_SYSTEM_H
 
 #define MESSAGE_SYSTEM_H
-
-
 namespace Copium::Message
 {
 
     class IReceiver
     {
         public:
+            /**************************************************************************/
+            /*!
+              \brief
+                Interface function for MessageSystem to call for IReceivers to handle
+                a messageType
+            */
+            /**************************************************************************/
             virtual void handleMessage(MESSAGE_TYPE mType) = 0;
     };
 
     CLASS_SYSTEM(MessageSystem)
     {
     public:
-
+        /**************************************************************************/
+        /*!
+          \brief
+            Default constructor that does nothing
+        */
+        /**************************************************************************/
         MessageSystem();
 
         /**************************************************************************/

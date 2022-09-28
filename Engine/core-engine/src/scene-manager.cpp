@@ -1,5 +1,4 @@
 /*!***************************************************************************************
-****
 \file			scenemanager.cpp
 \project
 \author			Matthew Lau
@@ -17,8 +16,7 @@
 		3. Assigning of new scenes to itself
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
-******************************************************************************************
-****/
+******************************************************************************************/
 #include "pch.h"
 #include "scene-manager.h"
 
