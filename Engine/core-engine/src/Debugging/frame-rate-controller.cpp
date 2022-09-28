@@ -24,7 +24,6 @@ FrameRateController::FrameRateController(double _maxFPS) :
 void FrameRateController::start()
 {
 	frameStart = glfwGetTime();
-
 }
 
 /*******************************************************************************
@@ -47,7 +46,7 @@ double FrameRateController::end()
 		frameTime = frameEnd - frameStart;
 
 	}
-	Windows::WindowsSystem::Instance()->update_time(0.016);
+	Windows::WindowsSystem::Instance()->update_time(0.16);
 	//Windows::windowsSystem.update_time(10.0);
 	frameRate = Windows::WindowsSystem::Instance()->get_fps();
 	++frameCount;

@@ -23,16 +23,18 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ****/
 #include <pch.h>
 #include "SceneManager/sm.h"
+#include "../Graphics/graphics-system.h"
+#include "../Windows/windows-system.h"
 
 namespace Copium {
-	
+
 	NewSceneManager::NewSceneManager() : gof{nullptr}, currentScene{nullptr}
 	{
 		gof = new GameObjectFactory();
 		if (!gof)
 		{
 			std::cout << "Error allocating memory for GameObjectFactory\n";
-		}		
+		}	
 	}
 
 	NewSceneManager::~NewSceneManager()
@@ -62,11 +64,31 @@ namespace Copium {
 		std::string str("Data\\sandbox.json");
 		load_scene(str);
 		std::cout << "No. of GameObjects in scene:" << currentScene->get_gameobjcount() << std::endl;
-		
+		//currentScene->get_gameobjectvector()[0]->Trans().Position();
+
+		for (int i = 0; i < currentScene->get_gameobjcount(); i++)
+		{
+			Copium::Graphics::SpriteRenderer * sprite = new Copium::Graphics::SpriteRenderer;
+			glm::vec3 pos = currentScene->get_gameobjectvector()[i]->Trans().glmPosition();
+			sprite->set_position(glm::vec2(pos.x, pos.y));
+
+			PRINT("Coords: " << pos.x << ", " << pos.y);
+
+			glm::vec3 size = currentScene->get_gameobjectvector()[i]->Trans().glmScale();
+			sprite->set_size(glm::vec2(size.x, size.y));
+
+			PRINT("Size: " << size.x << ", " << size.y);
+
+			glm::vec4 color = { 1.f, 1.f ,1.f ,1.f };
+			sprite->set_color(color);
+
+			Copium::Graphics::GraphicsSystem::Instance()->add_sprite(sprite);
+		}
 
 	}
 	void NewSceneManager::update()
 	{
+
 		// call current scene's update functions
 	}
 	void NewSceneManager::exit()

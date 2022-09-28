@@ -33,7 +33,7 @@ glm::dvec3 Transform::glmRotation() const { return rotation.to_glm(); }
 void Transform::Rotation(Copium::Math::Vec3 _rotation) { rotation = _rotation; }
 
 Copium::Math::Vec3 const Transform::Scale() { return scale; }
-glm::dvec3 Transform::glmScale() const { return position.to_glm(); }
+glm::dvec3 Transform::glmScale() const { return scale.to_glm(); }
 void Transform::Scale(Copium::Math::Vec3 _scale) { scale = _scale; }
 
 bool Transform::deserialize(rapidjson::Value& _value)

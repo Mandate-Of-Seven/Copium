@@ -128,7 +128,7 @@ public:
         Return a copy transform of gameObject
     */
     /**************************************************************************/
-    Transform const Trans() const;
+    Transform Trans() const;
 
     /*******************************************************************************
     /*!

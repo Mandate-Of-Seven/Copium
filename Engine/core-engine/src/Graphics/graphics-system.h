@@ -88,6 +88,7 @@ namespace Copium::Graphics
 
 		// Data Members
 		GLSLShader* const get_shader_program() { return shaderProgram; }
+		void add_sprite(SpriteRenderer * _sprite) { sprites.push_back(_sprite); }
 		std::vector<SpriteRenderer*> const get_sprites() { return sprites; }
 		Framebuffer get_framebuffer() { return framebuffer; }
 

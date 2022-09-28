@@ -102,7 +102,7 @@ void GameObject::deleteComponent(Component* component)
 
 void GameObject::Trans(Transform _trans) {trans = _trans;}
 
-Transform const GameObject::Trans() const {return trans;}
+Transform GameObject::Trans() const {return trans;}
 
 void GameObject::set_name(const std::string& _name){ name = _name; }
 std::string GameObject::get_name() const{ return name; }

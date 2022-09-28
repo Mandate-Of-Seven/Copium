@@ -116,8 +116,6 @@ namespace Copium::Graphics
 		// Mass spawning
 		if (massSpawn)
 		{
-			if (sprites.size() >= 2500)
-				massSpawn = true;
 
 			for (size_t i = 0; i < 10; i++)
 			{
@@ -401,5 +399,4 @@ namespace Copium::Graphics
 
 		renderer.flush();
 	}
-
 }
