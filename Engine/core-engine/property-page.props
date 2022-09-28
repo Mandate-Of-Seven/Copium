@@ -17,6 +17,7 @@
         copy "$(SolutionDir)lib\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll" /Y
         copy "$(SolutionDir)lib\rttr\lib\Debug\rttr_core_d.dll" "$(TargetDir)rttr_core_d.dll" /Y
         copy "$(SolutionDir)lib\rttr\lib\Release\rttr_core.dll" "$(TargetDir)rttr_core.dll" /Y
+        copy "$(SolutionDir)lib\FMOD\lib\fmod.dll" "$(TargetDir)fmod.dll" /Y
       </Command>
     </PostBuildEvent>
     <ClCompile>
