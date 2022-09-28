@@ -1,4 +1,4 @@
-#include "component.h"
+#include "GameObject/component.h"
 #include <mono/metadata/assembly.h>
 
 class ScriptComponent;

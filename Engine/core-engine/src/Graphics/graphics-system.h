@@ -17,7 +17,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef GRAPHICS_SYSTEM_H
 #define GRAPHICS_SYSTEM_H
 
-#include "Copium Core/system-interface.h"
+#include "CopiumCore/system-interface.h"
 
 #include "Graphics/glslshader.h"
 #include "Graphics/textures.h"

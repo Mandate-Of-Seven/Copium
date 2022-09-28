@@ -1,4 +1,4 @@
-#include "SAMPLE_RECEIVER.h"
+#include "../Messaging/SAMPLE_RECEIVER.h"
 
 namespace Copium::Message
 {

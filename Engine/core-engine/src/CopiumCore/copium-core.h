@@ -1,7 +1,7 @@
 #pragma once
-#include "Copium Core/system-interface.h"
+#include "CopiumCore/system-interface.h"
 #include "Windows/windows-system.h"
-#include "message-system.h"
+#include "../Messaging/message-system.h"
 #include "Editor/editor-system.h"
 #include "Scripting/scripting-system.h"
 #include "Physics/physics-system.h"

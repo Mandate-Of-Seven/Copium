@@ -14,7 +14,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 
 #include "pch.h"
-#include "component.h"
+#include "GameObject/component.h"
 
 
 std::map<Component::Type, const std::string> Component::componentMap

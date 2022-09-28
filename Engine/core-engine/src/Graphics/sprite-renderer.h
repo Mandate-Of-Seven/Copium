@@ -17,7 +17,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define SPRITE_RENDERER_H
 
 #include <glm/glm.hpp>
-#include <renderer.h>
+#include "Graphics/renderer.h"
 #include <cstring>
 
 namespace Copium::Graphics

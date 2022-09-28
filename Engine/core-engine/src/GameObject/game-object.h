@@ -25,8 +25,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <list>
 #include <string>
 
-#include "component.h"
-#include "GameObject/transform.h"
+#include "GameObject/component.h"
+#include "Math/transform.h"
 #include <rapidjson/document.h>
 
 //USING

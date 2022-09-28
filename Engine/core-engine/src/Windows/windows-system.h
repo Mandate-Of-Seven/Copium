@@ -24,7 +24,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <rapidjson/document.h>
 #include <rapidjson/istreamwrapper.h>
 
-#include "Copium Core/system-interface.h"
+#include "CopiumCore/system-interface.h"
 
 namespace Copium::Windows
 {

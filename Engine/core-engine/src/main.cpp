@@ -30,8 +30,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "SceneManager/scene-manager.h"
 
 //Systems
-#include "Copium Core/copium-core.h"
-#include "SAMPLE_RECEIVER.h"
+#include "CopiumCore/copium-core.h"
+#include "Messaging/SAMPLE_RECEIVER.h"
 #include "Debugging/frame-rate-controller.h"
 namespace
 {

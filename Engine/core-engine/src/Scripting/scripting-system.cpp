@@ -3,7 +3,7 @@
 #include "Scripting/compiler.h"
 #include "Scripting/scripting.h"
 #include "Scripting/file-path.h"
-#include "Copium Core/system-interface.h"
+#include "CopiumCore/system-interface.h"
 
 
 #include <Windows.h>

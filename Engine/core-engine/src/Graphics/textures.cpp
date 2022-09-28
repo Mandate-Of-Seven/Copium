@@ -16,7 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 #include <GL/glew.h>
 #define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
+#include <../stb/stb_image.h>
 
 #include "Graphics/textures.h"
 

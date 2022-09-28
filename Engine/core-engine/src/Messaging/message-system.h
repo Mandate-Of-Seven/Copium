@@ -1,4 +1,4 @@
-#include "Copium Core/system-interface.h"
+#include "../CopiumCore/system-interface.h"
 #include "message-types.h"
 
 #ifndef MESSAGE_SYSTEM_H
