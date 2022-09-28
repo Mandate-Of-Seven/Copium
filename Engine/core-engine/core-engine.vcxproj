@@ -173,7 +173,6 @@
     <ClInclude Include="src\CopiumCore\copium-core.h" />
     <ClInclude Include="src\Editor\editor-system.h" />
     <ClInclude Include="src\Editor\editor-sceneview.h" />
-    <ClInclude Include="src\Scripting\file-path.h" />
     <ClInclude Include="src\Graphics\framebuffer.h" />
     <ClInclude Include="src\GameObject\game-object-factory.h" />
     <ClInclude Include="src\GameObject\game-object.h" />

@@ -6,6 +6,7 @@ Press "1" and "2" keys will play an audio file.
 
 --GRAPHICS--
 C Key: Create Sprite. Sprite will be created at mouse position.
+LEFT SHIFT + C Key: Toggle mass spawning. Spawns 2500+ Gameobjects in the viewport
 Z Key: Scale up sprite size
 LEFT SHIFT + Z Key: Scale down sprite size
 R Key: Rotate sprite clockwise

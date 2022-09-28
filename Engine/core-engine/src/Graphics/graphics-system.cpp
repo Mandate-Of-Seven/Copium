@@ -62,10 +62,10 @@ namespace Copium::Graphics
 		glUniform1iv(loc, maxTextures, samplers);
 		
 		// Bean: Loading of textures to be done somewhere else
-		load_texture("Assets/textures/pizza-sticker.png");
-		load_texture("Assets/textures/cake-sticker.png");
-		load_texture("Assets/textures/muffin-sticker.png");
-		load_texture("Assets/textures/icecream-sticker.png");
+		load_texture("Assets/textures/train-part-01.png");
+		load_texture("Assets/textures/train-part-02.png");
+		load_texture("Assets/textures/train-part-03.png");
+		load_texture("Assets/textures/train-part-04.png");
 	}
 
 	void GraphicsSystem::update()
@@ -362,7 +362,7 @@ namespace Copium::Graphics
 			/*PRINT(i + 1 << " : Sprite Data: " << sprites[i]->get_position().x << "," << sprites[i]->get_position().y
 				<< "\t Size: " << sprites[i]->get_size().x << "," << sprites[i]->get_size().y);*/
 
-			int textureSelector = i % 4 + 1;
+			int textureSelector = i % 5 + 1;
 
 			glm::vec2 pos = { sprites[i]->get_position().x + movement_x, sprites[i]->get_position().y + movement_y };
 			glm::vec2 size = { sprites[i]->get_size().x + size_x, sprites[i]->get_size().y + size_y };
@@ -389,7 +389,7 @@ namespace Copium::Graphics
 			sprites[i]->set_size(size);
 			sprites[i]->bind_texture(&textures[i%3]);
 
-			if(textureSelector == 4)
+			if(textureSelector == 5)
 				renderer.draw_quad(transform, sprites[i]->get_size(), sprites[i]->get_color());
 			else
 				renderer.draw_quad(transform, sprites[i]->get_size(), sprites[i]->get_texture()->get_object_id());
