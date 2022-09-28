@@ -47,7 +47,7 @@ double FrameRateController::end()
 		frameTime = frameEnd - frameStart;
 
 	}
-	Windows::WindowsSystem::Instance()->update_time(10.0);
+	Windows::WindowsSystem::Instance()->update_time(0.016);
 	//Windows::windowsSystem.update_time(10.0);
 	frameRate = Windows::WindowsSystem::Instance()->get_fps();
 	++frameCount;

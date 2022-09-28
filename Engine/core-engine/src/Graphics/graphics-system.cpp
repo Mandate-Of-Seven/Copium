@@ -29,6 +29,7 @@ namespace Copium::Graphics
 	GLfloat movement_x = 0.f, movement_y = 0.f;
 	GLfloat size_x = 0.f, size_y = 0.f;
 	GLfloat rotate = 0.f;
+	bool massSpawn = false;
 
 	void GraphicsSystem::init()
 	{
@@ -87,7 +88,7 @@ namespace Copium::Graphics
 
 		// Create sprites
 		glm::vec2 mousePos{0}, centreOfScene{0}, mouseScenePos{0}, mouseToNDC{0};
-		if (Input::is_key_pressed(GLFW_KEY_C))
+		if (!Input::is_key_held(GLFW_KEY_LEFT_SHIFT) && Input::is_key_pressed(GLFW_KEY_C))
 		{
 			SpriteRenderer* sprite = new SpriteRenderer;
 
@@ -107,6 +108,31 @@ namespace Copium::Graphics
 			
 		}
 
+		if (Input::is_key_held(GLFW_KEY_LEFT_SHIFT) && Input::is_key_pressed(GLFW_KEY_C))
+		{
+			massSpawn = !massSpawn;
+		}
+
+		// Mass spawning
+		if (massSpawn)
+		{
+			if (sprites.size() >= 2500)
+				massSpawn = true;
+
+			for (size_t i = 0; i < 10; i++)
+			{
+				SpriteRenderer* sprite = new SpriteRenderer;
+
+				glm::vec2 pos = { rand() % 200 * 0.01f - 1.f, rand() % 200 * 0.01f - 1.f };
+
+				sprite->set_position(pos);
+
+				sprite->set_size(glm::vec2(0.045f, 0.08f));
+				sprite->set_color(glm::vec4(0.5f, 0.5f, 0.5f, 0.5f));
+				sprites.push_back(sprite);
+			}
+		}
+
 		/*PRINT("Mouse position: " << mousePos.x << ", " << mousePos.y);
 		PRINT("Centre position: " << centreOfScene.x << ", " << centreOfScene.y);
 		PRINT("NDC position: " << mouseToNDC.x << ", " << mouseToNDC.y);*/
@@ -120,7 +146,7 @@ namespace Copium::Graphics
 		{
 			debugMode = !debugMode;
 		}
-
+		
 		if (Input::is_key_held(GLFW_KEY_Z) && Input::is_key_held(GLFW_KEY_LEFT_SHIFT))
 		{
 			size_x -= dt;

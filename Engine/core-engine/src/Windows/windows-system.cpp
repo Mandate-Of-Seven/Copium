@@ -139,7 +139,7 @@ namespace Copium::Windows
             fps = count / elapsed_time;
             start_time = curr_time;
             count = 0.0;
-            std::cout << "FPS:" << fps << std::endl;
+            //std::cout << "FPS:" << fps << std::endl;
         }
     }
 
