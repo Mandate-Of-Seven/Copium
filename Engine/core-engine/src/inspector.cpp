@@ -169,13 +169,12 @@ namespace Window
                 ImVec2 buttonSize = ImGui::GetWindowSize();
                 buttonSize.y *= BUTTON_HEIGHT;
                 std::map<Component::Type, const std::string>::iterator it;
-                for (it = Component::componentMap.begin(); it != Component::componentMap.end(); it++)
+                for (it = Component::componentMap.begin(); it != Component::componentMap.end(); ++it)
                 {
                     if (ImGui::Button(it->second.c_str(), buttonSize)) {
                         selectedGameObject->addComponent(it->first);
                     }
                 }
-
                 ImGui::End();
             }
 		}

@@ -22,8 +22,10 @@ std::map<Component::Type, const std::string> Component::componentMap
     {Type::Animator,"Animator"},
     {Type::Collider,"Collider"},
     {Type::Renderer,"Renderer"},
-    {Type::Script,"New Script"}
+    {Type::Script,"NewScript"}
 };
+
+Component::Component() {}
 
 Component::Component(Component::Type _componentType) : componentType(_componentType) {}
 

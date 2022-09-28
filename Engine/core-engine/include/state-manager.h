@@ -1,5 +1,4 @@
 /*!***************************************************************************************
-****
 \file			StateManager.h
 \project		
 \author			Matthew Lau
@@ -15,8 +14,7 @@
 		2. Enums for all the Engine States
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
-******************************************************************************************
-****/
+******************************************************************************************/
 #pragma once
 #ifndef STATEMANAGER_H
 #define STATEMANAGER_H

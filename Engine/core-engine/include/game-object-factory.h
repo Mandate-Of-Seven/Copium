@@ -1,9 +1,7 @@
 /*!***************************************************************************************
-****
 \file			game-object-factory.h
 \project
 \author			Matthew Lau
-\co-authors
 
 \par			Course: GAM200
 \par			Section:
@@ -16,8 +14,8 @@
 	Note: GameObjectFactory inherits from ISystem class
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
-******************************************************************************************
-****/
+******************************************************************************************/
+
 #ifndef GAME_OBJECT_FACTORY_H
 #define GAME_OBJECT_FACTORY_H
 #include <system-interface.h>

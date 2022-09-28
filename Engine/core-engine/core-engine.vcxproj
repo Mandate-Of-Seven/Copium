@@ -88,12 +88,16 @@
     <ClCompile Include="src\component.cpp" />
     <ClCompile Include="src\editor-layer.cpp" />
     <ClCompile Include="src\editor-sceneview.cpp" />
+    <ClCompile Include="src\file-system.cpp" />
     <ClCompile Include="src\framebuffer.cpp" />
     <ClCompile Include="src\frameratecontroller.cpp" />
     <ClCompile Include="src\game-object-factory.cpp" />
     <ClCompile Include="src\game-object.cpp" />
     <ClCompile Include="src\gamestate-sandbox.cpp" />
-    <ClCompile Include="src\glapp.cpp" />
+    <ClCompile Include="src\pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\thread-system.cpp" />
     <ClCompile Include="src\windows-system.cpp" />
     <ClCompile Include="src\glslshader.cpp" />
     <ClCompile Include="src\graphics.cpp" />
@@ -124,21 +128,12 @@
     <ClCompile Include="src\math-library.cpp" />
     <ClCompile Include="src\message-system.cpp" />
     <ClCompile Include="src\renderer.cpp" />
-    <ClCompile Include="src\SAMPLE_RECEIVER.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="src\scene-manager.cpp" />
     <ClCompile Include="src\scene.cpp" />
-    <ClCompile Include="src\pch.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="src\scripting.cpp" />
     <ClCompile Include="src\scripting-system.cpp" />
     <ClCompile Include="src\serializer.cpp" />
     <ClCompile Include="src\state-manager.cpp" />
-    <ClCompile Include="src\system-interface.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="src\transform.cpp" />
     <ClCompile Include="src\windows-input.cpp" />
   </ItemGroup>
@@ -148,13 +143,13 @@
     <ClInclude Include="include\copium-core.h" />
     <ClInclude Include="include\editor-layer.h" />
     <ClInclude Include="include\editor-sceneview.h" />
-    <ClInclude Include="include\file-path.h" />
+    <ClInclude Include="include\file-system.h" />
     <ClInclude Include="include\framebuffer.h" />
     <ClInclude Include="include\frameratecontroller.h" />
     <ClInclude Include="include\game-object-factory.h" />
     <ClInclude Include="include\game-object.h" />
     <ClInclude Include="include\gamestate-sandbox.h" />
-    <ClInclude Include="include\glapp.h" />
+    <ClInclude Include="include\sprite-renderer.h" />
     <ClInclude Include="include\windows-system.h" />
     <ClInclude Include="include\glslshader.h" />
     <ClInclude Include="include\graphics.h" />
@@ -166,7 +161,6 @@
     <ClInclude Include="include\message-types.h" />
     <ClInclude Include="include\pch.h" />
     <ClInclude Include="include\renderer.h" />
-    <ClInclude Include="include\SAMPLE_RECEIVER.h" />
     <ClInclude Include="include\scene.h" />
     <ClInclude Include="include\scene-manager.h" />
     <ClInclude Include="include\scripting.h" />
@@ -177,6 +171,7 @@
     <ClInclude Include="include\transform.h" />
     <ClInclude Include="include\vertex-types.h" />
     <ClInclude Include="include\windows-input.h" />
+    <ClInclude Include="include\thread-system.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\shaders\shader-glsl.frag" />

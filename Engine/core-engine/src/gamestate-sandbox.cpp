@@ -1,5 +1,4 @@
 /*!***************************************************************************************
-****
 \file			gamestate-sandbox.cpp
 \project
 \author			Matthew Lau
@@ -17,8 +16,7 @@
 	Note: load, init, free and unload functions MUST be defined by scene sub-classes
 
 All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
-******************************************************************************************
-****/
+******************************************************************************************/
 #include <pch.h>
 #include "gamestate-sandbox.h"
 

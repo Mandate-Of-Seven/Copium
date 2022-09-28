@@ -1,7 +1,24 @@
+/*!***************************************************************************************
+\file			copium-core.h
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			27/09/2022
+
+\brief
+	This file holds the definitions of functions for copium-core.cpp
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 #pragma once
 #include "system-interface.h"
 #include "scripting-system.h"
+#include "file-system.h"
 #include "message-system.h"
+#include "thread-system.h"
 
 namespace Copium
 {
@@ -22,7 +39,9 @@ namespace Copium
 			{
 				//Put in sequence of calls
 				Message::MessageSystem::Instance(),
-				Scripting::ScriptingSystem::Instance()
+				Files::FileSystem::Instance(),
+				Scripting::ScriptingSystem::Instance(),
+				Thread::ThreadSystem::Instance()
 			};
 			for (ISystem* pSystem : systems)
 			{

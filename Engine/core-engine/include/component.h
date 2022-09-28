@@ -19,7 +19,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #define COMPONENT_H
 //INCLUDES
-#include <glm/vec2.hpp> //Vec2 //RMB TO CHANGE TO OWN MATH LIB
 #include <string>
 #include <map>
 

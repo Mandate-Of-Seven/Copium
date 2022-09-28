@@ -1,4 +1,23 @@
-#pragma once
+/*!***************************************************************************************
+\file			message-types.h
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			27/09/2022
+
+\brief
+    This file holds the definitions of message types and containers
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
+#include "game-object.h"
+
+#ifndef MESSAGE_TYPES_H
+
+#define MESSAGE_TYPES_H
 
 namespace Copium::Message
 {
@@ -9,6 +28,9 @@ namespace Copium::Message
         MT_MOUSE_CLICKED,
         MT_KEY_PRESSED,
         MT_COLLIDED,
+        MT_SCRIPTING_UPDATED,
+        MT_ADD_SCRIPT,
+        MT_ENGINE_EXIT,
         MT_NONE // END, DO NOT INSERT BEYOND
     };
 
@@ -18,6 +40,12 @@ namespace Copium::Message
         struct MC_MOUSE_MOVED
         {
             double x, y;
+        };
+
+        struct MC_ADD_SCRIPT
+        {
+            GameObject* gameObj;
+            const char* name;
         };
 
         //Bitwise operator flags for key modifiers
@@ -39,9 +67,10 @@ namespace Copium::Message
             uint32_t keyCode;
         };
 
+        static MC_ADD_SCRIPT addScript;
 
     }
-
     //static std::vector<MESSAGE_CONTAINERS::MOUSE_MOVED> QUEUE_MOUSE_MOVED;
     //static std::vector<MESSAGE_CONTAINERS::KEY_PRESSED> QUEUE_KEY_PRESSED;
 }
+#endif // !MESSAGE_TYPES_H

@@ -1,6 +1,6 @@
 using CopiumEngine;
 
-public class PlayerMovement : CopiumScript
+public class bye : CopiumScript
 {
 	void Start()
 	{

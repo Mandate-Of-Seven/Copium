@@ -1,9 +1,7 @@
 /*!***************************************************************************************
-****
 \file			scene.cpp
 \project
 \author			Matthew Lau
-\co-authors
 
 \par			Course: GAM200
 \par			Section:
@@ -17,8 +15,7 @@
 		3. Data pertaining to the game objects in the scene
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
-******************************************************************************************
-****/
+******************************************************************************************/
 #include "pch.h"
 #include "scene.h"
 

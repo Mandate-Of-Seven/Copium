@@ -63,14 +63,14 @@ namespace Copium::Graphics
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		if (Input::isKeyPressed(GLFW_KEY_A))
+		if (Input::isKeyHeld(GLFW_KEY_A))
 			movement_x -= GLHelper::delta_time;
-		else if (Input::isKeyPressed(GLFW_KEY_D))
+		else if (Input::isKeyHeld(GLFW_KEY_D))
 			movement_x += GLHelper::delta_time;
 
-		if (Input::isKeyPressed(GLFW_KEY_W))
+		if (Input::isKeyHeld(GLFW_KEY_W))
 			movement_y += GLHelper::delta_time;
-		else if (Input::isKeyPressed(GLFW_KEY_S))
+		else if (Input::isKeyHeld(GLFW_KEY_S))
 			movement_y -= GLHelper::delta_time;
 
 		static float time = 0.f;
