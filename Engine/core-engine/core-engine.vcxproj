@@ -47,8 +47,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)lib\imgui\include;$(ProjectDir)include;$(SolutionDir)lib\glfw-3.3.8.bin.WIN64\include;$(SolutionDir)lib\glew-2.2.0\include;$(SolutionDir)lib\glm-0.9.9.8;$(SolutionDir)lib\mono\include;$(SolutionDir)lib;$(SolutionDir)lib\spdlog\include;$(SolutionDir)lib\rapidjson\include;$(SolutionDir)lib\rttr\src;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\imgui\lib;$(SolutionDir)lib\glfw-3.3.8.bin.WIN64\lib-vc2019;$(SolutionDir)lib\glew-2.2.0\lib\Release\x64;$(SolutionDir)lib\mono\Debug;$(SolutionDir)lib\rttr\lib\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)lib\imgui\include;$(ProjectDir)src;$(SolutionDir)lib\glfw-3.3.8.bin.WIN64\include;$(SolutionDir)lib\glew-2.2.0\include;$(SolutionDir)lib\glm-0.9.9.8;$(SolutionDir)lib\mono\include;$(SolutionDir)lib;$(SolutionDir)lib\spdlog\include;$(SolutionDir)lib\rapidjson\include;$(SolutionDir)lib\rttr\src;$(SolutionDir)lib\FMOD\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\imgui\lib;$(SolutionDir)lib\glfw-3.3.8.bin.WIN64\lib-vc2019;$(SolutionDir)lib\glew-2.2.0\lib\Release\x64;$(SolutionDir)lib\mono\Debug;$(SolutionDir)lib\rttr\lib\Debug;$(SolutionDir)lib\FMOD\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -65,7 +65,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;glfw3dll.lib;mono-2.0-sgen.lib;ws2_32.lib;version.lib;bcrypt.lib;winmm.lib;rttr_core_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;glfw3dll.lib;mono-2.0-sgen.lib;ws2_32.lib;version.lib;bcrypt.lib;winmm.lib;rttr_core_d.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -85,27 +85,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\collision.cpp" />
-    <ClCompile Include="src\component.cpp" />
-    <ClCompile Include="src\ConsoleLog.cpp" />
-    <ClCompile Include="src\editor-sceneview.cpp" />
-    <ClCompile Include="src\editor-system.cpp" />
-    <ClCompile Include="src\file-system.cpp" />
-    <ClCompile Include="src\framebuffer.cpp" />
-    <ClCompile Include="src\frameratecontroller.cpp" />
-    <ClCompile Include="src\game-object-factory.cpp" />
-    <ClCompile Include="src\game-object.cpp" />
-    <ClCompile Include="src\gamestate-sandbox.cpp" />
-    <ClCompile Include="src\graphics-system.cpp" />
-    <ClCompile Include="src\pch.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\physics-system.cpp" />
-    <ClCompile Include="src\sm.cpp" />
-    <ClCompile Include="src\textures.cpp" />
-    <ClCompile Include="src\thread-system.cpp" />
-    <ClCompile Include="src\windows-system.cpp" />
-    <ClCompile Include="src\glslshader.cpp" />
+    <ClCompile Include="src\Debugging\frame-rate-controller.cpp" />
+    <ClCompile Include="src\Physics\collision.cpp" />
+    <ClCompile Include="src\GameObject\component.cpp" />
+    <ClCompile Include="src\Editor\editor-system.cpp" />
+    <ClCompile Include="src\Editor\ConsoleLog.cpp" />
+    <ClCompile Include="src\Editor\editor-sceneview.cpp" />
+    <ClCompile Include="src\Graphics\framebuffer.cpp" />
+    <ClCompile Include="src\GameObject\game-object-factory.cpp" />
+    <ClCompile Include="src\GameObject\game-object.cpp" />
+    <ClCompile Include="src\SceneManager\gamestate-sandbox.cpp" />
+    <ClCompile Include="src\Physics\physics-system.cpp" />
+    <ClCompile Include="src\Audio\sound-system.cpp" />
+    <ClCompile Include="src\Graphics\textures.cpp" />
+    <ClCompile Include="src\SceneManager\sm.cpp" />
+    <ClCompile Include="src\Windows\windows-system.cpp" />
+    <ClCompile Include="src\Graphics\glslshader.cpp" />
+    <ClCompile Include="src\Graphics\graphics-system.cpp" />
     <ClCompile Include="src\imgui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -127,65 +123,71 @@
     <ClCompile Include="src\imgui\imgui_widgets.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\inspector.cpp" />
-    <ClCompile Include="src\logging.cpp" />
+    <ClCompile Include="src\Editor\inspector.cpp" />
+    <ClCompile Include="src\Debugging\logging.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\math-library.cpp" />
-    <ClCompile Include="src\message-system.cpp" />
-    <ClCompile Include="src\renderer.cpp" />
-    <ClCompile Include="src\scene-manager.cpp" />
-    <ClCompile Include="src\scene.cpp" />
-    <ClCompile Include="src\scripting.cpp" />
-    <ClCompile Include="src\scripting-system.cpp" />
-    <ClCompile Include="src\serializer.cpp" />
-    <ClCompile Include="src\state-manager.cpp" />
-    <ClCompile Include="src\transform.cpp" />
-    <ClCompile Include="src\windows-input.cpp" />
+    <ClCompile Include="src\Math\math-library.cpp" />
+    <ClCompile Include="src\Messaging\message-system.cpp" />
+    <ClCompile Include="src\Graphics\renderer.cpp" />
+    <ClCompile Include="src\Messaging\SAMPLE_RECEIVER.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\SceneManager\scene-manager.cpp" />
+    <ClCompile Include="src\SceneManager\scene.cpp" />
+    <ClCompile Include="src\pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\Scripting\scripting.cpp" />
+    <ClCompile Include="src\Scripting\scripting-system.cpp" />
+    <ClCompile Include="src\SceneManager\serializer.cpp" />
+    <ClCompile Include="src\SceneManager\state-manager.cpp" />
+    <ClCompile Include="src\CopiumCore\system-interface.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\Math\transform.cpp" />
+    <ClCompile Include="src\Windows\windows-input.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\collider.h" />
-    <ClInclude Include="include\collision.h" />
-    <ClInclude Include="include\compiler.h" />
-    <ClInclude Include="include\component.h" />
-    <ClInclude Include="include\ConsoleLog.h" />
-    <ClInclude Include="include\copium-core.h" />
-    <ClInclude Include="include\editor-layer.h" />
-    <ClInclude Include="include\editor-sceneview.h" />
-    <ClInclude Include="include\editor-system.h" />
-    <ClInclude Include="include\file-system.h" />
-    <ClInclude Include="include\framebuffer.h" />
-    <ClInclude Include="include\frameratecontroller.h" />
-    <ClInclude Include="include\game-object-factory.h" />
-    <ClInclude Include="include\game-object.h" />
-    <ClInclude Include="include\gamestate-sandbox.h" />
-    <ClInclude Include="include\graphics-system.h" />
-    <ClInclude Include="include\physics-system.h" />
-    <ClInclude Include="include\sm.h" />
-    <ClInclude Include="include\sprite-renderer.h" />
-    <ClInclude Include="include\stb_image.h" />
-    <ClInclude Include="include\textures.h" />
-    <ClInclude Include="include\windows-system.h" />
-    <ClInclude Include="include\glslshader.h" />
-    <ClInclude Include="include\graphics.h" />
-    <ClInclude Include="include\input.h" />
-    <ClInclude Include="include\inspector.h" />
-    <ClInclude Include="include\logging.h" />
-    <ClInclude Include="include\math-library.h" />
-    <ClInclude Include="include\message-system.h" />
-    <ClInclude Include="include\message-types.h" />
-    <ClInclude Include="include\pch.h" />
-    <ClInclude Include="include\renderer.h" />
-    <ClInclude Include="include\scene.h" />
-    <ClInclude Include="include\scene-manager.h" />
-    <ClInclude Include="include\scripting.h" />
-    <ClInclude Include="include\scripting-system.h" />
-    <ClInclude Include="include\serializer.h" />
-    <ClInclude Include="include\state-manager.h" />
-    <ClInclude Include="include\system-interface.h" />
-    <ClInclude Include="include\transform.h" />
-    <ClInclude Include="include\vertex-types.h" />
-    <ClInclude Include="include\windows-input.h" />
-    <ClInclude Include="include\thread-system.h" />
+    <ClInclude Include="src\Debugging\frame-rate-controller.h" />
+    <ClInclude Include="src\Physics\collider.h" />
+    <ClInclude Include="src\Physics\collision.h" />
+    <ClInclude Include="src\Scripting\compiler.h" />
+    <ClInclude Include="src\GameObject\component.h" />
+    <ClInclude Include="src\Editor\ConsoleLog.h" />
+    <ClInclude Include="src\CopiumCore\copium-core.h" />
+    <ClInclude Include="src\Editor\editor-system.h" />
+    <ClInclude Include="src\Editor\editor-sceneview.h" />
+    <ClInclude Include="src\Scripting\file-path.h" />
+    <ClInclude Include="src\Graphics\framebuffer.h" />
+    <ClInclude Include="src\GameObject\game-object-factory.h" />
+    <ClInclude Include="src\GameObject\game-object.h" />
+    <ClInclude Include="src\SceneManager\gamestate-sandbox.h" />
+    <ClInclude Include="src\Physics\physics-system.h" />
+    <ClInclude Include="src\Audio\sound-system.h" />
+    <ClInclude Include="src\Graphics\textures.h" />
+    <ClInclude Include="src\SceneManager\sm.h" />
+    <ClInclude Include="src\Windows\windows-system.h" />
+    <ClInclude Include="src\Graphics\glslshader.h" />
+    <ClInclude Include="src\Graphics\graphics-system.h" />
+    <ClInclude Include="src\Windows\input.h" />
+    <ClInclude Include="src\Editor\inspector.h" />
+    <ClInclude Include="src\Debugging\logging.h" />
+    <ClInclude Include="src\Math\math-library.h" />
+    <ClInclude Include="src\Messaging\message-system.h" />
+    <ClInclude Include="src\Messaging\message-types.h" />
+    <ClInclude Include="src\pch.h" />
+    <ClInclude Include="src\Graphics\renderer.h" />
+    <ClInclude Include="src\Messaging\SAMPLE_RECEIVER.h" />
+    <ClInclude Include="src\SceneManager\scene.h" />
+    <ClInclude Include="src\SceneManager\scene-manager.h" />
+    <ClInclude Include="src\Scripting\scripting.h" />
+    <ClInclude Include="src\Scripting\scripting-system.h" />
+    <ClInclude Include="src\SceneManager\serializer.h" />
+    <ClInclude Include="src\SceneManager\state-manager.h" />
+    <ClInclude Include="src\CopiumCore\system-interface.h" />
+    <ClInclude Include="src\Math\transform.h" />
+    <ClInclude Include="src\Graphics\vertex-types.h" />
+    <ClInclude Include="src\Windows\windows-input.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\shaders\shader-glsl.frag" />
