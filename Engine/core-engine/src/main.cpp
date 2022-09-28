@@ -17,23 +17,21 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "pch.h"
 
 //PRECOMPILED HEADERS(Commonly used external libraries)
-#include "windows-system.h"
-#include "windows-input.h"
-#include "editor-system.h"
-#include "scripting-system.h"
-#include "scripting.h"
-#include "logging.h"
-#include "ConsoleLog.h"
+#include "Editor/editor-system.h"
+#include "Scripting/scripting-system.h"
+#include "Scripting/scripting.h"
+#include "Windows/windows-system.h"
+#include "Windows/windows-input.h"
+#include "Debugging/logging.h"
+#include "Editor/ConsoleLog.h"
 
 //State Manager
-#include "state-manager.h"
-#include "scene-manager.h"
+#include "SceneManager/state-manager.h"
+#include "SceneManager/scene-manager.h"
 
 //Systems
-#include "copium-core.h"
-#include "SAMPLE_RECEIVER.h"
-#include "serializer.h"
-#include "frameratecontroller.h"
+#include "CopiumCore/copium-core.h"
+#include "Debugging/frame-rate-controller.h"
 namespace
 {
     // Our state
@@ -83,16 +81,12 @@ int main()
 
     Copium::Windows::WindowsSystem* windowsSystem = Copium::Windows::WindowsSystem::Instance();
 
-    //glfwSetKeyCallback(Copium::windowsSystem.get_window(), quit_key_callback);
     glfwSetKeyCallback(windowsSystem->get_window(), Input::key_callback);
 
     SceneManager SM;
     FrameRateController frc(100.0);
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
-    //ScriptComponent *yolo;
-    //yolo = new ScriptComponent("PlayerMovement");
-    //delete yolo;
 
     // Engine Loop
     while (!glfwWindowShouldClose(windowsSystem->get_window()) && esCurrent != esQuit)
@@ -146,10 +140,9 @@ int main()
             }
         }
     }
-
+    messageSystem.dispatch(Copium::Message::MESSAGE_TYPE::MT_ENGINE_EXIT);
     copiumCore.exit();
     cleanup();
-    //delete sandboxScene;
     std::cout << "Engine Closing...\n";
 }
 
@@ -166,6 +159,14 @@ static void init()
     Input::get_input_instance()->init();
     Copium::Log::init();
 
+    SoundSystem::init();
+    SoundSystem::CreateSound("./Assets/sounds/reeling.wav", SoundAlias::reeling);
+    SoundSystem::SetVolume(reeling, 0.3f);
+    SoundSystem::CreateSound("./Assets/sounds/zap.wav", SoundAlias::zap);
+    SoundSystem::SetVolume(zap, 0.3f);
+
+    
+
     //Uncomment to test asserts
     //COPIUM_ASSERT(1+1==2,"Asserts are working as intended");
 }
@@ -180,6 +181,16 @@ static void init()
 /**************************************************************************/
 static void update()
 {
+    if (Input::is_key_pressed(GLFW_KEY_1))
+    {
+        SoundSystem::Play(zap, true, false);
+        std::cout << "Zap sound is being played\n";
+    }
+    if (Input::is_key_pressed(GLFW_KEY_2))
+    {
+        SoundSystem::Play(reeling, true, false);
+        std::cout << "Reeling sound is being played\n";
+    }
     quitEngine();
 }
 
