@@ -85,6 +85,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Debugging\frame-rate-controller.cpp" />
     <ClCompile Include="src\Physics\collision.cpp" />
     <ClCompile Include="src\Game Object\component.cpp" />
     <ClCompile Include="src\Editor\editor-system.cpp" />
@@ -148,6 +149,7 @@
     <ClCompile Include="src\Windows\windows-input.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Debugging\frame-rate-controller.h" />
     <ClInclude Include="src\Physics\collider.h" />
     <ClInclude Include="src\Physics\collision.h" />
     <ClInclude Include="src\Scripting\compiler.h" />

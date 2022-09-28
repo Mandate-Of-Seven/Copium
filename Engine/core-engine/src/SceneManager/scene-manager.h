@@ -26,9 +26,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <iostream>
 #include <string>
 #include <vector>
-#include "gamestate-sandbox.h"
-#include "scene.h"
-#include "Copium Core/system-interface.h"
+#include "SceneManager/gamestate-sandbox.h"
+#include "SceneManager/scene.h"
+#include "CopiumCore/system-interface.h"
 
 //GAMESTATE ID - int type
 enum GameState 

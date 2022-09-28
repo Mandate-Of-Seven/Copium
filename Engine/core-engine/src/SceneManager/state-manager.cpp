@@ -18,7 +18,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************
 ****/
 #include "pch.h"
-#include "state-manager.h"
+#include "SceneManager/state-manager.h"
 
 int esCurrent, esNext, esPrevious;
 

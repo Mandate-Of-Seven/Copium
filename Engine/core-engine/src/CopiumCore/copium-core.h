@@ -6,7 +6,7 @@
 #include "Scripting/scripting-system.h"
 #include "Physics/physics-system.h"
 #include "Graphics/graphics-system.h"
-#include "sm.h"
+#include "SceneManager/sm.h"
 
 namespace Copium
 {

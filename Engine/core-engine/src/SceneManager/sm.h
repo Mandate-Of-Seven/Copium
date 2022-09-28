@@ -25,9 +25,10 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef SM_H
 #define SM_H
 
-#include "Copium Core/system-interface.h"
-#include <game-object-factory.h>
-#include <scene.h>
+
+#include "GameObject/game-object-factory.h"
+#include "CopiumCore/system-interface.h"
+#include "SceneManager/scene.h"
 
 namespace Copium {
 

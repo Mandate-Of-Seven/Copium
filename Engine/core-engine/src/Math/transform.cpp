@@ -17,7 +17,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 //INCLUDES
 
 #include "pch.h"
-#include "transform.h"
+#include "Math/transform.h"
 
 Transform::Transform() : position{ Copium::Math::Vec3() }, rotation{ Copium::Math::Vec3() }, scale{ Copium::Math::Vec3(1,1,1) }, parent{nullptr}{}
 

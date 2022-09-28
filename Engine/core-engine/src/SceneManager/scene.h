@@ -31,7 +31,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <iostream>
 #include <string>
 #include <vector>
-#include <game-object.h>
+#include <GameObject/game-object.h>
 
 class Scene 
 {

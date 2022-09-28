@@ -20,12 +20,12 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 ******************************************************************************************
 ****/
 #include <pch.h>
-#include "gamestate-sandbox.h"
-#include <game-object-factory.h>
+#include "SceneManager/gamestate-sandbox.h"
+#include "GameObject/game-object-factory.h"
 
-#include <Windows/windows-system.h>
+#include "Windows/windows-system.h"
 #include "Windows/input.h"
-#include <serializer.h>
+#include "SceneManager/serializer.h"
 #include <rapidjson/prettywriter.h>
 
 // Global variables

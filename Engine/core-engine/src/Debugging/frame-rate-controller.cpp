@@ -1,6 +1,6 @@
 
 #include "pch.h"
-#include "frameratecontroller.h"
+#include "Debugging/frame-rate-controller.h"
 #include "Windows/windows-system.h"
 
 // Bean: remove after encapsulating the namespace

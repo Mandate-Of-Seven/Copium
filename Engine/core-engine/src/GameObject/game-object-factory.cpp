@@ -18,7 +18,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************
 ****/
 #include <pch.h>
-#include "game-object-factory.h"
+#include "GameObject/game-object-factory.h"
 #include <rttr/registration>
 
 namespace Copium {

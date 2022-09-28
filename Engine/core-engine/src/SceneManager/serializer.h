@@ -20,9 +20,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include <iostream>
 #include <fstream>
-#include "game-object.h"
-#include "scene.h"
-#include "transform.h"
+#include "GameObject/game-object.h"
+#include "SceneManager/scene.h"
+#include "GameObject/transform.h"
 #include <rapidjson/prettywriter.h>
 #include <rapidjson/document.h>
 #include <rapidjson/istreamwrapper.h>

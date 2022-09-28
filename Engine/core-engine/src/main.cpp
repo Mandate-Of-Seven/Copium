@@ -26,14 +26,13 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Editor/ConsoleLog.h"
 
 //State Manager
-#include "state-manager.h"
-#include "scene-manager.h"
+#include "SceneManager/state-manager.h"
+#include "SceneManager/scene-manager.h"
 
 //Systems
 #include "Copium Core/copium-core.h"
 #include "SAMPLE_RECEIVER.h"
-#include "serializer.h"
-#include "frameratecontroller.h"
+#include "Debugging/frame-rate-controller.h"
 namespace
 {
     // Our state

@@ -20,7 +20,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************
 ****/
 #include "pch.h"
-#include "scene-manager.h"
+#include "SceneManager/scene-manager.h"
 
 //Ctors and Dtor
 SceneManager::SceneManager() : current(0), next(0), previous(0), numberOfScenes(0), currentScene(nullptr) 

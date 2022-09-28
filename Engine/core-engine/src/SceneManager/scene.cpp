@@ -23,7 +23,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************
 ****/
 #include "pch.h"
-#include "scene.h"
+#include "SceneManager/scene.h"
 
 Scene::Scene(std::string& _filepath) : filename(_filepath) 
 {
