@@ -1,4 +1,6 @@
-public class PlayerMovement : NewScript
+using CopiumEngine;
+
+public class PlayerMovement : CopiumScript
 {
 	void Start()
 	{

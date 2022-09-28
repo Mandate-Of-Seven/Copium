@@ -1,7 +1,6 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using CopiumEngine;
 
-public class CSharpTesting
+public class CSharpTesting : CopiumScript
 {
     public int hello = 10;
     public int HI = 10;
@@ -9,33 +8,49 @@ public class CSharpTesting
 
     public CSharpTesting()
     {
-        Console.WriteLine("Hello matthew");
-        CppFunc();
+        Debug.Log();
+        //CppFunc();
     }
 
-    public void PrintMessage()
+    public void PrintMesssage()
     {
-        Console.WriteLine("Hello World from C#");
+        //Console.WriteLine("Hello World from C");
     }
 
     public void PrintInts(int message, int msg2)
     {
-        Console.WriteLine($"C# says: {message} {msg2}");
+        //Console.WriteLine($"C# says: {message} {msg2}");
     }
 
     public void PrintCustomMessage(string message)
     {
-        Console.WriteLine($"C# says: {message}");
+        //Console.WriteLine($"C# says: {message}");
     }
 
     public void Awake()
     {
-        Console.WriteLine("HELLO FROM CSHARPTESTING");
+        //Console.WriteLine("HELLO FROM CSHARPTESTING");
     }
 
-    [MethodImplAttribute(MethodImplOptions.InternalCall)]
-    extern static void CppFunc();
+    public void Start()
+    {
+        //Console.WriteLine("HELLO FROM CSHARPTESTING");
+    }
 
-    [MethodImplAttribute(MethodImplOptions.InternalCall)]
-    extern static void NativeLog();
+    public void Update()
+    {
+
+    }
+
+    public void LateUpdate()
+    {
+
+    }
+
+    /*
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        extern static void CppFunc();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        extern static void NativeLog();*/
 }
