@@ -19,9 +19,9 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scripting/scripting-system.h"
 #include "Scripting/compiler.h"
 #include "Scripting/scripting.h"
-#include "Scripting/file-path.h"
+#include "Utilities/thread-system.h"
+#include "Files/file-system.h"
 #include "CopiumCore/system-interface.h"
-
 
 #include <Windows.h>
 #include <mono/metadata/mono-config.h>
@@ -224,7 +224,7 @@ namespace Copium::Scripting
 
 		if (status != MONO_IMAGE_OK)
 		{
-			const char* errorMessage = mono_image_strerror(status);
+			// const char* errorMessage = mono_image_strerror(status);
 			// Log some error message using the errorMessage data
 			return nullptr;
 		}
@@ -317,7 +317,7 @@ namespace Copium::Scripting
 		return false;
 	}
 
-	static void CppFunc()
+	/*static void CppFunc()
 	{
 		std::cout << "This is a cpp function" << std::endl;
 	}
@@ -325,5 +325,5 @@ namespace Copium::Scripting
 	static void NativeLog()
 	{
 		std::cout << "This is a cpp function" << std::endl;
-	}
+	}*/
 }

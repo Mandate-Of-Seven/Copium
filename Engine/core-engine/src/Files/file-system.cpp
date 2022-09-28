@@ -15,7 +15,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************/
 
 #include "pch.h"
-#include "file-system.h"
+#include "../Files/file-system.h"
 #include <utility>
 
 namespace Copium::Files

@@ -31,7 +31,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 //Systems
 #include "CopiumCore/copium-core.h"
-#include "Messaging/SAMPLE_RECEIVER.h"
 #include "Debugging/frame-rate-controller.h"
 namespace
 {

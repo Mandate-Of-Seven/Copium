@@ -86,6 +86,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Debugging\frame-rate-controller.cpp" />
+    <ClCompile Include="src\Files\file-system.cpp" />
+    <ClCompile Include="src\Utilities\thread-system.cpp" />
     <ClCompile Include="src\Physics\collision.cpp" />
     <ClCompile Include="src\GameObject\component.cpp" />
     <ClCompile Include="src\Editor\editor-system.cpp" />
@@ -129,9 +131,6 @@
     <ClCompile Include="src\Math\math-library.cpp" />
     <ClCompile Include="src\Messaging\message-system.cpp" />
     <ClCompile Include="src\Graphics\renderer.cpp" />
-    <ClCompile Include="src\Messaging\SAMPLE_RECEIVER.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="src\SceneManager\scene-manager.cpp" />
     <ClCompile Include="src\SceneManager\scene.cpp" />
     <ClCompile Include="src\pch.cpp">
@@ -149,6 +148,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Debugging\frame-rate-controller.h" />
+    <ClInclude Include="src\Files\file-system.h" />
+    <ClInclude Include="src\Utilities\thread-system.h" />
     <ClInclude Include="src\Physics\collider.h" />
     <ClInclude Include="src\Physics\collision.h" />
     <ClInclude Include="src\Scripting\compiler.h" />
@@ -177,7 +178,6 @@
     <ClInclude Include="src\Messaging\message-types.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\Graphics\renderer.h" />
-    <ClInclude Include="src\Messaging\SAMPLE_RECEIVER.h" />
     <ClInclude Include="src\SceneManager\scene.h" />
     <ClInclude Include="src\SceneManager\scene-manager.h" />
     <ClInclude Include="src\Scripting\scripting.h" />

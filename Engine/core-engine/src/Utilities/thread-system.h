@@ -14,8 +14,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************/
 
 #pragma once
-#include "message-system.h"
-#include "message-types.h"
+#include "Messaging/message-system.h"
+#include "Messaging/message-types.h"
 #include <thread>
 #include <utility>
 
@@ -84,6 +84,6 @@ namespace Copium::Thread
 	private:
 		using namedThread = std::pair < const char*, std::thread*>;
 		std::vector<namedThread> threads;
-		bool quit;
+		bool quit = false;
 	};
 }

@@ -12,12 +12,14 @@
 
 All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
+#ifndef SCRIPTING_H
+#define SCRIPTING_H
+
 #include "GameObject/component.h"
+#include "Messaging/message-system.h"
+#include "Scripting/scripting-system.h"
 #include <mono/metadata/assembly.h>
 
-#ifndef SCRIPTING_H
-
-#define SCRIPTING_H
 namespace Copium
 {
     class ScriptComponent final : public Component, public Message::IReceiver

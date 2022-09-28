@@ -13,10 +13,9 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
-#include "game-object.h"
+#include "../GameObject/game-object.h"
 
 #ifndef MESSAGE_TYPES_H
-
 #define MESSAGE_TYPES_H
 
 namespace Copium::Message

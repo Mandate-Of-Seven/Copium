@@ -41,7 +41,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Audio/sound-system.h"
 
 //DEBUGGING
-#include "logging.h"
+#include "Debugging/logging.h"
 
 #define PRINT(str) std::cout << str << std::endl
 

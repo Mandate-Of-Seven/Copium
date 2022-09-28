@@ -16,7 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef FILE_SYSTEM_H
 #define FILE_SYSTEM_H
 
-#include "system-interface.h"
+#include "CopiumCore/system-interface.h"
 #include <filesystem>
 
 namespace Copium::Files

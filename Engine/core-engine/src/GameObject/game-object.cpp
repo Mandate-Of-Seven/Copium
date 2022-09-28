@@ -18,6 +18,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include "pch.h"
 #include "GameObject/game-object.h"
+#include "Messaging/message-system.h"
+#include "Scripting/scripting.h"
 
 //USING
 

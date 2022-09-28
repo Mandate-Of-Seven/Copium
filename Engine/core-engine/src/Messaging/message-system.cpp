@@ -14,7 +14,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 
 #include "pch.h"
-#include "message-system.h"
+#include "Messaging/message-system.h"
 
 namespace Copium::Message
 {

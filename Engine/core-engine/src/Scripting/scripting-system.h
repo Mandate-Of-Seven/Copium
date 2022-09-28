@@ -22,6 +22,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <mono/jit/jit.h>
 #include <thread>
 #include <filesystem>
+#include "Messaging/message-system.h"
+#include "Files/file-system.h"
 #include "CopiumCore/system-interface.h"
 
 namespace Copium::Scripting
@@ -55,27 +57,27 @@ namespace Copium::Scripting
 			MonoType of field
 	*/
 	/**************************************************************************/
-	static FieldType GetType(MonoType* mType)
-	{
-		int typeCode = mono_type_get_type(mType); //MonoTypeEnum
-		switch (typeCode)
-		{
-		case MONO_TYPE_VALUETYPE:
-		{
-			char* typeName = mono_type_get_name(mType);
-			if (strcmp(typeName, "Vector2") == 0) { return FieldType::Vector2; }
-			if (strcmp(typeName, "Vector3") == 0) { return FieldType::Vector3; }
-			if (strcmp(typeName, "Vector4") == 0) { return FieldType::Vector4; }
-		}
-		case MONO_TYPE_CLASS:
-			break;
-		default:
-			return FieldType(typeCode);
-			break;
-		}
-		PRINT("No type found");
-		return FieldType::None;
-	}
+	//static FieldType GetType(MonoType* mType)
+	//{
+	//	int typeCode = mono_type_get_type(mType); //MonoTypeEnum
+	//	switch (typeCode)
+	//	{
+	//	case MONO_TYPE_VALUETYPE:
+	//	{
+	//		char* typeName = mono_type_get_name(mType);
+	//		if (strcmp(typeName, "Vector2") == 0) { return FieldType::Vector2; }
+	//		if (strcmp(typeName, "Vector3") == 0) { return FieldType::Vector3; }
+	//		if (strcmp(typeName, "Vector4") == 0) { return FieldType::Vector4; }
+	//	}
+	//	case MONO_TYPE_CLASS:
+	//		break;
+	//	default:
+	//		return FieldType(typeCode);
+	//		break;
+	//	}
+	//	PRINT("No type found");
+	//	return FieldType::None;
+	//}
 
 	struct ScriptClass
 	{

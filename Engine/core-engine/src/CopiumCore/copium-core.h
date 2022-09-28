@@ -22,6 +22,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Physics/physics-system.h"
 #include "Graphics/graphics-system.h"
 #include "SceneManager/sm.h"
+#include "Utilities/thread-system.h"
 
 namespace Copium
 {

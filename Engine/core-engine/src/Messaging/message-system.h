@@ -13,12 +13,12 @@
 All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
-#include "../CopiumCore/system-interface.h"
-#include "message-types.h"
-
 #ifndef MESSAGE_SYSTEM_H
-
 #define MESSAGE_SYSTEM_H
+
+#include "CopiumCore/system-interface.h"
+#include "Messaging/message-types.h"
+
 namespace Copium::Message
 {
 

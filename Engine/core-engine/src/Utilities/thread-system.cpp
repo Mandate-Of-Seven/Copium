@@ -14,7 +14,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 
 #include "pch.h"
-#include "thread-system.h"
+#include "Utilities/thread-system.h"
 
 namespace Copium::Thread
 {

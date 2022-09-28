@@ -16,7 +16,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #pragma once
 
 #include <filesystem>
-#include "Scripting/file-path.h"
+#include "Files/file-system.h"
 
 
 namespace Copium::Scripting::Compiler
