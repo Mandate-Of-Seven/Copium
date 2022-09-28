@@ -11,7 +11,7 @@
 	This file contains the function definitions for a physics system. It will perform
 	physics and collision on a collider component of an object.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 #include "Physics/physics-system.h"
@@ -39,9 +39,9 @@ namespace Copium::Physics
 			convertedSize = Math::Vec2(size.x, size.y);
 			Copium::Component::RigidBody* box = new Copium::Component::RigidBody;
 			position = Copium::Graphics::GraphicsSystem::Instance()->get_sprites()[count]->get_position();
-			convertedPos = Math::Vec2(position.x, position.y);
-			box->set_pos(convertedPos);
+			convertedPos = {position};
 			box->set_vel(Math::Vec2{ 0.0, 0.0 });
+			box->set_acc(Math::Vec2{ 0.0,0.0 });
 			if (count == 0)
 			{
 				box->set_gravity(false);
@@ -63,27 +63,50 @@ namespace Copium::Physics
 
 		}
 		if (boxes.size() > 0)
-		{
+		{	
+			
 			if (Input::is_key_pressed(GLFW_KEY_I)) // move up
 			{
-				boxes[0]->set_vel(Math::Vec2{ 0.0,0.5 });
+				boxes[0]->add_acc(Math::Vec2{ 0.0,0.05 });
 			}
 			if (Input::is_key_pressed(GLFW_KEY_K)) // move down
 			{
-				boxes[0]->set_vel(Math::Vec2{ 0.0,-0.5 });
+				boxes[0]->add_acc(Math::Vec2{ 0.0,-0.05 });
 			}
 			if (Input::is_key_pressed(GLFW_KEY_L)) // move left
 			{
-				boxes[0]->set_vel(Math::Vec2{ 0.5,0.0 });
+				boxes[0]->add_acc(Math::Vec2{ 0.05,0.0 });
 			}
-			 if (Input::is_key_pressed(GLFW_KEY_J)) // move right
+			if (Input::is_key_pressed(GLFW_KEY_J)) // move right
 			{
-				boxes[0]->set_vel(Math::Vec2{ -0.5,0.0});
+				boxes[0]->add_acc(Math::Vec2{ -0.05,0.0 });
 			}
-
+			if (Input::is_key_pressed(GLFW_KEY_O)) //reset acceleration and velocity values
+			{
+				boxes[0]->set_acc(Math::Vec2{ 0.0,0.0 });
+				boxes[0]->set_vel(Math::Vec2{ 0.0,0.0 });
+			}
+		
 		}
-		update_pos();
-		check_collision();
+		if (Input::is_key_pressed(GLFW_KEY_P) && Input::is_key_pressed(GLFW_KEY_LEFT_SHIFT))
+			{
+			Physics::toggle_step();
+			}
+		if (stepModeActive == true)
+		{
+			if (Input::is_key_pressed(GLFW_KEY_0))
+			{
+				Physics::update_pos();
+				Physics::check_collision();
+			}
+		}
+		else
+		{
+			Physics::update_pos();
+			Physics::check_collision();
+		}
+			
+
 	}
 
 
@@ -97,8 +120,9 @@ namespace Copium::Physics
 	void Physics::update_pos()
 	{
 
-		float dt = (float)Windows::WindowsSystem::Instance()->get_delta_time();
+		double dt = Windows::WindowsSystem::Instance()->get_delta_time();
 		Math::Vec2 velocity;
+		Math::Vec2 acceleration;
 		glm::vec2 glmPosition;
 		glm::vec2 glmSize;
 		Math::Vec2 position;
@@ -106,19 +130,24 @@ namespace Copium::Physics
 		for (int a = 0; a < boxes.size(); a++)
 		{
 			velocity = boxes[a]->get_vel();
+			acceleration = boxes[a]->get_acc();
 			glmPosition = Copium::Graphics::GraphicsSystem::Instance()->get_sprites()[a]->get_position();
 			glmSize = Copium::Graphics::GraphicsSystem::Instance()->get_sprites()[a]->get_size();
 			position = Math::Vec2(glmPosition.x, glmPosition.y);
 			bound = boxes[a]->get_AABB();
 			if (boxes[a]->get_gravity() == true)
 			{
+				velocity = velocity + (acceleration * dt * 0.90);
 				velocity = velocity + (gravity * dt);
-				boxes[a]->set_vel(velocity);
 				position = position + (velocity * dt);
+				boxes[a]->set_vel(velocity);
+				
 			}
 			else
-			{
+			{	
+				velocity = velocity + (acceleration * dt * 0.90);
 				position = position + (velocity * dt);
+				boxes[a]->set_vel(velocity);
 			}
 			bound.max.x = position.x + (glmSize.x * 1 / 2);
 			bound.max.y = position.y + (glmSize.y * 1 / 2);
@@ -152,11 +181,19 @@ namespace Copium::Physics
 					boxes[a]->set_gravity(false);
 				}
 			}
-			else
-			{
-				boxes[a]->set_vel(velocity);
-			}
+		}
+	}
 
+	void Physics::toggle_step()
+	{
+		stepModeActive = !stepModeActive;
+		if (stepModeActive == true)
+		{
+			printf("Physics in step-by-step mode\n");
+		}
+		else
+		{
+			printf("Physics in normal mode\n");
 		}
 	}
 }
