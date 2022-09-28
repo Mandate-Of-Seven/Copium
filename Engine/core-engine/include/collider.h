@@ -22,11 +22,11 @@ namespace Copium::Component
 	public:
 		void const set_vel(Math::Vec2 _velocity) { velocity = _velocity; }
 		void const set_acc(Math::Vec2 _acceleration) { acceleration = _acceleration; }
-		void const add_acc(Math::Vec2 _acceleration) { acceleration += _acceleration; }
 		void const set_shape(Shape _objectShape) { objectShape = _objectShape; }
 		void const set_AABB(Math::Vec2 _min, Math::Vec2 _max) { boundingBox.max = _max; boundingBox.min = _min;}
 		void const set_active(bool _active) { active = _active; }
 		void const set_gravity(bool _gravity) { affectedGravity = _gravity; }
+		void const add_acc(Math::Vec2 _acceleration) { acceleration += _acceleration; }
 		bool get_active() { return active; }
 		bool get_gravity() { return affectedGravity; }
 		Math::Vec2 get_acc() { return acceleration; }

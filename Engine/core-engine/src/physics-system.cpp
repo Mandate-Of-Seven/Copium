@@ -39,7 +39,7 @@ namespace Copium::Physics
 			convertedSize = Math::Vec2(size.x, size.y);
 			Copium::Component::RigidBody* box = new Copium::Component::RigidBody;
 			position = Copium::Graphics::GraphicsSystem::Instance()->get_sprites()[count]->get_position();
-			convertedPos = { position.x, position.y };
+			convertedPos = {position};
 			box->set_vel(Math::Vec2{ 0.0, 0.0 });
 			box->set_acc(Math::Vec2{ 0.0,0.0 });
 			if (count == 0)
@@ -65,7 +65,7 @@ namespace Copium::Physics
 		if (boxes.size() > 0)
 		{	
 			
-			if (Input::isKeyPressed(GLFW_KEY_I)) // move up
+			if (Input::is_key_pressed(GLFW_KEY_I)) // move up
 			{
 				boxes[0]->add_acc(Math::Vec2{ 0.0,0.05 });
 			}
@@ -77,24 +77,24 @@ namespace Copium::Physics
 			{
 				boxes[0]->add_acc(Math::Vec2{ 0.05,0.0 });
 			}
-			if (Input::isKeyPressed(GLFW_KEY_J)) // move right
+			if (Input::is_key_pressed(GLFW_KEY_J)) // move right
 			{
 				boxes[0]->add_acc(Math::Vec2{ -0.05,0.0 });
 			}
-			if (Input::isKeyPressed(GLFW_KEY_O)) //reset acceleration and velocity values
+			if (Input::is_key_pressed(GLFW_KEY_O)) //reset acceleration and velocity values
 			{
 				boxes[0]->set_acc(Math::Vec2{ 0.0,0.0 });
 				boxes[0]->set_vel(Math::Vec2{ 0.0,0.0 });
 			}
 		
 		}
-		if (Input::isKeyPressed(GLFW_KEY_P) && Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT))
+		if (Input::is_key_pressed(GLFW_KEY_P) && Input::is_key_pressed(GLFW_KEY_LEFT_SHIFT))
 			{
 			Physics::toggle_step();
 			}
 		if (stepModeActive == true)
 		{
-			if (Input::isKeyPressed(GLFW_KEY_0))
+			if (Input::is_key_pressed(GLFW_KEY_0))
 			{
 				Physics::update_pos();
 				Physics::check_collision();
