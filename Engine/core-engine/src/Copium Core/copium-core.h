@@ -1,11 +1,11 @@
 #pragma once
-#include "system-interface.h"
+#include "Copium Core/system-interface.h"
 #include "Windows/windows-system.h"
 #include "message-system.h"
-#include "editor-system.h"
-#include "scripting-system.h"
-#include "physics-system.h"
-#include "graphics-system.h"
+#include "Editor/editor-system.h"
+#include "Scripting/scripting-system.h"
+#include "Physics/physics-system.h"
+#include "Graphics/graphics-system.h"
 #include "sm.h"
 
 namespace Copium

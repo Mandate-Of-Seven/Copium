@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "scripting.h"
+#include "Scripting/scripting.h"
 
 #define DEFAULT_SCRIPT_NAME "NewScript"
 #include <mono/jit/jit.h>

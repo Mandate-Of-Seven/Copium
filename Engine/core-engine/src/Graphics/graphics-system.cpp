@@ -17,8 +17,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 #include "Windows/windows-system.h"
 
-#include "graphics-system.h"
-#include "sprite-renderer.h"
+#include "Graphics/graphics-system.h"
+#include "Graphics/sprite-renderer.h"
 #include "Windows/input.h"
 
 namespace Copium::Graphics

@@ -15,7 +15,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef EDITOR_SYSTEM_H
 #define EDITOR_SYSTEM_H
 
-#include "system-interface.h"
+#include "Copium Core/system-interface.h"
 
 namespace Copium::Editor
 {

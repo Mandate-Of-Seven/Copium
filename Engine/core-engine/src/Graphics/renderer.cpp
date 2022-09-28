@@ -16,7 +16,7 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
-#include "graphics-system.h"
+#include "Graphics/graphics-system.h"
 #include <renderer.h>
 
 namespace Copium::Graphics

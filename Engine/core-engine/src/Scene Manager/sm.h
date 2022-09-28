@@ -25,7 +25,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef SM_H
 #define SM_H
 
-#include <system-interface.h>
+#include "Copium Core/system-interface.h"
 #include <game-object-factory.h>
 #include <scene.h>
 

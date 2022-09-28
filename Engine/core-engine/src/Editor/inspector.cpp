@@ -15,7 +15,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 
 #include "pch.h"
-#include "inspector.h"
+#include "Editor/inspector.h"
 
 
 #define BUTTON_HEIGHT 0.05 //Percent

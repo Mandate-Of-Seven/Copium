@@ -15,7 +15,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 #include "Windows/windows-system.h"
 #include "Editor/editor-sceneview.h"
-#include "graphics-system.h"
+#include "Graphics/graphics-system.h"
 
 namespace Copium::Editor::SceneView
 {

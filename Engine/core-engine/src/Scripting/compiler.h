@@ -1,7 +1,7 @@
 #pragma once
 
 #include <filesystem>
-#include "file-path.h"
+#include "Scripting/file-path.h"
 
 #define RECOMPILE_SCRIPTS_COOLDOWN 2.f
 

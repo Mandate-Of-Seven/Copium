@@ -17,7 +17,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor/editor-system.h"
 #include "Editor/editor-sceneview.h"
 #include "game-object.h"
-#include "inspector.h"
+#include "Editor/inspector.h"
 #include "Editor/ConsoleLog.h"
 
 namespace Copium::Editor

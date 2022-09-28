@@ -18,7 +18,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include "vertex-types.h"
+#include "Graphics/vertex-types.h"
 
 namespace Copium::Graphics 
 {

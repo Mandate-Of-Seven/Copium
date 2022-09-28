@@ -17,13 +17,13 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef GRAPHICS_SYSTEM_H
 #define GRAPHICS_SYSTEM_H
 
-#include "system-interface.h"
+#include "Copium Core/system-interface.h"
 
-#include "glslshader.h"
-#include "textures.h"
-#include "sprite-renderer.h"
-#include "framebuffer.h"
-#include "renderer.h"
+#include "Graphics/glslshader.h"
+#include "Graphics/textures.h"
+#include "Graphics/sprite-renderer.h"
+#include "Graphics/framebuffer.h"
+#include "Graphics/renderer.h"
 
 namespace Copium::Graphics
 {

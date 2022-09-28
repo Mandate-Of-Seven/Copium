@@ -19,7 +19,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ****/
 #ifndef GAME_OBJECT_FACTORY_H
 #define GAME_OBJECT_FACTORY_H
-#include <system-interface.h>
+#include "Copium Core/system-interface.h"
 #include <game-object.h>
 #include <scene.h>
 

@@ -1,9 +1,9 @@
 #include "pch.h"
-#include "scripting-system.h"
-#include "compiler.h"
-#include "scripting.h"
-#include "file-path.h"
-#include "system-interface.h"
+#include "Scripting/scripting-system.h"
+#include "Scripting/compiler.h"
+#include "Scripting/scripting.h"
+#include "Scripting/file-path.h"
+#include "Copium Core/system-interface.h"
 
 
 #include <Windows.h>

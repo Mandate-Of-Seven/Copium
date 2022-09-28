@@ -18,7 +18,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-#include "textures.h"
+#include "Graphics/textures.h"
 
 namespace Copium::Graphics
 {

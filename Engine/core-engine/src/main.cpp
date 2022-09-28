@@ -17,11 +17,11 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "pch.h"
 
 //PRECOMPILED HEADERS(Commonly used external libraries)
+#include "Editor/editor-system.h"
+#include "Scripting/scripting-system.h"
+#include "Scripting/scripting.h"
 #include "Windows/windows-system.h"
 #include "Windows/windows-input.h"
-#include "editor-system.h"
-#include "scripting-system.h"
-#include "scripting.h"
 #include "Debugging/logging.h"
 #include "Editor/ConsoleLog.h"
 
@@ -30,7 +30,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "scene-manager.h"
 
 //Systems
-#include "copium-core.h"
+#include "Copium Core/copium-core.h"
 #include "SAMPLE_RECEIVER.h"
 #include "serializer.h"
 #include "frameratecontroller.h"

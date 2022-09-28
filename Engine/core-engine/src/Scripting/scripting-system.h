@@ -5,7 +5,7 @@
 #include <mono/jit/jit.h>
 #include <thread>
 #include <filesystem>
-#include "system-interface.h"
+#include "Copium Core/system-interface.h"
 
 namespace Copium::Scripting
 {
