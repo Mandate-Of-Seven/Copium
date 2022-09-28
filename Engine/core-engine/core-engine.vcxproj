@@ -86,22 +86,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Physics\collision.cpp" />
-    <ClCompile Include="src\component.cpp" />
+    <ClCompile Include="src\Game Object\component.cpp" />
     <ClCompile Include="src\Editor\editor-system.cpp" />
     <ClCompile Include="src\Editor\ConsoleLog.cpp" />
     <ClCompile Include="src\Editor\editor-sceneview.cpp" />
-    <ClCompile Include="src\framebuffer.cpp" />
-    <ClCompile Include="src\frameratecontroller.cpp" />
-    <ClCompile Include="src\game-object-factory.cpp" />
-    <ClCompile Include="src\game-object.cpp" />
-    <ClCompile Include="src\gamestate-sandbox.cpp" />
-    <ClCompile Include="src\physics-system.cpp" />
-    <ClCompile Include="src\sound-system.cpp" />
-    <ClCompile Include="src\textures.cpp" />
-    <ClCompile Include="src\sm.cpp" />
-    <ClCompile Include="src\windows-system.cpp" />
-    <ClCompile Include="src\glslshader.cpp" />
-    <ClCompile Include="src\graphics-system.cpp" />
+    <ClCompile Include="src\Graphics\framebuffer.cpp" />
+    <ClCompile Include="src\Debugging\frameratecontroller.cpp" />
+    <ClCompile Include="src\Game Object\game-object-factory.cpp" />
+    <ClCompile Include="src\Game Object\game-object.cpp" />
+    <ClCompile Include="src\Scene Manager\gamestate-sandbox.cpp" />
+    <ClCompile Include="src\Physics\physics-system.cpp" />
+    <ClCompile Include="src\Audio\sound-system.cpp" />
+    <ClCompile Include="src\Graphics\textures.cpp" />
+    <ClCompile Include="src\Scene Manager\sm.cpp" />
+    <ClCompile Include="src\Windows\windows-system.cpp" />
+    <ClCompile Include="src\Graphics\glslshader.cpp" />
+    <ClCompile Include="src\Graphics\graphics-system.cpp" />
     <ClCompile Include="src\imgui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -123,71 +123,71 @@
     <ClCompile Include="src\imgui\imgui_widgets.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\inspector.cpp" />
-    <ClCompile Include="src\logging.cpp" />
+    <ClCompile Include="src\Editor\inspector.cpp" />
+    <ClCompile Include="src\Debugging\logging.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\math-library.cpp" />
-    <ClCompile Include="src\message-system.cpp" />
-    <ClCompile Include="src\renderer.cpp" />
-    <ClCompile Include="src\SAMPLE_RECEIVER.cpp">
+    <ClCompile Include="src\Math\math-library.cpp" />
+    <ClCompile Include="src\Messaging\message-system.cpp" />
+    <ClCompile Include="src\Graphics\renderer.cpp" />
+    <ClCompile Include="src\Messaging\SAMPLE_RECEIVER.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\scene-manager.cpp" />
-    <ClCompile Include="src\scene.cpp" />
+    <ClCompile Include="src\Scene Manager\scene-manager.cpp" />
+    <ClCompile Include="src\Scene Manager\scene.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\scripting.cpp" />
-    <ClCompile Include="src\scripting-system.cpp" />
-    <ClCompile Include="src\serializer.cpp" />
-    <ClCompile Include="src\state-manager.cpp" />
-    <ClCompile Include="src\system-interface.cpp">
+    <ClCompile Include="src\Scripting\scripting.cpp" />
+    <ClCompile Include="src\Scripting\scripting-system.cpp" />
+    <ClCompile Include="src\Scene Manager\serializer.cpp" />
+    <ClCompile Include="src\Scene Manager\state-manager.cpp" />
+    <ClCompile Include="src\Copium Core\system-interface.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\transform.cpp" />
-    <ClCompile Include="src\windows-input.cpp" />
+    <ClCompile Include="src\Math\transform.cpp" />
+    <ClCompile Include="src\Windows\windows-input.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Physics\collider.h" />
     <ClInclude Include="src\Physics\collision.h" />
-    <ClInclude Include="src\compiler.h" />
-    <ClInclude Include="src\component.h" />
+    <ClInclude Include="src\Scripting\compiler.h" />
+    <ClInclude Include="src\Game Object\component.h" />
     <ClInclude Include="src\Editor\ConsoleLog.h" />
-    <ClInclude Include="src\copium-core.h" />
+    <ClInclude Include="src\Copium Core\copium-core.h" />
     <ClInclude Include="src\Editor\editor-system.h" />
     <ClInclude Include="src\Editor\editor-sceneview.h" />
-    <ClInclude Include="src\file-path.h" />
-    <ClInclude Include="src\framebuffer.h" />
-    <ClInclude Include="src\frameratecontroller.h" />
-    <ClInclude Include="src\game-object-factory.h" />
-    <ClInclude Include="src\game-object.h" />
-    <ClInclude Include="src\gamestate-sandbox.h" />
-    <ClInclude Include="src\physics-system.h" />
-    <ClInclude Include="src\sound-system.h" />
-    <ClInclude Include="src\textures.h" />
-    <ClInclude Include="src\sm.h" />
-    <ClInclude Include="src\windows-system.h" />
-    <ClInclude Include="src\glslshader.h" />
-    <ClInclude Include="src\graphics-system.h" />
-    <ClInclude Include="src\input.h" />
-    <ClInclude Include="src\inspector.h" />
-    <ClInclude Include="src\logging.h" />
-    <ClInclude Include="src\math-library.h" />
-    <ClInclude Include="src\message-system.h" />
-    <ClInclude Include="src\message-types.h" />
+    <ClInclude Include="src\Scripting\file-path.h" />
+    <ClInclude Include="src\Graphics\framebuffer.h" />
+    <ClInclude Include="src\Debugging\frameratecontroller.h" />
+    <ClInclude Include="src\Game Object\game-object-factory.h" />
+    <ClInclude Include="src\Game Object\game-object.h" />
+    <ClInclude Include="src\Scene Manager\gamestate-sandbox.h" />
+    <ClInclude Include="src\Physics\physics-system.h" />
+    <ClInclude Include="src\Audio\sound-system.h" />
+    <ClInclude Include="src\Graphics\textures.h" />
+    <ClInclude Include="src\Scene Manager\sm.h" />
+    <ClInclude Include="src\Windows\windows-system.h" />
+    <ClInclude Include="src\Graphics\glslshader.h" />
+    <ClInclude Include="src\Graphics\graphics-system.h" />
+    <ClInclude Include="src\Windows\input.h" />
+    <ClInclude Include="src\Editor\inspector.h" />
+    <ClInclude Include="src\Debugging\logging.h" />
+    <ClInclude Include="src\Math\math-library.h" />
+    <ClInclude Include="src\Messaging\message-system.h" />
+    <ClInclude Include="src\Messaging\message-types.h" />
     <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\renderer.h" />
-    <ClInclude Include="src\SAMPLE_RECEIVER.h" />
-    <ClInclude Include="src\scene.h" />
-    <ClInclude Include="src\scene-manager.h" />
-    <ClInclude Include="src\scripting.h" />
-    <ClInclude Include="src\scripting-system.h" />
-    <ClInclude Include="src\serializer.h" />
-    <ClInclude Include="src\state-manager.h" />
-    <ClInclude Include="src\system-interface.h" />
-    <ClInclude Include="src\transform.h" />
-    <ClInclude Include="src\vertex-types.h" />
-    <ClInclude Include="src\windows-input.h" />
+    <ClInclude Include="src\Graphics\renderer.h" />
+    <ClInclude Include="src\Messaging\SAMPLE_RECEIVER.h" />
+    <ClInclude Include="src\Scene Manager\scene.h" />
+    <ClInclude Include="src\Scene Manager\scene-manager.h" />
+    <ClInclude Include="src\Scripting\scripting.h" />
+    <ClInclude Include="src\Scripting\scripting-system.h" />
+    <ClInclude Include="src\Scene Manager\serializer.h" />
+    <ClInclude Include="src\Scene Manager\state-manager.h" />
+    <ClInclude Include="src\Copium Core\system-interface.h" />
+    <ClInclude Include="src\Math\transform.h" />
+    <ClInclude Include="src\Graphics\vertex-types.h" />
+    <ClInclude Include="src\Windows\windows-input.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\shaders\line-shader-glsl.frag" />

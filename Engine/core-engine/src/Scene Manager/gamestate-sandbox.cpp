@@ -23,8 +23,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "gamestate-sandbox.h"
 #include <game-object-factory.h>
 
-#include <windows-system.h>
-#include <input.h>
+#include <Windows/windows-system.h>
+#include "Windows/input.h"
 #include <serializer.h>
 #include <rapidjson/prettywriter.h>
 

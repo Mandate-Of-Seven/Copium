@@ -14,7 +14,7 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "system-interface.h"
-#include "math-library.h"
+#include "Math/math-library.h"
 #include "Physics/collider.h"
 
 

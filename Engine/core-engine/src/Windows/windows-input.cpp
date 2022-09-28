@@ -14,11 +14,11 @@
 All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
-#include <input.h>
+#include "Windows/input.h"
 #include <iostream>
-#include "windows-input.h"
-#include "windows-system.h"
-#include <logging.h>
+#include "Windows/windows-input.h"
+#include "Windows/windows-system.h"
+#include <Debugging/logging.h>
 
 #define COPIUM_MAX_KEYS 400
 #define COPIUM_MAX_MOUSEBUTTONS 5

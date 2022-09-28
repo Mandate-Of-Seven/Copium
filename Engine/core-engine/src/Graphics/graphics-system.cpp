@@ -15,11 +15,11 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
-#include "windows-system.h"
+#include "Windows/windows-system.h"
 
 #include "graphics-system.h"
 #include "sprite-renderer.h"
-#include "input.h"
+#include "Windows/input.h"
 
 namespace Copium::Graphics
 {

@@ -1,5 +1,5 @@
 /*!***************************************************************************************
-\file			windows-system.h
+\file			Windows/windows-system.h
 \project
 \author			Sean Ngo
 
@@ -17,7 +17,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 *****************************************************************************************/
 #include "pch.h"
 
-#include "windows-system.h"
+#include "Windows/windows-system.h"
 
 namespace Copium::Windows
 {

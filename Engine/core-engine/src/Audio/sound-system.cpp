@@ -15,7 +15,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 *****************************************************************************************/
 
 #include "pch.h"
-#include "logging.h"
+#include "Debugging/logging.h"
 
 FMOD::System *SoundSystem::soundSystem;
 std::map<unsigned, std::pair<FMOD::SoundGroup*, FMOD::Sound*>> SoundSystem::soundList;

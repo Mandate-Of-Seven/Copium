@@ -1,6 +1,6 @@
 #pragma once
 #include "system-interface.h"
-#include "windows-system.h"
+#include "Windows/windows-system.h"
 #include "message-system.h"
 #include "editor-system.h"
 #include "scripting-system.h"
