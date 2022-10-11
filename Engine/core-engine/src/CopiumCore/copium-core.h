@@ -23,13 +23,14 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Graphics/graphics-system.h"
 #include "SceneManager/sm.h"
 #include "Utilities/thread-system.h"
+#include "Debugging/frame-rate-controller.h"
 
 namespace Copium
 {
 	CLASS_SYSTEM(CopiumCore)
 	{
 	public:
-		CopiumCore() {}
+		CopiumCore() : frc{ nullptr } {}
 
 		/**************************************************************************/
 		/*!
@@ -56,6 +57,9 @@ namespace Copium
 			{
 				pSystem->init();
 			}
+
+			frc = new FrameRateController;
+
 		}
 
 		/**************************************************************************/
@@ -66,10 +70,12 @@ namespace Copium
 		/**************************************************************************/
 		void update()
 		{
+			frc->update();
 			for (ISystem* pSystem : systems)
 			{
 				pSystem->update();
 			}
+			frc->end();
 		}
 
 		/**************************************************************************/
@@ -85,8 +91,12 @@ namespace Copium
 			{
 				pSystem->exit();
 			}
+
+			delete frc;
+			frc = nullptr;
 		}
 	private:
 		std::vector<ISystem*> systems;
+		FrameRateController* frc;
 	};
 }

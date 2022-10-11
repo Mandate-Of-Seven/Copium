@@ -18,11 +18,10 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Debugging/frame-rate-controller.h"
 #include "Windows/windows-system.h"
 
-// Bean: remove after encapsulating the namespace
 namespace Copium {
 	FrameRateController::FrameRateController(double _maxFPS) :
 		frameCount{0}, maxFrameRate{ _maxFPS }, frameRate{ _maxFPS }, minFrameTime{ 1 / _maxFPS },
-		frameStart{ 0.0 }, frameEnd{ 0.0 }, frameTime{ 0.0 } {}
+		frameStart{ 0.0 }, frameEnd{ 0.0 }, dt{ 0.0 }, accumulatedTime{ 0.0 }, stepCount{ 0 } {}
 
 	void FrameRateController::start()
 	{
@@ -30,19 +29,37 @@ namespace Copium {
 
 	}
 
-	double FrameRateController::end()
+	void FrameRateController::update()
 	{
-		while ((glfwGetTime() - frameStart) < minFrameTime) 
-		{
-			frameEnd = glfwGetTime();
-			frameTime = frameEnd - frameStart;
+		stepCount = 0;
 
+		dt = frameEnd - frameStart;
+		// For the next game loop calculation
+		frameStart = glfwGetTime();
+
+		accumulatedTime += dt;
+
+		while (accumulatedTime >= minFrameTime)
+		{
+			accumulatedTime -= minFrameTime;
+			++stepCount;
 		}
+
+		// Cap the number of steps
+		if (stepCount > MAX_STEP_COUNT)
+			stepCount = MAX_STEP_COUNT;
+
+		//std::cout << "StepCount: " << stepCount << std::endl;
+
+
+	}
+
+	void FrameRateController::end()
+	{
+		frameEnd = glfwGetTime();
 		Windows::WindowsSystem::Instance()->update_time(10.0);
-		//Windows::windowsSystem.update_time(10.0);
 		frameRate = Windows::WindowsSystem::Instance()->get_fps();
 		++frameCount;
-		return Windows::WindowsSystem::Instance()->get_fps();
 	}
 
 }
