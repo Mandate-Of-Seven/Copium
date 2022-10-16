@@ -123,7 +123,7 @@ namespace Copium::Physics
 		double dt = Windows::WindowsSystem::Instance()->get_delta_time();
 		Math::Vec2 velocity;
 		Math::Vec2 acceleration;
-		glm::vec2 glmPosition;
+		glm::vec3 glmPosition;
 		glm::vec2 glmSize;
 		Math::Vec2 position;
 		Copium::Collision::AABB bound;
@@ -154,7 +154,7 @@ namespace Copium::Physics
 			bound.min.x = position.x - (glmSize.x * 1 / 2);
 			bound.min.y = position.y - (glmSize.y * 1 / 2);
 			boxes[a]->set_AABB(bound.min, bound.max);
-			glmPosition = { position.x, position.y };
+			glmPosition = { position.x, position.y, 0.f };
 			Copium::Graphics::GraphicsSystem::Instance()->get_sprites()[a]->set_position(glmPosition);
 			
 		}

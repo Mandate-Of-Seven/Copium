@@ -16,6 +16,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define EDITOR_SYSTEM_H
 
 #include "CopiumCore/system-interface.h"
+#include "Editor/editor-sceneview.h"
+#include "Editor/editor-camera.h"
 
 namespace Copium::Editor
 {
@@ -54,8 +56,13 @@ namespace Copium::Editor
 		*/
 		/***************************************************************************/
 		void exit();
+		
+		EditorSceneView& get_scene_view() { return sceneView; }
+		EditorCamera& get_camera() { return camera; }
 
 	private:
+		EditorSceneView sceneView;
+		EditorCamera camera;
 	};
 }
 #endif // !EDITOR_SYSTEM_H

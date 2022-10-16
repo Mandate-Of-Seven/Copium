@@ -23,10 +23,13 @@ layout (location=0) out vec4 vColor;
 layout (location=1) out vec2 vTextureCoordinate;
 layout (location=2) out float vTextureIndex;
 
+uniform mat4 uViewProjection;
+
 void main()
 {
 	vColor				= aVertexColor;
 	vTextureCoordinate	= aTextureCoordinate;
 	vTextureIndex		= aTextureIndex;
-	gl_Position			= vec4(aVertexPosition, 1.0);
+	gl_Position			= uViewProjection * vec4(aVertexPosition, 1.0);
+	//gl_Position			= vec4(aVertexPosition, 1.0);
 }

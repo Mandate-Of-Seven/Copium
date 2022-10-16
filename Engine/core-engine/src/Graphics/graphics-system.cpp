@@ -21,10 +21,10 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Graphics/sprite-renderer.h"
 #include "Windows/input.h"
 
+#include "Editor/editor-system.h"
+
 namespace Copium::Graphics
 {
-	using Copium::Windows::WindowsSystem;
-
 	// Temporary global variables
 	GLfloat movement_x = 0.f, movement_y = 0.f;
 	GLfloat size_x = 0.f, size_y = 0.f;
@@ -34,11 +34,7 @@ namespace Copium::Graphics
 	void GraphicsSystem::init()
 	{
 		glClearColor(1.f, 1.f, 1.f, 1.f);
-		WindowsSystem* windowsSystem = WindowsSystem::Instance();
-		// Initialise Viewport
-
-		glViewport(0, 0, windowsSystem->get_window_width(), windowsSystem->get_window_height());
-
+		
 		// Setup Shaders
 		setup_shader_program("Assets/shaders/shader-glsl.vert",
 			"Assets/shaders/shader-glsl.frag");
@@ -76,7 +72,7 @@ namespace Copium::Graphics
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		if (Input::is_key_held(GLFW_KEY_A))
+		/*if (Input::is_key_held(GLFW_KEY_A))
 			movement_x -= dt;
 		else if (!Input::is_key_held(GLFW_KEY_LEFT_SHIFT) && Input::is_key_held(GLFW_KEY_D))
 			movement_x += dt;
@@ -84,7 +80,7 @@ namespace Copium::Graphics
 		if (Input::is_key_held(GLFW_KEY_W))
 			movement_y += dt;
 		else if (Input::is_key_held(GLFW_KEY_S))
-			movement_y -= dt;
+			movement_y -= dt;*/
 
 		// Create sprites
 		glm::vec2 mousePos{0}, centreOfScene{0}, mouseScenePos{0}, mouseToNDC{0};
@@ -92,17 +88,21 @@ namespace Copium::Graphics
 		{
 			SpriteRenderer* sprite = new SpriteRenderer;
 
+			Copium::Editor::EditorSystem* editor = Copium::Editor::EditorSystem::Instance();
+			glm::vec2 scenePos = editor->get_scene_view().get_scene_position();
+			glm::vec2 sceneDim = editor->get_scene_view().get_scene_dimension();
 			// Mouse to scene view conversion
 			mousePos = { Input::get_mouse_position().first , Input::get_mouse_position().second };
-			centreOfScene = { scenePosition.x + sceneWidth / 2, scenePosition.y + sceneHeight / 2 };
+			centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
 			mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
-			mouseToNDC = { mouseScenePos.x / sceneWidth * 2, mouseScenePos.y / sceneHeight * 2 + 0.2f };
+			mouseToNDC = { mouseScenePos.x / sceneDim.x * 2, mouseScenePos.y / sceneDim.y * 2 + 0.2f };
 
-			glm::vec2 pos = mouseToNDC;
+			glm::vec3 pos = glm::vec3(mouseToNDC, 0.f);
 
 			sprite->set_position(pos);
 
-			sprite->set_size( glm::vec2(0.09f, 0.16f ));
+			//sprite->set_size(glm::vec2(0.09f, 0.16f));
+			sprite->set_size( glm::vec2(1.f, 1.f));
 			sprite->set_color(glm::vec4(0.5f, 0.5f, 0.5f, 0.5f));
 			sprites.push_back(sprite);
 			
@@ -121,7 +121,7 @@ namespace Copium::Graphics
 			{
 				SpriteRenderer* sprite = new SpriteRenderer;
 
-				glm::vec2 pos = { rand() % 200 * 0.01f - 1.f, rand() % 200 * 0.01f - 1.f };
+				glm::vec3 pos = { rand() % 200 * 0.01f - 1.f, rand() % 200 * 0.01f - 1.f , 0.f};
 
 				sprite->set_position(pos);
 
@@ -145,7 +145,7 @@ namespace Copium::Graphics
 			debugMode = !debugMode;
 		}
 		
-		if (Input::is_key_held(GLFW_KEY_Z) && Input::is_key_held(GLFW_KEY_LEFT_SHIFT))
+		/*if (Input::is_key_held(GLFW_KEY_Z) && Input::is_key_held(GLFW_KEY_LEFT_SHIFT))
 		{
 			size_x -= dt;
 			size_y -= dt;
@@ -154,16 +154,16 @@ namespace Copium::Graphics
 		{
 			size_x += dt;
 			size_y += dt;
-		}
+		}*/
 
-		if (Input::is_key_held(GLFW_KEY_R) && Input::is_key_held(GLFW_KEY_LEFT_SHIFT))
+		/*if (Input::is_key_held(GLFW_KEY_R) && Input::is_key_held(GLFW_KEY_LEFT_SHIFT))
 		{
 			rotate -= dt * 75;
 		}
 		else if (Input::is_key_held(GLFW_KEY_R))
 		{
 			rotate += dt * 75;
-		}
+		}*/
 		
 		setup_matrices();
 
@@ -271,7 +271,7 @@ namespace Copium::Graphics
 			/*PRINT(i + 1 << " : Sprite Data: " << sprites[i]->get_position().x << "," << sprites[i]->get_position().y
 				<< "\t Size: " << sprites[i]->get_size().x << "," << sprites[i]->get_size().y);*/
 
-			glm::vec2 pos = { sprites[i]->get_position().x + movement_x, sprites[i]->get_position().y + movement_y };
+			glm::vec3 pos = { sprites[i]->get_position().x + movement_x, sprites[i]->get_position().y + movement_y, 0.f };
 			sprites[i]->set_position(pos);
 
 			glm::mat4 translate = {
@@ -281,7 +281,7 @@ namespace Copium::Graphics
 				glm::vec4(0.f, 0.f, 0.f, 1.f)
 			};
 
-			float rad = rotate * 3.14159265359f / 180.f;
+			float rad = glm::radians(rotate);
 
 			glm::mat4 rotation = {
 				glm::vec4(cos(rad), sin(rad), 0.f, 0.f),
@@ -340,22 +340,24 @@ namespace Copium::Graphics
 
 		renderer.flush();
 
-		// Sprites and Objects
+		// Spriqtes and Objects
 		renderer.begin_batch();
 
 		// Reference all sprites in the world and draw
 		// Overflowing sprites gets pushed to next draw call ( Which means dynamic 0.0 )
 		color = { 1.f, 1.f, 1.f, 1.f };
-		renderer.draw_quad({ 0.f, -0.5f }, { 1.6f, 0.1f }, color);
+		renderer.draw_quad({ 0.f, 0.f , 0.f}, { 2.f, 2.f }, 0.f, color);
+		color = { 1.f, 0.f, 1.f, 1.f };
+		renderer.draw_quad({ 0.f, 0.f , 1.f}, { 0.5f, 0.5f }, 0.f, color);
 
 		// Texture sampling
-		for (int i = 1; i < textureSlots.size(); i++)
+		/*for (int i = 1; i < textureSlots.size(); i++)
 		{
 			if (textureSlots[i] == 0)
 				continue;
 
-			renderer.draw_quad({ i * 0.2f - 0.6f, 0.f }, { 0.18f, 0.32f }, textureSlots[i]);
-		}
+			renderer.draw_quad({ i * 0.2f - 0.6f, -0.2f , 0.f}, { 0.36f, 0.64f }, 0.f, textureSlots[i]);
+		}*/
 
 		for (size_t i = 0; i < sprites.size(); i++)
 		{
@@ -364,35 +366,17 @@ namespace Copium::Graphics
 
 			int textureSelector = i % 5 + 1;
 
-			glm::vec2 pos = { sprites[i]->get_position().x + movement_x, sprites[i]->get_position().y + movement_y };
+			glm::vec3 pos = { sprites[i]->get_position().x + movement_x, sprites[i]->get_position().y + movement_y, 0.f };
 			glm::vec2 size = { sprites[i]->get_size().x + size_x, sprites[i]->get_size().y + size_y };
-
-			glm::mat4 translate = {
-				glm::vec4(1.f, 0.f, 0.f, 0.f),
-				glm::vec4(0.f, 1.f, 0.f, 0.f),
-				glm::vec4(pos.x, pos.y, 1.f, 0.f),
-				glm::vec4(0.f, 0.f, 0.f, 1.f)
-			};
-
-			float rad = rotate * 3.14159265359f / 180.f;
-
-			glm::mat4 rotation = {
-				glm::vec4(cos(rad), sin(rad), 0.f, 0.f),
-				glm::vec4(-sin(rad), cos(rad), 0.f, 0.f),
-				glm::vec4(0.f, 0.f, 1.f, 0.f),
-				glm::vec4(0.f, 0.f, 0.f, 1.f)
-			};
-
-			glm::mat4 transform = translate * rotation;
 
 			sprites[i]->set_position(pos);
 			sprites[i]->set_size(size);
 			sprites[i]->bind_texture(&textures[i%3]);
 
-			if(textureSelector == 5)
-				renderer.draw_quad(transform, sprites[i]->get_size(), sprites[i]->get_color());
+			if(textureSelector == 5) // Alpha Colored Square
+				renderer.draw_quad(pos, {1.f, 1.f}, rotate, sprites[i]->get_color());
 			else
-				renderer.draw_quad(transform, sprites[i]->get_size(), sprites[i]->get_texture()->get_object_id());
+				renderer.draw_quad(pos, size, rotate, sprites[i]->get_texture()->get_object_id());
 		}
 
 		renderer.end_batch();

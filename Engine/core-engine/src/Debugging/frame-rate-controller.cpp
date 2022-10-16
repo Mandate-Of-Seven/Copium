@@ -1,4 +1,19 @@
+/*!***************************************************************************************
+\file			frameratecontroller.cpp
+\project
+\author			Matthew Lau
+\co-authors
 
+\par			Course: GAM200
+\par			Section:
+\date			05/09/2022
+
+\brief
+	Contains the definitions for FrameRateController class, its constructor and 
+	member functions.
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #include "pch.h"
 #include "Debugging/frame-rate-controller.h"
 #include "Windows/windows-system.h"

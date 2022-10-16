@@ -44,7 +44,10 @@ namespace Copium::Editor
 		Window::EditorConsole::init();
 		Window::Inspector::selectedGameObject = new GameObject();
 
-		SceneView::init();
+		sceneView.init();
+		
+		// Initialize a new editor camera
+		camera.init(1.778f, -0.9f, 0.9f);
 	}
 
 	void EditorSystem::update()
@@ -58,10 +61,13 @@ namespace Copium::Editor
 		if (show_demo_window)
 			ImGui::ShowDemoWindow(&show_demo_window);
 
+		// Editor Camera
+		camera.update();
+		
 		// All the editor layers
 		Window::Inspector::update();
 		Window::EditorConsole::update();
-		SceneView::update();
+		sceneView.update();
 
 		ImGui::EndFrame();
 	}
@@ -79,6 +85,6 @@ namespace Copium::Editor
 		ImGui::DestroyContext();
 
 		delete Window::Inspector::selectedGameObject;
-		SceneView::exit();
+		sceneView.exit();
 	}
 }

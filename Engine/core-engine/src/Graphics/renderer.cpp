@@ -19,6 +19,11 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Graphics/graphics-system.h"
 #include "Graphics/renderer.h"
 
+#include "Editor/editor-system.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include "Graphics/camera.h"
+
 namespace Copium::Graphics
 {
 	void Renderer::init()
@@ -103,6 +108,18 @@ namespace Copium::Graphics
 		glVertexArrayElementBuffer(quadVertexArrayID, quadIndexBufferID);
 
 		glBindVertexArray(0);
+
+		// Setup default quad vertex positions
+		quadVertexPosition[0] = { -0.5f, -0.5f, 0.f, 1.f };
+		quadVertexPosition[1] = { 0.5f, -0.5f, 0.f, 1.f };
+		quadVertexPosition[2] = { 0.5f, 0.5f, 0.f, 1.f };
+		quadVertexPosition[3] = { -0.5f, 0.5f, 0.f, 1.f };
+
+		// Setup default textutre coordinates
+		quadTextCoord[0] = { 0.f, 0.f };
+		quadTextCoord[1] = { 1.f, 0.f };
+		quadTextCoord[2] = { 1.f, 1.f };
+		quadTextCoord[3] = { 0.f, 1.f };
 	}
 
 	// Setup the line vertex array object
@@ -156,6 +173,7 @@ namespace Copium::Graphics
 
 	void Renderer::flush()
 	{
+
 		if (quadIndexCount)
 		{
 			// Alpha blending for transparent objects
@@ -164,6 +182,23 @@ namespace Copium::Graphics
 
 			graphics->get_shader_program()[0].Use();
 			glBindVertexArray(quadVertexArrayID);
+
+			// Bean: Matrix assignment to be placed somewhere else
+			GLuint uProjection = glGetUniformLocation(
+				graphics->get_shader_program()[0].GetHandle(), "uViewProjection");
+
+			glm::mat4 projection = Copium::Editor::EditorSystem::Instance()->get_camera().get_view_projection();
+			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
+			/*PRINT("View Projection Matrix:");
+			for (int i = 0; i < 4; i++)
+			{
+				for (int j = 0; j < 4; j++)
+				{
+					std::cout << projection[j][i] << " ";
+				}
+				std::cout << "\n";
+			}*/
+			// End of matrix assignment
 			
 			for (GLuint i = 0; i < graphics->get_texture_slot_index(); i++)
 				glBindTextureUnit(i, graphics->get_texture_slots()[i]);
@@ -181,6 +216,15 @@ namespace Copium::Graphics
 		{
 			graphics->get_shader_program()[1].Use();
 			glBindVertexArray(lineVertexArrayID);
+
+			// Bean: Matrix assignment to be placed somewhere else
+			GLuint uProjection = glGetUniformLocation(
+				graphics->get_shader_program()[1].GetHandle(), "uViewProjection");
+
+			glm::mat4 projection = Copium::Editor::EditorSystem::Instance()->get_camera().get_view_projection();
+			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
+
+			// End of matrix assignment
 
 			glDrawArrays(GL_LINES, 0, lineVertexCount);
 			drawCount++;
@@ -213,7 +257,55 @@ namespace Copium::Graphics
 		
 	}
 
-	void Renderer::draw_quad(const glm::vec2& _position, const glm::vec2& _size, const glm::vec4& _color)
+	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const glm::vec4& _color)
+	{
+		glm::mat4 translate = glm::translate(glm::mat4(1.f), _position);
+		
+		float radians = glm::radians(_rotation);
+
+		glm::mat4 rotation = {
+			glm::vec4(cos(radians), sin(radians), 0.f, 0.f),
+			glm::vec4(-sin(radians), cos(radians), 0.f, 0.f),
+			glm::vec4(0.f, 0.f, 1.f, 0.f),
+			glm::vec4(0.f, 0.f, 0.f, 1.f)
+		};
+
+		glm::mat4 scale = {
+			glm::vec4(_scale.x, 0.f, 0.f, 0.f),
+			glm::vec4(0.f, _scale.y, 0.f, 0.f),
+			glm::vec4(0.f, 0.f, 1.f, 0.f),
+			glm::vec4(0.f, 0.f, 0.f, 1.f)
+		};
+
+		glm::mat4 transform = translate * rotation * scale;
+		draw_quad(transform, _color);
+	}
+
+	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, GLuint _textureID)
+	{
+		glm::mat4 translate = glm::translate(glm::mat4(1.f), _position);
+
+		float radians = glm::radians(_rotation);
+
+		glm::mat4 rotation = {
+			glm::vec4(cos(radians), sin(radians), 0.f, 0.f),
+			glm::vec4(-sin(radians), cos(radians), 0.f, 0.f),
+			glm::vec4(0.f, 0.f, 1.f, 0.f),
+			glm::vec4(0.f, 0.f, 0.f, 1.f)
+		};
+
+		glm::mat4 scale = {
+			glm::vec4(_scale.x, 0.f, 0.f, 0.f),
+			glm::vec4(0.f, _scale.y, 0.f, 0.f),
+			glm::vec4(0.f, 0.f, 1.f, 0.f),
+			glm::vec4(0.f, 0.f, 0.f, 1.f)
+		};
+
+		glm::mat4 transform = translate * rotation * scale;
+		draw_quad(transform, _textureID);
+	}
+
+	void Renderer::draw_quad(const glm::mat4& _transform, const glm::vec4& _color)
 	{
 		if (quadIndexCount >= maxIndexCount)
 		{
@@ -222,153 +314,29 @@ namespace Copium::Graphics
 			begin_batch();
 		}
 
-		GLfloat textureIndex = 0.f;
+		glm::mat4 projection = Copium::Editor::EditorSystem::Instance()->get_camera().get_view_projection();
+		
 
-		glm::vec2 halfsize = { _size.x / 2, _size.y / 2 };
+		GLfloat textureIndex = 0.f;
 
 		for (GLint i = 0; i < 4; i++)
 		{
-			if (i == 0)
-			{
-				quadBufferPtr->pos = { _position.x - halfsize.x, _position.y - halfsize.y, 0.0f };
-				quadBufferPtr->textCoord = { 0.f, 0.f };
-			}
-			else if (i == 1)
-			{
-				quadBufferPtr->pos = { _position.x + halfsize.x, _position.y - halfsize.y, 0.0f };
-				quadBufferPtr->textCoord = { 1.f, 0.f };
-			}
-			else if (i == 2)
-			{
-				quadBufferPtr->pos = { _position.x + halfsize.x, _position.y + halfsize.y, 0.0f };
-				quadBufferPtr->textCoord = { 1.f, 1.f };
-			}
-			else if (i == 3)
-			{
-				quadBufferPtr->pos = { _position.x - halfsize.x, _position.y + halfsize.y, 0.0f };
-				quadBufferPtr->textCoord = { 0.f, 1.f };
-			}
-
+			quadBufferPtr->pos = _transform * quadVertexPosition[i];
+			quadBufferPtr->textCoord = quadTextCoord[i];
 			quadBufferPtr->color = _color;
 			quadBufferPtr->texID = textureIndex;
 			quadBufferPtr++;
 		}
 
-		quadIndexCount += 6;
-		quadCount++;
-	}
-
-	void Renderer::draw_quad(const glm::vec2& _position, const glm::vec2& _size, GLuint _textureID)
-	{
-		if (quadIndexCount >= maxIndexCount || graphics->get_texture_slot_index() > maxTextures - 1)
-		{
-			end_batch();
-			flush();
-			begin_batch();
-		}
-
-		glm::vec4 color = { 1.f, 1.f, 1.f, 1.f };
-
-		GLfloat textureIndex = 0.f;
-
-		for (GLuint i = 1; i < graphics->get_texture_slot_index(); i++)
-		{
-			if (graphics->get_texture_slots()[i] == _textureID)
-			{
-				textureIndex = (GLfloat)i;
-				break;
-			}
-		}
-
-		if (textureIndex == 0.f)
-		{
-			textureIndex = (GLfloat) graphics->get_texture_slot_index();
-			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _textureID;
-			graphics->set_texture_slot_index((GLuint)textureIndex + 1);
-		}
-
-		//PRINT("Drawing texture: " << _textureID << " at texture slot: " << textureIndex);
-
-		glm::vec2 halfsize = { _size.x / 2, _size.y / 2 };
-
-		for (GLint i = 0; i < 4; i++)
-		{
-			if (i == 0)
-			{
-				quadBufferPtr->pos = { _position.x - halfsize.x, _position.y - halfsize.y, 0.0f };
-				quadBufferPtr->textCoord = { 0.f, 0.f };
-			}
-			else if (i == 1)
-			{
-				quadBufferPtr->pos = { _position.x + halfsize.x, _position.y - halfsize.y, 0.0f };
-				quadBufferPtr->textCoord = { 1.f, 0.f };
-			}
-			else if (i == 2)
-			{
-				quadBufferPtr->pos = { _position.x + halfsize.x, _position.y + halfsize.y, 0.0f };
-				quadBufferPtr->textCoord = { 1.f, 1.f };
-			}
-			else if (i == 3)
-			{
-				quadBufferPtr->pos = { _position.x - halfsize.x, _position.y + halfsize.y, 0.0f };
-				quadBufferPtr->textCoord = { 0.f, 1.f };
-			}
-
-			quadBufferPtr->color = color;
-			quadBufferPtr->texID = textureIndex;
-			quadBufferPtr++;
-		}
+		glm::vec3 pos = (quadBufferPtr - 4)->pos;
+		pos = projection * glm::vec4(pos, 1.f);
+		//std::cout << "Position: " << pos.x << "," << pos.y << "," << pos.z << "\n";
 
 		quadIndexCount += 6;
 		quadCount++;
 	}
 
-	void Renderer::draw_quad(const glm::mat4& _transform, const glm::vec2& _size, const glm::vec4& _color)
-	{
-		if (quadIndexCount >= maxIndexCount)
-		{
-			end_batch();
-			flush();
-			begin_batch();
-		}
-
-		GLfloat textureIndex = 0.f;
-
-		glm::vec2 halfsize = { _size.x / 2, _size.y / 2 };
-
-		for (GLint i = 0; i < 4; i++)
-		{
-			if (i == 0)
-			{
-				quadBufferPtr->pos = _transform * glm::vec4(-halfsize.x, -halfsize.y, 1.f, 1.f);
-				quadBufferPtr->textCoord = { 0.f, 0.f };
-			}
-			else if (i == 1)
-			{
-				quadBufferPtr->pos = _transform * glm::vec4(halfsize.x, -halfsize.y, 1.f, 1.f);
-				quadBufferPtr->textCoord = { 1.f, 0.f };
-			}
-			else if (i == 2)
-			{
-				quadBufferPtr->pos = _transform * glm::vec4(halfsize.x, halfsize.y, 1.f, 1.f);
-				quadBufferPtr->textCoord = { 1.f, 1.f };
-			}
-			else if (i == 3)
-			{
-				quadBufferPtr->pos = _transform * glm::vec4(-halfsize.x, halfsize.y, 1.f, 1.f);
-				quadBufferPtr->textCoord = { 0.f, 1.f };
-			}
-
-			quadBufferPtr->color = _color;
-			quadBufferPtr->texID = textureIndex;
-			quadBufferPtr++;
-		}
-
-		quadIndexCount += 6;
-		quadCount++;
-	}
-
-	void Renderer::draw_quad(const glm::mat4& _transform, const glm::vec2& _size, GLuint _textureID)
+	void Renderer::draw_quad(const glm::mat4& _transform, GLuint _textureID)
 	{
 		if (quadIndexCount >= maxIndexCount)
 		{
@@ -397,31 +365,10 @@ namespace Copium::Graphics
 			graphics->set_texture_slot_index((GLuint)textureIndex + 1);
 		}
 
-		glm::vec2 halfsize = { _size.x / 2, _size.y / 2 };
-
 		for (GLint i = 0; i < 4; i++)
 		{
-			if (i == 0)
-			{
-				quadBufferPtr->pos = _transform * glm::vec4(-halfsize.x, -halfsize.y, 1.f, 1.f);
-				quadBufferPtr->textCoord = { 0.f, 0.f };
-			}
-			else if (i == 1)
-			{
-				quadBufferPtr->pos = _transform * glm::vec4(halfsize.x, -halfsize.y, 1.f, 1.f);
-				quadBufferPtr->textCoord = { 1.f, 0.f };
-			}
-			else if (i == 2)
-			{
-				quadBufferPtr->pos = _transform * glm::vec4(halfsize.x, halfsize.y, 1.f, 1.f);
-				quadBufferPtr->textCoord = { 1.f, 1.f };
-			}
-			else if (i == 3)
-			{
-				quadBufferPtr->pos = _transform * glm::vec4(-halfsize.x, halfsize.y, 1.f, 1.f);
-				quadBufferPtr->textCoord = { 0.f, 1.f };
-			}
-
+			quadBufferPtr->pos = _transform * quadVertexPosition[i];
+			quadBufferPtr->textCoord = quadTextCoord[i];
 			quadBufferPtr->color = color;
 			quadBufferPtr->texID = textureIndex;
 			quadBufferPtr++;

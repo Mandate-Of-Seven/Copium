@@ -15,17 +15,41 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef EDITOR_SCENEVIEW_H
 #define EDITOR_SCENEVIEW_H
 
-#include "Editor/editor-system.h"
+#include <glm/vec2.hpp>
 
 namespace Copium::Editor
 {
-	namespace SceneView
+	class EditorSceneView
 	{
+	public:
 		void init();
 
 		void update();
 
 		void exit();
+
+		void resize_sceneview(glm::vec2 _newDimension);
+		
+		// Accessing Properties
+
+		// Scene Properties
+		int const get_scene_width() { return sceneWidth; }
+		void const set_scene_width(int _width) { sceneWidth = _width; }
+
+		int const get_scene_height() { return sceneHeight; }
+		void const set_scene_height(int _height) { sceneHeight = _height; }
+
+		glm::vec2 const get_scene_position() { return scenePosition; }
+		void const set_scene_position(glm::vec2 _position) { scenePosition = _position; }
+
+		glm::vec2 const get_scene_dimension() { return sceneDimension; }
+		void const set_scene_dimension(glm::vec2 _dimension) { sceneDimension = _dimension; }
+
+	private:
+		/* Scene Data *******************************************************************/
+		int sceneWidth = 1280, sceneHeight = 720; // The dimension of the viewport
+		glm::vec2 sceneDimension{0}; // The dimension of the viewport as vector 2
+		glm::vec2 scenePosition{0}; // The position of the viewport
 	};
 
 }

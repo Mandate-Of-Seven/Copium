@@ -74,11 +74,13 @@ bool WindowsInput::is_key_held_impl(int keycode)
 bool WindowsInput::is_mousebutton_pressed_impl(int button)
 {
     COPIUM_ASSERT((button > COPIUM_MAX_MOUSEBUTTONS), "Mouse button entered is out of range");
+    
     if (get_input_instance()->mouseButtons[button])
     {
         get_input_instance()->mouseButtons[button] = 0;
         return true;
     }
+
     return false;
 }
 
@@ -203,7 +205,7 @@ void Input::mousebutton_callback(GLFWwindow* window, int button, int action, int
 
 void Input::mousescroll_callback(GLFWwindow* window, double xOffset, double yOffset)
 {
-    (void) window;
+    (void) window, xOffset, yOffset;
     #ifdef _DEBUG
         std::cout << "Mouse scroll wheel offset: (" << xOffset << ", " << yOffset << ")" << std::endl;
     #endif
@@ -211,7 +213,7 @@ void Input::mousescroll_callback(GLFWwindow* window, double xOffset, double yOff
 
 void Input::mousepos_callback(GLFWwindow* window, double xPos, double yPos)
 {
-    (void) window;
+    (void) window, xPos, yPos;
     #ifdef _DEBUG
         std::cout << "Mouse cursor position: (" << xPos << ", " << yPos << ")" << std::endl;
     #endif
