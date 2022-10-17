@@ -16,19 +16,11 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <GL/glew.h>
 
 #include "Graphics/framebuffer.h"
-#include "Editor/editor-system.h"
 
 namespace Copium::Graphics
 {
-	// Global Declaration
-	Copium::Editor::EditorSystem* editor;
-	Copium::Editor::EditorSceneView sceneView;
-
 	void Framebuffer::init()
 	{
-		editor = Copium::Editor::EditorSystem::Instance();
-		sceneView = editor->get_scene_view();
-
 		if (get_buffer_object_id())
 		{
 			glDeleteFramebuffers(1, &get_buffer_object_id());
@@ -42,8 +34,8 @@ namespace Copium::Graphics
 		// Creating the color attachment
 		glCreateTextures(GL_TEXTURE_2D, 1, &colorAttachment);
 		glBindTexture(GL_TEXTURE_2D, colorAttachment);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, sceneView.get_scene_width(),
-			sceneView.get_scene_height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width,
+			height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -53,8 +45,8 @@ namespace Copium::Graphics
 		// Creating the depth and stencil attachment
 		glCreateTextures(GL_TEXTURE_2D, 1, &depthAttachment);
 		glBindTexture(GL_TEXTURE_2D, depthAttachment);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, sceneView.get_scene_width(),
-			sceneView.get_scene_height(), 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, nullptr);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, width,
+			height, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, nullptr);
 
 		// Attaching depth and stencil attachment onto framebuffer
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthAttachment, 0);
@@ -86,7 +78,7 @@ namespace Copium::Graphics
 
 	void Framebuffer::bind()
 	{
-		glViewport(0, 0, sceneView.get_scene_width(), sceneView.get_scene_height());
+		glViewport(0, 0, width, height);
 		glBindFramebuffer(GL_FRAMEBUFFER, get_buffer_object_id());
 	}
 
@@ -96,9 +88,19 @@ namespace Copium::Graphics
 	}
 
 	// Bean: update via messaging
-	void Framebuffer::resize()
+	void Framebuffer::resize(GLuint _width, GLuint _height)
 	{
+		COPIUM_ASSERT(_width == 0 || _height == 0, "Resize of Framebuffer Invalid!!");
+		width = _width;
+		height = _height;
+
 		init();
+	}
+
+	void Framebuffer::set_size(GLuint _width, GLuint _height)
+	{
+		width = _width;
+		height = _height;
 	}
 
 	void Framebuffer::exit()

@@ -23,7 +23,7 @@ namespace Copium::Editor
 	class EditorCamera : public Camera
 	{
 	public:
-		void init(float _aspectRatio, float _bottom, float _top);
+		void init(float _aspectRatio, bool _rotation = false);
 		
 		void update();
 
@@ -43,34 +43,33 @@ namespace Copium::Editor
 		// Matrices
 		void on_resize(float _width, float _height);
 
-		glm::mat4 get_ortho_projection() const { return orthoProjMatrix; }
 		glm::mat4 get_projection() const { return projMatrix; }
+		glm::mat4 get_ortho_projection() const { return orthoProjMatrix; }
 		glm::mat4 get_view_matrix() const { return viewMatrix; }
-		glm::mat4 get_view_projection() const { return viewProjMatrix; }
 
 	private:
+		void update_ortho_projection(float _aspectRatio, float _zoomLevel);
 		void update_ortho_projection(float _left, float _right, float _bottom, float _top);
 
 		void update_view_matrix();
-
 		void mouse_controls();
 
 		glm::vec3 calculate_position();
 
 	private:
 		/* Camera Data ******************************************************************/
-		glm::vec3 focalPoint;
-		glm::vec2 mousePosition;
+		glm::vec3 focalPoint{0};
+		glm::vec2 mousePosition{0};
 
 		float aspectRatio = 0.f;
 		float nearClip = -1.f, farClip = 10.f; // Orthographic projection's view box
 		float zoomLevel = 1.f; // To zoom in and out
 		float pitch = 0.f, yaw = 0.f; // For rotation
+		int width = 0, height = 0;
 
 		/* Matrices & Projection ********************************************************/
 		glm::mat4 projMatrix{0};
 		glm::mat4 viewMatrix{0};
-		glm::mat4 viewProjMatrix{0};
 		glm::mat4 orthoProjMatrix{0};
 	};
 }

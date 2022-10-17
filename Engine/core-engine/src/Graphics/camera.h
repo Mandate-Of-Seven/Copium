@@ -28,13 +28,17 @@ namespace Copium
 		glm::vec3 get_position() const { return position; }
 		void set_position(glm::vec3 _position) { position = _position; }
 
-		Transform* get_transform() { return transform; }
-		void set_transform(Transform* _transform) { transform = _transform; }
+		glm::mat4 get_transform() { return transform; }
+		void set_transform(glm::mat4 _transform) { transform = _transform; }
+
+		float get_angle() const { return angle; }
+		void set_angle(float _angle) { angle = _angle; }
 
 	private:
 		/* Camera Data ******************************************************************/
-		glm::vec3 position;
-		Transform* transform; // Transform of the camera
+		glm::vec3 position{0};
+		float angle = 0.f;
+		glm::mat4 transform{0}; // Transform of the camera
 
 	};
 }

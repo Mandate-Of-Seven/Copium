@@ -31,5 +31,4 @@ void main()
 	vTextureCoordinate	= aTextureCoordinate;
 	vTextureIndex		= aTextureIndex;
 	gl_Position			= uViewProjection * vec4(aVertexPosition, 1.0);
-	//gl_Position			= vec4(aVertexPosition, 1.0);
 }

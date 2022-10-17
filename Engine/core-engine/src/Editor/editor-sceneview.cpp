@@ -21,45 +21,52 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 namespace Copium::Editor
 {
 	// Bean: Temporary global variable
-	EditorCamera camera;
 	Copium::Graphics::GraphicsSystem* graphics;
 
 	void EditorSceneView::init()
 	{
 		graphics = Copium::Graphics::GraphicsSystem::Instance();
-		EditorSystem* editor = EditorSystem::Instance();
-		camera = editor->get_camera();
 
 		sceneDimension = { sceneWidth, sceneHeight };
 	}
 
 	void EditorSceneView::update()
 	{
-		ImGuiWindowFlags window_flags = 0;
-		window_flags |= ImGuiWindowFlags_NoCollapse;
+		// Scene view settings
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings;
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
-		// Begin
+
+		// Begin Scene View
 		ImGui::Begin("Scene View", 0, window_flags);
+		
 		scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
 
+		GLuint textureID = graphics->get_framebuffer()->get_color_attachment_id();
+		ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
+		resize_sceneview(*((glm::vec2*) &viewportEditorSize));
+		ImGui::Image((void*) (size_t) textureID, ImVec2{ (float)sceneWidth, (float)sceneHeight }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
+
+		ImGui::End();
+		ImGui::PopStyleVar();
+		// End Scene View
+		
+		// Render stats settings
+		window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+		ImGui::SetNextWindowBgAlpha(0.35f); // Transparent background
+
+		// Begin Render Stats
+		ImGui::Begin("Renderer Stats", 0, window_flags);
+
+		ImGui::Text("Render Stats");
 		char buffer[64];
-		sprintf(buffer, "Sprite Count: %d", (int)graphics->get_sprites().size());
+		sprintf(buffer, "Sprite Count: %d", (int) graphics->get_sprites().size());
 		ImGui::Text(buffer);
 
 		sprintf(buffer, "Viewport Dimensions: %d by %d", sceneWidth, sceneHeight);
 		ImGui::Text(buffer);
 
-		GLuint textureID = graphics->get_framebuffer().get_color_attachment_id();
-
-		ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
-		resize_sceneview(*((glm::vec2*) &viewportEditorSize));
-
-		ImGui::Image((void*) (size_t) textureID, ImVec2{ (float)sceneWidth, (float)sceneHeight }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
-
-		// End
+		// End Render Stats
 		ImGui::End();
-		ImGui::PopStyleVar();
-		
 	}
 
 	void EditorSceneView::exit()
@@ -70,13 +77,13 @@ namespace Copium::Editor
 	void EditorSceneView::resize_sceneview(glm::vec2 _newDimension)
 	{
 		// Only if the current scene dimension is not the same as new dimension
-		if (sceneDimension != _newDimension)
+		if (sceneDimension != _newDimension && _newDimension.x != 0 && _newDimension.y != 0)
 		{
 			sceneDimension = { _newDimension.x, _newDimension.y };
 			sceneWidth = (int)sceneDimension.x;
 			sceneHeight = (int)sceneDimension.y;
-			camera.on_resize(sceneWidth, sceneHeight);
-			graphics->get_framebuffer().resize();
+			graphics->get_framebuffer()->resize(sceneWidth, sceneHeight);
+			EditorSystem::Instance()->get_camera()->on_resize(sceneWidth, sceneHeight);
 		}
 	}
 }

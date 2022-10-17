@@ -79,7 +79,7 @@ namespace Copium::Graphics
 		GLSLShader* const get_shader_program() { return shaderProgram; }
 		void add_sprite(SpriteRenderer * _sprite) { sprites.push_back(_sprite); }
 		std::vector<SpriteRenderer*> const get_sprites() { return sprites; }
-		Framebuffer get_framebuffer() { return framebuffer; }
+		Framebuffer* get_framebuffer() { return &framebuffer; }
 
 #pragma region MemberFunctions
 	private:
@@ -157,11 +157,6 @@ namespace Copium::Graphics
 		GLuint textureSlotIndex = 1; // Initializes with 1
 		GLuint whiteTexture = 0;
 		GLuint whiteTextureSlot = 0;
-
-		/* Projections & Matrices *******************************************************/
-		glm::mat4 projMatrix{0};
-		glm::mat4 viewMatrix{0};
-		glm::mat4 viewProjMatrix{0};
 
 		/* Shaders **********************************************************************/
 		GLSLShader shaderProgram[2]; // Shader program to use

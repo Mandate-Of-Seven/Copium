@@ -33,17 +33,17 @@ namespace Copium::Editor
 		// Accessing Properties
 
 		// Scene Properties
-		int const get_scene_width() { return sceneWidth; }
-		void const set_scene_width(int _width) { sceneWidth = _width; }
+		int const get_width() { return sceneWidth; }
+		void const set_width(int _width) { sceneWidth = _width; }
 
-		int const get_scene_height() { return sceneHeight; }
-		void const set_scene_height(int _height) { sceneHeight = _height; }
+		int const get_height() { return sceneHeight; }
+		void const set_height(int _height) { sceneHeight = _height; }
 
-		glm::vec2 const get_scene_position() { return scenePosition; }
-		void const set_scene_position(glm::vec2 _position) { scenePosition = _position; }
+		glm::vec2 const get_position() { return scenePosition; }
+		void const set_position(glm::vec2 _position) { scenePosition = _position; }
 
-		glm::vec2 const get_scene_dimension() { return sceneDimension; }
-		void const set_scene_dimension(glm::vec2 _dimension) { sceneDimension = _dimension; }
+		glm::vec2 const get_dimension() { return sceneDimension; }
+		void const set_dimension(glm::vec2 _dimension) { sceneDimension = _dimension; }
 
 	private:
 		/* Scene Data *******************************************************************/

@@ -20,9 +20,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Graphics/renderer.h"
 
 #include "Editor/editor-system.h"
-#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "Graphics/camera.h"
 
 namespace Copium::Graphics
 {
@@ -186,15 +184,20 @@ namespace Copium::Graphics
 			// Bean: Matrix assignment to be placed somewhere else
 			GLuint uProjection = glGetUniformLocation(
 				graphics->get_shader_program()[0].GetHandle(), "uViewProjection");
-
-			glm::mat4 projection = Copium::Editor::EditorSystem::Instance()->get_camera().get_view_projection();
+			GLuint uTransform = glGetUniformLocation(
+				graphics->get_shader_program()[0].GetHandle(), "uTransform");
+			glm::mat4 projection = Copium::Editor::EditorSystem::Instance()->get_camera()->get_projection();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
-			/*PRINT("View Projection Matrix:");
+			glm::vec3 pos = Copium::Editor::EditorSystem::Instance()->get_camera()->get_position();
+			glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
+			glUniformMatrix4fv(uTransform, 1, GL_FALSE, glm::value_ptr(transform));
+			
+			/*PRINT("Transform Matrix:");
 			for (int i = 0; i < 4; i++)
 			{
 				for (int j = 0; j < 4; j++)
 				{
-					std::cout << projection[j][i] << " ";
+					std::cout << transform[j][i] << " ";
 				}
 				std::cout << "\n";
 			}*/
@@ -221,7 +224,7 @@ namespace Copium::Graphics
 			GLuint uProjection = glGetUniformLocation(
 				graphics->get_shader_program()[1].GetHandle(), "uViewProjection");
 
-			glm::mat4 projection = Copium::Editor::EditorSystem::Instance()->get_camera().get_view_projection();
+			glm::mat4 projection = Copium::Editor::EditorSystem::Instance()->get_camera()->get_projection();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
 			// End of matrix assignment
@@ -314,9 +317,6 @@ namespace Copium::Graphics
 			begin_batch();
 		}
 
-		glm::mat4 projection = Copium::Editor::EditorSystem::Instance()->get_camera().get_view_projection();
-		
-
 		GLfloat textureIndex = 0.f;
 
 		for (GLint i = 0; i < 4; i++)
@@ -327,10 +327,6 @@ namespace Copium::Graphics
 			quadBufferPtr->texID = textureIndex;
 			quadBufferPtr++;
 		}
-
-		glm::vec3 pos = (quadBufferPtr - 4)->pos;
-		pos = projection * glm::vec4(pos, 1.f);
-		//std::cout << "Position: " << pos.x << "," << pos.y << "," << pos.z << "\n";
 
 		quadIndexCount += 6;
 		quadCount++;

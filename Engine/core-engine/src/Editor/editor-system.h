@@ -57,8 +57,8 @@ namespace Copium::Editor
 		/***************************************************************************/
 		void exit();
 		
-		EditorSceneView& get_scene_view() { return sceneView; }
-		EditorCamera& get_camera() { return camera; }
+		EditorSceneView* get_scene_view() { return &sceneView; }
+		EditorCamera* get_camera() { return &camera; }
 
 	private:
 		EditorSceneView sceneView;
