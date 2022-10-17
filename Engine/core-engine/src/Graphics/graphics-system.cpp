@@ -65,6 +65,7 @@ namespace Copium::Graphics
 		load_texture("Assets/textures/train-part-02.png");
 		load_texture("Assets/textures/train-part-03.png");
 		load_texture("Assets/textures/train-part-04.png");
+		load_texture("Assets/textures/mock-up.png");
 	}
 
 	void GraphicsSystem::update()
@@ -346,8 +347,14 @@ namespace Copium::Graphics
 
 		// Reference all sprites in the world and draw
 		// Overflowing sprites gets pushed to next draw call ( Which means dynamic 0.0 )
-		color = { 1.f, 1.f, 1.f, 1.f };
-		renderer.draw_quad({ 1.f, 1.f , 0.f}, { 0.3f, 0.3f }, 0.f, color);
+		
+		// Background
+		// Bean: scale should be the scale of the object, 
+		// texture scale should be separate and derived from the image dimensions
+		renderer.draw_quad({ 0.f, 0.f , 0.f }, { 3.84f, 2.16f }, 0.f, textures[4].get_object_id());
+		
+		color = { 0.f, 0.f, 0.f, 1.f };
+		renderer.draw_quad({ 0.f, 0.f , 0.f}, { 0.3f, 0.3f }, 0.f, color);
 
 		for (size_t i = 0; i < sprites.size(); i++)
 		{
