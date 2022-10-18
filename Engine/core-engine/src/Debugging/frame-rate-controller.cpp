@@ -32,7 +32,7 @@ namespace Copium {
 	void FrameRateController::update()
 	{
 		stepCount = 0;
-
+		frameEnd = glfwGetTime();
 		dt = frameEnd - frameStart;
 		// For the next game loop calculation
 		frameStart = glfwGetTime();
@@ -56,7 +56,7 @@ namespace Copium {
 
 	void FrameRateController::end()
 	{
-		frameEnd = glfwGetTime();
+		//frameEnd = glfwGetTime();
 		Windows::WindowsSystem::Instance()->update_time(10.0);
 		frameRate = Windows::WindowsSystem::Instance()->get_fps();
 		++frameCount;

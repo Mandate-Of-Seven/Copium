@@ -48,9 +48,9 @@ namespace Copium
 				Editor::EditorSystem::Instance(),
 				Files::FileSystem::Instance(),
 				//Scripting::ScriptingSystem::Instance(),
+				NewSceneManager::Instance(),
 				Physics::Physics::Instance(),
 				Graphics::GraphicsSystem::Instance(),
-				NewSceneManager::Instance(),
 				Thread::ThreadSystem::Instance()
 			};
 			for (ISystem* pSystem : systems)
@@ -59,6 +59,13 @@ namespace Copium
 			}
 
 			frc = new FrameRateController;
+
+			// Testing archetype registering at init
+			double start = glfwGetTime();
+			NewSceneManager::Instance()->get_gof().register_archetypes("Data/Archetypes");
+			double timeTaken = glfwGetTime() - start;
+			std::cout << "Time taken to register all archetypes: " << timeTaken << std::endl;
+			NewSceneManager::Instance()->get_gof().build_gameobject("Default");
 
 		}
 

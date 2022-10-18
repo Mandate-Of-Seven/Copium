@@ -68,9 +68,9 @@ namespace Window
             if (selectedGameObject)
             {
                 Transform trans{ selectedGameObject->Trans() };
-                Vector3 position = trans.Position().to_glm();
-                Vector3 rotation = trans.Rotation().to_glm();
-                Vector3 scale = trans.Scale().to_glm();
+                Vector3 position = trans.get_position().to_glm();
+                Vector3 rotation = trans.get_rotation().to_glm();
+                Vector3 scale = trans.get_scale().to_glm();
                 if (ImGui::CollapsingHeader("Transform"))
                 {
                     if (ImGui::BeginTable("split", 4))

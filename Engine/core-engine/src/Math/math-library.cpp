@@ -53,6 +53,9 @@ namespace Copium::Math
 
 	}
 
+	myint::myint() : i{0} {}
+	myint::myint(int32_t _i) : i{_i} {}
+
 
 	// Vec2-----------------------------------------
 	// Vec2 Constructors

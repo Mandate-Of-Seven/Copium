@@ -24,6 +24,11 @@ namespace Copium::Physics
 	Copium::Collision::AABB floor = { (Math::Vec2{ -0.8,-0.55 }), (Math::Vec2{ 0.8,-0.45 }) }; //position of floor
 	void Physics::init()
 	{
+		// Registration of collider creator
+		if (NewSceneManager::Instance())
+		{
+			NewSceneManager::Instance()->get_gof().add_component_creator(COLLIDER_CREATOR, new ColliderCreator());
+		}
 
 	}
 	void Physics::update()

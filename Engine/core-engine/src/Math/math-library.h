@@ -35,7 +35,9 @@ namespace Copium::Math
 	//Ignore this, for debug purposes
 	class myint {
 	public:
-		int64_t i;
+		myint();
+		myint(int32_t _i);
+		int32_t i;
 		RTTR_ENABLE();
 	};
 

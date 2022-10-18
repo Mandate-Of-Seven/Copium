@@ -26,6 +26,20 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium {
 
+	#define ANIMATOR_CREATOR "Animator"
+	#define RENDERER_CREATOR "Renderer"
+	#define COLLIDER_CREATOR "Collider"
+
+	class GameObjectCreator {
+
+	};
+
+	class Default : public GameObjectCreator
+	{
+
+	};
+	
+
 	class GameObjectFactory {
 		
 	public:
@@ -119,12 +133,106 @@ namespace Copium {
 		/*******************************************************************************/
 		GameObject* clone_gameobject(GameObject* _src);
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Adds a component creator to the GameObjectFactory
+			Note: 1x component creator for each type of component, will reject if there is already a component creator of that type registered
+
+		\param _key
+			read-only reference to a string that contains the key of the component creator
+
+		\param _value
+			pointer to the dynamically allocated ComponentCreator to add to the list
+
+		\return
+			if registration is successful, return true
+			if specified pointer is invalid, return false
+			if there is already a ComponentCreator of that type registered, return false
+			
+		*/
+		/*******************************************************************************/
+		bool add_component_creator(const std::string& _key, ComponentCreator* _value);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Adds a component to the specified game object
+
+		\param _key
+			read-only reference to a string that contains the key that will determine what component to add
+
+		\param _go
+			pointer to the game object that the component is to be attached to
+
+		\return
+			if successful, return true
+			if specified key does not exist, return false
+			if there is an error in creation of component, return false
+
+		*/
+		/*******************************************************************************/
+		bool add_component(const std::string& _key, GameObject* _go);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Build an archetype and place it into the gameObjectCreators map
+
+		\param _value
+			reference to the rapidjson value which should contain the archetype game object
+
+		\return
+			if successful, return pointer to the newly created game object
+			if there were any errors in the process, return nullptr
+
+		*/
+		/*******************************************************************************/
+		GameObject* build_archetype(rapidjson::Value& _value);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Build a game object using an archetype registered to the GOF
+
+		\param _archetype
+			read-only reference to a string which contains the key of the archetype that is to be created
+
+		\return
+			if successful, return ptr to the newly created game object
+			if there were any errors in the process, return nullptr
+
+		*/
+		/*******************************************************************************/
+		GameObject* build_gameobject(const std::string& _archetype);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Iterates through the filepath that is specified and creates an archetype game object for each archetype json found in the folder.
+			Note: user must guarantee that the path provided is correct and that the files contain the correct format for a single game object
+
+		\param _directoryPath
+			read-only reference to the file path of the directory containing all the archetype files
+
+		\return
+			if successful, return true
+			if there were any errors in the process, return false
+
+		*/
+		/*******************************************************************************/
+		bool register_archetypes(const std::filesystem::path& _directoryPath);
+
 	private:
 		Scene* currentScene;
-
+		std::map<std::string, ComponentCreator*> componentCreators;
+		std::map<std::string, GameObject*> gameObjectCreators;
 	};
-
-
 
 }
 

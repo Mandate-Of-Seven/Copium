@@ -66,6 +66,13 @@ namespace Copium::Graphics
 		load_texture("Assets/textures/cake-sticker.png");
 		load_texture("Assets/textures/muffin-sticker.png");
 		load_texture("Assets/textures/icecream-sticker.png");
+
+		if (NewSceneManager::Instance())
+		{
+			NewSceneManager::Instance()->get_gof().add_component_creator(RENDERER_CREATOR, new RendererCreator);
+		}
+
+
 	}
 
 	void GraphicsSystem::update()

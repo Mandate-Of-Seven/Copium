@@ -141,4 +141,9 @@ namespace Copium {
 		return result;
 
 	}
+
+	GameObjectFactory& NewSceneManager::get_gof()
+	{
+		return *gof;
+	}
 }

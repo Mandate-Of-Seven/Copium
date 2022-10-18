@@ -207,6 +207,8 @@
   <ItemGroup>
     <None Include="Assets\shaders\shader-glsl.frag" />
     <None Include="Assets\shaders\shader-glsl.vert" />
+    <None Include="Data\Archetypes\camera.json" />
+    <None Include="Data\Archetypes\default.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
