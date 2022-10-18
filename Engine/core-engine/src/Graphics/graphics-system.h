@@ -29,7 +29,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium::Graphics
 {
-
 	// Global variables
 	static const GLuint maxQuadCount = 1000; // Number of sprites per batch
 	static const GLuint maxLineCount = 1000; // Number of lines per batch
@@ -69,16 +68,6 @@ namespace Copium::Graphics
 
 		// Accessing Properties
 
-		// Scene Properties
-		GLuint const get_scene_width() { return sceneWidth; }
-		void const set_scene_width(GLuint _width) { sceneWidth = _width; }
-
-		GLuint const get_scene_height() { return sceneHeight; }
-		void const set_scene_height(GLuint _height) { sceneHeight = _height; }
-
-		glm::vec2 const get_scene_position() { return scenePosition; }
-		void const set_scene_position(glm::vec2 _position) { scenePosition = _position; }
-
 		// Texture Properties
 		std::vector<GLuint>& get_texture_slots() { return textureSlots; }
 
@@ -92,7 +81,7 @@ namespace Copium::Graphics
 		GLSLShader* const get_shader_program() { return shaderProgram; }
 		void add_sprite(SpriteRenderer * _sprite) { sprites.push_back(_sprite); }
 		std::vector<SpriteRenderer*> const get_sprites() { return sprites; }
-		Framebuffer get_framebuffer() { return framebuffer; }
+		Framebuffer* get_framebuffer() { return &framebuffer; }
 
 #pragma region MemberFunctions
 	private:
@@ -165,22 +154,11 @@ namespace Copium::Graphics
 #pragma endregion MemberFunctions
 #pragma region DataMembers
 	private:
-		/* Camera View / Scene View *****************************************************/
-		// [Camera Here] (Bean: Should be a component instead?)
-		GLuint sceneWidth = 0;
-		GLuint sceneHeight = 0;
-		glm::vec2 scenePosition{0};
-
 		/* Stored Texture Assets ********************************************************/
 		std::vector<GLuint> textureSlots;
 		GLuint textureSlotIndex = 1; // Initializes with 1
 		GLuint whiteTexture = 0;
 		GLuint whiteTextureSlot = 0;
-
-		/* Projections & Matrices *******************************************************/
-		glm::mat4 projMatrix{0};
-		glm::mat4 viewMatrix{0};
-		glm::mat4 viewProjMatrix{0};
 
 		/* Shaders **********************************************************************/
 		GLSLShader shaderProgram[2]; // Shader program to use

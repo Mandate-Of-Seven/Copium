@@ -14,11 +14,12 @@
 All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 #include "Windows/input.h"
-#include <iostream>
 #include "Windows/windows-input.h"
 #include "Windows/windows-system.h"
-#include <Debugging/logging.h>
 
 #define COPIUM_MAX_KEYS 400
 #define COPIUM_MAX_MOUSEBUTTONS 5
@@ -74,11 +75,13 @@ bool WindowsInput::is_key_held_impl(int keycode)
 bool WindowsInput::is_mousebutton_pressed_impl(int button)
 {
     COPIUM_ASSERT((button > COPIUM_MAX_MOUSEBUTTONS), "Mouse button entered is out of range");
+    
     if (get_input_instance()->mouseButtons[button])
     {
         get_input_instance()->mouseButtons[button] = 0;
         return true;
     }
+
     return false;
 }
 
@@ -230,7 +233,7 @@ void Input::mousescroll_callback(GLFWwindow* window, double xOffset, double yOff
 
 void Input::mousepos_callback(GLFWwindow* window, double xPos, double yPos)
 {
-    (void) window;
+    (void) window, xPos, yPos;
     #ifdef _DEBUG
         //std::cout << "Mouse cursor position: (" << xPos << ", " << yPos << ")" << std::endl;
     #endif

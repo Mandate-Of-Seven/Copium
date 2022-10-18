@@ -42,8 +42,8 @@ namespace Copium::Graphics
 		Texture* const get_texture() { return texture; }
 
 		// Position
-		glm::vec2 const get_position() { return position; }
-		void const set_position(glm::vec2 _position) { position = _position; }
+		glm::vec3 const get_position() { return position; }
+		void const set_position(glm::vec3 _position) { position = _position; }
 
 		// Rotation
 		glm::vec3 const get_rotation() { return rotation; }
@@ -65,7 +65,7 @@ namespace Copium::Graphics
 		Texture* texture = nullptr; // The texture used for this sprite ( Bean: May be temporary because we can set a vector of textures in graphics to store all textures)
 		Transform* transform = nullptr; // The transform of this sprite ( Bean: it refer to the component in the gameobject )
 
-		glm::vec2 position{ 0 }; // Temporary variable to access the position
+		glm::vec3 position{ 0 }; // Temporary variable to access the position
 		glm::vec3 rotation{ 0 }; // Temporary variable for the rotation of the sprite
 		glm::vec2 size{ 0 }; // The size of the sprite in pixels ( Bean: different from the scale of the gameobject )
 		glm::vec4 color{ 0 }; // The blended color of this sprite

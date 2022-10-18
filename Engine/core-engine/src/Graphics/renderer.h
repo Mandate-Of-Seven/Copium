@@ -106,7 +106,7 @@ namespace Copium::Graphics
 			The color of the quad
 		*/
 		/***************************************************************************/
-		void draw_quad(const glm::vec2& _position, const glm::vec2& _size, const glm::vec4& _color);
+		void draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const glm::vec4& _color);
 
 		/***************************************************************************/
 		/*!
@@ -120,7 +120,7 @@ namespace Copium::Graphics
 			The index of the texture to be used
 		*/
 		/***************************************************************************/
-		void draw_quad(const glm::vec2& _position, const glm::vec2& _size, GLuint _textureID);
+		void draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, GLuint _textureID);
 
 		/***************************************************************************/
 		/*!
@@ -136,7 +136,7 @@ namespace Copium::Graphics
 			The color of the quad
 		*/
 		/***************************************************************************/
-		void draw_quad(const glm::mat4& _transform, const glm::vec2& _size, const glm::vec4& _color);
+		void draw_quad(const glm::mat4& _transform, const glm::vec4& _color);
 
 		/***************************************************************************/
 		/*!
@@ -152,7 +152,7 @@ namespace Copium::Graphics
 			The index of the texture to be used
 		*/
 		/***************************************************************************/
-		void draw_quad(const glm::mat4& _transform, const glm::vec2& _size, GLuint _textureID);
+		void draw_quad(const glm::mat4& _transform, GLuint _textureID);
 
 		/***************************************************************************/
 		/*!
@@ -169,6 +169,9 @@ namespace Copium::Graphics
 		void draw_line(const glm::vec2& _position0, const glm::vec2& _position1, const glm::vec4& _color);
 
 		// Accessing Properties
+
+		void set_line_width(GLfloat _lineWidth) { lineWidth = _lineWidth; }
+		GLfloat get_line_width() const { return lineWidth; }
 
 		/***************************************************************************/
 		/*!
@@ -245,6 +248,10 @@ namespace Copium::Graphics
 
 		LineVertex* lineBuffer = nullptr;
 		LineVertex* lineBufferPtr = nullptr;
+		GLfloat lineWidth = 1.f;
+
+		glm::vec4 quadVertexPosition[4];
+		glm::vec2 quadTextCoord[4];
 
 		GraphicsSystem* graphics = nullptr; // A pointer to the instance of graphics system
 	};

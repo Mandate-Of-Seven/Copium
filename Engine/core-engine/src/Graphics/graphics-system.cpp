@@ -21,10 +21,10 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Graphics/sprite-renderer.h"
 #include "Windows/input.h"
 
+#include "Editor/editor-system.h"
+
 namespace Copium::Graphics
 {
-	using Copium::Windows::WindowsSystem;
-
 	// Temporary global variables
 	GLfloat movement_x = 0.f, movement_y = 0.f;
 	GLfloat size_x = 0.f, size_y = 0.f;
@@ -34,11 +34,7 @@ namespace Copium::Graphics
 	void GraphicsSystem::init()
 	{
 		glClearColor(1.f, 1.f, 1.f, 1.f);
-		WindowsSystem* windowsSystem = WindowsSystem::Instance();
-		// Initialise Viewport
-
-		glViewport(0, 0, windowsSystem->get_window_width(), windowsSystem->get_window_height());
-
+		
 		// Setup Shaders
 		setup_shader_program("Assets/shaders/shader-glsl.vert",
 			"Assets/shaders/shader-glsl.frag");
@@ -49,6 +45,9 @@ namespace Copium::Graphics
 
 		// Initialise Sub systems
 		renderer.init();
+
+		glm::vec2 size = Copium::Editor::EditorSystem::Instance()->get_scene_view()->get_dimension();
+		framebuffer.set_size((GLuint)size.x, (GLuint)size.y);
 		framebuffer.init();
 
 		// Bind textures to quad fragment shader
@@ -66,25 +65,24 @@ namespace Copium::Graphics
 		load_texture("Assets/textures/train-part-02.png");
 		load_texture("Assets/textures/train-part-03.png");
 		load_texture("Assets/textures/train-part-04.png");
+		load_texture("Assets/textures/mock-up.png");
 
 		if (NewSceneManager::Instance())
 		{
 			NewSceneManager::Instance()->get_gof().add_component_creator(RENDERER_CREATOR, new RendererCreator);
 		}
 
-
-		
 	}
 
 	void GraphicsSystem::update()
 	{
-		GLfloat dt = /*windowsSystem.get_delta_time();*/(GLfloat) Windows::WindowsSystem::Instance()->get_delta_time();
+		//GLfloat dt = /*windowsSystem.get_delta_time();*/(GLfloat) Windows::WindowsSystem::Instance()->get_delta_time();
 		movement_x = movement_y = size_x = size_y = 0;
 
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		if (Input::is_key_held(GLFW_KEY_A))
+		/*if (Input::is_key_held(GLFW_KEY_A))
 			movement_x -= dt;
 		else if (!Input::is_key_held(GLFW_KEY_LEFT_SHIFT) && Input::is_key_held(GLFW_KEY_D))
 			movement_x += dt;
@@ -92,25 +90,31 @@ namespace Copium::Graphics
 		if (Input::is_key_held(GLFW_KEY_W))
 			movement_y += dt;
 		else if (Input::is_key_held(GLFW_KEY_S))
-			movement_y -= dt;
+			movement_y -= dt;*/
 
 		// Create sprites
-		glm::vec2 mousePos{0}, centreOfScene{0}, mouseScenePos{0}, mouseToNDC{0};
+		glm::vec2 mousePos{0}, centreOfScene{0}, mouseScenePos{0}, mouseToNDC{0}, worldSpace{0};
 		if (!Input::is_key_held(GLFW_KEY_LEFT_SHIFT) && Input::is_key_pressed(GLFW_KEY_C))
 		{
 			SpriteRenderer* sprite = new SpriteRenderer;
-
+			Copium::Editor::EditorSystem* editor = Copium::Editor::EditorSystem::Instance();
+			glm::vec2 scenePos = editor->get_scene_view()->get_position();
+			glm::vec2 sceneDim = editor->get_scene_view()->get_dimension();
+			glm::vec2 cameraPos = editor->get_camera()->get_position();
+			float zoom = editor->get_camera()->get_zoom();
 			// Mouse to scene view conversion
 			mousePos = { Input::get_mouse_position().first , Input::get_mouse_position().second };
-			centreOfScene = { scenePosition.x + sceneWidth / 2, scenePosition.y + sceneHeight / 2 };
+			centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
 			mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
-			mouseToNDC = { mouseScenePos.x / sceneWidth * 2, mouseScenePos.y / sceneHeight * 2 + 0.2f };
+			mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
+			mouseToNDC *= zoom;
+			worldSpace = { mouseToNDC.x + cameraPos.x, mouseToNDC.y + cameraPos.y };
 
-			glm::vec2 pos = mouseToNDC;
+			glm::vec3 pos = glm::vec3(worldSpace, 0.f);
 
 			sprite->set_position(pos);
-
-			sprite->set_size( glm::vec2(0.09f, 0.16f ));
+			
+			sprite->set_size( glm::vec2(0.5f, 0.3f));
 			sprite->set_color(glm::vec4(0.5f, 0.5f, 0.5f, 0.5f));
 			sprites.push_back(sprite);
 			
@@ -129,11 +133,11 @@ namespace Copium::Graphics
 			{
 				SpriteRenderer* sprite = new SpriteRenderer;
 
-				glm::vec2 pos = { rand() % 200 * 0.01f - 1.f, rand() % 200 * 0.01f - 1.f };
+				glm::vec3 pos = { rand() % 200 * 0.1f - 10.f, rand() % 200 * 0.1f - 10.f , 0.f};
 
 				sprite->set_position(pos);
 
-				sprite->set_size(glm::vec2(0.045f, 0.08f));
+				sprite->set_size(glm::vec2(0.5f, 0.3f));
 				sprite->set_color(glm::vec4(0.5f, 0.5f, 0.5f, 0.5f));
 				sprites.push_back(sprite);
 			}
@@ -141,7 +145,8 @@ namespace Copium::Graphics
 
 		/*PRINT("Mouse position: " << mousePos.x << ", " << mousePos.y);
 		PRINT("Centre position: " << centreOfScene.x << ", " << centreOfScene.y);
-		PRINT("NDC position: " << mouseToNDC.x << ", " << mouseToNDC.y);*/
+		PRINT("NDC position: " << mouseToNDC.x << ", " << mouseToNDC.y);
+		PRINT("World space: " << worldSpace.x << ", " << worldSpace.y);*/
 
 		if (Input::is_key_pressed(GLFW_KEY_Y))
 		{
@@ -153,7 +158,7 @@ namespace Copium::Graphics
 			debugMode = !debugMode;
 		}
 		
-		if (Input::is_key_held(GLFW_KEY_Z) && Input::is_key_held(GLFW_KEY_LEFT_SHIFT))
+		/*if (Input::is_key_held(GLFW_KEY_Z) && Input::is_key_held(GLFW_KEY_LEFT_SHIFT))
 		{
 			size_x -= dt;
 			size_y -= dt;
@@ -162,16 +167,16 @@ namespace Copium::Graphics
 		{
 			size_x += dt;
 			size_y += dt;
-		}
+		}*/
 
-		if (Input::is_key_held(GLFW_KEY_R) && Input::is_key_held(GLFW_KEY_LEFT_SHIFT))
+		/*if (Input::is_key_held(GLFW_KEY_R) && Input::is_key_held(GLFW_KEY_LEFT_SHIFT))
 		{
 			rotate -= dt * 75;
 		}
 		else if (Input::is_key_held(GLFW_KEY_R))
 		{
 			rotate += dt * 75;
-		}
+		}*/
 		
 		setup_matrices();
 
@@ -279,7 +284,7 @@ namespace Copium::Graphics
 			/*PRINT(i + 1 << " : Sprite Data: " << sprites[i]->get_position().x << "," << sprites[i]->get_position().y
 				<< "\t Size: " << sprites[i]->get_size().x << "," << sprites[i]->get_size().y);*/
 
-			glm::vec2 pos = { sprites[i]->get_position().x + movement_x, sprites[i]->get_position().y + movement_y };
+			glm::vec3 pos = { sprites[i]->get_position().x + movement_x, sprites[i]->get_position().y + movement_y, 0.f };
 			sprites[i]->set_position(pos);
 
 			glm::mat4 translate = {
@@ -289,7 +294,7 @@ namespace Copium::Graphics
 				glm::vec4(0.f, 0.f, 0.f, 1.f)
 			};
 
-			float rad = rotate * 3.14159265359f / 180.f;
+			float rad = glm::radians(rotate);
 
 			glm::mat4 rotation = {
 				glm::vec4(cos(rad), sin(rad), 0.f, 0.f),
@@ -333,37 +338,43 @@ namespace Copium::Graphics
 	{
 		// Grid
 		renderer.begin_batch();
-		glm::vec4 color = { 1.f, 1.f, 1.f, 0.15f };
-		for (float i = -1.f + 0.225f; i < 1.f; i += 0.225f)
+		glm::vec4 color = { 1.f, 1.f, 1.f, 0.2f };
+		float start = -100.f, end = -start;
+		float numDivision = 24.f, iteration = (end - start) / numDivision;
+		for (float i = start; i <= end; i += iteration)
 		{
-			renderer.draw_line({ i, -1.f }, { i, 1.f }, color);
+			renderer.draw_line({ i, start }, { i, end }, color);
+			renderer.draw_line({ start, i }, { end, i }, color);
 		}
 
-		for (float j = -1.f + 0.4f; j < 1.f; j += 0.4f)
+		color = { 1.f, 1.f, 1.f, 0.1f };
+		float subDivision = 5.f;
+		numDivision *= subDivision;
+		iteration = (end - start) / numDivision;
+		start = -10.f, end = -start;
+		for (float i = start; i <= end; i += iteration)
 		{
-			renderer.draw_line({ -1.f, j }, { 1.f, j }, color);
+			renderer.draw_line({ i, start }, { i, end }, color);
+			renderer.draw_line({ start, i }, { end, i }, color);
 		}
 
 		renderer.end_batch();
 
 		renderer.flush();
 
-		// Sprites and Objects
+		// Spriqtes and Objects
 		renderer.begin_batch();
 
 		// Reference all sprites in the world and draw
 		// Overflowing sprites gets pushed to next draw call ( Which means dynamic 0.0 )
-		color = { 1.f, 1.f, 1.f, 1.f };
-		renderer.draw_quad({ 0.f, -0.5f }, { 1.6f, 0.1f }, color);
-
-		// Texture sampling
-		for (int i = 1; i < textureSlots.size(); i++)
-		{
-			if (textureSlots[i] == 0)
-				continue;
-
-			renderer.draw_quad({ i * 0.2f - 0.6f, 0.f }, { 0.18f, 0.32f }, textureSlots[i]);
-		}
+		
+		// Background
+		// Bean: scale should be the scale of the object, 
+		// texture scale should be separate and derived from the image dimensions
+		//renderer.draw_quad({ 0.f, 0.f , 0.f }, { 3.84f, 2.16f }, 0.f, textures[4].get_object_id());
+		
+		color = { 0.f, 0.f, 0.f, 1.f };
+		renderer.draw_quad({ 0.f, 0.f , 0.f}, { 0.3f, 0.3f }, 0.f, color);
 
 		for (size_t i = 0; i < sprites.size(); i++)
 		{
@@ -372,35 +383,17 @@ namespace Copium::Graphics
 
 			int textureSelector = i % 5 + 1;
 
-			glm::vec2 pos = { sprites[i]->get_position().x + movement_x, sprites[i]->get_position().y + movement_y };
+			glm::vec3 pos = { sprites[i]->get_position().x + movement_x, sprites[i]->get_position().y + movement_y, 0.f };
 			glm::vec2 size = { sprites[i]->get_size().x + size_x, sprites[i]->get_size().y + size_y };
-
-			glm::mat4 translate = {
-				glm::vec4(1.f, 0.f, 0.f, 0.f),
-				glm::vec4(0.f, 1.f, 0.f, 0.f),
-				glm::vec4(pos.x, pos.y, 1.f, 0.f),
-				glm::vec4(0.f, 0.f, 0.f, 1.f)
-			};
-
-			float rad = rotate * 3.14159265359f / 180.f;
-
-			glm::mat4 rotation = {
-				glm::vec4(cos(rad), sin(rad), 0.f, 0.f),
-				glm::vec4(-sin(rad), cos(rad), 0.f, 0.f),
-				glm::vec4(0.f, 0.f, 1.f, 0.f),
-				glm::vec4(0.f, 0.f, 0.f, 1.f)
-			};
-
-			glm::mat4 transform = translate * rotation;
 
 			sprites[i]->set_position(pos);
 			sprites[i]->set_size(size);
 			sprites[i]->bind_texture(&textures[i%3]);
 
-			if(textureSelector == 5)
-				renderer.draw_quad(transform, sprites[i]->get_size(), sprites[i]->get_color());
+			if(textureSelector == 5) // Alpha Colored Square
+				renderer.draw_quad(pos, { 0.1f, 0.1f }, rotate, sprites[i]->get_color());
 			else
-				renderer.draw_quad(transform, sprites[i]->get_size(), sprites[i]->get_texture()->get_object_id());
+				renderer.draw_quad(pos, size, rotate, sprites[i]->get_texture()->get_object_id());
 		}
 
 		renderer.end_batch();

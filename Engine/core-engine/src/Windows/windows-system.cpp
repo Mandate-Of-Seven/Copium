@@ -90,6 +90,9 @@ namespace Copium::Windows
             std::cerr << "Driver doesn't support OpenGL 4.5 - abort program" << std::endl;
             abort();
         }
+
+        // Initialise Viewport
+        glViewport(0, 0, windowWidth, windowHeight);
     }
 
     void WindowsSystem::update()
@@ -148,7 +151,7 @@ namespace Copium::Windows
 #ifdef _DEBUG
         std::cerr << "GLFW error: " << _description << std::endl;
 #endif
-        (void) _error;
+        (void) _error, _description;
     }
 
     void WindowsSystem::framebuffer_size_callback(GLFWwindow * _window, int _width, int _height)

@@ -70,7 +70,7 @@ namespace Copium {
 		{
 			Copium::Graphics::SpriteRenderer * sprite = new Copium::Graphics::SpriteRenderer;
 			glm::vec3 pos = currentScene->get_gameobjectvector()[i]->Trans().glmPosition();
-			sprite->set_position(glm::vec2(pos.x, pos.y));
+			sprite->set_position(pos);
 
 			PRINT("Coords: " << pos.x << ", " << pos.y);
 
