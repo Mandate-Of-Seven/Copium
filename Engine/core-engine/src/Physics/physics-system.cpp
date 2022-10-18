@@ -14,10 +14,10 @@
 All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
-#include "Physics/physics-system.h"
-#include "Graphics/graphics-system.h"
 #include "Windows/windows-system.h"
 #include "Windows/windows-input.h"
+#include "Graphics/graphics-system.h"
+#include "Physics/physics-system.h"
 
 namespace Copium::Physics
 {

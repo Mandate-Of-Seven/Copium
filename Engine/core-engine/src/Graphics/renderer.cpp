@@ -16,6 +16,8 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
+#include <GL/glew.h> // for access to OpenGL API declarations 
+
 #include "Graphics/graphics-system.h"
 #include "Graphics/renderer.h"
 
@@ -29,8 +31,8 @@ namespace Copium::Graphics
 		graphics = GraphicsSystem::Instance();
 
 		// Setup Line Vertex Array Object
-		setup_line_vao();
 
+		setup_line_vao();
 		// Setup Quad Vertex Array Object
 		setup_quad_vao();
 
@@ -71,20 +73,20 @@ namespace Copium::Graphics
 		glVertexArrayVertexBuffer(quadVertexArrayID, 0, quadVertexBufferID, 0, sizeof(QuadVertex));
 
 		glEnableVertexArrayAttrib(quadVertexBufferID, 0);
-		glVertexAttribFormat(0, 3, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, pos));
-		glVertexAttribBinding(0, 0);
+		glVertexArrayAttribFormat(quadVertexArrayID, 0, 3, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, pos));
+		glVertexArrayAttribBinding(quadVertexArrayID, 0, 0);
 
 		glEnableVertexArrayAttrib(quadVertexBufferID, 1);
-		glVertexAttribFormat(1, 4, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, color));
-		glVertexAttribBinding(1, 0);
+		glVertexArrayAttribFormat(quadVertexArrayID, 1, 4, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, color));
+		glVertexArrayAttribBinding(quadVertexArrayID, 1, 0);
 
 		glEnableVertexArrayAttrib(quadVertexBufferID, 2);
-		glVertexAttribFormat(2, 2, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, textCoord));
-		glVertexAttribBinding(2, 0);
+		glVertexArrayAttribFormat(quadVertexArrayID, 2, 2, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, textCoord));
+		glVertexArrayAttribBinding(quadVertexArrayID, 2, 0);
 
 		glEnableVertexArrayAttrib(quadVertexBufferID, 3);
-		glVertexAttribFormat(3, 1, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, texID));
-		glVertexAttribBinding(3, 0);
+		glVertexArrayAttribFormat(quadVertexArrayID, 3, 1, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, texID));
+		glVertexArrayAttribBinding(quadVertexArrayID, 3, 0);
 
 		// Element Buffer Object
 		GLushort indices[maxIndexCount];
@@ -135,12 +137,12 @@ namespace Copium::Graphics
 		glVertexArrayVertexBuffer(lineVertexArrayID, 1, lineVertexBufferID, 0, sizeof(LineVertex));
 
 		glEnableVertexArrayAttrib(lineVertexBufferID, 0);
-		glVertexAttribFormat(0, 3, GL_FLOAT, GL_FALSE, offsetof(LineVertex, pos));
-		glVertexAttribBinding(0, 1);
+		glVertexArrayAttribFormat(lineVertexArrayID, 0, 3, GL_FLOAT, GL_FALSE, offsetof(LineVertex, pos));
+		glVertexArrayAttribBinding(lineVertexArrayID, 0, 1);
 
 		glEnableVertexArrayAttrib(lineVertexBufferID, 1);
-		glVertexAttribFormat(1, 4, GL_FLOAT, GL_FALSE, offsetof(LineVertex, color));
-		glVertexAttribBinding(1, 1);
+		glVertexArrayAttribFormat(lineVertexArrayID, 1, 4, GL_FLOAT, GL_FALSE, offsetof(LineVertex, color));
+		glVertexArrayAttribBinding(lineVertexArrayID, 1, 1);
 
 		glBindVertexArray(0);
 
@@ -229,6 +231,7 @@ namespace Copium::Graphics
 
 			// End of matrix assignment
 
+			glLineWidth(get_line_width());
 			glDrawArrays(GL_LINES, 0, lineVertexCount);
 			drawCount++;
 

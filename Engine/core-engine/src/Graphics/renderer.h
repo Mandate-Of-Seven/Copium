@@ -170,6 +170,9 @@ namespace Copium::Graphics
 
 		// Accessing Properties
 
+		void set_line_width(GLfloat _lineWidth) { lineWidth = _lineWidth; }
+		GLfloat get_line_width() const { return lineWidth; }
+
 		/***************************************************************************/
 		/*!
 		\brief
@@ -245,6 +248,7 @@ namespace Copium::Graphics
 
 		LineVertex* lineBuffer = nullptr;
 		LineVertex* lineBufferPtr = nullptr;
+		GLfloat lineWidth = 1.f;
 
 		glm::vec4 quadVertexPosition[4];
 		glm::vec2 quadTextCoord[4];

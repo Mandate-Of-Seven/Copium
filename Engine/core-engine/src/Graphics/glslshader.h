@@ -22,19 +22,24 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #ifndef GLSLSHADER_H
 #define GLSLSHADER_H
 
-#include <GL/glew.h> // for access to OpenGL API declarations 
 #include <glm/glm.hpp>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <cstdlib>
 #include <string>
 #include <vector>
 #include <map>
 
+#define GL_FALSE 0
+#define GL_TRUE 1
+
 namespace Copium::Graphics
 {
+    // Forward declaration of type definitions
+    typedef char GLchar;
+    typedef unsigned char GLboolean;
+    typedef int GLint;
+    typedef unsigned int GLenum;
+    typedef unsigned int GLuint;
+    typedef float GLfloat;
+
     class GLSLShader
     {
     public:
@@ -243,18 +248,6 @@ namespace Copium::Graphics
         void PrintActiveUniforms() const;
 
     private:
-        enum ShaderType
-        {
-            VERTEX_SHADER = GL_VERTEX_SHADER,
-            FRAGMENT_SHADER = GL_FRAGMENT_SHADER,
-            GEOMETRY_SHADER = GL_GEOMETRY_SHADER,
-            TESS_CONTROL_SHADER = GL_TESS_CONTROL_SHADER,
-            TESS_EVALUATION_SHADER = GL_TESS_EVALUATION_SHADER,
-            // ignore compute shader for now because it is not connected to
-            // the graphics pipe
-            // COMPUTE_SHADER = GL_COMPUTE_SHADER
-        };
-
         GLuint pgm_handle = 0;  // handle to linked shader program object
         GLboolean is_linked = GL_FALSE; // has the program successfully linked?
         std::string log_string; // log for OpenGL compiler and linker messages

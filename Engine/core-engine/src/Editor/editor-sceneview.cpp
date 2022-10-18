@@ -41,7 +41,7 @@ namespace Copium::Editor
 		
 		scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
 
-		GLuint textureID = graphics->get_framebuffer()->get_color_attachment_id();
+		unsigned int textureID = graphics->get_framebuffer()->get_color_attachment_id();
 		ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
 		resize_sceneview(*((glm::vec2*) &viewportEditorSize));
 		ImGui::Image((void*) (size_t) textureID, ImVec2{ (float)sceneWidth, (float)sceneHeight }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
@@ -83,7 +83,7 @@ namespace Copium::Editor
 			sceneWidth = (int)sceneDimension.x;
 			sceneHeight = (int)sceneDimension.y;
 			graphics->get_framebuffer()->resize(sceneWidth, sceneHeight);
-			EditorSystem::Instance()->get_camera()->on_resize(sceneWidth, sceneHeight);
+			EditorSystem::Instance()->get_camera()->on_resize(sceneDimension.x, sceneDimension.y);
 		}
 	}
 }

@@ -13,14 +13,17 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
-#pragma once
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#ifndef INPUT_H
+#define INPUT_H
+
 #include <utility> 
 
 //Checks for mouse or keyboard inputs
 class Input
 {
+	// Forward declaration for type definition
+	typedef struct GLFWwindow GLFWwindow;
+
 	public:
 		short* keys =nullptr;//contains the current state of all keys
 		short* mouseButtons = nullptr;//contains the current state of both mouse buttons
@@ -262,3 +265,4 @@ class Input
 	private:
 		static Input* inputInstance;
 };
+#endif // !INPUT_H

@@ -36,6 +36,7 @@ namespace Copium::Editor
 		glm::quat get_orientation() const;
 		glm::vec2 get_pan_speed() const;
 
+		float get_zoom() const { return zoomLevel; }
 		float get_zoom_speed() const;
 		float get_pitch() const { return pitch; }
 		float get_yaw() const { return yaw; }
@@ -62,7 +63,7 @@ namespace Copium::Editor
 		glm::vec2 mousePosition{0};
 
 		float aspectRatio = 0.f;
-		float nearClip = -1.f, farClip = 10.f; // Orthographic projection's view box
+		float nearClip = -1.f, farClip = 100.f; // Orthographic projection's view box
 		float zoomLevel = 1.f; // To zoom in and out
 		float pitch = 0.f, yaw = 0.f; // For rotation
 		int width = 0, height = 0;

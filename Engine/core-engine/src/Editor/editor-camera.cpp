@@ -14,6 +14,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 #include "pch.h"
 
+#include <GLFW/glfw3.h>
+
 #include "Windows/input.h"
 
 #define GLM_ENABLE_EXPERIMENTAL

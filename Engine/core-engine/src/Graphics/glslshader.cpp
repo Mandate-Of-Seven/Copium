@@ -15,10 +15,24 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 ******************************************************************************************/
 
 #include "pch.h"
+#include <GL/glew.h> // for access to OpenGL API declarations 
+
 #include <Graphics/glslshader.h>
 
 namespace Copium::Graphics
 {
+    enum ShaderType
+    {
+        VERTEX_SHADER = GL_VERTEX_SHADER,
+        FRAGMENT_SHADER = GL_FRAGMENT_SHADER,
+        GEOMETRY_SHADER = GL_GEOMETRY_SHADER,
+        TESS_CONTROL_SHADER = GL_TESS_CONTROL_SHADER,
+        TESS_EVALUATION_SHADER = GL_TESS_EVALUATION_SHADER,
+        // ignore compute shader for now because it is not connected to
+        // the graphics pipe
+        // COMPUTE_SHADER = GL_COMPUTE_SHADER
+    };
+
     GLint GLSLShader::GetUniformLocation(GLchar const* name)
     {
         return glGetUniformLocation(pgm_handle, name);

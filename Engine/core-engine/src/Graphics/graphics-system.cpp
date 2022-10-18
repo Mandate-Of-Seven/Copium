@@ -47,7 +47,7 @@ namespace Copium::Graphics
 		renderer.init();
 
 		glm::vec2 size = Copium::Editor::EditorSystem::Instance()->get_scene_view()->get_dimension();
-		framebuffer.set_size(size.x, size.y);
+		framebuffer.set_size((GLuint)size.x, (GLuint)size.y);
 		framebuffer.init();
 
 		// Bind textures to quad fragment shader
@@ -70,7 +70,7 @@ namespace Copium::Graphics
 
 	void GraphicsSystem::update()
 	{
-		GLfloat dt = /*windowsSystem.get_delta_time();*/(GLfloat) Windows::WindowsSystem::Instance()->get_delta_time();
+		//GLfloat dt = /*windowsSystem.get_delta_time();*/(GLfloat) Windows::WindowsSystem::Instance()->get_delta_time();
 		movement_x = movement_y = size_x = size_y = 0;
 
 		glClearColor(1.f, 1.f, 1.f, 1.f);
@@ -95,17 +95,19 @@ namespace Copium::Graphics
 			glm::vec2 scenePos = editor->get_scene_view()->get_position();
 			glm::vec2 sceneDim = editor->get_scene_view()->get_dimension();
 			glm::vec2 cameraPos = editor->get_camera()->get_position();
+			float zoom = editor->get_camera()->get_zoom();
 			// Mouse to scene view conversion
 			mousePos = { Input::get_mouse_position().first , Input::get_mouse_position().second };
 			centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
 			mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
 			mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
+			mouseToNDC *= zoom;
 			worldSpace = { mouseToNDC.x + cameraPos.x, mouseToNDC.y + cameraPos.y };
 
 			glm::vec3 pos = glm::vec3(worldSpace, 0.f);
 
 			sprite->set_position(pos);
-
+			
 			sprite->set_size( glm::vec2(0.5f, 0.3f));
 			sprite->set_color(glm::vec4(0.5f, 0.5f, 0.5f, 0.5f));
 			sprites.push_back(sprite);
@@ -330,9 +332,21 @@ namespace Copium::Graphics
 	{
 		// Grid
 		renderer.begin_batch();
-		glm::vec4 color = { 1.f, 1.f, 1.f, 0.15f };
-		float start = -2.f, end = 2.f;
-		for (float i = start; i < 2.f; i += 0.4f)
+		glm::vec4 color = { 1.f, 1.f, 1.f, 0.2f };
+		float start = -100.f, end = -start;
+		float numDivision = 24.f, iteration = (end - start) / numDivision;
+		for (float i = start; i <= end; i += iteration)
+		{
+			renderer.draw_line({ i, start }, { i, end }, color);
+			renderer.draw_line({ start, i }, { end, i }, color);
+		}
+
+		color = { 1.f, 1.f, 1.f, 0.1f };
+		float subDivision = 5.f;
+		numDivision *= subDivision;
+		iteration = (end - start) / numDivision;
+		start = -10.f, end = -start;
+		for (float i = start; i <= end; i += iteration)
 		{
 			renderer.draw_line({ i, start }, { i, end }, color);
 			renderer.draw_line({ start, i }, { end, i }, color);
@@ -351,7 +365,7 @@ namespace Copium::Graphics
 		// Background
 		// Bean: scale should be the scale of the object, 
 		// texture scale should be separate and derived from the image dimensions
-		renderer.draw_quad({ 0.f, 0.f , 0.f }, { 3.84f, 2.16f }, 0.f, textures[4].get_object_id());
+		//renderer.draw_quad({ 0.f, 0.f , 0.f }, { 3.84f, 2.16f }, 0.f, textures[4].get_object_id());
 		
 		color = { 0.f, 0.f, 0.f, 1.f };
 		renderer.draw_quad({ 0.f, 0.f , 0.f}, { 0.3f, 0.3f }, 0.f, color);
