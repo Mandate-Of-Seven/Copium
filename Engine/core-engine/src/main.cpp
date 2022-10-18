@@ -86,15 +86,13 @@ int main()
 
 
     SceneManager SM;
-    FrameRateController frc(100.0);
+    Copium::FrameRateController frc(100.0);
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
-
     // Engine Loop
     while (!glfwWindowShouldClose(windowsSystem->get_window()) && esCurrent != esQuit)
     {
         SM.add_scene(sandboxScene);
-        //std::cout << "Number of scenes: " << SM.get_scenecount() << std::endl;
         SM.change_scene(0);
 
         if (esCurrent == esActive) 

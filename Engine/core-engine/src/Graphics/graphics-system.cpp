@@ -66,6 +66,14 @@ namespace Copium::Graphics
 		load_texture("Assets/textures/train-part-02.png");
 		load_texture("Assets/textures/train-part-03.png");
 		load_texture("Assets/textures/train-part-04.png");
+
+		if (NewSceneManager::Instance())
+		{
+			NewSceneManager::Instance()->get_gof().add_component_creator(RENDERER_CREATOR, new RendererCreator);
+		}
+
+
+		
 	}
 
 	void GraphicsSystem::update()

@@ -43,6 +43,7 @@ private:
     Transform trans;                    //Transform of gameObject
     GameObject* parent;                 //Pointer to this gameObject's parent
     std::list<GameObject*> children;    //List of pointers to this gameObject's children
+
 public:
     GameObject& operator=(GameObject&) = delete;
 

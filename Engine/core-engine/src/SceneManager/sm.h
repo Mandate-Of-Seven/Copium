@@ -103,6 +103,18 @@ namespace Copium {
 		/*******************************************************************************/
 		bool change_scene(std::string& _newfilepath);
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Get reference to the GOF in the SM
+
+		\return
+			reference to the GOF
+		*/
+		/*******************************************************************************/
+		GameObjectFactory& get_gof();
+
 	private:
 		GameObjectFactory* gof;
 		Scene* currentScene;

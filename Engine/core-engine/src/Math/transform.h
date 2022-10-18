@@ -1,7 +1,8 @@
 ﻿/*!***************************************************************************************
 \file			transform.h
 \project
-\author			Matthew Lau
+\author			Zacharie Hong
+\co-authors     Matthew Lau
 
 \par			Course: GAM200
 \par			Section:
@@ -26,7 +27,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 class Transform;
 
-class Transform final
+class Transform
 {
 private:
     Copium::Math::Vec3 position;
@@ -67,7 +68,7 @@ public:
         Position of transform
     */
     /**************************************************************************/
-    Copium::Math::Vec3 const Position();
+    const Copium::Math::Vec3& get_position();
     /***************************************************************************/
     /*!
     \brief
@@ -86,7 +87,7 @@ public:
         Position to set for transform
     */
     /**************************************************************************/
-    void Position(Copium::Math::Vec3 _position);
+    void set_position(const Copium::Math::Vec3& _position);
 
 
     /***************************************************************************/
@@ -97,7 +98,7 @@ public:
         Rotation of transform
     */
     /**************************************************************************/
-    Copium::Math::Vec3 const Rotation();
+    const Copium::Math::Vec3& get_rotation();
     /***************************************************************************/
     /*!
     \brief
@@ -116,7 +117,7 @@ public:
         Rotation to set for transform
     */
     /**************************************************************************/
-    void Rotation(Copium::Math::Vec3 _rotation);
+    void set_rotation(const Copium::Math::Vec3& _rotation);
 
     /***************************************************************************/
     /*!
@@ -126,7 +127,7 @@ public:
         Scale of transform
     */
     /**************************************************************************/
-    Copium::Math::Vec3 const Scale();
+    const Copium::Math::Vec3& get_scale();
     /***************************************************************************/
     /*!
     \brief
@@ -145,7 +146,7 @@ public:
         Scale to set for transform
     */
     /**************************************************************************/
-    void Scale(Copium::Math::Vec3 _scale);
+    void set_scale(const Copium::Math::Vec3& _scale);
 
     /***************************************************************************/
     /*!
@@ -157,6 +158,10 @@ public:
     */
     /**************************************************************************/
     bool deserialize(rapidjson::Value& _value);
+
+    RTTR_ENABLE();
 };
+
+
 
 #endif // !TRANSFORM_H
