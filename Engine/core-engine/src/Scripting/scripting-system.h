@@ -25,6 +25,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Messaging/message-system.h"
 #include "Files/file-system.h"
 #include "CopiumCore/system-interface.h"
+#include "Windows/windows-system.h"
 
 namespace Copium::Scripting
 {
@@ -174,6 +175,10 @@ namespace Copium::Scripting
 		*/
 		/**************************************************************************/
 		void shutdownMono();
+
+		void invoke(MonoObject * mObj, MonoMethod * mMethod);
+
+		void handleMessage(Message::MESSAGE_TYPE mType);
 	private:
 		/**************************************************************************/
 		/*!

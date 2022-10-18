@@ -33,6 +33,13 @@ void Component::destroy(){}
 
 ComponentID const Component::ID(){return id;}
 
+bool Component::Enabled() const noexcept{ return enabled;}
+
+void Component::Enabled(bool _enabled) noexcept { enabled = _enabled; }
+
+
+
+
 ColliderComponent::ColliderComponent() :Component(Type::Collider) { std::cout << "COLLIDER CONS" << std::endl; }
 
 RendererComponent::RendererComponent() :Component(Type::Renderer) { std::cout << "RENDERER CONS" << std::endl; }

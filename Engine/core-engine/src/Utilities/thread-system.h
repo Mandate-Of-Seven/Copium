@@ -21,8 +21,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium::Thread
 {
-	CLASS_SYSTEM(ThreadSystem), public Message::IReceiver
-	{
+	CLASS_SYSTEM(ThreadSystem)	{
 	public:
 		/*******************************************************************************
 		/*!
@@ -60,7 +59,7 @@ namespace Copium::Thread
 				Thread to keep track of
 		*/
 		/*******************************************************************************/
-		void addThread(const char* _name, std::thread* _thread);
+		void addThread(std::thread* _thread);
 
 		/*******************************************************************************
 		/*!
@@ -82,8 +81,7 @@ namespace Copium::Thread
 		/*******************************************************************************/
 		void handleMessage(Message::MESSAGE_TYPE);
 	private:
-		using namedThread = std::pair < const char*, std::thread*>;
-		std::vector<namedThread> threads;
+		std::vector<std::thread*> threads;
 		bool quit = false;
 	};
 }

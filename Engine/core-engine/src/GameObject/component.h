@@ -55,6 +55,10 @@ public:
     /**************************************************************************/
     ComponentID const ID();
 
+    bool Enabled() const noexcept;
+
+    void Enabled(bool) noexcept;
+
     const std::string& Name();
 protected:
 
@@ -76,10 +80,13 @@ protected:
     /**************************************************************************/
     Component(Component::Type _componentType);
 
+
+
 private:
     ComponentID id;                     //Id of component, local to gameObject
     Type componentType;                 //Type of component
     const bool allowMultiple = false;   //Can gameObjects only have one of this Component?
+    bool enabled;
 };
 
 class ColliderComponent: public Component

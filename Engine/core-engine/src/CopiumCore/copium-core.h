@@ -46,7 +46,7 @@ namespace Copium
 				Message::MessageSystem::Instance(),
 				Editor::EditorSystem::Instance(),
 				Files::FileSystem::Instance(),
-				//Scripting::ScriptingSystem::Instance(),
+				Scripting::ScriptingSystem::Instance(),
 				Physics::Physics::Instance(),
 				Graphics::GraphicsSystem::Instance(),
 				NewSceneManager::Instance(),
@@ -81,9 +81,9 @@ namespace Copium
 		/**************************************************************************/
 		void exit()
 		{
-			for (ISystem* pSystem : systems)
+			for (int i = systems.size()-1; i > 0; --i)
 			{
-				pSystem->exit();
+				systems[i]->exit();
 			}
 		}
 	private:

@@ -128,6 +128,8 @@
     <ClCompile Include="src\SceneManager\serializer.cpp" />
     <ClCompile Include="src\SceneManager\sm.cpp" />
     <ClCompile Include="src\SceneManager\state-manager.cpp" />
+    <ClCompile Include="src\Scripting\scripting-system.cpp" />
+    <ClCompile Include="src\Scripting\scripting.cpp" />
     <ClCompile Include="src\Utilities\thread-system.cpp" />
     <ClCompile Include="src\imgui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>

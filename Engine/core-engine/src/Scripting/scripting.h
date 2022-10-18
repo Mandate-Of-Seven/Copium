@@ -100,7 +100,6 @@ namespace Copium
 		std::shared_ptr<Scripting::ScriptClass> spScriptClass;
 		MonoObject* mObject;
 		const std::string name;
-		static std::vector<ScriptComponent*> instances;
 		static Scripting::ScriptingSystem& sS;
     };
 }
