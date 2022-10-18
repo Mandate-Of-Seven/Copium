@@ -45,7 +45,6 @@ namespace Copium
 
 	ScriptComponent::~ScriptComponent()
 	{
-		PRINT("Script Component Destroyed");
 	}
 
 	void ScriptComponent::handleMessage(Message::MESSAGE_TYPE mType)
@@ -54,10 +53,7 @@ namespace Copium
 		spScriptClass = sS.getScriptClass(name.c_str());
 		//If mono class couldnt be loaded
 		if (spScriptClass == nullptr)
-		{
-			PRINT("Please delete " << name << " Instance as base script could not be found anymore!");
 			return;
-		}
 		mObject = sS.createMonoObject(spScriptClass.get()->mClass);
 	}
 
@@ -70,25 +66,25 @@ namespace Copium
 	void ScriptComponent::Start()
 	{
 		if (spScriptClass && spScriptClass->mStart)
-			mono_runtime_invoke(spScriptClass->mStart, mObject, nullptr, nullptr);
+			sS.invoke(mObject, spScriptClass->mStart);
 	}
 
 	void ScriptComponent::Update()
 	{
 		if (spScriptClass && spScriptClass->mUpdate)
-			mono_runtime_invoke(spScriptClass->mUpdate, mObject, nullptr, nullptr);
+			sS.invoke(mObject, spScriptClass->mUpdate);
 	}
 
 	void ScriptComponent::LateUpdate()
 	{
 		if (spScriptClass && spScriptClass->mLateUpdate)
-			mono_runtime_invoke(spScriptClass->mLateUpdate, mObject, nullptr, nullptr);
+			sS.invoke(mObject, spScriptClass->mLateUpdate);
 	}
 
 	void ScriptComponent::OnCollisionEnter()
 	{
 		if (spScriptClass && spScriptClass->mOnCollisionEnter)
-			mono_runtime_invoke(spScriptClass->mOnCollisionEnter, mObject, nullptr, nullptr);
+			sS.invoke(mObject, spScriptClass->mOnCollisionEnter);
 	}
 }
 

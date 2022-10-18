@@ -91,7 +91,8 @@ namespace Copium::Scripting
 				Class to load functions from
 		*/
 		/**************************************************************************/
-		ScriptClass(MonoClass* _mClass);
+		ScriptClass(const std::string& _name);
+		std::string name;
 		MonoClass* mClass;
 		MonoMethod* mAwake;
 		MonoMethod* mStart;
@@ -146,7 +147,7 @@ namespace Copium::Scripting
 				Shared pointer to a ScriptClass
 		*/
 		/**************************************************************************/
-		std::shared_ptr<ScriptClass> getScriptClass(const char* _name);
+		std::shared_ptr<ScriptClass> getScriptClass(const std::string & _name);
 
 		/**************************************************************************/
 		/*!
@@ -233,11 +234,7 @@ namespace Copium::Scripting
 		*/
 		/**************************************************************************/
 		bool scriptIsLoaded(const std::filesystem::path& filePath);
-		std::vector<std::shared_ptr<ScriptClass>> scriptClasses;
-		MonoDomain* mRootDomain{ nullptr };		//JIT RUNTIME DOMAIN
-		MonoDomain* mAppDomain{ nullptr };		//APP DOMAIN
-		MonoAssembly* mCoreAssembly{ nullptr };	//ASSEMBLY OF SCRIPTS.DLL
-		MonoImage* mAssemblyImage{ nullptr };	//LOADED IMAGE OF SCRIPTS.DLL
+		std::unordered_map<std::string, std::shared_ptr<ScriptClass>> scriptClassMap;
 		std::list<Files::File>& scriptFiles;
 	};
 

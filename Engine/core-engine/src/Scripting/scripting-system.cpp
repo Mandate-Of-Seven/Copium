@@ -46,6 +46,10 @@ namespace
 		Wait
 	};
 	CompilingState compilingState{ CompilingState::Wait};
+	MonoDomain* mRootDomain{ nullptr };		//JIT RUNTIME DOMAIN
+	MonoDomain* mAppDomain{ nullptr };		//APP DOMAIN
+	MonoAssembly* mCoreAssembly{ nullptr };	//ASSEMBLY OF SCRIPTS.DLL
+	MonoImage* mAssemblyImage{ nullptr };	//LOADED IMAGE OF SCRIPTS.DLL
 }
 
 namespace Copium::Scripting
@@ -58,12 +62,14 @@ namespace Copium::Scripting
 	MonoAssembly* loadAssembly(const std::string& assemblyPath);
 
 	#pragma region Struct ScriptMethods
-		ScriptClass::ScriptClass(MonoClass* _mClass) : mClass{_mClass}, 
-		mAwake{ mono_class_get_method_from_name(_mClass, "Awake", 0) },
-		mStart{ mono_class_get_method_from_name(_mClass, "Start", 0) },
-		mUpdate{ mono_class_get_method_from_name(_mClass, "Update", 0) },
-		mLateUpdate{ mono_class_get_method_from_name(_mClass, "LateUpdate", 0) },
-		mOnCollisionEnter{ mono_class_get_method_from_name(_mClass, "OnCollisionEnter", 0) }{}
+		ScriptClass::ScriptClass(const std::string& _name) : 
+		mClass{ mono_class_from_name(mAssemblyImage,"",_name.c_str())},
+		name{_name},
+		mAwake{ mono_class_get_method_from_name(mClass, "Awake", 0) },
+		mStart{ mono_class_get_method_from_name(mClass, "Start", 0) },
+		mUpdate{ mono_class_get_method_from_name(mClass, "Update", 0) },
+		mLateUpdate{ mono_class_get_method_from_name(mClass, "LateUpdate", 0) },
+		mOnCollisionEnter{ mono_class_get_method_from_name(mClass, "OnCollisionEnter", 0) }{}
 	#pragma endregion
 
 	// Gets the accessibility level of the given field
@@ -162,23 +168,24 @@ namespace Copium::Scripting
 		return mono_object_new(mAppDomain, mClass);
 	}
 
-	std::shared_ptr<ScriptClass> ScriptingSystem::getScriptClass(const char* _name)
+	std::shared_ptr<ScriptClass> ScriptingSystem::getScriptClass(const std::string& _name)
 	{
 		if (mAssemblyImage == nullptr)
 			return nullptr;
-		for (auto spScriptClass : scriptClasses)
+		auto nameSpScriptClassPair = scriptClassMap.find(_name);
+		std::shared_ptr<ScriptClass>* sp;
+		if (nameSpScriptClassPair != scriptClassMap.end())
 		{
-			if (spScriptClass.use_count() == 1)
+			sp = &(*nameSpScriptClassPair).second;
+			if (*sp == nullptr)
 			{
-				spScriptClass.reset();
-				spScriptClass = std::make_shared<ScriptClass>(mono_class_from_name(mAssemblyImage, "", _name));
-				PRINT("SCRIPT " << _name << " ALREADY EXISTS");
-				return spScriptClass;
+				*sp = std::make_shared<ScriptClass>(_name);
+				return *sp;
 			}
+			return *sp;
 		}
-		PRINT("SCRIPT " << _name << " WAS CREATED");
-		scriptClasses.push_back(std::make_shared<ScriptClass>(mono_class_from_name(mAssemblyImage, "", _name)));
-		return scriptClasses.back();
+		scriptClassMap.emplace(_name, std::make_shared<ScriptClass>(_name));
+		return scriptClassMap[_name];
 	}
 
 	void ScriptingSystem::initMono()
