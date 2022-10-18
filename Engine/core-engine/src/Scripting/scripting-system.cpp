@@ -29,10 +29,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <mono/metadata/assembly.h>
 #include <mono/metadata/appdomain.h>
 #include <mono/metadata/threads.h>
-#include <fstream>
-#include <iostream>
-#include <memory>
-#include <queue>
 
 #define SECONDS_TO_RECOMPILE 5
 

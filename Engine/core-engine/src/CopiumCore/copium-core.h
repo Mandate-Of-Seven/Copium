@@ -16,7 +16,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #pragma once
 #include "CopiumCore/system-interface.h"
 #include "Windows/windows-system.h"
-#include "../Messaging/message-system.h"
+#include "Messaging/message-system.h"
 #include "Editor/editor-system.h"
 #include "Scripting/scripting-system.h"
 #include "Physics/physics-system.h"
@@ -50,9 +50,9 @@ namespace Copium
 				NewSceneManager::Instance(),
 				Scripting::ScriptingSystem::Instance(),
 				Physics::Physics::Instance(),
+				SoundSystem::Instance(),
 				Graphics::GraphicsSystem::Instance(),
-				Thread::ThreadSystem::Instance(),
-				SoundSystem::Instance()
+				Thread::ThreadSystem::Instance()
 			};
 			for (ISystem* pSystem : systems)
 			{
