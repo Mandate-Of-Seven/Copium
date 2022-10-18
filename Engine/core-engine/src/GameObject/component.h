@@ -83,8 +83,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
         bool Enabled() const noexcept;
 
         void Enabled(bool) noexcept;
-
-        const std::string& Name();
     protected:
 
         /***************************************************************************/

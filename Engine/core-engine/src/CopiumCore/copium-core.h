@@ -95,9 +95,8 @@ namespace Copium
 		/**************************************************************************/
 		void exit()
 		{
-			for (int i = systems.size()-1; i > 0; --i)
+			for (int i = systems.size() - 1; i >= 0; --i)
 			{
-				PRINT("Current system: " << typeid(systems[i]));
 				systems[i]->exit();
 			}
 
