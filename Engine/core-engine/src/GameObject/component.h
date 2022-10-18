@@ -80,6 +80,11 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
             //std::cout << "default component dtor\n";
         }
 
+        bool Enabled() const noexcept;
+
+        void Enabled(bool) noexcept;
+
+        const std::string& Name();
     protected:
 
         /***************************************************************************/
@@ -100,11 +105,14 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
         /**************************************************************************/
         Component(Component::Type _componentType);
 
-    private:
-        ComponentID id;                     //Id of component, local to gameObject
-        Type componentType;                 //Type of component
-        const bool allowMultiple = false;   //Can gameObjects only have one of this Component?
-    };
+
+
+private:
+    ComponentID id;                     //Id of component, local to gameObject
+    Type componentType;                 //Type of component
+    const bool allowMultiple = false;   //Can gameObjects only have one of this Component?
+    bool enabled;
+};
 
     class ColliderComponent : public Component
     {

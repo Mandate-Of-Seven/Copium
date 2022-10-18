@@ -38,7 +38,14 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
         std::cout << "default deserialization\n";
     }
 
-    ColliderComponent::ColliderComponent() :Component(Type::Collider) { std::cout << "COLLIDER CONS" << std::endl; }
+bool Component::Enabled() const noexcept{ return enabled;}
+
+void Component::Enabled(bool _enabled) noexcept { enabled = _enabled; }
+
+
+
+
+ColliderComponent::ColliderComponent() :Component(Type::Collider) { std::cout << "COLLIDER CONS" << std::endl; }
 
     RendererComponent::RendererComponent() :Component(Type::Renderer) { std::cout << "RENDERER CONS" << std::endl; }
 

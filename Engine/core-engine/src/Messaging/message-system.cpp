@@ -36,7 +36,6 @@ namespace Copium::Message
         {
             receiver->handleMessage(mType);
         }
-        messageTypeListeners.clear();
     }
 
     void MessageSystem::init()
@@ -49,10 +48,7 @@ namespace Copium::Message
 
     void MessageSystem::update()
     {
-        for (int i = 0; i < int(MESSAGE_TYPE::MT_NONE); ++i)
-        {
-            messageTypeListeners.insert({ MESSAGE_TYPE(i),std::vector<IReceiver*>() });
-        }
+
     }
 
     void MessageSystem::exit()

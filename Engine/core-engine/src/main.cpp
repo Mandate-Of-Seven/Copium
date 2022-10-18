@@ -38,7 +38,6 @@ namespace
     // Our state
     float recompileTimer = 0;
     Copium::CopiumCore& copiumCore{ *Copium::CopiumCore::Instance()};
-    Copium::Message::MessageSystem& messageSystem{ *Copium::Message::MessageSystem::Instance() };
     Copium::SoundSystem& soundSystem{ *Copium::SoundSystem::Instance() };
 }
 
@@ -89,6 +88,12 @@ int main()
     Copium::FrameRateController frc(100.0);
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
+
+    //GameObject gObj;
+    //gObj.addComponent(Component::Type::Script);
+
+    Copium::ScriptComponent sComponent("CSharpTesting");
+
     // Engine Loop
     while (!glfwWindowShouldClose(windowsSystem->get_window()) && esCurrent != esQuit)
     {
@@ -118,7 +123,9 @@ int main()
                 {
                     frc.start();
 
-                    SM.update_scene();         //UPDATE STATE         
+                    SM.update_scene();         //UPDATE STATE
+                    //sComponent.Awake();
+                    //Copium::ScriptComponent somponent("CSharpTesting");
                     SM.draw_scene();           //DRAW STATE
                     copiumCore.update();
                     update();
@@ -140,7 +147,6 @@ int main()
             }
         }
     }
-    messageSystem.dispatch(Copium::Message::MESSAGE_TYPE::MT_ENGINE_EXIT);
     copiumCore.exit();
     cleanup();
     std::cout << "Engine Closing...\n";
@@ -225,7 +231,6 @@ void quitEngine()
 {
     if (Input::is_key_pressed(GLFW_KEY_Q)) 
     {
-
         change_enginestate(esQuit);
         std::cout << "Q was pressed" << std::endl;
     }

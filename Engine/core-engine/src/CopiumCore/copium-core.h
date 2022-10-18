@@ -47,8 +47,8 @@ namespace Copium
 				Message::MessageSystem::Instance(),
 				Editor::EditorSystem::Instance(),
 				Files::FileSystem::Instance(),
-				//Scripting::ScriptingSystem::Instance(),
 				NewSceneManager::Instance(),
+				Scripting::ScriptingSystem::Instance(),
 				Physics::Physics::Instance(),
 				Graphics::GraphicsSystem::Instance(),
 				Thread::ThreadSystem::Instance(),
@@ -95,9 +95,10 @@ namespace Copium
 		/**************************************************************************/
 		void exit()
 		{
-			for (ISystem* pSystem : systems)
+			for (int i = systems.size()-1; i > 0; --i)
 			{
-				pSystem->exit();
+				PRINT("Current system: " << typeid(systems[i]));
+				systems[i]->exit();
 			}
 
 			delete frc;

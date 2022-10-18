@@ -22,7 +22,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 namespace Copium
 {
 	using namespace Scripting;
-	std::vector<ScriptComponent*> ScriptComponent::instances{};
 	ScriptingSystem& ScriptComponent::sS{ *ScriptingSystem::Instance() };
 
 	ScriptComponent::ScriptComponent(const char* _name) :
@@ -30,20 +29,10 @@ namespace Copium
 	{
 		Message::MessageSystem::Instance()->subscribe(Message::MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
 		spScriptClass = sS.getScriptClass(_name);
-		if (spScriptClass == nullptr)
-		{
-			const std::string scriptPath = Files::Paths::projectPath + "\\" + _name + ".cs";
-			std::ofstream scriptFile(scriptPath);
-			scriptFile << "using CopiumEngine;\n\n";
-			scriptFile << "public class " << _name << " : CopiumScript" << std::endl;
-			scriptFile << "{\n\tvoid Start()\n\t{\n\n\t}\n\n\tvoid Update()\n\t{\n\n\t}\n}" << std::endl;
-			scriptFile.close();
-		}
-		else
+		if (spScriptClass != nullptr)
 		{
 			mObject = sS.createMonoObject(spScriptClass.get()->mClass);
 		}
-		instances.push_back(this);
 	}
 
 	ScriptComponent::ScriptComponent(MonoClass* _mClass) :
@@ -52,20 +41,11 @@ namespace Copium
 	{
 		Message::MessageSystem::Instance()->subscribe(Message::MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
 		mObject = sS.createMonoObject(spScriptClass.get()->mClass);
-		instances.push_back(this);
 	}
 
 	ScriptComponent::~ScriptComponent()
 	{
-		for (ScriptComponent* instance : instances)
-		{
-			if (instance == this)
-			{
-				instance = instances[instances.size()];
-				instances.pop_back();
-				break;
-			}
-		}
+		PRINT("Script Component Destroyed");
 	}
 
 	void ScriptComponent::handleMessage(Message::MESSAGE_TYPE mType)
@@ -83,27 +63,32 @@ namespace Copium
 
 	void ScriptComponent::Awake()
 	{
-		mono_runtime_invoke(spScriptClass->mAwake, mObject, nullptr, nullptr);
+		if (spScriptClass && spScriptClass->mAwake)
+			sS.invoke(mObject, spScriptClass->mAwake);
 	}
 
 	void ScriptComponent::Start()
 	{
-		mono_runtime_invoke(spScriptClass->mStart, mObject, nullptr, nullptr);
+		if (spScriptClass && spScriptClass->mStart)
+			mono_runtime_invoke(spScriptClass->mStart, mObject, nullptr, nullptr);
 	}
 
 	void ScriptComponent::Update()
 	{
-		mono_runtime_invoke(spScriptClass->mUpdate, mObject, nullptr, nullptr);
+		if (spScriptClass && spScriptClass->mUpdate)
+			mono_runtime_invoke(spScriptClass->mUpdate, mObject, nullptr, nullptr);
 	}
 
 	void ScriptComponent::LateUpdate()
 	{
-		mono_runtime_invoke(spScriptClass->mLateUpdate, mObject, nullptr, nullptr);
+		if (spScriptClass && spScriptClass->mLateUpdate)
+			mono_runtime_invoke(spScriptClass->mLateUpdate, mObject, nullptr, nullptr);
 	}
 
 	void ScriptComponent::OnCollisionEnter()
 	{
-		mono_runtime_invoke(spScriptClass->mOnCollisionEnter, mObject, nullptr, nullptr);
+		if (spScriptClass && spScriptClass->mOnCollisionEnter)
+			mono_runtime_invoke(spScriptClass->mOnCollisionEnter, mObject, nullptr, nullptr);
 	}
 }
 

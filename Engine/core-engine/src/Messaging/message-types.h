@@ -30,6 +30,8 @@ namespace Copium::Message
         MT_SCRIPTING_UPDATED,
         MT_ADD_SCRIPT,
         MT_ENGINE_EXIT,
+        MT_MONO_DOMAIN_LOADED,
+        MT_MONO_DOMAIN_UNLOADED,
         MT_NONE // END, DO NOT INSERT BEYOND
     };
 

@@ -22,8 +22,9 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Utilities/thread-system.h"
 #include "Files/file-system.h"
 #include "CopiumCore/system-interface.h"
+#include "Messaging/message-system.h"
+#include "Messaging/message-types.h"
 
-#include <Windows.h>
 #include <mono/metadata/mono-config.h>
 #include <mono/metadata/assembly.h>
 #include <mono/metadata/appdomain.h>
@@ -32,6 +33,20 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <iostream>
 #include <memory>
 #include <queue>
+
+#define SECONDS_TO_RECOMPILE 5
+
+namespace
+{
+	Copium::Message::MessageSystem* messageSystem{ Copium::Message::MessageSystem::Instance() };
+	enum class CompilingState
+	{
+		Compiling,
+		SwapAssembly,
+		Wait
+	};
+	CompilingState compilingState{ CompilingState::Wait};
+}
 
 namespace Copium::Scripting
 {
@@ -98,27 +113,17 @@ namespace Copium::Scripting
 	void ScriptingSystem::recompileThreadWork()
 	{
 		Thread::ThreadSystem& tSys = *Thread::ThreadSystem::Instance();
-		
-		sS.initMono();
 		while (!tSys.Quit())
 		{
+			while (compilingState != CompilingState::Wait);
+			compilingState = CompilingState::Compiling;
+			//Critical section
 			updateScriptFiles();
 			tryRecompileDll();
-			//MonoMethod* printMsgFunc = mono_class_get_method_from_name(mmClasses[2], "PrintMessage", 0);
-			////// Allocate an instance of our class
-			//MonoObject* classInstance = mono_object_new(mAppDomain, mmClasses[2]);
-			//if (classInstance == nullptr)
-			//{
-			//	PRINT("Unable to create class instance");
-			//	// Log error here and abort
-			//}
-			//// Call the parameterless (default) constructor
-			//mono_runtime_object_init(classInstance);
-			//mono_runtime_invoke(printMsgFunc, classInstance, nullptr, nullptr);
-			PRINT("Recompiler Thread looking for new files!");
-			Sleep(5 * 1000);
+			//Critical section End
+			Sleep(SECONDS_TO_RECOMPILE*1000);
 		}
-		sS.shutdownMono();
+
 	}
 
 	ScriptingSystem::ScriptingSystem() :
@@ -129,17 +134,27 @@ namespace Copium::Scripting
 
 	void ScriptingSystem::init()
 	{
-		Thread::ThreadSystem::Instance()->addThread("Compiler Thread",
-			new std::thread(&ScriptingSystem::recompileThreadWork,this));
+		initMono();
+		Thread::ThreadSystem::Instance()->addThread(new std::thread(&ScriptingSystem::recompileThreadWork,this));
 	}
 
 	void ScriptingSystem::update()
 	{
-
+		if (compilingState == CompilingState::SwapAssembly)
+		{
+			swapDll();
+			compilingState = CompilingState::Wait;
+		}
 	}
 
 	void ScriptingSystem::exit()
 	{
+		shutdownMono();
+	}
+
+	void ScriptingSystem::handleMessage(Message::MESSAGE_TYPE mType)
+	{
+
 	}
 
 	MonoObject* ScriptingSystem::createMonoObject(MonoClass* mClass)
@@ -157,9 +172,11 @@ namespace Copium::Scripting
 			{
 				spScriptClass.reset();
 				spScriptClass = std::make_shared<ScriptClass>(mono_class_from_name(mAssemblyImage, "", _name));
+				PRINT("SCRIPT " << _name << " ALREADY EXISTS");
 				return spScriptClass;
 			}
 		}
+		PRINT("SCRIPT " << _name << " WAS CREATED");
 		scriptClasses.push_back(std::make_shared<ScriptClass>(mono_class_from_name(mAssemblyImage, "", _name)));
 		return scriptClasses.back();
 	}
@@ -200,6 +217,7 @@ namespace Copium::Scripting
 		mCoreAssembly = loadAssembly(Files::Paths::scriptsAssemblyPath);
 		//mono_assemblies_init();
 		mAssemblyImage = mono_assembly_get_image(mCoreAssembly);
+		messageSystem->dispatch(Message::MESSAGE_TYPE::MT_SCRIPTING_UPDATED);
 		//void* propIter = nullptr;
 		//MonoClassField* raw_property = NULL;
 		//raw_property = mono_class_get_fields(mmClasses[0], &propIter);
@@ -211,6 +229,14 @@ namespace Copium::Scripting
 		//			PRINT("Name: " << name << " Type: String Access: Public");
 		//	}
 		//}
+	}
+
+	void ScriptingSystem::invoke(MonoObject* mObj, MonoMethod* mMethod)
+	{
+		if (mObj && mMethod)
+		{
+			mono_runtime_invoke(mMethod, mObj, nullptr, nullptr);
+		}
 	}
 
 	MonoAssembly* loadAssembly(const std::string& assemblyPath)
@@ -292,17 +318,18 @@ namespace Copium::Scripting
 
 	void ScriptingSystem::tryRecompileDll()
 	{
-		bool compiling = false;
+		compilingState = CompilingState::Wait;
+		bool startCompiling = false;
 		for (Files::File& scriptFile : scriptFiles)
 		{
 			scriptFile.updateModificationTiming();
-			if (scriptFile.Modified() && !compiling)
+			if (scriptFile.Modified() && !startCompiling)
 			{
 				PRINT(scriptFile.string() << " Changed! ");
 				PRINT("Compiling DLL....");
-				compiling = true;
+				startCompiling = true;
 				Compiler::compileDll();
-				swapDll();
+				compilingState = CompilingState::SwapAssembly;
 			}
 		}
 	}

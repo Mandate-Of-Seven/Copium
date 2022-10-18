@@ -20,9 +20,8 @@ namespace Copium::Thread
 {
 	void ThreadSystem::init()
 	{
+		PRINT("THREAD SYSTEM INITIALIZED");
 		quit = false;
-		using namespace Message;
-		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_ENGINE_EXIT, this);
 	}
 
 	void ThreadSystem::update()
@@ -30,36 +29,24 @@ namespace Copium::Thread
 
 	}
 
-	void ThreadSystem::addThread(const char* _name, std::thread* _thread)
+	void ThreadSystem::addThread(std::thread* _thread)
 	{
-		PRINT("Thread: " << _name << " added!");
-		threads.push_back(std::make_pair(_name, _thread));
+		threads.push_back(_thread);
 	}
 
 	void ThreadSystem::exit()
 	{
-		for (namedThread& thread : threads)
+		quit = true;
+		for (std::thread* thread : threads)
 		{
-			delete thread.second;
+			thread->join();
+			delete thread;
 		}
+		PRINT("All threads detached");
 	}
 
 	bool ThreadSystem::Quit() const
 	{
 		return quit;
 	}
-
-	void ThreadSystem::handleMessage(Message::MESSAGE_TYPE mType)
-	{
-		quit = true;
-		//Quit
-		PRINT("Quitting Threads");
-		for (namedThread& thread : threads)
-		{
-			thread.second->join();
-		}
-		PRINT("All threads detached");
-	}
-
-
 }
