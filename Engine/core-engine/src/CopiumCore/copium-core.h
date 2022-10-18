@@ -50,7 +50,8 @@ namespace Copium
 				Physics::Physics::Instance(),
 				Graphics::GraphicsSystem::Instance(),
 				NewSceneManager::Instance(),
-				Thread::ThreadSystem::Instance()
+				Thread::ThreadSystem::Instance(),
+				SoundSystem::Instance()
 			};
 			for (ISystem* pSystem : systems)
 			{

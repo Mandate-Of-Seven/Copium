@@ -53,7 +53,7 @@ bool WindowsInput::is_key_pressed_impl(int keycode)
     COPIUM_ASSERT((keycode > COPIUM_MAX_KEYS), "Keycode entered is out of range");
     if (get_input_instance()->keys[keycode]== GLFW_PRESS)
     {
-        //std::cout << get_input_instance()->keys[keycode] << "  " << std::endl;
+        std::cout << get_input_instance()->keys[keycode] << "  " << std::endl;
         get_input_instance()->keys[keycode] = 0;
         return true;
     }
@@ -119,6 +119,13 @@ float WindowsInput::get_mouseY_impl()
 {
     auto [xPos, yPos] = get_mouseposition_impl();
     return yPos;
+}
+
+double WindowsInput::get_mousescroll_impl()
+{
+    double temp = get_input_instance()->mouseScrollOffset;
+    get_input_instance()->mouseScrollOffset = 0;
+    return temp;
 }
 
 void Input::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -198,14 +205,26 @@ void Input::mousebutton_callback(GLFWwindow* window, int button, int action, int
         #endif
         break;
     }
-    
 }
 
 void Input::mousescroll_callback(GLFWwindow* window, double xOffset, double yOffset)
 {
     (void) window;
+    get_input_instance()->mouseScrollOffset = yOffset;
+
+    if (yOffset<0)
+    {
+        std::cout << "scrolling down" << std::endl;
+    }else if (yOffset > 0)
+    {
+        std::cout << "scrolling up" << std::endl;
+    }
+    else if(yOffset == 0 && !xOffset)
+    {
+        std::cout << "not scrolling" << std::endl;
+    }
     #ifdef _DEBUG
-        std::cout << "Mouse scroll wheel offset: (" << xOffset << ", " << yOffset << ")" << std::endl;
+        //std::cout << "Mouse scroll wheel offset: (" << xOffset << ", " << yOffset << ")" << std::endl;
     #endif
 }
 
@@ -213,6 +232,6 @@ void Input::mousepos_callback(GLFWwindow* window, double xPos, double yPos)
 {
     (void) window;
     #ifdef _DEBUG
-        std::cout << "Mouse cursor position: (" << xPos << ", " << yPos << ")" << std::endl;
+        //std::cout << "Mouse cursor position: (" << xPos << ", " << yPos << ")" << std::endl;
     #endif
 }

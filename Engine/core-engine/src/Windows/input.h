@@ -24,6 +24,7 @@ class Input
 	public:
 		short* keys =nullptr;//contains the current state of all keys
 		short* mouseButtons = nullptr;//contains the current state of both mouse buttons
+		double mouseScrollOffset;
 
 		virtual ~Input() = default;
 
@@ -126,6 +127,16 @@ class Input
 		*/
 		/**************************************************************************/
 		static bool get_mouseY() { return inputInstance->get_mouseY_impl(); }
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Returns the y offset of mouse scroll
+		\return
+			y offset of the mouse scroll
+		*/
+		/**************************************************************************/
+		static double get_mousescroll() { return inputInstance->get_mousescroll_impl(); }
 
 		/***************************************************************************/
 		/*!
@@ -259,6 +270,14 @@ class Input
 											 by derived class
 		/**************************************************************************/
 		virtual float get_mouseY_impl() = 0;
+
+		/***************************************************************************/
+		/*!
+		\brief
+			The implementaion of get_mousescroll_impl - Must be implemented
+														by derived class
+		/**************************************************************************/
+		virtual double get_mousescroll_impl() = 0;
 	private:
 		static Input* inputInstance;
 };

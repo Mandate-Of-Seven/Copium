@@ -17,6 +17,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #pragma once
 
 #include "fmod.hpp"
+#include "CopiumCore\system-interface.h"
 
 enum SoundAlias
 {
@@ -24,119 +25,119 @@ enum SoundAlias
 	zap,
 };
 
-
-class SoundSystem
+namespace Copium
 {
-public:
-	/***************************************************************************/
-		/*!
-		\brief
-			Creates a sound system from FMOD and initialises it
-		*/
-	/**************************************************************************/
-	static void init();
+	CLASS_SYSTEM(SoundSystem)
+	{
+	public:
+		/***************************************************************************/
+			/*!
+			\brief
+				Creates a sound system from FMOD and initialises it
+			*/
+			/**************************************************************************/
+		void init();
 
-	/***************************************************************************/
-		/*!
-		\brief
-			Updates the FMOD sound system
-		*/
-	/**************************************************************************/
-	static void update();
+		/***************************************************************************/
+			/*!
+			\brief
+				Updates the FMOD sound system
+			*/
+			/**************************************************************************/
+		void update();
 
-	/***************************************************************************/
-		/*!
-		\brief
-			Frees up any created sounds and exits
-		*/
-	/**************************************************************************/
-	static void exit();
+		/***************************************************************************/
+			/*!
+			\brief
+				Frees up any created sounds and exits
+			*/
+			/**************************************************************************/
+		void exit();
 
-	
-	/***************************************************************************/
-		/*!
-		\brief
-			Create a sound from the filename provided
-		\param fileName
-			the file path of the audio file
-		\param alias
-			easier way to refer to the audio file
-		*/
-	/**************************************************************************/
-	static void CreateSound(const char* fileName, unsigned alias);
 
-	/***************************************************************************/
-		/*!
-		\brief
-			Play the given audio
-		\param alias
-			which sound file should be played
-		\param overlap
-			should the audio be able to overlap
-		\param loop
-			should the audio loop
-		\param loopCount
-			to set for FMOD loop count
-		*/
-	/**************************************************************************/
-	static void Play(unsigned alias, bool overLap = true, bool loop = false, int loopCount = -1);
+		/***************************************************************************/
+			/*!
+			\brief
+				Create a sound from the filename provided
+			\param fileName
+				the file path of the audio file
+			\param alias
+				easier way to refer to the audio file
+			*/
+			/**************************************************************************/
+		void CreateSound(const char* fileName, unsigned alias);
 
-	/***************************************************************************/
-		/*!
-		\brief
-			Stop the given audio
-		\param alias
-			which sound file should be stopped
-		*/
-	/**************************************************************************/
-	static void Stop(unsigned alias);
-	// Set volume 0 - 1
+		/***************************************************************************/
+			/*!
+			\brief
+				Play the given audio
+			\param alias
+				which sound file should be played
+			\param overlap
+				should the audio be able to overlap
+			\param loop
+				should the audio loop
+			\param loopCount
+				to set for FMOD loop count
+			*/
+			/**************************************************************************/
+		void Play(unsigned alias, bool overLap = true, bool loop = false, int loopCount = -1);
 
-	/***************************************************************************/
-		/*!
-		\brief
-			Set the volume of an audio file
-		\param alias
-			which sound file should be stopped
-		\param volume
-			from 0.0 to 1.0 how loud should the audio file be
-		*/
-	/**************************************************************************/
-	static void SetVolume(unsigned alias, float volume);
+		/***************************************************************************/
+			/*!
+			\brief
+				Stop the given audio
+			\param alias
+				which sound file should be stopped
+			*/
+			/**************************************************************************/
+		void Stop(unsigned alias);
+		// Set volume 0 - 1
 
-	/***************************************************************************/
-		/*!
-		\brief
-			Mutes or unmutes all audio
-		\param status
-			should all audio be muted
-		*/
-	/**************************************************************************/
-	static void Mute(bool status);
-private:
+		/***************************************************************************/
+			/*!
+			\brief
+				Set the volume of an audio file
+			\param alias
+				which sound file should be stopped
+			\param volume
+				from 0.0 to 1.0 how loud should the audio file be
+			*/
+			/**************************************************************************/
+		void SetVolume(unsigned alias, float volume);
 
-	//a map of all sounds created using CreateSound()
-	static std::map<unsigned, std::pair<FMOD::SoundGroup*, FMOD::Sound*>> soundList;
+		/***************************************************************************/
+			/*!
+			\brief
+				Mutes or unmutes all audio
+			\param status
+				should all audio be muted
+			*/
+			/**************************************************************************/
+		void Mute(bool status);
+	private:
 
-	//the sound system playing all the audio
-	static FMOD::System *soundSystem;
+		//a map of all sounds created using CreateSound()
+		std::map<unsigned, std::pair<FMOD::SoundGroup*, FMOD::Sound*>> soundList;
 
-	SoundSystem(){}
+		//the sound system playing all the audio
+		FMOD::System* soundSystem;
 
-	/***************************************************************************/
-		/*!
-		\brief
-			Checks the FMOD version
-		*/
-	/**************************************************************************/
-	static void CheckVersion();
+		/***************************************************************************/
+			/*!
+			\brief
+				Checks the FMOD version
+			*/
+			/**************************************************************************/
+		void CheckVersion();
 
-	/***************************************************************************/
-		/*!
-		\brief
-			Checks the users sound cards and disables audio if no sound card is
-			found
-		*/
-	/**************************************************************************/
-	static void CheckDrivers();
-};
+		/***************************************************************************/
+			/*!
+			\brief
+				Checks the users sound cards and disables audio if no sound card is
+				found
+			*/
+			/**************************************************************************/
+		void CheckDrivers();
+	};
+}

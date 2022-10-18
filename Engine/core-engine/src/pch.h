@@ -38,7 +38,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include <regex>
 #include <algorithm>
-#include "Audio/sound-system.h"
 
 //DEBUGGING
 #include "Debugging/logging.h"

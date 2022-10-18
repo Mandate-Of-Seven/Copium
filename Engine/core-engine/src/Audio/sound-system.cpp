@@ -15,14 +15,15 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 *****************************************************************************************/
 
 #include "pch.h"
-#include "Debugging/logging.h"
+#include "sound-system.h"
 
-FMOD::System *SoundSystem::soundSystem;
-std::map<unsigned, std::pair<FMOD::SoundGroup*, FMOD::Sound*>> SoundSystem::soundList;
+namespace Copium
+{
 
 // Initialize sound system
 void SoundSystem::init()
 {
+
 	FMOD::System_Create(&soundSystem);
 	soundSystem->init(50, FMOD_INIT_NORMAL, NULL);
 	CheckVersion();
@@ -147,4 +148,6 @@ void SoundSystem::CheckDrivers()
 	{
 		soundSystem->setOutput(FMOD_OUTPUTTYPE_NOSOUND);
 	}
+}
+
 }
