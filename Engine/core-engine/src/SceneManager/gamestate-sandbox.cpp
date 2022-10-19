@@ -1,5 +1,6 @@
 /*!***************************************************************************************
-\file			gamestate-sandbox.cpp
+****
+\file			gamestate-sandbox.cpp (deprecated)
 \project
 \author			Matthew Lau
 \co-authors
@@ -15,8 +16,9 @@
 
 	Note: load, init, free and unload functions MUST be defined by scene sub-classes
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
-******************************************************************************************/
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************
+****/
 #include <pch.h>
 #include "SceneManager/gamestate-sandbox.h"
 #include "GameObject/game-object-factory.h"
@@ -37,13 +39,6 @@ SceneSandbox::SceneSandbox(std::string& _filepath) : Scene(_filepath)
 void SceneSandbox::load_scene() 
 {
 	std::cout << "load sandbox" << std::endl;
-	std::ifstream ifs("Data\\transform.json");
-	rapidjson::IStreamWrapper isw(ifs);
-	rapidjson::Document document;
-	document.ParseStream(isw);
-	Transform tester;
-	tester.deserialize(document);
-	std::cout << tester.Position() << std::endl;
 }
 void SceneSandbox::init_scene() 
 {

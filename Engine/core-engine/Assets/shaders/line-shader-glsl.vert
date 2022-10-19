@@ -19,8 +19,11 @@ layout (location=1) in vec4 aVertexColor;
 
 layout (location=0) out vec4 vColor;
 
+uniform mat4 uViewProjection;
+
 void main()
 {
 	vColor				= aVertexColor;
-	gl_Position			= vec4(aVertexPosition, 1.0);
+	gl_Position			= uViewProjection * vec4(aVertexPosition, 1.0);
+	//gl_Position			= vec4(aVertexPosition, 1.0);
 }

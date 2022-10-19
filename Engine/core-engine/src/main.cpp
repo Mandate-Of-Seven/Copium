@@ -21,6 +21,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scripting/scripting-system.h"
 #include "Scripting/scripting.h"
 #include "Windows/windows-system.h"
+#include "Audio/sound-system.h"
 #include "Windows/windows-input.h"
 #include "Debugging/logging.h"
 #include "Editor/ConsoleLog.h"
@@ -37,6 +38,7 @@ namespace
     // Our state
     float recompileTimer = 0;
     Copium::CopiumCore& copiumCore{ *Copium::CopiumCore::Instance()};
+    Copium::SoundSystem& soundSystem{ *Copium::SoundSystem::Instance() };
 }
 
 Input * Input::inputInstance = new WindowsInput();
@@ -77,13 +79,13 @@ int main()
 
     init();
     copiumCore.init();
+    //init();
 
     Copium::Windows::WindowsSystem* windowsSystem = Copium::Windows::WindowsSystem::Instance();
 
-    glfwSetKeyCallback(windowsSystem->get_window(), Input::key_callback);
 
     SceneManager SM;
-    FrameRateController frc(100.0);
+    Copium::FrameRateController frc(100.0);
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
 
@@ -96,7 +98,6 @@ int main()
     while (!glfwWindowShouldClose(windowsSystem->get_window()) && esCurrent != esQuit)
     {
         SM.add_scene(sandboxScene);
-        //std::cout << "Number of scenes: " << SM.get_scenecount() << std::endl;
         SM.change_scene(0);
 
         if (esCurrent == esActive) 
@@ -163,11 +164,12 @@ static void init()
 
     Input::get_input_instance()->init();
     Copium::Log::init();
-    SoundSystem::init();
-    SoundSystem::CreateSound("./Assets/sounds/reeling.wav", SoundAlias::reeling);
-    SoundSystem::SetVolume(reeling, 0.3f);
-    SoundSystem::CreateSound("./Assets/sounds/zap.wav", SoundAlias::zap);
-    SoundSystem::SetVolume(zap, 0.3f);
+
+    soundSystem.init();
+    soundSystem.CreateSound("./Assets/sounds/reeling.wav", SoundAlias::reeling);
+    soundSystem.SetVolume(reeling, 0.3f);
+    soundSystem.CreateSound("./Assets/sounds/zap.wav", SoundAlias::zap);
+    soundSystem.SetVolume(zap, 0.3f);
 
     
 
@@ -187,12 +189,12 @@ static void update()
 {
     if (Input::is_key_pressed(GLFW_KEY_1))
     {
-        SoundSystem::Play(zap, true, false);
+        soundSystem.Play(zap, true, false);
         std::cout << "Zap sound is being played\n";
     }
     if (Input::is_key_pressed(GLFW_KEY_2))
     {
-        SoundSystem::Play(reeling, true, false);
+        soundSystem.Play(reeling, true, false);
         std::cout << "Reeling sound is being played\n";
     }
     quitEngine();

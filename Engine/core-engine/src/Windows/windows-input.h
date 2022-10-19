@@ -85,6 +85,16 @@ class WindowsInput : public Input
 		/**************************************************************************/
 		virtual float get_mouseY_impl() override;
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Returns the y offset of the mouse scroll
+		\return
+			 y offset of the mouse scroll
+		*/
+		/**************************************************************************/
+		virtual double get_mousescroll_impl() override;
+
 	public:
 		/***************************************************************************/
 		/*!

@@ -1,5 +1,6 @@
 /*!***************************************************************************************
-\file			scenemanager.cpp
+****
+\file			scene-manager.cpp
 \project
 \author			Matthew Lau
 \co-authors
@@ -15,7 +16,7 @@
 		2. Calling of load, init, update, draw, free and unload state functions for each scene
 		3. Assigning of new scenes to itself
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "pch.h"
 #include "SceneManager/scene-manager.h"

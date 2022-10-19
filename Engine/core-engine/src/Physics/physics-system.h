@@ -16,11 +16,13 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "CopiumCore/system-interface.h"
 #include "Math/math-library.h"
 #include "Physics/collider.h"
+#include "SceneManager/sm.h"
 
 
 namespace Copium::Physics
 {	
 	const Math::Vec2 gravity = { 0.0,-0.50 };			//gravity affecting all objects that can be affected
+	
 	CLASS_SYSTEM(Physics)
 	{
 	public:
@@ -43,9 +45,18 @@ namespace Copium::Physics
 	*/
 	/**************************************************************************/
 		void check_collision();
+
+	/***************************************************************************/
+	/*!
+	\brief
+		  Toggle between normal and step-by-step physics.
+	*/
+	/**************************************************************************/
+		void toggle_step();
 		
 	public:
 		std::vector<Copium::Component::RigidBody*> boxes;  //store box component to be able to perform physics
+		bool stepModeActive = false;
 	};
 
 }

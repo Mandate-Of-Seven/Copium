@@ -1,5 +1,6 @@
 /*!***************************************************************************************
-\file			StateManager.h
+****
+\file			state-manager.h
 \project		
 \author			Matthew Lau
 \co-authors		
@@ -13,7 +14,7 @@
 		1. Declarations of functions and extern variables that allow for the management of Engine States
 		2. Enums for all the Engine States
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #pragma once
 #ifndef STATEMANAGER_H
