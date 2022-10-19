@@ -120,7 +120,7 @@ class Input
 			x coordinate of the mouse cursor
 		*/
 		/**************************************************************************/
-		static bool get_mouseX() { return inputInstance->get_mouseX_impl(); }
+		static float get_mouseX() { return inputInstance->get_mouseX_impl(); }
 		/***************************************************************************/
 		/*!
 		\brief
@@ -129,7 +129,7 @@ class Input
 			y coordinate of the mouse cursor
 		*/
 		/**************************************************************************/
-		static bool get_mouseY() { return inputInstance->get_mouseY_impl(); }
+		static float get_mouseY() { return inputInstance->get_mouseY_impl(); }
 
 		/***************************************************************************/
 		/*!

@@ -160,35 +160,35 @@ void Input::mousebutton_callback(GLFWwindow* window, int button, int action, int
         case GLFW_MOUSE_BUTTON_LEFT:
             target = GLFW_MOUSE_BUTTON_LEFT;
         #ifdef _DEBUG               
-            std::cout << "Left mouse button ";
+            //std::cout << "Left mouse button ";
         #endif
         break;
 
         case GLFW_MOUSE_BUTTON_RIGHT:
             target = GLFW_MOUSE_BUTTON_RIGHT;
         #ifdef _DEBUG           
-            std::cout << "Right mouse button ";
+            //std::cout << "Right mouse button ";
         #endif
         break;
 
         case GLFW_MOUSE_BUTTON_3:
             target = GLFW_MOUSE_BUTTON_3;
         #ifdef _DEBUG           
-                    std::cout << "Middle mouse button ";
+            //std::cout << "Middle mouse button ";
         #endif
             break;
 
         case GLFW_MOUSE_BUTTON_4:
             target = GLFW_MOUSE_BUTTON_4;
         #ifdef _DEBUG           
-                    std::cout << "Mouse button 4 ";
+             //std::cout << "Mouse button 4 ";
         #endif
             break;
 
         case GLFW_MOUSE_BUTTON_5:
             target = GLFW_MOUSE_BUTTON_5;
         #ifdef _DEBUG           
-                    std::cout << "Mouse button 5 ";
+            //std::cout << "Mouse button 5 ";
         #endif
             break;
     }
@@ -197,14 +197,14 @@ void Input::mousebutton_callback(GLFWwindow* window, int button, int action, int
         case GLFW_PRESS:
             get_input_instance()->mouseButtons[target] = 1;
         #ifdef _DEBUG
-            std::cout << "pressed!!!" << std::endl;
+            //std::cout << "pressed!!!" << std::endl;
         #endif
         break;
 
         case GLFW_RELEASE:
             get_input_instance()->mouseButtons[target] = 0;
         #ifdef _DEBUG
-            std::cout << "released!!!" << std::endl;
+            //std::cout << "released!!!" << std::endl;
         #endif
         break;
     }
@@ -217,14 +217,14 @@ void Input::mousescroll_callback(GLFWwindow* window, double xOffset, double yOff
 
     if (yOffset<0)
     {
-        std::cout << "scrolling down" << std::endl;
+        //std::cout << "scrolling down" << std::endl;
     }else if (yOffset > 0)
     {
-        std::cout << "scrolling up" << std::endl;
+        //std::cout << "scrolling up" << std::endl;
     }
     else if(yOffset == 0 && !xOffset)
     {
-        std::cout << "not scrolling" << std::endl;
+        //std::cout << "not scrolling" << std::endl;
     }
     #ifdef _DEBUG
         //std::cout << "Mouse scroll wheel offset: (" << xOffset << ", " << yOffset << ")" << std::endl;

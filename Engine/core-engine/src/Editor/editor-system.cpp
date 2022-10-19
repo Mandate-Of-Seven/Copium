@@ -47,8 +47,7 @@ namespace Copium::Editor
 		sceneView.init();
 		
 		// Initialize a new editor camera
-		float aspectRatio = sceneView.get_width() / (float)sceneView.get_height();
-		camera.init(aspectRatio);
+		camera.init((float) sceneView.get_width(), (float) sceneView.get_height());
 	}
 
 	void EditorSystem::update()

@@ -341,7 +341,7 @@ namespace Copium::Graphics
 		glm::vec4 color = { 1.f, 1.f, 1.f, 0.2f };
 		float start = -100.f, end = -start;
 		float numDivision = 24.f, iteration = (end - start) / numDivision;
-		for (float i = start; i <= end; i += iteration)
+		for (float i = start; i < end + iteration; i += iteration)
 		{
 			renderer.draw_line({ i, start }, { i, end }, color);
 			renderer.draw_line({ start, i }, { end, i }, color);
@@ -371,10 +371,20 @@ namespace Copium::Graphics
 		// Background
 		// Bean: scale should be the scale of the object, 
 		// texture scale should be separate and derived from the image dimensions
-		//renderer.draw_quad({ 0.f, 0.f , 0.f }, { 3.84f, 2.16f }, 0.f, textures[4].get_object_id());
+		renderer.draw_quad({ 0.f, 0.f , 0.f }, { 3.84f, 2.16f }, 0.f, textures[4].get_object_id());
 		
-		color = { 0.f, 0.f, 0.f, 1.f };
-		renderer.draw_quad({ 0.f, 0.f , 0.f}, { 0.3f, 0.3f }, 0.f, color);
+		color = { 0.1f, 1.f, 0.1f, 1.f };
+		glm::vec2 worldNDC{ 0 };
+		Copium::Editor::EditorSystem* editor = Copium::Editor::EditorSystem::Instance();
+		glm::vec2 cameraPos = editor->get_camera()->get_position();
+		float zoom = editor->get_camera()->get_zoom();
+		worldNDC = { cameraPos.x, cameraPos.y };
+		glm::vec2 scale = { 0.01f, 0.01f };
+		scale *= zoom;
+
+		//PRINT("World NDC position: " << worldNDC.x << ", " << worldNDC.y);
+
+		renderer.draw_quad({ worldNDC.x, worldNDC.y , 1.f}, scale, 0.f, color);
 
 		for (size_t i = 0; i < sprites.size(); i++)
 		{
