@@ -171,7 +171,6 @@ static void init()
     soundSystem.CreateSound("./Assets/sounds/zap.wav", SoundAlias::zap);
     soundSystem.SetVolume(zap, 0.3f);
 
-    
 
     //Uncomment to test asserts
     //COPIUM_ASSERT(1+1==2,"Asserts are working as intended");
@@ -232,7 +231,7 @@ void quitEngine()
     if (Input::is_key_pressed(GLFW_KEY_Q)) 
     {
         change_enginestate(esQuit);
-        std::cout << "Q was pressed" << std::endl;
+        std::cout << "Copium has been huffed, Engine shutting down" << std::endl;
     }
 }
 

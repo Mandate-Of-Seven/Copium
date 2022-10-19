@@ -39,7 +39,8 @@ namespace Copium::Editor
 		ImGui::StyleColorsDark();
 		ImGui_ImplGlfw_InitForOpenGL(windowsSystem->get_window(), true);
 		ImGui_ImplOpenGL3_Init("#version 330");
-
+		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		ImGui::GetIO().ConfigDockingWithShift = true;
 		Window::Inspector::init();
 		Window::EditorConsole::init();
 		Window::Inspector::selectedGameObject = new GameObject();
