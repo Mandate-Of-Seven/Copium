@@ -33,7 +33,7 @@ namespace Copium::Editor
 	void EditorSceneView::update()
 	{
 		// Scene view settings
-		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings;
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoCollapse;
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
 
 		// Begin Scene View
