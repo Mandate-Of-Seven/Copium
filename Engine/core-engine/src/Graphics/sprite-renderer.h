@@ -17,8 +17,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define SPRITE_RENDERER_H
 
 #include <glm/glm.hpp>
-#include "Graphics/renderer.h"
-#include <cstring>
+#include <string>
+#include <rapidjson/document.h>
 
 namespace Copium::Graphics
 {
@@ -26,11 +26,11 @@ namespace Copium::Graphics
 	class Texture;
 
 	// Depends on Transform
-	class SpriteRenderer final : public Graphics::Renderer
+	class SpriteRenderer final
 	{
 	public:
 		// Serialization inherited from Component
-
+		void deserialize(rapidjson::Value& _value);
 		// Accessing Properties
 
 		// Name

@@ -93,7 +93,7 @@ namespace Copium::Graphics
 			movement_y -= dt;*/
 
 		// Create sprites
-		glm::vec2 mousePos{0}, centreOfScene{0}, mouseScenePos{0}, mouseToNDC{0}, worldSpace{0};
+		glm::vec2 mousePos{0}, centreOfScene{0}, mouseScenePos{0}, mouseToNDC{0}, worldNDC{0};
 		if (!Input::is_key_held(GLFW_KEY_LEFT_SHIFT) && Input::is_key_pressed(GLFW_KEY_C))
 		{
 			SpriteRenderer* sprite = new SpriteRenderer;
@@ -108,9 +108,9 @@ namespace Copium::Graphics
 			mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
 			mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
 			mouseToNDC *= zoom;
-			worldSpace = { mouseToNDC.x + cameraPos.x, mouseToNDC.y + cameraPos.y };
+			worldNDC = { mouseToNDC.x + cameraPos.x, mouseToNDC.y + cameraPos.y };
 
-			glm::vec3 pos = glm::vec3(worldSpace, 0.f);
+			glm::vec3 pos = glm::vec3(worldNDC, 0.f);
 
 			sprite->set_position(pos);
 			
@@ -145,8 +145,8 @@ namespace Copium::Graphics
 
 		/*PRINT("Mouse position: " << mousePos.x << ", " << mousePos.y);
 		PRINT("Centre position: " << centreOfScene.x << ", " << centreOfScene.y);
-		PRINT("NDC position: " << mouseToNDC.x << ", " << mouseToNDC.y);
-		PRINT("World space: " << worldSpace.x << ", " << worldSpace.y);*/
+		PRINT("Mouse NDC position: " << mouseToNDC.x << ", " << mouseToNDC.y);
+		PRINT("World NDC position: " << worldNDC.x << ", " << worldNDC.y);*/
 
 		if (Input::is_key_pressed(GLFW_KEY_Y))
 		{

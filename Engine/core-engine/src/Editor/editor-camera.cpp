@@ -22,6 +22,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <glm/gtx/quaternion.hpp>
 
 #include "Editor/editor-camera.h"
+#include "Editor/editor-system.h"
 
 namespace Copium::Editor
 {
@@ -91,29 +92,46 @@ namespace Copium::Editor
 	void EditorCamera::mouse_controls()
 	{
 		glm::vec3 pos = get_position();
+		
 		// Movement WASD
-		if(Input::is_key_held(GLFW_KEY_LEFT_CONTROL))
-		//if (Input::is_mousebutton_pressed(GLFW_MOUSE_BUTTON_RIGHT)) //cannot use rn
+		if(Input::get_input_instance()->mouseButtons[1] == GLFW_PRESS && Input::get_input_instance()->mouseButtons[1] != GLFW_RELEASE)
 		{
 			glm::vec2 speed = get_pan_speed();
+			EditorSceneView* sceneView = EditorSystem::Instance()->get_scene_view();
+			glm::vec2 scenePos = sceneView->get_position();
+			glm::vec2 sceneDim = sceneView->get_dimension();
+			glm::vec2 cameraPos = get_position();
+
+			glm::vec2 mousePos = { Input::get_mouse_position().first, Input::get_mouse_position().second };
+			glm::vec2 centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
+			glm::vec2 mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
+			glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
+			mouseToNDC *= zoomLevel;
+			glm::vec2 worldNDC = { mouseToNDC.x - cameraPos.x, mouseToNDC.y - cameraPos.y };
+			glm::vec2 delta = (worldNDC - mousePosition);
+			PRINT("Delta position: " << delta.x << " " << delta.y);
+			mousePosition = worldNDC;
+
+			focalPoint += get_up_direction() * delta.y * speed.y * zoomLevel;
+			focalPoint += -get_right_direction() * delta.x * speed.x * zoomLevel;
 
 			// Bean: Zoomlevel should be positive
-			if (Input::is_key_held(GLFW_KEY_W)) // Up
-			{
-				focalPoint += get_up_direction() * 0.1f * speed.y * zoomLevel;
-			}
-			if (Input::is_key_held(GLFW_KEY_A)) // Left
-			{
-				focalPoint += -get_right_direction() * 0.1f * speed.x * zoomLevel;
-			}
-			if (Input::is_key_held(GLFW_KEY_S)) // Down
-			{
-				focalPoint += get_up_direction() * -0.1f * speed.y * zoomLevel;
-			}
-			if (Input::is_key_held(GLFW_KEY_D)) // Right
-			{
-				focalPoint += -get_right_direction() * -0.1f * speed.x * zoomLevel;
-			}
+			//if (Input::is_key_held(GLFW_KEY_W)) // Up
+			//{
+			//	focalPoint += get_up_direction() * 0.1f * speed.y * zoomLevel;
+			//}
+			//if (Input::is_key_held(GLFW_KEY_A)) // Left
+			//{
+			//	focalPoint += -get_right_direction() * 0.1f * speed.x * zoomLevel;
+			//}
+			//if (Input::is_key_held(GLFW_KEY_S)) // Down
+			//{
+			//	focalPoint += get_up_direction() * -0.1f * speed.y * zoomLevel;
+			//}
+			//if (Input::is_key_held(GLFW_KEY_D)) // Right
+			//{
+			//	focalPoint += -get_right_direction() * -0.1f * speed.x * zoomLevel;
+			//}
 		}
 
 		// Rotation
