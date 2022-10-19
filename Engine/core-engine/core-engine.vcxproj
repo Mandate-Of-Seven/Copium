@@ -99,7 +99,7 @@
     <ClCompile Include="src\Audio\sound-system.cpp" />
     <ClCompile Include="src\Debugging\frame-rate-controller.cpp" />
     <ClCompile Include="src\Debugging\logging.cpp" />
-    <ClCompile Include="src\Editor\ConsoleLog.cpp" />
+    <ClCompile Include="src\Editor\editor-consolelog.cpp" />
     <ClCompile Include="src\Editor\editor-camera.cpp" />
     <ClCompile Include="src\Editor\editor-sceneview.cpp" />
     <ClCompile Include="src\Editor\editor-system.cpp" />
@@ -174,7 +174,7 @@
     <ClInclude Include="src\Physics\collision.h" />
     <ClInclude Include="src\Scripting\compiler.h" />
     <ClInclude Include="src\GameObject\component.h" />
-    <ClInclude Include="src\Editor\ConsoleLog.h" />
+    <ClInclude Include="src\Editor\editor-consolelog.h" />
     <ClInclude Include="src\CopiumCore\copium-core.h" />
     <ClInclude Include="src\Editor\editor-system.h" />
     <ClInclude Include="src\Editor\editor-sceneview.h" />

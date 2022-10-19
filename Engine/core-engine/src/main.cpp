@@ -21,7 +21,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Windows/windows-input.h"
 #include "Editor/editor-system.h"
 #include "Scripting/scripting-system.h"
-#include "Editor/ConsoleLog.h"
+#include "Editor/editor-consolelog.h"
 #include "Scripting/scripting.h"
 #include "Debugging/logging.h"
 #include "Audio/sound-system.h"
