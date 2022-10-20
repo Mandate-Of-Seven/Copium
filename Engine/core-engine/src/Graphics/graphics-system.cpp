@@ -257,10 +257,12 @@ namespace Copium::Graphics
 	{
 		// Binds the framebuffer
 		framebuffer.bind();
-
+		//glEnable(GL_DEPTH_TEST);
+		
 		// Clear the screen
 		glClearColor(0.f, 0.f, 0.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Draw the world using batch rendering
 		draw_world();
@@ -371,7 +373,7 @@ namespace Copium::Graphics
 		// Background
 		// Bean: scale should be the scale of the object, 
 		// texture scale should be separate and derived from the image dimensions
-		renderer.draw_quad({ 0.f, 0.f , 0.f }, { 3.84f, 2.16f }, 0.f, textures[4].get_object_id());
+		renderer.draw_quad({ 0.f, 0.f, 0.f }, { 3.84f, 2.16f }, 0.f, textures[4].get_object_id());
 		
 		color = { 0.1f, 1.f, 0.1f, 1.f };
 		glm::vec2 worldNDC{ 0 };

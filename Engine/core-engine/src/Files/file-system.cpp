@@ -25,7 +25,7 @@ namespace Copium::Files
 		modified = true;
 	}
 
-	bool File::Modified()
+	bool File::is_modified()
 	{
 		if (modified)
 		{
@@ -35,7 +35,7 @@ namespace Copium::Files
 		return modified;
 	}
 
-	void File::updateModificationTiming()
+	void File::update_modification_timing()
 	{
 		struct _stat64i32 statsBuffer;
 		_stat(string().c_str(), &statsBuffer);
@@ -61,7 +61,23 @@ namespace Copium::Files
 
 	}
 
-	std::list<File>& FileSystem::getFilesWithExtension(const char* _extension)
+	std::list<File>& FileSystem::get_filepath_in_directory(const char* _path)
+	{
+		for (const auto& entry : std::filesystem::directory_iterator(_path))
+		{
+			if (entry.is_directory())
+			{
+				get_filepath_in_directory(entry.path().generic_string().c_str());
+			}
+			else if(!entry.is_directory()) // Is a file
+				std::cout << "Path name: " << entry.path() << "\n";
+
+		}
+
+		return assetsPath;
+	}
+
+	std::list<File>& FileSystem::get_files_with_extension(const char* _extension)
 	{
 		if (extensionTrackedFiles.count(_extension) == 0)
 			extensionTrackedFiles.emplace(std::make_pair(_extension, std::list<File>()));
