@@ -69,12 +69,16 @@ namespace Copium {
 		for (int i = 0; i < currentScene->get_gameobjcount(); i++)
 		{
 			Copium::Graphics::SpriteRenderer * sprite = new Copium::Graphics::SpriteRenderer;
-			glm::vec3 pos = currentScene->get_gameobjectvector()[i]->Trans().glmPosition();
+			TransformComponent* tmp = currentScene->get_gameobjectvector()[i]->Trans();
+			if (!tmp)
+				continue;
+
+			glm::vec3 pos = tmp->get_transform().glmPosition();
 			sprite->set_position(pos);
 
 			PRINT("Coords: " << pos.x << ", " << pos.y);
 
-			glm::vec3 size = currentScene->get_gameobjectvector()[i]->Trans().glmScale();
+			glm::vec3 size = tmp->get_transform().glmScale();
 			sprite->set_size(glm::vec2(size.x, size.y));
 
 			PRINT("Size: " << size.x << ", " << size.y);
@@ -84,6 +88,7 @@ namespace Copium {
 
 			Copium::Graphics::GraphicsSystem::Instance()->add_sprite(sprite);
 		}
+
 
 	}
 	void NewSceneManager::update()
@@ -167,5 +172,10 @@ namespace Copium {
 	GameObjectFactory& NewSceneManager::get_gof()
 	{
 		return *gof;
+	}
+
+	const Scene* NewSceneManager::get_current_scene()
+	{
+		return currentScene;
 	}
 }

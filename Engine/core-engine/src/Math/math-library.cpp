@@ -377,7 +377,7 @@ namespace Copium::Math
 		{
 			for (int j{ 0 }; j < 3; ++j)
 			{
-				m[i][j] = _rhs[i][j];
+				m[i][j] = _rhs[j][i];
 			}
 		}
 	}
@@ -444,7 +444,7 @@ namespace Copium::Math
 		{
 			for (int j{ 0 }; j < 3; ++j)
 			{
-				tmp[i][j] = (float) m[i][j];
+				tmp[j][i] = (float) m[i][j];
 			}
 		}
 
@@ -602,7 +602,286 @@ namespace Copium::Math
 		double result = _angle * (180.0 / PI);
 		return result;
 	}
-	
+
+	//M2
+	// Matrix4x4-----------------------------------------
+	Matrix4x4::Matrix4x4()
+	{
+		for (size_t i{ 0 }; i < 4; ++i)
+		{
+			for (size_t j{ 0 }; j < 4; ++j)
+			{
+				m[i][j] = 0.0;
+			}
+		}
+	}
+	Matrix4x4::Matrix4x4(const double(&_rhs)[16])
+	{
+		for (int i{ 0 }, k{ 0 }; i < 4; ++i)
+		{
+			for (int j{ 0 }; j < 4; ++j)
+			{
+				m[i][j] = _rhs[k];
+				++k;
+			}
+		}
+	}
+	Matrix4x4::Matrix4x4(double _00, double _01, double _02, double _03,
+		double _10, double _11, double _12, double _13,
+		double _20, double _21, double _22, double _23)
+	{
+		m[0][0] = _00;
+		m[0][1] = _01;
+		m[0][2] = _02;
+		m[0][3] = _03;
+
+		m[1][0] = _10;
+		m[1][1] = _11;
+		m[1][2] = _12;
+		m[1][3] = _13;
+
+		m[2][0] = _20;
+		m[2][1] = _21;
+		m[2][2] = _22;
+		m[2][3] = _23;
+
+	}
+	Matrix4x4::Matrix4x4(const glm::mat4x4& _rhs)
+	{
+		for (int i{ 0 }; i < 4; ++i)
+		{
+			for (int j{ 0 }; j < 4; ++j)
+			{
+				m[i][j] = _rhs[j][i];
+			}
+		}
+
+	}
+	Matrix4x4::Matrix4x4(const Matrix4x4& _rhs)
+	{
+		for (size_t i{ 0 }; i < 4; ++i)
+		{
+			for (size_t j{ 0 }; j < 4; ++j)
+			{
+				m[i][j] = _rhs.m[i][j];
+			}
+		}
+	}
+	Matrix4x4::Matrix4x4(const glm::vec4& _r0, const glm::vec4& _r1, const glm::vec4& _r2, const glm::vec4& _r3)
+	{
+		for (size_t i{ 0 }; i < 4; ++i)
+		{
+			m[0][i] = _r0[i];
+			m[1][i] = _r1[i];
+			m[2][i] = _r2[i];
+			m[3][i] = _r3[i];
+		}
+	}
+
+
+	Matrix4x4& Matrix4x4::operator=(const Matrix4x4& _rhs)
+	{
+		for (size_t i{ 0 }; i < 4; ++i)
+		{
+			for (size_t j{ 0 }; j < 4; ++j)
+			{
+
+				m[i][j] = _rhs.m[i][j];
+
+			}
+		}
+		return *this;
+	}
+	Matrix4x4& Matrix4x4::operator=(const glm::mat4x4& _rhs)
+	{
+		for (size_t i{ 0 }; i < 4; ++i)
+		{
+			for (size_t j{ 0 }; j < 4; ++j)
+			{
+
+				m[i][j] = _rhs[i][j];
+
+			}
+		}
+		return *this;
+	}
+	Matrix4x4& Matrix4x4::operator*=(const Matrix4x4& _rhs)
+	{
+		Matrix4x4 tmp(*this);
+		for (size_t i{ 0 }; i < 4; ++i)
+		{
+			for (size_t j{ 0 }; j < 4; ++j)
+			{
+				m[i][j] = 0.0;
+				for (size_t k{ 0 }; k < 4; ++k)
+				{
+					m[i][j] += tmp.m[i][k] * _rhs.m[k][j];
+				}
+			}
+		}
+		return *this;
+	}
+	Matrix4x4::Matrix4x4Proxy::Matrix4x4Proxy(Matrix4x4& _parent, size_t _row) : parent{ _parent }, rowIndex{ _row }{}
+	Matrix4x4::Matrix4x4Proxy Matrix4x4::operator[](size_t _row)
+	{
+		return Matrix4x4::Matrix4x4Proxy(*this, _row);
+	}
+	double& Matrix4x4::Matrix4x4Proxy::operator[](size_t _col)
+	{
+		return parent.m[rowIndex][_col];
+	}
+
+	Matrix4x4::Matrix4x4ProxyConst::Matrix4x4ProxyConst(const Matrix4x4& _parent, size_t _row) : parent{_parent}, rowIndex{_row}{}
+	Matrix4x4::Matrix4x4ProxyConst Matrix4x4::operator[](size_t _row) const
+	{
+		return Matrix4x4::Matrix4x4ProxyConst(*this, _row);
+	}
+	const double& Matrix4x4::Matrix4x4ProxyConst::operator[](size_t _col)
+	{
+		return parent.m[rowIndex][_col];
+	}
+
+	glm::mat4x4 Matrix4x4::to_glm() const
+	{
+		glm::mat4x4 tmp;
+		for (int i{ 0 }; i < 4; ++i)
+		{
+			for (int j{ 0 }; j < 4; ++j)
+			{
+				tmp[j][i] = (float)m[i][j];
+			}
+		}
+		return tmp;
+	}
+
+	Matrix4x4 operator+(const Matrix4x4& _lhs, const Matrix4x4& _rhs)
+	{
+		Matrix4x4 tmp;
+		for (size_t i{ 0 }; i < 4; ++i)
+		{
+			for (size_t j{ 0 }; j < 4; ++j)
+			{
+				tmp.m[i][j] = _lhs.m[i][j] + _rhs.m[i][j];
+			}
+		}
+		return tmp;
+	}
+	Matrix4x4 operator-(const Matrix4x4& _lhs, const Matrix4x4& _rhs)
+	{
+		Matrix4x4 tmp;
+		for (size_t i{ 0 }; i < 4; ++i)
+		{
+			for (size_t j{ 0 }; j < 4; ++j)
+			{
+				tmp.m[i][j] = _lhs.m[i][j] - _rhs.m[i][j];
+			}
+		}
+		return tmp;
+	}
+	Matrix4x4 operator*(const Matrix4x4& _lhs, const Matrix4x4& _rhs)
+	{
+		Matrix4x4 tmp(_lhs);
+		tmp *= _rhs;
+		return tmp;
+	}
+	Matrix4x4 operator*(double _scalar, const Matrix4x4& _mtx)
+	{
+		Matrix4x4 tmp(_mtx);
+		for (size_t i{ 0 }; i < 4; ++i)
+		{
+			for (size_t j{ 0 }; j < 4; ++j)
+			{
+				tmp.m[i][j] *= _scalar;
+			}
+		}
+		return tmp;
+	}
+	void matrix4x4_identity(Matrix4x4& _rhs)
+	{
+		for (size_t i{ 0 }; i < 4; ++i)
+		{
+			for (size_t j{ 0 }; j < 4; ++j)
+			{
+				if (i == j)
+					_rhs.m[i][j] = 1.0;
+				else
+					_rhs.m[i][j] = 0.0;
+			}
+		}
+	}
+	void matrix4x4_translation(Matrix4x4& _mtx, double _x, double _y, double _z)
+	{
+		// Make mtx into identity mtx first
+		matrix4x4_identity(_mtx);
+		_mtx.m[0][3] = _x;
+		_mtx.m[1][3] = _y;
+		_mtx.m[2][3] = _z;
+	}
+	void matrix4x4_scale(Matrix4x4& _mtx, double _x, double _y, double _z)
+	{
+		matrix4x4_identity(_mtx);
+		_mtx.m[0][0] = _x;
+		_mtx.m[1][1] = _y;
+		_mtx.m[2][2] = _z;
+
+	}
+	void matrix4x4_rot_2D(Matrix4x4& _mtx, double _deg)
+	{
+		matrix4x4_identity(_mtx);
+		_mtx.m[0][0] = cos(_deg);
+		_mtx.m[0][1] = -sin(_deg);
+		_mtx.m[1][0] = sin(_deg);
+		_mtx.m[1][1] = cos(_deg);
+	}
+
+	// SPECIFIED DEGREE MUST BE IN RADIANS - for 3D :)
+	void matrix4x4_rot_x(Matrix4x4& _mtx, double _deg)
+	{
+		matrix4x4_identity(_mtx);
+		_mtx.m[1][1] = cos(_deg);
+		_mtx.m[1][2] = sin(_deg);
+		_mtx.m[2][1] = -sin(_deg);
+		_mtx.m[2][2] = cos(_deg);
+	}
+	void matrix4x4_rot_y(Matrix4x4& _mtx, double _deg)
+	{
+		matrix4x4_identity(_mtx);
+		_mtx.m[0][0] = cos(_deg);
+		_mtx.m[0][2] = -sin(_deg);
+		_mtx.m[2][0] = sin(_deg);
+		_mtx.m[2][2] = cos(_deg);
+	}
+	void matrix4x4_rot_z(Matrix4x4& _mtx, double _deg)
+	{
+		matrix4x4_identity(_mtx);
+		_mtx.m[0][0] = cos(_deg);
+		_mtx.m[0][1] = -sin(_deg);
+		_mtx.m[1][0] = sin(_deg);
+		_mtx.m[1][1] = cos(_deg);
+	}
+
+	std::ostream& operator<<(std::ostream& _os, const Matrix4x4& _mtx)
+	{
+		_os << '{';
+		for (int i{ 0 }; i < 4; ++i) {
+			for (int j{ 0 }; j < 4; ++j) {
+				_os << _mtx.m[i][j];
+
+				if (j == 3 && i == 3)
+					continue;
+
+				if (j == 3)
+					_os << '\n';
+				else
+					_os << ',';
+			}
+
+		}
+		_os << "}";
+		return _os;
+	}
+
+
 }
 
 

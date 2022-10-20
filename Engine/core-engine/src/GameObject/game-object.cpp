@@ -112,7 +112,27 @@ void GameObject::deleteComponent(Component* component)
 
 void GameObject::Trans(Transform _trans) {trans = _trans;}
 
-Transform GameObject::Trans() const {return trans;}
+TransformComponent* GameObject::Trans()  
+{
+    for (std::list<Component*>::iterator iter = components.begin(); iter != components.end(); ++iter)
+    {
+        Component::Type tmp =   (*iter)->get_type();
+        if ((*iter)->componentMap.find(tmp) == (*iter)->componentMap.end())
+        {
+            std::cout << "cannot find component type\n";
+            continue;
+        }
+
+        std::cout << "Component Type:" << (*iter)->componentMap[tmp] << std::endl;
+
+        if (tmp == Component::Type::Transform)
+            return reinterpret_cast<TransformComponent*>(*iter);
+
+    }
+
+    return nullptr;
+
+}
 
 void GameObject::set_name(const std::string& _name){ name = _name; }
 std::string GameObject::get_name() const{ return name; }

@@ -91,7 +91,6 @@ int main()
 
     //GameObject gObj;
     //gObj.addComponent(Component::Type::Script);
-
     Copium::ScriptComponent sComponent("CSharpTesting");
 
     // Engine Loop

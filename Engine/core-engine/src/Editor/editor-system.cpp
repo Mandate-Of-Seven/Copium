@@ -19,6 +19,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "GameObject/game-object.h"
 #include "Editor/inspector.h"
 #include "Editor/ConsoleLog.h"
+#include "Editor/editor-scene-hierarchy-list.h"
 
 namespace Copium::Editor
 {
@@ -42,6 +43,7 @@ namespace Copium::Editor
 
 		Window::Inspector::init();
 		Window::EditorConsole::init();
+		Window::Hierarchy::init();
 		Window::Inspector::selectedGameObject = new GameObject();
 
 		sceneView.init();
@@ -66,6 +68,7 @@ namespace Copium::Editor
 		// All the editor layers
 		Window::Inspector::update();
 		Window::EditorConsole::update();
+		Window::Hierarchy::update();
 		sceneView.update();
 
 		// Editor Camera

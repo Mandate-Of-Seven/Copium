@@ -1055,6 +1055,499 @@ namespace Copium::Math
 	/*******************************************************************************/
 	std::ostream& operator<<(std::ostream& _os, const Matrix3x3& _mtx);
 
+
+	
+	struct Matrix4x4
+	{
+	public:
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Default constructor for Matrix4x4. Will initialize all elements of the matrix to 0.0
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		Matrix4x4();
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Constructor for Matrix4x4 using read-only reference to an array of 16 doubles. 
+			Elements of array should be in row major order.
+
+		\param _rhs
+			read-only reference to the array of 16 doubles which holds the values that the elements of 
+			the Matrix4x4 are to be assigned
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		Matrix4x4(const double(&_rhs)[16]);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Constructor for Matrix4x4 using 16 individual double values.
+			Note: Arguments are used in row major order
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		Matrix4x4(double _00, double _01, double _02, double _03,
+			double _10, double _11, double _12, double _13,
+			double _20, double _21, double _22, double _23);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Constructor for Matrix4x4 using a read-only reference to a glm::mat4x4.
+			Note: this function does conversion from column major(glm::mat4x4) to row major(Matrix4x4)
+
+		\param _rhs
+			read-only reference to the glm::mat4x4 that will be used to initialize this Matrix4x4
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		Matrix4x4(const glm::mat4x4& _rhs);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Copy constructor for Matrix4x4
+
+		\param _rhs
+			read-only reference to the Matrix4x4 which is to be copied into this Matrix4x4
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		Matrix4x4(const Matrix4x4& _rhs);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Constructor for Matrix4x4 using 4x glm::vec4s.
+			Note: each vec4 represents 1x row.
+			E.g. the elements of _r0 will be assigned to the elements of row 0
+
+		\param _r0
+			read-only reference to the glm::vec4 which copied into row 0 of the Matrix4x4
+
+		\param _r1
+			read-only reference to the glm::vec4 which copied into row 1 of the Matrix4x4
+
+		\param _r2
+			read-only reference to the glm::vec4 which copied into row 2 of the Matrix4x4
+
+		\param _r3
+			read-only reference to the glm::vec4 which copied into row 3 of the Matrix4x4
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		Matrix4x4(const glm::vec4& _r0, const glm::vec4& _r1, const glm::vec4& _r2, const glm::vec4& _r3);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			= operator overload for Matrix4x4. Copies _rhs into this Matrix4x4.
+
+		\param _rhs
+			the Matrix4x4 that is to be copied into this Matrix4x4
+
+		\return
+			reference to this Matrix4x4
+		*/
+		/*******************************************************************************/
+		Matrix4x4& operator=(const Matrix4x4& _rhs);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Copies the data in the specified glm::mat4x4 into this Matrix4x4
+			Note: this function does conversion from column major(glm::mat4x4) to row major(Matrix4x4) 
+
+		\param _rhs
+			the glm::mat4x4 that is to be copied into this Matrix4x4
+
+		\return
+			reference to this Matrix4x4
+		*/
+		/*******************************************************************************/
+		Matrix4x4& operator=(const glm::mat4x4& _rhs);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			*= operator overload for Matrix4x4. Compute matrix4x4 multiplication between this matrix and _rhs.
+			Places the result in this matrix.
+			Note: this matrix is considered the left hand operand of the multiplication.
+
+		\param _rhs
+			the Matrix4x4 that is to be the right hand operand of the multiplication
+
+		\return
+			reference to this Matrix4x4
+		*/
+		/*******************************************************************************/
+		Matrix4x4& operator*=(const Matrix4x4& _rhs);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Creates a glm::mat4x4 and copies the data from this Matrix4x4 into the glm::mat4x4
+			Note: this function does conversion from row major(Matrix4x4) to column major(glm::mat4x4)
+
+		\return
+			the resulting glm::mat4x4
+		*/
+		/*******************************************************************************/
+		glm::mat4x4 to_glm() const;
+
+		struct Matrix4x4Proxy
+		{
+			/*******************************************************************************
+			/*!
+			*
+			\brief
+				Constructor for Matrix4x4Proxy.
+
+			\param _parent
+				reference to the parent Matrix4x4
+
+			\param _row
+				the index of the row to provide access to
+
+			\return
+				void
+			*/
+			/*******************************************************************************/
+			Matrix4x4Proxy(Matrix4x4& _parent, size_t _row);
+			/*******************************************************************************
+			/*!
+			*
+			\brief
+				[] operator overload. Provides access to the element in its parent Matrix4x4 in 
+				row index: rowIndex and at specified column.
+				E.g. [i] will access m[rowIndex][i] in parent Matrix4x4
+
+			\param _col
+				index of the column the element is in
+
+			\return
+				reference to the accessed element
+			*/
+			/*******************************************************************************/
+			double& operator[](size_t _col);
+
+			Matrix4x4& parent;
+			size_t rowIndex;
+		};
+		struct Matrix4x4ProxyConst
+		{
+			/*******************************************************************************
+			/*!
+			*
+			\brief
+				Constructor for Matrix4x4ProxyConst.
+
+			\param _parent
+				read-only reference to the parent Matrix4x4
+
+			\param _row
+				the index of the row to provide access to
+
+			\return
+				void
+			*/
+			/*******************************************************************************/
+			Matrix4x4ProxyConst(const Matrix4x4& _parent, size_t _row);
+			/*******************************************************************************
+			/*!
+			*
+			\brief
+				[] operator overload. Provides read-only access to the element in its parent Matrix4x4 in
+				row index: rowIndex and at specified column.
+				E.g. [i] will access m[rowIndex][i] in parent Matrix4x4
+
+			\param _col
+				index of the column the element is in
+
+			\return
+				read-only reference to the accessed element
+			*/
+			/*******************************************************************************/
+			const double& operator[](size_t _col);
+
+			const Matrix4x4& parent;
+			size_t rowIndex;
+		};
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			[] operator overload. Creates a Matrix4x4Proxy object which will give access to the row in the Matrix4x4
+			whose index is specified.
+
+		\param _row
+			index of the row to access
+
+		\return
+			copy of the Matrix4x4Proxy object
+		*/
+		/*******************************************************************************/
+		Matrix4x4Proxy operator[](size_t _row);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			[] operator overload. Creates a Matrix4x4ProxyConst object which will give read-only access to the row in the Matrix4x4
+			whose index is specified.
+
+		\param _row
+			index of the row to access
+
+		\return
+			copy of the Matrix4x4ProxyConst object
+		*/
+		/*******************************************************************************/
+		Matrix4x4ProxyConst operator[](size_t _row) const;
+
+		double m[4][4];
+	};
+
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Perform matrix addition between two matrix4x4s
+
+	\param _lhs
+		the left hand matrix of the addition
+
+	\param _rhs
+		the right hand matrix of the addition
+
+	\return
+		the resultant matrix of the addition
+	*/
+	/*******************************************************************************/
+	Matrix4x4 operator+(const Matrix4x4& _lhs, const Matrix4x4& _rhs);
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Perform matrix subtraction between two matrix4x4s
+
+	\param _lhs
+		the left hand matrix of the subtraction
+
+	\param _rhs
+		the right hand matrix of the subtraction
+
+	\return
+		the resultant matrix of the subtraction
+	*/
+	/*******************************************************************************/
+	Matrix4x4 operator-(const Matrix4x4& _lhs, const Matrix4x4& _rhs);
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Perform matrix multiplication between two matrix4x4s
+
+	\param _lhs
+		the left hand matrix of the multiplication
+
+	\param _rhs
+		the right hand matrix of the multiplication
+
+	\return
+		the resultant matrix of the multiplication
+	*/
+	/*******************************************************************************/
+	Matrix4x4 operator*(const Matrix4x4& _lhs, const Matrix4x4& _rhs);
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Perform scalar multiplication on a Matrix4x4
+
+	\param _scalar
+		the scalar value to multiply with
+
+	\param _mtx
+		the matrix involved in the scalar multiplication
+
+	\return
+		the resultant matrix of the scalar multiplication
+	*/
+	/*******************************************************************************/
+	Matrix4x4 operator*(double _scalar, const Matrix4x4& _mtx);
+
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Turns specified Matrix4x4 into its identity matrix
+
+	\param _rhs
+		reference to the Matrix4x4 to perform this op on
+
+	\return
+		void
+	*/
+	/*******************************************************************************/
+	void matrix4x4_identity(Matrix4x4& _rhs);
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Create a translation matrix using specified arguments and place result in specified Matrix4x4
+
+	\param _mtx
+		reference to the Matrix4x4 to perform this op on
+
+	\param _x
+		the x value of the translation
+
+	\param _y
+		the y value of the translation
+
+	\param _z
+		the z value of the translation
+
+	\return
+		void
+	*/
+	/*******************************************************************************/
+	void matrix4x4_translation(Matrix4x4& _mtx, double _x, double _y, double _z);
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Create a scale matrix using specified arguments and place result in specified Matrix4x4
+
+	\param _mtx
+		reference to the Matrix4x4 to perform this op on
+
+	\param _x
+		the x value of the scaling
+
+	\param _y
+		the y value of the scaling
+
+	\param _z
+		the z value of the scaling
+
+	\return
+		void
+	*/
+	/*******************************************************************************/
+	void matrix4x4_scale(Matrix4x4& _mtx, double _x, double _y, double _z);
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Create a 2D rotation matrix using specified angle and place result in specified Matrix4x4
+
+	\param _mtx
+		reference to the Matrix4x4 to perform this op on
+
+	\param _deg
+		the angle of rotation that this matrix will apply
+		Note: this value MUST be in radians
+
+	\return
+		void
+	*/
+	/*******************************************************************************/
+	void matrix4x4_rot_2D(Matrix4x4& _mtx, double _deg);
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Create a 3D rotation matrix around X-axis using specified angle and place result in specified Matrix4x4
+
+	\param _mtx
+		reference to the Matrix4x4 to perform this op on
+
+	\param _deg
+		the angle of rotation that this matrix will apply
+		Note: this value MUST be in radians
+
+	\return
+		void
+	*/
+	/*******************************************************************************/
+	void matrix4x4_rot_x(Matrix4x4& _mtx, double _deg);
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Create a 3D rotation matrix around Y-axis using specified angle and place result in specified Matrix4x4
+
+	\param _mtx
+		reference to the Matrix4x4 to perform this op on
+
+	\param _deg
+		the angle of rotation that this matrix will apply
+		Note: this value MUST be in radians
+
+	\return
+		void
+	*/
+	/*******************************************************************************/
+	void matrix4x4_rot_y(Matrix4x4& _mtx, double _deg);
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Create a 3D rotation matrix around Z-axis using specified angle and place result in specified Matrix4x4
+
+	\param _mtx
+		reference to the Matrix4x4 to perform this op on
+
+	\param _deg
+		the angle of rotation that this matrix will apply
+		Note: this value MUST be in radians
+
+	\return
+		void
+	*/
+	/*******************************************************************************/
+	void matrix4x4_rot_z(Matrix4x4& _mtx, double _deg);
+
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		<< operator overload. Allow for printing of Matrix4x4 to cout in a readable format
+
+	\param _os
+		reference to the ostream
+
+	\param _mtx
+		read-only reference to the Matrix4x4 that is to be printed
+
+	\return
+		reference to the ostream
+	*/
+	/*******************************************************************************/
+	std::ostream& operator<<(std::ostream& _os, const Matrix4x4& _mtx);
+
 	/*******************************************************************************
 	/*!
 	*

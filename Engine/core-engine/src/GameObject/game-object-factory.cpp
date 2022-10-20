@@ -74,7 +74,7 @@ namespace Copium {
 		if (go->has_parent())
 			tmpPPID = _src.get_ppid();
 		go->set_ppid(tmpPPID);		// Parent ID
-		go->Trans(_src.Trans());	// Transform
+		//go->Trans(_src.Trans());	// Transform
 
 		// Components copy
 		for (std::list<Component*>::iterator it = _src.Components().begin(); it != _src.Components().end(); ++it)

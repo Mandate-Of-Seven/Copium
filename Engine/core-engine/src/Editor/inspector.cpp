@@ -67,96 +67,96 @@ namespace Window
             }
             if (selectedGameObject)
             {
-                Transform trans{ selectedGameObject->Trans() };
-                Vector3 position = trans.get_position().to_glm();
-                Vector3 rotation = trans.get_rotation().to_glm();
-                Vector3 scale = trans.get_scale().to_glm();
-                if (ImGui::CollapsingHeader("Transform"))
-                {
-                    if (ImGui::BeginTable("split", 4))
-                    {
-                        ImGui::TableNextColumn();
-                        ImGui::Text("Position");
+                //Transform trans{ selectedGameObject->Trans()->get_transform()};
+                //Vector3 position = trans.get_position().to_glm();
+                //Vector3 rotation = trans.get_rotation().to_glm();
+                //Vector3 scale = trans.get_scale().to_glm();
+                //if (ImGui::CollapsingHeader("Transform"))
+                //{
+                //    /*if (ImGui::BeginTable("split", 4))
+                //    {
+                //        ImGui::TableNextColumn();
+                //        ImGui::Text("Position");
 
-                        ImGui::TableNextColumn();
-                        ImGui::PushItemWidth(-1);
-                        ImGui::Text("X"); ImGui::SameLine();
-                        ImGui::InputDouble("posx", &position.x);
-                        ImGui::PopItemWidth();
+                //        ImGui::TableNextColumn();
+                //        ImGui::PushItemWidth(-1);
+                //        ImGui::Text("X"); ImGui::SameLine();
+                //        ImGui::InputDouble("posx", &position.x);
+                //        ImGui::PopItemWidth();
 
-                        ImGui::TableNextColumn();
-                        ImGui::PushItemWidth(-1);
-                        ImGui::Text("Y"); ImGui::SameLine();
-                        ImGui::InputDouble("posy", &position.y);
-                        ImGui::PopItemWidth();
+                //        ImGui::TableNextColumn();
+                //        ImGui::PushItemWidth(-1);
+                //        ImGui::Text("Y"); ImGui::SameLine();
+                //        ImGui::InputDouble("posy", &position.y);
+                //        ImGui::PopItemWidth();
 
-                        ImGui::TableNextColumn();
-                        ImGui::PushItemWidth(-1);
-                        ImGui::Text("Z"); ImGui::SameLine();
-                        ImGui::InputDouble("posz", &position.z);
-                        ImGui::PopItemWidth();
+                //        ImGui::TableNextColumn();
+                //        ImGui::PushItemWidth(-1);
+                //        ImGui::Text("Z"); ImGui::SameLine();
+                //        ImGui::InputDouble("posz", &position.z);
+                //        ImGui::PopItemWidth();
 
-                        ImGui::TableNextColumn();
-                        ImGui::Text("Rotation");
+                //        ImGui::TableNextColumn();
+                //        ImGui::Text("Rotation");
 
-                        ImGui::TableNextColumn();
-                        ImGui::PushItemWidth(-1);
-                        ImGui::Text("X"); ImGui::SameLine();
-                        ImGui::InputDouble("rotx", &rotation.x);
-                        ImGui::PopItemWidth();
+                //        ImGui::TableNextColumn();
+                //        ImGui::PushItemWidth(-1);
+                //        ImGui::Text("X"); ImGui::SameLine();
+                //        ImGui::InputDouble("rotx", &rotation.x);
+                //        ImGui::PopItemWidth();
 
-                        ImGui::TableNextColumn();
-                        ImGui::PushItemWidth(-1);
-                        ImGui::Text("Y"); ImGui::SameLine();
-                        ImGui::InputDouble("roty", &rotation.y);
-                        ImGui::PopItemWidth();
+                //        ImGui::TableNextColumn();
+                //        ImGui::PushItemWidth(-1);
+                //        ImGui::Text("Y"); ImGui::SameLine();
+                //        ImGui::InputDouble("roty", &rotation.y);
+                //        ImGui::PopItemWidth();
 
-                        ImGui::TableNextColumn();
-                        ImGui::PushItemWidth(-1);
-                        ImGui::Text("Z"); ImGui::SameLine();
-                        ImGui::InputDouble("rotz", &rotation.z);
-                        ImGui::PopItemWidth();
+                //        ImGui::TableNextColumn();
+                //        ImGui::PushItemWidth(-1);
+                //        ImGui::Text("Z"); ImGui::SameLine();
+                //        ImGui::InputDouble("rotz", &rotation.z);
+                //        ImGui::PopItemWidth();
 
-                        ImGui::TableNextColumn();
-                        ImGui::Text("Scale");
+                //        ImGui::TableNextColumn();
+                //        ImGui::Text("Scale");
 
-                        ImGui::TableNextColumn();
-                        ImGui::PushItemWidth(-1);
-                        ImGui::Text("X"); ImGui::SameLine();
-                        ImGui::InputDouble("scalex", &scale.x);
-                        ImGui::PopItemWidth();
+                //        ImGui::TableNextColumn();
+                //        ImGui::PushItemWidth(-1);
+                //        ImGui::Text("X"); ImGui::SameLine();
+                //        ImGui::InputDouble("scalex", &scale.x);
+                //        ImGui::PopItemWidth();
 
-                        ImGui::TableNextColumn();
-                        ImGui::PushItemWidth(-1);
-                        ImGui::Text("Y"); ImGui::SameLine();
-                        ImGui::InputDouble("scaley", &scale.y);
-                        ImGui::PopItemWidth();
+                //        ImGui::TableNextColumn();
+                //        ImGui::PushItemWidth(-1);
+                //        ImGui::Text("Y"); ImGui::SameLine();
+                //        ImGui::InputDouble("scaley", &scale.y);
+                //        ImGui::PopItemWidth();
 
-                        ImGui::TableNextColumn();
-                        ImGui::PushItemWidth(-1);
-                        ImGui::Text("Z"); ImGui::SameLine();
-                        ImGui::InputDouble("scalez", &scale.z);
-                        ImGui::PopItemWidth();
-                        ImGui::EndTable();
-                    }
-                }
-                selectedGameObject->Trans({position, rotation, scale});
-                ImVec2 buttonSize = ImGui::GetWindowSize();
-                buttonSize.x *= (float) BUTTON_WIDTH;
-                buttonSize.y *= (float) BUTTON_HEIGHT;
+                //        ImGui::TableNextColumn();
+                //        ImGui::PushItemWidth(-1);
+                //        ImGui::Text("Z"); ImGui::SameLine();
+                //        ImGui::InputDouble("scalez", &scale.z);
+                //        ImGui::PopItemWidth();
+                //        ImGui::EndTable();
+                //    }*/
+                //}
+                //selectedGameObject->Trans({position, rotation, scale});
+                //ImVec2 buttonSize = ImGui::GetWindowSize();
+                //buttonSize.x *= (float) BUTTON_WIDTH;
+                //buttonSize.y *= (float) BUTTON_HEIGHT;
 
-                for (Component *component : selectedGameObject->Components())
-                {
-                    if (ImGui::CollapsingHeader(component->Name().c_str()))
-                    {
-                        
-                    }
-                }
+                //for (Component *component : selectedGameObject->Components())
+                //{
+                //    if (ImGui::CollapsingHeader(component->Name().c_str()))
+                //    {
+                //        
+                //    }
+                //}
 
-                AlignForWidth(buttonSize.x);
-                if (ImGui::Button("Add Component", buttonSize)) {
-                    isAddingComponent = true;
-                }
+                //AlignForWidth(buttonSize.x);
+                //if (ImGui::Button("Add Component", buttonSize)) {
+                //    isAddingComponent = true;
+                //}
             }
             ImGui::End();
 

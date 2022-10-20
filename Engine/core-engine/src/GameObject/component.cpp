@@ -33,6 +33,8 @@ void Component::destroy() {}
 
 ComponentID const Component::ID() { return id; }
 
+Component::Type Component::get_type() { return componentType; }
+
 void Component::deserialize(rapidjson::Value& _value)
 {
     std::cout << "default deserialization\n";
@@ -54,6 +56,7 @@ TransformComponent::TransformComponent() :Component(Type::Transform)
 }
 void TransformComponent::deserialize(rapidjson::Value& _value)
 {
+    std::cout << "transform deserialize\n";
     t.deserialize(_value);
 }
 

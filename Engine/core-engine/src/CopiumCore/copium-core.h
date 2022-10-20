@@ -50,7 +50,7 @@ namespace Copium
 				NewSceneManager::Instance(),
 				Scripting::ScriptingSystem::Instance(),
 				Physics::Physics::Instance(),
-				SoundSystem::Instance(),
+				//SoundSystem::Instance(),
 				Graphics::GraphicsSystem::Instance(),
 				Thread::ThreadSystem::Instance()
 			};

@@ -58,6 +58,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
         /**************************************************************************/
         ComponentID const ID();
 
+        Component::Type get_type();
+
         const std::string& Name();
 
         /***************************************************************************/
