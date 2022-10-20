@@ -48,7 +48,7 @@ namespace Copium
 				Message::MessageSystem::Instance(),
 				Editor::EditorSystem::Instance(),
 				Files::FileSystem::Instance(),
-				Assets::AssetsSystem::Instance(),
+				Files::AssetsSystem::Instance(),
 				NewSceneManager::Instance(),
 				Scripting::ScriptingSystem::Instance(),
 				Physics::Physics::Instance(),

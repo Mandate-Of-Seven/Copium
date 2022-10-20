@@ -61,20 +61,33 @@ namespace Copium::Files
 
 	}
 
-	std::list<File>& FileSystem::get_filepath_in_directory(const char* _path)
+	std::list<std::string>& FileSystem::get_filepath_in_directory(const char* _path, const char* _extension)
 	{
+		// Empty the files in the list
+		assetsPath.clear();
+
 		for (const auto& entry : std::filesystem::directory_iterator(_path))
 		{
 			if (entry.is_directory())
 			{
-				get_filepath_in_directory(entry.path().generic_string().c_str());
+				get_filepath_in_directory(entry.path().generic_string().c_str(), _extension);
 			}
-			else if(!entry.is_directory()) // Is a file
-				std::cout << "Path name: " << entry.path() << "\n";
+			// Is a file of type extension
+			else if (!entry.is_directory() && !entry.path().extension().generic_string().compare(_extension)) 
+			{
+				assetsPath.push_back(entry.path().generic_string());
+				std::cout << "Path name: " << entry.path().generic_string() << "\n";
+			}
 
 		}
 
-		return assetsPath;
+		if (!assetsPath.empty())
+			return assetsPath;
+		else
+		{
+			assetsPath.clear();
+			return assetsPath;
+		}
 	}
 
 	std::list<File>& FileSystem::get_files_with_extension(const char* _extension)

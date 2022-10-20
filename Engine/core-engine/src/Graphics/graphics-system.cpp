@@ -22,6 +22,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Windows/input.h"
 
 #include "Editor/editor-system.h"
+#include "Files/assets-system.h"
 
 namespace Copium::Graphics
 {
@@ -61,11 +62,14 @@ namespace Copium::Graphics
 		glUniform1iv(loc, maxTextures, samplers);
 		
 		// Bean: Loading of textures to be done somewhere else
-		load_texture("Assets/textures/train-part-01.png");
+		/*load_texture("Assets/textures/train-part-01.png");
 		load_texture("Assets/textures/train-part-02.png");
 		load_texture("Assets/textures/train-part-03.png");
 		load_texture("Assets/textures/train-part-04.png");
-		load_texture("Assets/textures/mock-up.png");
+		load_texture("Assets/textures/mock-up.png");*/
+
+		// Parse all textures loaded into the engine into the graphics 
+		parse_textures();
 
 		if (NewSceneManager::Instance())
 		{
@@ -229,27 +233,19 @@ namespace Copium::Graphics
 
 	}
 
-	// Load a texture into the game
-	void GraphicsSystem::load_texture(const std::string & _filePath)
+	// parse all textures into the game
+	void GraphicsSystem::parse_textures()
 	{
+		Copium::Files::AssetsSystem* assets = Copium::Files::AssetsSystem::Instance();
+		
 		// Check for texture slots
 		COPIUM_ASSERT(textureSlotIndex == maxTextures, "Max textures reached! Replace old textures!!");
 
-		// Generate texture
-		Texture texture(_filePath);
-
-		// Ensure its not a repeated texture
-		for (GLuint i = 1; i < textureSlotIndex; i++)
-		{
-			COPIUM_ASSERT(textureSlots[i] == texture.get_object_id(), "Duplicate textures!!");
-		}
-
 		// Assign the slot to the texture
-		textureSlots[textureSlotIndex++] = texture.get_object_id();
-
-		// Store the texture
-		textures.push_back(texture);
-		//PRINT("Texture: " << texture.get_object_id() << " loaded into slot: " << textureSlotIndex - 1);
+		for (GLuint i = 0; i < assets->get_textures()->size(); i++)
+		{
+			textureSlots[textureSlotIndex++] = assets->get_textures()[0][i].get_object_id();
+		}
 	}
 	
 	// Renders the objects in the engine in batches
@@ -373,7 +369,8 @@ namespace Copium::Graphics
 		// Background
 		// Bean: scale should be the scale of the object, 
 		// texture scale should be separate and derived from the image dimensions
-		renderer.draw_quad({ 0.f, 0.f, 0.f }, { 3.84f, 2.16f }, 0.f, textures[4].get_object_id());
+		Copium::Files::AssetsSystem* assets = Copium::Files::AssetsSystem::Instance();
+		renderer.draw_quad({ 0.f, 0.f, 0.f }, { 3.84f, 2.16f }, 0.f, assets->get_textures()[0][0].get_object_id());
 		
 		color = { 0.1f, 1.f, 0.1f, 1.f };
 		glm::vec2 worldNDC{ 0 };
@@ -400,7 +397,10 @@ namespace Copium::Graphics
 
 			sprites[i]->set_position(pos);
 			sprites[i]->set_size(size);
-			sprites[i]->bind_texture(&textures[i%3]);
+
+			// Bean: Bind to index instead of a pointer to the texture
+			
+			sprites[i]->bind_texture(&assets->get_textures()[0][i % 4 + 1]);
 
 			if(textureSelector == 5) // Alpha Colored Square
 				renderer.draw_quad(pos, { 0.1f, 0.1f }, rotate, sprites[i]->get_color());

@@ -70,6 +70,7 @@ namespace Copium::Graphics
 
 		// Texture Properties
 		std::vector<GLuint>& get_texture_slots() { return textureSlots; }
+		void set_texture_slots(GLuint _index, GLuint _value) { textureSlots[_index] = _value; }
 
 		GLuint const get_texture_slot_index() { return textureSlotIndex; }
 		void const set_texture_slot_index(GLuint _index) { textureSlotIndex = _index; }
@@ -125,7 +126,7 @@ namespace Copium::Graphics
 			The file path to access to load the texture
 		*/
 		/***************************************************************************/
-		void load_texture(const std::string& _filePath);
+		void parse_textures();
 
 		/***************************************************************************/
 		/*!

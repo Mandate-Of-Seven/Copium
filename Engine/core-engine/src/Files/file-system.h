@@ -64,7 +64,7 @@ namespace Copium::Files
 		/*******************************************************************************/
 		void exit();
 
-		std::list<File>& get_filepath_in_directory(const char* _path);
+		std::list<std::string>& get_filepath_in_directory(const char* _path, const char* _extension);
 
 		/*******************************************************************************
 		/*!
@@ -82,7 +82,7 @@ namespace Copium::Files
 		std::list<File>& get_files_with_extension(const char* _extension);
 	private:
 		std::map<const char*, std::list<File>> extensionTrackedFiles;
-		std::list<File> assetsPath;
+		std::list<std::string> assetsPath;
 	};
 
 	class File final : public std::filesystem::path
