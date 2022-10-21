@@ -13,8 +13,6 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
-#include "../GameObject/game-object.h"
-
 #ifndef MESSAGE_TYPES_H
 #define MESSAGE_TYPES_H
 
@@ -28,10 +26,6 @@ namespace Copium::Message
         MT_KEY_PRESSED,
         MT_COLLIDED,
         MT_SCRIPTING_UPDATED,
-        MT_ADD_SCRIPT,
-        MT_ENGINE_EXIT,
-        MT_MONO_DOMAIN_LOADED,
-        MT_MONO_DOMAIN_UNLOADED,
         MT_NONE // END, DO NOT INSERT BEYOND
     };
 
@@ -41,12 +35,6 @@ namespace Copium::Message
         struct MC_MOUSE_MOVED
         {
             double x, y;
-        };
-
-        struct MC_ADD_SCRIPT
-        {
-            GameObject* gameObj;
-            const char* name;
         };
 
         //Bitwise operator flags for key modifiers
@@ -67,8 +55,6 @@ namespace Copium::Message
             uint8_t  flags;
             uint32_t keyCode;
         };
-
-        static MC_ADD_SCRIPT addScript;
 
     }
     //static std::vector<MESSAGE_CONTAINERS::MOUSE_MOVED> QUEUE_MOUSE_MOVED;

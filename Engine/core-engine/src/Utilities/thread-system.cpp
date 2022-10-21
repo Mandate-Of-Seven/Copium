@@ -20,7 +20,6 @@ namespace Copium::Thread
 {
 	void ThreadSystem::init()
 	{
-		PRINT("THREAD SYSTEM INITIALIZED");
 		quit = false;
 	}
 
@@ -37,12 +36,13 @@ namespace Copium::Thread
 	void ThreadSystem::exit()
 	{
 		quit = true;
+		PRINT("Exiting all threads...");
 		for (std::thread* thread : threads)
 		{
 			thread->join();
 			delete thread;
 		}
-		PRINT("All threads detached");
+		PRINT("All threads exited");
 	}
 
 	bool ThreadSystem::Quit() const

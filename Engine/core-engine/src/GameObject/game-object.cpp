@@ -18,15 +18,18 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include "pch.h"
 #include "GameObject/game-object.h"
-#include "Messaging/message-system.h"
 #include "Scripting/scripting.h"
+#include "Scripting/scripting-system.h"
 
 //USING
 
 namespace 
 {
     const std::string defaultGameObjName = "New GameObject"; // Append (No.) if its not the first
+    Copium::Message::MessageSystem& messageSystem{*Copium::Message::MessageSystem::Instance()};
+    Copium::Scripting::ScriptingSystem& scriptingSystem{ *Copium::Scripting::ScriptingSystem::Instance() };
 }
+
 
 GameObjectID GameObject::count = 1;
 
@@ -34,6 +37,7 @@ GameObject::GameObject()
     : name{ defaultGameObjName }, parent{nullptr}, parentid{0}
 {
     id = count++;
+    messageSystem.subscribe(Copium::Message::MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
     PRINT("GAMEOBJECT ID: " << id);
 }
 
@@ -86,10 +90,8 @@ void GameObject::addComponent(Component::Type componentType)
         break;
     case Component::Type::Script:
         using namespace Copium::Message;
-        MessageSystem::Instance()->
-            dispatch(MESSAGE_TYPE::MT_ADD_SCRIPT);
-        MESSAGE_CONTAINERS::addScript.name = "NewScript";
-        MESSAGE_CONTAINERS::addScript.gameObj = this;
+        //MESSAGE_CONTAINERS::addScript.name = "NewScript";
+        //MESSAGE_CONTAINERS::addScript.gameObj = this;
         PRINT("ADDED SCRIPT");
         break;
     case Component::Type::Transform:
@@ -199,5 +201,12 @@ bool GameObject::deserialize(rapidjson::Value& _value) {
     parentid = _value["PID"].GetInt();
 
     return true;
+}
+
+
+void GameObject::handleMessage(Copium::Message::MESSAGE_TYPE mType)
+{
+    //MT_SCRIPTING_UPDATED
+
 }
 

@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace CopiumEngine
 {
     public static class Debug

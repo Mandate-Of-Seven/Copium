@@ -23,12 +23,14 @@ namespace CopiumEngine
             transform = new Transform();
             transform.gameObject = this;
             gameObjects.Add(this);
-            ID = count++;
         }
         public Transform transform;
         public GameObject gameObject;
         public ulong ID;
-        private static ulong count = 0;
+        private void setID(ulong _ID)
+        {
+            ID = _ID;
+        }
         private static List<GameObject> gameObjects = new List<GameObject>(25000);
         public static GameObject Create()
         {

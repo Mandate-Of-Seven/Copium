@@ -88,11 +88,12 @@ int main()
     Copium::FrameRateController frc(100.0);
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
-
-    //GameObject gObj;
-    //gObj.addComponent(Component::Type::Script);
-
-    //Copium::ScriptComponent sComponent("CSharpTesting");
+    GameObject gObj;
+    Copium::ScriptComponent sComponent(gObj,"CSharpTesting");
+    //On reload assembly
+    //Condition to create a new gameObject in C#
+    //Make sure ID is the same as the one in C++
+    //Call C# function OnCreate
 
     // Engine Loop
     while (!glfwWindowShouldClose(windowsSystem->get_window()) && esCurrent != esQuit)
@@ -125,7 +126,6 @@ int main()
 
                     SM.update_scene();         //UPDATE STATE
                     //sComponent.Awake();
-                    //Copium::ScriptComponent somponent("CSharpTesting");
                     SM.draw_scene();           //DRAW STATE
                     copiumCore.update();
                     update();

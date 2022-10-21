@@ -64,9 +64,7 @@ namespace Copium
         }
     protected:
         Singleton<T>() 
-        { 
-            PRINT("SINGLETON OF " << typeid(T).name() << " CREATED!");
-        }
+        {}
     };
 
 

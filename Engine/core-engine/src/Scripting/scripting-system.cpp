@@ -49,6 +49,7 @@ namespace
 	MonoDomain* mAppDomain{ nullptr };		//APP DOMAIN
 	MonoAssembly* mCoreAssembly{ nullptr };	//ASSEMBLY OF SCRIPTS.DLL
 	MonoImage* mAssemblyImage{ nullptr };	//LOADED IMAGE OF SCRIPTS.DLL
+	MonoClass* mGameObject{ nullptr };
 }
 
 namespace Copium::Scripting
@@ -164,7 +165,6 @@ namespace Copium::Scripting
 
 	MonoObject* ScriptingSystem::instantiateClass(MonoClass* mClass)
 	{
-		PRINT("TRYING TO INSTANTIATE MONOCLASS");
 		if (mAppDomain != nullptr)
 			return mono_object_new(mAppDomain, mClass);
 		return nullptr;
@@ -243,19 +243,18 @@ namespace Copium::Scripting
 			mono_domain_set(mRootDomain, false);
 			mono_domain_unload(mAppDomain);
 			mAppDomain = nullptr;
-			PRINT("DOMAIN UNLOADED");
 		}
 	}
 
 	void ScriptingSystem::swapDll()
 	{
-		PRINT("SWAPPING AND LOADING ASSEMBLY...");
 		unloadAppDomain();
 		createAppDomain();
 		mCoreAssembly = loadAssembly(Files::Paths::scriptsAssemblyPath);
 		mAssemblyImage = mono_assembly_get_image(mCoreAssembly);
 		//Update scriptClasses
 		updateScriptClasses();
+		mGameObject = mono_class_from_name(mAssemblyImage, "", "GameObject");
 		messageSystem->dispatch(Message::MESSAGE_TYPE::MT_SCRIPTING_UPDATED);
 	}
 
@@ -351,8 +350,6 @@ namespace Copium::Scripting
 			scriptFile.updateModificationTiming();
 			if (scriptFile.Modified() && !startCompiling)
 			{
-				PRINT(scriptFile.string() << " Changed! ");
-				PRINT("Compiling DLL....");
 				startCompiling = true;
 				Compiler::compileDll();
 				compilingState = CompilingState::SwapAssembly;
@@ -368,6 +365,12 @@ namespace Copium::Scripting
 			if (*it == filePath) return true;
 		}
 		return false;
+	}
+
+	void reflectGameObject(unsigned long _ID)
+	{
+		MonoMethod* ;
+
 	}
 }
 

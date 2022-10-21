@@ -25,6 +25,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <list>
 #include <string>
 
+#include "Messaging/message-types.h"
+#include "Messaging/message-system.h"
 #include "GameObject/component.h"
 #include "Math/transform.h"
 #include <rapidjson/document.h>
@@ -33,7 +35,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 using GameObjectID = unsigned long;
 
-class GameObject
+class GameObject final : public Copium::Message::IReceiver
 {
 private:
     GameObjectID id;                    //Global ID for gameObjects
@@ -334,6 +336,9 @@ public:
     */
     /**************************************************************************/
     ~GameObject();
+
+    void handleMessage(Copium::Message::MESSAGE_TYPE mType);
+    
 };
 
 
