@@ -18,9 +18,40 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "CopiumCore/system-interface.h"
 #include <filesystem>
+#include <string>
+#include <list>
+#include <map>
 
 namespace Copium::Files
 {
+	/**************************************************************************/
+	/*!
+		\brief
+			Reads bytes from a file
+		\param filepath
+			File path to read bytes from
+		\param outSize
+			Amount of bytes read
+
+		\return
+			String of bytes read
+	*/
+	/**************************************************************************/
+	static char* ReadBytes(const std::string& filepath, uint32_t* outSize)
+	{
+	    std::ifstream stream(filepath, std::ios::binary | std::ios::ate);
+	
+	    if (!stream) return nullptr;
+	    std::streampos end = stream.tellg();
+	    stream.seekg(0, std::ios::beg);
+	    uint32_t size = end - stream.tellg();
+	    if (size == 0) return nullptr;
+	    char* buffer = new char[size];
+	    stream.read((char*)buffer, size);
+	    stream.close();
+	    *outSize = size;
+	    return buffer;
+	}
 
 	namespace Paths
 	{

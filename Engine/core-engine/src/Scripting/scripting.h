@@ -97,7 +97,7 @@ namespace Copium
 		/**************************************************************************/
 		void OnCollisionEnter();
 	private:
-		std::shared_ptr<Scripting::ScriptClass> spScriptClass;
+		Scripting::ScriptClass* pScriptClass;
 		MonoObject* mObject;
 		const std::string name;
 		static Scripting::ScriptingSystem& sS;

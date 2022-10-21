@@ -12,10 +12,11 @@
 \brief
     BaseClass for other C# scripts to inherit off
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace CopiumEngine
 {
@@ -76,10 +77,8 @@ namespace CopiumEngine
                     True if key was pressed
             */
             /*******************************************************************************/
-            public static bool GetKey(int keyCode)
-            {
-                return false;
-            }
+            [MethodImplAttribute(MethodImplOptions.InternalCall)]  
+            public static extern bool GetKey(int keyCode);
 
             /*******************************************************************************
             /*!
@@ -94,10 +93,8 @@ namespace CopiumEngine
                     True if key was just pressed
             */
             /*******************************************************************************/
-            public static bool GetKeyDown(int keyCode)
-            {
-                return false;
-            }
+            [MethodImplAttribute(MethodImplOptions.InternalCall)]  
+            public static extern bool GetKeyDown(int keyCode);
 
             /*******************************************************************************
             /*!
@@ -112,21 +109,51 @@ namespace CopiumEngine
                     True if key was just released
             */
             /*******************************************************************************/
-            public static bool GetKeyUp(int keyCode)
+            [MethodImplAttribute(MethodImplOptions.InternalCall)]  
+            public static extern bool GetKeyUp(int keyCode);
+        }
+
+        public class Vector2
+        {
+            public double x,y;
+        }
+
+        public class Vector3
+        {
+            public double x,y,z;
+            public Vector3(double _x=0,double _y=0,double _z=0)
             {
-                return false;
+                x = _x; y = _y; z = _z;
             }
         }
 
-        public static class Vector2
-        {
+        // public class Component
+        // {
 
+        // }
+
+        public class GameObject
+        {
+            //Query
+            // public Component GetComponent<T>()
+            // {
+            //     if (!(T is Component))
+            //         return null;
+            // }
         }
 
-        public static class Vector3
+        public class Transform
         {
-
+            public Vector3 position;
+            //public Vector3 scale;
+            //Query
+            // public Component GetComponent<T>()
+            // {
+            //     if (!(T is Component))
+            //         return null;
+            // }
         }
+
+        protected Transform transform;
     }
-
 }

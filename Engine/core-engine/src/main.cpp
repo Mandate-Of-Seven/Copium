@@ -38,10 +38,10 @@ namespace
     // Our state
     float recompileTimer = 0;
     Copium::CopiumCore& copiumCore{ *Copium::CopiumCore::Instance()};
-    Copium::SoundSystem& soundSystem{ *Copium::SoundSystem::Instance() };
+    Copium::SoundSystem& soundSystem{ *Copium::SoundSystem::Instance()};
+    Copium::InputSystem& inputSystem { *Copium::InputSystem::Instance()};
 }
 
-Input * Input::inputInstance = new WindowsInput();
 ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 // Function declarations
@@ -124,7 +124,7 @@ int main()
                     frc.start();
 
                     SM.update_scene();         //UPDATE STATE
-                    //sComponent.Awake();
+                    sComponent.Awake();
                     //Copium::ScriptComponent somponent("CSharpTesting");
                     SM.draw_scene();           //DRAW STATE
                     copiumCore.update();
@@ -161,20 +161,7 @@ int main()
 /**************************************************************************/
 static void init()
 {
-
-    Input::get_input_instance()->init();
     Copium::Log::init();
-
-    soundSystem.init();
-    soundSystem.CreateSound("./Assets/sounds/reeling.wav", SoundAlias::reeling);
-    soundSystem.SetVolume(reeling, 0.3f);
-    soundSystem.CreateSound("./Assets/sounds/zap.wav", SoundAlias::zap);
-    soundSystem.SetVolume(zap, 0.3f);
-
-    
-
-    //Uncomment to test asserts
-    //COPIUM_ASSERT(1+1==2,"Asserts are working as intended");
 }
 
 /***************************************************************************/
@@ -187,12 +174,12 @@ static void init()
 /**************************************************************************/
 static void update()
 {
-    if (Input::is_key_pressed(GLFW_KEY_1))
+    if (inputSystem.is_key_pressed(GLFW_KEY_1))
     {
         soundSystem.Play(zap, true, false);
         std::cout << "Zap sound is being played\n";
     }
-    if (Input::is_key_pressed(GLFW_KEY_2))
+    if (inputSystem.is_key_pressed(GLFW_KEY_2))
     {
         soundSystem.Play(reeling, true, false);
         std::cout << "Reeling sound is being played\n";
@@ -222,14 +209,12 @@ static void draw()
 /**************************************************************************/
 void cleanup() 
 {
-    glfwTerminate(); // Bean: should be in WindowSystem exit once the 
-                     //         exit system is called in reverse order
-    Input::destroy();
+    glfwTerminate();
 }
 
 void quitEngine() 
 {
-    if (Input::is_key_pressed(GLFW_KEY_Q)) 
+    if (inputSystem.is_key_pressed(GLFW_KEY_Q)) 
     {
         change_enginestate(esQuit);
         std::cout << "Q was pressed" << std::endl;

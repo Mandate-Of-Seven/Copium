@@ -16,12 +16,15 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include <GLFW/glfw3.h>
 
-#include "Windows/input.h"
-
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
-
+#include "Windows/windows-input.h"
 #include "Editor/editor-camera.h"
+
+namespace
+{
+	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
+}
 
 namespace Copium::Editor
 {
@@ -92,38 +95,38 @@ namespace Copium::Editor
 	{
 		glm::vec3 pos = get_position();
 		// Movement WASD
-		if(Input::is_key_held(GLFW_KEY_LEFT_CONTROL))
-		//if (Input::is_mousebutton_pressed(GLFW_MOUSE_BUTTON_RIGHT)) //cannot use rn
+		if(inputSystem.is_key_held(GLFW_KEY_LEFT_CONTROL))
+		//if (inputSystem.is_mousebutton_pressed(GLFW_MOUSE_BUTTON_RIGHT)) //cannot use rn
 		{
 			glm::vec2 speed = get_pan_speed();
 
 			// Bean: Zoomlevel should be positive
-			if (Input::is_key_held(GLFW_KEY_W)) // Up
+			if (inputSystem.is_key_held(GLFW_KEY_W)) // Up
 			{
 				focalPoint += get_up_direction() * 0.1f * speed.y * zoomLevel;
 			}
-			if (Input::is_key_held(GLFW_KEY_A)) // Left
+			if (inputSystem.is_key_held(GLFW_KEY_A)) // Left
 			{
 				focalPoint += -get_right_direction() * 0.1f * speed.x * zoomLevel;
 			}
-			if (Input::is_key_held(GLFW_KEY_S)) // Down
+			if (inputSystem.is_key_held(GLFW_KEY_S)) // Down
 			{
 				focalPoint += get_up_direction() * -0.1f * speed.y * zoomLevel;
 			}
-			if (Input::is_key_held(GLFW_KEY_D)) // Right
+			if (inputSystem.is_key_held(GLFW_KEY_D)) // Right
 			{
 				focalPoint += -get_right_direction() * -0.1f * speed.x * zoomLevel;
 			}
 		}
 
 		// Rotation
-		if (Input::is_key_held(GLFW_KEY_LEFT_ALT))
+		if (inputSystem.is_key_held(GLFW_KEY_LEFT_ALT))
 		{
-			glm::vec2 mouse{ Input::get_mouseX(), Input::get_mouseY() };
+			glm::vec2 mouse{ inputSystem.get_mouseX(), inputSystem.get_mouseY() };
 			glm::vec2 delta = (mouse - mousePosition) * 0.003f;
 			mousePosition = mouse;
 
-			if (Input::is_mousebutton_pressed(GLFW_MOUSE_BUTTON_RIGHT))
+			if (inputSystem.is_mousebutton_pressed(GLFW_MOUSE_BUTTON_RIGHT))
 			{
 				float yawSign = (get_up_direction().y < 0.f) ? -1.f : 1.f;
 				yaw += yawSign * delta.x * 0.8f;
@@ -132,7 +135,7 @@ namespace Copium::Editor
 		}
 
 		// Zoom In and Out
-		if (Input::is_key_held(GLFW_KEY_Z) && Input::is_key_held(GLFW_KEY_LEFT_SHIFT))
+		if (inputSystem.is_key_held(GLFW_KEY_Z) && inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT))
 		{
 			// 0.01f to be changed to scoll
 			zoomLevel -= 0.01f * get_zoom_speed(); // Zoom In
@@ -141,7 +144,7 @@ namespace Copium::Editor
 
 			update_ortho_projection(aspectRatio, zoomLevel);
 		}
-		else if (Input::is_key_held(GLFW_KEY_Z))
+		else if (inputSystem.is_key_held(GLFW_KEY_Z))
 		{
 			// -0.01f to be changed to scoll
 			zoomLevel -= -0.01f * get_zoom_speed(); // Zoom Out

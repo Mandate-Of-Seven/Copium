@@ -25,22 +25,22 @@ namespace Copium
 	ScriptingSystem& ScriptComponent::sS{ *ScriptingSystem::Instance() };
 
 	ScriptComponent::ScriptComponent(const char* _name) :
-		mObject{ nullptr }, spScriptClass{ nullptr }, name{ _name }, Component()
+		mObject{ nullptr }, pScriptClass{ nullptr }, name{ _name }, Component()
 	{
 		Message::MessageSystem::Instance()->subscribe(Message::MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
-		spScriptClass = sS.getScriptClass(_name);
-		if (spScriptClass != nullptr)
+		pScriptClass = sS.getScriptClass(_name);
+		if (pScriptClass != nullptr)
 		{
-			mObject = sS.createMonoObject(spScriptClass.get()->mClass);
+			mObject = sS.instantiateClass(pScriptClass->mClass);
 		}
 	}
 
 	ScriptComponent::ScriptComponent(MonoClass* _mClass) :
 		name{ mono_class_get_name(_mClass) },
-		spScriptClass{ sS.getScriptClass(name.c_str()) }
+		pScriptClass{ sS.getScriptClass(name.c_str()) }
 	{
 		Message::MessageSystem::Instance()->subscribe(Message::MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
-		mObject = sS.createMonoObject(spScriptClass.get()->mClass);
+		mObject = sS.instantiateClass(pScriptClass->mClass);
 	}
 
 	ScriptComponent::~ScriptComponent()
@@ -50,41 +50,41 @@ namespace Copium
 	void ScriptComponent::handleMessage(Message::MESSAGE_TYPE mType)
 	{
 		//MT_SCRIPTING_UPDATED
-		spScriptClass = sS.getScriptClass(name.c_str());
+		pScriptClass = sS.getScriptClass(name.c_str());
 		//If mono class couldnt be loaded
-		if (spScriptClass == nullptr)
+		if (pScriptClass == nullptr)
 			return;
-		mObject = sS.createMonoObject(spScriptClass.get()->mClass);
+		mObject = sS.instantiateClass(pScriptClass->mClass);
 	}
 
 	void ScriptComponent::Awake()
 	{
-		if (spScriptClass && spScriptClass->mAwake)
-			sS.invoke(mObject, spScriptClass->mAwake);
+		if (pScriptClass && pScriptClass->mAwake)
+			sS.invoke(mObject, pScriptClass->mAwake);
 	}
 
 	void ScriptComponent::Start()
 	{
-		if (spScriptClass && spScriptClass->mStart)
-			sS.invoke(mObject, spScriptClass->mStart);
+		if (pScriptClass && pScriptClass->mStart)
+			sS.invoke(mObject, pScriptClass->mStart);
 	}
 
 	void ScriptComponent::Update()
 	{
-		if (spScriptClass && spScriptClass->mUpdate)
-			sS.invoke(mObject, spScriptClass->mUpdate);
+		if (pScriptClass && pScriptClass->mUpdate)
+			sS.invoke(mObject, pScriptClass->mUpdate);
 	}
 
 	void ScriptComponent::LateUpdate()
 	{
-		if (spScriptClass && spScriptClass->mLateUpdate)
-			sS.invoke(mObject, spScriptClass->mLateUpdate);
+		if (pScriptClass && pScriptClass->mLateUpdate)
+			sS.invoke(mObject, pScriptClass->mLateUpdate);
 	}
 
 	void ScriptComponent::OnCollisionEnter()
 	{
-		if (spScriptClass && spScriptClass->mOnCollisionEnter)
-			sS.invoke(mObject, spScriptClass->mOnCollisionEnter);
+		if (pScriptClass && pScriptClass->mOnCollisionEnter)
+			sS.invoke(mObject, pScriptClass->mOnCollisionEnter);
 	}
 }
 

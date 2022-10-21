@@ -18,6 +18,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "CopiumCore/system-interface.h"
 #include "Messaging/message-types.h"
+#include <unordered_map>
 
 namespace Copium::Message
 {
@@ -99,7 +100,7 @@ namespace Copium::Message
         void dispatch(MESSAGE_TYPE mType);
 
     private:
-        std::map<MESSAGE_TYPE, std::vector<IReceiver*>> messageTypeListeners;
+        std::unordered_map<MESSAGE_TYPE, std::vector<IReceiver*>> messageTypeListeners;
     };
 }
 

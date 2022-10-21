@@ -19,6 +19,11 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Graphics/graphics-system.h"
 #include "Physics/physics-system.h"
 
+namespace
+{
+	Copium::InputSystem& inputSystem{*Copium::InputSystem::Instance()};
+}
+
 namespace Copium::Physics
 {
 	Copium::Collision::AABB floor = { (Math::Vec2{ -0.8,-0.55 }), (Math::Vec2{ 0.8,-0.45 }) }; //position of floor
@@ -34,7 +39,7 @@ namespace Copium::Physics
 	void Physics::update()
 	{
 		static int count = 0;
-		if (Input::is_key_pressed(GLFW_KEY_B) && (boxes.size() < Copium::Graphics::GraphicsSystem::Instance()->get_sprites().size()))
+		if (inputSystem.is_key_pressed(GLFW_KEY_B) && (boxes.size() < Copium::Graphics::GraphicsSystem::Instance()->get_sprites().size()))
 		{
 			glm::vec2 position;
 			glm::vec2 size;
@@ -70,36 +75,36 @@ namespace Copium::Physics
 		if (boxes.size() > 0)
 		{	
 			
-			if (Input::is_key_pressed(GLFW_KEY_I)) // move up
+			if (inputSystem.is_key_pressed(GLFW_KEY_I)) // move up
 			{
 				boxes[0]->add_acc(Math::Vec2{ 0.0,0.05 });
 			}
-			if (Input::is_key_pressed(GLFW_KEY_K)) // move down
+			if (inputSystem.is_key_pressed(GLFW_KEY_K)) // move down
 			{
 				boxes[0]->add_acc(Math::Vec2{ 0.0,-0.05 });
 			}
-			if (Input::is_key_pressed(GLFW_KEY_L)) // move left
+			if (inputSystem.is_key_pressed(GLFW_KEY_L)) // move left
 			{
 				boxes[0]->add_acc(Math::Vec2{ 0.05,0.0 });
 			}
-			if (Input::is_key_pressed(GLFW_KEY_J)) // move right
+			if (inputSystem.is_key_pressed(GLFW_KEY_J)) // move right
 			{
 				boxes[0]->add_acc(Math::Vec2{ -0.05,0.0 });
 			}
-			if (Input::is_key_pressed(GLFW_KEY_O)) //reset acceleration and velocity values
+			if (inputSystem.is_key_pressed(GLFW_KEY_O)) //reset acceleration and velocity values
 			{
 				boxes[0]->set_acc(Math::Vec2{ 0.0,0.0 });
 				boxes[0]->set_vel(Math::Vec2{ 0.0,0.0 });
 			}
 		
 		}
-		if (Input::is_key_pressed(GLFW_KEY_P) && Input::is_key_pressed(GLFW_KEY_LEFT_SHIFT))
+		if (inputSystem.is_key_pressed(GLFW_KEY_P) && inputSystem.is_key_pressed(GLFW_KEY_LEFT_SHIFT))
 			{
 			Physics::toggle_step();
 			}
 		if (stepModeActive == true)
 		{
-			if (Input::is_key_pressed(GLFW_KEY_0))
+			if (inputSystem.is_key_pressed(GLFW_KEY_0))
 			{
 				Physics::update_pos();
 				Physics::check_collision();

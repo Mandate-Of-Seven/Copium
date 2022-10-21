@@ -169,6 +169,7 @@
     <ClInclude Include="src\Files\file-system.h" />
     <ClInclude Include="src\Graphics\camera.h" />
     <ClInclude Include="src\Graphics\sprite-renderer.h" />
+    <ClInclude Include="src\Scripting\scriptWrappers.h" />
     <ClInclude Include="src\Utilities\thread-system.h" />
     <ClInclude Include="src\Physics\collider.h" />
     <ClInclude Include="src\Physics\collision.h" />
@@ -189,7 +190,6 @@
     <ClInclude Include="src\Windows\windows-system.h" />
     <ClInclude Include="src\Graphics\glslshader.h" />
     <ClInclude Include="src\Graphics\graphics-system.h" />
-    <ClInclude Include="src\Windows\input.h" />
     <ClInclude Include="src\Editor\inspector.h" />
     <ClInclude Include="src\Debugging\logging.h" />
     <ClInclude Include="src\Math\math-library.h" />

@@ -16,12 +16,16 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 #include "pch.h"
 #include "Windows/windows-system.h"
-
+#include "Windows/windows-input.h"
 #include "Graphics/graphics-system.h"
 #include "Graphics/sprite-renderer.h"
-#include "Windows/input.h"
 
 #include "Editor/editor-system.h"
+
+namespace
+{
+	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
+}
 
 namespace Copium::Graphics
 {
@@ -82,19 +86,19 @@ namespace Copium::Graphics
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		/*if (Input::is_key_held(GLFW_KEY_A))
+		/*if (inputSystem.is_key_held(GLFW_KEY_A))
 			movement_x -= dt;
-		else if (!Input::is_key_held(GLFW_KEY_LEFT_SHIFT) && Input::is_key_held(GLFW_KEY_D))
+		else if (!inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_held(GLFW_KEY_D))
 			movement_x += dt;
 
-		if (Input::is_key_held(GLFW_KEY_W))
+		if (inputSystem.is_key_held(GLFW_KEY_W))
 			movement_y += dt;
-		else if (Input::is_key_held(GLFW_KEY_S))
+		else if (inputSystem.is_key_held(GLFW_KEY_S))
 			movement_y -= dt;*/
 
 		// Create sprites
 		glm::vec2 mousePos{0}, centreOfScene{0}, mouseScenePos{0}, mouseToNDC{0}, worldSpace{0};
-		if (!Input::is_key_held(GLFW_KEY_LEFT_SHIFT) && Input::is_key_pressed(GLFW_KEY_C))
+		if (!inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_C))
 		{
 			SpriteRenderer* sprite = new SpriteRenderer;
 			Copium::Editor::EditorSystem* editor = Copium::Editor::EditorSystem::Instance();
@@ -103,7 +107,7 @@ namespace Copium::Graphics
 			glm::vec2 cameraPos = editor->get_camera()->get_position();
 			float zoom = editor->get_camera()->get_zoom();
 			// Mouse to scene view conversion
-			mousePos = { Input::get_mouse_position().first , Input::get_mouse_position().second };
+			mousePos = { inputSystem.get_mouseposition().first , inputSystem.get_mouseposition().second };
 			centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
 			mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
 			mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
@@ -120,7 +124,7 @@ namespace Copium::Graphics
 			
 		}
 
-		if (Input::is_key_held(GLFW_KEY_LEFT_SHIFT) && Input::is_key_pressed(GLFW_KEY_C))
+		if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_C))
 		{
 			massSpawn = !massSpawn;
 		}
@@ -148,32 +152,32 @@ namespace Copium::Graphics
 		PRINT("NDC position: " << mouseToNDC.x << ", " << mouseToNDC.y);
 		PRINT("World space: " << worldSpace.x << ", " << worldSpace.y);*/
 
-		if (Input::is_key_pressed(GLFW_KEY_Y))
+		if (inputSystem.is_key_pressed(GLFW_KEY_Y))
 		{
 			PRINT("Number of sprites: " << sprites.size());
 		}
 
-		if (Input::is_key_held(GLFW_KEY_LEFT_SHIFT) && Input::is_key_pressed(GLFW_KEY_D))
+		if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_D))
 		{
 			debugMode = !debugMode;
 		}
 		
-		/*if (Input::is_key_held(GLFW_KEY_Z) && Input::is_key_held(GLFW_KEY_LEFT_SHIFT))
+		/*if (inputSystem.is_key_held(GLFW_KEY_Z) && inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT))
 		{
 			size_x -= dt;
 			size_y -= dt;
 		}
-		else if (Input::is_key_held(GLFW_KEY_Z))
+		else if (inputSystem.is_key_held(GLFW_KEY_Z))
 		{
 			size_x += dt;
 			size_y += dt;
 		}*/
 
-		/*if (Input::is_key_held(GLFW_KEY_R) && Input::is_key_held(GLFW_KEY_LEFT_SHIFT))
+		/*if (inputSystem.is_key_held(GLFW_KEY_R) && inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT))
 		{
 			rotate -= dt * 75;
 		}
-		else if (Input::is_key_held(GLFW_KEY_R))
+		else if (inputSystem.is_key_held(GLFW_KEY_R))
 		{
 			rotate += dt * 75;
 		}*/

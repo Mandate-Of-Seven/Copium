@@ -17,15 +17,19 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #define SCRIPTING_SYSTEM_H
 #pragma once
 
-#include <mono/metadata/assembly.h>
-#include <mono/metadata/attrdefs.h>
-#include <mono/jit/jit.h>
-#include <thread>
-#include <filesystem>
-#include "Messaging/message-system.h"
-#include "Files/file-system.h"
-#include "CopiumCore/system-interface.h"
-#include "Windows/windows-system.h"
+#include "CopiumCore\system-interface.h"
+#include "Messaging\message-system.h"
+#include "Files\file-system.h"
+
+#include <string>
+#include <unordered_map>
+
+extern "C"
+{
+	typedef struct _MonoClass MonoClass;
+	typedef struct _MonoMethod MonoMethod;
+	typedef struct _MonoObject MonoObject;
+}
 
 namespace Copium::Scripting
 {
@@ -38,17 +42,17 @@ namespace Copium::Scripting
 		Public = (1 << 3)
 	};
 
-	enum class FieldType
-	{
-		None,
-		Vector2,
-		Vector3,
-		Vector4,
-		Float = MONO_TYPE_R4,
-		Integer = MONO_TYPE_I4,
-		UnsignedInteger = MONO_TYPE_U4,
-		String = MONO_TYPE_STRING
-	};
+	//enum class FieldType
+	//{
+	//	None,
+	//	Vector2,
+	//	Vector3,
+	//	Vector4,
+	//	Float = MONO_TYPE_R4,
+	//	Integer = MONO_TYPE_I4,
+	//	UnsignedInteger = MONO_TYPE_U4,
+	//	String = MONO_TYPE_STRING
+	//};
 
 	/**************************************************************************/
 	/*!
@@ -91,8 +95,8 @@ namespace Copium::Scripting
 				Class to load functions from
 		*/
 		/**************************************************************************/
-		ScriptClass(const std::string& _name);
-		std::string name;
+		ScriptClass(const std::string& _name, MonoClass* _mClass);
+		const std::string& name;
 		MonoClass* mClass;
 		MonoMethod* mAwake;
 		MonoMethod* mStart;
@@ -147,7 +151,7 @@ namespace Copium::Scripting
 				Shared pointer to a ScriptClass
 		*/
 		/**************************************************************************/
-		std::shared_ptr<ScriptClass> getScriptClass(const std::string & _name);
+		ScriptClass* getScriptClass(const std::string & _name);
 
 		/**************************************************************************/
 		/*!
@@ -159,7 +163,7 @@ namespace Copium::Scripting
 				Pointer to the clone
 		*/
 		/**************************************************************************/
-		MonoObject* createMonoObject(MonoClass * mClass);
+		MonoObject* instantiateClass(MonoClass * mClass);
 
 		/**************************************************************************/
 		/*!
@@ -181,6 +185,8 @@ namespace Copium::Scripting
 
 		void handleMessage(Message::MESSAGE_TYPE mType);
 	private:
+		void updateScriptClasses();
+
 		/**************************************************************************/
 		/*!
 			\brief
@@ -234,7 +240,7 @@ namespace Copium::Scripting
 		*/
 		/**************************************************************************/
 		bool scriptIsLoaded(const std::filesystem::path& filePath);
-		std::unordered_map<std::string, std::shared_ptr<ScriptClass>> scriptClassMap;
+		std::unordered_map<std::string, ScriptClass*> scriptClassMap;
 		std::list<Files::File>& scriptFiles;
 	};
 
@@ -249,6 +255,6 @@ namespace Copium::Scripting
 			
 	*/
 	/**************************************************************************/
-	unsigned char GetFieldAccessibility(MonoClassField* field);
+	//unsigned char GetFieldAccessibility(MonoClassField* field);
 }
 #endif // !SCRIPTING_SYSTEM_H
