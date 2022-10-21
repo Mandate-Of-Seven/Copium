@@ -20,14 +20,35 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium::Graphics
 {
-	/*RTTR_REGISTRATION{
+	RTTR_REGISTRATION{
 		using namespace rttr;
-	registration::class_<SpriteRenderer>("Sprite Renderer")
-		
-	}*/
+	/*registration::class_<glm::vec4>("Vec4")
+		.property("X", &glm::vec4::x)
+		.property("Y", &glm::vec4::y)
+		.property("Z", &glm::vec4::z)
+		.property("W", &glm::vec4::w);*/
 
-	void SpriteRenderer::deserialize(rapidjson::Value& _value)
+	registration::class_<SpriteRenderer>("Sprite Renderer")
+		.property("Sprite ID", &SpriteRenderer::get_sprite_id, &SpriteRenderer::set_sprite_id);
+		//.property("Color", &SpriteRenderer::get_color, &SpriteRenderer::set_color);
+	}
+
+	bool SpriteRenderer::deserialize(rapidjson::Value& _value)
 	{
-		
+		if (!_value.HasMember("Sprite ID"))
+			return false;
+
+		spriteID = _value["Sprite ID"].GetUint();
+
+		/*if (!_value.HasMember("Color"))
+			return false;
+
+		rapidjson::Value& _v = _value["Color"].GetObj();
+		color.x = _v["X"].GetFloat();
+		color.y = _v["Y"].GetFloat();
+		color.w = _v["Z"].GetFloat();
+		color.z = _v["W"].GetFloat();*/
+
+		return true;
 	}
 }

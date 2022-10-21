@@ -19,9 +19,9 @@
 
 All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
-#pragma once
 #ifndef MATHLIBRARY_H
 #define MATHLIBRARY_H
+
 #include <math.h>
 #include <iostream>
 #include <rttr/type>

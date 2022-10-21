@@ -76,7 +76,7 @@ namespace Copium::Files
 			else if (!entry.is_directory() && !entry.path().extension().generic_string().compare(_extension)) 
 			{
 				assetsPath.push_back(entry.path().generic_string());
-				std::cout << "Path name: " << entry.path().generic_string() << "\n";
+				//std::cout << "Path name: " << entry.path().generic_string() << "\n";
 			}
 
 		}

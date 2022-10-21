@@ -19,7 +19,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Math/transform.h"
 #include "Graphics/sprite-renderer.h"
 
-namespace Copium::Component
+namespace Copium
 {
 	class RendererComponent : public Component
 	{
@@ -34,6 +34,50 @@ namespace Copium::Component
 	protected:
 		Copium::Graphics::SpriteRenderer spriteRenderer;
 	};
+
+    class RendererCreator : public ComponentCreator
+    {
+    public:
+        /*******************************************************************************
+        /*!
+        *
+        \brief
+            Default contructor for Renderer Creator
+        */
+        /*******************************************************************************/
+        RendererCreator()
+        {
+            std::cout << "Renderer registered\n";
+        }
+        /***************************************************************************/
+        /*!
+        \brief
+            Creates an Renderer Component
+
+        \return
+            if successful in creating an Renderer Component, return ptr to it
+            if there were errors in the process, return nullptr
+        */
+        /**************************************************************************/
+        virtual Component* create()
+        {
+            return new RendererComponent;
+        }
+        /*******************************************************************************
+        /*!
+        *
+        \brief
+            Destructor for Renderer Creator
+
+        \return
+            void
+        */
+        /*******************************************************************************/
+        ~RendererCreator()
+        {
+            //std::cout << "Renderer Creator destructed\n";
+        }
+    };
 }
 
 #endif // !RENDERER_COMPONENT_H

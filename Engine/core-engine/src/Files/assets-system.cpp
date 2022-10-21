@@ -27,7 +27,7 @@ namespace Copium::Files
 
 		for (unsigned int i = 0; i < textures.size(); i++)
 		{
-			std::cout << "Texture: " << textures[i].get_object_id() << " " << textures[i].get_file_path() << "\n";
+			//std::cout << "Texture: " << textures[i].get_object_id() << " " << textures[i].get_file_path() << "\n";
 		}
 
 	}
@@ -46,7 +46,7 @@ namespace Copium::Files
 	{
 		for (std::string path : _path)
 		{
-			std::cout << "Texture: " << path << "\n";
+			//std::cout << "Texture: " << path << "\n";
 			// Generate texture
 			Copium::Graphics::Texture texture(path);
 

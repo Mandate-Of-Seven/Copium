@@ -18,28 +18,27 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include <glm/glm.hpp>
 #include <string>
+#include <rttr/type>
 #include <rapidjson/document.h>
 
 namespace Copium::Graphics
 {
-	class Transform;
-	class Texture;
-
 	// Depends on Transform
 	class SpriteRenderer final
 	{
 	public:
 		// Serialization inherited from Component
-		void deserialize(rapidjson::Value& _value);
+		bool deserialize(rapidjson::Value& _value);
+
 		// Accessing Properties
 
 		// Name
 		std::string const get_name() { return sprite_name; }
 		void const set_name(std::string _name) { sprite_name = _name; }
 
-		// Texture
-		void const bind_texture(Texture* _texture) { texture = _texture; }
-		Texture* const get_texture() { return texture; }
+		// Sprite
+		const unsigned int& get_sprite_id() { return spriteID; }
+		void set_sprite_id(const unsigned int& _index) { spriteID = _index; }
 
 		// Position
 		glm::vec3 const get_position() { return position; }
@@ -62,13 +61,16 @@ namespace Copium::Graphics
 		/* Sprite Information ***********************************************************/
 		std::string sprite_name; // Name of sprite
 
-		Texture* texture = nullptr; // The texture used for this sprite ( Bean: May be temporary because we can set a vector of textures in graphics to store all textures)
-		Transform* transform = nullptr; // The transform of this sprite ( Bean: it refer to the component in the gameobject )
+		unsigned int spriteID = 0; // The index of the sprite
 
 		glm::vec3 position{ 0 }; // Temporary variable to access the position
 		glm::vec3 rotation{ 0 }; // Temporary variable for the rotation of the sprite
 		glm::vec2 size{ 0 }; // The size of the sprite in pixels ( Bean: different from the scale of the gameobject )
 		glm::vec4 color{ 0 }; // The blended color of this sprite
+	
+	public:
+		RTTR_ENABLE();
 	};
+
 }
 #endif // !SPRITE_RENDERER_H

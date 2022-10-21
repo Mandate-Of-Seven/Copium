@@ -24,6 +24,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor/editor-system.h"
 #include "Files/assets-system.h"
 
+// Bean: remove this after NewManagerInstance is moved
+#include "GameObject/renderer-component.h"
+
 namespace Copium::Graphics
 {
 	// Temporary global variables
@@ -60,13 +63,6 @@ namespace Copium::Graphics
 			samplers[i] = i;
 
 		glUniform1iv(loc, maxTextures, samplers);
-		
-		// Bean: Loading of textures to be done somewhere else
-		/*load_texture("Assets/textures/train-part-01.png");
-		load_texture("Assets/textures/train-part-02.png");
-		load_texture("Assets/textures/train-part-03.png");
-		load_texture("Assets/textures/train-part-04.png");
-		load_texture("Assets/textures/mock-up.png");*/
 
 		// Parse all textures loaded into the engine into the graphics 
 		parse_textures();
@@ -334,6 +330,7 @@ namespace Copium::Graphics
 	// Draw the world
 	void GraphicsSystem::draw_world()
 	{
+		// Bean: Should be under draw editor, along with gizmos ( Maybe replace draw_debug_info with draw_editor)
 		// Grid
 		renderer.begin_batch();
 		glm::vec4 color = { 1.f, 1.f, 1.f, 0.2f };
@@ -369,6 +366,7 @@ namespace Copium::Graphics
 		// Background
 		// Bean: scale should be the scale of the object, 
 		// texture scale should be separate and derived from the image dimensions
+		// Scale = image scale / default scale(1024)
 		Copium::Files::AssetsSystem* assets = Copium::Files::AssetsSystem::Instance();
 		renderer.draw_quad({ 0.f, 0.f, 0.f }, { 3.84f, 2.16f }, 0.f, assets->get_textures()[0][0].get_object_id());
 		
@@ -382,9 +380,25 @@ namespace Copium::Graphics
 		scale *= zoom;
 
 		//PRINT("World NDC position: " << worldNDC.x << ", " << worldNDC.y);
-
+		// Bean: Temporary green dot in the centre of the scene
 		renderer.draw_quad({ worldNDC.x, worldNDC.y , 1.f}, scale, 0.f, color);
 
+		/*
+			Bean Theory:
+			For each gameobject, check if it has a renderer component
+				If it does:
+					Check if it is active
+						If not: Continue
+					Check if it has a spriteID of not 0 (default)
+						If it does:
+							Render sprite with color
+						Else
+							Render default sprite (white texture) with color
+				Else
+					Continue
+
+			Bean: To replace the following code with the Theory
+		*/
 		for (size_t i = 0; i < sprites.size(); i++)
 		{
 			/*PRINT(i + 1 << " : Sprite Data: " << sprites[i]->get_position().x << "," << sprites[i]->get_position().y
@@ -398,14 +412,13 @@ namespace Copium::Graphics
 			sprites[i]->set_position(pos);
 			sprites[i]->set_size(size);
 
-			// Bean: Bind to index instead of a pointer to the texture
-			
-			sprites[i]->bind_texture(&assets->get_textures()[0][i % 4 + 1]);
+			// Bean: Set sprite id should be done in the editor or via deserialization
+			sprites[i]->set_sprite_id(assets->get_textures()[0][i % 4 + 1].get_object_id());
 
 			if(textureSelector == 5) // Alpha Colored Square
 				renderer.draw_quad(pos, { 0.1f, 0.1f }, rotate, sprites[i]->get_color());
 			else
-				renderer.draw_quad(pos, size, rotate, sprites[i]->get_texture()->get_object_id());
+				renderer.draw_quad(pos, size, rotate, sprites[i]->get_sprite_id());
 		}
 
 		renderer.end_batch();

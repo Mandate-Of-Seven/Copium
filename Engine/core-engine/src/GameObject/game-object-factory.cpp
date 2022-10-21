@@ -19,8 +19,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <rttr/registration>
 #include <filesystem>
 
-namespace Copium {
-
+namespace Copium 
+{
 	GameObjectFactory::GameObjectFactory() : currentScene{ nullptr }
 	{
 		std::cout << "GOF ctor\n";

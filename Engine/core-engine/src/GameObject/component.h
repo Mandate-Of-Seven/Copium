@@ -12,9 +12,6 @@
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
-
-#pragma once
-
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
@@ -153,27 +150,6 @@ private:
         //void deserialize(rapidjson::Value& _value);
     protected:
 
-    };
-
-    class RendererComponent : public Component
-    {
-    public:
-        /***************************************************************************/
-        /*!
-        \brief
-            Default constructor for renderer Components
-        */
-        /**************************************************************************/
-        RendererComponent();
-
-        /***************************************************************************/
-        /*!
-        \brief
-            Deserialize this component's data from specified rapidjson value
-        */
-        /**************************************************************************/
-        //void deserialize(rapidjson::Value& _value);
-    protected:
     };
 
     class TransformComponent : public Component
@@ -326,51 +302,7 @@ private:
             //std::cout << "Animator Creator destructed\n";
         }
     };
-    class RendererCreator : public ComponentCreator 
-    {
-    public:
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Default contructor for Renderer Creator
 
-        \return
-            void
-        */
-        /*******************************************************************************/
-        RendererCreator() 
-        {
-            std::cout << "Renderer registered\n";
-        }
-        /***************************************************************************/
-        /*!
-        \brief
-            Creates an Renderer Component
-
-        \return
-            if successful in creating an Renderer Component, return ptr to it
-            if there were errors in the process, return nullptr
-        */
-        /**************************************************************************/
-	    virtual Component* create() {
-		    return new RendererComponent;
-	    }
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Destructor for Renderer Creator
-
-        \return
-            void
-        */
-        /*******************************************************************************/
-        ~RendererCreator()
-        {
-            //std::cout << "Renderer Creator destructed\n";
-        }
-    };
     class ColliderCreator : public ComponentCreator 
     {
     public:

@@ -15,6 +15,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "pch.h"
 #include "GameObject/component.h"
+#include "GameObject/renderer-component.h"
 
 std::map<Component::Type, const std::string> Component::componentMap
 {
@@ -44,14 +45,13 @@ void Component::Enabled(bool _enabled) noexcept { enabled = _enabled; }
 
 ColliderComponent::ColliderComponent() :Component(Type::Collider) { std::cout << "COLLIDER CONS" << std::endl; }
 
-RendererComponent::RendererComponent() :Component(Type::Renderer) { std::cout << "RENDERER CONS" << std::endl; }
-
 AnimatorComponent::AnimatorComponent() :Component(Type::Animator) { std::cout << "ANIMATOR CONS" << std::endl; }
 
 TransformComponent::TransformComponent() :Component(Type::Transform)
 { 
     std::cout << "TRANSFORM CONS" << std::endl; 
 }
+
 void TransformComponent::deserialize(rapidjson::Value& _value)
 {
     t.deserialize(_value);

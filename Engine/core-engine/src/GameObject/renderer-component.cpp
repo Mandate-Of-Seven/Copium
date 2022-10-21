@@ -15,11 +15,11 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 #include "GameObject/renderer-component.h"
 
-namespace Copium::Component
+namespace Copium
 {
-	RendererComponent::RendererComponent()
+	RendererComponent::RendererComponent() :Component(Type::Renderer)
 	{
-		PRINT("Renderer Component constructed");
+		PRINT("\tRenderer Component constructed");
 	}
 
 	void RendererComponent::deserialize(rapidjson::Value& _value)
