@@ -1579,6 +1579,24 @@ namespace Copium::Math
 	/*******************************************************************************/
 	double rad_to_deg(double _angle);
 	
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Deserialize a glm::vec4 from a rapidjson value
+
+	\param _value
+		reference to the rapidjson value
+
+	\param _v
+		reference to the glm::vec4 which will hold the deserialized data
+
+	\return
+		if there are errors with the format of the rapidjson value specified, return false
+		if deserialization was successful, return true
+	*/
+	/*******************************************************************************/
+	bool deserialize_color(rapidjson::Value& _value, glm::vec4& _v);
 }
 #endif
  

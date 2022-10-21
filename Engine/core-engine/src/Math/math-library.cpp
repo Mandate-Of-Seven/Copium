@@ -881,6 +881,25 @@ namespace Copium::Math
 		return _os;
 	}
 
+	// Deserialize support 
+	bool deserialize_color(rapidjson::Value& _value, glm::vec4& _v)
+	{
+		if (!_value.HasMember("R"))
+			return false;
+		if (!_value.HasMember("G"))
+			return false;
+		if (!_value.HasMember("B"))
+			return false;
+		if (!_value.HasMember("A"))
+			return false;
+
+		_v[0] = _value["R"].GetFloat();
+		_v[1] = _value["G"].GetFloat();
+		_v[2] = _value["B"].GetFloat();
+		_v[3] = _value["A"].GetFloat();
+		return true;
+
+	}
 
 }
 
