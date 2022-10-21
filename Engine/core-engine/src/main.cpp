@@ -92,7 +92,7 @@ int main()
     //GameObject gObj;
     //gObj.addComponent(Component::Type::Script);
 
-    Copium::ScriptComponent sComponent("CSharpTesting");
+    //Copium::ScriptComponent sComponent("CSharpTesting");
 
     // Engine Loop
     while (!glfwWindowShouldClose(windowsSystem->get_window()) && esCurrent != esQuit)
@@ -124,7 +124,7 @@ int main()
                     frc.start();
 
                     SM.update_scene();         //UPDATE STATE
-                    sComponent.Awake();
+                    //sComponent.Awake();
                     //Copium::ScriptComponent somponent("CSharpTesting");
                     SM.draw_scene();           //DRAW STATE
                     copiumCore.update();

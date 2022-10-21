@@ -28,11 +28,13 @@ namespace
     const std::string defaultGameObjName = "New GameObject"; // Append (No.) if its not the first
 }
 
+GameObjectID GameObject::count = 1;
 
 GameObject::GameObject()
-    : name{ defaultGameObjName }, id{0}, parent{nullptr}, parentid{0}
+    : name{ defaultGameObjName }, parent{nullptr}, parentid{0}
 {
-    
+    id = count++;
+    PRINT("GAMEOBJECT ID: " << id);
 }
 
 GameObject::~GameObject()
@@ -54,9 +56,10 @@ std::list<Component*>& GameObject::Components()
 
 GameObject::GameObject
 (Copium::Math::Vec3 _position, Copium::Math::Vec3 _rotation = { 0,0,0 }, Copium::Math::Vec3 _scale = { 1,1,1 })
-    : name{ defaultGameObjName }, id{0}, trans(_position, _rotation, _scale), parent{nullptr}, parentid{0}
+    : name{ defaultGameObjName }, trans(_position, _rotation, _scale), parent{nullptr}, parentid{0}
 {
-
+    id = count++;
+    PRINT("GAMEOBJECT ID: " << id);
 }
 
 void GameObject::addComponent(Component* component)
@@ -70,15 +73,15 @@ void GameObject::addComponent(Component::Type componentType)
     switch (componentType)
     {
     case Component::Type::Animator:
-        components.push_back(new AnimatorComponent());
+        components.push_back(new AnimatorComponent(*this));
         PRINT("ADDED ANIMATOR");
         break;
     case Component::Type::Collider:
-        components.push_back(new ColliderComponent());
+        components.push_back(new ColliderComponent(*this));
         PRINT("ADDED COLLIDER");
         break;
     case Component::Type::Renderer:
-        components.push_back(new RendererComponent());
+        components.push_back(new RendererComponent(*this));
         PRINT("ADDED RENDERER");
         break;
     case Component::Type::Script:
@@ -90,7 +93,7 @@ void GameObject::addComponent(Component::Type componentType)
         PRINT("ADDED SCRIPT");
         break;
     case Component::Type::Transform:
-        components.push_back(new TransformComponent());
+        components.push_back(new TransformComponent(*this));
         break;
     default:
         PRINT("ADDED NOTHING");

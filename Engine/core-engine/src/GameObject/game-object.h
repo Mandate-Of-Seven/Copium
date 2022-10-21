@@ -38,6 +38,7 @@ class GameObject
 private:
     GameObjectID id;                    //Global ID for gameObjects
     GameObjectID parentid;
+    static GameObjectID count;
     std::list<Component*> components;   //Components for gameObject
     std::string name;                   //Name of gameObject
     Transform trans;                    //Transform of gameObject

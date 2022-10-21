@@ -18,14 +18,13 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #define DEFAULT_SCRIPT_NAME "NewScript"
 #include <mono/jit/jit.h>
-
 namespace Copium
 {
 	using namespace Scripting;
 	ScriptingSystem& ScriptComponent::sS{ *ScriptingSystem::Instance() };
 
-	ScriptComponent::ScriptComponent(const char* _name) :
-		mObject{ nullptr }, pScriptClass{ nullptr }, name{ _name }, Component()
+	ScriptComponent::ScriptComponent(GameObject& _gameObj, const char* _name) :
+		mObject{ nullptr }, pScriptClass{ nullptr }, name{ _name }, Component(_gameObj, Component::Type::Script)
 	{
 		Message::MessageSystem::Instance()->subscribe(Message::MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
 		pScriptClass = sS.getScriptClass(_name);
@@ -33,14 +32,6 @@ namespace Copium
 		{
 			mObject = sS.instantiateClass(pScriptClass->mClass);
 		}
-	}
-
-	ScriptComponent::ScriptComponent(MonoClass* _mClass) :
-		name{ mono_class_get_name(_mClass) },
-		pScriptClass{ sS.getScriptClass(name.c_str()) }
-	{
-		Message::MessageSystem::Instance()->subscribe(Message::MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
-		mObject = sS.instantiateClass(pScriptClass->mClass);
 	}
 
 	ScriptComponent::~ScriptComponent()

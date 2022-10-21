@@ -57,7 +57,7 @@ namespace Copium::Files
 	{
 		static const std::string roslynCompilerPath{ "..\\tools\\Roslyn\\csc" };
 		static const std::string scriptsAssemblyPath{ "scripts.dll" };
-		static const std::string projectName = { "ScriptingSandbox" };
+		static const std::string projectName = { "PackedTracks" };
 		static const std::string projectPath{ "..\\" + projectName };
 	}
 

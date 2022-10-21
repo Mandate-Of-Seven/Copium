@@ -18,7 +18,13 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/component.h"
 #include "Messaging/message-system.h"
 #include "Scripting/scripting-system.h"
-#include <mono/metadata/assembly.h>
+
+extern "C"
+{
+	typedef struct _MonoClass MonoClass;
+	typedef struct _MonoMethod MonoMethod;
+	typedef struct _MonoObject MonoObject;
+}
 
 namespace Copium
 {
@@ -34,17 +40,7 @@ namespace Copium
 				Name of script to make an instance of
 		*/
 		/**************************************************************************/
-		ScriptComponent(const char* _name);
-		/**************************************************************************/
-		/*!
-			\brief
-				Constructs a ScriptComponent based on a monoclass
-
-			\param _mClass
-				Monoclass of script to make an instance of
-		*/
-		/**************************************************************************/
-		ScriptComponent(MonoClass* _mClass);
+		ScriptComponent(GameObject& gameObj, const char* _name);
 		/**************************************************************************/
 		/*!
 			\brief

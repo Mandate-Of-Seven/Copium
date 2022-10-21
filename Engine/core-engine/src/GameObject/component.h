@@ -23,12 +23,14 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <map>
 #include "Math/transform.h"
 
+class GameObject;
+
     //USING
 
-    using ComponentID = unsigned char;
+using ComponentID = unsigned char;
 
-    class Component
-    {
+class Component
+{
     public:
         enum class Type       // Types of Components
         {
@@ -92,24 +94,15 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
             derived classes from inheriting
         */
         /**************************************************************************/
-        Component();
+        Component() = delete;
 
-        /***************************************************************************/
-        /*!
-        \brief
-            Hidden constructor that is called by derived classes to determine name
-            and type
-        */
-        /**************************************************************************/
-        Component(Component::Type _componentType);
-
-
-
-private:
-    ComponentID id;                     //Id of component, local to gameObject
-    Type componentType;                 //Type of component
-    const bool allowMultiple = false;   //Can gameObjects only have one of this Component?
-    bool enabled;
+        Component(GameObject& _gameObj, Component::Type _componentType);
+    private:
+        ComponentID id;                     //Id of component, local to gameObject
+        Type componentType;                 //Type of component
+        const bool allowMultiple = false;   //Can gameObjects only have one of this Component?
+        bool enabled;
+        GameObject& gameObj;
 };
 
     class ColliderComponent : public Component
@@ -121,7 +114,7 @@ private:
             Default constructor for collider Components
         */
         /**************************************************************************/
-        ColliderComponent();
+        ColliderComponent(GameObject& _gameObj);
 
         /***************************************************************************/
         /*!
@@ -142,7 +135,7 @@ private:
             Default constructor for animator Components
         */
         /**************************************************************************/
-        AnimatorComponent();
+        AnimatorComponent(GameObject& _gameObj);
 
         /***************************************************************************/
         /*!
@@ -164,7 +157,7 @@ private:
             Default constructor for renderer Components
         */
         /**************************************************************************/
-        RendererComponent();
+        RendererComponent(GameObject& _gameObj);
 
         /***************************************************************************/
         /*!
@@ -188,7 +181,7 @@ private:
             void
         */
         /**************************************************************************/
-        TransformComponent();
+        TransformComponent(GameObject& _gameObj);
         /***************************************************************************/
         /*!
         \brief
@@ -268,7 +261,7 @@ private:
             if there were any errors in the process, return nullptr
         */
         /*******************************************************************************/
-        virtual Component* create() = 0;
+        virtual Component* create(GameObject& _gameObj) = 0;
         /*******************************************************************************
         /*!
         *
@@ -308,8 +301,8 @@ private:
             if there were errors in the process, return nullptr
         */
         /**************************************************************************/
-	    virtual Component* create() {
-		    return new AnimatorComponent;
+	    virtual Component* create(GameObject& _gameObj) {
+		    return new AnimatorComponent(_gameObj);
 	    }
         /*******************************************************************************
         /*!
@@ -353,8 +346,8 @@ private:
             if there were errors in the process, return nullptr
         */
         /**************************************************************************/
-	    virtual Component* create() {
-		    return new RendererComponent;
+	    virtual Component* create(GameObject& _gameObj) {
+		    return new RendererComponent(_gameObj);
 	    }
         /*******************************************************************************
         /*!
@@ -398,9 +391,9 @@ private:
             if there were errors in the process, return nullptr
         */
         /**************************************************************************/
-        virtual Component* create()
+        virtual Component* create(GameObject& _gameObj)
         {
-            return new ColliderComponent;
+            return new ColliderComponent(_gameObj);
         }
         /*******************************************************************************
         /*!
@@ -444,9 +437,9 @@ private:
             if there were errors in the process, return nullptr
         */
         /**************************************************************************/
-        virtual Component* create()
+        virtual Component* create(GameObject& _gameObj)
         {
-            return new TransformComponent;
+            return new TransformComponent(_gameObj);
         }
         /*******************************************************************************
         /*!

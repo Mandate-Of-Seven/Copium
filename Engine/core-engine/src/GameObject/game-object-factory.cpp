@@ -55,9 +55,6 @@ namespace Copium {
 		GameObject* tmp = new GameObject();
 		if (!tmp)
 			return nullptr;
-
-		GameObjectID id = (GameObjectID)currentScene->get_gameobjcount();
-		tmp->set_id(id);
 		currentScene->add_gameobject(tmp);
 
 		return tmp;
@@ -67,10 +64,8 @@ namespace Copium {
 		GameObject* go = new GameObject();
 		if (!go)
 			return nullptr;
-		GameObjectID tmpID = (GameObjectID)currentScene->get_gameobjcount() + 1;
 		GameObjectID tmpPPID{ 0 };
 		go->set_name(_src.get_name());	// Name
-		go->set_id(tmpID);			// ID
 		if (go->has_parent())
 			tmpPPID = _src.get_ppid();
 		go->set_ppid(tmpPPID);		// Parent ID
@@ -79,14 +74,12 @@ namespace Copium {
 		// Components copy
 		for (std::list<Component*>::iterator it = _src.Components().begin(); it != _src.Components().end(); ++it)
 		{
-			Component* tmp = componentCreators[(*it)->Name()]->create();
+			Component* tmp = componentCreators[(*it)->Name()]->create(*go);
 			if (tmp)
 				go->Components().push_back(tmp);
 		}
 
 		currentScene->add_gameobject(go);
-
-
 
 		for (std::list<GameObject*>::iterator iter = _src.mchildList().begin(); iter != _src.mchildList().end(); ++iter)
 		{
@@ -125,7 +118,7 @@ namespace Copium {
 				rapidjson::Value& component = *iter;
 				if (component.HasMember("Type")) 
 				{
-					Component* tmp = componentCreators[component["Type"].GetString()]->create();
+					Component* tmp = componentCreators[component["Type"].GetString()]->create(*go);
 					go->Components().push_back(tmp);
 					tmp->deserialize(component);
 				}
@@ -209,7 +202,7 @@ namespace Copium {
 		if (componentCreators.find(_key) == componentCreators.end())
 			return false;
 
-		Component* tmp = componentCreators[_key]->create();
+		Component* tmp = componentCreators[_key]->create(*_go);
 		if (!tmp)
 			return false;
 
@@ -237,7 +230,7 @@ namespace Copium {
 				rapidjson::Value& component = *iter;
 				if (component.HasMember("Type"))
 				{
-					Component* tmp = componentCreators[component["Type"].GetString()]->create();
+					Component* tmp = componentCreators[component["Type"].GetString()]->create(*go);
 					go->Components().push_back(tmp);
 					tmp->deserialize(component);
 				}
