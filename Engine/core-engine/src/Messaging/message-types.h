@@ -26,10 +26,11 @@ namespace Copium::Message
         MT_KEY_PRESSED,
         MT_COLLIDED,
         MT_SCRIPTING_UPDATED,
+        MT_REFLECT_CS_GAMEOBJECT,
         MT_NONE // END, DO NOT INSERT BEYOND
     };
 
-    namespace MESSAGE_CONTAINERS
+    namespace MESSAGE_CONTAINER
     {
         //MC = MESSAGE_CONTAINER
         struct MC_MOUSE_MOVED
@@ -56,6 +57,12 @@ namespace Copium::Message
             uint32_t keyCode;
         };
 
+        struct REFLECT_CS_GAMEOBJECT
+        {
+            unsigned long ID;
+        };
+
+        static REFLECT_CS_GAMEOBJECT reflectCsGameObject;
     }
     //static std::vector<MESSAGE_CONTAINERS::MOUSE_MOVED> QUEUE_MOUSE_MOVED;
     //static std::vector<MESSAGE_CONTAINERS::KEY_PRESSED> QUEUE_KEY_PRESSED;

@@ -18,8 +18,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include "pch.h"
 #include "GameObject/game-object.h"
-#include "Scripting/scripting.h"
-#include "Scripting/scripting-system.h"
 
 //USING
 
@@ -27,7 +25,6 @@ namespace
 {
     const std::string defaultGameObjName = "New GameObject"; // Append (No.) if its not the first
     Copium::Message::MessageSystem& messageSystem{*Copium::Message::MessageSystem::Instance()};
-    Copium::Scripting::ScriptingSystem& scriptingSystem{ *Copium::Scripting::ScriptingSystem::Instance() };
 }
 
 
@@ -38,7 +35,6 @@ GameObject::GameObject()
 {
     id = count++;
     messageSystem.subscribe(Copium::Message::MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
-    PRINT("GAMEOBJECT ID: " << id);
 }
 
 GameObject::~GameObject()
@@ -63,7 +59,6 @@ GameObject::GameObject
     : name{ defaultGameObjName }, trans(_position, _rotation, _scale), parent{nullptr}, parentid{0}
 {
     id = count++;
-    PRINT("GAMEOBJECT ID: " << id);
 }
 
 void GameObject::addComponent(Component* component)
@@ -122,7 +117,7 @@ Transform GameObject::Trans() const {return trans;}
 void GameObject::set_name(const std::string& _name){ name = _name; }
 std::string GameObject::get_name() const{ return name; }
 
-void GameObject::set_id(GameObjectID& _id) { id = _id; }
+//void GameObject::set_id(GameObjectID& _id) { id = _id; }
 GameObjectID GameObject::get_id() const { return id; }
 
 void GameObject::set_ppid(GameObjectID& _id) { parentid = _id; }
@@ -206,7 +201,10 @@ bool GameObject::deserialize(rapidjson::Value& _value) {
 
 void GameObject::handleMessage(Copium::Message::MESSAGE_TYPE mType)
 {
+    PRINT("HANDLE ID: " << id);
+    using namespace Copium::Message;
     //MT_SCRIPTING_UPDATED
-
+    MESSAGE_CONTAINER::reflectCsGameObject.ID = id;
+    messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
 }
 

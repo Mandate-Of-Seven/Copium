@@ -100,49 +100,50 @@ namespace Copium {
 	}
 	GameObject* GameObjectFactory::build_gameobject(rapidjson::Value& _value) {
 
-		GameObject* go = new GameObject();
-		if (!go)
-			return nullptr;
+		//GameObject* go = new GameObject();
+		//if (!go)
+		//	return nullptr;
 
-		if (!go->deserialize(_value))
-		{
-			delete go;
-			return nullptr;
-		}
+		//if (!go->deserialize(_value))
+		//{
+		//	delete go;
+		//	return nullptr;
+		//}
 
-		if (_value.HasMember("Components")) 
-		{
-			rapidjson::Value& compArr = _value["Components"].GetArray();
-			for (rapidjson::Value::ValueIterator iter = compArr.Begin(); iter != compArr.End(); ++iter)
-			{
-				rapidjson::Value& component = *iter;
-				if (component.HasMember("Type")) 
-				{
-					Component* tmp = componentCreators[component["Type"].GetString()]->create(*go);
-					go->Components().push_back(tmp);
-					tmp->deserialize(component);
-				}
-			}
-		}
+		//if (_value.HasMember("Components")) 
+		//{
+		//	rapidjson::Value& compArr = _value["Components"].GetArray();
+		//	for (rapidjson::Value::ValueIterator iter = compArr.Begin(); iter != compArr.End(); ++iter)
+		//	{
+		//		rapidjson::Value& component = *iter;
+		//		if (component.HasMember("Type")) 
+		//		{
+		//			Component* tmp = componentCreators[component["Type"].GetString()]->create(*go);
+		//			go->Components().push_back(tmp);
+		//			tmp->deserialize(component);
+		//		}
+		//	}
+		//}
 
-		currentScene->add_gameobject(go);					
+		//currentScene->add_gameobject(go);					
 
-		//unsigned int childCount{ 0 };
-		// Deserialize children (if any)
-		if (_value.HasMember("Children")) {
+		////unsigned int childCount{ 0 };
+		//// Deserialize children (if any)
+		//if (_value.HasMember("Children")) {
 
-			rapidjson::Value& childArr = _value["Children"].GetArray();
-			for (rapidjson::Value::ValueIterator iter = childArr.Begin(); iter != childArr.End(); ++iter)
-			{
-				GameObject* cgo = build_gameobject(*iter);
-				go->attach_child(cgo);
-				//++childCount;
-			}
+		//	rapidjson::Value& childArr = _value["Children"].GetArray();
+		//	for (rapidjson::Value::ValueIterator iter = childArr.Begin(); iter != childArr.End(); ++iter)
+		//	{
+		//		GameObject* cgo = build_gameobject(*iter);
+		//		go->attach_child(cgo);
+		//		//++childCount;
+		//	}
 
-		}
+		//}
 
 		//std::cout << "No. of children:" << childCount << std::endl;
-		return go;
+		//return go;
+		return nullptr;
 	}
 	GameObject* GameObjectFactory::clone_gameobject(GameObject* _src)
 	{

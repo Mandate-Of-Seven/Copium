@@ -105,7 +105,7 @@ namespace Copium::Scripting
 		MonoMethod* mOnCollisionEnter;
 	};
 
-	CLASS_SYSTEM(ScriptingSystem)
+	CLASS_SYSTEM(ScriptingSystem), Message::IReceiver
 	{
 	public:
 		/**************************************************************************/
@@ -184,6 +184,8 @@ namespace Copium::Scripting
 		void invoke(MonoObject * mObj, MonoMethod * mMethod);
 
 		void handleMessage(Message::MESSAGE_TYPE mType);
+
+		void reflectGameObject(unsigned long _ID);
 	private:
 		void updateScriptClasses();
 

@@ -142,6 +142,7 @@ namespace Copium::Scripting
 		initMono();
 		registerScriptWrappers();
 		Thread::ThreadSystem::Instance()->addThread(new std::thread(&ScriptingSystem::recompileThreadWork,this));
+		messageSystem->subscribe(Message::MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT, this);
 	}
 
 	void ScriptingSystem::update()
@@ -254,7 +255,9 @@ namespace Copium::Scripting
 		mAssemblyImage = mono_assembly_get_image(mCoreAssembly);
 		//Update scriptClasses
 		updateScriptClasses();
-		mGameObject = mono_class_from_name(mAssemblyImage, "", "GameObject");
+		mGameObject = mono_class_from_name(mAssemblyImage, "CopiumEngine", "GameObject");
+		if (!mGameObject)
+			PRINT("GAMEOBJECT COULDNT BE LOADED");
 		messageSystem->dispatch(Message::MESSAGE_TYPE::MT_SCRIPTING_UPDATED);
 	}
 
@@ -367,10 +370,19 @@ namespace Copium::Scripting
 		return false;
 	}
 
-	void reflectGameObject(unsigned long _ID)
+	void ScriptingSystem::reflectGameObject(unsigned long _ID)
 	{
-		MonoMethod* ;
+		MonoMethod* mSetID = mono_class_get_method_from_name(mGameObject, "setID", 1);
+		MonoObject* mInstance = instantiateClass(mGameObject);
+		void* param = &_ID;
+		mono_runtime_invoke(mSetID, mInstance, &param, nullptr);
+	}
 
+	void ScriptingSystem::handleMessage(Message::MESSAGE_TYPE mType)
+	{
+		//MT_REFLECT_CS_GAMEOBJECT
+		PRINT("ID: " << Message::MESSAGE_CONTAINER::reflectCsGameObject.ID);
+		reflectGameObject(Message::MESSAGE_CONTAINER::reflectCsGameObject.ID);
 	}
 }
 

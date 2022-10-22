@@ -37,7 +37,6 @@ namespace Copium::Scripting::Compiler
 			if (p.path().extension() == ".cs")
 				command += " " + p.path().string();
 		}
-		PRINT(command);
 		system(command.c_str());
 	}
 }
