@@ -123,7 +123,7 @@ namespace Copium::Scripting
 	}
 
 	ScriptingSystem::ScriptingSystem() :
-		scriptFiles{ Copium::Files::FileSystem::Instance()->getFilesWithExtension(".cs") }
+		scriptFiles{ Copium::Files::FileSystem::Instance()->get_files_with_extension(".cs") }
 	{
 
 	}
@@ -318,8 +318,8 @@ namespace Copium::Scripting
 		bool startCompiling = false;
 		for (Files::File& scriptFile : scriptFiles)
 		{
-			scriptFile.updateModificationTiming();
-			if (scriptFile.Modified() && !startCompiling)
+			scriptFile.update_modification_timing();
+			if (scriptFile.is_modified() && !startCompiling)
 			{
 				PRINT(scriptFile.string() << " Changed! ");
 				PRINT("Compiling DLL....");

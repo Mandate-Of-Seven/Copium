@@ -22,6 +22,10 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Windows/input.h"
 
 #include "Editor/editor-system.h"
+#include "Files/assets-system.h"
+
+// Bean: remove this after NewManagerInstance is moved
+#include "GameObject/renderer-component.h"
 
 namespace Copium::Graphics
 {
@@ -59,13 +63,9 @@ namespace Copium::Graphics
 			samplers[i] = i;
 
 		glUniform1iv(loc, maxTextures, samplers);
-		
-		// Bean: Loading of textures to be done somewhere else
-		load_texture("Assets/textures/train-part-01.png");
-		load_texture("Assets/textures/train-part-02.png");
-		load_texture("Assets/textures/train-part-03.png");
-		load_texture("Assets/textures/train-part-04.png");
-		load_texture("Assets/textures/mock-up.png");
+
+		// Parse all textures loaded into the engine into the graphics 
+		parse_textures();
 
 		if (NewSceneManager::Instance())
 		{
@@ -93,7 +93,7 @@ namespace Copium::Graphics
 			movement_y -= dt;*/
 
 		// Create sprites
-		glm::vec2 mousePos{0}, centreOfScene{0}, mouseScenePos{0}, mouseToNDC{0}, worldSpace{0};
+		glm::vec2 mousePos{0}, centreOfScene{0}, mouseScenePos{0}, mouseToNDC{0}, worldNDC{0};
 		if (!Input::is_key_held(GLFW_KEY_LEFT_SHIFT) && Input::is_key_pressed(GLFW_KEY_C))
 		{
 			SpriteRenderer* sprite = new SpriteRenderer;
@@ -108,9 +108,9 @@ namespace Copium::Graphics
 			mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
 			mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
 			mouseToNDC *= zoom;
-			worldSpace = { mouseToNDC.x + cameraPos.x, mouseToNDC.y + cameraPos.y };
+			worldNDC = { mouseToNDC.x + cameraPos.x, mouseToNDC.y + cameraPos.y };
 
-			glm::vec3 pos = glm::vec3(worldSpace, 0.f);
+			glm::vec3 pos = glm::vec3(worldNDC, 0.f);
 
 			sprite->set_position(pos);
 			
@@ -145,8 +145,8 @@ namespace Copium::Graphics
 
 		/*PRINT("Mouse position: " << mousePos.x << ", " << mousePos.y);
 		PRINT("Centre position: " << centreOfScene.x << ", " << centreOfScene.y);
-		PRINT("NDC position: " << mouseToNDC.x << ", " << mouseToNDC.y);
-		PRINT("World space: " << worldSpace.x << ", " << worldSpace.y);*/
+		PRINT("Mouse NDC position: " << mouseToNDC.x << ", " << mouseToNDC.y);
+		PRINT("World NDC position: " << worldNDC.x << ", " << worldNDC.y);*/
 
 		if (Input::is_key_pressed(GLFW_KEY_Y))
 		{
@@ -229,27 +229,19 @@ namespace Copium::Graphics
 
 	}
 
-	// Load a texture into the game
-	void GraphicsSystem::load_texture(const std::string & _filePath)
+	// parse all textures into the game
+	void GraphicsSystem::parse_textures()
 	{
+		Copium::Files::AssetsSystem* assets = Copium::Files::AssetsSystem::Instance();
+		
 		// Check for texture slots
 		COPIUM_ASSERT(textureSlotIndex == maxTextures, "Max textures reached! Replace old textures!!");
 
-		// Generate texture
-		Texture texture(_filePath);
-
-		// Ensure its not a repeated texture
-		for (GLuint i = 1; i < textureSlotIndex; i++)
-		{
-			COPIUM_ASSERT(textureSlots[i] == texture.get_object_id(), "Duplicate textures!!");
-		}
-
 		// Assign the slot to the texture
-		textureSlots[textureSlotIndex++] = texture.get_object_id();
-
-		// Store the texture
-		textures.push_back(texture);
-		//PRINT("Texture: " << texture.get_object_id() << " loaded into slot: " << textureSlotIndex - 1);
+		for (GLuint i = 0; i < assets->get_textures()->size(); i++)
+		{
+			textureSlots[textureSlotIndex++] = assets->get_textures()[0][i].get_object_id();
+		}
 	}
 	
 	// Renders the objects in the engine in batches
@@ -257,10 +249,12 @@ namespace Copium::Graphics
 	{
 		// Binds the framebuffer
 		framebuffer.bind();
-
+		//glEnable(GL_DEPTH_TEST);
+		
 		// Clear the screen
 		glClearColor(0.f, 0.f, 0.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Draw the world using batch rendering
 		draw_world();
@@ -336,12 +330,13 @@ namespace Copium::Graphics
 	// Draw the world
 	void GraphicsSystem::draw_world()
 	{
+		// Bean: Should be under draw editor, along with gizmos ( Maybe replace draw_debug_info with draw_editor)
 		// Grid
 		renderer.begin_batch();
 		glm::vec4 color = { 1.f, 1.f, 1.f, 0.2f };
 		float start = -100.f, end = -start;
 		float numDivision = 24.f, iteration = (end - start) / numDivision;
-		for (float i = start; i <= end; i += iteration)
+		for (float i = start; i < end + iteration; i += iteration)
 		{
 			renderer.draw_line({ i, start }, { i, end }, color);
 			renderer.draw_line({ start, i }, { end, i }, color);
@@ -371,11 +366,39 @@ namespace Copium::Graphics
 		// Background
 		// Bean: scale should be the scale of the object, 
 		// texture scale should be separate and derived from the image dimensions
-		//renderer.draw_quad({ 0.f, 0.f , 0.f }, { 3.84f, 2.16f }, 0.f, textures[4].get_object_id());
+		// Scale = image scale / default scale(1024)
+		Copium::Files::AssetsSystem* assets = Copium::Files::AssetsSystem::Instance();
+		renderer.draw_quad({ 0.f, 0.f, 0.f }, { 3.84f, 2.16f }, 0.f, assets->get_textures()[0][0].get_object_id());
 		
-		color = { 0.f, 0.f, 0.f, 1.f };
-		renderer.draw_quad({ 0.f, 0.f , 0.f}, { 0.3f, 0.3f }, 0.f, color);
+		color = { 0.1f, 1.f, 0.1f, 1.f };
+		glm::vec2 worldNDC{ 0 };
+		Copium::Editor::EditorSystem* editor = Copium::Editor::EditorSystem::Instance();
+		glm::vec2 cameraPos = editor->get_camera()->get_position();
+		float zoom = editor->get_camera()->get_zoom();
+		worldNDC = { cameraPos.x, cameraPos.y };
+		glm::vec2 scale = { 0.01f, 0.01f };
+		scale *= zoom;
 
+		//PRINT("World NDC position: " << worldNDC.x << ", " << worldNDC.y);
+		// Bean: Temporary green dot in the centre of the scene
+		renderer.draw_quad({ worldNDC.x, worldNDC.y , 1.f}, scale, 0.f, color);
+
+		/*
+			Bean Theory:
+			For each gameobject, check if it has a renderer component
+				If it does:
+					Check if it is active
+						If not: Continue
+					Check if it has a spriteID of not 0 (default)
+						If it does:
+							Render sprite with color
+						Else
+							Render default sprite (white texture) with color
+				Else
+					Continue
+
+			Bean: To replace the following code with the Theory
+		*/
 		for (size_t i = 0; i < sprites.size(); i++)
 		{
 			/*PRINT(i + 1 << " : Sprite Data: " << sprites[i]->get_position().x << "," << sprites[i]->get_position().y
@@ -388,12 +411,14 @@ namespace Copium::Graphics
 
 			sprites[i]->set_position(pos);
 			sprites[i]->set_size(size);
-			sprites[i]->bind_texture(&textures[i%3]);
+
+			// Bean: Set sprite id should be done in the editor or via deserialization
+			sprites[i]->set_sprite_id(assets->get_textures()[0][i % 4 + 1].get_object_id());
 
 			if(textureSelector == 5) // Alpha Colored Square
 				renderer.draw_quad(pos, { 0.1f, 0.1f }, rotate, sprites[i]->get_color());
 			else
-				renderer.draw_quad(pos, size, rotate, sprites[i]->get_texture()->get_object_id());
+				renderer.draw_quad(pos, size, rotate, sprites[i]->get_sprite_id());
 		}
 
 		renderer.end_batch();

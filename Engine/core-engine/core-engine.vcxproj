@@ -105,14 +105,17 @@
     <ClCompile Include="src\Editor\editor-sceneview.cpp" />
     <ClCompile Include="src\Editor\editor-system.cpp" />
     <ClCompile Include="src\Editor\inspector.cpp" />
+    <ClCompile Include="src\Files\assets-system.cpp" />
     <ClCompile Include="src\Files\file-system.cpp" />
     <ClCompile Include="src\GameObject\component.cpp" />
     <ClCompile Include="src\GameObject\game-object-factory.cpp" />
     <ClCompile Include="src\GameObject\game-object.cpp" />
+    <ClCompile Include="src\GameObject\renderer-component.cpp" />
     <ClCompile Include="src\Graphics\framebuffer.cpp" />
     <ClCompile Include="src\Graphics\glslshader.cpp" />
     <ClCompile Include="src\Graphics\graphics-system.cpp" />
     <ClCompile Include="src\Graphics\renderer.cpp" />
+    <ClCompile Include="src\Graphics\sprite-renderer.cpp" />
     <ClCompile Include="src\Graphics\textures.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Math\math-library.cpp" />
@@ -168,7 +171,9 @@
     <ClInclude Include="src\Debugging\frame-rate-controller.h" />
     <ClInclude Include="src\Editor\editor-camera.h" />
     <ClInclude Include="src\Editor\editor-scene-hierarchy-list.h" />
+    <ClInclude Include="src\Files\assets-system.h" />
     <ClInclude Include="src\Files\file-system.h" />
+    <ClInclude Include="src\GameObject\renderer-component.h" />
     <ClInclude Include="src\Graphics\camera.h" />
     <ClInclude Include="src\Graphics\sprite-renderer.h" />
     <ClInclude Include="src\Utilities\thread-system.h" />

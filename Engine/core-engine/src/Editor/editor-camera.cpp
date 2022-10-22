@@ -22,12 +22,15 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <glm/gtx/quaternion.hpp>
 
 #include "Editor/editor-camera.h"
+#include "Editor/editor-system.h"
 
 namespace Copium::Editor
 {
-	void EditorCamera::init(float _aspectRatio, bool _rotation)
+	void EditorCamera::init(float _width, float _height, bool _rotation)
 	{
-		aspectRatio = _aspectRatio;
+		aspectRatio = _width / _height;
+		width = _width;
+		height = _height;
 		update_ortho_projection(aspectRatio, zoomLevel);
 	}
 
@@ -91,33 +94,73 @@ namespace Copium::Editor
 	void EditorCamera::mouse_controls()
 	{
 		glm::vec3 pos = get_position();
-		// Movement WASD
-		if(Input::is_key_held(GLFW_KEY_LEFT_CONTROL))
-		//if (Input::is_mousebutton_pressed(GLFW_MOUSE_BUTTON_RIGHT)) //cannot use rn
+
+		// Bean: shouldnt be necessary here
+		// Clamping camera within boundary
+		if (pos.x > 100.f)
+		{
+			focalPoint = glm::vec3(100.f, pos.y, 0.f);
+		}
+		if (pos.x < -100.f)
+		{
+			focalPoint = glm::vec3(-100.f, pos.y, 0.f);
+		}
+		if (pos.y > 100.f)
+		{
+			focalPoint = glm::vec3(pos.x, 100.f, 0.f);
+		}
+		if (pos.y < -100.f)
+		{
+			focalPoint = glm::vec3(pos.x, -100.f, 0.f);
+		}
+		
+		// Bean: This needs to be refactored to some function
+		// Calculate delta drag
+		EditorSceneView* sceneView = EditorSystem::Instance()->get_scene_view();
+		glm::vec2 scenePos = sceneView->get_position();
+		glm::vec2 sceneDim = sceneView->get_dimension();
+		glm::vec2 mousePos = { Input::get_mouseX(), Input::get_mouseY()};
+		glm::vec2 centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
+		glm::vec2 mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
+		glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
+		mouseToNDC *= zoomLevel;
+		glm::vec2 worldNDC = { mouseToNDC.x + pos.x, mouseToNDC.y + pos.y };
+		glm::vec2 delta = (worldNDC - mousePosition) * 4.f;
+		mousePosition = worldNDC;
+
+		// Movement using right click and drag
+		if (Input::get_input_instance()->mouseButtons[1] == GLFW_PRESS)
 		{
 			glm::vec2 speed = get_pan_speed();
-
-			// Bean: Zoomlevel should be positive
-			if (Input::is_key_held(GLFW_KEY_W)) // Up
-			{
-				focalPoint += get_up_direction() * 0.1f * speed.y * zoomLevel;
-			}
-			if (Input::is_key_held(GLFW_KEY_A)) // Left
-			{
-				focalPoint += -get_right_direction() * 0.1f * speed.x * zoomLevel;
-			}
-			if (Input::is_key_held(GLFW_KEY_S)) // Down
-			{
-				focalPoint += get_up_direction() * -0.1f * speed.y * zoomLevel;
-			}
-			if (Input::is_key_held(GLFW_KEY_D)) // Right
-			{
-				focalPoint += -get_right_direction() * -0.1f * speed.x * zoomLevel;
-			}
+			focalPoint += -get_up_direction() * delta.y * speed.y;
+			focalPoint += -get_right_direction() * delta.x * speed.x;
 		}
+		
+
+		//if (Input::is_key_held(GLFW_KEY_LEFT_CONTROL))
+		//{
+		//	glm::vec2 speed = get_pan_speed();
+		//	// Bean: Zoomlevel should be positive
+		//	if (Input::is_key_held(GLFW_KEY_W)) // Up
+		//	{
+		//		focalPoint += get_up_direction() * 0.1f * speed.y * zoomLevel;
+		//	}
+		//	if (Input::is_key_held(GLFW_KEY_A)) // Left
+		//	{
+		//		focalPoint += -get_right_direction() * 0.1f * speed.x * zoomLevel;
+		//	}
+		//	if (Input::is_key_held(GLFW_KEY_S)) // Down
+		//	{
+		//		focalPoint += get_up_direction() * -0.1f * speed.y * zoomLevel;
+		//	}
+		//	if (Input::is_key_held(GLFW_KEY_D)) // Right
+		//	{
+		//		focalPoint += -get_right_direction() * -0.1f * speed.x * zoomLevel;
+		//	}
+		//}
 
 		// Rotation
-		if (Input::is_key_held(GLFW_KEY_LEFT_ALT))
+		/*if (Input::is_key_held(GLFW_KEY_LEFT_ALT))
 		{
 			glm::vec2 mouse{ Input::get_mouseX(), Input::get_mouseY() };
 			glm::vec2 delta = (mouse - mousePosition) * 0.003f;
@@ -129,22 +172,16 @@ namespace Copium::Editor
 				yaw += yawSign * delta.x * 0.8f;
 				pitch += delta.y * 0.8f;
 			}
-		}
+		}*/
 
 		// Zoom In and Out
-		if (Input::is_key_held(GLFW_KEY_Z) && Input::is_key_held(GLFW_KEY_LEFT_SHIFT))
+		int scroll = (int) Input::get_mousescroll();
+		if (scroll)
 		{
-			// 0.01f to be changed to scoll
-			zoomLevel -= 0.01f * get_zoom_speed(); // Zoom In
+			zoomLevel -= scroll * 0.1f * get_zoom_speed(); // Zoom In
+
 			if (zoomLevel <= nearClip)
 				zoomLevel = nearClip;
-
-			update_ortho_projection(aspectRatio, zoomLevel);
-		}
-		else if (Input::is_key_held(GLFW_KEY_Z))
-		{
-			// -0.01f to be changed to scoll
-			zoomLevel -= -0.01f * get_zoom_speed(); // Zoom Out
 			if (zoomLevel >= farClip)
 				zoomLevel = farClip;
 
@@ -181,9 +218,9 @@ namespace Copium::Editor
 	{
 		glm::vec2 speed;
 		float x = std::min(width / 1000.f, 2.4f); // Max speed is 2.4
-		speed.x = 0.0366f * (x * x) - 0.1778f * x + 0.3021f;
+		speed.x = 0.04f * (x * x) - 0.1778f * x + 0.3f;
 		float y = std::min(height / 1000.f, 2.4f); // Max speed is 2.4
-		speed.y = 0.0366f * (y * y) - 0.1778f * y + 0.3021f;
+		speed.y = 0.04f * (y * y) - 0.1778f * y + 0.3f;
 		return speed;
 	}
 

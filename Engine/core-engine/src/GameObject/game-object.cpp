@@ -21,6 +21,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Messaging/message-system.h"
 #include "Scripting/scripting.h"
 
+#include "GameObject/renderer-component.h"
+
 //USING
 
 namespace 
@@ -78,7 +80,7 @@ void GameObject::addComponent(Component::Type componentType)
         PRINT("ADDED COLLIDER");
         break;
     case Component::Type::Renderer:
-        components.push_back(new RendererComponent());
+        components.push_back(new Copium::RendererComponent());
         PRINT("ADDED RENDERER");
         break;
     case Component::Type::Script:
