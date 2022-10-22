@@ -115,6 +115,8 @@ namespace Copium {
 		/*******************************************************************************/
 		GameObjectFactory& get_gof();
 
+		const Scene* get_current_scene();
+
 	private:
 		GameObjectFactory* gof;
 		Scene* currentScene;

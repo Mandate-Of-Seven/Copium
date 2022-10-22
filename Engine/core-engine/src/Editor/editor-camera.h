@@ -23,7 +23,7 @@ namespace Copium::Editor
 	class EditorCamera : public Camera
 	{
 	public:
-		void init(float _aspectRatio, bool _rotation = false);
+		void init(float _width, float _height, bool _rotation = false);
 		
 		void update();
 

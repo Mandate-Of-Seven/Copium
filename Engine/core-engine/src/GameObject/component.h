@@ -10,11 +10,8 @@
 \brief
     Declares Component Class to be added to GameObjects and its member functions
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
-
-#pragma once
-
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
@@ -59,6 +56,8 @@ class Component
         */
         /**************************************************************************/
         ComponentID const ID();
+
+        Component::Type get_type();
 
         const std::string& Name();
 
@@ -146,27 +145,6 @@ class Component
         //void deserialize(rapidjson::Value& _value);
     protected:
 
-    };
-
-    class RendererComponent : public Component
-    {
-    public:
-        /***************************************************************************/
-        /*!
-        \brief
-            Default constructor for renderer Components
-        */
-        /**************************************************************************/
-        RendererComponent(GameObject& _gameObj);
-
-        /***************************************************************************/
-        /*!
-        \brief
-            Deserialize this component's data from specified rapidjson value
-        */
-        /**************************************************************************/
-        //void deserialize(rapidjson::Value& _value);
-    protected:
     };
 
     class TransformComponent : public Component
@@ -319,51 +297,7 @@ class Component
             //std::cout << "Animator Creator destructed\n";
         }
     };
-    class RendererCreator : public ComponentCreator 
-    {
-    public:
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Default contructor for Renderer Creator
 
-        \return
-            void
-        */
-        /*******************************************************************************/
-        RendererCreator() 
-        {
-            std::cout << "Renderer registered\n";
-        }
-        /***************************************************************************/
-        /*!
-        \brief
-            Creates an Renderer Component
-
-        \return
-            if successful in creating an Renderer Component, return ptr to it
-            if there were errors in the process, return nullptr
-        */
-        /**************************************************************************/
-	    virtual Component* create(GameObject& _gameObj) {
-		    return new RendererComponent(_gameObj);
-	    }
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Destructor for Renderer Creator
-
-        \return
-            void
-        */
-        /*******************************************************************************/
-        ~RendererCreator()
-        {
-            //std::cout << "Renderer Creator destructed\n";
-        }
-    };
     class ColliderCreator : public ComponentCreator 
     {
     public:

@@ -19,8 +19,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <rttr/registration>
 #include <filesystem>
 
-namespace Copium {
-
+namespace Copium 
+{
 	GameObjectFactory::GameObjectFactory() : currentScene{ nullptr }
 	{
 		std::cout << "GOF ctor\n";
@@ -69,7 +69,7 @@ namespace Copium {
 		if (go->has_parent())
 			tmpPPID = _src.get_ppid();
 		go->set_ppid(tmpPPID);		// Parent ID
-		go->Trans(_src.Trans());	// Transform
+		//go->Trans(_src.Trans());	// Transform
 
 		// Components copy
 		for (std::list<Component*>::iterator it = _src.Components().begin(); it != _src.Components().end(); ++it)

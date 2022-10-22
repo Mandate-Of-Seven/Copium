@@ -44,7 +44,7 @@ glm::dvec3 Transform::glmRotation() const { return rotation.to_glm(); }
 void Transform::set_rotation(const Copium::Math::Vec3& _rotation) { rotation = _rotation; }
 
 const Copium::Math::Vec3& Transform::get_scale() { return scale; }
-glm::dvec3 Transform::glmScale() const { return position.to_glm(); }
+glm::dvec3 Transform::glmScale() const { return scale.to_glm(); }
 void Transform::set_scale(const Copium::Math::Vec3& _scale) { scale = _scale; }
 
 bool Transform::deserialize(rapidjson::Value& _value)
@@ -54,19 +54,19 @@ bool Transform::deserialize(rapidjson::Value& _value)
 		return false;
 	rapidjson::Value& _v = _value["Pos"].GetObj();
 	position.deserialize(_v);
-	//std::cout << "Position:" << position;
+	std::cout << "Position:" << position;
 
 	if (!_value.HasMember("Rot"))
 		return false;
 	_v = _value["Rot"].GetObj();
 	rotation.deserialize(_v);
-	//std::cout << "Rotation:" << rotation;
+	std::cout << "Rotation:" << rotation;
 
 	if (!_value.HasMember("Scale"))
 		return false;
 	_v = _value["Scale"].GetObj();
 	scale.deserialize(_v);
-	//std::cout << "Scale:" << scale;
+	std::cout << "Scale:" << scale;
 
 	return true;
 }

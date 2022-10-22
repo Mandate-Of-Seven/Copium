@@ -30,8 +30,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <mono/metadata/assembly.h>
 #include <mono/metadata/appdomain.h>
 #include <mono/metadata/threads.h>
-#include <memory>
-#include <queue>
 
 #define SECONDS_TO_RECOMPILE 5
 
@@ -132,7 +130,7 @@ namespace Copium::Scripting
 	}
 
 	ScriptingSystem::ScriptingSystem() :
-		scriptFiles{ Files::FileSystem::Instance()->getFilesWithExtension(".cs") }
+		scriptFiles{ Copium::Files::FileSystem::Instance()->get_files_with_extension(".cs") }
 	{
 
 	}
@@ -350,8 +348,8 @@ namespace Copium::Scripting
 		bool startCompiling = false;
 		for (Files::File& scriptFile : scriptFiles)
 		{
-			scriptFile.updateModificationTiming();
-			if (scriptFile.Modified() && !startCompiling)
+			scriptFile.update_modification_timing();
+			if (scriptFile.is_modified() && !startCompiling)
 			{
 				startCompiling = true;
 				Compiler::compileDll();

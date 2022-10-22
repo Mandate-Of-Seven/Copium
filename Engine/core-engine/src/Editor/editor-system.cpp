@@ -10,7 +10,7 @@
 \brief
 	This file holds the definition of functions for the editor.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 #include "Windows/windows-system.h"
@@ -19,6 +19,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "GameObject/game-object.h"
 #include "Editor/inspector.h"
 #include "Editor/ConsoleLog.h"
+#include "Editor/editor-scene-hierarchy-list.h"
 
 namespace Copium::Editor
 {
@@ -42,13 +43,13 @@ namespace Copium::Editor
 
 		Window::Inspector::init();
 		Window::EditorConsole::init();
-		//Window::Inspector::selectedGameObject = new GameObject();
+		Window::Hierarchy::init();
+		Window::Inspector::selectedGameObject = new GameObject();
 
 		sceneView.init();
 		
 		// Initialize a new editor camera
-		float aspectRatio = sceneView.get_width() / (float)sceneView.get_height();
-		camera.init(aspectRatio);
+		camera.init((float) sceneView.get_width(), (float) sceneView.get_height());
 	}
 
 	void EditorSystem::update()
@@ -66,6 +67,7 @@ namespace Copium::Editor
 		// All the editor layers
 		Window::Inspector::update();
 		Window::EditorConsole::update();
+		Window::Hierarchy::update();
 		sceneView.update();
 
 		// Editor Camera

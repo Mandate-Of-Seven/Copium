@@ -36,108 +36,6 @@ namespace
 namespace Copium
 {
 
-#pragma region Callbacks
-void InputSystem::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    (void)mods, scancode, window; // Bean: to prevent warning, remove later
-    if (action == GLFW_PRESS)
-    {
-        keys[key] = GLFW_PRESS;
-        //std::cout<<key << " some Key pressed" << std::endl;
-    }
-    else if (action == GLFW_REPEAT)
-    {
-        keys[key] = GLFW_REPEAT;
-        //std::cout << key<< " some Key repeatedly pressed" << std::endl;
-    }
-    else if (action == GLFW_RELEASE)
-    {
-        keys[key] = GLFW_RELEASE;
-        //std::cout<< key << " some Key released" << std::endl;
-    }
-}
-
-void InputSystem::mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
-{
-    (void)mods, window; // Bean: to prevent warning, remove later
-    int target = 0;
-    switch (button)
-    {
-    case GLFW_MOUSE_BUTTON_LEFT:
-        target = GLFW_MOUSE_BUTTON_LEFT;
-#ifdef _DEBUG               
-        std::cout << "Left mouse button ";
-#endif
-        break;
-
-    case GLFW_MOUSE_BUTTON_RIGHT:
-        target = GLFW_MOUSE_BUTTON_RIGHT;
-#ifdef _DEBUG           
-        std::cout << "Right mouse button ";
-#endif
-        break;
-
-    case GLFW_MOUSE_BUTTON_3:
-        target = GLFW_MOUSE_BUTTON_3;
-#ifdef _DEBUG           
-        std::cout << "Middle mouse button ";
-#endif
-        break;
-
-    case GLFW_MOUSE_BUTTON_4:
-        target = GLFW_MOUSE_BUTTON_4;
-#ifdef _DEBUG           
-        std::cout << "Mouse button 4 ";
-#endif
-        break;
-
-    case GLFW_MOUSE_BUTTON_5:
-        target = GLFW_MOUSE_BUTTON_5;
-#ifdef _DEBUG           
-        std::cout << "Mouse button 5 ";
-#endif
-        break;
-    }
-    switch (action)
-    {
-    case GLFW_PRESS:
-        mouseButtons[target] = 1;
-#ifdef _DEBUG
-        std::cout << "pressed!!!" << std::endl;
-#endif
-        break;
-
-    case GLFW_RELEASE:
-        mouseButtons[target] = 0;
-#ifdef _DEBUG
-        std::cout << "released!!!" << std::endl;
-#endif
-        break;
-    }
-}
-
-void InputSystem::mousescroll_callback(GLFWwindow* window, double xOffset, double yOffset)
-{
-    (void)window;
-    mouseScrollOffset = yOffset;
-
-    if (yOffset < 0)
-    {
-        std::cout << "scrolling down" << std::endl;
-    }
-    else if (yOffset > 0)
-    {
-        std::cout << "scrolling up" << std::endl;
-    }
-    else if (yOffset == 0 && !xOffset)
-    {
-        std::cout << "not scrolling" << std::endl;
-    }
-#ifdef _DEBUG
-    //std::cout << "Mouse scroll wheel offset: (" << xOffset << ", " << yOffset << ")" << std::endl;
-#endif
-}
-
 void InputSystem::mousepos_callback(GLFWwindow* window, double xPos, double yPos)
 {
     (void)window, xPos, yPos;
@@ -246,5 +144,94 @@ double InputSystem::get_mousescroll()
     return temp;
 }
 
+void InputSystem::mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    (void) mods, window; // Bean: to prevent warning, remove later
+    int target = 0;
+    switch (button) 
+    {
+        case GLFW_MOUSE_BUTTON_LEFT:
+            target = GLFW_MOUSE_BUTTON_LEFT;
+        #ifdef _DEBUG               
+            //std::cout << "Left mouse button ";
+        #endif
+        break;
+
+        case GLFW_MOUSE_BUTTON_RIGHT:
+            target = GLFW_MOUSE_BUTTON_RIGHT;
+        #ifdef _DEBUG           
+            //std::cout << "Right mouse button ";
+        #endif
+        break;
+
+        case GLFW_MOUSE_BUTTON_3:
+            target = GLFW_MOUSE_BUTTON_3;
+        #ifdef _DEBUG           
+            //std::cout << "Middle mouse button ";
+        #endif
+            break;
+
+        case GLFW_MOUSE_BUTTON_4:
+            target = GLFW_MOUSE_BUTTON_4;
+        #ifdef _DEBUG           
+             //std::cout << "Mouse button 4 ";
+        #endif
+            break;
+
+        case GLFW_MOUSE_BUTTON_5:
+            target = GLFW_MOUSE_BUTTON_5;
+        #ifdef _DEBUG           
+            //std::cout << "Mouse button 5 ";
+        #endif
+            break;
+    }
+    switch (action) 
+    {
+        case GLFW_PRESS:
+            get_input_instance()->mouseButtons[target] = 1;
+        #ifdef _DEBUG
+            //std::cout << "pressed!!!" << std::endl;
+        #endif
+        break;
+
+        case GLFW_RELEASE:
+            get_input_instance()->mouseButtons[target] = 0;
+        #ifdef _DEBUG
+            //std::cout << "released!!!" << std::endl;
+        #endif
+        break;
+    }
 }
+
+void InputSystem::mousescroll_callback(GLFWwindow* window, double xOffset, double yOffset)
+{
+    (void) window;
+    get_input_instance()->mouseScrollOffset = yOffset;
+
+    if (yOffset<0)
+    {
+        //std::cout << "scrolling down" << std::endl;
+    }else if (yOffset > 0)
+    {
+        //std::cout << "scrolling up" << std::endl;
+    }
+    else if(yOffset == 0 && !xOffset)
+    {
+        //std::cout << "not scrolling" << std::endl;
+    }
+    #ifdef _DEBUG
+        //std::cout << "Mouse scroll wheel offset: (" << xOffset << ", " << yOffset << ")" << std::endl;
+    #endif
+}
+
+void InputSystem::mousepos_callback(GLFWwindow* window, double xPos, double yPos)
+{
+    (void) window, xPos, yPos;
+    #ifdef _DEBUG
+        //std::cout << "Mouse cursor position: (" << xPos << ", " << yPos << ")" << std::endl;
+    #endif
+}
+
+}
+
 

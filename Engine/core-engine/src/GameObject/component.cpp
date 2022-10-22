@@ -10,11 +10,12 @@
 \brief
     Defines Component Class to be added to GameObjects and its member functions
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 #include "pch.h"
 #include "GameObject/component.h"
+#include "GameObject/renderer-component.h"
 
 std::map<Component::Type, const std::string> Component::componentMap
 {
@@ -32,6 +33,8 @@ void Component::destroy() {}
 
 ComponentID const Component::ID() { return id; }
 
+Component::Type Component::get_type() { return componentType; }
+
 void Component::deserialize(rapidjson::Value& _value)
 {
     std::cout << "default deserialization\n";
@@ -40,9 +43,6 @@ void Component::deserialize(rapidjson::Value& _value)
 bool Component::Enabled() const noexcept{ return enabled;}
 
 void Component::Enabled(bool _enabled) noexcept { enabled = _enabled; }
-
-
-
 
 ColliderComponent::ColliderComponent(GameObject& _gameObj) 
     :Component(_gameObj,Type::Collider) { std::cout << "COLLIDER CONS" << std::endl; }

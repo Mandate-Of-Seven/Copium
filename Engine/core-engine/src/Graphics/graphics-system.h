@@ -70,6 +70,7 @@ namespace Copium::Graphics
 
 		// Texture Properties
 		std::vector<GLuint>& get_texture_slots() { return textureSlots; }
+		void set_texture_slots(GLuint _index, GLuint _value) { textureSlots[_index] = _value; }
 
 		GLuint const get_texture_slot_index() { return textureSlotIndex; }
 		void const set_texture_slot_index(GLuint _index) { textureSlotIndex = _index; }
@@ -79,7 +80,7 @@ namespace Copium::Graphics
 
 		// Data Members
 		GLSLShader* const get_shader_program() { return shaderProgram; }
-		void add_sprite(SpriteRenderer * _sprite) { sprites.push_back(_sprite); }
+		void add_sprite(SpriteRenderer* _sprite) { sprites.push_back(_sprite); }
 		std::vector<SpriteRenderer*> const get_sprites() { return sprites; }
 		Framebuffer* get_framebuffer() { return &framebuffer; }
 
@@ -125,7 +126,7 @@ namespace Copium::Graphics
 			The file path to access to load the texture
 		*/
 		/***************************************************************************/
-		void load_texture(const std::string& _filePath);
+		void parse_textures();
 
 		/***************************************************************************/
 		/*!

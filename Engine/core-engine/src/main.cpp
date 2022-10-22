@@ -17,14 +17,14 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "pch.h"
 
 //PRECOMPILED HEADERS(Commonly used external libraries)
+#include "Windows/windows-system.h"
+#include "Windows/windows-input.h"
 #include "Editor/editor-system.h"
 #include "Scripting/scripting-system.h"
-#include "Scripting/scripting.h"
-#include "Windows/windows-system.h"
-#include "Audio/sound-system.h"
-#include "Windows/windows-input.h"
-#include "Debugging/logging.h"
 #include "Editor/ConsoleLog.h"
+#include "Scripting/scripting.h"
+#include "Debugging/logging.h"
+#include "Audio/sound-system.h"
 
 //State Manager
 #include "SceneManager/state-manager.h"

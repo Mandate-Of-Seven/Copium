@@ -13,11 +13,7 @@
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
-
-#pragma once
-
 #ifndef TRANSFORM_H
-
 #define TRANSFORM_H
 
 //INCLUDES

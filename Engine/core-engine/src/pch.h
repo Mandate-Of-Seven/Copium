@@ -12,7 +12,7 @@
 \brief
     Contains precompiled include to reduce build times
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #ifndef PCH_H
@@ -24,6 +24,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <list>
 #include <vector>
 #include <array>
+#include <queue>
 
 //IMGUI
 #include <imgui.h>
@@ -36,7 +37,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <iomanip>
 #include <fstream>
 
-#include <regex>
+#include <memory>
 #include <algorithm>
 
 //DEBUGGING

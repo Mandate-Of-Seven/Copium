@@ -16,7 +16,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #pragma once
 #include "CopiumCore/system-interface.h"
 #include "Windows/windows-system.h"
-#include "../Messaging/message-system.h"
+#include "Messaging/message-system.h"
+#include "Files/assets-system.h"
 #include "Editor/editor-system.h"
 #include "Scripting/scripting-system.h"
 #include "Physics/physics-system.h"
@@ -47,6 +48,7 @@ namespace Copium
 				Message::MessageSystem::Instance(),
 				Editor::EditorSystem::Instance(),
 				Files::FileSystem::Instance(),
+				Files::AssetsSystem::Instance(),
 				NewSceneManager::Instance(),
 				Physics::Physics::Instance(),
 				Graphics::GraphicsSystem::Instance(),

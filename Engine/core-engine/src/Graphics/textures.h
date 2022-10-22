@@ -32,6 +32,8 @@ namespace Copium::Graphics
 		*/
 		/***************************************************************************/
 		Texture(const std::string& _filePath);
+		
+		void init(const std::string& _filePath);
 
 		/***************************************************************************/
 		/*!
@@ -41,19 +43,19 @@ namespace Copium::Graphics
 		/***************************************************************************/
 		~Texture();
 
-		GLuint get_width() { return width; }
-		GLuint get_height() { return height; }
-		GLuint get_object_id() { return textureObjectID; }
+		unsigned int get_width() { return width; }
+		unsigned int get_height() { return height; }
+		unsigned int get_object_id() { return textureObjectID; }
 		std::string& get_file_path() { return filePath; }
 
 	private:
 		std::string filePath;
-		GLuint width = 0;
-		GLuint height = 0;
-		GLuint textureObjectID = 0; // To store the texture
+		unsigned int width = 0;
+		unsigned int height = 0;
+		unsigned int textureObjectID = 0; // To store the texture
 
-		GLenum internalFormat = 0;
-		GLenum dataFormat = 0;
+		unsigned int internalFormat = 0;
+		unsigned int dataFormat = 0;
 	};
 }
 
