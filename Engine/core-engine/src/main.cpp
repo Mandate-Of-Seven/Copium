@@ -40,6 +40,7 @@ namespace
     Copium::CopiumCore& copiumCore{ *Copium::CopiumCore::Instance()};
     Copium::SoundSystem& soundSystem{ *Copium::SoundSystem::Instance()};
     Copium::InputSystem& inputSystem { *Copium::InputSystem::Instance()};
+    Copium::Windows::WindowsSystem* windowsSystem = Copium::Windows::WindowsSystem::Instance();
 }
 
 ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -79,21 +80,14 @@ int main()
 
     init();
     copiumCore.init();
-    //init();
-
-    Copium::Windows::WindowsSystem* windowsSystem = Copium::Windows::WindowsSystem::Instance();
-
 
     SceneManager SM;
     Copium::FrameRateController frc(100.0);
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
     GameObject gObj;
-    Copium::ScriptComponent sComponent(gObj,"CSharpTesting");
-    //On reload assembly
-    //Condition to create a new gameObject in C#
-    //Make sure ID is the same as the one in C++
-    //Call C# function OnCreate
+    Copium::ScriptComponent sComponent(gObj);
+    sComponent.Name("CSharpTesting");
 
     // Engine Loop
     while (!glfwWindowShouldClose(windowsSystem->get_window()) && esCurrent != esQuit)
@@ -125,7 +119,7 @@ int main()
                     frc.start();
 
                     SM.update_scene();         //UPDATE STATE
-                    //sComponent.Awake();
+                    sComponent.Awake();
                     SM.draw_scene();           //DRAW STATE
                     copiumCore.update();
                     update();

@@ -11,7 +11,7 @@ namespace Copium::Scripting
 		void mono_add_internal_call(const char*, const void*);
 	}
 
-	const std::string CSScriptNamespace{ "CopiumEngine.CopiumScript/" };
+	const std::string CSScriptNamespace{ "CopiumEngine." };
 	#define Register(CLASS,METHOD) mono_add_internal_call((CSScriptNamespace+#CLASS+"::"+#METHOD).c_str(),METHOD)
 
 	#pragma region Input

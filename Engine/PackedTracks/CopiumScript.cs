@@ -15,13 +15,18 @@
 All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
+using System;
 
 namespace CopiumEngine
 {
     public class CopiumScript
     {
-        void OnCreate(ulong ID)
+        
+        virtual protected void OnCreate(ulong ID)
         {
+            Console.WriteLine("HELLO " + ID);
+            if (gameObject != null)
+                return;
             gameObject = GameObject.FindByID(ID);
             transform = gameObject.transform;
         }

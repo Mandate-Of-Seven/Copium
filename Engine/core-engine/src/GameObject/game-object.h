@@ -33,7 +33,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 //USING
 
-using GameObjectID = unsigned long;
+using GameObjectID = uint64_t;
 
 class GameObject final : public Copium::Message::IReceiver
 {

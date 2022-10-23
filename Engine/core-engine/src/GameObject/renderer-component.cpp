@@ -17,7 +17,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
-	RendererComponent::RendererComponent() :Component(Type::Renderer)
+	RendererComponent::RendererComponent(GameObject& _gameObj) :Component(_gameObj,Type::Renderer)
 	{
 		PRINT("\tRenderer Component constructed");
 	}

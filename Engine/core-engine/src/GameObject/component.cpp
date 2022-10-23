@@ -47,9 +47,6 @@ void Component::Enabled(bool _enabled) noexcept { enabled = _enabled; }
 ColliderComponent::ColliderComponent(GameObject& _gameObj) 
     :Component(_gameObj,Type::Collider) { std::cout << "COLLIDER CONS" << std::endl; }
 
-RendererComponent::RendererComponent(GameObject& _gameObj) 
-    :Component(_gameObj,Type::Renderer) { std::cout << "RENDERER CONS" << std::endl; }
-
 AnimatorComponent::AnimatorComponent(GameObject& _gameObj) 
     :Component(_gameObj,Type::Animator) { std::cout << "ANIMATOR CONS" << std::endl; }
 
@@ -58,6 +55,7 @@ TransformComponent::TransformComponent(GameObject& _gameObj)
 { 
     std::cout << "TRANSFORM CONS" << std::endl; 
 }
+
 void TransformComponent::deserialize(rapidjson::Value& _value)
 {
     t.deserialize(_value);

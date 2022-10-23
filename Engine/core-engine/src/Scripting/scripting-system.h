@@ -103,6 +103,7 @@ namespace Copium::Scripting
 		MonoMethod* mUpdate;
 		MonoMethod* mLateUpdate;
 		MonoMethod* mOnCollisionEnter;
+		MonoMethod* mOnCreate;
 	};
 
 	CLASS_SYSTEM(ScriptingSystem), Message::IReceiver
@@ -181,11 +182,11 @@ namespace Copium::Scripting
 		/**************************************************************************/
 		void shutdownMono();
 
-		void invoke(MonoObject * mObj, MonoMethod * mMethod);
+		void invoke(MonoObject * mObj, MonoMethod * mMethod, void** params = nullptr);
 
 		void handleMessage(Message::MESSAGE_TYPE mType);
 
-		void reflectGameObject(unsigned long _ID);
+		void reflectGameObject(uint64_t _ID);
 	private:
 		void updateScriptClasses();
 

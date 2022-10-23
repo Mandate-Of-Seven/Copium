@@ -17,6 +17,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "Math/math-library.h"
 #include "Windows/windows-input.h"
 #include "Windows/windows-system.h"
 
@@ -35,15 +36,6 @@ namespace
 
 namespace Copium
 {
-
-void InputSystem::mousepos_callback(GLFWwindow* window, double xPos, double yPos)
-{
-    (void)window, xPos, yPos;
-#ifdef _DEBUG
-    //std::cout << "Mouse cursor position: (" << xPos << ", " << yPos << ")" << std::endl;
-#endif
-}
-#pragma endregion
 
 void InputSystem::init()
 {
@@ -98,7 +90,7 @@ bool InputSystem::is_mousebutton_pressed(int button)
     return false;
 }
 
-std::pair<float, float> InputSystem::get_mouseposition()
+Copium::Math::Vec2 InputSystem::get_mouseposition()
 {
     auto& window = *windowsSystem->get_window();
     double xPos, yPos;
@@ -142,6 +134,26 @@ double InputSystem::get_mousescroll()
     double temp = mouseScrollOffset;
     mouseScrollOffset = 0;
     return temp;
+}
+
+void InputSystem::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    (void)mods, scancode, window; // Bean: to prevent warning, remove later
+    if (action == GLFW_PRESS)
+    {
+        keys[key] = GLFW_PRESS;
+        //std::cout<<key << " some Key pressed" << std::endl;
+    }
+    else if (action == GLFW_REPEAT)
+    {
+        keys[key] = GLFW_REPEAT;
+        //std::cout << key<< " some Key repeatedly pressed" << std::endl;
+    }
+    else if (action == GLFW_RELEASE)
+    {
+        keys[key] = GLFW_RELEASE;
+        //std::cout<< key << " some Key released" << std::endl;
+    }
 }
 
 void InputSystem::mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
@@ -188,14 +200,14 @@ void InputSystem::mousebutton_callback(GLFWwindow* window, int button, int actio
     switch (action) 
     {
         case GLFW_PRESS:
-            get_input_instance()->mouseButtons[target] = 1;
+            mouseButtons[target] = 1;
         #ifdef _DEBUG
             //std::cout << "pressed!!!" << std::endl;
         #endif
         break;
 
         case GLFW_RELEASE:
-            get_input_instance()->mouseButtons[target] = 0;
+            mouseButtons[target] = 0;
         #ifdef _DEBUG
             //std::cout << "released!!!" << std::endl;
         #endif
@@ -206,7 +218,7 @@ void InputSystem::mousebutton_callback(GLFWwindow* window, int button, int actio
 void InputSystem::mousescroll_callback(GLFWwindow* window, double xOffset, double yOffset)
 {
     (void) window;
-    get_input_instance()->mouseScrollOffset = yOffset;
+    mouseScrollOffset = yOffset;
 
     if (yOffset<0)
     {
@@ -231,6 +243,8 @@ void InputSystem::mousepos_callback(GLFWwindow* window, double xPos, double yPos
         //std::cout << "Mouse cursor position: (" << xPos << ", " << yPos << ")" << std::endl;
     #endif
 }
+
+
 
 }
 

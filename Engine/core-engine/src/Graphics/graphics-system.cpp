@@ -97,7 +97,8 @@ namespace Copium::Graphics
 			movement_y -= dt;*/
 
 		// Create sprites
-		glm::vec2 mousePos{0}, centreOfScene{0}, mouseScenePos{0}, mouseToNDC{0}, worldNDC{0};
+		Math::Vec2 mousePos{ 0,0 };
+		glm::vec2 centreOfScene{0}, mouseScenePos{0}, mouseToNDC{0}, worldNDC{0};
 		if (!inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_C))
 		{
 			SpriteRenderer* sprite = new SpriteRenderer;
@@ -107,7 +108,7 @@ namespace Copium::Graphics
 			glm::vec2 cameraPos = editor->get_camera()->get_position();
 			float zoom = editor->get_camera()->get_zoom();
 			// Mouse to scene view conversion
-			mousePos = { inputSystem.get_mouseposition().first , inputSystem.get_mouseposition().second };
+			mousePos = inputSystem.get_mouseposition();
 			centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
 			mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
 			mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };

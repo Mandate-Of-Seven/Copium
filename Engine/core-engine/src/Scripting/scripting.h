@@ -40,7 +40,7 @@ namespace Copium
 				Name of script to make an instance of
 		*/
 		/**************************************************************************/
-		ScriptComponent(GameObject& gameObj, const char* _name);
+		ScriptComponent(GameObject& gameObj);
 		/**************************************************************************/
 		/*!
 			\brief
@@ -57,6 +57,10 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		void handleMessage(Message::MESSAGE_TYPE mType);
+
+		const std::string& Name() const;
+
+		void Name(const std::string& _name);
 		/**************************************************************************/
 		/*!
 			\brief
@@ -93,9 +97,11 @@ namespace Copium
 		/**************************************************************************/
 		void OnCollisionEnter();
 	private:
+		void instantiate();
+
 		Scripting::ScriptClass* pScriptClass;
 		MonoObject* mObject;
-		const std::string name;
+		std::string name;
 		static Scripting::ScriptingSystem& sS;
     };
 }

@@ -65,7 +65,7 @@ namespace Copium
 
 			// Testing archetype registering at init
 			double start = glfwGetTime();
-			NewSceneManager::Instance()->get_gof().register_archetypes("Data/Archetypes");
+			//NewSceneManager::Instance()->get_gof().register_archetypes("Data/Archetypes");
 			double timeTaken = glfwGetTime() - start;
 			std::cout << "Time taken to register all archetypes: " << timeTaken << std::endl;
 			NewSceneManager::Instance()->get_gof().build_gameobject("Default");

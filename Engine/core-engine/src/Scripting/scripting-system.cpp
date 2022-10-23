@@ -48,6 +48,7 @@ namespace
 	MonoAssembly* mCoreAssembly{ nullptr };	//ASSEMBLY OF SCRIPTS.DLL
 	MonoImage* mAssemblyImage{ nullptr };	//LOADED IMAGE OF SCRIPTS.DLL
 	MonoClass* mGameObject{ nullptr };
+	MonoClass* mCopiumScript{ nullptr };
 }
 
 namespace Copium::Scripting
@@ -67,7 +68,21 @@ namespace Copium::Scripting
 		mStart{ mono_class_get_method_from_name(mClass, "Start", 0) },
 		mUpdate{ mono_class_get_method_from_name(mClass, "Update", 0) },
 		mLateUpdate{ mono_class_get_method_from_name(mClass, "LateUpdate", 0) },
-		mOnCollisionEnter{ mono_class_get_method_from_name(mClass, "OnCollisionEnter", 0) }{}
+		mOnCollisionEnter{ mono_class_get_method_from_name(mClass, "OnCollisionEnter", 0) },
+		mOnCreate{ mono_class_get_method_from_name(mCopiumScript, "OnCreate", 1) }
+		{
+			//void* propIter = nullptr;;
+			//MonoClass* raw_property = NULL;
+			////mono_class_get_methods
+			////raw_property = mono_class_get_methods(mmClasses[0], &propIter);
+			//mono_s
+			//PRINT("CLASSES OF " << name);
+			//while (raw_property = mono_class_get_nested_types(mClass, &propIter)) {
+			//	std::string methodName = mono_class_get_name(mClass);
+			//	PRINT(methodName);
+			//}
+		
+		}
 	#pragma endregion
 
 	// Gets the accessibility level of the given field
@@ -164,9 +179,9 @@ namespace Copium::Scripting
 
 	MonoObject* ScriptingSystem::instantiateClass(MonoClass* mClass)
 	{
-		if (mAppDomain != nullptr)
-			return mono_object_new(mAppDomain, mClass);
-		return nullptr;
+		if (mAppDomain == nullptr || mClass == nullptr)
+			return nullptr;
+		return mono_object_new(mAppDomain, mClass);
 	}
 
 	ScriptClass* ScriptingSystem::getScriptClass(const std::string& _name)
@@ -197,15 +212,17 @@ namespace Copium::Scripting
 		for (auto& keyVal : scriptClassMap)
 		{
 			MonoClass* mClass = mono_class_from_name(mAssemblyImage,"", keyVal.first.c_str());
+			//If the class was successfully created, meaning it exists in the assembly
+			delete keyVal.second;
 			if (mClass)
 			{
 				keyVal.second = new ScriptClass(keyVal.first,mClass);
 			}
+			//If the class was not found in the assembly, meaning it doesnt exist in the assembly
 			else
 			{
 				keyMask.push_back(it);
 			}
-			delete keyVal.second;
 			++it;
 		}
 		for (nameToClassIt& it : keyMask)
@@ -252,18 +269,19 @@ namespace Copium::Scripting
 		mCoreAssembly = loadAssembly(Files::Paths::scriptsAssemblyPath);
 		mAssemblyImage = mono_assembly_get_image(mCoreAssembly);
 		//Update scriptClasses
-		updateScriptClasses();
 		mGameObject = mono_class_from_name(mAssemblyImage, "CopiumEngine", "GameObject");
-		if (!mGameObject)
-			PRINT("GAMEOBJECT COULDNT BE LOADED");
+		mCopiumScript = mono_class_from_name(mAssemblyImage, "CopiumEngine", "CopiumScript");
+		updateScriptClasses();
+		if (!mCopiumScript)
+			PRINT("COPIUM SCRIPT CANT BE FOUND");
 		messageSystem->dispatch(Message::MESSAGE_TYPE::MT_SCRIPTING_UPDATED);
 	}
 
-	void ScriptingSystem::invoke(MonoObject* mObj, MonoMethod* mMethod)
+	void ScriptingSystem::invoke(MonoObject* mObj, MonoMethod* mMethod, void** params)
 	{
 		if (mObj && mMethod)
 		{
-			mono_runtime_invoke(mMethod, mObj, nullptr, nullptr);
+			mono_runtime_invoke(mMethod, mObj, params, nullptr);
 		}
 	}
 
@@ -368,24 +386,25 @@ namespace Copium::Scripting
 		return false;
 	}
 
-	void ScriptingSystem::reflectGameObject(unsigned long _ID)
+	void ScriptingSystem::reflectGameObject(uint64_t _ID)
 	{
 		MonoMethod* mSetID = mono_class_get_method_from_name(mGameObject, "setID", 1);
 		MonoObject* mInstance = instantiateClass(mGameObject);
 		void* param = &_ID;
+		mono_runtime_object_init(mInstance);
 		mono_runtime_invoke(mSetID, mInstance, &param, nullptr);
 	}
 
 	void ScriptingSystem::handleMessage(Message::MESSAGE_TYPE mType)
 	{
 		//MT_REFLECT_CS_GAMEOBJECT
-		PRINT("ID: " << Message::MESSAGE_CONTAINER::reflectCsGameObject.ID);
 		reflectGameObject(Message::MESSAGE_CONTAINER::reflectCsGameObject.ID);
 	}
 }
 
 //void* propIter = nullptr;
 //MonoClassField* raw_property = NULL;
+//mono_class_get_methods
 //raw_property = mono_class_get_fields(mmClasses[0], &propIter);
 //while (raw_property = mono_class_get_fields(mmClasses[0], &propIter)) {
 //	std::string name = mono_field_get_name(raw_property);
@@ -395,3 +414,4 @@ namespace Copium::Scripting
 //			PRINT("Name: " << name << " Type: String Access: Public");
 //	}
 //}
+

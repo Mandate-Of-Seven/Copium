@@ -24,7 +24,7 @@ namespace Copium
 	class RendererComponent : public Component
 	{
 	public:
-		RendererComponent();
+		RendererComponent(GameObject& _gameObj);
 
 		void deserialize(rapidjson::Value& _value);
 
@@ -59,9 +59,9 @@ namespace Copium
             if there were errors in the process, return nullptr
         */
         /**************************************************************************/
-        virtual Component* create()
+        virtual Component* create(GameObject& _gameObj)
         {
-            return new RendererComponent;
+            return new RendererComponent(_gameObj);
         }
         /*******************************************************************************
         /*!

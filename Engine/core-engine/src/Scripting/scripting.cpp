@@ -15,6 +15,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "pch.h"
 #include "Scripting/scripting.h"
+#include "GameObject/game-object.h"
 
 #define DEFAULT_SCRIPT_NAME "NewScript"
 #include <mono/jit/jit.h>
@@ -23,29 +24,51 @@ namespace Copium
 	using namespace Scripting;
 	ScriptingSystem& ScriptComponent::sS{ *ScriptingSystem::Instance() };
 
-	ScriptComponent::ScriptComponent(GameObject& _gameObj, const char* _name) :
-		mObject{ nullptr }, pScriptClass{ nullptr }, name{ _name }, Component(_gameObj, Component::Type::Script)
+	ScriptComponent::ScriptComponent(GameObject& _gameObj) :
+		mObject{ nullptr }, pScriptClass{ nullptr }, Component(_gameObj, Component::Type::Script), name{ DEFAULT_SCRIPT_NAME }
 	{
 		Message::MessageSystem::Instance()->subscribe(Message::MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
-		pScriptClass = sS.getScriptClass(_name);
-		if (pScriptClass != nullptr)
-		{
-			mObject = sS.instantiateClass(pScriptClass->mClass);
-		}
+		pScriptClass = sS.getScriptClass(name);
+		instantiate();
 	}
 
 	ScriptComponent::~ScriptComponent()
 	{
 	}
 
+	void ScriptComponent::instantiate()
+	{
+		if (pScriptClass != nullptr)
+		{
+			mObject = sS.instantiateClass(pScriptClass->mClass);
+			GameObjectID id = gameObj.get_id();
+			void* param = &id;
+			//mono_object_init
+			if (!pScriptClass->mOnCreate)
+			{
+				PRINT("ON CREATE DOES NOT EXIST");
+			}
+			sS.invoke(mObject, pScriptClass->mOnCreate, &param);
+		}
+	}
+
 	void ScriptComponent::handleMessage(Message::MESSAGE_TYPE mType)
 	{
 		//MT_SCRIPTING_UPDATED
 		pScriptClass = sS.getScriptClass(name.c_str());
-		//If mono class couldnt be loaded
-		if (pScriptClass == nullptr)
-			return;
-		mObject = sS.instantiateClass(pScriptClass->mClass);
+		instantiate();
+	}
+
+	const std::string& ScriptComponent::Name() const
+	{
+		return name;
+	}
+
+	void ScriptComponent::Name(const std::string& _name)
+	{
+		name = _name;		
+		pScriptClass = sS.getScriptClass(name);
+		instantiate();
 	}
 
 	void ScriptComponent::Awake()

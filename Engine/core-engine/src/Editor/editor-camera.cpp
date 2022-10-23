@@ -122,7 +122,7 @@ namespace Copium::Editor
 		EditorSceneView* sceneView = EditorSystem::Instance()->get_scene_view();
 		glm::vec2 scenePos = sceneView->get_position();
 		glm::vec2 sceneDim = sceneView->get_dimension();
-		glm::vec2 mousePos = { Input::get_mouseX(), Input::get_mouseY()};
+		Math::Vec2 mousePos = inputSystem.get_mouseposition();
 		glm::vec2 centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
 		glm::vec2 mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
 		glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
@@ -132,7 +132,7 @@ namespace Copium::Editor
 		mousePosition = worldNDC;
 
 		// Movement using right click and drag
-		if (Input::get_input_instance()->mouseButtons[1] == GLFW_PRESS)
+		if (inputSystem.is_mousebutton_pressed(1))
 		{
 			glm::vec2 speed = get_pan_speed();
 			focalPoint += -get_up_direction() * delta.y * speed.y;
@@ -178,7 +178,7 @@ namespace Copium::Editor
 		}*/
 
 		// Zoom In and Out
-		int scroll = (int) Input::get_mousescroll();
+		int scroll = (int) inputSystem.get_mousescroll();
 		if (scroll)
 		{
 			zoomLevel -= scroll * 0.1f * get_zoom_speed(); // Zoom In

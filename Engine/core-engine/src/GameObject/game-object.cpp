@@ -61,6 +61,7 @@ GameObject::GameObject
     : name{ defaultGameObjName }, trans(_position, _rotation, _scale), parent{nullptr}, parentid{0}
 {
     id = count++;
+    PRINT("GAMEOBJECT ID CONSTRUCTED: " << id);
 }
 
 void GameObject::addComponent(Component* component)
@@ -82,7 +83,7 @@ void GameObject::addComponent(Component::Type componentType)
         PRINT("ADDED COLLIDER");
         break;
     case Component::Type::Renderer:
-        components.push_back(new Copium::RendererComponent());
+        components.push_back(new Copium::RendererComponent(*this));
         PRINT("ADDED RENDERER");
         break;
     case Component::Type::Script:
@@ -223,7 +224,6 @@ bool GameObject::deserialize(rapidjson::Value& _value) {
 
 void GameObject::handleMessage(Copium::Message::MESSAGE_TYPE mType)
 {
-    PRINT("HANDLE ID: " << id);
     using namespace Copium::Message;
     //MT_SCRIPTING_UPDATED
     MESSAGE_CONTAINER::reflectCsGameObject.ID = id;

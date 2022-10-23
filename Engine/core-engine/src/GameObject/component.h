@@ -95,13 +95,13 @@ class Component
         /**************************************************************************/
         Component() = delete;
 
+        GameObject& gameObj;
         Component(GameObject& _gameObj, Component::Type _componentType);
     private:
         ComponentID id;                     //Id of component, local to gameObject
         Type componentType;                 //Type of component
         const bool allowMultiple = false;   //Can gameObjects only have one of this Component?
         bool enabled;
-        GameObject& gameObj;
 };
 
     class ColliderComponent : public Component

@@ -10,28 +10,23 @@ namespace CopiumEngine
         public Transform()
         {
             position = Vector3.zero;
-            transform = this;
         }
 
-        public Transform transform;
         public GameObject gameObject;
     }
     public class GameObject
     {
         GameObject()
         {
-            gameObject = this;
             transform = new Transform();
             transform.gameObject = this;
             gameObjects.Add(this);
         }
         public Transform transform;
-        public GameObject gameObject;
         public ulong ID;
         private void setID(ulong _ID)
         {
             ID = _ID;
-            Console.WriteLine("GameObject ID In C# was set to " + _ID);
         }
         private static List<GameObject> gameObjects = new List<GameObject>(25000);
         public static GameObject FindByID(ulong _ID)

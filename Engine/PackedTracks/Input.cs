@@ -18,7 +18,7 @@ namespace CopiumEngine
                 True if key was held
         */
         /*******************************************************************************/
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool GetKey(int keyCode);
 
         /*******************************************************************************
@@ -34,7 +34,7 @@ namespace CopiumEngine
                 True if key was just pressed
         */
         /*******************************************************************************/
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool GetKeyDown(int keyCode);
 
         /*******************************************************************************
@@ -50,7 +50,7 @@ namespace CopiumEngine
                 True if key was just released
         */
         /*******************************************************************************/
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool GetKeyUp(int keyCode);
     }
 }

@@ -14,7 +14,11 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 #pragma once
 #include "CopiumCore/system-interface.h"
-#include <utility>
+
+namespace Copium::Math 
+{
+	struct Vec2;
+}
 
 namespace Copium
 {
@@ -65,7 +69,7 @@ namespace Copium
 				the mouse position
 			*/
 			/**************************************************************************/
-			std::pair<float, float> get_mouseposition();
+			Copium::Math::Vec2 get_mouseposition();
 
 			/***************************************************************************/
 			/*!
