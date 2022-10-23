@@ -21,7 +21,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Windows/windows-input.h"
 #include "Editor/editor-system.h"
 #include "Scripting/scripting-system.h"
-#include "Editor/ConsoleLog.h"
+#include "Editor/editor-consolelog.h"
 #include "Scripting/scripting.h"
 #include "Debugging/logging.h"
 #include "Audio/sound-system.h"
@@ -211,7 +211,7 @@ void quitEngine()
     if (inputSystem.is_key_pressed(GLFW_KEY_Q)) 
     {
         change_enginestate(esQuit);
-        std::cout << "Q was pressed" << std::endl;
+        std::cout << "Copium has been huffed, Engine shutting down" << std::endl;
     }
 }
 

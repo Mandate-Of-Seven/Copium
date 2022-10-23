@@ -24,7 +24,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <spdlog/sinks/rotating_file_sink.h> // support for rotating file logging
 
 #include <memory>
-#include "Editor/ConsoleLog.h"
+#include "Editor/editor-consolelog.h"
 
 namespace Copium 
 {
