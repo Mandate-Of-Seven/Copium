@@ -46,10 +46,10 @@ namespace Copium
 				//Put in sequence of calls
 				Windows::WindowsSystem::Instance(),
 				Message::MessageSystem::Instance(),
-				Editor::EditorSystem::Instance(),
 				Files::FileSystem::Instance(),
 				Files::AssetsSystem::Instance(),
 				NewSceneManager::Instance(),
+				Editor::EditorSystem::Instance(),
 				Scripting::ScriptingSystem::Instance(),
 				Physics::Physics::Instance(),
 				//SoundSystem::Instance(),

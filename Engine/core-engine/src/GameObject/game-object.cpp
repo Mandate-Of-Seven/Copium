@@ -34,7 +34,7 @@ namespace
 GameObject::GameObject()
     : name{ defaultGameObjName }, id{0}, parent{nullptr}, parentid{0}
 {
-    
+
 }
 
 GameObject::~GameObject()
@@ -79,9 +79,9 @@ void GameObject::addComponent(Component::Type componentType)
         components.push_back(new ColliderComponent());
         PRINT("ADDED COLLIDER");
         break;
-    case Component::Type::Renderer:
+    case Component::Type::SpriteRenderer:
         components.push_back(new Copium::RendererComponent());
-        PRINT("ADDED RENDERER");
+        PRINT("ADDED SPRITE RENDERER");
         break;
     case Component::Type::Script:
         using namespace Copium::Message;
@@ -125,7 +125,7 @@ TransformComponent* GameObject::Trans()
             continue;
         }
 
-        std::cout << "Component Type:" << (*iter)->componentMap[tmp] << std::endl;
+        //std::cout << "Component Type:" << (*iter)->componentMap[tmp] << std::endl;
 
         if (tmp == Component::Type::Transform)
             return reinterpret_cast<TransformComponent*>(*iter);

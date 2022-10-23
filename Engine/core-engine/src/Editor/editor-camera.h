@@ -64,7 +64,7 @@ namespace Copium::Editor
 
 		float aspectRatio = 0.f;
 		float nearClip = -1.f, farClip = 100.f; // Orthographic projection's view box
-		float zoomLevel = 1.f; // To zoom in and out
+		float zoomLevel = 4.f; // To zoom in and out
 		float pitch = 0.f, yaw = 0.f; // For rotation
 		int width = 0, height = 0;
 

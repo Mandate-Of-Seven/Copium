@@ -21,8 +21,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Math/transform.h"
 
     //USING
-
     using ComponentID = unsigned char;
+    class GameObject;
 
     class Component
     {
@@ -31,7 +31,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
         {
             Animator,
             Collider,
-            Renderer,
+            SpriteRenderer,
             Script,
             Transform
         };
@@ -73,6 +73,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
         */
         /**************************************************************************/
         virtual void deserialize(rapidjson::Value& _value);
+
+        virtual void inspector_view(GameObject& _gameObject) = 0;
 
         virtual ~Component()
         {
@@ -122,6 +124,8 @@ private:
         /**************************************************************************/
         ColliderComponent();
 
+        void inspector_view(GameObject& _gameObject){};
+
         /***************************************************************************/
         /*!
         \brief
@@ -142,6 +146,8 @@ private:
         */
         /**************************************************************************/
         AnimatorComponent();
+
+        void inspector_view(GameObject& _gameObject){};
 
         /***************************************************************************/
         /*!
@@ -191,6 +197,8 @@ private:
         */
         /**************************************************************************/
         void deserialize(rapidjson::Value& _value);
+
+        void inspector_view(GameObject& _gameObject);
 
         /***************************************************************************/
         /*!

@@ -36,7 +36,12 @@ namespace Copium::Editor
 
 	void EditorCamera::update()
 	{
-		mouse_controls();
+		EditorSceneView* sceneView = EditorSystem::Instance()->get_scene_view();
+		if (sceneView->is_window_hovered())
+		{
+			mouse_controls();
+		}
+
 		update_view_matrix();
 	}
 
@@ -175,6 +180,7 @@ namespace Copium::Editor
 		}*/
 
 		// Zoom In and Out
+		
 		int scroll = (int) Input::get_mousescroll();
 		if (scroll)
 		{

@@ -15,9 +15,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef RENDERER_COMPONENT_H
 #define RENDERER_COMPONENT_H
 
-#include "GameObject/component.h"
-#include "Math/transform.h"
 #include "Graphics/sprite-renderer.h"
+#include "GameObject/game-object.h"
 
 namespace Copium
 {
@@ -27,6 +26,8 @@ namespace Copium
 		RendererComponent();
 
 		void deserialize(rapidjson::Value& _value);
+
+        void inspector_view(GameObject& _gameObject);
 
 		const Copium::Graphics::SpriteRenderer& get_sprite_renderer() const { return spriteRenderer; }
 		void set_sprite_renderer(const Copium::Graphics::SpriteRenderer& _spriteRenderer) { spriteRenderer = _spriteRenderer; }

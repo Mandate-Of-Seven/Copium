@@ -16,6 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************/
 #include <pch.h>
 #include "GameObject/game-object-factory.h"
+#include "GameObject/renderer-component.h"
 #include <rttr/registration>
 #include <filesystem>
 
@@ -24,8 +25,9 @@ namespace Copium
 	GameObjectFactory::GameObjectFactory() : currentScene{ nullptr }
 	{
 		std::cout << "GOF ctor\n";
-		add_component_creator(ANIMATOR_CREATOR, new AnimatorCreator());
 		add_component_creator("Transform", new TransformCreator());
+		add_component_creator(RENDERER_CREATOR, new RendererCreator());
+		add_component_creator(ANIMATOR_CREATOR, new AnimatorCreator());
 
 	}
 	GameObjectFactory::~GameObjectFactory()
@@ -125,6 +127,7 @@ namespace Copium
 				rapidjson::Value& component = *iter;
 				if (component.HasMember("Type")) 
 				{
+					PRINT("Component: " << component["Type"].GetString());
 					Component* tmp = componentCreators[component["Type"].GetString()]->create();
 					go->Components().push_back(tmp);
 					tmp->deserialize(component);

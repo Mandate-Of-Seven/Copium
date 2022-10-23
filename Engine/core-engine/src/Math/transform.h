@@ -17,7 +17,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #define TRANSFORM_H
 
 //INCLUDES
-#include "pch.h"
 #include <rapidjson/document.h>
 #include <Math/math-library.h>
 
