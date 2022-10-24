@@ -25,6 +25,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 // Bean: remove this after NewManagerInstance is moved
 #include "GameObject/renderer-component.h"
+#include "SceneManager/sm.h"
 
 namespace
 {
@@ -418,6 +419,27 @@ namespace Copium::Graphics
 				renderer.draw_quad(pos, { 0.1f, 0.1f }, rotate, sprites[i]->get_color());
 			else
 				renderer.draw_quad(pos, size, rotate, sprites[i]->get_sprite_id());
+		}
+
+		// Theory WIP
+		Copium::NewSceneManager* sm = Copium::NewSceneManager::Instance();
+		Scene* scene = sm->get_current_scene();
+		for (GameObject* gameObject : scene->get_gameobjectvector())
+		{
+			for (Component* component : gameObject->Components())
+			{
+				if (component->get_type() != Component::Type::SpriteRenderer)
+					continue;
+
+				if (!component->Enabled())
+					continue;
+
+				Transform t = gameObject->Trans()->get_transform();
+				RendererComponent * rc = reinterpret_cast<RendererComponent*>(component);
+				SpriteRenderer sr = rc->get_sprite_renderer();
+				glm::vec2 size(t.glmScale().x, t.glmScale().y);
+				renderer.draw_quad(t.glmPosition(), size, 0.f, sr.get_sprite_id());
+			}
 		}
 
 		renderer.end_batch();

@@ -27,7 +27,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 namespace Copium {
 
 	#define ANIMATOR_CREATOR "Animator"
-	#define RENDERER_CREATOR "Renderer"
+	#define RENDERER_CREATOR "Sprite Renderer"
 	#define COLLIDER_CREATOR "Collider"
 
 	class GameObjectCreator {

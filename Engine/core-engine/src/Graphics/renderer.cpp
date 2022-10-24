@@ -46,7 +46,7 @@ namespace Copium::Graphics
 		glTextureParameteri(texture, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTextureParameteri(texture, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-		GLuint color = 0xffffffff;
+		GLuint color = 0xFFFFFFFF;
 		glTextureSubImage2D(texture, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &color);
 
 		graphics->get_texture_slots().resize(maxTextures);
@@ -350,7 +350,8 @@ namespace Copium::Graphics
 			}
 		}
 
-		if (textureIndex == 0.f)
+		// Change texture index only if ID retrieved is more than 0 (0 is white texture)
+		if (textureIndex == 0.f && _textureID != 0)
 		{
 			textureIndex = (GLfloat) graphics->get_texture_slot_index();
 			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _textureID;

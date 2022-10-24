@@ -13,11 +13,7 @@
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
-
-#pragma once
-
 #ifndef GAME_OBJECT_H
-
 #define GAME_OBJECT_H
 
 //INCLUDES

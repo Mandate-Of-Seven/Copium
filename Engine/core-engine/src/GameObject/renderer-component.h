@@ -10,7 +10,7 @@
 \brief
 	This file holds the declaration of the Renderer component class.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #ifndef RENDERER_COMPONENT_H
 #define RENDERER_COMPONENT_H
@@ -18,6 +18,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "GameObject/component.h"
 #include "GameObject/transform-component.h"
 #include "Graphics/sprite-renderer.h"
+#include "GameObject/game-object.h"
 
 namespace Copium
 {
@@ -27,6 +28,8 @@ namespace Copium
 		RendererComponent(GameObject& _gameObj);
 
 		void deserialize(rapidjson::Value& _value);
+
+        void inspector_view(GameObject& _gameObject);
 
 		const Copium::Graphics::SpriteRenderer& get_sprite_renderer() const { return spriteRenderer; }
 		void set_sprite_renderer(const Copium::Graphics::SpriteRenderer& _spriteRenderer) { spriteRenderer = _spriteRenderer; }

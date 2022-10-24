@@ -96,6 +96,9 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		void OnCollisionEnter();
+
+		void inspector_view(GameObject& _gameObject){};
+
 	private:
 		void instantiate();
 

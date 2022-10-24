@@ -39,7 +39,12 @@ namespace Copium::Editor
 
 	void EditorCamera::update()
 	{
-		mouse_controls();
+		EditorSceneView* sceneView = EditorSystem::Instance()->get_scene_view();
+		if (sceneView->is_window_hovered())
+		{
+			mouse_controls();
+		}
+
 		update_view_matrix();
 	}
 

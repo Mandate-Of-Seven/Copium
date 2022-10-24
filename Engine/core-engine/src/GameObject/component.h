@@ -33,7 +33,7 @@ class Component
         {
             Animator,
             Collider,
-            Renderer,
+            SpriteRenderer,
             Script,
             Transform
         };
@@ -76,6 +76,8 @@ class Component
         /**************************************************************************/
         virtual void deserialize(rapidjson::Value& _value);
 
+        virtual void inspector_view(GameObject& _gameObject) = 0;
+
         virtual ~Component()
         {
             //std::cout << "default component dtor\n";
@@ -115,6 +117,8 @@ class Component
         /**************************************************************************/
         ColliderComponent(GameObject& _gameObj);
 
+        void inspector_view(GameObject& _gameObject){};
+
         /***************************************************************************/
         /*!
         \brief
@@ -135,6 +139,8 @@ class Component
         */
         /**************************************************************************/
         AnimatorComponent(GameObject& _gameObj);
+
+        void inspector_view(GameObject& _gameObject){};
 
         /***************************************************************************/
         /*!

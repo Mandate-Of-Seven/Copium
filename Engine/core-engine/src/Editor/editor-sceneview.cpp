@@ -33,12 +33,13 @@ namespace Copium::Editor
 	void EditorSceneView::update()
 	{
 		// Scene view settings
-		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoCollapse;
+		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoCollapse;
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
 
 		// Begin Scene View
-		ImGui::Begin("Scene View", 0, window_flags);
-		
+		ImGui::Begin("Scene View", 0, windowFlags);
+		windowFocused = ImGui::IsWindowFocused();
+		windowHovered = ImGui::IsWindowHovered();
 		scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
 
 		unsigned int textureID = graphics->get_framebuffer()->get_color_attachment_id();
@@ -51,11 +52,11 @@ namespace Copium::Editor
 		// End Scene View
 		
 		// Render stats settings
-		window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+		windowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
 		ImGui::SetNextWindowBgAlpha(0.35f); // Transparent background
 
 		// Begin Render Stats
-		ImGui::Begin("Renderer Stats", 0, window_flags);
+		ImGui::Begin("Renderer Stats", 0, windowFlags);
 
 		ImGui::Text("Render Stats");
 		char buffer[64];

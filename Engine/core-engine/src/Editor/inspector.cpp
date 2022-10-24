@@ -17,11 +17,12 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 #include "Editor/inspector.h"
 
+// Bean: Remove once we can auto select gameobjects
+#include "SceneManager/sm.h"
+
 
 #define BUTTON_HEIGHT 0.05 //Percent
 #define BUTTON_WIDTH .6 //Percent
-
-using Vector3 = glm::dvec3;
 
 namespace Window
 {
@@ -43,7 +44,8 @@ namespace Window
 
         void init()
         {
-            selectedGameObject = nullptr;
+            Copium::NewSceneManager* sm = Copium::NewSceneManager::Instance();
+            selectedGameObject = sm->get_current_scene()->get_gameobjectvector()[0];
             ImGuiIO& io = ImGui::GetIO();
             io.Fonts->AddFontFromFileTTF("assets\\fonts\\bahnschrift.ttf", 32.f);
             isOpen = true;
@@ -57,101 +59,37 @@ namespace Window
             if (!isOpen)
                 return;
 
-            
-
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
+            ImGui::SetNextWindowSizeConstraints(ImVec2(320, 180), ImVec2(FLT_MAX, FLT_MAX));
             if (!ImGui::Begin("Inspector", &isOpen)) 
             {
-
                 ImGui::End();
                 return;
             }
             if (selectedGameObject)
             {
-                //Transform trans{ selectedGameObject->Trans()->get_transform()};
-                //Vector3 position = trans.get_position().to_glm();
-                //Vector3 rotation = trans.get_rotation().to_glm();
-                //Vector3 scale = trans.get_scale().to_glm();
-                //if (ImGui::CollapsingHeader("Transform"))
-                //{
-                //    /*if (ImGui::BeginTable("split", 4))
-                //    {
-                //        ImGui::TableNextColumn();
-                //        ImGui::Text("Position");
+                // Set flags for tables
+                ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH 
+                    | ImGuiTableFlags_ScrollY;
+                ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);
 
-                //        ImGui::TableNextColumn();
-                //        ImGui::PushItemWidth(-1);
-                //        ImGui::Text("X"); ImGui::SameLine();
-                //        ImGui::InputDouble("posx", &position.x);
-                //        ImGui::PopItemWidth();
-
-                //        ImGui::TableNextColumn();
-                //        ImGui::PushItemWidth(-1);
-                //        ImGui::Text("Y"); ImGui::SameLine();
-                //        ImGui::InputDouble("posy", &position.y);
-                //        ImGui::PopItemWidth();
-
-                //        ImGui::TableNextColumn();
-                //        ImGui::PushItemWidth(-1);
-                //        ImGui::Text("Z"); ImGui::SameLine();
-                //        ImGui::InputDouble("posz", &position.z);
-                //        ImGui::PopItemWidth();
-
-                //        ImGui::TableNextColumn();
-                //        ImGui::Text("Rotation");
-
-                //        ImGui::TableNextColumn();
-                //        ImGui::PushItemWidth(-1);
-                //        ImGui::Text("X"); ImGui::SameLine();
-                //        ImGui::InputDouble("rotx", &rotation.x);
-                //        ImGui::PopItemWidth();
-
-                //        ImGui::TableNextColumn();
-                //        ImGui::PushItemWidth(-1);
-                //        ImGui::Text("Y"); ImGui::SameLine();
-                //        ImGui::InputDouble("roty", &rotation.y);
-                //        ImGui::PopItemWidth();
-
-                //        ImGui::TableNextColumn();
-                //        ImGui::PushItemWidth(-1);
-                //        ImGui::Text("Z"); ImGui::SameLine();
-                //        ImGui::InputDouble("rotz", &rotation.z);
-                //        ImGui::PopItemWidth();
-
-                //        ImGui::TableNextColumn();
-                //        ImGui::Text("Scale");
-
-                //        ImGui::TableNextColumn();
-                //        ImGui::PushItemWidth(-1);
-                //        ImGui::Text("X"); ImGui::SameLine();
-                //        ImGui::InputDouble("scalex", &scale.x);
-                //        ImGui::PopItemWidth();
-
-                //        ImGui::TableNextColumn();
-                //        ImGui::PushItemWidth(-1);
-                //        ImGui::Text("Y"); ImGui::SameLine();
-                //        ImGui::InputDouble("scaley", &scale.y);
-                //        ImGui::PopItemWidth();
-
-                //        ImGui::TableNextColumn();
-                //        ImGui::PushItemWidth(-1);
-                //        ImGui::Text("Z"); ImGui::SameLine();
-                //        ImGui::InputDouble("scalez", &scale.z);
-                //        ImGui::PopItemWidth();
-                //        ImGui::EndTable();
-                //    }*/
-                //}
-                //selectedGameObject->Trans({position, rotation, scale});
-                //ImVec2 buttonSize = ImGui::GetWindowSize();
-                //buttonSize.x *= (float) BUTTON_WIDTH;
-                //buttonSize.y *= (float) BUTTON_HEIGHT;
-
-                //for (Component *component : selectedGameObject->Components())
-                //{
-                //    if (ImGui::CollapsingHeader(component->Name().c_str()))
-                //    {
-                //        
-                //    }
-                //}
+                // A row represent a component
+                if (ImGui::BeginTable("Components", 1, tableFlags, ImVec2(0.f, 450.f)))
+                {
+                    ImGui::TableNextRow();
+                    ImGui::TableNextColumn();
+                    ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed;
+                    for (Component *component : selectedGameObject->Components())
+                    {
+                        if (ImGui::CollapsingHeader(component->Name().c_str(), nodeFlags))
+                        {
+                            component->inspector_view(*selectedGameObject);
+                        }
+                        ImGui::TableNextColumn();
+                    }
+                    ImGui::EndTable();
+                }
+                ImGui::PopStyleVar();
 
                 //AlignForWidth(buttonSize.x);
                 //if (ImGui::Button("Add Component", buttonSize)) {
@@ -159,6 +97,7 @@ namespace Window
                 //}
             }
             ImGui::End();
+            ImGui::PopStyleVar();
 
             if (isAddingComponent)
             {
@@ -179,6 +118,14 @@ namespace Window
                 }
                 ImGui::End();
             }
+
+            // For each component in gameobject, show in inspector
+
 		}
+
+        void exit()
+        {
+            selectedGameObject = nullptr;
+        }
 	}
 }

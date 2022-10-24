@@ -12,10 +12,11 @@
 	The GameObjectFactory is responsible for the creation, management and destruction of game objects. 
 	Note: The GameObjectFactory will also place the created gameobjects inside the current scene.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include <pch.h>
 #include "GameObject/game-object-factory.h"
+#include "GameObject/renderer-component.h"
 #include <rttr/registration>
 #include <filesystem>
 
@@ -110,20 +111,21 @@ namespace Copium
 		//	return nullptr;
 		//}
 
-		//if (_value.HasMember("Components")) 
-		//{
-		//	rapidjson::Value& compArr = _value["Components"].GetArray();
-		//	for (rapidjson::Value::ValueIterator iter = compArr.Begin(); iter != compArr.End(); ++iter)
-		//	{
-		//		rapidjson::Value& component = *iter;
-		//		if (component.HasMember("Type")) 
-		//		{
-		//			Component* tmp = componentCreators[component["Type"].GetString()]->create(*go);
-		//			go->Components().push_back(tmp);
-		//			tmp->deserialize(component);
-		//		}
-		//	}
-		//}
+		if (_value.HasMember("Components")) 
+		{
+			rapidjson::Value& compArr = _value["Components"].GetArray();
+			for (rapidjson::Value::ValueIterator iter = compArr.Begin(); iter != compArr.End(); ++iter)
+			{
+				rapidjson::Value& component = *iter;
+				if (component.HasMember("Type")) 
+				{
+					PRINT("Component: " << component["Type"].GetString());
+					Component* tmp = componentCreators[component["Type"].GetString()]->create();
+					go->Components().push_back(tmp);
+					tmp->deserialize(component);
+				}
+			}
+		}
 
 		//currentScene->add_gameobject(go);					
 

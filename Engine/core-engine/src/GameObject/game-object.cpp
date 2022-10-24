@@ -80,9 +80,9 @@ void GameObject::addComponent(Component::Type componentType)
         components.push_back(new ColliderComponent(*this));
         PRINT("ADDED COLLIDER");
         break;
-    case Component::Type::Renderer:
-        components.push_back(new Copium::RendererComponent(*this));
-        PRINT("ADDED RENDERER");
+    case Component::Type::SpriteRenderer:
+        components.push_back(new Copium::RendererComponent());
+        PRINT("ADDED SPRITE RENDERER");
         break;
     case Component::Type::Script:
         using namespace Copium::Message;
