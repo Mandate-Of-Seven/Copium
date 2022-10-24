@@ -14,8 +14,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 *****************************************************************************************/
 
 #include "pch.h"
+#include <rapidjson/document.h>
 #include "GameObject/component.h"
-#include "GameObject/renderer-component.h"
 
 std::map<Component::Type, const std::string> Component::componentMap
 {
@@ -49,17 +49,6 @@ ColliderComponent::ColliderComponent(GameObject& _gameObj)
 
 AnimatorComponent::AnimatorComponent(GameObject& _gameObj) 
     :Component(_gameObj,Type::Animator) { std::cout << "ANIMATOR CONS" << std::endl; }
-
-TransformComponent::TransformComponent(GameObject& _gameObj) 
-    :Component(_gameObj,Type::Transform)
-{ 
-    std::cout << "TRANSFORM CONS" << std::endl; 
-}
-
-void TransformComponent::deserialize(rapidjson::Value& _value)
-{
-    t.deserialize(_value);
-}
 
 const std::string& Component::Name()
 {

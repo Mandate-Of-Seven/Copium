@@ -14,7 +14,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 *****************************************************************************************/
 #include "pch.h"
 #include <Editor/editor-consolelog.h>
-#include "Debugging/logging.h"
 
 namespace Window
 {

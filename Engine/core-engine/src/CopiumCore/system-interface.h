@@ -74,7 +74,7 @@ namespace Copium
         Pure virtual class for systems to implement
     */
     /**************************************************************************/
-    class ISystem
+    class ISystem 
     {
     public:
         /**************************************************************************/

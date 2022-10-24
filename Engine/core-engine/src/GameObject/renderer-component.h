@@ -16,7 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define RENDERER_COMPONENT_H
 
 #include "GameObject/component.h"
-#include "Math/transform.h"
+#include "GameObject/transform-component.h"
 #include "Graphics/sprite-renderer.h"
 
 namespace Copium

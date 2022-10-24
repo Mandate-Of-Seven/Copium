@@ -25,14 +25,12 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <list>
 #include <string>
 
-#include "Messaging/message-types.h"
 #include "Messaging/message-system.h"
-#include "GameObject/component.h"
-#include "Math/transform.h"
 #include <rapidjson/document.h>
+#include "Math/math-library.h"
+#include "GameObject/transform-component.h"
 
 //USING
-
 using GameObjectID = uint64_t;
 
 class GameObject final : public Copium::Message::IReceiver
@@ -43,20 +41,12 @@ private:
     static GameObjectID count;
     std::list<Component*> components;   //Components for gameObject
     std::string name;                   //Name of gameObject
-    Transform trans;                    //Transform of gameObject
+    TransformComponent transform;
     GameObject* parent;                 //Pointer to this gameObject's parent
     std::list<GameObject*> children;    //List of pointers to this gameObject's children
 
 public:
     GameObject& operator=(GameObject&) = delete;
-
-    /***************************************************************************/
-    /*!
-    \brief
-        Default constructor, initializes Transform, name, id
-    */
-    /**************************************************************************/
-    GameObject();
 
     /***************************************************************************/
     /*!
@@ -70,7 +60,10 @@ public:
         Scale of transform to initialize with
     */
     /**************************************************************************/
-    GameObject(Copium::Math::Vec3 _position, Copium::Math::Vec3 _rotation, Copium::Math::Vec3 _scale);
+    GameObject(
+        Copium::Math::Vec3 _position = { 0,0,0 },
+        Copium::Math::Vec3 _rotation = { 0,0,0 },
+        Copium::Math::Vec3 _scale = {1,1,1});
 
     /***************************************************************************/
     /*!
@@ -81,6 +74,13 @@ public:
     */
     /**************************************************************************/
     void addComponent(Component* component);
+
+    template <typename T>
+    void addComponent()
+    {
+        static_assert(std::is_base_of<Component, T>::value);
+        components.push_back(new T(*this));
+    }
 
     /***************************************************************************/
     /*!
@@ -117,22 +117,12 @@ public:
     /***************************************************************************/
     /*!
     \brief
-        Setter for gameObject Transform
-    \param _trans
-        Transform to copy values from into gameObject
-    */
-    /**************************************************************************/
-    void Trans(Transform _trans);
-
-    /***************************************************************************/
-    /*!
-    \brief
         Getter for gameObject Transform
     \return
         Return a copy transform of gameObject
     */
     /**************************************************************************/
-    TransformComponent* Trans();
+    TransformComponent& Transform();
 
     /*******************************************************************************
     /*!

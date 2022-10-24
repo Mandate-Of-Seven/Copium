@@ -42,7 +42,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <algorithm>
 
 //DEBUGGING
-#include "Debugging/logging.h"
+#include "Debugging/logging-system.h"
 
 #define PRINT(str) std::cout << str << std::endl
 

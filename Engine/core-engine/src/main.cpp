@@ -23,8 +23,10 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scripting/scripting-system.h"
 #include "Editor/editor-consolelog.h"
 #include "Scripting/scripting.h"
-#include "Debugging/logging.h"
+#include "Debugging/logging-system.h"
 #include "Audio/sound-system.h"
+#include "SceneManager/sm.h"
+#include "GameObject/component.h"
 
 //State Manager
 #include "SceneManager/state-manager.h"
@@ -41,6 +43,7 @@ namespace
     Copium::SoundSystem& soundSystem{ *Copium::SoundSystem::Instance()};
     Copium::InputSystem& inputSystem { *Copium::InputSystem::Instance()};
     Copium::Windows::WindowsSystem* windowsSystem = Copium::Windows::WindowsSystem::Instance();
+    Copium::NewSceneManager* sceneManager = Copium::NewSceneManager::Instance();
 }
 
 ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -85,7 +88,9 @@ int main()
     Copium::FrameRateController frc(100.0);
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
-    GameObject gObj;
+    GameObject& gObj = *sceneManager->get_gof().build_gameobject();
+    gObj.Transform().position =  Copium::Math::Vec3(100,100,100);
+    gObj.addComponent<AnimatorComponent>();
     Copium::ScriptComponent sComponent(gObj);
     sComponent.Name("CSharpTesting");
 
@@ -119,11 +124,11 @@ int main()
                     frc.start();
 
                     SM.update_scene();         //UPDATE STATE
-                    sComponent.Awake();
                     SM.draw_scene();           //DRAW STATE
                     copiumCore.update();
                     update();
-
+                    sComponent.Awake();
+ 
                     if (esCurrent == esQuit)
                         SM.change_scene(gsQuit);
 
@@ -155,7 +160,7 @@ int main()
 /**************************************************************************/
 static void init()
 {
-    Copium::Log::init();
+
 }
 
 /***************************************************************************/

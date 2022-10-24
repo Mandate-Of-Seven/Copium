@@ -27,6 +27,17 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "../Windows/windows-system.h"
 
 namespace Copium {
+	GameObject* NewSceneManager::findGameObjByID(GameObjectID _ID)
+	{
+		for (GameObject* pGameObj : currentScene->get_gameobjectvector())
+		{
+			if (pGameObj->get_id() == _ID)
+			{
+				return pGameObj;
+			}
+		}
+		return nullptr;
+	}
 
 	NewSceneManager::NewSceneManager() : gof{nullptr}, currentScene{nullptr}
 	{
@@ -69,16 +80,14 @@ namespace Copium {
 		for (int i = 0; i < currentScene->get_gameobjcount(); i++)
 		{
 			Copium::Graphics::SpriteRenderer * sprite = new Copium::Graphics::SpriteRenderer;
-			TransformComponent* tmp = currentScene->get_gameobjectvector()[i]->Trans();
-			if (!tmp)
-				continue;
+			TransformComponent& tmp = currentScene->get_gameobjectvector()[i]->Transform();
 
-			glm::vec3 pos = tmp->get_transform().glmPosition();
+			glm::vec3 pos = tmp.glmPosition();
 			sprite->set_position(pos);
 
 			PRINT("Coords: " << pos.x << ", " << pos.y);
 
-			glm::vec3 size = tmp->get_transform().glmScale();
+			glm::vec3 size = tmp.glmScale();
 			sprite->set_size(glm::vec2(size.x, size.y));
 
 			PRINT("Size: " << size.x << ", " << size.y);

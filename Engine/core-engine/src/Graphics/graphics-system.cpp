@@ -70,12 +70,6 @@ namespace Copium::Graphics
 
 		// Parse all textures loaded into the engine into the graphics 
 		parse_textures();
-
-		if (NewSceneManager::Instance())
-		{
-			NewSceneManager::Instance()->get_gof().add_component_creator(RENDERER_CREATOR, new RendererCreator);
-		}
-
 	}
 
 	void GraphicsSystem::update()

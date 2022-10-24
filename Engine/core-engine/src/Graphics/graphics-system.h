@@ -25,7 +25,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Graphics/framebuffer.h"
 #include "Graphics/renderer.h"
 
-#include "SceneManager/sm.h"
+#include "SceneManager/scene-manager.h"
 
 namespace Copium::Graphics
 {

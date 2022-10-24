@@ -41,7 +41,10 @@
     <Compile Include="Debug.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="Input.cs" />
+    <Compile Include="InternalCalls.cs" />
+    <Compile Include="KeyCode.cs" />
     <Compile Include="Math.cs" />
+    <Compile Include="Transform.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

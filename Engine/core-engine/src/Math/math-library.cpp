@@ -105,9 +105,6 @@ namespace Copium::Math
 		return Vec2(-x, -y);
 	}
 
-	// Accessor Functions
-	double Vec2::X() const { return x; }
-	double Vec2::Y() const { return y; }
 	glm::dvec2 Vec2::to_glm() const
 	{
 		return glm::vec2(x, y);
@@ -116,29 +113,29 @@ namespace Copium::Math
 	// Vec2 Binary Operators
 	Vec2 operator+ (const Vec2& _lhs, const Vec2& _rhs)
 	{
-		return Vec2(_lhs.X() + _rhs.X(), _lhs.Y() + _rhs.Y());
+		return Vec2(_lhs.x + _rhs.x, _lhs.y + _rhs.y);
 	}
 	Vec2 operator- (const Vec2& _lhs, const Vec2& _rhs)
 	{
-		return Vec2(_lhs.X() - _rhs.X(), _lhs.Y() - _rhs.Y());
+		return Vec2(_lhs.x - _rhs.x, _lhs.y - _rhs.y);
 	}
 	Vec2 operator* (const Vec2& _lhs, double _rhs)
 	{
-		return Vec2(_lhs.X() * _rhs, _lhs.Y() * _rhs);
+		return Vec2(_lhs.x * _rhs, _lhs.y * _rhs);
 	}
 	Vec2 operator* (double _lhs, const Vec2& _rhs)
 	{
-		return Vec2(_lhs * _rhs.X(), _lhs * _rhs.Y());
+		return Vec2(_lhs * _rhs.x, _lhs * _rhs.y);
 	}
 	Vec2 operator/ (const Vec2& _lhs, double _rhs)
 	{
-		return Vec2(_lhs.X() / _rhs, _lhs.Y() / _rhs);
+		return Vec2(_lhs.x / _rhs, _lhs.y / _rhs);
 	}
 
 	// Vec2 Functions
 	void vec2_normalize(Vec2& _result, const Vec2& _src)
 	{
-		Vec2 v(_src.X() / vec2_length(_src), _src.Y() / vec2_length(_src));
+		Vec2 v(_src.x / vec2_length(_src), _src.y / vec2_length(_src));
 		_result = v;
 
 	}
@@ -148,29 +145,29 @@ namespace Copium::Math
 	}
 	double vec2_squarelength(const Vec2& _v)
 	{
-		return (_v.X()*_v.X() + _v.Y()*_v.Y());
+		return (_v.x*_v.x + _v.y*_v.y);
 	}
 	double vec2_distance(const Vec2& _v1, const Vec2& _v2)
 	{
-		Vec2 v(_v1.X() - _v2.X(), _v1.Y() - _v2.Y());
+		Vec2 v(_v1.x - _v2.x, _v1.y - _v2.y);
 		return vec2_length(v);
 	}
 	double vec2_squaredistance(const Vec2& _v1, const Vec2& _v2)
 	{
-		Vec2 v(_v1.X() - _v2.X(), _v1.Y() - _v2.Y());
+		Vec2 v(_v1.x - _v2.x, _v1.y - _v2.y);
 		return vec2_squarelength(v);
 	}
 	double vec2_dotproduct(const Vec2& _v1, const Vec2& _v2)
 	{
-		return (_v1.X() * _v2.X() + _v1.Y() * _v2.Y());
+		return (_v1.x * _v2.x + _v1.y * _v2.y);
 	}
 	double vec2_crossproductmag(const Vec2& _v1, const Vec2& _v2)
 	{
-		return (_v1.X() * _v2.Y() - _v1.Y() * _v2.X());
+		return (_v1.x * _v2.y - _v1.y * _v2.x);
 	}
 	std::ostream& operator<<(std::ostream& _os, const Vec2& _v) 
 	{
-		_os << "x:" << _v.X() << " " << "y:" << _v.Y() << std::endl;
+		_os << "x:" << _v.x << " " << "y:" << _v.y << std::endl;
 		return _os;
 	}
 	bool Vec2::deserialize(rapidjson::Value& _value	)
@@ -240,11 +237,6 @@ namespace Copium::Math
 		return Vec3(-x, -y, -z);
 	}
 
-	// Vec3 Accessor functions
-	double Vec3::X() const { return x; }
-	double Vec3::Y() const { return y; }
-	double Vec3::Z() const { return z; }
-
 	glm::dvec3 Vec3::to_glm() const
 	{
 		return glm::vec3(x, y, z);
@@ -254,29 +246,29 @@ namespace Copium::Math
 	// Vec3 Binary Operators
 	Vec3 operator+ (const Vec3& _lhs, const Vec3& _rhs)
 	{
-		return Vec3(_lhs.X() + _rhs.X(), _lhs.Y() + _rhs.Y(), _lhs.Z() + _rhs.Z());
+		return Vec3(_lhs.x + _rhs.x, _lhs.y + _rhs.y, _lhs.z + _rhs.z);
 	}
 	Vec3 operator- (const Vec3& _lhs, const Vec3& _rhs)
 	{
-		return Vec3(_lhs.X() - _rhs.X(), _lhs.Y() - _rhs.Y(), _lhs.Z() - _rhs.Z());
+		return Vec3(_lhs.x - _rhs.x, _lhs.y - _rhs.y, _lhs.z - _rhs.z);
 	}
 	Vec3 operator* (const Vec3& _lhs, double _rhs)
 	{
-		return Vec3(_lhs.X() * _rhs, _lhs.Y() * _rhs, _lhs.Z() * _rhs);
+		return Vec3(_lhs.x * _rhs, _lhs.y * _rhs, _lhs.z * _rhs);
 	}
 	Vec3 operator* (double _lhs, const Vec3& _rhs)
 	{
-		return Vec3(_rhs.X() * _lhs, _rhs.Y() * _lhs, _rhs.Z() * _lhs);
+		return Vec3(_rhs.x * _lhs, _rhs.y * _lhs, _rhs.z * _lhs);
 	}
 	Vec3 operator/ (const Vec3& _lhs, double _rhs)
 	{
-		return Vec3(_lhs.X() / _rhs, _lhs.Y() / _rhs, _lhs.Z() / _rhs);
+		return Vec3(_lhs.x / _rhs, _lhs.y / _rhs, _lhs.z / _rhs);
 	}
 
 	// Vec3 Functions
 	void vec3_normalize(Vec3& _result, const Vec3& _src)
 	{
-		Vec3 v(_src.X() / vec3_length(_src), _src.Y() / vec3_length(_src), _src.Z() / vec3_length(_src));
+		Vec3 v(_src.x / vec3_length(_src), _src.y / vec3_length(_src), _src.z / vec3_length(_src));
 		_result = v;
 	}
 	double vec3_length(const Vec3& _v)
@@ -288,35 +280,35 @@ namespace Copium::Math
 	double vec3_squarelength(const Vec3& _v)
 	{
 		double d;
-		d = _v.X() * _v.X() + _v.Y() * _v.Y() + _v.Z() * _v.Z();
+		d = _v.x * _v.x + _v.y * _v.y + _v.z * _v.z;
 		return d;
 	}
 	double vec3_distance(const Vec3& _v1, const Vec3& _v2)
 	{
-		Vec3 v(_v1.X() - _v2.X(), _v1.Y() - _v2.Y(), _v1.Z() - _v2.Z());
+		Vec3 v(_v1.x - _v2.x, _v1.y - _v2.y, _v1.z - _v2.z);
 		return vec3_length(v);
 	}
 	double vec3_squaredistance(const Vec3& _v1, const Vec3& _v2)
 	{
-		Vec3 v(_v1.X() - _v2.X(), _v1.Y() - _v2.Y(), _v1.Z() - _v2.Z());
+		Vec3 v(_v1.x - _v2.x, _v1.y - _v2.y, _v1.z - _v2.z);
 		return vec3_squarelength(v);
 	}
 	double vec3_dotproduct(const Vec3& _v1, const Vec3& _v2)
 	{
-		double d = _v1.X() * _v2.X() + _v1.Y() * _v2.Y() + _v1.Z() * _v2.Z();
+		double d = _v1.x * _v2.x + _v1.y * _v2.y + _v1.z * _v2.z;
 		return d;
 	}
 	Vec3 vec3_crossproduct(const Vec3& _v1, const Vec3& _v2)
 	{
 		double vx, vy, vz;
-		vx = _v1.Y() * _v2.Z() - _v1.Z() * _v2.Y();
-		vy = _v1.X() * _v2.Z() - _v1.Z() * _v2.X();
-		vz = _v1.X() * _v2.Y() - _v1.Y() * _v2.X();
+		vx = _v1.y * _v2.z - _v1.z * _v2.y;
+		vy = _v1.x * _v2.z - _v1.z * _v2.x;
+		vz = _v1.x * _v2.y - _v1.y * _v2.x;
 		return Vec3(vx, vy, vz);
 	}
 	std::ostream& operator<<(std::ostream& _os, const Vec3& _v) 
 	{
-		_os << "x:" << _v.X() << " y:" << _v.Y() << " z:" << _v.Z() << std::endl;
+		_os << "x:" << _v.x << " y:" << _v.y << " z:" << _v.z << std::endl;
 		return _os;
 	}
 	bool Vec3::deserialize(rapidjson::Value& _value)

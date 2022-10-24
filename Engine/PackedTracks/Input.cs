@@ -1,5 +1,4 @@
 ﻿
-using System.Runtime.CompilerServices;
 
 namespace CopiumEngine
 {
@@ -18,8 +17,7 @@ namespace CopiumEngine
                 True if key was held
         */
         /*******************************************************************************/
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern bool GetKey(int keyCode);
+        public static bool GetKey(KeyCode keyCode) { return InternalCalls.GetKey((int)keyCode); }
 
         /*******************************************************************************
         /*!
@@ -34,8 +32,7 @@ namespace CopiumEngine
                 True if key was just pressed
         */
         /*******************************************************************************/
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern bool GetKeyDown(int keyCode);
+        public static bool GetKeyDown(KeyCode keyCode) { return InternalCalls.GetKeyDown((int)keyCode); }
 
         /*******************************************************************************
         /*!
@@ -50,7 +47,6 @@ namespace CopiumEngine
                 True if key was just released
         */
         /*******************************************************************************/
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern bool GetKeyUp(int keyCode);
+        public static bool GetKeyUp(KeyCode keyCode) { return InternalCalls.GetKeyUp((int)keyCode); }
     }
 }

@@ -98,7 +98,7 @@
   <ItemGroup>
     <ClCompile Include="src\Audio\sound-system.cpp" />
     <ClCompile Include="src\Debugging\frame-rate-controller.cpp" />
-    <ClCompile Include="src\Debugging\logging.cpp" />
+    <ClCompile Include="src\Debugging\logging-system.cpp" />
     <ClCompile Include="src\Editor\editor-consolelog.cpp" />
     <ClCompile Include="src\Editor\editor-camera.cpp" />
     <ClCompile Include="src\Editor\editor-scene-hierarchy-list.cpp" />
@@ -119,10 +119,11 @@
     <ClCompile Include="src\Graphics\textures.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Math\math-library.cpp" />
-    <ClCompile Include="src\Math\transform.cpp" />
+    <ClCompile Include="src\GameObject\transform-component.cpp" />
     <ClCompile Include="src\Messaging\message-system.cpp" />
     <ClCompile Include="src\Messaging\message-types.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -131,9 +132,9 @@
     <ClCompile Include="src\Physics\collision.cpp" />
     <ClCompile Include="src\Physics\physics-system.cpp" />
     <ClCompile Include="src\SceneManager\gamestate-sandbox.cpp" />
-    <ClCompile Include="src\SceneManager\scene-manager.cpp" />
     <ClCompile Include="src\SceneManager\scene.cpp" />
     <ClCompile Include="src\SceneManager\serializer.cpp" />
+    <ClCompile Include="src\SceneManager\scene-manager.cpp" />
     <ClCompile Include="src\SceneManager\sm.cpp" />
     <ClCompile Include="src\SceneManager\state-manager.cpp" />
     <ClCompile Include="src\Scripting\scripting-system.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="src\GameObject\renderer-component.h" />
     <ClInclude Include="src\Graphics\camera.h" />
     <ClInclude Include="src\Graphics\sprite-renderer.h" />
+    <ClInclude Include="src\SceneManager\sm.h" />
     <ClInclude Include="src\Scripting\scriptWrappers.h" />
     <ClInclude Include="src\Utilities\thread-system.h" />
     <ClInclude Include="src\Physics\collider.h" />
@@ -196,25 +198,24 @@
     <ClInclude Include="src\Physics\physics-system.h" />
     <ClInclude Include="src\Audio\sound-system.h" />
     <ClInclude Include="src\Graphics\textures.h" />
-    <ClInclude Include="src\SceneManager\sm.h" />
+    <ClInclude Include="src\SceneManager\scene-manager.h" />
     <ClInclude Include="src\Windows\windows-system.h" />
     <ClInclude Include="src\Graphics\glslshader.h" />
     <ClInclude Include="src\Graphics\graphics-system.h" />
     <ClInclude Include="src\Editor\inspector.h" />
-    <ClInclude Include="src\Debugging\logging.h" />
+    <ClInclude Include="src\Debugging\logging-system.h" />
     <ClInclude Include="src\Math\math-library.h" />
     <ClInclude Include="src\Messaging\message-system.h" />
     <ClInclude Include="src\Messaging\message-types.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\Graphics\renderer.h" />
     <ClInclude Include="src\SceneManager\scene.h" />
-    <ClInclude Include="src\SceneManager\scene-manager.h" />
     <ClInclude Include="src\Scripting\scripting.h" />
     <ClInclude Include="src\Scripting\scripting-system.h" />
     <ClInclude Include="src\SceneManager\serializer.h" />
     <ClInclude Include="src\SceneManager\state-manager.h" />
     <ClInclude Include="src\CopiumCore\system-interface.h" />
-    <ClInclude Include="src\Math\transform.h" />
+    <ClInclude Include="src\GameObject\transform-component.h" />
     <ClInclude Include="src\Graphics\vertex-types.h" />
     <ClInclude Include="src\Windows\windows-input.h" />
   </ItemGroup>

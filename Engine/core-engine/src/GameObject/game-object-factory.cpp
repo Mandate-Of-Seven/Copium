@@ -25,7 +25,7 @@ namespace Copium
 	{
 		std::cout << "GOF ctor\n";
 		add_component_creator(ANIMATOR_CREATOR, new AnimatorCreator());
-		add_component_creator("Transform", new TransformCreator());
+		//add_component_creator("Transform", new TransformCreator());
 
 	}
 	GameObjectFactory::~GameObjectFactory()
@@ -286,5 +286,6 @@ namespace Copium
 		GameObject* tmp = build_gameobject(*gameObjectCreators[_archetype]);
 		return tmp;
 	}
+
 
 }

@@ -14,13 +14,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 
 #include "pch.h"
-#include "Debugging/logging.h"
 namespace Copium 
 {
-    std::shared_ptr<spdlog::logger> Log::consoleLogger;
-
-
-    void Log::init()
+    void LoggingSystem::init()
     {
         auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
         console_sink->set_level(spdlog::level::trace);
@@ -40,7 +36,17 @@ namespace Copium
         std::cout << "Logging init was called" << std::endl;
     }
 
-    std::string Log::to_string(std::string msg)
+    void LoggingSystem::update()
+    {
+
+    }
+
+    void LoggingSystem::exit()
+    {
+
+    }
+
+    std::string LoggingSystem::to_string(std::string msg)
     {
         std::ostringstream _oss;
         auto ostream_logger = spdlog::get("gtest_logger");
@@ -61,7 +67,7 @@ namespace Copium
         return text;
     }
 
-    void Log::create_multiplefile(int fileSize,int fileAmount)
+    void LoggingSystem::create_multiplefile(int fileSize,int fileAmount)
     {
         int max_size = fileSize;
         int max_files = fileAmount;
@@ -72,7 +78,7 @@ namespace Copium
         logger->info("The purpose of this is to test the rotating file sink");
     }
 
-    void Log::error_log()
+    void LoggingSystem::error_log()
     {
         auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
         console_sink->set_level(spdlog::level::warn);
@@ -88,7 +94,7 @@ namespace Copium
         spdlog::set_default_logger(std::make_shared<spdlog::logger>("Error", spdlog::sinks_init_list({ console_sink, file_sink })));
     }
 
-    void Log::assert_to_file(std::string expr_str, bool expr, std::string file, int line, std::string msg)
+    void LoggingSystem::assert_to_file(std::string expr_str, bool expr, std::string file, int line, std::string msg)
     {
         error_log();
 

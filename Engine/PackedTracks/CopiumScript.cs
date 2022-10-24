@@ -22,9 +22,9 @@ namespace CopiumEngine
     public class CopiumScript
     {
         
-        virtual protected void OnCreate(ulong ID)
+        private void OnCreate(ulong ID)
         {
-            Console.WriteLine("HELLO " + ID);
+            Console.WriteLine("GameObject Created in CS: " + ID);
             if (gameObject != null)
                 return;
             gameObject = GameObject.FindByID(ID);

@@ -35,6 +35,8 @@ namespace Copium {
 	CLASS_SYSTEM(NewSceneManager)
 	{
 	public:
+		GameObject* findGameObjByID(GameObjectID _ID);
+
 		NewSceneManager();
 		~NewSceneManager();
 

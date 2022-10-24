@@ -44,7 +44,7 @@ namespace Copium::Editor
 		ImGui::GetIO().ConfigDockingWithShift = true;
 		Window::Inspector::init();
 		Window::EditorConsole::init();
-		Window::Inspector::selectedGameObject = new GameObject();
+		//Window::Inspector::selectedGameObject = new GameObject();
 		sceneView.init();
 		
 		// Initialize a new editor camera

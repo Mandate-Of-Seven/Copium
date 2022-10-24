@@ -18,7 +18,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include "pch.h"
 #include "GameObject/game-object.h"
-
 #include "GameObject/renderer-component.h"
 
 //USING
@@ -31,13 +30,6 @@ namespace
 
 
 GameObjectID GameObject::count = 1;
-
-GameObject::GameObject()
-    : name{ defaultGameObjName }, parent{nullptr}, parentid{0}
-{
-    id = count++;
-    messageSystem.subscribe(Copium::Message::MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
-}
 
 GameObject::~GameObject()
 {
@@ -57,10 +49,13 @@ std::list<Component*>& GameObject::Components()
 }
 
 GameObject::GameObject
-(Copium::Math::Vec3 _position, Copium::Math::Vec3 _rotation = { 0,0,0 }, Copium::Math::Vec3 _scale = { 1,1,1 })
-    : name{ defaultGameObjName }, trans(_position, _rotation, _scale), parent{nullptr}, parentid{0}
+(Copium::Math::Vec3 _position, Copium::Math::Vec3 _rotation, Copium::Math::Vec3 _scale)
+    : 
+    name{ defaultGameObjName }, parent{nullptr}, parentid{0}, 
+    transform(*this,_position, _rotation, _scale)
 {
     id = count++;
+    messageSystem.subscribe(Copium::Message::MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
     PRINT("GAMEOBJECT ID CONSTRUCTED: " << id);
 }
 
@@ -68,6 +63,9 @@ void GameObject::addComponent(Component* component)
 {
     components.push_back(component);
 }
+
+
+
 
 
 void GameObject::addComponent(Component::Type componentType)
@@ -113,28 +111,9 @@ void GameObject::deleteComponent(Component* component)
     components.erase(it);
 }
 
-void GameObject::Trans(Transform _trans) {trans = _trans;}
-
-TransformComponent* GameObject::Trans()  
+TransformComponent& GameObject::Transform()  
 {
-    for (std::list<Component*>::iterator iter = components.begin(); iter != components.end(); ++iter)
-    {
-        Component::Type tmp =   (*iter)->get_type();
-        if ((*iter)->componentMap.find(tmp) == (*iter)->componentMap.end())
-        {
-            std::cout << "cannot find component type\n";
-            continue;
-        }
-
-        std::cout << "Component Type:" << (*iter)->componentMap[tmp] << std::endl;
-
-        if (tmp == Component::Type::Transform)
-            return reinterpret_cast<TransformComponent*>(*iter);
-
-    }
-
-    return nullptr;
-
+    return transform;
 }
 
 void GameObject::set_name(const std::string& _name){ name = _name; }

@@ -18,7 +18,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 //INCLUDES
 #include <string>
 #include <map>
-#include "Math/transform.h"
+#include <rapidjson/document.h>
 
 class GameObject;
 
@@ -147,81 +147,6 @@ class Component
 
     };
 
-    class TransformComponent : public Component
-    {
-    public:
-        /***************************************************************************/
-        /*!
-        \brief
-            Default constructor for transform Components
-
-        \return
-            void
-        */
-        /**************************************************************************/
-        TransformComponent(GameObject& _gameObj);
-        /***************************************************************************/
-        /*!
-        \brief
-            Destructor for transform Components
-
-        \return
-            void
-        */
-        /**************************************************************************/
-        ~TransformComponent()
-        {
-            //std::cout << "transform component dtor\n";
-        }
-
-        /***************************************************************************/
-        /*!
-        \brief
-            Deserialize this component's data from specified rapidjson value
-
-        \return 
-            void
-        */
-        /**************************************************************************/
-        void deserialize(rapidjson::Value& _value);
-
-        /***************************************************************************/
-        /*!
-        \brief
-            Get read-only reference to the transform object in this component
-
-        \return
-            read-only reference to the transform object in this component
-        */
-        /**************************************************************************/
-        const Transform& get_transform() const
-        {
-            return t;
-        }
-        
-        /***************************************************************************/
-        /*!
-        \brief
-            Set the transform object to the specified transform object.
-            Performs deep copy of the specified transform object into the transform object in this component.
-
-        \param _src
-            read-only reference to the transform object that is to be copied
-
-        \return
-            void
-        */
-        /**************************************************************************/
-        void set_transform(const Transform& _src)
-        {
-            t = _src;
-        }
-    
-    private:
-        Transform t;
-        
-    };
-
     // Creators - 1x for each component
     class ComponentCreator 
     {
@@ -344,51 +269,6 @@ class Component
             //std::cout << "Collider Creator destructed\n";
         }
     };
-    class TransformCreator : public ComponentCreator
-    {
-    public:
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Default contructor for Transform Creator
 
-        \return
-            void
-        */
-        /*******************************************************************************/
-        TransformCreator()
-        {
-            std::cout << "Transform registered\n";
-        }
-        /***************************************************************************/
-        /*!
-        \brief
-            Creates an Transform Component
-
-        \return
-            if successful in creating an Transform Component, return ptr to it
-            if there were errors in the process, return nullptr
-        */
-        /**************************************************************************/
-        virtual Component* create(GameObject& _gameObj)
-        {
-            return new TransformComponent(_gameObj);
-        }
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Destructor for Transform Creator
-
-        \return
-            void
-        */
-        /*******************************************************************************/
-        ~TransformCreator()
-        {
-            //std::cout << "Transform Creator destructed\n";
-        }
-    };
 
 #endif // !COMPONENT_H

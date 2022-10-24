@@ -22,9 +22,10 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scripting/scripting-system.h"
 #include "Physics/physics-system.h"
 #include "Graphics/graphics-system.h"
-#include "SceneManager/sm.h"
 #include "Utilities/thread-system.h"
 #include "Debugging/frame-rate-controller.h"
+#include "SceneManager/sm.h"
+#include "Debugging/logging-system.h"
 
 namespace Copium
 {
@@ -45,11 +46,12 @@ namespace Copium
 			{
 				//Put in sequence of calls
 				Windows::WindowsSystem::Instance(),
+				LoggingSystem::Instance(),
+				NewSceneManager::Instance(),
 				Message::MessageSystem::Instance(),
 				Editor::EditorSystem::Instance(),
 				Files::FileSystem::Instance(),
 				Files::AssetsSystem::Instance(),
-				NewSceneManager::Instance(),
 				Physics::Physics::Instance(),
 				Graphics::GraphicsSystem::Instance(),
 				SoundSystem::Instance(),
@@ -64,11 +66,11 @@ namespace Copium
 			frc = new FrameRateController;
 
 			// Testing archetype registering at init
-			double start = glfwGetTime();
+			//double start = glfwGetTime();
 			//NewSceneManager::Instance()->get_gof().register_archetypes("Data/Archetypes");
-			double timeTaken = glfwGetTime() - start;
-			std::cout << "Time taken to register all archetypes: " << timeTaken << std::endl;
-			NewSceneManager::Instance()->get_gof().build_gameobject("Default");
+			//double timeTaken = glfwGetTime() - start;
+			//std::cout << "Time taken to register all archetypes: " << timeTaken << std::endl;
+			//NewSceneManager::Instance()->get_gof().build_gameobject("Default");
 
 		}
 

@@ -4,16 +4,7 @@ using System;
 
 namespace CopiumEngine
 {
-    public class Transform
-    {
-        public Vector3 position;
-        public Transform()
-        {
-            position = Vector3.zero;
-        }
 
-        public GameObject gameObject;
-    }
     public class GameObject
     {
         GameObject()
