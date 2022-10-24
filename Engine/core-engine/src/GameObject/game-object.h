@@ -42,7 +42,6 @@ private:
     std::list<GameObject*> children;    //List of pointers to this gameObject's children
 
 public:
-    GameObject& operator=(GameObject&) = delete;
 
     /***************************************************************************/
     /*!
@@ -61,23 +60,16 @@ public:
         Copium::Math::Vec3 _rotation = { 0,0,0 },
         Copium::Math::Vec3 _scale = {1,1,1});
 
-    /***************************************************************************/
-    /*!
-    \brief
-        Appends a new component to components list
-    \param component
-        Pointer to component to append to components list
-    */
-    /**************************************************************************/
-    void addComponent(Component* component);
-
     template <typename T>
-    void addComponent()
+    T* addComponent()
     {
         static_assert(std::is_base_of<Component, T>::value);
-        components.push_back(new T(*this));
+        T* component = new T(*this);
+        components.push_back(component);
+        return component;
     }
 
+    Component* getComponent(Component::Type componentType);
     /***************************************************************************/
     /*!
     \brief
@@ -86,7 +78,9 @@ public:
         Type of component to append to components list
     */
     /**************************************************************************/
-    void addComponent(Component::Type componentType);
+    Component* addComponent(Component::Type componentType);
+
+    Component* addComponent(const Component& component);
 
     /***************************************************************************/
     /*!
@@ -97,18 +91,6 @@ public:
     */
     /**************************************************************************/
     void deleteComponent(Component* component);
-
-    /***************************************************************************/
-    /*!
-    \brief
-        Gets a reference to the components list of this game object
-
-    \return 
-        reference to this gameobject's component list
-
-    */
-    /**************************************************************************/
-    std::list<Component*>& Components();
 
     /***************************************************************************/
     /*!
@@ -314,6 +296,8 @@ public:
     /*******************************************************************************/
     bool deserialize(rapidjson::Value& _value);
 
+    void inspectorView();
+
 
     /***************************************************************************/
     /*!
@@ -324,6 +308,9 @@ public:
     ~GameObject();
 
     void handleMessage(Copium::Message::MESSAGE_TYPE mType);
+
+    GameObject& operator=(const GameObject& rhs);
+
     
 };
 

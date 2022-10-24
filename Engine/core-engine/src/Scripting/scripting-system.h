@@ -29,60 +29,74 @@ extern "C"
 	typedef struct _MonoClass MonoClass;
 	typedef struct _MonoMethod MonoMethod;
 	typedef struct _MonoObject MonoObject;
+	typedef struct _MonoClassField MonoClassField;
 }
 
 namespace Copium::Scripting
 {
-	enum class Accessibility : unsigned char
+	enum class FieldType
 	{
-		None = 0,
-		Private = 1,
-		Internal = (1 << 1),
-		Protected = (1 << 2),
-		Public = (1 << 3)
+		Float, Double,
+		Bool, Char, Byte, Short, Int, Long,
+		UByte, UShort, UInt, ULong,
+		Vector2, Vector3, None
 	};
 
-	//enum class FieldType
-	//{
-	//	None,
-	//	Vector2,
-	//	Vector3,
-	//	Vector4,
-	//	Float = MONO_TYPE_R4,
-	//	Integer = MONO_TYPE_I4,
-	//	UnsignedInteger = MONO_TYPE_U4,
-	//	String = MONO_TYPE_STRING
-	//};
+	struct Field
+	{
+		FieldType type;
+		std::string name;
 
-	/**************************************************************************/
-	/*!
-		\brief
-			Retrieves the type of field from monoType
-		\param mType
-			MonoType of field
-	*/
-	/**************************************************************************/
-	//static FieldType GetType(MonoType* mType)
-	//{
-	//	int typeCode = mono_type_get_type(mType); //MonoTypeEnum
-	//	switch (typeCode)
-	//	{
-	//	case MONO_TYPE_VALUETYPE:
-	//	{
-	//		char* typeName = mono_type_get_name(mType);
-	//		if (strcmp(typeName, "Vector2") == 0) { return FieldType::Vector2; }
-	//		if (strcmp(typeName, "Vector3") == 0) { return FieldType::Vector3; }
-	//		if (strcmp(typeName, "Vector4") == 0) { return FieldType::Vector4; }
-	//	}
-	//	case MONO_TYPE_CLASS:
-	//		break;
-	//	default:
-	//		return FieldType(typeCode);
-	//		break;
-	//	}
-	//	PRINT("No type found");
-	//	return FieldType::None;
-	//}
+		MonoClassField* classField;
+	};
+
+	// ScriptField + data storage
+	struct FieldInstance
+	{
+		Field Field;
+
+		FieldInstance()
+		{
+			memset(m_Buffer, 0, sizeof(m_Buffer));
+		}
+
+		template<typename T>
+		T GetValue()
+		{
+			static_assert(sizeof(T) <= 16, "Type too large!");
+			return *(T*)m_Buffer;
+		}
+
+		template<typename T>
+		void SetValue(T value)
+		{
+			static_assert(sizeof(T) <= 16, "Type too large!");
+			memcpy(m_Buffer, &value, sizeof(T));
+		}
+	private:
+		uint8_t m_Buffer[16];
+	};
+
+	using FieldMap = std::unordered_map<std::string, FieldInstance>;
+
+	static std::unordered_map<std::string, Scripting::FieldType> fieldTypeMap =
+	{
+		{ "System.Single", FieldType::Float },
+		{ "System.Double", FieldType::Double },
+		{ "System.Boolean", FieldType::Bool },
+		{ "System.Char", FieldType::Char },
+		{ "System.Int16", FieldType::Short },
+		{ "System.Int32", FieldType::Int },
+		{ "System.Int64", FieldType::Long },
+		{ "System.Byte", FieldType::Byte },
+		{ "System.UInt16", FieldType::UShort },
+		{ "System.UInt32", FieldType::UInt },
+		{ "System.UInt64", FieldType::ULong },
+
+		{ "CopiumEngine.Vector2", FieldType::Vector2 },
+		{ "CopiumEngine.Vector3", FieldType::Vector3 }
+	};
+
 
 	struct ScriptClass
 	{
@@ -96,14 +110,15 @@ namespace Copium::Scripting
 		*/
 		/**************************************************************************/
 		ScriptClass(const std::string& _name, MonoClass* _mClass);
-		const std::string& name;
-		MonoClass* mClass;
+		const		std::string& name;
+		MonoClass*	mClass;
 		MonoMethod* mAwake;
 		MonoMethod* mStart;
 		MonoMethod* mUpdate;
 		MonoMethod* mLateUpdate;
 		MonoMethod* mOnCollisionEnter;
 		MonoMethod* mOnCreate;
+		std::map<std::string, Field> m_Fields;
 	};
 
 	CLASS_SYSTEM(ScriptingSystem), Message::IReceiver
@@ -187,6 +202,8 @@ namespace Copium::Scripting
 		void handleMessage(Message::MESSAGE_TYPE mType);
 
 		void reflectGameObject(uint64_t _ID);
+
+		void loadAssemblyClasses();
 	private:
 		void updateScriptClasses();
 
@@ -246,18 +263,5 @@ namespace Copium::Scripting
 		std::unordered_map<std::string, ScriptClass*> scriptClassMap;
 		std::list<Files::File>& scriptFiles;
 	};
-
-	/**************************************************************************/
-	/*!
-		\brief
-			Gets the accessibility of a monoField
-		\param field
-			Monofield to check
-		\return
-			Enum of MonoAccessibility
-			
-	*/
-	/**************************************************************************/
-	//unsigned char GetFieldAccessibility(MonoClassField* field);
 }
 #endif // !SCRIPTING_SYSTEM_H

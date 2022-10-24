@@ -25,13 +25,14 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Messaging/message-types.h"
 #include "Scripting/scriptWrappers.h"
 
-#include <mono/metadata/mono-config.h>
-#include <mono/jit/jit.h>
-#include <mono/metadata/assembly.h>
-#include <mono/metadata/appdomain.h>
-#include <mono/metadata/threads.h>
+#include "mono/jit/jit.h"
+#include "mono/metadata/assembly.h"
+#include "mono/metadata/object.h"
+#include "mono/metadata/tabledefs.h"
 
 #define SECONDS_TO_RECOMPILE 5
+
+
 
 namespace
 {
@@ -49,16 +50,69 @@ namespace
 	MonoImage* mAssemblyImage{ nullptr };	//LOADED IMAGE OF SCRIPTS.DLL
 	MonoClass* mGameObject{ nullptr };
 	MonoClass* mCopiumScript{ nullptr };
+
+}
+
+namespace Copium::Utils
+{
+	static char* readBytes(const std::string& filepath, uint32_t* outSize)
+	{
+		std::ifstream stream(filepath, std::ios::binary | std::ios::ate);
+
+		if (!stream) return nullptr;
+		std::streampos end = stream.tellg();
+		stream.seekg(0, std::ios::beg);
+		uint32_t size = end - stream.tellg();
+		if (size == 0) return nullptr;
+		char* buffer = new char[size];
+		stream.read((char*)buffer, size);
+		stream.close();
+		*outSize = size;
+		return buffer;
+	}
+
+	static MonoAssembly* loadAssembly(const std::string& assemblyPath)
+	{
+		uint32_t fileSize = 0;
+		char* fileData = readBytes(assemblyPath, &fileSize);
+
+		// NOTE: We can't use this image for anything other than loading the assembly because this image doesn't have a reference to the assembly
+		MonoImageOpenStatus status;
+		MonoImage* image = mono_image_open_from_data_full(fileData, fileSize, 1, &status, 0);
+
+		if (status != MONO_IMAGE_OK)
+		{
+			// const char* errorMessage = mono_image_strerror(status);
+			// Log some error message using the errorMessage data
+			return nullptr;
+		}
+
+		MonoAssembly* assembly = mono_assembly_load_from_full(image, assemblyPath.c_str(), &status, 0);
+
+		mono_image_close(image);
+
+		// Don't forget to free the file data
+		delete[] fileData;
+
+		return assembly;
+	}
+
+	Scripting::FieldType monoTypeToFieldType(MonoType* monoType)
+	{
+		std::string typeName = mono_type_get_name(monoType);
+		using namespace Scripting;
+		auto it = fieldTypeMap.find(typeName);
+		COPIUM_ASSERT(it == fieldTypeMap.end(), "Invalid monoType")
+		return it->second;
+	}
 }
 
 namespace Copium::Scripting
 {
-	//ScriptingEngine Namespace Variables
 	ScriptingSystem& sS{ *ScriptingSystem::Instance() };
 	bool scriptIsLoaded(const std::filesystem::path&);
 	bool scriptPathExists(const std::filesystem::path& filePath);
 	//ScriptingEngine Namespace Functions
-	MonoAssembly* loadAssembly(const std::string& assemblyPath);
 
 	#pragma region Struct ScriptMethods
 		ScriptClass::ScriptClass(const std::string& _name, MonoClass* _mClass) : 
@@ -71,17 +125,19 @@ namespace Copium::Scripting
 		mOnCollisionEnter{ mono_class_get_method_from_name(mClass, "OnCollisionEnter", 0) },
 		mOnCreate{ mono_class_get_method_from_name(mCopiumScript, "OnCreate", 1) }
 		{
-			//void* propIter = nullptr;;
-			//MonoClass* raw_property = NULL;
-			////mono_class_get_methods
-			////raw_property = mono_class_get_methods(mmClasses[0], &propIter);
-			//mono_s
-			//PRINT("CLASSES OF " << name);
-			//while (raw_property = mono_class_get_nested_types(mClass, &propIter)) {
-			//	std::string methodName = mono_class_get_name(mClass);
-			//	PRINT(methodName);
-			//}
-		
+			int fieldCount = mono_class_num_fields(mClass);
+			void* iterator = nullptr;
+			while (MonoClassField* field = mono_class_get_fields(mClass, &iterator))
+			{
+				const char* fieldName = mono_field_get_name(field);
+				uint32_t flags = mono_field_get_flags(field);
+				if (flags & FIELD_ATTRIBUTE_PUBLIC)
+				{
+					MonoType* type = mono_field_get_type(field);
+					FieldType fieldType = Utils::monoTypeToFieldType(type);
+					m_Fields[fieldName] = { fieldType, fieldName, field };
+				}
+			}
 		}
 	#pragma endregion
 
@@ -142,6 +198,7 @@ namespace Copium::Scripting
 			//Critical section End
 			Sleep(SECONDS_TO_RECOMPILE*1000);
 		}
+
 	}
 
 	ScriptingSystem::ScriptingSystem() :
@@ -181,7 +238,9 @@ namespace Copium::Scripting
 	{
 		if (mAppDomain == nullptr || mClass == nullptr)
 			return nullptr;
-		return mono_object_new(mAppDomain, mClass);
+		MonoObject* tmp = mono_object_new(mAppDomain, mClass);
+		mono_runtime_object_init(tmp);
+		return tmp;
 	}
 
 	ScriptClass* ScriptingSystem::getScriptClass(const std::string& _name)
@@ -266,7 +325,7 @@ namespace Copium::Scripting
 	{
 		unloadAppDomain();
 		createAppDomain();
-		mCoreAssembly = loadAssembly(Files::Paths::scriptsAssemblyPath);
+		mCoreAssembly = Utils::loadAssembly(Files::Paths::scriptsAssemblyPath);
 		mAssemblyImage = mono_assembly_get_image(mCoreAssembly);
 		//Update scriptClasses
 		mGameObject = mono_class_from_name(mAssemblyImage, "CopiumEngine", "GameObject");
@@ -285,31 +344,7 @@ namespace Copium::Scripting
 		}
 	}
 
-	MonoAssembly* loadAssembly(const std::string& assemblyPath)
-	{
-		uint32_t fileSize = 0;
-		char* fileData = Files::ReadBytes(assemblyPath, &fileSize);
-
-		// NOTE: We can't use this image for anything other than loading the assembly because this image doesn't have a reference to the assembly
-		MonoImageOpenStatus status;
-		MonoImage* image = mono_image_open_from_data_full(fileData, fileSize, 1, &status, 0);
-
-		if (status != MONO_IMAGE_OK)
-		{
-			// const char* errorMessage = mono_image_strerror(status);
-			// Log some error message using the errorMessage data
-			return nullptr;
-		}
-
-		MonoAssembly* assembly = mono_assembly_load_from_full(image, assemblyPath.c_str(), &status, 0);
-
-		mono_image_close(image);
-
-		// Don't forget to free the file data
-		delete[] fileData;
-
-		return assembly;
-	}
+	
 
 	void ScriptingSystem::updateScriptFiles()
 	{
@@ -401,17 +436,3 @@ namespace Copium::Scripting
 		reflectGameObject(Message::MESSAGE_CONTAINER::reflectCsGameObject.ID);
 	}
 }
-
-//void* propIter = nullptr;
-//MonoClassField* raw_property = NULL;
-//mono_class_get_methods
-//raw_property = mono_class_get_fields(mmClasses[0], &propIter);
-//while (raw_property = mono_class_get_fields(mmClasses[0], &propIter)) {
-//	std::string name = mono_field_get_name(raw_property);
-//	if (GetFieldAccessibility(raw_property) & (unsigned char)Accessibility::Public)
-//	{
-//		if (GetType(mono_field_get_type(raw_property)) == FieldType::String)
-//			PRINT("Name: " << name << " Type: String Access: Public");
-//	}
-//}
-

@@ -25,30 +25,10 @@ namespace Copium
 	GameObjectFactory::GameObjectFactory() : currentScene{ nullptr }
 	{
 		std::cout << "GOF ctor\n";
-		add_component_creator(ANIMATOR_CREATOR, new AnimatorCreator());
-		//add_component_creator("Transform", new TransformCreator());
 
 	}
 	GameObjectFactory::~GameObjectFactory()
 	{
-		for (std::map<std::string, ComponentCreator*>::iterator iter = componentCreators.begin(); iter != componentCreators.end(); ++iter) {
-			if (iter->second)
-			{
-				delete iter->second;
-				iter->second = nullptr;
-			}
-		}
-		componentCreators.clear();
-
-		for (std::map<std::string, GameObject*>::iterator iter = gameObjectCreators.begin(); iter != gameObjectCreators.end(); ++iter)
-		{
-			if (iter->second)
-			{
-				delete iter->second;
-				iter->second = nullptr;
-			}
-		}
-		gameObjectCreators.clear();
 	}
 
 	GameObject* GameObjectFactory::build_gameobject()
@@ -60,6 +40,7 @@ namespace Copium
 
 		return tmp;
 	}
+
 	GameObject* GameObjectFactory::build_gameobject(GameObject& _src)
 	{
 		GameObject* go = new GameObject();
@@ -73,12 +54,7 @@ namespace Copium
 		//go->Trans(_src.Trans());	// Transform
 
 		// Components copy
-		for (std::list<Component*>::iterator it = _src.Components().begin(); it != _src.Components().end(); ++it)
-		{
-			Component* tmp = componentCreators[(*it)->Name()]->create(*go);
-			if (tmp)
-				go->Components().push_back(tmp);
-		}
+		*go = _src;
 
 		currentScene->add_gameobject(go);
 
@@ -111,28 +87,26 @@ namespace Copium
 		//	return nullptr;
 		//}
 
-		if (_value.HasMember("Components")) 
-		{
-			rapidjson::Value& compArr = _value["Components"].GetArray();
-			for (rapidjson::Value::ValueIterator iter = compArr.Begin(); iter != compArr.End(); ++iter)
-			{
-				rapidjson::Value& component = *iter;
-				if (component.HasMember("Type")) 
-				{
-					PRINT("Component: " << component["Type"].GetString());
-					Component* tmp = componentCreators[component["Type"].GetString()]->create();
-					go->Components().push_back(tmp);
-					tmp->deserialize(component);
-				}
-			}
-		}
+		//if (_value.HasMember("Components")) 
+		//{
+		//	rapidjson::Value& compArr = _value["Components"].GetArray();
+		//	for (rapidjson::Value::ValueIterator iter = compArr.Begin(); iter != compArr.End(); ++iter)
+		//	{
+		//		rapidjson::Value& component = *iter;
+		//		if (component.HasMember("Type")) 
+		//		{
+		//			const char* name = component["Type"].GetString();
+		//			PRINT("Component: " << name);
+		//			go->addComponent(Component::nameToType(name))->deserialize(component);
+		//		}
+		//	}
+		//}
 
 		//currentScene->add_gameobject(go);					
 
 		////unsigned int childCount{ 0 };
 		//// Deserialize children (if any)
 		//if (_value.HasMember("Children")) {
-
 		//	rapidjson::Value& childArr = _value["Children"].GetArray();
 		//	for (rapidjson::Value::ValueIterator iter = childArr.Begin(); iter != childArr.End(); ++iter)
 		//	{
@@ -140,11 +114,10 @@ namespace Copium
 		//		go->attach_child(cgo);
 		//		//++childCount;
 		//	}
-
 		//}
 
-		//std::cout << "No. of children:" << childCount << std::endl;
-		//return go;
+		////std::cout << "No. of children:" << childCount << std::endl;
+		////return go;
 		return nullptr;
 	}
 	GameObject* GameObjectFactory::clone_gameobject(GameObject* _src)
@@ -184,35 +157,6 @@ namespace Copium
 
 	}
 
-	// M2
-	bool GameObjectFactory::add_component_creator(const std::string& _key, ComponentCreator* _value)
-	{
-
-		if (!_value)
-			return false;
-
-		if (componentCreators.find(_key) != componentCreators.end())
-		{
-			delete _value;
-			return false;
-		}
-		componentCreators.emplace(_key, _value);
-
-		return true;
-	}
-	bool GameObjectFactory::add_component(const std::string& _key, GameObject* _go)
-	{
-		if (componentCreators.find(_key) == componentCreators.end())
-			return false;
-
-		Component* tmp = componentCreators[_key]->create(*_go);
-		if (!tmp)
-			return false;
-
-		_go->Components().push_back(tmp);
-
-		return true;
-	}
 	GameObject* GameObjectFactory::build_archetype(rapidjson::Value& _value)
 	{
 		GameObject* go = new GameObject();
@@ -233,9 +177,8 @@ namespace Copium
 				rapidjson::Value& component = *iter;
 				if (component.HasMember("Type"))
 				{
-					Component* tmp = componentCreators[component["Type"].GetString()]->create(*go);
-					go->Components().push_back(tmp);
-					tmp->deserialize(component);
+					const char* name = component["Type"].GetString();
+					go->addComponent(Component::nameToType(name))->deserialize(component);
 				}
 			}
 		}

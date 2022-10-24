@@ -29,16 +29,31 @@ using ComponentID = unsigned char;
 class Component
 {
     public:
-        enum class Type       // Types of Components
+        enum class Type : int      // Types of Components
         {
             Animator,
             Collider,
             SpriteRenderer,
             Script,
-            Transform
+            Transform,
+            None
         };
+        const Type componentType;           //Type of component
 
         static std::map<Type, const std::string> componentMap; // Declared map to link Component::Type and its name
+
+        static Type nameToType(const std::string& _name)
+        {
+            int i {0};
+            int end{ (int)Type::None };
+            while (i != end)
+            {
+                if (componentMap[(Type)i] == _name)
+                    return (Type)i;
+                i+=1;
+            }
+            return Type::None;
+        }
 
         /***************************************************************************/
         /*!
@@ -57,8 +72,6 @@ class Component
         /**************************************************************************/
         ComponentID const ID();
 
-        Component::Type get_type();
-
         const std::string& Name();
 
         /***************************************************************************/
@@ -76,12 +89,14 @@ class Component
         /**************************************************************************/
         virtual void deserialize(rapidjson::Value& _value);
 
-        virtual void inspector_view(GameObject& _gameObject) = 0;
+        virtual void inspector_view() = 0;
 
         virtual ~Component()
         {
             //std::cout << "default component dtor\n";
         }
+
+        Component& operator=(const Component& rhs);
 
         bool Enabled() const noexcept;
 
@@ -96,12 +111,11 @@ class Component
         */
         /**************************************************************************/
         Component() = delete;
+        Component(GameObject& _gameObj, Component::Type _componentType);
 
         GameObject& gameObj;
-        Component(GameObject& _gameObj, Component::Type _componentType);
     private:
         ComponentID id;                     //Id of component, local to gameObject
-        Type componentType;                 //Type of component
         const bool allowMultiple = false;   //Can gameObjects only have one of this Component?
         bool enabled;
 };
@@ -117,7 +131,7 @@ class Component
         /**************************************************************************/
         ColliderComponent(GameObject& _gameObj);
 
-        void inspector_view(GameObject& _gameObject){};
+        void inspector_view(){};
 
         /***************************************************************************/
         /*!
@@ -140,7 +154,7 @@ class Component
         /**************************************************************************/
         AnimatorComponent(GameObject& _gameObj);
 
-        void inspector_view(GameObject& _gameObject){};
+        void inspector_view(){};
 
         /***************************************************************************/
         /*!
@@ -152,129 +166,5 @@ class Component
     protected:
 
     };
-
-    // Creators - 1x for each component
-    class ComponentCreator 
-    {
-    public:
-
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Pure virtual function that each component must define. Handles the creation of the component tied to this creator
-            E.g TransformCreator should be able to create a TransformComponent using this function
-
-        \return
-            if Component was successfully created, return pointer to the newly created Component
-            if there were any errors in the process, return nullptr
-        */
-        /*******************************************************************************/
-        virtual Component* create(GameObject& _gameObj) = 0;
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Virtual destructor for Component classes and all derived classes
-
-        \return
-            void
-        */
-        /*******************************************************************************/
-        virtual ~ComponentCreator(){}
-    };
-    class AnimatorCreator : public ComponentCreator 
-    {
-    public:
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Default contructor for AnimatorCreator
-
-        \return
-            void
-        */
-        /*******************************************************************************/
-        AnimatorCreator() 
-        {
-            std::cout << "Animator registered\n";
-        }
-        /***************************************************************************/
-        /*!
-        \brief
-            Creates an Animator Component
-
-        \return
-            if successful in creating an Animator Component, return ptr to it
-            if there were errors in the process, return nullptr
-        */
-        /**************************************************************************/
-	    virtual Component* create(GameObject& _gameObj) {
-		    return new AnimatorComponent(_gameObj);
-	    }
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Destructor for AnimatorCreator
-
-        \return
-            void
-        */
-        /*******************************************************************************/
-        ~AnimatorCreator()
-        {
-            //std::cout << "Animator Creator destructed\n";
-        }
-    };
-
-    class ColliderCreator : public ComponentCreator 
-    {
-    public:
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Default contructor for Collider Creator
-
-        \return
-            void
-        */
-        /*******************************************************************************/
-        ColliderCreator()
-        {
-            std::cout << "Collider registered\n";
-        }
-        /***************************************************************************/
-        /*!
-        \brief
-            Creates an Collider Component
-
-        \return
-            if successful in creating an Collider Component, return ptr to it
-            if there were errors in the process, return nullptr
-        */
-        /**************************************************************************/
-        virtual Component* create(GameObject& _gameObj)
-        {
-            return new ColliderComponent(_gameObj);
-        }
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Destructor for Collider Creator
-
-        \return
-            void
-        */
-        /*******************************************************************************/
-        ~ColliderCreator()
-        {
-            //std::cout << "Collider Creator destructed\n";
-        }
-    };
-
 
 #endif // !COMPONENT_H

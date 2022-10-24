@@ -43,11 +43,6 @@ GameObject::~GameObject()
     }
 }
 
-std::list<Component*>& GameObject::Components()
-{
-    return components;
-}
-
 GameObject::GameObject
 (Copium::Math::Vec3 _position, Copium::Math::Vec3 _rotation, Copium::Math::Vec3 _scale)
     : 
@@ -59,29 +54,39 @@ GameObject::GameObject
     PRINT("GAMEOBJECT ID CONSTRUCTED: " << id);
 }
 
-void GameObject::addComponent(Component* component)
+Component* GameObject::getComponent(Component::Type componentType)
 {
-    components.push_back(component);
+    for (Component* pComponent : components)
+    {
+        if (pComponent->componentType == componentType)
+            return pComponent;
+    }
+    return nullptr;
+}
+
+Component* GameObject::addComponent(const Component& component)
+{
+    Component* tmp = addComponent(component.componentType);
+    *tmp = component;
+    return tmp;
 }
 
 
-
-
-
-void GameObject::addComponent(Component::Type componentType)
+Component* GameObject::addComponent(Component::Type componentType)
 {
+    Component* component = nullptr;
     switch (componentType)
     {
     case Component::Type::Animator:
-        components.push_back(new AnimatorComponent(*this));
+        component = new AnimatorComponent(*this);
         PRINT("ADDED ANIMATOR");
         break;
     case Component::Type::Collider:
-        components.push_back(new ColliderComponent(*this));
+        component = new ColliderComponent(*this);
         PRINT("ADDED COLLIDER");
         break;
     case Component::Type::SpriteRenderer:
-        components.push_back(new Copium::RendererComponent());
+        component = new Copium::RendererComponent(*this);
         PRINT("ADDED SPRITE RENDERER");
         break;
     case Component::Type::Script:
@@ -90,13 +95,13 @@ void GameObject::addComponent(Component::Type componentType)
         //MESSAGE_CONTAINERS::addScript.gameObj = this;
         PRINT("ADDED SCRIPT");
         break;
-    case Component::Type::Transform:
-        components.push_back(new TransformComponent(*this));
-        break;
     default:
         PRINT("ADDED NOTHING");
         break;
     }
+    if (component)
+        components.push_back(component);
+    return component;
 }
 
 void GameObject::deleteComponent(Component* component)
@@ -209,3 +214,43 @@ void GameObject::handleMessage(Copium::Message::MESSAGE_TYPE mType)
     messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
 }
 
+
+GameObject& GameObject::operator=(const GameObject& rhs)
+{
+    transform = rhs.transform;
+    for (Component* component : components)
+    {
+        delete component;
+    }
+    components.clear();
+    for (const Component* component: rhs.components)
+    {
+        addComponent(*component);
+    }
+    return *this;
+}
+
+
+void GameObject::inspectorView()
+{
+    transform.inspector_view();
+    ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
+        | ImGuiTableFlags_ScrollY;
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);
+    if (ImGui::BeginTable("Components", 1, tableFlags, ImVec2(0.f, 450.f)))
+    {
+        ImGui::TableNextRow();
+        ImGui::TableNextColumn();
+        ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed;
+        for (Component* component : components)
+        {
+            if (ImGui::CollapsingHeader(component->Name().c_str(), nodeFlags))
+            {
+                component->inspector_view();
+            }
+            ImGui::TableNextColumn();
+        }
+        ImGui::EndTable();
+    }
+    ImGui::PopStyleVar();
+}

@@ -43,7 +43,6 @@ namespace Copium
 			mObject = sS.instantiateClass(pScriptClass->mClass);
 			GameObjectID id = gameObj.get_id();
 			void* param = &id;
-			//mono_object_init
 			if (!pScriptClass->mOnCreate)
 			{
 				PRINT("ON CREATE DOES NOT EXIST");

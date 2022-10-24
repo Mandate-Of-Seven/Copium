@@ -27,7 +27,7 @@ namespace Copium
 		spriteRenderer.deserialize(_value);
 	}
 
-	void RendererComponent::inspector_view(GameObject& _gameObject)
+	void RendererComponent::inspector_view()
 	{
 		float Padding = 16.f;
 		float sameLinePadding = 16.f;

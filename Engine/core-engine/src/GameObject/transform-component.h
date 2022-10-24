@@ -135,6 +135,8 @@ public:
     /**************************************************************************/
     void deserialize(rapidjson::Value& _value);
 
+    void inspector_view();
+
     RTTR_ENABLE();
 
     

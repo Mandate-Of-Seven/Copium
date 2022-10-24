@@ -85,7 +85,9 @@ namespace Copium
 			frc->update();
 			for (ISystem* pSystem : systems)
 			{
+				//Time start
 				pSystem->update();
+				//Time End
 			}
 			frc->end();
 		}

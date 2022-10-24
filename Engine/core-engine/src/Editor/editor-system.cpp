@@ -29,6 +29,7 @@ namespace Copium::Editor
 
 	void EditorSystem::init()
 	{
+		PRINT("WASSUP");
 		Copium::Windows::WindowsSystem* windowsSystem = Copium::Windows::WindowsSystem::Instance();
 
 		//imgui

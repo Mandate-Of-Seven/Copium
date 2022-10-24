@@ -27,10 +27,12 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Audio/sound-system.h"
 #include "SceneManager/sm.h"
 #include "GameObject/component.h"
+#include "GameObject/renderer-component.h"
 
 //State Manager
 #include "SceneManager/state-manager.h"
 #include "SceneManager/scene-manager.h"
+#include "Editor/inspector.h"
 
 //Systems
 #include "CopiumCore/copium-core.h"
@@ -89,10 +91,12 @@ int main()
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
     GameObject& gObj = *sceneManager->get_gof().build_gameobject();
-    gObj.Transform().position =  Copium::Math::Vec3(100,100,100);
-    gObj.addComponent<AnimatorComponent>();
+    //gObj.addComponent<AnimatorComponent>();
     Copium::ScriptComponent sComponent(gObj);
     sComponent.Name("CSharpTesting");
+    
+    Window::Inspector::selectedGameObject = &gObj;
+    gObj.addComponent<Copium::RendererComponent>();
 
     // Engine Loop
     while (!glfwWindowShouldClose(windowsSystem->get_window()) && esCurrent != esQuit)

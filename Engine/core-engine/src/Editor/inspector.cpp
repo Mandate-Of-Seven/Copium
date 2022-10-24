@@ -45,7 +45,7 @@ namespace Window
         void init()
         {
             Copium::NewSceneManager* sm = Copium::NewSceneManager::Instance();
-            selectedGameObject = sm->get_current_scene()->get_gameobjectvector()[0];
+            selectedGameObject = nullptr;
             ImGuiIO& io = ImGui::GetIO();
             io.Fonts->AddFontFromFileTTF("assets\\fonts\\bahnschrift.ttf", 32.f);
             isOpen = true;
@@ -69,27 +69,7 @@ namespace Window
             if (selectedGameObject)
             {
                 // Set flags for tables
-                ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH 
-                    | ImGuiTableFlags_ScrollY;
-                ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);
-
-                // A row represent a component
-                if (ImGui::BeginTable("Components", 1, tableFlags, ImVec2(0.f, 450.f)))
-                {
-                    ImGui::TableNextRow();
-                    ImGui::TableNextColumn();
-                    ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed;
-                    for (Component *component : selectedGameObject->Components())
-                    {
-                        if (ImGui::CollapsingHeader(component->Name().c_str(), nodeFlags))
-                        {
-                            component->inspector_view(*selectedGameObject);
-                        }
-                        ImGui::TableNextColumn();
-                    }
-                    ImGui::EndTable();
-                }
-                ImGui::PopStyleVar();
+                selectedGameObject->inspectorView();
 
                 //AlignForWidth(buttonSize.x);
                 //if (ImGui::Button("Add Component", buttonSize)) {
