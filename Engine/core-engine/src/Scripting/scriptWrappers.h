@@ -4,7 +4,7 @@
 #include "SceneManager\sm.h"
 #include <glm/vec3.hpp>
 
-namespace Copium::Scripting
+namespace Copium
 {
 
 	extern "C"

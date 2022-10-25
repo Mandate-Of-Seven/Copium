@@ -16,6 +16,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #pragma once
 #include "CopiumCore/system-interface.h"
 #include "Windows/windows-system.h"
+#include "Windows/windows-input.h"
 #include "Messaging/message-system.h"
 #include "Files/assets-system.h"
 #include "Editor/editor-system.h"
@@ -26,6 +27,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Debugging/frame-rate-controller.h"
 #include "SceneManager/sm.h"
 #include "Debugging/logging-system.h"
+#include "Audio/sound-system.h"
+#include "Scripting/logic-system.h"
 
 namespace Copium
 {
@@ -45,18 +48,20 @@ namespace Copium
 			systems =
 			{
 				//Put in sequence of calls
-				Windows::WindowsSystem::Instance(),
+				WindowsSystem::Instance(),
 				LoggingSystem::Instance(),
 				NewSceneManager::Instance(),
-				Message::MessageSystem::Instance(),
-				Files::FileSystem::Instance(),
-				Files::AssetsSystem::Instance(),
-				Editor::EditorSystem::Instance(),
-				Physics::Physics::Instance(),
-				Graphics::GraphicsSystem::Instance(),
-				SoundSystem::Instance(),
-				Scripting::ScriptingSystem::Instance(),
-				Thread::ThreadSystem::Instance(),
+				MessageSystem::Instance(),
+				FileSystem::Instance(),
+				AssetsSystem::Instance(),
+				InputSystem::Instance(),
+				EditorSystem::Instance(),
+				LogicSystem::Instance(),
+				PhysicsSystem::Instance(),
+				GraphicsSystem::Instance(),
+				SoundSystem::Instance()	,
+				ScriptingSystem::Instance(),
+				ThreadSystem::Instance()
 			};
 			for (ISystem* pSystem : systems)
 			{
@@ -86,6 +91,7 @@ namespace Copium
 			for (ISystem* pSystem : systems)
 			{
 				//Time start
+				//PRINT("UPDATE: " << typeid(*pSystem).name());
 				pSystem->update();
 				//Time End
 			}

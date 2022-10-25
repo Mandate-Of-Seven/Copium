@@ -27,7 +27,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "SceneManager/scene-manager.h"
 
-namespace Copium::Graphics
+namespace Copium
 {
 	// Global variables
 	static const GLuint maxQuadCount = 1000; // Number of sprites per batch

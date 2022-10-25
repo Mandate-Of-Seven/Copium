@@ -19,16 +19,16 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "renderer-component.h"
 #include "transform-component.h"
 
-std::map<Component::Type, const std::string> Component::componentMap
+std::map<ComponentType, const std::string> Component::componentMap
 {
-    {Type::Animator,"Animator"},
-    {Type::Collider,"Collider"},
-    {Type::SpriteRenderer,"Sprite Renderer"},
-    {Type::Script,"NewScript"},
-    {Type::Transform, "Transform"}
+    {ComponentType::Animator,"AnimatorComponent"},
+    {ComponentType::Collider,"ColliderComponent"},
+    {ComponentType::Renderer,"RendererComponent"},
+    {ComponentType::Script,"ScriptComponent"},
+    {ComponentType::Transform, "TransformComponent"}
 };
 
-Component::Component::Component(GameObject& _gameObj, Component::Type _componentType) 
+Component::Component::Component(GameObject& _gameObj, ComponentType _componentType) 
     : gameObj { _gameObj }, componentType{_componentType} {}
 
 
@@ -46,10 +46,10 @@ bool Component::Enabled() const noexcept{ return enabled;}
 void Component::Enabled(bool _enabled) noexcept { enabled = _enabled; }
 
 ColliderComponent::ColliderComponent(GameObject& _gameObj) 
-    :Component(_gameObj,Type::Collider) { std::cout << "COLLIDER CONS" << std::endl; }
+    :Component(_gameObj, ComponentType::Collider) { std::cout << "COLLIDER CONS" << std::endl; }
 
 AnimatorComponent::AnimatorComponent(GameObject& _gameObj) 
-    :Component(_gameObj,Type::Animator) { std::cout << "ANIMATOR CONS" << std::endl; }
+    :Component(_gameObj, ComponentType::Animator) { std::cout << "ANIMATOR CONS" << std::endl; }
 
 
 
@@ -65,36 +65,35 @@ Component& Component::operator=(const Component& rhs)
     COPIUM_ASSERT(componentType == rhs.componentType, "TRYING TO COPY ASSIGN TWO DIFFERENT COMPONENT TYPES!");
     switch (componentType)
     {
-    case Component::Type::Animator:
+    case ComponentType::Animator:
     {
         auto pRhs = reinterpret_cast<const AnimatorComponent*>(&rhs);
         auto pLhs = reinterpret_cast<AnimatorComponent*>(this);
         PRINT("ADDED ANIMATOR");
         break;
     }
-    case Component::Type::Collider:
+    case ComponentType::Collider:
     {
         auto pRhs = reinterpret_cast<const ColliderComponent*>(&rhs);
         auto pLhs = reinterpret_cast<ColliderComponent*>(this);
         PRINT("ADDED COLLIDER");
         break;
     }
-    case Component::Type::SpriteRenderer:
+    case ComponentType::Renderer:
     {
         auto pRhs = reinterpret_cast<const Copium::RendererComponent*>(&rhs);
         auto pLhs = reinterpret_cast<Copium::RendererComponent*>(this);
         PRINT("ADDED SPRITE RENDERER");
         break;
     }
-    case Component::Type::Script:
+    case ComponentType::Script:
     {
-        using namespace Copium::Message;
         //MESSAGE_CONTAINERS::addScript.name = "NewScript";
         //MESSAGE_CONTAINERS::addScript.gameObj = this;
         PRINT("ADDED SCRIPT");
         break;
     }
-    case Component::Type::Transform:
+    case ComponentType::Transform:
     {
         auto* pRhs = reinterpret_cast<const TransformComponent*>(&rhs);
         auto* pLhs = reinterpret_cast<TransformComponent*>(this);

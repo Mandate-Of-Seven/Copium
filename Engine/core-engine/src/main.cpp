@@ -20,6 +20,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Windows/windows-input.h"
 #include "Editor/editor-system.h"
 #include "Scripting/scripting-system.h"
+#include "Scripting/logic-system.h"
 #include "Editor/editor-consolelog.h"
 #include "Scripting/scripting.h"
 #include "Debugging/logging-system.h"
@@ -42,7 +43,7 @@ namespace
     Copium::CopiumCore& copiumCore{ *Copium::CopiumCore::Instance()};
     Copium::SoundSystem& soundSystem{ *Copium::SoundSystem::Instance()};
     Copium::InputSystem& inputSystem { *Copium::InputSystem::Instance()};
-    Copium::Windows::WindowsSystem* windowsSystem = Copium::Windows::WindowsSystem::Instance();
+    Copium::WindowsSystem* windowsSystem = Copium::WindowsSystem::Instance();
     Copium::NewSceneManager* sceneManager = Copium::NewSceneManager::Instance();
 }
 
@@ -89,10 +90,10 @@ int main()
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
     GameObject& gObj = *sceneManager->get_gof().build_gameobject();
-    Copium::ScriptComponent* sComponent = gObj.addComponent<Copium::ScriptComponent>();
-    sComponent->Name("CSharpTesting");
-    Window::Inspector::selectedGameObject = &gObj;
+    Copium::ScriptComponent& sComponent = gObj.addComponent<Copium::ScriptComponent>();
     gObj.addComponent<Copium::RendererComponent>();
+    sComponent.Name("CSharpTesting");
+    Window::Inspector::selectedGameObject = &gObj;
 
     // Engine Loop
     while (!glfwWindowShouldClose(windowsSystem->get_window()) && esCurrent != esQuit)
@@ -127,8 +128,6 @@ int main()
                     SM.draw_scene();           //DRAW STATE
                     copiumCore.update();
                     update();
-                    sComponent->Awake();
- 
                     if (esCurrent == esQuit)
                         SM.change_scene(gsQuit);
 
@@ -148,7 +147,6 @@ int main()
     }
     copiumCore.exit();
     cleanup();
-    std::cout << "Engine Closing...\n";
 }
 
 /***************************************************************************/
@@ -183,6 +181,10 @@ static void update()
         soundSystem.Play(reeling, true, false);
         std::cout << "Reeling sound is being played\n";
     }
+    if (inputSystem.is_key_pressed(GLFW_KEY_E))
+    {
+        Copium::LogicSystem::Instance()->Play(true);
+    }
     quitEngine();
 }
 
@@ -195,8 +197,8 @@ static void update()
 /**************************************************************************/
 static void draw() 
 {
-    Copium::Editor::EditorSystem::Instance()->draw();
-    Copium::Windows::WindowsSystem::Instance()->draw();
+    Copium::EditorSystem::Instance()->draw();
+    Copium::WindowsSystem::Instance()->draw();
 }
 
 /***************************************************************************/

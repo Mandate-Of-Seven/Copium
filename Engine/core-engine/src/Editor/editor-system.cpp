@@ -22,15 +22,14 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Editor/editor-scene-hierarchy-list.h"
 #include "GameObject/component.h"
 
-namespace Copium::Editor
+namespace Copium
 {
 	// Our state
 	bool show_demo_window = true;
 
 	void EditorSystem::init()
 	{
-		PRINT("WASSUP");
-		Copium::Windows::WindowsSystem* windowsSystem = Copium::Windows::WindowsSystem::Instance();
+		Copium::WindowsSystem* windowsSystem = Copium::WindowsSystem::Instance();
 
 		//imgui
 		ImGui::CreateContext();

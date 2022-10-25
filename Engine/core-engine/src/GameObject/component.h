@@ -26,33 +26,35 @@ class GameObject;
 
 using ComponentID = unsigned char;
 
+
+enum class ComponentType : int      // Types of Components
+{
+    Animator,
+    Collider,
+    Renderer,
+    Script,
+    Transform,
+    None
+};
+
 class Component
 {
     public:
-        enum class Type : int      // Types of Components
-        {
-            Animator,
-            Collider,
-            SpriteRenderer,
-            Script,
-            Transform,
-            None
-        };
-        const Type componentType;           //Type of component
+        const ComponentType componentType;           //Type of component
 
-        static std::map<Type, const std::string> componentMap; // Declared map to link Component::Type and its name
+        static std::map<ComponentType, const std::string> componentMap; // Declared map to link ComponentType and its name
 
-        static Type nameToType(const std::string& _name)
+        static ComponentType nameToType(const std::string& _name)
         {
             int i {0};
-            int end{ (int)Type::None };
+            int end{ (int)ComponentType::None };
             while (i != end)
             {
-                if (componentMap[(Type)i] == _name)
-                    return (Type)i;
+                if (componentMap[(ComponentType)i] == _name)
+                    return (ComponentType)i;
                 i+=1;
             }
-            return Type::None;
+            return ComponentType::None;
         }
 
         /***************************************************************************/
@@ -111,7 +113,7 @@ class Component
         */
         /**************************************************************************/
         Component() = delete;
-        Component(GameObject& _gameObj, Component::Type _componentType);
+        Component(GameObject& _gameObj, ComponentType _componentType);
 
         GameObject& gameObj;
     private:

@@ -20,7 +20,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Messaging/message-types.h"
 #include <unordered_map>
 
-namespace Copium::Message
+namespace Copium
 {
 
     class IReceiver
@@ -85,6 +85,8 @@ namespace Copium::Message
         */
         /**************************************************************************/
         void subscribe(MESSAGE_TYPE mType, IReceiver * pReceiver);
+
+        void unsubscribe(MESSAGE_TYPE mType, IReceiver * pReceiver);
 
         /**************************************************************************/
         /*!

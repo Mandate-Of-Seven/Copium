@@ -24,25 +24,25 @@ namespace
 	Copium::InputSystem& inputSystem{*Copium::InputSystem::Instance()};
 }
 
-namespace Copium::Physics
+namespace Copium
 {
 	Copium::Collision::AABB floor = { (Math::Vec2{ -0.8,-0.55 }), (Math::Vec2{ 0.8,-0.45 }) }; //position of floor
-	void Physics::init()
+	void PhysicsSystem::init()
 	{
 	}
-	void Physics::update()
+	void PhysicsSystem::update()
 	{
 		static int count = 0;
-		if (inputSystem.is_key_pressed(GLFW_KEY_B) && (boxes.size() < Copium::Graphics::GraphicsSystem::Instance()->get_sprites().size()))
+		if (inputSystem.is_key_pressed(GLFW_KEY_B) && (boxes.size() < Copium::GraphicsSystem::Instance()->get_sprites().size()))
 		{
 			glm::vec2 position;
 			glm::vec2 size;
 			Math::Vec2 convertedPos;
 			Math::Vec2 convertedSize;
-			size = Copium::Graphics::GraphicsSystem::Instance()->get_sprites()[count]->get_size();
+			size = Copium::GraphicsSystem::Instance()->get_sprites()[count]->get_size();
 			convertedSize = Math::Vec2(size.x, size.y);
 			Copium::Component::RigidBody* box = new Copium::Component::RigidBody;
-			position = Copium::Graphics::GraphicsSystem::Instance()->get_sprites()[count]->get_position();
+			position = Copium::GraphicsSystem::Instance()->get_sprites()[count]->get_position();
 			convertedPos = {position};
 			box->set_vel(Math::Vec2{ 0.0, 0.0 });
 			box->set_acc(Math::Vec2{ 0.0,0.0 });
@@ -94,37 +94,37 @@ namespace Copium::Physics
 		}
 		if (inputSystem.is_key_pressed(GLFW_KEY_P) && inputSystem.is_key_pressed(GLFW_KEY_LEFT_SHIFT))
 			{
-			Physics::toggle_step();
+			PhysicsSystem::toggle_step();
 			}
 		if (stepModeActive == true)
 		{
 			if (inputSystem.is_key_pressed(GLFW_KEY_0))
 			{
-				Physics::update_pos();
-				Physics::check_collision();
+				PhysicsSystem::update_pos();
+				PhysicsSystem::check_collision();
 			}
 		}
 		else
 		{
-			Physics::update_pos();
-			Physics::check_collision();
+			PhysicsSystem::update_pos();
+			PhysicsSystem::check_collision();
 		}
 			
 
 	}
 
 
-	void Physics::exit()
+	void PhysicsSystem::exit()
 	{
 		for (Copium::Component::RigidBody* a : boxes)
 		{
 			delete a;
 		}
 	}
-	void Physics::update_pos()
+	void PhysicsSystem::update_pos()
 	{
 
-		double dt = Windows::WindowsSystem::Instance()->get_delta_time();
+		double dt = WindowsSystem::Instance()->get_delta_time();
 		Math::Vec2 velocity;
 		Math::Vec2 acceleration;
 		glm::vec3 glmPosition;
@@ -135,8 +135,8 @@ namespace Copium::Physics
 		{
 			velocity = boxes[a]->get_vel();
 			acceleration = boxes[a]->get_acc();
-			glmPosition = Copium::Graphics::GraphicsSystem::Instance()->get_sprites()[a]->get_position();
-			glmSize = Copium::Graphics::GraphicsSystem::Instance()->get_sprites()[a]->get_size();
+			glmPosition = Copium::GraphicsSystem::Instance()->get_sprites()[a]->get_position();
+			glmSize = Copium::GraphicsSystem::Instance()->get_sprites()[a]->get_size();
 			position = Math::Vec2(glmPosition.x, glmPosition.y);
 			bound = boxes[a]->get_AABB();
 			if (boxes[a]->get_gravity() == true)
@@ -159,12 +159,12 @@ namespace Copium::Physics
 			bound.min.y = position.y - (glmSize.y * 1 / 2);
 			boxes[a]->set_AABB(bound.min, bound.max);
 			glmPosition = { position.x, position.y, 0.f };
-			Copium::Graphics::GraphicsSystem::Instance()->get_sprites()[a]->set_position(glmPosition);
+			Copium::GraphicsSystem::Instance()->get_sprites()[a]->set_position(glmPosition);
 			
 		}
 
 	}
-	void Physics::check_collision()
+	void PhysicsSystem::check_collision()
 	{	
 		for (int a = 0; a < boxes.size(); a++)
 		{
@@ -174,7 +174,7 @@ namespace Copium::Physics
 			Math::Vec2 position;
 			Copium::Collision::AABB bound;
 			velocity = boxes[a]->get_vel();
-			glmPosition = Copium::Graphics::GraphicsSystem::Instance()->get_sprites()[a]->get_position();
+			glmPosition = Copium::GraphicsSystem::Instance()->get_sprites()[a]->get_position();
 			position = Math::Vec2(glmPosition.x, glmPosition.y);
 			bound = boxes[a]->get_AABB();
 			if ((Copium::Collision::collision_rectrect(bound, velocity, floor, Math::Vec2{ 0.0,0.0 }) == true))
@@ -188,7 +188,7 @@ namespace Copium::Physics
 		}
 	}
 
-	void Physics::toggle_step()
+	void PhysicsSystem::toggle_step()
 	{
 		stepModeActive = !stepModeActive;
 		if (stepModeActive == true)

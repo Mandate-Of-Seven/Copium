@@ -32,7 +32,7 @@ namespace Copium::Collision
 
 			//Initialize values to check for collision between moving rectangles
 			Math::Vec2 vB;
-			double tFirst = 0, tLast = Copium::Windows::WindowsSystem::Instance()->get_delta_time();
+			double tFirst = 0, tLast = Copium::WindowsSystem::Instance()->get_delta_time();
 			vB.x = vel2.x - vel1.x;
 			vB.y = vel2.y - vel1.y;
 			//Object b is moving away from object a on the x axis
@@ -163,7 +163,7 @@ namespace Copium::Collision
 		{
 
 			float tFirst = 0;
-			float tLast = (float)Copium::Windows::WindowsSystem::Instance()->get_delta_time();
+			float tLast = (float)Copium::WindowsSystem::Instance()->get_delta_time();
 
 			//Object b is moving away from object a on the x axis
 			if (vel2.x < 0)

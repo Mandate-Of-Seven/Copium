@@ -19,7 +19,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "CopiumCore/system-interface.h"
 #include "Graphics/textures.h"
 
-namespace Copium::Files
+namespace Copium
 {
 	CLASS_SYSTEM(AssetsSystem)
 	{
@@ -32,10 +32,10 @@ namespace Copium::Files
 
 		void load_all_textures(std::list<std::string>& _path);
 
-		std::vector<Copium::Graphics::Texture>* get_textures() { return &textures; }
+		std::vector<Copium::Texture>* get_textures() { return &textures; }
 
 	private:
-		std::vector<Copium::Graphics::Texture> textures;
+		std::vector<Copium::Texture> textures;
 	};
 }
 

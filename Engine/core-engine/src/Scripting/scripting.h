@@ -28,7 +28,7 @@ extern "C"
 
 namespace Copium
 {
-    class ScriptComponent final : public Component, public Message::IReceiver
+    class ScriptComponent final : public Component, public IReceiver
     {
     public:
 		/**************************************************************************/
@@ -56,7 +56,7 @@ namespace Copium
 				Type of message
 		*/
 		/**************************************************************************/
-		void handleMessage(Message::MESSAGE_TYPE mType);
+		void handleMessage(MESSAGE_TYPE mType);
 
 		const std::string& Name() const;
 
@@ -105,10 +105,10 @@ namespace Copium
 	private:
 		void instantiate();
 
-		Scripting::ScriptClass* pScriptClass;
+		ScriptClass* pScriptClass;
 		MonoObject* mObject;
 		std::string name;
-		static Scripting::ScriptingSystem& sS;
+		static ScriptingSystem& sS;
     };
 }
 

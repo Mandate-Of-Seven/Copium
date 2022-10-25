@@ -32,7 +32,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 TransformComponent::TransformComponent
 	(GameObject& _gameObj,Copium::Math::Vec3 _position, Copium::Math::Vec3 _rotation, Copium::Math::Vec3 _scale)
-	:Component(_gameObj,Type::Transform),
+	:Component(_gameObj, ComponentType::Transform),
 	position {_position}, rotation{ _rotation }, scale{ _scale }, parent{ nullptr }{}
 
 glm::dvec3 TransformComponent::glmPosition() const { return position.to_glm(); }

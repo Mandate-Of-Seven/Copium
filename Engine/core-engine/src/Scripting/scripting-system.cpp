@@ -32,11 +32,9 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #define SECONDS_TO_RECOMPILE 5
 
-
-
 namespace
 {
-	Copium::Message::MessageSystem* messageSystem{ Copium::Message::MessageSystem::Instance() };
+	Copium::MessageSystem* messageSystem{ Copium::MessageSystem::Instance() };
 	enum class CompilingState
 	{
 		Compiling,
@@ -97,17 +95,16 @@ namespace Copium::Utils
 		return assembly;
 	}
 
-	Scripting::FieldType monoTypeToFieldType(MonoType* monoType)
+	FieldType monoTypeToFieldType(MonoType* monoType)
 	{
 		std::string typeName = mono_type_get_name(monoType);
-		using namespace Scripting;
 		auto it = fieldTypeMap.find(typeName);
 		COPIUM_ASSERT(it == fieldTypeMap.end(), "Invalid monoType")
 		return it->second;
 	}
 }
 
-namespace Copium::Scripting
+namespace Copium
 {
 	ScriptingSystem& sS{ *ScriptingSystem::Instance() };
 	bool scriptIsLoaded(const std::filesystem::path&);
@@ -141,53 +138,9 @@ namespace Copium::Scripting
 		}
 	#pragma endregion
 
-	// Gets the accessibility level of the given field
-	/*unsigned char GetFieldAccessibility(MonoClassField* field)
-	{
-		unsigned char accessibility = (unsigned char)Accessibility::None;
-		unsigned int accessFlag = mono_field_get_flags(field) & MONO_FIELD_ATTR_FIELD_ACCESS_MASK;
-
-		switch (accessFlag)
-		{
-			case MONO_FIELD_ATTR_PRIVATE:
-			{
-				accessibility = (unsigned char)Accessibility::Private;
-				break;
-			}
-			case MONO_FIELD_ATTR_FAM_AND_ASSEM:
-			{
-				accessibility |= (unsigned char)Accessibility::Protected;
-				accessibility |= (unsigned char)Accessibility::Internal;
-				break;
-			}
-			case MONO_FIELD_ATTR_ASSEMBLY:
-			{
-				accessibility = (unsigned char)Accessibility::Internal;
-				break;
-			}
-			case MONO_FIELD_ATTR_FAMILY:
-			{
-				accessibility = (unsigned char)Accessibility::Protected;
-				break;
-			}
-			case MONO_FIELD_ATTR_FAM_OR_ASSEM:
-			{
-				accessibility |= (unsigned char)Accessibility::Private;
-				accessibility |= (unsigned char)Accessibility::Protected;
-				break;
-			}
-			case MONO_FIELD_ATTR_PUBLIC:
-			{
-				accessibility = (unsigned char)Accessibility::Public;
-				break;
-			}
-		}
-		return accessibility;
-	}*/
-
 	void ScriptingSystem::recompileThreadWork()
 	{
-		Thread::ThreadSystem& tSys = *Thread::ThreadSystem::Instance();
+		ThreadSystem& tSys = *ThreadSystem::Instance();
 		while (!tSys.Quit())
 		{
 			while (compilingState != CompilingState::Wait);
@@ -202,7 +155,7 @@ namespace Copium::Scripting
 	}
 
 	ScriptingSystem::ScriptingSystem() :
-		scriptFiles{ Copium::Files::FileSystem::Instance()->get_files_with_extension(".cs") }
+		scriptFiles{ Copium::FileSystem::Instance()->get_files_with_extension(".cs") }
 	{
 
 	}
@@ -211,8 +164,8 @@ namespace Copium::Scripting
 	{
 		initMono();
 		registerScriptWrappers();
-		Thread::ThreadSystem::Instance()->addThread(new std::thread(&ScriptingSystem::recompileThreadWork,this));
-		messageSystem->subscribe(Message::MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT, this);
+		ThreadSystem::Instance()->addThread(new std::thread(&ScriptingSystem::recompileThreadWork,this));
+		messageSystem->subscribe(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT, this);
 	}
 
 	void ScriptingSystem::update()
@@ -325,7 +278,7 @@ namespace Copium::Scripting
 	{
 		unloadAppDomain();
 		createAppDomain();
-		mCoreAssembly = Utils::loadAssembly(Files::Paths::scriptsAssemblyPath);
+		mCoreAssembly = Utils::loadAssembly(Paths::scriptsAssemblyPath);
 		mAssemblyImage = mono_assembly_get_image(mCoreAssembly);
 		//Update scriptClasses
 		mGameObject = mono_class_from_name(mAssemblyImage, "CopiumEngine", "GameObject");
@@ -333,7 +286,7 @@ namespace Copium::Scripting
 		updateScriptClasses();
 		if (!mCopiumScript)
 			PRINT("COPIUM SCRIPT CANT BE FOUND");
-		messageSystem->dispatch(Message::MESSAGE_TYPE::MT_SCRIPTING_UPDATED);
+		messageSystem->dispatch(MESSAGE_TYPE::MT_SCRIPTING_UPDATED);
 	}
 
 	void ScriptingSystem::invoke(MonoObject* mObj, MonoMethod* mMethod, void** params)
@@ -350,15 +303,15 @@ namespace Copium::Scripting
 	{
 		//Check for new files
 		namespace fs = std::filesystem;
-		using scriptFileListIter = std::list<Files::File>::iterator;
+		using scriptFileListIter = std::list<File>::iterator;
 		scriptFileListIter scriptFilesIt = scriptFiles.begin();
-		static std::list<Files::File*> maskScriptFiles;
+		static std::list<File*> maskScriptFiles;
 		maskScriptFiles.resize(scriptFiles.size());
-		for (Files::File& file : scriptFiles)
+		for (File& file : scriptFiles)
 		{
 			maskScriptFiles.push_back(&file);
 		}
-		for (fs::directory_entry p : fs::recursive_directory_iterator(Files::Paths::projectPath))
+		for (fs::directory_entry p : fs::recursive_directory_iterator(Paths::projectPath))
 		{
 			const fs::path& pathRef{ p.path() };
 			if (pathRef.extension() != ".cs")
@@ -373,7 +326,7 @@ namespace Copium::Scripting
 			else
 			{
 				//Set scripts to be masked
-				for (Files::File* scriptFile : maskScriptFiles)
+				for (File* scriptFile : maskScriptFiles)
 				{
 					if (scriptFile && *scriptFile == pathRef)
 					{
@@ -385,7 +338,7 @@ namespace Copium::Scripting
 			}
 		}
 		// Remove deleted scripts using mask
-		for (Files::File* scriptFile : maskScriptFiles)
+		for (File* scriptFile : maskScriptFiles)
 		{
 			if (scriptFile != nullptr)
 			{
@@ -399,13 +352,13 @@ namespace Copium::Scripting
 	{
 		compilingState = CompilingState::Wait;
 		bool startCompiling = false;
-		for (Files::File& scriptFile : scriptFiles)
+		for (File& scriptFile : scriptFiles)
 		{
 			scriptFile.update_modification_timing();
 			if (scriptFile.is_modified() && !startCompiling)
 			{
 				startCompiling = true;
-				Compiler::compileDll();
+				Utils::compileDll();
 				compilingState = CompilingState::SwapAssembly;
 			}
 		}
@@ -413,7 +366,7 @@ namespace Copium::Scripting
 
 	bool ScriptingSystem::scriptIsLoaded(const std::filesystem::path& filePath)
 	{
-		using scriptFileListIter = std::list<Files::File>::iterator;
+		using scriptFileListIter = std::list<File>::iterator;
 		for (scriptFileListIter it = scriptFiles.begin(); it != scriptFiles.end(); ++it)
 		{
 			if (*it == filePath) return true;
@@ -430,9 +383,9 @@ namespace Copium::Scripting
 		mono_runtime_invoke(mSetID, mInstance, &param, nullptr);
 	}
 
-	void ScriptingSystem::handleMessage(Message::MESSAGE_TYPE mType)
+	void ScriptingSystem::handleMessage(MESSAGE_TYPE mType)
 	{
 		//MT_REFLECT_CS_GAMEOBJECT
-		reflectGameObject(Message::MESSAGE_CONTAINER::reflectCsGameObject.ID);
+		reflectGameObject(MESSAGE_CONTAINER::reflectCsGameObject.ID);
 	}
 }

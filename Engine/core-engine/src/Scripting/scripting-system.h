@@ -32,7 +32,7 @@ extern "C"
 	typedef struct _MonoClassField MonoClassField;
 }
 
-namespace Copium::Scripting
+namespace Copium
 {
 	enum class FieldType
 	{
@@ -79,7 +79,7 @@ namespace Copium::Scripting
 
 	using FieldMap = std::unordered_map<std::string, FieldInstance>;
 
-	static std::unordered_map<std::string, Scripting::FieldType> fieldTypeMap =
+	static std::unordered_map<std::string, FieldType> fieldTypeMap =
 	{
 		{ "System.Single", FieldType::Float },
 		{ "System.Double", FieldType::Double },
@@ -121,7 +121,7 @@ namespace Copium::Scripting
 		std::map<std::string, Field> mFields;
 	};
 
-	CLASS_SYSTEM(ScriptingSystem), Message::IReceiver
+	CLASS_SYSTEM(ScriptingSystem), IReceiver
 	{
 	public:
 		/**************************************************************************/
@@ -199,7 +199,7 @@ namespace Copium::Scripting
 
 		void invoke(MonoObject * mObj, MonoMethod * mMethod, void** params = nullptr);
 
-		void handleMessage(Message::MESSAGE_TYPE mType);
+		void handleMessage(MESSAGE_TYPE mType);
 
 		void reflectGameObject(uint64_t _ID);
 
@@ -261,7 +261,7 @@ namespace Copium::Scripting
 		/**************************************************************************/
 		bool scriptIsLoaded(const std::filesystem::path& filePath);
 		std::unordered_map<std::string, ScriptClass*> scriptClassMap;
-		std::list<Files::File>& scriptFiles;
+		std::list<File>& scriptFiles;
 	};
 }
 #endif // !SCRIPTING_SYSTEM_H

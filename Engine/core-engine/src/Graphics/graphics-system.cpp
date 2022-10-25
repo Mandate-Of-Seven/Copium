@@ -32,7 +32,7 @@ namespace
 	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
 }
 
-namespace Copium::Graphics
+namespace Copium
 {
 	// Temporary global variables
 	GLfloat movement_x = 0.f, movement_y = 0.f;
@@ -55,7 +55,7 @@ namespace Copium::Graphics
 		// Initialise Sub systems
 		renderer.init();
 
-		glm::vec2 size = Copium::Editor::EditorSystem::Instance()->get_scene_view()->get_dimension();
+		glm::vec2 size = Copium::EditorSystem::Instance()->get_scene_view()->get_dimension();
 		framebuffer.set_size((GLuint)size.x, (GLuint)size.y);
 		framebuffer.init();
 
@@ -75,7 +75,7 @@ namespace Copium::Graphics
 
 	void GraphicsSystem::update()
 	{
-		//GLfloat dt = /*windowsSystem.get_delta_time();*/(GLfloat) Windows::WindowsSystem::Instance()->get_delta_time();
+		//GLfloat dt = /*windowsSystem.get_delta_time();*/(GLfloat) WindowsSystem::Instance()->get_delta_time();
 		movement_x = movement_y = size_x = size_y = 0;
 
 		glClearColor(1.f, 1.f, 1.f, 1.f);
@@ -97,7 +97,7 @@ namespace Copium::Graphics
 		if (!inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_C))
 		{
 			SpriteRenderer* sprite = new SpriteRenderer;
-			Copium::Editor::EditorSystem* editor = Copium::Editor::EditorSystem::Instance();
+			Copium::EditorSystem* editor = Copium::EditorSystem::Instance();
 			glm::vec2 scenePos = editor->get_scene_view()->get_position();
 			glm::vec2 sceneDim = editor->get_scene_view()->get_dimension();
 			glm::vec2 cameraPos = editor->get_camera()->get_position();
@@ -232,7 +232,7 @@ namespace Copium::Graphics
 	// parse all textures into the game
 	void GraphicsSystem::parse_textures()
 	{
-		Copium::Files::AssetsSystem* assets = Copium::Files::AssetsSystem::Instance();
+		Copium::AssetsSystem* assets = Copium::AssetsSystem::Instance();
 		
 		// Check for texture slots
 		COPIUM_ASSERT(textureSlotIndex == maxTextures, "Max textures reached! Replace old textures!!");
@@ -367,12 +367,12 @@ namespace Copium::Graphics
 		// Bean: scale should be the scale of the object, 
 		// texture scale should be separate and derived from the image dimensions
 		// Scale = image scale / default scale(1024)
-		Copium::Files::AssetsSystem* assets = Copium::Files::AssetsSystem::Instance();
+		Copium::AssetsSystem* assets = Copium::AssetsSystem::Instance();
 		renderer.draw_quad({ 0.f, 0.f, 0.f }, { 3.84f, 2.16f }, 0.f, assets->get_textures()[0][0].get_object_id());
 		
 		color = { 0.1f, 1.f, 0.1f, 1.f };
 		glm::vec2 worldNDC{ 0 };
-		Copium::Editor::EditorSystem* editor = Copium::Editor::EditorSystem::Instance();
+		Copium::EditorSystem* editor = Copium::EditorSystem::Instance();
 		glm::vec2 cameraPos = editor->get_camera()->get_position();
 		float zoom = editor->get_camera()->get_zoom();
 		worldNDC = { cameraPos.x, cameraPos.y };
@@ -426,7 +426,7 @@ namespace Copium::Graphics
 		Scene* scene = sm->get_current_scene();
 		for (GameObject* gameObject : scene->get_gameobjectvector())
 		{
-			Component* component = gameObject->getComponent(Component::Type::SpriteRenderer);
+			Component* component = gameObject->getComponent(ComponentType::Renderer);
 			if (!component || !component->Enabled())
 				continue;
 			TransformComponent& t = gameObject->Transform();

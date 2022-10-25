@@ -27,7 +27,7 @@ namespace
 	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
 }
 
-namespace Copium::Editor
+namespace Copium
 {
 	void EditorCamera::init(float _width, float _height, bool _rotation)
 	{

@@ -18,14 +18,14 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor/editor-system.h"
 #include "Graphics/graphics-system.h"
 
-namespace Copium::Editor
+namespace Copium
 {
 	// Bean: Temporary global variable
-	Copium::Graphics::GraphicsSystem* graphics;
+	Copium::GraphicsSystem* graphics;
 
 	void EditorSceneView::init()
 	{
-		graphics = Copium::Graphics::GraphicsSystem::Instance();
+		graphics = Copium::GraphicsSystem::Instance();
 
 		sceneDimension = { sceneWidth, sceneHeight };
 	}
