@@ -192,11 +192,51 @@ namespace Copium
 				case FieldType::ULong:				
 					break;
 				case FieldType::Vector2:
-					ImGui::InputFloat2(name.c_str(), reinterpret_cast<float*>(buffer));
+				{
+					if (ImGui::BeginTable(name.c_str(), 3, windowFlags))
+					{
+						float* fBuffer = reinterpret_cast<float*>(buffer);
+						ImGui::TableNextColumn();
+						ImGui::PushID(0);
+						ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+						ImGui::InputFloat("", fBuffer++);
+						ImGui::PopID();
+
+						ImGui::TableNextColumn();
+						ImGui::PushID(1);
+						ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+						ImGui::InputFloat("", fBuffer++);
+						ImGui::PopID();
+						ImGui::EndTable();
+					}
 					break;
+				}
 				case FieldType::Vector3:
-					ImGui::InputFloat3(name.c_str(), reinterpret_cast<float*>(buffer));
+				{
+					if (ImGui::BeginTable(name.c_str(), 3, windowFlags))
+					{
+						float* fBuffer = reinterpret_cast<float*>(buffer);
+						ImGui::TableNextColumn();
+						ImGui::PushID(0);
+						ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+						ImGui::InputFloat("", fBuffer++);
+						ImGui::PopID();
+
+						ImGui::TableNextColumn();
+						ImGui::PushID(1);
+						ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+						ImGui::InputFloat("", fBuffer++);
+						ImGui::PopID();
+
+						ImGui::TableNextColumn();
+						ImGui::PushID(2);
+						ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+						ImGui::InputFloat("", fBuffer);
+						ImGui::PopID();
+						ImGui::EndTable();
+					}
 					break;
+				}
 				}
 				setFieldValue(name, buffer);
 				++it;
