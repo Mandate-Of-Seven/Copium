@@ -13,10 +13,9 @@
 All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
-// Extension loader library's header must be included before GLFW's header!!!
 #include "pch.h"
 
-//PRECOMPILED HEADERS(Commonly used external libraries)
+//Systems
 #include "Windows/windows-system.h"
 #include "Windows/windows-input.h"
 #include "Editor/editor-system.h"
@@ -34,7 +33,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "SceneManager/scene-manager.h"
 #include "Editor/inspector.h"
 
-//Systems
 #include "CopiumCore/copium-core.h"
 #include "Debugging/frame-rate-controller.h"
 namespace
@@ -91,10 +89,8 @@ int main()
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
     GameObject& gObj = *sceneManager->get_gof().build_gameobject();
-    //gObj.addComponent<AnimatorComponent>();
-    Copium::ScriptComponent sComponent(gObj);
-    sComponent.Name("CSharpTesting");
-    
+    Copium::ScriptComponent* sComponent = gObj.addComponent<Copium::ScriptComponent>();
+    sComponent->Name("CSharpTesting");
     Window::Inspector::selectedGameObject = &gObj;
     gObj.addComponent<Copium::RendererComponent>();
 
@@ -131,7 +127,7 @@ int main()
                     SM.draw_scene();           //DRAW STATE
                     copiumCore.update();
                     update();
-                    sComponent.Awake();
+                    sComponent->Awake();
  
                     if (esCurrent == esQuit)
                         SM.change_scene(gsQuit);

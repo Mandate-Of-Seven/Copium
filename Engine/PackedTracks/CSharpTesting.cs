@@ -2,7 +2,8 @@ using CopiumEngine;
 using System;
 public class CSharpTesting : CopiumScript
 {
-	public double speed = 0.2;
+	public float speed = 0.2f;
+	public Vector2 vec2;
     void Awake()
 	{
 		Vector3 position = transform.position;
@@ -24,6 +25,8 @@ public class CSharpTesting : CopiumScript
 			position.y -= speed;
 		}
 		transform.position = position;
+		vec2.x = position.x;
+		vec2.y = position.y;
 	}
 
 	void Start()

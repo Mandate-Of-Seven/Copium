@@ -29,7 +29,6 @@ namespace Copium
 
 	void RendererComponent::inspector_view()
 	{
-		float Padding = 16.f;
 		float sameLinePadding = 16.f;
 		bool openPopup = false;
 

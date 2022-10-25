@@ -44,15 +44,11 @@ namespace Window
 
         void init()
         {
-            Copium::NewSceneManager* sm = Copium::NewSceneManager::Instance();
             selectedGameObject = nullptr;
             ImGuiIO& io = ImGui::GetIO();
             io.Fonts->AddFontFromFileTTF("assets\\fonts\\bahnschrift.ttf", 32.f);
             isOpen = true;
         }
-
-
-        ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 		void update()
 		{
@@ -72,9 +68,9 @@ namespace Window
                 selectedGameObject->inspectorView();
 
                 //AlignForWidth(buttonSize.x);
-                //if (ImGui::Button("Add Component", buttonSize)) {
-                //    isAddingComponent = true;
-                //}
+                if (ImGui::Button("Add Component", {100.f,100.f})) {
+                    isAddingComponent = true;
+                }
             }
             ImGui::End();
             ImGui::PopStyleVar();

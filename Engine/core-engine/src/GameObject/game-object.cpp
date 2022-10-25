@@ -244,6 +244,7 @@ void GameObject::inspectorView()
         ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed;
         for (Component* component : components)
         {
+
             if (ImGui::CollapsingHeader(component->Name().c_str(), nodeFlags))
             {
                 component->inspector_view();

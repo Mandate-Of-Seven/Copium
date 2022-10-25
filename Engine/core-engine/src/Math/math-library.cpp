@@ -28,8 +28,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 namespace Copium::Math
 {
 	// USEFUL MATH MACROS
-	#define EPSILON		0.0001
-	#define PI			3.14159265358
+	#define EPSILON		0.0001f
+	#define PI			3.14159265358f
 
 	//Setting up for RTTR implementation----------
 	RTTR_REGISTRATION
@@ -47,10 +47,6 @@ namespace Copium::Math
 		.property("x", &Vec3::x)
 		.property("y", &Vec3::y)
 		.property("z", &Vec3::z);
-
-
-
-
 	}
 
 	myint::myint() : i{0} {}
@@ -60,8 +56,8 @@ namespace Copium::Math
 	// Vec2-----------------------------------------
 	// Vec2 Constructors
 	Vec2::Vec2(): x{0.0}, y{0.0} {}
-	Vec2::Vec2(double _x, double _y) : x{_x}, y{_y} {}
-	Vec2::Vec2(glm::dvec2& _v) : x{_v.x}, y{_v.y} {}
+	Vec2::Vec2(float _x, float _y) : x{_x}, y{_y} {}
+	Vec2::Vec2(glm::vec2& _v) : x{_v.x}, y{_v.y} {}
 
 	// Vec2 Assignment Operators + Unary Operator
 	Vec2& Vec2::operator= (const Vec2& _rhs)
@@ -70,7 +66,7 @@ namespace Copium::Math
 		y = _rhs.y;
 		return *this;
 	}
-	Vec2& Vec2::operator= (const glm::dvec2& _rhs)
+	Vec2& Vec2::operator= (const glm::vec2& _rhs)
 	{
 		x = _rhs.x;
 		y = _rhs.y;
@@ -88,13 +84,13 @@ namespace Copium::Math
 		y -= _rhs.y;
 		return *this;
 	}
-	Vec2& Vec2::operator*= (double _rhs)
+	Vec2& Vec2::operator*= (float _rhs)
 	{
 		x *= _rhs;
 		y *= _rhs;
 		return *this;
 	}
-	Vec2& Vec2::operator/= (double _rhs)
+	Vec2& Vec2::operator/= (float _rhs)
 	{
 		x /= _rhs;
 		y /= _rhs;
@@ -105,7 +101,7 @@ namespace Copium::Math
 		return Vec2(-x, -y);
 	}
 
-	glm::dvec2 Vec2::to_glm() const
+	glm::vec2 Vec2::to_glm() const
 	{
 		return glm::vec2(x, y);
 	}
@@ -119,15 +115,15 @@ namespace Copium::Math
 	{
 		return Vec2(_lhs.x - _rhs.x, _lhs.y - _rhs.y);
 	}
-	Vec2 operator* (const Vec2& _lhs, double _rhs)
+	Vec2 operator* (const Vec2& _lhs, float _rhs)
 	{
 		return Vec2(_lhs.x * _rhs, _lhs.y * _rhs);
 	}
-	Vec2 operator* (double _lhs, const Vec2& _rhs)
+	Vec2 operator* (float _lhs, const Vec2& _rhs)
 	{
 		return Vec2(_lhs * _rhs.x, _lhs * _rhs.y);
 	}
-	Vec2 operator/ (const Vec2& _lhs, double _rhs)
+	Vec2 operator/ (const Vec2& _lhs, float _rhs)
 	{
 		return Vec2(_lhs.x / _rhs, _lhs.y / _rhs);
 	}
@@ -139,29 +135,29 @@ namespace Copium::Math
 		_result = v;
 
 	}
-	double vec2_length(const Vec2& _v)
+	float vec2_length(const Vec2& _v)
 	{
 		return sqrt(vec2_squarelength(_v));
 	}
-	double vec2_squarelength(const Vec2& _v)
+	float vec2_squarelength(const Vec2& _v)
 	{
 		return (_v.x*_v.x + _v.y*_v.y);
 	}
-	double vec2_distance(const Vec2& _v1, const Vec2& _v2)
+	float vec2_distance(const Vec2& _v1, const Vec2& _v2)
 	{
 		Vec2 v(_v1.x - _v2.x, _v1.y - _v2.y);
 		return vec2_length(v);
 	}
-	double vec2_squaredistance(const Vec2& _v1, const Vec2& _v2)
+	float vec2_squaredistance(const Vec2& _v1, const Vec2& _v2)
 	{
 		Vec2 v(_v1.x - _v2.x, _v1.y - _v2.y);
 		return vec2_squarelength(v);
 	}
-	double vec2_dotproduct(const Vec2& _v1, const Vec2& _v2)
+	float vec2_dotproduct(const Vec2& _v1, const Vec2& _v2)
 	{
 		return (_v1.x * _v2.x + _v1.y * _v2.y);
 	}
-	double vec2_crossproductmag(const Vec2& _v1, const Vec2& _v2)
+	float vec2_crossproductmag(const Vec2& _v1, const Vec2& _v2)
 	{
 		return (_v1.x * _v2.y - _v1.y * _v2.x);
 	}
@@ -175,8 +171,8 @@ namespace Copium::Math
 		if (!_value.HasMember("X") || !_value.HasMember("Y"))
 			return false;
 
-		x = _value["X"].GetDouble();
-		y = _value["Y"].GetDouble();
+		x = _value["X"].GetFloat();
+		y = _value["Y"].GetFloat();
 			
 		return false;
 
@@ -186,8 +182,8 @@ namespace Copium::Math
 	// Vec3-----------------------------------------
 	// Vec3 Constructors
 	Vec3::Vec3(): x{0.0}, y{0.0}, z{0.0} {}
-	Vec3::Vec3(double _x, double _y, double _z): x{_x}, y{_y}, z{_z} {}
-	Vec3::Vec3(glm::dvec3& _v): x{_v.x}, y{_v.y}, z{_v.z} {}
+	Vec3::Vec3(float _x, float _y, float _z): x{_x}, y{_y}, z{_z} {}
+	Vec3::Vec3(glm::vec3& _v): x{_v.x}, y{_v.y}, z{_v.z} {}
 
 	// Vec3 Assignment Operators + Unary Operator
 	Vec3& Vec3::operator= (const Vec3& _rhs)
@@ -197,7 +193,7 @@ namespace Copium::Math
 		z = _rhs.z;
 		return *this;
 	}
-	Vec3& Vec3::operator= (const glm::dvec3& _rhs)
+	Vec3& Vec3::operator= (const glm::vec3& _rhs)
 	{
 		x = _rhs.x;
 		y = _rhs.y;
@@ -218,14 +214,14 @@ namespace Copium::Math
 		z -= _rhs.z;
 		return *this;
 	}
-	Vec3& Vec3::operator*= (double _rhs)
+	Vec3& Vec3::operator*= (float _rhs)
 	{
 		x *= _rhs;
 		y *= _rhs;
 		z *= _rhs;
 		return *this;
 	}
-	Vec3& Vec3::operator/= (double _rhs)
+	Vec3& Vec3::operator/= (float _rhs)
 	{
 		x /= _rhs;
 		y /= _rhs;
@@ -237,7 +233,7 @@ namespace Copium::Math
 		return Vec3(-x, -y, -z);
 	}
 
-	glm::dvec3 Vec3::to_glm() const
+	glm::vec3 Vec3::to_glm() const
 	{
 		return glm::vec3(x, y, z);
 	}
@@ -252,15 +248,15 @@ namespace Copium::Math
 	{
 		return Vec3(_lhs.x - _rhs.x, _lhs.y - _rhs.y, _lhs.z - _rhs.z);
 	}
-	Vec3 operator* (const Vec3& _lhs, double _rhs)
+	Vec3 operator* (const Vec3& _lhs, float _rhs)
 	{
 		return Vec3(_lhs.x * _rhs, _lhs.y * _rhs, _lhs.z * _rhs);
 	}
-	Vec3 operator* (double _lhs, const Vec3& _rhs)
+	Vec3 operator* (float _lhs, const Vec3& _rhs)
 	{
 		return Vec3(_rhs.x * _lhs, _rhs.y * _lhs, _rhs.z * _lhs);
 	}
-	Vec3 operator/ (const Vec3& _lhs, double _rhs)
+	Vec3 operator/ (const Vec3& _lhs, float _rhs)
 	{
 		return Vec3(_lhs.x / _rhs, _lhs.y / _rhs, _lhs.z / _rhs);
 	}
@@ -271,36 +267,36 @@ namespace Copium::Math
 		Vec3 v(_src.x / vec3_length(_src), _src.y / vec3_length(_src), _src.z / vec3_length(_src));
 		_result = v;
 	}
-	double vec3_length(const Vec3& _v)
+	float vec3_length(const Vec3& _v)
 	{
-		double d;
+		float d;
 		d = sqrt(vec3_squarelength(_v));
 		return d;
 	}
-	double vec3_squarelength(const Vec3& _v)
+	float vec3_squarelength(const Vec3& _v)
 	{
-		double d;
+		float d;
 		d = _v.x * _v.x + _v.y * _v.y + _v.z * _v.z;
 		return d;
 	}
-	double vec3_distance(const Vec3& _v1, const Vec3& _v2)
+	float vec3_distance(const Vec3& _v1, const Vec3& _v2)
 	{
 		Vec3 v(_v1.x - _v2.x, _v1.y - _v2.y, _v1.z - _v2.z);
 		return vec3_length(v);
 	}
-	double vec3_squaredistance(const Vec3& _v1, const Vec3& _v2)
+	float vec3_squaredistance(const Vec3& _v1, const Vec3& _v2)
 	{
 		Vec3 v(_v1.x - _v2.x, _v1.y - _v2.y, _v1.z - _v2.z);
 		return vec3_squarelength(v);
 	}
-	double vec3_dotproduct(const Vec3& _v1, const Vec3& _v2)
+	float vec3_dotproduct(const Vec3& _v1, const Vec3& _v2)
 	{
-		double d = _v1.x * _v2.x + _v1.y * _v2.y + _v1.z * _v2.z;
+		float d = _v1.x * _v2.x + _v1.y * _v2.y + _v1.z * _v2.z;
 		return d;
 	}
 	Vec3 vec3_crossproduct(const Vec3& _v1, const Vec3& _v2)
 	{
-		double vx, vy, vz;
+		float vx, vy, vz;
 		vx = _v1.y * _v2.z - _v1.z * _v2.y;
 		vy = _v1.x * _v2.z - _v1.z * _v2.x;
 		vz = _v1.x * _v2.y - _v1.y * _v2.x;
@@ -316,9 +312,9 @@ namespace Copium::Math
 		if (!_value.HasMember("X") || !_value.HasMember("Y") || !_value.HasMember("Z"))
 			return false;
 
-		x = _value["X"].GetDouble();
-		y = _value["Y"].GetDouble();
-		z = _value["Z"].GetDouble();
+		x = _value["X"].GetFloat();
+		y = _value["Y"].GetFloat();
+		z = _value["Z"].GetFloat();
 		return true;
 
 	}
@@ -336,7 +332,7 @@ namespace Copium::Math
 			}
 		}
 	}
-	Matrix3x3::Matrix3x3(const double(&_rhs)[9]) {
+	Matrix3x3::Matrix3x3(const float(&_rhs)[9]) {
 		for (int i{ 0 }, k{ 0 }; i < 3; ++i)
 		{
 			for (int j{ 0 }; j < 3; ++j)
@@ -346,9 +342,9 @@ namespace Copium::Math
 			}
 		}
 	}
-	Matrix3x3::Matrix3x3(double _00, double _01, double _02,
-							double _10, double _11, double _12,
-							double _20, double _21, double _22)
+	Matrix3x3::Matrix3x3(float _00, float _01, float _02,
+							float _10, float _11, float _12,
+							float _20, float _21, float _22)
 	{
 		m[0][0] = _00;
 		m[0][1] = _01;
@@ -459,20 +455,20 @@ namespace Copium::Math
 			}
 		}
 	}
-	void matrix3x3_translate(Matrix3x3& _mtx, double _x, double _y) 
+	void matrix3x3_translate(Matrix3x3& _mtx, float _x, float _y) 
 	{
 		matrix3x3_identity(_mtx);
 		_mtx.m[0][2] = _x;
 		_mtx.m[1][2] = _y;
 
 	}
-	void matrix3x3_scale(Matrix3x3& _mtx, double _x, double _y)
+	void matrix3x3_scale(Matrix3x3& _mtx, float _x, float _y)
 	{
 		matrix3x3_identity(_mtx);
 		_mtx.m[0][0] = _x;
 		_mtx.m[1][1] = _y;
 	}
-	void matrix3x3_rotrad(Matrix3x3& _mtx, double _angle) 
+	void matrix3x3_rotrad(Matrix3x3& _mtx, float _angle) 
 	{
 		matrix3x3_identity(_mtx);
 
@@ -481,12 +477,12 @@ namespace Copium::Math
 		_mtx.m[1][0] = sinf((float) _angle);
 		_mtx.m[1][1] = cosf((float) _angle);
 	}
-	void matrix3x3_rotdeg(Matrix3x3& _mtx, double _angle) 
+	void matrix3x3_rotdeg(Matrix3x3& _mtx, float _angle) 
 	{
 		matrix3x3_identity(_mtx);
 
 		//Convert to radian
-		double result = _angle * (PI / 180.0);
+		float result = _angle * (PI / 180.0);
 
 		_mtx.m[0][0] = cosf((float) result);
 		_mtx.m[0][1] = -sinf((float) result);
@@ -497,7 +493,7 @@ namespace Copium::Math
 	void matrix3x3_transpose(Matrix3x3& _mtx, const Matrix3x3& _rhs) 
 	{
 		_mtx = _rhs;
-		double tmp;
+		float tmp;
 
 		//Swap values across the diagonal
 		tmp = _mtx.m[0][1];
@@ -513,7 +509,7 @@ namespace Copium::Math
 		_mtx.m[2][1] = tmp;
 
 	}
-	void matrix3x3_inverse(Matrix3x3* _dest, double* _determinant, const Matrix3x3& _src) 
+	void matrix3x3_inverse(Matrix3x3* _dest, float* _determinant, const Matrix3x3& _src) 
 	{
 		*_determinant = _src.m[0][0] * (_src.m[1][1] * _src.m[2][2] - _src.m[1][2] * _src.m[2][1])
 			- _src.m[0][1] * (_src.m[1][0] * _src.m[2][2] - _src.m[1][2] * _src.m[2][0])
@@ -584,14 +580,14 @@ namespace Copium::Math
 		return _os;
 	}
 
-	double deg_to_rad(double _angle)
+	float deg_to_rad(float _angle)
 	{
-		double result = _angle * (PI / 180.0);
+		float result = _angle * (PI / 180.0f);
 		return result;
 	}
-	double rad_to_deg(double _angle)
+	float rad_to_deg(float _angle)
 	{
-		double result = _angle * (180.0 / PI);
+		float result = _angle * (180.0f / PI);
 		return result;
 	}
 
@@ -607,7 +603,7 @@ namespace Copium::Math
 			}
 		}
 	}
-	Matrix4x4::Matrix4x4(const double(&_rhs)[16])
+	Matrix4x4::Matrix4x4(const float(&_rhs)[16])
 	{
 		for (int i{ 0 }, k{ 0 }; i < 4; ++i)
 		{
@@ -618,9 +614,9 @@ namespace Copium::Math
 			}
 		}
 	}
-	Matrix4x4::Matrix4x4(double _00, double _01, double _02, double _03,
-		double _10, double _11, double _12, double _13,
-		double _20, double _21, double _22, double _23)
+	Matrix4x4::Matrix4x4(float _00, float _01, float _02, float _03,
+		float _10, float _11, float _12, float _13,
+		float _20, float _21, float _22, float _23)
 	{
 		m[0][0] = _00;
 		m[0][1] = _01;
@@ -718,7 +714,7 @@ namespace Copium::Math
 	{
 		return Matrix4x4::Matrix4x4Proxy(*this, _row);
 	}
-	double& Matrix4x4::Matrix4x4Proxy::operator[](size_t _col)
+	float& Matrix4x4::Matrix4x4Proxy::operator[](size_t _col)
 	{
 		return parent.m[rowIndex][_col];
 	}
@@ -728,7 +724,7 @@ namespace Copium::Math
 	{
 		return Matrix4x4::Matrix4x4ProxyConst(*this, _row);
 	}
-	const double& Matrix4x4::Matrix4x4ProxyConst::operator[](size_t _col)
+	const float& Matrix4x4::Matrix4x4ProxyConst::operator[](size_t _col)
 	{
 		return parent.m[rowIndex][_col];
 	}
@@ -776,7 +772,7 @@ namespace Copium::Math
 		tmp *= _rhs;
 		return tmp;
 	}
-	Matrix4x4 operator*(double _scalar, const Matrix4x4& _mtx)
+	Matrix4x4 operator*(float _scalar, const Matrix4x4& _mtx)
 	{
 		Matrix4x4 tmp(_mtx);
 		for (size_t i{ 0 }; i < 4; ++i)
@@ -801,7 +797,7 @@ namespace Copium::Math
 			}
 		}
 	}
-	void matrix4x4_translation(Matrix4x4& _mtx, double _x, double _y, double _z)
+	void matrix4x4_translation(Matrix4x4& _mtx, float _x, float _y, float _z)
 	{
 		// Make mtx into identity mtx first
 		matrix4x4_identity(_mtx);
@@ -809,7 +805,7 @@ namespace Copium::Math
 		_mtx.m[1][3] = _y;
 		_mtx.m[2][3] = _z;
 	}
-	void matrix4x4_scale(Matrix4x4& _mtx, double _x, double _y, double _z)
+	void matrix4x4_scale(Matrix4x4& _mtx, float _x, float _y, float _z)
 	{
 		matrix4x4_identity(_mtx);
 		_mtx.m[0][0] = _x;
@@ -817,7 +813,7 @@ namespace Copium::Math
 		_mtx.m[2][2] = _z;
 
 	}
-	void matrix4x4_rot_2D(Matrix4x4& _mtx, double _deg)
+	void matrix4x4_rot_2D(Matrix4x4& _mtx, float _deg)
 	{
 		matrix4x4_identity(_mtx);
 		_mtx.m[0][0] = cos(_deg);
@@ -827,7 +823,7 @@ namespace Copium::Math
 	}
 
 	// SPECIFIED DEGREE MUST BE IN RADIANS - for 3D :)
-	void matrix4x4_rot_x(Matrix4x4& _mtx, double _deg)
+	void matrix4x4_rot_x(Matrix4x4& _mtx, float _deg)
 	{
 		matrix4x4_identity(_mtx);
 		_mtx.m[1][1] = cos(_deg);
@@ -835,7 +831,7 @@ namespace Copium::Math
 		_mtx.m[2][1] = -sin(_deg);
 		_mtx.m[2][2] = cos(_deg);
 	}
-	void matrix4x4_rot_y(Matrix4x4& _mtx, double _deg)
+	void matrix4x4_rot_y(Matrix4x4& _mtx, float _deg)
 	{
 		matrix4x4_identity(_mtx);
 		_mtx.m[0][0] = cos(_deg);
@@ -843,7 +839,7 @@ namespace Copium::Math
 		_mtx.m[2][0] = sin(_deg);
 		_mtx.m[2][2] = cos(_deg);
 	}
-	void matrix4x4_rot_z(Matrix4x4& _mtx, double _deg)
+	void matrix4x4_rot_z(Matrix4x4& _mtx, float _deg)
 	{
 		matrix4x4_identity(_mtx);
 		_mtx.m[0][0] = cos(_deg);

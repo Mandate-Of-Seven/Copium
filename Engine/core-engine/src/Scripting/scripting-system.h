@@ -118,7 +118,7 @@ namespace Copium::Scripting
 		MonoMethod* mLateUpdate;
 		MonoMethod* mOnCollisionEnter;
 		MonoMethod* mOnCreate;
-		std::map<std::string, Field> m_Fields;
+		std::map<std::string, Field> mFields;
 	};
 
 	CLASS_SYSTEM(ScriptingSystem), Message::IReceiver

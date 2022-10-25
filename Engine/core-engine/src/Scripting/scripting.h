@@ -97,7 +97,10 @@ namespace Copium
 		/**************************************************************************/
 		void OnCollisionEnter();
 
-		void inspector_view(){};
+		void inspector_view();
+
+		bool getFieldValue(const std::string& name, void* buffer);
+		bool setFieldValue(const std::string& name, const void* value);
 
 	private:
 		void instantiate();

@@ -4,14 +4,14 @@ namespace CopiumEngine
 {
     public struct Vector2
     {
-        public double x, y;
+        public float x, y;
         public static Vector2 Zero => new Vector2(0.0f);
 
-        public Vector2(double scalar)
+        public Vector2(float scalar)
         {
             x = scalar; y = scalar;
         }
-        public Vector2(double _x, double _y)
+        public Vector2(float _x, float _y)
         {
             x = _x; y = _y;
         }
@@ -19,13 +19,13 @@ namespace CopiumEngine
     
     public struct Vector3
     {
-        public double x, y, z;
+        public float x, y, z;
         public static Vector3 zero => new Vector3(0.0f);
-        public Vector3(double scalar)
+        public Vector3(float scalar)
         {
             x = scalar; y = scalar; z = scalar;
         }
-        public Vector3(double _x = 0, double _y = 0, double _z = 0)
+        public Vector3(float _x = 0, float _y = 0, float _z = 0)
         {
             x = _x; y = _y; z = _z;
         }

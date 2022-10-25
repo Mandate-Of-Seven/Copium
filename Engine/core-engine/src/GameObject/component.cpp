@@ -53,7 +53,7 @@ AnimatorComponent::AnimatorComponent(GameObject& _gameObj)
 
 
 
-const std::string& Component::Name()
+const std::string& Component::Name() const
 {
     return componentMap[componentType];
 }

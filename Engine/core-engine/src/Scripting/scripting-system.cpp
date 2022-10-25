@@ -135,7 +135,7 @@ namespace Copium::Scripting
 				{
 					MonoType* type = mono_field_get_type(field);
 					FieldType fieldType = Utils::monoTypeToFieldType(type);
-					m_Fields[fieldName] = { fieldType, fieldName, field };
+					mFields[fieldName] = { fieldType, fieldName, field };
 				}
 			}
 		}
