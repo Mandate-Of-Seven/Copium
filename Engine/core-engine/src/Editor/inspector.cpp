@@ -11,7 +11,7 @@
     Defines Window::Inspector namespace with ImGui functions for displaying and
     interacting with the window.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 #include "pch.h"
@@ -21,17 +21,21 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "SceneManager/sm.h"
 
 
-#define BUTTON_HEIGHT 0.05 //Percent
+#define BUTTON_HEIGHT .1 //Percent
 #define BUTTON_WIDTH .6 //Percent
+#define MAX_NAME_LENGTH 128;
 
 namespace Window
 {
 
 	namespace Inspector
 	{
+        
+
         bool isOpen;
         GameObject* selectedGameObject;
         bool isAddingComponent = false;
+        char nameBuffer[128];
 
         void AlignForWidth(float width, float alignment = 0.5f)
         {
@@ -48,6 +52,11 @@ namespace Window
             ImGuiIO& io = ImGui::GetIO();
             io.Fonts->AddFontFromFileTTF("assets\\fonts\\bahnschrift.ttf", 32.f);
             isOpen = true;
+
+            for (size_t i{ 0 }; i < 128; ++i)
+            {
+                nameBuffer[i] = '\0';
+            }
         }
 
 		void update()
@@ -57,6 +66,10 @@ namespace Window
 
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
             ImGui::SetNextWindowSizeConstraints(ImVec2(320, 180), ImVec2(FLT_MAX, FLT_MAX));
+            if (Copium::NewSceneManager::Instance() != nullptr)
+                if (selectedGameObject != Copium::NewSceneManager::Instance()->get_selected_gameobject())
+                    selectedGameObject = Copium::NewSceneManager::Instance()->selectedGameObject;
+
             if (!ImGui::Begin("Inspector", &isOpen)) 
             {
                 ImGui::End();
@@ -94,8 +107,6 @@ namespace Window
                 }
                 ImGui::End();
             }
-
-            // For each component in gameobject, show in inspector
 
 		}
 

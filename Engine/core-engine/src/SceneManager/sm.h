@@ -18,7 +18,7 @@
 	3. de-allocation of resources used by current scene (cleanup before engine close)
 	4. Calling scene's update functions
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************
 ****/
 #pragma once
@@ -29,6 +29,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "GameObject/game-object-factory.h"
 #include "CopiumCore/system-interface.h"
 #include "SceneManager/scene.h"
+#include <filesystem>
 
 namespace Copium {
 
@@ -88,7 +89,7 @@ namespace Copium {
 			if there are errors with loading scene data, return false
 		*/
 		/*******************************************************************************/
-		bool load_scene(std::string& _filepath);
+		bool load_scene(const std::string& _filepath);
 		/*******************************************************************************
 		/*!
 		*
@@ -103,7 +104,7 @@ namespace Copium {
 			on failure, return false
 		*/
 		/*******************************************************************************/
-		bool change_scene(std::string& _newfilepath);
+		bool change_scene(const std::string& _newfilepath);
 
 		/*******************************************************************************
 		/*!
@@ -117,7 +118,47 @@ namespace Copium {
 		/*******************************************************************************/
 		GameObjectFactory& get_gof();
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Get pointer to the current scene
+
+		\return
+			pointer to the current scene
+			if there is no scene loaded, return nullptr
+		*/
+		/*******************************************************************************/
 		Scene* get_current_scene();
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Set the selected game object
+
+		\param _go
+			ptr to the game object that is selected
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		void set_selected_gameobject(GameObject * _go);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Get pointer to the selected game object (if any)
+
+		\return
+			pointer to the selected game object
+			if there is no game object selected, return nullptr
+		*/
+		/*******************************************************************************/
+		GameObject* get_selected_gameobject();
+
+		GameObject* selectedGameObject;
 
 	private:
 		GameObjectFactory* gof;

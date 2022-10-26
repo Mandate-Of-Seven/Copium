@@ -38,7 +38,7 @@ ComponentID const Component::ID() { return id; }
 
 void Component::deserialize(rapidjson::Value& _value)
 {
-    std::cout << "default deserialization\n";
+    //std::cout << "default deserialization\n";
 }
 
 bool Component::Enabled() const noexcept{ return enabled;}
@@ -50,8 +50,6 @@ ColliderComponent::ColliderComponent(GameObject& _gameObj)
 
 AnimatorComponent::AnimatorComponent(GameObject& _gameObj) 
     :Component(_gameObj, ComponentType::Animator) { std::cout << "ANIMATOR CONS" << std::endl; }
-
-
 
 const std::string& Component::Name() const
 {

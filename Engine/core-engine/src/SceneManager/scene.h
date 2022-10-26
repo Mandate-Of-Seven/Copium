@@ -34,7 +34,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 class Scene 
 {
 public:
-	Scene(std::string& _filepath);
+	Scene(const std::string& _filepath);
 
 	Scene() = delete;
 	Scene(Scene&) = delete;
@@ -118,20 +118,7 @@ public:
 	*/
 	/*******************************************************************************/
 	std::string get_filename() const;
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Sets the filename of the file that contains this scene's data
 
-	\param	_newFilename
-		the new filename to be set
-		
-	\return
-		void
-	*/
-	/*******************************************************************************/
-	void set_filename(std::string& _newFilename);
 	/*******************************************************************************
 	/*!
 	*
@@ -195,9 +182,8 @@ public:
 	/*******************************************************************************/
 	std::string get_name() const;
 
-
 private:
-	std::string& filename;
+	const std::string& filename;
 	std::string name;
 	std::vector<GameObject*> gameObjects;	//Vector should be in order
 };
@@ -206,7 +192,7 @@ namespace Copium {
 	class NormalScene : public Scene
 	{
 	public:
-		NormalScene(std::string& _filepath);
+		NormalScene(const std::string& _filepath);
 		/*******************************************************************************
 		/*!
 		*
