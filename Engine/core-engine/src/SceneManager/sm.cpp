@@ -28,17 +28,21 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium {
 
-	NewSceneManager::NewSceneManager() : gof{nullptr}, currentScene{nullptr}
+	NewSceneManager::NewSceneManager() : gof{nullptr}, currentScene{nullptr}, selectedGameObject{nullptr}
 	{
 		gof = new GameObjectFactory();
 		if (!gof)
 		{
 			std::cout << "Error allocating memory for GameObjectFactory\n";
 		}	
+		std::cout << "sm ctor\n";
 	}
 
 	NewSceneManager::~NewSceneManager()
 	{
+		std::cout << selectedGameObject << std::endl;
+		selectedGameObject = nullptr;
+
 		if (gof)
 		{
 			delete gof;
@@ -53,6 +57,7 @@ namespace Copium {
 		}
 
 
+		//std::cout << "new scene manager destruction called\n";
 
 	}
 
@@ -100,7 +105,7 @@ namespace Copium {
 	{
 	}
 
-	bool NewSceneManager::load_scene(std::string& _filepath)
+	bool NewSceneManager::load_scene(const std::string& _filepath)
 	{
 		std::cout << "load_scene\n";
 
@@ -142,7 +147,7 @@ namespace Copium {
 		return true;
 
 	}
-	bool NewSceneManager::change_scene(std::string& _newfilepath)
+	bool NewSceneManager::change_scene(const std::string& _newfilepath)
 	{
 		bool result;
 
@@ -159,11 +164,17 @@ namespace Copium {
 
 		// Clear game objects in scene
 		// Deserialize from new file and overwrite other scene data
-		delete currentScene;
-		result = load_scene(_newfilepath);
 		
-
-
+		if (std::filesystem::exists(_newfilepath))
+		{
+			result = load_scene(_newfilepath);
+			delete currentScene;
+		}
+		else
+		{
+			std::cout << "file does not exist, scene change aborted\n";
+			return false;
+		}
 
 		return result;
 
@@ -174,8 +185,11 @@ namespace Copium {
 		return *gof;
 	}
 
-	const Scene* NewSceneManager::get_current_scene()
+	Scene* NewSceneManager::get_current_scene()
 	{
 		return currentScene;
 	}
+	void NewSceneManager::set_selected_gameobject(GameObject* _go) { selectedGameObject = _go; }
+	GameObject* NewSceneManager::get_selected_gameobject() { return selectedGameObject; }
+
 }

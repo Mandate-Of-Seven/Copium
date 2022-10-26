@@ -56,6 +56,9 @@ namespace Copium {
 		if (!tmp)
 			return nullptr;
 
+		// Add default transform component
+		add_component("Transform", tmp);
+
 		GameObjectID id = (GameObjectID)currentScene->get_gameobjcount();
 		tmp->set_id(id);
 		currentScene->add_gameobject(tmp);
@@ -251,7 +254,6 @@ namespace Copium {
 			{
 				GameObject* cgo = build_gameobject(*iter);
 				go->attach_child(cgo);
-				//++childCount;
 			}
 
 		}
@@ -260,12 +262,12 @@ namespace Copium {
 	}
 	bool GameObjectFactory::register_archetypes(const std::filesystem::path& _directoryPath)
 	{
+		std::cout << "Registration of Archetypes Begin----\n";
 		std::filesystem::directory_entry dir(_directoryPath);
 
 		// Iterate through the Archetypes folder and create a game object for each archetype file
 		for (const auto& dir_entry : std::filesystem::directory_iterator{ dir })
 		{
-			//std::cout << dir_entry.path() << std::endl;
 			std::ifstream ifs(dir_entry.path());
 			if (!ifs)
 				continue;
@@ -278,10 +280,10 @@ namespace Copium {
 				ifs.close();
 				continue;
 			}
-			//std::cout << "success building archetype: " << doc["Archetype"].GetString() << std::endl;
 			gameObjectCreators.emplace(doc["Archetype"].GetString(), tmp);
 			ifs.close();
 		}
+		std::cout << "Registration of Archetypes End----\n";
 		return true;
 	}
 	GameObject* GameObjectFactory::build_gameobject(const std::string& _archetype)

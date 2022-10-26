@@ -37,7 +37,7 @@ Component::Type Component::get_type() { return componentType; }
 
 void Component::deserialize(rapidjson::Value& _value)
 {
-    std::cout << "default deserialization\n";
+    //std::cout << "default deserialization\n";
 }
 
 bool Component::Enabled() const noexcept{ return enabled;}
@@ -52,11 +52,11 @@ AnimatorComponent::AnimatorComponent() :Component(Type::Animator) { std::cout <<
 
 TransformComponent::TransformComponent() :Component(Type::Transform)
 { 
-    std::cout << "TRANSFORM CONS" << std::endl; 
+    //std::cout << "TRANSFORM CONS" << std::endl; 
 }
 void TransformComponent::deserialize(rapidjson::Value& _value)
 {
-    std::cout << "transform deserialize\n";
+    //std::cout << "transform deserialize\n";
     t.deserialize(_value);
 }
 

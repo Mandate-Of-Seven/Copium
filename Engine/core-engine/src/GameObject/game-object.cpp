@@ -32,6 +32,7 @@ namespace
 GameObject::GameObject()
     : name{ defaultGameObjName }, id{0}, parent{nullptr}, parentid{0}
 {
+    std::cout << "game object ctor\n";
     
 }
 
@@ -119,11 +120,11 @@ TransformComponent* GameObject::Trans()
         Component::Type tmp =   (*iter)->get_type();
         if ((*iter)->componentMap.find(tmp) == (*iter)->componentMap.end())
         {
-            std::cout << "cannot find component type\n";
+            //std::cout << "cannot find component type\n";
             continue;
         }
 
-        std::cout << "Component Type:" << (*iter)->componentMap[tmp] << std::endl;
+        //std::cout << "Component Type:" << (*iter)->componentMap[tmp] << std::endl;
 
         if (tmp == Component::Type::Transform)
             return reinterpret_cast<TransformComponent*>(*iter);

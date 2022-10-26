@@ -54,19 +54,19 @@ bool Transform::deserialize(rapidjson::Value& _value)
 		return false;
 	rapidjson::Value& _v = _value["Pos"].GetObj();
 	position.deserialize(_v);
-	std::cout << "Position:" << position;
+	//std::cout << "Position:" << position;
 
 	if (!_value.HasMember("Rot"))
 		return false;
 	_v = _value["Rot"].GetObj();
 	rotation.deserialize(_v);
-	std::cout << "Rotation:" << rotation;
+	//std::cout << "Rotation:" << rotation;
 
 	if (!_value.HasMember("Scale"))
 		return false;
 	_v = _value["Scale"].GetObj();
 	scale.deserialize(_v);
-	std::cout << "Scale:" << scale;
+	//std::cout << "Scale:" << scale;
 
 	return true;
 }

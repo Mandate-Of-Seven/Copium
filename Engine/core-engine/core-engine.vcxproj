@@ -101,7 +101,7 @@
     <ClCompile Include="src\Debugging\logging.cpp" />
     <ClCompile Include="src\Editor\ConsoleLog.cpp" />
     <ClCompile Include="src\Editor\editor-camera.cpp" />
-    <ClCompile Include="src\Editor\editor-scene-hierarchy-list.cpp" />
+    <ClCompile Include="src\Editor\editor-hierarchy-list.cpp" />
     <ClCompile Include="src\Editor\editor-sceneview.cpp" />
     <ClCompile Include="src\Editor\editor-system.cpp" />
     <ClCompile Include="src\Editor\inspector.cpp" />
@@ -167,7 +167,7 @@
   <ItemGroup>
     <ClInclude Include="src\Debugging\frame-rate-controller.h" />
     <ClInclude Include="src\Editor\editor-camera.h" />
-    <ClInclude Include="src\Editor\editor-scene-hierarchy-list.h" />
+    <ClInclude Include="src\Editor\editor-hierarchy-list.h" />
     <ClInclude Include="src\Files\file-system.h" />
     <ClInclude Include="src\Graphics\camera.h" />
     <ClInclude Include="src\Graphics\sprite-renderer.h" />

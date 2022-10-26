@@ -22,7 +22,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 #include "SceneManager/scene.h"
 
-Scene::Scene(std::string& _filepath) : filename(_filepath) 
+Scene::Scene(const std::string& _filepath) : filename(_filepath) 
 {
 
 }
@@ -34,9 +34,9 @@ Scene::~Scene()
 
 	for (size_t i{ 0 }; i < gameObjects.size(); ++i)
 	{
-		if (gameObjects[i])
+		if (gameObjects[i] != nullptr)
 		{
-			std::cout << "deleting a game object\n";
+			//std::cout << "deleting a game object\n";
 			delete gameObjects[i];
 			gameObjects[i] = nullptr;
 		}
@@ -57,12 +57,14 @@ void Scene::draw_scene()
 }
 
 std::string Scene::get_filename() const {return filename;}
-void Scene::set_filename(std::string& _newFilename) {filename = _newFilename;}
 size_t Scene::get_gameobjcount() const { return gameObjects.size(); }
 std::vector<GameObject*>& Scene::get_gameobjectvector() { return gameObjects;}
 GameObject* Scene::add_gameobject(GameObject* _gameObj) 
 {
 	gameObjects.push_back(_gameObj);
+	GameObjectID id = (GameObjectID)gameObjects.size();
+	_gameObj->set_id(id);
+	std::cout << "ID:" << id << std::endl;
 	return _gameObj;
 }
 
@@ -70,7 +72,7 @@ void Scene::set_name(const std::string& _name){ name = _name; }
 std::string Scene::get_name() const{ return name; }
 
 namespace Copium {
-	NormalScene::NormalScene(std::string& _filepath) : Scene(_filepath)
+	NormalScene::NormalScene(const std::string& _filepath) : Scene(_filepath)
 	{
 
 	}

@@ -45,9 +45,9 @@ namespace Copium
 				//Put in sequence of calls
 				Windows::WindowsSystem::Instance(),
 				Message::MessageSystem::Instance(),
+				NewSceneManager::Instance(),
 				Editor::EditorSystem::Instance(),
 				Files::FileSystem::Instance(),
-				NewSceneManager::Instance(),
 				Scripting::ScriptingSystem::Instance(),
 				Physics::Physics::Instance(),
 				//SoundSystem::Instance(),
