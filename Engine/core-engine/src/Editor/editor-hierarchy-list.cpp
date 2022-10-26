@@ -29,7 +29,6 @@ namespace Window::Hierarchy
 		ImGui::SetNextWindowSize(ImVec2(500, 900), ImGuiCond_FirstUseEver);
 		ImGui::Begin("Hierarchy");
 		ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, 10.f);
-		int id = 0;
 
 		create_gameobject_btn("+");
 
@@ -54,7 +53,7 @@ namespace Window::Hierarchy
 			// Display scene name as the rootiest node
 			if (ImGui::TreeNodeEx(currentScene->get_name().c_str(), rootFlags))
 			{
-				int selection = -1;
+				GameObjectID selection = 0;
 				bool isSelected = false;
 
 				for (size_t i{ 0 }; i < roots.size(); ++i)
@@ -101,11 +100,10 @@ namespace Window::Hierarchy
 		ImGui::TreePop();
 
 	}
-	bool display_gameobject_advanced(GameObject& _go, int& _selected)
+	bool display_gameobject_advanced(GameObject& _go, GameObjectID& _selected)
 	{
 		bool isSelected = false;
 		ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
-		int node_clicked = -1;
 
 		if (!_go.is_parent())
 			baseFlags |= ImGuiTreeNodeFlags_Leaf;

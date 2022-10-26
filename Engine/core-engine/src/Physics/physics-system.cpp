@@ -141,16 +141,16 @@ namespace Copium
 			bound = boxes[a]->get_AABB();
 			if (boxes[a]->get_gravity() == true)
 			{
-				velocity = velocity + (acceleration * dt * 0.90);
-				velocity = velocity + (gravity * dt);
-				position = position + (velocity * dt);
+				velocity = velocity + (acceleration * dt * 0.90f);
+				velocity = velocity + (gravity * (float)dt);
+				position = position + (velocity * (float)dt);
 				boxes[a]->set_vel(velocity);
 				
 			}
 			else
 			{	
-				velocity = velocity + (acceleration * dt * 0.90);
-				position = position + (velocity * dt);
+				velocity = velocity + (acceleration * dt * 0.90f);
+				position = position + (velocity * (float)dt);
 				boxes[a]->set_vel(velocity);
 			}
 			bound.max.x = position.x + (glmSize.x * 1 / 2);
