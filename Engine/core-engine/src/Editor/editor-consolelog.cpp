@@ -1,5 +1,5 @@
 /*!***************************************************************************************
-\file			ConsoleLog.cpp
+\file			editor-consolelog.cpp
 \project
 \author			Shawn Tanary
 
@@ -13,8 +13,7 @@
 All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
-#include <Editor/ConsoleLog.h>
-#include "Debugging/logging.h"
+#include <Editor/editor-consolelog.h>
 
 namespace Window
 {

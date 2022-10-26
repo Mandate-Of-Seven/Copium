@@ -19,11 +19,11 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "SceneManager/sm.h"
 
 
-namespace Copium::Physics
+namespace Copium
 {	
 	const Math::Vec2 gravity = { 0.0,-0.50 };			//gravity affecting all objects that can be affected
 	
-	CLASS_SYSTEM(Physics)
+	CLASS_SYSTEM(PhysicsSystem)
 	{
 	public:
 		void init();

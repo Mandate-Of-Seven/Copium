@@ -18,11 +18,17 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/component.h"
 #include "Messaging/message-system.h"
 #include "Scripting/scripting-system.h"
-#include <mono/metadata/assembly.h>
+
+extern "C"
+{
+	typedef struct _MonoClass MonoClass;
+	typedef struct _MonoMethod MonoMethod;
+	typedef struct _MonoObject MonoObject;
+}
 
 namespace Copium
 {
-    class ScriptComponent final : public Component, public Message::IReceiver
+    class ScriptComponent final : public Component, public IReceiver
     {
     public:
 		/**************************************************************************/
@@ -34,17 +40,7 @@ namespace Copium
 				Name of script to make an instance of
 		*/
 		/**************************************************************************/
-		ScriptComponent(const char* _name);
-		/**************************************************************************/
-		/*!
-			\brief
-				Constructs a ScriptComponent based on a monoclass
-
-			\param _mClass
-				Monoclass of script to make an instance of
-		*/
-		/**************************************************************************/
-		ScriptComponent(MonoClass* _mClass);
+		ScriptComponent(GameObject& gameObj);
 		/**************************************************************************/
 		/*!
 			\brief
@@ -60,7 +56,11 @@ namespace Copium
 				Type of message
 		*/
 		/**************************************************************************/
-		void handleMessage(Message::MESSAGE_TYPE mType);
+		void handleMessage(MESSAGE_TYPE mType);
+
+		const std::string& Name() const;
+
+		void Name(const std::string& _name);
 		/**************************************************************************/
 		/*!
 			\brief
@@ -96,11 +96,20 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		void OnCollisionEnter();
+
+		void inspector_view();
+
+		bool getFieldValue(const std::string& name, void* buffer);
+		bool setFieldValue(const std::string& name, const void* value);
+
 	private:
-		std::shared_ptr<Scripting::ScriptClass> spScriptClass;
+		void instantiate();
+
+		ScriptClass* pScriptClass;
 		MonoObject* mObject;
-		const std::string name;
-		static Scripting::ScriptingSystem& sS;
+		MonoObject* mGameObject;
+		std::string name;
+		static ScriptingSystem& sS;
     };
 }
 

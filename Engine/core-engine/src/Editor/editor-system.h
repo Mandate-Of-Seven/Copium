@@ -19,7 +19,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor/editor-sceneview.h"
 #include "Editor/editor-camera.h"
 
-namespace Copium::Editor
+namespace Copium
 {
 	CLASS_SYSTEM(EditorSystem)
 	{

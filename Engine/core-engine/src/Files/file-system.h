@@ -18,16 +18,33 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "CopiumCore/system-interface.h"
 #include <filesystem>
+#include <string>
+#include <list>
+#include <map>
 
-namespace Copium::Files
+namespace Copium
 {
+	/**************************************************************************/
+	/*!
+		\brief
+			Reads bytes from a file
+		\param filepath
+			File path to read bytes from
+		\param outSize
+			Amount of bytes read
+
+		\return
+			String of bytes read
+	*/
+	/**************************************************************************/
 
 	namespace Paths
 	{
 		static const std::string roslynCompilerPath{ "..\\tools\\Roslyn\\csc" };
 		static const std::string scriptsAssemblyPath{ "scripts.dll" };
-		static const std::string projectName = { "ScriptingSandbox" };
+		static const std::string projectName = { "PackedTracks" };
 		static const std::string projectPath{ "..\\" + projectName };
+		static const std::string assetPath{ "../core-engine/Assets" };
 	}
 
 	class File;
@@ -63,6 +80,8 @@ namespace Copium::Files
 		/*******************************************************************************/
 		void exit();
 
+		std::list<std::string>& get_filepath_in_directory(const char* _path, const char* _extension);
+
 		/*******************************************************************************
 		/*!
 		*
@@ -76,9 +95,10 @@ namespace Copium::Files
 				Reference to list of files with the extension
 		*/
 		/*******************************************************************************/
-		std::list<File>& getFilesWithExtension(const char* _extension);
+		std::list<File>& get_files_with_extension(const char* _extension);
 	private:
 		std::map<const char*, std::list<File>> extensionTrackedFiles;
+		std::list<std::string> assetsPath;
 	};
 
 	class File final : public std::filesystem::path
@@ -115,7 +135,7 @@ namespace Copium::Files
 				If file was modified, return true, else return false
 		*/
 		/*******************************************************************************/
-		bool Modified();
+		bool is_modified();
 
 		/*******************************************************************************
 		/*!
@@ -124,7 +144,7 @@ namespace Copium::Files
 				Queries the system whether the modification timings changed
 		*/
 		/*******************************************************************************/
-		void updateModificationTiming();
+		void update_modification_timing();
 	private:
 		bool modified;
 		time_t lastModifiedTime;

@@ -10,7 +10,7 @@
           "Type": "Transform",
           "Pos": {
             "X": 0,
-            "Y": 0,
+            "Y": 2,
             "Z": 0
           },
           "Rot": {
@@ -23,7 +23,10 @@
             "Y": 1,
             "Z": 1
           }
-        
+        },
+        {
+          "Type": "Sprite Renderer",
+          "Sprite ID": 2
         }
       ],
       "Children": [

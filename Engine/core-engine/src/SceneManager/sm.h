@@ -18,7 +18,7 @@
 	3. de-allocation of resources used by current scene (cleanup before engine close)
 	4. Calling scene's update functions
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************
 ****/
 #pragma once
@@ -36,6 +36,8 @@ namespace Copium {
 	CLASS_SYSTEM(NewSceneManager)
 	{
 	public:
+		GameObject* findGameObjByID(GameObjectID _ID);
+
 		NewSceneManager();
 		~NewSceneManager();
 

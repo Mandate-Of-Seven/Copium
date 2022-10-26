@@ -24,15 +24,15 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor/editor-system.h"
 #include <glm/gtc/type_ptr.hpp>
 
-namespace Copium::Graphics
+namespace Copium
 {
 	void Renderer::init()
 	{
 		graphics = GraphicsSystem::Instance();
 
 		// Setup Line Vertex Array Object
-
 		setup_line_vao();
+
 		// Setup Quad Vertex Array Object
 		setup_quad_vao();
 
@@ -46,7 +46,7 @@ namespace Copium::Graphics
 		glTextureParameteri(texture, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTextureParameteri(texture, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-		GLuint color = 0xffffffff;
+		GLuint color = 0xFFFFFFFF;
 		glTextureSubImage2D(texture, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &color);
 
 		graphics->get_texture_slots().resize(maxTextures);
@@ -65,26 +65,24 @@ namespace Copium::Graphics
 
 		// Vertex Array Object
 		glCreateVertexArrays(1, &quadVertexArrayID);
-		glBindVertexArray(quadVertexArrayID);
 
 		// Quad Buffer Object
 		glCreateBuffers(1, &quadVertexBufferID);
-		glNamedBufferData(quadVertexBufferID, maxVertexCount * sizeof(QuadVertex), nullptr, GL_DYNAMIC_DRAW);
-		glVertexArrayVertexBuffer(quadVertexArrayID, 0, quadVertexBufferID, 0, sizeof(QuadVertex));
+		glNamedBufferStorage(quadVertexBufferID, maxVertexCount * sizeof(QuadVertex), nullptr, GL_DYNAMIC_STORAGE_BIT);
 
-		glEnableVertexArrayAttrib(quadVertexBufferID, 0);
+		glEnableVertexArrayAttrib(quadVertexArrayID, 0);
 		glVertexArrayAttribFormat(quadVertexArrayID, 0, 3, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, pos));
 		glVertexArrayAttribBinding(quadVertexArrayID, 0, 0);
 
-		glEnableVertexArrayAttrib(quadVertexBufferID, 1);
+		glEnableVertexArrayAttrib(quadVertexArrayID, 1);
 		glVertexArrayAttribFormat(quadVertexArrayID, 1, 4, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, color));
 		glVertexArrayAttribBinding(quadVertexArrayID, 1, 0);
 
-		glEnableVertexArrayAttrib(quadVertexBufferID, 2);
+		glEnableVertexArrayAttrib(quadVertexArrayID, 2);
 		glVertexArrayAttribFormat(quadVertexArrayID, 2, 2, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, textCoord));
 		glVertexArrayAttribBinding(quadVertexArrayID, 2, 0);
 
-		glEnableVertexArrayAttrib(quadVertexBufferID, 3);
+		glEnableVertexArrayAttrib(quadVertexArrayID, 3);
 		glVertexArrayAttribFormat(quadVertexArrayID, 3, 1, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, texID));
 		glVertexArrayAttribBinding(quadVertexArrayID, 3, 0);
 
@@ -105,9 +103,6 @@ namespace Copium::Graphics
 
 		glCreateBuffers(1, &quadIndexBufferID);
 		glNamedBufferStorage(quadIndexBufferID, sizeof(indices), indices, GL_DYNAMIC_STORAGE_BIT);
-		glVertexArrayElementBuffer(quadVertexArrayID, quadIndexBufferID);
-
-		glBindVertexArray(0);
 
 		// Setup default quad vertex positions
 		quadVertexPosition[0] = { -0.5f, -0.5f, 0.f, 1.f };
@@ -129,22 +124,18 @@ namespace Copium::Graphics
 
 		// Vertex Array Object
 		glCreateVertexArrays(1, &lineVertexArrayID);
-		glBindVertexArray(lineVertexArrayID);
 
 		// Line Buffer Object
 		glCreateBuffers(1, &lineVertexBufferID);
-		glNamedBufferData(lineVertexBufferID, maxVertexCount * sizeof(LineVertex), nullptr, GL_DYNAMIC_DRAW);
-		glVertexArrayVertexBuffer(lineVertexArrayID, 1, lineVertexBufferID, 0, sizeof(LineVertex));
+		glNamedBufferStorage(lineVertexBufferID, maxVertexCount * sizeof(LineVertex), nullptr, GL_DYNAMIC_STORAGE_BIT);
 
-		glEnableVertexArrayAttrib(lineVertexBufferID, 0);
+		glEnableVertexArrayAttrib(lineVertexArrayID, 0);
 		glVertexArrayAttribFormat(lineVertexArrayID, 0, 3, GL_FLOAT, GL_FALSE, offsetof(LineVertex, pos));
 		glVertexArrayAttribBinding(lineVertexArrayID, 0, 1);
 
-		glEnableVertexArrayAttrib(lineVertexBufferID, 1);
+		glEnableVertexArrayAttrib(lineVertexArrayID, 1);
 		glVertexArrayAttribFormat(lineVertexArrayID, 1, 4, GL_FLOAT, GL_FALSE, offsetof(LineVertex, color));
 		glVertexArrayAttribBinding(lineVertexArrayID, 1, 1);
-
-		glBindVertexArray(0);
 
 		glLineWidth(1.f);
 	}
@@ -188,9 +179,9 @@ namespace Copium::Graphics
 				graphics->get_shader_program()[0].GetHandle(), "uViewProjection");
 			GLuint uTransform = glGetUniformLocation(
 				graphics->get_shader_program()[0].GetHandle(), "uTransform");
-			glm::mat4 projection = Copium::Editor::EditorSystem::Instance()->get_camera()->get_projection();
+			glm::mat4 projection = Copium::EditorSystem::Instance()->get_camera()->get_projection();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
-			glm::vec3 pos = Copium::Editor::EditorSystem::Instance()->get_camera()->get_position();
+			glm::vec3 pos = Copium::EditorSystem::Instance()->get_camera()->get_position();
 			glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
 			glUniformMatrix4fv(uTransform, 1, GL_FALSE, glm::value_ptr(transform));
 			
@@ -226,7 +217,7 @@ namespace Copium::Graphics
 			GLuint uProjection = glGetUniformLocation(
 				graphics->get_shader_program()[1].GetHandle(), "uViewProjection");
 
-			glm::mat4 projection = Copium::Editor::EditorSystem::Instance()->get_camera()->get_projection();
+			glm::mat4 projection = Copium::EditorSystem::Instance()->get_camera()->get_projection();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
 			// End of matrix assignment
@@ -245,10 +236,12 @@ namespace Copium::Graphics
 	{
 		if (quadIndexCount)
 		{
+			// Quad Buffer Object
 			glBindVertexArray(quadVertexArrayID);
 			GLsizeiptr size = (GLuint*)quadBufferPtr - (GLuint*)quadBuffer;
-			glNamedBufferSubData(quadVertexBufferID, 0, size * 4, quadBuffer);
+			glNamedBufferSubData(quadVertexBufferID, 0, sizeof(float) * size, quadBuffer);
 			glVertexArrayVertexBuffer(quadVertexArrayID, 0, quadVertexBufferID, 0, sizeof(QuadVertex));
+			glVertexArrayElementBuffer(quadVertexArrayID, quadIndexBufferID);
 			glBindVertexArray(0);
 		}
 
@@ -256,7 +249,7 @@ namespace Copium::Graphics
 		{
 			glBindVertexArray(lineVertexArrayID);
 			GLsizeiptr size = (GLuint*)lineBufferPtr - (GLuint*)lineBuffer;
-			glNamedBufferSubData(lineVertexBufferID, 0, size * 4, lineBuffer);
+			glNamedBufferSubData(lineVertexBufferID, 0, sizeof(float) * size, lineBuffer);
 			glVertexArrayVertexBuffer(lineVertexArrayID, 1, lineVertexBufferID, 0, sizeof(LineVertex));
 			glBindVertexArray(0);
 		}
@@ -357,7 +350,8 @@ namespace Copium::Graphics
 			}
 		}
 
-		if (textureIndex == 0.f)
+		// Change texture index only if ID retrieved is more than 0 (0 is white texture)
+		if (textureIndex == 0.f && _textureID != 0)
 		{
 			textureIndex = (GLfloat) graphics->get_texture_slot_index();
 			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _textureID;

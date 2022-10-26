@@ -17,7 +17,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include <glm/vec2.hpp>
 
-namespace Copium::Editor
+namespace Copium
 {
 	class EditorSceneView
 	{
@@ -33,6 +33,9 @@ namespace Copium::Editor
 		// Accessing Properties
 
 		// Scene Properties
+		const bool& is_window_focused() { return windowFocused; }
+		const bool& is_window_hovered() { return windowHovered; }
+
 		int const get_width() { return sceneWidth; }
 		void const set_width(int _width) { sceneWidth = _width; }
 
@@ -47,6 +50,7 @@ namespace Copium::Editor
 
 	private:
 		/* Scene Data *******************************************************************/
+		bool windowFocused = false, windowHovered = false;
 		int sceneWidth = 1280, sceneHeight = 720; // The dimension of the viewport
 		glm::vec2 sceneDimension{0}; // The dimension of the viewport as vector 2
 		glm::vec2 scenePosition{0}; // The position of the viewport

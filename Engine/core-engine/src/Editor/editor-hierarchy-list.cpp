@@ -180,9 +180,6 @@ namespace Window::Hierarchy
 		if (ImGui::IsItemClicked())
 			std::cout << "clicking\n";
 
-
-
-
 		return isSelected;
 
 	}

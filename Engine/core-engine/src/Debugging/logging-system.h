@@ -24,11 +24,12 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <spdlog/sinks/rotating_file_sink.h> // support for rotating file logging
 
 #include <memory>
-#include "Editor/ConsoleLog.h"
+#include "Editor/editor-consolelog.h"
+#include "CopiumCore/system-interface.h"
 
 namespace Copium 
 {
-	class Log
+	CLASS_SYSTEM(LoggingSystem)
 	{
 	public:
 		/***************************************************************************/
@@ -37,7 +38,11 @@ namespace Copium
 			Initialises all the loggers with their desired levels and formats
 		*/
 		/**************************************************************************/
-		static void init();
+		void init();
+
+		void update();
+
+		void exit();
 
 		/***************************************************************************/
 		/*!
@@ -45,7 +50,7 @@ namespace Copium
 			Used to log asserts to both file and to the console
 		*/
 		/**************************************************************************/
-		static void error_log();
+		void error_log();
 
 		/***************************************************************************/
 		/*!
@@ -63,7 +68,7 @@ namespace Copium
 			the message to display along with the error
 		*/
 		/**************************************************************************/
-		static void assert_to_file(std::string expr_str, bool expr, std::string file, int line, std::string msg);
+		void assert_to_file(std::string expr_str, bool expr, std::string file, int line, std::string msg);
 
 		/***************************************************************************/
 		/*!
@@ -73,7 +78,7 @@ namespace Copium
 			the message as a string as well
 		*/
 		/**************************************************************************/
-		static std::string to_string(std::string msg);
+		std::string to_string(std::string msg);
 
 		/***************************************************************************/
 		/*!
@@ -85,7 +90,7 @@ namespace Copium
 			the maximum amount of files
 		*/
 		/**************************************************************************/
-		static void create_multiplefile(int fileSize, int fileAmount);
+		void create_multiplefile(int fileSize, int fileAmount);
 
 		/***************************************************************************/
 		/*!
@@ -95,38 +100,44 @@ namespace Copium
 			the consoleLogger
 		*/
 		/**************************************************************************/
-		inline static std::shared_ptr<spdlog::logger>& getConsoleLogger() { return consoleLogger; }
+		inline std::shared_ptr<spdlog::logger>& getConsoleLogger() { return consoleLogger; }
 
 	private:
-		static std::shared_ptr<spdlog::logger> consoleLogger;
+		std::shared_ptr<spdlog::logger> consoleLogger;
 
 
 	};
 }
+
+namespace
+{
+	Copium::LoggingSystem& loggingSystem{*Copium::LoggingSystem::Instance()};
+}
+
 //User Macros
 #define CONSOLE_CRITICAL(...)															\
 							{															\
-								Copium::Log::getConsoleLogger()->critical(__VA_ARGS__); \
+								loggingSystem.getConsoleLogger()->critical(__VA_ARGS__); \
 								Window::EditorConsole::add_logEntry(__VA_ARGS__);		\
 							}
 #define CONSOLE_ERROR(...)																\
 							{															\
-									Copium::Log::getConsoleLogger()->error(__VA_ARGS__);\
+									loggingSystem.getConsoleLogger()->error(__VA_ARGS__);\
 									Window::EditorConsole::add_logEntry(__VA_ARGS__);	\
 							}
 #define CONSOLE_WARN(...)																\
 							{															\
-									Copium::Log::getConsoleLogger()->warn(__VA_ARGS__); \
+									loggingSystem.getConsoleLogger()->warn(__VA_ARGS__); \
 									Window::EditorConsole::add_logEntry(__VA_ARGS__);	\
 							}
 #define CONSOLE_INFO(...)																\
 							{															\
-									Copium::Log::getConsoleLogger()->info(__VA_ARGS__); \
+									loggingSystem.getConsoleLogger()->info(__VA_ARGS__); \
 									Window::EditorConsole::add_logEntry(__VA_ARGS__);	\
 							}
 #define CONSOLE_TRACE(...)																\
 							{															\
-									Copium::Log::getConsoleLogger()->trace(__VA_ARGS__);\
+									loggingSystem.getConsoleLogger()->trace(__VA_ARGS__);\
 									Window::EditorConsole::add_logEntry(__VA_ARGS__);	\
 							}
 
@@ -136,6 +147,6 @@ namespace Copium
 #define FILE_INFO(...)			::spdlog::info(__VA_ARGS__)
 
 //enter the condition to trigger the assert, followed by the message you want.
-#define COPIUM_ASSERT(Expr, Msg) Copium::Log::assert_to_file(#Expr, Expr, __FILE__, __LINE__, Msg);
+#define COPIUM_ASSERT(Expr, Msg) loggingSystem.assert_to_file(#Expr, Expr, __FILE__, __LINE__, Msg);
 
-#define Console_ToString(...)	::Log::to_string(__VA_ARGS__)
+#define Console_ToString(...)	loggingSystem.::to_string(__VA_ARGS__)

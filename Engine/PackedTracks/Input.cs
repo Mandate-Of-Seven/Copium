@@ -1,0 +1,52 @@
+﻿
+
+namespace CopiumEngine
+{
+    public static class Input
+    {
+        /*******************************************************************************
+        /*!
+        *
+            \brief
+                Checks if a key is held
+
+            \param keyCode
+                KeyCode to listen for
+
+            \return
+                True if key was held
+        */
+        /*******************************************************************************/
+        public static bool GetKey(KeyCode keyCode) { return InternalCalls.GetKey((int)keyCode); }
+
+        /*******************************************************************************
+        /*!
+        *
+            \brief
+                Checks if a key just pressed
+
+            \param keyCode
+                KeyCode to listen for
+
+            \return
+                True if key was just pressed
+        */
+        /*******************************************************************************/
+        public static bool GetKeyDown(KeyCode keyCode) { return InternalCalls.GetKeyDown((int)keyCode); }
+
+        /*******************************************************************************
+        /*!
+        *
+            \brief
+                Checks if a key just released
+
+            \param keyCode
+                KeyCode to listen for
+
+            \return
+                True if key was just released
+        */
+        /*******************************************************************************/
+        public static bool GetKeyUp(KeyCode keyCode) { return InternalCalls.GetKeyUp((int)keyCode); }
+    }
+}

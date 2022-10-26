@@ -10,36 +10,52 @@
 \brief
     Declares Component Class to be added to GameObjects and its member functions
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
-
-#pragma once
-
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
 //INCLUDES
 #include <string>
 #include <map>
-#include "Math/transform.h"
+#include <rapidjson/document.h>
+
+class GameObject;
 
     //USING
 
-    using ComponentID = unsigned char;
+using ComponentID = unsigned char;
 
-    class Component
-    {
+
+enum class ComponentType : int      // Types of Components
+{
+    Animator,
+    Collider,
+    Renderer,
+    Script,
+    Transform,
+    None
+};
+
+class Component
+{
     public:
-        enum class Type       // Types of Components
-        {
-            Animator,
-            Collider,
-            Renderer,
-            Script,
-            Transform
-        };
+        const ComponentType componentType;           //Type of component
 
-        static std::map<Type, const std::string> componentMap; // Declared map to link Component::Type and its name
+        static std::map<ComponentType, const std::string> componentMap; // Declared map to link ComponentType and its name
+
+        static ComponentType nameToType(const std::string& _name)
+        {
+            int i {0};
+            int end{ (int)ComponentType::None };
+            while (i != end)
+            {
+                if (componentMap[(ComponentType)i] == _name)
+                    return (ComponentType)i;
+                i+=1;
+            }
+            return ComponentType::None;
+        }
 
         /***************************************************************************/
         /*!
@@ -58,9 +74,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
         /**************************************************************************/
         ComponentID const ID();
 
-        Component::Type get_type();
-
-        const std::string& Name();
+        virtual const std::string& Name() const;
 
         /***************************************************************************/
         /*!
@@ -77,10 +91,14 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
         /**************************************************************************/
         virtual void deserialize(rapidjson::Value& _value);
 
+        virtual void inspector_view() = 0;
+
         virtual ~Component()
         {
             //std::cout << "default component dtor\n";
         }
+
+        Component& operator=(const Component& rhs);
 
         bool Enabled() const noexcept;
 
@@ -94,24 +112,14 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
             derived classes from inheriting
         */
         /**************************************************************************/
-        Component();
+        Component() = delete;
+        Component(GameObject& _gameObj, ComponentType _componentType);
 
-        /***************************************************************************/
-        /*!
-        \brief
-            Hidden constructor that is called by derived classes to determine name
-            and type
-        */
-        /**************************************************************************/
-        Component(Component::Type _componentType);
-
-
-
-private:
-    ComponentID id;                     //Id of component, local to gameObject
-    Type componentType;                 //Type of component
-    const bool allowMultiple = false;   //Can gameObjects only have one of this Component?
-    bool enabled;
+        GameObject& gameObj;
+    private:
+        ComponentID id;                     //Id of component, local to gameObject
+        const bool allowMultiple = false;   //Can gameObjects only have one of this Component?
+        bool enabled;
 };
 
     class ColliderComponent : public Component
@@ -123,7 +131,9 @@ private:
             Default constructor for collider Components
         */
         /**************************************************************************/
-        ColliderComponent();
+        ColliderComponent(GameObject& _gameObj);
+
+        void inspector_view(){};
 
         /***************************************************************************/
         /*!
@@ -144,7 +154,9 @@ private:
             Default constructor for animator Components
         */
         /**************************************************************************/
-        AnimatorComponent();
+        AnimatorComponent(GameObject& _gameObj);
+
+        void inspector_view(){};
 
         /***************************************************************************/
         /*!
@@ -155,315 +167,6 @@ private:
         //void deserialize(rapidjson::Value& _value);
     protected:
 
-    };
-
-    class RendererComponent : public Component
-    {
-    public:
-        /***************************************************************************/
-        /*!
-        \brief
-            Default constructor for renderer Components
-        */
-        /**************************************************************************/
-        RendererComponent();
-
-        /***************************************************************************/
-        /*!
-        \brief
-            Deserialize this component's data from specified rapidjson value
-        */
-        /**************************************************************************/
-        //void deserialize(rapidjson::Value& _value);
-    protected:
-    };
-
-    class TransformComponent : public Component
-    {
-    public:
-        /***************************************************************************/
-        /*!
-        \brief
-            Default constructor for transform Components
-
-        \return
-            void
-        */
-        /**************************************************************************/
-        TransformComponent();
-        /***************************************************************************/
-        /*!
-        \brief
-            Destructor for transform Components
-
-        \return
-            void
-        */
-        /**************************************************************************/
-        ~TransformComponent()
-        {
-            //std::cout << "transform component dtor\n";
-        }
-
-        /***************************************************************************/
-        /*!
-        \brief
-            Deserialize this component's data from specified rapidjson value
-
-        \return 
-            void
-        */
-        /**************************************************************************/
-        void deserialize(rapidjson::Value& _value);
-
-        /***************************************************************************/
-        /*!
-        \brief
-            Get read-only reference to the transform object in this component
-
-        \return
-            read-only reference to the transform object in this component
-        */
-        /**************************************************************************/
-        const Transform& get_transform() const
-        {
-            return t;
-        }
-        
-        /***************************************************************************/
-        /*!
-        \brief
-            Set the transform object to the specified transform object.
-            Performs deep copy of the specified transform object into the transform object in this component.
-
-        \param _src
-            read-only reference to the transform object that is to be copied
-
-        \return
-            void
-        */
-        /**************************************************************************/
-        void set_transform(const Transform& _src)
-        {
-            t = _src;
-        }
-    
-    private:
-        Transform t;
-        
-    };
-
-    // Creators - 1x for each component
-    class ComponentCreator 
-    {
-    public:
-
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Pure virtual function that each component must define. Handles the creation of the component tied to this creator
-            E.g TransformCreator should be able to create a TransformComponent using this function
-
-        \return
-            if Component was successfully created, return pointer to the newly created Component
-            if there were any errors in the process, return nullptr
-        */
-        /*******************************************************************************/
-        virtual Component* create() = 0;
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Virtual destructor for Component classes and all derived classes
-
-        \return
-            void
-        */
-        /*******************************************************************************/
-        virtual ~ComponentCreator(){}
-    };
-    class AnimatorCreator : public ComponentCreator 
-    {
-    public:
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Default contructor for AnimatorCreator
-
-        \return
-            void
-        */
-        /*******************************************************************************/
-        AnimatorCreator() 
-        {
-            std::cout << "Animator registered\n";
-        }
-        /***************************************************************************/
-        /*!
-        \brief
-            Creates an Animator Component
-
-        \return
-            if successful in creating an Animator Component, return ptr to it
-            if there were errors in the process, return nullptr
-        */
-        /**************************************************************************/
-	    virtual Component* create() {
-		    return new AnimatorComponent;
-	    }
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Destructor for AnimatorCreator
-
-        \return
-            void
-        */
-        /*******************************************************************************/
-        ~AnimatorCreator()
-        {
-            //std::cout << "Animator Creator destructed\n";
-        }
-    };
-    class RendererCreator : public ComponentCreator 
-    {
-    public:
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Default contructor for Renderer Creator
-
-        \return
-            void
-        */
-        /*******************************************************************************/
-        RendererCreator() 
-        {
-            std::cout << "Renderer registered\n";
-        }
-        /***************************************************************************/
-        /*!
-        \brief
-            Creates an Renderer Component
-
-        \return
-            if successful in creating an Renderer Component, return ptr to it
-            if there were errors in the process, return nullptr
-        */
-        /**************************************************************************/
-	    virtual Component* create() {
-		    return new RendererComponent;
-	    }
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Destructor for Renderer Creator
-
-        \return
-            void
-        */
-        /*******************************************************************************/
-        ~RendererCreator()
-        {
-            //std::cout << "Renderer Creator destructed\n";
-        }
-    };
-    class ColliderCreator : public ComponentCreator 
-    {
-    public:
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Default contructor for Collider Creator
-
-        \return
-            void
-        */
-        /*******************************************************************************/
-        ColliderCreator()
-        {
-            std::cout << "Collider registered\n";
-        }
-        /***************************************************************************/
-        /*!
-        \brief
-            Creates an Collider Component
-
-        \return
-            if successful in creating an Collider Component, return ptr to it
-            if there were errors in the process, return nullptr
-        */
-        /**************************************************************************/
-        virtual Component* create()
-        {
-            return new ColliderComponent;
-        }
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Destructor for Collider Creator
-
-        \return
-            void
-        */
-        /*******************************************************************************/
-        ~ColliderCreator()
-        {
-            //std::cout << "Collider Creator destructed\n";
-        }
-    };
-    class TransformCreator : public ComponentCreator
-    {
-    public:
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Default contructor for Transform Creator
-
-        \return
-            void
-        */
-        /*******************************************************************************/
-        TransformCreator()
-        {
-            std::cout << "Transform registered\n";
-        }
-        /***************************************************************************/
-        /*!
-        \brief
-            Creates an Transform Component
-
-        \return
-            if successful in creating an Transform Component, return ptr to it
-            if there were errors in the process, return nullptr
-        */
-        /**************************************************************************/
-        virtual Component* create()
-        {
-            return new TransformComponent;
-        }
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Destructor for Transform Creator
-
-        \return
-            void
-        */
-        /*******************************************************************************/
-        ~TransformCreator()
-        {
-            //std::cout << "Transform Creator destructed\n";
-        }
     };
 
 #endif // !COMPONENT_H

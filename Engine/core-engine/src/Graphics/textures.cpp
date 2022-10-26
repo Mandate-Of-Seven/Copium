@@ -20,7 +20,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Graphics/textures.h"
 
-namespace Copium::Graphics
+namespace Copium
 {
 	Texture::Texture(const std::string& _filePath) : filePath(_filePath)
 	{
@@ -32,8 +32,8 @@ namespace Copium::Graphics
 		// File cannot be loaded
 		COPIUM_ASSERT(data == NULL, "File cannot be loaded! Check the file path...");
 			
-		width = (GLuint)iWidth;
-		height = (GLuint)iHeight;
+		width = (unsigned int)iWidth;
+		height = (unsigned int)iHeight;
 
 		// Assign format based on the number of channels
 		if (channels == 4)

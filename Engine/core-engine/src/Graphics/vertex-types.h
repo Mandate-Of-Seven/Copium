@@ -17,7 +17,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include <glm/glm.hpp>
 
-namespace Copium::Graphics
+namespace Copium
 {
 	// A Vertex contains information about a vertex that is used for rendering
 	struct QuadVertex

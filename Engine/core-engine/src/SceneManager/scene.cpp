@@ -62,9 +62,6 @@ std::vector<GameObject*>& Scene::get_gameobjectvector() { return gameObjects;}
 GameObject* Scene::add_gameobject(GameObject* _gameObj) 
 {
 	gameObjects.push_back(_gameObj);
-	GameObjectID id = (GameObjectID)gameObjects.size();
-	_gameObj->set_id(id);
-	std::cout << "ID:" << id << std::endl;
 	return _gameObj;
 }
 

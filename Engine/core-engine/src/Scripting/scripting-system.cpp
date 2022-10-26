@@ -18,23 +18,23 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "pch.h"
 #include "Scripting/scripting-system.h"
 #include "Scripting/compiler.h"
-#include "Scripting/scripting.h"
 #include "Utilities/thread-system.h"
 #include "Files/file-system.h"
 #include "CopiumCore/system-interface.h"
 #include "Messaging/message-system.h"
 #include "Messaging/message-types.h"
+#include "Scripting/scriptWrappers.h"
 
-#include <mono/metadata/mono-config.h>
-#include <mono/metadata/assembly.h>
-#include <mono/metadata/appdomain.h>
-#include <mono/metadata/threads.h>
+#include "mono/jit/jit.h"
+#include "mono/metadata/assembly.h"
+#include "mono/metadata/object.h"
+#include "mono/metadata/tabledefs.h"
 
 #define SECONDS_TO_RECOMPILE 5
 
 namespace
 {
-	Copium::Message::MessageSystem* messageSystem{ Copium::Message::MessageSystem::Instance() };
+	Copium::MessageSystem* messageSystem{ Copium::MessageSystem::Instance() };
 	enum class CompilingState
 	{
 		Compiling,
@@ -42,73 +42,105 @@ namespace
 		Wait
 	};
 	CompilingState compilingState{ CompilingState::Wait};
+	MonoDomain* mRootDomain{ nullptr };		//JIT RUNTIME DOMAIN
+	MonoDomain* mAppDomain{ nullptr };		//APP DOMAIN
+	MonoAssembly* mCoreAssembly{ nullptr };	//ASSEMBLY OF SCRIPTS.DLL
+	MonoImage* mAssemblyImage{ nullptr };	//LOADED IMAGE OF SCRIPTS.DLL
+	MonoClass* mGameObject{ nullptr };
+	MonoClass* mCopiumScript{ nullptr };
+
 }
 
-namespace Copium::Scripting
+namespace Copium::Utils
 {
-	//ScriptingEngine Namespace Variables
-	Copium::Scripting::ScriptingSystem& sS{ *Copium::Scripting::ScriptingSystem::Instance() };
+	static char* readBytes(const std::string& filepath, uint32_t* outSize)
+	{
+		std::ifstream stream(filepath, std::ios::binary | std::ios::ate);
+
+		if (!stream) return nullptr;
+		std::streampos end = stream.tellg();
+		stream.seekg(0, std::ios::beg);
+		uint32_t size = end - stream.tellg();
+		if (size == 0) return nullptr;
+		char* buffer = new char[size];
+		stream.read((char*)buffer, size);
+		stream.close();
+		*outSize = size;
+		return buffer;
+	}
+
+	static MonoAssembly* loadAssembly(const std::string& assemblyPath)
+	{
+		uint32_t fileSize = 0;
+		char* fileData = readBytes(assemblyPath, &fileSize);
+
+		// NOTE: We can't use this image for anything other than loading the assembly because this image doesn't have a reference to the assembly
+		MonoImageOpenStatus status;
+		MonoImage* image = mono_image_open_from_data_full(fileData, fileSize, 1, &status, 0);
+
+		if (status != MONO_IMAGE_OK)
+		{
+			// const char* errorMessage = mono_image_strerror(status);
+			// Log some error message using the errorMessage data
+			return nullptr;
+		}
+
+		MonoAssembly* assembly = mono_assembly_load_from_full(image, assemblyPath.c_str(), &status, 0);
+
+		mono_image_close(image);
+
+		// Don't forget to free the file data
+		delete[] fileData;
+
+		return assembly;
+	}
+
+	FieldType monoTypeToFieldType(MonoType* monoType)
+	{
+		std::string typeName = mono_type_get_name(monoType);
+		auto it = fieldTypeMap.find(typeName);
+		COPIUM_ASSERT(it == fieldTypeMap.end(), "Invalid monoType")
+		return it->second;
+	}
+}
+
+namespace Copium
+{
+	ScriptingSystem& sS{ *ScriptingSystem::Instance() };
 	bool scriptIsLoaded(const std::filesystem::path&);
 	bool scriptPathExists(const std::filesystem::path& filePath);
 	//ScriptingEngine Namespace Functions
-	MonoAssembly* loadAssembly(const std::string& assemblyPath);
 
 	#pragma region Struct ScriptMethods
-		ScriptClass::ScriptClass(MonoClass* _mClass) : mClass{_mClass}, 
-		mAwake{ mono_class_get_method_from_name(_mClass, "Awake", 0) },
-		mStart{ mono_class_get_method_from_name(_mClass, "Start", 0) },
-		mUpdate{ mono_class_get_method_from_name(_mClass, "Update", 0) },
-		mLateUpdate{ mono_class_get_method_from_name(_mClass, "LateUpdate", 0) },
-		mOnCollisionEnter{ mono_class_get_method_from_name(_mClass, "OnCollisionEnter", 0) }{}
-	#pragma endregion
-
-	// Gets the accessibility level of the given field
-	unsigned char GetFieldAccessibility(MonoClassField* field)
-	{
-		unsigned char accessibility = (unsigned char)Accessibility::None;
-		unsigned int accessFlag = mono_field_get_flags(field) & MONO_FIELD_ATTR_FIELD_ACCESS_MASK;
-
-		switch (accessFlag)
+		ScriptClass::ScriptClass(const std::string& _name, MonoClass* _mClass) : 
+		mClass{ _mClass},
+		name{_name},
+		mAwake{ mono_class_get_method_from_name(mClass, "Awake", 0) },
+		mStart{ mono_class_get_method_from_name(mClass, "Start", 0) },
+		mUpdate{ mono_class_get_method_from_name(mClass, "Update", 0) },
+		mLateUpdate{ mono_class_get_method_from_name(mClass, "LateUpdate", 0) },
+		mOnCollisionEnter{ mono_class_get_method_from_name(mClass, "OnCollisionEnter", 0) },
+		mOnCreate{ mono_class_get_method_from_name(mCopiumScript, "OnCreate", 1) }
 		{
-			case MONO_FIELD_ATTR_PRIVATE:
+			int fieldCount = mono_class_num_fields(mClass);
+			void* iterator = nullptr;
+			while (MonoClassField* field = mono_class_get_fields(mClass, &iterator))
 			{
-				accessibility = (unsigned char)Accessibility::Private;
-				break;
-			}
-			case MONO_FIELD_ATTR_FAM_AND_ASSEM:
-			{
-				accessibility |= (unsigned char)Accessibility::Protected;
-				accessibility |= (unsigned char)Accessibility::Internal;
-				break;
-			}
-			case MONO_FIELD_ATTR_ASSEMBLY:
-			{
-				accessibility = (unsigned char)Accessibility::Internal;
-				break;
-			}
-			case MONO_FIELD_ATTR_FAMILY:
-			{
-				accessibility = (unsigned char)Accessibility::Protected;
-				break;
-			}
-			case MONO_FIELD_ATTR_FAM_OR_ASSEM:
-			{
-				accessibility |= (unsigned char)Accessibility::Private;
-				accessibility |= (unsigned char)Accessibility::Protected;
-				break;
-			}
-			case MONO_FIELD_ATTR_PUBLIC:
-			{
-				accessibility = (unsigned char)Accessibility::Public;
-				break;
+				const char* fieldName = mono_field_get_name(field);
+				uint32_t flags = mono_field_get_flags(field);
+				if (flags & FIELD_ATTRIBUTE_PUBLIC)
+				{
+					MonoType* type = mono_field_get_type(field);
+					FieldType fieldType = Utils::monoTypeToFieldType(type);
+					mFields[fieldName] = { fieldType, fieldName, field };
+				}
 			}
 		}
-		return accessibility;
-	}
+	#pragma endregion
 
 	void ScriptingSystem::recompileThreadWork()
 	{
-		Thread::ThreadSystem& tSys = *Thread::ThreadSystem::Instance();
+		ThreadSystem& tSys = *ThreadSystem::Instance();
 		while (!tSys.Quit())
 		{
 			while (compilingState != CompilingState::Wait);
@@ -123,7 +155,7 @@ namespace Copium::Scripting
 	}
 
 	ScriptingSystem::ScriptingSystem() :
-		scriptFiles{ Copium::Files::FileSystem::Instance()->getFilesWithExtension(".cs") }
+		scriptFiles{ Copium::FileSystem::Instance()->get_files_with_extension(".cs") }
 	{
 
 	}
@@ -131,7 +163,9 @@ namespace Copium::Scripting
 	void ScriptingSystem::init()
 	{
 		initMono();
-		Thread::ThreadSystem::Instance()->addThread(new std::thread(&ScriptingSystem::recompileThreadWork,this));
+		registerScriptWrappers();
+		ThreadSystem::Instance()->addThread(new std::thread(&ScriptingSystem::recompileThreadWork,this));
+		messageSystem->subscribe(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT, this);
 	}
 
 	void ScriptingSystem::update()
@@ -145,36 +179,75 @@ namespace Copium::Scripting
 
 	void ScriptingSystem::exit()
 	{
+		for (auto& it : scriptClassMap)
+		{
+
+			delete it.second;
+		}
 		shutdownMono();
 	}
 
-	void ScriptingSystem::handleMessage(Message::MESSAGE_TYPE mType)
+	MonoObject* ScriptingSystem::instantiateClass(MonoClass* mClass)
 	{
-
+		if (mAppDomain == nullptr || mClass == nullptr)
+			return nullptr;
+		MonoObject* tmp = mono_object_new(mAppDomain, mClass);
+		mono_runtime_object_init(tmp);
+		return tmp;
 	}
 
-	MonoObject* ScriptingSystem::createMonoObject(MonoClass* mClass)
-	{
-		return mono_object_new(mAppDomain, mClass);
-	}
-
-	std::shared_ptr<ScriptClass> ScriptingSystem::getScriptClass(const char* _name)
+	ScriptClass* ScriptingSystem::getScriptClass(const std::string& _name)
 	{
 		if (mAssemblyImage == nullptr)
 			return nullptr;
-		for (auto spScriptClass : scriptClasses)
+		auto namePScriptClassPair = scriptClassMap.find(_name);
+		ScriptClass* pScriptClass{nullptr};
+		if (namePScriptClassPair != scriptClassMap.end())
 		{
-			if (spScriptClass.use_count() == 1)
-			{
-				spScriptClass.reset();
-				spScriptClass = std::make_shared<ScriptClass>(mono_class_from_name(mAssemblyImage, "", _name));
-				PRINT("SCRIPT " << _name << " ALREADY EXISTS");
-				return spScriptClass;
-			}
+			pScriptClass = (* namePScriptClassPair).second;
+			return pScriptClass;
 		}
-		PRINT("SCRIPT " << _name << " WAS CREATED");
-		scriptClasses.push_back(std::make_shared<ScriptClass>(mono_class_from_name(mAssemblyImage, "", _name)));
-		return scriptClasses.back();
+		MonoClass* mClass = mono_class_from_name(mAssemblyImage, "", _name.c_str());
+		if (mClass)
+		{
+			pScriptClass = new ScriptClass(_name, mClass);
+			scriptClassMap.emplace(_name, pScriptClass);
+		}
+		return pScriptClass;
+	}
+
+	const std::unordered_map<std::string, ScriptClass*>& ScriptingSystem::getScriptClassMap()
+	{
+		return scriptClassMap;
+	}
+
+	void ScriptingSystem::updateScriptClasses()
+	{
+		using nameToClassIt = std::unordered_map<std::string, ScriptClass*>::iterator;
+		nameToClassIt it = scriptClassMap.begin();
+		static std::vector<nameToClassIt> keyMask;
+		for (auto& keyVal : scriptClassMap)
+		{
+			MonoClass* mClass = mono_class_from_name(mAssemblyImage,"", keyVal.first.c_str());
+			//If the class was successfully created, meaning it exists in the assembly
+			delete keyVal.second;
+			if (mClass)
+			{
+				keyVal.second = new ScriptClass(keyVal.first,mClass);
+			}
+			//If the class was not found in the assembly, meaning it doesnt exist in the assembly
+			else
+			{
+				keyMask.push_back(it);
+			}
+			++it;
+		}
+		for (nameToClassIt& it : keyMask)
+		{
+
+			scriptClassMap.erase(it);
+		}
+		keyMask.clear();
 	}
 
 	void ScriptingSystem::initMono()
@@ -198,82 +271,52 @@ namespace Copium::Scripting
 
 	void ScriptingSystem::unloadAppDomain()
 	{
-		mono_domain_set(mRootDomain, false);
-		mono_domain_unload(mAppDomain);
-		PRINT("DOMAIN UNLOADED");
-		mAppDomain = nullptr;
+		if (mAppDomain)
+		{
+			mono_domain_set(mRootDomain, false);
+			mono_domain_unload(mAppDomain);
+			mAppDomain = nullptr;
+		}
 	}
 
 	void ScriptingSystem::swapDll()
 	{
-		PRINT("SWAPPING AND LOADING ASSEMBLY...");
-		if (mAppDomain)
-			unloadAppDomain();
+		unloadAppDomain();
 		createAppDomain();
-		mCoreAssembly = loadAssembly(Files::Paths::scriptsAssemblyPath);
-		//mono_assemblies_init();
+		mCoreAssembly = Utils::loadAssembly(Paths::scriptsAssemblyPath);
 		mAssemblyImage = mono_assembly_get_image(mCoreAssembly);
-		messageSystem->dispatch(Message::MESSAGE_TYPE::MT_SCRIPTING_UPDATED);
-		//void* propIter = nullptr;
-		//MonoClassField* raw_property = NULL;
-		//raw_property = mono_class_get_fields(mmClasses[0], &propIter);
-		//while (raw_property = mono_class_get_fields(mmClasses[0], &propIter)) {
-		//	std::string name = mono_field_get_name(raw_property);
-		//	if (GetFieldAccessibility(raw_property) & (unsigned char)Accessibility::Public)
-		//	{
-		//		if (GetType(mono_field_get_type(raw_property)) == FieldType::String)
-		//			PRINT("Name: " << name << " Type: String Access: Public");
-		//	}
-		//}
+		//Update scriptClasses
+		mGameObject = mono_class_from_name(mAssemblyImage, "CopiumEngine", "GameObject");
+		mCopiumScript = mono_class_from_name(mAssemblyImage, "CopiumEngine", "CopiumScript");
+		updateScriptClasses();
+		if (!mCopiumScript)
+			PRINT("COPIUM SCRIPT CANT BE FOUND");
+		messageSystem->dispatch(MESSAGE_TYPE::MT_SCRIPTING_UPDATED);
 	}
 
-	void ScriptingSystem::invoke(MonoObject* mObj, MonoMethod* mMethod)
+	void ScriptingSystem::invoke(MonoObject* mObj, MonoMethod* mMethod, void** params)
 	{
-		if (mObj && mMethod)
+		if (mObj && mMethod && mAppDomain)
 		{
-			mono_runtime_invoke(mMethod, mObj, nullptr, nullptr);
+			mono_runtime_invoke(mMethod, mObj, params, nullptr);
 		}
 	}
 
-	MonoAssembly* loadAssembly(const std::string& assemblyPath)
-	{
-		uint32_t fileSize = 0;
-		char* fileData = ReadBytes(assemblyPath, &fileSize);
-
-		// NOTE: We can't use this image for anything other than loading the assembly because this image doesn't have a reference to the assembly
-		MonoImageOpenStatus status;
-		MonoImage* image = mono_image_open_from_data_full(fileData, fileSize, 1, &status, 0);
-
-		if (status != MONO_IMAGE_OK)
-		{
-			// const char* errorMessage = mono_image_strerror(status);
-			// Log some error message using the errorMessage data
-			return nullptr;
-		}
-
-		MonoAssembly* assembly = mono_assembly_load_from_full(image, assemblyPath.c_str(), &status, 0);
-
-		mono_image_close(image);
-
-		// Don't forget to free the file data
-		delete[] fileData;
-
-		return assembly;
-	}
+	
 
 	void ScriptingSystem::updateScriptFiles()
 	{
 		//Check for new files
 		namespace fs = std::filesystem;
-		using scriptFileListIter = std::list<Files::File>::iterator;
+		using scriptFileListIter = std::list<File>::iterator;
 		scriptFileListIter scriptFilesIt = scriptFiles.begin();
-		std::list<Files::File*> maskScriptFiles;
+		static std::list<File*> maskScriptFiles;
 		maskScriptFiles.resize(scriptFiles.size());
-		for (Files::File& file : scriptFiles)
+		for (File& file : scriptFiles)
 		{
 			maskScriptFiles.push_back(&file);
 		}
-		for (fs::directory_entry p : fs::recursive_directory_iterator(Files::Paths::projectPath))
+		for (fs::directory_entry p : fs::recursive_directory_iterator(Paths::projectPath))
 		{
 			const fs::path& pathRef{ p.path() };
 			if (pathRef.extension() != ".cs")
@@ -282,16 +325,13 @@ namespace Copium::Scripting
 			//Detect new scripts
 			if (!scriptIsLoaded(pathRef))
 			{
-				PRINT("SCRIPT WAS NOT LOADED: " << pathRef.stem().string());
 				scriptFiles.emplace(scriptFilesIt, pathRef);
 			}
 			//Script was already loaded
 			else
 			{
-				PRINT("SCRIPTS ALREADY LOADED: " << pathRef.stem().string());
 				//Set scripts to be masked
-				
-				for (Files::File* scriptFile : maskScriptFiles)
+				for (File* scriptFile : maskScriptFiles)
 				{
 					if (scriptFile && *scriptFile == pathRef)
 					{
@@ -303,28 +343,27 @@ namespace Copium::Scripting
 			}
 		}
 		// Remove deleted scripts using mask
-		for (Files::File* scriptFile : maskScriptFiles)
+		for (File* scriptFile : maskScriptFiles)
 		{
 			if (scriptFile != nullptr)
 			{
 				scriptFiles.remove(*scriptFile);
 			}
 		}
+		maskScriptFiles.clear();
 	}
 
 	void ScriptingSystem::tryRecompileDll()
 	{
 		compilingState = CompilingState::Wait;
 		bool startCompiling = false;
-		for (Files::File& scriptFile : scriptFiles)
+		for (File& scriptFile : scriptFiles)
 		{
-			scriptFile.updateModificationTiming();
-			if (scriptFile.Modified() && !startCompiling)
+			scriptFile.update_modification_timing();
+			if (scriptFile.is_modified() && !startCompiling)
 			{
-				PRINT(scriptFile.string() << " Changed! ");
-				PRINT("Compiling DLL....");
 				startCompiling = true;
-				Compiler::compileDll();
+				Utils::compileDll();
 				compilingState = CompilingState::SwapAssembly;
 			}
 		}
@@ -332,7 +371,7 @@ namespace Copium::Scripting
 
 	bool ScriptingSystem::scriptIsLoaded(const std::filesystem::path& filePath)
 	{
-		using scriptFileListIter = std::list<Files::File>::iterator;
+		using scriptFileListIter = std::list<File>::iterator;
 		for (scriptFileListIter it = scriptFiles.begin(); it != scriptFiles.end(); ++it)
 		{
 			if (*it == filePath) return true;
@@ -340,13 +379,20 @@ namespace Copium::Scripting
 		return false;
 	}
 
-	/*static void CppFunc()
+	void ScriptingSystem::reflectGameObject(uint64_t _ID)
 	{
-		std::cout << "This is a cpp function" << std::endl;
+		if (!mAssemblyImage)
+			return;
+		MonoMethod* mSetID = mono_class_get_method_from_name(mGameObject, "setID", 1);
+		MonoObject* mInstance = instantiateClass(mGameObject);
+		void* param = &_ID;
+		mono_runtime_object_init(mInstance);
+		mono_runtime_invoke(mSetID, mInstance, &param, nullptr);
 	}
 
-	static void NativeLog()
+	void ScriptingSystem::handleMessage(MESSAGE_TYPE mType)
 	{
-		std::cout << "This is a cpp function" << std::endl;
-	}*/
+		//MT_REFLECT_CS_GAMEOBJECT
+		reflectGameObject(MESSAGE_CONTAINER::reflectCsGameObject.ID);
+	}
 }
