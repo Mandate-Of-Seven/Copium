@@ -19,8 +19,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/game-object.h"
 #include "Editor/inspector.h"
 #include "Editor/editor-consolelog.h"
-#include "Editor/editor-scene-hierarchy-list.h"
-#include "GameObject/component.h"
+#include "Editor/editor-hierarchy-list.h"
 
 namespace Copium
 {
@@ -45,6 +44,8 @@ namespace Copium
 		ImGui::GetIO().ConfigDockingWithShift = true;
 		Window::Inspector::init();
 		Window::EditorConsole::init();
+		Window::Hierarchy::init();
+
 		sceneView.init();
 		
 		// Initialize a new editor camera
@@ -165,6 +166,7 @@ namespace Copium
             //Call all the editor layers updates here
             Window::Inspector::update();
             Window::EditorConsole::update();
+			Window::Hierarchy::update();
             sceneView.update();
 
 			// demo update
@@ -195,6 +197,7 @@ namespace Copium
 		ImGui::DestroyContext();
 
 		Window::Inspector::exit();
+		Window::Inspector::selectedGameObject = nullptr;
 		sceneView.exit();
 	}
 }

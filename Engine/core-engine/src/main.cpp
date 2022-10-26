@@ -183,7 +183,8 @@ static void update()
     }
     if (inputSystem.is_key_pressed(GLFW_KEY_E))
     {
-        Copium::LogicSystem::Instance()->Play(true);
+        bool play = Copium::LogicSystem::Instance()->Play();
+        Copium::LogicSystem::Instance()->Play(!play);
     }
     quitEngine();
 }

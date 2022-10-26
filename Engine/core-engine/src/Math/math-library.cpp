@@ -731,7 +731,7 @@ namespace Copium::Math
 
 	glm::mat4x4 Matrix4x4::to_glm() const
 	{
-		glm::mat4x4 tmp;
+		glm::mat4x4 tmp{};
 		for (int i{ 0 }; i < 4; ++i)
 		{
 			for (int j{ 0 }; j < 4; ++j)

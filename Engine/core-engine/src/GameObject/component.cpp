@@ -24,8 +24,7 @@ std::map<ComponentType, const std::string> Component::componentMap
     {ComponentType::Animator,"AnimatorComponent"},
     {ComponentType::Collider,"ColliderComponent"},
     {ComponentType::Renderer,"RendererComponent"},
-    {ComponentType::Script,"ScriptComponent"},
-    {ComponentType::Transform, "TransformComponent"}
+    {ComponentType::Script,"ScriptComponent"}
 };
 
 Component::Component::Component(GameObject& _gameObj, ComponentType _componentType) 
@@ -38,7 +37,7 @@ ComponentID const Component::ID() { return id; }
 
 void Component::deserialize(rapidjson::Value& _value)
 {
-    std::cout << "default deserialization\n";
+    //std::cout << "default deserialization\n";
 }
 
 bool Component::Enabled() const noexcept{ return enabled;}
@@ -50,8 +49,6 @@ ColliderComponent::ColliderComponent(GameObject& _gameObj)
 
 AnimatorComponent::AnimatorComponent(GameObject& _gameObj) 
     :Component(_gameObj, ComponentType::Animator) { std::cout << "ANIMATOR CONS" << std::endl; }
-
-
 
 const std::string& Component::Name() const
 {
@@ -67,43 +64,36 @@ Component& Component::operator=(const Component& rhs)
     {
     case ComponentType::Animator:
     {
-        auto pRhs = reinterpret_cast<const AnimatorComponent*>(&rhs);
-        auto pLhs = reinterpret_cast<AnimatorComponent*>(this);
-        PRINT("ADDED ANIMATOR");
+        const AnimatorComponent* pRhs = reinterpret_cast<const AnimatorComponent*>(&rhs);
+        AnimatorComponent* pLhs = reinterpret_cast<AnimatorComponent*>(this);
         break;
     }
     case ComponentType::Collider:
     {
-        auto pRhs = reinterpret_cast<const ColliderComponent*>(&rhs);
-        auto pLhs = reinterpret_cast<ColliderComponent*>(this);
-        PRINT("ADDED COLLIDER");
+        const ColliderComponent* pRhs = reinterpret_cast<const ColliderComponent*>(&rhs);
+        ColliderComponent* pLhs = reinterpret_cast<ColliderComponent*>(this);
         break;
     }
     case ComponentType::Renderer:
     {
-        auto pRhs = reinterpret_cast<const Copium::RendererComponent*>(&rhs);
-        auto pLhs = reinterpret_cast<Copium::RendererComponent*>(this);
-        PRINT("ADDED SPRITE RENDERER");
+        const Copium::RendererComponent* pRhs = reinterpret_cast<const Copium::RendererComponent*>(&rhs);
+        Copium::RendererComponent* pLhs = reinterpret_cast<Copium::RendererComponent*>(this);
         break;
     }
     case ComponentType::Script:
     {
-        //MESSAGE_CONTAINERS::addScript.name = "NewScript";
-        //MESSAGE_CONTAINERS::addScript.gameObj = this;
-        PRINT("ADDED SCRIPT");
         break;
     }
     case ComponentType::Transform:
     {
-        auto* pRhs = reinterpret_cast<const TransformComponent*>(&rhs);
-        auto* pLhs = reinterpret_cast<TransformComponent*>(this);
+        const TransformComponent* pRhs = reinterpret_cast<const TransformComponent*>(&rhs);
+        TransformComponent* pLhs = reinterpret_cast<TransformComponent*>(this);
         pLhs->position = pRhs->position;
         pLhs->rotation = pRhs->rotation;
         pLhs->scale = pRhs->scale;
         break;
     }
     default:
-        PRINT("ADDED NOTHING");
         break;
     }
     return *this;
