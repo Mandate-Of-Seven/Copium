@@ -100,6 +100,9 @@ namespace Copium
         */
         /**************************************************************************/
         virtual void exit()     = 0;
+
+        double updateTime;
+        double updateTimePercent;
     };
 
 

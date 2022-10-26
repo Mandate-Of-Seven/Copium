@@ -80,10 +80,27 @@ namespace Copium
 		/**************************************************************************/
 		void update()
 		{
+			double totalUpdateTime = 0;
 			frc->update();
 			for (ISystem* pSystem : systems)
 			{
+				double startTime = glfwGetTime();
 				pSystem->update();
+				pSystem->updateTime = glfwGetTime() - startTime;
+				totalUpdateTime += pSystem->updateTime;
+			}
+
+			if (displayPerformance)
+			{
+				std::cout<<"Start\n";
+				for (ISystem* pSystem : systems)
+				{
+
+					pSystem->updateTimePercent = (pSystem->updateTime / totalUpdateTime) * 100;
+					std::cout << typeid(*pSystem).name() << ": " << pSystem->updateTimePercent << "%\n";
+
+				}
+				std::cout << "End\n\n";
 			}
 			frc->end();
 		}
@@ -105,8 +122,12 @@ namespace Copium
 			delete frc;
 			frc = nullptr;
 		}
+
+		void toggle_display_peformance() {displayPerformance = !displayPerformance;}
+		//bool get_display_peformance() {return displayPerformance}
 	private:
 		std::vector<ISystem*> systems;
 		FrameRateController* frc;
+		bool displayPerformance = false;
 	};
 }
