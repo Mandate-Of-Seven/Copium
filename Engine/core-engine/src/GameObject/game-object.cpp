@@ -42,7 +42,7 @@ GameObject::~GameObject()
     {
         if (*iter)
         {
-            delete* iter;
+            delete (*iter);
 
         }
     }
