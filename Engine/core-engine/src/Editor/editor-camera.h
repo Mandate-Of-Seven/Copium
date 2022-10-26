@@ -17,7 +17,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Graphics/camera.h"
 
-namespace Copium::Editor
+namespace Copium
 {
 	// Editor camera which moves around in the scene
 	class EditorCamera : public Camera

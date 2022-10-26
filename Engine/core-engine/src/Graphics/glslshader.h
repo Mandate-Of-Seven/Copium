@@ -30,7 +30,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #define GL_FALSE 0
 #define GL_TRUE 1
 
-namespace Copium::Graphics
+namespace Copium
 {
     // Forward declaration of type definitions
     typedef char GLchar;

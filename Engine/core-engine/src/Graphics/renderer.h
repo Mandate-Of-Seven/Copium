@@ -20,7 +20,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Graphics/vertex-types.h"
 
-namespace Copium::Graphics 
+namespace Copium 
 {
 
 	// Forward declare

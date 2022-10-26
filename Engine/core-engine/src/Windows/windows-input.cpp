@@ -27,7 +27,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 // Bean: Temporary for window systems declaration
 namespace
 {
-    Copium::Windows::WindowsSystem * windowsSystem = Copium::Windows::WindowsSystem::Instance();
+    Copium::WindowsSystem * windowsSystem = Copium::WindowsSystem::Instance();
     short keys[COPIUM_MAX_KEYS];
     short mouseButtons[COPIUM_MAX_MOUSEBUTTONS];
     double mouseScrollOffset;

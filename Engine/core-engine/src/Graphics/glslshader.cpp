@@ -19,7 +19,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #include <Graphics/glslshader.h>
 
-namespace Copium::Graphics
+namespace Copium
 {
     enum ShaderType
     {

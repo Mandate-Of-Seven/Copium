@@ -68,8 +68,8 @@ namespace Copium {
 	void FrameRateController::end()
 	{
 		//frameEnd = glfwGetTime();
-		Windows::WindowsSystem::Instance()->update_time(0.16);
-		frameRate = Windows::WindowsSystem::Instance()->get_fps();
+		WindowsSystem::Instance()->update_time(0.16);
+		frameRate = WindowsSystem::Instance()->get_fps();
 		++frameCount;
 	}
 

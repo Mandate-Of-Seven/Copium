@@ -19,13 +19,14 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "pch.h"
 #include "GameObject/game-object.h"
 #include "GameObject/renderer-component.h"
+#include "GameObject/component.h"
 
 //USING
 
 namespace 
 {
     const std::string defaultGameObjName = "New GameObject"; // Append (No.) if its not the first
-    Copium::Message::MessageSystem& messageSystem{*Copium::Message::MessageSystem::Instance()};
+    Copium::MessageSystem& messageSystem{*Copium::MessageSystem::Instance()};
 }
 
 
@@ -43,6 +44,8 @@ GameObject::~GameObject()
     }
 }
 
+
+
 GameObject::GameObject
 (Copium::Math::Vec3 _position, Copium::Math::Vec3 _rotation, Copium::Math::Vec3 _scale)
     : 
@@ -50,11 +53,11 @@ GameObject::GameObject
     transform(*this,_position, _rotation, _scale)
 {
     id = count++;
-    messageSystem.subscribe(Copium::Message::MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
+    messageSystem.subscribe(Copium::MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
     PRINT("GAMEOBJECT ID CONSTRUCTED: " << id);
 }
 
-Component* GameObject::getComponent(Component::Type componentType)
+Component* GameObject::getComponent(ComponentType componentType)
 {
     for (Component* pComponent : components)
     {
@@ -72,25 +75,24 @@ Component* GameObject::addComponent(const Component& component)
 }
 
 
-Component* GameObject::addComponent(Component::Type componentType)
+Component* GameObject::addComponent(ComponentType componentType)
 {
     Component* component = nullptr;
     switch (componentType)
     {
-    case Component::Type::Animator:
+    case ComponentType::Animator:
         component = new AnimatorComponent(*this);
         PRINT("ADDED ANIMATOR");
         break;
-    case Component::Type::Collider:
+    case ComponentType::Collider:
         component = new ColliderComponent(*this);
         PRINT("ADDED COLLIDER");
         break;
-    case Component::Type::SpriteRenderer:
+    case ComponentType::Renderer:
         component = new Copium::RendererComponent(*this);
         PRINT("ADDED SPRITE RENDERER");
         break;
-    case Component::Type::Script:
-        using namespace Copium::Message;
+    case ComponentType::Script:
         //MESSAGE_CONTAINERS::addScript.name = "NewScript";
         //MESSAGE_CONTAINERS::addScript.gameObj = this;
         PRINT("ADDED SCRIPT");
@@ -104,16 +106,55 @@ Component* GameObject::addComponent(Component::Type componentType)
     return component;
 }
 
-void GameObject::deleteComponent(Component* component)
+void GameObject::removeComponent(ComponentType componentType)
 {
-    std::list<Component*>::iterator it{ components.begin() };
-    ComponentID _id{};
-    while (_id != component->ID())
+    if (componentType == ComponentType::Transform)
     {
-        ++_id; ++it;
+        PRINT("CANNOT REMOVE TRANSFORM");
+        return;
     }
-    //std::cout << "Id:" << id << std::endl;
-    components.erase(it);
+    auto it{ components.begin() };
+    while (it != components.end())
+    {
+        if ((*it)->componentType == componentType)
+        {
+            delete* it;
+            components.erase(it);
+            return;
+        }
+        ++it;
+    }
+    PRINT("Component of Type " << Component::componentMap[componentType] << " does not exist on " << name);
+}
+
+void GameObject::removeComponent(ComponentID componentID)
+{
+    auto it{ components.begin() };
+    while (it != components.end())
+    {
+        if ((*it)->ID() == id)
+        {
+            delete* it;
+            components.erase(it);
+            return;
+        }
+        ++it;
+    }
+}
+
+
+bool GameObject::hasComponent(ComponentType componentType) const
+{
+    auto it{ components.begin() };
+    while (it != components.end())
+    {
+        if ((*it)->componentType == componentType)
+        {
+            return true;
+        }
+        ++it;
+    }
+    return false;
 }
 
 TransformComponent& GameObject::Transform()  
@@ -206,9 +247,9 @@ bool GameObject::deserialize(rapidjson::Value& _value) {
 }
 
 
-void GameObject::handleMessage(Copium::Message::MESSAGE_TYPE mType)
+void GameObject::handleMessage(Copium::MESSAGE_TYPE mType)
 {
-    using namespace Copium::Message;
+    using namespace Copium;
     //MT_SCRIPTING_UPDATED
     MESSAGE_CONTAINER::reflectCsGameObject.ID = id;
     messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);

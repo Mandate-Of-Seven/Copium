@@ -19,7 +19,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "Windows/windows-system.h"
 
-namespace Copium::Windows
+namespace Copium
 {
 
     void WindowsSystem::init()

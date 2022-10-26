@@ -85,7 +85,7 @@ namespace Window
                 ImGui::PopItemWidth();
                 ImVec2 buttonSize = ImGui::GetWindowSize();
                 buttonSize.y *= (float) BUTTON_HEIGHT;
-                std::map<Component::Type, const std::string>::iterator it;
+                std::map<ComponentType, const std::string>::iterator it;
                 for (it = Component::componentMap.begin(); it != Component::componentMap.end(); ++it)
                 {
                     if (ImGui::Button(it->second.c_str(), buttonSize)) {

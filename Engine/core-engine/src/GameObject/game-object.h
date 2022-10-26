@@ -29,7 +29,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 //USING
 using GameObjectID = uint64_t;
 
-class GameObject final : public Copium::Message::IReceiver
+class GameObject final : public Copium::IReceiver
 {
 private:
     GameObjectID id;                    //Global ID for gameObjects
@@ -61,15 +61,32 @@ public:
         Copium::Math::Vec3 _scale = {1,1,1});
 
     template <typename T>
-    T* addComponent()
+    T& addComponent()
     {
         static_assert(std::is_base_of<Component, T>::value);
         T* component = new T(*this);
         components.push_back(component);
-        return component;
+        return *component;
     }
 
-    Component* getComponent(Component::Type componentType);
+    template <typename T>
+    const std::vector<T*>& getComponents()
+    {
+        static_assert(std::is_base_of<Component, T>::value);
+        static std::vector<T*> typedComponents;
+        typedComponents.clear();
+
+        std::string tName = typeid(T).name() + std::string("class Copium::").length();
+        ComponentType componentType = Component::nameToType(tName);
+        for (Component* pComponent : components)
+        {
+            if (pComponent->componentType == componentType)
+                typedComponents.push_back(reinterpret_cast<T*>(pComponent));
+        }
+        return typedComponents;
+    }
+
+    Component* getComponent(ComponentType componentType);
     /***************************************************************************/
     /*!
     \brief
@@ -78,7 +95,10 @@ public:
         Type of component to append to components list
     */
     /**************************************************************************/
-    Component* addComponent(Component::Type componentType);
+    Component* addComponent(ComponentType componentType);
+
+
+    bool hasComponent(ComponentType componentType) const;
 
     Component* addComponent(const Component& component);
 
@@ -90,7 +110,18 @@ public:
         Pointer to component to delete from components list
     */
     /**************************************************************************/
-    void deleteComponent(Component* component);
+    void removeComponent(ComponentType componentType);
+
+    void removeComponent(ComponentID componentID);
+
+    template <typename T>
+    void removeComponent()
+    {
+        static_assert(std::is_base_of<Component, T>::value);
+        std::string tName = typeid(T).name() + std::string("class Copium::").length();
+        ComponentType componentType = Component::nameToType(tName); 
+        removeComponent(componentType);
+    }
 
     /***************************************************************************/
     /*!
@@ -307,7 +338,7 @@ public:
     /**************************************************************************/
     ~GameObject();
 
-    void handleMessage(Copium::Message::MESSAGE_TYPE mType);
+    void handleMessage(Copium::MESSAGE_TYPE mType);
 
     GameObject& operator=(const GameObject& rhs);
 

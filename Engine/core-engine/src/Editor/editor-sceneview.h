@@ -17,7 +17,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include <glm/vec2.hpp>
 
-namespace Copium::Editor
+namespace Copium
 {
 	class EditorSceneView
 	{

@@ -137,6 +137,7 @@
     <ClCompile Include="src\SceneManager\scene-manager.cpp" />
     <ClCompile Include="src\SceneManager\sm.cpp" />
     <ClCompile Include="src\SceneManager\state-manager.cpp" />
+    <ClCompile Include="src\Scripting\logic-system.cpp" />
     <ClCompile Include="src\Scripting\scripting-system.cpp" />
     <ClCompile Include="src\Scripting\scripting.cpp" />
     <ClCompile Include="src\Utilities\thread-system.cpp" />
@@ -181,6 +182,10 @@
     <ClInclude Include="src\Graphics\camera.h" />
     <ClInclude Include="src\Graphics\sprite-renderer.h" />
     <ClInclude Include="src\SceneManager\sm.h" />
+    <ClInclude Include="src\Scripting\logic-system.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="src\Scripting\scriptWrappers.h" />
     <ClInclude Include="src\Utilities\thread-system.h" />
     <ClInclude Include="src\Physics\collider.h" />

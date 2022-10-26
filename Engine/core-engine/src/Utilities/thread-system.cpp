@@ -16,7 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 #include "Utilities/thread-system.h"
 
-namespace Copium::Thread
+namespace Copium
 {
 	void ThreadSystem::init()
 	{

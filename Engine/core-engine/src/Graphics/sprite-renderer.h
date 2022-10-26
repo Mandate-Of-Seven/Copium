@@ -21,7 +21,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <rttr/type>
 #include <rapidjson/document.h>
 
-namespace Copium::Graphics
+namespace Copium
 {
 	// Depends on Transform
 	class SpriteRenderer final

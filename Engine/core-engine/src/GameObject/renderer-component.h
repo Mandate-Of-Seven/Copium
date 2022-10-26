@@ -31,11 +31,11 @@ namespace Copium
 
         void inspector_view();
 
-		const Copium::Graphics::SpriteRenderer& get_sprite_renderer() const { return spriteRenderer; }
-		void set_sprite_renderer(const Copium::Graphics::SpriteRenderer& _spriteRenderer) { spriteRenderer = _spriteRenderer; }
+		const Copium::SpriteRenderer& get_sprite_renderer() const { return spriteRenderer; }
+		void set_sprite_renderer(const Copium::SpriteRenderer& _spriteRenderer) { spriteRenderer = _spriteRenderer; }
 
 	protected:
-		Copium::Graphics::SpriteRenderer spriteRenderer;
+		Copium::SpriteRenderer spriteRenderer;
 	};
 }
 

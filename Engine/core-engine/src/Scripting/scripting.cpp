@@ -21,19 +21,19 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <mono/jit/jit.h>
 namespace Copium
 {
-	using namespace Scripting;
 	ScriptingSystem& ScriptComponent::sS{ *ScriptingSystem::Instance() };
 
 	ScriptComponent::ScriptComponent(GameObject& _gameObj) :
-		mObject{ nullptr }, pScriptClass{ nullptr }, Component(_gameObj, Component::Type::Script), name{ DEFAULT_SCRIPT_NAME }
+		mObject{ nullptr }, pScriptClass{ nullptr }, Component(_gameObj, ComponentType::Script), name{ DEFAULT_SCRIPT_NAME }
 	{
-		Message::MessageSystem::Instance()->subscribe(Message::MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
+		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
 		pScriptClass = sS.getScriptClass(name);
 		instantiate();
 	}
 
 	ScriptComponent::~ScriptComponent()
 	{
+		MessageSystem::Instance()->unsubscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
 	}
 
 	void ScriptComponent::instantiate()
@@ -51,7 +51,7 @@ namespace Copium
 		}
 	}
 
-	void ScriptComponent::handleMessage(Message::MESSAGE_TYPE mType)
+	void ScriptComponent::handleMessage(MESSAGE_TYPE mType)
 	{
 		//MT_SCRIPTING_UPDATED
 		pScriptClass = sS.getScriptClass(name.c_str());
@@ -154,7 +154,6 @@ namespace Copium
 				ImGui::Text(name.c_str());
 				ImGui::TableNextColumn();
 				ImGui::PushItemWidth(-FLT_MIN);
-				using namespace Scripting;
 				static char buffer[32];
 				getFieldValue(name, buffer);
 				switch (it->second.type)
@@ -236,7 +235,6 @@ namespace Copium
 						ImGui::EndTable();
 					}
 					break;
-				}
 				}
 				setFieldValue(name, buffer);
 				++it;

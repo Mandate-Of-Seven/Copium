@@ -6,6 +6,15 @@ public class CSharpTesting : CopiumScript
 	public Vector2 vec2;
     void Awake()
 	{
+	}
+
+	void Start()
+	{
+
+	}
+
+	void Update()
+	{
 		Vector3 position = transform.position;
 		if (Input.GetKey(KeyCode.D))
 		{
@@ -27,15 +36,5 @@ public class CSharpTesting : CopiumScript
 		transform.position = position;
 		vec2.x = position.x;
 		vec2.y = position.y;
-	}
-
-	void Start()
-	{
-
-	}
-
-	void Update()
-	{
-
 	}
 }

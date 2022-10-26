@@ -18,7 +18,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef MESSAGE_TYPES_H
 #define MESSAGE_TYPES_H
 
-namespace Copium::Message
+namespace Copium
 {
     enum class MESSAGE_TYPE
     {
