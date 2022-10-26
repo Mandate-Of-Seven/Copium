@@ -47,6 +47,8 @@ namespace Copium::Physics
 			convertedPos = {position};
 			box->set_vel(Math::Vec2{ 0.0, 0.0 });
 			box->set_acc(Math::Vec2{ 0.0,0.0 });
+			box->set_force(Math::Vec2{ 0.0,0.0 });
+			box->set_mass(1.0);
 			if (count == 0)
 			{
 				box->set_gravity(false);
@@ -72,19 +74,19 @@ namespace Copium::Physics
 			
 			if (Input::is_key_pressed(GLFW_KEY_I)) // move up
 			{
-				boxes[0]->add_acc(Math::Vec2{ 0.0,0.05 });
+				boxes[0]->set_force(Math::Vec2{ 0.0, 0.50 });
 			}
 			if (Input::is_key_pressed(GLFW_KEY_K)) // move down
 			{
-				boxes[0]->add_acc(Math::Vec2{ 0.0,-0.05 });
+				boxes[0]->set_force(Math::Vec2{ 0.0, -0.50 });
 			}
 			if (Input::is_key_pressed(GLFW_KEY_L)) // move left
 			{
-				boxes[0]->add_acc(Math::Vec2{ 0.05,0.0 });
+				boxes[0]->set_force(Math::Vec2{ -0.50, 0.0 });
 			}
 			if (Input::is_key_pressed(GLFW_KEY_J)) // move right
 			{
-				boxes[0]->add_acc(Math::Vec2{ -0.05,0.0 });
+				boxes[0]->set_force(Math::Vec2{ 0.50, 0.0 });
 			}
 			if (Input::is_key_pressed(GLFW_KEY_O)) //reset acceleration and velocity values
 			{
@@ -128,30 +130,37 @@ namespace Copium::Physics
 		double dt = Windows::WindowsSystem::Instance()->get_delta_time();
 		Math::Vec2 velocity;
 		Math::Vec2 acceleration;
+		Math::Vec2 force;
 		glm::vec3 glmPosition;
 		glm::vec2 glmSize;
 		Math::Vec2 position;
+		float mass;
 		Copium::Collision::AABB bound;
 		for (int a = 0; a < boxes.size(); a++)
 		{
+			force = boxes[a]->get_force();
 			velocity = boxes[a]->get_vel();
 			acceleration = boxes[a]->get_acc();
+			mass = boxes[a]->get_mass();
 			glmPosition = Copium::Graphics::GraphicsSystem::Instance()->get_sprites()[a]->get_position();
 			glmSize = Copium::Graphics::GraphicsSystem::Instance()->get_sprites()[a]->get_size();
 			position = Math::Vec2(glmPosition.x, glmPosition.y);
 			bound = boxes[a]->get_AABB();
 			if (boxes[a]->get_gravity() == true)
 			{
+				acceleration = (force + gravity)/ mass;
 				velocity = velocity + (acceleration * dt * 0.90);
-				velocity = velocity + (gravity * dt);
 				position = position + (velocity * dt);
+				boxes[a]->set_acc(acceleration);
 				boxes[a]->set_vel(velocity);
 				
 			}
 			else
 			{	
+				acceleration = force / mass;
 				velocity = velocity + (acceleration * dt * 0.90);
 				position = position + (velocity * dt);
+				boxes[a]->set_acc(acceleration);
 				boxes[a]->set_vel(velocity);
 			}
 			bound.max.x = position.x + (glmSize.x * 1 / 2);
@@ -181,6 +190,7 @@ namespace Copium::Physics
 			if ((Copium::Collision::collision_rectrect(bound, velocity, floor, Math::Vec2{ 0.0,0.0 }) == true))
 			{
 				boxes[a]->set_vel(Math::Vec2{ 0.0, 0.0 });
+				boxes[a]->set_force(Math::Vec2{ 0.0,0.0 });
 				if (boxes[a]->get_gravity() == true)
 				{
 					boxes[a]->set_gravity(false);
