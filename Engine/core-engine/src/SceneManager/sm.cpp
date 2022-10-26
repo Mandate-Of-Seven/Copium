@@ -18,7 +18,7 @@
 	3. de-allocation of resources used by current scene (cleanup before engine close)
 	4. Calling scene's update functions
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************
 ****/
 #include <pch.h>
@@ -27,6 +27,17 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "../Windows/windows-system.h"
 
 namespace Copium {
+	GameObject* NewSceneManager::findGameObjByID(GameObjectID _ID)
+	{
+		for (GameObject* pGameObj : currentScene->get_gameobjectvector())
+		{
+			if (pGameObj->get_id() == _ID)
+			{
+				return pGameObj;
+			}
+		}
+		return nullptr;
+	}
 
 	NewSceneManager::NewSceneManager() : gof{nullptr}, currentScene{nullptr}
 	{
@@ -65,31 +76,6 @@ namespace Copium {
 		load_scene(str);
 		std::cout << "No. of GameObjects in scene:" << currentScene->get_gameobjcount() << std::endl;
 		//currentScene->get_gameobjectvector()[0]->Trans().Position();
-
-		for (int i = 0; i < currentScene->get_gameobjcount(); i++)
-		{
-			Copium::Graphics::SpriteRenderer * sprite = new Copium::Graphics::SpriteRenderer;
-			TransformComponent* tmp = currentScene->get_gameobjectvector()[i]->Trans();
-			if (!tmp)
-				continue;
-
-			glm::vec3 pos = tmp->get_transform().glmPosition();
-			sprite->set_position(pos);
-
-			PRINT("Coords: " << pos.x << ", " << pos.y);
-
-			glm::vec3 size = tmp->get_transform().glmScale();
-			sprite->set_size(glm::vec2(size.x, size.y));
-
-			PRINT("Size: " << size.x << ", " << size.y);
-
-			glm::vec4 color = { 1.f, 1.f ,1.f ,1.f };
-			sprite->set_color(color);
-
-			Copium::Graphics::GraphicsSystem::Instance()->add_sprite(sprite);
-		}
-
-
 	}
 	void NewSceneManager::update()
 	{
@@ -174,7 +160,7 @@ namespace Copium {
 		return *gof;
 	}
 
-	const Scene* NewSceneManager::get_current_scene()
+	Scene* NewSceneManager::get_current_scene()
 	{
 		return currentScene;
 	}

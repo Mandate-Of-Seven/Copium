@@ -35,6 +35,8 @@ namespace Copium {
 	CLASS_SYSTEM(NewSceneManager)
 	{
 	public:
+		GameObject* findGameObjByID(GameObjectID _ID);
+
 		NewSceneManager();
 		~NewSceneManager();
 
@@ -115,7 +117,7 @@ namespace Copium {
 		/*******************************************************************************/
 		GameObjectFactory& get_gof();
 
-		const Scene* get_current_scene();
+		Scene* get_current_scene();
 
 	private:
 		GameObjectFactory* gof;

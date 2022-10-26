@@ -24,7 +24,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor/editor-system.h"
 #include <glm/gtc/type_ptr.hpp>
 
-namespace Copium::Graphics
+namespace Copium
 {
 	void Renderer::init()
 	{
@@ -46,7 +46,7 @@ namespace Copium::Graphics
 		glTextureParameteri(texture, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTextureParameteri(texture, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-		GLuint color = 0xffffffff;
+		GLuint color = 0xFFFFFFFF;
 		glTextureSubImage2D(texture, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &color);
 
 		graphics->get_texture_slots().resize(maxTextures);
@@ -179,9 +179,9 @@ namespace Copium::Graphics
 				graphics->get_shader_program()[0].GetHandle(), "uViewProjection");
 			GLuint uTransform = glGetUniformLocation(
 				graphics->get_shader_program()[0].GetHandle(), "uTransform");
-			glm::mat4 projection = Copium::Editor::EditorSystem::Instance()->get_camera()->get_projection();
+			glm::mat4 projection = Copium::EditorSystem::Instance()->get_camera()->get_projection();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
-			glm::vec3 pos = Copium::Editor::EditorSystem::Instance()->get_camera()->get_position();
+			glm::vec3 pos = Copium::EditorSystem::Instance()->get_camera()->get_position();
 			glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
 			glUniformMatrix4fv(uTransform, 1, GL_FALSE, glm::value_ptr(transform));
 			
@@ -217,7 +217,7 @@ namespace Copium::Graphics
 			GLuint uProjection = glGetUniformLocation(
 				graphics->get_shader_program()[1].GetHandle(), "uViewProjection");
 
-			glm::mat4 projection = Copium::Editor::EditorSystem::Instance()->get_camera()->get_projection();
+			glm::mat4 projection = Copium::EditorSystem::Instance()->get_camera()->get_projection();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
 			// End of matrix assignment
@@ -350,7 +350,8 @@ namespace Copium::Graphics
 			}
 		}
 
-		if (textureIndex == 0.f)
+		// Change texture index only if ID retrieved is more than 0 (0 is white texture)
+		if (textureIndex == 0.f && _textureID != 0)
 		{
 			textureIndex = (GLfloat) graphics->get_texture_slot_index();
 			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _textureID;

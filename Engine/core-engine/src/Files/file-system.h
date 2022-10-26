@@ -18,15 +18,31 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "CopiumCore/system-interface.h"
 #include <filesystem>
+#include <string>
+#include <list>
+#include <map>
 
-namespace Copium::Files
+namespace Copium
 {
+	/**************************************************************************/
+	/*!
+		\brief
+			Reads bytes from a file
+		\param filepath
+			File path to read bytes from
+		\param outSize
+			Amount of bytes read
+
+		\return
+			String of bytes read
+	*/
+	/**************************************************************************/
 
 	namespace Paths
 	{
 		static const std::string roslynCompilerPath{ "..\\tools\\Roslyn\\csc" };
 		static const std::string scriptsAssemblyPath{ "scripts.dll" };
-		static const std::string projectName = { "ScriptingSandbox" };
+		static const std::string projectName = { "PackedTracks" };
 		static const std::string projectPath{ "..\\" + projectName };
 		static const std::string assetPath{ "../core-engine/Assets" };
 	}

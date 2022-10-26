@@ -21,7 +21,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <rttr/type>
 #include <rapidjson/document.h>
 
-namespace Copium::Graphics
+namespace Copium
 {
 	// Depends on Transform
 	class SpriteRenderer final
@@ -39,6 +39,11 @@ namespace Copium::Graphics
 		// Sprite
 		const unsigned int& get_sprite_id() { return spriteID; }
 		void set_sprite_id(const unsigned int& _index) { spriteID = _index; }
+		unsigned int* access_sprite_id() { return &spriteID; }
+
+		// Flip
+		bool* access_flip_x() { return &flip.x; }
+		bool* access_flip_y() { return &flip.y; }
 
 		// Position
 		glm::vec3 const get_position() { return position; }
@@ -55,6 +60,7 @@ namespace Copium::Graphics
 		// Color
 		glm::vec4 const get_color() { return color; }
 		void const set_color(glm::vec4 _color) { color = _color; }
+		float* access_color() { return &color.x; }
 
 	private:
 
@@ -63,6 +69,7 @@ namespace Copium::Graphics
 
 		unsigned int spriteID = 0; // The index of the sprite
 
+		glm::bvec2 flip{ 0 };
 		glm::vec3 position{ 0 }; // Temporary variable to access the position
 		glm::vec3 rotation{ 0 }; // Temporary variable for the rotation of the sprite
 		glm::vec2 size{ 0 }; // The size of the sprite in pixels ( Bean: different from the scale of the gameobject )

@@ -19,7 +19,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Files/file-system.h"
 
 
-namespace Copium::Scripting::Compiler
+namespace Copium::Utils
 {
 	namespace fs = std::filesystem;
 
@@ -31,13 +31,12 @@ namespace Copium::Scripting::Compiler
 	/**************************************************************************/
 	static void compileDll()
 	{
-		std::string command {Files::Paths::roslynCompilerPath + " -target:library -out:scripts.dll"};
-		for (fs::directory_entry p : fs::recursive_directory_iterator(Files::Paths::projectPath))
+		std::string command {Paths::roslynCompilerPath + " -target:library -out:scripts.dll"};
+		for (fs::directory_entry p : fs::recursive_directory_iterator(Paths::projectPath))
 		{
 			if (p.path().extension() == ".cs")
 				command += " " + p.path().string();
 		}
-		PRINT(command);
 		system(command.c_str());
 	}
 }

@@ -15,8 +15,6 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
-#include "pch.h"
-
 #ifndef SYSTEM_INTERFACE_H
 
 #define SYSTEM_INTERFACE_H
@@ -66,9 +64,7 @@ namespace Copium
         }
     protected:
         Singleton<T>() 
-        { 
-            PRINT("SINGLETON OF " << typeid(T).name() << " CREATED!");
-        }
+        {}
     };
 
 
@@ -78,7 +74,7 @@ namespace Copium
         Pure virtual class for systems to implement
     */
     /**************************************************************************/
-    class ISystem
+    class ISystem 
     {
     public:
         /**************************************************************************/

@@ -18,24 +18,19 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include "pch.h"
 #include "GameObject/game-object.h"
-#include "Messaging/message-system.h"
-#include "Scripting/scripting.h"
-
 #include "GameObject/renderer-component.h"
+#include "GameObject/component.h"
 
 //USING
 
 namespace 
 {
     const std::string defaultGameObjName = "New GameObject"; // Append (No.) if its not the first
+    Copium::MessageSystem& messageSystem{*Copium::MessageSystem::Instance()};
 }
 
 
-GameObject::GameObject()
-    : name{ defaultGameObjName }, id{0}, parent{nullptr}, parentid{0}
-{
-    
-}
+GameObjectID GameObject::count = 1;
 
 GameObject::~GameObject()
 {
@@ -49,97 +44,128 @@ GameObject::~GameObject()
     }
 }
 
-std::list<Component*>& GameObject::Components()
-{
-    return components;
-}
+
 
 GameObject::GameObject
-(Copium::Math::Vec3 _position, Copium::Math::Vec3 _rotation = { 0,0,0 }, Copium::Math::Vec3 _scale = { 1,1,1 })
-    : name{ defaultGameObjName }, id{0}, trans(_position, _rotation, _scale), parent{nullptr}, parentid{0}
+(Copium::Math::Vec3 _position, Copium::Math::Vec3 _rotation, Copium::Math::Vec3 _scale)
+    : 
+    name{ defaultGameObjName }, parent{nullptr}, parentid{0}, 
+    transform(*this,_position, _rotation, _scale)
 {
-
+    id = count++;
+    messageSystem.subscribe(Copium::MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
+    PRINT("GAMEOBJECT ID CONSTRUCTED: " << id);
 }
 
-void GameObject::addComponent(Component* component)
+Component* GameObject::getComponent(ComponentType componentType)
 {
-    components.push_back(component);
+    for (Component* pComponent : components)
+    {
+        if (pComponent->componentType == componentType)
+            return pComponent;
+    }
+    return nullptr;
+}
+
+Component* GameObject::addComponent(const Component& component)
+{
+    Component* tmp = addComponent(component.componentType);
+    *tmp = component;
+    return tmp;
 }
 
 
-void GameObject::addComponent(Component::Type componentType)
+Component* GameObject::addComponent(ComponentType componentType)
 {
+    Component* component = nullptr;
     switch (componentType)
     {
-    case Component::Type::Animator:
-        components.push_back(new AnimatorComponent());
+    case ComponentType::Animator:
+        component = new AnimatorComponent(*this);
         PRINT("ADDED ANIMATOR");
         break;
-    case Component::Type::Collider:
-        components.push_back(new ColliderComponent());
+    case ComponentType::Collider:
+        component = new ColliderComponent(*this);
         PRINT("ADDED COLLIDER");
         break;
-    case Component::Type::Renderer:
-        components.push_back(new Copium::RendererComponent());
-        PRINT("ADDED RENDERER");
+    case ComponentType::Renderer:
+        component = new Copium::RendererComponent(*this);
+        PRINT("ADDED SPRITE RENDERER");
         break;
-    case Component::Type::Script:
-        using namespace Copium::Message;
-        MessageSystem::Instance()->
-            dispatch(MESSAGE_TYPE::MT_ADD_SCRIPT);
-        MESSAGE_CONTAINERS::addScript.name = "NewScript";
-        MESSAGE_CONTAINERS::addScript.gameObj = this;
+    case ComponentType::Script:
+        //MESSAGE_CONTAINERS::addScript.name = "NewScript";
+        //MESSAGE_CONTAINERS::addScript.gameObj = this;
         PRINT("ADDED SCRIPT");
-        break;
-    case Component::Type::Transform:
-        components.push_back(new TransformComponent());
         break;
     default:
         PRINT("ADDED NOTHING");
         break;
     }
+    if (component)
+        components.push_back(component);
+    return component;
 }
 
-void GameObject::deleteComponent(Component* component)
+void GameObject::removeComponent(ComponentType componentType)
 {
-    std::list<Component*>::iterator it{ components.begin() };
-    ComponentID _id{};
-    while (_id != component->ID())
+    if (componentType == ComponentType::Transform)
     {
-        ++_id; ++it;
+        PRINT("CANNOT REMOVE TRANSFORM");
+        return;
     }
-    //std::cout << "Id:" << id << std::endl;
-    components.erase(it);
-}
-
-void GameObject::Trans(Transform _trans) {trans = _trans;}
-
-TransformComponent* GameObject::Trans()  
-{
-    for (std::list<Component*>::iterator iter = components.begin(); iter != components.end(); ++iter)
+    auto it{ components.begin() };
+    while (it != components.end())
     {
-        Component::Type tmp =   (*iter)->get_type();
-        if ((*iter)->componentMap.find(tmp) == (*iter)->componentMap.end())
+        if ((*it)->componentType == componentType)
         {
-            std::cout << "cannot find component type\n";
-            continue;
+            delete* it;
+            components.erase(it);
+            return;
         }
-
-        std::cout << "Component Type:" << (*iter)->componentMap[tmp] << std::endl;
-
-        if (tmp == Component::Type::Transform)
-            return reinterpret_cast<TransformComponent*>(*iter);
-
+        ++it;
     }
+    PRINT("Component of Type " << Component::componentMap[componentType] << " does not exist on " << name);
+}
 
-    return nullptr;
+void GameObject::removeComponent(ComponentID componentID)
+{
+    auto it{ components.begin() };
+    while (it != components.end())
+    {
+        if ((*it)->ID() == id)
+        {
+            delete* it;
+            components.erase(it);
+            return;
+        }
+        ++it;
+    }
+}
 
+
+bool GameObject::hasComponent(ComponentType componentType) const
+{
+    auto it{ components.begin() };
+    while (it != components.end())
+    {
+        if ((*it)->componentType == componentType)
+        {
+            return true;
+        }
+        ++it;
+    }
+    return false;
+}
+
+TransformComponent& GameObject::Transform()  
+{
+    return transform;
 }
 
 void GameObject::set_name(const std::string& _name){ name = _name; }
 std::string GameObject::get_name() const{ return name; }
 
-void GameObject::set_id(GameObjectID& _id) { id = _id; }
+//void GameObject::set_id(GameObjectID& _id) { id = _id; }
 GameObjectID GameObject::get_id() const { return id; }
 
 void GameObject::set_ppid(GameObjectID& _id) { parentid = _id; }
@@ -220,3 +246,53 @@ bool GameObject::deserialize(rapidjson::Value& _value) {
     return true;
 }
 
+
+void GameObject::handleMessage(Copium::MESSAGE_TYPE mType)
+{
+    using namespace Copium;
+    //MT_SCRIPTING_UPDATED
+    MESSAGE_CONTAINER::reflectCsGameObject.ID = id;
+    messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
+}
+
+
+GameObject& GameObject::operator=(const GameObject& rhs)
+{
+    transform = rhs.transform;
+    for (Component* component : components)
+    {
+        delete component;
+    }
+    components.clear();
+    for (const Component* component: rhs.components)
+    {
+        addComponent(*component);
+    }
+    return *this;
+}
+
+
+void GameObject::inspectorView()
+{
+    transform.inspector_view();
+    ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
+        | ImGuiTableFlags_ScrollY;
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);
+    if (ImGui::BeginTable("Components", 1, tableFlags, ImVec2(0.f, 450.f)))
+    {
+        ImGui::TableNextRow();
+        ImGui::TableNextColumn();
+        ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed;
+        for (Component* component : components)
+        {
+
+            if (ImGui::CollapsingHeader(component->Name().c_str(), nodeFlags))
+            {
+                component->inspector_view();
+            }
+            ImGui::TableNextColumn();
+        }
+        ImGui::EndTable();
+    }
+    ImGui::PopStyleVar();
+}

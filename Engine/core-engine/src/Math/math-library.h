@@ -45,8 +45,8 @@ namespace Copium::Math
 	public:
 		// Constructors
 		Vec2();
-		Vec2(double _x, double _y);
-		Vec2(glm::dvec2& _v);
+		Vec2(float _x, float _y);
+		Vec2(glm::vec2& _v);
 
 		// Assignment operators
 		/*******************************************************************************
@@ -67,16 +67,16 @@ namespace Copium::Math
 		/*!
 		*
 		\brief
-			= operator overload. Copy the data in a glm::dvec2 into this Vec2
+			= operator overload. Copy the data in a glm::vec2 into this Vec2
 
 		\param _rhs
-			read-only reference to the glm::dvec2 which will be copied into this Vec2
+			read-only reference to the glm::vec2 which will be copied into this Vec2
 
 		\return
 			reference to this Vec2
 		*/
 		/*******************************************************************************/
-		Vec2& operator= (const glm::dvec2& _rhs);
+		Vec2& operator= (const glm::vec2& _rhs);
 		/*******************************************************************************
 		/*!
 		*
@@ -118,7 +118,7 @@ namespace Copium::Math
 			reference to this Vec2
 		*/
 		/*******************************************************************************/
-		Vec2& operator*= (double _rhs);
+		Vec2& operator*= (float _rhs);
 		/*******************************************************************************
 		/*!
 		*
@@ -132,7 +132,7 @@ namespace Copium::Math
 			reference to this Vec2
 		*/
 		/*******************************************************************************/
-		Vec2& operator/= (double _rhs);
+		Vec2& operator/= (float _rhs);
 
 		// Unary operators
 		/*******************************************************************************
@@ -146,30 +146,6 @@ namespace Copium::Math
 		*/
 		/*******************************************************************************/
 		Vec2 operator -() const;	
-	
-		// Accessors
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Gets the x coordinate of this Vec2
-
-		\return
-			the x coordinate of this Vec2
-		*/
-		/*******************************************************************************/
-		double X() const;
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Gets the y coordinate of this Vec2
-
-		\return
-			the y coordinate of this Vec2
-		*/
-		/*******************************************************************************/
-		double Y() const;
 
 		/*******************************************************************************
 		/*!
@@ -191,15 +167,15 @@ namespace Copium::Math
 		/*!
 		*
 		\brief
-			Creates a glm::dvec2 and copies the data from this Vec2 into the glm::dvec2
+			Creates a glm::vec2 and copies the data from this Vec2 into the glm::vec2
 
 		\return
-			the resulting glm::dvec2
+			the resulting glm::vec2
 		*/
 		/*******************************************************************************/
-		glm::dvec2 to_glm() const;
+		glm::vec2 to_glm() const;
 
-		double x, y;
+		float x, y;
 
 		RTTR_ENABLE();
 
@@ -257,7 +233,7 @@ namespace Copium::Math
 		the resultant Vec2
 	*/
 	/*******************************************************************************/
-	Vec2 operator* (const Vec2& _lhs, double _rhs);
+	Vec2 operator* (const Vec2& _lhs, float _rhs);
 	/*******************************************************************************
 	/*!
 	*
@@ -274,7 +250,7 @@ namespace Copium::Math
 		the resultant Vec2
 	*/
 	/*******************************************************************************/
-	Vec2 operator* (double _lhs, const Vec2& _rhs);
+	Vec2 operator* (float _lhs, const Vec2& _rhs);
 	/*******************************************************************************
 	/*!
 	*
@@ -291,7 +267,7 @@ namespace Copium::Math
 		the resultant Vec2
 	*/
 	/*******************************************************************************/
-	Vec2 operator/ (const Vec2& _lhs, double _rhs);
+	Vec2 operator/ (const Vec2& _lhs, float _rhs);
 
 	// Vec2 Functions
 	/*******************************************************************************
@@ -324,7 +300,7 @@ namespace Copium::Math
 		the computed length of the Vec2
 	*/
 	/*******************************************************************************/
-	double vec2_length(const Vec2& _v);
+	float vec2_length(const Vec2& _v);
 	/*******************************************************************************
 	/*!
 	*
@@ -338,7 +314,7 @@ namespace Copium::Math
 		the computed square length of the Vec2
 	*/
 	/*******************************************************************************/
-	double vec2_squarelength(const Vec2& _v);
+	float vec2_squarelength(const Vec2& _v);
 	/*******************************************************************************
 	/*!
 	*
@@ -355,7 +331,7 @@ namespace Copium::Math
 		the computed distance between the two Vec2s
 	*/
 	/*******************************************************************************/
-	double vec2_distance(const Vec2& _v1, const Vec2& _v2);
+	float vec2_distance(const Vec2& _v1, const Vec2& _v2);
 	/*******************************************************************************
 	/*!
 	*
@@ -372,7 +348,7 @@ namespace Copium::Math
 		the computed squared distance between the two Vec2s
 	*/
 	/*******************************************************************************/
-	double vec2_squaredistance(const Vec2& _v1, const Vec2& _v2);
+	float vec2_squaredistance(const Vec2& _v1, const Vec2& _v2);
 	/*******************************************************************************
 	/*!
 	*
@@ -389,7 +365,7 @@ namespace Copium::Math
 		the result of the dot product
 	*/
 	/*******************************************************************************/
-	double vec2_dotproduct(const Vec2& _v1, const Vec2& _v2);
+	float vec2_dotproduct(const Vec2& _v1, const Vec2& _v2);
 	/*******************************************************************************
 	/*!
 	*
@@ -406,7 +382,7 @@ namespace Copium::Math
 		the computed magnitude of the cross product
 	*/
 	/*******************************************************************************/
-	double vec2_crossproductmag(const Vec2& _v1, const Vec2& _v2);
+	float vec2_crossproductmag(const Vec2& _v1, const Vec2& _v2);
 
 
 	/*******************************************************************************
@@ -428,11 +404,10 @@ namespace Copium::Math
 	std::ostream& operator<<(std::ostream& _os, const Vec2& _v);
 
 	struct Vec3 {
-	public:
 		//Ctors
 		Vec3();
-		Vec3(double _x, double _y, double _z);
-		Vec3(glm::dvec3& _v);
+		Vec3(float _x, float _y, float _z);
+		Vec3(glm::vec3& _v);
 
 		/*******************************************************************************
 		/*!
@@ -452,16 +427,16 @@ namespace Copium::Math
 		/*!
 		*
 		\brief
-			= operator overload. Copy the data in a glm::dvec3 into this Vec3
+			= operator overload. Copy the data in a glm::vec3 into this Vec3
 
 		\param _rhs
-			read-only reference to the glm::dvec3 which will be copied into this Vec3
+			read-only reference to the glm::vec3 which will be copied into this Vec3
 
 		\return
 			reference to this Vec3
 		*/
 		/*******************************************************************************/
-		Vec3& operator= (const glm::dvec3& _rhs);
+		Vec3& operator= (const glm::vec3& _rhs);
 		/*******************************************************************************
 		/*!
 		*
@@ -503,7 +478,7 @@ namespace Copium::Math
 			reference to this Vec3
 		*/
 		/*******************************************************************************/
-		Vec3& operator*= (double _rhs);
+		Vec3& operator*= (float _rhs);
 		/*******************************************************************************
 		/*!
 		*
@@ -517,7 +492,7 @@ namespace Copium::Math
 			reference to this Vec3
 		*/
 		/*******************************************************************************/
-		Vec3& operator/= (double _rhs);
+		Vec3& operator/= (float _rhs);
 
 		/*******************************************************************************
 		/*!
@@ -530,41 +505,6 @@ namespace Copium::Math
 		*/
 		/*******************************************************************************/
 		Vec3 operator- () const;
-
-		// Accessors
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Gets the x coordinate of this Vec3
-
-		\return
-			the x coordinate of this Vec3
-		*/
-		/*******************************************************************************/
-		double X() const;
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Gets the y coordinate of this Vec3
-
-		\return
-			the y coordinate of this Vec3
-		*/
-		/*******************************************************************************/
-		double Y() const;
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Gets the z coordinate of this Vec3
-
-		\return
-			the z coordinate of this Vec3
-		*/
-		/*******************************************************************************/
-		double Z() const;
 
 		/*******************************************************************************
 		/*!
@@ -587,17 +527,18 @@ namespace Copium::Math
 		/*!
 		*
 		\brief
-			Creates a glm::dvec3 and copies the data from this Vec3 into the glm::dvec3
+			Creates a glm::vec3 and copies the data from this Vec3 into the glm::vec3
 
 		\return
-			the resulting glm::dvec3
+			the resulting glm::vec3
 		*/
 		/*******************************************************************************/
-		glm::dvec3 to_glm() const;
+		glm::vec3 to_glm() const;
 
-		double x, y, z;
+		//RTTR_ENABLE();
 
-		RTTR_ENABLE();
+		float x, y, z;
+
 	};
 
 	// Vec3 Binary Operators
@@ -651,7 +592,7 @@ namespace Copium::Math
 		the resultant Vec3
 	*/
 	/*******************************************************************************/
-	Vec3 operator* (const Vec3& _lhs, double _rhs);
+	Vec3 operator* (const Vec3& _lhs, float _rhs);
 	/*******************************************************************************
 	/*!
 	*
@@ -668,7 +609,7 @@ namespace Copium::Math
 		the resultant Vec3
 	*/
 	/*******************************************************************************/
-	Vec3 operator* (double _lhs, const Vec3& _rhs);
+	Vec3 operator* (float _lhs, const Vec3& _rhs);
 	/*******************************************************************************
 	/*!
 	*
@@ -685,7 +626,7 @@ namespace Copium::Math
 		the resultant Vec3
 	*/
 	/*******************************************************************************/
-	Vec3 operator/ (const Vec3& _lhs, double _rhs);
+	Vec3 operator/ (const Vec3& _lhs, float _rhs);
 
 	// Vec3 Functions
 	/*******************************************************************************
@@ -718,7 +659,7 @@ namespace Copium::Math
 		the computed length of _v
 	*/
 	/*******************************************************************************/
-	double vec3_length(const Vec3& _v);
+	float vec3_length(const Vec3& _v);
 	/*******************************************************************************
 	/*!
 	*
@@ -732,7 +673,7 @@ namespace Copium::Math
 		the computed squared length of _v
 	*/
 	/*******************************************************************************/
-	double vec3_squarelength(const Vec3& _v);
+	float vec3_squarelength(const Vec3& _v);
 	/*******************************************************************************
 	/*!
 	*
@@ -749,7 +690,7 @@ namespace Copium::Math
 		the computed distance between _v1, _v2
 	*/
 	/*******************************************************************************/
-	double vec3_distance(const Vec3& _v1, const Vec3& _v2);
+	float vec3_distance(const Vec3& _v1, const Vec3& _v2);
 	/*******************************************************************************
 	/*!
 	*
@@ -766,7 +707,7 @@ namespace Copium::Math
 		the computed squared distance between _v1, _v2
 	*/
 	/*******************************************************************************/
-	double vec3_squaredistance(const Vec3& _v1, const Vec3& _v2);
+	float vec3_squaredistance(const Vec3& _v1, const Vec3& _v2);
 	/*******************************************************************************
 	/*!
 	*
@@ -783,7 +724,7 @@ namespace Copium::Math
 		the computed result of the dot product between _v1, _v2
 	*/
 	/*******************************************************************************/
-	double vec3_dotproduct(const Vec3& _v1, const Vec3& _v2);
+	float vec3_dotproduct(const Vec3& _v1, const Vec3& _v2);
 	/*******************************************************************************
 	/*!
 	*
@@ -822,10 +763,10 @@ namespace Copium::Math
 	struct Matrix3x3 {
 	public:
 		Matrix3x3();
-		Matrix3x3(const double(&_rhs)[9]);
-		Matrix3x3(double _00, double _01, double _02,
-					double _10, double _11, double _12,
-					double _20, double _21, double _22);
+		Matrix3x3(const float(&_rhs)[9]);
+		Matrix3x3(float _00, float _01, float _02,
+					float _10, float _11, float _12,
+					float _20, float _21, float _22);
 		Matrix3x3(const glm::mat3x3& _rhs);
 		/*******************************************************************************
 		/*!
@@ -885,7 +826,7 @@ namespace Copium::Math
 		/*******************************************************************************/
 		glm::mat3x3 to_glm() const;
 
-		double m[3][3];
+		float m[3][3];
 	};
 
 	/*******************************************************************************
@@ -940,7 +881,7 @@ namespace Copium::Math
 		void
 	*/
 	/*******************************************************************************/
-	void matrix3x3_translate(Matrix3x3& _mtx, double _x, double _y);
+	void matrix3x3_translate(Matrix3x3& _mtx, float _x, float _y);
 
 	/*******************************************************************************
 	/*!
@@ -961,7 +902,7 @@ namespace Copium::Math
 		void
 	*/
 	/*******************************************************************************/
-	void matrix3x3_scale(Matrix3x3& _mtx, double _x, double _y);
+	void matrix3x3_scale(Matrix3x3& _mtx, float _x, float _y);
 
 	/*******************************************************************************
 	/*!
@@ -980,7 +921,7 @@ namespace Copium::Math
 		void
 	*/
 	/*******************************************************************************/
-	void matrix3x3_rotrad(Matrix3x3& _mtx, double _angle);
+	void matrix3x3_rotrad(Matrix3x3& _mtx, float _angle);
 
 	/*******************************************************************************
 	/*!
@@ -999,7 +940,7 @@ namespace Copium::Math
 		void
 	*/
 	/*******************************************************************************/
-	void matrix3x3_rotdeg(Matrix3x3& _mtx, double _angle);
+	void matrix3x3_rotdeg(Matrix3x3& _mtx, float _angle);
 
 	/*******************************************************************************
 	/*!
@@ -1036,7 +977,7 @@ namespace Copium::Math
 		void
 	*/
 	/*******************************************************************************/
-	void matrix3x3_inverse(Matrix3x3* _dest, double* _determinant, const Matrix3x3& _src);
+	void matrix3x3_inverse(Matrix3x3* _dest, float* _determinant, const Matrix3x3& _src);
 	/*******************************************************************************
 	/*!
 	*
@@ -1075,32 +1016,32 @@ namespace Copium::Math
 		/*!
 		*
 		\brief
-			Constructor for Matrix4x4 using read-only reference to an array of 16 doubles. 
+			Constructor for Matrix4x4 using read-only reference to an array of 16 floats. 
 			Elements of array should be in row major order.
 
 		\param _rhs
-			read-only reference to the array of 16 doubles which holds the values that the elements of 
+			read-only reference to the array of 16 floats which holds the values that the elements of 
 			the Matrix4x4 are to be assigned
 
 		\return
 			void
 		*/
 		/*******************************************************************************/
-		Matrix4x4(const double(&_rhs)[16]);
+		Matrix4x4(const float(&_rhs)[16]);
 		/*******************************************************************************
 		/*!
 		*
 		\brief
-			Constructor for Matrix4x4 using 16 individual double values.
+			Constructor for Matrix4x4 using 16 individual float values.
 			Note: Arguments are used in row major order
 
 		\return
 			void
 		*/
 		/*******************************************************************************/
-		Matrix4x4(double _00, double _01, double _02, double _03,
-			double _10, double _11, double _12, double _13,
-			double _20, double _21, double _22, double _23);
+		Matrix4x4(float _00, float _01, float _02, float _03,
+			float _10, float _11, float _12, float _13,
+			float _20, float _21, float _22, float _23);
 		/*******************************************************************************
 		/*!
 		*
@@ -1249,7 +1190,7 @@ namespace Copium::Math
 				reference to the accessed element
 			*/
 			/*******************************************************************************/
-			double& operator[](size_t _col);
+			float& operator[](size_t _col);
 
 			Matrix4x4& parent;
 			size_t rowIndex;
@@ -1288,7 +1229,7 @@ namespace Copium::Math
 				read-only reference to the accessed element
 			*/
 			/*******************************************************************************/
-			const double& operator[](size_t _col);
+			const float& operator[](size_t _col);
 
 			const Matrix4x4& parent;
 			size_t rowIndex;
@@ -1325,7 +1266,7 @@ namespace Copium::Math
 		/*******************************************************************************/
 		Matrix4x4ProxyConst operator[](size_t _row) const;
 
-		double m[4][4];
+		float m[4][4];
 	};
 
 	/*******************************************************************************
@@ -1395,7 +1336,7 @@ namespace Copium::Math
 		the resultant matrix of the scalar multiplication
 	*/
 	/*******************************************************************************/
-	Matrix4x4 operator*(double _scalar, const Matrix4x4& _mtx);
+	Matrix4x4 operator*(float _scalar, const Matrix4x4& _mtx);
 
 	/*******************************************************************************
 	/*!
@@ -1433,7 +1374,7 @@ namespace Copium::Math
 		void
 	*/
 	/*******************************************************************************/
-	void matrix4x4_translation(Matrix4x4& _mtx, double _x, double _y, double _z);
+	void matrix4x4_translation(Matrix4x4& _mtx, float _x, float _y, float _z);
 	/*******************************************************************************
 	/*!
 	*
@@ -1456,7 +1397,7 @@ namespace Copium::Math
 		void
 	*/
 	/*******************************************************************************/
-	void matrix4x4_scale(Matrix4x4& _mtx, double _x, double _y, double _z);
+	void matrix4x4_scale(Matrix4x4& _mtx, float _x, float _y, float _z);
 	/*******************************************************************************
 	/*!
 	*
@@ -1474,7 +1415,7 @@ namespace Copium::Math
 		void
 	*/
 	/*******************************************************************************/
-	void matrix4x4_rot_2D(Matrix4x4& _mtx, double _deg);
+	void matrix4x4_rot_2D(Matrix4x4& _mtx, float _deg);
 	/*******************************************************************************
 	/*!
 	*
@@ -1492,7 +1433,7 @@ namespace Copium::Math
 		void
 	*/
 	/*******************************************************************************/
-	void matrix4x4_rot_x(Matrix4x4& _mtx, double _deg);
+	void matrix4x4_rot_x(Matrix4x4& _mtx, float _deg);
 	/*******************************************************************************
 	/*!
 	*
@@ -1510,7 +1451,7 @@ namespace Copium::Math
 		void
 	*/
 	/*******************************************************************************/
-	void matrix4x4_rot_y(Matrix4x4& _mtx, double _deg);
+	void matrix4x4_rot_y(Matrix4x4& _mtx, float _deg);
 	/*******************************************************************************
 	/*!
 	*
@@ -1528,7 +1469,7 @@ namespace Copium::Math
 		void
 	*/
 	/*******************************************************************************/
-	void matrix4x4_rot_z(Matrix4x4& _mtx, double _deg);
+	void matrix4x4_rot_z(Matrix4x4& _mtx, float _deg);
 
 	/*******************************************************************************
 	/*!
@@ -1562,7 +1503,7 @@ namespace Copium::Math
 		the result of the conversion of _angle to radians
 	*/
 	/*******************************************************************************/
-	double deg_to_rad(double _angle);
+	float deg_to_rad(float _angle);
 	/*******************************************************************************
 	/*!
 	*
@@ -1577,7 +1518,7 @@ namespace Copium::Math
 		the result of the conversion of _angle to degrees
 	*/
 	/*******************************************************************************/
-	double rad_to_deg(double _angle);
+	float rad_to_deg(float _angle);
 	
 	/*******************************************************************************
 	/*!

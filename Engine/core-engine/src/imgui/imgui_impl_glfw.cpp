@@ -309,9 +309,9 @@ void ImGui_ImplGlfw_MouseButtonCallback(GLFWwindow* window, int button, int acti
     ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
     if (bd->PrevUserCallbackMousebutton != nullptr && window == bd->Window)
         bd->PrevUserCallbackMousebutton(window, button, action, mods);
-    Input::mousebutton_callback(window, button, action, mods);
-    ImGui_ImplGlfw_UpdateKeyModifiers(mods);
 
+    Copium::InputSystem::mousebutton_callback(window, button, action, mods);
+    ImGui_ImplGlfw_UpdateKeyModifiers(mods);
     ImGuiIO& io = ImGui::GetIO();
     if (button >= 0 && button < ImGuiMouseButton_COUNT)
         io.AddMouseButtonEvent(button, action == GLFW_PRESS);
@@ -322,7 +322,7 @@ void ImGui_ImplGlfw_ScrollCallback(GLFWwindow* window, double xoffset, double yo
     ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
     if (bd->PrevUserCallbackScroll != nullptr && window == bd->Window)
         bd->PrevUserCallbackScroll(window, xoffset, yoffset);
-    Input::mousescroll_callback(window, xoffset, yoffset);
+    Copium::InputSystem::mousescroll_callback(window, xoffset, yoffset);
     ImGuiIO& io = ImGui::GetIO();
     io.AddMouseWheelEvent((float)xoffset, (float)yoffset);
 }
@@ -360,7 +360,7 @@ void ImGui_ImplGlfw_KeyCallback(GLFWwindow* window, int keycode, int scancode, i
     ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
     if (bd->PrevUserCallbackKey != nullptr && window == bd->Window)
         bd->PrevUserCallbackKey(window, keycode, scancode, action, mods);
-    Input::key_callback( window, keycode, scancode, action, mods);
+    Copium::InputSystem::key_callback( window, keycode, scancode, action, mods);
     if (action != GLFW_PRESS && action != GLFW_RELEASE)
         return;
 
@@ -397,7 +397,7 @@ void ImGui_ImplGlfw_CursorPosCallback(GLFWwindow* window, double x, double y)
         bd->PrevUserCallbackCursorPos(window, x, y);
     if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
         return;
-    Input::mousepos_callback(window, x, y);
+    Copium::InputSystem::mousepos_callback(window, x, y);
     ImGuiIO& io = ImGui::GetIO();
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {

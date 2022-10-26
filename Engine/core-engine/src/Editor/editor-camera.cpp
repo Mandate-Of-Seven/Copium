@@ -10,21 +10,24 @@
 \brief
 
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 
 #include <GLFW/glfw3.h>
 
-#include "Windows/input.h"
-
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
-
+#include "Windows/windows-input.h"
 #include "Editor/editor-camera.h"
 #include "Editor/editor-system.h"
 
-namespace Copium::Editor
+namespace
+{
+	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
+}
+
+namespace Copium
 {
 	void EditorCamera::init(float _width, float _height, bool _rotation)
 	{
@@ -36,7 +39,12 @@ namespace Copium::Editor
 
 	void EditorCamera::update()
 	{
-		mouse_controls();
+		EditorSceneView* sceneView = EditorSystem::Instance()->get_scene_view();
+		if (sceneView->is_window_hovered())
+		{
+			mouse_controls();
+		}
+
 		update_view_matrix();
 	}
 
@@ -119,7 +127,7 @@ namespace Copium::Editor
 		EditorSceneView* sceneView = EditorSystem::Instance()->get_scene_view();
 		glm::vec2 scenePos = sceneView->get_position();
 		glm::vec2 sceneDim = sceneView->get_dimension();
-		glm::vec2 mousePos = { Input::get_mouseX(), Input::get_mouseY()};
+		Math::Vec2 mousePos = inputSystem.get_mouseposition();
 		glm::vec2 centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
 		glm::vec2 mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
 		glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
@@ -129,7 +137,7 @@ namespace Copium::Editor
 		mousePosition = worldNDC;
 
 		// Movement using right click and drag
-		if (Input::get_input_instance()->mouseButtons[1] == GLFW_PRESS)
+		if (inputSystem.is_mousebutton_pressed(1))
 		{
 			glm::vec2 speed = get_pan_speed();
 			focalPoint += -get_up_direction() * delta.y * speed.y;
@@ -162,11 +170,11 @@ namespace Copium::Editor
 		// Rotation
 		/*if (Input::is_key_held(GLFW_KEY_LEFT_ALT))
 		{
-			glm::vec2 mouse{ Input::get_mouseX(), Input::get_mouseY() };
+			glm::vec2 mouse{ inputSystem.get_mouseX(), inputSystem.get_mouseY() };
 			glm::vec2 delta = (mouse - mousePosition) * 0.003f;
 			mousePosition = mouse;
 
-			if (Input::is_mousebutton_pressed(GLFW_MOUSE_BUTTON_RIGHT))
+			if (inputSystem.is_mousebutton_pressed(GLFW_MOUSE_BUTTON_RIGHT))
 			{
 				float yawSign = (get_up_direction().y < 0.f) ? -1.f : 1.f;
 				yaw += yawSign * delta.x * 0.8f;
@@ -175,7 +183,7 @@ namespace Copium::Editor
 		}*/
 
 		// Zoom In and Out
-		int scroll = (int) Input::get_mousescroll();
+		int scroll = (int) inputSystem.get_mousescroll();
 		if (scroll)
 		{
 			zoomLevel -= scroll * 0.1f * get_zoom_speed(); // Zoom In

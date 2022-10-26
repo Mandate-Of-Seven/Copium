@@ -29,6 +29,10 @@ void SoundSystem::init()
 	CheckVersion();
 	CheckDrivers();
 	std::cout << "Sound init was called" << std::endl;
+	CreateSound("./Assets/sounds/reeling.wav", SoundAlias::reeling);
+	SetVolume(reeling, 0.3f);
+	CreateSound("./Assets/sounds/zap.wav", SoundAlias::zap);
+	SetVolume(zap, 0.3f);
 }
 
 void SoundSystem::update()

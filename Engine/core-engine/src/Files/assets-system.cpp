@@ -18,7 +18,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Files/file-system.h"
 #include "Graphics/graphics-system.h"
 
-namespace Copium::Files
+namespace Copium
 {
 	void AssetsSystem::init()
 	{
@@ -48,7 +48,7 @@ namespace Copium::Files
 		{
 			//std::cout << "Texture: " << path << "\n";
 			// Generate texture
-			Copium::Graphics::Texture texture(path);
+			Copium::Texture texture(path);
 
 			// Store the texture
 			textures.push_back(texture);

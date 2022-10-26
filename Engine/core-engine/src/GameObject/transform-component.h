@@ -18,34 +18,19 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 //INCLUDES
 #include "pch.h"
-#include <rapidjson/document.h>
-#include <Math/math-library.h>
+#include "Math/math-library.h"
+#include "GameObject/component.h"
 
-class Transform;
-
-class Transform
+class TransformComponent : public Component
 {
 private:
+    TransformComponent* parent;
+    std::list<TransformComponent*> childList;
+
+public:
     Copium::Math::Vec3 position;
     Copium::Math::Vec3 rotation;
     Copium::Math::Vec3 scale;
-    Transform* parent;
-    std::list<Transform*> childList;
-
-public:
-    void* operator new(size_t count) = delete;
-    void* operator new[](size_t count) = delete;
-    void operator delete(void*) = delete;
-    void operator delete(void*, size_t) = delete;
-
-    /***************************************************************************/
-    /*!
-    \brief
-        Default constructor, position and rotations to 0, scale to 1, and parent
-        to nullptr
-    */
-    /**************************************************************************/
-    Transform();
 
     /***************************************************************************/
     /*!
@@ -54,17 +39,12 @@ public:
         parent to nullptr
     */
     /**************************************************************************/
-    Transform(Copium::Math::Vec3 _position, Copium::Math::Vec3 _rotation = {0,0,0}, Copium::Math::Vec3 _scale = {1,1,1});
+    TransformComponent(
+        GameObject& _gameObj,
+        Copium::Math::Vec3 _position = Copium::Math::Vec3(),
+        Copium::Math::Vec3 _rotation = Copium::Math::Vec3(),
+        Copium::Math::Vec3 _scale = {1,1,1});
 
-    /***************************************************************************/
-    /*!
-    \brief
-        Getter for Position
-    \return
-        Position of transform
-    */
-    /**************************************************************************/
-    const Copium::Math::Vec3& get_position();
     /***************************************************************************/
     /*!
     \brief
@@ -153,9 +133,13 @@ public:
         on failure, return false
     */
     /**************************************************************************/
-    bool deserialize(rapidjson::Value& _value);
+    void deserialize(rapidjson::Value& _value);
+
+    void inspector_view();
 
     RTTR_ENABLE();
+
+    
 };
 
 

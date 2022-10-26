@@ -10,7 +10,7 @@
 \brief
 	This file holds the definition of functions for the editor.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 #include "Windows/windows-system.h"
@@ -20,15 +20,16 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor/inspector.h"
 #include "Editor/editor-consolelog.h"
 #include "Editor/editor-scene-hierarchy-list.h"
+#include "GameObject/component.h"
 
-namespace Copium::Editor
+namespace Copium
 {
 	// Our state
 	bool show_demo_window = true;
 
 	void EditorSystem::init()
 	{
-		Copium::Windows::WindowsSystem* windowsSystem = Copium::Windows::WindowsSystem::Instance();
+		Copium::WindowsSystem* windowsSystem = Copium::WindowsSystem::Instance();
 
 		//imgui
 		ImGui::CreateContext();
@@ -44,7 +45,6 @@ namespace Copium::Editor
 		ImGui::GetIO().ConfigDockingWithShift = true;
 		Window::Inspector::init();
 		Window::EditorConsole::init();
-		Window::Inspector::selectedGameObject = new GameObject();
 		sceneView.init();
 		
 		// Initialize a new editor camera
@@ -57,9 +57,6 @@ namespace Copium::Editor
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-
-
-		
 
 		//Dockspace
 		{
@@ -197,7 +194,7 @@ namespace Copium::Editor
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
 
-		delete Window::Inspector::selectedGameObject;
+		Window::Inspector::exit();
 		sceneView.exit();
 	}
 }

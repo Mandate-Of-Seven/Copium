@@ -17,11 +17,12 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 #include "Editor/inspector.h"
 
+// Bean: Remove once we can auto select gameobjects
+#include "SceneManager/sm.h"
+
 
 #define BUTTON_HEIGHT 0.05 //Percent
 #define BUTTON_WIDTH .6 //Percent
-
-using Vector3 = glm::dvec3;
 
 namespace Window
 {
@@ -49,116 +50,30 @@ namespace Window
             isOpen = true;
         }
 
-
-        ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
 		void update()
 		{
             if (!isOpen)
                 return;
 
-            
-
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
+            ImGui::SetNextWindowSizeConstraints(ImVec2(320, 180), ImVec2(FLT_MAX, FLT_MAX));
             if (!ImGui::Begin("Inspector", &isOpen)) 
             {
-
                 ImGui::End();
                 return;
             }
             if (selectedGameObject)
             {
-                //Transform trans{ selectedGameObject->Trans()->get_transform()};
-                //Vector3 position = trans.get_position().to_glm();
-                //Vector3 rotation = trans.get_rotation().to_glm();
-                //Vector3 scale = trans.get_scale().to_glm();
-                //if (ImGui::CollapsingHeader("Transform"))
-                //{
-                //    /*if (ImGui::BeginTable("split", 4))
-                //    {
-                //        ImGui::TableNextColumn();
-                //        ImGui::Text("Position");
-
-                //        ImGui::TableNextColumn();
-                //        ImGui::PushItemWidth(-1);
-                //        ImGui::Text("X"); ImGui::SameLine();
-                //        ImGui::InputDouble("posx", &position.x);
-                //        ImGui::PopItemWidth();
-
-                //        ImGui::TableNextColumn();
-                //        ImGui::PushItemWidth(-1);
-                //        ImGui::Text("Y"); ImGui::SameLine();
-                //        ImGui::InputDouble("posy", &position.y);
-                //        ImGui::PopItemWidth();
-
-                //        ImGui::TableNextColumn();
-                //        ImGui::PushItemWidth(-1);
-                //        ImGui::Text("Z"); ImGui::SameLine();
-                //        ImGui::InputDouble("posz", &position.z);
-                //        ImGui::PopItemWidth();
-
-                //        ImGui::TableNextColumn();
-                //        ImGui::Text("Rotation");
-
-                //        ImGui::TableNextColumn();
-                //        ImGui::PushItemWidth(-1);
-                //        ImGui::Text("X"); ImGui::SameLine();
-                //        ImGui::InputDouble("rotx", &rotation.x);
-                //        ImGui::PopItemWidth();
-
-                //        ImGui::TableNextColumn();
-                //        ImGui::PushItemWidth(-1);
-                //        ImGui::Text("Y"); ImGui::SameLine();
-                //        ImGui::InputDouble("roty", &rotation.y);
-                //        ImGui::PopItemWidth();
-
-                //        ImGui::TableNextColumn();
-                //        ImGui::PushItemWidth(-1);
-                //        ImGui::Text("Z"); ImGui::SameLine();
-                //        ImGui::InputDouble("rotz", &rotation.z);
-                //        ImGui::PopItemWidth();
-
-                //        ImGui::TableNextColumn();
-                //        ImGui::Text("Scale");
-
-                //        ImGui::TableNextColumn();
-                //        ImGui::PushItemWidth(-1);
-                //        ImGui::Text("X"); ImGui::SameLine();
-                //        ImGui::InputDouble("scalex", &scale.x);
-                //        ImGui::PopItemWidth();
-
-                //        ImGui::TableNextColumn();
-                //        ImGui::PushItemWidth(-1);
-                //        ImGui::Text("Y"); ImGui::SameLine();
-                //        ImGui::InputDouble("scaley", &scale.y);
-                //        ImGui::PopItemWidth();
-
-                //        ImGui::TableNextColumn();
-                //        ImGui::PushItemWidth(-1);
-                //        ImGui::Text("Z"); ImGui::SameLine();
-                //        ImGui::InputDouble("scalez", &scale.z);
-                //        ImGui::PopItemWidth();
-                //        ImGui::EndTable();
-                //    }*/
-                //}
-                //selectedGameObject->Trans({position, rotation, scale});
-                //ImVec2 buttonSize = ImGui::GetWindowSize();
-                //buttonSize.x *= (float) BUTTON_WIDTH;
-                //buttonSize.y *= (float) BUTTON_HEIGHT;
-
-                //for (Component *component : selectedGameObject->Components())
-                //{
-                //    if (ImGui::CollapsingHeader(component->Name().c_str()))
-                //    {
-                //        
-                //    }
-                //}
+                // Set flags for tables
+                selectedGameObject->inspectorView();
 
                 //AlignForWidth(buttonSize.x);
-                //if (ImGui::Button("Add Component", buttonSize)) {
-                //    isAddingComponent = true;
-                //}
+                if (ImGui::Button("Add Component", {100.f,100.f})) {
+                    isAddingComponent = true;
+                }
             }
             ImGui::End();
+            ImGui::PopStyleVar();
 
             if (isAddingComponent)
             {
@@ -170,7 +85,7 @@ namespace Window
                 ImGui::PopItemWidth();
                 ImVec2 buttonSize = ImGui::GetWindowSize();
                 buttonSize.y *= (float) BUTTON_HEIGHT;
-                std::map<Component::Type, const std::string>::iterator it;
+                std::map<ComponentType, const std::string>::iterator it;
                 for (it = Component::componentMap.begin(); it != Component::componentMap.end(); ++it)
                 {
                     if (ImGui::Button(it->second.c_str(), buttonSize)) {
@@ -179,6 +94,14 @@ namespace Window
                 }
                 ImGui::End();
             }
+
+            // For each component in gameobject, show in inspector
+
 		}
+
+        void exit()
+        {
+            selectedGameObject = nullptr;
+        }
 	}
 }
