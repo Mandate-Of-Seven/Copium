@@ -46,13 +46,7 @@ namespace Copium
 		GameObject* go = new GameObject();
 		if (!go)
 			return nullptr;
-		GameObjectID tmpPPID{ 0 };
 		go->set_name(_src.get_name());	// Name
-		if (go->has_parent())
-			tmpPPID = _src.get_ppid();
-		go->set_ppid(tmpPPID);		// Parent ID
-		//go->Trans(_src.Trans());	// Transform
-
 		// Components copy
 		*go = _src;
 
@@ -69,7 +63,6 @@ namespace Copium
 
 			//cgo->set_parent(go);
 			go->attach_child(cgo);
-
 
 		}
 		return go;

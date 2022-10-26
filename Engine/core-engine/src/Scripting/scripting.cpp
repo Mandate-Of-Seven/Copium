@@ -65,7 +65,7 @@ namespace Copium
 
 	void ScriptComponent::Name(const std::string& _name)
 	{
-		name = _name;		
+		name = _name;
 		pScriptClass = sS.getScriptClass(name);
 		instantiate();
 	}
@@ -182,13 +182,13 @@ namespace Copium
 				case FieldType::Long:
 					ImGui::InputInt2(name.c_str(), reinterpret_cast<int*>(buffer));
 					break;
-				case FieldType::UByte:				
+				case FieldType::UByte:
 					break;
-				case FieldType::UShort:				
+				case FieldType::UShort:
 					break;
-				case FieldType::UInt:				
+				case FieldType::UInt:
 					break;
-				case FieldType::ULong:				
+				case FieldType::ULong:
 					break;
 				case FieldType::Vector2:
 				{
@@ -236,6 +236,7 @@ namespace Copium
 					}
 					break;
 				}
+			}
 				setFieldValue(name, buffer);
 				++it;
 			}

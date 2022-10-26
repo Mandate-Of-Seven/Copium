@@ -208,6 +208,7 @@ namespace Copium {
 	private:
 		Scene* currentScene;
 		std::map<std::string, GameObject*> gameObjectCreators;
+		friend GameObject;
 	};
 
 }
