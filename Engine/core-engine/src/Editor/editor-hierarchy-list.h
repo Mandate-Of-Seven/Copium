@@ -75,6 +75,6 @@ namespace Window::Hierarchy
 	bool display_gameobject_advanced(GameObject& _go, GameObjectID& _selected);
 
 	bool create_gameobject_btn(const std::string& _btnName);
-
+	bool create_delete_btn(const std::string& _btnName);
 }
 #endif

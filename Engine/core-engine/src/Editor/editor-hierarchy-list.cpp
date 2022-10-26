@@ -6,10 +6,15 @@ namespace Window::Hierarchy
 {
 	Scene* currentScene = nullptr;
 	bool isOpen;
+	int selectedID = -1;
+
+	bool showAddGameObject, showDeleteGameObject;
 
 	void init()
 	{
 		isOpen = true;
+		showAddGameObject = false;
+		showDeleteGameObject = false;
 		if (Copium::NewSceneManager::Instance())
 			currentScene = Copium::NewSceneManager::Instance()->get_current_scene();
 
@@ -27,10 +32,43 @@ namespace Window::Hierarchy
 
 
 		ImGui::SetNextWindowSize(ImVec2(500, 900), ImGuiCond_FirstUseEver);
-		ImGui::Begin("Hierarchy");
+		ImGui::Begin("Hierarchy", &isOpen, ImGuiWindowFlags_MenuBar);
+
+		if (ImGui::BeginMenuBar())
+		{
+			if (ImGui::BeginMenu("Menu"))
+			{
+				// Add menu items
+				if (ImGui::MenuItem("Add a GameObject", nullptr, showAddGameObject))
+				{
+					std::cout << "Add\n";
+					if (!Copium::NewSceneManager::Instance()->get_gof().build_gameobject())
+						std::cout << "Error creating game object\n";
+				}
+				if (ImGui::MenuItem("Delete Selected GameObject", nullptr, showDeleteGameObject))
+				{
+					if (Copium::NewSceneManager::Instance()->get_selected_gameobject())
+					{
+						std::cout << "Delete\n";
+						Copium::NewSceneManager::Instance()->get_gof().delete_gameobject(Copium::NewSceneManager::Instance()->get_selected_gameobject());
+						Copium::NewSceneManager::Instance()->set_selected_gameobject(nullptr);
+					}
+					else
+					{
+						std::cout << "no game object selected, can't delete\n";
+					}
+					
+				}
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenuBar();
+		}
+
 		ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, 10.f);
 
-		create_gameobject_btn("+");
+		//create_gameobject_btn("Add a GameObject");
+		//ImGui::SameLine;
+		//create_delete_btn("Delete GameObject");
 
 		ImGuiTreeNodeFlags rootFlags = ImGuiTreeNodeFlags_DefaultOpen;
 
@@ -53,12 +91,11 @@ namespace Window::Hierarchy
 			// Display scene name as the rootiest node
 			if (ImGui::TreeNodeEx(currentScene->get_name().c_str(), rootFlags))
 			{
-				GameObjectID selection = 0;
 				bool isSelected = false;
 
 				for (size_t i{ 0 }; i < roots.size(); ++i)
 				{
-					isSelected = display_gameobject_advanced(*roots[i], selection);
+					isSelected = display_gameobject_advanced(*roots[i], selectedID);
 				}	
 
 				ImGui::TreePop();
@@ -67,7 +104,7 @@ namespace Window::Hierarchy
 		}
 
 
-		ImGui::PopStyleVar();
+		ImGui::PopStyleVar();			
 		ImGui::End();
 	}
 	
@@ -103,15 +140,32 @@ namespace Window::Hierarchy
 	bool display_gameobject_advanced(GameObject& _go, GameObjectID& _selected)
 	{
 		bool isSelected = false;
-		ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
+		ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+		int node_clicked = -1;
 
 		if (!_go.is_parent())
 			baseFlags |= ImGuiTreeNodeFlags_Leaf;
 
+		if (_selected == _go.get_id())
+		{
+			baseFlags |= ImGuiTreeNodeFlags_Selected;
+		}
+			
+
 		if (!ImGui::TreeNodeEx(_go.get_name().c_str(), baseFlags))
 			return false;
 
+		if (ImGui::IsItemClicked())
+		{
+			if (!isSelected)
+			{
+				std::cout << _go.get_name() << " is selected\n";
+				_selected = _go.get_id();
+				isSelected = true;
+				Copium::NewSceneManager::Instance()->set_selected_gameobject(&_go);
+			}
 
+		}
 		// If game object has children, recursively display children
 		if (_go.is_parent())
 		{
@@ -123,18 +177,8 @@ namespace Window::Hierarchy
 
 		ImGui::TreePop();
 
-
-		if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
-		{
-			if (!isSelected)
-			{
-				std::cout << _go.get_name() << " is selected\n";
-				_selected = _go.id;
-				isSelected = true;
-				Copium::NewSceneManager::Instance()->set_selected_gameobject(&_go);
-			}
-
-		}
+		if (ImGui::IsItemClicked())
+			std::cout << "clicking\n";
 
 		return isSelected;
 
@@ -161,5 +205,24 @@ namespace Window::Hierarchy
 
 		}
 		return true;
+	}
+
+	bool create_delete_btn(const std::string& _btnName)
+	{
+		static int deleteClicked = 0;
+		if (!ImGui::Button(_btnName.c_str()))
+			return false;
+
+		++deleteClicked;
+
+		if (deleteClicked)
+		{
+			deleteClicked = 0;
+
+
+
+		}
+		return true;
+
 	}
 }

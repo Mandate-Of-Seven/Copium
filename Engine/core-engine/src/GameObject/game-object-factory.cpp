@@ -132,19 +132,32 @@ namespace Copium
 		if (!_go)
 			return false;
 
+		// Deattach children from this game object (if any)
+		for (std::list<GameObject*>::iterator iter = _go->mchildList().begin(); iter != _go->mchildList().end(); ++iter)
+		{
+			GameObjectID id{ 0 };
+			(*iter)->set_parent(nullptr);
+			(*iter)->set_ppid(id);
+		}
+
+		std::cout << "Deleting " << _go->get_name() << std::endl;
+
 		delete _go;
-		_go = nullptr;
+
 		//Iterate through currentScene vector and destroy
 		for (size_t i{ 0 }; i < currentScene->get_gameobjectvector().size(); ++i)
 		{
-			if (!currentScene->get_gameobjectvector()[i])
+			if (currentScene->get_gameobjectvector()[i] == _go)
 			{
+				std::cout << "trimming go vector\n";
 				currentScene->get_gameobjectvector().erase(currentScene->get_gameobjectvector().begin() + i);
 				currentScene->get_gameobjectvector().shrink_to_fit();
 				break;
 
 			}
 		}
+
+		std::cout << "Number of Game Objects left: " << currentScene->get_gameobjcount() << std::endl;
 
 		return true;
 
