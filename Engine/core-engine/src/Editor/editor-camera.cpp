@@ -133,14 +133,13 @@ namespace Copium::Editor
 		glm::vec2 delta = (worldNDC - mousePosition) * 4.f;
 		mousePosition = worldNDC;
 
-		// Movement using right click and drag
-		if (Input::get_input_instance()->mouseButtons[1] == GLFW_PRESS)
+		// Movement using right/middle click and drag
+		if (Input::get_input_instance()->mouseButtons[1] == GLFW_PRESS || Input::get_input_instance()->mouseButtons[2] == GLFW_PRESS)
 		{
 			glm::vec2 speed = get_pan_speed();
 			focalPoint += -get_up_direction() * delta.y * speed.y;
 			focalPoint += -get_right_direction() * delta.x * speed.x;
 		}
-		
 
 		//if (Input::is_key_held(GLFW_KEY_LEFT_CONTROL))
 		//{

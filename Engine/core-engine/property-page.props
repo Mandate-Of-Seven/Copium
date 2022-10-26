@@ -18,6 +18,7 @@
         copy "$(SolutionDir)lib\rttr\lib\Debug\rttr_core_d.dll" "$(TargetDir)rttr_core_d.dll" /Y
         copy "$(SolutionDir)lib\rttr\lib\Release\rttr_core.dll" "$(TargetDir)rttr_core.dll" /Y
         copy "$(SolutionDir)lib\FMOD\lib\fmod.dll" "$(TargetDir)fmod.dll" /Y
+        copy "$(SolutionDir)lib\freetype\bin\freetype.dll" "$(TargetDir)freetype.dll" /Y
       </Command>
     </PostBuildEvent>
     <ClCompile>

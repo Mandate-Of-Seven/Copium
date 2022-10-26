@@ -50,11 +50,11 @@ namespace Copium
 				Files::AssetsSystem::Instance(),
 				NewSceneManager::Instance(),
 				Editor::EditorSystem::Instance(),
-				Scripting::ScriptingSystem::Instance(),
+				//Scripting::ScriptingSystem::Instance(),
 				Physics::Physics::Instance(),
 				//SoundSystem::Instance(),
 				Graphics::GraphicsSystem::Instance(),
-				Thread::ThreadSystem::Instance()
+				//Thread::ThreadSystem::Instance()
 			};
 			for (ISystem* pSystem : systems)
 			{

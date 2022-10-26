@@ -72,6 +72,14 @@ namespace Copium::Graphics
 		/***************************************************************************/
 		/*!
 		\brief
+			Setup the text's vertex array object along with its data
+		*/
+		/***************************************************************************/
+		void setup_text_vao();
+
+		/***************************************************************************/
+		/*!
+		\brief
 			Begins batching the draw calls of the renderer into the buffer for
 			rendering
 		*/
@@ -168,6 +176,34 @@ namespace Copium::Graphics
 		/***************************************************************************/
 		void draw_line(const glm::vec2& _position0, const glm::vec2& _position1, const glm::vec4& _color);
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Draws the text onto the game window
+		\param position
+			The position of the text
+		\param size
+			The size of the text
+		\param textureID
+			The index of the font to be used
+		*/
+		/***************************************************************************/
+		void draw_text(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const glm::vec4& _color, GLuint _fontID);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Draws a text onto the game window
+		\param position
+			The position of the text
+		\param color
+			The color of the text
+		\param fontID
+			The font to draw
+		*/
+		/***************************************************************************/
+		void draw_text(const glm::vec3& _position, const glm::vec4& _color, GLuint _fontID);
+
 		// Accessing Properties
 
 		void set_line_width(GLfloat _lineWidth) { lineWidth = _lineWidth; }
@@ -232,9 +268,11 @@ namespace Copium::Graphics
 		GLuint drawCount = 0; // The amount of draw calls
 		GLuint quadCount = 0; // The amount of quads drawn
 		GLuint lineCount = 0; // The amount of lines drawn
+		GLuint textCount = 0; // The amount of text drawn
 
 		GLuint quadVertexArrayID = 0; // Handle to Quad Vertex Array Object
 		GLuint lineVertexArrayID = 0; // Handle to Line Vertex Array Object
+		GLuint textVertexArrayID = 0; // Handle to Text Vertex Array Object
 
 		GLuint quadVertexBufferID = 0; // Handle to Quad Vertex Buffer Object
 		GLuint quadIndexBufferID = 0; // Handle to Quad Index Buffer
@@ -243,12 +281,18 @@ namespace Copium::Graphics
 		GLuint lineVertexBufferID = 0; // Handle to Line Vertex Buffer Object
 		GLuint lineVertexCount = 0; // Number of elements in the Line object
 
+		GLuint textVertexBufferID = 0; // Handle to Text Vertex Buffer Object
+		GLuint textVertexCount = 0; // Number of elements in the Text object
+
 		QuadVertex* quadBuffer = nullptr;
 		QuadVertex* quadBufferPtr = nullptr;
 
 		LineVertex* lineBuffer = nullptr;
 		LineVertex* lineBufferPtr = nullptr;
 		GLfloat lineWidth = 1.f;
+
+		TextVertex* textBuffer = nullptr;
+		TextVertex* textBufferPtr = nullptr;
 
 		glm::vec4 quadVertexPosition[4];
 		glm::vec2 quadTextCoord[4];

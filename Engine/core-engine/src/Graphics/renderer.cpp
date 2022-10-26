@@ -36,6 +36,9 @@ namespace Copium::Graphics
 		// Setup Quad Vertex Array Object
 		setup_quad_vao();
 
+		// Setup Text Vertex Array Object
+		setup_text_vao();
+
 		GLuint texture = graphics->get_white_texture();
 		glCreateTextures(GL_TEXTURE_2D, 1, &texture);
 		glTextureStorage2D(texture, 1, GL_RGBA8, 1, 1);
@@ -140,17 +143,48 @@ namespace Copium::Graphics
 		glLineWidth(1.f);
 	}
 
+	void Renderer::setup_text_vao()
+	{
+		textBuffer = new TextVertex[maxVertexCount];
+
+		// Vertex Array Object
+		glCreateVertexArrays(1, &textVertexArrayID);
+
+		// Text Buffer Object
+		glCreateBuffers(1, &textVertexBufferID);
+		glNamedBufferStorage(textVertexBufferID, maxVertexCount * sizeof(TextVertex), nullptr, GL_DYNAMIC_STORAGE_BIT);
+
+		glEnableVertexArrayAttrib(textVertexArrayID, 0);
+		glVertexArrayAttribFormat(textVertexArrayID, 0, 3, GL_FLOAT, GL_FALSE, offsetof(TextVertex, pos));
+		glVertexArrayAttribBinding(textVertexArrayID, 0, 2);
+
+		glEnableVertexArrayAttrib(textVertexArrayID, 1);
+		glVertexArrayAttribFormat(textVertexArrayID, 1, 4, GL_FLOAT, GL_FALSE, offsetof(TextVertex, color));
+		glVertexArrayAttribBinding(textVertexArrayID, 1, 2);
+
+		glEnableVertexArrayAttrib(textVertexArrayID, 2);
+		glVertexArrayAttribFormat(textVertexArrayID, 2, 2, GL_FLOAT, GL_FALSE, offsetof(TextVertex, textCoord));
+		glVertexArrayAttribBinding(textVertexArrayID, 2, 2);
+
+		glEnableVertexArrayAttrib(textVertexArrayID, 3);
+		glVertexArrayAttribFormat(textVertexArrayID, 3, 1, GL_FLOAT, GL_FALSE, offsetof(TextVertex, fontID));
+		glVertexArrayAttribBinding(textVertexArrayID, 3, 2);
+	}
+
 	void Renderer::shutdown()
 	{
 		glDeleteVertexArrays(1, &quadVertexArrayID);
 		glDeleteVertexArrays(1, &lineVertexArrayID);
+		glDeleteVertexArrays(1, &textVertexArrayID);
 		glDeleteBuffers(1, &quadVertexBufferID);
 		glDeleteBuffers(1, &lineVertexBufferID);
+		glDeleteBuffers(1, &textVertexBufferID);
 		glDeleteBuffers(1, &quadIndexBufferID);
 		glDeleteTextures(1, &graphics->get_white_texture());
 
 		delete[] quadBuffer;
 		delete[] lineBuffer;
+		delete[] textBuffer;
 	}
 
 	void Renderer::begin_batch()
@@ -160,6 +194,9 @@ namespace Copium::Graphics
 
 		lineVertexCount = 0;
 		lineBufferPtr = lineBuffer;
+
+		textVertexCount = 0;
+		textBufferPtr = textBuffer;
 	}
 
 	void Renderer::flush()
@@ -229,6 +266,34 @@ namespace Copium::Graphics
 			glBindVertexArray(0);
 			graphics->get_shader_program()[1].UnUse();
 		}
+
+		if (textVertexCount)
+		{
+			// Alpha blending for transparent objects
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			graphics->get_shader_program()[2].Use();
+			glBindVertexArray(textVertexArrayID);
+
+			// Bind texture unit
+
+			// Bean: Matrix assignment to be placed somewhere else
+			GLuint uProjection = glGetUniformLocation(
+				graphics->get_shader_program()[2].GetHandle(), "uViewProjection");
+
+			glm::mat4 projection = Copium::Editor::EditorSystem::Instance()->get_camera()->get_projection();
+			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
+
+			// End of matrix assignment
+
+			glDrawArrays(GL_TRIANGLES, 0, textVertexCount);
+			drawCount++;
+
+			glBindVertexArray(0);
+			graphics->get_shader_program()[2].UnUse();
+			glDisable(GL_BLEND);
+		}
 		
 	}
 
@@ -251,6 +316,15 @@ namespace Copium::Graphics
 			GLsizeiptr size = (GLuint*)lineBufferPtr - (GLuint*)lineBuffer;
 			glNamedBufferSubData(lineVertexBufferID, 0, sizeof(float) * size, lineBuffer);
 			glVertexArrayVertexBuffer(lineVertexArrayID, 1, lineVertexBufferID, 0, sizeof(LineVertex));
+			glBindVertexArray(0);
+		}
+
+		if (textVertexCount)
+		{
+			glBindVertexArray(textVertexArrayID);
+			GLsizeiptr size = (GLuint*)textBufferPtr - (GLuint*)textBuffer;
+			glNamedBufferSubData(textVertexBufferID, 0, sizeof(float) * size, textBuffer);
+			glVertexArrayVertexBuffer(textVertexArrayID, 1, textVertexBufferID, 0, sizeof(QuadVertex));
 			glBindVertexArray(0);
 		}
 		
@@ -389,5 +463,29 @@ namespace Copium::Graphics
 		lineBufferPtr++;
 
 		lineVertexCount += 2;
+	}
+
+	void Renderer::draw_text(const glm::vec3& _position, const glm::vec4& _color, GLuint _fontID)
+	{
+		glm::mat4 translate = glm::translate(glm::mat4(1.f), _position);
+
+		if (textVertexCount >= maxTextCount)
+		{
+			end_batch();
+			flush();
+			begin_batch();
+		}
+
+		for (GLint i = 0; i < 4; i++)
+		{
+			textBufferPtr->pos = translate * quadVertexPosition[i];
+			textBufferPtr->textCoord = quadTextCoord[i];
+			textBufferPtr->color = _color;
+			textBufferPtr->fontID = _fontID;
+			textBufferPtr++;
+		}
+
+		textVertexCount += 4;
+		textCount++;
 	}
 }

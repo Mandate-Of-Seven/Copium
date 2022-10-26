@@ -47,9 +47,12 @@ namespace Copium::Graphics
 		setup_shader_program("Assets/shaders/line-shader-glsl.vert",
 			"Assets/shaders/line-shader-glsl.frag");
 
+		setup_shader_program("Assets/shaders/text-shader-glsl.vert",
+			"Assets/shaders/text-shader-glsl.frag");
 
 		// Initialise Sub systems
 		renderer.init();
+		fontCorbel.load_font("Assets/fonts/corbel.ttf");
 
 		glm::vec2 size = Copium::Editor::EditorSystem::Instance()->get_scene_view()->get_dimension();
 		framebuffer.set_size((GLuint)size.x, (GLuint)size.y);
@@ -64,6 +67,13 @@ namespace Copium::Graphics
 			samplers[i] = i;
 
 		glUniform1iv(loc, maxTextures, samplers);
+		shaderProgram[0].UnUse();
+
+		// Bind fonts to text fragment shader
+		shaderProgram[2].Use();
+		loc = glGetUniformLocation(shaderProgram[2].GetHandle(), "uFonts");
+		glUniform1iv(loc, maxTextures, samplers);
+		shaderProgram[2].UnUse();
 
 		// Parse all textures loaded into the engine into the graphics 
 		parse_textures();
@@ -186,6 +196,7 @@ namespace Copium::Graphics
 
 	void GraphicsSystem::exit()
 	{
+		fontCorbel.shutdown();
 		renderer.shutdown();
 		framebuffer.exit();
 
@@ -200,7 +211,7 @@ namespace Copium::Graphics
 		shdr_files.emplace_back(std::make_pair(GL_VERTEX_SHADER, _vtx_shdr));
 		shdr_files.emplace_back(std::make_pair(GL_FRAGMENT_SHADER, _frg_shdr));
 
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < NUM_SHADERS; i++)
 		{
 			if (shaderProgram[i].IsLinked())
 				continue;
@@ -256,6 +267,10 @@ namespace Copium::Graphics
 		glClearColor(0.f, 0.f, 0.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glm::vec3 position = { 0.f, 0.f, 0.f };
+		glm::vec4 color = { 255.f, 255.f, 255.f, 1.f };
+		fontCorbel.draw_text("Hello", position, color, 1.f, 0);
 
 		// Draw the world using batch rendering
 		draw_world();
@@ -369,7 +384,7 @@ namespace Copium::Graphics
 		// texture scale should be separate and derived from the image dimensions
 		// Scale = image scale / default scale(1024)
 		Copium::Files::AssetsSystem* assets = Copium::Files::AssetsSystem::Instance();
-		renderer.draw_quad({ 0.f, 0.f, 0.f }, { 3.84f, 2.16f }, 0.f, assets->get_textures()[0][0].get_object_id());
+		//renderer.draw_quad({ 0.f, 0.f, 0.f }, { 3.84f, 2.16f }, 0.f, assets->get_textures()[0][0].get_object_id());
 		
 		color = { 0.1f, 1.f, 0.1f, 1.f };
 		glm::vec2 worldNDC{ 0 };

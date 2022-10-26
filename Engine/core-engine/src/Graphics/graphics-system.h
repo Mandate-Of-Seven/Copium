@@ -24,6 +24,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Graphics/sprite-renderer.h"
 #include "Graphics/framebuffer.h"
 #include "Graphics/renderer.h"
+#include "Graphics/fonts.h"
 
 #include "SceneManager/sm.h"
 
@@ -32,10 +33,17 @@ namespace Copium::Graphics
 	// Global variables
 	static const GLuint maxQuadCount = 1000; // Number of sprites per batch
 	static const GLuint maxLineCount = 1000; // Number of lines per batch
+	static const GLuint maxTextCount = 1000; // Number of text per batch
 	static const GLuint maxVertexCount = maxQuadCount * 4;
 	static const GLuint maxIndexCount = maxQuadCount * 6;
 	static const GLuint maxLineVertexCount = maxLineCount * 2;
+	static const GLuint maxTextVertexCount = maxTextCount * 4;
 	static const GLuint maxTextures = 32;
+
+	static enum
+	{
+		NUM_SHADERS = 3
+	};
 
 	CLASS_SYSTEM(GraphicsSystem) // Inherits from System
 	{
@@ -162,7 +170,7 @@ namespace Copium::Graphics
 		GLuint whiteTextureSlot = 0;
 
 		/* Shaders **********************************************************************/
-		GLSLShader shaderProgram[2]; // Shader program to use
+		GLSLShader shaderProgram[NUM_SHADERS]; // Shader program to use
 
 		/* Stored Information ***********************************************************/
 		std::vector<Texture> textures;
@@ -170,6 +178,7 @@ namespace Copium::Graphics
 
 		Renderer renderer;
 		Framebuffer framebuffer;
+		Font fontCorbel;
 
 		bool debugMode = false;
 #pragma endregion DataMembers
