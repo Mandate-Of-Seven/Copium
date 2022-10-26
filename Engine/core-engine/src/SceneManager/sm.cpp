@@ -18,7 +18,7 @@
 	3. de-allocation of resources used by current scene (cleanup before engine close)
 	4. Calling scene's update functions
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************
 ****/
 #include <pch.h>
@@ -27,18 +27,33 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "../Windows/windows-system.h"
 
 namespace Copium {
+	GameObject* NewSceneManager::findGameObjByID(GameObjectID _ID)
+	{
+		for (GameObject* pGameObj : currentScene->get_gameobjectvector())
+		{
+			if (pGameObj->id == _ID)
+			{
+				return pGameObj;
+			}
+		}
+		return nullptr;
+	}
 
-	NewSceneManager::NewSceneManager() : gof{nullptr}, currentScene{nullptr}
+	NewSceneManager::NewSceneManager() : gof{nullptr}, currentScene{nullptr}, selectedGameObject{nullptr}
 	{
 		gof = new GameObjectFactory();
 		if (!gof)
 		{
 			std::cout << "Error allocating memory for GameObjectFactory\n";
 		}	
+		std::cout << "sm ctor\n";
 	}
 
 	NewSceneManager::~NewSceneManager()
 	{
+		std::cout << selectedGameObject << std::endl;
+		selectedGameObject = nullptr;
+
 		if (gof)
 		{
 			delete gof;
@@ -53,6 +68,7 @@ namespace Copium {
 		}
 
 
+		//std::cout << "new scene manager destruction called\n";
 
 	}
 
@@ -65,26 +81,6 @@ namespace Copium {
 		load_scene(str);
 		std::cout << "No. of GameObjects in scene:" << currentScene->get_gameobjcount() << std::endl;
 		//currentScene->get_gameobjectvector()[0]->Trans().Position();
-
-		for (int i = 0; i < currentScene->get_gameobjcount(); i++)
-		{
-			Copium::Graphics::SpriteRenderer * sprite = new Copium::Graphics::SpriteRenderer;
-			glm::vec3 pos = currentScene->get_gameobjectvector()[i]->Trans().glmPosition();
-			sprite->set_position(pos);
-
-			PRINT("Coords: " << pos.x << ", " << pos.y);
-
-			glm::vec3 size = currentScene->get_gameobjectvector()[i]->Trans().glmScale();
-			sprite->set_size(glm::vec2(size.x, size.y));
-
-			PRINT("Size: " << size.x << ", " << size.y);
-
-			glm::vec4 color = { 1.f, 1.f ,1.f ,1.f };
-			sprite->set_color(color);
-
-			Copium::Graphics::GraphicsSystem::Instance()->add_sprite(sprite);
-		}
-
 	}
 	void NewSceneManager::update()
 	{
@@ -95,7 +91,7 @@ namespace Copium {
 	{
 	}
 
-	bool NewSceneManager::load_scene(std::string& _filepath)
+	bool NewSceneManager::load_scene(const std::string& _filepath)
 	{
 		std::cout << "load_scene\n";
 
@@ -137,7 +133,7 @@ namespace Copium {
 		return true;
 
 	}
-	bool NewSceneManager::change_scene(std::string& _newfilepath)
+	bool NewSceneManager::change_scene(const std::string& _newfilepath)
 	{
 		bool result;
 
@@ -154,11 +150,17 @@ namespace Copium {
 
 		// Clear game objects in scene
 		// Deserialize from new file and overwrite other scene data
-		delete currentScene;
-		result = load_scene(_newfilepath);
 		
-
-
+		if (std::filesystem::exists(_newfilepath))
+		{
+			result = load_scene(_newfilepath);
+			delete currentScene;
+		}
+		else
+		{
+			std::cout << "file does not exist, scene change aborted\n";
+			return false;
+		}
 
 		return result;
 
@@ -168,4 +170,12 @@ namespace Copium {
 	{
 		return *gof;
 	}
+
+	Scene* NewSceneManager::get_current_scene()
+	{
+		return currentScene;
+	}
+	void NewSceneManager::set_selected_gameobject(GameObject* _go) { selectedGameObject = _go; }
+	GameObject* NewSceneManager::get_selected_gameobject() { return selectedGameObject; }
+
 }

@@ -13,11 +13,7 @@
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
-
-#pragma once
-
 #ifndef GAME_OBJECT_H
-
 #define GAME_OBJECT_H
 
 //INCLUDES
@@ -25,35 +21,27 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <list>
 #include <string>
 
-#include "GameObject/component.h"
-#include "Math/transform.h"
+#include "Messaging/message-system.h"
 #include <rapidjson/document.h>
+#include "Math/math-library.h"
+#include "GameObject/transform-component.h"
 
 //USING
+using GameObjectID = uint64_t;
 
-using GameObjectID = unsigned long;
-
-class GameObject
+class GameObject final : public Copium::IReceiver
 {
 private:
-    GameObjectID id;                    //Global ID for gameObjects
     GameObjectID parentid;
+    static GameObjectID count;
     std::list<Component*> components;   //Components for gameObject
     std::string name;                   //Name of gameObject
-    Transform trans;                    //Transform of gameObject
+    TransformComponent transform;
     GameObject* parent;                 //Pointer to this gameObject's parent
     std::list<GameObject*> children;    //List of pointers to this gameObject's children
 
 public:
-    GameObject& operator=(GameObject&) = delete;
-
-    /***************************************************************************/
-    /*!
-    \brief
-        Default constructor, initializes Transform, name, id
-    */
-    /**************************************************************************/
-    GameObject();
+    const GameObjectID id;                    //Global ID for gameObjects
 
     /***************************************************************************/
     /*!
@@ -67,18 +55,38 @@ public:
         Scale of transform to initialize with
     */
     /**************************************************************************/
-    GameObject(Copium::Math::Vec3 _position, Copium::Math::Vec3 _rotation, Copium::Math::Vec3 _scale);
+    GameObject(
+        Copium::Math::Vec3 _position = { 0,0,0 },
+        Copium::Math::Vec3 _rotation = { 0,0,0 },
+        Copium::Math::Vec3 _scale = {1,1,1});
 
-    /***************************************************************************/
-    /*!
-    \brief
-        Appends a new component to components list
-    \param component
-        Pointer to component to append to components list
-    */
-    /**************************************************************************/
-    void addComponent(Component* component);
+    template <typename T>
+    T& addComponent()
+    {
+        static_assert(std::is_base_of<Component, T>::value);
+        T* component = new T(*this);
+        components.push_back(component);
+        return *component;
+    }
 
+    template <typename T>
+    const std::vector<T*>& getComponents()
+    {
+        static_assert(std::is_base_of<Component, T>::value);
+        static std::vector<T*> typedComponents;
+        typedComponents.clear();
+
+        std::string tName = typeid(T).name() + std::string("class Copium::").length();
+        ComponentType componentType = Component::nameToType(tName);
+        for (Component* pComponent : components)
+        {
+            if (pComponent->componentType == componentType)
+                typedComponents.push_back(reinterpret_cast<T*>(pComponent));
+        }
+        return typedComponents;
+    }
+
+    Component* getComponent(ComponentType componentType);
     /***************************************************************************/
     /*!
     \brief
@@ -87,7 +95,12 @@ public:
         Type of component to append to components list
     */
     /**************************************************************************/
-    void addComponent(Component::Type componentType);
+    Component* addComponent(ComponentType componentType);
+
+
+    bool hasComponent(ComponentType componentType) const;
+
+    Component* addComponent(const Component& component);
 
     /***************************************************************************/
     /*!
@@ -97,29 +110,18 @@ public:
         Pointer to component to delete from components list
     */
     /**************************************************************************/
-    void deleteComponent(Component* component);
+    void removeComponent(ComponentType componentType);
 
-    /***************************************************************************/
-    /*!
-    \brief
-        Gets a reference to the components list of this game object
+    void removeComponent(ComponentID componentID);
 
-    \return 
-        reference to this gameobject's component list
-
-    */
-    /**************************************************************************/
-    std::list<Component*>& Components();
-
-    /***************************************************************************/
-    /*!
-    \brief
-        Setter for gameObject Transform
-    \param _trans
-        Transform to copy values from into gameObject
-    */
-    /**************************************************************************/
-    void Trans(Transform _trans);
+    template <typename T>
+    void removeComponent()
+    {
+        static_assert(std::is_base_of<Component, T>::value);
+        std::string tName = typeid(T).name() + std::string("class Copium::").length();
+        ComponentType componentType = Component::nameToType(tName); 
+        removeComponent(componentType);
+    }
 
     /***************************************************************************/
     /*!
@@ -129,7 +131,7 @@ public:
         Return a copy transform of gameObject
     */
     /**************************************************************************/
-    Transform Trans() const;
+    TransformComponent& Transform();
 
     /*******************************************************************************
     /*!
@@ -156,32 +158,6 @@ public:
     */
     /*******************************************************************************/
     std::string get_name() const;
-
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Sets the ID of the GameObject
-
-    \param	_id
-        the new ID to be set
-
-    \return
-        void
-    */
-    /*******************************************************************************/
-    void set_id(GameObjectID& _id);
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Gets the ID of the GameObject
-
-    \return
-        the ID of the GameObject
-    */
-    /*******************************************************************************/
-    GameObjectID get_id() const;
 
     /*******************************************************************************
     /*!
@@ -325,6 +301,8 @@ public:
     /*******************************************************************************/
     bool deserialize(rapidjson::Value& _value);
 
+    void inspectorView();
+
 
     /***************************************************************************/
     /*!
@@ -333,6 +311,12 @@ public:
     */
     /**************************************************************************/
     ~GameObject();
+
+    void handleMessage(Copium::MESSAGE_TYPE mType);
+
+    GameObject& operator=(const GameObject& rhs);
+
+    
 };
 
 

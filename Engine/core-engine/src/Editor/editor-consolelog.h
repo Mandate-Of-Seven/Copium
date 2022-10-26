@@ -1,5 +1,5 @@
 /*!***************************************************************************************
-\file			ConsoleLog.cpp
+\file			editor-consolelog.h
 \project
 \author			Shawn Tanary
 

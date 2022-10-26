@@ -1,6 +1,5 @@
 .tmp
 .vs/
-*.exe
 *.pdb
 *.log
 *.recipe

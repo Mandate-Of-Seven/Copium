@@ -16,11 +16,10 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 #include "Utilities/thread-system.h"
 
-namespace Copium::Thread
+namespace Copium
 {
 	void ThreadSystem::init()
 	{
-		PRINT("THREAD SYSTEM INITIALIZED");
 		quit = false;
 	}
 
@@ -37,12 +36,13 @@ namespace Copium::Thread
 	void ThreadSystem::exit()
 	{
 		quit = true;
+		PRINT("Exiting all threads...");
 		for (std::thread* thread : threads)
 		{
 			thread->join();
 			delete thread;
 		}
-		PRINT("All threads detached");
+		PRINT("All threads exited");
 	}
 
 	bool ThreadSystem::Quit() const

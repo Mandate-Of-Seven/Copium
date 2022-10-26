@@ -17,7 +17,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Graphics/framebuffer.h"
 
-namespace Copium::Graphics
+namespace Copium
 {
 	void Framebuffer::init()
 	{

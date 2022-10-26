@@ -15,80 +15,232 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "pch.h"
 #include "Scripting/scripting.h"
+#include "GameObject/game-object.h"
 
 #define DEFAULT_SCRIPT_NAME "NewScript"
 #include <mono/jit/jit.h>
-
 namespace Copium
 {
-	using namespace Scripting;
 	ScriptingSystem& ScriptComponent::sS{ *ScriptingSystem::Instance() };
 
-	ScriptComponent::ScriptComponent(const char* _name) :
-		mObject{ nullptr }, spScriptClass{ nullptr }, name{ _name }, Component()
+	ScriptComponent::ScriptComponent(GameObject& _gameObj) :
+		mObject{ nullptr }, pScriptClass{ nullptr }, Component(_gameObj, ComponentType::Script), name{ DEFAULT_SCRIPT_NAME }
 	{
-		Message::MessageSystem::Instance()->subscribe(Message::MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
-		spScriptClass = sS.getScriptClass(_name);
-		if (spScriptClass != nullptr)
-		{
-			mObject = sS.createMonoObject(spScriptClass.get()->mClass);
-		}
-	}
-
-	ScriptComponent::ScriptComponent(MonoClass* _mClass) :
-		name{ mono_class_get_name(_mClass) },
-		spScriptClass{ sS.getScriptClass(name.c_str()) }
-	{
-		Message::MessageSystem::Instance()->subscribe(Message::MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
-		mObject = sS.createMonoObject(spScriptClass.get()->mClass);
+		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
+		pScriptClass = sS.getScriptClass(name);
+		instantiate();
 	}
 
 	ScriptComponent::~ScriptComponent()
 	{
-		PRINT("Script Component Destroyed");
+		MessageSystem::Instance()->unsubscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
 	}
 
-	void ScriptComponent::handleMessage(Message::MESSAGE_TYPE mType)
+	void ScriptComponent::instantiate()
+	{
+		if (pScriptClass != nullptr)
+		{
+			mObject = sS.instantiateClass(pScriptClass->mClass);
+			GameObjectID id = gameObj.id;
+			void* param = &id;
+			sS.invoke(mObject, pScriptClass->mOnCreate, &param);
+		}
+	}
+
+	void ScriptComponent::handleMessage(MESSAGE_TYPE mType)
 	{
 		//MT_SCRIPTING_UPDATED
-		spScriptClass = sS.getScriptClass(name.c_str());
-		//If mono class couldnt be loaded
-		if (spScriptClass == nullptr)
-		{
-			PRINT("Please delete " << name << " Instance as base script could not be found anymore!");
-			return;
-		}
-		mObject = sS.createMonoObject(spScriptClass.get()->mClass);
+		pScriptClass = sS.getScriptClass(name.c_str());
+		instantiate();
+	}
+
+	const std::string& ScriptComponent::Name() const
+	{
+		return name;
+	}
+
+	void ScriptComponent::Name(const std::string& _name)
+	{
+		name = _name;
+		pScriptClass = sS.getScriptClass(name);
+		//if (pScriptClass)
+		//	PRINT("NAME CALLED BY NAME(): " << pScriptClass->name);
+		instantiate();
 	}
 
 	void ScriptComponent::Awake()
 	{
-		if (spScriptClass && spScriptClass->mAwake)
-			sS.invoke(mObject, spScriptClass->mAwake);
+		if (pScriptClass && pScriptClass->mAwake)
+			sS.invoke(mObject, pScriptClass->mAwake);
 	}
 
 	void ScriptComponent::Start()
 	{
-		if (spScriptClass && spScriptClass->mStart)
-			mono_runtime_invoke(spScriptClass->mStart, mObject, nullptr, nullptr);
+		if (pScriptClass && pScriptClass->mStart)
+			sS.invoke(mObject, pScriptClass->mStart);
 	}
 
 	void ScriptComponent::Update()
 	{
-		if (spScriptClass && spScriptClass->mUpdate)
-			mono_runtime_invoke(spScriptClass->mUpdate, mObject, nullptr, nullptr);
+		if (pScriptClass && pScriptClass->mUpdate)
+			sS.invoke(mObject, pScriptClass->mUpdate);
 	}
 
 	void ScriptComponent::LateUpdate()
 	{
-		if (spScriptClass && spScriptClass->mLateUpdate)
-			mono_runtime_invoke(spScriptClass->mLateUpdate, mObject, nullptr, nullptr);
+		if (pScriptClass && pScriptClass->mLateUpdate)
+			sS.invoke(mObject, pScriptClass->mLateUpdate);
 	}
 
 	void ScriptComponent::OnCollisionEnter()
 	{
-		if (spScriptClass && spScriptClass->mOnCollisionEnter)
-			mono_runtime_invoke(spScriptClass->mOnCollisionEnter, mObject, nullptr, nullptr);
+		if (pScriptClass && pScriptClass->mOnCollisionEnter)
+			sS.invoke(mObject, pScriptClass->mOnCollisionEnter);
+	}
+
+	//Use for serialization
+	bool ScriptComponent::getFieldValue(const std::string& name, void* buffer)
+	{
+		const auto& it = pScriptClass->mFields.find(name);
+		if (it == pScriptClass->mFields.end())
+			return false;
+		const Field& field = it->second;
+		mono_field_get_value(mObject, field.classField, buffer);
+		return true;
+	}
+
+	bool ScriptComponent::setFieldValue(const std::string& name, const void* value)
+	{
+		const auto& it = pScriptClass->mFields.find(name);
+		if (it == pScriptClass->mFields.end())
+			return false;
+		const Field& field = it->second;
+		mono_field_set_value(mObject, field.classField, (void*)value);
+		return true;
+	}
+
+	void ScriptComponent::inspector_view()
+	{
+		if (!pScriptClass)
+			return;
+		float Padding = 16.f;
+		float sameLinePadding = 16.f;
+		bool openPopup = false;
+
+		static ImVec4 backupColor;
+
+		ImGuiColorEditFlags miscFlags = ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip
+			| ImGuiColorEditFlags_NoLabel;
+
+		ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
+			| ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp;
+		if (ImGui::BeginTable(name.c_str(), 2, windowFlags))
+		{
+			ImGui::Indent();
+			// Sprite
+			// Extern source file
+			ImGui::TableSetupColumn("Text", 0, 0.4f);
+			ImGui::TableSetupColumn("Input", 0, 0.6f);
+
+			const auto& fieldMap = pScriptClass->mFields;
+			auto it = fieldMap.begin();
+			while (it != fieldMap.end())
+			{
+				ImGui::TableNextRow();
+				ImGui::TableNextColumn();
+				const std::string& name{ it->first };
+				ImGui::Text(name.c_str());
+				ImGui::TableNextColumn();
+				ImGui::PushItemWidth(-FLT_MIN);
+				static char buffer[32];
+				getFieldValue(name, buffer);
+				switch (it->second.type)
+				{
+				case FieldType::Float:
+					ImGui::InputFloat(name.c_str(), reinterpret_cast<float*>(buffer));
+					break;
+				case FieldType::Double:
+					ImGui::InputDouble(name.c_str(), reinterpret_cast<double*>(buffer));
+					break;
+				case FieldType::Bool:
+					ImGui::Checkbox(name.c_str(), reinterpret_cast<bool*>(buffer));
+					break;
+				case FieldType::Char:
+					ImGui::InputInt(name.c_str(), reinterpret_cast<int*>(buffer));
+					break;
+				case FieldType::Byte:
+					ImGui::InputInt(name.c_str(), reinterpret_cast<int*>(buffer));
+					break;
+				case FieldType::Short:
+					ImGui::InputInt(name.c_str(), reinterpret_cast<int*>(buffer));
+					break;
+				case FieldType::Int:
+					ImGui::InputInt(name.c_str(), reinterpret_cast<int*>(buffer));
+					break;
+				case FieldType::Long:
+					ImGui::InputInt2(name.c_str(), reinterpret_cast<int*>(buffer));
+					break;
+				case FieldType::UByte:
+					break;
+				case FieldType::UShort:
+					break;
+				case FieldType::UInt:
+					break;
+				case FieldType::ULong:
+					break;
+				case FieldType::Vector2:
+				{
+					if (ImGui::BeginTable(name.c_str(), 3, windowFlags))
+					{
+						float* fBuffer = reinterpret_cast<float*>(buffer);
+						ImGui::TableNextColumn();
+						ImGui::PushID(0);
+						ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+						ImGui::InputFloat("", fBuffer++);
+						ImGui::PopID();
+
+						ImGui::TableNextColumn();
+						ImGui::PushID(1);
+						ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+						ImGui::InputFloat("", fBuffer++);
+						ImGui::PopID();
+						ImGui::EndTable();
+					}
+					break;
+				}
+				case FieldType::Vector3:
+				{
+					if (ImGui::BeginTable(name.c_str(), 3, windowFlags))
+					{
+						float* fBuffer = reinterpret_cast<float*>(buffer);
+						ImGui::TableNextColumn();
+						ImGui::PushID(0);
+						ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+						ImGui::InputFloat("", fBuffer++);
+						ImGui::PopID();
+
+						ImGui::TableNextColumn();
+						ImGui::PushID(1);
+						ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+						ImGui::InputFloat("", fBuffer++);
+						ImGui::PopID();
+
+						ImGui::TableNextColumn();
+						ImGui::PushID(2);
+						ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+						ImGui::InputFloat("", fBuffer);
+						ImGui::PopID();
+						ImGui::EndTable();
+					}
+					break;
+				}
+			}
+				setFieldValue(name, buffer);
+				++it;
+			}
+			ImGui::Unindent();
+			ImGui::EndTable();
+		}
 	}
 }
 

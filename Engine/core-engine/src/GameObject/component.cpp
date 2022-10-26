@@ -10,24 +10,26 @@
 \brief
     Defines Component Class to be added to GameObjects and its member functions
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 #include "pch.h"
+#include <rapidjson/document.h>
 #include "GameObject/component.h"
+#include "renderer-component.h"
+#include "transform-component.h"
 
-std::map<Component::Type, const std::string> Component::componentMap
+std::map<ComponentType, const std::string> Component::componentMap
 {
-    {Type::Animator,"Animator"},
-    {Type::Collider,"Collider"},
-    {Type::Renderer,"Renderer"},
-    {Type::Script,"NewScript"},
-    {Type::Transform, "Transform"}
+    {ComponentType::Animator,"AnimatorComponent"},
+    {ComponentType::Collider,"ColliderComponent"},
+    {ComponentType::Renderer,"RendererComponent"},
+    {ComponentType::Script,"ScriptComponent"}
 };
 
-Component::Component() {}
+Component::Component::Component(GameObject& _gameObj, ComponentType _componentType) 
+    : gameObj { _gameObj }, componentType{_componentType} {}
 
-Component::Component(Component::Type _componentType) : componentType(_componentType) {}
 
 void Component::destroy() {}
 
@@ -35,31 +37,65 @@ ComponentID const Component::ID() { return id; }
 
 void Component::deserialize(rapidjson::Value& _value)
 {
-    std::cout << "default deserialization\n";
+    //std::cout << "default deserialization\n";
 }
 
 bool Component::Enabled() const noexcept{ return enabled;}
 
 void Component::Enabled(bool _enabled) noexcept { enabled = _enabled; }
 
-ColliderComponent::ColliderComponent() :Component(Type::Collider) { std::cout << "COLLIDER CONS" << std::endl; }
+ColliderComponent::ColliderComponent(GameObject& _gameObj) 
+    :Component(_gameObj, ComponentType::Collider) { std::cout << "COLLIDER CONS" << std::endl; }
 
-RendererComponent::RendererComponent() :Component(Type::Renderer) { std::cout << "RENDERER CONS" << std::endl; }
+AnimatorComponent::AnimatorComponent(GameObject& _gameObj) 
+    :Component(_gameObj, ComponentType::Animator) { std::cout << "ANIMATOR CONS" << std::endl; }
 
-AnimatorComponent::AnimatorComponent() :Component(Type::Animator) { std::cout << "ANIMATOR CONS" << std::endl; }
-
-TransformComponent::TransformComponent() :Component(Type::Transform)
-{ 
-    std::cout << "TRANSFORM CONS" << std::endl; 
-}
-void TransformComponent::deserialize(rapidjson::Value& _value)
-{
-    t.deserialize(_value);
-}
-
-const std::string& Component::Name()
+const std::string& Component::Name() const
 {
     return componentMap[componentType];
 }
 
+
+Component& Component::operator=(const Component& rhs)
+{
+    enabled = rhs.enabled;
+    COPIUM_ASSERT(componentType == rhs.componentType, "TRYING TO COPY ASSIGN TWO DIFFERENT COMPONENT TYPES!");
+    switch (componentType)
+    {
+    case ComponentType::Animator:
+    {
+        const AnimatorComponent* pRhs = reinterpret_cast<const AnimatorComponent*>(&rhs);
+        AnimatorComponent* pLhs = reinterpret_cast<AnimatorComponent*>(this);
+        break;
+    }
+    case ComponentType::Collider:
+    {
+        const ColliderComponent* pRhs = reinterpret_cast<const ColliderComponent*>(&rhs);
+        ColliderComponent* pLhs = reinterpret_cast<ColliderComponent*>(this);
+        break;
+    }
+    case ComponentType::Renderer:
+    {
+        const Copium::RendererComponent* pRhs = reinterpret_cast<const Copium::RendererComponent*>(&rhs);
+        Copium::RendererComponent* pLhs = reinterpret_cast<Copium::RendererComponent*>(this);
+        break;
+    }
+    case ComponentType::Script:
+    {
+        break;
+    }
+    case ComponentType::Transform:
+    {
+        const TransformComponent* pRhs = reinterpret_cast<const TransformComponent*>(&rhs);
+        TransformComponent* pLhs = reinterpret_cast<TransformComponent*>(this);
+        pLhs->position = pRhs->position;
+        pLhs->rotation = pRhs->rotation;
+        pLhs->scale = pRhs->scale;
+        break;
+    }
+    default:
+        break;
+    }
+    return *this;
+}
 

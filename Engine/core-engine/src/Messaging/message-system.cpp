@@ -16,7 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 #include "Messaging/message-system.h"
 
-namespace Copium::Message
+namespace Copium
 {
 
     MessageSystem::MessageSystem() 
@@ -24,7 +24,7 @@ namespace Copium::Message
 
     }
 
-    void Message::MessageSystem::subscribe(MESSAGE_TYPE mType, IReceiver* pReceiver)
+    void MessageSystem::subscribe(MESSAGE_TYPE mType, IReceiver* pReceiver)
     {
         messageTypeListeners[mType].push_back(pReceiver);
     }
@@ -35,6 +35,21 @@ namespace Copium::Message
         for (IReceiver* receiver : messageTypeListeners[mType])
         {
             receiver->handleMessage(mType);
+        }
+    }
+
+    void MessageSystem::unsubscribe(MESSAGE_TYPE mType, IReceiver* pReceiver)
+    {
+        auto& listeners = messageTypeListeners[mType];
+        auto it = listeners.begin();
+        while (it != listeners.end())
+        {
+            if (pReceiver == *it)
+            {
+                messageTypeListeners[mType].erase(it);
+                return;
+            }
+            ++it;
         }
     }
 

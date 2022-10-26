@@ -27,7 +27,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 namespace Copium {
 
 	#define ANIMATOR_CREATOR "Animator"
-	#define RENDERER_CREATOR "Renderer"
+	#define RENDERER_CREATOR "Sprite Renderer"
 	#define COLLIDER_CREATOR "Collider"
 
 	class GameObjectCreator {
@@ -137,28 +137,6 @@ namespace Copium {
 		/*!
 		*
 		\brief
-			Adds a component creator to the GameObjectFactory
-			Note: 1x component creator for each type of component, will reject if there is already a component creator of that type registered
-
-		\param _key
-			read-only reference to a string that contains the key of the component creator
-
-		\param _value
-			pointer to the dynamically allocated ComponentCreator to add to the list
-
-		\return
-			if registration is successful, return true
-			if specified pointer is invalid, return false
-			if there is already a ComponentCreator of that type registered, return false
-			
-		*/
-		/*******************************************************************************/
-		bool add_component_creator(const std::string& _key, ComponentCreator* _value);
-
-		/*******************************************************************************
-		/*!
-		*
-		\brief
 			Adds a component to the specified game object
 
 		\param _key
@@ -175,7 +153,6 @@ namespace Copium {
 		*/
 		/*******************************************************************************/
 		bool add_component(const std::string& _key, GameObject* _go);
-
 		/*******************************************************************************
 		/*!
 		*
@@ -230,8 +207,8 @@ namespace Copium {
 
 	private:
 		Scene* currentScene;
-		std::map<std::string, ComponentCreator*> componentCreators;
 		std::map<std::string, GameObject*> gameObjectCreators;
+		friend GameObject;
 	};
 
 }

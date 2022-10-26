@@ -12,18 +12,27 @@
 	various sub-systems which includes asset loading, matrice calculations and rendering.
 	Components and objects which require rendering would refer to this class.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 #include "Windows/windows-system.h"
-
+#include "Windows/windows-input.h"
 #include "Graphics/graphics-system.h"
 #include "Graphics/sprite-renderer.h"
-#include "Windows/input.h"
 
 #include "Editor/editor-system.h"
+#include "Files/assets-system.h"
 
-namespace Copium::Graphics
+// Bean: remove this after NewManagerInstance is moved
+#include "GameObject/renderer-component.h"
+#include "SceneManager/sm.h"
+
+namespace
+{
+	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
+}
+
+namespace Copium
 {
 	// Temporary global variables
 	GLfloat movement_x = 0.f, movement_y = 0.f;
@@ -46,7 +55,7 @@ namespace Copium::Graphics
 		// Initialise Sub systems
 		renderer.init();
 
-		glm::vec2 size = Copium::Editor::EditorSystem::Instance()->get_scene_view()->get_dimension();
+		glm::vec2 size = Copium::EditorSystem::Instance()->get_scene_view()->get_dimension();
 		framebuffer.set_size((GLuint)size.x, (GLuint)size.y);
 		framebuffer.init();
 
@@ -59,58 +68,49 @@ namespace Copium::Graphics
 			samplers[i] = i;
 
 		glUniform1iv(loc, maxTextures, samplers);
-		
-		// Bean: Loading of textures to be done somewhere else
-		load_texture("Assets/textures/train-part-01.png");
-		load_texture("Assets/textures/train-part-02.png");
-		load_texture("Assets/textures/train-part-03.png");
-		load_texture("Assets/textures/train-part-04.png");
-		load_texture("Assets/textures/mock-up.png");
 
-		if (NewSceneManager::Instance())
-		{
-			NewSceneManager::Instance()->get_gof().add_component_creator(RENDERER_CREATOR, new RendererCreator);
-		}
-
+		// Parse all textures loaded into the engine into the graphics 
+		parse_textures();
 	}
 
 	void GraphicsSystem::update()
 	{
-		//GLfloat dt = /*windowsSystem.get_delta_time();*/(GLfloat) Windows::WindowsSystem::Instance()->get_delta_time();
+		//GLfloat dt = /*windowsSystem.get_delta_time();*/(GLfloat) WindowsSystem::Instance()->get_delta_time();
 		movement_x = movement_y = size_x = size_y = 0;
 
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		/*if (Input::is_key_held(GLFW_KEY_A))
+		/*if (inputSystem.is_key_held(GLFW_KEY_A))
 			movement_x -= dt;
-		else if (!Input::is_key_held(GLFW_KEY_LEFT_SHIFT) && Input::is_key_held(GLFW_KEY_D))
+		else if (!inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_held(GLFW_KEY_D))
 			movement_x += dt;
 
-		if (Input::is_key_held(GLFW_KEY_W))
+		if (inputSystem.is_key_held(GLFW_KEY_W))
 			movement_y += dt;
-		else if (Input::is_key_held(GLFW_KEY_S))
+		else if (inputSystem.is_key_held(GLFW_KEY_S))
 			movement_y -= dt;*/
 
 		// Create sprites
-		glm::vec2 mousePos{0}, centreOfScene{0}, mouseScenePos{0}, mouseToNDC{0}, worldSpace{0};
-		if (!Input::is_key_held(GLFW_KEY_LEFT_SHIFT) && Input::is_key_pressed(GLFW_KEY_C))
+		Math::Vec2 mousePos{ 0,0 };
+		glm::vec2 centreOfScene{0}, mouseScenePos{0}, mouseToNDC{0}, worldNDC{0};
+		if (!inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_C))
 		{
 			SpriteRenderer* sprite = new SpriteRenderer;
-			Copium::Editor::EditorSystem* editor = Copium::Editor::EditorSystem::Instance();
+			Copium::EditorSystem* editor = Copium::EditorSystem::Instance();
 			glm::vec2 scenePos = editor->get_scene_view()->get_position();
 			glm::vec2 sceneDim = editor->get_scene_view()->get_dimension();
 			glm::vec2 cameraPos = editor->get_camera()->get_position();
 			float zoom = editor->get_camera()->get_zoom();
 			// Mouse to scene view conversion
-			mousePos = { Input::get_mouse_position().first , Input::get_mouse_position().second };
+			mousePos = inputSystem.get_mouseposition();
 			centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
 			mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
 			mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
 			mouseToNDC *= zoom;
-			worldSpace = { mouseToNDC.x + cameraPos.x, mouseToNDC.y + cameraPos.y };
+			worldNDC = { mouseToNDC.x + cameraPos.x, mouseToNDC.y + cameraPos.y };
 
-			glm::vec3 pos = glm::vec3(worldSpace, 0.f);
+			glm::vec3 pos = glm::vec3(worldNDC, 0.f);
 
 			sprite->set_position(pos);
 			
@@ -120,7 +120,7 @@ namespace Copium::Graphics
 			
 		}
 
-		if (Input::is_key_held(GLFW_KEY_LEFT_SHIFT) && Input::is_key_pressed(GLFW_KEY_C))
+		if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_C))
 		{
 			massSpawn = !massSpawn;
 		}
@@ -145,35 +145,35 @@ namespace Copium::Graphics
 
 		/*PRINT("Mouse position: " << mousePos.x << ", " << mousePos.y);
 		PRINT("Centre position: " << centreOfScene.x << ", " << centreOfScene.y);
-		PRINT("NDC position: " << mouseToNDC.x << ", " << mouseToNDC.y);
-		PRINT("World space: " << worldSpace.x << ", " << worldSpace.y);*/
+		PRINT("Mouse NDC position: " << mouseToNDC.x << ", " << mouseToNDC.y);
+		PRINT("World NDC position: " << worldNDC.x << ", " << worldNDC.y);*/
 
-		if (Input::is_key_pressed(GLFW_KEY_Y))
+		if (inputSystem.is_key_pressed(GLFW_KEY_Y))
 		{
 			PRINT("Number of sprites: " << sprites.size());
 		}
 
-		if (Input::is_key_held(GLFW_KEY_LEFT_SHIFT) && Input::is_key_pressed(GLFW_KEY_D))
+		if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_D))
 		{
 			debugMode = !debugMode;
 		}
 		
-		/*if (Input::is_key_held(GLFW_KEY_Z) && Input::is_key_held(GLFW_KEY_LEFT_SHIFT))
+		/*if (inputSystem.is_key_held(GLFW_KEY_Z) && inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT))
 		{
 			size_x -= dt;
 			size_y -= dt;
 		}
-		else if (Input::is_key_held(GLFW_KEY_Z))
+		else if (inputSystem.is_key_held(GLFW_KEY_Z))
 		{
 			size_x += dt;
 			size_y += dt;
 		}*/
 
-		/*if (Input::is_key_held(GLFW_KEY_R) && Input::is_key_held(GLFW_KEY_LEFT_SHIFT))
+		/*if (inputSystem.is_key_held(GLFW_KEY_R) && inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT))
 		{
 			rotate -= dt * 75;
 		}
-		else if (Input::is_key_held(GLFW_KEY_R))
+		else if (inputSystem.is_key_held(GLFW_KEY_R))
 		{
 			rotate += dt * 75;
 		}*/
@@ -229,27 +229,19 @@ namespace Copium::Graphics
 
 	}
 
-	// Load a texture into the game
-	void GraphicsSystem::load_texture(const std::string & _filePath)
+	// parse all textures into the game
+	void GraphicsSystem::parse_textures()
 	{
+		Copium::AssetsSystem* assets = Copium::AssetsSystem::Instance();
+		
 		// Check for texture slots
 		COPIUM_ASSERT(textureSlotIndex == maxTextures, "Max textures reached! Replace old textures!!");
 
-		// Generate texture
-		Texture texture(_filePath);
-
-		// Ensure its not a repeated texture
-		for (GLuint i = 1; i < textureSlotIndex; i++)
-		{
-			COPIUM_ASSERT(textureSlots[i] == texture.get_object_id(), "Duplicate textures!!");
-		}
-
 		// Assign the slot to the texture
-		textureSlots[textureSlotIndex++] = texture.get_object_id();
-
-		// Store the texture
-		textures.push_back(texture);
-		//PRINT("Texture: " << texture.get_object_id() << " loaded into slot: " << textureSlotIndex - 1);
+		for (GLuint i = 0; i < assets->get_textures()->size(); i++)
+		{
+			textureSlots[textureSlotIndex++] = assets->get_textures()[0][i].get_object_id();
+		}
 	}
 	
 	// Renders the objects in the engine in batches
@@ -257,10 +249,12 @@ namespace Copium::Graphics
 	{
 		// Binds the framebuffer
 		framebuffer.bind();
-
+		//glEnable(GL_DEPTH_TEST);
+		
 		// Clear the screen
 		glClearColor(0.f, 0.f, 0.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Draw the world using batch rendering
 		draw_world();
@@ -336,12 +330,13 @@ namespace Copium::Graphics
 	// Draw the world
 	void GraphicsSystem::draw_world()
 	{
+		// Bean: Should be under draw editor, along with gizmos ( Maybe replace draw_debug_info with draw_editor)
 		// Grid
 		renderer.begin_batch();
 		glm::vec4 color = { 1.f, 1.f, 1.f, 0.2f };
 		float start = -100.f, end = -start;
 		float numDivision = 24.f, iteration = (end - start) / numDivision;
-		for (float i = start; i <= end; i += iteration)
+		for (float i = start; i < end + iteration; i += iteration)
 		{
 			renderer.draw_line({ i, start }, { i, end }, color);
 			renderer.draw_line({ start, i }, { end, i }, color);
@@ -371,11 +366,39 @@ namespace Copium::Graphics
 		// Background
 		// Bean: scale should be the scale of the object, 
 		// texture scale should be separate and derived from the image dimensions
-		//renderer.draw_quad({ 0.f, 0.f , 0.f }, { 3.84f, 2.16f }, 0.f, textures[4].get_object_id());
+		// Scale = image scale / default scale(1024)
+		Copium::AssetsSystem* assets = Copium::AssetsSystem::Instance();
+		renderer.draw_quad({ 0.f, 0.f, 0.f }, { 3.84f, 2.16f }, 0.f, assets->get_textures()[0][0].get_object_id());
 		
-		color = { 0.f, 0.f, 0.f, 1.f };
-		renderer.draw_quad({ 0.f, 0.f , 0.f}, { 0.3f, 0.3f }, 0.f, color);
+		color = { 0.1f, 1.f, 0.1f, 1.f };
+		glm::vec2 worldNDC{ 0 };
+		Copium::EditorSystem* editor = Copium::EditorSystem::Instance();
+		glm::vec2 cameraPos = editor->get_camera()->get_position();
+		float zoom = editor->get_camera()->get_zoom();
+		worldNDC = { cameraPos.x, cameraPos.y };
+		glm::vec2 scale = { 0.01f, 0.01f };
+		scale *= zoom;
 
+		//PRINT("World NDC position: " << worldNDC.x << ", " << worldNDC.y);
+		// Bean: Temporary green dot in the centre of the scene
+		renderer.draw_quad({ worldNDC.x, worldNDC.y , 1.f}, scale, 0.f, color);
+
+		/*
+			Bean Theory:
+			For each gameobject, check if it has a renderer component
+				If it does:
+					Check if it is active
+						If not: Continue
+					Check if it has a spriteID of not 0 (default)
+						If it does:
+							Render sprite with color
+						Else
+							Render default sprite (white texture) with color
+				Else
+					Continue
+
+			Bean: To replace the following code with the Theory
+		*/
 		for (size_t i = 0; i < sprites.size(); i++)
 		{
 			/*PRINT(i + 1 << " : Sprite Data: " << sprites[i]->get_position().x << "," << sprites[i]->get_position().y
@@ -388,12 +411,29 @@ namespace Copium::Graphics
 
 			sprites[i]->set_position(pos);
 			sprites[i]->set_size(size);
-			sprites[i]->bind_texture(&textures[i%3]);
+
+			// Bean: Set sprite id should be done in the editor or via deserialization
+			sprites[i]->set_sprite_id(assets->get_textures()[0][i % 4 + 1].get_object_id());
 
 			if(textureSelector == 5) // Alpha Colored Square
 				renderer.draw_quad(pos, { 0.1f, 0.1f }, rotate, sprites[i]->get_color());
 			else
-				renderer.draw_quad(pos, size, rotate, sprites[i]->get_texture()->get_object_id());
+				renderer.draw_quad(pos, size, rotate, sprites[i]->get_sprite_id());
+		}
+
+		// Theory WIP
+		Copium::NewSceneManager* sm = Copium::NewSceneManager::Instance();
+		Scene* scene = sm->get_current_scene();
+		for (GameObject* gameObject : scene->get_gameobjectvector())
+		{
+			Component* component = gameObject->getComponent(ComponentType::Renderer);
+			if (!component || !component->Enabled())
+				continue;
+			TransformComponent& t = gameObject->Transform();
+			RendererComponent * rc = reinterpret_cast<RendererComponent*>(component);
+			SpriteRenderer sr = rc->get_sprite_renderer();
+			glm::vec2 size(t.glmScale().x, t.glmScale().y);
+			renderer.draw_quad(t.glmPosition(), size, 0.f, sr.get_sprite_id());
 		}
 
 		renderer.end_batch();

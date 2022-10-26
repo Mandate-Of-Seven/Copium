@@ -26,7 +26,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "CopiumCore/system-interface.h"
 
-namespace Copium::Windows
+namespace Copium
 {
 	CLASS_SYSTEM(WindowsSystem)
 	{

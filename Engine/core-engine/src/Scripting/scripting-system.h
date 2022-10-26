@@ -17,68 +17,86 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #define SCRIPTING_SYSTEM_H
 #pragma once
 
-#include <mono/metadata/assembly.h>
-#include <mono/metadata/attrdefs.h>
-#include <mono/jit/jit.h>
-#include <thread>
-#include <filesystem>
-#include "Messaging/message-system.h"
-#include "Files/file-system.h"
-#include "CopiumCore/system-interface.h"
-#include "Windows/windows-system.h"
+#include "CopiumCore\system-interface.h"
+#include "Messaging\message-system.h"
+#include "Files\file-system.h"
 
-namespace Copium::Scripting
+#include <string>
+#include <unordered_map>
+
+extern "C"
 {
-	enum class Accessibility : unsigned char
-	{
-		None = 0,
-		Private = 1,
-		Internal = (1 << 1),
-		Protected = (1 << 2),
-		Public = (1 << 3)
-	};
+	typedef struct _MonoClass MonoClass;
+	typedef struct _MonoMethod MonoMethod;
+	typedef struct _MonoObject MonoObject;
+	typedef struct _MonoClassField MonoClassField;
+}
 
+namespace Copium
+{
 	enum class FieldType
 	{
-		None,
-		Vector2,
-		Vector3,
-		Vector4,
-		Float = MONO_TYPE_R4,
-		Integer = MONO_TYPE_I4,
-		UnsignedInteger = MONO_TYPE_U4,
-		String = MONO_TYPE_STRING
+		Float, Double,
+		Bool, Char, Byte, Short, Int, Long,
+		UByte, UShort, UInt, ULong,
+		Vector2, Vector3, None
 	};
 
-	/**************************************************************************/
-	/*!
-		\brief
-			Retrieves the type of field from monoType
-		\param mType
-			MonoType of field
-	*/
-	/**************************************************************************/
-	//static FieldType GetType(MonoType* mType)
-	//{
-	//	int typeCode = mono_type_get_type(mType); //MonoTypeEnum
-	//	switch (typeCode)
-	//	{
-	//	case MONO_TYPE_VALUETYPE:
-	//	{
-	//		char* typeName = mono_type_get_name(mType);
-	//		if (strcmp(typeName, "Vector2") == 0) { return FieldType::Vector2; }
-	//		if (strcmp(typeName, "Vector3") == 0) { return FieldType::Vector3; }
-	//		if (strcmp(typeName, "Vector4") == 0) { return FieldType::Vector4; }
-	//	}
-	//	case MONO_TYPE_CLASS:
-	//		break;
-	//	default:
-	//		return FieldType(typeCode);
-	//		break;
-	//	}
-	//	PRINT("No type found");
-	//	return FieldType::None;
-	//}
+	struct Field
+	{
+		FieldType type;
+		std::string name;
+
+		MonoClassField* classField;
+	};
+
+	// ScriptField + data storage
+	struct FieldInstance
+	{
+		Field Field;
+
+		FieldInstance()
+		{
+			memset(m_Buffer, 0, sizeof(m_Buffer));
+		}
+
+		template<typename T>
+		T GetValue()
+		{
+			static_assert(sizeof(T) <= 16, "Type too large!");
+			return *(T*)m_Buffer;
+		}
+
+		template<typename T>
+		void SetValue(T value)
+		{
+			static_assert(sizeof(T) <= 16, "Type too large!");
+			memcpy(m_Buffer, &value, sizeof(T));
+		}
+	private:
+		uint8_t m_Buffer[16];
+	};
+
+	using FieldMap = std::unordered_map<std::string, FieldInstance>;
+
+	static std::unordered_map<std::string, FieldType> fieldTypeMap =
+	{
+		{ "System.Single", FieldType::Float },
+		{ "System.Double", FieldType::Double },
+		{ "System.Boolean", FieldType::Bool },
+		{ "System.Char", FieldType::Char },
+		{ "System.Int16", FieldType::Short },
+		{ "System.Int32", FieldType::Int },
+		{ "System.Int64", FieldType::Long },
+		{ "System.Byte", FieldType::Byte },
+		{ "System.UInt16", FieldType::UShort },
+		{ "System.UInt32", FieldType::UInt },
+		{ "System.UInt64", FieldType::ULong },
+
+		{ "CopiumEngine.Vector2", FieldType::Vector2 },
+		{ "CopiumEngine.Vector3", FieldType::Vector3 }
+	};
+
 
 	struct ScriptClass
 	{
@@ -91,16 +109,19 @@ namespace Copium::Scripting
 				Class to load functions from
 		*/
 		/**************************************************************************/
-		ScriptClass(MonoClass* _mClass);
-		MonoClass* mClass;
+		ScriptClass(const std::string& _name, MonoClass* _mClass);
+		const		std::string name;
+		MonoClass*	mClass;
 		MonoMethod* mAwake;
 		MonoMethod* mStart;
 		MonoMethod* mUpdate;
 		MonoMethod* mLateUpdate;
 		MonoMethod* mOnCollisionEnter;
+		MonoMethod* mOnCreate;
+		std::map<std::string, Field> mFields;
 	};
 
-	CLASS_SYSTEM(ScriptingSystem)
+	CLASS_SYSTEM(ScriptingSystem), IReceiver
 	{
 	public:
 		/**************************************************************************/
@@ -146,7 +167,7 @@ namespace Copium::Scripting
 				Shared pointer to a ScriptClass
 		*/
 		/**************************************************************************/
-		std::shared_ptr<ScriptClass> getScriptClass(const char* _name);
+		ScriptClass* getScriptClass(const std::string & _name);
 
 		/**************************************************************************/
 		/*!
@@ -158,7 +179,9 @@ namespace Copium::Scripting
 				Pointer to the clone
 		*/
 		/**************************************************************************/
-		MonoObject* createMonoObject(MonoClass * mClass);
+		MonoObject* instantiateClass(MonoClass * mClass);
+
+
 
 		/**************************************************************************/
 		/*!
@@ -176,10 +199,19 @@ namespace Copium::Scripting
 		/**************************************************************************/
 		void shutdownMono();
 
-		void invoke(MonoObject * mObj, MonoMethod * mMethod);
+		void invoke(MonoObject * mObj, MonoMethod * mMethod, void** params = nullptr);
 
-		void handleMessage(Message::MESSAGE_TYPE mType);
+		void handleMessage(MESSAGE_TYPE mType);
+
+		void reflectGameObject(uint64_t _ID);
+
+		void loadAssemblyClasses();
+
+
+		const std::unordered_map<std::string, ScriptClass*>& getScriptClassMap();
 	private:
+		void updateScriptClasses();
+
 		/**************************************************************************/
 		/*!
 			\brief
@@ -233,25 +265,8 @@ namespace Copium::Scripting
 		*/
 		/**************************************************************************/
 		bool scriptIsLoaded(const std::filesystem::path& filePath);
-		std::vector<std::shared_ptr<ScriptClass>> scriptClasses;
-		MonoDomain* mRootDomain{ nullptr };		//JIT RUNTIME DOMAIN
-		MonoDomain* mAppDomain{ nullptr };		//APP DOMAIN
-		MonoAssembly* mCoreAssembly{ nullptr };	//ASSEMBLY OF SCRIPTS.DLL
-		MonoImage* mAssemblyImage{ nullptr };	//LOADED IMAGE OF SCRIPTS.DLL
-		std::list<Files::File>& scriptFiles;
+		std::unordered_map<std::string, ScriptClass*> scriptClassMap;
+		std::list<File>& scriptFiles;
 	};
-
-	/**************************************************************************/
-	/*!
-		\brief
-			Gets the accessibility of a monoField
-		\param field
-			Monofield to check
-		\return
-			Enum of MonoAccessibility
-			
-	*/
-	/**************************************************************************/
-	unsigned char GetFieldAccessibility(MonoClassField* field);
 }
 #endif // !SCRIPTING_SYSTEM_H

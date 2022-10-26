@@ -266,7 +266,7 @@ int deserialize_scene(const std::string& _filename, Scene* _scene)
 			{
 				ComponentID newID{0};
 				ifs.read((char*)newID, sizeof(ComponentID));
-				tmp->addComponent((Component::Type)newID);
+				tmp->addComponent((ComponentType)newID);
 			}
 		}
 		//--------------------------------------------------------
@@ -346,7 +346,7 @@ int deserialize_scene(const std::string& _filename, Scene* _scene)
 					{
 						ComponentID newID{0};
 						ifs.read((char*)newID, sizeof(ComponentID));
-						tmp->addComponent((Component::Type)newID);
+						tmp->addComponent((ComponentType)newID);
 					}
 				}
 

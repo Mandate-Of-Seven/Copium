@@ -19,7 +19,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <thread>
 #include <utility>
 
-namespace Copium::Thread
+namespace Copium
 {
 	CLASS_SYSTEM(ThreadSystem)	{
 	public:
@@ -79,7 +79,7 @@ namespace Copium::Thread
 				Tracks when to quit and exit all threads
 		*/
 		/*******************************************************************************/
-		void handleMessage(Message::MESSAGE_TYPE);
+		void handleMessage(MESSAGE_TYPE);
 	private:
 		std::vector<std::thread*> threads;
 		bool quit = false;
