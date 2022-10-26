@@ -32,7 +32,6 @@ using GameObjectID = uint64_t;
 class GameObject final : public Copium::IReceiver
 {
 private:
-    GameObjectID id;                    //Global ID for gameObjects
     GameObjectID parentid;
     static GameObjectID count;
     std::list<Component*> components;   //Components for gameObject
@@ -42,6 +41,7 @@ private:
     std::list<GameObject*> children;    //List of pointers to this gameObject's children
 
 public:
+    const GameObjectID id;                    //Global ID for gameObjects
 
     /***************************************************************************/
     /*!
@@ -158,32 +158,6 @@ public:
     */
     /*******************************************************************************/
     std::string get_name() const;
-
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Sets the ID of the GameObject
-
-    \param	_id
-        the new ID to be set
-
-    \return
-        void
-    */
-    /*******************************************************************************/
-    /*void set_id(GameObjectID& _id);*/
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Gets the ID of the GameObject
-
-    \return
-        the ID of the GameObject
-    */
-    /*******************************************************************************/
-    GameObjectID get_id() const;
 
     /*******************************************************************************
     /*!

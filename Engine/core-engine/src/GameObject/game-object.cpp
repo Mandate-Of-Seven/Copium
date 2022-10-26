@@ -50,10 +50,11 @@ GameObject::GameObject
 (Copium::Math::Vec3 _position, Copium::Math::Vec3 _rotation, Copium::Math::Vec3 _scale)
     : 
     name{ defaultGameObjName }, parent{nullptr}, parentid{0}, 
-    transform(*this,_position, _rotation, _scale)
+    transform(*this, _position, _rotation, _scale), id{count++}
 {
-    id = count++;
     messageSystem.subscribe(Copium::MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
+    Copium::MESSAGE_CONTAINER::reflectCsGameObject.ID = id;
+    messageSystem.dispatch(Copium::MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
     PRINT("GAMEOBJECT ID CONSTRUCTED: " << id);
 }
 
@@ -165,9 +166,6 @@ TransformComponent& GameObject::Transform()
 void GameObject::set_name(const std::string& _name){ name = _name; }
 std::string GameObject::get_name() const{ return name; }
 
-//void GameObject::set_id(GameObjectID& _id) { id = _id; }
-GameObjectID GameObject::get_id() const { return id; }
-
 void GameObject::set_ppid(GameObjectID& _id) { parentid = _id; }
 GameObjectID GameObject::get_ppid() const { return parentid; }
 
@@ -230,8 +228,6 @@ bool GameObject::deattach_child(GameObject* _child)
 bool GameObject::deserialize(rapidjson::Value& _value) {
     if (!_value.HasMember("ID"))
         return false;
-    
-     id = _value["ID"].GetInt();
 
     if (!_value.HasMember("Name"))
         return false;

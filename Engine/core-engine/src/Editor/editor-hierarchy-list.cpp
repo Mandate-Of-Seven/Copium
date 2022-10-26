@@ -131,7 +131,7 @@ namespace Window::Hierarchy
 			if (!isSelected)
 			{
 				std::cout << _go.get_name() << " is selected\n";
-				_selected = _go.get_id();
+				_selected = _go.id;
 				isSelected = true;
 				Copium::NewSceneManager::Instance()->set_selected_gameobject(&_go);
 			}

@@ -41,12 +41,8 @@ namespace Copium
 		if (pScriptClass != nullptr)
 		{
 			mObject = sS.instantiateClass(pScriptClass->mClass);
-			GameObjectID id = gameObj.get_id();
+			GameObjectID id = gameObj.id;
 			void* param = &id;
-			if (!pScriptClass->mOnCreate)
-			{
-				PRINT("ON CREATE DOES NOT EXIST");
-			}
 			sS.invoke(mObject, pScriptClass->mOnCreate, &param);
 		}
 	}
@@ -67,6 +63,8 @@ namespace Copium
 	{
 		name = _name;
 		pScriptClass = sS.getScriptClass(name);
+		//if (pScriptClass)
+		//	PRINT("NAME CALLED BY NAME(): " << pScriptClass->name);
 		instantiate();
 	}
 

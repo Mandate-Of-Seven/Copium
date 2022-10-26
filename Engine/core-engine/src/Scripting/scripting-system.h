@@ -110,7 +110,7 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		ScriptClass(const std::string& _name, MonoClass* _mClass);
-		const		std::string& name;
+		const		std::string name;
 		MonoClass*	mClass;
 		MonoMethod* mAwake;
 		MonoMethod* mStart;
@@ -181,6 +181,8 @@ namespace Copium
 		/**************************************************************************/
 		MonoObject* instantiateClass(MonoClass * mClass);
 
+
+
 		/**************************************************************************/
 		/*!
 			\brief
@@ -204,6 +206,9 @@ namespace Copium
 		void reflectGameObject(uint64_t _ID);
 
 		void loadAssemblyClasses();
+
+
+		const std::unordered_map<std::string, ScriptClass*>& getScriptClassMap();
 	private:
 		void updateScriptClasses();
 

@@ -107,6 +107,7 @@ namespace Copium
 
 		ScriptClass* pScriptClass;
 		MonoObject* mObject;
+		MonoObject* mGameObject;
 		std::string name;
 		static ScriptingSystem& sS;
     };

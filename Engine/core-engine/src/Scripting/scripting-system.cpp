@@ -216,6 +216,11 @@ namespace Copium
 		return pScriptClass;
 	}
 
+	const std::unordered_map<std::string, ScriptClass*>& ScriptingSystem::getScriptClassMap()
+	{
+		return scriptClassMap;
+	}
+
 	void ScriptingSystem::updateScriptClasses()
 	{
 		using nameToClassIt = std::unordered_map<std::string, ScriptClass*>::iterator;
@@ -291,7 +296,7 @@ namespace Copium
 
 	void ScriptingSystem::invoke(MonoObject* mObj, MonoMethod* mMethod, void** params)
 	{
-		if (mObj && mMethod)
+		if (mObj && mMethod && mAppDomain)
 		{
 			mono_runtime_invoke(mMethod, mObj, params, nullptr);
 		}
@@ -376,6 +381,8 @@ namespace Copium
 
 	void ScriptingSystem::reflectGameObject(uint64_t _ID)
 	{
+		if (!mAssemblyImage)
+			return;
 		MonoMethod* mSetID = mono_class_get_method_from_name(mGameObject, "setID", 1);
 		MonoObject* mInstance = instantiateClass(mGameObject);
 		void* param = &_ID;

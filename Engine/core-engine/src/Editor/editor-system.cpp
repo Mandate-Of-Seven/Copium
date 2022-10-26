@@ -18,7 +18,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Editor/editor-sceneview.h"
 #include "GameObject/game-object.h"
 #include "Editor/inspector.h"
-#include "Editor/ConsoleLog.h"
+#include "Editor/editor-consolelog.h"
 #include "Editor/editor-hierarchy-list.h"
 
 namespace Copium
@@ -166,6 +166,7 @@ namespace Copium
             //Call all the editor layers updates here
             Window::Inspector::update();
             Window::EditorConsole::update();
+			Window::Hierarchy::update();
             sceneView.update();
 
 			// demo update

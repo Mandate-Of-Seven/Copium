@@ -16,6 +16,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "pch.h"
 #include "Editor/inspector.h"
+#include "Scripting/scripting.h"
 
 // Bean: Remove once we can auto select gameobjects
 #include "SceneManager/sm.h"
@@ -30,12 +31,12 @@ namespace Window
 
 	namespace Inspector
 	{
-        
-
         bool isOpen;
         GameObject* selectedGameObject;
-        bool isAddingComponent = false;
+        bool isAddingScript;
+        bool isAddingComponent;
         char nameBuffer[128];
+        Copium::ScriptingSystem& scriptingSystem{ *Copium::ScriptingSystem::Instance() };
 
         void AlignForWidth(float width, float alignment = 0.5f)
         {
@@ -49,6 +50,8 @@ namespace Window
         void init()
         {
             selectedGameObject = nullptr;
+            isAddingScript = false;
+            isAddingComponent = false;
             ImGuiIO& io = ImGui::GetIO();
             io.Fonts->AddFontFromFileTTF("assets\\fonts\\bahnschrift.ttf", 32.f);
             isOpen = true;
@@ -92,17 +95,38 @@ namespace Window
             {
                 ImGui::Begin("Add Component",&isAddingComponent);
                 AlignForWidth(ImGui::GetWindowSize().x);
-                char buff[7]{' '};
-                ImGui::PushItemWidth(-1);
-                ImGui::InputText("Search", buff,7);
-                ImGui::PopItemWidth();
                 ImVec2 buttonSize = ImGui::GetWindowSize();
                 buttonSize.y *= (float) BUTTON_HEIGHT;
                 std::map<ComponentType, const std::string>::iterator it;
                 for (it = Component::componentMap.begin(); it != Component::componentMap.end(); ++it)
                 {
                     if (ImGui::Button(it->second.c_str(), buttonSize)) {
-                        selectedGameObject->addComponent(it->first);
+                        if (it->first == ComponentType::Script)
+                        {
+                            isAddingScript = true;
+                        }
+                        else
+                        {
+                            selectedGameObject->addComponent(it->first);
+                        }
+                        isAddingComponent = false;
+                        break;
+                    }
+                }
+                ImGui::End();
+            }
+
+            if (isAddingScript)
+            {
+                ImGui::Begin("Add Script", &isAddingComponent);
+                AlignForWidth(ImGui::GetWindowSize().x);
+                ImVec2 buttonSize = ImGui::GetWindowSize();
+                buttonSize.y *= (float)BUTTON_HEIGHT;
+                for (auto& nameToScriptClass : scriptingSystem.getScriptClassMap())
+                {
+                    const std::string& name { nameToScriptClass.first };
+                    if (ImGui::Button(name.c_str(), buttonSize)) {
+                        selectedGameObject->addComponent<Copium::ScriptComponent>().Name(name);
                     }
                 }
                 ImGui::End();
