@@ -202,7 +202,7 @@ namespace Copium::Graphics
 			The font to draw
 		*/
 		/***************************************************************************/
-		void draw_text(const glm::vec3& _position, const glm::vec4& _color, GLuint _fontID);
+		void draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float _scale, GLuint _fontID);
 
 		// Accessing Properties
 
@@ -296,6 +296,7 @@ namespace Copium::Graphics
 
 		glm::vec4 quadVertexPosition[4];
 		glm::vec2 quadTextCoord[4];
+		glm::vec2 textTextCoord[6];
 
 		GraphicsSystem* graphics = nullptr; // A pointer to the instance of graphics system
 	};

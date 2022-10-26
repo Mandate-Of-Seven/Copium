@@ -19,7 +19,7 @@ namespace Copium
 {
 	RendererComponent::RendererComponent() :Component(Type::SpriteRenderer)
 	{
-		PRINT("\tRenderer Component constructed");
+		PRINT("Renderer Component constructed");
 	}
 
 	void RendererComponent::deserialize(rapidjson::Value& _value)

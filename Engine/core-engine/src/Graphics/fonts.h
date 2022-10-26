@@ -40,6 +40,8 @@ namespace Copium::Graphics
 
 		void shutdown();
 
+		const std::map<char, Character>& get_characters() const { return characters; }
+
 	private:
 		std::map<char, Character> characters;
 

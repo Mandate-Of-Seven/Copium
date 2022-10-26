@@ -127,7 +127,7 @@ namespace Copium
 				rapidjson::Value& component = *iter;
 				if (component.HasMember("Type")) 
 				{
-					PRINT("Component: " << component["Type"].GetString());
+					PRINT("\nComponent: " << component["Type"].GetString());
 					Component* tmp = componentCreators[component["Type"].GetString()]->create();
 					go->Components().push_back(tmp);
 					tmp->deserialize(component);

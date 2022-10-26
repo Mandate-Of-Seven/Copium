@@ -21,6 +21,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include FT_FREETYPE_H
 
 #include "Graphics/graphics-system.h"
+#include "Editor/editor-system.h"
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Copium::Graphics
 {
@@ -31,13 +33,14 @@ namespace Copium::Graphics
 
 		FT_Face face;
 		COPIUM_ASSERT(FT_New_Face(ft, _font.c_str(), 0, &face), "Fail to load font");
-		
-		FT_Set_Pixel_Sizes(face, 0, 32);
+
+		FT_Set_Pixel_Sizes(face, 0, 256);
 
 		// Disable byte-alignment restriction
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-		for (unsigned char c = 0; c < 128; c++)
+		int i = 0;
+		for (unsigned char c = 0; c < 128; c++, i++)
 		{
 			// Load character glyph
 			COPIUM_ASSERT(FT_Load_Char(face, c, FT_LOAD_RENDER), "Fail to load glyph");
@@ -62,6 +65,7 @@ namespace Copium::Graphics
 				glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
 				static_cast<GLuint>(face->glyph->advance.x)
 			};
+
 			characters.insert(std::pair<char, Character>(c, character));
 		}
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -69,11 +73,13 @@ namespace Copium::Graphics
 		FT_Done_Face(face);
 		FT_Done_FreeType(ft);
 
+#if defined(DEBUG) | defined(_DEBUG)
 		size_t pos = _font.find_last_of('/');
 		size_t lastPos = _font.find_last_of('.');
 		size_t size = lastPos - pos;
 		std::string str = _font.substr(pos + 1, size - 1);
-		PRINT("\tFont " << str << " loaded...");
+		PRINT("Font " << str << " loaded...");
+#endif
 	}
 
 	void Font::setup_font_vao()
@@ -81,63 +87,109 @@ namespace Copium::Graphics
 		// Vertex Array Object
 		glCreateVertexArrays(1, &fontVertexArrayID);
 
-		// Quad Buffer Object
+		// Font Buffer Object
 		glCreateBuffers(1, &fontVertexBufferID);
-		glNamedBufferStorage(fontVertexArrayID, sizeof(float) * 6 * 4, nullptr, GL_DYNAMIC_STORAGE_BIT);
+		glNamedBufferStorage(fontVertexBufferID, 6 * sizeof(TextVertex), nullptr, GL_DYNAMIC_STORAGE_BIT);
 
 		glEnableVertexArrayAttrib(fontVertexArrayID, 0);
-		glVertexArrayAttribFormat(fontVertexArrayID, 0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float));
-		glVertexArrayAttribBinding(fontVertexArrayID, 0, 0);
+		glVertexArrayAttribFormat(fontVertexArrayID, 0, 3, GL_FLOAT, GL_FALSE, offsetof(TextVertex, pos));
+		glVertexArrayAttribBinding(fontVertexArrayID, 0, 2);
+
+		glEnableVertexArrayAttrib(fontVertexArrayID, 1);
+		glVertexArrayAttribFormat(fontVertexArrayID, 1, 4, GL_FLOAT, GL_FALSE, offsetof(TextVertex, color));
+		glVertexArrayAttribBinding(fontVertexArrayID, 1, 2);
+
+		glEnableVertexArrayAttrib(fontVertexArrayID, 2);
+		glVertexArrayAttribFormat(fontVertexArrayID, 2, 2, GL_FLOAT, GL_FALSE, offsetof(TextVertex, textCoord));
+		glVertexArrayAttribBinding(fontVertexArrayID, 2, 2);
+
+		/*glEnableVertexArrayAttrib(fontVertexArrayID, 3);
+		glVertexArrayAttribFormat(fontVertexArrayID, 3, 1, GL_FLOAT, GL_FALSE, offsetof(TextVertex, fontID));
+		glVertexArrayAttribBinding(fontVertexArrayID, 3, 2);*/
 	}
 
 	void Font::draw_text(std::string _text, const glm::vec3& _position, const glm::vec4& _color, GLfloat _scale, GLuint _fontID)
 	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 		Graphics::GraphicsSystem* graphics = Graphics::GraphicsSystem::Instance();
 		graphics->get_shader_program()[2].Use();
+
+		GLuint uProjection = glGetUniformLocation(
+			graphics->get_shader_program()[2].GetHandle(), "uViewProjection");
+
+		glm::mat4 projection = Copium::Editor::EditorSystem::Instance()->get_camera()->get_projection();
+		glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
+
 		glActiveTexture(GL_TEXTURE0);
 		glBindVertexArray(fontVertexArrayID);
 
 		float x = _position.x;
 		float y = _position.y;
 
+		glm::vec2 fontTextCoord[6] = {
+			glm::vec2(0.f, 0.f),
+			glm::vec2(0.f, 1.f),
+			glm::vec2(1.f, 1.f),
+			glm::vec2(0.f, 0.f),
+			glm::vec2(1.f, 1.f),
+			glm::vec2(1.f, 0.f)
+		};
+
+		/*float w = 0.f, h = 0.f, xpos = 0.f, ypos = 0.f;
+		glm::vec3 fontVertexPosition[6] = {
+			glm::vec3(xpos, ypos + h, 0.f),
+			glm::vec3(xpos, ypos, 0.f),
+			glm::vec3(xpos + w, ypos, 0.f),
+			glm::vec3(xpos, ypos + h, 0.f),
+			glm::vec3(xpos + w, ypos, 0.f),
+			glm::vec3(xpos + w, ypos + h, 0.f)
+		};*/
+
 		std::string::const_iterator c;
 		for (c = _text.begin(); c != _text.end(); c++)
 		{
 			Character ch = characters[*c];
 
-			float xpos = x + ch.bearing.x * _scale;
-			float ypos = y - (ch.size.y - ch.bearing.y) * _scale;
+			float xpos = x + ch.bearing.x * (_scale * 0.01f);
+			float ypos = y - (ch.size.y - ch.bearing.y) * (_scale * 0.01f);
 
-			float w = ch.size.x * _scale;
-			float h = ch.size.y * _scale;
+			float w = ch.size.x * (_scale * 0.01f);
+			float h = ch.size.y * (_scale * 0.01f);
 
 			// Update VBO for each character
-			float vertices[6][4] = {
-				{xpos		, ypos + h	, 0.f, 0.f},
-				{xpos		, ypos		, 0.f, 1.f},
-				{xpos + w	, ypos		, 1.f, 1.f},
+			TextVertex vertices[6];
+			vertices[0].pos = glm::vec3(xpos, ypos + h, 0.f);
+			vertices[1].pos = glm::vec3(xpos, ypos, 0.f);
+			vertices[2].pos = glm::vec3(xpos + w, ypos, 0.f);
+			vertices[3].pos = glm::vec3(xpos, ypos + h, 0.f);
+			vertices[4].pos = glm::vec3(xpos + w, ypos, 0.f);
+			vertices[5].pos = glm::vec3(xpos + w, ypos + h, 0.f);
 
-				{xpos		, ypos + h	, 0.f, 0.f},
-				{xpos + w	, ypos		, 1.f, 1.f},
-				{xpos + w	, ypos + h	, 1.f, 0.f}
-			};
+			for (int i = 0; i < 6; i++)
+			{
+				vertices[i].color = _color;
+				vertices[i].textCoord = fontTextCoord[i];
+			}
 
 			// Render glyph texture over quad
 			glBindTexture(GL_TEXTURE_2D, ch.textureID);
 
 			// Update content of VBO memory
-			// glBindBuffer(GL_ARRAY_BUFFER, fontVertexBufferID);
 			glNamedBufferSubData(fontVertexBufferID, 0, sizeof(vertices), vertices);
+			glVertexArrayVertexBuffer(fontVertexArrayID, 2, fontVertexBufferID, 0, sizeof(TextVertex));
 
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 
-			x += (ch.advance >> 6) * _scale; // Bitshift by 6 to get value in pixels
-
+			x += (ch.advance >> 6) * (_scale * 0.01f); // Bitshift by 6 to get value in pixels
 		}
 
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		graphics->get_shader_program()[2].UnUse();
+
+		glDisable(GL_BLEND);
 	}
 
 	void Font::shutdown()

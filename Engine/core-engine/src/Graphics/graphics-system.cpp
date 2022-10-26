@@ -38,6 +38,8 @@ namespace Copium::Graphics
 
 	void GraphicsSystem::init()
 	{
+		PRINT("\n---------------- Loading Graphics System ----------------\n");
+
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 		
 		// Setup Shaders
@@ -52,7 +54,13 @@ namespace Copium::Graphics
 
 		// Initialise Sub systems
 		renderer.init();
-		fontCorbel.load_font("Assets/fonts/corbel.ttf");
+
+		fonts[0].load_font("Assets/fonts/arial.ttf");
+		fonts[1].load_font("Assets/fonts/corbel.ttf");
+		fonts[2].load_font("Assets/fonts/Comfortaa-Regular.ttf");
+		
+		for (int i = 0; i < 3; i++)
+			fonts[i].setup_font_vao();
 
 		glm::vec2 size = Copium::Editor::EditorSystem::Instance()->get_scene_view()->get_dimension();
 		framebuffer.set_size((GLuint)size.x, (GLuint)size.y);
@@ -70,10 +78,10 @@ namespace Copium::Graphics
 		shaderProgram[0].UnUse();
 
 		// Bind fonts to text fragment shader
-		shaderProgram[2].Use();
-		loc = glGetUniformLocation(shaderProgram[2].GetHandle(), "uFonts");
+		/*shaderProgram[2].Use();
+		loc = glGetUniformLocation(shaderProgram[2].GetHandle(), "uFont");
 		glUniform1iv(loc, maxTextures, samplers);
-		shaderProgram[2].UnUse();
+		shaderProgram[2].UnUse();*/
 
 		// Parse all textures loaded into the engine into the graphics 
 		parse_textures();
@@ -82,13 +90,13 @@ namespace Copium::Graphics
 		//{
 		//	NewSceneManager::Instance()->get_gof().add_component_creator(RENDERER_CREATOR, new RendererCreator);
 		//}
-
+		PRINT("\n---------------- Graphics System Completed ----------------\n");
 	}
 
 	void GraphicsSystem::update()
 	{
-		//GLfloat dt = /*windowsSystem.get_delta_time();*/(GLfloat) Windows::WindowsSystem::Instance()->get_delta_time();
-		movement_x = movement_y = size_x = size_y = 0;
+		GLfloat dt = (GLfloat) Windows::WindowsSystem::Instance()->get_delta_time();
+		movement_x = movement_y = 0;
 
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -169,7 +177,7 @@ namespace Copium::Graphics
 			debugMode = !debugMode;
 		}
 		
-		/*if (Input::is_key_held(GLFW_KEY_Z) && Input::is_key_held(GLFW_KEY_LEFT_SHIFT))
+		if (Input::is_key_held(GLFW_KEY_Z) && Input::is_key_held(GLFW_KEY_LEFT_SHIFT))
 		{
 			size_x -= dt;
 			size_y -= dt;
@@ -178,7 +186,7 @@ namespace Copium::Graphics
 		{
 			size_x += dt;
 			size_y += dt;
-		}*/
+		}
 
 		/*if (Input::is_key_held(GLFW_KEY_R) && Input::is_key_held(GLFW_KEY_LEFT_SHIFT))
 		{
@@ -196,7 +204,9 @@ namespace Copium::Graphics
 
 	void GraphicsSystem::exit()
 	{
-		fontCorbel.shutdown();
+		for (int i = 0; i < 3; i++)
+			fonts[i].shutdown();
+
 		renderer.shutdown();
 		framebuffer.exit();
 
@@ -268,15 +278,19 @@ namespace Copium::Graphics
 		glClear(GL_COLOR_BUFFER_BIT);
 		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glm::vec3 position = { 0.f, 0.f, 0.f };
-		glm::vec4 color = { 255.f, 255.f, 255.f, 1.f };
-		fontCorbel.draw_text("Hello", position, color, 1.f, 0);
-
 		// Draw the world using batch rendering
 		draw_world();
 
 		if(debugMode)
 			draw_debug_info();
+
+		glm::vec3 position = { 0.f, 0.f, 0.f };
+		glm::vec4 color = { 1.f, 1.f, 1.f, 1.f };
+		fonts[1].draw_text("Corbel", position, color, 0.4f + size_x, 0);
+
+		position = { 0.f, 2.f, 0.f };
+		color = { 0.f, 1.f, 1.f, 1.f };
+		fonts[2].draw_text("Hello Comfortaa Here...", position, color, 0.6f + size_x, 0);
 
 		// Unbind the framebuffer to display renderable
 		// onto the image
@@ -458,6 +472,11 @@ namespace Copium::Graphics
 			}
 		}
 
+		// Bean : Testing Text
+		/*glm::vec3 position = { 0.f, -1.f, 0.f };
+		color = { 1.f, 1.f, 0.f, 1.f };
+		renderer.draw_text("Testing Arial", position, color, 0.1f, 0);*/
+		
 		renderer.end_batch();
 
 		renderer.flush();

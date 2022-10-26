@@ -166,9 +166,17 @@ namespace Copium::Graphics
 		glVertexArrayAttribFormat(textVertexArrayID, 2, 2, GL_FLOAT, GL_FALSE, offsetof(TextVertex, textCoord));
 		glVertexArrayAttribBinding(textVertexArrayID, 2, 2);
 
-		glEnableVertexArrayAttrib(textVertexArrayID, 3);
+		/*glEnableVertexArrayAttrib(textVertexArrayID, 3);
 		glVertexArrayAttribFormat(textVertexArrayID, 3, 1, GL_FLOAT, GL_FALSE, offsetof(TextVertex, fontID));
-		glVertexArrayAttribBinding(textVertexArrayID, 3, 2);
+		glVertexArrayAttribBinding(textVertexArrayID, 3, 2);*/
+
+		// Setup default text texture coordinates
+		textTextCoord[0] = { 0.f, 0.f };
+		textTextCoord[1] = { 0.f, 1.f };
+		textTextCoord[2] = { 1.f, 1.f };
+		textTextCoord[3] = { 0.f, 0.f };
+		textTextCoord[4] = { 1.f, 1.f };
+		textTextCoord[5] = { 1.f, 0.f };
 	}
 
 	void Renderer::shutdown()
@@ -274,9 +282,15 @@ namespace Copium::Graphics
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			graphics->get_shader_program()[2].Use();
+			glActiveTexture(GL_TEXTURE0);
 			glBindVertexArray(textVertexArrayID);
 
 			// Bind texture unit
+			// 
+			
+			// Cannot just bind texture because there is multiple textures in this one draw
+			// Requires an array of textures and reference from there
+			//glBindTexture(GL_TEXTURE_2D, ch.textureID);
 
 			// Bean: Matrix assignment to be placed somewhere else
 			GLuint uProjection = glGetUniformLocation(
@@ -287,10 +301,12 @@ namespace Copium::Graphics
 
 			// End of matrix assignment
 
+			// Draws the entire text out
 			glDrawArrays(GL_TRIANGLES, 0, textVertexCount);
 			drawCount++;
 
 			glBindVertexArray(0);
+			glBindTexture(GL_TEXTURE_2D, 0);
 			graphics->get_shader_program()[2].UnUse();
 			glDisable(GL_BLEND);
 		}
@@ -324,7 +340,7 @@ namespace Copium::Graphics
 			glBindVertexArray(textVertexArrayID);
 			GLsizeiptr size = (GLuint*)textBufferPtr - (GLuint*)textBuffer;
 			glNamedBufferSubData(textVertexBufferID, 0, sizeof(float) * size, textBuffer);
-			glVertexArrayVertexBuffer(textVertexArrayID, 1, textVertexBufferID, 0, sizeof(QuadVertex));
+			glVertexArrayVertexBuffer(textVertexArrayID, 2, textVertexBufferID, 0, sizeof(TextVertex));
 			glBindVertexArray(0);
 		}
 		
@@ -465,10 +481,8 @@ namespace Copium::Graphics
 		lineVertexCount += 2;
 	}
 
-	void Renderer::draw_text(const glm::vec3& _position, const glm::vec4& _color, GLuint _fontID)
+	void Renderer::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float _scale, GLuint _fontID)
 	{
-		glm::mat4 translate = glm::translate(glm::mat4(1.f), _position);
-
 		if (textVertexCount >= maxTextCount)
 		{
 			end_batch();
@@ -476,16 +490,46 @@ namespace Copium::Graphics
 			begin_batch();
 		}
 
-		for (GLint i = 0; i < 4; i++)
-		{
-			textBufferPtr->pos = translate * quadVertexPosition[i];
-			textBufferPtr->textCoord = quadTextCoord[i];
-			textBufferPtr->color = _color;
-			textBufferPtr->fontID = _fontID;
-			textBufferPtr++;
-		}
+		float x = _position.x;
+		float y = _position.y;
 
-		textVertexCount += 4;
+		Font font = graphics->get_font(_fontID);
+		std::map<char, Character> chars = font.get_characters();
+		
+		std::string::const_iterator c;
+		for (c = _text.begin(); c != _text.end(); c++)
+		{
+			Character ch = chars[*c];
+
+			float xpos = x + ch.bearing.x * (_scale * 0.01f);
+			float ypos = y - (ch.size.y - ch.bearing.y) * (_scale * 0.01f);
+
+			float w = ch.size.x * (_scale * 0.01f);
+			float h = ch.size.y * (_scale * 0.01f);
+
+			// Update VBO for each character
+			glm::vec3 textVertexPosition[6] = {
+				glm::vec3(xpos, ypos + h, 0.f),
+				glm::vec3(xpos, ypos, 0.f),
+				glm::vec3(xpos + w, ypos, 0.f),
+				glm::vec3(xpos, ypos + h, 0.f),
+				glm::vec3(xpos + w, ypos, 0.f),
+				glm::vec3(xpos + w, ypos + h, 0.f)
+			};
+
+			for (GLint i = 0; i < 6; i++)
+			{
+				textBufferPtr->pos = textVertexPosition[i];
+				textBufferPtr->textCoord = textTextCoord[i];
+				textBufferPtr->color = _color;
+				textBufferPtr++;
+			}
+
+			x += (ch.advance >> 6) * (_scale * 0.01f); // Bitshift by 6 to get value in pixels
+		
+			textVertexCount += 6;
+		}
+		
 		textCount++;
 	}
 }

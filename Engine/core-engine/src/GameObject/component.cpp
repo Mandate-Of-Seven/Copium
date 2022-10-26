@@ -49,17 +49,17 @@ void Component::Enabled(bool _enabled) noexcept { enabled = _enabled; }
 
 ColliderComponent::ColliderComponent() :Component(Type::Collider)
 {
-    PRINT("\tCollider Component constructed");
+    PRINT("Collider Component constructed");
 }
 
 AnimatorComponent::AnimatorComponent() :Component(Type::Animator) 
 { 
-    PRINT("\tAnimator Component constructed");
+    PRINT("Animator Component constructed");
 }
 
 TransformComponent::TransformComponent() :Component(Type::Transform)
 { 
-    PRINT("\tTransform Component constructed");
+    PRINT("Transform Component constructed");
 }
 
 void TransformComponent::deserialize(rapidjson::Value& _value)

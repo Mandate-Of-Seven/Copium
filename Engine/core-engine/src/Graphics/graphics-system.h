@@ -91,6 +91,7 @@ namespace Copium::Graphics
 		void add_sprite(SpriteRenderer* _sprite) { sprites.push_back(_sprite); }
 		std::vector<SpriteRenderer*> const get_sprites() { return sprites; }
 		Framebuffer* get_framebuffer() { return &framebuffer; }
+		const Font& get_font(GLuint _fontID) const { return fonts[_fontID]; }
 
 #pragma region MemberFunctions
 	private:
@@ -178,7 +179,7 @@ namespace Copium::Graphics
 
 		Renderer renderer;
 		Framebuffer framebuffer;
-		Font fontCorbel;
+		Font fonts[16];
 
 		bool debugMode = false;
 #pragma endregion DataMembers
