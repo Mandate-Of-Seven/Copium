@@ -71,24 +71,24 @@ namespace Copium
 			
 			if (inputSystem.is_key_pressed(GLFW_KEY_I)) // move up
 			{
-				boxes[0]->add_acc(Math::Vec2{ 0.0,0.05 });
+				boxes[0]->add_acc(Math::Vec2{ 0.0f,0.05f });
 			}
 			if (inputSystem.is_key_pressed(GLFW_KEY_K)) // move down
 			{
-				boxes[0]->add_acc(Math::Vec2{ 0.0,-0.05 });
+				boxes[0]->add_acc(Math::Vec2{ 0.0f,-0.05f });
 			}
 			if (inputSystem.is_key_pressed(GLFW_KEY_L)) // move left
 			{
-				boxes[0]->add_acc(Math::Vec2{ 0.05,0.0 });
+				boxes[0]->add_acc(Math::Vec2{ 0.05f,0.0f });
 			}
 			if (inputSystem.is_key_pressed(GLFW_KEY_J)) // move right
 			{
-				boxes[0]->add_acc(Math::Vec2{ -0.05,0.0 });
+				boxes[0]->add_acc(Math::Vec2{ -0.05f,0.0f });
 			}
 			if (inputSystem.is_key_pressed(GLFW_KEY_O)) //reset acceleration and velocity values
 			{
-				boxes[0]->set_acc(Math::Vec2{ 0.0,0.0 });
-				boxes[0]->set_vel(Math::Vec2{ 0.0,0.0 });
+				boxes[0]->set_acc(Math::Vec2{ 0.0f,0.0f });
+				boxes[0]->set_vel(Math::Vec2{ 0.0f,0.0f });
 			}
 		
 		}
