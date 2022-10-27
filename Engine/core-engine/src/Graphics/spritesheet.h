@@ -1,27 +1,26 @@
 /*!***************************************************************************************
-\file			textures.h
+\file			spritesheet.h
 \project
 \author			Sean Ngo
 
 \par			Course: GAM200
 \par			Section:
-\date			22/09/2022
+\date			27/10/2022
 
 \brief
-	This file holds the declaration of 2D textures and its data which is then parse into 
-	sprites or into the Graphics system.
+	This file holds the declaration of the spritesheet.
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
-#ifndef TEXTURES_H
-#define TEXTURES_H
 
-#include <glm/glm.hpp>
-#include <string>
+#ifndef SPRITESHEET_H
+#define SPRITESHEET_H
+
+#include "Graphics/textures.h"
 
 namespace Copium::Graphics
 {
-	class Texture
+	class Spritesheet : public Texture
 	{
 	public:
 		// Constructors
@@ -31,7 +30,7 @@ namespace Copium::Graphics
 			Generates the texture based on the file path using stbi_load
 		*/
 		/***************************************************************************/
-		Texture(const std::string& _filePath);
+		Spritesheet(const std::string& _filePath, const unsigned int _xDivisor, const unsigned int _yDivisor);
 
 		/***************************************************************************/
 		/*!
@@ -39,22 +38,16 @@ namespace Copium::Graphics
 			Delete texture object id
 		*/
 		/***************************************************************************/
-		~Texture();
+		~Spritesheet();
+	private:
+		unsigned int xColumns; // Minimum 1 column
+		unsigned int yRows; // Minimum 1 row
 
-		unsigned int get_width() { return width; }
-		unsigned int get_height() { return height; }
-		unsigned int get_object_id() { return textureObjectID; }
-		std::string& get_file_path() { return filePath; }
-
-	protected:
-		std::string filePath;
-		unsigned int width = 0;
-		unsigned int height = 0;
-		unsigned int textureObjectID = 0; // To store the texture
-
-		unsigned int internalFormat = 0;
-		unsigned int dataFormat = 0;
+		std::vector<glm::vec2> textureOffsets; // Offsets starts from 0,0 to 1,1
+		// E.g. if column = 4, and row = 1, textureOffsets[0] = {0,0}, textureOffsets[1] = {0.25,0}
+		// textureOffsets[2] = {0.5,0}, textureOffsets[3] = {0.75,0}
 	};
 }
 
-#endif // !TEXTURES_H
+#endif // !SPRITESHEET_H
+

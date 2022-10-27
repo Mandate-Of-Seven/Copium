@@ -288,8 +288,36 @@ namespace Copium::Graphics
 		glm::vec4 color = { 1.f, 1.f, 1.f, 1.f };
 		fonts[1].draw_text("Corbel", position, color, 0.4f + size_x, 0);
 
+
+		float red = 0.f, green = 1.f;
+		static float timer = 0.f; 
+		timer += (float)Windows::WindowsSystem::Instance()->get_delta_time();
+		static bool switcher = false;
+
+		if (timer >= 1.f && switcher)
+		{
+			timer = 0.f;
+			switcher = false;
+		}
+		else if (timer >= 1.f && !switcher)
+		{
+			timer = 0.f;
+			switcher = true;
+		}
+
+		if (switcher)
+		{
+			red = (0.1f * (1.0 - timer)) + (0.9f * timer);
+			green = (0.9f * (1.0 - timer)) + (0.1f * timer);
+		}
+		else
+		{
+			red = (0.9f * (1.0 - timer)) + (0.1f * timer);
+			green = (0.1f * (1.0 - timer)) + (0.9f * timer);
+		}
+
 		position = { 0.f, 2.f, 0.f };
-		color = { 0.f, 1.f, 1.f, 1.f };
+		color = { red, green, 1.f, 1.f };
 		fonts[2].draw_text("Hello Comfortaa Here...", position, color, 0.6f + size_x, 0);
 
 		// Unbind the framebuffer to display renderable

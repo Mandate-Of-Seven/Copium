@@ -183,15 +183,16 @@ namespace Copium::Editor
 		int scroll = (int) Input::get_mousescroll();
 		if (scroll)
 		{
-			zoomLevel -= scroll * 0.1f * get_zoom_speed(); // Zoom In
-
-			if (zoomLevel <= nearClip)
-				zoomLevel = nearClip;
-			if (zoomLevel >= farClip)
+			if (zoomLevel < 0.f)
+				zoomLevel = 0.f;
+			if (zoomLevel > farClip)
 				zoomLevel = farClip;
+
+			zoomLevel -= scroll * 0.1f * get_zoom_speed(); // Zoom In
 
 			update_ortho_projection(aspectRatio, zoomLevel);
 		}
+		//scroll = Input::get_mousescroll();
 	}
 
 	glm::vec3 EditorCamera::calculate_position()
@@ -232,7 +233,7 @@ namespace Copium::Editor
 	float EditorCamera::get_zoom_speed() const
 	{
 		float tempDistance = zoomLevel * 0.2f;
-		tempDistance = std::max(zoomLevel, nearClip); // Max distance is 0
+		tempDistance = std::max(zoomLevel, 0.f); // Max distance is 0
 		float speed = zoomLevel * zoomLevel;
 		speed = std::min(speed, 50.f); // The max speed currently is 50
 		return speed;
