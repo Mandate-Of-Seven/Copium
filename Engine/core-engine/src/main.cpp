@@ -171,21 +171,13 @@ static void init()
 /**************************************************************************/
 static void update()
 {
-    if (inputSystem.is_key_pressed(GLFW_KEY_1))
-    {
-        soundSystem.Play(zap, true, false);
-        std::cout << "Zap sound is being played\n";
-    }
-    if (inputSystem.is_key_pressed(GLFW_KEY_2))
-    {
-        soundSystem.Play(reeling, true, false);
-        std::cout << "Reeling sound is being played\n";
-    }
+   
     if (inputSystem.is_key_pressed(GLFW_KEY_E))
     {
         bool play = Copium::LogicSystem::Instance()->Play();
         Copium::LogicSystem::Instance()->Play(!play);
     }
+
     quitEngine();
 }
 

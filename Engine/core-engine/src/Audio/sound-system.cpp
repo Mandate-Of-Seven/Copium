@@ -16,6 +16,14 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "pch.h"
 #include "sound-system.h"
+#include "Windows/windows-system.h"
+#include "Windows/windows-input.h"
+
+
+namespace
+{
+	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
+}
 
 namespace Copium
 {
@@ -23,7 +31,7 @@ namespace Copium
 // Initialize sound system
 void SoundSystem::init()
 {
-
+	this->onlyUpdateOnPlay = true;
 	FMOD::System_Create(&soundSystem);
 	soundSystem->init(50, FMOD_INIT_NORMAL, NULL);
 	CheckVersion();
@@ -38,6 +46,16 @@ void SoundSystem::init()
 void SoundSystem::update()
 {
 	soundSystem->update();
+	if (inputSystem.is_key_pressed(GLFW_KEY_1))
+	{
+		Copium::SoundSystem::Instance()->Play(zap, true, false);
+		std::cout << "Zap sound is being played\n";
+	}
+	if (inputSystem.is_key_pressed(GLFW_KEY_2))
+	{
+		Copium::SoundSystem::Instance()->Play(reeling, true, false);
+		std::cout << "Reeling sound is being played\n";
+	}
 }
 
 void SoundSystem::exit()

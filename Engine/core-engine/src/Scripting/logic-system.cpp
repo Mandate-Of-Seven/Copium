@@ -18,6 +18,7 @@ namespace Copium
 	{
 		play = false;
 		gameObjects = nullptr;
+		this->onlyUpdateOnPlay = true;
 	}
 
 	void LogicSystem::update()

@@ -97,8 +97,9 @@ namespace Copium
         /**************************************************************************/
         virtual void exit()     = 0;
 
-        double updateTime;
-        double updateTimePercent;
+        double updateTime =0.0;
+        double updateTimePercent =0.0;
+        bool onlyUpdateOnPlay = false;
     };
 
 

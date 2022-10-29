@@ -29,6 +29,7 @@ namespace Copium
 	Copium::Collision::AABB floor = { (Math::Vec2{ -0.8,-0.55 }), (Math::Vec2{ 0.8,-0.45 }) }; //position of floor
 	void PhysicsSystem::init()
 	{
+		this->onlyUpdateOnPlay = true;
 	}
 	void PhysicsSystem::update()
 	{

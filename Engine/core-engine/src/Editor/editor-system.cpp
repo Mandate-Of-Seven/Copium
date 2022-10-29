@@ -20,11 +20,14 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Editor/inspector.h"
 #include "Editor/editor-consolelog.h"
 #include "Editor/editor-hierarchy-list.h"
+#include "CopiumCore/copium-core.h"
 
 namespace Copium
 {
 	// Our state
 	bool show_demo_window = true;
+	Copium::CopiumCore& copiumCore{ *Copium::CopiumCore::Instance() };
+
 
 	void EditorSystem::init()
 	{
@@ -149,6 +152,17 @@ namespace Copium
 					ImGui::EndMenu();
 				}
 
+				if (ImGui::BeginMenu("Preview"))
+				{
+					if (ImGui::MenuItem("Play Scene"))
+					{
+						printf("Toggling between play and preview\n");
+						copiumCore.toggle_inplaymode();
+					}
+
+					ImGui::EndMenu();
+				}
+
 				ImGui::EndMenuBar();
 			}
 
@@ -168,6 +182,7 @@ namespace Copium
             Window::EditorConsole::update();
 			Window::Hierarchy::update();
             sceneView.update();
+
 
 			// demo update
 			if (show_demo_window)

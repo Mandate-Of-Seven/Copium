@@ -82,7 +82,8 @@ namespace Copium
 		/**************************************************************************/
 		/*!
 		  \brief
-			Calls the update function of all the systems in vector systems
+			Calls the update function of all the systems in vector systems depending
+			if it should only be update in play mode or not
 		*/
 		/**************************************************************************/
 		void update()
@@ -91,10 +92,25 @@ namespace Copium
 			frc->update();
 			for (ISystem* pSystem : systems)
 			{
-				double startTime = glfwGetTime();
-				pSystem->update();
-				pSystem->updateTime = glfwGetTime() - startTime;
-				totalUpdateTime += pSystem->updateTime;
+				if (pSystem->onlyUpdateOnPlay && inPlayMode)
+				{
+					double startTime = glfwGetTime();
+					pSystem->update();
+					pSystem->updateTime = glfwGetTime() - startTime;
+					totalUpdateTime += pSystem->updateTime;
+				}
+				else if (pSystem->onlyUpdateOnPlay &&!inPlayMode)
+				{
+					//printf("Not in playmode \n");
+					continue;
+				}
+				else
+				{
+					double startTime = glfwGetTime();
+					pSystem->update();
+					pSystem->updateTime = glfwGetTime() - startTime;
+					totalUpdateTime += pSystem->updateTime;
+				}
 			}
 
 			if (displayPerformance)
@@ -121,7 +137,7 @@ namespace Copium
 		/**************************************************************************/
 		void exit()
 		{
-			for (int i = systems.size() - 1; i >= 0; --i)
+			for(int i = (int)systems.size() - 1; i >= 0; --i)
 			{
 				systems[i]->exit();
 			}
@@ -130,11 +146,14 @@ namespace Copium
 			frc = nullptr;
 		}
 
+		// getter /setters
 		void toggle_display_peformance() {displayPerformance = !displayPerformance;}
-		//bool get_display_peformance() {return displayPerformance}
+		void toggle_inplaymode() { inPlayMode = !inPlayMode; }
+		bool get_inplaymode() { return inPlayMode; }
 	private:
 		std::vector<ISystem*> systems;
 		FrameRateController* frc;
 		bool displayPerformance = false;
+		bool inPlayMode = false;
 	};
 }
