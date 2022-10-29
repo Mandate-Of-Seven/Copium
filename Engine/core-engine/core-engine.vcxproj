@@ -181,8 +181,9 @@
     <ClInclude Include="src\GameObject\renderer-component.h" />
     <ClInclude Include="src\Graphics\camera.h" />
     <ClInclude Include="src\Graphics\sprite-renderer.h" />
+    <ClInclude Include="src\Graphics\ui-components.h" />
     <ClInclude Include="src\SceneManager\sm.h" />
-    <ClInclude Include="src\Scripting\logic-system.h"/>
+    <ClInclude Include="src\Scripting\logic-system.h" />
     <ClInclude Include="src\Scripting\scriptWrappers.h" />
     <ClInclude Include="src\Utilities\thread-system.h" />
     <ClInclude Include="src\Physics\collider.h" />

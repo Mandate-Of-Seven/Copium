@@ -92,7 +92,7 @@ namespace Window::Hierarchy
 			if (ImGui::TreeNodeEx(currentScene->get_name().c_str(), rootFlags))
 			{
 				bool isSelected = false;
-
+				GameObjectID selectedID = 0;
 				for (size_t i{ 0 }; i < roots.size(); ++i)
 				{
 					isSelected = display_gameobject_advanced(*roots[i], selectedID);
@@ -146,7 +146,7 @@ namespace Window::Hierarchy
 		if (!_go.is_parent())
 			baseFlags |= ImGuiTreeNodeFlags_Leaf;
 
-		if (_selected == _go.get_id())
+		if (_selected == _go.id)
 		{
 			baseFlags |= ImGuiTreeNodeFlags_Selected;
 		}
@@ -160,7 +160,7 @@ namespace Window::Hierarchy
 			if (!isSelected)
 			{
 				std::cout << _go.get_name() << " is selected\n";
-				_selected = _go.get_id();
+				_selected = _go.id;
 				isSelected = true;
 				Copium::NewSceneManager::Instance()->set_selected_gameobject(&_go);
 			}
