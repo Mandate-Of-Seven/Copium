@@ -52,6 +52,7 @@ namespace Copium
 				LoggingSystem::Instance(),
 				NewSceneManager::Instance(),
 				MessageSystem::Instance(),
+				SoundSystem::Instance()	,
 				FileSystem::Instance(),
 				AssetsSystem::Instance(),
 				InputSystem::Instance(),
@@ -59,7 +60,6 @@ namespace Copium
 				LogicSystem::Instance(),
 				PhysicsSystem::Instance(),
 				GraphicsSystem::Instance(),
-				SoundSystem::Instance()	,
 				ScriptingSystem::Instance(),
 				ThreadSystem::Instance()
 			};

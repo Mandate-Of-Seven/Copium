@@ -166,17 +166,6 @@ namespace Copium
 				ImGui::EndMenuBar();
 			}
 
-			//ImGui::DockBuilderRemoveNode(dockspace_id);
-			//ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace);
-			//ImGui::DockBuilderSetNodeSize(dockspace_id, { 1600,900 });
-
-			//ImGuiID mainID = dockspace_id;
-			//ImGuiID left = ImGui::DockBuilderSplitNode(mainID, ImGuiDir_Left, 0.2f, NULL, &mainID);
-			//ImGuiID btm = ImGui::DockBuilderSplitNode(mainID, ImGuiDir_Down, 0.50f, NULL, &mainID);
-			//ImGui::DockBuilderDockWindow("Console Log", btm);
-			//ImGui::DockBuilderDockWindow("Inspector", left);
-			//ImGui::DockBuilderFinish(mainID);
-
             //Call all the editor layers updates here
             Window::Inspector::update();
             Window::EditorConsole::update();

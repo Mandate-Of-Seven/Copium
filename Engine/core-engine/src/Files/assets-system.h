@@ -32,6 +32,8 @@ namespace Copium
 
 		void load_all_textures(std::list<std::string>& _path);
 
+		void load_all_audio(std::list<std::string>&_path);
+
 		std::vector<Copium::Texture>* get_textures() { return &textures; }
 
 	private:
