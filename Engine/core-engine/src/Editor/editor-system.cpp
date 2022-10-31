@@ -36,6 +36,9 @@ namespace Copium
 
 		// Only move window from title bar
 		io.ConfigWindowsMoveFromTitleBarOnly = true;
+
+		// Global Font Size
+		io.FontGlobalScale = 0.6f;
 		
 		ImGui::StyleColorsDark();
 		ImGui_ImplGlfw_InitForOpenGL(windowsSystem->get_window(), true);

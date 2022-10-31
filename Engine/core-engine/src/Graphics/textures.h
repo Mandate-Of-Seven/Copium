@@ -32,8 +32,6 @@ namespace Copium
 		*/
 		/***************************************************************************/
 		Texture(const std::string& _filePath);
-		
-		void init(const std::string& _filePath);
 
 		/***************************************************************************/
 		/*!
@@ -48,7 +46,7 @@ namespace Copium
 		unsigned int get_object_id() { return textureObjectID; }
 		std::string& get_file_path() { return filePath; }
 
-	private:
+	protected:
 		std::string filePath;
 		unsigned int width = 0;
 		unsigned int height = 0;

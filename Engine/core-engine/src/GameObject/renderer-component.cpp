@@ -19,7 +19,7 @@ namespace Copium
 {
 	RendererComponent::RendererComponent(GameObject& _gameObj) :Component(_gameObj,ComponentType::Renderer)
 	{
-		PRINT("\tRenderer Component constructed");
+		PRINT("Renderer Component constructed");
 	}
 
 	void RendererComponent::deserialize(rapidjson::Value& _value)
