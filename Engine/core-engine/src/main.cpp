@@ -183,8 +183,10 @@ static void update()
     {
         if (!Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack.empty())
         {
+            Copium::UndoRedo::Command* temp = Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack.top();
             Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack.top()->Undo(&Copium::NewSceneManager::Instance()->get_commandmanager()->redoStack);
             Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack.pop();
+            delete temp;
         }
         else
         {
@@ -198,8 +200,10 @@ static void update()
         
         if (!Copium::NewSceneManager::Instance()->get_commandmanager()->redoStack.empty())
         {
+            Copium::UndoRedo::Command* temp = Copium::NewSceneManager::Instance()->get_commandmanager()->redoStack.top();
             Copium::NewSceneManager::Instance()->get_commandmanager()->redoStack.top()->Redo(&Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack);
             Copium::NewSceneManager::Instance()->get_commandmanager()->redoStack.pop();
+            delete temp;
         }
         else
         {

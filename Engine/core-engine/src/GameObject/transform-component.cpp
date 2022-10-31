@@ -99,6 +99,7 @@ void TransformComponent::inspector_view()
                     temp = position.x;
                 }
             }
+
             ImGui::PopID();
 
             ImGui::TableNextColumn();
@@ -154,18 +155,60 @@ void TransformComponent::inspector_view()
             ImGui::PushID(0);
             ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
             ImGui::InputFloat("", &rotation.x);
+            if (ImGui::IsItemActivated())
+            {
+                temp = rotation.x;
+            }
+            if (ImGui::IsItemEdited())
+            {
+                printf("temp: %f\n", temp);
+                if (temp != rotation.x)
+                {
+                    Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::TransformCommand(&rotation.x, temp);
+                    Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    temp = rotation.x;
+                }
+            }
             ImGui::PopID();
 
             ImGui::TableNextColumn();
             ImGui::PushID(1);
             ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
             ImGui::InputFloat("", &rotation.y);
+            if (ImGui::IsItemActivated())
+            {
+                temp = rotation.y;
+            }
+            if (ImGui::IsItemEdited())
+            {
+                printf("temp: %f\n", temp);
+                if (temp != rotation.y)
+                {
+                    Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::TransformCommand(&rotation.y, temp);
+                    Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    temp = rotation.y;
+                }
+            }
             ImGui::PopID();
 
             ImGui::TableNextColumn();
             ImGui::PushID(2);
             ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
             ImGui::InputFloat("", &rotation.z);
+            if (ImGui::IsItemActivated())
+            {
+                temp = rotation.z;
+            }
+            if (ImGui::IsItemEdited())
+            {
+                printf("temp: %f\n", temp);
+                if (temp != rotation.z)
+                {
+                    Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::TransformCommand(&rotation.z, temp);
+                    Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    temp = rotation.z;
+                }
+            }
             ImGui::PopID();
 
             ImGui::EndTable();
@@ -181,18 +224,60 @@ void TransformComponent::inspector_view()
             ImGui::PushID(0);
             ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
             ImGui::InputFloat("", &scale.x);
+            if (ImGui::IsItemActivated())
+            {
+                temp = scale.x;
+            }
+            if (ImGui::IsItemEdited())
+            {
+                printf("temp: %f\n", temp);
+                if (temp != scale.x)
+                {
+                    Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::TransformCommand(&scale.x, temp);
+                    Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    temp = scale.x;
+                }
+            }
             ImGui::PopID();
 
             ImGui::TableNextColumn();
             ImGui::PushID(1);
             ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
             ImGui::InputFloat("", &scale.y);
+            if (ImGui::IsItemActivated())
+            {
+                temp = scale.y;
+            }
+            if (ImGui::IsItemEdited())
+            {
+                printf("temp: %f\n", temp);
+                if (temp != scale.y)
+                {
+                    Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::TransformCommand(&scale.y, temp);
+                    Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    temp = scale.y;
+                }
+            }
             ImGui::PopID();
 
             ImGui::TableNextColumn();
             ImGui::PushID(2);
             ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
             ImGui::InputFloat("", &scale.z);
+            if (ImGui::IsItemActivated())
+            {
+                temp = scale.z;
+            }
+            if (ImGui::IsItemEdited())
+            {
+                printf("temp: %f\n", temp);
+                if (temp != scale.z)
+                {
+                    Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::TransformCommand(&scale.z, temp);
+                    Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    temp = scale.z;
+                }
+            }
             ImGui::PopID();
 
             ImGui::EndTable();

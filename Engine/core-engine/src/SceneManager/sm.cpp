@@ -67,6 +67,19 @@ namespace Copium {
 			currentScene = nullptr;
 		}
 
+		while(commandManager.undoStack.size()>0)
+		{
+			Copium::UndoRedo::Command* temp = Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack.top();
+			Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack.pop();
+			delete temp;
+		}
+
+		while (commandManager.redoStack.size() > 0)
+		{
+			Copium::UndoRedo::Command* temp = Copium::NewSceneManager::Instance()->get_commandmanager()->redoStack.top();
+			Copium::NewSceneManager::Instance()->get_commandmanager()->redoStack.pop();
+			delete temp;
+		}
 
 		//std::cout << "new scene manager destruction called\n";
 
