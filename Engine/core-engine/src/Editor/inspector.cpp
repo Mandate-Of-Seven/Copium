@@ -98,7 +98,7 @@ namespace Window
                 ImVec2 buttonSize = ImGui::GetWindowSize();
                 buttonSize.y *= (float) BUTTON_HEIGHT;
                 std::map<ComponentType, const std::string>::iterator it;
-                for (it = Component::componentMap.begin(); it != Component::componentMap.end(); ++it)
+                for (it = MAP_COMPONENT_TYPE_NAME.begin(); it != MAP_COMPONENT_TYPE_NAME.end(); ++it)
                 {
                     if (ImGui::Button(it->second.c_str(), buttonSize)) {
                         if (it->first == ComponentType::Script)

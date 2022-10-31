@@ -117,6 +117,7 @@
     <ClCompile Include="src\Graphics\renderer.cpp" />
     <ClCompile Include="src\Graphics\sprite-renderer.cpp" />
     <ClCompile Include="src\Graphics\textures.cpp" />
+    <ClCompile Include="src\Graphics\ui-components.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Math\math-library.cpp" />
     <ClCompile Include="src\GameObject\transform-component.cpp" />

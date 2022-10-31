@@ -19,15 +19,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "renderer-component.h"
 #include "transform-component.h"
 
-std::map<ComponentType, const std::string> Component::componentMap
-{
-    {ComponentType::Animator,"AnimatorComponent"},
-    {ComponentType::Collider,"ColliderComponent"},
-    {ComponentType::Renderer,"RendererComponent"},
-    {ComponentType::Script,"ScriptComponent"}
-};
-
-Component::Component::Component(GameObject& _gameObj, ComponentType _componentType) 
+Component::Component(GameObject& _gameObj, ComponentType _componentType) 
     : gameObj { _gameObj }, componentType{_componentType} {}
 
 
@@ -52,7 +44,7 @@ AnimatorComponent::AnimatorComponent(GameObject& _gameObj)
 
 const std::string& Component::Name() const
 {
-    return componentMap[componentType];
+    return MAP_COMPONENT_TYPE_NAME[componentType];
 }
 
 

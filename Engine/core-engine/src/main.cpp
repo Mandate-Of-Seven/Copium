@@ -28,6 +28,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "SceneManager/sm.h"
 #include "GameObject/component.h"
 #include "GameObject/renderer-component.h"
+#include "Graphics/ui-components.h"
 
 //State Manager
 #include "SceneManager/state-manager.h"
@@ -90,8 +91,11 @@ int main()
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
     GameObject& gObj = *sceneManager->get_gof().build_gameobject();
+
+
     Copium::ScriptComponent& sComponent = gObj.addComponent<Copium::ScriptComponent>();
     gObj.addComponent<Copium::RendererComponent>();
+    Copium::UIButtonComponent& button = gObj.addComponent<Copium::UIButtonComponent>();
     sComponent.Name("CSharpTesting");
     Window::Inspector::selectedGameObject = &gObj;
 
@@ -128,6 +132,7 @@ int main()
                     SM.draw_scene();           //DRAW STATE
                     copiumCore.update();
                     update();
+                    button.update();
                     if (esCurrent == esQuit)
                         SM.change_scene(gsQuit);
 

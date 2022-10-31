@@ -20,6 +20,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "GameObject/game-object.h"
 #include "GameObject/renderer-component.h"
 #include "GameObject/component.h"
+#include "Graphics/ui-components.h"
 
 //USING
 
@@ -98,6 +99,18 @@ Component* GameObject::addComponent(ComponentType componentType)
         //MESSAGE_CONTAINERS::addScript.gameObj = this;
         PRINT("ADDED SCRIPT");
         break;
+    case ComponentType::UIButton:
+        component = new Copium::UIButtonComponent(*this);
+        PRINT("ADDED UI BUTTON");
+        break;
+    case ComponentType::UIImage:
+        component = new Copium::UIImageComponent(*this);
+        PRINT("ADDED UI IMAGE");
+        break;
+    case ComponentType::UIText:
+        component = new Copium::UITextComponent(*this);
+        PRINT("ADDED UI TEXT");
+        break;
     default:
         PRINT("ADDED NOTHING");
         break;
@@ -125,7 +138,7 @@ void GameObject::removeComponent(ComponentType componentType)
         }
         ++it;
     }
-    PRINT("Component of Type " << Component::componentMap[componentType] << " does not exist on " << name);
+    PRINT("Component of Type " << MAP_COMPONENT_TYPE_NAME[componentType] << " does not exist on " << name);
 }
 
 void GameObject::removeComponent(ComponentID componentID)
@@ -270,15 +283,18 @@ GameObject& GameObject::operator=(const GameObject& rhs)
 
 void GameObject::inspectorView()
 {
-    transform.inspector_view();
     ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
         | ImGuiTableFlags_ScrollY;
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);
+    ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed;
+    if (ImGui::CollapsingHeader("Transform", nodeFlags))
+    {
+        transform.inspector_view();
+    }
     if (ImGui::BeginTable("Components", 1, tableFlags, ImVec2(0.f, 450.f)))
     {
         ImGui::TableNextRow();
         ImGui::TableNextColumn();
-        ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed;
         for (Component* component : components)
         {
 

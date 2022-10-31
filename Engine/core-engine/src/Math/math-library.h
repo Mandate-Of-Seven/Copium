@@ -41,10 +41,13 @@ namespace Copium::Math
 		RTTR_ENABLE();
 	};
 
+	struct Vec3;
+
 	struct Vec2 {
 	public:
 		// Constructors
 		Vec2();
+		Vec2(Vec3 _v);
 		Vec2(float _x, float _y);
 		Vec2(glm::vec2& _v);
 

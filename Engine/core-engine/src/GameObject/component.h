@@ -34,7 +34,21 @@ enum class ComponentType : int      // Types of Components
     Renderer,
     Script,
     Transform,
+    UIButton,
+    UIText,
+    UIImage,
     None
+};
+
+static std::map<ComponentType, const std::string> MAP_COMPONENT_TYPE_NAME
+{
+    {ComponentType::Animator,"AnimatorComponent"},
+    {ComponentType::Collider,"ColliderComponent"},
+    {ComponentType::Renderer,"RendererComponent"},
+    {ComponentType::Script,"ScriptComponent"},
+    {ComponentType::UIButton,"UIButtonComponent"},
+    {ComponentType::UIText,"UITextComponent"},
+    {ComponentType::UIImage,"UIImageComponent"}
 };
 
 class Component
@@ -42,15 +56,13 @@ class Component
     public:
         const ComponentType componentType;           //Type of component
 
-        static std::map<ComponentType, const std::string> componentMap; // Declared map to link ComponentType and its name
-
         static ComponentType nameToType(const std::string& _name)
         {
             int i {0};
             int end{ (int)ComponentType::None };
             while (i != end)
             {
-                if (componentMap[(ComponentType)i] == _name)
+                if (MAP_COMPONENT_TYPE_NAME[(ComponentType)i] == _name)
                     return (ComponentType)i;
                 i+=1;
             }
