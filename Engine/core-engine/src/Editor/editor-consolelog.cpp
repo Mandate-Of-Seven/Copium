@@ -14,6 +14,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 *****************************************************************************************/
 #include "pch.h"
 #include <Editor/editor-consolelog.h>
+#include <CopiumCore/copium-core.h>
+
 
 namespace Window
 {
@@ -106,7 +108,6 @@ namespace Window
                 CONSOLE_TRACE("Goodbye");
             }
 
-            // Buttons
             if (ImGui::Button("Options"))
             {
                 ImGui::OpenPopup("Options");
@@ -116,7 +117,13 @@ namespace Window
             ImGui::SameLine();
             bool copy = ImGui::Button("Copy");
             ImGui::SameLine();
-            editorLog.Search.Draw("Search", 150.0f);
+            if (ImGui::Button("Performance Viewer"))
+            {
+                Copium::CopiumCore::Instance()->toggle_display_peformance();
+            }
+
+            ImGui::SameLine();
+            editorLog.Search.Draw("Search", 200.0f);
 
             ImGui::Separator();
             ImGui::BeginChild("scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);

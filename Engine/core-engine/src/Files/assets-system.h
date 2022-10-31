@@ -35,6 +35,7 @@ namespace Copium
 
 		std::vector<Copium::Graphics::Texture>& get_textures() { return textures; }
 		std::vector<Copium::Graphics::Spritesheet>& get_spritesheets() { return spritesheets; }
+		void load_all_audio(std::list<std::string>&_path);
 
 	private:
 		std::vector<Copium::Graphics::Texture> textures;

@@ -19,12 +19,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "fmod.hpp"
 #include "CopiumCore\system-interface.h"
 
-enum SoundAlias
-{
-	reeling,
-	zap,
-};
-
 namespace Copium
 {
 	CLASS_SYSTEM(SoundSystem)
@@ -65,7 +59,7 @@ namespace Copium
 				easier way to refer to the audio file
 			*/
 			/**************************************************************************/
-		void CreateSound(const char* fileName, unsigned alias);
+		void CreateSound(std::string fileName, std::string alias);
 
 		/***************************************************************************/
 			/*!
@@ -81,7 +75,7 @@ namespace Copium
 				to set for FMOD loop count
 			*/
 			/**************************************************************************/
-		void Play(unsigned alias, bool overLap = true, bool loop = false, int loopCount = -1);
+		void Play(std::string alias, bool overLap = true, bool loop = false, int loopCount = -1);
 
 		/***************************************************************************/
 			/*!
@@ -91,7 +85,7 @@ namespace Copium
 				which sound file should be stopped
 			*/
 			/**************************************************************************/
-		void Stop(unsigned alias);
+		void Stop(std::string alias);
 		// Set volume 0 - 1
 
 		/***************************************************************************/
@@ -104,7 +98,7 @@ namespace Copium
 				from 0.0 to 1.0 how loud should the audio file be
 			*/
 			/**************************************************************************/
-		void SetVolume(unsigned alias, float volume);
+		void SetVolume(std::string alias, float volume);
 
 		/***************************************************************************/
 			/*!
@@ -115,13 +109,15 @@ namespace Copium
 			*/
 			/**************************************************************************/
 		void Mute(bool status);
-	private:
 
 		//a map of all sounds created using CreateSound()
-		std::map<unsigned, std::pair<FMOD::SoundGroup*, FMOD::Sound*>> soundList;
+		std::map<std::string, std::pair<FMOD::SoundGroup*, FMOD::Sound*>> soundList;
 
 		//the sound system playing all the audio
 		FMOD::System* soundSystem;
+	private:
+
+		
 
 		/***************************************************************************/
 			/*!

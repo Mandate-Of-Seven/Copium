@@ -29,6 +29,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/game-object-factory.h"
 #include "CopiumCore/system-interface.h"
 #include "SceneManager/scene.h"
+#include "Editor/editor-undoredo.h"
 #include <filesystem>
 
 namespace Copium {
@@ -213,6 +214,9 @@ namespace Copium {
 			if there are errors in deallocating memory for the copy of the current scene, return false
 		*/
 		/*******************************************************************************/
+		Copium::UndoRedo::CommandManager* get_commandmanager();
+
+		bool startPreview();
 		bool endPreview();
 
 		GameObject* selectedGameObject;
@@ -223,6 +227,7 @@ namespace Copium {
 		Scene* storageScene;
 		rapidjson::Document document;
 		std::string sceneFilePath;
+		Copium::UndoRedo::CommandManager commandManager;
 	};
 
 	/*******************************************************************************
@@ -245,6 +250,7 @@ namespace Copium {
 	*/
 	/*******************************************************************************/
 	void create_rapidjson_string(rapidjson::Document& _doc, rapidjson::Value& _value, const std::string& _str);
+
 
 }
 

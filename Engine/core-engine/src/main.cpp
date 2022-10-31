@@ -28,6 +28,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "SceneManager/sm.h"
 #include "GameObject/component.h"
 #include "GameObject/renderer-component.h"
+#include "Editor/editor-undoredo.h"
 
 //State Manager
 #include "SceneManager/state-manager.h"
@@ -171,21 +172,46 @@ static void init()
 /**************************************************************************/
 static void update()
 {
-    if (inputSystem.is_key_pressed(GLFW_KEY_1))
-    {
-        soundSystem.Play(zap, true, false);
-        std::cout << "Zap sound is being played\n";
-    }
-    if (inputSystem.is_key_pressed(GLFW_KEY_2))
-    {
-        soundSystem.Play(reeling, true, false);
-        std::cout << "Reeling sound is being played\n";
-    }
+   
     if (inputSystem.is_key_pressed(GLFW_KEY_E))
     {
         bool play = Copium::LogicSystem::Instance()->Play();
         Copium::LogicSystem::Instance()->Play(!play);
     }
+    
+    if (inputSystem.is_key_pressed(GLFW_KEY_Z))//undo
+    {
+        if (!Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack.empty())
+        {
+            Copium::UndoRedo::Command* temp = Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack.top();
+            Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack.top()->Undo(&Copium::NewSceneManager::Instance()->get_commandmanager()->redoStack);
+            Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack.pop();
+            delete temp;
+        }
+        else
+        {
+            PRINT("No undo commands left");
+            return;
+        }
+    }
+
+    if (inputSystem.is_key_pressed(GLFW_KEY_X) )//redo
+    {
+        
+        if (!Copium::NewSceneManager::Instance()->get_commandmanager()->redoStack.empty())
+        {
+            Copium::UndoRedo::Command* temp = Copium::NewSceneManager::Instance()->get_commandmanager()->redoStack.top();
+            Copium::NewSceneManager::Instance()->get_commandmanager()->redoStack.top()->Redo(&Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack);
+            Copium::NewSceneManager::Instance()->get_commandmanager()->redoStack.pop();
+            delete temp;
+        }
+        else
+        {
+            PRINT("No redo commands left");
+            return;
+        }
+    }
+
     quitEngine();
 }
 

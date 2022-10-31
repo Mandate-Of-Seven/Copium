@@ -59,7 +59,7 @@ bool InputSystem::is_key_pressed(int keycode)
     COPIUM_ASSERT((keycode > COPIUM_MAX_KEYS), "Keycode entered is out of range");
     if (keys[keycode]== GLFW_PRESS)
     {
-        std::cout << keys[keycode] << "  " << std::endl;
+        //std::cout << keys[keycode] << "  " << std::endl;
         keys[keycode] = 0;
         return true;
     }

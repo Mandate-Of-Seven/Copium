@@ -20,11 +20,14 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Editor/inspector.h"
 #include "Editor/editor-consolelog.h"
 #include "Editor/editor-hierarchy-list.h"
+#include "CopiumCore/copium-core.h"
 
 namespace Copium
 {
 	// Our state
 	bool show_demo_window = true;
+	Copium::CopiumCore& copiumCore{ *Copium::CopiumCore::Instance() };
+
 
 	void EditorSystem::init()
 	{
@@ -153,25 +156,32 @@ namespace Copium
 					ImGui::EndMenu();
 				}
 
+				if (ImGui::BeginMenu("Preview"))
+				{
+					if (ImGui::MenuItem("Play Scene"))
+					{
+						printf("Starting scene\n");
+						Copium::NewSceneManager::Instance()->startPreview();
+						copiumCore.toggle_inplaymode();
+					}
+					if (ImGui::MenuItem("Stop Scene"))
+					{
+						Copium::NewSceneManager::Instance()->endPreview();
+						copiumCore.toggle_inplaymode();
+					}
+
+					ImGui::EndMenu();
+				}
+
 				ImGui::EndMenuBar();
 			}
-
-			//ImGui::DockBuilderRemoveNode(dockspace_id);
-			//ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace);
-			//ImGui::DockBuilderSetNodeSize(dockspace_id, { 1600,900 });
-
-			//ImGuiID mainID = dockspace_id;
-			//ImGuiID left = ImGui::DockBuilderSplitNode(mainID, ImGuiDir_Left, 0.2f, NULL, &mainID);
-			//ImGuiID btm = ImGui::DockBuilderSplitNode(mainID, ImGuiDir_Down, 0.50f, NULL, &mainID);
-			//ImGui::DockBuilderDockWindow("Console Log", btm);
-			//ImGui::DockBuilderDockWindow("Inspector", left);
-			//ImGui::DockBuilderFinish(mainID);
 
             //Call all the editor layers updates here
             Window::Inspector::update();
             Window::EditorConsole::update();
 			Window::Hierarchy::update();
             sceneView.update();
+
 
 			// demo update
 			if (show_demo_window)
