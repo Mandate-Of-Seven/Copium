@@ -183,7 +183,7 @@ public:
 	std::string get_name() const;
 
 private:
-	const std::string& filename;
+	const std::string filename;
 	std::string name;
 	std::vector<GameObject*> gameObjects;	//Vector should be in order
 };

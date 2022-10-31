@@ -156,7 +156,13 @@ namespace Copium
 				{
 					if (ImGui::MenuItem("Play Scene"))
 					{
-						printf("Toggling between play and preview\n");
+						printf("Starting scene\n");
+						Copium::NewSceneManager::Instance()->startPreview();
+						copiumCore.toggle_inplaymode();
+					}
+					if (ImGui::MenuItem("Stop Scene"))
+					{
+						Copium::NewSceneManager::Instance()->endPreview();
 						copiumCore.toggle_inplaymode();
 					}
 

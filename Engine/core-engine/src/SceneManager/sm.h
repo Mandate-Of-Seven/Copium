@@ -29,6 +29,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/game-object-factory.h"
 #include "CopiumCore/system-interface.h"
 #include "SceneManager/scene.h"
+#include "Editor/editor-undoredo.h"
 #include <filesystem>
 
 namespace Copium {
@@ -158,13 +159,21 @@ namespace Copium {
 		/*******************************************************************************/
 		GameObject* get_selected_gameobject();
 
+		Copium::UndoRedo::CommandManager* get_commandmanager();
+
+		bool startPreview();
+		bool endPreview();
+
 		GameObject* selectedGameObject;
 
 	private:
 		GameObjectFactory* gof;
 		Scene* currentScene;
+		Scene* storageScene;
 		rapidjson::Document document;
+		Copium::UndoRedo::CommandManager commandManager;
 	};
+
 
 
 }

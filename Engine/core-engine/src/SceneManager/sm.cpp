@@ -39,7 +39,7 @@ namespace Copium {
 		return nullptr;
 	}
 
-	NewSceneManager::NewSceneManager() : gof{nullptr}, currentScene{nullptr}, selectedGameObject{nullptr}
+	NewSceneManager::NewSceneManager() : gof{nullptr}, currentScene{nullptr}, selectedGameObject{nullptr},storageScene{nullptr}
 	{
 		gof = new GameObjectFactory();
 		if (!gof)
@@ -166,6 +166,53 @@ namespace Copium {
 
 	}
 
+	bool NewSceneManager::startPreview()
+	{
+		if (!currentScene)
+		{
+			PRINT("Cannot preview scene as there is no scene! There might be too much copium in your system...\n");
+			return false;
+		}
+		storageScene = currentScene;
+		currentScene = nullptr;
+
+		// Make copy 
+		PRINT(storageScene->get_filename());
+		Scene* tmp = new NormalScene(storageScene->get_filename());
+
+		if (!tmp)
+			return false;
+
+		tmp->set_name(storageScene->get_name());
+
+		// Copy game object data
+		for (size_t i{ 0 }; i < storageScene->get_gameobjcount(); ++i)
+		{
+
+			// Build a game object copy from original scene
+			GameObject* go = new GameObject(*(storageScene->get_gameobjectvector()[i]));
+			if (go)
+				tmp->get_gameobjectvector().emplace_back(go);
+		}
+
+		currentScene = tmp;
+		return true;
+
+
+	}
+	bool NewSceneManager::endPreview()
+	{
+
+		// Delete memory for the preview scene
+		if (!currentScene)
+			return false;
+		delete currentScene;
+		currentScene = nullptr;
+		currentScene = storageScene;
+		return true;
+
+	}
+
 	GameObjectFactory& NewSceneManager::get_gof()
 	{
 		return *gof;
@@ -177,5 +224,10 @@ namespace Copium {
 	}
 	void NewSceneManager::set_selected_gameobject(GameObject* _go) { selectedGameObject = _go; }
 	GameObject* NewSceneManager::get_selected_gameobject() { return selectedGameObject; }
+
+	Copium::UndoRedo::CommandManager* NewSceneManager::get_commandmanager()
+	{
+		return &commandManager;
+	}
 
 }
