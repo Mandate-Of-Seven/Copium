@@ -204,7 +204,7 @@ bool GameObject::attach_child(GameObject* _child)
     children.push_back(_child);
     _child->set_parent(this);
     _child->parentid = id;
-
+    std::cout << "child attached\n";
 
     return true;
 
@@ -292,3 +292,41 @@ void GameObject::inspectorView()
     }
     ImGui::PopStyleVar();
 }
+
+
+// M2
+bool GameObject::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
+{
+
+    _value.AddMember("ID", id, _doc.GetAllocator());
+
+    rapidjson::Value _name;
+    _name.SetString(name.c_str(), name.length(), _doc.GetAllocator());
+    _value.AddMember("Name", _name, _doc.GetAllocator());
+
+    _value.AddMember("PID", parentid, _doc.GetAllocator());
+
+    rapidjson::Value _components(rapidjson::kArrayType);
+    rapidjson::Value transformComponent(rapidjson::kObjectType);
+    transform.serialize(transformComponent, _doc);
+    _components.PushBack(transformComponent, _doc.GetAllocator());
+    for (std::list<Component*>::iterator iter = components.begin(); iter != components.end(); ++iter)
+    {
+        // Serialize each component
+    }
+    _value.AddMember("Components", _components, _doc.GetAllocator());
+    
+
+    //Recursively serialize children and their children and so on
+    rapidjson::Value children(rapidjson::kArrayType);
+    for (std::list<GameObject*>::const_iterator cit = childList().cbegin(); cit != childList().cend(); ++cit)
+    {
+        rapidjson::Value cgo(rapidjson::kObjectType);
+        (*cit)->serialize(cgo, _doc);
+        children.PushBack(cgo, _doc.GetAllocator());
+    }
+    _value.AddMember("Children", children, _doc.GetAllocator());
+    return true;
+
+}
+

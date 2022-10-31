@@ -177,6 +177,14 @@ namespace Copium::Math
 		return false;
 
 	}
+	bool Vec2::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
+	{
+		_value.AddMember("X", x, _doc.GetAllocator());
+		_value.AddMember("Y", y, _doc.GetAllocator());
+
+		return true;
+
+	}
 
 
 	// Vec3-----------------------------------------
@@ -317,6 +325,13 @@ namespace Copium::Math
 		z = _value["Z"].GetFloat();
 		return true;
 
+	}
+	bool Vec3::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
+	{
+		_value.AddMember("X", x, _doc.GetAllocator());
+		_value.AddMember("Y", y, _doc.GetAllocator());
+		_value.AddMember("Z", z, _doc.GetAllocator());
+		return true;
 	}
 
 

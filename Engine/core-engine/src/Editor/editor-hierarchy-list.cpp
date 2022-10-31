@@ -144,9 +144,12 @@ namespace Window::Hierarchy
 		int node_clicked = -1;
 
 		if (!_go.is_parent())
+		{
 			baseFlags |= ImGuiTreeNodeFlags_Leaf;
+		}
+			
 
-		if (_selected == _go.get_id())
+		if (_selected == _go.id)
 		{
 			baseFlags |= ImGuiTreeNodeFlags_Selected;
 		}
@@ -160,7 +163,7 @@ namespace Window::Hierarchy
 			if (!isSelected)
 			{
 				std::cout << _go.get_name() << " is selected\n";
-				_selected = _go.get_id();
+				_selected = _go.id;
 				isSelected = true;
 				Copium::NewSceneManager::Instance()->set_selected_gameobject(&_go);
 			}

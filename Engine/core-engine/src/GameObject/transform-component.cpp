@@ -60,6 +60,29 @@ void TransformComponent::deserialize(rapidjson::Value& _value)
 	std::cout << "Scale:" << scale;
 }
 
+// M2
+void TransformComponent::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
+{
+    rapidjson::Value _pos(rapidjson::kObjectType);
+    rapidjson::Value _rot(rapidjson::kObjectType);
+    rapidjson::Value _scale(rapidjson::kObjectType);
+
+    rapidjson::Value type;
+    std::string tc = "Transform";
+    type.SetString(tc.c_str(), tc.length(), _doc.GetAllocator());
+    _value.AddMember("Type", type, _doc.GetAllocator()); 
+
+    position.serialize(_pos, _doc);
+    rotation.serialize(_rot, _doc);
+    scale.serialize(_scale, _doc);
+
+    _value.AddMember("Pos", _pos, _doc.GetAllocator());
+    _value.AddMember("Rot", _rot, _doc.GetAllocator());
+    _value.AddMember("Scale", _scale, _doc.GetAllocator());
+
+}
+
+
 void TransformComponent::inspector_view()
 {
     ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody

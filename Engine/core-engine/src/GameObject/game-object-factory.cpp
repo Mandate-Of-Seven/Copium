@@ -40,7 +40,6 @@ namespace Copium
 
 		return tmp;
 	}
-
 	GameObject* GameObjectFactory::build_gameobject(GameObject& _src)
 	{
 		GameObject* go = new GameObject();
@@ -70,48 +69,54 @@ namespace Copium
 	}
 	GameObject* GameObjectFactory::build_gameobject(rapidjson::Value& _value) {
 
-		//GameObject* go = new GameObject();
-		//if (!go)
-		//	return nullptr;
+		GameObject* go = new GameObject();
+		if (!go)
+			return nullptr;
 
-		//if (!go->deserialize(_value))
-		//{
-		//	delete go;
-		//	return nullptr;
-		//}
+		if (!go->deserialize(_value))
+		{
+			delete go;
+			return nullptr;
+		}
 
-		//if (_value.HasMember("Components")) 
-		//{
-		//	rapidjson::Value& compArr = _value["Components"].GetArray();
-		//	for (rapidjson::Value::ValueIterator iter = compArr.Begin(); iter != compArr.End(); ++iter)
-		//	{
-		//		rapidjson::Value& component = *iter;
-		//		if (component.HasMember("Type")) 
-		//		{
-		//			const char* name = component["Type"].GetString();
-		//			PRINT("Component: " << name);
-		//			go->addComponent(Component::nameToType(name))->deserialize(component);
-		//		}
-		//	}
-		//}
+		std::cout << "Object name: " << go->get_name() << std::endl;
 
-		//currentScene->add_gameobject(go);					
+		if (_value.HasMember("Components")) 
+		{
+			rapidjson::Value& compArr = _value["Components"].GetArray();
+			for (rapidjson::Value::ValueIterator iter = compArr.Begin(); iter != compArr.End(); ++iter)
+			{
+				rapidjson::Value& component = *iter;
+				if (component.HasMember("Type")) 
+				{
+					std::string key = component["Type"].GetString();
+					//PRINT("Component: " << name);
+					if (key == "Transform")
+						// deserialize transform component
+						go->Transform().deserialize(component);
+					else
+						add_component(key, go);
 
-		////unsigned int childCount{ 0 };
-		//// Deserialize children (if any)
-		//if (_value.HasMember("Children")) {
-		//	rapidjson::Value& childArr = _value["Children"].GetArray();
-		//	for (rapidjson::Value::ValueIterator iter = childArr.Begin(); iter != childArr.End(); ++iter)
-		//	{
-		//		GameObject* cgo = build_gameobject(*iter);
-		//		go->attach_child(cgo);
-		//		//++childCount;
-		//	}
-		//}
+				}
+			}
+		}
 
-		////std::cout << "No. of children:" << childCount << std::endl;
-		////return go;
-		return nullptr;
+		currentScene->add_gameobject(go);					
+
+		//unsigned int childCount{ 0 };
+		// Deserialize children (if any)
+		if (_value.HasMember("Children")) {
+			rapidjson::Value& childArr = _value["Children"].GetArray();
+			for (rapidjson::Value::ValueIterator iter = childArr.Begin(); iter != childArr.End(); ++iter)
+			{
+				GameObject* cgo = build_gameobject(*iter);
+				go->attach_child(cgo);
+				//++childCount;
+			}
+		}
+
+		//std::cout << "No. of children:" << childCount << std::endl;
+		return go;
 	}
 	GameObject* GameObjectFactory::clone_gameobject(GameObject* _src)
 	{
@@ -235,6 +240,12 @@ namespace Copium
 		std::cout << "Making an archetype: " << _archetype << std::endl;
 		GameObject* tmp = build_gameobject(*gameObjectCreators[_archetype]);
 		return tmp;
+	}
+	bool GameObjectFactory::add_component(const std::string& _key, GameObject* _go)
+	{
+		
+		_go->addComponent(Component::nameToType(_key));
+		return true;
 	}
 
 
