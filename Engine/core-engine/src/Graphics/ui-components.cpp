@@ -13,6 +13,7 @@ namespace
 
 namespace Copium
 {
+	const UIButtonComponent* UIButtonComponent::hoveredBtn{nullptr};
 
 	UIComponent::UIComponent(GameObject& _gameObj, ComponentType _componentType) 
 		: Component(_gameObj,_componentType)
@@ -26,62 +27,75 @@ namespace Copium
 		min = _min;
 		max = _max;
 		state = UIButtonState::None;
+		for (int i = 0; i <= int(UIButtonState::None); ++i)
+		{
+			mapStateCallbacks.insert({UIButtonState(i),nullptr});
+		}
 	}
+
 
 	void UIButtonComponent::update()
 	{
-		updateState();
-		switch (state)
+		state = getInternalState();
+
+		UIButtonCallback callback = mapStateCallbacks[state];
+		if (callback != nullptr)
 		{
-		case UIButtonState::None:
-		{
-			PRINT("NONE");
-			break;
+			callback();
 		}
-		case UIButtonState::OnHover:
-		{
-			PRINT("HOVER");
-			break;
-		}
-		case UIButtonState::OnClick:
-		{
-			PRINT("CLICK");
-			break;
-		}
-		case UIButtonState::OnRelease:
-		{
-			PRINT("RELEASE");
-			break;
-		}
-		}
+		//switch (state)
+		//{
+		//case UIButtonState::OnClick:
+		//{
+
+		//	PRINT("Clicking");
+		//	break;
+		//}
+		//case UIButtonState::OnHover:
+		//{
+		//	PRINT("Hovering");
+		//	break;
+		//}
+		//case UIButtonState::OnRelease:
+		//{
+		//	PRINT("Released");
+		//	break;
+		//}
+		//case UIButtonState::None:
+		//{
+		//	PRINT("None");
+		//	break;
+		//}
+		//}
 	}
 
-	void UIButtonComponent::updateState()
+	UIButtonState UIButtonComponent::getInternalState() const
 	{
 		static const Math::Vec3& pos{ gameObj.Transform().position };
 		Collision::AABB newBounds{ pos + min, pos + max };
 		glm::vec2 scenePos = EditorSystem::Instance()->get_camera()->get_ndc();
-		if (Collision::static_collision_pointrect(scenePos, newBounds))
+		if (hoveredBtn == nullptr)
 		{
-			if (inputSystem.is_mousebutton_pressed(0))
+			if (Collision::static_collision_pointrect(scenePos, newBounds))
 			{
-				state = UIButtonState::OnClick;
-				return;
+				if (inputSystem.is_mousebutton_pressed(0))
+				{
+					hoveredBtn = this;
+					return UIButtonState::OnClick;
+				}
+				return UIButtonState::OnHover;
 			}
-			state = UIButtonState::OnHover;
-			return;
 		}
-		else
+		else if (hoveredBtn == this)
 		{
 			if (!inputSystem.is_mousebutton_pressed(0))
 			{
-				state = UIButtonState::OnRelease;
-				return;
+				hoveredBtn = nullptr;
+				return UIButtonState::OnRelease;
 			}
-			state = UIButtonState::OnClick;
-			return;
+			return UIButtonState::OnClick;
 		}
-		state = UIButtonState::None;
+		return UIButtonState::None;
 	}
 
 	UITextComponent::UITextComponent(GameObject& _gameObj)

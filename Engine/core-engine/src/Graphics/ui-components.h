@@ -3,14 +3,17 @@
 #include "GameObject/component.h"
 #include "Math/math-library.h"
 
+#include <unordered_map>
 namespace Copium
 {
+	using UIButtonCallback = void (*)();
+
 	enum class UIButtonState
 	{
-		None,
 		OnHover,
 		OnClick,
 		OnRelease,
+		None,
 	};
 
 	//Runs after InputSystem
@@ -32,11 +35,14 @@ namespace Copium
 			UIButtonComponent(GameObject& _gameObj,Math::Vec2 _min = {-0.5,-0.5}, Math::Vec2 _max = {0.5,0.5});
 			void update();
 			void inspector_view() {};
-		private:		
+		private:
+			static const UIButtonComponent* hoveredBtn;
+			std::unordered_map<UIButtonState, UIButtonCallback> mapStateCallbacks;
 			Math::Vec2 min;
 			Math::Vec2 max;
 			UIButtonState state;
-			void updateState();
+			UIButtonState getInternalState() const;
+
 	};
 
 	class UITextComponent final : public UIComponent
