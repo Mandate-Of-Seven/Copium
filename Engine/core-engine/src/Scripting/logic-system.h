@@ -37,8 +37,6 @@ namespace Copium
 		void exit();
 		bool Play() const;
 		void Play(bool);
-	private:
-		UIButtonComponent* selectedBtn;
 	};
 }
 

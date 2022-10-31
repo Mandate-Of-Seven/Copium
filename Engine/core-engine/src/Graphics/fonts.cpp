@@ -22,17 +22,21 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Graphics/graphics-system.h"
 #include "Editor/editor-system.h"
+#include "Files/file-system.h"
 #include <glm/gtc/type_ptr.hpp>
 
 namespace Copium
 {
-	void Font::load_font(std::string _font)
+	std::unordered_map<std::string, Font*> Font::mapNameFonts;
+
+	Font::Font(const std::string& name)
 	{
+		std::string path = Paths::assetPath + "fonts\\" + name + ".ttf";
 		FT_Library ft;
 		COPIUM_ASSERT(FT_Init_FreeType(&ft), "Could not initialize FreeType Library");
 
 		FT_Face face;
-		COPIUM_ASSERT(FT_New_Face(ft, _font.c_str(), 0, &face), "Fail to load font");
+		COPIUM_ASSERT(FT_New_Face(ft, path.c_str(), 0, &face), "Fail to load font");
 
 		FT_Set_Pixel_Sizes(face, 0, 256);
 
@@ -49,7 +53,7 @@ namespace Copium
 			GLuint textureID;
 			glCreateTextures(GL_TEXTURE_2D, 1, &textureID);
 			glBindTexture(GL_TEXTURE_2D, textureID);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, face->glyph->bitmap.width, 
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, face->glyph->bitmap.width,
 				face->glyph->bitmap.rows, 0, GL_RED, GL_UNSIGNED_BYTE, face->glyph->bitmap.buffer);
 
 			// Texture options
@@ -74,12 +78,31 @@ namespace Copium
 		FT_Done_FreeType(ft);
 
 #if defined(DEBUG) | defined(_DEBUG)
-		size_t pos = _font.find_last_of('/');
-		size_t lastPos = _font.find_last_of('.');
-		size_t size = lastPos - pos;
-		std::string str = _font.substr(pos + 1, size - 1);
-		PRINT("Font " << str << " loaded...");
+		PRINT("Font " << name << " loaded...");
 #endif
+	}
+
+	Font* Font::getFont(const std::string& name)
+	{
+		auto pairNameFont = mapNameFonts.find(name);
+		if (pairNameFont != mapNameFonts.end())
+			return pairNameFont->second;
+		Font* pFont = new Font(name);
+		pFont->setup_font_vao();
+		mapNameFonts.emplace(std::make_pair(name, pFont));
+		return pFont;
+	}
+
+
+	void Font::cleanUp()
+	{
+		for (auto& pairNameFont : mapNameFonts)
+		{
+			Font* pFont = pairNameFont.second;
+			glDeleteVertexArrays(1, &pFont->fontVertexArrayID);
+			glDeleteBuffers(1, &pFont->fontVertexBufferID);
+			delete pFont;
+		}
 	}
 
 	void Font::setup_font_vao()
@@ -190,11 +213,5 @@ namespace Copium
 		graphics->get_shader_program()[2].UnUse();
 
 		glDisable(GL_BLEND);
-	}
-
-	void Font::shutdown()
-	{
-		glDeleteVertexArrays(1, &fontVertexArrayID);
-		glDeleteBuffers(1, &fontVertexBufferID);
 	}
 }

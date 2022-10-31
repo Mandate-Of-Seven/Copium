@@ -16,8 +16,12 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define FONTS_H
 
 #include <map>
+#include <unordered_map>
 #include <string>
 #include <glm/glm.hpp>
+
+typedef unsigned int GLuint;
+typedef float GLfloat;
 
 namespace Copium
 {
@@ -32,7 +36,7 @@ namespace Copium
 	class Font
 	{
 	public:
-		void load_font(std::string _font);
+		Font() = delete;
 
 		void setup_font_vao();
 
@@ -42,9 +46,13 @@ namespace Copium
 
 		const std::map<char, Character>& get_characters() const { return characters; }
 
-	private:
-		std::map<char, Character> characters;
+		static Font* getFont(const std::string& name);
 
+		static void cleanUp();
+	private:
+		Font(const std::string& name);
+		static std::unordered_map<std::string, Font*> mapNameFonts;
+		std::map<char, Character> characters;
 		GLuint fontVertexArrayID = 0; // Handle to Font Vertex Array Object
 		GLuint fontVertexBufferID = 0; // Handle to Font Vertex Buffer Object
 	};

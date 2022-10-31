@@ -26,6 +26,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 // Bean: remove this after NewManagerInstance is moved
 #include "GameObject/renderer-component.h"
+#include "Graphics/ui-components.h"
 #include "SceneManager/sm.h"
 
 namespace
@@ -59,13 +60,6 @@ namespace Copium
 
 		// Initialise Sub systems
 		renderer.init();
-
-		fonts[0].load_font("Assets/fonts/arial.ttf");
-		fonts[1].load_font("Assets/fonts/corbel.ttf");
-		fonts[2].load_font("Assets/fonts/Comfortaa-Regular.ttf");
-		
-		for (int i = 0; i < 3; i++)
-			fonts[i].setup_font_vao();
 
 		glm::vec2 size = Copium::EditorSystem::Instance()->get_scene_view()->get_dimension();
 		framebuffer.set_size((GLuint)size.x, (GLuint)size.y);
@@ -209,8 +203,7 @@ namespace Copium
 
 	void GraphicsSystem::exit()
 	{
-		for (int i = 0; i < 3; i++)
-			fonts[i].shutdown();
+		Font::cleanUp();
 
 		renderer.shutdown();
 		framebuffer.exit();
@@ -291,7 +284,7 @@ namespace Copium
 
 		glm::vec3 position = { 0.f, 0.f, 0.f };
 		glm::vec4 color = { 1.f, 1.f, 1.f, 1.f };
-		fonts[1].draw_text("Corbel", position, color, 0.4f + size_x, 0);
+		Font::getFont("corbel")->draw_text("Corbel", position, color, 0.4f + size_x, 0);
 
 
 		float red = 0.f, green = 1.f;
@@ -323,7 +316,7 @@ namespace Copium
 
 		position = { 0.f, 2.f, 0.f };
 		color = { red, green, 1.f, 1.f };
-		fonts[2].draw_text("Hello Comfortaa Here...", position, color, 0.6f + size_x, 0);
+		Font::getFont("Comfortaa-Regular")->draw_text("Hello Comfortaa Here...", position, color, 0.6f + size_x, 0);
 
 		// Unbind the framebuffer to display renderable
 		// onto the image
@@ -499,6 +492,13 @@ namespace Copium
 				SpriteRenderer sr = rc->get_sprite_renderer();
 				glm::vec2 size(t.glmScale().x, t.glmScale().y);
 				renderer.draw_quad(t.glmPosition(), size, 0.f, sr.get_sprite_id());
+			}
+			for (Component* component : gameObject->getComponents<UITextComponent>())
+			{
+				if (!component->Enabled())
+					continue;
+				UITextComponent* textComponent = reinterpret_cast<UITextComponent*>(component);
+				textComponent->render();
 			}
 		}
 

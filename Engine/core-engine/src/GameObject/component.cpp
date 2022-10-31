@@ -20,7 +20,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "transform-component.h"
 
 Component::Component(GameObject& _gameObj, ComponentType _componentType) 
-    : gameObj { _gameObj }, componentType{_componentType} {}
+    : gameObj{ _gameObj }, componentType{ _componentType }, enabled{true} {}
 
 
 void Component::destroy() {}

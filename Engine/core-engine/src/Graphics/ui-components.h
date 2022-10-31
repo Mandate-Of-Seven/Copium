@@ -2,6 +2,7 @@
 
 #include "GameObject/component.h"
 #include "Math/math-library.h"
+#include "Graphics/fonts.h"
 
 #include <unordered_map>
 namespace Copium
@@ -51,6 +52,9 @@ namespace Copium
 			UITextComponent(GameObject& _gameObj);
 			void inspector_view() {};
 			void render();
+		private:
+			std::string content;
+			Font* font;
 		//Display a text
 	};
 

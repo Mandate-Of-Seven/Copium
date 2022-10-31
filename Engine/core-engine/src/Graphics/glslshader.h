@@ -30,16 +30,16 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #define GL_FALSE 0
 #define GL_TRUE 1
 
+// Forward declaration of type definitions
+typedef char GLchar;
+typedef unsigned char GLboolean;
+typedef int GLint;
+typedef unsigned int GLenum;
+typedef unsigned int GLuint;
+typedef float GLfloat;
+
 namespace Copium
 {
-    // Forward declaration of type definitions
-    typedef char GLchar;
-    typedef unsigned char GLboolean;
-    typedef int GLint;
-    typedef unsigned int GLenum;
-    typedef unsigned int GLuint;
-    typedef float GLfloat;
-
     class GLSLShader
     {
     public:

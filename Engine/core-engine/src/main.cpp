@@ -96,6 +96,7 @@ int main()
     Copium::ScriptComponent& sComponent = gObj.addComponent<Copium::ScriptComponent>();
     gObj.addComponent<Copium::RendererComponent>();
     Copium::UIButtonComponent& button = gObj.addComponent<Copium::UIButtonComponent>();
+    gObj.addComponent<Copium::UITextComponent>();
     sComponent.Name("CSharpTesting");
     Window::Inspector::selectedGameObject = &gObj;
 

@@ -99,14 +99,15 @@ namespace Copium
 	}
 
 	UITextComponent::UITextComponent(GameObject& _gameObj)
-		: UIComponent(_gameObj, ComponentType::UIText)
+		: UIComponent(_gameObj, ComponentType::UIText), font{Font::getFont("corbel")}
 	{
-
 	}
 
 	void UITextComponent::render()
 	{
-
+		if (!font)
+			return;
+		font->draw_text("Hello bby", gameObj.Transform().position.to_glm(), { 1.f, 1.f, 1.f, 1.f }, 1.f, 0);
 	}
 
 	UIImageComponent::UIImageComponent(GameObject& _gameObj)
