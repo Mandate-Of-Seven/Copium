@@ -28,6 +28,8 @@ namespace Copium
 		RendererComponent(GameObject& _gameObj);
 
 		void deserialize(rapidjson::Value& _value);
+		void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
+
 
         void inspector_view();
 

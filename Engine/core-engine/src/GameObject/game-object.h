@@ -294,12 +294,34 @@ public:
     \brief
         Deserialize GameObject data from rapidJson value and populate this GameObject with the data
 
+    \param  _value
+        reference to the rapidjson::Value that contains the GameObject data
+
     \return
         if deserialization was successful, return true
         if deserialization was unsuccessful, return false
     */
     /*******************************************************************************/
     bool deserialize(rapidjson::Value& _value);
+
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Serialize this GameObject's data into a rapidjson::Value
+
+    \param  _value
+        reference to the rapidjson::Value that will contain the GameObject data
+
+    \param _doc
+        reference to the rapidjson::Document which is associated with the save file
+
+    \return
+        if deserialization was successful, return true
+        if deserialization was unsuccessful, return false
+    */
+    /*******************************************************************************/
+    bool serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
     void inspectorView();
 

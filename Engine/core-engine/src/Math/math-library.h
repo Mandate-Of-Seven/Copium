@@ -154,7 +154,7 @@ namespace Copium::Math
 			Deserialize this Vec2's data from the specified rapidjson Value
 
 		\param _value
-			reference to the rapidJson buffer to serialize to
+			reference to the rapidJson value to deserialize from
 
 		\return
 			on success, return true
@@ -162,6 +162,24 @@ namespace Copium::Math
 		*/
 		/*******************************************************************************/
 		bool deserialize(rapidjson::Value& _value);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Serialize this Vec2's data to the specified rapidjson Value
+
+		\param _value
+			reference to the rapidJson value to serialize to
+
+		\param _doc
+			reference to the rapidJson Document associated with the save file
+
+		\return
+			on success, return true
+			on failure, return false
+		*/
+		/*******************************************************************************/
+		bool serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
 		/*******************************************************************************
 		/*!
@@ -521,6 +539,25 @@ namespace Copium::Math
 		*/
 		/*******************************************************************************/
 		bool deserialize(rapidjson::Value& _value);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Serialize this Vec3's data to the specified rapidjson Value
+
+		\param _value
+			reference to the rapidJson value to serialize to
+
+		\param _doc
+			reference to the rapidJson Document associated with the save file
+
+		\return
+			on success, return true
+			on failure, return false
+		*/
+		/*******************************************************************************/
+		bool serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
 
 		/*******************************************************************************
@@ -1525,6 +1562,7 @@ namespace Copium::Math
 	*
 	\brief
 		Deserialize a glm::vec4 from a rapidjson value
+		Note: this function was written specifically for color vec4
 
 	\param _value
 		reference to the rapidjson value

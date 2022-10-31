@@ -24,7 +24,8 @@ std::map<ComponentType, const std::string> Component::componentMap
     {ComponentType::Animator,"AnimatorComponent"},
     {ComponentType::Collider,"ColliderComponent"},
     {ComponentType::Renderer,"RendererComponent"},
-    {ComponentType::Script,"ScriptComponent"}
+    {ComponentType::Script,"ScriptComponent"},
+    {ComponentType::Transform, "TransformComponent"}
 };
 
 Component::Component::Component(GameObject& _gameObj, ComponentType _componentType) 
@@ -39,6 +40,10 @@ void Component::deserialize(rapidjson::Value& _value)
 {
     //std::cout << "default deserialization\n";
 }
+void Component::serialize(rapidjson::Value& _value, rapidjson::Document& _doc) {
+
+}
+
 
 bool Component::Enabled() const noexcept{ return enabled;}
 

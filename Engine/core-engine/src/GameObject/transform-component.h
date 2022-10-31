@@ -128,12 +128,34 @@ public:
     /*!
     \brief
         Deserializes transform data from a rapidjson::Value
+    
+    \param  _value
+        reference to the rapidjson::Value that the transform component data is to be loaded from
+
     \return
         on success, return true
         on failure, return false
     */
     /**************************************************************************/
     void deserialize(rapidjson::Value& _value);
+
+    /***************************************************************************/
+    /*!
+    \brief
+        Serializes transform data to a rapidjson::Value
+
+    \param  _value
+        reference to a rapidjson::Value which will store the transform component data. It will then be saved to a json file
+
+    \param _doc
+        reference to a rapidjson::Document that is associated with the save file
+
+    \return
+        on success, return true
+        on failure, return false
+    */
+    /**************************************************************************/
+    void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
     void inspector_view();
 

@@ -27,6 +27,12 @@ namespace Copium
 		spriteRenderer.deserialize(_value);
 	}
 
+	void RendererComponent::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
+	{
+
+	}
+
+
 	void RendererComponent::inspector_view()
 	{
 		float sameLinePadding = 16.f;

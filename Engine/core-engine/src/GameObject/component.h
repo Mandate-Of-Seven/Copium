@@ -91,6 +91,21 @@ class Component
         /**************************************************************************/
         virtual void deserialize(rapidjson::Value& _value);
 
+        /***************************************************************************/
+        /*!
+        \brief
+            Pure virtual function that serializes this component's data to a rapidjson value.
+            Note: each component must define how to serialize itself as each component has its own data structure
+
+        \param _value
+            reference to the rapidjson value that will contain the data of the component
+
+        \return
+            void
+        */
+        /**************************************************************************/
+        virtual void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
+
         virtual void inspector_view() = 0;
 
         virtual ~Component()
@@ -142,6 +157,7 @@ class Component
         */
         /**************************************************************************/
         //void deserialize(rapidjson::Value& _value);
+
     protected:
     };
 

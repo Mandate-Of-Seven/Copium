@@ -25,6 +25,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "SceneManager/sm.h"
 #include "../Graphics/graphics-system.h"
 #include "../Windows/windows-system.h"
+#include <rapidjson/ostreamwrapper.h>
+#include <rapidjson/prettywriter.h>
 
 namespace Copium {
 	GameObject* NewSceneManager::findGameObjByID(GameObjectID _ID)
@@ -46,12 +48,11 @@ namespace Copium {
 		{
 			std::cout << "Error allocating memory for GameObjectFactory\n";
 		}	
-		std::cout << "sm ctor\n";
+		//std::cout << "sm ctor\n";
 	}
 
 	NewSceneManager::~NewSceneManager()
 	{
-		std::cout << selectedGameObject << std::endl;
 		selectedGameObject = nullptr;
 
 		if (gof)
@@ -67,9 +68,6 @@ namespace Copium {
 			currentScene = nullptr;
 		}
 
-
-		//std::cout << "new scene manager destruction called\n";
-
 	}
 
 	void NewSceneManager::init()
@@ -79,8 +77,8 @@ namespace Copium {
 		// Debug Purposes
 		std::string str("Data\\sandbox.json");
 		load_scene(str);
-		std::cout << "No. of GameObjects in scene:" << currentScene->get_gameobjcount() << std::endl;
-		//currentScene->get_gameobjectvector()[0]->Trans().Position();
+		sceneFilePath = str;
+		//std::cout << "No. of GameObjects in scene:" << currentScene->get_gameobjcount() << std::endl;
 	}
 	void NewSceneManager::update()
 	{
@@ -99,6 +97,8 @@ namespace Copium {
 		{
 			currentScene = new NormalScene(_filepath);
 		}
+
+		sceneFilePath = _filepath;
 
 		gof->link_to_scene(currentScene);
 			
@@ -177,5 +177,116 @@ namespace Copium {
 	}
 	void NewSceneManager::set_selected_gameobject(GameObject* _go) { selectedGameObject = _go; }
 	GameObject* NewSceneManager::get_selected_gameobject() { return selectedGameObject; }
+
+
+	// M2
+	bool NewSceneManager::startPreview()
+	{
+		if (!currentScene)
+		{
+			PRINT("Cannot preview scene as there is no scene! There might be too much copium in your system...\n");
+			return false;
+		}
+		storageScene = currentScene;
+		currentScene = nullptr;
+		
+		// Make copy 
+		Scene* tmp = new NormalScene(storageScene->get_filename());
+		if (!tmp)
+			return false;
+
+		tmp->set_name(storageScene->get_name());
+
+		// Copy game object data
+		for (size_t i{ 0 }; i < storageScene->get_gameobjcount(); ++i)
+		{
+
+			// Build a game object copy from original scene
+			GameObject* go = new GameObject(*(storageScene->get_gameobjectvector()[i]));
+			if (go)
+				tmp->get_gameobjectvector().emplace_back(go);
+		}
+
+		currentScene = tmp;
+		return true;
+
+
+	}
+	bool NewSceneManager::endPreview()
+	{
+
+		// Delete memory for the preview scene
+		if (!currentScene)
+			return false;
+		delete currentScene;
+
+		// Swap the original unmodified scene back to current scene
+		currentScene = nullptr;
+		currentScene = storageScene;
+		return true;
+
+	}
+
+	bool NewSceneManager::save_scene()
+	{
+		double startTime = glfwGetTime();
+		std::cout << "saving scene...\n";
+		if (!save_scene(sceneFilePath))
+			return false;
+
+		std::cout << "save complete\n";
+		std::cout << "Time taken: " << glfwGetTime() - startTime << std::endl;
+		return true;
+	}
+	bool NewSceneManager::save_scene(const std::string& _filepath)
+	{
+		rapidjson::Document doc;
+
+		doc.SetObject();
+		rapidjson::Value name;
+		create_rapidjson_string(doc, name,  currentScene->get_name());
+		doc.AddMember("Name", name, doc.GetAllocator());
+
+		std::vector<GameObject*> roots;
+		for (size_t i{ 0 }; i < currentScene->get_gameobjcount(); ++i) {
+			GameObject* tmp = currentScene->get_gameobjectvector()[i];
+			if (!tmp->has_parent())
+				roots.emplace_back(tmp);
+		}
+
+		//Create array of game objects
+		rapidjson::Value gameObjects(rapidjson::kArrayType);
+		for (size_t i{ 0 }; i < roots.size(); ++i) {
+
+			GameObject* tmp = roots[i];
+			if (tmp->has_parent())
+				continue;
+
+			rapidjson::Value go(rapidjson::kObjectType);
+			tmp->serialize(go, doc);
+
+			
+			//rapidjson::Value components(rapidjson::kArrayType);
+			// Insert transform component into component array
+
+
+			gameObjects.PushBack(go, doc.GetAllocator());
+		}
+
+		doc.AddMember("GameObjects", gameObjects, doc.GetAllocator());
+
+		rapidjson::StringBuffer sb;
+		rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(sb);
+		doc.Accept(writer);
+		std::ofstream ofs(_filepath);
+		ofs << sb.GetString();
+		//std::cout << sb.GetString() << std::endl;
+		return true;
+	}
+
+	void create_rapidjson_string(rapidjson::Document& _doc, rapidjson::Value& _value, const std::string& _str)
+	{
+		_value.SetString(_str.c_str(), _str.length(), _doc.GetAllocator());
+	}
 
 }

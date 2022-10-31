@@ -110,6 +110,36 @@ namespace Copium {
 		/*!
 		*
 		\brief
+			save the current scene data into the file that is at filepath denoted by scenefilepath data member in the scene manager.
+			Note: this function calls save_scene(const std::string& _filepath)
+
+		\return
+			if success, return true
+			if there are errors, return false
+		*/
+		/*******************************************************************************/
+		bool save_scene();
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			save the current scene data into the file whose filepath is specified as a parameter
+
+		\param	_filepath
+			read-only reference to a string which contains the filepath of the file that the current scene data
+			is to be saved to
+
+		\return
+			if success, return true
+			if there are errors, return false
+		*/
+		/*******************************************************************************/
+		bool save_scene(const std::string& _filepath);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
 			Get reference to the GOF in the SM
 
 		\return
@@ -144,7 +174,7 @@ namespace Copium {
 			void
 		*/
 		/*******************************************************************************/
-		void set_selected_gameobject(GameObject * _go);
+		void set_selected_gameobject(GameObject* _go);
 		/*******************************************************************************
 		/*!
 		*
@@ -158,14 +188,63 @@ namespace Copium {
 		/*******************************************************************************/
 		GameObject* get_selected_gameobject();
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Clone the current scene and put the current scene into a scene buffer for safekeeping. The copy will made the current scene and be
+			used for the preview.
+			Note: this will allow the original scene to remain unmodified by the scripts as preview is just a preview
+
+		\return
+			if success, return true
+			if there are errors in allocating memory for a copy of the current scene, return false
+		*/
+		/*******************************************************************************/
+		bool startPreview();
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Free the memory allocated to the preview scene and put the unmodifed scene back to current scene
+
+		\return
+			if success, return true
+			if there are errors in deallocating memory for the copy of the current scene, return false
+		*/
+		/*******************************************************************************/
+		bool endPreview();
+
 		GameObject* selectedGameObject;
 
 	private:
 		GameObjectFactory* gof;
 		Scene* currentScene;
+		Scene* storageScene;
 		rapidjson::Document document;
+		std::string sceneFilePath;
 	};
 
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Helper function for creating a rapidjson string and placing it inside a rapidjson value
+
+	\param	_doc
+		reference to the rapidjson document associated with the save file
+
+	\param _value
+		reference to the rapidjson value which is to hold the string
+
+	\param _str
+		read-only reference to the string that is to be made into a rapidjson string
+
+	\return
+		void
+	*/
+	/*******************************************************************************/
+	void create_rapidjson_string(rapidjson::Document& _doc, rapidjson::Value& _value, const std::string& _str);
 
 }
 

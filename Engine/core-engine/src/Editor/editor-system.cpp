@@ -137,6 +137,7 @@ namespace Copium
 					if (ImGui::MenuItem("Save", "Ctrl+S"))
 					{
 						//save scene
+						Copium::NewSceneManager::Instance()->save_scene();
 					}
 
 					if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
