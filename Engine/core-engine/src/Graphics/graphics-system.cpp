@@ -133,7 +133,7 @@ namespace Copium::Graphics
 
 			sprite->set_position(pos);
 			
-			sprite->set_size( glm::vec2(0.5f, 0.3f));
+			sprite->set_size( glm::vec2(1.f, 1.f));
 			sprite->set_color(glm::vec4(0.5f, 0.5f, 0.5f, 0.5f));
 			sprites.push_back(sprite);
 			
@@ -156,7 +156,7 @@ namespace Copium::Graphics
 
 				sprite->set_position(pos);
 
-				sprite->set_size(glm::vec2(0.5f, 0.3f));
+				sprite->set_size(glm::vec2(1.f, 1.f));
 				sprite->set_color(glm::vec4(0.5f, 0.5f, 0.5f, 0.5f));
 				sprites.push_back(sprite);
 			}
@@ -255,14 +255,13 @@ namespace Copium::Graphics
 	void GraphicsSystem::parse_textures()
 	{
 		Copium::Files::AssetsSystem* assets = Copium::Files::AssetsSystem::Instance();
-		
 		// Check for texture slots
 		COPIUM_ASSERT(textureSlotIndex == maxTextures, "Max textures reached! Replace old textures!!");
 
 		// Assign the slot to the texture
-		for (GLuint i = 0; i < assets->get_textures()->size(); i++)
+		for (GLuint i = 0; i < assets->get_textures().size(); i++)
 		{
-			textureSlots[textureSlotIndex++] = assets->get_textures()[0][i].get_object_id();
+			textureSlots[textureSlotIndex++] = assets->get_textures()[i].get_object_id();
 		}
 	}
 	
@@ -285,7 +284,7 @@ namespace Copium::Graphics
 			draw_debug_info();
 
 		glm::vec3 position = { 0.f, 0.f, 0.f };
-		glm::vec4 color = { 1.f, 1.f, 1.f, 1.f };
+		glm::vec4 color = { 0.f, 0.f, 0.f, 1.f };
 		fonts[1].draw_text("Corbel", position, color, 0.4f + size_x, 0);
 
 
@@ -306,6 +305,7 @@ namespace Copium::Graphics
 		}
 
 		if (switcher)
+
 		{
 			red = (0.1f * (1.0 - timer)) + (0.9f * timer);
 			green = (0.9f * (1.0 - timer)) + (0.1f * timer);
@@ -426,7 +426,7 @@ namespace Copium::Graphics
 		// texture scale should be separate and derived from the image dimensions
 		// Scale = image scale / default scale(1024)
 		Copium::Files::AssetsSystem* assets = Copium::Files::AssetsSystem::Instance();
-		//renderer.draw_quad({ 0.f, 0.f, 0.f }, { 3.84f, 2.16f }, 0.f, assets->get_textures()[0][0].get_object_id());
+		renderer.draw_quad({ 0.f, 0.f, 0.f }, { 3.84f * 2.5f, 2.16f * 2.5f }, 0.f, assets->get_textures()[0].get_object_id());
 		
 		color = { 0.1f, 1.f, 0.1f, 1.f };
 		glm::vec2 worldNDC{ 0 };
@@ -465,18 +465,19 @@ namespace Copium::Graphics
 			int textureSelector = i % 5 + 1;
 
 			glm::vec3 pos = { sprites[i]->get_position().x + movement_x, sprites[i]->get_position().y + movement_y, 0.f };
-			glm::vec2 size = { sprites[i]->get_size().x + size_x, sprites[i]->get_size().y + size_y };
+			glm::vec2 size = { sprites[i]->get_size().x + size_x, sprites[i]->get_size().y + size_y};
 
 			sprites[i]->set_position(pos);
 			sprites[i]->set_size(size);
 
 			// Bean: Set sprite id should be done in the editor or via deserialization
-			sprites[i]->set_sprite_id(assets->get_textures()[0][i % 4 + 1].get_object_id());
+			sprites[i]->set_sprite_id(assets->get_textures()[i % 4 + 1].get_object_id());
+			sprites[i]->set_texture(&assets->get_textures()[i % 4 + 1]);
 
 			if(textureSelector == 5) // Alpha Colored Square
 				renderer.draw_quad(pos, { 0.1f, 0.1f }, rotate, sprites[i]->get_color());
 			else
-				renderer.draw_quad(pos, size, rotate, sprites[i]->get_sprite_id());
+				renderer.draw_quad(pos, size, rotate, *sprites[i]);
 		}
 
 		// Theory WIP
@@ -496,10 +497,42 @@ namespace Copium::Graphics
 				RendererComponent * rc = reinterpret_cast<RendererComponent*>(component);
 				SpriteRenderer sr = rc->get_sprite_renderer();
 				glm::vec2 size(t.glmScale().x, t.glmScale().y);
-				renderer.draw_quad(t.glmPosition(), size, 0.f, sr.get_sprite_id());
+				float rotate = t.glmRotation().z;
+				// Bean: It should be set in inspector view of the renderer component instead
+				unsigned int id = sr.get_sprite_id() - 1;
+				if (id == -1)
+					id = 0;
+				sr.set_texture(&assets->get_textures()[id]);
+				renderer.draw_quad(t.glmPosition(), size, rotate, sr);
 			}
 		}
 
+		// Bean : Testing Animations
+		if (!assets->get_spritesheets().empty())
+		{
+			glm::vec3 position(-3.f, 1.f, 0.f);
+			glm::vec2 size(2.f, 2.f);
+			static GLuint animationID = 0;
+			GLuint indexSize = assets->get_spritesheets()[0].get_size() - 1;
+
+			GLfloat dt = (GLfloat) Windows::WindowsSystem::Instance()->get_delta_time();
+			static float timer = 0.f;
+			timer += dt;
+			if (timer > 0.01f)
+			{
+				timer = 0.f;
+				animationID++;
+			}
+
+			if (animationID > indexSize)
+			{
+				animationID = 0;
+			}
+
+			renderer.draw_quad(position, size, 0.f, assets->get_spritesheets()[0], animationID, 10);
+
+		}
+		
 		// Bean : Testing Text
 		/*glm::vec3 position = { 0.f, -1.f, 0.f };
 		color = { 1.f, 1.f, 0.f, 1.f };

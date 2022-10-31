@@ -20,7 +20,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "CopiumCore/system-interface.h"
 
 #include "Graphics/glslshader.h"
-#include "Graphics/textures.h"
+#include "Graphics/spritesheet.h"
 #include "Graphics/sprite-renderer.h"
 #include "Graphics/framebuffer.h"
 #include "Graphics/renderer.h"
@@ -174,7 +174,6 @@ namespace Copium::Graphics
 		GLSLShader shaderProgram[NUM_SHADERS]; // Shader program to use
 
 		/* Stored Information ***********************************************************/
-		std::vector<Texture> textures;
 		std::vector<SpriteRenderer*> sprites;
 
 		Renderer renderer;

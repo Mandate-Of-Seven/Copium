@@ -20,29 +20,25 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium::Graphics
 {
-	class Spritesheet : public Texture
+	class Spritesheet
 	{
 	public:
-		// Constructors
-		/***************************************************************************/
-		/*!
-		\brief
-			Generates the texture based on the file path using stbi_load
-		*/
-		/***************************************************************************/
-		Spritesheet(const std::string& _filePath, const unsigned int _xDivisor, const unsigned int _yDivisor);
+		
+		Spritesheet(const Texture& _texture, const unsigned int _xDivisor, const unsigned int _yDivisor);
+		
+		const unsigned int& get_size() const { return size;}
+		const Texture& get_texture() const { return refTexture; }
+		const glm::vec2& get_steps() const { return steps; }
+		const std::vector<glm::vec2>& get_offsets() const { return textureOffsets; }
 
-		/***************************************************************************/
-		/*!
-		\brief
-			Delete texture object id
-		*/
-		/***************************************************************************/
-		~Spritesheet();
 	private:
+		const Texture& refTexture;
+
 		unsigned int xColumns; // Minimum 1 column
 		unsigned int yRows; // Minimum 1 row
+		unsigned int size;
 
+		glm::vec2 steps;
 		std::vector<glm::vec2> textureOffsets; // Offsets starts from 0,0 to 1,1
 		// E.g. if column = 4, and row = 1, textureOffsets[0] = {0,0}, textureOffsets[1] = {0.25,0}
 		// textureOffsets[2] = {0.5,0}, textureOffsets[3] = {0.75,0}

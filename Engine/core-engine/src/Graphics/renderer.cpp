@@ -370,7 +370,7 @@ namespace Copium::Graphics
 		draw_quad(transform, _color);
 	}
 
-	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, GLuint _textureID)
+	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const GLuint _textureID)
 	{
 		glm::mat4 translate = glm::translate(glm::mat4(1.f), _position);
 
@@ -392,6 +392,60 @@ namespace Copium::Graphics
 
 		glm::mat4 transform = translate * rotation * scale;
 		draw_quad(transform, _textureID);
+	}
+
+	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const SpriteRenderer& _sprite)
+	{
+		glm::mat4 translate = glm::translate(glm::mat4(1.f), _position);
+
+		float radians = glm::radians(_rotation);
+
+		glm::mat4 rotation = {
+			glm::vec4(cos(radians), sin(radians), 0.f, 0.f),
+			glm::vec4(-sin(radians), cos(radians), 0.f, 0.f),
+			glm::vec4(0.f, 0.f, 1.f, 0.f),
+			glm::vec4(0.f, 0.f, 0.f, 1.f)
+		};
+
+		float pixelWidth = _sprite.get_texture()->get_pixel_width();
+		float pixelHeight = _sprite.get_texture()->get_pixel_height();
+
+		glm::mat4 scale = {
+			glm::vec4(_scale.x * pixelWidth, 0.f, 0.f, 0.f),
+			glm::vec4(0.f, _scale.y * pixelHeight, 0.f, 0.f),
+			glm::vec4(0.f, 0.f, 1.f, 0.f),
+			glm::vec4(0.f, 0.f, 0.f, 1.f)
+		};
+
+		glm::mat4 transform = translate * rotation * scale;
+		draw_quad(transform, _sprite);
+	}
+
+	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Spritesheet& _spritesheet, GLuint _offsetID, GLuint _textureID)
+	{
+		glm::mat4 translate = glm::translate(glm::mat4(1.f), _position);
+
+		float radians = glm::radians(_rotation);
+
+		glm::mat4 rotation = {
+			glm::vec4(cos(radians), sin(radians), 0.f, 0.f),
+			glm::vec4(-sin(radians), cos(radians), 0.f, 0.f),
+			glm::vec4(0.f, 0.f, 1.f, 0.f),
+			glm::vec4(0.f, 0.f, 0.f, 1.f)
+		};
+
+		float pixelWidth = _spritesheet.get_texture().get_pixel_width();
+		float pixelHeight = _spritesheet.get_texture().get_pixel_height();
+
+		glm::mat4 scale = {
+			glm::vec4(_scale.x * pixelWidth, 0.f, 0.f, 0.f),
+			glm::vec4(0.f, _scale.y * pixelHeight, 0.f, 0.f),
+			glm::vec4(0.f, 0.f, 1.f, 0.f),
+			glm::vec4(0.f, 0.f, 0.f, 1.f)
+		};
+
+		glm::mat4 transform = translate * rotation * scale;
+		draw_quad(transform, _spritesheet, _offsetID, _textureID);
 	}
 
 	void Renderer::draw_quad(const glm::mat4& _transform, const glm::vec4& _color)
@@ -418,7 +472,7 @@ namespace Copium::Graphics
 		quadCount++;
 	}
 
-	void Renderer::draw_quad(const glm::mat4& _transform, GLuint _textureID)
+	void Renderer::draw_quad(const glm::mat4& _transform, const GLuint _textureID)
 	{
 		if (quadIndexCount >= maxIndexCount)
 		{
@@ -445,6 +499,47 @@ namespace Copium::Graphics
 		{
 			textureIndex = (GLfloat) graphics->get_texture_slot_index();
 			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _textureID;
+			graphics->set_texture_slot_index((GLuint) textureIndex + 1);
+		}
+
+		for (GLint i = 0; i < 4; i++)
+		{
+			quadBufferPtr->pos = _transform * quadVertexPosition[i];
+			quadBufferPtr->textCoord = quadTextCoord[i];
+			quadBufferPtr->color = color;
+			quadBufferPtr->texID = textureIndex;
+			quadBufferPtr++;
+		}
+
+		quadIndexCount += 6;
+		quadCount++;
+	}
+
+	void Renderer::draw_quad(const glm::mat4& _transform, const SpriteRenderer& _sprite)
+	{
+		if (quadIndexCount >= maxIndexCount)
+		{
+			end_batch();
+			flush();
+			begin_batch();
+		}
+
+		GLfloat textureIndex = 0.f;
+
+		for (GLuint i = 1; i < graphics->get_texture_slot_index(); i++)
+		{
+			if (graphics->get_texture_slots()[i] == _sprite.get_sprite_id())
+			{
+				textureIndex = (GLfloat) i;
+				break;
+			}
+		}
+
+		// Change texture index only if ID retrieved is more than 0 (0 is white texture)
+		if (textureIndex == 0.f && _sprite.get_sprite_id() != 0)
+		{
+			textureIndex = (GLfloat) graphics->get_texture_slot_index();
+			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _sprite.get_sprite_id();
 			graphics->set_texture_slot_index((GLuint)textureIndex + 1);
 		}
 
@@ -452,6 +547,61 @@ namespace Copium::Graphics
 		{
 			quadBufferPtr->pos = _transform * quadVertexPosition[i];
 			quadBufferPtr->textCoord = quadTextCoord[i];
+			quadBufferPtr->color = _sprite.get_color();
+			quadBufferPtr->texID = textureIndex;
+			quadBufferPtr++;
+		}
+
+		quadIndexCount += 6;
+		quadCount++;
+	}
+
+	void Renderer::draw_quad(const glm::mat4& _transform, const Spritesheet& _spritesheet, GLuint _offsetID, GLuint _textureID)
+	{
+		if (quadIndexCount >= maxIndexCount)
+		{
+			end_batch();
+			flush();
+			begin_batch();
+		}
+
+		glm::vec4 color = { 1.f, 1.f, 1.f, 1.f };
+
+		GLfloat textureIndex = 0.f;
+
+		for (GLuint i = 1; i < graphics->get_texture_slot_index(); i++)
+		{
+			if (graphics->get_texture_slots()[i] == _textureID)
+			{
+				textureIndex = (GLfloat) i;
+				break;
+			}
+		}
+
+		// Change texture index only if ID retrieved is more than 0 (0 is white texture)
+		if (textureIndex == 0.f && _textureID != 0)
+		{
+			textureIndex = (GLfloat) graphics->get_texture_slot_index();
+			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _textureID;
+			graphics->set_texture_slot_index((GLuint) textureIndex + 1);
+		}
+
+		glm::vec2 offset = _spritesheet.get_offsets()[_offsetID];
+		glm::vec2 step = _spritesheet.get_steps();
+		step.x = (step.x == 0.f) ? 1.f : step.x;
+		step.y = (step.y == 0.f) ? 1.f : step.y;
+		glm::vec2 spriteTextCoord[4] =
+		{
+			glm::vec2(offset),
+			glm::vec2(offset.x + step.x, offset.y),
+			glm::vec2(offset + step),
+			glm::vec2(offset.x, offset.y + step.y)
+		};
+
+		for (GLint i = 0; i < 4; i++)
+		{
+			quadBufferPtr->pos = _transform * quadVertexPosition[i];
+			quadBufferPtr->textCoord = spriteTextCoord[i];
 			quadBufferPtr->color = color;
 			quadBufferPtr->texID = textureIndex;
 			quadBufferPtr++;

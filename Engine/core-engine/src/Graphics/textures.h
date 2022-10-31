@@ -21,6 +21,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium::Graphics
 {
+#define PIXELRATIO 1000.f
 	class Texture
 	{
 	public:
@@ -41,15 +42,18 @@ namespace Copium::Graphics
 		/***************************************************************************/
 		~Texture();
 
-		unsigned int get_width() { return width; }
-		unsigned int get_height() { return height; }
-		unsigned int get_object_id() { return textureObjectID; }
+		const unsigned int& get_width() const { return width; }
+		const unsigned int& get_height() const { return height; }
+		const float& get_pixel_width() const { return width / PIXELRATIO; }
+		const float& get_pixel_height() const { return height / PIXELRATIO; }
+		const unsigned int& get_object_id() const { return textureObjectID; }
 		std::string& get_file_path() { return filePath; }
 
 	protected:
 		std::string filePath;
 		unsigned int width = 0;
 		unsigned int height = 0;
+
 		unsigned int textureObjectID = 0; // To store the texture
 
 		unsigned int internalFormat = 0;

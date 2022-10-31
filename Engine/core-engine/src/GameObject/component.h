@@ -110,7 +110,7 @@ private:
     ComponentID id;                     //Id of component, local to gameObject
     Type componentType;                 //Type of component
     const bool allowMultiple = false;   //Can gameObjects only have one of this Component?
-    bool enabled;
+    bool enabled = true;
 };
 
     class ColliderComponent : public Component

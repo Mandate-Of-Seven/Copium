@@ -66,7 +66,7 @@ namespace Copium
 			ImGui::TableNextColumn();
 			ImGui::Text("Color");
 			ImGui::TableNextColumn();
-			openPopup = ImGui::ColorButton("Color", color, 0, ImVec2(FLT_MAX, 0));
+			openPopup = ImGui::ColorButton("Color", color, miscFlags, ImVec2(FLT_MAX, 0));
 
 			// Flip
 			ImGui::TableNextRow();

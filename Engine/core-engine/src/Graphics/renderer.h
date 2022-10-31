@@ -125,10 +125,44 @@ namespace Copium::Graphics
 		\param size
 			The size of the quad
 		\param textureID
+			The texture to use
+		*/
+		/***************************************************************************/
+		void draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const GLuint _textureID);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Draws the quad onto the game window
+		\param position
+			The position of the quad
+		\param size
+			The size of the quad
+		\param sprite
+			The sprite to use to draw
+		*/
+		/***************************************************************************/
+		void draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const SpriteRenderer& _sprite);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Draws the quad onto the game window
+		\param position
+			The position of the quad
+		\param scale
+			The size of the quad
+		\param rotation
+			The rotation of the quad
+		\param spritesheet
+			The spritesheet to reference
+		\param offset
+			The index offset of the spritesheet
+		\param textureID
 			The index of the texture to be used
 		*/
 		/***************************************************************************/
-		void draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, GLuint _textureID);
+		void draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Spritesheet& _spritesheet, GLuint _offsetID, GLuint _textureID);
 
 		/***************************************************************************/
 		/*!
@@ -152,15 +186,39 @@ namespace Copium::Graphics
 			Draws the quad onto the game window
 		\param transform
 			The transform of the quad
-		\param position
-			The position of the quad
-		\param size
-			The size of the quad
+		\param textureID
+			The texture to use to draw
+		*/
+		/***************************************************************************/
+		void draw_quad(const glm::mat4& _transform, const GLuint _textureID);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Draws the quad onto the game window
+		\param transform
+			The transform of the quad
+		\param sprite
+			The sprite to use to draw
+		*/
+		/***************************************************************************/
+		void draw_quad(const glm::mat4& _transform, const SpriteRenderer& _sprite);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Draws the quad onto the game window
+		\param transform
+			The transform of the quad
+		\param spritesheet
+			The sprite sheet reference
+		\param offsetID
+			The index offset of the spritesheet
 		\param textureID
 			The index of the texture to be used
 		*/
 		/***************************************************************************/
-		void draw_quad(const glm::mat4& _transform, GLuint _textureID);
+		void draw_quad(const glm::mat4& _transform, const Spritesheet& _spritesheet, GLuint _offsetID, GLuint _textureID);
 
 		/***************************************************************************/
 		/*!

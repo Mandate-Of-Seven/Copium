@@ -53,5 +53,8 @@ namespace Copium::Files
 			// Store the texture
 			textures.push_back(texture);
 		}
+
+		Copium::Graphics::Spritesheet ss(get_textures()[10], 1, 8);
+		spritesheets.push_back(ss);
 	}
 }
