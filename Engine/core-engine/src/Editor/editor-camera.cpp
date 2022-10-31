@@ -99,6 +99,21 @@ namespace Copium
 		update_ortho_projection(aspectRatio, zoomLevel);
 	}
 
+	glm::vec2 EditorCamera::get_ndc() const
+	{
+		glm::vec3 pos = get_position();
+		EditorSceneView* sceneView = EditorSystem::Instance()->get_scene_view();
+		glm::vec2 scenePos = sceneView->get_position();
+		glm::vec2 sceneDim = sceneView->get_dimension();
+		Math::Vec2 mousePos = inputSystem.get_mouseposition();
+		glm::vec2 centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
+		glm::vec2 mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
+		glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
+		mouseToNDC *= zoomLevel;
+		glm::vec2 worldNDC = { mouseToNDC.x + pos.x, mouseToNDC.y + pos.y };
+		return worldNDC;
+	}
+
 	void EditorCamera::mouse_controls()
 	{
 		glm::vec3 pos = get_position();

@@ -120,6 +120,7 @@
     <ClCompile Include="src\Graphics\sprite-renderer.cpp" />
     <ClCompile Include="src\Graphics\spritesheet.cpp" />
     <ClCompile Include="src\Graphics\textures.cpp" />
+    <ClCompile Include="src\Graphics\ui-components.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Math\math-library.cpp" />
     <ClCompile Include="src\GameObject\transform-component.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="src\Graphics\camera.h" />
     <ClInclude Include="src\Graphics\fonts.h" />
     <ClInclude Include="src\Graphics\sprite-renderer.h" />
+    <ClInclude Include="src\Graphics\ui-components.h" />
     <ClInclude Include="src\SceneManager\sm.h" />
     <ClInclude Include="src\Scripting\logic-system.h" />
     <ClInclude Include="src\Scripting\scriptWrappers.h" />

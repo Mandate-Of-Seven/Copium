@@ -4,6 +4,7 @@ public class CSharpTesting : CopiumScript
 {
 	public float speed = 0.2f;
 	public Vector2 vec2;
+	public Vector3 vec3;
     void Awake()
 	{
 	}

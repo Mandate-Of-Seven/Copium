@@ -50,7 +50,10 @@ void InputSystem::init()
     std::cout << "Input init was called" << std::endl;
 }
 
-void InputSystem::update() {}
+void InputSystem::update() 
+{
+
+}
 
 void InputSystem::exit() {}
 
@@ -83,7 +86,6 @@ bool InputSystem::is_mousebutton_pressed(int button)
     
     if (mouseButtons[button])
     {
-        mouseButtons[button] = 0;
         return true;
     }
 

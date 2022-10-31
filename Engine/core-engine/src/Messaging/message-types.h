@@ -35,10 +35,10 @@ namespace Copium
     namespace MESSAGE_CONTAINER
     {
         //MC = MESSAGE_CONTAINER
-        //struct MC_MOUSE_MOVED
-        //{
-        //    double x, y;
-        //};
+        struct MC_MOUSE_MOVED
+        {
+            double x, y;
+        };
 
         ////Bitwise operator flags for key modifiers
         //enum class KEY_MOD

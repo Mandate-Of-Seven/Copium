@@ -85,7 +85,7 @@ namespace Window::Hierarchy
 		if a game object is selected return true
 	*/
 	/*******************************************************************************/
-	bool display_gameobject_advanced(GameObject& _go, int& _selected);
+	bool display_gameobject_advanced(GameObject& _go, GameObjectID& _selected);
 
 	/*******************************************************************************
 	/*!

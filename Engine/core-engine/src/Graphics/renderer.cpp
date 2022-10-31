@@ -296,7 +296,7 @@ namespace Copium
 			GLuint uProjection = glGetUniformLocation(
 				graphics->get_shader_program()[2].GetHandle(), "uViewProjection");
 
-			glm::mat4 projection = Copium::Editor::EditorSystem::Instance()->get_camera()->get_projection();
+			glm::mat4 projection = Copium::EditorSystem::Instance()->get_camera()->get_projection();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
 			// End of matrix assignment
@@ -633,53 +633,53 @@ namespace Copium
 
 	void Renderer::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float _scale, GLuint _fontID)
 	{
-		if (textVertexCount >= maxTextCount)
-		{
-			end_batch();
-			flush();
-			begin_batch();
-		}
+		//if (textVertexCount >= maxTextCount)
+		//{
+		//	end_batch();
+		//	flush();
+		//	begin_batch();
+		//}
 
-		float x = _position.x;
-		float y = _position.y;
+		//float x = _position.x;
+		//float y = _position.y;
 
-		Font font = graphics->get_font(_fontID);
-		std::map<char, Character> chars = font.get_characters();
-		
-		std::string::const_iterator c;
-		for (c = _text.begin(); c != _text.end(); c++)
-		{
-			Character ch = chars[*c];
+		//Font font = graphics->get_font(_fontID);
+		//std::map<char, Character> chars = font.get_characters();
+		//
+		//std::string::const_iterator c;
+		//for (c = _text.begin(); c != _text.end(); c++)
+		//{
+		//	Character ch = chars[*c];
 
-			float xpos = x + ch.bearing.x * (_scale * 0.01f);
-			float ypos = y - (ch.size.y - ch.bearing.y) * (_scale * 0.01f);
+		//	float xpos = x + ch.bearing.x * (_scale * 0.01f);
+		//	float ypos = y - (ch.size.y - ch.bearing.y) * (_scale * 0.01f);
 
-			float w = ch.size.x * (_scale * 0.01f);
-			float h = ch.size.y * (_scale * 0.01f);
+		//	float w = ch.size.x * (_scale * 0.01f);
+		//	float h = ch.size.y * (_scale * 0.01f);
 
-			// Update VBO for each character
-			glm::vec3 textVertexPosition[6] = {
-				glm::vec3(xpos, ypos + h, 0.f),
-				glm::vec3(xpos, ypos, 0.f),
-				glm::vec3(xpos + w, ypos, 0.f),
-				glm::vec3(xpos, ypos + h, 0.f),
-				glm::vec3(xpos + w, ypos, 0.f),
-				glm::vec3(xpos + w, ypos + h, 0.f)
-			};
+		//	// Update VBO for each character
+		//	glm::vec3 textVertexPosition[6] = {
+		//		glm::vec3(xpos, ypos + h, 0.f),
+		//		glm::vec3(xpos, ypos, 0.f),
+		//		glm::vec3(xpos + w, ypos, 0.f),
+		//		glm::vec3(xpos, ypos + h, 0.f),
+		//		glm::vec3(xpos + w, ypos, 0.f),
+		//		glm::vec3(xpos + w, ypos + h, 0.f)
+		//	};
 
-			for (GLint i = 0; i < 6; i++)
-			{
-				textBufferPtr->pos = textVertexPosition[i];
-				textBufferPtr->textCoord = textTextCoord[i];
-				textBufferPtr->color = _color;
-				textBufferPtr++;
-			}
+		//	for (GLint i = 0; i < 6; i++)
+		//	{
+		//		textBufferPtr->pos = textVertexPosition[i];
+		//		textBufferPtr->textCoord = textTextCoord[i];
+		//		textBufferPtr->color = _color;
+		//		textBufferPtr++;
+		//	}
 
-			x += (ch.advance >> 6) * (_scale * 0.01f); // Bitshift by 6 to get value in pixels
-		
-			textVertexCount += 6;
-		}
-		
-		textCount++;
+		//	x += (ch.advance >> 6) * (_scale * 0.01f); // Bitshift by 6 to get value in pixels
+		//
+		//	textVertexCount += 6;
+		//}
+		//
+		//textCount++;
 	}
 }

@@ -40,6 +40,7 @@ namespace Copium
 		float get_zoom_speed() const;
 		float get_pitch() const { return pitch; }
 		float get_yaw() const { return yaw; }
+		glm::vec2 get_ndc() const;
 
 		// Matrices
 		void on_resize(float _width, float _height);

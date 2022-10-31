@@ -29,6 +29,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/component.h"
 #include "GameObject/renderer-component.h"
 #include "Editor/editor-undoredo.h"
+#include "Graphics/ui-components.h"
 
 //State Manager
 #include "SceneManager/state-manager.h"
@@ -90,11 +91,15 @@ int main()
     Copium::FrameRateController frc(100.0);
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
-    //GameObject& gObj = *sceneManager->get_gof().build_gameobject();
-    //Copium::ScriptComponent& sComponent = gObj.addComponent<Copium::ScriptComponent>();
-    //gObj.addComponent<Copium::RendererComponent>();
-    //sComponent.Name("CSharpTesting");
-    //Window::Inspector::selectedGameObject = &gObj;
+    GameObject& gObj = *sceneManager->get_gof().build_gameobject();
+
+
+    Copium::ScriptComponent& sComponent = gObj.addComponent<Copium::ScriptComponent>();
+    gObj.addComponent<Copium::RendererComponent>();
+    Copium::UIButtonComponent& button = gObj.addComponent<Copium::UIButtonComponent>();
+    gObj.addComponent<Copium::UITextComponent>();
+    sComponent.Name("CSharpTesting");
+    Window::Inspector::selectedGameObject = &gObj;
 
     // Engine Loop
     while (!glfwWindowShouldClose(windowsSystem->get_window()) && esCurrent != esQuit)
@@ -129,6 +134,7 @@ int main()
                     SM.draw_scene();           //DRAW STATE
                     copiumCore.update();
                     update();
+                    button.update();
                     if (esCurrent == esQuit)
                         SM.change_scene(gsQuit);
 

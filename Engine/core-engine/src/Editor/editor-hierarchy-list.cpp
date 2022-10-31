@@ -92,7 +92,7 @@ namespace Window::Hierarchy
 			if (ImGui::TreeNodeEx(currentScene->get_name().c_str(), rootFlags))
 			{
 				bool isSelected = false;
-
+				GameObjectID selectedID = 0;
 				for (size_t i{ 0 }; i < roots.size(); ++i)
 				{
 					isSelected = display_gameobject_advanced(*roots[i], selectedID);
@@ -137,7 +137,7 @@ namespace Window::Hierarchy
 		ImGui::TreePop();
 
 	}
-	bool display_gameobject_advanced(GameObject& _go, int& _selected)
+	bool display_gameobject_advanced(GameObject& _go, GameObjectID& _selected)
 	{
 		bool isSelected = false;
 		ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;

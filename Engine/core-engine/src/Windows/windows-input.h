@@ -20,6 +20,8 @@ namespace Copium::Math
 	struct Vec2;
 }
 
+struct GLFWwindow;
+
 namespace Copium
 {
 	CLASS_SYSTEM(InputSystem)

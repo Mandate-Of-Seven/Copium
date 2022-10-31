@@ -12,20 +12,21 @@
 	various sub-systems which includes asset loading, matrice calculations and rendering.
 	Components and objects which require rendering would refer to this class.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 #include "Windows/windows-system.h"
 
 #include "Graphics/graphics-system.h"
 #include "Graphics/sprite-renderer.h"
-#include "Windows/input.h"
+#include "Windows/windows-input.h"
 
 #include "Editor/editor-system.h"
 #include "Files/assets-system.h"
 
 // Bean: remove this after NewManagerInstance is moved
 #include "GameObject/renderer-component.h"
+#include "Graphics/ui-components.h"
 #include "SceneManager/sm.h"
 
 namespace Copium::Graphics
@@ -55,14 +56,7 @@ namespace Copium::Graphics
 		// Initialise Sub systems
 		renderer.init();
 
-		fonts[0].load_font("Assets/fonts/arial.ttf");
-		fonts[1].load_font("Assets/fonts/corbel.ttf");
-		fonts[2].load_font("Assets/fonts/Comfortaa-Regular.ttf");
-		
-		for (int i = 0; i < 3; i++)
-			fonts[i].setup_font_vao();
-
-		glm::vec2 size = Copium::Editor::EditorSystem::Instance()->get_scene_view()->get_dimension();
+		glm::vec2 size = Copium::EditorSystem::Instance()->get_scene_view()->get_dimension();
 		framebuffer.set_size((GLuint)size.x, (GLuint)size.y);
 		framebuffer.init();
 
@@ -95,7 +89,7 @@ namespace Copium::Graphics
 
 	void GraphicsSystem::update()
 	{
-		GLfloat dt = (GLfloat) Windows::WindowsSystem::Instance()->get_delta_time();
+		GLfloat dt = (GLfloat) WindowsSystem::Instance()->get_delta_time();
 		movement_x = movement_y = 0;
 
 		glClearColor(1.f, 1.f, 1.f, 1.f);
@@ -113,7 +107,7 @@ namespace Copium::Graphics
 
 		// Create sprites
 		glm::vec2 mousePos{0}, centreOfScene{0}, mouseScenePos{0}, mouseToNDC{0}, worldNDC{0};
-		if (!Input::is_key_held(GLFW_KEY_LEFT_SHIFT) && Input::is_key_pressed(GLFW_KEY_C))
+		if (!inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_C))
 		{
 			SpriteRenderer* sprite = new SpriteRenderer;
 			Copium::Editor::EditorSystem* editor = Copium::Editor::EditorSystem::Instance();
@@ -122,7 +116,7 @@ namespace Copium::Graphics
 			glm::vec2 cameraPos = editor->get_camera()->get_position();
 			float zoom = editor->get_camera()->get_zoom();
 			// Mouse to scene view conversion
-			mousePos = { Input::get_mouse_position().first , Input::get_mouse_position().second };
+			mousePos = inputSystem.get_mouseposition().to_glm();
 			centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
 			mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
 			mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
@@ -177,7 +171,7 @@ namespace Copium::Graphics
 			debugMode = !debugMode;
 		}
 		
-		if (Input::is_key_held(GLFW_KEY_Z) && Input::is_key_held(GLFW_KEY_LEFT_SHIFT))
+		if (inputSystem.is_key_held(GLFW_KEY_Z) && inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT))
 		{
 			size_x -= dt;
 			size_y -= dt;
@@ -204,8 +198,7 @@ namespace Copium::Graphics
 
 	void GraphicsSystem::exit()
 	{
-		for (int i = 0; i < 3; i++)
-			fonts[i].shutdown();
+		Font::cleanUp();
 
 		renderer.shutdown();
 		framebuffer.exit();
@@ -284,13 +277,13 @@ namespace Copium::Graphics
 			draw_debug_info();
 
 		glm::vec3 position = { 0.f, 0.f, 0.f };
-		glm::vec4 color = { 0.f, 0.f, 0.f, 1.f };
-		fonts[1].draw_text("Corbel", position, color, 0.4f + size_x, 0);
+		glm::vec4 color = { 1.f, 1.f, 1.f, 1.f };
+		Font::getFont("corbel")->draw_text("Corbel", position, color, 0.4f + size_x, 0);
 
 
 		float red = 0.f, green = 1.f;
 		static float timer = 0.f; 
-		timer += (float)Windows::WindowsSystem::Instance()->get_delta_time();
+		timer += (float)WindowsSystem::Instance()->get_delta_time();
 		static bool switcher = false;
 
 		if (timer >= 1.f && switcher)
@@ -318,7 +311,7 @@ namespace Copium::Graphics
 
 		position = { 0.f, 2.f, 0.f };
 		color = { red, green, 1.f, 1.f };
-		fonts[2].draw_text("Hello Comfortaa Here...", position, color, 0.6f + size_x, 0);
+		Font::getFont("Comfortaa-Regular")->draw_text("Hello Comfortaa Here...", position, color, 0.6f + size_x, 0);
 
 		// Unbind the framebuffer to display renderable
 		// onto the image
@@ -425,7 +418,7 @@ namespace Copium::Graphics
 		// Bean: scale should be the scale of the object, 
 		// texture scale should be separate and derived from the image dimensions
 		// Scale = image scale / default scale(1024)
-		Copium::Files::AssetsSystem* assets = Copium::Files::AssetsSystem::Instance();
+		Copium::AssetsSystem* assets = Copium::AssetsSystem::Instance();
 		renderer.draw_quad({ 0.f, 0.f, 0.f }, { 3.84f * 2.5f, 2.16f * 2.5f }, 0.f, assets->get_textures()[0].get_object_id());
 		
 		color = { 0.1f, 1.f, 0.1f, 1.f };
@@ -487,13 +480,10 @@ namespace Copium::Graphics
 		{
 			for (Component* component : gameObject->Components())
 			{
-				if (component->get_type() != Component::Type::SpriteRenderer)
-					continue;
-
 				if (!component->Enabled())
 					continue;
 
-				Transform t = gameObject->Trans()->get_transform();
+				TransformComponent& t = gameObject->Transform();
 				RendererComponent * rc = reinterpret_cast<RendererComponent*>(component);
 				SpriteRenderer sr = rc->get_sprite_renderer();
 				glm::vec2 size(t.glmScale().x, t.glmScale().y);
@@ -504,6 +494,13 @@ namespace Copium::Graphics
 					id = 0;
 				sr.set_texture(&assets->get_textures()[id]);
 				renderer.draw_quad(t.glmPosition(), size, rotate, sr);
+			}
+			for (Component* component : gameObject->getComponents<UITextComponent>())
+			{
+				if (!component->Enabled())
+					continue;
+				UITextComponent* textComponent = reinterpret_cast<UITextComponent*>(component);
+				textComponent->render();
 			}
 		}
 

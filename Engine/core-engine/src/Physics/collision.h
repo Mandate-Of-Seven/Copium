@@ -62,4 +62,6 @@ namespace Copium::Collision
    /**************************************************************************/
 	bool collision_pointrect(const Math::Vec2& point,
 		const AABB& aabb2, const Math::Vec2& vel2);
+
+	bool static_collision_pointrect(const Math::Vec2& point,const AABB& aabb2);
 }
