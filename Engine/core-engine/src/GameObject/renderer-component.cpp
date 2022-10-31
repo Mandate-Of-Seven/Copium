@@ -19,7 +19,7 @@ namespace Copium
 {
 	RendererComponent::RendererComponent(GameObject& _gameObj) :Component(_gameObj,ComponentType::Renderer)
 	{
-		PRINT("\tRenderer Component constructed");
+		PRINT("Renderer Component constructed");
 	}
 
 	void RendererComponent::deserialize(rapidjson::Value& _value)
@@ -65,7 +65,7 @@ namespace Copium
 			ImGui::TableNextColumn();
 			ImGui::Text("Color");
 			ImGui::TableNextColumn();
-			openPopup = ImGui::ColorButton("Color", color, 0, ImVec2(FLT_MAX, 0));
+			openPopup = ImGui::ColorButton("Color", color, miscFlags, ImVec2(FLT_MAX, 0));
 
 			// Flip
 			ImGui::TableNextRow();

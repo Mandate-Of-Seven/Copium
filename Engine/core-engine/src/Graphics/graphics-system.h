@@ -20,10 +20,11 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "CopiumCore/system-interface.h"
 
 #include "Graphics/glslshader.h"
-#include "Graphics/textures.h"
+#include "Graphics/spritesheet.h"
 #include "Graphics/sprite-renderer.h"
 #include "Graphics/framebuffer.h"
 #include "Graphics/renderer.h"
+#include "Graphics/fonts.h"
 
 #include "SceneManager/scene-manager.h"
 
@@ -32,10 +33,17 @@ namespace Copium
 	// Global variables
 	static const GLuint maxQuadCount = 1000; // Number of sprites per batch
 	static const GLuint maxLineCount = 1000; // Number of lines per batch
+	static const GLuint maxTextCount = 1000; // Number of text per batch
 	static const GLuint maxVertexCount = maxQuadCount * 4;
 	static const GLuint maxIndexCount = maxQuadCount * 6;
 	static const GLuint maxLineVertexCount = maxLineCount * 2;
+	static const GLuint maxTextVertexCount = maxTextCount * 4;
 	static const GLuint maxTextures = 32;
+
+	static enum
+	{
+		NUM_SHADERS = 3
+	};
 
 	CLASS_SYSTEM(GraphicsSystem) // Inherits from System
 	{
@@ -83,6 +91,7 @@ namespace Copium
 		void add_sprite(SpriteRenderer* _sprite) { sprites.push_back(_sprite); }
 		std::vector<SpriteRenderer*> const get_sprites() { return sprites; }
 		Framebuffer* get_framebuffer() { return &framebuffer; }
+		const Font& get_font(GLuint _fontID) const { return fonts[_fontID]; }
 
 #pragma region MemberFunctions
 	private:
@@ -162,14 +171,14 @@ namespace Copium
 		GLuint whiteTextureSlot = 0;
 
 		/* Shaders **********************************************************************/
-		GLSLShader shaderProgram[2]; // Shader program to use
+		GLSLShader shaderProgram[NUM_SHADERS]; // Shader program to use
 
 		/* Stored Information ***********************************************************/
-		std::vector<Texture> textures;
 		std::vector<SpriteRenderer*> sprites;
 
 		Renderer renderer;
 		Framebuffer framebuffer;
+		Font fonts[16];
 
 		bool debugMode = false;
 #pragma endregion DataMembers
