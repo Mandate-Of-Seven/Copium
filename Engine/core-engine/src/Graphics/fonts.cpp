@@ -24,7 +24,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor/editor-system.h"
 #include <glm/gtc/type_ptr.hpp>
 
-namespace Copium::Graphics
+namespace Copium
 {
 	void Font::load_font(std::string _font)
 	{
@@ -113,13 +113,13 @@ namespace Copium::Graphics
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		Graphics::GraphicsSystem* graphics = Graphics::GraphicsSystem::Instance();
+		GraphicsSystem* graphics = GraphicsSystem::Instance();
 		graphics->get_shader_program()[2].Use();
 
 		GLuint uProjection = glGetUniformLocation(
 			graphics->get_shader_program()[2].GetHandle(), "uViewProjection");
 
-		glm::mat4 projection = Copium::Editor::EditorSystem::Instance()->get_camera()->get_projection();
+		glm::mat4 projection = Copium::EditorSystem::Instance()->get_camera()->get_projection();
 		glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
 		glActiveTexture(GL_TEXTURE0);
