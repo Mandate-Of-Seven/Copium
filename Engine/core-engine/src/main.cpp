@@ -22,7 +22,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scripting/scripting-system.h"
 #include "Scripting/logic-system.h"
 #include "Editor/editor-consolelog.h"
-#include "Scripting/scripting.h"
+#include "Scripting/script-component.h"
 #include "Debugging/logging-system.h"
 #include "Audio/sound-system.h"
 #include "SceneManager/sm.h"
@@ -87,11 +87,11 @@ int main()
     init();
     copiumCore.init();
 
-    SceneManager SM;
+    Copium::SceneManager SM;
     Copium::FrameRateController frc(100.0);
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
-    GameObject& gObj = *sceneManager->get_gof().build_gameobject();
+    Copium::GameObject& gObj = *sceneManager->get_gof().build_gameobject();
 
 
     Copium::ScriptComponent& sComponent = gObj.addComponent<Copium::ScriptComponent>();
@@ -99,7 +99,6 @@ int main()
     Copium::UIButtonComponent& button = gObj.addComponent<Copium::UIButtonComponent>();
     gObj.addComponent<Copium::UITextComponent>();
     sComponent.Name("CSharpTesting");
-    Window::Inspector::selectedGameObject = &gObj;
 
     // Engine Loop
     while (!glfwWindowShouldClose(windowsSystem->get_window()) && esCurrent != esQuit)
@@ -177,14 +176,7 @@ static void init()
 */
 /**************************************************************************/
 static void update()
-{
-   
-    if (inputSystem.is_key_pressed(GLFW_KEY_E))
-    {
-        bool play = Copium::LogicSystem::Instance()->Play();
-        Copium::LogicSystem::Instance()->Play(!play);
-    }
-    
+{   
     if (inputSystem.is_key_pressed(GLFW_KEY_Z))//undo
     {
         if (!Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack.empty())

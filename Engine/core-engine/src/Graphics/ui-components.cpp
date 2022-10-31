@@ -98,6 +98,15 @@ namespace Copium
 		return UIButtonState::None;
 	}
 
+	UIButtonComponent& UIButtonComponent::operator=(const UIButtonComponent& rhs)
+	{
+		min = rhs.min;
+		max = rhs.max;
+		state = rhs.state;
+		mapStateCallbacks = rhs.mapStateCallbacks;
+		return *this;
+	}
+
 	UITextComponent::UITextComponent(GameObject& _gameObj)
 		: UIComponent(_gameObj, ComponentType::UIText), font{Font::getFont("corbel")}
 	{
@@ -110,6 +119,15 @@ namespace Copium
 		font->draw_text("Hello bby", gameObj.Transform().position.to_glm(), { 1.f, 1.f, 1.f, 1.f }, 1.f, 0);
 	}
 
+	UITextComponent& UITextComponent::operator=(const UITextComponent& rhs)
+	{
+		offset = rhs.offset;
+		percentage = rhs.percentage;
+		content = rhs.content;
+		font = rhs.font;
+		return *this;
+	}
+
 	UIImageComponent::UIImageComponent(GameObject& _gameObj)
 		: UIComponent(_gameObj, ComponentType::UIImage)
 	{
@@ -119,5 +137,12 @@ namespace Copium
 	void UIImageComponent::render()
 	{
 
+	}
+
+	UIImageComponent& UIImageComponent::operator=(const UIImageComponent& rhs)
+	{
+		offset = rhs.offset;
+		percentage = rhs.percentage;
+		return *this;
 	}
 }

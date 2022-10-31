@@ -35,8 +35,6 @@ namespace Copium
 		void init();
 		void update();
 		void exit();
-		bool Play() const;
-		void Play(bool);
 	};
 }
 

@@ -1,5 +1,5 @@
 /*!***************************************************************************************
-\file			scripting.h
+\file			script-component.h
 \project
 \author			Zacharie Hong
 
@@ -102,9 +102,10 @@ namespace Copium
 		bool getFieldValue(const std::string& name, void* buffer);
 		bool setFieldValue(const std::string& name, const void* value);
 
+		ScriptComponent& operator=(const ScriptComponent& rhs);
 	private:
 		void instantiate();
-
+		char buffer[32];
 		ScriptClass* pScriptClass;
 		MonoObject* mObject;
 		MonoObject* mGameObject;

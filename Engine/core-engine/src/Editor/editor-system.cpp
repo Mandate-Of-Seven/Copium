@@ -26,12 +26,12 @@ namespace Copium
 {
 	// Our state
 	bool show_demo_window = true;
-	Copium::CopiumCore& copiumCore{ *Copium::CopiumCore::Instance() };
+	CopiumCore& copiumCore{ *CopiumCore::Instance() };
 
 
 	void EditorSystem::init()
 	{
-		Copium::WindowsSystem* windowsSystem = Copium::WindowsSystem::Instance();
+		WindowsSystem* windowsSystem = WindowsSystem::Instance();
 
 		//imgui
 		ImGui::CreateContext();
@@ -140,7 +140,7 @@ namespace Copium
 					if (ImGui::MenuItem("Save", "Ctrl+S"))
 					{
 						//save scene
-						Copium::NewSceneManager::Instance()->save_scene();
+						NewSceneManager::Instance()->save_scene();
 					}
 
 					if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
@@ -161,12 +161,12 @@ namespace Copium
 					if (ImGui::MenuItem("Play Scene"))
 					{
 						printf("Starting scene\n");
-						Copium::NewSceneManager::Instance()->startPreview();
+						NewSceneManager::Instance()->startPreview();
 						copiumCore.toggle_inplaymode();
 					}
 					if (ImGui::MenuItem("Stop Scene"))
 					{
-						Copium::NewSceneManager::Instance()->endPreview();
+						NewSceneManager::Instance()->endPreview();
 						copiumCore.toggle_inplaymode();
 					}
 

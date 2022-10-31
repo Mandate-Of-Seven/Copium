@@ -18,7 +18,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Graphics/textures.h"
 
-namespace Copium::Graphics
+namespace Copium
 {
 	class Spritesheet
 	{

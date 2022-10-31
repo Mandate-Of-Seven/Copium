@@ -142,7 +142,7 @@ namespace Copium
 		GLuint uProjection = glGetUniformLocation(
 			graphics->get_shader_program()[2].GetHandle(), "uViewProjection");
 
-		glm::mat4 projection = Copium::EditorSystem::Instance()->get_camera()->get_projection();
+		glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_projection();
 		glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
 		glActiveTexture(GL_TEXTURE0);

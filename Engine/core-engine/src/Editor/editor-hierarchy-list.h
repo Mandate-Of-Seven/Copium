@@ -63,7 +63,7 @@ namespace Window::Hierarchy
 		void
 	*/
 	/*******************************************************************************/
-	void display_gameobject(const GameObject& _go);
+	void display_gameobject(const Copium::GameObject& _go);
 
 	/*******************************************************************************
 	/*!
@@ -85,7 +85,7 @@ namespace Window::Hierarchy
 		if a game object is selected return true
 	*/
 	/*******************************************************************************/
-	bool display_gameobject_advanced(GameObject& _go, GameObjectID& _selected);
+	bool display_gameobject_advanced(Copium::GameObject& _go, Copium::GameObjectID& _selected);
 
 	/*******************************************************************************
 	/*!

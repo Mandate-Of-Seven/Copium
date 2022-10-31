@@ -46,7 +46,6 @@ namespace Copium
 	{
 		FieldType type;
 		std::string name;
-
 		MonoClassField* classField;
 	};
 
@@ -207,6 +206,7 @@ namespace Copium
 
 		void loadAssemblyClasses();
 
+		MonoObject* cloneInstance(MonoObject* _instance);
 
 		const std::unordered_map<std::string, ScriptClass*>& getScriptClassMap();
 	private:

@@ -159,30 +159,30 @@ namespace Copium
 			focalPoint += -get_right_direction() * delta.x * speed.x;
 		}
 
-		//if (Input::is_key_held(GLFW_KEY_LEFT_CONTROL))
+		//if (inputSystem.is_key_held(GLFW_KEY_LEFT_CONTROL))
 		//{
 		//	glm::vec2 speed = get_pan_speed();
 		//	// Bean: Zoomlevel should be positive
-		//	if (Input::is_key_held(GLFW_KEY_W)) // Up
+		//	if (inputSystem.is_key_held(GLFW_KEY_W)) // Up
 		//	{
 		//		focalPoint += get_up_direction() * 0.1f * speed.y * zoomLevel;
 		//	}
-		//	if (Input::is_key_held(GLFW_KEY_A)) // Left
+		//	if (inputSystem.is_key_held(GLFW_KEY_A)) // Left
 		//	{
 		//		focalPoint += -get_right_direction() * 0.1f * speed.x * zoomLevel;
 		//	}
-		//	if (Input::is_key_held(GLFW_KEY_S)) // Down
+		//	if (inputSystem.is_key_held(GLFW_KEY_S)) // Down
 		//	{
 		//		focalPoint += get_up_direction() * -0.1f * speed.y * zoomLevel;
 		//	}
-		//	if (Input::is_key_held(GLFW_KEY_D)) // Right
+		//	if (inputSystem.is_key_held(GLFW_KEY_D)) // Right
 		//	{
 		//		focalPoint += -get_right_direction() * -0.1f * speed.x * zoomLevel;
 		//	}
 		//}
 
 		// Rotation
-		/*if (Input::is_key_held(GLFW_KEY_LEFT_ALT))
+		/*if (inputSystem.is_key_held(GLFW_KEY_LEFT_ALT))
 		{
 			glm::vec2 mouse{ inputSystem.get_mouseX(), inputSystem.get_mouseY() };
 			glm::vec2 delta = (mouse - mousePosition) * 0.003f;
@@ -209,7 +209,7 @@ namespace Copium
 
 			update_ortho_projection(aspectRatio, zoomLevel);
 		}
-		//scroll = Input::get_mousescroll();
+		//scroll = inputSystem.get_mousescroll();
 	}
 
 	glm::vec3 EditorCamera::calculate_position()

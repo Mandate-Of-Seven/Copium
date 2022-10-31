@@ -21,11 +21,11 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 namespace Copium
 {
 	// Bean: Temporary global variable
-	Copium::GraphicsSystem* graphics;
+	GraphicsSystem* graphics;
 
 	void EditorSceneView::init()
 	{
-		graphics = Copium::GraphicsSystem::Instance();
+		graphics = GraphicsSystem::Instance();
 
 		sceneDimension = { sceneWidth, sceneHeight };
 	}

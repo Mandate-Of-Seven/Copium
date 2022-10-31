@@ -40,33 +40,33 @@ namespace Copium
 
 		return tmp;
 	}
+
+
 	GameObject* GameObjectFactory::build_gameobject(GameObject& _src)
 	{
-		GameObject* go = new GameObject();
+		GameObject* go = new GameObject(_src);
 		if (!go)
 			return nullptr;
-		go->set_name(_src.get_name());	// Name
-		// Components copy
-		*go = _src;
 
 		currentScene->add_gameobject(go);
 
-		for (std::list<GameObject*>::iterator iter = _src.mchildList().begin(); iter != _src.mchildList().end(); ++iter)
-		{
-			if (!(*iter))
-				continue;
-			//std::cout << "adding a child\n";
-			GameObject* cgo = build_gameobject(*(*iter));
-			if (!cgo)
-				break;
+		//for (std::list<GameObject*>::iterator iter = _src.mchildList().begin(); iter != _src.mchildList().end(); ++iter)
+		//{
+		//	if (!(*iter))
+		//		continue;
+		//	//std::cout << "adding a child\n";
+		//	GameObject* cgo = build_gameobject(*(*iter));
+		//	if (!cgo)
+		//		break;
 
-			//cgo->set_parent(go);
-			go->attach_child(cgo);
+		//	cgo->set_parent(go);
+		//	go->attach_child(cgo);
 
-		}
+		//}
 		return go;
 
 	}
+
 	GameObject* GameObjectFactory::build_gameobject(rapidjson::Value& _value) {
 
 		GameObject* go = new GameObject();

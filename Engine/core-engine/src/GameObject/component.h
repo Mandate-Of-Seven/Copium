@@ -20,6 +20,10 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <map>
 #include <rapidjson/document.h>
 
+
+namespace Copium
+{
+
 class GameObject;
 
     //USING
@@ -42,9 +46,9 @@ enum class ComponentType : int      // Types of Components
 
 static std::map<ComponentType, const std::string> MAP_COMPONENT_TYPE_NAME
 {
-    {ComponentType::Animator,"AnimatorComponent"},
-    {ComponentType::Collider,"ColliderComponent"},
-    {ComponentType::Renderer,"RendererComponent"},
+    {ComponentType::Animator,"Copium::AnimatorComponent"},
+    {ComponentType::Collider,"Copium::ColliderComponent"},
+    {ComponentType::Renderer,"Copium::RendererComponent"},
     {ComponentType::Script,"ScriptComponent"},
     {ComponentType::UIButton,"UIButtonComponent"},
     {ComponentType::UIText,"UITextComponent"},
@@ -125,7 +129,22 @@ class Component
             //std::cout << "default component dtor\n";
         }
 
-        Component& operator=(const Component& rhs);
+        Component& operator=(const Component& rhs)
+        {
+            enabled = rhs.enabled;
+            return *this;
+        }
+
+        template<typename T>
+        T& operator=(const T& rhs)
+        {
+            static_assert(std::is_base_of<Component, T>::value); 
+            COPIUM_ASSERT(componentType != rhs.componentType, "TRYING TO COPY ASSIGN TWO DIFFERENT COMPONENT TYPES!");
+            enabled = rhs.enabled;
+            T* self = reinterpret_cast<T*>(this);
+            *self = rhs;
+            return *self;
+        }
 
         bool Enabled() const noexcept;
 
@@ -170,6 +189,8 @@ class Component
         /**************************************************************************/
         //void deserialize(rapidjson::Value& _value);
 
+        ColliderComponent& operator=(const ColliderComponent& rhs) { return *this; }
+
     protected:
     };
 
@@ -186,6 +207,7 @@ class Component
 
         void inspector_view(){};
 
+        AnimatorComponent& operator=(const AnimatorComponent& rhs) { return *this; }
         /***************************************************************************/
         /*!
         \brief
@@ -197,4 +219,5 @@ class Component
 
     };
 
+}
 #endif // !COMPONENT_H

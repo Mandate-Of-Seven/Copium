@@ -122,7 +122,6 @@ namespace Copium
 		mOnCollisionEnter{ mono_class_get_method_from_name(mClass, "OnCollisionEnter", 0) },
 		mOnCreate{ mono_class_get_method_from_name(mCopiumScript, "OnCreate", 1) }
 		{
-			int fieldCount = mono_class_num_fields(mClass);
 			void* iterator = nullptr;
 			while (MonoClassField* field = mono_class_get_fields(mClass, &iterator))
 			{
@@ -155,7 +154,7 @@ namespace Copium
 	}
 
 	ScriptingSystem::ScriptingSystem() :
-		scriptFiles{ Copium::FileSystem::Instance()->get_files_with_extension(".cs") }
+		scriptFiles{ FileSystem::Instance()->get_files_with_extension(".cs") }
 	{
 
 	}
@@ -242,10 +241,10 @@ namespace Copium
 			}
 			++it;
 		}
-		for (nameToClassIt& it : keyMask)
+		for (nameToClassIt& itMask : keyMask)
 		{
 
-			scriptClassMap.erase(it);
+			scriptClassMap.erase(itMask);
 		}
 		keyMask.clear();
 	}
@@ -351,6 +350,11 @@ namespace Copium
 			}
 		}
 		maskScriptFiles.clear();
+	}
+
+	MonoObject* ScriptingSystem::cloneInstance(MonoObject* _instance)
+	{
+		return mono_object_clone(_instance);
 	}
 
 	void ScriptingSystem::tryRecompileDll()

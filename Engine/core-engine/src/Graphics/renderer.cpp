@@ -224,9 +224,9 @@ namespace Copium
 				graphics->get_shader_program()[0].GetHandle(), "uViewProjection");
 			GLuint uTransform = glGetUniformLocation(
 				graphics->get_shader_program()[0].GetHandle(), "uTransform");
-			glm::mat4 projection = Copium::EditorSystem::Instance()->get_camera()->get_projection();
+			glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_projection();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
-			glm::vec3 pos = Copium::EditorSystem::Instance()->get_camera()->get_position();
+			glm::vec3 pos = EditorSystem::Instance()->get_camera()->get_position();
 			glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
 			glUniformMatrix4fv(uTransform, 1, GL_FALSE, glm::value_ptr(transform));
 			
@@ -262,7 +262,7 @@ namespace Copium
 			GLuint uProjection = glGetUniformLocation(
 				graphics->get_shader_program()[1].GetHandle(), "uViewProjection");
 
-			glm::mat4 projection = Copium::EditorSystem::Instance()->get_camera()->get_projection();
+			glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_projection();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
 			// End of matrix assignment
@@ -296,7 +296,7 @@ namespace Copium
 			GLuint uProjection = glGetUniformLocation(
 				graphics->get_shader_program()[2].GetHandle(), "uViewProjection");
 
-			glm::mat4 projection = Copium::EditorSystem::Instance()->get_camera()->get_projection();
+			glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_projection();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
 			// End of matrix assignment

@@ -24,7 +24,6 @@ namespace Copium
 			void virtual render() = 0;
 		protected:
 			UIComponent(GameObject& _gameObj, ComponentType _componentType);
-		private:
 			Math::Vec2 offset;
 			bool percentage;
 	};
@@ -36,6 +35,7 @@ namespace Copium
 			UIButtonComponent(GameObject& _gameObj,Math::Vec2 _min = {-0.5,-0.5}, Math::Vec2 _max = {0.5,0.5});
 			void update();
 			void inspector_view() {};
+			UIButtonComponent& operator=(const UIButtonComponent& rhs);
 		private:
 			static const UIButtonComponent* hoveredBtn;
 			std::unordered_map<UIButtonState, UIButtonCallback> mapStateCallbacks;
@@ -52,6 +52,7 @@ namespace Copium
 			UITextComponent(GameObject& _gameObj);
 			void inspector_view() {};
 			void render();
+			UITextComponent& operator=(const UITextComponent& rhs);
 		private:
 			std::string content;
 			Font* font;
@@ -64,6 +65,7 @@ namespace Copium
 			UIImageComponent(GameObject& _gameObj);
 			void inspector_view() {};
 			void render();
+			UIImageComponent& operator=(const UIImageComponent& rhs);
 		//Display an image
 	};
 }

@@ -22,7 +22,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "Graphics/textures.h"
 
-namespace Copium::Graphics
+namespace Copium
 {
 	// Bean: Rename to sprite later
 	class SpriteRenderer final

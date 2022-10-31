@@ -33,13 +33,13 @@ namespace Copium
 
 		void load_all_textures(std::list<std::string>& _path);
 
-		std::vector<Copium::Graphics::Texture>& get_textures() { return textures; }
-		std::vector<Copium::Graphics::Spritesheet>& get_spritesheets() { return spritesheets; }
+		std::vector<Texture>& get_textures() { return textures; }
+		std::vector<Spritesheet>& get_spritesheets() { return spritesheets; }
 		void load_all_audio(std::list<std::string>&_path);
 
 	private:
-		std::vector<Copium::Graphics::Texture> textures;
-		std::vector<Copium::Graphics::Spritesheet> spritesheets;
+		std::vector<Texture> textures;
+		std::vector<Spritesheet> spritesheets;
 	};
 }
 

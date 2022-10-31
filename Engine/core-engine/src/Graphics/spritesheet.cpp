@@ -17,7 +17,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Graphics/spritesheet.h"
 
-namespace Copium::Graphics
+namespace Copium
 {
 	Spritesheet::Spritesheet(const Texture& _texture, const unsigned int _xDivisor, const unsigned int _yDivisor)
 		: refTexture(_texture), xColumns(_xDivisor), yRows(_yDivisor), size(xColumns * yRows)

@@ -18,18 +18,18 @@ namespace Copium
 
 		namespace
 		{
-			Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
+			InputSystem& inputSystem{ *InputSystem::Instance() };
 		}
 
-		static bool GetKeyDown(int keyCode)
-		{
-			return inputSystem.is_key_pressed(keyCode);
-		}
+		//static bool GetKeyDown(int keyCode)
+		//{
+		//	return inputSystem.is_key_pressed(keyCode);
+		//}
 
-		static bool GetKeyUp(int keyCode)
-		{
-			return false;
-		}
+		//static bool GetKeyUp(int keyCode)
+		//{
+		//	return false;
+		//}
 
 		static bool GetKey(int keyCode)
 		{
@@ -42,7 +42,7 @@ namespace Copium
 
 		namespace
 		{
-			Copium::NewSceneManager& sceneManager{ *Copium::NewSceneManager::Instance() };
+			NewSceneManager& sceneManager{ *NewSceneManager::Instance() };
 		}
 
 		static void GetTranslation(GameObjectID _ID, Math::Vec3* translation)

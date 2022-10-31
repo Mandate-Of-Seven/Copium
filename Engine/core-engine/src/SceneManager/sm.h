@@ -214,9 +214,8 @@ namespace Copium {
 			if there are errors in deallocating memory for the copy of the current scene, return false
 		*/
 		/*******************************************************************************/
-		Copium::UndoRedo::CommandManager* get_commandmanager();
+		UndoRedo::CommandManager* get_commandmanager();
 
-		bool startPreview();
 		bool endPreview();
 
 		GameObject* selectedGameObject;
@@ -227,7 +226,7 @@ namespace Copium {
 		Scene* storageScene;
 		rapidjson::Document document;
 		std::string sceneFilePath;
-		Copium::UndoRedo::CommandManager commandManager;
+		UndoRedo::CommandManager commandManager;
 	};
 
 	/*******************************************************************************

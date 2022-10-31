@@ -143,7 +143,7 @@
     <ClCompile Include="src\SceneManager\state-manager.cpp" />
     <ClCompile Include="src\Scripting\logic-system.cpp" />
     <ClCompile Include="src\Scripting\scripting-system.cpp" />
-    <ClCompile Include="src\Scripting\scripting.cpp" />
+    <ClCompile Include="src\Scripting\script-component.cpp" />
     <ClCompile Include="src\Utilities\thread-system.cpp" />
     <ClCompile Include="src\imgui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -220,7 +220,7 @@
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\Graphics\renderer.h" />
     <ClInclude Include="src\SceneManager\scene.h" />
-    <ClInclude Include="src\Scripting\scripting.h" />
+    <ClInclude Include="src\Scripting\script-component.h" />
     <ClInclude Include="src\Scripting\scripting-system.h" />
     <ClInclude Include="src\SceneManager\serializer.h" />
     <ClInclude Include="src\SceneManager\state-manager.h" />

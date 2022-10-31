@@ -29,7 +29,12 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Graphics/ui-components.h"
 #include "SceneManager/sm.h"
 
-namespace Copium::Graphics
+namespace
+{
+	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance()};
+}
+
+namespace Copium
 {
 	// Temporary global variables
 	GLfloat movement_x = 0.f, movement_y = 0.f;
@@ -56,7 +61,7 @@ namespace Copium::Graphics
 		// Initialise Sub systems
 		renderer.init();
 
-		glm::vec2 size = Copium::EditorSystem::Instance()->get_scene_view()->get_dimension();
+		glm::vec2 size = EditorSystem::Instance()->get_scene_view()->get_dimension();
 		framebuffer.set_size((GLuint)size.x, (GLuint)size.y);
 		framebuffer.init();
 
@@ -95,14 +100,14 @@ namespace Copium::Graphics
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		/*if (Input::is_key_held(GLFW_KEY_A))
+		/*if (inputSystem.is_key_held(GLFW_KEY_A))
 			movement_x -= dt;
-		else if (!Input::is_key_held(GLFW_KEY_LEFT_SHIFT) && Input::is_key_held(GLFW_KEY_D))
+		else if (!inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_held(GLFW_KEY_D))
 			movement_x += dt;
 
-		if (Input::is_key_held(GLFW_KEY_W))
+		if (inputSystem.is_key_held(GLFW_KEY_W))
 			movement_y += dt;
-		else if (Input::is_key_held(GLFW_KEY_S))
+		else if (inputSystem.is_key_held(GLFW_KEY_S))
 			movement_y -= dt;*/
 
 		// Create sprites
@@ -110,7 +115,7 @@ namespace Copium::Graphics
 		if (!inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_C))
 		{
 			SpriteRenderer* sprite = new SpriteRenderer;
-			Copium::Editor::EditorSystem* editor = Copium::Editor::EditorSystem::Instance();
+			EditorSystem* editor = EditorSystem::Instance();
 			glm::vec2 scenePos = editor->get_scene_view()->get_position();
 			glm::vec2 sceneDim = editor->get_scene_view()->get_dimension();
 			glm::vec2 cameraPos = editor->get_camera()->get_position();
@@ -133,7 +138,7 @@ namespace Copium::Graphics
 			
 		}
 
-		if (Input::is_key_held(GLFW_KEY_LEFT_SHIFT) && Input::is_key_pressed(GLFW_KEY_C))
+		if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_C))
 		{
 			massSpawn = !massSpawn;
 		}
@@ -161,12 +166,12 @@ namespace Copium::Graphics
 		PRINT("Mouse NDC position: " << mouseToNDC.x << ", " << mouseToNDC.y);
 		PRINT("World NDC position: " << worldNDC.x << ", " << worldNDC.y);*/
 
-		if (Input::is_key_pressed(GLFW_KEY_Y))
+		if (inputSystem.is_key_pressed(GLFW_KEY_Y))
 		{
 			PRINT("Number of sprites: " << sprites.size());
 		}
 
-		if (Input::is_key_held(GLFW_KEY_LEFT_SHIFT) && Input::is_key_pressed(GLFW_KEY_D))
+		if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_D))
 		{
 			debugMode = !debugMode;
 		}
@@ -176,17 +181,17 @@ namespace Copium::Graphics
 			size_x -= dt;
 			size_y -= dt;
 		}
-		else if (Input::is_key_held(GLFW_KEY_Z))
+		else if (inputSystem.is_key_held(GLFW_KEY_Z))
 		{
 			size_x += dt;
 			size_y += dt;
 		}
 
-		/*if (Input::is_key_held(GLFW_KEY_R) && Input::is_key_held(GLFW_KEY_LEFT_SHIFT))
+		/*if (inputSystem.is_key_held(GLFW_KEY_R) && inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT))
 		{
 			rotate -= dt * 75;
 		}
-		else if (Input::is_key_held(GLFW_KEY_R))
+		else if (inputSystem.is_key_held(GLFW_KEY_R))
 		{
 			rotate += dt * 75;
 		}*/
@@ -203,7 +208,7 @@ namespace Copium::Graphics
 		renderer.shutdown();
 		framebuffer.exit();
 
-		for (SpriteRenderer * s : sprites)
+		for (SpriteRenderer* s : sprites)
 			delete s;
 	}
 
@@ -247,7 +252,7 @@ namespace Copium::Graphics
 	// parse all textures into the game
 	void GraphicsSystem::parse_textures()
 	{
-		Copium::Files::AssetsSystem* assets = Copium::Files::AssetsSystem::Instance();
+		AssetsSystem* assets = AssetsSystem::Instance();
 		// Check for texture slots
 		COPIUM_ASSERT(textureSlotIndex == maxTextures, "Max textures reached! Replace old textures!!");
 
@@ -300,13 +305,13 @@ namespace Copium::Graphics
 		if (switcher)
 
 		{
-			red = (0.1f * (1.0 - timer)) + (0.9f * timer);
-			green = (0.9f * (1.0 - timer)) + (0.1f * timer);
+			red = (0.1f * (1.0f - timer)) + (0.9f * timer);
+			green = (0.9f * (1.0f - timer)) + (0.1f * timer);
 		}
 		else
 		{
-			red = (0.9f * (1.0 - timer)) + (0.1f * timer);
-			green = (0.1f * (1.0 - timer)) + (0.9f * timer);
+			red = (0.9f * (1.0f - timer)) + (0.1f * timer);
+			green = (0.1f * (1.0f - timer)) + (0.9f * timer);
 		}
 
 		position = { 0.f, 2.f, 0.f };
@@ -418,12 +423,12 @@ namespace Copium::Graphics
 		// Bean: scale should be the scale of the object, 
 		// texture scale should be separate and derived from the image dimensions
 		// Scale = image scale / default scale(1024)
-		Copium::AssetsSystem* assets = Copium::AssetsSystem::Instance();
+		AssetsSystem* assets = AssetsSystem::Instance();
 		renderer.draw_quad({ 0.f, 0.f, 0.f }, { 3.84f * 2.5f, 2.16f * 2.5f }, 0.f, assets->get_textures()[0].get_object_id());
 		
 		color = { 0.1f, 1.f, 0.1f, 1.f };
 		glm::vec2 worldNDC{ 0 };
-		Copium::Editor::EditorSystem* editor = Copium::Editor::EditorSystem::Instance();
+		EditorSystem* editor = EditorSystem::Instance();
 		glm::vec2 cameraPos = editor->get_camera()->get_position();
 		float zoom = editor->get_camera()->get_zoom();
 		worldNDC = { cameraPos.x, cameraPos.y };
@@ -474,11 +479,11 @@ namespace Copium::Graphics
 		}
 
 		// Theory WIP
-		Copium::NewSceneManager* sm = Copium::NewSceneManager::Instance();
+		NewSceneManager* sm = NewSceneManager::Instance();
 		Scene* scene = sm->get_current_scene();
 		for (GameObject* gameObject : scene->get_gameobjectvector())
 		{
-			for (Component* component : gameObject->Components())
+			for (Component* component : gameObject->getComponents<RendererComponent>())
 			{
 				if (!component->Enabled())
 					continue;
@@ -487,13 +492,13 @@ namespace Copium::Graphics
 				RendererComponent * rc = reinterpret_cast<RendererComponent*>(component);
 				SpriteRenderer sr = rc->get_sprite_renderer();
 				glm::vec2 size(t.glmScale().x, t.glmScale().y);
-				float rotate = t.glmRotation().z;
+				float rotation = t.glmRotation().z;
 				// Bean: It should be set in inspector view of the renderer component instead
 				unsigned int id = sr.get_sprite_id() - 1;
 				if (id == -1)
 					id = 0;
 				sr.set_texture(&assets->get_textures()[id]);
-				renderer.draw_quad(t.glmPosition(), size, rotate, sr);
+				renderer.draw_quad(t.glmPosition(), size, rotation, sr);
 			}
 			for (Component* component : gameObject->getComponents<UITextComponent>())
 			{
@@ -512,7 +517,7 @@ namespace Copium::Graphics
 			static GLuint animationID = 0;
 			GLuint indexSize = assets->get_spritesheets()[0].get_size() - 1;
 
-			GLfloat dt = (GLfloat) Windows::WindowsSystem::Instance()->get_delta_time();
+			GLfloat dt = (GLfloat) WindowsSystem::Instance()->get_delta_time();
 			static float timer = 0.f;
 			timer += dt;
 			if (timer > 0.01f)

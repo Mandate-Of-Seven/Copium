@@ -4,7 +4,7 @@
 //M2
 namespace Window::Hierarchy
 {
-	Scene* currentScene = nullptr;
+	Copium::Scene * currentScene = nullptr;
 	bool isOpen;
 	int selectedID = -1;
 
@@ -77,10 +77,10 @@ namespace Window::Hierarchy
 
 
 			// Find all the root nodes
-			std::vector<GameObject*>roots;
+			std::vector<Copium::GameObject*>roots;
 			for (size_t i{ 0 }; i < currentScene->get_gameobjcount(); ++i)
 			{
-				GameObject* tmp = currentScene->get_gameobjectvector()[i];
+				Copium::GameObject* tmp = currentScene->get_gameobjectvector()[i];
 				if (!tmp->has_parent())
 					roots.push_back(tmp);
 			}
@@ -92,10 +92,10 @@ namespace Window::Hierarchy
 			if (ImGui::TreeNodeEx(currentScene->get_name().c_str(), rootFlags))
 			{
 				bool isSelected = false;
-				GameObjectID selectedID = 0;
+				Copium::GameObjectID _selectedID = 0;
 				for (size_t i{ 0 }; i < roots.size(); ++i)
 				{
-					isSelected = display_gameobject_advanced(*roots[i], selectedID);
+					isSelected = display_gameobject_advanced(*roots[i], _selectedID);
 				}	
 
 				ImGui::TreePop();
@@ -108,7 +108,7 @@ namespace Window::Hierarchy
 		ImGui::End();
 	}
 	
-	void display_gameobject(const GameObject& _go)
+	void display_gameobject(const Copium::GameObject& _go)
 	{
 
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen;
@@ -127,7 +127,7 @@ namespace Window::Hierarchy
 		// If game object has children, recursively display children
 		if(_go.is_parent())
 		{
-			for (std::list<GameObject*>::const_iterator iter = _go.childList().begin(); iter != _go.childList().end(); ++iter)
+			for (std::list<Copium::GameObject*>::const_iterator iter = _go.childList().begin(); iter != _go.childList().end(); ++iter)
 			{
 				display_gameobject(**iter);
 			}
@@ -137,7 +137,7 @@ namespace Window::Hierarchy
 		ImGui::TreePop();
 
 	}
-	bool display_gameobject_advanced(GameObject& _go, GameObjectID& _selected)
+	bool display_gameobject_advanced(Copium::GameObject& _go, Copium::GameObjectID& _selected)
 	{
 		bool isSelected = false;
 		ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
@@ -172,7 +172,7 @@ namespace Window::Hierarchy
 		// If game object has children, recursively display children
 		if (_go.is_parent())
 		{
-			for (std::list<GameObject*>::const_iterator iter = _go.childList().begin(); iter != _go.childList().end(); ++iter)
+			for (std::list<Copium::GameObject*>::const_iterator iter = _go.childList().begin(); iter != _go.childList().end(); ++iter)
 			{
 				isSelected = display_gameobject_advanced(**iter, _selected);
 			}

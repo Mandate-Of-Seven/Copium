@@ -14,7 +14,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 *****************************************************************************************/
 
 #include "pch.h"
-#include "Scripting/scripting.h"
+#include "Scripting/script-component.h"
 #include "GameObject/game-object.h"
 
 #define DEFAULT_SCRIPT_NAME "NewScript"
@@ -41,8 +41,8 @@ namespace Copium
 		if (pScriptClass != nullptr)
 		{
 			mObject = sS.instantiateClass(pScriptClass->mClass);
-			GameObjectID id = gameObj.id;
-			void* param = &id;
+			GameObjectID _id = gameObj.id;
+			void* param = &_id;
 			sS.invoke(mObject, pScriptClass->mOnCreate, &param);
 		}
 	}
@@ -99,9 +99,9 @@ namespace Copium
 	}
 
 	//Use for serialization
-	bool ScriptComponent::getFieldValue(const std::string& name, void* buffer)
+	bool ScriptComponent::getFieldValue(const std::string& _name, void* buffer)
 	{
-		const auto& it = pScriptClass->mFields.find(name);
+		const auto& it = pScriptClass->mFields.find(_name);
 		if (it == pScriptClass->mFields.end())
 			return false;
 		const Field& field = it->second;
@@ -109,9 +109,9 @@ namespace Copium
 		return true;
 	}
 
-	bool ScriptComponent::setFieldValue(const std::string& name, const void* value)
+	bool ScriptComponent::setFieldValue(const std::string& _name, const void* value)
 	{
-		const auto& it = pScriptClass->mFields.find(name);
+		const auto& it = pScriptClass->mFields.find(_name);
 		if (it == pScriptClass->mFields.end())
 			return false;
 		const Field& field = it->second;
@@ -123,14 +123,8 @@ namespace Copium
 	{
 		if (!pScriptClass)
 			return;
-		float Padding = 16.f;
-		float sameLinePadding = 16.f;
-		bool openPopup = false;
 
 		static ImVec4 backupColor;
-
-		ImGuiColorEditFlags miscFlags = ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip
-			| ImGuiColorEditFlags_NoLabel;
 
 		ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
 			| ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp;
@@ -148,37 +142,36 @@ namespace Copium
 			{
 				ImGui::TableNextRow();
 				ImGui::TableNextColumn();
-				const std::string& name{ it->first };
-				ImGui::Text(name.c_str());
+				const std::string& _name{ it->first };
+				ImGui::Text(_name.c_str());
 				ImGui::TableNextColumn();
 				ImGui::PushItemWidth(-FLT_MIN);
-				static char buffer[32];
-				getFieldValue(name, buffer);
+				getFieldValue(_name, buffer);
 				switch (it->second.type)
 				{
 				case FieldType::Float:
-					ImGui::InputFloat(name.c_str(), reinterpret_cast<float*>(buffer));
+					ImGui::InputFloat(_name.c_str(), reinterpret_cast<float*>(buffer));
 					break;
 				case FieldType::Double:
-					ImGui::InputDouble(name.c_str(), reinterpret_cast<double*>(buffer));
+					ImGui::InputDouble(_name.c_str(), reinterpret_cast<double*>(buffer));
 					break;
 				case FieldType::Bool:
-					ImGui::Checkbox(name.c_str(), reinterpret_cast<bool*>(buffer));
+					ImGui::Checkbox(_name.c_str(), reinterpret_cast<bool*>(buffer));
 					break;
 				case FieldType::Char:
-					ImGui::InputInt(name.c_str(), reinterpret_cast<int*>(buffer));
+					ImGui::InputInt(_name.c_str(), reinterpret_cast<int*>(buffer));
 					break;
 				case FieldType::Byte:
-					ImGui::InputInt(name.c_str(), reinterpret_cast<int*>(buffer));
+					ImGui::InputInt(_name.c_str(), reinterpret_cast<int*>(buffer));
 					break;
 				case FieldType::Short:
-					ImGui::InputInt(name.c_str(), reinterpret_cast<int*>(buffer));
+					ImGui::InputInt(_name.c_str(), reinterpret_cast<int*>(buffer));
 					break;
 				case FieldType::Int:
-					ImGui::InputInt(name.c_str(), reinterpret_cast<int*>(buffer));
+					ImGui::InputInt(_name.c_str(), reinterpret_cast<int*>(buffer));
 					break;
 				case FieldType::Long:
-					ImGui::InputInt2(name.c_str(), reinterpret_cast<int*>(buffer));
+					ImGui::InputInt2(_name.c_str(), reinterpret_cast<int*>(buffer));
 					break;
 				case FieldType::UByte:
 					break;
@@ -190,7 +183,7 @@ namespace Copium
 					break;
 				case FieldType::Vector2:
 				{
-					if (ImGui::BeginTable(name.c_str(), 3, windowFlags))
+					if (ImGui::BeginTable(_name.c_str(), 3, windowFlags))
 					{
 						float* fBuffer = reinterpret_cast<float*>(buffer);
 						ImGui::TableNextColumn();
@@ -210,7 +203,7 @@ namespace Copium
 				}
 				case FieldType::Vector3:
 				{
-					if (ImGui::BeginTable(name.c_str(), 3, windowFlags))
+					if (ImGui::BeginTable(_name.c_str(), 3, windowFlags))
 					{
 						float* fBuffer = reinterpret_cast<float*>(buffer);
 						ImGui::TableNextColumn();
@@ -235,12 +228,20 @@ namespace Copium
 					break;
 				}
 			}
-				setFieldValue(name, buffer);
+				setFieldValue(_name, buffer);
 				++it;
 			}
 			ImGui::Unindent();
 			ImGui::EndTable();
 		}
+	}
+
+	ScriptComponent& ScriptComponent::operator=(const ScriptComponent& rhs)
+	{
+		pScriptClass = rhs.pScriptClass;
+		name = rhs.name;
+		mObject = sS.cloneInstance(rhs.mObject);
+		return *this;
 	}
 }
 

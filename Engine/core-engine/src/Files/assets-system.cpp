@@ -49,13 +49,13 @@ namespace Copium
 		{
 			//std::cout << "Texture: " << path << "\n";
 			// Generate texture
-			Copium::Texture texture(path);
+			Texture texture(path);
 
 			// Store the texture
 			textures.push_back(texture);
 		}
 
-		Copium::Graphics::Spritesheet ss(get_textures()[10], 1, 8);
+		Spritesheet ss(get_textures()[10], 1, 8);
 		spritesheets.push_back(ss);
 	}
 
@@ -68,7 +68,7 @@ namespace Copium
 			std::string temp = path.substr(lastSlash + 1);
 			size_t lastDot = temp.find_last_of(".");
 			std::cout << "Alias: " << temp.substr(0, lastDot) << "\n";
-			Copium::SoundSystem::Instance()->CreateSound(path, temp.substr(0, lastDot));
+			SoundSystem::Instance()->CreateSound(path, temp.substr(0, lastDot));
 		}
 	}
 }

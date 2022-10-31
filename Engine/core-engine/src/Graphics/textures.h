@@ -44,8 +44,8 @@ namespace Copium
 
 		const unsigned int& get_width() const { return width; }
 		const unsigned int& get_height() const { return height; }
-		const float& get_pixel_width() const { return width / PIXELRATIO; }
-		const float& get_pixel_height() const { return height / PIXELRATIO; }
+		float get_pixel_width() const { return width / PIXELRATIO; }
+		float get_pixel_height() const { return height / PIXELRATIO; }
 		const unsigned int& get_object_id() const { return textureObjectID; }
 		std::string& get_file_path() { return filePath; }
 

@@ -27,9 +27,13 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "GameObject/transform-component.h"
 
 //USING
+
+namespace Copium
+{
+
 using GameObjectID = uint64_t;
 
-class GameObject final : public Copium::IReceiver
+class GameObject final : public IReceiver
 {
 private:
     GameObjectID parentid;
@@ -56,9 +60,11 @@ public:
     */
     /**************************************************************************/
     GameObject(
-        Copium::Math::Vec3 _position = { 0,0,0 },
-        Copium::Math::Vec3 _rotation = { 0,0,0 },
-        Copium::Math::Vec3 _scale = {1,1,1});
+        Math::Vec3 _position = { 0,0,0 },
+        Math::Vec3 _rotation = { 0,0,0 },
+        Math::Vec3 _scale = {1,1,1});
+
+    GameObject(const GameObject& rhs);
 
     template <typename T>
     T& addComponent()
@@ -76,12 +82,14 @@ public:
         static std::vector<T*> typedComponents;
         typedComponents.clear();
 
-        std::string tName = typeid(T).name() + std::string("class Copium::").length();
+        std::string tName = typeid(T).name() + std::string("class ").length();
         ComponentType componentType = Component::nameToType(tName);
         for (Component* pComponent : components)
         {
             if (pComponent->componentType == componentType)
+            {
                 typedComponents.push_back(reinterpret_cast<T*>(pComponent));
+            }
         }
         return typedComponents;
     }
@@ -97,10 +105,16 @@ public:
     /**************************************************************************/
     Component* addComponent(ComponentType componentType);
 
-
     bool hasComponent(ComponentType componentType) const;
 
-    Component* addComponent(const Component& component);
+    template <typename T>
+    T* addComponent(const T& component)
+    {
+        static_assert(std::is_base_of<Component, T>::value);
+        T* tmp = addComponent(component.componentType);
+        *tmp = component;
+        return tmp;
+    }
 
     /***************************************************************************/
     /*!
@@ -118,7 +132,7 @@ public:
     void removeComponent()
     {
         static_assert(std::is_base_of<Component, T>::value);
-        std::string tName = typeid(T).name() + std::string("class Copium::").length();
+        std::string tName = typeid(T).name() + std::string("class ").length();
         ComponentType componentType = Component::nameToType(tName); 
         removeComponent(componentType);
     }
@@ -334,13 +348,11 @@ public:
     /**************************************************************************/
     ~GameObject();
 
-    void handleMessage(Copium::MESSAGE_TYPE mType);
-
-    GameObject& operator=(const GameObject& rhs);
-
-    
+    void handleMessage(MESSAGE_TYPE mType);
 };
 
+
+}
 
 
 #endif // !GAME_OBJECT_H

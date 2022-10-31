@@ -19,9 +19,11 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "renderer-component.h"
 #include "transform-component.h"
 
+namespace Copium
+{
+
 Component::Component(GameObject& _gameObj, ComponentType _componentType) 
     : gameObj{ _gameObj }, componentType{ _componentType }, enabled{true} {}
-
 
 void Component::destroy() {}
 
@@ -50,48 +52,4 @@ const std::string& Component::Name() const
 {
     return MAP_COMPONENT_TYPE_NAME[componentType];
 }
-
-
-Component& Component::operator=(const Component& rhs)
-{
-    enabled = rhs.enabled;
-    COPIUM_ASSERT(componentType == rhs.componentType, "TRYING TO COPY ASSIGN TWO DIFFERENT COMPONENT TYPES!");
-    switch (componentType)
-    {
-    case ComponentType::Animator:
-    {
-        const AnimatorComponent* pRhs = reinterpret_cast<const AnimatorComponent*>(&rhs);
-        AnimatorComponent* pLhs = reinterpret_cast<AnimatorComponent*>(this);
-        break;
-    }
-    case ComponentType::Collider:
-    {
-        const ColliderComponent* pRhs = reinterpret_cast<const ColliderComponent*>(&rhs);
-        ColliderComponent* pLhs = reinterpret_cast<ColliderComponent*>(this);
-        break;
-    }
-    case ComponentType::Renderer:
-    {
-        const Copium::RendererComponent* pRhs = reinterpret_cast<const Copium::RendererComponent*>(&rhs);
-        Copium::RendererComponent* pLhs = reinterpret_cast<Copium::RendererComponent*>(this);
-        break;
-    }
-    case ComponentType::Script:
-    {
-        break;
-    }
-    case ComponentType::Transform:
-    {
-        const TransformComponent* pRhs = reinterpret_cast<const TransformComponent*>(&rhs);
-        TransformComponent* pLhs = reinterpret_cast<TransformComponent*>(this);
-        pLhs->position = pRhs->position;
-        pLhs->rotation = pRhs->rotation;
-        pLhs->scale = pRhs->scale;
-        break;
-    }
-    default:
-        break;
-    }
-    return *this;
 }
-
