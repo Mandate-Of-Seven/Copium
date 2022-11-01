@@ -100,7 +100,10 @@ namespace Copium
 				}
 				else if (pSystem->systemFlags & FLAG_RUN_ON_EDITOR &&!inPlayMode)
 				{
+					double startTime = glfwGetTime();
 					pSystem->update();
+					pSystem->updateTime = glfwGetTime() - startTime;
+					totalUpdateTime += pSystem->updateTime;
 					continue;
 				}
 			}
@@ -113,14 +116,15 @@ namespace Copium
 					std::string temp = "\n";
 					for (ISystem* pSystem : systems)
 					{
-
-						pSystem->updateTimePercent = (pSystem->updateTime / totalUpdateTime) * 100;
+						pSystem->updateTimePercent = (pSystem->updateTime<=0) ? 0:((pSystem->updateTime / totalUpdateTime) * 100);
+						//std::cout<< pSystem->updateTime << "\n";
 						temp += typeid(*pSystem).name();
 						temp += ": ";
 						temp += std::to_string(pSystem->updateTimePercent);
 						temp += "%%\n\n";
 						//std::cout << typeid(*pSystem).name() << ": " << pSystem->updateTimePercent << "%\n";
 					}
+					//std::cout << temp;
 					Window::EditorConsole::editorLog.set_performancetext(temp);
 					//std::cout << "End\n\n";
 					performanceCounter = 0;
