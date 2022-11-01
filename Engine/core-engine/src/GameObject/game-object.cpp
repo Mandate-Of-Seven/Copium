@@ -336,8 +336,6 @@ void GameObject::handleMessage(MESSAGE_TYPE mType)
 void GameObject::inspectorView()
 {
     ImGui::Text(name.c_str());
-
-    transform.inspector_view();
     ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
         | ImGuiTableFlags_ScrollY;
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);

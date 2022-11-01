@@ -145,7 +145,9 @@ namespace Copium
 			while (compilingState != CompilingState::Wait);
 			compilingState = CompilingState::Compiling;
 			//Critical section
+			while (!tSys.acquireMutex(MutexType::FileSystem));
 			updateScriptFiles();
+			tSys.returnMutex(MutexType::FileSystem);
 			tryRecompileDll();
 			//Critical section End
 			Sleep(SECONDS_TO_RECOMPILE*1000);
@@ -156,6 +158,11 @@ namespace Copium
 		scriptFiles{ FileSystem::Instance()->get_files_with_extension(".cs") }
 	{
 
+	}
+
+	const std::list<Copium::File>& ScriptingSystem::getScriptFiles()
+	{
+		return scriptFiles;
 	}
 
 	void ScriptingSystem::init()
@@ -316,7 +323,7 @@ namespace Copium
 		{
 			maskScriptFiles.push_back(&file);
 		}
-		for (fs::directory_entry p : fs::recursive_directory_iterator(Paths::projectPath))
+		for (const fs::directory_entry& p : fs::recursive_directory_iterator(Paths::projectPath))
 		{
 			const fs::path& pathRef{ p.path() };
 			if (pathRef.extension() != ".cs")

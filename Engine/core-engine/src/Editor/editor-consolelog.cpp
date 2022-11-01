@@ -14,8 +14,12 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 *****************************************************************************************/
 #include "pch.h"
 #include <Editor/editor-consolelog.h>
-#include <CopiumCore/copium-core.h>
+#include <Messaging/message-system.h>
 
+namespace
+{
+    Copium::MessageSystem& messageSystem { *Copium::MessageSystem::Instance() };
+}
 
 namespace Window
 {
@@ -122,7 +126,10 @@ namespace Window
             ImGui::SameLine();
             bool copy = ImGui::Button("Copy");
             ImGui::SameLine();
-            
+            if (ImGui::Button("Performance Viewer"))
+            {
+                messageSystem.dispatch(Copium::MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW);
+            }
 
             ImGui::SameLine();
             editorLog.Search.Draw("Search", 200.0f);
