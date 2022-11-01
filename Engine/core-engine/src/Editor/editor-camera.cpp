@@ -32,8 +32,8 @@ namespace Copium
 	void EditorCamera::init(float _width, float _height, bool _rotation)
 	{
 		aspectRatio = _width / _height;
-		width = _width;
-		height = _height;
+		width = int(_width);
+		height = int(_height);
 		update_ortho_projection(aspectRatio, zoomLevel);
 	}
 

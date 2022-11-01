@@ -23,6 +23,8 @@ namespace Copium
 {
 	void AssetsSystem::init()
 	{
+
+		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		FileSystem* fs = FileSystem::Instance();
 		load_all_textures(fs->get_filepath_in_directory(Paths::assetPath.c_str(), ".png"));
 		load_all_audio(fs->get_filepath_in_directory((Paths::assetPath+"/sounds").c_str(), ".wav"));

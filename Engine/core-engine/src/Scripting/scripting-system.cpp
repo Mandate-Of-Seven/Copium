@@ -150,7 +150,6 @@ namespace Copium
 			//Critical section End
 			Sleep(SECONDS_TO_RECOMPILE*1000);
 		}
-
 	}
 
 	ScriptingSystem::ScriptingSystem() :
@@ -161,8 +160,10 @@ namespace Copium
 
 	void ScriptingSystem::init()
 	{
+		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		initMono();
 		registerScriptWrappers();
+		systemFlags |= FLAG_RUN_ON_EDITOR;
 		ThreadSystem::Instance()->addThread(new std::thread(&ScriptingSystem::recompileThreadWork,this));
 		messageSystem->subscribe(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT, this);
 	}
@@ -354,6 +355,8 @@ namespace Copium
 
 	MonoObject* ScriptingSystem::cloneInstance(MonoObject* _instance)
 	{
+		if (!_instance)
+			return nullptr;
 		return mono_object_clone(_instance);
 	}
 

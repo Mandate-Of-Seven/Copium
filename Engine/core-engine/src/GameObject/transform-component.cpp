@@ -77,7 +77,7 @@ void TransformComponent::serialize(rapidjson::Value& _value, rapidjson::Document
 
     rapidjson::Value type;
     std::string tc = "Transform";
-    type.SetString(tc.c_str(), tc.length(), _doc.GetAllocator());
+    type.SetString(tc.c_str(), rapidjson::SizeType(tc.length()), _doc.GetAllocator());
     _value.AddMember("Type", type, _doc.GetAllocator()); 
 
     position.serialize(_pos, _doc);

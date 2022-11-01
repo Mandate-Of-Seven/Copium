@@ -48,14 +48,20 @@ namespace Copium
 		static void GetTranslation(GameObjectID _ID, Math::Vec3* translation)
 		{
 			GameObject* gameObj = sceneManager.findGameObjByID(_ID);
-			COPIUM_ASSERT(!gameObj, "Could not find game object with ID");
+			if (gameObj == nullptr)
+			{
+				return;
+			}
 			*translation = gameObj->Transform().position;
 		}
 
 		static void SetTranslation(GameObjectID _ID, Math::Vec3* val)
 		{
 			GameObject* gameObj = sceneManager.findGameObjByID(_ID);
-			COPIUM_ASSERT(!gameObj, "Could not find game object with ID");
+			if (gameObj == nullptr)
+			{
+				return;
+			}
 			gameObj->Transform().position = *val;
 		}
 

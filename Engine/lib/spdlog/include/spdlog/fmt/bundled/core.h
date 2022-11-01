@@ -5,6 +5,8 @@
 //
 // For the license information refer to format.h.
 
+#pragma warning(disable : 6285)
+
 #ifndef FMT_CORE_H_
 #define FMT_CORE_H_
 

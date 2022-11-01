@@ -31,6 +31,8 @@ namespace Copium
 
 	void EditorSystem::init()
 	{
+		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
+		//PRINT("FLAGS: " << systemFlags);
 		WindowsSystem* windowsSystem = WindowsSystem::Instance();
 
 		//imgui

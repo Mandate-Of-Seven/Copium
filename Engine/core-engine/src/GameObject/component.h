@@ -46,9 +46,9 @@ enum class ComponentType : int      // Types of Components
 
 static std::map<ComponentType, const std::string> MAP_COMPONENT_TYPE_NAME
 {
-    {ComponentType::Animator,"Copium::AnimatorComponent"},
-    {ComponentType::Collider,"Copium::ColliderComponent"},
-    {ComponentType::Renderer,"Copium::RendererComponent"},
+    {ComponentType::Animator,"AnimatorComponent"},
+    {ComponentType::Collider,"ColliderComponent"},
+    {ComponentType::Renderer,"RendererComponent"},
     {ComponentType::Script,"ScriptComponent"},
     {ComponentType::UIButton,"UIButtonComponent"},
     {ComponentType::UIText,"UITextComponent"},
@@ -58,6 +58,8 @@ static std::map<ComponentType, const std::string> MAP_COMPONENT_TYPE_NAME
 class Component
 {
     public:
+        Component(const Component&) = delete;
+
         const ComponentType componentType;           //Type of component
 
         static ComponentType nameToType(const std::string& _name)
@@ -149,6 +151,7 @@ class Component
         bool Enabled() const noexcept;
 
         void Enabled(bool) noexcept;
+        GameObject& gameObj;
     protected:
 
         /***************************************************************************/
@@ -160,8 +163,6 @@ class Component
         /**************************************************************************/
         Component() = delete;
         Component(GameObject& _gameObj, ComponentType _componentType);
-
-        GameObject& gameObj;
     private:
         ComponentID id;                     //Id of component, local to gameObject
         const bool allowMultiple = false;   //Can gameObjects only have one of this Component?
@@ -189,7 +190,7 @@ class Component
         /**************************************************************************/
         //void deserialize(rapidjson::Value& _value);
 
-        ColliderComponent& operator=(const ColliderComponent& rhs) { return *this; }
+        ColliderComponent& operator=(const ColliderComponent& rhs) { (void)rhs; return *this; }
 
     protected:
     };
@@ -207,7 +208,7 @@ class Component
 
         void inspector_view(){};
 
-        AnimatorComponent& operator=(const AnimatorComponent& rhs) { return *this; }
+        AnimatorComponent& operator=(const AnimatorComponent& rhs) { (void)rhs; return *this; }
         /***************************************************************************/
         /*!
         \brief

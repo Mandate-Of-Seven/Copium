@@ -26,10 +26,10 @@ namespace
 
 namespace Copium
 {
-	Collision::AABB floor = { (Math::Vec2{ -0.8,-0.55 }), (Math::Vec2{ 0.8,-0.45 }) }; //position of floor
+	Collision::AABB floor = { (Math::Vec2{ -0.8f,-0.55f }), (Math::Vec2{ 0.8f,-0.45f }) }; //position of floor
 	void PhysicsSystem::init()
 	{
-		this->onlyUpdateOnPlay = true;
+		systemFlags |= FLAG_RUN_ON_PLAY;
 	}
 	void PhysicsSystem::update()
 	{

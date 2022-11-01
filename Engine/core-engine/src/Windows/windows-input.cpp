@@ -39,6 +39,7 @@ namespace Copium
 
 void InputSystem::init()
 {
+    systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
     for (int i = 0; i < 400; i++)
     {
         keys[i] = 0;

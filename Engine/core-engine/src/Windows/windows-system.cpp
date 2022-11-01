@@ -26,6 +26,7 @@ namespace Copium
 
     void WindowsSystem::init()
     {
+        systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
         init_system(1600, 900, "Copium");
     }
 

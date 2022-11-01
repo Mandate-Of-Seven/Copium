@@ -82,7 +82,7 @@ public:
         static std::vector<T*> typedComponents;
         typedComponents.clear();
 
-        std::string tName = typeid(T).name() + std::string("class ").length();
+        std::string tName = typeid(T).name() + std::string("class Copium::").length();
         ComponentType componentType = Component::nameToType(tName);
         for (Component* pComponent : components)
         {
@@ -132,7 +132,7 @@ public:
     void removeComponent()
     {
         static_assert(std::is_base_of<Component, T>::value);
-        std::string tName = typeid(T).name() + std::string("class ").length();
+        std::string tName = typeid(T).name() + std::string("class Copium::").length();
         ComponentType componentType = Component::nameToType(tName); 
         removeComponent(componentType);
     }
