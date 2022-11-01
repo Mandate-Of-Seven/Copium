@@ -88,6 +88,11 @@ namespace Copium {
 			delete currentScene;
 			currentScene = nullptr;
 		}
+		if (storageScene)
+		{
+			delete storageScene;
+			storageScene = nullptr;
+		}
 
 		while (commandManager.undoStack.size() > 0)
 		{

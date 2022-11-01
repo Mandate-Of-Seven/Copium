@@ -42,29 +42,29 @@ namespace Copium
 			Math::Vec2 convertedSize;
 			size = GraphicsSystem::Instance()->get_sprites()[count]->get_size();
 			convertedSize = Math::Vec2(size.x, size.y);
-			RigidBodyComponent* box = new RigidBodyComponent;
-			position = GraphicsSystem::Instance()->get_sprites()[count]->get_position();
-			convertedPos = {position};
-			box->set_vel(Math::Vec2{ 0.0, 0.0 });
-			box->set_acc(Math::Vec2{ 0.0,0.0 });
-			if (count == 0)
-			{
-				box->set_gravity(false);
-			}
-			else
-			{
-				box->set_gravity(true);
-			}
-			count++;
-			
+			//RigidBodyComponent* box = new RigidBodyComponent;
+			//position = GraphicsSystem::Instance()->get_sprites()[count]->get_position();
+			//convertedPos = {position};
+			//box->set_vel(Math::Vec2{ 0.0, 0.0 });
+			//box->set_acc(Math::Vec2{ 0.0,0.0 });
+			//if (count == 0)
+			//{
+			//	box->set_gravity(false);
+			//}
+			//else
+			//{
+			//	box->set_gravity(true);
+			//}
+			//count++;
+			//
 
-			box->set_shape(SQUARE);
-			box->set_active(true);
-			if (box->get_shape() == SQUARE)
-			{
-				box->set_AABB(Math::Vec2{ convertedPos.x - (convertedSize.x / 2),convertedPos.y - (convertedSize.y / 2) }, Math::Vec2{ convertedPos.x + (convertedSize.x / 2),convertedPos.y + (convertedSize.y / 2) });
-			}
-			boxes.push_back(box);
+			//box->set_shape(SQUARE);
+			//box->set_active(true);
+			//if (box->get_shape() == SQUARE)
+			//{
+			//	box->set_AABB(Math::Vec2{ convertedPos.x - (convertedSize.x / 2),convertedPos.y - (convertedSize.y / 2) }, Math::Vec2{ convertedPos.x + (convertedSize.x / 2),convertedPos.y + (convertedSize.y / 2) });
+			//}
+			//boxes.push_back(box);
 
 		}
 		if (boxes.size() > 0)
