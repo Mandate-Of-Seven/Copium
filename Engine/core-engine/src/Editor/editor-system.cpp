@@ -20,6 +20,9 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Editor/inspector.h"
 #include "Editor/editor-consolelog.h"
 #include "Editor/editor-hierarchy-list.h"
+#include "Windows/windows-utils.h"
+#include "SceneManager/state-manager.h"
+
 
 namespace Copium
 {
@@ -129,6 +132,30 @@ namespace Copium
 					if (ImGui::MenuItem("Open...", "Ctrl+O"))
 					{
 						//open scene
+						std::string filepath = FileDialogs::open_file("Copium Scene (*.json)\0*.json\0");
+						if (!filepath.empty())
+						{
+							std::cout << filepath << std::endl;
+
+
+							if (Copium::NewSceneManager::Instance()->get_current_scene() != nullptr)
+							{
+								std::cout << "change scene\n";
+								Copium::NewSceneManager::Instance()->change_scene(filepath);
+							}
+							else {
+								if (Copium::NewSceneManager::Instance()->load_scene(filepath))
+									std::cout << "loading success\n";
+								else
+									std::cout << "loading fail\n";
+							}
+
+						}
+						else
+						{
+							std::cout << "file failed to open\n";
+						}
+
 					}
 
 					if (ImGui::MenuItem("Save", "Ctrl+S"))
@@ -140,11 +167,18 @@ namespace Copium
 					if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
 					{
 						//save sceen as
+						std::string filepath = FileDialogs::save_file("Copium Scene (*.json)\0.json\0");
+						std::cout << filepath << std::endl;
+						Copium::NewSceneManager::Instance()->save_scene(filepath);
 					}
 
 					if (ImGui::MenuItem("Exit"))
 					{
+
 						//exit game engine
+						change_enginestate(EngineState::esQuit);
+						std::cout << "Copium has been huffed, Engine shutting down" << std::endl;
+
 					}
 
 					ImGui::EndMenu();
@@ -152,17 +186,6 @@ namespace Copium
 
 				ImGui::EndMenuBar();
 			}
-
-			//ImGui::DockBuilderRemoveNode(dockspace_id);
-			//ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace);
-			//ImGui::DockBuilderSetNodeSize(dockspace_id, { 1600,900 });
-
-			//ImGuiID mainID = dockspace_id;
-			//ImGuiID left = ImGui::DockBuilderSplitNode(mainID, ImGuiDir_Left, 0.2f, NULL, &mainID);
-			//ImGuiID btm = ImGui::DockBuilderSplitNode(mainID, ImGuiDir_Down, 0.50f, NULL, &mainID);
-			//ImGui::DockBuilderDockWindow("Console Log", btm);
-			//ImGui::DockBuilderDockWindow("Inspector", left);
-			//ImGui::DockBuilderFinish(mainID);
 
             //Call all the editor layers updates here
             Window::Inspector::update();

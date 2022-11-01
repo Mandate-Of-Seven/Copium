@@ -66,16 +66,10 @@ namespace Window::Hierarchy
 
 		ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, 10.f);
 
-		//create_gameobject_btn("Add a GameObject");
-		//ImGui::SameLine;
-		//create_delete_btn("Delete GameObject");
-
 		ImGuiTreeNodeFlags rootFlags = ImGuiTreeNodeFlags_DefaultOpen;
 
 		if (currentScene)
 		{
-
-
 			// Find all the root nodes
 			std::vector<GameObject*>roots;
 			for (size_t i{ 0 }; i < currentScene->get_gameobjcount(); ++i)
@@ -221,9 +215,6 @@ namespace Window::Hierarchy
 		if (deleteClicked)
 		{
 			deleteClicked = 0;
-
-
-
 		}
 		return true;
 

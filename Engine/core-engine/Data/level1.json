@@ -1,5 +1,5 @@
 {
-    "Name": "sandbox",
+    "Name": "level1",
     "GameObjects": [
         {
             "ID": 1,
@@ -89,32 +89,6 @@
                     "Type": "Transform",
                     "Pos": {
                         "X": 2.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                }
-            ],
-            "Children": []
-        },
-        {
-            "ID": 5,
-            "Name": "New GameObject",
-            "PID": 0,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
                         "Y": 0.0,
                         "Z": 0.0
                     },

@@ -424,17 +424,21 @@ namespace Copium
 		// Theory WIP
 		Copium::NewSceneManager* sm = Copium::NewSceneManager::Instance();
 		Scene* scene = sm->get_current_scene();
-		for (GameObject* gameObject : scene->get_gameobjectvector())
+		if (scene != nullptr)
 		{
-			Component* component = gameObject->getComponent(ComponentType::Renderer);
-			if (!component || !component->Enabled())
-				continue;
-			TransformComponent& t = gameObject->Transform();
-			RendererComponent * rc = reinterpret_cast<RendererComponent*>(component);
-			SpriteRenderer sr = rc->get_sprite_renderer();
-			glm::vec2 size(t.glmScale().x, t.glmScale().y);
-			renderer.draw_quad(t.glmPosition(), size, 0.f, sr.get_sprite_id());
+			for (GameObject* gameObject : scene->get_gameobjectvector())
+			{
+				Component* component = gameObject->getComponent(ComponentType::Renderer);
+				if (!component || !component->Enabled())
+					continue;
+				TransformComponent& t = gameObject->Transform();
+				RendererComponent * rc = reinterpret_cast<RendererComponent*>(component);
+				SpriteRenderer sr = rc->get_sprite_renderer();
+				glm::vec2 size(t.glmScale().x, t.glmScale().y);
+				renderer.draw_quad(t.glmPosition(), size, 0.f, sr.get_sprite_id());
+			}
 		}
+
 
 		renderer.end_batch();
 

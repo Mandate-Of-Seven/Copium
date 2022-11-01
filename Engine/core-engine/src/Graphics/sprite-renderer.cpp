@@ -51,4 +51,8 @@ namespace Copium
 
 		return true;
 	}
+	bool SpriteRenderer::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
+	{
+		return true;
+	}
 }

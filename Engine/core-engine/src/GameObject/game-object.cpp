@@ -270,6 +270,8 @@ GameObject& GameObject::operator=(const GameObject& rhs)
 
 void GameObject::inspectorView()
 {
+    ImGui::Text(name.c_str());
+
     transform.inspector_view();
     ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
         | ImGuiTableFlags_ScrollY;
@@ -312,7 +314,9 @@ bool GameObject::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
     _components.PushBack(transformComponent, _doc.GetAllocator());
     for (std::list<Component*>::iterator iter = components.begin(); iter != components.end(); ++iter)
     {
+        rapidjson::Value comp(rapidjson::kObjectType);
         // Serialize each component
+        (*iter)->serialize(comp, _doc);
     }
     _value.AddMember("Components", _components, _doc.GetAllocator());
     

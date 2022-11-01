@@ -75,9 +75,9 @@ namespace Copium {
 		// Load default scene
 
 		// Debug Purposes
-		std::string str("Data\\sandbox.json");
-		load_scene(str);
-		sceneFilePath = str;
+		//std::string str("Data\\sandbox.json");
+		//load_scene(str);
+		//sceneFilePath = str;
 		//std::cout << "No. of GameObjects in scene:" << currentScene->get_gameobjcount() << std::endl;
 	}
 	void NewSceneManager::update()
@@ -135,12 +135,11 @@ namespace Copium {
 	}
 	bool NewSceneManager::change_scene(const std::string& _newfilepath)
 	{
-		bool result;
+		bool result = false;
 
 		// No scene loaded, therefore cannot change
 		if (!currentScene)
 		{
-			result = load_scene(_newfilepath);
 			return result;
 		}
 
@@ -153,8 +152,13 @@ namespace Copium {
 		
 		if (std::filesystem::exists(_newfilepath))
 		{
-			result = load_scene(_newfilepath);
+			std::cout << "file exists\n";
 			delete currentScene;
+			currentScene = nullptr;
+			load_scene(_newfilepath);
+			//Scene* tmp = currentScene;
+			//result = load_scene(_newfilepath);
+			//delete tmp;
 		}
 		else
 		{
