@@ -30,7 +30,7 @@ namespace Copium
 	public:
 		// Serialization inherited from Component
 		bool deserialize(rapidjson::Value& _value);
-
+		bool serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 		// Accessing Properties
 
 		// Name

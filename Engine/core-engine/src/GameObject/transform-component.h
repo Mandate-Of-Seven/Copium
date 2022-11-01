@@ -142,22 +142,23 @@ public:
     /**************************************************************************/
     void deserialize(rapidjson::Value& _value);
 
-    /***************************************************************************/
+    /*******************************************************************************
     /*!
+    *
     \brief
-        Serializes transform data to a rapidjson::Value
+        Serialize this transform component's data to the specified rapidjson Value
 
-    \param  _value
-        reference to a rapidjson::Value which will store the transform component data. It will then be saved to a json file
+    \param _value
+        reference to the rapidjson Value which the transform component's data is to serialize its data to
 
     \param _doc
-        reference to a rapidjson::Document that is associated with the save file
+        reference to the rapidjson Document which is associated to the save file which the data is being saved to
 
     \return
-        on success, return true
-        on failure, return false
+        void
+
     */
-    /**************************************************************************/
+    /*******************************************************************************/
     void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
     void inspector_view();

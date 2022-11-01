@@ -64,10 +64,6 @@ namespace Copium {
 		// Load default scene
 
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
-		// Debug Purposes
-		std::string str("Data\\sandbox.json");
-		load_scene(str);
-		sceneFilePath = str;
 		storageScene = nullptr;
 		//std::cout << "No. of GameObjects in scene:" << currentScene->get_gameobjcount() << std::endl;
 	}
@@ -91,6 +87,11 @@ namespace Copium {
 		{
 			delete currentScene;
 			currentScene = nullptr;
+		}
+		if (storageScene)
+		{
+			delete storageScene;
+			storageScene = nullptr;
 		}
 
 		while (commandManager.undoStack.size() > 0)
@@ -154,12 +155,11 @@ namespace Copium {
 	}
 	bool NewSceneManager::change_scene(const std::string& _newfilepath)
 	{
-		bool result;
+		bool result = false;
 
 		// No scene loaded, therefore cannot change
 		if (!currentScene)
 		{
-			result = load_scene(_newfilepath);
 			return result;
 		}
 
@@ -172,8 +172,13 @@ namespace Copium {
 		
 		if (std::filesystem::exists(_newfilepath))
 		{
-			result = load_scene(_newfilepath);
+			std::cout << "file exists\n";
 			delete currentScene;
+			currentScene = nullptr;
+			load_scene(_newfilepath);
+			//Scene* tmp = currentScene;
+			//result = load_scene(_newfilepath);
+			//delete tmp;
 		}
 		else
 		{
@@ -203,7 +208,7 @@ namespace Copium {
 	{
 		if (!currentScene)
 		{
-			PRINT("Cannot preview scene as there is no scene! There might be too much copium in your system...\n");
+			PRINT("There is no scene to preview...\n");
 			return false;
 		}
 		storageScene = currentScene;
@@ -235,6 +240,11 @@ namespace Copium {
 	}
 	bool NewSceneManager::endPreview()
 	{
+		if (!currentScene)
+		{
+			PRINT("There is no scene to stop preview...\n");
+			return false;
+		}
 
 		// Delete memory for the preview scene
 		if (!storageScene)
@@ -251,6 +261,11 @@ namespace Copium {
 
 	bool NewSceneManager::save_scene()
 	{
+		if (!currentScene)
+		{
+			PRINT("There is no scene to save...\n");
+			return false;
+		}
 		double startTime = glfwGetTime();
 		std::cout << "saving scene...\n";
 		if (!save_scene(sceneFilePath))
@@ -262,6 +277,11 @@ namespace Copium {
 	}
 	bool NewSceneManager::save_scene(const std::string& _filepath)
 	{
+		if(!currentScene)
+		{
+			PRINT("There is no scene to save...\n");
+			return false;
+		}
 		rapidjson::Document doc;
 
 		doc.SetObject();

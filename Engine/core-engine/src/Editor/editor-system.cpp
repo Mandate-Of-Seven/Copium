@@ -19,6 +19,9 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Editor/inspector.h"
 #include "Editor/editor-consolelog.h"
 #include "Editor/editor-hierarchy-list.h"
+#include "Windows/windows-utils.h"
+#include "SceneManager/state-manager.h"
+
 #include "CopiumCore/copium-core.h"
 
 namespace Copium
@@ -137,6 +140,30 @@ namespace Copium
 					if (ImGui::MenuItem("Open...", "Ctrl+O"))
 					{
 						//open scene
+						std::string filepath = FileDialogs::open_file("Copium Scene (*.json)\0*.json\0");
+						if (!filepath.empty())
+						{
+							std::cout << filepath << std::endl;
+
+
+							if (Copium::NewSceneManager::Instance()->get_current_scene() != nullptr)
+							{
+								std::cout << "change scene\n";
+								Copium::NewSceneManager::Instance()->change_scene(filepath);
+							}
+							else {
+								if (Copium::NewSceneManager::Instance()->load_scene(filepath))
+									std::cout << "loading success\n";
+								else
+									std::cout << "loading fail\n";
+							}
+
+						}
+						else
+						{
+							std::cout << "file failed to open\n";
+						}
+
 					}
 
 					if (ImGui::MenuItem("Save", "Ctrl+S"))
@@ -147,12 +174,27 @@ namespace Copium
 
 					if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
 					{
-						//save sceen as
+						if (Copium::NewSceneManager::Instance()->get_current_scene())
+						{
+							//save scene as
+							std::string filepath = FileDialogs::save_file("Copium Scene (*.json)\0.json\0");
+							std::cout << filepath << std::endl;
+							Copium::NewSceneManager::Instance()->save_scene(filepath);
+						}
+						else
+						{
+							PRINT("There is no scene to save...\n");
+						}
+
 					}
 
 					if (ImGui::MenuItem("Exit"))
 					{
+
 						//exit game engine
+						change_enginestate(EngineState::esQuit);
+						std::cout << "Copium has been huffed, Engine shutting down" << std::endl;
+
 					}
 
 					ImGui::EndMenu();

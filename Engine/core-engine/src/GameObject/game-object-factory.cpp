@@ -41,7 +41,11 @@ namespace Copium
 	{
 		Scene* currScene = sceneManager.get_current_scene();
 		if (!currScene)
+		{
+			std::cout << "There is no scene loaded\n";
 			return nullptr;
+
+		}
 		GameObject* tmp = new GameObject();
 		if (!tmp)
 			return nullptr;
@@ -110,7 +114,11 @@ namespace Copium
 						// deserialize transform component
 						go->Transform().deserialize(component);
 					else
-						add_component(key, go);
+					{
+						Component* tmp = go->addComponent(Component::nameToType(key));
+						if (tmp)
+							tmp->deserialize(component);
+					}						
 
 				}
 			}
@@ -166,11 +174,11 @@ namespace Copium
 			if (currScene->get_gameobjectvector()[i] == _go)
 			{
 				delete _go;
-				currentScene->get_gameobjectvector()[i] = nullptr;
+				currScene->get_gameobjectvector()[i] = nullptr;
 				std::cout << "trimming go vector\n";
-				currentScene->get_gameobjectvector().erase(currentScene->get_gameobjectvector().begin() + i);
-				currentScene->get_gameobjectvector().shrink_to_fit();
-				std::cout << currentScene->get_gameobjcount()<<"\n";
+				currScene->get_gameobjectvector().erase(currScene->get_gameobjectvector().begin() + i);
+				currScene->get_gameobjectvector().shrink_to_fit();
+				std::cout << "Number of GameObjects left: " << currScene->get_gameobjcount() << std::endl;
 				break;
 
 			}
@@ -258,7 +266,7 @@ namespace Copium
 	bool GameObjectFactory::add_component(const std::string& _key, GameObject* _go)
 	{
 		
-		_go->addComponent(Component::nameToType(_key));
+		Component* tmp = _go->addComponent(Component::nameToType(_key));
 		return true;
 	}
 

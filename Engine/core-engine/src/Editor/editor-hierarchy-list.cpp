@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			editor-hierarchy-list.cpp
+\project
+\author			Matthew Lau
+
+\par			Course: GAM200
+\par			Section:
+\date			27/10/2022
+
+\brief
+	Definition of functions that handle initialization and update of Hierarchy List
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 #include "pch.h"
 #include "Editor/editor-hierarchy-list.h"
 
@@ -66,16 +80,11 @@ namespace Window::Hierarchy
 
 		ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, 10.f);
 
-		//create_gameobject_btn("Add a GameObject");
-		//ImGui::SameLine;
-		//create_delete_btn("Delete GameObject");
-
 		ImGuiTreeNodeFlags rootFlags = ImGuiTreeNodeFlags_DefaultOpen;
-
+		
+		// Ensure that game objects are displayed only if there is a current scene loaded
 		if (currentScene)
 		{
-
-
 			// Find all the root nodes
 			std::vector<Copium::GameObject*>roots;
 			for (size_t i{ 0 }; i < currentScene->get_gameobjcount(); ++i)
@@ -221,9 +230,6 @@ namespace Window::Hierarchy
 		if (deleteClicked)
 		{
 			deleteClicked = 0;
-
-
-
 		}
 		return true;
 
