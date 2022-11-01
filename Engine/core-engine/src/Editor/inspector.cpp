@@ -32,11 +32,11 @@ namespace Window
 	namespace Inspector
 	{
         bool isOpen;
-        Copium::GameObject* selectedGameObject;
         bool isAddingScript;
         bool isAddingComponent;
         char nameBuffer[128];
         Copium::ScriptingSystem& scriptingSystem{ *Copium::ScriptingSystem::Instance() };
+        Copium::NewSceneManager& sceneManager{ *Copium::NewSceneManager::Instance() };
 
         void AlignForWidth(float width, float alignment = 0.5f)
         {
@@ -49,7 +49,6 @@ namespace Window
 
         void init()
         {
-            selectedGameObject = nullptr;
             isAddingScript = false;
             isAddingComponent = false;
             ImGuiIO& io = ImGui::GetIO();
@@ -69,22 +68,23 @@ namespace Window
 
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
             ImGui::SetNextWindowSizeConstraints(ImVec2(320, 180), ImVec2(FLT_MAX, FLT_MAX));
-            if (Copium::NewSceneManager::Instance() != nullptr)
-                if (selectedGameObject != Copium::NewSceneManager::Instance()->get_selected_gameobject())
-                    selectedGameObject = Copium::NewSceneManager::Instance()->selectedGameObject;
 
             if (!ImGui::Begin("Inspector", &isOpen)) 
             {
                 ImGui::End();
                 return;
             }
+
+            Copium::GameObject* selectedGameObject = sceneManager.selectedGameObject;
             if (selectedGameObject)
             {
                 // Set flags for tables
                 selectedGameObject->inspectorView();
 
                 //AlignForWidth(buttonSize.x);
-                if (ImGui::Button("Add Component", {100.f,100.f})) {
+                ImVec2 buttonSize = ImGui::GetWindowSize();
+                buttonSize.y *= (float)BUTTON_HEIGHT;
+                if (ImGui::Button("Add Component", buttonSize)) {
                     isAddingComponent = true;
                 }
             }
@@ -119,15 +119,16 @@ namespace Window
 
             if (isAddingScript)
             {
-                ImGui::Begin("Add Script", &isAddingComponent);
+                ImGui::Begin("Add Script", &isAddingScript);
                 AlignForWidth(ImGui::GetWindowSize().x);
                 ImVec2 buttonSize = ImGui::GetWindowSize();
                 buttonSize.y *= (float)BUTTON_HEIGHT;
-                for (auto& nameToScriptClass : scriptingSystem.getScriptClassMap())
+                for (auto& nameToScriptClass : scriptingSystem.getScriptFiles())
                 {
-                    const std::string& name { nameToScriptClass.first };
+                    const std::string& name {nameToScriptClass.filename().stem().string()};
                     if (ImGui::Button(name.c_str(), buttonSize)) {
                         selectedGameObject->addComponent<Copium::ScriptComponent>().Name(name);
+                        isAddingScript = false;
                     }
                 }
                 ImGui::End();
@@ -137,7 +138,6 @@ namespace Window
 
         void exit()
         {
-            selectedGameObject = nullptr;
         }
 	}
 }

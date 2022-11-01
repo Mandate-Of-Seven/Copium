@@ -247,7 +247,6 @@ namespace Copium
 		ImGui::DestroyContext();
 
 		Window::Inspector::exit();
-		Window::Inspector::selectedGameObject = nullptr;
 		sceneView.exit();
 	}
 }

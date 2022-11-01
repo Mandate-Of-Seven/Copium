@@ -158,6 +158,11 @@ namespace Copium
 
 	}
 
+	const std::list<Copium::File>& ScriptingSystem::getScriptFiles()
+	{
+		return scriptFiles;
+	}
+
 	void ScriptingSystem::init()
 	{
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
@@ -316,7 +321,7 @@ namespace Copium
 		{
 			maskScriptFiles.push_back(&file);
 		}
-		for (fs::directory_entry p : fs::recursive_directory_iterator(Paths::projectPath))
+		for (const fs::directory_entry& p : fs::recursive_directory_iterator(Paths::projectPath))
 		{
 			const fs::path& pathRef{ p.path() };
 			if (pathRef.extension() != ".cs")
