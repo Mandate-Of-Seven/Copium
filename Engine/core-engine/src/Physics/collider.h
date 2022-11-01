@@ -15,11 +15,17 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 *****************************************************************************************/
 #include "Physics/collision.h"
 #include "Math/math-library.h"
+#include "GameObject/component.h"
 namespace Copium
 {
-    class RigidBodyComponent
+    class RigidBodyComponent: public Component
     {
 	public:
+
+		RigidBodyComponent(GameObject& _gameObj)
+			:Component(_gameObj, ComponentType::RigidBody) {
+			std::cout << "RigidBody CONS" << std::endl;
+		}
 		void const set_vel(Math::Vec2 _velocity) { velocity = _velocity; }
 		void const set_acc(Math::Vec2 _acceleration) { acceleration = _acceleration; }
 		void const set_force(Math::Vec2 _force) { force = _force; }
@@ -37,6 +43,22 @@ namespace Copium
 		float get_mass() { return mass; }
 		Shape get_shape() { return objectShape; }
 		Collision::AABB get_AABB() { return boundingBox; }
+
+
+		
+
+
+		void inspector_view() {};
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Deserialize this component's data from specified rapidjson value
+		*/
+		/**************************************************************************/
+		//void deserialize(rapidjson::Value& _value);
+
+		RigidBodyComponent& operator=(const RigidBodyComponent& rhs) { (void)rhs; return *this; }
 		
 		
 	private:
