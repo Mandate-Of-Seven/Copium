@@ -145,7 +145,9 @@ namespace Copium
 			while (compilingState != CompilingState::Wait);
 			compilingState = CompilingState::Compiling;
 			//Critical section
+			while (!tSys.acquireMutex(MutexType::FileSystem));
 			updateScriptFiles();
+			tSys.returnMutex(MutexType::FileSystem);
 			tryRecompileDll();
 			//Critical section End
 			Sleep(SECONDS_TO_RECOMPILE*1000);

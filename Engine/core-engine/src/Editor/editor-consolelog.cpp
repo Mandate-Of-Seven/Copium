@@ -14,8 +14,12 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 *****************************************************************************************/
 #include "pch.h"
 #include <Editor/editor-consolelog.h>
-#include <CopiumCore/copium-core.h>
+#include <Messaging/message-system.h>
 
+namespace
+{
+    Copium::MessageSystem& messageSystem { *Copium::MessageSystem::Instance() };
+}
 
 namespace Window
 {
@@ -119,7 +123,7 @@ namespace Window
             ImGui::SameLine();
             if (ImGui::Button("Performance Viewer"))
             {
-                Copium::CopiumCore::Instance()->toggle_display_peformance();
+                messageSystem.dispatch(Copium::MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW);
             }
 
             ImGui::SameLine();

@@ -22,6 +22,10 @@ namespace Copium
 	{
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		quit = false;
+		for (int i = 0; i < int(MutexType::None); ++i)
+		{
+			mutexes.emplace(std::make_pair(MutexType(i),0));
+		}
 	}
 
 	void ThreadSystem::update()

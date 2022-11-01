@@ -24,7 +24,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #define BUTTON_HEIGHT .1 //Percent
 #define BUTTON_WIDTH .6 //Percent
-#define MAX_NAME_LENGTH 128;
+#define INPUT_BUFFER_SIZE 128
 
 namespace Window
 {
@@ -34,7 +34,8 @@ namespace Window
         bool isOpen;
         bool isAddingScript;
         bool isAddingComponent;
-        char nameBuffer[128];
+        bool isAddingNewScript;
+        char nameBuffer[INPUT_BUFFER_SIZE];
         Copium::ScriptingSystem& scriptingSystem{ *Copium::ScriptingSystem::Instance() };
         Copium::NewSceneManager& sceneManager{ *Copium::NewSceneManager::Instance() };
 
@@ -51,6 +52,7 @@ namespace Window
         {
             isAddingScript = false;
             isAddingComponent = false;
+            isAddingNewScript = false;
             ImGuiIO& io = ImGui::GetIO();
             io.Fonts->AddFontFromFileTTF("assets\\fonts\\bahnschrift.ttf", 32.f);
             isOpen = true;
@@ -72,6 +74,7 @@ namespace Window
             if (!ImGui::Begin("Inspector", &isOpen)) 
             {
                 ImGui::End();
+                ImGui::PopStyleVar();
                 return;
             }
 
@@ -90,7 +93,6 @@ namespace Window
             }
             ImGui::End();
             ImGui::PopStyleVar();
-
             if (isAddingComponent)
             {
                 ImGui::Begin("Add Component",&isAddingComponent);
@@ -131,9 +133,31 @@ namespace Window
                         isAddingScript = false;
                     }
                 }
+                if (ImGui::Button("NewScript", buttonSize)) {
+                    isAddingNewScript = true;
+                    isAddingScript = false;
+                }
                 ImGui::End();
             }
 
+            if (isAddingNewScript)
+            {
+                ImGui::Begin("NewScript", &isAddingNewScript);
+                AlignForWidth(ImGui::GetWindowSize().x);
+                ImGui::PushItemWidth(-1);
+                ImGui::InputTextWithHint("##ScriptName", "Enter script name:", nameBuffer, INPUT_BUFFER_SIZE);
+                ImGui::PopItemWidth();
+
+                for (auto& nameToScriptClass : scriptingSystem.getScriptFiles())
+                {
+                    const std::string& name{ nameToScriptClass.filename().stem().string() };
+                    if (name == nameBuffer)
+                    {
+                        PRINT("SCRIPT ALREADY EXISTS");
+                    }
+                }
+                ImGui::End();
+            }
 		}
 
         void exit()

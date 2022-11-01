@@ -26,6 +26,7 @@
 *************************************************************************************/
 
 
+#pragma warning (disable: 26451)
 #pragma warning(disable : 26439)
 
 #ifndef RTTR_VARIANT_DATA_CONVERTER_H_
