@@ -148,13 +148,14 @@ namespace Copium
 				acceleration = gameobj->getComponent<RigidBodyComponent>()->get_acc();
 				Math::Vec2 size{ gameobj->Transform().scale.x, gameobj->Transform().scale.y };
 				Math::Vec2 position{ gameobj->Transform().position.x, gameobj->Transform().position.y };
+				mass = gameobj->getComponent<RigidBodyComponent>()->get_mass();
 				bound = gameobj->getComponent<RigidBodyComponent>()->get_AABB();
-				if (gameobj->getComponent<RigidBodyComponent>()->get_mass() != 0)
+				if (mass != 0)
 				{
 					if (gameobj->getComponent<RigidBodyComponent>()->get_gravity() == true)
 					{
-						acceleration = (force + gravity) / gameobj->getComponent<RigidBodyComponent>()->get_mass();
-						velocity = velocity + (acceleration * dt * 0.90);
+						acceleration = (force + gravity) / mass;
+						velocity = velocity + (acceleration * dt * 0.90f);
 						position = position + (velocity * dt);
 						gameobj->getComponent<RigidBodyComponent>()->set_acc(acceleration);
 						gameobj->getComponent<RigidBodyComponent>()->set_vel(velocity);
@@ -162,8 +163,8 @@ namespace Copium
 					}
 					else
 					{
-						acceleration = force / gameobj->getComponent<RigidBodyComponent>()->get_mass();
-						velocity = velocity + (acceleration * dt * 0.90);
+						acceleration = force / mass;
+						velocity = velocity + (acceleration * dt * 0.90f);
 						position = position + (velocity * dt);
 						gameobj->getComponent<RigidBodyComponent>()->set_acc(acceleration);
 						gameobj->getComponent<RigidBodyComponent>()->set_vel(velocity);

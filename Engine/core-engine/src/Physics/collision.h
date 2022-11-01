@@ -19,7 +19,14 @@ enum Shape
 {	DOT,
 	SQUARE
 };
-
+enum class collisionDirection : int
+{
+	NONE,
+	TOP,
+	BOTTOM,
+	LEFT,
+	RIGHT
+};
 namespace Copium::Collision
 {
 	
@@ -62,6 +69,22 @@ namespace Copium::Collision
    /**************************************************************************/
 	bool collision_pointrect(const Math::Vec2& point,
 		const AABB& aabb2, const Math::Vec2& vel2);
-
+	/***************************************************************************/
+	/*!
+	\brief
+	Checks for static collision between a rectangle and a point
+	\param point
+	The point to check for collision
+	\param aabb2
+	The AABB of the second object to check
+	\return
+	1 if the objects are colliding, 0 otherwise.
+*/
+/**************************************************************************/
 	bool static_collision_pointrect(const Math::Vec2& point,const AABB& aabb2);
+
+	void resolve_collision(const AABB& aabb1, const AABB& aabb2, collisionDirection direction);
+
+	collisionDirection check_collision_direction(const AABB& aabb1, const Math::Vec2& vel1,
+		const AABB& aabb2, const Math::Vec2& vel2);
 }
