@@ -328,7 +328,8 @@ namespace Copium {
 
 	void create_rapidjson_string(rapidjson::Document& _doc, rapidjson::Value& _value, const std::string& _str)
 	{
-		_value.SetString(_str.c_str(), _str.length(), _doc.GetAllocator());
+		rapidjson::SizeType sz = static_cast<rapidjson::SizeType>(_str.size());
+		_value.SetString(_str.c_str(), sz, _doc.GetAllocator());
 	}
 
 	UndoRedo::CommandManager* NewSceneManager::get_commandmanager()
