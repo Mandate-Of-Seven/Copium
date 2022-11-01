@@ -272,42 +272,8 @@ namespace Copium
 		if(debugMode)
 			draw_debug_info();
 
-		glm::vec3 position = { 0.f, 0.f, 0.f };
-		glm::vec4 color = { 0.f, 0.f, 0.f, 1.f };
-		Font::getFont("corbel")->draw_text("Corbel", position, color, 0.4f + size_x, 0);
-
-
-		float red = 0.f, green = 1.f;
-		static float timer = 0.f; 
-		timer += (float)WindowsSystem::Instance()->get_delta_time();
-		static bool switcher = false;
-
-		if (timer >= 1.f && switcher)
-		{
-			timer = 0.f;
-			switcher = false;
-		}
-		else if (timer >= 1.f && !switcher)
-		{
-			timer = 0.f;
-			switcher = true;
-		}
-
-		if (switcher)
-
-		{
-			red = (0.1f * (1.0f - timer)) + (0.9f * timer);
-			green = (0.9f * (1.0f - timer)) + (0.1f * timer);
-		}
-		else
-		{
-			red = (0.9f * (1.0f - timer)) + (0.1f * timer);
-			green = (0.1f * (1.0f - timer)) + (0.9f * timer);
-		}
-
-		position = { 0.f, 2.f, 0.f };
-		color = { red, green, 1.f, 1.f };
-		Font::getFont("Comfortaa-Regular")->draw_text("Hello Comfortaa Here...", position, color, 0.6f + size_x, 0);
+		if (NewSceneManager::Instance()->get_current_scene() != nullptr)
+			draw_development();
 
 		// Unbind the framebuffer to display renderable
 		// onto the image
@@ -414,8 +380,7 @@ namespace Copium
 		// texture scale should be separate and derived from the image dimensions
 		// Scale = image scale / default scale(1024)
 		AssetsSystem* assets = AssetsSystem::Instance();
-		renderer.draw_quad({ 0.f, 0.f, 0.f }, { 3.84f * 2.5f, 2.16f * 2.5f }, 0.f, assets->get_textures()[0].get_object_id());
-		
+
 		color = { 0.1f, 1.f, 0.1f, 1.f };
 		glm::vec2 worldNDC{ 0 };
 		EditorSystem* editor = EditorSystem::Instance();
@@ -502,11 +467,61 @@ namespace Copium
 			}
 
 		}
+		
+		// Bean : Testing Text
+		/*glm::vec3 position = { 0.f, -1.f, 0.f };
+		color = { 1.f, 1.f, 0.f, 1.f };
+		renderer.draw_text("Testing Arial", position, color, 0.1f, 0);*/
+		
+		renderer.end_batch();
+
+		renderer.flush();
+	}
+
+	void GraphicsSystem::draw_development()
+	{
+		glm::vec3 position = { 3.f, 0.f, 0.f };
+		glm::vec4 color = { 0.f, 0.f, 0.f, 1.f };
+		Font::getFont("corbel")->draw_text("Corbel Font", position, color, 0.4f + size_x, 0);
+
+		float red = 0.f, green = 1.f;
+		static float timer = 0.f;
+		timer += (float) WindowsSystem::Instance()->get_delta_time();
+		static bool switcher = false;
+
+		if (timer >= 1.f && switcher)
+		{
+			timer = 0.f;
+			switcher = false;
+		}
+		else if (timer >= 1.f && !switcher)
+		{
+			timer = 0.f;
+			switcher = true;
+		}
+
+		if (switcher)
+
+		{
+			red = (0.1f * (1.0f - timer)) + (0.9f * timer);
+			green = (0.9f * (1.0f - timer)) + (0.1f * timer);
+		}
+		else
+		{
+			red = (0.9f * (1.0f - timer)) + (0.1f * timer);
+			green = (0.1f * (1.0f - timer)) + (0.9f * timer);
+		}
+
+		position = { 3.f, 2.f, 0.f };
+		color = { red, green, 1.f, 1.f };
+		Font::getFont("Comfortaa-Regular")->draw_text("Hello Professors :D", position, color, 0.6f + size_x, 0);
 
 		// Bean : Testing Animations
+		renderer.begin_batch();
+		AssetsSystem* assets = AssetsSystem::Instance();
 		if (!assets->get_spritesheets().empty())
 		{
-			glm::vec3 position(-3.f, 1.f, 0.f);
+			glm::vec3 position(-4.f, 1.f, 0.f);
 			glm::vec2 size(2.f, 2.f);
 			static GLuint animationID = 0;
 			GLuint indexSize = assets->get_spritesheets()[0].get_size() - 1;
@@ -526,14 +541,8 @@ namespace Copium
 			}
 
 			renderer.draw_quad(position, size, 0.f, assets->get_spritesheets()[0], animationID, 10);
-
 		}
-		
-		// Bean : Testing Text
-		/*glm::vec3 position = { 0.f, -1.f, 0.f };
-		color = { 1.f, 1.f, 0.f, 1.f };
-		renderer.draw_text("Testing Arial", position, color, 0.1f, 0);*/
-		
+
 		renderer.end_batch();
 
 		renderer.flush();

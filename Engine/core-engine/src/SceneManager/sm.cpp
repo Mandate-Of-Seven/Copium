@@ -175,6 +175,7 @@ namespace Copium {
 			std::cout << "file exists\n";
 			delete currentScene;
 			currentScene = nullptr;
+			selectedGameObject = nullptr;
 			load_scene(_newfilepath);
 			//Scene* tmp = currentScene;
 			//result = load_scene(_newfilepath);

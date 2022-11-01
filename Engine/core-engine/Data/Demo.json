@@ -105,7 +105,8 @@
                 },
                 {
                     "Type": "RendererComponent",
-                    "Sprite ID": 2,
+                    "Sprite ID": 1,
+                    "Sprite Name": "mock-up.png",
                     "Color": {
                         "X": 0.8933992385864258,
                         "Y": 0.1497664451599121,

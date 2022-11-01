@@ -168,14 +168,12 @@ namespace Copium
 				case MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW:
 				{
 					displayPerformance = !displayPerformance;
+					performanceCounter = 0.05f;
 					break;
 				}
 			}
 		}
 
-		// getter /setters
-		void toggle_display_peformance() { displayPerformance = !displayPerformance; performanceCounter = 0.05f; }
-		void toggle_inplaymode() { inPlayMode = !inPlayMode; }
 		bool get_inplaymode() { return inPlayMode; }
 	private:
 		std::vector<ISystem*> systems;

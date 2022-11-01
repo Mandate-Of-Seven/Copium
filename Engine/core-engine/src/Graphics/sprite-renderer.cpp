@@ -30,6 +30,11 @@ namespace Copium
 		if(spriteID != 0)
 			refTexture = &AssetsSystem::Instance()->get_textures()[spriteID - 1];
 
+		if (!_value.HasMember("Sprite Name"))
+			return false;
+
+		sprite_name = _value["Sprite Name"].GetString();
+
 		if (!_value.HasMember("Color"))
 			return false;
 
@@ -44,6 +49,11 @@ namespace Copium
 	bool SpriteRenderer::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
 		_value.AddMember("Sprite ID", spriteID, _doc.GetAllocator());
+
+		rapidjson::Value type(rapidjson::kObjectType);
+		type.SetString(sprite_name.c_str(), (rapidjson::SizeType)sprite_name.length(), _doc.GetAllocator());
+		_value.AddMember("Sprite Name", type, _doc.GetAllocator());
+
 		rapidjson::Value _color(rapidjson::kObjectType);
 		_color.AddMember("X",color.x, _doc.GetAllocator());
 		_color.AddMember("Y", color.y, _doc.GetAllocator());

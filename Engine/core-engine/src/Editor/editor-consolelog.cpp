@@ -126,10 +126,6 @@ namespace Window
             ImGui::SameLine();
             bool copy = ImGui::Button("Copy");
             ImGui::SameLine();
-            if (ImGui::Button("Performance Viewer"))
-            {
-                messageSystem.dispatch(Copium::MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW);
-            }
 
             ImGui::SameLine();
             editorLog.Search.Draw("Search", 200.0f);
@@ -196,12 +192,13 @@ namespace Window
             ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 75);
             if (ImGui::Button("Start Performance Viewer"))
             {
-                Copium::CopiumCore::Instance()->toggle_display_peformance();
+                messageSystem.dispatch(Copium::MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW);
             }
             //ImGui::Text("Performance Viewer");
             std::string buffer = Window::EditorConsole::editorLog.performanceText;
             ImGui::Text(buffer.c_str());
-            // End Render Stats
+            PRINT(buffer);
+            // End Performance Stats
             ImGui::End();
 		}
 	}
