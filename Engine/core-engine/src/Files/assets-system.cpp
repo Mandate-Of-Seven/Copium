@@ -24,11 +24,11 @@ namespace Copium
 	void AssetsSystem::init()
 	{
 		FileSystem* fs = FileSystem::Instance();
-		load_all_textures(fs->get_filepath_in_directory(Paths::assetPath.c_str(), ".png"));
+		load_all_textures(fs->get_filepath_in_directory((Paths::assetPath+"/textures").c_str(), ".png"));
 		load_all_audio(fs->get_filepath_in_directory((Paths::assetPath+"/sounds").c_str(), ".wav"));
 		for (unsigned int i = 0; i < textures.size(); i++)
 		{
-			//std::cout << "Texture: " << textures[i].get_object_id() << " " << textures[i].get_file_path() << "\n";
+			std::cout << "Texture: " << textures[i].get_object_id() << " " << textures[i].get_file_path() << "\n";
 		}
 
 	}
@@ -37,7 +37,7 @@ namespace Copium
 	{
 
 	}
-
+	
 	void AssetsSystem::exit()
 	{
 

@@ -68,7 +68,7 @@ namespace Copium
 
 	private:
 		/* Sprite Information ***********************************************************/
-		std::string sprite_name; // Name of sprite
+		std::string sprite_name = "empty"; // Name of sprite
 
 		Texture* refTexture; // Pointer to the texture
 		unsigned int spriteID = 0; // The index of the sprite

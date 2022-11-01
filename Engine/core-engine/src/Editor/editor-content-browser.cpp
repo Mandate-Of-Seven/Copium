@@ -14,6 +14,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************/
 #include "pch.h"
 
+#include <algorithm>
 #include "Editor/editor-content-browser.h"
 
 namespace Copium
@@ -86,6 +87,7 @@ namespace Copium
 				const auto& path = dirEntry.path();
 				auto relativePath = std::filesystem::relative(path, assets);
 				std::string fileName = relativePath.filename().string();
+				
 
 				ImGui::PushID(fileName.c_str());
 
@@ -93,12 +95,15 @@ namespace Copium
 				ImTextureID icon = (ImTextureID)(size_t)icons[index].get_object_id();
 				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
 				ImGui::ImageButton(icon, { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
-				ImGui::PopStyleColor();
-
+				
 				if (ImGui::BeginDragDropSource())
 				{
-					std::string filePath = relativePath.string().c_str();
-					ImGui::SetDragDropPayload("ContentBrowserItem", (void*)filePath.c_str(), filePath.size());
+					std::string str = path.string();
+					std::replace(str.begin(), str.end(), '\\', '/');
+					const char* filePath = str.c_str();
+					PRINT("File: " << str.c_str());
+					ImGui::SetDragDropPayload("ContentBrowserItem", filePath, str.size() + 1);
+					
 					ImGui::EndDragDropSource();
 				}
 
@@ -109,6 +114,7 @@ namespace Copium
 						currentDirectory /= path.filename();
 					}
 				}
+				ImGui::PopStyleColor();
 
 				float textWidth = ImGui::CalcTextSize(fileName.c_str()).x;
 				float indent = (cellSize - textWidth) * 0.5f;

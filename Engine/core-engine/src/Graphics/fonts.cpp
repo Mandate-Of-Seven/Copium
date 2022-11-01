@@ -31,7 +31,7 @@ namespace Copium
 
 	Font::Font(const std::string& name)
 	{
-		std::string path = Paths::assetPath + "fonts\\" + name + ".ttf";
+		std::string path = Paths::assetPath + "/fonts/" + name + ".ttf";
 		FT_Library ft;
 		COPIUM_ASSERT(FT_Init_FreeType(&ft), "Could not initialize FreeType Library");
 
