@@ -31,7 +31,7 @@ namespace Copium
 // Initialize sound system
 void SoundSystem::init()
 {
-	this->onlyUpdateOnPlay = true;
+	systemFlags |= FLAG_RUN_ON_PLAY;
 	FMOD::System_Create(&soundSystem);
 	soundSystem->init(50, FMOD_INIT_NORMAL, NULL);
 	CheckVersion();

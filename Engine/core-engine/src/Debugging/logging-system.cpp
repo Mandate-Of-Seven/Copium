@@ -18,6 +18,7 @@ namespace Copium
 {
     void LoggingSystem::init()
     {
+        systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
         auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
         console_sink->set_level(spdlog::level::trace);
         console_sink->set_pattern("[%T] [%^%l%$] %v");

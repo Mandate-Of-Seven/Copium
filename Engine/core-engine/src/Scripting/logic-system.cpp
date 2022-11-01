@@ -10,14 +10,14 @@ namespace Copium
 	namespace
 	{
 		NewSceneManager& sceneManager {*NewSceneManager::Instance()};
-		bool play;
 		std::vector<GameObject*>* gameObjects;
 	}
 
 	void LogicSystem::init()
 	{
+
+		systemFlags |= FLAG_RUN_ON_PLAY;
 		gameObjects = &sceneManager.get_current_scene()->get_gameobjectvector();
-		this->onlyUpdateOnPlay = true;
 	}
 
 	void LogicSystem::update()
@@ -26,7 +26,6 @@ namespace Copium
 		for (GameObject* pGameObj : *gameObjects)
 		{
 			const std::vector<ScriptComponent*>& pScriptComponents{ pGameObj->getComponents<ScriptComponent>() };
-			PRINT("LOGIC!" << pGameObj->get_name() << " " << pScriptComponents.size());
 			for (ScriptComponent* pScriptComponent : pScriptComponents)
 			{
 				if (!pScriptComponent)

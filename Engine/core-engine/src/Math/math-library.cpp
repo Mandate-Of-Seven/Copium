@@ -498,7 +498,7 @@ namespace Copium::Math
 		matrix3x3_identity(_mtx);
 
 		//Convert to radian
-		float result = _angle * (PI / 180.0);
+		float result = _angle * (PI / 180.0f);
 
 		_mtx.m[0][0] = cosf((float) result);
 		_mtx.m[0][1] = -sinf((float) result);
@@ -571,7 +571,7 @@ namespace Copium::Math
 		//Multiply Adjugate by 1/determinant
 		for (int i{ 0 }; i < 3; ++i) {
 			for (int j{ 0 }; j < 3; ++j) {
-				tmp.m[i][j] *= (1.0 / (*_determinant));
+				tmp.m[i][j] *= (1.0f / (*_determinant));
 			}
 		}
 

@@ -110,6 +110,7 @@ namespace Copium
 		MonoObject* mObject;
 		MonoObject* mGameObject;
 		std::string name;
+		const ScriptComponent* reference;
 		static ScriptingSystem& sS;
     };
 }

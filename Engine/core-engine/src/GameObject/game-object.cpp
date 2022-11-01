@@ -40,6 +40,7 @@ GameObjectID GameObject::count = 1;
 
 GameObject::~GameObject()
 {
+    messageSystem.unsubscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
     for (std::list<Component*>::iterator iter = components.begin(); iter != components.end(); ++iter)
     {
         if (*iter)
@@ -50,7 +51,7 @@ GameObject::~GameObject()
 }
 
 
-GameObject::GameObject(const GameObject& rhs) : transform(*this), id{count++}
+GameObject::GameObject(const GameObject& rhs) : transform(*this), id{ count++ }, parent{ nullptr }, parentid{0}
 {
     messageSystem.subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
     MESSAGE_CONTAINER::reflectCsGameObject.ID = id;
@@ -117,7 +118,7 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{count++}
     }
     for (GameObject* pGameObj : rhs.children)
     {
-        GameObject* child = new GameObject(*pGameObj);
+        GameObject* child = sceneManager.get_gof().build_gameobject(*pGameObj);
         children.push_back(child);
         child->set_parent(this);
     }
@@ -340,7 +341,7 @@ void GameObject::inspectorView()
     ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed;
     if (ImGui::CollapsingHeader("Transform", nodeFlags))
     {
-        transform.inspector_view();
+        transform.inspector_view();     
     }
     if (ImGui::BeginTable("Components", 1, tableFlags, ImVec2(0.f, 450.f)))
     {

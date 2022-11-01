@@ -24,7 +24,7 @@ namespace Copium
 	ScriptingSystem& ScriptComponent::sS{ *ScriptingSystem::Instance() };
 
 	ScriptComponent::ScriptComponent(GameObject& _gameObj) :
-		mObject{ nullptr }, pScriptClass{ nullptr }, Component(_gameObj, ComponentType::Script), name{ DEFAULT_SCRIPT_NAME }
+		mObject{ nullptr }, pScriptClass{ nullptr }, Component(_gameObj, ComponentType::Script), name{ DEFAULT_SCRIPT_NAME }, reference{nullptr}
 	{
 		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
 		pScriptClass = sS.getScriptClass(name);
@@ -40,7 +40,14 @@ namespace Copium
 	{
 		if (pScriptClass != nullptr)
 		{
-			mObject = sS.instantiateClass(pScriptClass->mClass);
+			if (reference == nullptr)
+			{
+				mObject = sS.instantiateClass(pScriptClass->mClass);
+			}
+			else
+			{
+				mObject = sS.cloneInstance(reference->mObject);
+			}
 			GameObjectID _id = gameObj.id;
 			void* param = &_id;
 			sS.invoke(mObject, pScriptClass->mOnCreate, &param);
@@ -63,8 +70,6 @@ namespace Copium
 	{
 		name = _name;
 		pScriptClass = sS.getScriptClass(name);
-		//if (pScriptClass)
-		//	PRINT("NAME CALLED BY NAME(): " << pScriptClass->name);
 		instantiate();
 	}
 
@@ -240,7 +245,8 @@ namespace Copium
 	{
 		pScriptClass = rhs.pScriptClass;
 		name = rhs.name;
-		mObject = sS.cloneInstance(rhs.mObject);
+		reference = &rhs;
+		instantiate();
 		return *this;
 	}
 }

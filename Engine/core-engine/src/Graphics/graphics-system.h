@@ -40,7 +40,7 @@ namespace Copium
 	static const GLuint maxTextVertexCount = maxTextCount * 4;
 	static const GLuint maxTextures = 32;
 
-	static enum
+	enum
 	{
 		NUM_SHADERS = 3
 	};

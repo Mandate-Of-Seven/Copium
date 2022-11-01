@@ -141,7 +141,7 @@ namespace Window::Hierarchy
 	{
 		bool isSelected = false;
 		ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
-		int node_clicked = -1;
+		//int node_clicked = -1;
 
 		if (!_go.is_parent())
 		{

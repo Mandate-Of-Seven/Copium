@@ -20,6 +20,7 @@ namespace Copium
 {
 	void ThreadSystem::init()
 	{
+		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		quit = false;
 	}
 

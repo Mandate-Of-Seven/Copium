@@ -37,6 +37,6 @@ public class CSharpTesting : CopiumScript
 		transform.position = position;
 		vec2.x = position.x;
 		vec2.y = position.y;
-		Console.WriteLine("HELLO FROM C#");
+		Console.WriteLine("GameObject ID: " + gameObject.ID + " running!");
 	}
 }

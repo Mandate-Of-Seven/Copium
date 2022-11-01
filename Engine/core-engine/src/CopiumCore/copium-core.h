@@ -49,9 +49,9 @@ namespace Copium
 			{
 				//Put in sequence of calls
 				WindowsSystem::Instance(),
+				MessageSystem::Instance(),
 				LoggingSystem::Instance(),
 				NewSceneManager::Instance(),
-				MessageSystem::Instance(),
 				SoundSystem::Instance()	,
 				FileSystem::Instance(),
 				AssetsSystem::Instance(),
@@ -92,24 +92,17 @@ namespace Copium
 			frc->update();
 			for (ISystem* pSystem : systems)
 			{
-				if (pSystem->onlyUpdateOnPlay && inPlayMode)
+				if (pSystem->systemFlags & FLAG_RUN_ON_PLAY && inPlayMode)
 				{
 					double startTime = glfwGetTime();
 					pSystem->update();
 					pSystem->updateTime = glfwGetTime() - startTime;
 					totalUpdateTime += pSystem->updateTime;
 				}
-				else if (pSystem->onlyUpdateOnPlay &&!inPlayMode)
+				else if (pSystem->systemFlags & FLAG_RUN_ON_EDITOR &&!inPlayMode)
 				{
-					//printf("Not in playmode \n");
+					pSystem->update();
 					continue;
-				}
-				else
-				{
-					double startTime = glfwGetTime();
-					pSystem->update();
-					pSystem->updateTime = glfwGetTime() - startTime;
-					totalUpdateTime += pSystem->updateTime;
 				}
 			}
 

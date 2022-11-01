@@ -44,6 +44,7 @@ namespace Copium
 
 	void GraphicsSystem::init()
 	{
+		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		PRINT("\n---------------- Loading Graphics System ----------------\n");
 
 		glClearColor(1.f, 1.f, 1.f, 1.f);
