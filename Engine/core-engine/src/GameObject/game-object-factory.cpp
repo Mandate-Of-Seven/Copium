@@ -41,7 +41,11 @@ namespace Copium
 	{
 		Scene* currScene = sceneManager.get_current_scene();
 		if (!currScene)
+		{
+			std::cout << "There is no scene loaded\n";
 			return nullptr;
+
+		}
 		GameObject* tmp = new GameObject();
 		if (!tmp)
 			return nullptr;
@@ -110,7 +114,11 @@ namespace Copium
 						// deserialize transform component
 						go->Transform().deserialize(component);
 					else
-						add_component(key, go);
+					{
+						Component* tmp = go->addComponent(Component::nameToType(key));
+						if (tmp)
+							tmp->deserialize(component);
+					}						
 
 				}
 			}
@@ -258,7 +266,7 @@ namespace Copium
 	bool GameObjectFactory::add_component(const std::string& _key, GameObject* _go)
 	{
 		
-		_go->addComponent(Component::nameToType(_key));
+		Component* tmp = _go->addComponent(Component::nameToType(_key));
 		return true;
 	}
 

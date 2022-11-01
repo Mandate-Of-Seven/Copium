@@ -174,10 +174,18 @@ namespace Copium
 
 					if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
 					{
-						//save sceen as
-						std::string filepath = FileDialogs::save_file("Copium Scene (*.json)\0.json\0");
-						std::cout << filepath << std::endl;
-						Copium::NewSceneManager::Instance()->save_scene(filepath);
+						if (Copium::NewSceneManager::Instance()->get_current_scene())
+						{
+							//save scene as
+							std::string filepath = FileDialogs::save_file("Copium Scene (*.json)\0.json\0");
+							std::cout << filepath << std::endl;
+							Copium::NewSceneManager::Instance()->save_scene(filepath);
+						}
+						else
+						{
+							PRINT("There is no scene to save...\n");
+						}
+
 					}
 
 					if (ImGui::MenuItem("Exit"))

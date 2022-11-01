@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			editor-hierarchy-list.cpp
+\project
+\author			Matthew Lau
+
+\par			Course: GAM200
+\par			Section:
+\date			27/10/2022
+
+\brief
+	Definition of functions that handle initialization and update of Hierarchy List
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 #include "pch.h"
 #include "Editor/editor-hierarchy-list.h"
 
@@ -67,7 +81,8 @@ namespace Window::Hierarchy
 		ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, 10.f);
 
 		ImGuiTreeNodeFlags rootFlags = ImGuiTreeNodeFlags_DefaultOpen;
-
+		
+		// Ensure that game objects are displayed only if there is a current scene loaded
 		if (currentScene)
 		{
 			// Find all the root nodes

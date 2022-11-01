@@ -222,8 +222,8 @@ namespace Copium {
 
 	private:
 		GameObjectFactory* gof;
-		Scene* currentScene;
-		Scene* storageScene;
+		Scene* currentScene;	// Pointer to the current scene
+		Scene* storageScene;	// Scene Pointer that acts as buffer for preview scene
 		rapidjson::Document document;
 		std::string sceneFilePath;
 		UndoRedo::CommandManager commandManager;

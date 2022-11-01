@@ -386,6 +386,7 @@ bool GameObject::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
         rapidjson::Value comp(rapidjson::kObjectType);
         // Serialize each component
         (*iter)->serialize(comp, _doc);
+        _components.PushBack(comp, _doc.GetAllocator());
     }
     _value.AddMember("Components", _components, _doc.GetAllocator());
     

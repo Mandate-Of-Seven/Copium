@@ -56,7 +56,6 @@ float temp;
 
 void TransformComponent::deserialize(rapidjson::Value& _value)
 {
-
 	rapidjson::Value& _v = _value["Pos"].GetObj();
 	position.deserialize(_v);
 	std::cout << "Position:" << position;

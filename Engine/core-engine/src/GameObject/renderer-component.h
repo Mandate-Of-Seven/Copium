@@ -28,6 +28,23 @@ namespace Copium
 		RendererComponent(GameObject& _gameObj);
 
 		void deserialize(rapidjson::Value& _value);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Serialize this renderer component's data to the specified rapidjson Value
+
+		\param _value
+			reference to the rapidjson Value which the renderer component's data is to serialize its data to
+
+		\param _doc
+			reference to the rapidjson Document which is associated to the save file which the data is being saved to
+
+		\return
+			void
+
+		*/
+		/*******************************************************************************/
 		void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
 

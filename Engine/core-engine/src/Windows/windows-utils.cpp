@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			windows-utils.cpp
+\project
+\author			Matthew Lau
+
+\par			Course: GAM200
+\par			Section:
+\date			30/10/2022
+
+\brief
+	Useful windows utilities are defined here.
+	1. Open and save file dialogs
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 #include "pch.h"
 #include "Windows/windows-utils.h"
 #include "Windows/windows-system.h"
@@ -11,7 +26,7 @@ namespace Copium
 {
 	#define MAX_FILENAME_LENGTH 250
 
-	std::string FileDialogs::open_file(const char* filter)
+	std::string FileDialogs::open_file(const char* _filter)
 	{
 		OPENFILENAMEA ofn;
 		char buffer[MAX_FILENAME_LENGTH] = {0};
@@ -29,7 +44,7 @@ namespace Copium
 
 		ofn.lpstrFile = buffer;
 		ofn.nMaxFile = sizeof(buffer);
-		ofn.lpstrFilter = filter;
+		ofn.lpstrFilter = _filter;
 		ofn.nFilterIndex = 1;
 
 		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
@@ -40,8 +55,7 @@ namespace Copium
 			return std::string();
 
 	}
-
-	std::string FileDialogs::save_file(const char* filter)
+	std::string FileDialogs::save_file(const char* _filter)
 	{
 		OPENFILENAMEA ofn;
 		char buffer[MAX_FILENAME_LENGTH] = { 0 };
@@ -59,7 +73,7 @@ namespace Copium
 
 		ofn.lpstrFile = buffer;
 		ofn.nMaxFile = sizeof(buffer);
-		ofn.lpstrFilter = filter;
+		ofn.lpstrFilter = _filter;
 		ofn.nFilterIndex = 1;
 
 		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;

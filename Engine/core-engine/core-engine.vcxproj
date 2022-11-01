@@ -238,7 +238,7 @@
     <None Include="Assets\shaders\text-shader-glsl.vert" />
     <None Include="Data\Archetypes\camera.json" />
     <None Include="Data\Archetypes\default.json" />
-    <None Include="Data\level1.json" />
+    <None Include="Data\Demo.json" />
     <None Include="Data\test.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
