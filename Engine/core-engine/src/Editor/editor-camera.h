@@ -64,7 +64,7 @@ namespace Copium
 		glm::vec2 mousePosition{0};
 
 		float aspectRatio = 0.f;
-		float nearClip = -1.f, farClip = 100.f; // Orthographic projection's view box
+		float nearClip = 0.1f, farClip = 100.f; // Orthographic projection's view box
 		float zoomLevel = 4.f; // To zoom in and out
 		float pitch = 0.f, yaw = 0.f; // For rotation
 		int width = 0, height = 0;

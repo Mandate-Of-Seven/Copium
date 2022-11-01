@@ -200,15 +200,17 @@ namespace Copium
 		int scroll = (int) inputSystem.get_mousescroll();
 		if (scroll)
 		{
-			if (zoomLevel < 0.f)
-				zoomLevel = 0.f;
-			if (zoomLevel > farClip)
+			zoomLevel -= scroll * 0.1f * get_zoom_speed(); // Zoom In
+			
+			if (zoomLevel <= nearClip)
+				zoomLevel = nearClip;
+			if (zoomLevel >= farClip)
 				zoomLevel = farClip;
 
-			zoomLevel -= scroll * 0.1f * get_zoom_speed(); // Zoom In
 
 			update_ortho_projection(aspectRatio, zoomLevel);
 		}
+
 		//scroll = inputSystem.get_mousescroll();
 	}
 
