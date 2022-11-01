@@ -44,7 +44,7 @@ namespace Copium
 		static const std::string scriptsAssemblyPath{ "scripts.dll" };
 		static const std::string projectName = { "PackedTracks" };
 		static const std::string projectPath{ "..\\" + projectName };
-		static const std::string assetPath{ "..\\core-engine\\Assets\\" };
+		static const std::string assetPath{ "Assets" };
 	}
 
 	class File;
@@ -81,6 +81,7 @@ namespace Copium
 		void exit();
 
 		std::list<std::string>& get_filepath_in_directory(const char* _path, const char* _extension);
+		std::list<std::string>& get_filepath_in_directory(const char* _path, const char* _extension1, const char* _extension2);
 
 		/*******************************************************************************
 		/*!

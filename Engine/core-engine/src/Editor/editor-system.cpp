@@ -1,5 +1,5 @@
 /*!***************************************************************************************
-\file			editor-layer.cpp
+\file			editor-system.cpp
 \project
 \author			Sean Ngo
 
@@ -15,7 +15,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "pch.h"
 #include "Windows/windows-system.h"
 #include "Editor/editor-system.h"
-#include "Editor/editor-sceneview.h"
 #include "GameObject/game-object.h"
 #include "Editor/inspector.h"
 #include "Editor/editor-consolelog.h"
@@ -55,6 +54,7 @@ namespace Copium
 		Window::Hierarchy::init();
 
 		sceneView.init();
+		contentBrowser.init();
 		
 		// Initialize a new editor camera
 		camera.init((float) sceneView.get_width(), (float) sceneView.get_height());
@@ -183,6 +183,7 @@ namespace Copium
             Window::EditorConsole::update();
 			Window::Hierarchy::update();
             sceneView.update();
+			contentBrowser.update();
 
 
 			// demo update
@@ -215,6 +216,7 @@ namespace Copium
 		Window::Inspector::exit();
 		Window::Inspector::selectedGameObject = nullptr;
 		sceneView.exit();
+		contentBrowser.exit();
 	}
 
 	void EditorSystem::imguiConsoleAddLog(std::string value)

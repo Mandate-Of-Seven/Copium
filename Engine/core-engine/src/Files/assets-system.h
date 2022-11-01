@@ -32,10 +32,11 @@ namespace Copium
 		void exit();
 
 		void load_all_textures(std::list<std::string>& _path);
+		void load_all_audio(std::list<std::string>& _path);
+		void load_all_shaders(std::list<std::string>& _path);
 
 		std::vector<Texture>& get_textures() { return textures; }
 		std::vector<Spritesheet>& get_spritesheets() { return spritesheets; }
-		void load_all_audio(std::list<std::string>&_path);
 
 	private:
 		std::vector<Texture> textures;
