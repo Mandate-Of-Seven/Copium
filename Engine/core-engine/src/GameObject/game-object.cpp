@@ -78,6 +78,13 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{ count++ },
             PRINT("ADDED COLLIDER");
             break;
         }
+        case ComponentType::RigidBody:
+        {
+            component = new RigidBodyComponent(*this);
+            *component = *(reinterpret_cast<RigidBodyComponent*>(pComponent));
+            PRINT("ADDED RigidBody");
+            break;
+        }
         case ComponentType::Renderer:
         {
             component = new RendererComponent(*this);

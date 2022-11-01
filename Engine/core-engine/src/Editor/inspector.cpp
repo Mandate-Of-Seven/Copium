@@ -32,9 +32,7 @@ namespace Window
 	namespace Inspector
 	{
         bool isOpen;
-        bool isAddingScript;
         bool isAddingComponent;
-        bool isAddingNewScript;
         char nameBuffer[INPUT_BUFFER_SIZE];
         Copium::ScriptingSystem& scriptingSystem{ *Copium::ScriptingSystem::Instance() };
         Copium::NewSceneManager& sceneManager{ *Copium::NewSceneManager::Instance() };
@@ -50,9 +48,7 @@ namespace Window
 
         void init()
         {
-            isAddingScript = false;
             isAddingComponent = false;
-            isAddingNewScript = false;
             ImGuiIO& io = ImGui::GetIO();
             io.Fonts->AddFontFromFileTTF("assets\\fonts\\bahnschrift.ttf", 32.f);
             isOpen = true;
@@ -63,15 +59,15 @@ namespace Window
             }
         }
 
-		void update()
-		{
+        void update()
+        {
             if (!isOpen)
                 return;
 
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
             ImGui::SetNextWindowSizeConstraints(ImVec2(320, 180), ImVec2(FLT_MAX, FLT_MAX));
 
-            if (!ImGui::Begin("Inspector", &isOpen)) 
+            if (!ImGui::Begin("Inspector", &isOpen))
             {
                 ImGui::End();
                 ImGui::PopStyleVar();
@@ -95,70 +91,48 @@ namespace Window
             ImGui::PopStyleVar();
             if (isAddingComponent)
             {
-                ImGui::Begin("Add Component",&isAddingComponent);
+                ImGui::Begin("Add Component", &isAddingComponent);
                 AlignForWidth(ImGui::GetWindowSize().x);
                 ImVec2 buttonSize = ImGui::GetWindowSize();
-                buttonSize.y *= (float) BUTTON_HEIGHT;
+                buttonSize.y *= (float)BUTTON_HEIGHT;
+                static ImGuiTextFilter filter;
+                ImGui::PushItemWidth(-1);
+                filter.Draw("##ComponentName");
+                ImGui::PopItemWidth();
                 std::map<Copium::ComponentType, const std::string>::iterator it;
                 for (it = Copium::MAP_COMPONENT_TYPE_NAME.begin();
                     it != Copium::MAP_COMPONENT_TYPE_NAME.end(); ++it)
                 {
-                    if (ImGui::Button(it->second.c_str(), buttonSize)) {
-                        if (it->first == Copium::ComponentType::Script)
-                        {
-                            isAddingScript = true;
-                        }
-                        else
-                        {
-                            selectedGameObject->addComponent(it->first);
-                        }
+                    if (it->first == Copium::ComponentType::Script)
+                        continue;
+                    const std::string& componentName{ it->second };
+                    if (filter.PassFilter(componentName.c_str()) && ImGui::Button(componentName.c_str(), buttonSize))
+                    {
+                        selectedGameObject->addComponent(it->first);
                         isAddingComponent = false;
                         break;
                     }
                 }
-                ImGui::End();
-            }
-
-            if (isAddingScript)
-            {
-                ImGui::Begin("Add Script", &isAddingScript);
-                AlignForWidth(ImGui::GetWindowSize().x);
-                ImVec2 buttonSize = ImGui::GetWindowSize();
-                buttonSize.y *= (float)BUTTON_HEIGHT;
-                for (auto& nameToScriptClass : scriptingSystem.getScriptFiles())
-                {
-                    const std::string& name {nameToScriptClass.filename().stem().string()};
-                    if (ImGui::Button(name.c_str(), buttonSize)) {
-                        selectedGameObject->addComponent<Copium::ScriptComponent>().Name(name);
-                        isAddingScript = false;
-                    }
-                }
-                if (ImGui::Button("NewScript", buttonSize)) {
-                    isAddingNewScript = true;
-                    isAddingScript = false;
-                }
-                ImGui::End();
-            }
-
-            if (isAddingNewScript)
-            {
-                ImGui::Begin("NewScript", &isAddingNewScript);
-                AlignForWidth(ImGui::GetWindowSize().x);
-                ImGui::PushItemWidth(-1);
-                ImGui::InputTextWithHint("##ScriptName", "Enter script name:", nameBuffer, INPUT_BUFFER_SIZE);
-                ImGui::PopItemWidth();
-
                 for (auto& nameToScriptClass : scriptingSystem.getScriptFiles())
                 {
                     const std::string& name{ nameToScriptClass.filename().stem().string() };
-                    if (name == nameBuffer)
-                    {
-                        PRINT("SCRIPT ALREADY EXISTS");
+                    if (filter.PassFilter(name.c_str()) && ImGui::Button(name.c_str(), buttonSize)) {
+                        selectedGameObject->addComponent<Copium::ScriptComponent>().Name(name);
+                        isAddingComponent = false;
                     }
+                }
+                static std::string newScriptPrompt;
+                newScriptPrompt.clear();
+                newScriptPrompt += "[New Script] ";
+                newScriptPrompt += filter.InputBuf;
+                if(ImGui::Button(newScriptPrompt.c_str(), buttonSize)) 
+                {
+                    //Ask scripting system query if file exists
+                    isAddingComponent = false;
                 }
                 ImGui::End();
             }
-		}
+        }
 
         void exit()
         {
