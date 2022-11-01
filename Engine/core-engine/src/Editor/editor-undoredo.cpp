@@ -4,22 +4,6 @@
 
 namespace Copium
 {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	UndoRedo::TransformCommand::TransformCommand(float* _pointer, float _value)
 	{
 		this->pointer = _pointer;
@@ -41,7 +25,14 @@ namespace Copium
 		}
 		Command* temp = new TransformCommand(this->pointer, *this->pointer);
 		stackPointer->push(temp);
-		*this->pointer = this->value;
+		if (this->pointer != nullptr)
+		{
+			*this->pointer = this->value;
+		}
+		else
+		{
+			std::cout << "The pointer is invalid, skipping undo command";
+		}
 	}
 
 	void UndoRedo::TransformCommand::Redo(std::stack<Command*>* stackPointer)
@@ -53,7 +44,28 @@ namespace Copium
 		}
 		Command* temp = new TransformCommand(this->pointer, *this->pointer);
 		stackPointer->push(temp);
-		*this->pointer = this->value;
+
+		if (this->pointer)
+		{
+			*this->pointer = this->value;
+		}
+		else
+		{
+			std::cout << "The pointer is invalid, skipping redo command";
+		}
+	}
+
+	void UndoRedo::TransformCommand::printCommand()
+	{
+		if (this->pointer)
+		{
+			std::cout << "The command's pointer is valid";
+		}
+		else
+		{
+			std::cout << "The command's pointer is valid";
+		}
+		std::cout << " & the value to restore is "<<this->value;
 	}
 
 }
