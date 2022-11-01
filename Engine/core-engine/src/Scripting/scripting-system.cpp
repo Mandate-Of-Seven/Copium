@@ -137,6 +137,19 @@ namespace Copium
 		}
 	#pragma endregion
 
+
+	void ScriptingSystem::addEmptyScript(const std::string& _name)
+	{
+		std::ofstream file(Paths::projectPath+_name+".cs");
+		file << "using CopiumEngine;\n";
+		file << "using System;\n\n";
+		file << "public class " << _name << ": CopiumScript\n{\n";
+		file << "\tvoid Start()\n\t{\n\n\t}\n";
+		file << "\tvoid Update()\n\t{\n\n\t}\n";
+		file << "}\n";
+		file.close();
+	}
+
 	void ScriptingSystem::recompileThreadWork()
 	{
 		ThreadSystem& tSys = *ThreadSystem::Instance();

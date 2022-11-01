@@ -128,6 +128,8 @@ namespace Window
                 if(ImGui::Button(newScriptPrompt.c_str(), buttonSize)) 
                 {
                     //Ask scripting system query if file exists
+                    scriptingSystem.addEmptyScript(filter.InputBuf);
+                    selectedGameObject->addComponent<Copium::ScriptComponent>().Name(filter.InputBuf);
                     isAddingComponent = false;
                 }
                 ImGui::End();
