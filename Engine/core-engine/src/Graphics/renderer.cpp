@@ -407,8 +407,12 @@ namespace Copium
 			glm::vec4(0.f, 0.f, 0.f, 1.f)
 		};
 
-		float pixelWidth = _sprite.get_texture()->get_pixel_width();
-		float pixelHeight = _sprite.get_texture()->get_pixel_height();
+		float pixelWidth = 1.f, pixelHeight = 1.f;
+		if (_sprite.get_texture() != nullptr)
+		{
+			pixelWidth = _sprite.get_texture()->get_pixel_width();
+			pixelHeight = _sprite.get_texture()->get_pixel_height();
+		}
 
 		glm::mat4 scale = {
 			glm::vec4(_scale.x * pixelWidth, 0.f, 0.f, 0.f),

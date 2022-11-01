@@ -262,7 +262,7 @@ namespace Copium
 		//glEnable(GL_DEPTH_TEST);
 		
 		// Clear the screen
-		glClearColor(0.f, 0.f, 0.f, 1.f);
+		glClearColor(0.278f, 0.278f, 0.278f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -380,7 +380,7 @@ namespace Copium
 		// Bean: Should be under draw editor, along with gizmos ( Maybe replace draw_debug_info with draw_editor)
 		// Grid
 		renderer.begin_batch();
-		glm::vec4 color = { 1.f, 1.f, 1.f, 0.2f };
+		glm::vec4 color = { 1.f, 1.f, 1.f, 0.4f };
 		float start = -100.f, end = -start;
 		float numDivision = 24.f, iteration = (end - start) / numDivision;
 		for (float i = start; i < end + iteration; i += iteration)
@@ -389,7 +389,6 @@ namespace Copium
 			renderer.draw_line({ start, i }, { end, i }, color);
 		}
 
-		color = { 1.f, 1.f, 1.f, 0.1f };
 		float subDivision = 5.f;
 		numDivision *= subDivision;
 		iteration = (end - start) / numDivision;
@@ -488,9 +487,9 @@ namespace Copium
 					float rotation = t.glmRotation().z;
 					// Bean: It should be set in inspector view of the renderer component instead
 					unsigned int id = sr.get_sprite_id() - 1;
-					if (id == -1)
-						id = 0;
-					sr.set_texture(&assets->get_textures()[id]);
+					if (id != -1)
+						sr.set_texture(&assets->get_textures()[id]);
+
 					renderer.draw_quad(t.glmPosition(), size, rotation, sr);
 				}
 				for (Component* component : gameObject->getComponents<UITextComponent>())
