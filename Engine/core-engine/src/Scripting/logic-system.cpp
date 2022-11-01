@@ -32,6 +32,7 @@ namespace Copium
 			const std::vector<ScriptComponent*>& pScriptComponents{ pGameObj->getComponents<ScriptComponent>() };
 			for (ScriptComponent* pScriptComponent : pScriptComponents)
 			{
+				PRINT("NAME: " << pScriptComponent->Name());
 				if (!pScriptComponent)
 					continue;
 				pScriptComponent->Update();
