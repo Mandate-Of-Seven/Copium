@@ -12,6 +12,7 @@ namespace Copium
 			public:
 				virtual void Undo(std::stack<Command*>* stackPointer) = 0;
 				virtual void Redo(std::stack<Command*>* stackPointer) = 0;
+				virtual void printCommand() = 0;
 		};
 
 		class TransformCommand : public Command
@@ -21,11 +22,24 @@ namespace Copium
 				~TransformCommand();
 				void Undo(std::stack<Command*>* stackPointer) override;
 				void Redo(std::stack<Command*>* stackPointer) override;
+				void printCommand()override;
 
 				float* pointer;//pointer to what was changed
 				float value;//original value
 		};
 
+		class GameObjectCommand : public Command
+		{
+		public:
+			GameObjectCommand(GameObject* _pointer, GameObject _value);
+			~GameObjectCommand();
+			void Undo(std::stack<Command*>* stackPointer) override;
+			void Redo(std::stack<Command*>* stackPointer) override;
+			void printCommand()override;
+
+			GameObject* pointer;//pointer to what was changed
+			GameObject value;//original value
+		};
 
 		class CommandManager
 		{
@@ -33,8 +47,6 @@ namespace Copium
 				std::stack<Command*> undoStack;
 				std::stack<Command*> redoStack;
 		};
-
-		//static CommandManager commandManager;
 	}
 	
 }
