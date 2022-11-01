@@ -79,10 +79,21 @@ namespace Copium::Collision
 	The AABB of the second object to check
 	\return
 	1 if the objects are colliding, 0 otherwise.
-*/
-/**************************************************************************/
+	*/
+	/**************************************************************************/
 	bool static_collision_pointrect(const Math::Vec2& point,const AABB& aabb2);
 
+	/***************************************************************************/
+	/*!
+	\brief
+	Resolves collision based on the direction the collision was detected
+	\param aabb1
+	The AABB of the first object to resolve
+	\param aabb2
+	The AABB of the second object to resolve
+	
+	*/
+	/**************************************************************************/
 	void resolve_collision(const AABB& aabb1, const AABB& aabb2, collisionDirection direction);
 
 	collisionDirection check_collision_direction(const AABB& aabb1, const Math::Vec2& vel1,
