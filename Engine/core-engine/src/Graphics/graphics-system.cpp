@@ -484,30 +484,34 @@ namespace Copium
 		Scene* scene = sm->get_current_scene();
 		if (scene != nullptr)
 		{
-			for (Component* component : gameObject->getComponents<RendererComponent>())
+			for (GameObject* gameObject : scene->get_gameobjectvector())
 			{
-				if (!component->Enabled())
-					continue;
+				for (Component* component : gameObject->getComponents<RendererComponent>())
+				{
+					if (!component->Enabled())
+						continue;
 
-				TransformComponent& t = gameObject->Transform();
-				RendererComponent * rc = reinterpret_cast<RendererComponent*>(component);
-				SpriteRenderer sr = rc->get_sprite_renderer();
-				glm::vec2 size(t.glmScale().x, t.glmScale().y);
-				float rotation = t.glmRotation().z;
-				// Bean: It should be set in inspector view of the renderer component instead
-				unsigned int id = sr.get_sprite_id() - 1;
-				if (id == -1)
-					id = 0;
-				sr.set_texture(&assets->get_textures()[id]);
-				renderer.draw_quad(t.glmPosition(), size, rotation, sr);
+					TransformComponent& t = gameObject->Transform();
+					RendererComponent * rc = reinterpret_cast<RendererComponent*>(component);
+					SpriteRenderer sr = rc->get_sprite_renderer();
+					glm::vec2 size(t.glmScale().x, t.glmScale().y);
+					float rotation = t.glmRotation().z;
+					// Bean: It should be set in inspector view of the renderer component instead
+					unsigned int id = sr.get_sprite_id() - 1;
+					if (id == -1)
+						id = 0;
+					sr.set_texture(&assets->get_textures()[id]);
+					renderer.draw_quad(t.glmPosition(), size, rotation, sr);
+				}
+				for (Component* component : gameObject->getComponents<UITextComponent>())
+				{
+					if (!component->Enabled())
+						continue;
+					UITextComponent* textComponent = reinterpret_cast<UITextComponent*>(component);
+					textComponent->render();
+				}
 			}
-			for (Component* component : gameObject->getComponents<UITextComponent>())
-			{
-				if (!component->Enabled())
-					continue;
-				UITextComponent* textComponent = reinterpret_cast<UITextComponent*>(component);
-				textComponent->render();
-			}
+
 		}
 
 		// Bean : Testing Animations
