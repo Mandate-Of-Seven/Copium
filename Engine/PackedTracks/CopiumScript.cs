@@ -25,7 +25,7 @@ namespace CopiumEngine
         private void OnCreate(ulong ID)
         {
             Console.WriteLine("GameObject Created in CS: " + ID);
-            if (gameObject != null)
+            if (gameObject != null && ID == gameObject.ID)
                 return;
             gameObject = GameObject.FindByID(ID);
             transform = gameObject.transform;

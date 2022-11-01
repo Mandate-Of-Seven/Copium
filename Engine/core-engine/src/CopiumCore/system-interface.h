@@ -67,6 +67,9 @@ namespace Copium
         {}
     };
 
+    using ISystemFlags = unsigned char;
+    static ISystemFlags FLAG_RUN_ON_PLAY = 0x00000001;
+    static ISystemFlags FLAG_RUN_ON_EDITOR = 0x00000010;
 
     /**************************************************************************/
     /*!
@@ -96,6 +99,10 @@ namespace Copium
         */
         /**************************************************************************/
         virtual void exit()     = 0;
+
+        double updateTime = 0.0;
+        double updateTimePercent =0.0;
+        ISystemFlags systemFlags = 0;
     };
 
 

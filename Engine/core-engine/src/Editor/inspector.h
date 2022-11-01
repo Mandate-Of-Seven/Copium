@@ -30,7 +30,7 @@ namespace Window
 {
 	namespace Inspector
 	{
-		extern GameObject* selectedGameObject;
+		extern Copium::GameObject* selectedGameObject;
 
 		/***************************************************************************/
 		/*!

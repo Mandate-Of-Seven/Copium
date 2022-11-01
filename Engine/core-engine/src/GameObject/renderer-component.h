@@ -31,14 +31,14 @@ namespace Copium
 		void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
 
-        void inspector_view();
+		void inspector_view();
 
-		const Copium::SpriteRenderer& get_sprite_renderer() const { return spriteRenderer; }
-		void set_sprite_renderer(const Copium::SpriteRenderer& _spriteRenderer) { spriteRenderer = _spriteRenderer; }
+		const SpriteRenderer& get_sprite_renderer() const { return spriteRenderer; }
+		void set_sprite_renderer(const SpriteRenderer& _spriteRenderer) { spriteRenderer = _spriteRenderer; }
 
+		RendererComponent& operator=(const RendererComponent& rhs);
 	protected:
-		Copium::SpriteRenderer spriteRenderer;
+		SpriteRenderer spriteRenderer;
 	};
 }
-
 #endif // !RENDERER_COMPONENT_H

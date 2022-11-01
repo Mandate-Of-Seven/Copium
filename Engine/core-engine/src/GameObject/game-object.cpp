@@ -19,7 +19,10 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "pch.h"
 #include "GameObject/game-object.h"
 #include "GameObject/renderer-component.h"
+#include "Scripting/script-component.h"
 #include "GameObject/component.h"
+#include "Graphics/ui-components.h"
+#include "SceneManager/sm.h"
 
 //USING
 
@@ -27,34 +30,109 @@ namespace
 {
     const std::string defaultGameObjName = "New GameObject"; // Append (No.) if its not the first
     Copium::MessageSystem& messageSystem{*Copium::MessageSystem::Instance()};
+    Copium::NewSceneManager& sceneManager{ *Copium::NewSceneManager::Instance() };
 }
 
+namespace Copium
+{
 
 GameObjectID GameObject::count = 1;
 
 GameObject::~GameObject()
 {
+    messageSystem.unsubscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
     for (std::list<Component*>::iterator iter = components.begin(); iter != components.end(); ++iter)
     {
         if (*iter)
         {
             delete (*iter);
-
         }
     }
 }
 
 
+GameObject::GameObject(const GameObject& rhs) : transform(*this), id{ count++ }, parent{ nullptr }, parentid{0}
+{
+    messageSystem.subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
+    MESSAGE_CONTAINER::reflectCsGameObject.ID = id;
+    messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
+    transform = rhs.transform;
+    name = rhs.name;
+    for (Component* pComponent : rhs.components)
+    {
+        Component* component = nullptr;
+        switch (pComponent->componentType)
+        {
+        case ComponentType::Animator:
+        {
+            component = new AnimatorComponent(*this);
+            *component = *(reinterpret_cast<AnimatorComponent*>(pComponent));
+            PRINT("ADDED ANIMATOR");
+            break;
+        }
+        case ComponentType::Collider:
+        {
+            component = new ColliderComponent(*this);
+            *component = *(reinterpret_cast<ColliderComponent*>(pComponent));
+            PRINT("ADDED COLLIDER");
+            break;
+        }
+        case ComponentType::Renderer:
+        {
+            component = new RendererComponent(*this);
+            *component = *(reinterpret_cast<RendererComponent*>(pComponent));
+            PRINT("ADDED SPRITE RENDERER");
+            break;
+        }
+        case ComponentType::Script:
+        {
+            component = new ScriptComponent(*this);
+            *component = *(reinterpret_cast<ScriptComponent*>(pComponent));
+            PRINT("ADDED SCRIPT");
+            break;
+        }
+        case ComponentType::UIButton:
+        {
+            component = new UIButtonComponent(*this);
+            *component = *(reinterpret_cast<UIButtonComponent*>(pComponent));
+            PRINT("ADDED UI BUTTON");
+            break;
+        }
+        case ComponentType::UIImage:
+        {
+            component = new UIImageComponent(*this);
+            *component = *(reinterpret_cast<UIImageComponent*>(pComponent));
+            PRINT("ADDED UI IMAGE");
+            break;
+        }
+        case ComponentType::UIText:
+        {
+            component = new UITextComponent(*this);
+            *component = *(reinterpret_cast<UITextComponent*>(pComponent));
+            PRINT("ADDED UI TEXT");
+            break;
+        }
+        }
+        if (component)
+            components.push_back(component);
+    }
+    for (GameObject* pGameObj : rhs.children)
+    {
+        GameObject* child = sceneManager.get_gof().build_gameobject(*pGameObj);
+        children.push_back(child);
+        child->set_parent(this);
+    }
+}
 
 GameObject::GameObject
-(Copium::Math::Vec3 _position, Copium::Math::Vec3 _rotation, Copium::Math::Vec3 _scale)
+(Math::Vec3 _position, Math::Vec3 _rotation, Math::Vec3 _scale)
     : 
     name{ defaultGameObjName }, parent{nullptr}, parentid{0}, 
     transform(*this, _position, _rotation, _scale), id{count++}
 {
-    messageSystem.subscribe(Copium::MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
-    Copium::MESSAGE_CONTAINER::reflectCsGameObject.ID = id;
-    messageSystem.dispatch(Copium::MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
+    messageSystem.subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
+    MESSAGE_CONTAINER::reflectCsGameObject.ID = id;
+    messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
     PRINT("GAMEOBJECT ID CONSTRUCTED: " << id);
 }
 
@@ -67,14 +145,6 @@ Component* GameObject::getComponent(ComponentType componentType)
     }
     return nullptr;
 }
-
-Component* GameObject::addComponent(const Component& component)
-{
-    Component* tmp = addComponent(component.componentType);
-    *tmp = component;
-    return tmp;
-}
-
 
 Component* GameObject::addComponent(ComponentType componentType)
 {
@@ -90,13 +160,24 @@ Component* GameObject::addComponent(ComponentType componentType)
         PRINT("ADDED COLLIDER");
         break;
     case ComponentType::Renderer:
-        component = new Copium::RendererComponent(*this);
+        component = new RendererComponent(*this);
         PRINT("ADDED SPRITE RENDERER");
         break;
     case ComponentType::Script:
-        //MESSAGE_CONTAINERS::addScript.name = "NewScript";
-        //MESSAGE_CONTAINERS::addScript.gameObj = this;
+        component = new ScriptComponent(*this);
         PRINT("ADDED SCRIPT");
+        break;
+    case ComponentType::UIButton:
+        component = new UIButtonComponent(*this);
+        PRINT("ADDED UI BUTTON");
+        break;
+    case ComponentType::UIImage:
+        component = new UIImageComponent(*this);
+        PRINT("ADDED UI IMAGE");
+        break;
+    case ComponentType::UIText:
+        component = new UITextComponent(*this);
+        PRINT("ADDED UI TEXT");
         break;
     default:
         PRINT("ADDED NOTHING");
@@ -125,7 +206,7 @@ void GameObject::removeComponent(ComponentType componentType)
         }
         ++it;
     }
-    PRINT("Component of Type " << Component::componentMap[componentType] << " does not exist on " << name);
+    PRINT("Component of Type " << MAP_COMPONENT_TYPE_NAME[componentType] << " does not exist on " << name);
 }
 
 void GameObject::removeComponent(ComponentID componentID)
@@ -243,28 +324,12 @@ bool GameObject::deserialize(rapidjson::Value& _value) {
 }
 
 
-void GameObject::handleMessage(Copium::MESSAGE_TYPE mType)
+void GameObject::handleMessage(MESSAGE_TYPE mType)
 {
     using namespace Copium;
     //MT_SCRIPTING_UPDATED
     MESSAGE_CONTAINER::reflectCsGameObject.ID = id;
     messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
-}
-
-
-GameObject& GameObject::operator=(const GameObject& rhs)
-{
-    transform = rhs.transform;
-    for (Component* component : components)
-    {
-        delete component;
-    }
-    components.clear();
-    for (const Component* component: rhs.components)
-    {
-        addComponent(*component);
-    }
-    return *this;
 }
 
 
@@ -276,11 +341,15 @@ void GameObject::inspectorView()
     ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
         | ImGuiTableFlags_ScrollY;
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);
+    ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed;
+    if (ImGui::CollapsingHeader("Transform", nodeFlags))
+    {
+        transform.inspector_view();     
+    }
     if (ImGui::BeginTable("Components", 1, tableFlags, ImVec2(0.f, 450.f)))
     {
         ImGui::TableNextRow();
         ImGui::TableNextColumn();
-        ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed;
         for (Component* component : components)
         {
 
@@ -303,7 +372,7 @@ bool GameObject::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
     _value.AddMember("ID", id, _doc.GetAllocator());
 
     rapidjson::Value _name;
-    _name.SetString(name.c_str(), name.length(), _doc.GetAllocator());
+    _name.SetString(name.c_str(), rapidjson::SizeType(name.length()), _doc.GetAllocator());
     _value.AddMember("Name", _name, _doc.GetAllocator());
 
     _value.AddMember("PID", parentid, _doc.GetAllocator());
@@ -322,15 +391,17 @@ bool GameObject::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
     
 
     //Recursively serialize children and their children and so on
-    rapidjson::Value children(rapidjson::kArrayType);
+    rapidjson::Value _children(rapidjson::kArrayType);
     for (std::list<GameObject*>::const_iterator cit = childList().cbegin(); cit != childList().cend(); ++cit)
     {
         rapidjson::Value cgo(rapidjson::kObjectType);
         (*cit)->serialize(cgo, _doc);
-        children.PushBack(cgo, _doc.GetAllocator());
+        _children.PushBack(cgo, _doc.GetAllocator());
     }
-    _value.AddMember("Children", children, _doc.GetAllocator());
+    _value.AddMember("Children", _children, _doc.GetAllocator());
     return true;
 
 }
 
+
+}

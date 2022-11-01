@@ -25,6 +25,8 @@
 *                                                                                   *
 *************************************************************************************/
 
+#pragma warning(disable : 26439)
+
 #ifndef RTTR_METADATA_H_
 #define RTTR_METADATA_H_
 

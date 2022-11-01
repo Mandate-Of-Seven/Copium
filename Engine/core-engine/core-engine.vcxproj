@@ -47,12 +47,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)lib\imgui\include;$(ProjectDir)src;$(SolutionDir)lib\glfw-3.3.8.bin.WIN64\include;$(SolutionDir)lib\glew-2.2.0\include;$(SolutionDir)lib\glm-0.9.9.8;$(SolutionDir)lib\mono\include;$(SolutionDir)lib;$(SolutionDir)lib\spdlog\include;$(SolutionDir)lib\rapidjson\include;$(SolutionDir)lib\rttr\src;$(SolutionDir)lib\FMOD\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\imgui\lib;$(SolutionDir)lib\glfw-3.3.8.bin.WIN64\lib-vc2019;$(SolutionDir)lib\glew-2.2.0\lib\Release\x64;$(SolutionDir)lib\mono\Debug;$(SolutionDir)lib\rttr\lib\Debug;$(SolutionDir)lib\FMOD\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)lib\imgui\include;$(ProjectDir)src;$(SolutionDir)lib\glfw-3.3.8.bin.WIN64\include;$(SolutionDir)lib\glew-2.2.0\include;$(SolutionDir)lib\glm-0.9.9.8;$(SolutionDir)lib\mono\include;$(SolutionDir)lib;$(SolutionDir)lib\spdlog\include;$(SolutionDir)lib\rapidjson\include;$(SolutionDir)lib\rttr\src;$(SolutionDir)lib\FMOD\include;$(SolutionDir)lib\freetype\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\imgui\lib;$(SolutionDir)lib\glfw-3.3.8.bin.WIN64\lib-vc2019;$(SolutionDir)lib\glew-2.2.0\lib\Release\x64;$(SolutionDir)lib\mono\Debug;$(SolutionDir)lib\rttr\lib\Debug;$(SolutionDir)lib\FMOD\lib;$(SolutionDir)lib\freetype\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)lib\imgui\include;$(ProjectDir)include;$(SolutionDir)lib\glfw-3.3.8.bin.WIN64\include;$(SolutionDir)lib\glew-2.2.0\include;$(SolutionDir)lib\glm-0.9.9.8;$(SolutionDir)lib\mono\include;$(SolutionDir)lib;$(SolutionDir)lib\spdlog\include;$(SolutionDir)lib\rapidjson\include;$(SolutionDir)lib\rttr\src;$(ProjectDir)src;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\imgui\lib;$(SolutionDir)lib\glfw-3.3.8.bin.WIN64\lib-vc2019;$(SolutionDir)lib\glew-2.2.0\lib\Release\x64;$(SolutionDir)lib\mono\Release;$(SolutionDir)lib\rttr\lib\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)lib\imgui\include;$(ProjectDir)include;$(SolutionDir)lib\glfw-3.3.8.bin.WIN64\include;$(SolutionDir)lib\glew-2.2.0\include;$(SolutionDir)lib\glm-0.9.9.8;$(SolutionDir)lib\mono\include;$(SolutionDir)lib;$(SolutionDir)lib\spdlog\include;$(SolutionDir)lib\rapidjson\include;$(SolutionDir)lib\rttr\src;$(ProjectDir)src;$(SolutionDir)lib\freetype\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\imgui\lib;$(SolutionDir)lib\glfw-3.3.8.bin.WIN64\lib-vc2019;$(SolutionDir)lib\glew-2.2.0\lib\Release\x64;$(SolutionDir)lib\mono\Release;$(SolutionDir)lib\rttr\lib\Release;$(SolutionDir)lib\freetype\lib;$(LibraryPath)</LibraryPath>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -71,7 +71,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;glfw3dll.lib;mono-2.0-sgen.lib;ws2_32.lib;version.lib;bcrypt.lib;winmm.lib;rttr_core_d.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;glfw3dll.lib;mono-2.0-sgen.lib;ws2_32.lib;version.lib;bcrypt.lib;winmm.lib;rttr_core_d.lib;fmod_vc.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -92,7 +92,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;glfw3dll.lib;mono-2.0-sgen.lib;ws2_32.lib;version.lib;bcrypt.lib;winmm.lib;rttr_core.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;glfw3dll.lib;mono-2.0-sgen.lib;ws2_32.lib;version.lib;bcrypt.lib;winmm.lib;rttr_core.lib;fmod_vc.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -104,6 +104,7 @@
     <ClCompile Include="src\Editor\editor-hierarchy-list.cpp" />
     <ClCompile Include="src\Editor\editor-sceneview.cpp" />
     <ClCompile Include="src\Editor\editor-system.cpp" />
+    <ClCompile Include="src\Editor\editor-undoredo.cpp" />
     <ClCompile Include="src\Editor\inspector.cpp" />
     <ClCompile Include="src\Files\assets-system.cpp" />
     <ClCompile Include="src\Files\file-system.cpp" />
@@ -111,12 +112,15 @@
     <ClCompile Include="src\GameObject\game-object-factory.cpp" />
     <ClCompile Include="src\GameObject\game-object.cpp" />
     <ClCompile Include="src\GameObject\renderer-component.cpp" />
+    <ClCompile Include="src\Graphics\fonts.cpp" />
     <ClCompile Include="src\Graphics\framebuffer.cpp" />
     <ClCompile Include="src\Graphics\glslshader.cpp" />
     <ClCompile Include="src\Graphics\graphics-system.cpp" />
     <ClCompile Include="src\Graphics\renderer.cpp" />
     <ClCompile Include="src\Graphics\sprite-renderer.cpp" />
+    <ClCompile Include="src\Graphics\spritesheet.cpp" />
     <ClCompile Include="src\Graphics\textures.cpp" />
+    <ClCompile Include="src\Graphics\ui-components.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Math\math-library.cpp" />
     <ClCompile Include="src\GameObject\transform-component.cpp" />
@@ -139,7 +143,7 @@
     <ClCompile Include="src\SceneManager\state-manager.cpp" />
     <ClCompile Include="src\Scripting\logic-system.cpp" />
     <ClCompile Include="src\Scripting\scripting-system.cpp" />
-    <ClCompile Include="src\Scripting\scripting.cpp" />
+    <ClCompile Include="src\Scripting\script-component.cpp" />
     <ClCompile Include="src\Utilities\thread-system.cpp" />
     <ClCompile Include="src\imgui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -176,15 +180,19 @@
   <ItemGroup>
     <ClInclude Include="src\Debugging\frame-rate-controller.h" />
     <ClInclude Include="src\Editor\editor-camera.h" />
+    <ClInclude Include="src\Editor\editor-undoredo.h" />
     <ClInclude Include="src\Files\assets-system.h" />
     <ClInclude Include="src\Editor\editor-hierarchy-list.h" />
     <ClInclude Include="src\Files\file-system.h" />
     <ClInclude Include="src\GameObject\renderer-component.h" />
     <ClInclude Include="src\Graphics\camera.h" />
+    <ClInclude Include="src\Graphics\fonts.h" />
     <ClInclude Include="src\Graphics\sprite-renderer.h" />
+    <ClInclude Include="src\Graphics\ui-components.h" />
     <ClInclude Include="src\SceneManager\sm.h" />
     <ClInclude Include="src\Scripting\logic-system.h" />
     <ClInclude Include="src\Scripting\scriptWrappers.h" />
+    <ClInclude Include="src\Graphics\spritesheet.h" />
     <ClInclude Include="src\Utilities\thread-system.h" />
     <ClInclude Include="src\Physics\collider.h" />
     <ClInclude Include="src\Physics\collision.h" />
@@ -213,7 +221,7 @@
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\Graphics\renderer.h" />
     <ClInclude Include="src\SceneManager\scene.h" />
-    <ClInclude Include="src\Scripting\scripting.h" />
+    <ClInclude Include="src\Scripting\script-component.h" />
     <ClInclude Include="src\Scripting\scripting-system.h" />
     <ClInclude Include="src\SceneManager\serializer.h" />
     <ClInclude Include="src\SceneManager\state-manager.h" />
@@ -226,6 +234,8 @@
   <ItemGroup>
     <None Include="Assets\shaders\shader-glsl.frag" />
     <None Include="Assets\shaders\shader-glsl.vert" />
+    <None Include="Assets\shaders\text-shader-glsl.frag" />
+    <None Include="Assets\shaders\text-shader-glsl.vert" />
     <None Include="Data\Archetypes\camera.json" />
     <None Include="Data\Archetypes\default.json" />
     <None Include="Data\level1.json" />

@@ -34,5 +34,13 @@ namespace Copium
 		glm::vec4 color;
 	};
 
+	struct TextVertex
+	{
+		glm::vec3 pos;		// Position of vertex
+		glm::vec4 color;	// Color of vertex
+		glm::vec2 textCoord;// Texture coordinate of vertex
+		//float fontID;		// Font index
+	};
+
 }
 #endif // !VERTEX_TYPES_H

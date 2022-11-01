@@ -36,6 +36,9 @@ namespace Copium
 		// Setup Quad Vertex Array Object
 		setup_quad_vao();
 
+		// Setup Text Vertex Array Object
+		setup_text_vao();
+
 		GLuint texture = graphics->get_white_texture();
 		glCreateTextures(GL_TEXTURE_2D, 1, &texture);
 		glTextureStorage2D(texture, 1, GL_RGBA8, 1, 1);
@@ -140,17 +143,56 @@ namespace Copium
 		glLineWidth(1.f);
 	}
 
+	void Renderer::setup_text_vao()
+	{
+		textBuffer = new TextVertex[maxVertexCount];
+
+		// Vertex Array Object
+		glCreateVertexArrays(1, &textVertexArrayID);
+
+		// Text Buffer Object
+		glCreateBuffers(1, &textVertexBufferID);
+		glNamedBufferStorage(textVertexBufferID, maxVertexCount * sizeof(TextVertex), nullptr, GL_DYNAMIC_STORAGE_BIT);
+
+		glEnableVertexArrayAttrib(textVertexArrayID, 0);
+		glVertexArrayAttribFormat(textVertexArrayID, 0, 3, GL_FLOAT, GL_FALSE, offsetof(TextVertex, pos));
+		glVertexArrayAttribBinding(textVertexArrayID, 0, 2);
+
+		glEnableVertexArrayAttrib(textVertexArrayID, 1);
+		glVertexArrayAttribFormat(textVertexArrayID, 1, 4, GL_FLOAT, GL_FALSE, offsetof(TextVertex, color));
+		glVertexArrayAttribBinding(textVertexArrayID, 1, 2);
+
+		glEnableVertexArrayAttrib(textVertexArrayID, 2);
+		glVertexArrayAttribFormat(textVertexArrayID, 2, 2, GL_FLOAT, GL_FALSE, offsetof(TextVertex, textCoord));
+		glVertexArrayAttribBinding(textVertexArrayID, 2, 2);
+
+		/*glEnableVertexArrayAttrib(textVertexArrayID, 3);
+		glVertexArrayAttribFormat(textVertexArrayID, 3, 1, GL_FLOAT, GL_FALSE, offsetof(TextVertex, fontID));
+		glVertexArrayAttribBinding(textVertexArrayID, 3, 2);*/
+
+		// Setup default text texture coordinates
+		textTextCoord[0] = { 0.f, 0.f };
+		textTextCoord[1] = { 0.f, 1.f };
+		textTextCoord[2] = { 1.f, 1.f };
+		textTextCoord[3] = { 0.f, 0.f };
+		textTextCoord[4] = { 1.f, 1.f };
+		textTextCoord[5] = { 1.f, 0.f };
+	}
+
 	void Renderer::shutdown()
 	{
 		glDeleteVertexArrays(1, &quadVertexArrayID);
 		glDeleteVertexArrays(1, &lineVertexArrayID);
+		glDeleteVertexArrays(1, &textVertexArrayID);
 		glDeleteBuffers(1, &quadVertexBufferID);
 		glDeleteBuffers(1, &lineVertexBufferID);
+		glDeleteBuffers(1, &textVertexBufferID);
 		glDeleteBuffers(1, &quadIndexBufferID);
 		glDeleteTextures(1, &graphics->get_white_texture());
 
 		delete[] quadBuffer;
 		delete[] lineBuffer;
+		delete[] textBuffer;
 	}
 
 	void Renderer::begin_batch()
@@ -160,6 +202,9 @@ namespace Copium
 
 		lineVertexCount = 0;
 		lineBufferPtr = lineBuffer;
+
+		textVertexCount = 0;
+		textBufferPtr = textBuffer;
 	}
 
 	void Renderer::flush()
@@ -179,9 +224,9 @@ namespace Copium
 				graphics->get_shader_program()[0].GetHandle(), "uViewProjection");
 			GLuint uTransform = glGetUniformLocation(
 				graphics->get_shader_program()[0].GetHandle(), "uTransform");
-			glm::mat4 projection = Copium::EditorSystem::Instance()->get_camera()->get_projection();
+			glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_projection();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
-			glm::vec3 pos = Copium::EditorSystem::Instance()->get_camera()->get_position();
+			glm::vec3 pos = EditorSystem::Instance()->get_camera()->get_position();
 			glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
 			glUniformMatrix4fv(uTransform, 1, GL_FALSE, glm::value_ptr(transform));
 			
@@ -217,7 +262,7 @@ namespace Copium
 			GLuint uProjection = glGetUniformLocation(
 				graphics->get_shader_program()[1].GetHandle(), "uViewProjection");
 
-			glm::mat4 projection = Copium::EditorSystem::Instance()->get_camera()->get_projection();
+			glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_projection();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
 			// End of matrix assignment
@@ -228,6 +273,42 @@ namespace Copium
 
 			glBindVertexArray(0);
 			graphics->get_shader_program()[1].UnUse();
+		}
+
+		if (textVertexCount)
+		{
+			// Alpha blending for transparent objects
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			graphics->get_shader_program()[2].Use();
+			glActiveTexture(GL_TEXTURE0);
+			glBindVertexArray(textVertexArrayID);
+
+			// Bind texture unit
+			// 
+			
+			// Cannot just bind texture because there is multiple textures in this one draw
+			// Requires an array of textures and reference from there
+			//glBindTexture(GL_TEXTURE_2D, ch.textureID);
+
+			// Bean: Matrix assignment to be placed somewhere else
+			GLuint uProjection = glGetUniformLocation(
+				graphics->get_shader_program()[2].GetHandle(), "uViewProjection");
+
+			glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_projection();
+			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
+
+			// End of matrix assignment
+
+			// Draws the entire text out
+			glDrawArrays(GL_TRIANGLES, 0, textVertexCount);
+			drawCount++;
+
+			glBindVertexArray(0);
+			glBindTexture(GL_TEXTURE_2D, 0);
+			graphics->get_shader_program()[2].UnUse();
+			glDisable(GL_BLEND);
 		}
 		
 	}
@@ -251,6 +332,15 @@ namespace Copium
 			GLsizeiptr size = (GLuint*)lineBufferPtr - (GLuint*)lineBuffer;
 			glNamedBufferSubData(lineVertexBufferID, 0, sizeof(float) * size, lineBuffer);
 			glVertexArrayVertexBuffer(lineVertexArrayID, 1, lineVertexBufferID, 0, sizeof(LineVertex));
+			glBindVertexArray(0);
+		}
+
+		if (textVertexCount)
+		{
+			glBindVertexArray(textVertexArrayID);
+			GLsizeiptr size = (GLuint*)textBufferPtr - (GLuint*)textBuffer;
+			glNamedBufferSubData(textVertexBufferID, 0, sizeof(float) * size, textBuffer);
+			glVertexArrayVertexBuffer(textVertexArrayID, 2, textVertexBufferID, 0, sizeof(TextVertex));
 			glBindVertexArray(0);
 		}
 		
@@ -280,7 +370,7 @@ namespace Copium
 		draw_quad(transform, _color);
 	}
 
-	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, GLuint _textureID)
+	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const GLuint _textureID)
 	{
 		glm::mat4 translate = glm::translate(glm::mat4(1.f), _position);
 
@@ -302,6 +392,60 @@ namespace Copium
 
 		glm::mat4 transform = translate * rotation * scale;
 		draw_quad(transform, _textureID);
+	}
+
+	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const SpriteRenderer& _sprite)
+	{
+		glm::mat4 translate = glm::translate(glm::mat4(1.f), _position);
+
+		float radians = glm::radians(_rotation);
+
+		glm::mat4 rotation = {
+			glm::vec4(cos(radians), sin(radians), 0.f, 0.f),
+			glm::vec4(-sin(radians), cos(radians), 0.f, 0.f),
+			glm::vec4(0.f, 0.f, 1.f, 0.f),
+			glm::vec4(0.f, 0.f, 0.f, 1.f)
+		};
+
+		float pixelWidth = _sprite.get_texture()->get_pixel_width();
+		float pixelHeight = _sprite.get_texture()->get_pixel_height();
+
+		glm::mat4 scale = {
+			glm::vec4(_scale.x * pixelWidth, 0.f, 0.f, 0.f),
+			glm::vec4(0.f, _scale.y * pixelHeight, 0.f, 0.f),
+			glm::vec4(0.f, 0.f, 1.f, 0.f),
+			glm::vec4(0.f, 0.f, 0.f, 1.f)
+		};
+
+		glm::mat4 transform = translate * rotation * scale;
+		draw_quad(transform, _sprite);
+	}
+
+	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Spritesheet& _spritesheet, GLuint _offsetID, GLuint _textureID)
+	{
+		glm::mat4 translate = glm::translate(glm::mat4(1.f), _position);
+
+		float radians = glm::radians(_rotation);
+
+		glm::mat4 rotation = {
+			glm::vec4(cos(radians), sin(radians), 0.f, 0.f),
+			glm::vec4(-sin(radians), cos(radians), 0.f, 0.f),
+			glm::vec4(0.f, 0.f, 1.f, 0.f),
+			glm::vec4(0.f, 0.f, 0.f, 1.f)
+		};
+
+		float pixelWidth = _spritesheet.get_texture().get_pixel_width();
+		float pixelHeight = _spritesheet.get_texture().get_pixel_height();
+
+		glm::mat4 scale = {
+			glm::vec4(_scale.x * pixelWidth, 0.f, 0.f, 0.f),
+			glm::vec4(0.f, _scale.y * pixelHeight, 0.f, 0.f),
+			glm::vec4(0.f, 0.f, 1.f, 0.f),
+			glm::vec4(0.f, 0.f, 0.f, 1.f)
+		};
+
+		glm::mat4 transform = translate * rotation * scale;
+		draw_quad(transform, _spritesheet, _offsetID, _textureID);
 	}
 
 	void Renderer::draw_quad(const glm::mat4& _transform, const glm::vec4& _color)
@@ -328,7 +472,7 @@ namespace Copium
 		quadCount++;
 	}
 
-	void Renderer::draw_quad(const glm::mat4& _transform, GLuint _textureID)
+	void Renderer::draw_quad(const glm::mat4& _transform, const GLuint _textureID)
 	{
 		if (quadIndexCount >= maxIndexCount)
 		{
@@ -355,6 +499,47 @@ namespace Copium
 		{
 			textureIndex = (GLfloat) graphics->get_texture_slot_index();
 			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _textureID;
+			graphics->set_texture_slot_index((GLuint) textureIndex + 1);
+		}
+
+		for (GLint i = 0; i < 4; i++)
+		{
+			quadBufferPtr->pos = _transform * quadVertexPosition[i];
+			quadBufferPtr->textCoord = quadTextCoord[i];
+			quadBufferPtr->color = color;
+			quadBufferPtr->texID = textureIndex;
+			quadBufferPtr++;
+		}
+
+		quadIndexCount += 6;
+		quadCount++;
+	}
+
+	void Renderer::draw_quad(const glm::mat4& _transform, const SpriteRenderer& _sprite)
+	{
+		if (quadIndexCount >= maxIndexCount)
+		{
+			end_batch();
+			flush();
+			begin_batch();
+		}
+
+		GLfloat textureIndex = 0.f;
+
+		for (GLuint i = 1; i < graphics->get_texture_slot_index(); i++)
+		{
+			if (graphics->get_texture_slots()[i] == _sprite.get_sprite_id())
+			{
+				textureIndex = (GLfloat) i;
+				break;
+			}
+		}
+
+		// Change texture index only if ID retrieved is more than 0 (0 is white texture)
+		if (textureIndex == 0.f && _sprite.get_sprite_id() != 0)
+		{
+			textureIndex = (GLfloat) graphics->get_texture_slot_index();
+			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _sprite.get_sprite_id();
 			graphics->set_texture_slot_index((GLuint)textureIndex + 1);
 		}
 
@@ -362,6 +547,61 @@ namespace Copium
 		{
 			quadBufferPtr->pos = _transform * quadVertexPosition[i];
 			quadBufferPtr->textCoord = quadTextCoord[i];
+			quadBufferPtr->color = _sprite.get_color();
+			quadBufferPtr->texID = textureIndex;
+			quadBufferPtr++;
+		}
+
+		quadIndexCount += 6;
+		quadCount++;
+	}
+
+	void Renderer::draw_quad(const glm::mat4& _transform, const Spritesheet& _spritesheet, GLuint _offsetID, GLuint _textureID)
+	{
+		if (quadIndexCount >= maxIndexCount)
+		{
+			end_batch();
+			flush();
+			begin_batch();
+		}
+
+		glm::vec4 color = { 1.f, 1.f, 1.f, 1.f };
+
+		GLfloat textureIndex = 0.f;
+
+		for (GLuint i = 1; i < graphics->get_texture_slot_index(); i++)
+		{
+			if (graphics->get_texture_slots()[i] == _textureID)
+			{
+				textureIndex = (GLfloat) i;
+				break;
+			}
+		}
+
+		// Change texture index only if ID retrieved is more than 0 (0 is white texture)
+		if (textureIndex == 0.f && _textureID != 0)
+		{
+			textureIndex = (GLfloat) graphics->get_texture_slot_index();
+			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _textureID;
+			graphics->set_texture_slot_index((GLuint) textureIndex + 1);
+		}
+
+		glm::vec2 offset = _spritesheet.get_offsets()[_offsetID];
+		glm::vec2 step = _spritesheet.get_steps();
+		step.x = (step.x == 0.f) ? 1.f : step.x;
+		step.y = (step.y == 0.f) ? 1.f : step.y;
+		glm::vec2 spriteTextCoord[4] =
+		{
+			glm::vec2(offset),
+			glm::vec2(offset.x + step.x, offset.y),
+			glm::vec2(offset + step),
+			glm::vec2(offset.x, offset.y + step.y)
+		};
+
+		for (GLint i = 0; i < 4; i++)
+		{
+			quadBufferPtr->pos = _transform * quadVertexPosition[i];
+			quadBufferPtr->textCoord = spriteTextCoord[i];
 			quadBufferPtr->color = color;
 			quadBufferPtr->texID = textureIndex;
 			quadBufferPtr++;
@@ -389,5 +629,57 @@ namespace Copium
 		lineBufferPtr++;
 
 		lineVertexCount += 2;
+	}
+
+	void Renderer::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float _scale, GLuint _fontID)
+	{
+		//if (textVertexCount >= maxTextCount)
+		//{
+		//	end_batch();
+		//	flush();
+		//	begin_batch();
+		//}
+
+		//float x = _position.x;
+		//float y = _position.y;
+
+		//Font font = graphics->get_font(_fontID);
+		//std::map<char, Character> chars = font.get_characters();
+		//
+		//std::string::const_iterator c;
+		//for (c = _text.begin(); c != _text.end(); c++)
+		//{
+		//	Character ch = chars[*c];
+
+		//	float xpos = x + ch.bearing.x * (_scale * 0.01f);
+		//	float ypos = y - (ch.size.y - ch.bearing.y) * (_scale * 0.01f);
+
+		//	float w = ch.size.x * (_scale * 0.01f);
+		//	float h = ch.size.y * (_scale * 0.01f);
+
+		//	// Update VBO for each character
+		//	glm::vec3 textVertexPosition[6] = {
+		//		glm::vec3(xpos, ypos + h, 0.f),
+		//		glm::vec3(xpos, ypos, 0.f),
+		//		glm::vec3(xpos + w, ypos, 0.f),
+		//		glm::vec3(xpos, ypos + h, 0.f),
+		//		glm::vec3(xpos + w, ypos, 0.f),
+		//		glm::vec3(xpos + w, ypos + h, 0.f)
+		//	};
+
+		//	for (GLint i = 0; i < 6; i++)
+		//	{
+		//		textBufferPtr->pos = textVertexPosition[i];
+		//		textBufferPtr->textCoord = textTextCoord[i];
+		//		textBufferPtr->color = _color;
+		//		textBufferPtr++;
+		//	}
+
+		//	x += (ch.advance >> 6) * (_scale * 0.01f); // Bitshift by 6 to get value in pixels
+		//
+		//	textVertexCount += 6;
+		//}
+		//
+		//textCount++;
 	}
 }

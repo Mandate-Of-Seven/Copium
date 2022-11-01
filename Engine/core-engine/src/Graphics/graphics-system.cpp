@@ -16,20 +16,22 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 *****************************************************************************************/
 #include "pch.h"
 #include "Windows/windows-system.h"
-#include "Windows/windows-input.h"
+
 #include "Graphics/graphics-system.h"
 #include "Graphics/sprite-renderer.h"
+#include "Windows/windows-input.h"
 
 #include "Editor/editor-system.h"
 #include "Files/assets-system.h"
 
 // Bean: remove this after NewManagerInstance is moved
 #include "GameObject/renderer-component.h"
+#include "Graphics/ui-components.h"
 #include "SceneManager/sm.h"
 
 namespace
 {
-	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
+	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance()};
 }
 
 namespace Copium
@@ -42,6 +44,9 @@ namespace Copium
 
 	void GraphicsSystem::init()
 	{
+		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
+		PRINT("\n---------------- Loading Graphics System ----------------\n");
+
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 		
 		// Setup Shaders
@@ -51,11 +56,13 @@ namespace Copium
 		setup_shader_program("Assets/shaders/line-shader-glsl.vert",
 			"Assets/shaders/line-shader-glsl.frag");
 
+		setup_shader_program("Assets/shaders/text-shader-glsl.vert",
+			"Assets/shaders/text-shader-glsl.frag");
 
 		// Initialise Sub systems
 		renderer.init();
 
-		glm::vec2 size = Copium::EditorSystem::Instance()->get_scene_view()->get_dimension();
+		glm::vec2 size = EditorSystem::Instance()->get_scene_view()->get_dimension();
 		framebuffer.set_size((GLuint)size.x, (GLuint)size.y);
 		framebuffer.init();
 
@@ -68,15 +75,28 @@ namespace Copium
 			samplers[i] = i;
 
 		glUniform1iv(loc, maxTextures, samplers);
+		shaderProgram[0].UnUse();
+
+		// Bind fonts to text fragment shader
+		/*shaderProgram[2].Use();
+		loc = glGetUniformLocation(shaderProgram[2].GetHandle(), "uFont");
+		glUniform1iv(loc, maxTextures, samplers);
+		shaderProgram[2].UnUse();*/
 
 		// Parse all textures loaded into the engine into the graphics 
 		parse_textures();
+
+		//if (NewSceneManager::Instance())
+		//{
+		//	NewSceneManager::Instance()->get_gof().add_component_creator(RENDERER_CREATOR, new RendererCreator);
+		//}
+		PRINT("\n---------------- Graphics System Completed ----------------\n");
 	}
 
 	void GraphicsSystem::update()
 	{
-		//GLfloat dt = /*windowsSystem.get_delta_time();*/(GLfloat) WindowsSystem::Instance()->get_delta_time();
-		movement_x = movement_y = size_x = size_y = 0;
+		GLfloat dt = (GLfloat) WindowsSystem::Instance()->get_delta_time();
+		movement_x = movement_y = 0;
 
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -92,18 +112,17 @@ namespace Copium
 			movement_y -= dt;*/
 
 		// Create sprites
-		Math::Vec2 mousePos{ 0,0 };
-		glm::vec2 centreOfScene{0}, mouseScenePos{0}, mouseToNDC{0}, worldNDC{0};
+		glm::vec2 mousePos{0}, centreOfScene{0}, mouseScenePos{0}, mouseToNDC{0}, worldNDC{0};
 		if (!inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_C))
 		{
 			SpriteRenderer* sprite = new SpriteRenderer;
-			Copium::EditorSystem* editor = Copium::EditorSystem::Instance();
+			EditorSystem* editor = EditorSystem::Instance();
 			glm::vec2 scenePos = editor->get_scene_view()->get_position();
 			glm::vec2 sceneDim = editor->get_scene_view()->get_dimension();
 			glm::vec2 cameraPos = editor->get_camera()->get_position();
 			float zoom = editor->get_camera()->get_zoom();
 			// Mouse to scene view conversion
-			mousePos = inputSystem.get_mouseposition();
+			mousePos = inputSystem.get_mouseposition().to_glm();
 			centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
 			mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
 			mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
@@ -114,7 +133,7 @@ namespace Copium
 
 			sprite->set_position(pos);
 			
-			sprite->set_size( glm::vec2(0.5f, 0.3f));
+			sprite->set_size( glm::vec2(1.f, 1.f));
 			sprite->set_color(glm::vec4(0.5f, 0.5f, 0.5f, 0.5f));
 			sprites.push_back(sprite);
 			
@@ -137,7 +156,7 @@ namespace Copium
 
 				sprite->set_position(pos);
 
-				sprite->set_size(glm::vec2(0.5f, 0.3f));
+				sprite->set_size(glm::vec2(1.f, 1.f));
 				sprite->set_color(glm::vec4(0.5f, 0.5f, 0.5f, 0.5f));
 				sprites.push_back(sprite);
 			}
@@ -158,7 +177,7 @@ namespace Copium
 			debugMode = !debugMode;
 		}
 		
-		/*if (inputSystem.is_key_held(GLFW_KEY_Z) && inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT))
+		if (inputSystem.is_key_held(GLFW_KEY_Z) && inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT))
 		{
 			size_x -= dt;
 			size_y -= dt;
@@ -167,7 +186,7 @@ namespace Copium
 		{
 			size_x += dt;
 			size_y += dt;
-		}*/
+		}
 
 		/*if (inputSystem.is_key_held(GLFW_KEY_R) && inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT))
 		{
@@ -185,10 +204,12 @@ namespace Copium
 
 	void GraphicsSystem::exit()
 	{
+		Font::cleanUp();
+
 		renderer.shutdown();
 		framebuffer.exit();
 
-		for (SpriteRenderer * s : sprites)
+		for (SpriteRenderer* s : sprites)
 			delete s;
 	}
 
@@ -199,7 +220,7 @@ namespace Copium
 		shdr_files.emplace_back(std::make_pair(GL_VERTEX_SHADER, _vtx_shdr));
 		shdr_files.emplace_back(std::make_pair(GL_FRAGMENT_SHADER, _frg_shdr));
 
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < NUM_SHADERS; i++)
 		{
 			if (shaderProgram[i].IsLinked())
 				continue;
@@ -232,15 +253,14 @@ namespace Copium
 	// parse all textures into the game
 	void GraphicsSystem::parse_textures()
 	{
-		Copium::AssetsSystem* assets = Copium::AssetsSystem::Instance();
-		
+		AssetsSystem* assets = AssetsSystem::Instance();
 		// Check for texture slots
 		COPIUM_ASSERT(textureSlotIndex == maxTextures, "Max textures reached! Replace old textures!!");
 
 		// Assign the slot to the texture
-		for (GLuint i = 0; i < assets->get_textures()->size(); i++)
+		for (GLuint i = 0; i < assets->get_textures().size(); i++)
 		{
-			textureSlots[textureSlotIndex++] = assets->get_textures()[0][i].get_object_id();
+			textureSlots[textureSlotIndex++] = assets->get_textures()[i].get_object_id();
 		}
 	}
 	
@@ -261,6 +281,43 @@ namespace Copium
 
 		if(debugMode)
 			draw_debug_info();
+
+		glm::vec3 position = { 0.f, 0.f, 0.f };
+		glm::vec4 color = { 1.f, 1.f, 1.f, 1.f };
+		Font::getFont("corbel")->draw_text("Corbel", position, color, 0.4f + size_x, 0);
+
+
+		float red = 0.f, green = 1.f;
+		static float timer = 0.f; 
+		timer += (float)WindowsSystem::Instance()->get_delta_time();
+		static bool switcher = false;
+
+		if (timer >= 1.f && switcher)
+		{
+			timer = 0.f;
+			switcher = false;
+		}
+		else if (timer >= 1.f && !switcher)
+		{
+			timer = 0.f;
+			switcher = true;
+		}
+
+		if (switcher)
+
+		{
+			red = (0.1f * (1.0f - timer)) + (0.9f * timer);
+			green = (0.9f * (1.0f - timer)) + (0.1f * timer);
+		}
+		else
+		{
+			red = (0.9f * (1.0f - timer)) + (0.1f * timer);
+			green = (0.1f * (1.0f - timer)) + (0.9f * timer);
+		}
+
+		position = { 0.f, 2.f, 0.f };
+		color = { red, green, 1.f, 1.f };
+		Font::getFont("Comfortaa-Regular")->draw_text("Hello Comfortaa Here...", position, color, 0.6f + size_x, 0);
 
 		// Unbind the framebuffer to display renderable
 		// onto the image
@@ -367,12 +424,12 @@ namespace Copium
 		// Bean: scale should be the scale of the object, 
 		// texture scale should be separate and derived from the image dimensions
 		// Scale = image scale / default scale(1024)
-		Copium::AssetsSystem* assets = Copium::AssetsSystem::Instance();
-		renderer.draw_quad({ 0.f, 0.f, 0.f }, { 3.84f, 2.16f }, 0.f, assets->get_textures()[0][0].get_object_id());
+		AssetsSystem* assets = AssetsSystem::Instance();
+		renderer.draw_quad({ 0.f, 0.f, 0.f }, { 3.84f * 2.5f, 2.16f * 2.5f }, 0.f, assets->get_textures()[0].get_object_id());
 		
 		color = { 0.1f, 1.f, 0.1f, 1.f };
 		glm::vec2 worldNDC{ 0 };
-		Copium::EditorSystem* editor = Copium::EditorSystem::Instance();
+		EditorSystem* editor = EditorSystem::Instance();
 		glm::vec2 cameraPos = editor->get_camera()->get_position();
 		float zoom = editor->get_camera()->get_zoom();
 		worldNDC = { cameraPos.x, cameraPos.y };
@@ -407,39 +464,83 @@ namespace Copium
 			int textureSelector = i % 5 + 1;
 
 			glm::vec3 pos = { sprites[i]->get_position().x + movement_x, sprites[i]->get_position().y + movement_y, 0.f };
-			glm::vec2 size = { sprites[i]->get_size().x + size_x, sprites[i]->get_size().y + size_y };
+			glm::vec2 size = { sprites[i]->get_size().x + size_x, sprites[i]->get_size().y + size_y};
 
 			sprites[i]->set_position(pos);
 			sprites[i]->set_size(size);
 
 			// Bean: Set sprite id should be done in the editor or via deserialization
-			sprites[i]->set_sprite_id(assets->get_textures()[0][i % 4 + 1].get_object_id());
+			sprites[i]->set_sprite_id(assets->get_textures()[i % 4 + 1].get_object_id());
+			sprites[i]->set_texture(&assets->get_textures()[i % 4 + 1]);
 
 			if(textureSelector == 5) // Alpha Colored Square
 				renderer.draw_quad(pos, { 0.1f, 0.1f }, rotate, sprites[i]->get_color());
 			else
-				renderer.draw_quad(pos, size, rotate, sprites[i]->get_sprite_id());
+				renderer.draw_quad(pos, size, rotate, *sprites[i]);
 		}
 
 		// Theory WIP
-		Copium::NewSceneManager* sm = Copium::NewSceneManager::Instance();
+		NewSceneManager* sm = NewSceneManager::Instance();
 		Scene* scene = sm->get_current_scene();
 		if (scene != nullptr)
 		{
-			for (GameObject* gameObject : scene->get_gameobjectvector())
+			for (Component* component : gameObject->getComponents<RendererComponent>())
 			{
-				Component* component = gameObject->getComponent(ComponentType::Renderer);
-				if (!component || !component->Enabled())
+				if (!component->Enabled())
 					continue;
+
 				TransformComponent& t = gameObject->Transform();
 				RendererComponent * rc = reinterpret_cast<RendererComponent*>(component);
 				SpriteRenderer sr = rc->get_sprite_renderer();
 				glm::vec2 size(t.glmScale().x, t.glmScale().y);
-				renderer.draw_quad(t.glmPosition(), size, 0.f, sr.get_sprite_id());
+				float rotation = t.glmRotation().z;
+				// Bean: It should be set in inspector view of the renderer component instead
+				unsigned int id = sr.get_sprite_id() - 1;
+				if (id == -1)
+					id = 0;
+				sr.set_texture(&assets->get_textures()[id]);
+				renderer.draw_quad(t.glmPosition(), size, rotation, sr);
+			}
+			for (Component* component : gameObject->getComponents<UITextComponent>())
+			{
+				if (!component->Enabled())
+					continue;
+				UITextComponent* textComponent = reinterpret_cast<UITextComponent*>(component);
+				textComponent->render();
 			}
 		}
 
+		// Bean : Testing Animations
+		if (!assets->get_spritesheets().empty())
+		{
+			glm::vec3 position(-3.f, 1.f, 0.f);
+			glm::vec2 size(2.f, 2.f);
+			static GLuint animationID = 0;
+			GLuint indexSize = assets->get_spritesheets()[0].get_size() - 1;
 
+			GLfloat dt = (GLfloat) WindowsSystem::Instance()->get_delta_time();
+			static float timer = 0.f;
+			timer += dt;
+			if (timer > 0.01f)
+			{
+				timer = 0.f;
+				animationID++;
+			}
+
+			if (animationID > indexSize)
+			{
+				animationID = 0;
+			}
+
+			renderer.draw_quad(position, size, 0.f, assets->get_spritesheets()[0], animationID, 10);
+
+		}
+		
+		// Bean : Testing Text
+		/*glm::vec3 position = { 0.f, -1.f, 0.f };
+		color = { 1.f, 1.f, 0.f, 1.f };
+		renderer.draw_text("Testing Arial", position, color, 0.1f, 0);*/
+		
 		renderer.end_batch();
 
 		renderer.flush();

@@ -41,7 +41,7 @@ namespace Copium {
 		return nullptr;
 	}
 
-	NewSceneManager::NewSceneManager() : gof{nullptr}, currentScene{nullptr}, selectedGameObject{nullptr}
+	NewSceneManager::NewSceneManager() : gof{nullptr}, currentScene{nullptr}, selectedGameObject{nullptr},storageScene{nullptr}
 	{
 		gof = new GameObjectFactory();
 		if (!gof)
@@ -53,20 +53,9 @@ namespace Copium {
 
 	NewSceneManager::~NewSceneManager()
 	{
-		selectedGameObject = nullptr;
 
-		if (gof)
-		{
-			delete gof;
-			gof = nullptr;
-		}
-		
 
-		if (currentScene)
-		{
-			delete currentScene;
-			currentScene = nullptr;
-		}
+		//std::cout << "new scene manager destruction called\n";
 
 	}
 
@@ -74,10 +63,8 @@ namespace Copium {
 	{
 		// Load default scene
 
-		// Debug Purposes
-		//std::string str("Data\\sandbox.json");
-		//load_scene(str);
-		//sceneFilePath = str;
+		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
+		storageScene = nullptr;
 		//std::cout << "No. of GameObjects in scene:" << currentScene->get_gameobjcount() << std::endl;
 	}
 	void NewSceneManager::update()
@@ -87,6 +74,34 @@ namespace Copium {
 	}
 	void NewSceneManager::exit()
 	{
+		selectedGameObject = nullptr;
+
+		if (gof)
+		{
+			delete gof;
+			gof = nullptr;
+		}
+
+
+		if (currentScene)
+		{
+			delete currentScene;
+			currentScene = nullptr;
+		}
+
+		while (commandManager.undoStack.size() > 0)
+		{
+			UndoRedo::Command* temp = NewSceneManager::Instance()->get_commandmanager()->undoStack.top();
+			NewSceneManager::Instance()->get_commandmanager()->undoStack.pop();
+			delete temp;
+		}
+
+		while (commandManager.redoStack.size() > 0)
+		{
+			UndoRedo::Command* temp = NewSceneManager::Instance()->get_commandmanager()->redoStack.top();
+			NewSceneManager::Instance()->get_commandmanager()->redoStack.pop();
+			delete temp;
+		}
 	}
 
 	bool NewSceneManager::load_scene(const std::string& _filepath)
@@ -100,7 +115,7 @@ namespace Copium {
 
 		sceneFilePath = _filepath;
 
-		gof->link_to_scene(currentScene);
+		//gof->link_to_scene(currentScene);
 			
 		std::ifstream ifs(_filepath);
 		if (!ifs)
@@ -193,40 +208,43 @@ namespace Copium {
 		}
 		storageScene = currentScene;
 		currentScene = nullptr;
-		
-		// Make copy 
-		Scene* tmp = new NormalScene(storageScene->get_filename());
-		if (!tmp)
-			return false;
 
-		tmp->set_name(storageScene->get_name());
+		// Make copy 
+		currentScene = new NormalScene(storageScene->get_filename());
+		if (!currentScene)
+		{
+			currentScene = storageScene;
+			storageScene = nullptr;
+			return false;
+		}
+
+		currentScene->set_name(storageScene->get_name() + "CLONE");
 
 		// Copy game object data
 		for (size_t i{ 0 }; i < storageScene->get_gameobjcount(); ++i)
 		{
-
 			// Build a game object copy from original scene
-			GameObject* go = new GameObject(*(storageScene->get_gameobjectvector()[i]));
-			if (go)
-				tmp->get_gameobjectvector().emplace_back(go);
+			GameObject* rhs = storageScene->get_gameobjectvector()[i];
+			if (rhs && !rhs->get_parent())
+			{
+				gof->build_gameobject(*rhs);
+			}
 		}
-
-		currentScene = tmp;
+		selectedGameObject = nullptr;
 		return true;
-
-
 	}
 	bool NewSceneManager::endPreview()
 	{
 
 		// Delete memory for the preview scene
-		if (!currentScene)
+		if (!storageScene)
 			return false;
 		delete currentScene;
 
 		// Swap the original unmodified scene back to current scene
-		currentScene = nullptr;
 		currentScene = storageScene;
+		storageScene = nullptr;
+		selectedGameObject = nullptr;
 		return true;
 
 	}
@@ -291,6 +309,11 @@ namespace Copium {
 	void create_rapidjson_string(rapidjson::Document& _doc, rapidjson::Value& _value, const std::string& _str)
 	{
 		_value.SetString(_str.c_str(), _str.length(), _doc.GetAllocator());
+	}
+
+	UndoRedo::CommandManager* NewSceneManager::get_commandmanager()
+	{
+		return &commandManager;
 	}
 
 }

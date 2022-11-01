@@ -17,9 +17,10 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 namespace Copium
 {
-	RendererComponent::RendererComponent(GameObject& _gameObj) :Component(_gameObj,ComponentType::Renderer)
+
+	RendererComponent::RendererComponent(GameObject& _gameObj) :Component(_gameObj, ComponentType::Renderer)
 	{
-		PRINT("\tRenderer Component constructed");
+		PRINT("Renderer Component constructed");
 	}
 
 	void RendererComponent::deserialize(rapidjson::Value& _value)
@@ -51,7 +52,7 @@ namespace Copium
 
 		static ImVec4 backupColor;
 
-		ImGuiColorEditFlags miscFlags = ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip 
+		ImGuiColorEditFlags miscFlags = ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip
 			| ImGuiColorEditFlags_NoLabel;
 
 		ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
@@ -77,7 +78,7 @@ namespace Copium
 			ImGui::TableNextColumn();
 			ImGui::Text("Color");
 			ImGui::TableNextColumn();
-			openPopup = ImGui::ColorButton("Color", color, 0, ImVec2(FLT_MAX, 0));
+			openPopup = ImGui::ColorButton("Color", color, miscFlags, ImVec2(FLT_MAX, 0));
 
 			// Flip
 			ImGui::TableNextRow();
@@ -98,18 +99,24 @@ namespace Copium
 			backupColor = color;
 			windowFlags = ImGuiTableFlags_NoBordersInBody;
 		}
-		if (ImGui::BeginPopup("Color",windowFlags))
+		if (ImGui::BeginPopup("Color", windowFlags))
 		{
 			ImGui::Text("Color");
 			ImGui::Separator();
 			miscFlags = ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview
 				| ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoLabel;
 			ImGui::ColorPicker4("Picker", spriteRenderer.access_color(), miscFlags);
-			
+
 			ImGui::EndPopup();
 		}
 
 		if (spriteID >= 0)
 			spriteRenderer.set_sprite_id(spriteID);
+	}
+
+	RendererComponent& RendererComponent::operator=(const RendererComponent& rhs)
+	{
+		spriteRenderer = rhs.spriteRenderer;
+		return *this;
 	}
 }

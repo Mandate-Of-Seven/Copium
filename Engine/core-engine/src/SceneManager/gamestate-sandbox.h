@@ -23,7 +23,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "SceneManager/serializer.h"
 #include "Math/math-library.h"
 
-class SceneSandbox : public Scene 
+class SceneSandbox : public Copium::Scene 
 {
 public:
 	SceneSandbox(std::string& _filepath);

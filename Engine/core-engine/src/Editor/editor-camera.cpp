@@ -32,8 +32,8 @@ namespace Copium
 	void EditorCamera::init(float _width, float _height, bool _rotation)
 	{
 		aspectRatio = _width / _height;
-		width = _width;
-		height = _height;
+		width = int(_width);
+		height = int(_height);
 		update_ortho_projection(aspectRatio, zoomLevel);
 	}
 
@@ -99,6 +99,21 @@ namespace Copium
 		update_ortho_projection(aspectRatio, zoomLevel);
 	}
 
+	glm::vec2 EditorCamera::get_ndc() const
+	{
+		glm::vec3 pos = get_position();
+		EditorSceneView* sceneView = EditorSystem::Instance()->get_scene_view();
+		glm::vec2 scenePos = sceneView->get_position();
+		glm::vec2 sceneDim = sceneView->get_dimension();
+		Math::Vec2 mousePos = inputSystem.get_mouseposition();
+		glm::vec2 centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
+		glm::vec2 mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
+		glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
+		mouseToNDC *= zoomLevel;
+		glm::vec2 worldNDC = { mouseToNDC.x + pos.x, mouseToNDC.y + pos.y };
+		return worldNDC;
+	}
+
 	void EditorCamera::mouse_controls()
 	{
 		glm::vec3 pos = get_position();
@@ -137,38 +152,37 @@ namespace Copium
 		mousePosition = worldNDC;
 
 		// Movement using right click and drag
-		if (inputSystem.is_mousebutton_pressed(1))
+		if (inputSystem.is_mousebutton_pressed(1) || inputSystem.is_mousebutton_pressed(2))
 		{
 			glm::vec2 speed = get_pan_speed();
 			focalPoint += -get_up_direction() * delta.y * speed.y;
 			focalPoint += -get_right_direction() * delta.x * speed.x;
 		}
-		
 
-		//if (Input::is_key_held(GLFW_KEY_LEFT_CONTROL))
+		//if (inputSystem.is_key_held(GLFW_KEY_LEFT_CONTROL))
 		//{
 		//	glm::vec2 speed = get_pan_speed();
 		//	// Bean: Zoomlevel should be positive
-		//	if (Input::is_key_held(GLFW_KEY_W)) // Up
+		//	if (inputSystem.is_key_held(GLFW_KEY_W)) // Up
 		//	{
 		//		focalPoint += get_up_direction() * 0.1f * speed.y * zoomLevel;
 		//	}
-		//	if (Input::is_key_held(GLFW_KEY_A)) // Left
+		//	if (inputSystem.is_key_held(GLFW_KEY_A)) // Left
 		//	{
 		//		focalPoint += -get_right_direction() * 0.1f * speed.x * zoomLevel;
 		//	}
-		//	if (Input::is_key_held(GLFW_KEY_S)) // Down
+		//	if (inputSystem.is_key_held(GLFW_KEY_S)) // Down
 		//	{
 		//		focalPoint += get_up_direction() * -0.1f * speed.y * zoomLevel;
 		//	}
-		//	if (Input::is_key_held(GLFW_KEY_D)) // Right
+		//	if (inputSystem.is_key_held(GLFW_KEY_D)) // Right
 		//	{
 		//		focalPoint += -get_right_direction() * -0.1f * speed.x * zoomLevel;
 		//	}
 		//}
 
 		// Rotation
-		/*if (Input::is_key_held(GLFW_KEY_LEFT_ALT))
+		/*if (inputSystem.is_key_held(GLFW_KEY_LEFT_ALT))
 		{
 			glm::vec2 mouse{ inputSystem.get_mouseX(), inputSystem.get_mouseY() };
 			glm::vec2 delta = (mouse - mousePosition) * 0.003f;
@@ -186,15 +200,16 @@ namespace Copium
 		int scroll = (int) inputSystem.get_mousescroll();
 		if (scroll)
 		{
-			zoomLevel -= scroll * 0.1f * get_zoom_speed(); // Zoom In
-
-			if (zoomLevel <= nearClip)
-				zoomLevel = nearClip;
-			if (zoomLevel >= farClip)
+			if (zoomLevel < 0.f)
+				zoomLevel = 0.f;
+			if (zoomLevel > farClip)
 				zoomLevel = farClip;
+
+			zoomLevel -= scroll * 0.1f * get_zoom_speed(); // Zoom In
 
 			update_ortho_projection(aspectRatio, zoomLevel);
 		}
+		//scroll = inputSystem.get_mousescroll();
 	}
 
 	glm::vec3 EditorCamera::calculate_position()
@@ -235,7 +250,7 @@ namespace Copium
 	float EditorCamera::get_zoom_speed() const
 	{
 		float tempDistance = zoomLevel * 0.2f;
-		tempDistance = std::max(zoomLevel, nearClip); // Max distance is 0
+		tempDistance = std::max(zoomLevel, 0.f); // Max distance is 0
 		float speed = zoomLevel * zoomLevel;
 		speed = std::min(speed, 50.f); // The max speed currently is 50
 		return speed;

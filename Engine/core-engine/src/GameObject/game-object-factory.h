@@ -100,7 +100,7 @@ namespace Copium {
 			pointer to the new game object
 		*/
 		/*******************************************************************************/
-		void link_to_scene(Scene* _s);
+		//void link_to_scene(Scene* _s);
 		/*******************************************************************************
 		/*!
 		*
@@ -206,7 +206,6 @@ namespace Copium {
 		bool register_archetypes(const std::filesystem::path& _directoryPath);
 
 	private:
-		Scene* currentScene;
 		std::map<std::string, GameObject*> gameObjectCreators;
 		friend GameObject;
 	};

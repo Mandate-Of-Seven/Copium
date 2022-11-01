@@ -27,14 +27,14 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 namespace Copium		
 {
+	class UIButtonComponent;
+
 	CLASS_SYSTEM(LogicSystem)
 	{
 	public:
 		void init();
 		void update();
 		void exit();
-		bool Play() const;
-		void Play(bool);
 	};
 }
 

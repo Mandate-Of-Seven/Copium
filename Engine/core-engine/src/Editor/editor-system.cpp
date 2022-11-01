@@ -23,15 +23,20 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Windows/windows-utils.h"
 #include "SceneManager/state-manager.h"
 
+#include "CopiumCore/copium-core.h"
 
 namespace Copium
 {
 	// Our state
 	bool show_demo_window = true;
+	CopiumCore& copiumCore{ *CopiumCore::Instance() };
+
 
 	void EditorSystem::init()
 	{
-		Copium::WindowsSystem* windowsSystem = Copium::WindowsSystem::Instance();
+		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
+		//PRINT("FLAGS: " << systemFlags);
+		WindowsSystem* windowsSystem = WindowsSystem::Instance();
 
 		//imgui
 		ImGui::CreateContext();
@@ -39,6 +44,9 @@ namespace Copium
 
 		// Only move window from title bar
 		io.ConfigWindowsMoveFromTitleBarOnly = true;
+
+		// Global Font Size
+		io.FontGlobalScale = 0.6f;
 		
 		ImGui::StyleColorsDark();
 		ImGui_ImplGlfw_InitForOpenGL(windowsSystem->get_window(), true);
@@ -161,7 +169,7 @@ namespace Copium
 					if (ImGui::MenuItem("Save", "Ctrl+S"))
 					{
 						//save scene
-						Copium::NewSceneManager::Instance()->save_scene();
+						NewSceneManager::Instance()->save_scene();
 					}
 
 					if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
@@ -184,6 +192,23 @@ namespace Copium
 					ImGui::EndMenu();
 				}
 
+				if (ImGui::BeginMenu("Preview"))
+				{
+					if (ImGui::MenuItem("Play Scene"))
+					{
+						printf("Starting scene\n");
+						NewSceneManager::Instance()->startPreview();
+						copiumCore.toggle_inplaymode();
+					}
+					if (ImGui::MenuItem("Stop Scene"))
+					{
+						NewSceneManager::Instance()->endPreview();
+						copiumCore.toggle_inplaymode();
+					}
+
+					ImGui::EndMenu();
+				}
+
 				ImGui::EndMenuBar();
 			}
 
@@ -192,6 +217,7 @@ namespace Copium
             Window::EditorConsole::update();
 			Window::Hierarchy::update();
             sceneView.update();
+
 
 			// demo update
 			if (show_demo_window)
