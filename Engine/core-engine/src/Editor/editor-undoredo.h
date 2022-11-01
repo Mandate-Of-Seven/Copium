@@ -28,6 +28,19 @@ namespace Copium
 				float value;//original value
 		};
 
+		class GameObjectCommand : public Command
+		{
+		public:
+			GameObjectCommand(GameObject* _pointer, GameObject _value);
+			~GameObjectCommand();
+			void Undo(std::stack<Command*>* stackPointer) override;
+			void Redo(std::stack<Command*>* stackPointer) override;
+			void printCommand()override;
+
+			GameObject* pointer;//pointer to what was changed
+			GameObject value;//original value
+		};
+
 		class CommandManager
 		{
 			public:

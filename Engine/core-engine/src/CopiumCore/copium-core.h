@@ -29,6 +29,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Debugging/logging-system.h"
 #include "Audio/sound-system.h"
 #include "Scripting/logic-system.h"
+//#include "string.h"
 
 namespace Copium
 {
@@ -115,15 +116,28 @@ namespace Copium
 
 			if (displayPerformance)
 			{
-				std::cout<<"Start\n";
-				for (ISystem* pSystem : systems)
+				if (performanceCounter >= 0.05f)
 				{
+					//std::cout<<"Start\n";
+					std::string temp = "\n";
+					for (ISystem* pSystem : systems)
+					{
 
-					pSystem->updateTimePercent = (pSystem->updateTime / totalUpdateTime) * 100;
-					std::cout << typeid(*pSystem).name() << ": " << pSystem->updateTimePercent << "%\n";
-
+						pSystem->updateTimePercent = (pSystem->updateTime / totalUpdateTime) * 100;
+						temp += typeid(*pSystem).name();
+						temp += ": ";
+						temp += std::to_string(pSystem->updateTimePercent);
+						temp += "%%\n\n";
+						//std::cout << typeid(*pSystem).name() << ": " << pSystem->updateTimePercent << "%\n";
+					}
+					Window::EditorConsole::editorLog.set_performancetext(temp);
+					//std::cout << "End\n\n";
+					performanceCounter = 0;
 				}
-				std::cout << "End\n\n";
+				else
+				{
+					performanceCounter += (float)Copium::WindowsSystem::Instance()->get_delta_time();
+				}
 			}
 			frc->end();
 		}
@@ -147,12 +161,13 @@ namespace Copium
 		}
 
 		// getter /setters
-		void toggle_display_peformance() {displayPerformance = !displayPerformance;}
+		void toggle_display_peformance() { displayPerformance = !displayPerformance; performanceCounter = 0.05f; }
 		void toggle_inplaymode() { inPlayMode = !inPlayMode; }
 		bool get_inplaymode() { return inPlayMode; }
 	private:
 		std::vector<ISystem*> systems;
 		FrameRateController* frc;
+		float performanceCounter = 0;
 		bool displayPerformance = false;
 		bool inPlayMode = false;
 	};

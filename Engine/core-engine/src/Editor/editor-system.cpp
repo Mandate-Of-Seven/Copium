@@ -25,7 +25,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 namespace Copium
 {
 	// Our state
-	bool show_demo_window = true;
+	bool show_demo_window = false;
 	CopiumCore& copiumCore{ *CopiumCore::Instance() };
 
 
@@ -213,5 +213,11 @@ namespace Copium
 		Window::Inspector::exit();
 		Window::Inspector::selectedGameObject = nullptr;
 		sceneView.exit();
+	}
+
+	void EditorSystem::imguiConsoleAddLog(std::string value)
+	{
+		std::cout << value << "\n";
+		Window::EditorConsole::editorLog.add_logEntry(value);
 	}
 }

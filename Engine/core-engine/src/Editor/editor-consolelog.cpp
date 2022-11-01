@@ -52,10 +52,15 @@ namespace Window
             }
 		}
 
-        void add_logEntry(std::string str)
+        void EditorConsoleLog::add_logEntry(std::string str)
         {
             str += '\n';
             editorLog.AddLog(str.c_str());
+        }
+
+        void EditorConsoleLog::set_performancetext(std::string str)
+        {
+            performanceText = str;
         }
 
 		void init()
@@ -117,10 +122,7 @@ namespace Window
             ImGui::SameLine();
             bool copy = ImGui::Button("Copy");
             ImGui::SameLine();
-            if (ImGui::Button("Performance Viewer"))
-            {
-                Copium::CopiumCore::Instance()->toggle_display_peformance();
-            }
+            
 
             ImGui::SameLine();
             editorLog.Search.Draw("Search", 200.0f);
@@ -176,6 +178,23 @@ namespace Window
                 ImGui::SetScrollHereY(1.0f);
 
             ImGui::EndChild();
+            ImGui::End();
+
+
+            ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+            ImGui::SetNextWindowBgAlpha(0.35f);
+
+            // Begin Render Stats
+            ImGui::Begin("Performance Viewer", 0,windowFlags);
+            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 75);
+            if (ImGui::Button("Start Performance Viewer"))
+            {
+                Copium::CopiumCore::Instance()->toggle_display_peformance();
+            }
+            //ImGui::Text("Performance Viewer");
+            std::string buffer = Window::EditorConsole::editorLog.performanceText;
+            ImGui::Text(buffer.c_str());
+            // End Render Stats
             ImGui::End();
 		}
 	}
