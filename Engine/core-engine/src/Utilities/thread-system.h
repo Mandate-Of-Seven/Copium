@@ -18,9 +18,17 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Messaging/message-types.h"
 #include <thread>
 #include <utility>
+#include <unordered_map>
 
 namespace Copium
 {
+	enum class MutexType
+	{
+		FileSystem,
+		None
+	};
+
+
 	CLASS_SYSTEM(ThreadSystem)	{
 	public:
 		/*******************************************************************************
@@ -61,6 +69,19 @@ namespace Copium
 		/*******************************************************************************/
 		void addThread(std::thread* _thread);
 
+		bool acquireMutex(MutexType mutexType)
+		{
+			if (mutexes[mutexType] == 1)
+				return 0;
+			mutexes[mutexType] = 1;
+			return 1;
+		}
+
+		void returnMutex(MutexType mutexType)
+		{
+			mutexes[mutexType] = 0;
+		}
+
 		/*******************************************************************************
 		/*!
 		*
@@ -82,6 +103,7 @@ namespace Copium
 		void handleMessage(MESSAGE_TYPE);
 	private:
 		std::vector<std::thread*> threads;
+		std::unordered_map<MutexType, bool> mutexes;
 		bool quit = false;
 	};
 }

@@ -180,8 +180,7 @@ namespace Copium
 		/**************************************************************************/
 		MonoObject* instantiateClass(MonoClass * mClass);
 
-
-
+		const std::list<Copium::File>& getScriptFiles();
 		/**************************************************************************/
 		/*!
 			\brief

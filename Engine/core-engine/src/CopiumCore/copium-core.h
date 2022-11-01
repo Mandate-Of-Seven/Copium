@@ -32,7 +32,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 namespace Copium
 {
-	CLASS_SYSTEM(CopiumCore)
+	CLASS_SYSTEM(CopiumCore) , public IReceiver
 	{
 	public:
 		CopiumCore() : frc{ nullptr } {}
@@ -45,11 +45,12 @@ namespace Copium
 		/**************************************************************************/
 		void init()
 		{
+			MessageSystem* pMessageSystem = MessageSystem::Instance();
 			systems =
 			{
 				//Put in sequence of calls
 				WindowsSystem::Instance(),
-				MessageSystem::Instance(),
+				pMessageSystem,
 				LoggingSystem::Instance(),
 				NewSceneManager::Instance(),
 				SoundSystem::Instance()	,
@@ -68,14 +69,11 @@ namespace Copium
 				pSystem->init();
 			}
 
-			frc = new FrameRateController;
+			pMessageSystem->subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
+			pMessageSystem->subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
+			pMessageSystem->subscribe(MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW, this);
 
-			// Testing archetype registering at init
-			//double start = glfwGetTime();
-			//NewSceneManager::Instance()->get_gof().register_archetypes("Data/Archetypes");
-			//double timeTaken = glfwGetTime() - start;
-			//std::cout << "Time taken to register all archetypes: " << timeTaken << std::endl;
-			//NewSceneManager::Instance()->get_gof().build_gameobject("Default");
+			frc = new FrameRateController;
 
 		}
 
@@ -139,9 +137,28 @@ namespace Copium
 			frc = nullptr;
 		}
 
-		// getter /setters
-		void toggle_display_peformance() {displayPerformance = !displayPerformance;}
-		void toggle_inplaymode() { inPlayMode = !inPlayMode; }
+		void handleMessage(MESSAGE_TYPE mType)
+		{
+			switch (mType)
+			{
+				case MESSAGE_TYPE::MT_START_PREVIEW:
+				{
+					inPlayMode = true;
+					break;
+				}
+				case MESSAGE_TYPE::MT_STOP_PREVIEW:
+				{
+					inPlayMode = false;
+					break;
+				}
+				case MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW:
+				{
+					displayPerformance = !displayPerformance;
+					break;
+				}
+			}
+		}
+
 		bool get_inplaymode() { return inPlayMode; }
 	private:
 		std::vector<ISystem*> systems;

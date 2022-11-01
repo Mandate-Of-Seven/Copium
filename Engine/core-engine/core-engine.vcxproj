@@ -175,6 +175,7 @@
     </ClCompile>
     <ClCompile Include="src\Windows\windows-input.cpp" />
     <ClCompile Include="src\Windows\windows-system.cpp" />
+    <ClCompile Include="src\Windows\windows-utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Debugging\frame-rate-controller.h" />
@@ -228,6 +229,7 @@
     <ClInclude Include="src\GameObject\transform-component.h" />
     <ClInclude Include="src\Graphics\vertex-types.h" />
     <ClInclude Include="src\Windows\windows-input.h" />
+    <ClInclude Include="src\Windows\windows-utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\shaders\shader-glsl.frag" />

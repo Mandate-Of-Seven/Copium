@@ -1,0 +1,75 @@
+#include "pch.h"
+#include "Windows/windows-utils.h"
+#include "Windows/windows-system.h"
+#include "Utilities/thread-system.h"
+
+#include <commdlg.h>	// Win32 API
+#include <GLFW/glfw3.h>	// GLFW
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include <GLFW/glfw3native.h>
+
+namespace Copium
+{
+	#define MAX_FILENAME_LENGTH 250
+	namespace 
+	{
+	}
+
+	std::string FileDialogs::open_file(const char* filter)
+	{
+		OPENFILENAMEA ofn;
+		char buffer[MAX_FILENAME_LENGTH] = {0};
+
+		ZeroMemory(&ofn, sizeof(OPENFILENAME));
+		ofn.lStructSize = sizeof(OPENFILENAME);
+
+		// Set native window
+		if (!Copium::WindowsSystem::Instance())
+			return std::string();
+
+		ofn.hwndOwner = glfwGetWin32Window(Copium::WindowsSystem::Instance()->get_window());
+		if (ofn.hwndOwner == nullptr)
+			return std::string();
+
+		ofn.lpstrFile = buffer;
+		ofn.nMaxFile = sizeof(buffer);
+		ofn.lpstrFilter = filter;
+		ofn.nFilterIndex = 1;
+
+		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+
+		if (GetOpenFileNameA(&ofn) == true)
+			return ofn.lpstrFile;
+		else
+			return std::string();
+	}
+
+	std::string FileDialogs::save_file(const char* filter)
+	{
+		OPENFILENAMEA ofn;
+		char buffer[MAX_FILENAME_LENGTH] = { 0 };
+
+		ZeroMemory(&ofn, sizeof(OPENFILENAME));
+		ofn.lStructSize = sizeof(OPENFILENAME);
+
+		// Set native window
+		if (!Copium::WindowsSystem::Instance())
+			return std::string();
+
+		ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)Copium::WindowsSystem::Instance()->get_window());
+		if (ofn.hwndOwner == nullptr)
+			return std::string();
+
+		ofn.lpstrFile = buffer;
+		ofn.nMaxFile = sizeof(buffer);
+		ofn.lpstrFilter = filter;
+		ofn.nFilterIndex = 1;
+
+		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+		if (GetSaveFileNameA(&ofn) == true)
+			return ofn.lpstrFile;
+		else
+			return std::string();
+	}
+}
+

@@ -24,7 +24,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #define BUTTON_HEIGHT .1 //Percent
 #define BUTTON_WIDTH .6 //Percent
-#define MAX_NAME_LENGTH 128;
+#define INPUT_BUFFER_SIZE 128
 
 namespace Window
 {
@@ -32,11 +32,12 @@ namespace Window
 	namespace Inspector
 	{
         bool isOpen;
-        Copium::GameObject* selectedGameObject;
         bool isAddingScript;
         bool isAddingComponent;
-        char nameBuffer[128];
+        bool isAddingNewScript;
+        char nameBuffer[INPUT_BUFFER_SIZE];
         Copium::ScriptingSystem& scriptingSystem{ *Copium::ScriptingSystem::Instance() };
+        Copium::NewSceneManager& sceneManager{ *Copium::NewSceneManager::Instance() };
 
         void AlignForWidth(float width, float alignment = 0.5f)
         {
@@ -49,9 +50,9 @@ namespace Window
 
         void init()
         {
-            selectedGameObject = nullptr;
             isAddingScript = false;
             isAddingComponent = false;
+            isAddingNewScript = false;
             ImGuiIO& io = ImGui::GetIO();
             io.Fonts->AddFontFromFileTTF("assets\\fonts\\bahnschrift.ttf", 32.f);
             isOpen = true;
@@ -69,28 +70,29 @@ namespace Window
 
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
             ImGui::SetNextWindowSizeConstraints(ImVec2(320, 180), ImVec2(FLT_MAX, FLT_MAX));
-            if (Copium::NewSceneManager::Instance() != nullptr)
-                if (selectedGameObject != Copium::NewSceneManager::Instance()->get_selected_gameobject())
-                    selectedGameObject = Copium::NewSceneManager::Instance()->selectedGameObject;
 
             if (!ImGui::Begin("Inspector", &isOpen)) 
             {
                 ImGui::End();
+                ImGui::PopStyleVar();
                 return;
             }
+
+            Copium::GameObject* selectedGameObject = sceneManager.selectedGameObject;
             if (selectedGameObject)
             {
                 // Set flags for tables
                 selectedGameObject->inspectorView();
 
                 //AlignForWidth(buttonSize.x);
-                if (ImGui::Button("Add Component", {100.f,100.f})) {
+                ImVec2 buttonSize = ImGui::GetWindowSize();
+                buttonSize.y *= (float)BUTTON_HEIGHT;
+                if (ImGui::Button("Add Component", buttonSize)) {
                     isAddingComponent = true;
                 }
             }
             ImGui::End();
             ImGui::PopStyleVar();
-
             if (isAddingComponent)
             {
                 ImGui::Begin("Add Component",&isAddingComponent);
@@ -119,25 +121,47 @@ namespace Window
 
             if (isAddingScript)
             {
-                ImGui::Begin("Add Script", &isAddingComponent);
+                ImGui::Begin("Add Script", &isAddingScript);
                 AlignForWidth(ImGui::GetWindowSize().x);
                 ImVec2 buttonSize = ImGui::GetWindowSize();
                 buttonSize.y *= (float)BUTTON_HEIGHT;
-                for (auto& nameToScriptClass : scriptingSystem.getScriptClassMap())
+                for (auto& nameToScriptClass : scriptingSystem.getScriptFiles())
                 {
-                    const std::string& name { nameToScriptClass.first };
+                    const std::string& name {nameToScriptClass.filename().stem().string()};
                     if (ImGui::Button(name.c_str(), buttonSize)) {
                         selectedGameObject->addComponent<Copium::ScriptComponent>().Name(name);
+                        isAddingScript = false;
                     }
+                }
+                if (ImGui::Button("NewScript", buttonSize)) {
+                    isAddingNewScript = true;
+                    isAddingScript = false;
                 }
                 ImGui::End();
             }
 
+            if (isAddingNewScript)
+            {
+                ImGui::Begin("NewScript", &isAddingNewScript);
+                AlignForWidth(ImGui::GetWindowSize().x);
+                ImGui::PushItemWidth(-1);
+                ImGui::InputTextWithHint("##ScriptName", "Enter script name:", nameBuffer, INPUT_BUFFER_SIZE);
+                ImGui::PopItemWidth();
+
+                for (auto& nameToScriptClass : scriptingSystem.getScriptFiles())
+                {
+                    const std::string& name{ nameToScriptClass.filename().stem().string() };
+                    if (name == nameBuffer)
+                    {
+                        PRINT("SCRIPT ALREADY EXISTS");
+                    }
+                }
+                ImGui::End();
+            }
 		}
 
         void exit()
         {
-            selectedGameObject = nullptr;
         }
 	}
 }

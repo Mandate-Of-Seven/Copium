@@ -160,16 +160,17 @@ namespace Copium
 
 		std::cout << "Deleting " << _go->get_name() << std::endl;
 
-		delete _go;
-
 		//Iterate through currentScene vector and destroy
 		for (size_t i{ 0 }; i < currScene->get_gameobjectvector().size(); ++i)
 		{
 			if (currScene->get_gameobjectvector()[i] == _go)
 			{
+				delete _go;
+				currScene->get_gameobjectvector()[i] = nullptr;
 				std::cout << "trimming go vector\n";
 				currScene->get_gameobjectvector().erase(currScene->get_gameobjectvector().begin() + i);
 				currScene->get_gameobjectvector().shrink_to_fit();
+				std::cout << "Number of GameObjects left: " << currScene->get_gameobjcount() << std::endl;
 				break;
 
 			}

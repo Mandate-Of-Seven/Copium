@@ -20,14 +20,20 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Editor/inspector.h"
 #include "Editor/editor-consolelog.h"
 #include "Editor/editor-hierarchy-list.h"
-#include "CopiumCore/copium-core.h"
+#include "Windows/windows-utils.h"
+#include "Utilities/thread-system.h"
+#include "SceneManager/state-manager.h"
+#include "Messaging/message-system.h"
 
 namespace Copium
 {
-	// Our state
-	bool show_demo_window = true;
-	CopiumCore& copiumCore{ *CopiumCore::Instance() };
-
+	namespace
+	{
+		// Our state
+		bool show_demo_window = true;
+		ThreadSystem& threadSystem{ *ThreadSystem::Instance() };
+		MessageSystem& messageSystem{ *MessageSystem::Instance() };
+	}
 
 	void EditorSystem::init()
 	{
@@ -137,6 +143,32 @@ namespace Copium
 					if (ImGui::MenuItem("Open...", "Ctrl+O"))
 					{
 						//open scene
+						while (!threadSystem.acquireMutex(MutexType::FileSystem));
+						std::string filepath = FileDialogs::open_file("Copium Scene (*.json)\0*.json\0");
+						threadSystem.returnMutex(MutexType::FileSystem);
+						if (!filepath.empty())
+						{
+							std::cout << filepath << std::endl;
+
+
+							if (Copium::NewSceneManager::Instance()->get_current_scene() != nullptr)
+							{
+								std::cout << "change scene\n";
+								Copium::NewSceneManager::Instance()->change_scene(filepath);
+							}
+							else {
+								if (Copium::NewSceneManager::Instance()->load_scene(filepath))
+									std::cout << "loading success\n";
+								else
+									std::cout << "loading fail\n";
+							}
+
+						}
+						else
+						{
+							std::cout << "file failed to open\n";
+						}
+
 					}
 
 					if (ImGui::MenuItem("Save", "Ctrl+S"))
@@ -148,11 +180,20 @@ namespace Copium
 					if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
 					{
 						//save sceen as
+						while (!threadSystem.acquireMutex(MutexType::FileSystem));
+						std::string filepath = FileDialogs::save_file("Copium Scene (*.json)\0.json\0");
+						threadSystem.returnMutex(MutexType::FileSystem);
+						std::cout << filepath << std::endl;
+						Copium::NewSceneManager::Instance()->save_scene(filepath);
 					}
 
 					if (ImGui::MenuItem("Exit"))
 					{
+
 						//exit game engine
+						change_enginestate(EngineState::esQuit);
+						std::cout << "Copium has been huffed, Engine shutting down" << std::endl;
+
 					}
 
 					ImGui::EndMenu();
@@ -164,12 +205,12 @@ namespace Copium
 					{
 						printf("Starting scene\n");
 						NewSceneManager::Instance()->startPreview();
-						copiumCore.toggle_inplaymode();
+						messageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
 					}
 					if (ImGui::MenuItem("Stop Scene"))
 					{
 						NewSceneManager::Instance()->endPreview();
-						copiumCore.toggle_inplaymode();
+						messageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
 					}
 
 					ImGui::EndMenu();
@@ -213,7 +254,6 @@ namespace Copium
 		ImGui::DestroyContext();
 
 		Window::Inspector::exit();
-		Window::Inspector::selectedGameObject = nullptr;
 		sceneView.exit();
 	}
 }
