@@ -141,39 +141,45 @@ namespace Copium
 		for (int a = 0; a < sceneManager.get_current_scene()->get_gameobjectvector().size(); a++)
 		{
 			gameobj = sceneManager.get_current_scene()->get_gameobjectvector()[a];
-			if (gameobj->getComponent<RigidBodyComponent>() != nullptr)
+			gameobj->getComponent<AnimatorComponent>();
+			RigidBodyComponent* pRb = gameobj->getComponent<RigidBodyComponent>();
+			if (pRb)
 			{
-				force = gameobj->getComponent<RigidBodyComponent>()->get_force();
-				velocity = gameobj->getComponent<RigidBodyComponent>()->get_vel();
-				acceleration = gameobj->getComponent<RigidBodyComponent>()->get_acc();
+				PRINT("GAMEOBJ " << gameobj->get_name() << "HAS RIGIDBODY");
+			}
+			if (pRb != nullptr)
+			{
+				force = pRb->get_force();
+				velocity = pRb->get_vel();
+				acceleration = pRb->get_acc();
 				Math::Vec2 size{ gameobj->Transform().scale.x, gameobj->Transform().scale.y };
 				Math::Vec2 position{ gameobj->Transform().position.x, gameobj->Transform().position.y };
-				bound = gameobj->getComponent<RigidBodyComponent>()->get_AABB();
-				if (gameobj->getComponent<RigidBodyComponent>()->get_mass() != 0)
+				bound = pRb->get_AABB();
+				if (pRb->get_mass() != 0)
 				{
-					if (gameobj->getComponent<RigidBodyComponent>()->get_gravity() == true)
+					if (pRb->get_gravity() == true)
 					{
 						acceleration = (force + gravity) / gameobj->getComponent<RigidBodyComponent>()->get_mass();
 						velocity = velocity + (acceleration * dt * 0.90);
 						position = position + (velocity * dt);
-						gameobj->getComponent<RigidBodyComponent>()->set_acc(acceleration);
-						gameobj->getComponent<RigidBodyComponent>()->set_vel(velocity);
+						pRb->set_acc(acceleration);
+						pRb->set_vel(velocity);
 
 					}
 					else
 					{
-						acceleration = force / gameobj->getComponent<RigidBodyComponent>()->get_mass();
+						acceleration = force / pRb->get_mass();
 						velocity = velocity + (acceleration * dt * 0.90);
 						position = position + (velocity * dt);
-						gameobj->getComponent<RigidBodyComponent>()->set_acc(acceleration);
-						gameobj->getComponent<RigidBodyComponent>()->set_vel(velocity);
+						pRb->set_acc(acceleration);
+						pRb->set_vel(velocity);
 					}
 				}
 				bound.max.x = position.x + (size.x * 1 / 2);
 				bound.max.y = position.y + (size.y * 1 / 2);
 				bound.min.x = position.x - (size.x * 1 / 2);
 				bound.min.y = position.y - (size.y * 1 / 2);
-				gameobj->getComponent<RigidBodyComponent>()->set_AABB(bound.min, bound.max);
+				pRb->set_AABB(bound.min, bound.max);
 				gameobj->Transform().position.x = position.x;
 				gameobj->Transform().position.y = position.y;
 			

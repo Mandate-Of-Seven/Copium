@@ -122,7 +122,7 @@ public:
 
         static_assert(std::is_base_of<Component, T>::value);
         std::string tName = typeid(T).name() + std::string("class Copium::").length();
-      /*  std::cout << tName << std::endl;*/
+        std::cout << "Gameobj: " << name << std::endl;
         ComponentType componentType = Component::nameToType(tName);
         for (Component* pComponent : components)
         {

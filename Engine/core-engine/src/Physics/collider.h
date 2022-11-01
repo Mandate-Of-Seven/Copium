@@ -24,7 +24,6 @@ namespace Copium
 
 		RigidBodyComponent(GameObject& _gameObj)
 			:Component(_gameObj, ComponentType::RigidBody) {
-			std::cout << "RigidBody CONS" << std::endl;
 		}
 		void const set_vel(Math::Vec2 _velocity) { velocity = _velocity; }
 		void const set_acc(Math::Vec2 _acceleration) { acceleration = _acceleration; }
