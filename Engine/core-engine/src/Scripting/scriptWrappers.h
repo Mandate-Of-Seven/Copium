@@ -66,6 +66,7 @@ namespace Copium
 		}
 
 
+
 	#pragma endregion Transform
 
 	static void registerScriptWrappers()
