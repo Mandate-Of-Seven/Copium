@@ -207,6 +207,8 @@ namespace Copium
 
 		MonoObject* cloneInstance(MonoObject* _instance);
 
+		void addEmptyScript(const std::string& _name);
+
 		const std::unordered_map<std::string, ScriptClass*>& getScriptClassMap();
 	private:
 		void updateScriptClasses();

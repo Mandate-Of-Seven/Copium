@@ -35,6 +35,7 @@ enum class ComponentType : int      // Types of Components
 {
     Animator,
     Collider,
+    RigidBody,
     Renderer,
     Script,
     Transform,
@@ -48,6 +49,7 @@ static std::map<ComponentType, const std::string> MAP_COMPONENT_TYPE_NAME
 {
     {ComponentType::Animator,"AnimatorComponent"},
     {ComponentType::Collider,"ColliderComponent"},
+    {ComponentType::RigidBody,"RigidBodyComponent"},
     {ComponentType::Renderer,"RendererComponent"},
     {ComponentType::Script,"ScriptComponent"},
     {ComponentType::UIButton,"UIButtonComponent"},

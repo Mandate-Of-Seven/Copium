@@ -21,6 +21,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "GameObject/renderer-component.h"
 #include "Scripting/script-component.h"
 #include "GameObject/component.h"
+#include "Physics/collider.h"
 #include "Graphics/ui-components.h"
 #include "SceneManager/sm.h"
 
@@ -75,6 +76,13 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{ count++ },
             component = new ColliderComponent(*this);
             *component = *(reinterpret_cast<ColliderComponent*>(pComponent));
             PRINT("ADDED COLLIDER");
+            break;
+        }
+        case ComponentType::RigidBody:
+        {
+            component = new RigidBodyComponent(*this);
+            *component = *(reinterpret_cast<RigidBodyComponent*>(pComponent));
+            PRINT("ADDED RigidBody");
             break;
         }
         case ComponentType::Renderer:
@@ -158,6 +166,10 @@ Component* GameObject::addComponent(ComponentType componentType)
     case ComponentType::Collider:
         component = new ColliderComponent(*this);
         PRINT("ADDED COLLIDER");
+        break;
+    case ComponentType::RigidBody:
+        component = new RigidBodyComponent(*this);
+        PRINT("ADDED RIGIDBODY");
         break;
     case ComponentType::Renderer:
         component = new RendererComponent(*this);
