@@ -101,7 +101,6 @@ namespace Copium
 					std::string str = path.string();
 					std::replace(str.begin(), str.end(), '\\', '/');
 					const char* filePath = str.c_str();
-					PRINT("File: " << str.c_str());
 					ImGui::SetDragDropPayload("ContentBrowserItem", filePath, str.size() + 1);
 					
 					ImGui::EndDragDropSource();

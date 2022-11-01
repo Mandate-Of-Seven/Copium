@@ -81,6 +81,7 @@ namespace Copium
 		void exit();
 
 		std::list<std::string>& get_filepath_in_directory(const char* _path, const char* _extension);
+		std::list<std::string>& get_filepath_in_directory(const char* _path, const char* _extension1, const char* _extension2);
 
 		/*******************************************************************************
 		/*!

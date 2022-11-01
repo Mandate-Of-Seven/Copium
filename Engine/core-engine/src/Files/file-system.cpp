@@ -65,29 +65,50 @@ namespace Copium
 	{
 		// Empty the files in the list
 		assetsPath.clear();
-
-		for (const auto& entry : std::filesystem::directory_iterator(_path))
+		for (const auto& entry : std::filesystem::recursive_directory_iterator(_path))
 		{
 			if (entry.is_directory())
 			{
-				get_filepath_in_directory(entry.path().generic_string().c_str(), _extension);
+				//get_filepath_in_directory(entry.path().generic_string().c_str(), _extension);
+				//PRINT("Dir: " << entry.path().string());
 			}
 			// Is a file of type extension
 			else if (!entry.is_directory() && !entry.path().extension().generic_string().compare(_extension)) 
 			{
 				assetsPath.push_back(entry.path().generic_string());
-				//std::cout << "Path name: " << entry.path().generic_string() << "\n";
+				//std::cout << "Path name: " << entry.path().string() << "\n";
 			}
 
 		}
 
-		if (!assetsPath.empty())
-			return assetsPath;
-		else
+		return assetsPath;
+	}
+
+	std::list<std::string>& FileSystem::get_filepath_in_directory(const char* _path, const char* _extension1, const char* _extension2)
+	{
+		// Empty the files in the list
+		assetsPath.clear();
+		for (const auto& entry : std::filesystem::recursive_directory_iterator(_path))
 		{
-			assetsPath.clear();
-			return assetsPath;
+			if (entry.is_directory())
+			{
+				//get_filepath_in_directory(entry.path().generic_string().c_str(), _extension);
+				//PRINT("Dir: " << entry.path().string());
+			}
+			// Is a file of type extension
+			else if (!entry.is_directory())
+			{
+				bool extension1 = !entry.path().extension().generic_string().compare(_extension1);
+				bool extension2 = !entry.path().extension().generic_string().compare(_extension2);
+				if (extension1 || extension2)
+				{
+					assetsPath.push_back(entry.path().generic_string());
+					std::cout << "Path name: " << entry.path().string() << "\n";
+				}
+			}
 		}
+
+		return assetsPath;
 	}
 
 	std::list<File>& FileSystem::get_files_with_extension(const char* _extension)

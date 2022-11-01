@@ -48,16 +48,6 @@ namespace Copium
 		PRINT("\n---------------- Loading Graphics System ----------------\n");
 
 		glClearColor(1.f, 1.f, 1.f, 1.f);
-		
-		// Setup Shaders
-		setup_shader_program("Assets/shaders/shader-glsl.vert",
-			"Assets/shaders/shader-glsl.frag");
-
-		setup_shader_program("Assets/shaders/line-shader-glsl.vert",
-			"Assets/shaders/line-shader-glsl.frag");
-
-		setup_shader_program("Assets/shaders/text-shader-glsl.vert",
-			"Assets/shaders/text-shader-glsl.frag");
 
 		// Initialise Sub systems
 		renderer.init();
@@ -67,21 +57,21 @@ namespace Copium
 		framebuffer.init();
 
 		// Bind textures to quad fragment shader
-		shaderProgram[0].Use();
-		GLuint loc = glGetUniformLocation(shaderProgram[0].GetHandle(), "uTextures");
+		shaderProgram[QUAD_SHADER].Use();
+		GLuint loc = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTextures");
 		GLint samplers[maxTextures];
 
 		for (GLuint i = 0; i < maxTextures; i++)
 			samplers[i] = i;
 
 		glUniform1iv(loc, maxTextures, samplers);
-		shaderProgram[0].UnUse();
+		shaderProgram[QUAD_SHADER].UnUse();
 
 		// Bind fonts to text fragment shader
-		/*shaderProgram[2].Use();
-		loc = glGetUniformLocation(shaderProgram[2].GetHandle(), "uFont");
+		/*shaderProgram[TEXT_SHADER].Use();
+		loc = glGetUniformLocation(shaderProgram[TEXT_SHADER].GetHandle(), "uFont");
 		glUniform1iv(loc, maxTextures, samplers);
-		shaderProgram[2].UnUse();*/
+		shaderProgram[TEXT_SHADER].UnUse();*/
 
 		// Parse all textures loaded into the engine into the graphics 
 		parse_textures();

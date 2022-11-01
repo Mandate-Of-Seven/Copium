@@ -42,7 +42,10 @@ namespace Copium
 
 	enum
 	{
-		NUM_SHADERS = 3
+		LINE_SHADER,
+		QUAD_SHADER,
+		TEXT_SHADER,
+		NUM_SHADERS
 	};
 
 	CLASS_SYSTEM(GraphicsSystem) // Inherits from System
@@ -93,13 +96,12 @@ namespace Copium
 		Framebuffer* get_framebuffer() { return &framebuffer; }
 
 #pragma region MemberFunctions
-	private:
-		// Member functions 
-		
+		// Public Member Functions
+
 		/***************************************************************************/
 		/*!
 		\brief
-			Setup default shaders for the graphics system and binds the vertex and 
+			Setup default shaders for the graphics system and binds the vertex and
 			fragment shader to the GLSLshader program
 		\param vtx_shdr
 			The vertex shader to bind
@@ -108,6 +110,9 @@ namespace Copium
 		*/
 		/***************************************************************************/
 		void setup_shader_program(std::string _vtx_shdr, std::string _frg_shdr);
+
+	private:
+		// Private Member functions 
 
 		/***************************************************************************/
 		/*!
