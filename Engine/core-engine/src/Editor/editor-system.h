@@ -8,7 +8,7 @@
 \date			16/09/2022
 
 \brief
-	This file holds the declaration of functions for editor-layer.cpp.
+	This file holds the declaration of functions for editor-system.cpp.
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
@@ -17,6 +17,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "CopiumCore/system-interface.h"
 #include "Editor/editor-sceneview.h"
+#include "Editor/editor-content-browser.h"
 #include "Editor/editor-camera.h"
 
 namespace Copium
@@ -62,6 +63,7 @@ namespace Copium
 
 	private:
 		EditorSceneView sceneView;
+		EditorContentBrowser contentBrowser;
 		EditorCamera camera;
 	};
 }

@@ -282,7 +282,7 @@ namespace Copium
 			draw_debug_info();
 
 		glm::vec3 position = { 0.f, 0.f, 0.f };
-		glm::vec4 color = { 1.f, 1.f, 1.f, 1.f };
+		glm::vec4 color = { 0.f, 0.f, 0.f, 1.f };
 		Font::getFont("corbel")->draw_text("Corbel", position, color, 0.4f + size_x, 0);
 
 

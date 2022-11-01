@@ -67,6 +67,13 @@ namespace Copium
 			ImGui::PushItemWidth(-FLT_MIN);
 			ImGui::InputInt("", &spriteID, 0);
 
+			if (ImGui::BeginDragDropTarget())
+			{
+				const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ContentBrowserItem");
+				PRINT("Filename: " << (char*)payload->Data);
+				ImGui::EndDragDropTarget();
+			}
+
 			// Color
 			ImGui::TableNextRow();
 			ImGui::TableNextColumn();
