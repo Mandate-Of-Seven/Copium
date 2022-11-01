@@ -16,7 +16,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "pch.h"
 #include "Editor/inspector.h"
-#include "Scripting/scripting.h"
+#include "Scripting/script-component.h"
 
 // Bean: Remove once we can auto select gameobjects
 #include "SceneManager/sm.h"
@@ -32,7 +32,7 @@ namespace Window
 	namespace Inspector
 	{
         bool isOpen;
-        GameObject* selectedGameObject;
+        Copium::GameObject* selectedGameObject;
         bool isAddingScript;
         bool isAddingComponent;
         char nameBuffer[128];
@@ -97,11 +97,12 @@ namespace Window
                 AlignForWidth(ImGui::GetWindowSize().x);
                 ImVec2 buttonSize = ImGui::GetWindowSize();
                 buttonSize.y *= (float) BUTTON_HEIGHT;
-                std::map<ComponentType, const std::string>::iterator it;
-                for (it = Component::componentMap.begin(); it != Component::componentMap.end(); ++it)
+                std::map<Copium::ComponentType, const std::string>::iterator it;
+                for (it = Copium::MAP_COMPONENT_TYPE_NAME.begin();
+                    it != Copium::MAP_COMPONENT_TYPE_NAME.end(); ++it)
                 {
                     if (ImGui::Button(it->second.c_str(), buttonSize)) {
-                        if (it->first == ComponentType::Script)
+                        if (it->first == Copium::ComponentType::Script)
                         {
                             isAddingScript = true;
                         }

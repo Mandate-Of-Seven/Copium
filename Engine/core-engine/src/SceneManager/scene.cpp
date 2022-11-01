@@ -22,6 +22,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 #include "SceneManager/scene.h"
 
+namespace Copium
+{
 Scene::Scene(const std::string& _filepath) : filename(_filepath) 
 {
 
@@ -68,46 +70,43 @@ GameObject* Scene::add_gameobject(GameObject* _gameObj)
 void Scene::set_name(const std::string& _name){ name = _name; }
 std::string Scene::get_name() const{ return name; }
 
-namespace Copium {
-	NormalScene::NormalScene(const std::string& _filepath) : Scene(_filepath)
-	{
-
-	}
-
-	void NormalScene::load_scene()
-	{
-
-	}
-
-	void NormalScene::init_scene()
-	{
-
-	}
-
-	void NormalScene::update_scene()
-	{
-
-	}
-
-	void NormalScene::draw_scene()
-	{
-
-	}
-
-	void NormalScene::free_scene()
-	{
-
-	}
-
-	void NormalScene::unload_scene()
-	{
-
-	}
-
-
+NormalScene::NormalScene(const std::string& _filepath) : Scene(_filepath)
+{
 
 }
 
+void NormalScene::load_scene()
+{
+
+}
+
+void NormalScene::init_scene()
+{
+
+}
+
+void NormalScene::update_scene()
+{
+
+}
+
+void NormalScene::draw_scene()
+{
+
+}
+
+void NormalScene::free_scene()
+{
+
+}
+
+void NormalScene::unload_scene()
+{
+
+}
+
+
+}
 
 
 

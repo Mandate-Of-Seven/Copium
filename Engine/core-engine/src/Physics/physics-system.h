@@ -55,7 +55,7 @@ namespace Copium
 		void toggle_step();
 		
 	public:
-		std::vector<Copium::Component::RigidBody*> boxes;  //store box component to be able to perform physics
+		std::vector<RigidBodyComponent*> boxes;  //store box component to be able to perform physics
 		bool stepModeActive = false;
 	};
 

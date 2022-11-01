@@ -20,15 +20,20 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Editor/inspector.h"
 #include "Editor/editor-consolelog.h"
 #include "Editor/editor-hierarchy-list.h"
+#include "CopiumCore/copium-core.h"
 
 namespace Copium
 {
 	// Our state
 	bool show_demo_window = true;
+	CopiumCore& copiumCore{ *CopiumCore::Instance() };
+
 
 	void EditorSystem::init()
 	{
-		Copium::WindowsSystem* windowsSystem = Copium::WindowsSystem::Instance();
+		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
+		//PRINT("FLAGS: " << systemFlags);
+		WindowsSystem* windowsSystem = WindowsSystem::Instance();
 
 		//imgui
 		ImGui::CreateContext();
@@ -36,6 +41,9 @@ namespace Copium
 
 		// Only move window from title bar
 		io.ConfigWindowsMoveFromTitleBarOnly = true;
+
+		// Global Font Size
+		io.FontGlobalScale = 0.6f;
 		
 		ImGui::StyleColorsDark();
 		ImGui_ImplGlfw_InitForOpenGL(windowsSystem->get_window(), true);
@@ -134,6 +142,7 @@ namespace Copium
 					if (ImGui::MenuItem("Save", "Ctrl+S"))
 					{
 						//save scene
+						NewSceneManager::Instance()->save_scene();
 					}
 
 					if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
@@ -149,25 +158,32 @@ namespace Copium
 					ImGui::EndMenu();
 				}
 
+				if (ImGui::BeginMenu("Preview"))
+				{
+					if (ImGui::MenuItem("Play Scene"))
+					{
+						printf("Starting scene\n");
+						NewSceneManager::Instance()->startPreview();
+						copiumCore.toggle_inplaymode();
+					}
+					if (ImGui::MenuItem("Stop Scene"))
+					{
+						NewSceneManager::Instance()->endPreview();
+						copiumCore.toggle_inplaymode();
+					}
+
+					ImGui::EndMenu();
+				}
+
 				ImGui::EndMenuBar();
 			}
-
-			//ImGui::DockBuilderRemoveNode(dockspace_id);
-			//ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace);
-			//ImGui::DockBuilderSetNodeSize(dockspace_id, { 1600,900 });
-
-			//ImGuiID mainID = dockspace_id;
-			//ImGuiID left = ImGui::DockBuilderSplitNode(mainID, ImGuiDir_Left, 0.2f, NULL, &mainID);
-			//ImGuiID btm = ImGui::DockBuilderSplitNode(mainID, ImGuiDir_Down, 0.50f, NULL, &mainID);
-			//ImGui::DockBuilderDockWindow("Console Log", btm);
-			//ImGui::DockBuilderDockWindow("Inspector", left);
-			//ImGui::DockBuilderFinish(mainID);
 
             //Call all the editor layers updates here
             Window::Inspector::update();
             Window::EditorConsole::update();
 			Window::Hierarchy::update();
             sceneView.update();
+
 
 			// demo update
 			if (show_demo_window)

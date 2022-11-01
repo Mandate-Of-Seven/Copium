@@ -122,7 +122,6 @@ namespace Copium
 		mOnCollisionEnter{ mono_class_get_method_from_name(mClass, "OnCollisionEnter", 0) },
 		mOnCreate{ mono_class_get_method_from_name(mCopiumScript, "OnCreate", 1) }
 		{
-			int fieldCount = mono_class_num_fields(mClass);
 			void* iterator = nullptr;
 			while (MonoClassField* field = mono_class_get_fields(mClass, &iterator))
 			{
@@ -151,19 +150,20 @@ namespace Copium
 			//Critical section End
 			Sleep(SECONDS_TO_RECOMPILE*1000);
 		}
-
 	}
 
 	ScriptingSystem::ScriptingSystem() :
-		scriptFiles{ Copium::FileSystem::Instance()->get_files_with_extension(".cs") }
+		scriptFiles{ FileSystem::Instance()->get_files_with_extension(".cs") }
 	{
 
 	}
 
 	void ScriptingSystem::init()
 	{
+		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		initMono();
 		registerScriptWrappers();
+		systemFlags |= FLAG_RUN_ON_EDITOR;
 		ThreadSystem::Instance()->addThread(new std::thread(&ScriptingSystem::recompileThreadWork,this));
 		messageSystem->subscribe(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT, this);
 	}
@@ -242,10 +242,10 @@ namespace Copium
 			}
 			++it;
 		}
-		for (nameToClassIt& it : keyMask)
+		for (nameToClassIt& itMask : keyMask)
 		{
 
-			scriptClassMap.erase(it);
+			scriptClassMap.erase(itMask);
 		}
 		keyMask.clear();
 	}
@@ -351,6 +351,13 @@ namespace Copium
 			}
 		}
 		maskScriptFiles.clear();
+	}
+
+	MonoObject* ScriptingSystem::cloneInstance(MonoObject* _instance)
+	{
+		if (!_instance)
+			return nullptr;
+		return mono_object_clone(_instance);
 	}
 
 	void ScriptingSystem::tryRecompileDll()

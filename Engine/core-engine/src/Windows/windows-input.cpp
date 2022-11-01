@@ -39,6 +39,7 @@ namespace Copium
 
 void InputSystem::init()
 {
+    systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
     for (int i = 0; i < 400; i++)
     {
         keys[i] = 0;
@@ -50,7 +51,10 @@ void InputSystem::init()
     std::cout << "Input init was called" << std::endl;
 }
 
-void InputSystem::update() {}
+void InputSystem::update() 
+{
+
+}
 
 void InputSystem::exit() {}
 
@@ -59,7 +63,7 @@ bool InputSystem::is_key_pressed(int keycode)
     COPIUM_ASSERT((keycode > COPIUM_MAX_KEYS), "Keycode entered is out of range");
     if (keys[keycode]== GLFW_PRESS)
     {
-        std::cout << keys[keycode] << "  " << std::endl;
+        //std::cout << keys[keycode] << "  " << std::endl;
         keys[keycode] = 0;
         return true;
     }
@@ -83,7 +87,6 @@ bool InputSystem::is_mousebutton_pressed(int button)
     
     if (mouseButtons[button])
     {
-        mouseButtons[button] = 0;
         return true;
     }
 

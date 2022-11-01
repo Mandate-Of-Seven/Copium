@@ -49,9 +49,10 @@ namespace Copium
 			{
 				//Put in sequence of calls
 				WindowsSystem::Instance(),
+				MessageSystem::Instance(),
 				LoggingSystem::Instance(),
 				NewSceneManager::Instance(),
-				MessageSystem::Instance(),
+				SoundSystem::Instance()	,
 				FileSystem::Instance(),
 				AssetsSystem::Instance(),
 				InputSystem::Instance(),
@@ -59,7 +60,6 @@ namespace Copium
 				LogicSystem::Instance(),
 				PhysicsSystem::Instance(),
 				GraphicsSystem::Instance(),
-				SoundSystem::Instance()	,
 				ScriptingSystem::Instance(),
 				ThreadSystem::Instance()
 			};
@@ -82,18 +82,41 @@ namespace Copium
 		/**************************************************************************/
 		/*!
 		  \brief
-			Calls the update function of all the systems in vector systems
+			Calls the update function of all the systems in vector systems depending
+			if it should only be update in play mode or not
 		*/
 		/**************************************************************************/
 		void update()
 		{
+			double totalUpdateTime = 0;
 			frc->update();
 			for (ISystem* pSystem : systems)
 			{
-				//Time start
-				//PRINT("UPDATE: " << typeid(*pSystem).name());
-				pSystem->update();
-				//Time End
+				if (pSystem->systemFlags & FLAG_RUN_ON_PLAY && inPlayMode)
+				{
+					double startTime = glfwGetTime();
+					pSystem->update();
+					pSystem->updateTime = glfwGetTime() - startTime;
+					totalUpdateTime += pSystem->updateTime;
+				}
+				else if (pSystem->systemFlags & FLAG_RUN_ON_EDITOR &&!inPlayMode)
+				{
+					pSystem->update();
+					continue;
+				}
+			}
+
+			if (displayPerformance)
+			{
+				std::cout<<"Start\n";
+				for (ISystem* pSystem : systems)
+				{
+
+					pSystem->updateTimePercent = (pSystem->updateTime / totalUpdateTime) * 100;
+					std::cout << typeid(*pSystem).name() << ": " << pSystem->updateTimePercent << "%\n";
+
+				}
+				std::cout << "End\n\n";
 			}
 			frc->end();
 		}
@@ -107,7 +130,7 @@ namespace Copium
 		/**************************************************************************/
 		void exit()
 		{
-			for (int i = systems.size() - 1; i >= 0; --i)
+			for(int i = (int)systems.size() - 1; i >= 0; --i)
 			{
 				systems[i]->exit();
 			}
@@ -115,8 +138,15 @@ namespace Copium
 			delete frc;
 			frc = nullptr;
 		}
+
+		// getter /setters
+		void toggle_display_peformance() {displayPerformance = !displayPerformance;}
+		void toggle_inplaymode() { inPlayMode = !inPlayMode; }
+		bool get_inplaymode() { return inPlayMode; }
 	private:
 		std::vector<ISystem*> systems;
 		FrameRateController* frc;
+		bool displayPerformance = false;
+		bool inPlayMode = false;
 	};
 }

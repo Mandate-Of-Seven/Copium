@@ -20,6 +20,8 @@ namespace Copium::Math
 	struct Vec2;
 }
 
+struct GLFWwindow;
+
 namespace Copium
 {
 	CLASS_SYSTEM(InputSystem)
@@ -69,7 +71,7 @@ namespace Copium
 				the mouse position
 			*/
 			/**************************************************************************/
-			Copium::Math::Vec2 get_mouseposition();
+			Math::Vec2 get_mouseposition();
 
 			/***************************************************************************/
 			/*!

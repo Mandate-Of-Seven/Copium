@@ -25,6 +25,8 @@
 *                                                                                   *
 *************************************************************************************/
 
+#pragma warning(disable : 26495)
+
 #ifndef RTTR_VARIANT_IMPL_H_
 #define RTTR_VARIANT_IMPL_H_
 

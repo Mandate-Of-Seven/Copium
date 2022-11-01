@@ -31,6 +31,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <vector>
 #include <GameObject/game-object.h>
 
+namespace Copium
+{
+
 class Scene 
 {
 public:
@@ -183,87 +186,84 @@ public:
 	std::string get_name() const;
 
 private:
-	const std::string& filename;
+	const std::string filename;
 	std::string name;
 	std::vector<GameObject*> gameObjects;	//Vector should be in order
 };
 
-namespace Copium {
-	class NormalScene : public Scene
-	{
-	public:
-		NormalScene(const std::string& _filepath);
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			LOAD function for a NormalScene
+class NormalScene : public Scene
+{
+public:
+	NormalScene(const std::string& _filepath);
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		LOAD function for a NormalScene
 
-		\return
-			void
-		*/
-		/*******************************************************************************/
-		void load_scene();
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			INIT function for a NormalScene
+	\return
+		void
+	*/
+	/*******************************************************************************/
+	void load_scene();
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		INIT function for a NormalScene
 
-		\return
-			void
-		*/
-		/*******************************************************************************/
-		void init_scene();
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			UPDATE function for a NormalScene
+	\return
+		void
+	*/
+	/*******************************************************************************/
+	void init_scene();
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		UPDATE function for a NormalScene
 
-		\return
-			void
-		*/
-		/*******************************************************************************/
-		void update_scene();
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			DRAW function for a NormalScene
+	\return
+		void
+	*/
+	/*******************************************************************************/
+	void update_scene();
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		DRAW function for a NormalScene
 
-		\return
-			void
-		*/
-		/*******************************************************************************/
-		void draw_scene();
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			FREE function for a NormalScene
+	\return
+		void
+	*/
+	/*******************************************************************************/
+	void draw_scene();
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		FREE function for a NormalScene
 
-		\return
-			void
-		*/
-		/*******************************************************************************/
-		void free_scene();
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			UNLOAD function for a NormalScene
+	\return
+		void
+	*/
+	/*******************************************************************************/
+	void free_scene();
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		UNLOAD function for a NormalScene
 
-		\return
-			void
-		*/
-		/*******************************************************************************/
-		void unload_scene();
-
+	\return
+		void
+	*/
+	/*******************************************************************************/
+	void unload_scene();
 
 
-	};
+
+};
 }
-
-
 #endif SCENE_H

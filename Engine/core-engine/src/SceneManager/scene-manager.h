@@ -35,6 +35,9 @@ enum GameState
 	gsRestart = -1,	
 };
 
+namespace Copium
+{
+
 class SceneManager 
 {
 public:
@@ -167,6 +170,8 @@ private:
 	Scene* currentScene;
 };
 
+
+}
 
 
 

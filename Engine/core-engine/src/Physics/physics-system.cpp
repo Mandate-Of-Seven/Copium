@@ -26,23 +26,24 @@ namespace
 
 namespace Copium
 {
-	Copium::Collision::AABB floor = { (Math::Vec2{ -0.8,-0.55 }), (Math::Vec2{ 0.8,-0.45 }) }; //position of floor
+	Collision::AABB floor = { (Math::Vec2{ -0.8f,-0.55f }), (Math::Vec2{ 0.8f,-0.45f }) }; //position of floor
 	void PhysicsSystem::init()
 	{
+		systemFlags |= FLAG_RUN_ON_PLAY;
 	}
 	void PhysicsSystem::update()
 	{
 		static int count = 0;
-		if (inputSystem.is_key_pressed(GLFW_KEY_B) && (boxes.size() < Copium::GraphicsSystem::Instance()->get_sprites().size()))
+		if (inputSystem.is_key_pressed(GLFW_KEY_B) && (boxes.size() < GraphicsSystem::Instance()->get_sprites().size()))
 		{
 			glm::vec2 position;
 			glm::vec2 size;
 			Math::Vec2 convertedPos;
 			Math::Vec2 convertedSize;
-			size = Copium::GraphicsSystem::Instance()->get_sprites()[count]->get_size();
+			size = GraphicsSystem::Instance()->get_sprites()[count]->get_size();
 			convertedSize = Math::Vec2(size.x, size.y);
-			Copium::Component::RigidBody* box = new Copium::Component::RigidBody;
-			position = Copium::GraphicsSystem::Instance()->get_sprites()[count]->get_position();
+			RigidBodyComponent* box = new RigidBodyComponent;
+			position = GraphicsSystem::Instance()->get_sprites()[count]->get_position();
 			convertedPos = {position};
 			box->set_vel(Math::Vec2{ 0.0, 0.0 });
 			box->set_acc(Math::Vec2{ 0.0,0.0 });
@@ -118,7 +119,7 @@ namespace Copium
 
 	void PhysicsSystem::exit()
 	{
-		for (Copium::Component::RigidBody* a : boxes)
+		for (RigidBodyComponent* a : boxes)
 		{
 			delete a;
 		}
@@ -133,16 +134,14 @@ namespace Copium
 		glm::vec3 glmPosition;
 		glm::vec2 glmSize;
 		Math::Vec2 position;
-		float mass;
-		Copium::Collision::AABB bound;
+		Collision::AABB bound;
 		for (int a = 0; a < boxes.size(); a++)
 		{
 			force = boxes[a]->get_force();
 			velocity = boxes[a]->get_vel();
 			acceleration = boxes[a]->get_acc();
-			mass = boxes[a]->get_mass();
-			glmPosition = Copium::Graphics::GraphicsSystem::Instance()->get_sprites()[a]->get_position();
-			glmSize = Copium::Graphics::GraphicsSystem::Instance()->get_sprites()[a]->get_size();
+			glmPosition = GraphicsSystem::Instance()->get_sprites()[a]->get_position();
+			glmSize = GraphicsSystem::Instance()->get_sprites()[a]->get_size();
 			position = Math::Vec2(glmPosition.x, glmPosition.y);
 			bound = boxes[a]->get_AABB();
 			if (boxes[a]->get_gravity() == true)
@@ -168,7 +167,7 @@ namespace Copium
 			bound.min.y = position.y - (glmSize.y * 1 / 2);
 			boxes[a]->set_AABB(bound.min, bound.max);
 			glmPosition = { position.x, position.y, 0.f };
-			Copium::GraphicsSystem::Instance()->get_sprites()[a]->set_position(glmPosition);
+			GraphicsSystem::Instance()->get_sprites()[a]->set_position(glmPosition);
 			
 		}
 
@@ -181,12 +180,12 @@ namespace Copium
 			Math::Vec2 velocity;
 			glm::vec2 glmPosition;
 			Math::Vec2 position;
-			Copium::Collision::AABB bound;
+			Collision::AABB bound;
 			velocity = boxes[a]->get_vel();
-			glmPosition = Copium::GraphicsSystem::Instance()->get_sprites()[a]->get_position();
+			glmPosition = GraphicsSystem::Instance()->get_sprites()[a]->get_position();
 			position = Math::Vec2(glmPosition.x, glmPosition.y);
 			bound = boxes[a]->get_AABB();
-			if ((Copium::Collision::collision_rectrect(bound, velocity, floor, Math::Vec2{ 0.0,0.0 }) == true))
+			if ((Collision::collision_rectrect(bound, velocity, floor, Math::Vec2{ 0.0,0.0 }) == true))
 			{
 				boxes[a]->set_vel(Math::Vec2{ 0.0, 0.0 });
 				boxes[a]->set_force(Math::Vec2{ 0.0,0.0 });

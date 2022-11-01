@@ -44,7 +44,7 @@ namespace Copium
 		static const std::string scriptsAssemblyPath{ "scripts.dll" };
 		static const std::string projectName = { "PackedTracks" };
 		static const std::string projectPath{ "..\\" + projectName };
-		static const std::string assetPath{ "../core-engine/Assets" };
+		static const std::string assetPath{ "..\\core-engine\\Assets\\" };
 	}
 
 	class File;

@@ -20,6 +20,10 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <map>
 #include <rapidjson/document.h>
 
+
+namespace Copium
+{
+
 class GameObject;
 
     //USING
@@ -34,15 +38,29 @@ enum class ComponentType : int      // Types of Components
     Renderer,
     Script,
     Transform,
+    UIButton,
+    UIText,
+    UIImage,
     None
+};
+
+static std::map<ComponentType, const std::string> MAP_COMPONENT_TYPE_NAME
+{
+    {ComponentType::Animator,"AnimatorComponent"},
+    {ComponentType::Collider,"ColliderComponent"},
+    {ComponentType::Renderer,"RendererComponent"},
+    {ComponentType::Script,"ScriptComponent"},
+    {ComponentType::UIButton,"UIButtonComponent"},
+    {ComponentType::UIText,"UITextComponent"},
+    {ComponentType::UIImage,"UIImageComponent"}
 };
 
 class Component
 {
     public:
-        const ComponentType componentType;           //Type of component
+        Component(const Component&) = delete;
 
-        static std::map<ComponentType, const std::string> componentMap; // Declared map to link ComponentType and its name
+        const ComponentType componentType;           //Type of component
 
         static ComponentType nameToType(const std::string& _name)
         {
@@ -50,7 +68,7 @@ class Component
             int end{ (int)ComponentType::None };
             while (i != end)
             {
-                if (componentMap[(ComponentType)i] == _name)
+                if (MAP_COMPONENT_TYPE_NAME[(ComponentType)i] == _name)
                     return (ComponentType)i;
                 i+=1;
             }
@@ -91,6 +109,21 @@ class Component
         /**************************************************************************/
         virtual void deserialize(rapidjson::Value& _value);
 
+        /***************************************************************************/
+        /*!
+        \brief
+            Pure virtual function that serializes this component's data to a rapidjson value.
+            Note: each component must define how to serialize itself as each component has its own data structure
+
+        \param _value
+            reference to the rapidjson value that will contain the data of the component
+
+        \return
+            void
+        */
+        /**************************************************************************/
+        virtual void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
+
         virtual void inspector_view() = 0;
 
         virtual ~Component()
@@ -98,11 +131,27 @@ class Component
             //std::cout << "default component dtor\n";
         }
 
-        Component& operator=(const Component& rhs);
+        Component& operator=(const Component& rhs)
+        {
+            enabled = rhs.enabled;
+            return *this;
+        }
+
+        template<typename T>
+        T& operator=(const T& rhs)
+        {
+            static_assert(std::is_base_of<Component, T>::value); 
+            COPIUM_ASSERT(componentType != rhs.componentType, "TRYING TO COPY ASSIGN TWO DIFFERENT COMPONENT TYPES!");
+            enabled = rhs.enabled;
+            T* self = reinterpret_cast<T*>(this);
+            *self = rhs;
+            return *self;
+        }
 
         bool Enabled() const noexcept;
 
         void Enabled(bool) noexcept;
+        GameObject& gameObj;
     protected:
 
         /***************************************************************************/
@@ -114,8 +163,6 @@ class Component
         /**************************************************************************/
         Component() = delete;
         Component(GameObject& _gameObj, ComponentType _componentType);
-
-        GameObject& gameObj;
     private:
         ComponentID id;                     //Id of component, local to gameObject
         const bool allowMultiple = false;   //Can gameObjects only have one of this Component?
@@ -142,6 +189,9 @@ class Component
         */
         /**************************************************************************/
         //void deserialize(rapidjson::Value& _value);
+
+        ColliderComponent& operator=(const ColliderComponent& rhs) { (void)rhs; return *this; }
+
     protected:
     };
 
@@ -158,6 +208,7 @@ class Component
 
         void inspector_view(){};
 
+        AnimatorComponent& operator=(const AnimatorComponent& rhs) { (void)rhs; return *this; }
         /***************************************************************************/
         /*!
         \brief
@@ -169,4 +220,5 @@ class Component
 
     };
 
+}
 #endif // !COMPONENT_H

@@ -27,9 +27,13 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "GameObject/transform-component.h"
 
 //USING
+
+namespace Copium
+{
+
 using GameObjectID = uint64_t;
 
-class GameObject final : public Copium::IReceiver
+class GameObject final : public IReceiver
 {
 private:
     GameObjectID parentid;
@@ -56,9 +60,11 @@ public:
     */
     /**************************************************************************/
     GameObject(
-        Copium::Math::Vec3 _position = { 0,0,0 },
-        Copium::Math::Vec3 _rotation = { 0,0,0 },
-        Copium::Math::Vec3 _scale = {1,1,1});
+        Math::Vec3 _position = { 0,0,0 },
+        Math::Vec3 _rotation = { 0,0,0 },
+        Math::Vec3 _scale = {1,1,1});
+
+    GameObject(const GameObject& rhs);
 
     template <typename T>
     T& addComponent()
@@ -81,7 +87,9 @@ public:
         for (Component* pComponent : components)
         {
             if (pComponent->componentType == componentType)
+            {
                 typedComponents.push_back(reinterpret_cast<T*>(pComponent));
+            }
         }
         return typedComponents;
     }
@@ -97,10 +105,16 @@ public:
     /**************************************************************************/
     Component* addComponent(ComponentType componentType);
 
-
     bool hasComponent(ComponentType componentType) const;
 
-    Component* addComponent(const Component& component);
+    template <typename T>
+    T* addComponent(const T& component)
+    {
+        static_assert(std::is_base_of<Component, T>::value);
+        T* tmp = addComponent(component.componentType);
+        *tmp = component;
+        return tmp;
+    }
 
     /***************************************************************************/
     /*!
@@ -294,12 +308,34 @@ public:
     \brief
         Deserialize GameObject data from rapidJson value and populate this GameObject with the data
 
+    \param  _value
+        reference to the rapidjson::Value that contains the GameObject data
+
     \return
         if deserialization was successful, return true
         if deserialization was unsuccessful, return false
     */
     /*******************************************************************************/
     bool deserialize(rapidjson::Value& _value);
+
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Serialize this GameObject's data into a rapidjson::Value
+
+    \param  _value
+        reference to the rapidjson::Value that will contain the GameObject data
+
+    \param _doc
+        reference to the rapidjson::Document which is associated with the save file
+
+    \return
+        if deserialization was successful, return true
+        if deserialization was unsuccessful, return false
+    */
+    /*******************************************************************************/
+    bool serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
     void inspectorView();
 
@@ -312,13 +348,11 @@ public:
     /**************************************************************************/
     ~GameObject();
 
-    void handleMessage(Copium::MESSAGE_TYPE mType);
-
-    GameObject& operator=(const GameObject& rhs);
-
-    
+    void handleMessage(MESSAGE_TYPE mType);
 };
 
+
+}
 
 
 #endif // !GAME_OBJECT_H

@@ -5,8 +5,14 @@
 //
 // For the license information refer to format.h.
 
+
+#pragma warning(disable : 26451)
+#pragma warning(disable : 26495)
+#pragma warning(disable : 26498)
+
 #ifndef FMT_FORMAT_INL_H_
 #define FMT_FORMAT_INL_H_
+
 
 #include <algorithm>
 #include <cctype>

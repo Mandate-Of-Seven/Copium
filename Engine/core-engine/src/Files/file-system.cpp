@@ -48,7 +48,7 @@ namespace Copium
 
 	void FileSystem::init()
 	{
-
+		systemFlags |= FLAG_RUN_ON_EDITOR;
 	}
 
 	void FileSystem::update()

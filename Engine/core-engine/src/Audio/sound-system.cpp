@@ -16,6 +16,14 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "pch.h"
 #include "sound-system.h"
+#include "Windows/windows-system.h"
+#include "Windows/windows-input.h"
+
+
+namespace
+{
+	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
+}
 
 namespace Copium
 {
@@ -23,26 +31,37 @@ namespace Copium
 // Initialize sound system
 void SoundSystem::init()
 {
-
+	systemFlags |= FLAG_RUN_ON_PLAY;
 	FMOD::System_Create(&soundSystem);
 	soundSystem->init(50, FMOD_INIT_NORMAL, NULL);
 	CheckVersion();
 	CheckDrivers();
 	std::cout << "Sound init was called" << std::endl;
-	CreateSound("./Assets/sounds/reeling.wav", SoundAlias::reeling);
-	SetVolume(reeling, 0.3f);
-	CreateSound("./Assets/sounds/zap.wav", SoundAlias::zap);
-	SetVolume(zap, 0.3f);
 }
 
 void SoundSystem::update()
 {
 	soundSystem->update();
+	if (inputSystem.is_key_pressed(GLFW_KEY_1))
+	{
+		Copium::SoundSystem::Instance()->Play("zap", true, false);
+		std::cout << "Zap sound is being played\n";
+	}
+	if (inputSystem.is_key_pressed(GLFW_KEY_2))
+	{
+		Copium::SoundSystem::Instance()->Play("reeling", true, false);
+		std::cout << "Reeling sound is being played\n";
+	}
+	if (inputSystem.is_key_pressed(GLFW_KEY_3))
+	{
+		Copium::SoundSystem::Instance()->Play("testbgm", false, true);
+		std::cout << "BGM is being played\n";
+	}
 }
 
 void SoundSystem::exit()
 {
-	std::map<unsigned, std::pair<FMOD::SoundGroup*, FMOD::Sound*>>::iterator soundIt;
+	std::map<std::string, std::pair<FMOD::SoundGroup*, FMOD::Sound*>>::iterator soundIt;
 	for (soundIt = soundList.begin(); soundIt != soundList.end(); soundIt++)
 	{
 		soundIt->second.first->release();
@@ -55,12 +74,12 @@ void SoundSystem::exit()
 }
 
 // Create sound
-void SoundSystem::CreateSound(const char* fileName, unsigned alias)
+void SoundSystem::CreateSound(std::string fileName, std::string alias)
 {
 	FMOD::Sound *newSound;
 	FMOD::SoundGroup *newGroup;
-	soundSystem->createSoundGroup(std::to_string(alias).c_str(), &newGroup);
-	soundSystem->createSound(fileName, FMOD_DEFAULT, nullptr, &newSound);
+	soundSystem->createSoundGroup(alias.c_str(), &newGroup);
+	soundSystem->createSound(fileName.c_str(), FMOD_DEFAULT, nullptr, &newSound);
 	newSound->setSoundGroup(newGroup);
 
 	if (soundList.count(alias))
@@ -77,7 +96,7 @@ void SoundSystem::CreateSound(const char* fileName, unsigned alias)
 }
 
 // Play sound
-void SoundSystem::Play(unsigned alias, bool overLap, bool loop, int loopCount)
+void SoundSystem::Play(std::string alias, bool overLap, bool loop, int loopCount)
 {
 	FMOD::Sound *rSound(soundList[alias].second);
 	int numPlaying(0);
@@ -105,7 +124,7 @@ void SoundSystem::Play(unsigned alias, bool overLap, bool loop, int loopCount)
 }
 
 // Stop sound
-void SoundSystem::Stop(unsigned alias)
+void SoundSystem::Stop(std::string alias)
 {
 	if (soundList[alias].first)
 	{
@@ -114,7 +133,7 @@ void SoundSystem::Stop(unsigned alias)
 }
 
 // Set volume
-void SoundSystem::SetVolume(unsigned alias, float volume)
+void SoundSystem::SetVolume(std::string alias, float volume)
 {
 	volume = (volume > 1.0f) ? 1.0f : volume;
 	volume = (volume < 0.0f) ? 0.0f : volume;

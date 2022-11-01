@@ -10,7 +10,7 @@
 \brief
 	Contains function declarations for Assets system
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #ifndef ASSETS_SYSTEM_H
@@ -18,6 +18,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "CopiumCore/system-interface.h"
 #include "Graphics/textures.h"
+#include "Graphics/spritesheet.h"
 
 namespace Copium
 {
@@ -32,10 +33,13 @@ namespace Copium
 
 		void load_all_textures(std::list<std::string>& _path);
 
-		std::vector<Copium::Texture>* get_textures() { return &textures; }
+		std::vector<Texture>& get_textures() { return textures; }
+		std::vector<Spritesheet>& get_spritesheets() { return spritesheets; }
+		void load_all_audio(std::list<std::string>&_path);
 
 	private:
-		std::vector<Copium::Texture> textures;
+		std::vector<Texture> textures;
+		std::vector<Spritesheet> spritesheets;
 	};
 }
 

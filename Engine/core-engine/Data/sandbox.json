@@ -1,122 +1,136 @@
 {
-  "Name": "sandbox",
-  "GameObjects": [
-    {
-      "ID": 1,
-      "Name": "Frank",
-      "PID": 0,
-      "Components": [
+    "Name": "sandboxCLONE",
+    "GameObjects": [
         {
-          "Type": "Transform",
-          "Pos": {
-            "X": 0,
-            "Y": 2,
-            "Z": 0
-          },
-          "Rot": {
-            "X": 0,
-            "Y": 0,
-            "Z": 0
-          },
-          "Scale": {
-            "X": 1,
-            "Y": 1,
-            "Z": 1
-          }
+            "ID": 11,
+            "Name": "Frank",
+            "PID": 0,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 2.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ],
+            "Children": [
+                {
+                    "ID": 12,
+                    "Name": "Frank Jr",
+                    "PID": 0,
+                    "Components": [
+                        {
+                            "Type": "Transform",
+                            "Pos": {
+                                "X": 1.0,
+                                "Y": 0.0,
+                                "Z": 0.0
+                            },
+                            "Rot": {
+                                "X": 0.0,
+                                "Y": 0.0,
+                                "Z": 0.0
+                            },
+                            "Scale": {
+                                "X": 1.0,
+                                "Y": 1.0,
+                                "Z": 1.0
+                            }
+                        }
+                    ],
+                    "Children": []
+                }
+            ]
         },
         {
-          "Type": "Sprite Renderer",
-          "Sprite ID": 2
-        }
-      ],
-      "Children": [
+            "ID": 13,
+            "Name": "Thanos",
+            "PID": 0,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 2.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ],
+            "Children": []
+        },
         {
-          "ID": 10,
-          "Name": "Frank Jr",
-          "PID": 1,
-          "Components": [
-            {
-              "Type": "Transform",
-              "Pos": {
-                "X": 1,
-                "Y": 0,
-                "Z": 0
-              },
-              "Rot": {
-                "X": 0,
-                "Y": 0,
-                "Z": 0
-              },
-              "Scale": {
-                "X": 1,
-                "Y": 1,
-                "Z": 1
-              }
-            }
-          ],
-          "Children": [
-
-          ]
-        }
-      ]
-    },
-    {
-      "ID": 2,
-      "Name": "Thanos",
-      "PID": 0,
-      "Components": [
+            "ID": 14,
+            "Name": "Chad",
+            "PID": 0,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 2.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ],
+            "Children": []
+        },
         {
-          "Type": "Transform",
-          "Pos": {
-            "X": 2,
-            "Y": 0,
-            "Z": 0
-          },
-          "Rot": {
-            "X": 0,
-            "Y": 0,
-            "Z": 0
-          },
-          "Scale": {
-            "X": 1,
-            "Y": 1,
-            "Z": 1
-          }
+            "ID": 15,
+            "Name": "New GameObject",
+            "PID": 0,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -10.799994468688965,
+                        "Y": -10.999994277954102,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ],
+            "Children": []
         }
-      ],
-      "Children": [
-
-      ]
-    },
-    {
-      "ID": 0,
-      "Name": "Chad",
-      "PID": 0,
-      "Components": [
-        {
-          "Type": "Transform",
-          "Pos": {
-            "X": 2,
-            "Y": 0,
-            "Z": 0
-          },
-          "Rot": {
-            "X": 0,
-            "Y": 0,
-            "Z": 0
-          },
-          "Scale": {
-            "X": 1,
-            "Y": 1,
-            "Z": 1
-          }
-        }
-      ],
-      "Children": [
-
-      ]
-    }
-
-
-  ]
+    ]
 }

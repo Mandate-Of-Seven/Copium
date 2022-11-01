@@ -21,9 +21,12 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 namespace Copium
 {
+    int WindowsSystem::windowWidth;
+    int WindowsSystem::windowHeight;
 
     void WindowsSystem::init()
     {
+        systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
         init_system(1600, 900, "Copium");
     }
 
@@ -34,7 +37,7 @@ namespace Copium
         title = _title;
 
         std::string config("Data\\config.json");
-        load_config(config, _width, _height);
+        load_config(config, windowWidth, windowHeight);
 
         if (!glfwInit())
         {
@@ -162,6 +165,8 @@ namespace Copium
         // Bean: This would be changed once we implement IMGUI
         // 
         // use the entire framebuffer as drawing region
+        windowWidth = _width;
+        windowHeight = _height;
         glViewport(0, 0, _width, _height);
         // later, if working in 3D, we'll have to set the projection matrix here ...
         (void) _window;

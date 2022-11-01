@@ -2,7 +2,7 @@
 #include "pch.h"
 #include "GameObject/game-object.h"
 #include "Scripting/logic-system.h"
-#include "Scripting/scripting.h"
+#include "Scripting/script-component.h"
 #include "SceneManager/sm.h"
 
 namespace Copium
@@ -10,58 +10,42 @@ namespace Copium
 	namespace
 	{
 		NewSceneManager& sceneManager {*NewSceneManager::Instance()};
-		bool play;
 		std::vector<GameObject*>* gameObjects;
 	}
 
 	void LogicSystem::init()
 	{
-		play = false;
-		gameObjects = nullptr;
+
+		systemFlags |= FLAG_RUN_ON_PLAY;
+		gameObjects = &sceneManager.get_current_scene()->get_gameobjectvector();
 	}
 
 	void LogicSystem::update()
 	{
-		if (play)
+		gameObjects = &sceneManager.get_current_scene()->get_gameobjectvector();
+		for (GameObject* pGameObj : *gameObjects)
 		{
-			for (GameObject* pGameObj : *gameObjects)
+			const std::vector<ScriptComponent*>& pScriptComponents{ pGameObj->getComponents<ScriptComponent>() };
+			for (ScriptComponent* pScriptComponent : pScriptComponents)
 			{
-				const std::vector<ScriptComponent*>& pScriptComponents{ pGameObj->getComponents<ScriptComponent>() };
-				for (ScriptComponent* pScriptComponent : pScriptComponents)
-				{
-					pScriptComponent->Update();
-					pScriptComponent->LateUpdate();
-				}
+				if (!pScriptComponent)
+					continue;
+				pScriptComponent->Update();
+				pScriptComponent->LateUpdate();
 			}
 		}
 	}
 
 	void LogicSystem::exit()
 	{
-
-	}
-
-	bool LogicSystem::Play() const
-	{
-		return play;
-	}
-
-	void LogicSystem::Play(bool _play)
-	{
-		//Awake, Init
-		if (_play == true)
-		{
-			gameObjects = &sceneManager.get_current_scene()->get_gameobjectvector();
-			for (GameObject* pGameObj : *gameObjects) 
-			{
-				const std::vector<ScriptComponent*>& pScriptComponents{pGameObj->getComponents<ScriptComponent>()};
-				for (ScriptComponent* pScriptComponent : pScriptComponents)
-				{
-					pScriptComponent->Awake();
-					pScriptComponent->Start();
-				}
-			}
-		}
-		play = _play;
+		//for (GameObject* pGameObj : *gameObjects)
+		//{
+		//	const std::vector<ScriptComponent*>& pScriptComponents{ pGameObj->getComponents<ScriptComponent>() };
+		//	for (ScriptComponent* pScriptComponent : pScriptComponents)
+		//	{
+		//		pScriptComponent->Awake();
+		//		pScriptComponent->Start();
+		//	}
+		//}
 	}
 }

@@ -4,6 +4,7 @@ public class CSharpTesting : CopiumScript
 {
 	public float speed = 0.2f;
 	public Vector2 vec2;
+	public Vector3 vec3;
     void Awake()
 	{
 	}
@@ -36,5 +37,6 @@ public class CSharpTesting : CopiumScript
 		transform.position = position;
 		vec2.x = position.x;
 		vec2.y = position.y;
+		Console.WriteLine("GameObject ID: " + gameObject.ID + " running!");
 	}
 }

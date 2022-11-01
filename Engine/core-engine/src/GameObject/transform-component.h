@@ -21,6 +21,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Math/math-library.h"
 #include "GameObject/component.h"
 
+namespace Copium
+{
+
 class TransformComponent : public Component
 {
 private:
@@ -28,9 +31,9 @@ private:
     std::list<TransformComponent*> childList;
 
 public:
-    Copium::Math::Vec3 position;
-    Copium::Math::Vec3 rotation;
-    Copium::Math::Vec3 scale;
+    Math::Vec3 position;
+    Math::Vec3 rotation;
+    Math::Vec3 scale;
 
     /***************************************************************************/
     /*!
@@ -41,9 +44,9 @@ public:
     /**************************************************************************/
     TransformComponent(
         GameObject& _gameObj,
-        Copium::Math::Vec3 _position = Copium::Math::Vec3(),
-        Copium::Math::Vec3 _rotation = Copium::Math::Vec3(),
-        Copium::Math::Vec3 _scale = {1,1,1});
+        Math::Vec3 _position = Math::Vec3(),
+        Math::Vec3 _rotation = Math::Vec3(),
+        Math::Vec3 _scale = {1,1,1});
 
     /***************************************************************************/
     /*!
@@ -63,7 +66,7 @@ public:
         Position to set for transform
     */
     /**************************************************************************/
-    void set_position(const Copium::Math::Vec3& _position);
+    void set_position(const Math::Vec3& _position);
 
 
     /***************************************************************************/
@@ -74,7 +77,7 @@ public:
         Rotation of transform
     */
     /**************************************************************************/
-    const Copium::Math::Vec3& get_rotation();
+    const Math::Vec3& get_rotation();
     /***************************************************************************/
     /*!
     \brief
@@ -93,7 +96,7 @@ public:
         Rotation to set for transform
     */
     /**************************************************************************/
-    void set_rotation(const Copium::Math::Vec3& _rotation);
+    void set_rotation(const Math::Vec3& _rotation);
 
     /***************************************************************************/
     /*!
@@ -103,7 +106,7 @@ public:
         Scale of transform
     */
     /**************************************************************************/
-    const Copium::Math::Vec3& get_scale();
+    const Math::Vec3& get_scale();
     /***************************************************************************/
     /*!
     \brief
@@ -122,12 +125,16 @@ public:
         Scale to set for transform
     */
     /**************************************************************************/
-    void set_scale(const Copium::Math::Vec3& _scale);
+    void set_scale(const Math::Vec3& _scale);
 
     /***************************************************************************/
     /*!
     \brief
         Deserializes transform data from a rapidjson::Value
+    
+    \param  _value
+        reference to the rapidjson::Value that the transform component data is to be loaded from
+
     \return
         on success, return true
         on failure, return false
@@ -135,12 +142,33 @@ public:
     /**************************************************************************/
     void deserialize(rapidjson::Value& _value);
 
+    /***************************************************************************/
+    /*!
+    \brief
+        Serializes transform data to a rapidjson::Value
+
+    \param  _value
+        reference to a rapidjson::Value which will store the transform component data. It will then be saved to a json file
+
+    \param _doc
+        reference to a rapidjson::Document that is associated with the save file
+
+    \return
+        on success, return true
+        on failure, return false
+    */
+    /**************************************************************************/
+    void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
+
     void inspector_view();
 
-    RTTR_ENABLE();
+    TransformComponent& operator=(const TransformComponent& rhs);
 
+    RTTR_ENABLE();
     
 };
+
+}
 
 
 

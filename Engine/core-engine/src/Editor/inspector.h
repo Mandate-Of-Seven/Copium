@@ -30,7 +30,7 @@ namespace Window
 {
 	namespace Inspector
 	{
-		extern GameObject* selectedGameObject;
+		extern Copium::GameObject* selectedGameObject;
 
 		/***************************************************************************/
 		/*!
@@ -46,7 +46,12 @@ namespace Window
 		*/
 		/**************************************************************************/
 		void update();
-
+		/***************************************************************************/
+		/*!
+		\brief
+			Exit function called at end of program
+		*/
+		/**************************************************************************/
 		void exit();
 	}
 }

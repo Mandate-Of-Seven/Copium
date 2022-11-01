@@ -20,6 +20,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "pch.h"
 #include "GameObject\transform-component.h"
 #include <rttr/registration>
+#include "Editor/editor-undoredo.h"
+#include "SceneManager/sm.h"
 
 //RTTR_REGISTRATION{
 //	using namespace rttr;
@@ -30,21 +32,27 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 //
 //}
 
+namespace Copium
+{
+
+
 TransformComponent::TransformComponent
-	(GameObject& _gameObj,Copium::Math::Vec3 _position, Copium::Math::Vec3 _rotation, Copium::Math::Vec3 _scale)
+	(GameObject& _gameObj,Math::Vec3 _position, Math::Vec3 _rotation, Math::Vec3 _scale)
 	:Component(_gameObj, ComponentType::Transform),
 	position {_position}, rotation{ _rotation }, scale{ _scale }, parent{ nullptr }{}
 
 glm::dvec3 TransformComponent::glmPosition() const { return position.to_glm(); }
-void TransformComponent::set_position(const Copium::Math::Vec3& _position) { position = _position; }
+void TransformComponent::set_position(const Math::Vec3& _position) { position = _position; }
 
-const Copium::Math::Vec3& TransformComponent::get_rotation() { return rotation; }
+const Math::Vec3& TransformComponent::get_rotation() { return rotation; }
 glm::dvec3 TransformComponent::glmRotation() const { return rotation.to_glm(); }
-void TransformComponent::set_rotation(const Copium::Math::Vec3& _rotation) { rotation = _rotation; }
+void TransformComponent::set_rotation(const Math::Vec3& _rotation) { rotation = _rotation; }
 
-const Copium::Math::Vec3& TransformComponent::get_scale() { return scale; }
+const Math::Vec3& TransformComponent::get_scale() { return scale; }
 glm::dvec3 TransformComponent::glmScale() const { return scale.to_glm(); }
-void TransformComponent::set_scale(const Copium::Math::Vec3& _scale) { scale = _scale; }
+void TransformComponent::set_scale(const Math::Vec3& _scale) { scale = _scale; }
+
+float temp;
 
 void TransformComponent::deserialize(rapidjson::Value& _value)
 {
@@ -59,6 +67,29 @@ void TransformComponent::deserialize(rapidjson::Value& _value)
 	scale.deserialize(_v);
 	std::cout << "Scale:" << scale;
 }
+
+// M2
+void TransformComponent::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
+{
+    rapidjson::Value _pos(rapidjson::kObjectType);
+    rapidjson::Value _rot(rapidjson::kObjectType);
+    rapidjson::Value _scale(rapidjson::kObjectType);
+
+    rapidjson::Value type;
+    std::string tc = "Transform";
+    type.SetString(tc.c_str(), rapidjson::SizeType(tc.length()), _doc.GetAllocator());
+    _value.AddMember("Type", type, _doc.GetAllocator()); 
+
+    position.serialize(_pos, _doc);
+    rotation.serialize(_rot, _doc);
+    scale.serialize(_scale, _doc);
+
+    _value.AddMember("Pos", _pos, _doc.GetAllocator());
+    _value.AddMember("Rot", _rot, _doc.GetAllocator());
+    _value.AddMember("Scale", _scale, _doc.GetAllocator());
+
+}
+
 
 void TransformComponent::inspector_view()
 {
@@ -81,18 +112,61 @@ void TransformComponent::inspector_view()
             ImGui::PushID(0);
             ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
             ImGui::InputFloat("", &position.x);
+            if (ImGui::IsItemActivated())
+            {
+                temp = position.x;
+            }
+            if (ImGui::IsItemEdited())
+            {
+                printf("temp: %f\n",temp);
+                if (temp!=position.x)
+                {
+                    UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&position.x, temp);
+                    NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    temp = position.x;
+                }
+            }
+
             ImGui::PopID();
 
             ImGui::TableNextColumn();
             ImGui::PushID(1);
             ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
             ImGui::InputFloat("", &position.y);
+            if (ImGui::IsItemActivated())
+            {
+                temp = position.y;
+            }
+            if (ImGui::IsItemEdited())
+            {
+                printf("temp: %f\n", temp);
+                if (temp != position.y)
+                {
+                    UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&position.y, temp);
+                    NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    temp = position.y;
+                }
+            }
             ImGui::PopID();
 
             ImGui::TableNextColumn();
             ImGui::PushID(2);
             ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
             ImGui::InputFloat("", &position.z);
+            if (ImGui::IsItemActivated())
+            {
+                temp = position.z;
+            }
+            if (ImGui::IsItemEdited())
+            {
+                printf("temp: %f\n", temp);
+                if (temp != position.z)
+                {
+                    UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&position.z, temp);
+                    NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    temp = position.z;
+                }
+            }
             ImGui::PopID();
 
             ImGui::EndTable();
@@ -108,18 +182,60 @@ void TransformComponent::inspector_view()
             ImGui::PushID(0);
             ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
             ImGui::InputFloat("", &rotation.x);
+            if (ImGui::IsItemActivated())
+            {
+                temp = rotation.x;
+            }
+            if (ImGui::IsItemEdited())
+            {
+                printf("temp: %f\n", temp);
+                if (temp != rotation.x)
+                {
+                    UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&rotation.x, temp);
+                    NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    temp = rotation.x;
+                }
+            }
             ImGui::PopID();
 
             ImGui::TableNextColumn();
             ImGui::PushID(1);
             ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
             ImGui::InputFloat("", &rotation.y);
+            if (ImGui::IsItemActivated())
+            {
+                temp = rotation.y;
+            }
+            if (ImGui::IsItemEdited())
+            {
+                printf("temp: %f\n", temp);
+                if (temp != rotation.y)
+                {
+                    UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&rotation.y, temp);
+                    NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    temp = rotation.y;
+                }
+            }
             ImGui::PopID();
 
             ImGui::TableNextColumn();
             ImGui::PushID(2);
             ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
             ImGui::InputFloat("", &rotation.z);
+            if (ImGui::IsItemActivated())
+            {
+                temp = rotation.z;
+            }
+            if (ImGui::IsItemEdited())
+            {
+                printf("temp: %f\n", temp);
+                if (temp != rotation.z)
+                {
+                    UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&rotation.z, temp);
+                    NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    temp = rotation.z;
+                }
+            }
             ImGui::PopID();
 
             ImGui::EndTable();
@@ -135,18 +251,60 @@ void TransformComponent::inspector_view()
             ImGui::PushID(0);
             ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
             ImGui::InputFloat("", &scale.x);
+            if (ImGui::IsItemActivated())
+            {
+                temp = scale.x;
+            }
+            if (ImGui::IsItemEdited())
+            {
+                printf("temp: %f\n", temp);
+                if (temp != scale.x)
+                {
+                    UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&scale.x, temp);
+                    NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    temp = scale.x;
+                }
+            }
             ImGui::PopID();
 
             ImGui::TableNextColumn();
             ImGui::PushID(1);
             ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
             ImGui::InputFloat("", &scale.y);
+            if (ImGui::IsItemActivated())
+            {
+                temp = scale.y;
+            }
+            if (ImGui::IsItemEdited())
+            {
+                printf("temp: %f\n", temp);
+                if (temp != scale.y)
+                {
+                    UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&scale.y, temp);
+                    NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    temp = scale.y;
+                }
+            }
             ImGui::PopID();
 
             ImGui::TableNextColumn();
             ImGui::PushID(2);
             ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
             ImGui::InputFloat("", &scale.z);
+            if (ImGui::IsItemActivated())
+            {
+                temp = scale.z;
+            }
+            if (ImGui::IsItemEdited())
+            {
+                printf("temp: %f\n", temp);
+                if (temp != scale.z)
+                {
+                    UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&scale.z, temp);
+                    NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    temp = scale.z;
+                }
+            }
             ImGui::PopID();
 
             ImGui::EndTable();
@@ -156,5 +314,15 @@ void TransformComponent::inspector_view()
         ImGui::EndTable();
     }
 
+
+}
+
+TransformComponent& TransformComponent::operator=(const TransformComponent& rhs)
+{
+    position = rhs.position;
+    rotation = rhs.rotation;
+    scale = rhs.scale;
+    return *this;
+}
 
 }

@@ -127,7 +127,9 @@ namespace Copium
 		std::string get_title() { return title; }
 
 		int get_window_width() { return windowWidth; }
+		void set_width(int _width) { windowWidth = _width; }
 		int get_window_height() { return windowHeight; }
+		void set_height(int _height) { windowHeight = _height; }
 
 		double const get_fps() { return fps; }
 		double const get_delta_time() { return delta_time; }
@@ -141,8 +143,8 @@ namespace Copium
 		/* Properties of a Window *******************************************************/
 		std::string title;
 
-		int windowWidth = 0;
-		int windowHeight = 0;
+		static int windowWidth;
+		static int windowHeight;
 
 		double fps = 0; // The frames per second of the engine
 		double delta_time = 0; // Time taken to complete most recent engine loop

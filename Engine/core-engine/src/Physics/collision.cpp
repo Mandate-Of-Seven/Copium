@@ -158,10 +158,9 @@ namespace Copium::Collision
 		const AABB& aabb2, const Math::Vec2& vel2)
 	{
 		//Check for static collision
-		if ((point.x < aabb2.min.x) || (point.x> aabb2.max.x) ||
+		if ((point.x < aabb2.min.x) || (point.x > aabb2.max.x) ||
 			(point.y < aabb2.min.y) || (point.y > aabb2.max.y))
 		{
-
 			float tFirst = 0;
 			float tLast = (float)Copium::WindowsSystem::Instance()->get_delta_time();
 
@@ -264,7 +263,18 @@ namespace Copium::Collision
 			if (tFirst > tLast)
 				return 0;
 		}
-			return 1;
+		return 1;
 		//both objects are colliding
+	}
+
+	bool static_collision_pointrect
+	(const Math::Vec2& point,const AABB& aabb2)
+	{
+		if ((point.x < aabb2.min.x) || (point.x > aabb2.max.x) ||
+			(point.y < aabb2.min.y) || (point.y > aabb2.max.y))
+		{
+			return 0;
+		}
+		return 1;
 	}
 }

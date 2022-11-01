@@ -15,9 +15,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 *****************************************************************************************/
 #include "Physics/collision.h"
 #include "Math/math-library.h"
-namespace Copium::Component
+namespace Copium
 {
-    class RigidBody
+    class RigidBodyComponent
     {
 	public:
 		void const set_vel(Math::Vec2 _velocity) { velocity = _velocity; }
@@ -36,7 +36,7 @@ namespace Copium::Component
 		Math::Vec2 get_vel() { return velocity; }
 		float get_mass() { return mass; }
 		Shape get_shape() { return objectShape; }
-		Copium::Collision::AABB get_AABB() { return boundingBox; }
+		Collision::AABB get_AABB() { return boundingBox; }
 		
 		
 	private:
@@ -45,7 +45,7 @@ namespace Copium::Component
 		Math::Vec2 force;						//forces acting on object
 		float mass;								//mass of object
 		Shape objectShape;						//Shape of object
-		Copium::Collision::AABB boundingBox;	//bounding box of object
+		Collision::AABB boundingBox;	//bounding box of object
 		bool active = false;                    //is object active?
 		bool affectedGravity = false;           //is object affected by gravity?
     };

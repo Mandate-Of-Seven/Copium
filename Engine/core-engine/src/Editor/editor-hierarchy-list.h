@@ -1,5 +1,18 @@
 #pragma once
+/*!***************************************************************************************
+\file			editor-hierarchy-list.h
+\project
+\author			Matthew Lau
 
+\par			Course: GAM200
+\par			Section:
+\date			27/10/2022
+
+\brief
+	Declaration of functions that handle initialization and update of Hierarchy List
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 #ifndef SCENE_HIERARCHY_LIST_H
 #define SCENE_HIERARCHY_LIST_H
 #include <imgui.h>
@@ -50,7 +63,7 @@ namespace Window::Hierarchy
 		void
 	*/
 	/*******************************************************************************/
-	void display_gameobject(const GameObject& _go);
+	void display_gameobject(const Copium::GameObject& _go);
 
 	/*******************************************************************************
 	/*!
@@ -72,9 +85,39 @@ namespace Window::Hierarchy
 		if a game object is selected return true
 	*/
 	/*******************************************************************************/
-	bool display_gameobject_advanced(GameObject& _go, int& _selected);
+	bool display_gameobject_advanced(Copium::GameObject& _go, Copium::GameObjectID& _selected);
 
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Create a button in the Hierarchy List window's menu bar that upon click will create a game object
+		in the current scene
+
+	\param	_btnName
+		read-only reference to a string that contains the name of the button
+
+	\return
+		if successful, return true
+		if there are errors in creation of the button, return false
+	*/
+	/*******************************************************************************/
 	bool create_gameobject_btn(const std::string& _btnName);
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Create a button in the Hierarchy List window's menu bar that upon click will delete the selected game object
+		in the current scene
 
+	\param	_btnName
+		read-only reference to a string that contains the name of the button
+
+	\return
+		if successful, return true
+		if there are errors in creation of the button, return false
+	*/
+	/*******************************************************************************/
+	bool create_delete_btn(const std::string& _btnName);
 }
 #endif
