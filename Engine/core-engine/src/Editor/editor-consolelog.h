@@ -74,6 +74,8 @@ namespace Window
 			void add_logEntry(std::string str);
 
 			void set_performancetext(std::string str);
+
+			std::string get_performancetext();
 		};
 
 

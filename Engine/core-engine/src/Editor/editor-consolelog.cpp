@@ -64,7 +64,12 @@ namespace Window
 
         void EditorConsoleLog::set_performancetext(std::string str)
         {
-            performanceText = str;
+            Window::EditorConsole::editorLog.performanceText = str;
+        }
+
+        std::string EditorConsoleLog::get_performancetext()
+        {
+            return performanceText;
         }
 
 		void init()
@@ -74,7 +79,6 @@ namespace Window
 
 		void update()
 		{
-
 			if (!isOpen)
 			{
 				return;
@@ -182,7 +186,7 @@ namespace Window
 
             ImGui::EndChild();
             ImGui::End();
-
+            
 
             ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
             ImGui::SetNextWindowBgAlpha(0.35f);
@@ -194,10 +198,11 @@ namespace Window
             {
                 messageSystem.dispatch(Copium::MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW);
             }
-            //ImGui::Text("Performance Viewer");
-            std::string buffer = Window::EditorConsole::editorLog.performanceText;
+            
+
+            std::string buffer = Window::EditorConsole::editorLog.get_performancetext();
             ImGui::Text(buffer.c_str());
-            PRINT(buffer);
+            //PRINT(buffer);
             // End Performance Stats
             ImGui::End();
 		}
