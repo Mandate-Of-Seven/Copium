@@ -16,11 +16,12 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define EDITOR_CAMERA_H
 
 #include "Graphics/camera.h"
+#include "Messaging/message-system.h"
 
 namespace Copium
 {
 	// Editor camera which moves around in the scene view
-	class EditorCamera : public Camera
+	class EditorCamera : public Camera, public IReceiver
 	{
 	public:
 		/***************************************************************************/
@@ -44,6 +45,17 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		void update();
+
+		/**************************************************************************/
+		/*!
+		\brief
+			Interface function for MessageSystem to call for IReceivers to handle
+			a messageType
+		\param _mType
+			The type of message to receive
+		*/
+		/**************************************************************************/
+		void handleMessage(MESSAGE_TYPE _mType);
 
 		// Accessing Properties
 

@@ -283,7 +283,8 @@ namespace Copium
 		if(debugMode)
 			draw_debug_info();
 
-		if (NewSceneManager::Instance()->get_current_scene() != nullptr)
+		if (NewSceneManager::Instance()->get_current_scene() != nullptr && 
+			!NewSceneManager::Instance()->get_current_scene()->get_name().compare("sandbox"))
 			draw_development();
 
 		// Unbind the framebuffer to display renderable
