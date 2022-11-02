@@ -60,6 +60,7 @@ namespace Copium {
 		{
 			std::cout << "Error allocating memory for GameObjectFactory\n";
 		}	
+
 		//std::cout << "sm ctor\n";
 	}
 
@@ -77,6 +78,9 @@ namespace Copium {
 
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		storageScene = nullptr;
+		//gof->register_archetypes("Data/Archetypes");
+
+
 		//std::cout << "No. of GameObjects in scene:" << currentScene->get_gameobjcount() << std::endl;
 	}
 	void NewSceneManager::update()
@@ -346,7 +350,8 @@ namespace Copium {
 
 	void create_rapidjson_string(rapidjson::Document& _doc, rapidjson::Value& _value, const std::string& _str)
 	{
-		_value.SetString(_str.c_str(), (rapidjson::SizeType)_str.length(), _doc.GetAllocator());
+		rapidjson::SizeType sz = static_cast<rapidjson::SizeType>(_str.size());
+		_value.SetString(_str.c_str(), sz, _doc.GetAllocator());
 	}
 
 	UndoRedo::CommandManager* NewSceneManager::get_commandmanager()

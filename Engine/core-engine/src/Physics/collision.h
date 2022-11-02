@@ -37,6 +37,18 @@ namespace Copium
 		{
 
 		}
+		/***************************************************************************/
+		/*!
+		\brief
+			Deserialize this AABB's data from the specified rapidjson Value
+
+		\param _value
+			reference to the rapidjson Value from which this AABB's data is deserialized from
+
+		\return
+			void
+		*/
+		/**************************************************************************/
 		void deserialize(rapidjson::Value& _value)
 		{
 			if (_value.HasMember("Min"))
@@ -50,6 +62,21 @@ namespace Copium
 				max.deserialize(_v);
 			}
 		}
+		/***************************************************************************/
+		/*!
+		\brief
+			Serialize this AABB's data to the specified rapidjson Value
+
+		\param _value
+			reference to the rapidjson Value to which this AABB's data is to be serialized to
+
+		\param _doc
+			reference to the rapidjson Document that is associated with the save file
+
+		\return
+			void
+		*/
+		/**************************************************************************/
 		void serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 		{
 			rapidjson::Value minimum(rapidjson::kObjectType);

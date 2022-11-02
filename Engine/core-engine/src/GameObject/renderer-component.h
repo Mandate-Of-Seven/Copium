@@ -27,6 +27,20 @@ namespace Copium
 	public:
 		RendererComponent(GameObject& _gameObj);
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Deserialize this renderer component's data from the specified rapidjson Value
+
+		\param _value
+			reference to the rapidjson Value which the renderer component's data deserializes its data from
+
+		\return
+			void
+
+		*/
+		/*******************************************************************************/
 		void deserialize(rapidjson::Value& _value);
 		/*******************************************************************************
 		/*!
