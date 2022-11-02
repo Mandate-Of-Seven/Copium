@@ -97,32 +97,32 @@ namespace Copium
 			movement_y -= dt;*/
 
 		// Create sprites
-		glm::vec2 mousePos{0}, centreOfScene{0}, mouseScenePos{0}, mouseToNDC{0}, worldNDC{0};
-		if (!inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_C))
-		{
-			SpriteRenderer* sprite = new SpriteRenderer;
-			EditorSystem* editor = EditorSystem::Instance();
-			glm::vec2 scenePos = editor->get_scene_view()->get_position();
-			glm::vec2 sceneDim = editor->get_scene_view()->get_dimension();
-			glm::vec2 cameraPos = editor->get_camera()->get_position();
-			float zoom = editor->get_camera()->get_zoom();
-			// Mouse to scene view conversion
-			mousePos = inputSystem.get_mouseposition().to_glm();
-			centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
-			mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
-			mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
-			mouseToNDC *= zoom;
-			worldNDC = { mouseToNDC.x + cameraPos.x, mouseToNDC.y + cameraPos.y };
+		//glm::vec2 mousePos{0}, centreOfScene{0}, mouseScenePos{0}, mouseToNDC{0}, worldNDC{0};
+		//if (!inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_C))
+		//{
+		//	SpriteRenderer* sprite = new SpriteRenderer;
+		//	EditorSystem* editor = EditorSystem::Instance();
+		//	glm::vec2 scenePos = editor->get_scene_view()->get_position();
+		//	glm::vec2 sceneDim = editor->get_scene_view()->get_dimension();
+		//	glm::vec2 cameraPos = editor->get_camera()->get_position();
+		//	float zoom = editor->get_camera()->get_zoom();
+		//	// Mouse to scene view conversion
+		//	mousePos = inputSystem.get_mouseposition().to_glm();
+		//	centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
+		//	mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
+		//	mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
+		//	mouseToNDC *= zoom;
+		//	worldNDC = { mouseToNDC.x + cameraPos.x, mouseToNDC.y + cameraPos.y };
 
-			glm::vec3 pos = glm::vec3(worldNDC, 0.f);
+		//	glm::vec3 pos = glm::vec3(worldNDC, 0.f);
 
-			sprite->set_position(pos);
-			
-			sprite->set_size( glm::vec2(1.f, 1.f));
-			sprite->set_color(glm::vec4(0.5f, 0.5f, 0.5f, 0.5f));
-			sprites.push_back(sprite);
-			
-		}
+		//	sprite->set_position(pos);
+		//	
+		//	sprite->set_size( glm::vec2(1.f, 1.f));
+		//	sprite->set_color(glm::vec4(0.5f, 0.5f, 0.5f, 0.5f));
+		//	sprites.push_back(sprite);
+		//	
+		//}
 
 		if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_C))
 		{
