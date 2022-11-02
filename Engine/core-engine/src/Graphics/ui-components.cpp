@@ -1,3 +1,17 @@
+﻿/*!***************************************************************************************
+\file			scripting-system.h
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			30/10/2022
+
+\brief
+	This file holds the definition of UI components
+
+All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 
 #include "pch.h"
 #include "Windows/windows-input.h"

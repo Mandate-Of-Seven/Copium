@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			AIMovement.cs
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			1/11/2022
+
+\brief
+	This file defines the AI behaviour for an enemy train
+
+All content ? 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 using System.Collections;
 using System.Collections.Generic;
 using CopiumEngine;

@@ -1,4 +1,17 @@
-#pragma once
+﻿/*!***************************************************************************************
+\file			script-wrappers.h
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			30/10/2022
+
+\brief
+	This file helps register static functions be used as internal calls in C#
+
+All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 
 #include "Windows\windows-input.h"
 #include "SceneManager\sm.h"
@@ -8,74 +21,108 @@
 #include "mono/metadata/object.h"
 #include "mono/metadata/reflection.h"
 
+#ifndef SCRIPT_WRAPPERS_H
+#define SCRIPT_WRAPPERS_H
+
+
+
 namespace Copium
 {
 	#define Register(METHOD) mono_add_internal_call("CopiumEngine.InternalCalls::"#METHOD,METHOD)
 
-	#pragma region Input
 
-		namespace
+	namespace
+	{
+		InputSystem& inputSystem{ *InputSystem::Instance() };
+		NewSceneManager& sceneManager{ *NewSceneManager::Instance() };
+	}
+
+	//static bool GetKeyDown(int keyCode)
+	//{
+	//	return inputSystem.is_key_pressed(keyCode);
+	//}
+
+	//static bool GetKeyUp(int keyCode)
+	//{
+	//	return false;
+	//}
+
+	/*******************************************************************************
+	/*!
+	\brief
+		Checks if a key was held
+	\param keyCode
+		Keycode to listen to
+	\return
+		True if key held
+	*/
+	/*******************************************************************************/
+	static bool GetKey(int keyCode)
+	{
+		return inputSystem.is_key_held(keyCode);
+	}
+
+	/*******************************************************************************
+	/*!
+	\brief
+		Gets the position of a GameObject via its id
+	\param _ID
+		_ID of gameObject to look for
+	\param[out] translation
+		Stores the value of translation of the queried gameObj
+	*/
+	/*******************************************************************************/
+	static void GetTranslation(GameObjectID _ID, Math::Vec3* translation)
+	{
+		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+		if (gameObj == nullptr)
 		{
-			InputSystem& inputSystem{ *InputSystem::Instance() };
+			return;
 		}
+		*translation = gameObj->Transform().position;
+	}
 
-		//static bool GetKeyDown(int keyCode)
-		//{
-		//	return inputSystem.is_key_pressed(keyCode);
-		//}
-
-		//static bool GetKeyUp(int keyCode)
-		//{
-		//	return false;
-		//}
-
-		static bool GetKey(int keyCode)
+	/*******************************************************************************
+	/*!
+	\brief
+		Sets the position of a GameObject via its id
+	\param _ID
+		_ID of gameObject to look for
+	\param val
+		Value of Vec3 to set
+	*/
+	/*******************************************************************************/
+	static void SetTranslation(GameObjectID _ID, Math::Vec3* val)
+	{
+		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+		if (gameObj == nullptr)
 		{
-			return inputSystem.is_key_held(keyCode);
+			return;
 		}
+		gameObj->Transform().position = *val;
+	}
 
-	#pragma endregion Input
-	
-	#pragma region Transform
-
-		namespace
+	/*******************************************************************************
+	/*!
+	\brief
+		Finds GameObject via its name
+	\param name
+		Name of gameObject to look for
+	\return
+		ID of gameObject found by name
+	*/
+	/*******************************************************************************/
+	static GameObjectID FindGameObjByName(MonoString* name)
+	{
+		char* nameCStr = mono_string_to_utf8(name);
+		GameObject* gameObj = sceneManager.findGameObjByName(nameCStr);
+		mono_free(nameCStr);
+		if (gameObj == nullptr)
 		{
-			NewSceneManager& sceneManager{ *NewSceneManager::Instance() };
+			return GameObjectID(- 1);
 		}
-
-		static void GetTranslation(GameObjectID _ID, Math::Vec3* translation)
-		{
-			GameObject* gameObj = sceneManager.findGameObjByID(_ID);
-			if (gameObj == nullptr)
-			{
-				return;
-			}
-			*translation = gameObj->Transform().position;
-		}
-
-		static void SetTranslation(GameObjectID _ID, Math::Vec3* val)
-		{
-			GameObject* gameObj = sceneManager.findGameObjByID(_ID);
-			if (gameObj == nullptr)
-			{
-				return;
-			}
-			gameObj->Transform().position = *val;
-		}
-
-		static GameObjectID FindGameObjByName(MonoString* name)
-		{
-			char* nameCStr = mono_string_to_utf8(name);
-			GameObject* gameObj = sceneManager.findGameObjByName(nameCStr);
-			mono_free(nameCStr);
-			if (gameObj == nullptr)
-			{
-				return GameObjectID(- 1);
-			}
-			return gameObj->id;
-		}
-
-	#pragma endregion Transform
+		return gameObj->id;
+	}
 
 	//static void RigidBodyAddForce(GameObjectID _ID, Math::Vec2* force)
 	//{
@@ -100,6 +147,12 @@ namespace Copium
 	//	return false;
 	//}
 
+	/*******************************************************************************
+	/*!
+	\brief
+		Registers all defined internal calls with mono
+	*/
+	/*******************************************************************************/
 	static void registerScriptWrappers()
 	{
 		Register(GetKey);
@@ -110,3 +163,5 @@ namespace Copium
 }
 
 
+
+#endif // !SCRIPT_WRAPPERS_H

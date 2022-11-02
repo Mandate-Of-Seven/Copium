@@ -61,12 +61,31 @@ namespace Copium
 		/*******************************************************************************/
 		void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Displays the inspector view with its fields
 
+		*/
+		/*******************************************************************************/
 		void inspector_view();
 
 		SpriteRenderer& get_sprite_renderer() { return spriteRenderer; }
 		void set_sprite_renderer(const SpriteRenderer& _spriteRenderer) { spriteRenderer = _spriteRenderer; }
 
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Deep copies a RendererComponent into another
+		\param rhs
+			Reference to another RendererComponent
+		\return
+			Reference to this RendererComponent
+		*/
+		/*******************************************************************************/
 		RendererComponent& operator=(const RendererComponent& rhs);
 	protected:
 		SpriteRenderer spriteRenderer;

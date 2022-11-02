@@ -34,10 +34,10 @@ namespace Copium
 		/**************************************************************************/
 		/*!
 			\brief
-				Constructs a ScriptComponent based on the scripts name
+				Constructs a ScriptComponent
 
-			\param _name
-				Name of script to make an instance of
+			\param gameObj
+				Owner of this
 		*/
 		/**************************************************************************/
 		ScriptComponent(GameObject& gameObj);
@@ -97,11 +97,58 @@ namespace Copium
 		/**************************************************************************/
 		void OnCollisionEnter();
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Displays the inspector view with its fields
+
+		*/
+		/*******************************************************************************/
 		void inspector_view();
 
+		
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Gets a field from a C# field using its name
+		\param name
+			Name of the field
+		\param buffer
+			Buffer to store the values, needs to be type casted
+		\return
+			False if operation failed, true if it was successful
+		*/
+		/*******************************************************************************/
 		bool getFieldValue(const std::string& name, void* buffer);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Sets a field from a C# field using its name
+		\param name
+			Name of the field
+		\param value
+			Value to write into C# memory space
+		\return
+			False if operation failed, true if it was successful
+		*/
+		/*******************************************************************************/
 		bool setFieldValue(const std::string& name, const void* value);
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Deep copies a ScriptComponent into another
+		\param rhs
+			Reference to another ScriptComponent
+		\return
+			Reference to this ScriptComponent
+		*/
+		/*******************************************************************************/
 		ScriptComponent& operator=(const ScriptComponent& rhs);
 	private:
 		void instantiate();

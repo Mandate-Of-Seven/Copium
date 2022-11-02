@@ -65,6 +65,17 @@ class Component
         const ComponentType componentType;      //Type of component
         const ComponentID id;                   //Id of component
 
+        /*******************************************************************************
+        /*!
+        *
+        \brief
+            Converts a name to ComponentType
+        \param _name
+            Name to look for in the map
+        \return
+            ComponentType
+        */
+        /*******************************************************************************/
         static ComponentType nameToType(const std::string& _name)
         {
             int i {0};
@@ -118,19 +129,61 @@ class Component
         /**************************************************************************/
         virtual void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
+
+
+
+        /*******************************************************************************
+        /*!
+        *
+        \brief
+            Displays the inspector view with its fields
+
+        */
+        /*******************************************************************************/
         virtual void inspector_view() = 0;
 
+        /*******************************************************************************
+        /*!
+        *
+        \brief
+            Default constructor that does nothing
+
+        */
+        /*******************************************************************************/
         virtual ~Component()
         {
             //std::cout << "default component dtor\n";
         }
 
+        /*******************************************************************************
+        /*!
+        *
+        \brief
+            Deep copies a Component into another
+        \param rhs
+            Reference to another Component
+        \return
+            Reference to this Component
+        */
+        /*******************************************************************************/
         Component& operator=(const Component& rhs)
         {
             enabled = rhs.enabled;
             return *this;
         }
 
+        /*******************************************************************************
+        /*!
+        *
+        \brief
+            Deep copies a Component into another by making it type safe in the sense
+            that they must be the same component types
+        \param rhs
+            Reference to another Component
+        \return
+            Reference to this Component
+        */
+        /*******************************************************************************/
         template<typename T>
         T& operator=(const T& rhs)
         {
@@ -156,6 +209,18 @@ class Component
         */
         /**************************************************************************/
         Component() = delete;
+
+        /***************************************************************************/
+        /*!
+        \brief
+            Hidden base class constructor for derived classes to implement
+            determine the componentType
+        \param _gameObj
+            Owner of this component
+        \param _componentType
+            Type of component to be defined by derived classes
+        */
+        /**************************************************************************/
         Component(GameObject& _gameObj, ComponentType _componentType);
     private:
         const bool allowMultiple = false;   //Can gameObjects only have one of this Component?
@@ -169,11 +234,21 @@ class Component
         /***************************************************************************/
         /*!
         \brief
-            Default constructor for collider Components
+            Constructor for collider Components
+        \param _gameObj
+            Owner of this component
         */
         /**************************************************************************/
         ColliderComponent(GameObject& _gameObj);
 
+        /*******************************************************************************
+        /*!
+        *
+        \brief
+            Displays the inspector view with its fields
+
+        */
+        /*******************************************************************************/
         void inspector_view(){};
 
         /***************************************************************************/
@@ -183,7 +258,18 @@ class Component
         */
         /**************************************************************************/
         //void deserialize(rapidjson::Value& _value);
-
+               
+        /*******************************************************************************
+        /*!
+        *
+        \brief
+            Deep copies a ColliderComponent into another
+        \param rhs
+            Reference to another ColliderComponent
+        \return
+            Reference to this ColliderComponent
+        */
+        /*******************************************************************************/
         ColliderComponent& operator=(const ColliderComponent& rhs) { (void)rhs; return *this; }
 
     protected:
@@ -195,13 +281,36 @@ class Component
         /***************************************************************************/
         /*!
         \brief
-            Default constructor for animator Components
+            Constructor for animator Components
+        \param _gameObj
+            Owner of this component
         */
         /**************************************************************************/
         AnimatorComponent(GameObject& _gameObj);
 
+
+        /*******************************************************************************
+        /*!
+        *
+        \brief
+            Displays the inspector view with its fields
+
+        */
+        /*******************************************************************************/
         void inspector_view(){};
 
+
+        /*******************************************************************************
+        /*!
+        *
+        \brief
+            Deep copies a AnimatorComponent into another
+        \param rhs
+            Reference to another AnimatorComponent
+        \return
+            Reference to this AnimatorComponent
+        */
+        /*******************************************************************************/
         AnimatorComponent& operator=(const AnimatorComponent& rhs) { (void)rhs; return *this; }
         /***************************************************************************/
         /*!

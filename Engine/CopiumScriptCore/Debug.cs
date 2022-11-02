@@ -1,4 +1,18 @@
-﻿using System;
+﻿/*!***************************************************************************************
+\file			Debug.cs
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			1/11/2022
+
+\brief
+	This file encapsulates the debugging features of the Engine
+
+All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+using System;
 
 namespace CopiumEngine
 {

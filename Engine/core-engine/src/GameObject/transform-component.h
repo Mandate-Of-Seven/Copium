@@ -162,8 +162,27 @@ public:
     /*******************************************************************************/
     void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Displays the inspector view with its fields
+
+    */
+    /*******************************************************************************/
     void inspector_view();
 
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Deep copies a TransformComponent into another
+    \param rhs
+        Reference to another Transform
+    \return
+        Reference to this transform
+    */
+    /*******************************************************************************/
     TransformComponent& operator=(const TransformComponent& rhs);
 
     RTTR_ENABLE();

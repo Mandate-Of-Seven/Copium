@@ -1,6 +1,6 @@
 /*!***************************************************************************************
 ****
-\file			CopiumEngine.cs
+\file			CopiumScript.cs
 \project
 \author			Zacharie Hong
 \co-authors

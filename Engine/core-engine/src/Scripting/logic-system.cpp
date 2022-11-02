@@ -1,3 +1,17 @@
+﻿/*!***************************************************************************************
+\file			logic-system.cpp
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			30/10/2022
+
+\brief
+	This file defines the functions for the Logic System
+
+All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 
 #include "pch.h"
 #include "GameObject/game-object.h"

@@ -44,9 +44,9 @@ namespace Copium
 
 	struct Field
 	{
-		FieldType type;
+		FieldType type{};
 		std::string name;
-		MonoClassField* classField;
+		MonoClassField* classField{nullptr};
 	};
 
 	// ScriptField + data storage
@@ -197,20 +197,81 @@ namespace Copium
 		/**************************************************************************/
 		void shutdownMono();
 
+		/**************************************************************************/
+		/*!
+			\brief
+				Cleans up mono and its domains
+			\param mObj
+				Instance to invoke from
+			\param mMethod
+				Method to invoke
+			\param params
+				Parameters to pass into mono function
+		*/
+		/**************************************************************************/
 		void invoke(MonoObject * mObj, MonoMethod * mMethod, void** params = nullptr);
 
+		/**************************************************************************/
+		/*!
+			\brief
+				Listens to MT_REFLECT_CS_GAMEOBJECT to know when to tell scripts
+				to create their version of a gameObject
+			\param mType
+				Message type, used if this listens to two or more messages
+		*/
+		/**************************************************************************/
 		void handleMessage(MESSAGE_TYPE mType);
 
+		/**************************************************************************/
+		/*!
+			\brief
+				Reflects a gameObject of ID into C#
+			\param _ID
+				ID of gameObject to be reflected
+		*/
+		/**************************************************************************/
 		void reflectGameObject(uint64_t _ID);
 
-		void loadAssemblyClasses();
 
+		/**************************************************************************/
+		/*!
+			\brief
+				Reflects a gameObject of ID into C#
+			\param _ID
+				ID of gameObject to be reflected
+		*/
+		/**************************************************************************/
 		MonoObject* cloneInstance(MonoObject* _instance);
 
+
+		/**************************************************************************/
+		/*!
+			\brief
+				Creates a new file
+			\param _name
+				Name of the new script
+		*/
+		/**************************************************************************/
 		void addEmptyScript(const std::string& _name);
 
+
+		/**************************************************************************/
+		/*!
+			\brief
+				Gets the map of names to ScriptClasses
+			\return 
+				Map of names to ScriptClasses
+		*/
+		/**************************************************************************/
 		const std::unordered_map<std::string, ScriptClass*>& getScriptClassMap();
 	private:
+
+		/**************************************************************************/
+		/*!
+			\brief
+				Reloads and updates script classes
+		*/
+		/**************************************************************************/
 		void updateScriptClasses();
 
 		/**************************************************************************/
