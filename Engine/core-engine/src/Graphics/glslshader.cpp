@@ -351,6 +351,7 @@ namespace Copium
     void GLSLShader::PrintActiveAttribs() const
     {
 #if defined(DEBUG) | defined(_DEBUG)
+#if 0
         GLint max_length, num_attribs;
         glGetProgramiv(pgm_handle, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &max_length);
         glGetProgramiv(pgm_handle, GL_ACTIVE_ATTRIBUTES, &num_attribs);
@@ -370,6 +371,7 @@ namespace Copium
         }
         std::cout << "------------------------------------\n";
         delete[] pname;
+#endif
 #endif
 #if 0
         GLint numAttribs;
@@ -394,6 +396,7 @@ namespace Copium
     void GLSLShader::PrintActiveUniforms() const
     {
 #if defined(DEBUG) | defined(_DEBUG)
+#if 0
         GLint max_length;
         glGetProgramiv(pgm_handle, GL_ACTIVE_UNIFORM_MAX_LENGTH, &max_length);
         GLchar* pname = new GLchar[max_length];
@@ -417,6 +420,7 @@ namespace Copium
         }
 
         delete[] pname;
+#endif
 #endif
     }
 }

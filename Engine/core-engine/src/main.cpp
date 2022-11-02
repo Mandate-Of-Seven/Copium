@@ -77,7 +77,6 @@ Note that the C++ compiler will insert a return 0 statement if one is missing.
 int main() 
 {
     init_statemanager(esActive);
-
     // Enable run-time memory check for debug purposes 
 
     #if defined(DEBUG) | defined(_DEBUG)
@@ -91,14 +90,6 @@ int main()
     Copium::FrameRateController frc(100.0);
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
-    Copium::GameObject& gObj = *sceneManager->get_gof().build_gameobject();
-
-
-    //Copium::ScriptComponent& sComponent = gObj.addComponent<Copium::ScriptComponent>();
-    //gObj.addComponent<Copium::RendererComponent>();
-    //Copium::UIButtonComponent& button = gObj.addComponent<Copium::UIButtonComponent>();
-    //gObj.addComponent<Copium::UITextComponent>();
-    //sComponent.Name("CSharpTesting");
 
     // Engine Loop
     while (!glfwWindowShouldClose(windowsSystem->get_window()) && esCurrent != esQuit)

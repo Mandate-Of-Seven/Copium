@@ -22,19 +22,21 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 //INCLUDES
 #include "CopiumCore/system-interface.h"
+#include "Messaging/message-system.h"
 
 //USING
 
-namespace Copium		
+namespace Copium
 {
 	class UIButtonComponent;
 
-	CLASS_SYSTEM(LogicSystem)
+	CLASS_SYSTEM(LogicSystem) , public IReceiver
 	{
 	public:
 		void init();
 		void update();
 		void exit();
+		void handleMessage(MESSAGE_TYPE mType);
 	};
 }
 

@@ -30,8 +30,6 @@ namespace Window
 {
 	namespace Inspector
 	{
-		extern Copium::GameObject* selectedGameObject;
-
 		/***************************************************************************/
 		/*!
 		\brief

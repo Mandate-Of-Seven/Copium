@@ -23,7 +23,18 @@ namespace Copium
 	class Spritesheet
 	{
 	public:
-		
+		/***************************************************************************/
+		/*!
+		\brief
+			Constructs the spritesheet to be used for animations
+		\param _texture
+			The texture to reference and set
+		\param _xDivisor
+			The number of columns
+		\param _yDivisor
+			The number of rows
+		*/
+		/***************************************************************************/
 		Spritesheet(const Texture& _texture, const unsigned int _xDivisor, const unsigned int _yDivisor);
 		
 		const unsigned int& get_size() const { return size;}

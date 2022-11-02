@@ -21,6 +21,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "GameObject/renderer-component.h"
 #include "Scripting/script-component.h"
 #include "GameObject/component.h"
+#include "Physics/collider.h"
 #include "Graphics/ui-components.h"
 #include "SceneManager/sm.h"
 
@@ -75,6 +76,13 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{ count++ },
             component = new ColliderComponent(*this);
             *component = *(reinterpret_cast<ColliderComponent*>(pComponent));
             PRINT("ADDED COLLIDER");
+            break;
+        }
+        case ComponentType::RigidBody:
+        {
+            component = new RigidBodyComponent(*this);
+            *component = *(reinterpret_cast<RigidBodyComponent*>(pComponent));
+            PRINT("ADDED RigidBody");
             break;
         }
         case ComponentType::Renderer:
@@ -159,6 +167,10 @@ Component* GameObject::addComponent(ComponentType componentType)
         component = new ColliderComponent(*this);
         PRINT("ADDED COLLIDER");
         break;
+    case ComponentType::RigidBody:
+        component = new RigidBodyComponent(*this);
+        PRINT("ADDED RIGIDBODY");
+        break;
     case ComponentType::Renderer:
         component = new RendererComponent(*this);
         PRINT("ADDED SPRITE RENDERER");
@@ -168,6 +180,14 @@ Component* GameObject::addComponent(ComponentType componentType)
         PRINT("ADDED SCRIPT");
         break;
     case ComponentType::UIButton:
+        if (hasComponent(componentType))
+        {
+            break;
+        }
+        if (!hasComponent(ComponentType::UIImage))
+            addComponent<UIImageComponent>();
+        if (!hasComponent(ComponentType::UIText))
+            addComponent<UITextComponent>();
         component = new UIButtonComponent(*this);
         PRINT("ADDED UI BUTTON");
         break;
@@ -214,9 +234,9 @@ void GameObject::removeComponent(ComponentID componentID)
     auto it{ components.begin() };
     while (it != components.end())
     {
-        if ((*it)->ID() == id)
+        if ((*it)->id == componentID)
         {
-            delete* it;
+            delete *it;
             components.erase(it);
             return;
         }
@@ -335,9 +355,12 @@ void GameObject::handleMessage(MESSAGE_TYPE mType)
 
 void GameObject::inspectorView()
 {
-    ImGui::Text(name.c_str());
-
-    transform.inspector_view();
+    static char buffer[256];
+    strcpy(buffer, name.c_str());
+    ImGui::PushItemWidth(-1);
+    ImGui::InputText("##gameObjName", buffer,256);
+    ImGui::PopItemWidth();
+    name = buffer;
     ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
         | ImGuiTableFlags_ScrollY;
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);
@@ -346,18 +369,33 @@ void GameObject::inspectorView()
     {
         transform.inspector_view();     
     }
-    if (ImGui::BeginTable("Components", 1, tableFlags, ImVec2(0.f, 450.f)))
+    if (ImGui::BeginTable("Components", 1, tableFlags, ImVec2(0.f, ImGui::GetWindowSize().y/2.f)))
     {
         ImGui::TableNextRow();
         ImGui::TableNextColumn();
+        static std::vector<ComponentID> componentsToDelete;
+        componentsToDelete.clear();
+        int index = 0;
         for (Component* component : components)
         {
-
-            if (ImGui::CollapsingHeader(component->Name().c_str(), nodeFlags))
+            const std::string& componentName{ component->Name() };
+            ImGui::PushID(index);
+            if (ImGui::CollapsingHeader(componentName.c_str(), nodeFlags))
             {
                 component->inspector_view();
+                if (ImGui::Button("Delete", ImVec2(ImGui::GetWindowSize().x, 0.f)))
+                {
+                    PRINT("ID: " << component->id);
+                    componentsToDelete.push_back(component->id);
+                }
             }
+            ImGui::PopID();
+            ++index;
             ImGui::TableNextColumn();
+        }
+        for (ComponentID componentId : componentsToDelete)
+        {
+            removeComponent(componentId);
         }
         ImGui::EndTable();
     }

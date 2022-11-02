@@ -8,6 +8,5 @@
 *.tlog
 *.obj
 *.iobj
-*.exe
 *.ipdb
 *.pch

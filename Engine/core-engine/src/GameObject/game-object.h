@@ -116,6 +116,24 @@ public:
         return tmp;
     }
 
+    template <typename T>
+    T* getComponent()
+    {
+
+        static_assert(std::is_base_of<Component, T>::value);
+        std::string tName = typeid(T).name() + std::string("class Copium::").length();
+        ComponentType componentType = Component::nameToType(tName);
+        for (Component* pComponent : components)
+        {
+            if (pComponent->componentType == componentType)
+            {
+                return reinterpret_cast<T*>(pComponent);
+            }
+        }
+       /* std::cout << tName << "returns a nullptr" << std::endl;*/
+        return nullptr;
+    }
+
     /***************************************************************************/
     /*!
     \brief

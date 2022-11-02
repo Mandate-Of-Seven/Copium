@@ -31,6 +31,7 @@ namespace Copium
 	GameObjectFactory::GameObjectFactory()
 	{
 		std::cout << "GOF ctor\n";
+		//register_archetypes("Data/Archetypes");
 
 	}
 	GameObjectFactory::~GameObjectFactory()
@@ -280,7 +281,7 @@ namespace Copium
 	{
 		
 		Component* tmp = _go->addComponent(Component::nameToType(_key));
-		return true;
+		return tmp != nullptr;
 	}
 
 

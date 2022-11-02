@@ -180,8 +180,7 @@ namespace Copium
 		/**************************************************************************/
 		MonoObject* instantiateClass(MonoClass * mClass);
 
-
-
+		const std::list<Copium::File>& getScriptFiles();
 		/**************************************************************************/
 		/*!
 			\brief
@@ -207,6 +206,8 @@ namespace Copium
 		void loadAssemblyClasses();
 
 		MonoObject* cloneInstance(MonoObject* _instance);
+
+		void addEmptyScript(const std::string& _name);
 
 		const std::unordered_map<std::string, ScriptClass*>& getScriptClassMap();
 	private:

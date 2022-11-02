@@ -3,6 +3,7 @@
 #include "GameObject/component.h"
 #include "Math/math-library.h"
 #include "Graphics/fonts.h"
+#include "GameObject/renderer-component.h"
 
 #include <unordered_map>
 namespace Copium
@@ -18,12 +19,11 @@ namespace Copium
 	};
 
 	//Runs after InputSystem
-	class UIComponent : public Component
+	class IUIComponent
 	{
 		public:
 			void virtual render() = 0;
 		protected:
-			UIComponent(GameObject& _gameObj, ComponentType _componentType);
 			Math::Vec2 offset;
 			bool percentage;
 	};
@@ -46,7 +46,7 @@ namespace Copium
 
 	};
 
-	class UITextComponent final : public UIComponent
+	class UITextComponent final : public Component, IUIComponent
 	{
 		public:
 			UITextComponent(GameObject& _gameObj);
@@ -56,16 +56,21 @@ namespace Copium
 		private:
 			std::string content;
 			Font* font;
+			SpriteRenderer spriteRenderer;
 		//Display a text
 	};
 
-	class UIImageComponent final : public UIComponent
+	class UIImageComponent final : public Component, IUIComponent
 	{
 		public:
 			UIImageComponent(GameObject& _gameObj);
-			void inspector_view() {};
+			void inspector_view();
 			void render();
+			const SpriteRenderer& get_sprite_renderer() const { return spriteRenderer; }
+			void set_sprite_renderer(const SpriteRenderer& _spriteRenderer) { spriteRenderer = _spriteRenderer; }
 			UIImageComponent& operator=(const UIImageComponent& rhs);
+		protected:
+			SpriteRenderer spriteRenderer;
 		//Display an image
 	};
 }

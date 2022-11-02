@@ -619,6 +619,7 @@ namespace Copium::Math
 			}
 		}
 	}
+
 	Matrix4x4::Matrix4x4(const float(&_rhs)[16])
 	{
 		for (int i{ 0 }, k{ 0 }; i < 4; ++i)
@@ -630,6 +631,7 @@ namespace Copium::Math
 			}
 		}
 	}
+
 	Matrix4x4::Matrix4x4(float _00, float _01, float _02, float _03,
 		float _10, float _11, float _12, float _13,
 		float _20, float _21, float _22, float _23)
@@ -650,6 +652,7 @@ namespace Copium::Math
 		m[2][3] = _23;
 
 	}
+
 	Matrix4x4::Matrix4x4(const glm::mat4x4& _rhs)
 	{
 		for (int i{ 0 }; i < 4; ++i)
@@ -661,6 +664,7 @@ namespace Copium::Math
 		}
 
 	}
+
 	Matrix4x4::Matrix4x4(const Matrix4x4& _rhs)
 	{
 		for (size_t i{ 0 }; i < 4; ++i)
@@ -671,9 +675,10 @@ namespace Copium::Math
 			}
 		}
 	}
+
 	Matrix4x4::Matrix4x4(const glm::vec4& _r0, const glm::vec4& _r1, const glm::vec4& _r2, const glm::vec4& _r3)
 	{
-		for (size_t i{ 0 }; i < 4; ++i)
+		for (unsigned int i{ 0 }; i < 4; ++i)
 		{
 			m[0][i] = _r0[i];
 			m[1][i] = _r1[i];
@@ -682,12 +687,11 @@ namespace Copium::Math
 		}
 	}
 
-
 	Matrix4x4& Matrix4x4::operator=(const Matrix4x4& _rhs)
 	{
-		for (size_t i{ 0 }; i < 4; ++i)
+		for (unsigned int i{ 0 }; i < 4; ++i)
 		{
-			for (size_t j{ 0 }; j < 4; ++j)
+			for (unsigned int j{ 0 }; j < 4; ++j)
 			{
 
 				m[i][j] = _rhs.m[i][j];
@@ -698,9 +702,9 @@ namespace Copium::Math
 	}
 	Matrix4x4& Matrix4x4::operator=(const glm::mat4x4& _rhs)
 	{
-		for (size_t i{ 0 }; i < 4; ++i)
+		for (unsigned int i{ 0 }; i < 4; ++i)
 		{
-			for (size_t j{ 0 }; j < 4; ++j)
+			for (unsigned int j{ 0 }; j < 4; ++j)
 			{
 
 				m[i][j] = _rhs[i][j];
@@ -712,12 +716,12 @@ namespace Copium::Math
 	Matrix4x4& Matrix4x4::operator*=(const Matrix4x4& _rhs)
 	{
 		Matrix4x4 tmp(*this);
-		for (size_t i{ 0 }; i < 4; ++i)
+		for (unsigned int i{ 0 }; i < 4; ++i)
 		{
-			for (size_t j{ 0 }; j < 4; ++j)
+			for (unsigned int j{ 0 }; j < 4; ++j)
 			{
 				m[i][j] = 0.0;
-				for (size_t k{ 0 }; k < 4; ++k)
+				for (unsigned int k{ 0 }; k < 4; ++k)
 				{
 					m[i][j] += tmp.m[i][k] * _rhs.m[k][j];
 				}

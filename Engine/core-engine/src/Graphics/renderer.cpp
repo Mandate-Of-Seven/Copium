@@ -216,14 +216,14 @@ namespace Copium
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			graphics->get_shader_program()[0].Use();
+			graphics->get_shader_program()[QUAD_SHADER].Use();
 			glBindVertexArray(quadVertexArrayID);
 
 			// Bean: Matrix assignment to be placed somewhere else
 			GLuint uProjection = glGetUniformLocation(
-				graphics->get_shader_program()[0].GetHandle(), "uViewProjection");
+				graphics->get_shader_program()[QUAD_SHADER].GetHandle(), "uViewProjection");
 			GLuint uTransform = glGetUniformLocation(
-				graphics->get_shader_program()[0].GetHandle(), "uTransform");
+				graphics->get_shader_program()[QUAD_SHADER].GetHandle(), "uTransform");
 			glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_projection();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 			glm::vec3 pos = EditorSystem::Instance()->get_camera()->get_position();
@@ -249,18 +249,18 @@ namespace Copium
 
 			graphics->set_texture_slot_index(1);
 			glBindVertexArray(0);
-			graphics->get_shader_program()[0].UnUse();
+			graphics->get_shader_program()[QUAD_SHADER].UnUse();
 			glDisable(GL_BLEND);
 		}
 
 		if (lineVertexCount)
 		{
-			graphics->get_shader_program()[1].Use();
+			graphics->get_shader_program()[LINE_SHADER].Use();
 			glBindVertexArray(lineVertexArrayID);
 
 			// Bean: Matrix assignment to be placed somewhere else
 			GLuint uProjection = glGetUniformLocation(
-				graphics->get_shader_program()[1].GetHandle(), "uViewProjection");
+				graphics->get_shader_program()[LINE_SHADER].GetHandle(), "uViewProjection");
 
 			glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_projection();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
@@ -272,7 +272,7 @@ namespace Copium
 			drawCount++;
 
 			glBindVertexArray(0);
-			graphics->get_shader_program()[1].UnUse();
+			graphics->get_shader_program()[LINE_SHADER].UnUse();
 		}
 
 		if (textVertexCount)
@@ -281,7 +281,7 @@ namespace Copium
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			graphics->get_shader_program()[2].Use();
+			graphics->get_shader_program()[TEXT_SHADER].Use();
 			glActiveTexture(GL_TEXTURE0);
 			glBindVertexArray(textVertexArrayID);
 
@@ -294,7 +294,7 @@ namespace Copium
 
 			// Bean: Matrix assignment to be placed somewhere else
 			GLuint uProjection = glGetUniformLocation(
-				graphics->get_shader_program()[2].GetHandle(), "uViewProjection");
+				graphics->get_shader_program()[TEXT_SHADER].GetHandle(), "uViewProjection");
 
 			glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_projection();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
@@ -307,7 +307,7 @@ namespace Copium
 
 			glBindVertexArray(0);
 			glBindTexture(GL_TEXTURE_2D, 0);
-			graphics->get_shader_program()[2].UnUse();
+			graphics->get_shader_program()[TEXT_SHADER].UnUse();
 			glDisable(GL_BLEND);
 		}
 		
@@ -407,8 +407,12 @@ namespace Copium
 			glm::vec4(0.f, 0.f, 0.f, 1.f)
 		};
 
-		float pixelWidth = _sprite.get_texture()->get_pixel_width();
-		float pixelHeight = _sprite.get_texture()->get_pixel_height();
+		float pixelWidth = 1.f, pixelHeight = 1.f;
+		if (_sprite.get_texture() != nullptr)
+		{
+			pixelWidth = _sprite.get_texture()->get_pixel_width();
+			pixelHeight = _sprite.get_texture()->get_pixel_height();
+		}
 
 		glm::mat4 scale = {
 			glm::vec4(_scale.x * pixelWidth, 0.f, 0.f, 0.f),

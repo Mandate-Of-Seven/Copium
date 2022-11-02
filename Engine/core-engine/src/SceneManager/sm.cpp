@@ -18,7 +18,7 @@
 	3. de-allocation of resources used by current scene (cleanup before engine close)
 	4. Calling scene's update functions
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************
 ****/
 #include <pch.h>
@@ -41,7 +41,19 @@ namespace Copium {
 		return nullptr;
 	}
 
-	NewSceneManager::NewSceneManager() : gof{nullptr}, currentScene{nullptr}, selectedGameObject{nullptr},storageScene{nullptr}
+	GameObject* NewSceneManager::findGameObjByName(const std::string& name)
+	{
+		for (GameObject* pGameObj : currentScene->get_gameobjectvector())
+		{
+			if (pGameObj->get_name() == name)
+			{
+				return pGameObj;
+			}
+		}
+		return nullptr;
+	}
+
+	NewSceneManager::NewSceneManager() : gof{nullptr}, currentScene{nullptr}, selectedGameObject{nullptr}, storageScene{nullptr}
 	{
 		gof = new GameObjectFactory();
 		if (!gof)
@@ -179,6 +191,7 @@ namespace Copium {
 			std::cout << "file exists\n";
 			delete currentScene;
 			currentScene = nullptr;
+			selectedGameObject = nullptr;
 			load_scene(_newfilepath);
 			//Scene* tmp = currentScene;
 			//result = load_scene(_newfilepath);

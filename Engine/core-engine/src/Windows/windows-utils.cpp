@@ -16,6 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 #include "Windows/windows-utils.h"
 #include "Windows/windows-system.h"
+#include "Utilities/thread-system.h"
 
 #include <commdlg.h>	// Win32 API
 #include <GLFW/glfw3.h>	// GLFW
@@ -25,6 +26,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 namespace Copium
 {
 	#define MAX_FILENAME_LENGTH 250
+	namespace 
+	{
+	}
 
 	std::string FileDialogs::open_file(const char* _filter)
 	{
@@ -48,12 +52,11 @@ namespace Copium
 		ofn.nFilterIndex = 1;
 
 		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
-		
-		if (GetOpenFileNameA(&ofn) == true)
+
+		if ((bool)GetOpenFileNameA(&ofn) == true)
 			return ofn.lpstrFile;
 		else
 			return std::string();
-
 	}
 	std::string FileDialogs::save_file(const char* _filter)
 	{
@@ -77,8 +80,7 @@ namespace Copium
 		ofn.nFilterIndex = 1;
 
 		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
-
-		if (GetSaveFileNameA(&ofn) == true)
+		if ((bool)GetSaveFileNameA(&ofn) == true)
 			return ofn.lpstrFile;
 		else
 			return std::string();

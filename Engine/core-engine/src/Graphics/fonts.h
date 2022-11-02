@@ -38,10 +38,38 @@ namespace Copium
 	public:
 		Font() = delete;
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Setup the vertex array object of the fonts
+		*/
+		/***************************************************************************/
 		void setup_font_vao();
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Draws text onto the screen
+		\param _text
+			The text to load onto the screen
+		\param _position
+			The position of the text
+		\param _color
+			The color of the text
+		\param _scale
+			The size of the text
+		\param _fontID
+			The font to use
+		*/
+		/***************************************************************************/
 		void draw_text(std::string _text, const glm::vec3& _position, const glm::vec4& _color, GLfloat _scale, GLuint _fontID);
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Exits the font system
+		*/
+		/***************************************************************************/
 		void shutdown();
 
 		const std::map<char, Character>& get_characters() const { return characters; }

@@ -37,6 +37,11 @@ namespace Copium::Utils
 			if (p.path().extension() == ".cs")
 				command += " " + p.path().string();
 		}
+		for (fs::directory_entry p : fs::recursive_directory_iterator(Paths::coreScriptsPath))
+		{
+			if (p.path().extension() == ".cs")
+				command += " " + p.path().string();
+		}
 		system(command.c_str());
 	}
 }

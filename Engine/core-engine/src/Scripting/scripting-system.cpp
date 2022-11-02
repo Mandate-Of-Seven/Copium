@@ -137,6 +137,19 @@ namespace Copium
 		}
 	#pragma endregion
 
+
+	void ScriptingSystem::addEmptyScript(const std::string& _name)
+	{
+		std::ofstream file(Paths::projectPath+_name+".cs");
+		file << "using CopiumEngine;\n";
+		file << "using System;\n\n";
+		file << "public class " << _name << ": CopiumScript\n{\n";
+		file << "\tvoid Start()\n\t{\n\n\t}\n";
+		file << "\tvoid Update()\n\t{\n\n\t}\n";
+		file << "}\n";
+		file.close();
+	}
+
 	void ScriptingSystem::recompileThreadWork()
 	{
 		ThreadSystem& tSys = *ThreadSystem::Instance();
@@ -145,7 +158,9 @@ namespace Copium
 			while (compilingState != CompilingState::Wait);
 			compilingState = CompilingState::Compiling;
 			//Critical section
+			while (!tSys.acquireMutex(MutexType::FileSystem));
 			updateScriptFiles();
+			tSys.returnMutex(MutexType::FileSystem);
 			tryRecompileDll();
 			//Critical section End
 			Sleep(SECONDS_TO_RECOMPILE*1000);
@@ -156,6 +171,11 @@ namespace Copium
 		scriptFiles{ FileSystem::Instance()->get_files_with_extension(".cs") }
 	{
 
+	}
+
+	const std::list<Copium::File>& ScriptingSystem::getScriptFiles()
+	{
+		return scriptFiles;
 	}
 
 	void ScriptingSystem::init()
@@ -316,7 +336,7 @@ namespace Copium
 		{
 			maskScriptFiles.push_back(&file);
 		}
-		for (fs::directory_entry p : fs::recursive_directory_iterator(Paths::projectPath))
+		for (const fs::directory_entry& p : fs::recursive_directory_iterator(Paths::projectPath))
 		{
 			const fs::path& pathRef{ p.path() };
 			if (pathRef.extension() != ".cs")

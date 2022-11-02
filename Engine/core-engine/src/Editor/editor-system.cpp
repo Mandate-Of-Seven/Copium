@@ -1,5 +1,5 @@
 /*!***************************************************************************************
-\file			editor-layer.cpp
+\file			editor-system.cpp
 \project
 \author			Sean Ngo
 
@@ -10,27 +10,29 @@
 \brief
 	This file holds the definition of functions for the editor.
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 #include "Windows/windows-system.h"
 #include "Editor/editor-system.h"
-#include "Editor/editor-sceneview.h"
 #include "GameObject/game-object.h"
 #include "Editor/inspector.h"
 #include "Editor/editor-consolelog.h"
 #include "Editor/editor-hierarchy-list.h"
 #include "Windows/windows-utils.h"
+#include "Utilities/thread-system.h"
 #include "SceneManager/state-manager.h"
-
-#include "CopiumCore/copium-core.h"
+#include "Messaging/message-system.h"
 
 namespace Copium
 {
-	// Our state
-	bool show_demo_window = true;
-	CopiumCore& copiumCore{ *CopiumCore::Instance() };
-
+	namespace
+	{
+		// Our state
+		bool show_demo_window = false;
+		ThreadSystem& threadSystem{ *ThreadSystem::Instance() };
+		MessageSystem& messageSystem{ *MessageSystem::Instance() };
+	}
 
 	void EditorSystem::init()
 	{
@@ -58,6 +60,7 @@ namespace Copium
 		Window::Hierarchy::init();
 
 		sceneView.init();
+		contentBrowser.init();
 		
 		// Initialize a new editor camera
 		camera.init((float) sceneView.get_width(), (float) sceneView.get_height());
@@ -140,7 +143,9 @@ namespace Copium
 					if (ImGui::MenuItem("Open...", "Ctrl+O"))
 					{
 						//open scene
+						while (!threadSystem.acquireMutex(MutexType::FileSystem));
 						std::string filepath = FileDialogs::open_file("Copium Scene (*.json)\0*.json\0");
+						threadSystem.returnMutex(MutexType::FileSystem);
 						if (!filepath.empty())
 						{
 							std::cout << filepath << std::endl;
@@ -174,10 +179,13 @@ namespace Copium
 
 					if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
 					{
+						
 						if (Copium::NewSceneManager::Instance()->get_current_scene())
 						{
-							//save scene as
+							//save sceen as
+							while (!threadSystem.acquireMutex(MutexType::FileSystem));
 							std::string filepath = FileDialogs::save_file("Copium Scene (*.json)\0.json\0");
+							threadSystem.returnMutex(MutexType::FileSystem);
 							std::cout << filepath << std::endl;
 							Copium::NewSceneManager::Instance()->save_scene(filepath);
 						}
@@ -206,12 +214,12 @@ namespace Copium
 					{
 						printf("Starting scene\n");
 						NewSceneManager::Instance()->startPreview();
-						copiumCore.toggle_inplaymode();
+						messageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
 					}
 					if (ImGui::MenuItem("Stop Scene"))
 					{
 						NewSceneManager::Instance()->endPreview();
-						copiumCore.toggle_inplaymode();
+						messageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
 					}
 
 					ImGui::EndMenu();
@@ -220,20 +228,20 @@ namespace Copium
 				ImGui::EndMenuBar();
 			}
 
-            //Call all the editor layers updates here
-            Window::Inspector::update();
-            Window::EditorConsole::update();
-			Window::Hierarchy::update();
-            sceneView.update();
 
+            //Call all the editor layers updates here
+			Window::Inspector::update();
+			Window::EditorConsole::update();
+			Window::Hierarchy::update();
+			sceneView.update();
+			contentBrowser.update();
 
 			// demo update
 			if (show_demo_window)
 				ImGui::ShowDemoWindow(&show_demo_window);
 
-
-            // Editor Camera
-            camera.update();
+			// Editor Camera
+			camera.update();
 
             ImGui::End();
 		}
@@ -255,7 +263,13 @@ namespace Copium
 		ImGui::DestroyContext();
 
 		Window::Inspector::exit();
-		Window::Inspector::selectedGameObject = nullptr;
 		sceneView.exit();
+		contentBrowser.exit();
+	}
+
+	void EditorSystem::imguiConsoleAddLog(std::string value)
+	{
+		std::cout << value << "\n";
+		Window::EditorConsole::editorLog.add_logEntry(value);
 	}
 }

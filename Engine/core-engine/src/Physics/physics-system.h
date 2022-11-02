@@ -21,7 +21,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {	
-	const Math::Vec2 gravity = { 0.0,-0.50 };			//gravity affecting all objects that can be affected
+	const Math::Vec2 gravity = { 0.0,-0.25 };			//gravity affecting all objects that can be affected
 	
 	CLASS_SYSTEM(PhysicsSystem)
 	{

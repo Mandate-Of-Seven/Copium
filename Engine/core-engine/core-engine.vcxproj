@@ -101,6 +101,7 @@
     <ClCompile Include="src\Debugging\logging-system.cpp" />
     <ClCompile Include="src\Editor\editor-consolelog.cpp" />
     <ClCompile Include="src\Editor\editor-camera.cpp" />
+    <ClCompile Include="src\Editor\editor-content-browser.cpp" />
     <ClCompile Include="src\Editor\editor-hierarchy-list.cpp" />
     <ClCompile Include="src\Editor\editor-sceneview.cpp" />
     <ClCompile Include="src\Editor\editor-system.cpp" />
@@ -180,6 +181,7 @@
   <ItemGroup>
     <ClInclude Include="src\Debugging\frame-rate-controller.h" />
     <ClInclude Include="src\Editor\editor-camera.h" />
+    <ClInclude Include="src\Editor\editor-content-browser.h" />
     <ClInclude Include="src\Editor\editor-undoredo.h" />
     <ClInclude Include="src\Files\assets-system.h" />
     <ClInclude Include="src\Editor\editor-hierarchy-list.h" />
@@ -244,4 +246,9 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties Data_4Archetypes_4default_1json__JsonSchema="https://cdn.jsdelivr.net/gh/roadrunner-server/roadrunner@latest/schemas/config/2.0.schema.json" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

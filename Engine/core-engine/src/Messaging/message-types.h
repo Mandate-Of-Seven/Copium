@@ -29,6 +29,10 @@ namespace Copium
         MT_COLLIDED,
         MT_SCRIPTING_UPDATED,
         MT_REFLECT_CS_GAMEOBJECT,
+        MT_START_PREVIEW,
+        MT_STOP_PREVIEW,
+        MT_TOGGLE_PERFORMANCE_VIEW,
+        MT_WINDOW_MINIMIZE,
         MT_NONE // END, DO NOT INSERT BEYOND
     };
 
@@ -59,12 +63,18 @@ namespace Copium
         //    uint32_t keyCode;
         //};
 
+        struct FILESYSTEM_MUTEX
+        {
+            bool acquired;
+        };
+
         struct REFLECT_CS_GAMEOBJECT
         {
             uint64_t ID;
         };
 
         extern REFLECT_CS_GAMEOBJECT reflectCsGameObject;
+        extern FILESYSTEM_MUTEX fileSystemMutex;
     }
     //static std::vector<MESSAGE_CONTAINERS::MOUSE_MOVED> QUEUE_MOUSE_MOVED;
     //static std::vector<MESSAGE_CONTAINERS::KEY_PRESSED> QUEUE_KEY_PRESSED;

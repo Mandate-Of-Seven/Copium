@@ -104,7 +104,7 @@ namespace Copium
 	}
 
 	//Use for serialization
-	bool ScriptComponent::getFieldValue(const std::string& _name, void* buffer)
+	bool ScriptComponent::getFieldValue(const std::string& _name, void* outBuffer)
 	{
 		const auto& it = pScriptClass->mFields.find(_name);
 		if (it == pScriptClass->mFields.end())

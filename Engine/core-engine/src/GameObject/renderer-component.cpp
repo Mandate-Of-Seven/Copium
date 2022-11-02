@@ -14,6 +14,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 *****************************************************************************************/
 #include "pch.h"
 #include "GameObject/renderer-component.h"
+#include "Files/assets-system.h"
 
 namespace Copium
 {
@@ -32,7 +33,7 @@ namespace Copium
 	{
 		rapidjson::Value type;
 		std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
-		type.SetString(tc.c_str(), tc.length(), _doc.GetAllocator());
+		type.SetString(tc.c_str(), (rapidjson::SizeType)tc.length(), _doc.GetAllocator());
 		_value.AddMember("Type", type, _doc.GetAllocator());
 
 		// Serialize spriteRenderer
@@ -50,7 +51,8 @@ namespace Copium
 		ImVec4 color = { clrGLM.r, clrGLM.g, clrGLM.b, clrGLM.a };
 
 		int spriteID = (int)spriteRenderer.get_sprite_id();
-
+		
+		std::string spriteName = spriteRenderer.get_name();
 		static ImVec4 backupColor;
 
 		ImGuiColorEditFlags miscFlags = ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip
@@ -71,8 +73,25 @@ namespace Copium
 			ImGui::TableNextColumn();
 			ImGui::Text("Sprite");
 			ImGui::TableNextColumn();
-			ImGui::PushItemWidth(-FLT_MIN);
-			ImGui::InputInt("", &spriteID, 0);
+			ImGui::Button(spriteName.c_str(), ImVec2(-FLT_MIN, 0.f));
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ContentBrowserItem"))
+				{
+					std::string str = (const char*)(payload->Data);
+					Copium::AssetsSystem* assets = Copium::AssetsSystem::Instance();
+					for (int i = 0; i < assets->get_textures().size(); i++)
+					{
+						if (!assets->get_textures()[i].get_file_path().compare(str))
+						{
+							spriteID = i + 1;
+						}
+					}
+					size_t pos = str.find_last_of('/');
+					spriteName = str.substr(pos + 1, str.length() - pos);
+				}
+				ImGui::EndDragDropTarget(); 
+			}
 
 			// Color
 			ImGui::TableNextRow();
@@ -113,6 +132,7 @@ namespace Copium
 
 		if (spriteID >= 0)
 			spriteRenderer.set_sprite_id(spriteID);
+		spriteRenderer.set_name(spriteName);
 	}
 
 	RendererComponent& RendererComponent::operator=(const RendererComponent& rhs)

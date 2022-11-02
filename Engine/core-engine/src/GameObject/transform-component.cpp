@@ -3,6 +3,7 @@
 \project
 \author			Zacharie Hong
 \co-authors		Matthew Lau
+                Shawn Tanary
 
 \par			Course: GAM200
 \par			Section:
@@ -41,15 +42,15 @@ TransformComponent::TransformComponent
 	:Component(_gameObj, ComponentType::Transform),
 	position {_position}, rotation{ _rotation }, scale{ _scale }, parent{ nullptr }{}
 
-glm::dvec3 TransformComponent::glmPosition() const { return position.to_glm(); }
+glm::vec3 TransformComponent::glmPosition() const { return position.to_glm(); }
 void TransformComponent::set_position(const Math::Vec3& _position) { position = _position; }
 
 const Math::Vec3& TransformComponent::get_rotation() { return rotation; }
-glm::dvec3 TransformComponent::glmRotation() const { return rotation.to_glm(); }
+glm::vec3 TransformComponent::glmRotation() const { return rotation.to_glm(); }
 void TransformComponent::set_rotation(const Math::Vec3& _rotation) { rotation = _rotation; }
 
 const Math::Vec3& TransformComponent::get_scale() { return scale; }
-glm::dvec3 TransformComponent::glmScale() const { return scale.to_glm(); }
+glm::vec3 TransformComponent::glmScale() const { return scale.to_glm(); }
 void TransformComponent::set_scale(const Math::Vec3& _scale) { scale = _scale; }
 
 float temp;
