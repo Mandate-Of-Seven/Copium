@@ -353,28 +353,28 @@ namespace Copium
 			boundB = pRbB->get_AABB();
 		if (direction == collisionDirection::TOP)
 		{
-			std::cout << "resolve top" << std::endl;
+			//std::cout << "resolve top" << std::endl;
 			resolvePos = boundA.min.y - boundB.max.y;
 			resolvePos *= 1.05f;
 			aabb1.Transform().position.y -= resolvePos;
 		}
 		if (direction == collisionDirection::BOTTOM)
 		{
-			std::cout << "resolve bottom" << std::endl;
+			//std::cout << "resolve bottom" << std::endl;
 			resolvePos = boundA.max.y - boundB.min.y;
 			resolvePos *= 1.05f;
 			aabb1.Transform().position.y -= resolvePos;
 		}
 		if (direction == collisionDirection::LEFT)
 		{
-			std::cout << "resolve left" << std::endl;
+			//std::cout << "resolve left" << std::endl;
 			resolvePos = boundA.min.x - boundB.max.x;
 			resolvePos *= 1.05f;
 			aabb1.Transform().position.x -= resolvePos;
 		}
 		if (direction == collisionDirection::RIGHT)
 		{
-			std::cout << "resolve right" << std::endl;
+			//std::cout << "resolve right" << std::endl;
 			resolvePos = boundA.max.x - boundB.min.x;
 			resolvePos *= 1.05f;
 			aabb1.Transform().position.x -= resolvePos;

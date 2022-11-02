@@ -189,7 +189,7 @@ namespace Copium
 					AABB boundB = pRb2->get_AABB();
 					if ((collision_rectrect(boundA, velocityA, boundB, velocityB) == true))
 					{
-						PRINT("COLLIDING?");
+						//PRINT("COLLIDING?");
 						//fix collision resolution
 						collisionDirection direct = check_collision_direction(boundA, velocityA, boundB, velocityB);
 						resolve_collision(*object1, *object2, direct);
