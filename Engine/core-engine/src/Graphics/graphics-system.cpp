@@ -61,7 +61,7 @@ namespace Copium
 		// Bind textures to quad fragment shader
 		shaderProgram[QUAD_SHADER].Use();
 		GLuint loc = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTextures");
-		GLint samplers[maxTextures];
+		GLint samplers[maxTextures]{};
 
 		for (GLuint i = 0; i < maxTextures; i++)
 			samplers[i] = i;
@@ -574,31 +574,31 @@ namespace Copium
 		glm::vec4 color = { 0.f, 0.f, 0.f, 1.f };
 		Font::getFont("corbel")->draw_text("Corbel Font", position, color, 0.4f + size_x, 0);
 		float red = 0.f, green = 1.f;
-		static float timer = 0.f;
-		timer += (float) WindowsSystem::Instance()->get_delta_time();
+		static float colorTimer = 0.f;
+		colorTimer += (float) WindowsSystem::Instance()->get_delta_time();
 		static bool switcher = false;
 
-		if (timer >= 1.f && switcher)
+		if (colorTimer >= 1.f && switcher)
 		{
-			timer = 0.f;
+			colorTimer = 0.f;
 			switcher = false;
 		}
-		else if (timer >= 1.f && !switcher)
+		else if (colorTimer >= 1.f && !switcher)
 		{
-			timer = 0.f;
+			colorTimer = 0.f;
 			switcher = true;
 		}
 
 		if (switcher)
 
 		{
-			red = (0.1f * (1.0f - timer)) + (0.9f * timer);
-			green = (0.9f * (1.0f - timer)) + (0.1f * timer);
+			red = (0.1f * (1.0f - colorTimer)) + (0.9f * colorTimer);
+			green = (0.9f * (1.0f - colorTimer)) + (0.1f * colorTimer);
 		}
 		else
 		{
-			red = (0.9f * (1.0f - timer)) + (0.1f * timer);
-			green = (0.1f * (1.0f - timer)) + (0.9f * timer);
+			red = (0.9f * (1.0f - colorTimer)) + (0.1f * colorTimer);
+			green = (0.1f * (1.0f - colorTimer)) + (0.9f * colorTimer);
 		}
 
 		position = { 3.f, 2.f, 0.f };
@@ -610,17 +610,17 @@ namespace Copium
 		AssetsSystem* assets = AssetsSystem::Instance();
 		if (!assets->get_spritesheets().empty())
 		{
-			glm::vec3 position(-4.f, 1.f, 0.f);
+			position = {-4.f, 1.f, 0.f};
 			glm::vec2 size(2.f, 2.f);
 			static GLuint animIndex = 0;
 			GLuint indexSize = assets->get_spritesheets()[animID].get_size() - 1;
 
 			GLfloat dt = (GLfloat) WindowsSystem::Instance()->get_delta_time();
-			static float timer = 0.f;
-			timer += dt;
-			if (timer > 0.01f && toggleAnimation)
+			static float animTimer = 0.f;
+			animTimer += dt;
+			if (animTimer > 0.01f && toggleAnimation)
 			{
-				timer = 0.f;
+				animTimer = 0.f;
 				animIndex++;
 			}
 
@@ -629,8 +629,8 @@ namespace Copium
 				animIndex = 0;
 			}
 			
-			int id = 0;
-			for (size_t i = 0; i < assets->get_textures().size(); i++)
+			GLuint id = 0;
+			for (GLuint i = 0; i < assets->get_textures().size(); ++i)
 			{
 				if (assets->get_textures()[i].get_object_id() == assets->get_spritesheets()[animID].get_texture().get_object_id())
 					id = i + 1;

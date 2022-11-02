@@ -51,12 +51,12 @@ public:
     /***************************************************************************/
     /*!
     \brief
-        Gets Position vector and converts it to glm::dvec3
+        Gets Position vector and converts it to glm::vec3
     \return
-        Position of transform as a glm::dvec3
+        Position of transform as a glm::vec3
     */
     /**************************************************************************/
-    glm::dvec3 glmPosition() const;
+    glm::vec3 glmPosition() const;
 
     /***************************************************************************/
     /*!
@@ -81,12 +81,12 @@ public:
     /***************************************************************************/
     /*!
     \brief
-        Gets Rotation vector and converts it to glm::dvec3
+        Gets Rotation vector and converts it to glm::vec3
     \return
-        Rotation of transform as a glm::dvec3
+        Rotation of transform as a glm::vec3
     */
     /**************************************************************************/
-    glm::dvec3 glmRotation() const;
+    glm::vec3 glmRotation() const;
 
     /***************************************************************************/
     /*!
@@ -110,12 +110,12 @@ public:
     /***************************************************************************/
     /*!
     \brief
-        Gets Scale vector and converts it to glm::dvec3
+        Gets Scale vector and converts it to glm::vec3
     \return
-        Scale of transform as a glm::dvec3
+        Scale of transform as a glm::vec3
     */
     /**************************************************************************/
-    glm::dvec3 glmScale() const;
+    glm::vec3 glmScale() const;
 
     /***************************************************************************/
     /*!

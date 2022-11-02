@@ -69,7 +69,7 @@ namespace Copium
 			mono_free(nameCStr);
 			if (gameObj == nullptr)
 			{
-				return -1;
+				return GameObjectID(- 1);
 			}
 			return gameObj->id;
 		}

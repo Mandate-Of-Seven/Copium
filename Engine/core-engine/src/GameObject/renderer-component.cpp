@@ -87,7 +87,7 @@ namespace Copium
 							spriteID = i + 1;
 						}
 					}
-					int pos = str.find_last_of('/');
+					size_t pos = str.find_last_of('/');
 					spriteName = str.substr(pos + 1, str.length() - pos);
 				}
 				ImGui::EndDragDropTarget(); 

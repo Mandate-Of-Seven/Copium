@@ -375,11 +375,12 @@ void GameObject::inspectorView()
         ImGui::TableNextColumn();
         static std::vector<ComponentID> componentsToDelete;
         componentsToDelete.clear();
+        int index = 0;
         for (Component* component : components)
         {
-            const std::string& name{ component->Name() };
-            ImGui::PushID(component->id);
-            if (ImGui::CollapsingHeader(name.c_str(), nodeFlags))
+            const std::string& componentName{ component->Name() };
+            ImGui::PushID(index);
+            if (ImGui::CollapsingHeader(componentName.c_str(), nodeFlags))
             {
                 component->inspector_view();
                 if (ImGui::Button("Delete", ImVec2(ImGui::GetWindowSize().x, 0.f)))
@@ -389,11 +390,12 @@ void GameObject::inspectorView()
                 }
             }
             ImGui::PopID();
+            ++index;
             ImGui::TableNextColumn();
         }
-        for (ComponentID id : componentsToDelete)
+        for (ComponentID componentId : componentsToDelete)
         {
-            removeComponent(id);
+            removeComponent(componentId);
         }
         ImGui::EndTable();
     }

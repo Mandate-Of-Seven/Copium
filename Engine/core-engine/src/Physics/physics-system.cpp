@@ -109,8 +109,6 @@ namespace Copium
 		Math::Vec2 velocity;
 		Math::Vec2 acceleration;
 		Math::Vec2 force;
-		float mass;
-
 		Collision::AABB bound;
 		for (int a = 0; a < sceneManager.get_current_scene()->get_gameobjectvector().size(); a++)
 		{
@@ -130,7 +128,7 @@ namespace Copium
 					if (pRb->get_gravity() == true)
 					{
 						acceleration = (force + gravity) / pRb->get_mass();
-						velocity = velocity + (acceleration * dt * 0.80);
+						velocity = velocity + (acceleration * dt * 0.80f);
 						position = position + (velocity);
 
 						pRb->set_acc(acceleration);
@@ -141,7 +139,7 @@ namespace Copium
 					else
 					{
 						acceleration += force / pRb->get_mass();
-						velocity = velocity + (acceleration * dt * 0.80);
+						velocity = velocity + (acceleration * dt * 0.80f);
 						position = position + (velocity);
 						pRb->set_acc(acceleration);
 						pRb->set_vel(velocity);

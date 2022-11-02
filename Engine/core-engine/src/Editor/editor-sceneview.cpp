@@ -60,7 +60,7 @@ namespace Copium
 		ImGui::Begin("Renderer Stats", 0, windowFlags);
 
 		Scene* scene = NewSceneManager::Instance()->get_current_scene();
-		int gameobjectCount = 0;
+		size_t gameobjectCount = 0;
 		if (scene != nullptr)
 			gameobjectCount = scene->get_gameobjcount();
 

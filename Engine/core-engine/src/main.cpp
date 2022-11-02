@@ -91,14 +91,6 @@ int main()
     Copium::FrameRateController frc(100.0);
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
-    Copium::GameObject& gObj = *sceneManager->get_gof().build_gameobject();
-
-
-    //Copium::ScriptComponent& sComponent = gObj.addComponent<Copium::ScriptComponent>();
-    //gObj.addComponent<Copium::RendererComponent>();
-    //Copium::UIButtonComponent& button = gObj.addComponent<Copium::UIButtonComponent>();
-    //gObj.addComponent<Copium::UITextComponent>();
-    //sComponent.Name("CSharpTesting");
 
     // Engine Loop
     while (!glfwWindowShouldClose(windowsSystem->get_window()) && esCurrent != esQuit)

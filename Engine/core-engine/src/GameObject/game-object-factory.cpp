@@ -268,7 +268,7 @@ namespace Copium
 	{
 		
 		Component* tmp = _go->addComponent(Component::nameToType(_key));
-		return true;
+		return tmp != nullptr;
 	}
 
 
