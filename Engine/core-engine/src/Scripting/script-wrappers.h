@@ -2,6 +2,7 @@
 
 #include "Windows\windows-input.h"
 #include "SceneManager\sm.h"
+#include "Physics\collider.h"
 #include <glm/vec3.hpp>
 
 #include "mono/metadata/object.h"
@@ -76,15 +77,28 @@ namespace Copium
 
 	#pragma endregion Transform
 
-	static void RigidBodyAddForce(GameObjectID _ID, Math::Vec2* force)
-	{
-		//Entity entity = scene->GetEntityByUUID(entityID);
-		//HZ_CORE_ASSERT(entity);
+	//static void RigidBodyAddForce(GameObjectID _ID, Math::Vec2* force)
+	//{
+	//	GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+	//	if (gameObj == nullptr)
+	//	{
+	//		return;
+	//	}
+	//	auto rb = gameObj->getComponent<RigidBodyComponent>();
+	//	rb->add_force(*force);
+	//}
 
-		//auto& rb2d = entity.GetComponent<Rigidbody2DComponent>();
-		//b2Body* body = (b2Body*)rb2d.RuntimeBody;
-		//body->ApplyLinearImpulseToCenter(b2Vec2(impulse->x, impulse->y), wake);
-	}
+	//static bool HasComponent(GameObjectID _ID, MonoReflectionType* componentType)
+	//{
+	//	GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+	//	if (gameObj == nullptr)
+	//	{
+	//		return false;
+	//	}
+	//	MonoType* managedType = mono_reflection_type_get_type(componentType);
+	//	MonoType type = mono_type
+	//	return false;
+	//}
 
 	static void registerScriptWrappers()
 	{

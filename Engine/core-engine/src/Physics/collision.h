@@ -28,11 +28,15 @@ enum class collisionDirection : int
 	LEFT,
 	RIGHT
 };
-namespace Copium::Collision
+namespace Copium
 {
 	
 	struct AABB
 	{
+		AABB(Math::Vec2 _min = {-0.5f,-0.5f}, Math::Vec2 _max = { 0.5f,0.5f }) : max{_max}, min{_min}
+		{
+
+		}
 		void deserialize(rapidjson::Value& _value)
 		{
 			if (_value.HasMember("Min"))
@@ -60,7 +64,9 @@ namespace Copium::Collision
 		}
 		Math::Vec2 min;
 		Math::Vec2 max;
+
 	};
+
 	/***************************************************************************/
    /*!
    \brief

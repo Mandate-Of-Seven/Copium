@@ -224,6 +224,11 @@ namespace Copium {
 			PRINT("There is no scene to preview...\n");
 			return false;
 		}
+		if (storageScene)
+		{
+			PRINT("Currently in play mode...\n");
+			return false;
+		}
 		storageScene = currentScene;
 		currentScene = nullptr;
 

@@ -61,11 +61,11 @@ namespace Copium
 	UIButtonState UIButtonComponent::getInternalState() const
 	{
 		static const Math::Vec3& pos{ gameObj.Transform().position };
-		Collision::AABB newBounds{ pos + min, pos + max };
+		AABB newBounds{ pos + min, pos + max };
 		glm::vec2 scenePos = EditorSystem::Instance()->get_camera()->get_ndc();
 		if (hoveredBtn == nullptr)
 		{
-			if (Collision::static_collision_pointrect(scenePos, newBounds))
+			if (static_collision_pointrect(scenePos, newBounds))
 			{
 				if (inputSystem.is_mousebutton_pressed(0))
 				{

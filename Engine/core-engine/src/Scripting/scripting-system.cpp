@@ -23,7 +23,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "CopiumCore/system-interface.h"
 #include "Messaging/message-system.h"
 #include "Messaging/message-types.h"
-#include "Scripting/scriptWrappers.h"
+#include "Scripting/script-wrappers.h"
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
