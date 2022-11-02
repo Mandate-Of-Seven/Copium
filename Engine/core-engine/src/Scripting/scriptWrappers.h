@@ -76,7 +76,15 @@ namespace Copium
 
 	#pragma endregion Transform
 
+	static void RigidBodyAddForce(GameObjectID _ID, Math::Vec2* force)
+	{
+		//Entity entity = scene->GetEntityByUUID(entityID);
+		//HZ_CORE_ASSERT(entity);
 
+		//auto& rb2d = entity.GetComponent<Rigidbody2DComponent>();
+		//b2Body* body = (b2Body*)rb2d.RuntimeBody;
+		//body->ApplyLinearImpulseToCenter(b2Vec2(impulse->x, impulse->y), wake);
+	}
 
 	static void registerScriptWrappers()
 	{

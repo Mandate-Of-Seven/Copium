@@ -77,7 +77,6 @@ Note that the C++ compiler will insert a return 0 statement if one is missing.
 int main() 
 {
     init_statemanager(esActive);
-
     // Enable run-time memory check for debug purposes 
 
     #if defined(DEBUG) | defined(_DEBUG)
