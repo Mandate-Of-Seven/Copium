@@ -28,6 +28,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/renderer-component.h"
 #include "Graphics/ui-components.h"
 #include "SceneManager/sm.h"
+#include "Math/math-library.h"
 
 namespace
 {
@@ -40,7 +41,8 @@ namespace Copium
 	GLfloat movement_x = 0.f, movement_y = 0.f;
 	GLfloat size_x = 0.f, size_y = 0.f;
 	GLfloat rotate = 0.f;
-	bool massSpawn = false;
+	bool massSpawn = false, toggleAnimation = false;
+	int animID = 0;
 
 	void GraphicsSystem::init()
 	{
@@ -137,18 +139,23 @@ namespace Copium
 		// Mass spawning
 		if (massSpawn)
 		{
-
-			for (size_t i = 0; i < 10; i++)
+			NewSceneManager* sm = NewSceneManager::Instance();
+			Scene* scene = sm->get_current_scene();
+			if (scene != nullptr)
 			{
-				SpriteRenderer* sprite = new SpriteRenderer;
+				for (size_t i = 0; i < 10; i++)
+				{
+					GameObject* go = sm->get_gof().build_gameobject();
+					go->addComponent(ComponentType::Renderer);
+					//go->addComponent(ComponentType::RigidBody);
 
-				glm::vec3 pos = { rand() % 200 * 0.1f - 10.f, rand() % 200 * 0.1f - 10.f , 0.f};
+					float x = rand() % 2000 * 0.1f - 100.f;
+					float y = rand() % 2000 * 0.1f - 100.f;
 
-				sprite->set_position(pos);
-
-				sprite->set_size(glm::vec2(1.f, 1.f));
-				sprite->set_color(glm::vec4(0.5f, 0.5f, 0.5f, 0.5f));
-				sprites.push_back(sprite);
+					go->Transform().set_position({ x, y, 0.f });
+					RendererComponent* rc = reinterpret_cast<RendererComponent*>(go->getComponent(ComponentType::Renderer));
+					rc->get_sprite_renderer().set_sprite_id(rand() % 7 + 15);
+				}
 			}
 		}
 
@@ -159,7 +166,18 @@ namespace Copium
 
 		if (inputSystem.is_key_pressed(GLFW_KEY_Y))
 		{
-			PRINT("Number of sprites: " << sprites.size());
+			NewSceneManager* sm = NewSceneManager::Instance();
+			PRINT("Number of Gameobjects: " << sm->get_current_scene()->get_gameobjcount());
+		}
+
+		if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_A))
+		{
+			toggleAnimation = !toggleAnimation;
+		}
+
+		if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_S))
+		{
+			animID = (animID == 1) ? 0 : 1;
 		}
 
 		if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_D))
@@ -286,12 +304,68 @@ namespace Copium
 		renderer.begin_batch();
 
 		// Reference all debug info in the world and draw
+		NewSceneManager* sm = NewSceneManager::Instance();
+		Scene* scene = sm->get_current_scene();
+		if (scene == nullptr)
+			return;
+		size_t size = scene->get_gameobjcount();
+		for (size_t i = 0; i < size; i++)
+		{
+			/*PRINT(i + 1 << " : Sprite Data: " << sprites[i]->get_position().x << "," << sprites[i]->get_position().y
+				<< "\t Size: " << sprites[i]->get_size().x << "," << sprites[i]->get_size().y);*/
+			glm::vec3 prePos = scene->get_gameobjectvector()[i]->Transform().glmPosition();
+			glm::vec3 preSize = scene->get_gameobjectvector()[i]->Transform().glmScale();
+			float preRotate = scene->get_gameobjectvector()[i]->Transform().glmRotation().z;
+			glm::vec3 pos = { prePos.x + movement_x, prePos.y + movement_y, 0.f };
+			//sprites[i]->set_position(pos);
+
+			glm::mat4 translate = {
+				glm::vec4(1.f, 0.f, 0.f, 0.f),
+				glm::vec4(0.f, 1.f, 0.f, 0.f),
+				glm::vec4(pos.x, pos.y, 1.f, 0.f),
+				glm::vec4(0.f, 0.f, 0.f, 1.f)
+			};
+
+			float rad = glm::radians(preRotate);
+
+			glm::mat4 rotation = {
+				glm::vec4(cos(rad), sin(rad), 0.f, 0.f),
+				glm::vec4(-sin(rad), cos(rad), 0.f, 0.f),
+				glm::vec4(0.f, 0.f, 1.f, 0.f),
+				glm::vec4(0.f, 0.f, 0.f, 1.f)
+			};
+
+			glm::mat4 transform = translate * rotation;
+
+			glm::vec4 color = { 0.3f, 1.f, 0.3f, 1.f };
+
+			glm::vec4 pos0 = transform * glm::vec4(-preSize.x / 2, -preSize.y / 2, 1.f, 1.f);
+			glm::vec4 pos1 = transform * glm::vec4(preSize.x / 2, -preSize.y / 2, 1.f, 1.f);
+			glm::vec4 pos2 = transform * glm::vec4(preSize.x / 2, preSize.y / 2, 1.f, 1.f);
+			glm::vec4 pos3 = transform * glm::vec4(-preSize.x / 2, preSize.y / 2, 1.f, 1.f);
+
+			float minX = fminf(pos0.x, fminf(pos1.x, fminf(pos2.x, pos3.x)));
+			float minY = fminf(pos0.y, fminf(pos1.y, fminf(pos2.y, pos3.y)));
+			float maxX = fmaxf(pos0.x, fmaxf(pos1.x, fmaxf(pos2.x, pos3.x)));
+			float maxY = fmaxf(pos0.y, fmaxf(pos1.y, fmaxf(pos2.y, pos3.y)));
+
+			glm::vec2 pos0_1 = { minX, minY };
+			glm::vec2 pos1_1 = { maxX, minY };
+			glm::vec2 pos2_1 = { maxX, maxY };
+			glm::vec2 pos3_1 = { minX, maxY };
+
+			renderer.draw_line(pos0_1, pos1_1, color);
+			renderer.draw_line(pos1_1, pos2_1, color);
+			renderer.draw_line(pos2_1, pos3_1, color);
+			renderer.draw_line(pos3_1, pos0_1, color);
+		}
+
 		for (size_t i = 0; i < sprites.size(); i++)
 		{
 			/*PRINT(i + 1 << " : Sprite Data: " << sprites[i]->get_position().x << "," << sprites[i]->get_position().y
 				<< "\t Size: " << sprites[i]->get_size().x << "," << sprites[i]->get_size().y);*/
-
 			glm::vec3 pos = { sprites[i]->get_position().x + movement_x, sprites[i]->get_position().y + movement_y, 0.f };
+			sprites[i]->set_position(pos);
 			sprites[i]->set_position(pos);
 
 			glm::mat4 translate = {
@@ -498,7 +572,7 @@ namespace Copium
 	{
 		glm::vec3 position = { 3.f, 0.f, 0.f };
 		glm::vec4 color = { 0.f, 0.f, 0.f, 1.f };
-
+		Font::getFont("corbel")->draw_text("Corbel Font", position, color, 0.4f + size_x, 0);
 		float red = 0.f, green = 1.f;
 		static float timer = 0.f;
 		timer += (float) WindowsSystem::Instance()->get_delta_time();
@@ -529,36 +603,43 @@ namespace Copium
 
 		position = { 3.f, 2.f, 0.f };
 		color = { red, green, 1.f, 1.f };
-		//Font::getFont("Comfortaa-Regular")->draw_text("Hello Professors :D", position, color, 0.6f + size_x, 0);
+		Font::getFont("Comfortaa-Regular")->draw_text("Hello Professors :D", position, color, 0.6f + size_x, 0);
 
 		// Bean : Testing Animations
-		//renderer.begin_batch();
-		//AssetsSystem* assets = AssetsSystem::Instance();
-		//if (!assets->get_spritesheets().empty())
-		//{
-		//	glm::vec3 position(-4.f, 1.f, 0.f);
-		//	glm::vec2 size(2.f, 2.f);
-		//	static GLuint animationID = 0;
-		//	GLuint indexSize = assets->get_spritesheets()[0].get_size() - 1;
+		renderer.begin_batch();
+		AssetsSystem* assets = AssetsSystem::Instance();
+		if (!assets->get_spritesheets().empty())
+		{
+			glm::vec3 position(-4.f, 1.f, 0.f);
+			glm::vec2 size(2.f, 2.f);
+			static GLuint animIndex = 0;
+			GLuint indexSize = assets->get_spritesheets()[animID].get_size() - 1;
 
-		//	GLfloat dt = (GLfloat) WindowsSystem::Instance()->get_delta_time();
-		//	static float timer = 0.f;
-		//	timer += dt;
-		//	if (timer > 0.01f)
-		//	{
-		//		timer = 0.f;
-		//		animationID++;
-		//	}
+			GLfloat dt = (GLfloat) WindowsSystem::Instance()->get_delta_time();
+			static float timer = 0.f;
+			timer += dt;
+			if (timer > 0.01f && toggleAnimation)
+			{
+				timer = 0.f;
+				animIndex++;
+			}
 
-		//	if (animationID > indexSize)
-		//	{
-		//		animationID = 0;
-		//	}
+			if (animIndex > indexSize)
+			{
+				animIndex = 0;
+			}
+			
+			int id = 0;
+			for (size_t i = 0; i < assets->get_textures().size(); i++)
+			{
+				if (assets->get_textures()[i].get_object_id() == assets->get_spritesheets()[animID].get_texture().get_object_id())
+					id = i + 1;
+			}
 
-		//	renderer.draw_quad(position, size, 0.f, assets->get_spritesheets()[0], animationID, 10);
-		//}
+			renderer.draw_quad(position, size, 0.f, assets->get_spritesheets()[animID], animIndex, id);
+		}
 
-		//renderer.end_batch();
+		renderer.end_batch();
 
 		renderer.flush();
 	}

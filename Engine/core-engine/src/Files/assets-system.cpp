@@ -67,8 +67,20 @@ namespace Copium
 			textures.push_back(texture);
 		}
 
-		Spritesheet ss(get_textures()[10], 1, 8);
-		spritesheets.push_back(ss);
+		for (int i = 0; i < get_textures().size(); i++)
+		{
+
+			if (!get_textures()[i].get_file_path().compare("Assets/textures/TrackSpriteSheet.png"))
+			{
+				Spritesheet ss(get_textures()[i], 1, 8);
+				spritesheets.push_back(ss);
+			}
+			else if (!get_textures()[i].get_file_path().compare("Assets/textures/mock-up.png"))
+			{
+				Spritesheet ss(get_textures()[i], 4, 3);
+				spritesheets.push_back(ss);
+			}
+		}
 	}
 
 	void AssetsSystem::load_all_audio(std::list<std::string>& _path)

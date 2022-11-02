@@ -36,13 +36,13 @@ namespace Copium
 			for (unsigned int j = 0; j < xColumns; j++)
 			{
 				textureOffsets.push_back(textureCoord);
-				PRINT("texture offset: " << textureCoord.x << " " << textureCoord.y);
+				//PRINT("texture offset: " << textureCoord.x << " " << textureCoord.y);
 				textureCoord += glm::vec2(xStep, yStep);
 			}
 		}
 
 		glm::vec2 textCord = { textureOffsets.back().x, textureOffsets.back().y };
-		PRINT("Last texture offset: " << textCord.x << " " << textCord.y);
-		PRINT("Steps: " << xStep << " " << yStep);
+		//PRINT("Last texture offset: " << textCord.x << " " << textCord.y);
+		//PRINT("Steps: " << xStep << " " << yStep);
 	}
 }
