@@ -58,6 +58,12 @@ namespace Copium
 		/***************************************************************************/
 		void exit();
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Adds a log to the imgui console
+		*/
+		/***************************************************************************/
 		void imguiConsoleAddLog(std::string value);
 		
 		EditorSceneView* get_scene_view() { return &sceneView; }

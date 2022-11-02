@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			editor-undoredo.h
+\project
+\author			Shawn Tanary
+
+\par			Course: GAM200
+\par			Section:
+\date			28/10/2022
+
+\brief
+	This file holds functions to undo and redo changes made in gameobjects as well as 
+	transform components.
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 #pragma once
 
 #include <stack>
@@ -7,40 +22,121 @@ namespace Copium
 {
 	namespace UndoRedo
 	{
+		//The base class for commands
 		class Command
 		{
 			public:
+				virtual ~Command() = default;
 				virtual void Undo(std::stack<Command*>* stackPointer) = 0;
 				virtual void Redo(std::stack<Command*>* stackPointer) = 0;
 				virtual void printCommand() = 0;
 		};
 
+		//a derived subclass specifically for transform components
 		class TransformCommand : public Command
 		{
 			public:
+				/***************************************************************************/
+				/*!
+				\brief
+					Constructor for a transform command
+				*/
+				/**************************************************************************/
 				TransformCommand(float* _pointer, float _value);
+
+				/***************************************************************************/
+				/*!
+				\brief
+					Destructor for a transform command
+				*/
+				/**************************************************************************/
 				~TransformCommand();
+
+				/***************************************************************************/
+				/*!
+				\brief
+					Push its current value to redo and revert the pointer to its previous value
+				\param
+					a pointer to the opposite stack pointer in case of reverting this func
+				*/
+				/**************************************************************************/
 				void Undo(std::stack<Command*>* stackPointer) override;
+
+				/***************************************************************************/
+				/*!
+				\brief
+					Push its current value to undo and revert the pointer to its previous value
+				\param
+					a pointer to the opposite stack pointer in case of reverting this func
+				*/
+				/**************************************************************************/
 				void Redo(std::stack<Command*>* stackPointer) override;
+
+				/***************************************************************************/
+				/*!
+				\brief
+					Prints information about the command
+				*/
+				/**************************************************************************/
 				void printCommand()override;
 
 				float* pointer;//pointer to what was changed
 				float value;//original value
 		};
 
+		//a derived subclass specifically for game objects
 		class GameObjectCommand : public Command
 		{
-		public:
-			GameObjectCommand(GameObject* _pointer, GameObject _value);
-			~GameObjectCommand();
-			void Undo(std::stack<Command*>* stackPointer) override;
-			void Redo(std::stack<Command*>* stackPointer) override;
-			void printCommand()override;
+			public:
+				/***************************************************************************/
+				/*!
+				\brief
+					Constructor for a game object command
+				*/
+				/**************************************************************************/
+				GameObjectCommand(GameObject* _pointer, GameObject _value);
 
-			GameObject* pointer;//pointer to what was changed
-			GameObject value;//original value
+				/***************************************************************************/
+				/*!
+				\brief
+					Destructor for a game object command
+				*/
+				/**************************************************************************/
+				~GameObjectCommand();
+
+				/***************************************************************************/
+				/*!
+				\brief
+					Push its current value to redo and revert the pointer to its previous value
+				\param
+					a pointer to the opposite stack pointer in case of reverting this func
+				*/
+				/**************************************************************************/
+				void Undo(std::stack<Command*>* stackPointer) override;
+
+				/***************************************************************************/
+				/*!
+				\brief
+					Push its current value to undo and revert the pointer to its previous value
+				\param
+					a pointer to the opposite stack pointer in case of reverting this func
+				*/
+				/**************************************************************************/
+				void Redo(std::stack<Command*>* stackPointer) override;
+
+				/***************************************************************************/
+				/*!
+				\brief
+					Prints information about the command
+				*/
+				/**************************************************************************/
+				void printCommand()override;
+
+				GameObject* pointer;//pointer to what was changed
+				GameObject value;//original value
 		};
 
+		//contains a stack of commands for undo and redo
 		class CommandManager
 		{
 			public:
