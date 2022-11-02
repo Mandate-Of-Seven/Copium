@@ -31,6 +31,7 @@ namespace Copium
 	GameObjectFactory::GameObjectFactory()
 	{
 		std::cout << "GOF ctor\n";
+		//register_archetypes("Data/Archetypes");
 
 	}
 	GameObjectFactory::~GameObjectFactory()

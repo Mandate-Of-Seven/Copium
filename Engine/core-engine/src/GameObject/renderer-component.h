@@ -50,7 +50,7 @@ namespace Copium
 
 		void inspector_view();
 
-		const SpriteRenderer& get_sprite_renderer() const { return spriteRenderer; }
+		SpriteRenderer& get_sprite_renderer() { return spriteRenderer; }
 		void set_sprite_renderer(const SpriteRenderer& _spriteRenderer) { spriteRenderer = _spriteRenderer; }
 
 		RendererComponent& operator=(const RendererComponent& rhs);

@@ -17,6 +17,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor/editor-sceneview.h"
 #include "Editor/editor-system.h"
 #include "Graphics/graphics-system.h"
+#include "SceneManager/sm.h"
 
 namespace Copium
 {
@@ -58,9 +59,14 @@ namespace Copium
 		// Begin Render Stats
 		ImGui::Begin("Renderer Stats", 0, windowFlags);
 
+		Scene* scene = NewSceneManager::Instance()->get_current_scene();
+		int gameobjectCount = 0;
+		if (scene != nullptr)
+			gameobjectCount = scene->get_gameobjcount();
+
 		ImGui::Text("Render Stats");
 		char buffer[64];
-		sprintf(buffer, "Sprite Count: %d", (int) graphics->get_sprites().size());
+		sprintf(buffer, "GameObject Count: %d", gameobjectCount);
 		ImGui::Text(buffer);
 
 		sprintf(buffer, "Viewport Dimensions: %d by %d", sceneWidth, sceneHeight);
