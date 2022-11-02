@@ -8,9 +8,9 @@
 \date			15/10/2022
 
 \brief
+	Contains function definitions for the editor camera.
 
-
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 

@@ -10,7 +10,7 @@
 \brief
     Declares Component Class to be added to GameObjects and its member functions
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #ifndef COMPONENT_H
 #define COMPONENT_H

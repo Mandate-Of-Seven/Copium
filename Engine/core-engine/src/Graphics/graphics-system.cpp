@@ -12,7 +12,7 @@
 	various sub-systems which includes asset loading, matrice calculations and rendering.
 	Components and objects which require rendering would refer to this class.
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 #include "Windows/windows-system.h"
@@ -47,7 +47,6 @@ namespace Copium
 	void GraphicsSystem::init()
 	{
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
-		PRINT("\n---------------- Loading Graphics System ----------------\n");
 
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 
@@ -77,12 +76,6 @@ namespace Copium
 
 		// Parse all textures loaded into the engine into the graphics 
 		parse_textures();
-
-		//if (NewSceneManager::Instance())
-		//{
-		//	NewSceneManager::Instance()->get_gof().add_component_creator(RENDERER_CREATOR, new RendererCreator);
-		//}
-		PRINT("\n---------------- Graphics System Completed ----------------\n");
 	}
 
 	void GraphicsSystem::update()

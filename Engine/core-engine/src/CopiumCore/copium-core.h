@@ -10,10 +10,11 @@
 \brief
 	This file holds the definitions of functions for copium-core.cpp
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
+#ifndef COPIUM_CORE_H
+#define COPIUM_CORE_H
 
-#pragma once
 #include "CopiumCore/system-interface.h"
 #include "Windows/windows-system.h"
 #include "Windows/windows-input.h"
@@ -187,3 +188,4 @@ namespace Copium
 		bool inPlayMode = false;
 	};
 }
+#endif // !COPIUM_CORE_H

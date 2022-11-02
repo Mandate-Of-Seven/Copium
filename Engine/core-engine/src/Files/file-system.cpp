@@ -103,7 +103,7 @@ namespace Copium
 				if (extension1 || extension2)
 				{
 					assetsPath.push_back(entry.path().generic_string());
-					std::cout << "Path name: " << entry.path().string() << "\n";
+					//std::cout << "Path name: " << entry.path().string() << "\n";
 				}
 			}
 		}

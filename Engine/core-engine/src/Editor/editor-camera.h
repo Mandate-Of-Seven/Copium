@@ -8,7 +8,7 @@
 \date			15/10/2022
 
 \brief
-
+	Contains the function declarations of the editor camera.
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
@@ -19,12 +19,30 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
-	// Editor camera which moves around in the scene
+	// Editor camera which moves around in the scene view
 	class EditorCamera : public Camera
 	{
 	public:
+		/***************************************************************************/
+		/*!
+		\brief
+			Initializes the editor camera
+		\param _width
+			The width of the screen
+		\param _height
+			The height of the screen
+		\param _rotation
+			Is there rotation
+		*/
+		/**************************************************************************/
 		void init(float _width, float _height, bool _rotation = false);
 		
+		/***************************************************************************/
+		/*!
+		\brief
+			Updates the editor camera
+		*/
+		/**************************************************************************/
 		void update();
 
 		// Accessing Properties

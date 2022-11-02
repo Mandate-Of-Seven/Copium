@@ -18,7 +18,7 @@
 	3. de-allocation of resources used by current scene (cleanup before engine close)
 	4. Calling scene's update functions
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************
 ****/
 #include <pch.h>
@@ -341,7 +341,7 @@ namespace Copium {
 
 	void create_rapidjson_string(rapidjson::Document& _doc, rapidjson::Value& _value, const std::string& _str)
 	{
-		_value.SetString(_str.c_str(), _str.length(), _doc.GetAllocator());
+		_value.SetString(_str.c_str(), (rapidjson::SizeType)_str.length(), _doc.GetAllocator());
 	}
 
 	UndoRedo::CommandManager* NewSceneManager::get_commandmanager()
