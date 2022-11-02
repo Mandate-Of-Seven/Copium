@@ -48,6 +48,7 @@ namespace Copium {
 		{
 			std::cout << "Error allocating memory for GameObjectFactory\n";
 		}	
+
 		//std::cout << "sm ctor\n";
 	}
 
@@ -65,6 +66,9 @@ namespace Copium {
 
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		storageScene = nullptr;
+		//gof->register_archetypes("Data/Archetypes");
+
+
 		//std::cout << "No. of GameObjects in scene:" << currentScene->get_gameobjcount() << std::endl;
 	}
 	void NewSceneManager::update()

@@ -202,6 +202,8 @@ namespace Copium
 			return nullptr;
 		}
 
+		//std::cout << "Object name: " << go->get_name() << std::endl;
+
 		if (_value.HasMember("Components"))
 		{
 			rapidjson::Value& compArr = _value["Components"].GetArray();
@@ -210,23 +212,34 @@ namespace Copium
 				rapidjson::Value& component = *iter;
 				if (component.HasMember("Type"))
 				{
-					const char* name = component["Type"].GetString();
-					go->addComponent(Component::nameToType(name))->deserialize(component);
+					std::string key = component["Type"].GetString();
+					//PRINT("Component: " << name);
+					if (key == "Transform")
+						// deserialize transform component
+						go->Transform().deserialize(component);
+					else
+					{
+						Component* tmp = go->addComponent(Component::nameToType(key));
+						if (tmp)
+							tmp->deserialize(component);
+					}
+
 				}
 			}
 		}
-
+		//unsigned int childCount{ 0 };
+		// Deserialize children (if any)
 		if (_value.HasMember("Children")) {
-
 			rapidjson::Value& childArr = _value["Children"].GetArray();
 			for (rapidjson::Value::ValueIterator iter = childArr.Begin(); iter != childArr.End(); ++iter)
 			{
 				GameObject* cgo = build_gameobject(*iter);
 				go->attach_child(cgo);
+				//++childCount;
 			}
-
 		}
-		//std::cout << '\n';
+
+		//std::cout << "No. of children:" << childCount << std::endl;
 		return go;
 	}
 	bool GameObjectFactory::register_archetypes(const std::filesystem::path& _directoryPath)
@@ -244,12 +257,12 @@ namespace Copium
 			rapidjson::Document doc;
 			doc.ParseStream(isw);
 			GameObject* tmp = build_archetype(doc);
-			if (!tmp)
+			if (tmp)
 			{
-				ifs.close();
-				continue;
+				std::cout << "Registering " << doc["Archetype"].GetString() << std::endl;
+				gameObjectCreators.emplace(doc["Archetype"].GetString(), tmp);
 			}
-			gameObjectCreators.emplace(doc["Archetype"].GetString(), tmp);
+
 			ifs.close();
 		}
 		std::cout << "Registration of Archetypes End----\n";
@@ -269,6 +282,13 @@ namespace Copium
 		Component* tmp = _go->addComponent(Component::nameToType(_key));
 		return true;
 	}
+
+
+	std::map<std::string, GameObject*>& GameObjectFactory::get_archetype_map()
+	{
+		return gameObjectCreators;
+	}
+
 
 
 }
