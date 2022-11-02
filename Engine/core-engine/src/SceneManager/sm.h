@@ -215,9 +215,19 @@ namespace Copium {
 			if there are errors in deallocating memory for the copy of the current scene, return false
 		*/
 		/*******************************************************************************/
-		UndoRedo::CommandManager* get_commandmanager();
-
 		bool endPreview();
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			A getter function for the command manager
+
+		\return
+			a pointer to the undo redo command manager
+		*/
+		/*******************************************************************************/
+		UndoRedo::CommandManager* get_commandmanager();
 
 		GameObject* selectedGameObject;
 
@@ -227,7 +237,7 @@ namespace Copium {
 		Scene* storageScene;	// Scene Pointer that acts as buffer for preview scene
 		rapidjson::Document document;
 		std::string sceneFilePath;
-		UndoRedo::CommandManager commandManager;
+		UndoRedo::CommandManager commandManager; //for undo and redo
 	};
 
 	/*******************************************************************************

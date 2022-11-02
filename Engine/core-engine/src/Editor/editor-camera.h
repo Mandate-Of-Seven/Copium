@@ -8,7 +8,7 @@
 \date			15/10/2022
 
 \brief
-
+	Contains the function declarations of the editor camera.
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
@@ -16,16 +16,46 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define EDITOR_CAMERA_H
 
 #include "Graphics/camera.h"
+#include "Messaging/message-system.h"
 
 namespace Copium
 {
-	// Editor camera which moves around in the scene
-	class EditorCamera : public Camera
+	// Editor camera which moves around in the scene view
+	class EditorCamera : public Camera, public IReceiver
 	{
 	public:
+		/***************************************************************************/
+		/*!
+		\brief
+			Initializes the editor camera
+		\param _width
+			The width of the screen
+		\param _height
+			The height of the screen
+		\param _rotation
+			Is there rotation
+		*/
+		/**************************************************************************/
 		void init(float _width, float _height, bool _rotation = false);
 		
+		/***************************************************************************/
+		/*!
+		\brief
+			Updates the editor camera
+		*/
+		/**************************************************************************/
 		void update();
+
+		/**************************************************************************/
+		/*!
+		\brief
+			Interface function for MessageSystem to call for IReceivers to handle
+			a messageType
+		\param _mType
+			The type of message to receive
+		*/
+		/**************************************************************************/
+		void handleMessage(MESSAGE_TYPE _mType);
 
 		// Accessing Properties
 

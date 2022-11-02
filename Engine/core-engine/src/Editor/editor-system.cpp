@@ -2,6 +2,7 @@
 \file			editor-system.cpp
 \project
 \author			Sean Ngo
+\co-author		Shawn Tanary
 
 \par			Course: GAM200
 \par			Section:
@@ -10,7 +11,7 @@
 \brief
 	This file holds the definition of functions for the editor.
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 #include "Windows/windows-system.h"
@@ -228,21 +229,20 @@ namespace Copium
 				ImGui::EndMenuBar();
 			}
 
-            //Call all the editor layers updates here
-            Window::Inspector::update();
-            Window::EditorConsole::update();
-			Window::Hierarchy::update();
-            sceneView.update();
-			contentBrowser.update();
 
+            //Call all the editor layers updates here
+			Window::Inspector::update();
+			Window::EditorConsole::update();
+			Window::Hierarchy::update();
+			sceneView.update();
+			contentBrowser.update();
 
 			// demo update
 			if (show_demo_window)
 				ImGui::ShowDemoWindow(&show_demo_window);
 
-
-            // Editor Camera
-            camera.update();
+			// Editor Camera
+			camera.update();
 
             ImGui::End();
 		}

@@ -18,6 +18,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor/editor-system.h"
 #include "Graphics/graphics-system.h"
 #include "SceneManager/sm.h"
+#include "Windows/windows-system.h"
 
 namespace Copium
 {
@@ -66,7 +67,7 @@ namespace Copium
 
 		ImGui::Text("Render Stats");
 		char buffer[64];
-		sprintf(buffer, "GameObject Count: %d", gameobjectCount);
+		sprintf(buffer, "GameObject Count: %zd", (size_t)gameobjectCount);
 		ImGui::Text(buffer);
 
 		sprintf(buffer, "Viewport Dimensions: %d by %d", sceneWidth, sceneHeight);
@@ -83,6 +84,10 @@ namespace Copium
 
 	void EditorSceneView::resize_sceneview(glm::vec2 _newDimension)
 	{
+		// Only resize if the window is focused
+		if (!WindowsSystem::Instance()->get_window_focused())
+			return;
+
 		// Only if the current scene dimension is not the same as new dimension
 		if (sceneDimension != _newDimension && _newDimension.x != 0 && _newDimension.y != 0)
 		{

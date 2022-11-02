@@ -120,6 +120,18 @@ namespace Copium
 		/***************************************************************************/
 		static void framebuffer_size_callback(GLFWwindow * _window, int _width, int _height);
 
+		/***************************************************************************/
+		/*!
+		\brief
+			This function is called when the window is loses or gains focus
+		\param _window
+			The handle to window that is being focused or unfocused
+		\param _focused
+			The current focus of the window
+		*/
+		/***************************************************************************/
+		static void window_focus_callback(GLFWwindow * _window, int _focused);
+
 		// Accessing Properties
 
 		void set_window_dimensions(int _width, int _height) { windowWidth = _width; windowHeight = _height; }
@@ -128,8 +140,11 @@ namespace Copium
 
 		int get_window_width() { return windowWidth; }
 		void set_width(int _width) { windowWidth = _width; }
+
 		int get_window_height() { return windowHeight; }
 		void set_height(int _height) { windowHeight = _height; }
+
+		const bool& get_window_focused() const { return windowFocused; }
 
 		double const get_fps() { return fps; }
 		double const get_delta_time() { return delta_time; }
@@ -137,7 +152,6 @@ namespace Copium
 		GLFWwindow* get_window() { return window; }
 
 		static bool load_config(std::string& _filename, GLint& _w, GLint& _h);
-		
 
 	private:
 		/* Properties of a Window *******************************************************/
@@ -145,6 +159,7 @@ namespace Copium
 
 		static int windowWidth;
 		static int windowHeight;
+		static bool windowFocused;
 
 		double fps = 0; // The frames per second of the engine
 		double delta_time = 0; // Time taken to complete most recent engine loop

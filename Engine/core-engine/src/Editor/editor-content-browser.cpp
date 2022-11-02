@@ -8,7 +8,7 @@
 \date			01/11/2022
 
 \brief
-	Contains function definitions for the editor content browser
+	Contains function definitions for the editor content browser.
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
@@ -55,14 +55,15 @@ namespace Copium
 			columnCount = 1;
 
 		for (auto& dirEntry : std::filesystem::directory_iterator(currentDirectory))
+		{
+			(void) dirEntry;
 			fileCount++;
+		}
 
 		if (fileCount >= columnCount)
 			finalCount = columnCount;
 		else
 			finalCount = fileCount;
-
-		float columnWidth = panelWidth / (float)finalCount;
 
 		ImGuiTableFlags tableFlags = ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp;
 		if (ImGui::BeginTable("Table: Content Browser", finalCount, tableFlags))

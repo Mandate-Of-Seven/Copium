@@ -53,7 +53,7 @@ namespace Copium
 
 		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 
-		if (GetOpenFileNameA(&ofn) == true)
+		if ((bool)GetOpenFileNameA(&ofn) == true)
 			return ofn.lpstrFile;
 		else
 			return std::string();
@@ -80,7 +80,7 @@ namespace Copium
 		ofn.nFilterIndex = 1;
 
 		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
-		if (GetSaveFileNameA(&ofn) == true)
+		if ((bool)GetSaveFileNameA(&ofn) == true)
 			return ofn.lpstrFile;
 		else
 			return std::string();

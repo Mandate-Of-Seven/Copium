@@ -8,9 +8,9 @@
 \date			15/10/2022
 
 \brief
+	Contains function definitions for the editor camera.
 
-
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 
@@ -21,10 +21,13 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Windows/windows-input.h"
 #include "Editor/editor-camera.h"
 #include "Editor/editor-system.h"
+#include "SceneManager/sm.h"
 
 namespace
 {
 	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
+
+	bool enableCamera = false;
 }
 
 namespace Copium
@@ -35,6 +38,9 @@ namespace Copium
 		width = int(_width);
 		height = int(_height);
 		update_ortho_projection(aspectRatio, zoomLevel);
+
+		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
+		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
 	}
 
 	void EditorCamera::update()
@@ -45,7 +51,40 @@ namespace Copium
 			mouse_controls();
 		}
 
+		if (enableCamera)
+		{
+			NewSceneManager* sm = NewSceneManager::Instance();
+			Scene* scene = sm->get_current_scene();
+			if (scene != nullptr && !scene->get_name().compare("DemoCLONE"))
+			{
+				zoomLevel = 5.f;
+				update_ortho_projection(aspectRatio, zoomLevel);
+				for (size_t i = 0; i < scene->get_gameobjectvector().size(); i++)
+				{
+					// If the object is the player
+					if (!scene->get_gameobjectvector()[i]->get_name().compare("PlayerTrain"))
+					{
+						GameObject* go = scene->get_gameobjectvector()[i];
+						focalPoint = go->Transform().glmPosition(); // Fix the camera onto the player
+						//PRINT("Focal point: " << focalPoint.x << " " << focalPoint.y);
+					}
+				}
+			}
+		}
+
 		update_view_matrix();
+	}
+
+	void EditorCamera::handleMessage(MESSAGE_TYPE _mType)
+	{
+		if (_mType == MESSAGE_TYPE::MT_START_PREVIEW)
+		{
+			enableCamera = true;
+		}
+		else if (_mType == MESSAGE_TYPE::MT_STOP_PREVIEW)
+		{
+			enableCamera = false;
+		}
 	}
 
 	void EditorCamera::update_ortho_projection(float _aspectRatio, float _zoomLevel)
@@ -198,7 +237,7 @@ namespace Copium
 
 		// Zoom In and Out
 		int scroll = (int) inputSystem.get_mousescroll();
-		if (scroll)
+		if (scroll && !enableCamera)
 		{
 			zoomLevel -= scroll * 0.1f * get_zoom_speed(); // Zoom In
 			
