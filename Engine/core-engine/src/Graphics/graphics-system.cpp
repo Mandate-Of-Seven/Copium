@@ -457,6 +457,22 @@ namespace Copium
 
 					renderer.draw_quad(t.glmPosition(), size, rotation, sr);
 				}
+				for (Component* component : gameObject->getComponents<UIImageComponent>())
+				{
+					if (!component->Enabled())
+						continue;
+					TransformComponent& t = gameObject->Transform();
+					UIImageComponent* rc = reinterpret_cast<UIImageComponent*>(component);
+					SpriteRenderer sr = rc->get_sprite_renderer();
+					glm::vec2 size(t.glmScale().x, t.glmScale().y);
+					float rotation = t.glmRotation().z;
+					// Bean: It should be set in inspector view of the renderer component instead
+					unsigned int id = sr.get_sprite_id() - 1;
+					if (id != -1)
+						sr.set_texture(&assets->get_textures()[id]);
+
+					renderer.draw_quad(t.glmPosition(), size, rotation, sr);
+				}
 				for (Component* component : gameObject->getComponents<UITextComponent>())
 				{
 					if (!component->Enabled())
@@ -482,7 +498,6 @@ namespace Copium
 	{
 		glm::vec3 position = { 3.f, 0.f, 0.f };
 		glm::vec4 color = { 0.f, 0.f, 0.f, 1.f };
-		Font::getFont("corbel")->draw_text("Corbel Font", position, color, 0.4f + size_x, 0);
 
 		float red = 0.f, green = 1.f;
 		static float timer = 0.f;
@@ -514,36 +529,36 @@ namespace Copium
 
 		position = { 3.f, 2.f, 0.f };
 		color = { red, green, 1.f, 1.f };
-		Font::getFont("Comfortaa-Regular")->draw_text("Hello Professors :D", position, color, 0.6f + size_x, 0);
+		//Font::getFont("Comfortaa-Regular")->draw_text("Hello Professors :D", position, color, 0.6f + size_x, 0);
 
 		// Bean : Testing Animations
-		renderer.begin_batch();
-		AssetsSystem* assets = AssetsSystem::Instance();
-		if (!assets->get_spritesheets().empty())
-		{
-			glm::vec3 position(-4.f, 1.f, 0.f);
-			glm::vec2 size(2.f, 2.f);
-			static GLuint animationID = 0;
-			GLuint indexSize = assets->get_spritesheets()[0].get_size() - 1;
+		//renderer.begin_batch();
+		//AssetsSystem* assets = AssetsSystem::Instance();
+		//if (!assets->get_spritesheets().empty())
+		//{
+		//	glm::vec3 position(-4.f, 1.f, 0.f);
+		//	glm::vec2 size(2.f, 2.f);
+		//	static GLuint animationID = 0;
+		//	GLuint indexSize = assets->get_spritesheets()[0].get_size() - 1;
 
-			GLfloat dt = (GLfloat) WindowsSystem::Instance()->get_delta_time();
-			static float timer = 0.f;
-			timer += dt;
-			if (timer > 0.01f)
-			{
-				timer = 0.f;
-				animationID++;
-			}
+		//	GLfloat dt = (GLfloat) WindowsSystem::Instance()->get_delta_time();
+		//	static float timer = 0.f;
+		//	timer += dt;
+		//	if (timer > 0.01f)
+		//	{
+		//		timer = 0.f;
+		//		animationID++;
+		//	}
 
-			if (animationID > indexSize)
-			{
-				animationID = 0;
-			}
+		//	if (animationID > indexSize)
+		//	{
+		//		animationID = 0;
+		//	}
 
-			renderer.draw_quad(position, size, 0.f, assets->get_spritesheets()[0], animationID, 10);
-		}
+		//	renderer.draw_quad(position, size, 0.f, assets->get_spritesheets()[0], animationID, 10);
+		//}
 
-		renderer.end_batch();
+		//renderer.end_batch();
 
 		renderer.flush();
 	}

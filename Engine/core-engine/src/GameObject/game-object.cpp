@@ -226,9 +226,9 @@ void GameObject::removeComponent(ComponentID componentID)
     auto it{ components.begin() };
     while (it != components.end())
     {
-        if ((*it)->ID() == id)
+        if ((*it)->id == componentID)
         {
-            delete* it;
+            delete *it;
             components.erase(it);
             return;
         }
@@ -347,7 +347,12 @@ void GameObject::handleMessage(MESSAGE_TYPE mType)
 
 void GameObject::inspectorView()
 {
-    ImGui::Text(name.c_str());
+    static char buffer[256];
+    strcpy(buffer, name.c_str());
+    ImGui::PushItemWidth(-1);
+    ImGui::InputText("##gameObjName", buffer,256);
+    ImGui::PopItemWidth();
+    name = buffer;
     ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
         | ImGuiTableFlags_ScrollY;
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);
@@ -356,18 +361,31 @@ void GameObject::inspectorView()
     {
         transform.inspector_view();     
     }
-    if (ImGui::BeginTable("Components", 1, tableFlags, ImVec2(0.f, 450.f)))
+    if (ImGui::BeginTable("Components", 1, tableFlags, ImVec2(0.f, ImGui::GetWindowSize().y/2.f)))
     {
         ImGui::TableNextRow();
         ImGui::TableNextColumn();
+        static std::vector<ComponentID> componentsToDelete;
+        componentsToDelete.clear();
         for (Component* component : components)
         {
-
-            if (ImGui::CollapsingHeader(component->Name().c_str(), nodeFlags))
+            const std::string& name{ component->Name() };
+            ImGui::PushID(component->id);
+            if (ImGui::CollapsingHeader(name.c_str(), nodeFlags))
             {
                 component->inspector_view();
+                if (ImGui::Button("Delete", ImVec2(ImGui::GetWindowSize().x, 0.f)))
+                {
+                    PRINT("ID: " << component->id);
+                    componentsToDelete.push_back(component->id);
+                }
             }
+            ImGui::PopID();
             ImGui::TableNextColumn();
+        }
+        for (ComponentID id : componentsToDelete)
+        {
+            removeComponent(id);
         }
         ImGui::EndTable();
     }

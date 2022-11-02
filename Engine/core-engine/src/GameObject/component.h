@@ -28,7 +28,7 @@ class GameObject;
 
     //USING
 
-using ComponentID = unsigned char;
+using ComponentID = uint64_t;
 
 
 enum class ComponentType : int      // Types of Components
@@ -62,7 +62,8 @@ class Component
     public:
         Component(const Component&) = delete;
 
-        const ComponentType componentType;           //Type of component
+        const ComponentType componentType;      //Type of component
+        const ComponentID id;                   //Id of component
 
         static ComponentType nameToType(const std::string& _name)
         {
@@ -84,15 +85,6 @@ class Component
         */
         /**************************************************************************/
         virtual void destroy();
-        /***************************************************************************/
-        /*!
-        \brief
-            Getter for component id
-        \return
-            Id of this component
-        */
-        /**************************************************************************/
-        ComponentID const ID();
 
         virtual const std::string& Name() const;
 
@@ -166,8 +158,8 @@ class Component
         Component() = delete;
         Component(GameObject& _gameObj, ComponentType _componentType);
     private:
-        ComponentID id;                     //Id of component, local to gameObject
         const bool allowMultiple = false;   //Can gameObjects only have one of this Component?
+        static ComponentID count;
         bool enabled;
 };
 

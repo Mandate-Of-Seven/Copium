@@ -38,7 +38,7 @@ namespace Copium
 	static const GLuint maxIndexCount = maxQuadCount * 6;
 	static const GLuint maxLineVertexCount = maxLineCount * 2;
 	static const GLuint maxTextVertexCount = maxTextCount * 4;
-	static const GLuint maxTextures = 32;
+	static const GLuint maxTextures = 256;
 
 	enum
 	{

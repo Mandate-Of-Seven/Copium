@@ -5,6 +5,7 @@
 #include "Scripting/script-component.h"
 #include "SceneManager/sm.h"
 #include "Messaging/message-system.h"
+#include "Graphics/ui-components.h"
 
 namespace Copium
 {
@@ -29,10 +30,16 @@ namespace Copium
 		gameObjects = &pScene->get_gameobjectvector();
 		for (GameObject* pGameObj : *gameObjects)
 		{
+			const std::vector<UIButtonComponent*>& buttonComponents{ pGameObj->getComponents<UIButtonComponent>() };
+			for (UIButtonComponent* pButtonComponent : buttonComponents)
+			{
+				if (!pButtonComponent)
+					continue;
+				pButtonComponent->update();
+			}
 			const std::vector<ScriptComponent*>& pScriptComponents{ pGameObj->getComponents<ScriptComponent>() };
 			for (ScriptComponent* pScriptComponent : pScriptComponents)
 			{
-				PRINT("NAME: " << pScriptComponent->Name());
 				if (!pScriptComponent)
 					continue;
 				pScriptComponent->Update();

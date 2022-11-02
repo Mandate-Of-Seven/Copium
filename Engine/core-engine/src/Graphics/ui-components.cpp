@@ -5,6 +5,7 @@
 #include "GameObject/game-object.h"
 #include "Physics/collision.h"
 #include "Editor/editor-system.h"
+#include "Files/assets-system.h"
 
 namespace
 {
@@ -15,10 +16,9 @@ namespace Copium
 {
 	const UIButtonComponent* UIButtonComponent::hoveredBtn{nullptr};
 
-	UIComponent::UIComponent(GameObject& _gameObj, ComponentType _componentType) 
-		: Component(_gameObj,_componentType)
+	void click()
 	{
-
+		PRINT("CLICKADOODLEDOO");
 	}
 
 	UIButtonComponent::UIButtonComponent(GameObject& _gameObj,Math::Vec2 _min, Math::Vec2 _max) 
@@ -31,6 +31,7 @@ namespace Copium
 		{
 			mapStateCallbacks.insert({UIButtonState(i),nullptr});
 		}
+		mapStateCallbacks[UIButtonState::OnClick] = click;
 	}
 
 
@@ -108,7 +109,7 @@ namespace Copium
 	}
 
 	UITextComponent::UITextComponent(GameObject& _gameObj)
-		: UIComponent(_gameObj, ComponentType::UIText), font{Font::getFont("corbel")}
+		: Component(_gameObj, ComponentType::UIText), font{Font::getFont("corbel")}
 	{
 	}
 
@@ -129,7 +130,7 @@ namespace Copium
 	}
 
 	UIImageComponent::UIImageComponent(GameObject& _gameObj)
-		: UIComponent(_gameObj, ComponentType::UIImage)
+		: Component(_gameObj, ComponentType::UIImage)
 	{
 
 	}
@@ -138,6 +139,99 @@ namespace Copium
 	{
 
 	}
+
+	void UIImageComponent::inspector_view() 
+	{
+		float sameLinePadding = 16.f;
+		bool openPopup = false;
+
+		glm::vec4 clrGLM = spriteRenderer.get_color();
+		ImVec4 color = { clrGLM.r, clrGLM.g, clrGLM.b, clrGLM.a };
+
+		int spriteID = (int)spriteRenderer.get_sprite_id();
+
+		std::string spriteName = spriteRenderer.get_name();
+		static ImVec4 backupColor;
+
+		ImGuiColorEditFlags miscFlags = ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip
+			| ImGuiColorEditFlags_NoLabel;
+
+		ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
+			| ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp;
+		if (ImGui::BeginTable("UIImageComponent", 2, windowFlags))
+		{
+			ImGui::Indent();
+			// Sprite
+			// Extern source file
+
+			ImGui::TableSetupColumn("Text", 0, 0.4f);
+			ImGui::TableSetupColumn("Input", 0, 0.6f);
+
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("Sprite");
+			ImGui::TableNextColumn();
+			ImGui::Button(spriteName.c_str(), ImVec2(-FLT_MIN, 0.f));
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ContentBrowserItem"))
+				{
+					std::string str = (const char*)(payload->Data);
+					Copium::AssetsSystem* assets = Copium::AssetsSystem::Instance();
+					for (int i = 0; i < assets->get_textures().size(); i++)
+					{
+						if (!assets->get_textures()[i].get_file_path().compare(str))
+						{
+							spriteID = i + 1;
+						}
+					}
+					int pos = str.find_last_of('/');
+					spriteName = str.substr(pos + 1, str.length() - pos);
+				}
+				ImGui::EndDragDropTarget();
+			}
+
+			// Color
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("Color");
+			ImGui::TableNextColumn();
+			openPopup = ImGui::ColorButton("Color", color, miscFlags, ImVec2(FLT_MAX, 0));
+
+			// Flip
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("Flip");
+			ImGui::TableNextColumn();
+			ImGui::Checkbox("X", spriteRenderer.access_flip_x());
+			ImGui::SameLine(0.f, sameLinePadding);
+			ImGui::Checkbox("Y", spriteRenderer.access_flip_y());
+
+			ImGui::Unindent();
+			ImGui::EndTable();
+		}
+
+		if (openPopup)
+		{
+			ImGui::OpenPopup("Color");
+			backupColor = color;
+			windowFlags = ImGuiTableFlags_NoBordersInBody;
+		}
+		if (ImGui::BeginPopup("Color", windowFlags))
+		{
+			ImGui::Text("Color");
+			ImGui::Separator();
+			miscFlags = ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview
+				| ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoLabel;
+			ImGui::ColorPicker4("Picker", spriteRenderer.access_color(), miscFlags);
+
+			ImGui::EndPopup();
+		}
+
+		if (spriteID >= 0)
+			spriteRenderer.set_sprite_id(spriteID);
+		spriteRenderer.set_name(spriteName);
+	};
 
 	UIImageComponent& UIImageComponent::operator=(const UIImageComponent& rhs)
 	{

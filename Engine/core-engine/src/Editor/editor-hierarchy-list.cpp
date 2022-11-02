@@ -189,9 +189,6 @@ namespace Window::Hierarchy
 
 		ImGui::TreePop();
 
-		if (ImGui::IsItemClicked())
-			std::cout << "clicking\n";
-
 		return isSelected;
 
 	}

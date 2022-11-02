@@ -31,5 +31,17 @@ namespace CopiumEngine
             }
             return null;
         }
+        public static GameObject FindByName(string name)
+        {
+            ulong _ID = InternalCalls.FindGameObjByName(name);
+            foreach (GameObject gameObj in gameObjects)
+            {
+                if (gameObj.ID == _ID)
+                {
+                    return gameObj;
+                }
+            }
+            return null;
+        }
     }
 }

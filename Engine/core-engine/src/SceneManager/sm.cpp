@@ -41,6 +41,18 @@ namespace Copium {
 		return nullptr;
 	}
 
+	GameObject* NewSceneManager::findGameObjByName(const std::string& name)
+	{
+		for (GameObject* pGameObj : currentScene->get_gameobjectvector())
+		{
+			if (pGameObj->get_name() == name)
+			{
+				return pGameObj;
+			}
+		}
+		return nullptr;
+	}
+
 	NewSceneManager::NewSceneManager() : gof{nullptr}, currentScene{nullptr}, selectedGameObject{nullptr},storageScene{nullptr}
 	{
 		gof = new GameObjectFactory();

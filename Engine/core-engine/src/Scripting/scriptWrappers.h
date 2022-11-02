@@ -4,14 +4,11 @@
 #include "SceneManager\sm.h"
 #include <glm/vec3.hpp>
 
+#include "mono/metadata/object.h"
+#include "mono/metadata/reflection.h"
+
 namespace Copium
 {
-
-	extern "C"
-	{
-		void mono_add_internal_call(const char*, const void*);
-	}
-
 	#define Register(METHOD) mono_add_internal_call("CopiumEngine.InternalCalls::"#METHOD,METHOD)
 
 	#pragma region Input
@@ -65,15 +62,28 @@ namespace Copium
 			gameObj->Transform().position = *val;
 		}
 
-
+		static GameObjectID FindGameObjByName(MonoString* name)
+		{
+			char* nameCStr = mono_string_to_utf8(name);
+			GameObject* gameObj = sceneManager.findGameObjByName(nameCStr);
+			mono_free(nameCStr);
+			if (gameObj == nullptr)
+			{
+				return -1;
+			}
+			return gameObj->id;
+		}
 
 	#pragma endregion Transform
+
+
 
 	static void registerScriptWrappers()
 	{
 		Register(GetKey);
 		Register(GetTranslation);
 		Register(SetTranslation);
+		Register(FindGameObjByName);
 	}
 }
 

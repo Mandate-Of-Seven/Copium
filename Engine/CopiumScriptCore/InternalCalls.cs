@@ -10,6 +10,8 @@ namespace CopiumEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetTranslation(ulong ID, ref Vector3 translation);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static ulong FindGameObjByName(string name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool GetKey(int keyCode);

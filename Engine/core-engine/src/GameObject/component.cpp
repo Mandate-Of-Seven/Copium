@@ -21,35 +21,35 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 namespace Copium
 {
+    ComponentID Component::count = 0;
 
-Component::Component(GameObject& _gameObj, ComponentType _componentType) 
-    : gameObj{ _gameObj }, componentType{ _componentType }, enabled{true} {}
+    Component::Component(GameObject& _gameObj, ComponentType _componentType) 
+        : gameObj{ _gameObj }, componentType{ _componentType }, enabled{ true }, id{count++} {}
 
-void Component::destroy() {}
-
-ComponentID const Component::ID() { return id; }
-
-void Component::deserialize(rapidjson::Value& _value)
-{
-    //std::cout << "default deserialization\n";
-}
-void Component::serialize(rapidjson::Value& _value, rapidjson::Document& _doc) {
-
-}
+    void Component::destroy() {}
 
 
-bool Component::Enabled() const noexcept{ return enabled;}
+    void Component::deserialize(rapidjson::Value& _value)
+    {
+        //std::cout << "default deserialization\n";
+    }
+    void Component::serialize(rapidjson::Value& _value, rapidjson::Document& _doc) {
 
-void Component::Enabled(bool _enabled) noexcept { enabled = _enabled; }
+    }
 
-ColliderComponent::ColliderComponent(GameObject& _gameObj) 
-    :Component(_gameObj, ComponentType::Collider) { std::cout << "COLLIDER CONS" << std::endl; }
 
-AnimatorComponent::AnimatorComponent(GameObject& _gameObj) 
-    :Component(_gameObj, ComponentType::Animator) { std::cout << "ANIMATOR CONS" << std::endl; }
+    bool Component::Enabled() const noexcept{ return enabled;}
 
-const std::string& Component::Name() const
-{
-    return MAP_COMPONENT_TYPE_NAME[componentType];
-}
+    void Component::Enabled(bool _enabled) noexcept { enabled = _enabled; }
+
+    ColliderComponent::ColliderComponent(GameObject& _gameObj) 
+        :Component(_gameObj, ComponentType::Collider) { std::cout << "COLLIDER CONS" << std::endl; }
+
+    AnimatorComponent::AnimatorComponent(GameObject& _gameObj) 
+        :Component(_gameObj, ComponentType::Animator) { std::cout << "ANIMATOR CONS" << std::endl; }
+
+    const std::string& Component::Name() const
+    {
+        return MAP_COMPONENT_TYPE_NAME[componentType];
+    }
 }

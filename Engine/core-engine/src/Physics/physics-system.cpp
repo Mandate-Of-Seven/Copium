@@ -2,15 +2,12 @@
 \file			physics-system.cpp
 \project
 \author			Abdul Hadi
-
 \par			Course: GAM200
 \par			Section:
 \date			23/09/2022
-
 \brief
 	This file contains the function definitions for a physics system. It will perform
 	physics and collision on a collider component of an object.
-
 All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
@@ -22,8 +19,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 namespace
 {
-	Copium::InputSystem& inputSystem{*Copium::InputSystem::Instance()};
-	Copium::NewSceneManager& sceneManager{ *Copium::NewSceneManager::Instance()};
+	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
+	Copium::NewSceneManager& sceneManager{ *Copium::NewSceneManager::Instance() };
 }
 
 namespace Copium
@@ -34,51 +31,16 @@ namespace Copium
 		systemFlags |= FLAG_RUN_ON_PLAY;
 	}
 	void PhysicsSystem::update()
-	{	
+	{
 		GameObject* gameobj;
 		if (sceneManager.get_current_scene() != nullptr)
 		{
-			glm::vec2 position;
-			glm::vec2 size;
-			Math::Vec2 convertedPos;
-			Math::Vec2 convertedSize;
-			size = GraphicsSystem::Instance()->get_sprites()[count]->get_size();
-			convertedSize = Math::Vec2(size.x, size.y);
-			//RigidBodyComponent* box = new RigidBodyComponent;
-			//position = GraphicsSystem::Instance()->get_sprites()[count]->get_position();
-			//convertedPos = {position};
-			//box->set_vel(Math::Vec2{ 0.0, 0.0 });
-			//box->set_acc(Math::Vec2{ 0.0,0.0 });
-			//if (count == 0)
-			//{
-			//	box->set_gravity(false);
-			//}
-			//else
-			//{
-			//	box->set_gravity(true);
-			//}
-			//count++;
-			//
-
-			//box->set_shape(SQUARE);
-			//box->set_active(true);
-			//if (box->get_shape() == SQUARE)
-			//{
-			//	box->set_AABB(Math::Vec2{ convertedPos.x - (convertedSize.x / 2),convertedPos.y - (convertedSize.y / 2) }, Math::Vec2{ convertedPos.x + (convertedSize.x / 2),convertedPos.y + (convertedSize.y / 2) });
-			//}
-			//boxes.push_back(box);
-
-		}
-		if (boxes.size() > 0)
-		{	
-			
-			if (inputSystem.is_key_pressed(GLFW_KEY_I)) // move up
+			for (size_t a = 0; a < sceneManager.get_current_scene()->get_gameobjectvector().size(); a++)
 			{
 				gameobj = sceneManager.get_current_scene()->get_gameobjectvector()[a];
 				RigidBodyComponent* pRb = gameobj->getComponent<RigidBodyComponent>();
 				if (pRb != nullptr)
 				{
-					PRINT("GAMEOBJ " << gameobj->get_name() << "HAS RIGIDBODY");
 					Math::Vec2 position{ gameobj->Transform().position.x, gameobj->Transform().position.y };
 					Math::Vec2 size{ gameobj->Transform().scale.x, gameobj->Transform().scale.y };
 					pRb->set_active(true);
@@ -112,38 +74,26 @@ namespace Copium
 					}
 				}
 			}
-			if (inputSystem.is_key_pressed(GLFW_KEY_K)) // move down
+
+			if (inputSystem.is_key_pressed(GLFW_KEY_P) && inputSystem.is_key_pressed(GLFW_KEY_LEFT_SHIFT))
 			{
-				boxes[0]->add_acc(Math::Vec2{ 0.0f,-0.05f });
+				PhysicsSystem::toggle_step();
 			}
-			if (inputSystem.is_key_pressed(GLFW_KEY_L)) // move left
+			if (stepModeActive == true)
 			{
-				boxes[0]->add_acc(Math::Vec2{ 0.05f,0.0f });
+				if (inputSystem.is_key_pressed(GLFW_KEY_0))
+				{
+					PhysicsSystem::update_pos();
+					PhysicsSystem::check_collision();
+				}
 			}
-			if (inputSystem.is_key_pressed(GLFW_KEY_J)) // move right
-			{
-				boxes[0]->add_acc(Math::Vec2{ -0.05f,0.0f });
-			}
-			if (inputSystem.is_key_pressed(GLFW_KEY_O)) //reset acceleration and velocity values
-			{
-				boxes[0]->set_acc(Math::Vec2{ 0.0f,0.0f });
-				boxes[0]->set_vel(Math::Vec2{ 0.0f,0.0f });
-			}
-		
-		}
-		if (inputSystem.is_key_pressed(GLFW_KEY_P) && inputSystem.is_key_pressed(GLFW_KEY_LEFT_SHIFT))
-			{
-			PhysicsSystem::toggle_step();
-			}
-		if (stepModeActive == true)
-		{
-			if (inputSystem.is_key_pressed(GLFW_KEY_0))
+			else
 			{
 				PhysicsSystem::update_pos();
 				PhysicsSystem::check_collision();
 			}
 		}
-			
+
 
 	}
 
@@ -160,7 +110,7 @@ namespace Copium
 		Math::Vec2 acceleration;
 		Math::Vec2 force;
 		float mass;
-		
+
 		Collision::AABB bound;
 		for (int a = 0; a < sceneManager.get_current_scene()->get_gameobjectvector().size(); a++)
 		{
@@ -182,10 +132,10 @@ namespace Copium
 						acceleration = (force + gravity) / pRb->get_mass();
 						velocity = velocity + (acceleration * dt * 0.80);
 						position = position + (velocity);
-						
+
 						pRb->set_acc(acceleration);
 						pRb->set_vel(velocity);
-						
+
 
 					}
 					else
@@ -197,37 +147,37 @@ namespace Copium
 						pRb->set_vel(velocity);
 					}
 				}
-					if (position.y < -2.0)
-					{
-						position.y = -2.0;
-					}
-					if (position.y > 2.0)
-					{
-						position.y = 2.0;
-					}
-					if (position.x > 2.0)
-					{
-						position.x = 2.0;
-					}
-					if (position.x < -2.0)
-					{
-						position.x = -2.0;
-					}
+				if (position.y < -2.0)
+				{
+					position.y = -2.0;
+				}
+				if (position.y > 2.0)
+				{
+					position.y = 2.0;
+				}
+				if (position.x > 2.0)
+				{
+					position.x = 2.0;
+				}
+				if (position.x < -2.0)
+				{
+					position.x = -2.0;
+				}
 				bound.max.x = position.x + (size.x * 1 / 2);
 				bound.max.y = position.y + (size.y * 1 / 2);
 				bound.min.x = position.x - (size.x * 1 / 2);
 				bound.min.y = position.y - (size.y * 1 / 2);
 				pRb->set_AABB(bound.min, bound.max);
-				
+
 				gameobj->Transform().position.x = position.x;
 				gameobj->Transform().position.y = position.y;
-			
+
 			}
 		}
 
 	}
 	void PhysicsSystem::check_collision()
-	{	
+	{
 		GameObject* object1;
 		GameObject* object2;
 
@@ -241,7 +191,7 @@ namespace Copium
 				}
 				object1 = sceneManager.get_current_scene()->get_gameobjectvector()[a];
 				object2 = sceneManager.get_current_scene()->get_gameobjectvector()[b];
-				if (object1->getComponent<RigidBodyComponent>() == nullptr || 
+				if (object1->getComponent<RigidBodyComponent>() == nullptr ||
 					object2->getComponent<RigidBodyComponent>() == nullptr)
 				{
 
@@ -254,7 +204,7 @@ namespace Copium
 					Math::Vec2 positionB{ object2->Transform().position.x, object2->Transform().position.y };
 					Collision::AABB boundA;
 					Collision::AABB boundB;
-					
+
 					velocityA = object1->getComponent<RigidBodyComponent>()->get_vel();
 					velocityB = object2->getComponent<RigidBodyComponent>()->get_vel();
 					boundA = object1->getComponent<RigidBodyComponent>()->get_AABB();
@@ -284,4 +234,3 @@ namespace Copium
 		}
 	}
 }
-
