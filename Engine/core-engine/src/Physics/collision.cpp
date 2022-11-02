@@ -15,8 +15,9 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
+#include <limits>
 #include "Windows/windows-system.h"
-#include "Physics/collision.h"
+#include "Physics/collider.h"
 
 namespace Copium::Collision
 {
@@ -276,5 +277,112 @@ namespace Copium::Collision
 			return 0;
 		}
 		return 1;
+	}
+
+	
+	collisionDirection check_collision_direction(const AABB& aabb1, const Math::Vec2& vel1,
+		const AABB& aabb2, const Math::Vec2& vel2)
+	{
+		Math::Vec2 vB = vel1 - vel2;
+
+		float xEntry = 0.0f;
+		float xExit = 0.0f;
+		float yEntry = 0.0f;
+		float yExit = 0.0f;
+		//double tFirst = 0;
+		//double tLast = Copium::WindowsSystem::Instance()->get_delta_time();
+
+		if (vB.x < 0)
+		{
+			xEntry = (aabb1.max.x - aabb2.min.x) / vB.x;
+			xExit = (aabb1.min.x - aabb2.max.x) / vB.x;
+		}
+		if (vB.x > 0)
+		{
+			xEntry = (aabb1.min.x - aabb2.max.x) / vB.x;
+			xExit = (aabb1.max.x - aabb2.min.x) / vB.x;
+		}
+		if (vB.y < 0)
+		{
+			yEntry = (aabb1.max.y - aabb2.min.y) / vB.y;
+			yExit = (aabb1.min.y - aabb2.max.y) / vB.y;
+		}
+		if (vB.y > 0)
+		{	
+			yEntry = (aabb1.min.y - aabb2.max.y) / vB.y;
+			yExit = (aabb1.max.y - aabb2.min.y) / vB.y;			
+		}
+		if (vB.x == 0)
+		{
+			xEntry = std::numeric_limits<float>::infinity();
+			xExit = std::numeric_limits<float>::infinity();
+		}
+		if (vB.y == 0)
+		{
+			yEntry = std::numeric_limits<float>::infinity();
+			yExit = std::numeric_limits<float>::infinity();
+		}
+		printf("xentry %f yentry y %f\n", xEntry, yEntry);
+		if (xEntry < yEntry)
+		{
+			if (vB.x > 0)
+			{	
+
+				return collisionDirection::RIGHT;
+				
+			}
+			if (vB.x < 0)
+			{	
+				return collisionDirection::LEFT;				
+			}
+		}
+		if (yEntry < xEntry)
+		{
+			if (vB.y < 0)
+			{
+				return collisionDirection::TOP;
+			}
+			if (vB.y > 0)
+			{
+				return collisionDirection::BOTTOM;
+			}
+		}
+		return collisionDirection::NONE;
+	}
+	void resolve_collision(GameObject& aabb1, GameObject& aabb2, collisionDirection direction)
+	{		
+			RigidBodyComponent* pRbA = aabb1.getComponent<RigidBodyComponent>();
+			RigidBodyComponent* pRbB = aabb2.getComponent<RigidBodyComponent>();
+			Collision::AABB boundA;
+			Collision::AABB boundB;
+			float resolvePos = 0.0f;
+			boundA = pRbA->get_AABB();
+			boundB = pRbB->get_AABB();
+		if (direction == collisionDirection::TOP)
+		{
+			std::cout << "resolve top" << std::endl;
+			resolvePos = boundA.max.y - boundB.min.y;
+			aabb1.Transform().position.y -= resolvePos;
+			
+		}
+		if (direction == collisionDirection::BOTTOM)
+		{
+			std::cout << "resolve bottom" << std::endl;
+			resolvePos = boundB.max.y - boundA.min.y;
+			aabb1.Transform().position.y += resolvePos;
+		}
+		if (direction == collisionDirection::LEFT)
+		{
+			std::cout << "resolve left" << std::endl;
+			resolvePos = boundB.max.x - boundA.min.x;
+			aabb1.Transform().position.x += resolvePos;
+		}
+		if (direction == collisionDirection::RIGHT)
+		{
+			std::cout << "resolve right" << std::endl;
+			resolvePos = boundA.max.x - boundB.min.x;
+			aabb1.Transform().position.x -= resolvePos;
+		}
+		
 	}
 }

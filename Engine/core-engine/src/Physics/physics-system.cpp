@@ -15,7 +15,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Windows/windows-input.h"
 #include "Graphics/graphics-system.h"
 #include "Physics/physics-system.h"
-#include "SceneManager/sm.h"
+
 
 namespace
 {
@@ -44,7 +44,7 @@ namespace Copium
 					Math::Vec2 position{ gameobj->Transform().position.x, gameobj->Transform().position.y };
 					Math::Vec2 size{ gameobj->Transform().scale.x, gameobj->Transform().scale.y };
 					pRb->set_active(true);
-					if (pRb->get_shape() == SQUARE)
+					if (pRb->get_shape() == Shape::SQUARE)
 					{
 						pRb->set_AABB(Math::Vec2{ position.x - (0.5f * size.x),position.y - (0.5f * size.y) }, Math::Vec2{ position.x + (0.5f * size.x),position.y - (0.5f * size.y) });
 					}
@@ -145,22 +145,7 @@ namespace Copium
 						pRb->set_vel(velocity);
 					}
 				}
-				if (position.y < -2.0)
-				{
-					position.y = -2.0;
-				}
-				if (position.y > 2.0)
-				{
-					position.y = 2.0;
-				}
-				if (position.x > 2.0)
-				{
-					position.x = 2.0;
-				}
-				if (position.x < -2.0)
-				{
-					position.x = -2.0;
-				}
+
 				bound.max.x = position.x + (size.x * 1 / 2);
 				bound.max.y = position.y + (size.y * 1 / 2);
 				bound.min.x = position.x - (size.x * 1 / 2);
@@ -207,12 +192,13 @@ namespace Copium
 					velocityB = object2->getComponent<RigidBodyComponent>()->get_vel();
 					boundA = object1->getComponent<RigidBodyComponent>()->get_AABB();
 					boundB = object2->getComponent<RigidBodyComponent>()->get_AABB();
-					printf("box a:x min %f y min %f \n box a:x max %f y max %f\n", boundA.min.x, boundA.min.y, boundA.max.x, boundA.max.y);
-					printf("box b:x min %f b min %f \n box b:x max %f b max %f\n", boundB.min.x, boundB.min.y, boundB.max.x, boundB.max.y);
 					if ((Collision::collision_rectrect(boundA, velocityA, boundB, velocityB) == true))
 					{
-						object1->getComponent<RigidBodyComponent>()->set_vel(Math::Vec2{ 0.0, 0.0 });
-						object1->getComponent<RigidBodyComponent>()->set_force(Math::Vec2{ 0.0,0.0 });
+						//fix collision resolution
+					/*	collisionDirection direct = Collision::check_collision_direction(boundA, velocityA, boundB, velocityB);
+						Collision::resolve_collision(*object1, *object2, direct);*/
+						object1->getComponent<RigidBodyComponent>()->set_vel(Math::Vec2(0.0, 0.0));
+						object1->getComponent<RigidBodyComponent>()->set_acc(Math::Vec2(0.0, 0.0));
 					}
 				}
 			}

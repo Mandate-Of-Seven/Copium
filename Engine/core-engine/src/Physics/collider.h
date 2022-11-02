@@ -31,7 +31,7 @@ namespace Copium
 			force = Math::Vec2(0.0, 0.0);
 			mass = 1.0;
 			affectedGravity = true;
-			objectShape = SQUARE;
+			objectShape = Shape::SQUARE;
 		}
 		void const set_vel(Math::Vec2 _velocity) { velocity = _velocity; }
 		void const set_acc(Math::Vec2 _acceleration) { acceleration = _acceleration; }
