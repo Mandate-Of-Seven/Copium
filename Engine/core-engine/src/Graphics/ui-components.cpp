@@ -16,11 +16,6 @@ namespace Copium
 {
 	const UIButtonComponent* UIButtonComponent::hoveredBtn{nullptr};
 
-	void click()
-	{
-		PRINT("CLICKADOODLEDOO");
-	}
-
 	UIButtonComponent::UIButtonComponent(GameObject& _gameObj,Math::Vec2 _min, Math::Vec2 _max) 
 		: Component(_gameObj, ComponentType::UIButton)
 	{
@@ -31,7 +26,6 @@ namespace Copium
 		{
 			mapStateCallbacks.insert({UIButtonState(i),nullptr});
 		}
-		mapStateCallbacks[UIButtonState::OnClick] = click;
 	}
 
 
@@ -44,30 +38,24 @@ namespace Copium
 		{
 			callback();
 		}
-		//switch (state)
-		//{
-		//case UIButtonState::OnClick:
-		//{
-
-		//	PRINT("Clicking");
-		//	break;
-		//}
-		//case UIButtonState::OnHover:
-		//{
-		//	PRINT("Hovering");
-		//	break;
-		//}
-		//case UIButtonState::OnRelease:
-		//{
-		//	PRINT("Released");
-		//	break;
-		//}
-		//case UIButtonState::None:
-		//{
-		//	PRINT("None");
-		//	break;
-		//}
-		//}
+		switch (state)
+		{
+		case UIButtonState::OnClick:
+		{
+			PRINT("UI: Clicking on " << gameObj.get_name());
+			break;
+		}
+		case UIButtonState::OnHover:
+		{
+			PRINT("UI: Hovering on " << gameObj.get_name());
+			break;
+		}
+		case UIButtonState::OnRelease:
+		{
+			PRINT("UI: Released on " << gameObj.get_name());
+			break;
+		}
+		}
 	}
 
 	UIButtonState UIButtonComponent::getInternalState() const
@@ -117,7 +105,7 @@ namespace Copium
 	{
 		if (!font)
 			return;
-		font->draw_text("Hello bby", gameObj.Transform().position.to_glm(), { 1.f, 1.f, 1.f, 1.f }, 1.f, 0);
+		font->draw_text("Button!", gameObj.Transform().position.to_glm(), { 1.f, 1.f, 1.f, 1.f }, 0.2f, 0);
 	}
 
 	UITextComponent& UITextComponent::operator=(const UITextComponent& rhs)

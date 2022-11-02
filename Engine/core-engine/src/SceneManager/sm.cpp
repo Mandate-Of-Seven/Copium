@@ -53,7 +53,7 @@ namespace Copium {
 		return nullptr;
 	}
 
-	NewSceneManager::NewSceneManager() : gof{nullptr}, currentScene{nullptr}, selectedGameObject{nullptr},storageScene{nullptr}
+	NewSceneManager::NewSceneManager() : gof{nullptr}, currentScene{nullptr}, selectedGameObject{nullptr}, storageScene{nullptr}
 	{
 		gof = new GameObjectFactory();
 		if (!gof)

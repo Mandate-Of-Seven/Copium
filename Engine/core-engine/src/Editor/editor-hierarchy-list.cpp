@@ -22,13 +22,9 @@ namespace Window::Hierarchy
 	bool isOpen;
 	int selectedID = -1;
 
-	bool showAddGameObject, showDeleteGameObject;
-
 	void init()
 	{
 		isOpen = true;
-		showAddGameObject = false;
-		showDeleteGameObject = false;
 		if (Copium::NewSceneManager::Instance())
 			currentScene = Copium::NewSceneManager::Instance()->get_current_scene();
 
@@ -53,13 +49,13 @@ namespace Window::Hierarchy
 			if (ImGui::BeginMenu("Menu"))
 			{
 				// Add menu items
-				if (ImGui::MenuItem("Add a GameObject", nullptr, showAddGameObject))
+				if (ImGui::MenuItem("Add GameObject", nullptr))
 				{
 					std::cout << "Add\n";
 					if (!Copium::NewSceneManager::Instance()->get_gof().build_gameobject())
 						std::cout << "Error creating game object\n";
 				}
-				if (ImGui::MenuItem("Delete Selected GameObject", nullptr, showDeleteGameObject))
+				if (ImGui::MenuItem("Delete GameObject", nullptr))
 				{
 					if (Copium::NewSceneManager::Instance()->get_selected_gameobject())
 					{
@@ -71,7 +67,19 @@ namespace Window::Hierarchy
 					{
 						std::cout << "no game object selected, can't delete\n";
 					}
-					
+				}
+				if (ImGui::MenuItem("Clone GameObject", nullptr))
+				{
+					if (Copium::NewSceneManager::Instance()->get_selected_gameobject())
+					{
+						std::cout << "Clone\n";
+						Copium::NewSceneManager::Instance()->get_gof().clone_gameobject(Copium::NewSceneManager::Instance()->get_selected_gameobject());
+						Copium::NewSceneManager::Instance()->set_selected_gameobject(nullptr);
+					}
+					else
+					{
+						std::cout << "no game object selected, can't clone\n";
+					}
 				}
 				ImGui::EndMenu();
 			}

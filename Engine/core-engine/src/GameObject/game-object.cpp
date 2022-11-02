@@ -180,6 +180,14 @@ Component* GameObject::addComponent(ComponentType componentType)
         PRINT("ADDED SCRIPT");
         break;
     case ComponentType::UIButton:
+        if (hasComponent(componentType))
+        {
+            break;
+        }
+        if (!hasComponent(ComponentType::UIImage))
+            addComponent<UIImageComponent>();
+        if (!hasComponent(ComponentType::UIText))
+            addComponent<UITextComponent>();
         component = new UIButtonComponent(*this);
         PRINT("ADDED UI BUTTON");
         break;

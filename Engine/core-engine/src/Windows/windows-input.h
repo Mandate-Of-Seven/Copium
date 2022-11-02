@@ -119,5 +119,8 @@ namespace Copium
 			static void mousepos_callback(GLFWwindow * window, double xPos, double yPos);
 			static void mousebutton_callback(GLFWwindow * window, int button, int action, int mods);
 			static void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods);
+
+	private:
+		bool printInput = 0;
 	};
 }

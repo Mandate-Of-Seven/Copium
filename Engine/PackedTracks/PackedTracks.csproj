@@ -27,7 +27,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AIMovement.cs" />
-    <Compile Include="Bullet.cs" />
     <Compile Include="CombatMovement.cs" />
     <Compile Include="CopiumScriptCore\CopiumScript.cs" />
     <Compile Include="CopiumScriptCore\Debug.cs" />
