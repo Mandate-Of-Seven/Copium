@@ -15,7 +15,8 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "Math/math-library.h"
-enum Shape
+#include "SceneManager/sm.h"
+enum class Shape : int
 {	DOT,
 	SQUARE
 };
@@ -86,16 +87,35 @@ namespace Copium::Collision
 	/***************************************************************************/
 	/*!
 	\brief
+	Checks for the shortest collision direction to resolve
+	\param aabb1
+	The AABB of the first object to check direction
+	\param vel1
+	The velocity of the first object
+	\param aabb2
+	The AABB of the second object to check for direction
+	\param vel2
+	The velocity of the second object
+    \return
+	The enum class collisiondirection , to show which direction of collision
+	to resolve
+
+*/
+/**************************************************************************/
+	collisionDirection check_collision_direction(const AABB& aabb1, const Math::Vec2& vel1,
+		const AABB& aabb2, const Math::Vec2& vel2);
+	/***************************************************************************/
+	/*!
+	\brief
 	Resolves collision based on the direction the collision was detected
 	\param aabb1
-	The AABB of the first object to resolve
+	The first gameobject to resolve 
 	\param aabb2
-	The AABB of the second object to resolve
+	The second gameobject to resolve
+	\param direction
+	the direction to resolve
 	
 	*/
 	/**************************************************************************/
-	void resolve_collision(const AABB& aabb1, const AABB& aabb2, collisionDirection direction);
-
-	collisionDirection check_collision_direction(const AABB& aabb1, const Math::Vec2& vel1,
-		const AABB& aabb2, const Math::Vec2& vel2);
+	void resolve_collision(GameObject& aabb1, GameObject& aabb2, collisionDirection direction);
 }
