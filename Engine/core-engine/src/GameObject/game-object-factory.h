@@ -205,6 +205,17 @@ namespace Copium {
 		/*******************************************************************************/
 		bool register_archetypes(const std::filesystem::path& _directoryPath);
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Get reference of the archetype map
+
+		\return
+			reference to the archetype map
+
+		*/
+		/*******************************************************************************/
 		std::map<std::string, GameObject*>& get_archetype_map();
 
 	private:

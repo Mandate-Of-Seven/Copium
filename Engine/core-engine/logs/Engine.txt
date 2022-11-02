@@ -1,0 +1,3 @@
+[source ] [function ] [line ] [21:19:35] Copium Engine:  This is a critical
+[source ] [function ] [line ] [21:19:35] Copium Engine:  This is an error
+[source ] [function ] [line ] [21:19:35] Copium Engine:  This is a warning
