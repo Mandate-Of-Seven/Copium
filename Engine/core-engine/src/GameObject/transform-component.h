@@ -3,6 +3,7 @@
 \project
 \author			Zacharie Hong
 \co-authors     Matthew Lau
+                Shawn Tanary
 
 \par			Course: GAM200
 \par			Section:
