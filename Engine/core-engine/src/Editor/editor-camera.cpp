@@ -53,12 +53,12 @@ namespace Copium
 
 		if (enableCamera)
 		{
-			zoomLevel = 4.f;
-			update_ortho_projection(aspectRatio, zoomLevel);
 			NewSceneManager* sm = NewSceneManager::Instance();
 			Scene* scene = sm->get_current_scene();
-			if (scene != nullptr)
+			if (scene != nullptr && !scene->get_name().compare("DemoCLONE"))
 			{
+				zoomLevel = 5.f;
+				update_ortho_projection(aspectRatio, zoomLevel);
 				for (size_t i = 0; i < scene->get_gameobjectvector().size(); i++)
 				{
 					// If the object is the player
