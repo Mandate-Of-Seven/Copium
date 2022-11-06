@@ -17,7 +17,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <pch.h>
 #include "GameObject/game-object-factory.h"
 #include "SceneManager/sm.h"
-#include "GameObject/renderer-component.h"
+#include "GameObject/Components/renderer-component.h"
 #include <rttr/registration>
 #include <filesystem>
 
@@ -117,6 +117,7 @@ namespace Copium
 					else
 					{
 						Component* tmp = go->addComponent(Component::nameToType(key));
+						//PRINT();
 						if (tmp)
 							tmp->deserialize(component);
 					}						

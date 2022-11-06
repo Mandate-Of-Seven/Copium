@@ -35,20 +35,12 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 namespace
 {
 	Copium::MessageSystem* messageSystem{ Copium::MessageSystem::Instance() };
-	enum class CompilingState
-	{
-		Compiling,
-		SwapAssembly,
-		Wait
-	};
-	CompilingState compilingState{ CompilingState::Wait};
 	MonoDomain* mRootDomain{ nullptr };		//JIT RUNTIME DOMAIN
 	MonoDomain* mAppDomain{ nullptr };		//APP DOMAIN
 	MonoAssembly* mCoreAssembly{ nullptr };	//ASSEMBLY OF SCRIPTS.DLL
 	MonoImage* mAssemblyImage{ nullptr };	//LOADED IMAGE OF SCRIPTS.DLL
 	MonoClass* mGameObject{ nullptr };
 	MonoClass* mCopiumScript{ nullptr };
-
 }
 
 namespace Copium::Utils
@@ -150,6 +142,11 @@ namespace Copium
 		file.close();
 	}
 
+	MonoType* ScriptingSystem::getMonoTypeFromName(std::string& name)
+	{
+		return mono_reflection_type_from_name(name.data(), mAssemblyImage);
+	}
+
 	void ScriptingSystem::recompileThreadWork()
 	{
 		ThreadSystem& tSys = *ThreadSystem::Instance();
@@ -170,7 +167,7 @@ namespace Copium
 	ScriptingSystem::ScriptingSystem() :
 		scriptFiles{ FileSystem::Instance()->get_files_with_extension(".cs") }
 	{
-
+		
 	}
 
 	const std::list<Copium::File>& ScriptingSystem::getScriptFiles()
@@ -186,6 +183,8 @@ namespace Copium
 		systemFlags |= FLAG_RUN_ON_EDITOR;
 		ThreadSystem::Instance()->addThread(new std::thread(&ScriptingSystem::recompileThreadWork,this));
 		messageSystem->subscribe(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT, this);
+		messageSystem->subscribe(MESSAGE_TYPE::MT_SCENE_OPENED, this);
+		messageSystem->subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
 	}
 
 	void ScriptingSystem::update()
@@ -193,6 +192,7 @@ namespace Copium
 		if (compilingState == CompilingState::SwapAssembly)
 		{
 			swapDll();
+			registerComponents();
 			compilingState = CompilingState::Wait;
 		}
 	}
@@ -420,6 +420,21 @@ namespace Copium
 	void ScriptingSystem::handleMessage(MESSAGE_TYPE mType)
 	{
 		//MT_REFLECT_CS_GAMEOBJECT
-		reflectGameObject(MESSAGE_CONTAINER::reflectCsGameObject.ID);
+		switch (mType)
+		{
+			case MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT:
+			{
+				reflectGameObject(MESSAGE_CONTAINER::reflectCsGameObject.ID);
+			}
+			case MESSAGE_TYPE::MT_SCENE_OPENED:
+			{
+				while (compilingState == CompilingState::Compiling);
+				compilingState = CompilingState::Deserializing;
+			}
+			case MESSAGE_TYPE::MT_SCENE_DESERIALIZED:
+			{
+				compilingState = CompilingState::Wait;
+			}
+		}
 	}
 }

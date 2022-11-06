@@ -15,8 +15,10 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "Windows\windows-input.h"
 #include "SceneManager\sm.h"
-#include "Physics\collider.h"
+#include "GameObject/Components/physics-components.h"
 #include <glm/vec3.hpp>
+#include <Scripting/scripting-system.h>
+#include <cstring>
 
 #include "mono/metadata/object.h"
 #include "mono/metadata/reflection.h"
@@ -29,6 +31,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 namespace Copium
 {
 	#define Register(METHOD) mono_add_internal_call("CopiumEngine.InternalCalls::"#METHOD,METHOD)
+
+	static std::unordered_map<MonoType*, ComponentType> s_EntityHasComponentFuncs;
 
 
 	namespace
@@ -124,28 +128,34 @@ namespace Copium
 		return gameObj->id;
 	}
 
-	//static void RigidBodyAddForce(GameObjectID _ID, Math::Vec2* force)
-	//{
-	//	GameObject* gameObj = sceneManager.findGameObjByID(_ID);
-	//	if (gameObj == nullptr)
-	//	{
-	//		return;
-	//	}
-	//	auto rb = gameObj->getComponent<RigidBodyComponent>();
-	//	rb->add_force(*force);
-	//}
+	static void RigidbodyAddForce(GameObjectID _ID, Math::Vec2* force)
+	{
+		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+		if (gameObj == nullptr)
+		{
+			return;
+		}
+		auto rb = gameObj->getComponent<Rigidbody2D>();
+		if (rb == nullptr)
+		{
+			//LOG SOMETHING TO CONSOLE LIKE THIS OBJ HAS NOT RB
+			return;
+		}
+		rb->add_force(*force);
+	}
 
-	//static bool HasComponent(GameObjectID _ID, MonoReflectionType* componentType)
-	//{
-	//	GameObject* gameObj = sceneManager.findGameObjByID(_ID);
-	//	if (gameObj == nullptr)
-	//	{
-	//		return false;
-	//	}
-	//	MonoType* managedType = mono_reflection_type_get_type(componentType);
-	//	MonoType type = mono_type
-	//	return false;
-	//}
+	static bool HasComponent(GameObjectID _ID, MonoReflectionType* componentType)
+	{
+		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+		if (gameObj == nullptr)
+		{
+			return false;
+		}
+		MonoType* managedType = mono_reflection_type_get_type(componentType);
+		ComponentType cType = s_EntityHasComponentFuncs[managedType];
+		PRINT(MAP_COMPONENT_TYPE_NAME[cType]);
+		return gameObj->hasComponent(cType);
+	}
 
 	/*******************************************************************************
 	/*!
@@ -159,6 +169,25 @@ namespace Copium
 		Register(GetTranslation);
 		Register(SetTranslation);
 		Register(FindGameObjByName);
+		Register(HasComponent);
+		Register(RigidbodyAddForce);
+	}
+
+	static void registerComponents()
+	{
+		s_EntityHasComponentFuncs.clear();
+		int i{ 0 };
+		int end{ (int)ComponentType::None };
+		while (i != end)
+		{
+			std::string name = "CopiumEngine." + MAP_COMPONENT_TYPE_NAME[(ComponentType)i];
+			MonoType* mType = ScriptingSystem::Instance()->getMonoTypeFromName(name);
+			if (mType != nullptr)
+			{
+				s_EntityHasComponentFuncs.insert(std::make_pair(mType, (ComponentType)i));
+			}
+			++i;
+		}
 	}
 }
 

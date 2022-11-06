@@ -20,7 +20,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
-	bool SpriteRenderer::deserialize(rapidjson::Value& _value)
+	bool Sprite::deserialize(rapidjson::Value& _value)
 	{
 		if (!_value.HasMember("Sprite ID"))
 			return false;
@@ -46,7 +46,7 @@ namespace Copium
 
 		return true;
 	}
-	bool SpriteRenderer::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
+	bool Sprite::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
 		_value.AddMember("Sprite ID", spriteID, _doc.GetAllocator());
 

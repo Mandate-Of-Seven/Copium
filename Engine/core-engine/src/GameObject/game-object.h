@@ -24,7 +24,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Messaging/message-system.h"
 #include <rapidjson/document.h>
 #include "Math/math-library.h"
-#include "GameObject/transform-component.h"
+#include "GameObject/Components/transform-component.h"
 
 //USING
 
@@ -40,7 +40,7 @@ private:
     static GameObjectID count;
     std::list<Component*> components;   //Components for gameObject
     std::string name;                   //Name of gameObject
-    TransformComponent transform;
+    Transform transform;
     GameObject* parent;                 //Pointer to this gameObject's parent
     std::list<GameObject*> children;    //List of pointers to this gameObject's children
 
@@ -257,7 +257,7 @@ public:
         Return a copy transform of gameObject
     */
     /**************************************************************************/
-    TransformComponent& Transform();
+    Transform& Transform();
 
     /*******************************************************************************
     /*!

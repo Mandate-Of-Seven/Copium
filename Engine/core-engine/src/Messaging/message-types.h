@@ -33,6 +33,8 @@ namespace Copium
         MT_STOP_PREVIEW,
         MT_TOGGLE_PERFORMANCE_VIEW,
         MT_WINDOW_MINIMIZE,
+        MT_SCENE_OPENED,
+        MT_SCENE_DESERIALIZED,
         MT_NONE // END, DO NOT INSERT BEYOND
     };
 

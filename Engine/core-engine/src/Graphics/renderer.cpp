@@ -394,7 +394,7 @@ namespace Copium
 		draw_quad(transform, _textureID);
 	}
 
-	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const SpriteRenderer& _sprite)
+	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Sprite& _sprite)
 	{
 		glm::mat4 translate = glm::translate(glm::mat4(1.f), _position);
 
@@ -519,7 +519,7 @@ namespace Copium
 		quadCount++;
 	}
 
-	void Renderer::draw_quad(const glm::mat4& _transform, const SpriteRenderer& _sprite)
+	void Renderer::draw_quad(const glm::mat4& _transform, const Sprite& _sprite)
 	{
 		if (quadIndexCount >= maxIndexCount)
 		{

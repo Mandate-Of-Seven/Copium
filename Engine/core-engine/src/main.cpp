@@ -22,14 +22,14 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scripting/scripting-system.h"
 #include "Scripting/logic-system.h"
 #include "Editor/editor-consolelog.h"
-#include "Scripting/script-component.h"
+#include "GameObject/Components/script-component.h"
 #include "Debugging/logging-system.h"
 #include "Audio/sound-system.h"
 #include "SceneManager/sm.h"
-#include "GameObject/component.h"
-#include "GameObject/renderer-component.h"
+#include "GameObject/Components/component.h"
+#include "GameObject/Components/renderer-component.h"
 #include "Editor/editor-undoredo.h"
-#include "Graphics/ui-components.h"
+#include "GameObject/Components/ui-components.h"
 
 //State Manager
 #include "SceneManager/state-manager.h"

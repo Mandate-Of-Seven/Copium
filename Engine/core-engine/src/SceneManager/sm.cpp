@@ -27,6 +27,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "../Windows/windows-system.h"
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/prettywriter.h>
+#include <Messaging/message-system.h>
 
 namespace Copium {
 	GameObject* NewSceneManager::findGameObjByID(GameObjectID _ID)
@@ -128,7 +129,7 @@ namespace Copium {
 	bool NewSceneManager::load_scene(const std::string& _filepath)
 	{
 		std::cout << "load_scene\n";
-
+		
 		if (!currentScene)
 		{
 			currentScene = new NormalScene(_filepath);
@@ -149,6 +150,8 @@ namespace Copium {
 			return false;
 		}
 
+		// WAIT
+		MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_SCENE_OPENED);
 
 		if (document.HasMember("Name"))
 		{
@@ -166,6 +169,7 @@ namespace Copium {
 		}
 		
 		ifs.close();
+		MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_SCENE_DESERIALIZED);
 		return true;
 
 	}

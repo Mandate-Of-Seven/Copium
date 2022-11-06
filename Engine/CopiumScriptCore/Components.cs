@@ -25,17 +25,13 @@ namespace CopiumEngine
                 InternalCalls.SetTranslation(gameObject.ID, ref value);
             }
         }
-        public Transform()
-        {
-
-        }
     }
 
-/*    public class Rigidbody2DComponent : Component
-	{
-		public void AddForce(Vector2 impulse)
-		{
-			//InternalCalls.Rigidbody2DComponent_ApplyLinearImpulseToCenter(Entity.ID, ref impulse, wake);
-		}
-	}*/
+    public class Rigidbody2D : Component
+    {
+        public void AddForce(Vector2 force)
+        {
+            InternalCalls.RigidbodyAddForce(gameObject.ID, ref force);
+        }
+    }
 }

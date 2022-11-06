@@ -91,8 +91,8 @@ namespace Copium
 
 		// Data Members
 		GLSLShader* const get_shader_program() { return shaderProgram; }
-		void add_sprite(SpriteRenderer* _sprite) { sprites.push_back(_sprite); }
-		std::vector<SpriteRenderer*> const get_sprites() { return sprites; }
+		void add_sprite(Sprite* _sprite) { sprites.push_back(_sprite); }
+		std::vector<Sprite*> const get_sprites() { return sprites; }
 		Framebuffer* get_framebuffer() { return &framebuffer; }
 
 #pragma region MemberFunctions
@@ -186,7 +186,7 @@ namespace Copium
 		GLSLShader shaderProgram[NUM_SHADERS]; // Shader program to use
 
 		/* Stored Information ***********************************************************/
-		std::vector<SpriteRenderer*> sprites;
+		std::vector<Sprite*> sprites;
 
 		Renderer renderer;
 		Framebuffer framebuffer;

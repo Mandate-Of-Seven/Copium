@@ -199,7 +199,7 @@ namespace Copium::Math
 
 		float x, y;
 
-		RTTR_ENABLE();
+		//RTTR_ENABLE();
 
 
 	};

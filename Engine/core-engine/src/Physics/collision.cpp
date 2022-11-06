@@ -17,7 +17,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "pch.h"
 #include <limits>
 #include "Windows/windows-system.h"
-#include "Physics/collider.h"
+#include <Physics/collision.h>
+#include <GameObject/Components/transform-component.h>
 
 namespace Copium
 {
@@ -342,42 +343,36 @@ namespace Copium
 		return collisionDirection::NONE;
 	}
 
-	void resolve_collision(GameObject& aabb1, GameObject& aabb2, collisionDirection direction)
+	void resolve_AABBcollision(Transform& transform1,AABB& aabb1, AABB& aabb2, collisionDirection direction)
 	{		
-			RigidBodyComponent* pRbA = aabb1.getComponent<RigidBodyComponent>();
-			RigidBodyComponent* pRbB = aabb2.getComponent<RigidBodyComponent>();
-			AABB boundA;
-			AABB boundB;
-			float resolvePos = 0.0f;
-			boundA = pRbA->get_AABB();
-			boundB = pRbB->get_AABB();
+		float resolvePos = 0.0f;
 		if (direction == collisionDirection::TOP)
 		{
 			//std::cout << "resolve top" << std::endl;
-			resolvePos = boundA.min.y - boundB.max.y;
+			resolvePos = aabb1.min.y - aabb2.max.y;
 			resolvePos *= 1.05f;
-			aabb1.Transform().position.y -= resolvePos;
+			transform1.position.y -= resolvePos;
 		}
 		if (direction == collisionDirection::BOTTOM)
 		{
 			//std::cout << "resolve bottom" << std::endl;
-			resolvePos = boundA.max.y - boundB.min.y;
+			resolvePos = aabb1.max.y - aabb2.min.y;
 			resolvePos *= 1.05f;
-			aabb1.Transform().position.y -= resolvePos;
+			transform1.position.y -= resolvePos;
 		}
 		if (direction == collisionDirection::LEFT)
 		{
 			//std::cout << "resolve left" << std::endl;
-			resolvePos = boundA.min.x - boundB.max.x;
+			resolvePos = aabb1.min.x - aabb2.max.x;
 			resolvePos *= 1.05f;
-			aabb1.Transform().position.x -= resolvePos;
+			transform1.position.x -= resolvePos;
 		}
 		if (direction == collisionDirection::RIGHT)
 		{
 			//std::cout << "resolve right" << std::endl;
-			resolvePos = boundA.max.x - boundB.min.x;
+			resolvePos = aabb1.max.x - aabb2.min.x;
 			resolvePos *= 1.05f;
-			aabb1.Transform().position.x -= resolvePos;
+			transform1.position.x -= resolvePos;
 		}
 		
 	}

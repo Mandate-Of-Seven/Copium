@@ -54,8 +54,9 @@ namespace Copium
 				WindowsSystem::Instance(),
 				pMessageSystem,
 				LoggingSystem::Instance(),
+				ScriptingSystem::Instance(),
 				NewSceneManager::Instance(),
-				SoundSystem::Instance()	,
+				SoundSystem::Instance(),
 				FileSystem::Instance(),
 				AssetsSystem::Instance(),
 				InputSystem::Instance(),
@@ -63,7 +64,6 @@ namespace Copium
 				LogicSystem::Instance(),
 				PhysicsSystem::Instance(),
 				GraphicsSystem::Instance(),
-				ScriptingSystem::Instance(),
 				ThreadSystem::Instance()
 			};
 			for (ISystem* pSystem : systems)

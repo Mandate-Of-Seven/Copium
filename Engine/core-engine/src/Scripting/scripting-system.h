@@ -30,6 +30,7 @@ extern "C"
 	typedef struct _MonoMethod MonoMethod;
 	typedef struct _MonoObject MonoObject;
 	typedef struct _MonoClassField MonoClassField;
+	typedef struct _MonoType MonoType;
 }
 
 namespace Copium
@@ -37,8 +38,8 @@ namespace Copium
 	enum class FieldType
 	{
 		Float, Double,
-		Bool, Char, Byte, Short, Int, Long,
-		UByte, UShort, UInt, ULong,
+		Bool, Char, Short, Int, Long,
+		UShort, UInt, ULong,
 		Vector2, Vector3, None
 	};
 
@@ -87,15 +88,20 @@ namespace Copium
 		{ "System.Int16", FieldType::Short },
 		{ "System.Int32", FieldType::Int },
 		{ "System.Int64", FieldType::Long },
-		{ "System.Byte", FieldType::Byte },
 		{ "System.UInt16", FieldType::UShort },
 		{ "System.UInt32", FieldType::UInt },
 		{ "System.UInt64", FieldType::ULong },
-
 		{ "CopiumEngine.Vector2", FieldType::Vector2 },
 		{ "CopiumEngine.Vector3", FieldType::Vector3 }
 	};
 
+	enum class CompilingState
+	{
+		Compiling,
+		SwapAssembly,
+		Deserializing,
+		Wait
+	};
 
 	struct ScriptClass
 	{
@@ -264,6 +270,9 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		const std::unordered_map<std::string, ScriptClass*>& getScriptClassMap();
+
+		MonoType* getMonoTypeFromName(std::string& name);
+
 	private:
 
 		/**************************************************************************/
@@ -329,6 +338,7 @@ namespace Copium
 		bool scriptIsLoaded(const std::filesystem::path& filePath);
 		std::unordered_map<std::string, ScriptClass*> scriptClassMap;
 		std::list<File>& scriptFiles;
+		CompilingState compilingState{ CompilingState::Wait };
 	};
 }
 #endif // !SCRIPTING_SYSTEM_H

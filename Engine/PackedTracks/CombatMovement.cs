@@ -1,5 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
+using System;
 using CopiumEngine;
 
 public class CombatMovement : CopiumScript
@@ -8,15 +8,17 @@ public class CombatMovement : CopiumScript
     public float TrainSpeed = 0;
     public float MaxTrainSpeed = 1;
     public float TrainAcc = 0.01f;
-    public Vector3 test;
+    public Vector2 force;
 
     bool canMoveLeft = true;
     bool canMoveRight = true;
+
+    Rigidbody2D rb;
     
     // Start is called before the first frame update
     void Start()
     {
-
+        rb = gameObject.GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -24,35 +26,45 @@ public class CombatMovement : CopiumScript
     {
         bool inputLeft = false;
         bool inputRight = false;
-
         Vector3 pos = transform.position;
+        /*        if (Input.GetKey(KeyCode.A))
+                {
+                    if (-TrainSpeed < MaxTrainSpeed)
+                    {
+                        TrainSpeed -= TrainAcc;
+                    }
+                    else
+                    {
+                        TrainSpeed = -MaxTrainSpeed;
+                    }
+                }
+                else if (Input.GetKey(KeyCode.D))
+                {
+                    if (TrainSpeed < MaxTrainSpeed)
+                    {
+                        TrainSpeed += TrainAcc;
+                    }
+                    else
+                    {
+                        TrainSpeed = MaxTrainSpeed;
+                    }    
+                }
+                else
+                {
+                    TrainSpeed *= 0.97f;
+                }*/
+
         if (Input.GetKey(KeyCode.A))
         {
-            if (-TrainSpeed < MaxTrainSpeed)
-            {
-                TrainSpeed -= TrainAcc;
-            }
-            else
-            {
-                TrainSpeed = -MaxTrainSpeed;
-            }
+            Console.WriteLine("HELLO?");
+            rb.AddForce(force);
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            if (TrainSpeed < MaxTrainSpeed)
-            {
-                TrainSpeed += TrainAcc;
-            }
-            else
-            {
-                TrainSpeed = MaxTrainSpeed;
-            }    
+            //rb.AddForce(new Vector2(0.0f, 30.0f));
         }
-        else
-        {
-            TrainSpeed *= 0.97f;
-        }
-        pos.x += TrainSpeed;
+
+/*        pos.x += TrainSpeed;
         if (pos.x < -4.5f)
         {
             TrainSpeed /= 2f;
@@ -62,7 +74,7 @@ public class CombatMovement : CopiumScript
         {
             TrainSpeed /= 2f;
             pos.x = 7.0f;
-        }
-        transform.position = pos;
+        }*/
+        //transform.position = pos;
     }
 }

@@ -16,10 +16,15 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 *****************************************************************************************/
 #include "Math/math-library.h"
 #include "SceneManager/sm.h"
+
+#ifndef COLLISION_H
+#define COLLISION_H
+
 enum class Shape : int
 {	DOT,
 	SQUARE
 };
+
 enum class collisionDirection : int
 {
 	NONE,
@@ -33,7 +38,7 @@ namespace Copium
 	
 	struct AABB
 	{
-		AABB(Math::Vec2 _min = {-0.5f,-0.5f}, Math::Vec2 _max = { 0.5f,0.5f }) : max{_max}, min{_min}
+		AABB(Math::Vec2 _min = { -0.5f,-0.5f }, Math::Vec2 _max = { 0.5f,0.5f }) : max{ _max }, min{ _min }
 		{
 
 		}
@@ -91,7 +96,6 @@ namespace Copium
 		}
 		Math::Vec2 min;
 		Math::Vec2 max;
-
 	};
 
 	/***************************************************************************/
@@ -175,5 +179,7 @@ namespace Copium
 	
 	*/
 	/**************************************************************************/
-	void resolve_collision(GameObject& aabb1, GameObject& aabb2, collisionDirection direction);
+	void resolve_AABBcollision(Transform& transform1, AABB& aabb1, AABB& aabb2, collisionDirection direction);
 }
+
+#endif // !COLLISION_H
