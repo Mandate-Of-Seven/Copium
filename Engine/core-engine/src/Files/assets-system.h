@@ -16,13 +16,15 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #ifndef ASSETS_SYSTEM_H
 #define ASSETS_SYSTEM_H
 
+#include <map>
 #include "CopiumCore/system-interface.h"
+#include "Messaging/message-system.h"
 #include "Graphics/textures.h"
 #include "Graphics/spritesheet.h"
 
 namespace Copium
 {
-	CLASS_SYSTEM(AssetsSystem)
+	CLASS_SYSTEM(AssetsSystem), public IReceiver
 	{
 	public:
 		/***************************************************************************/
@@ -49,6 +51,16 @@ namespace Copium
 		/**************************************************************************/
 		void exit();
 
+		void handleMessage(MESSAGE_TYPE mType);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Reload all assets in the assets folder
+		*/
+		/**************************************************************************/
+		void reload_assets();
+
 		/***************************************************************************/
 		/*!
 		\brief
@@ -58,6 +70,16 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		void load_all_textures(std::list<std::string>& _path);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Loads all textures into the engine
+		\param _path
+			The file path to load from
+		*/
+		/**************************************************************************/
+		void reload_textures(std::list<std::string>&_path);
 
 		/***************************************************************************/
 		/*!
@@ -83,6 +105,9 @@ namespace Copium
 		std::vector<Spritesheet>& get_spritesheets() { return spritesheets; }
 
 	private:
+		/* Assets Data ******************************************************************/
+		std::map<std::string, std::list<std::string>> assetFilePath;
+
 		std::vector<Texture> textures;
 		std::vector<Spritesheet> spritesheets;
 	};

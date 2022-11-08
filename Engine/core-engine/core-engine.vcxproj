@@ -120,7 +120,7 @@
     <ClCompile Include="src\Graphics\glslshader.cpp" />
     <ClCompile Include="src\Graphics\graphics-system.cpp" />
     <ClCompile Include="src\Graphics\renderer.cpp" />
-    <ClCompile Include="src\Graphics\sprite-renderer.cpp" />
+    <ClCompile Include="src\Graphics\sprite.cpp" />
     <ClCompile Include="src\Graphics\spritesheet.cpp" />
     <ClCompile Include="src\Graphics\textures.cpp" />
     <ClCompile Include="src\GameObject\Components\ui-components.cpp" />
@@ -195,7 +195,7 @@
     <ClInclude Include="src\GameObject\Components\renderer-component.h" />
     <ClInclude Include="src\Graphics\camera.h" />
     <ClInclude Include="src\Graphics\fonts.h" />
-    <ClInclude Include="src\Graphics\sprite-renderer.h" />
+    <ClInclude Include="src\Graphics\sprite.h" />
     <ClInclude Include="src\GameObject\Components\ui-components.h" />
     <ClInclude Include="src\SceneManager\sm.h" />
     <ClInclude Include="src\Scripting\logic-system.h" />

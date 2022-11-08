@@ -14,6 +14,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************/
 #include "pch.h"
 
+#include <GLFW/glfw3.h>
+
 #include "Files/assets-system.h"
 #include "Files/file-system.h"
 #include "Graphics/graphics-system.h"
@@ -23,6 +25,7 @@ namespace Copium
 {
 	void AssetsSystem::init()
 	{
+		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_RELOAD_ASSETS, this);
 
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		FileSystem* fs = FileSystem::Instance();
@@ -30,29 +33,116 @@ namespace Copium
 		// Bean: In the future, we shall store all extension files in their own extension vectors std::map<std::string, std::vector<std::string>>
 		// And update when the user adds more files into the system during runtime
 
+		// Load all files in the asset folder
+		for (auto& dirEntry : std::filesystem::recursive_directory_iterator(Paths::assetPath))
+		{
+			if (!dirEntry.is_directory()) // If it is a file
+			{
+				// Check if the file extension exists
+				std::string fileExt = dirEntry.path().extension().string();
+				if (assetFilePath.contains(fileExt))
+				{
+					// Add file path into the map
+					assetFilePath[fileExt].push_back(dirEntry.path().generic_string());
+				}
+				else
+				{
+					// Create new key
+					assetFilePath.emplace(std::make_pair(fileExt, std::list<std::string>()));
+					assetFilePath[fileExt].push_back(dirEntry.path().generic_string());
+				}
+			}
+		}
+
+		/*for (auto str : assetFilePath)
+		{
+			PRINT("Extension: " << str.first);
+			for (auto str2 : str.second)
+			{
+				PRINT("  Path: " << str2);
+			}
+			PRINT("");
+		}*/
+
 		// Load Textures (.png)
-		load_all_textures(fs->get_filepath_in_directory(Paths::assetPath.c_str(), ".png"));
+		load_all_textures(assetFilePath[".png"]);
+
+		//load_all_textures(fs->get_filepath_in_directory(Paths::assetPath.c_str(), ".png"));
 		
 		// Load Shaders (.vert & .frag)
 		load_all_shaders(fs->get_filepath_in_directory(Paths::assetPath.c_str(), ".vert", ".frag"));
 		
 		// Load Audio (.wav)
 		load_all_audio(fs->get_filepath_in_directory(Paths::assetPath.c_str(), ".wav"));
-		
-		for (unsigned int i = 0; i < textures.size(); i++)
-		{
-			//std::cout << "Texture: " << textures[i].get_object_id() << " " << textures[i].get_file_path() << "\n";
-		}
 	}
 
 	void AssetsSystem::update()
 	{
+		static int previousFileCount = 0;
 
+		int fileCount = 0;
+		for (auto dirEntry : std::filesystem::recursive_directory_iterator(Paths::assetPath))
+		{
+			(void)dirEntry;
+			fileCount++;
+		}
+
+		// Check if there is a change in the number of files
+		if (previousFileCount != 0 && previousFileCount != fileCount)
+			reload_assets();
+
+		previousFileCount = fileCount;
 	}
 	
 	void AssetsSystem::exit()
 	{
 
+	}
+
+	void AssetsSystem::handleMessage(MESSAGE_TYPE mType)
+	{
+		if (mType == MESSAGE_TYPE::MT_RELOAD_ASSETS)
+		{
+			reload_assets();
+		}
+	}
+
+	void AssetsSystem::reload_assets()
+	{
+		assetFilePath.clear();
+
+		for (auto& dirEntry : std::filesystem::recursive_directory_iterator(Paths::assetPath))
+		{
+			if (!dirEntry.is_directory()) // If it is a file
+			{
+				// Check if the file extension exists
+				std::string fileExt = dirEntry.path().extension().string();
+				if (assetFilePath.contains(fileExt))
+				{
+					// Check if there is already a file in assets that has the same file path
+					bool sameFile = false;
+					for (auto str : assetFilePath[fileExt])
+					{
+						if (!str.compare(dirEntry.path().generic_string()))
+						{
+							sameFile = true;
+						}
+					}
+
+					// Add file path into the map
+					if(!sameFile)
+						assetFilePath[fileExt].push_back(dirEntry.path().generic_string());
+				}
+				else
+				{
+					// Create new key
+					assetFilePath.emplace(std::make_pair(fileExt, std::list<std::string>()));
+					assetFilePath[fileExt].push_back(dirEntry.path().generic_string());
+				}
+			}
+		}
+
+		reload_textures(assetFilePath[".png"]);
 	}
 
 	void AssetsSystem::load_all_textures(std::list<std::string>& _path)
@@ -81,6 +171,60 @@ namespace Copium
 				spritesheets.push_back(ss);
 			}
 		}
+	}
+
+	void AssetsSystem::reload_textures(std::list<std::string>& _path)
+	{
+		float start = glfwGetTime();
+		for (std::string path : _path)
+		{
+			// Only add new textures
+			bool isNewTexture = true;
+			for (auto texture : textures)
+			{
+				if (!texture.get_file_path().compare(path))
+				{
+					isNewTexture = false;
+					break;
+				}
+			}
+
+			// Generate texture
+			if (isNewTexture)
+			{
+				// Bean: STBI load is intensive for some reasons, probably because the file
+				//		 dimension is above 2k or file size too huge
+				Texture newTexture(path);
+				//std::cout << "Texture: " << path << "\n";
+				
+				// Store the texture
+				textures.push_back(newTexture);
+				isNewTexture = false;
+			}			
+		}
+
+		for (auto it = textures.begin(); it != textures.end();)
+		{
+			bool hasTexture = false;
+			for (std::string path : _path)
+			{
+				// Check if texture still exists in the assets folder
+				if (!((*it).get_file_path().compare(path)))
+				{
+					hasTexture = true;
+					break;
+				}
+			}
+
+			if (!hasTexture)
+				it = textures.erase(it);
+			else
+				it++;
+		}
+
+		float end = glfwGetTime();
+
+		PRINT("Time taken to reload: " << end - start);
 	}
 
 	void AssetsSystem::load_all_audio(std::list<std::string>& _path)

@@ -30,7 +30,7 @@ namespace Copium
 		unsigned int textureID; // The texture id to bind the glyph texture
 		glm::ivec2 size; // Size of glyph
 		glm::ivec2 bearing; // Offset from the baseline to left/top of gylph
-		unsigned int advance; // Offseet to advance to next glyph
+		unsigned int advance; // Offset to advance to next glyph
 	};
 
 	class Font

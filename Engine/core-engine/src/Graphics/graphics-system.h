@@ -20,8 +20,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "CopiumCore/system-interface.h"
 
 #include "Graphics/glslshader.h"
-#include "Graphics/spritesheet.h"
-#include "Graphics/sprite-renderer.h"
 #include "Graphics/framebuffer.h"
 #include "Graphics/renderer.h"
 #include "Graphics/fonts.h"
@@ -91,8 +89,6 @@ namespace Copium
 
 		// Data Members
 		GLSLShader* const get_shader_program() { return shaderProgram; }
-		void add_sprite(Sprite* _sprite) { sprites.push_back(_sprite); }
-		std::vector<Sprite*> const get_sprites() { return sprites; }
 		Framebuffer* get_framebuffer() { return &framebuffer; }
 
 #pragma region MemberFunctions
@@ -113,23 +109,6 @@ namespace Copium
 
 	private:
 		// Private Member functions 
-
-		/***************************************************************************/
-		/*!
-		\brief
-			Setup default world, view and projection matrices 
-			(May include orthographic)
-		*/
-		/***************************************************************************/
-		void setup_matrices();
-		
-		/***************************************************************************/
-		/*!
-		\brief
-			Load assets into the engine
-		*/
-		/***************************************************************************/
-		void load_assets();
 
 		/***************************************************************************/
 		/*!
@@ -186,8 +165,6 @@ namespace Copium
 		GLSLShader shaderProgram[NUM_SHADERS]; // Shader program to use
 
 		/* Stored Information ***********************************************************/
-		std::vector<Sprite*> sprites;
-
 		Renderer renderer;
 		Framebuffer framebuffer;
 

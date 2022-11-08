@@ -17,7 +17,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "GameObject/Components/component.h"
 #include "GameObject/Components/transform-component.h"
-#include "Graphics/sprite-renderer.h"
+#include "Graphics/sprite.h"
 #include "GameObject/game-object.h"
 
 namespace Copium

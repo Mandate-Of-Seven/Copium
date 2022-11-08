@@ -35,6 +35,7 @@ namespace Copium
         MT_WINDOW_MINIMIZE,
         MT_SCENE_OPENED,
         MT_SCENE_DESERIALIZED,
+        MT_RELOAD_ASSETS,
         MT_NONE // END, DO NOT INSERT BEYOND
     };
 

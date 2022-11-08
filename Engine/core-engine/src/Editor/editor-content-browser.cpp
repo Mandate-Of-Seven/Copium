@@ -16,10 +16,20 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include <algorithm>
 #include "Editor/editor-content-browser.h"
+#include "Messaging/message-system.h"
 
 namespace Copium
 {
-	std::filesystem::path assets = "Assets";
+	namespace
+	{
+		std::filesystem::path assets = "Assets";
+
+		const float padding = 16.f;
+		const float thumbnailSize = 128.f;
+		float cellSize = thumbnailSize + padding;
+
+		int finalCount = 0;
+	}
 
 	void EditorContentBrowser::init()
 	{
@@ -43,17 +53,21 @@ namespace Copium
 				currentDirectory = currentDirectory.parent_path();
 			}
 		}
-
-		static float padding = 16.f;
-		static float thumbnailSize = 128.f;
-		float cellSize = thumbnailSize + padding;
+		else
+		{
+			if (ImGui::Button("Reload"))
+			{
+				MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_RELOAD_ASSETS);
+			}
+		}
 
 		float panelWidth = ImGui::GetContentRegionAvail().x;
 		int columnCount = (int)(panelWidth / cellSize);
-		int fileCount = 0, finalCount = 0;
+		
 		if (columnCount < 1)
 			columnCount = 1;
 
+		int fileCount = 0;
 		for (auto& dirEntry : std::filesystem::directory_iterator(currentDirectory))
 		{
 			(void) dirEntry;
@@ -88,7 +102,6 @@ namespace Copium
 				const auto& path = dirEntry.path();
 				auto relativePath = std::filesystem::relative(path, assets);
 				std::string fileName = relativePath.filename().string();
-				
 
 				ImGui::PushID(fileName.c_str());
 
@@ -99,8 +112,7 @@ namespace Copium
 				
 				if (ImGui::BeginDragDropSource())
 				{
-					std::string str = path.string();
-					std::replace(str.begin(), str.end(), '\\', '/');
+					std::string str = path.generic_string();
 					const char* filePath = str.c_str();
 					ImGui::SetDragDropPayload("ContentBrowserItem", filePath, str.size() + 1);
 					
