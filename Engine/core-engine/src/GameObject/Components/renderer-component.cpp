@@ -85,7 +85,6 @@ namespace Copium
 						if (!assets->get_textures()[i].get_file_path().compare(str))
 						{
 							spriteID = i + 1;
-							PRINT("Sprite ID: " << spriteID);
 						}
 					}
 					size_t pos = str.find_last_of('/');

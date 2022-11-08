@@ -72,4 +72,9 @@ namespace Copium
 	{
 		//glDeleteTextures(1, &textureObjectID);
 	}
+
+	void Texture::exit()
+	{
+		glDeleteTextures(1, &textureObjectID);
+	}
 }

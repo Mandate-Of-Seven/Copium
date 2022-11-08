@@ -32,37 +32,15 @@ namespace Copium
 		
 		// Bean: In the future, we shall store all extension files in their own extension vectors std::map<std::string, std::vector<std::string>>
 		// And update when the user adds more files into the system during runtime
-
-		// Load all files in the asset folder
-		for (auto& dirEntry : std::filesystem::recursive_directory_iterator(Paths::assetPath))
-		{
-			if (!dirEntry.is_directory()) // If it is a file
-			{
-				// Check if the file extension exists
-				std::string fileExt = dirEntry.path().extension().string();
-				if (assetFilePath.contains(fileExt))
-				{
-					// Add file path into the map
-					assetFilePath[fileExt].push_back(dirEntry.path().generic_string());
-				}
-				else
-				{
-					// Create new key
-					assetFilePath.emplace(std::make_pair(fileExt, std::list<std::string>()));
-					assetFilePath[fileExt].push_back(dirEntry.path().generic_string());
-				}
-			}
-		}
-
-		/*for (auto str : assetFilePath)
-		{
-			PRINT("Extension: " << str.first);
-			for (auto str2 : str.second)
-			{
-				PRINT("  Path: " << str2);
-			}
-			PRINT("");
-		}*/
+		// Assets should have their own file types for easy access and setting up of image icons etc
+		// Can be a struct or a class
+		// All files should have:
+		// 1. A unique ID
+		// 2. A file path
+		// 3. The extension
+		//
+		// Load all file paths in the asset folder
+		load_assets();
 
 		// Load Textures (.png)
 		load_all_textures(assetFilePath[".png"]);
@@ -96,7 +74,8 @@ namespace Copium
 	
 	void AssetsSystem::exit()
 	{
-
+		for (Texture& texture : textures)
+			texture.exit();
 	}
 
 	void AssetsSystem::handleMessage(MESSAGE_TYPE mType)
@@ -107,10 +86,8 @@ namespace Copium
 		}
 	}
 
-	void AssetsSystem::reload_assets()
+	void AssetsSystem::load_assets()
 	{
-		assetFilePath.clear();
-
 		for (auto& dirEntry : std::filesystem::recursive_directory_iterator(Paths::assetPath))
 		{
 			if (!dirEntry.is_directory()) // If it is a file
@@ -119,19 +96,8 @@ namespace Copium
 				std::string fileExt = dirEntry.path().extension().string();
 				if (assetFilePath.contains(fileExt))
 				{
-					// Check if there is already a file in assets that has the same file path
-					bool sameFile = false;
-					for (auto str : assetFilePath[fileExt])
-					{
-						if (!str.compare(dirEntry.path().generic_string()))
-						{
-							sameFile = true;
-						}
-					}
-
 					// Add file path into the map
-					if(!sameFile)
-						assetFilePath[fileExt].push_back(dirEntry.path().generic_string());
+					assetFilePath[fileExt].push_back(dirEntry.path().generic_string());
 				}
 				else
 				{
@@ -141,6 +107,23 @@ namespace Copium
 				}
 			}
 		}
+
+		/*for (auto str : assetFilePath)
+		{
+			PRINT("Extension: " << str.first);
+			for (auto str2 : str.second)
+			{
+				PRINT("  Path: " << str2);
+			}
+			PRINT("");
+		}*/
+	}
+
+	void AssetsSystem::reload_assets()
+	{
+		assetFilePath.clear();
+
+		load_assets();
 
 		reload_textures(assetFilePath[".png"]);
 	}
@@ -157,6 +140,7 @@ namespace Copium
 			textures.push_back(texture);
 		}
 
+		// Bean: This should be done in the animation system or animator component
 		for (int i = 0; i < get_textures().size(); i++)
 		{
 
@@ -175,7 +159,7 @@ namespace Copium
 
 	void AssetsSystem::reload_textures(std::list<std::string>& _path)
 	{
-		float start = glfwGetTime();
+		double start = glfwGetTime();
 		for (std::string path : _path)
 		{
 			// Only add new textures
@@ -216,13 +200,14 @@ namespace Copium
 				}
 			}
 
+			// If it does not exist in the assets folder, delete it
 			if (!hasTexture)
 				it = textures.erase(it);
 			else
 				it++;
 		}
 
-		float end = glfwGetTime();
+		double end = glfwGetTime();
 
 		PRINT("Time taken to reload: " << end - start);
 	}

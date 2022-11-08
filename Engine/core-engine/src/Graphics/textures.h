@@ -40,7 +40,7 @@ namespace Copium
 			Delete texture object id
 		*/
 		/***************************************************************************/
-		~Texture();
+		void exit();
 
 		const unsigned int& get_width() const { return width; }
 		const unsigned int& get_height() const { return height; }
