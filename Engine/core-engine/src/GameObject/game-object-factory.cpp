@@ -36,6 +36,7 @@ namespace Copium
 	}
 	GameObjectFactory::~GameObjectFactory()
 	{
+		//clear_archetypes();
 	}
 
 	GameObject* GameObjectFactory::build_gameobject()
@@ -47,9 +48,25 @@ namespace Copium
 			return nullptr;
 
 		}
+
+
+		unsigned count{ 0 };
+		for (GameObject* go : currScene->get_gameobjectvector())
+		{
+			if (go->get_name().find("New GameObject") != std::string::npos)
+				++count;
+		}
+
+
+
 		GameObject* tmp = new GameObject();
 		if (!tmp)
 			return nullptr;
+		if (count)
+		{
+			std::string postfix('(' + std::to_string(count) + ')');
+			tmp->set_name(tmp->get_name() + postfix);
+		}
 		currScene->add_gameobject(tmp);
 
 		return tmp;
@@ -228,7 +245,6 @@ namespace Copium
 				}
 			}
 		}
-		//unsigned int childCount{ 0 };
 		// Deserialize children (if any)
 		if (_value.HasMember("Children")) {
 			rapidjson::Value& childArr = _value["Children"].GetArray();
@@ -236,7 +252,6 @@ namespace Copium
 			{
 				GameObject* cgo = build_gameobject(*iter);
 				go->attach_child(cgo);
-				//++childCount;
 			}
 		}
 
@@ -268,6 +283,16 @@ namespace Copium
 		}
 		std::cout << "Registration of Archetypes End----\n";
 		return true;
+	}
+	void GameObjectFactory::clear_archetypes()
+	{
+		for (std::map<std::string, GameObject*>::iterator iter = gameObjectCreators.begin(); iter != gameObjectCreators.end(); ++iter)
+		{
+			if ((*iter).second != nullptr) {
+				delete (*iter).second;
+				(*iter).second = nullptr;
+			}
+		}
 	}
 	GameObject* GameObjectFactory::build_gameobject(const std::string& _archetype)
 	{

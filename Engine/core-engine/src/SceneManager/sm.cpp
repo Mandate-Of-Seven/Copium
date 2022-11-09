@@ -78,7 +78,7 @@ namespace Copium {
 
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		storageScene = nullptr;
-		//gof->register_archetypes("Data/Archetypes");
+		gof->register_archetypes("Data/Archetypes");
 
 
 		//std::cout << "No. of GameObjects in scene:" << currentScene->get_gameobjcount() << std::endl;
@@ -94,6 +94,7 @@ namespace Copium {
 
 		if (gof)
 		{
+			gof->clear_archetypes();
 			delete gof;
 			gof = nullptr;
 		}
@@ -283,6 +284,7 @@ namespace Copium {
 			PRINT("There is no scene to save...\n");
 			return false;
 		}
+
 		double startTime = glfwGetTime();
 		std::cout << "saving scene...\n";
 		if (!save_scene(sceneFilePath))
@@ -299,6 +301,7 @@ namespace Copium {
 			PRINT("There is no scene to save...\n");
 			return false;
 		}
+		std::ofstream ofs(_filepath);
 		rapidjson::Document doc;
 
 		doc.SetObject();
@@ -337,9 +340,7 @@ namespace Copium {
 		rapidjson::StringBuffer sb;
 		rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(sb);
 		doc.Accept(writer);
-		std::ofstream ofs(_filepath);
 		ofs << sb.GetString();
-		//std::cout << sb.GetString() << std::endl;
 		return true;
 	}
 
@@ -354,4 +355,21 @@ namespace Copium {
 		return &commandManager;
 	}
 
+
+	// M3
+	std::string& NewSceneManager::get_scenefilepath() { return sceneFilePath; }
+	bool NewSceneManager::create_scene()
+	{
+		if (currentScene) {
+			delete currentScene;
+			currentScene = nullptr;
+			sceneFilePath.clear();
+		}
+
+		currentScene = new NormalScene();
+		if (!currentScene)
+			return false;
+
+		return true;
+	}
 }

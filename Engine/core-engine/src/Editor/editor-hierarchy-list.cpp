@@ -15,6 +15,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 #include "Editor/editor-hierarchy-list.h"
 
+
 //M2
 namespace Window::Hierarchy
 {
@@ -44,18 +45,28 @@ namespace Window::Hierarchy
 		ImGui::SetNextWindowSize(ImVec2(500, 900), ImGuiCond_FirstUseEver);
 		ImGui::Begin("Hierarchy", &isOpen, ImGuiWindowFlags_MenuBar);
 
+		// Menu Bar
 		if (ImGui::BeginMenuBar())
 		{
 			if (ImGui::BeginMenu("Menu"))
 			{
 				// Add menu items
-				if (ImGui::MenuItem("Add GameObject", nullptr))
+				if (ImGui::MenuItem("Create GameObject", nullptr))
 				{
-					std::cout << "Add\n";
-					if (!Copium::NewSceneManager::Instance()->get_gof().build_gameobject())
-						std::cout << "Error creating game object\n";
+					if (!currentScene)
+					{
+						Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
+
+					}
+					else
+					{
+						if (!Copium::NewSceneManager::Instance()->get_gof().build_gameobject())
+							std::cout << "Error creating game object\n";
+					}
+
+
 				}
-				if (ImGui::MenuItem("Delete GameObject", nullptr))
+				if (ImGui::MenuItem("Delete Selected GameObject", nullptr))
 				{
 					if (Copium::NewSceneManager::Instance()->get_selected_gameobject())
 					{
@@ -65,10 +76,10 @@ namespace Window::Hierarchy
 					}
 					else
 					{
-						std::cout << "no game object selected, can't delete\n";
+						Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
 					}
 				}
-				if (ImGui::MenuItem("Clone GameObject", nullptr))
+				if (ImGui::MenuItem("Clone Selected GameObject", nullptr))
 				{
 					if (Copium::NewSceneManager::Instance()->get_selected_gameobject())
 					{
@@ -78,10 +89,32 @@ namespace Window::Hierarchy
 					}
 					else
 					{
-						std::cout << "no game object selected, can't clone\n";
+						Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
 					}
+				}				
+				if (ImGui::BeginMenu("Add Archetype"))
+				{
+					if (!currentScene)
+					{
+						Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
+					}
+					else
+					{
+						for (std::map<std::string, Copium::GameObject*>::iterator iter = Copium::NewSceneManager::Instance()->get_gof().get_archetype_map().begin();
+							iter != Copium::NewSceneManager::Instance()->get_gof().get_archetype_map().end(); ++iter)
+						{
+							if (ImGui::MenuItem((*iter).first.c_str()) && currentScene)
+							{
+								Copium::NewSceneManager::Instance()->get_gof().build_gameobject(*(*iter).second);
+							}
+
+						} 
+					}
+
+					ImGui::EndMenu();
 				}
 				ImGui::EndMenu();
+
 			}
 			ImGui::EndMenuBar();
 		}

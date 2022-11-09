@@ -30,7 +30,7 @@ namespace Copium
 	namespace
 	{
 		// Our state
-		bool show_demo_window = false;
+		bool show_demo_window = true;
 		ThreadSystem& threadSystem{ *ThreadSystem::Instance() };
 		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 	}
@@ -139,6 +139,7 @@ namespace Copium
 					if (ImGui::MenuItem("New", "Ctrl+N"))
 					{
 						//create new scene
+						Copium::NewSceneManager::Instance()->create_scene();
 					}
 
 					if (ImGui::MenuItem("Open...", "Ctrl+O"))
@@ -175,7 +176,18 @@ namespace Copium
 					if (ImGui::MenuItem("Save", "Ctrl+S"))
 					{
 						//save scene
-						NewSceneManager::Instance()->save_scene();
+						if (NewSceneManager::Instance()->get_scenefilepath().empty()) {
+							//save sceen as
+							while (!threadSystem.acquireMutex(MutexType::FileSystem));
+							std::string filepath = FileDialogs::save_file("Copium Scene (*.json)\0.json\0");
+							threadSystem.returnMutex(MutexType::FileSystem);
+							std::cout << filepath << std::endl;
+							Copium::NewSceneManager::Instance()->save_scene(filepath);
+						}
+						else 
+						{
+							NewSceneManager::Instance()->save_scene();
+						}
 					}
 
 					if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
