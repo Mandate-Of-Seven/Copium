@@ -226,13 +226,17 @@ namespace Copium
 					if (ImGui::MenuItem("Play Scene"))
 					{
 						printf("Starting scene\n");
-						NewSceneManager::Instance()->startPreview();
-						messageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
+						if (NewSceneManager::Instance()->startPreview())
+						{
+							messageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
+						}
 					}
 					if (ImGui::MenuItem("Stop Scene"))
 					{
-						NewSceneManager::Instance()->endPreview();
-						messageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
+						if (NewSceneManager::Instance()->endPreview())
+						{
+							messageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
+						}
 					}
 
 					ImGui::EndMenu();

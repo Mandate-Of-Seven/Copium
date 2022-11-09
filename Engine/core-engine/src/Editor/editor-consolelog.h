@@ -73,8 +73,24 @@ namespace Window
 			/**************************************************************************/
 			void add_logEntry(std::string str);
 
+			/***************************************************************************/
+			/*!
+			\brief
+				Sets the performance text for the performance viewer
+			\param str
+				the message that you wish to add
+			*/
+			/**************************************************************************/
 			void set_performancetext(std::string str);
 
+			/***************************************************************************/
+			/*!
+			\brief
+				gets the performance text from the performance viewer
+			\return
+				the performance text
+			*/
+			/**************************************************************************/
 			std::string get_performancetext();
 		};
 

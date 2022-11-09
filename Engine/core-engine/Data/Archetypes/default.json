@@ -24,7 +24,7 @@
 
     },
     {
-      "Type": "RendererComponent",
+      "Type": "SpriteRenderer",
       "Sprite ID": 20,
       "Sprite Name": "PlayerHead.png",
       "Color": {
@@ -36,7 +36,7 @@
 
     },
     {
-      "Type": "RigidBodyComponent",
+      "Type": "Rigidbody2D",
       "Velocity": {
         "X": 0.0,
         "Y": 0.0

@@ -109,10 +109,12 @@
     <ClCompile Include="src\Editor\inspector.cpp" />
     <ClCompile Include="src\Files\assets-system.cpp" />
     <ClCompile Include="src\Files\file-system.cpp" />
-    <ClCompile Include="src\GameObject\component.cpp" />
+    <ClCompile Include="src\GameObject\Components\collider-components.cpp" />
+    <ClCompile Include="src\GameObject\Components\component.cpp" />
+    <ClCompile Include="src\GameObject\Components\physics-components.cpp" />
     <ClCompile Include="src\GameObject\game-object-factory.cpp" />
     <ClCompile Include="src\GameObject\game-object.cpp" />
-    <ClCompile Include="src\GameObject\renderer-component.cpp" />
+    <ClCompile Include="src\GameObject\Components\renderer-component.cpp" />
     <ClCompile Include="src\Graphics\fonts.cpp" />
     <ClCompile Include="src\Graphics\framebuffer.cpp" />
     <ClCompile Include="src\Graphics\glslshader.cpp" />
@@ -121,10 +123,10 @@
     <ClCompile Include="src\Graphics\sprite-renderer.cpp" />
     <ClCompile Include="src\Graphics\spritesheet.cpp" />
     <ClCompile Include="src\Graphics\textures.cpp" />
-    <ClCompile Include="src\Graphics\ui-components.cpp" />
+    <ClCompile Include="src\GameObject\Components\ui-components.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Math\math-library.cpp" />
-    <ClCompile Include="src\GameObject\transform-component.cpp" />
+    <ClCompile Include="src\GameObject\Components\transform-component.cpp" />
     <ClCompile Include="src\Messaging\message-system.cpp" />
     <ClCompile Include="src\Messaging\message-types.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -144,7 +146,7 @@
     <ClCompile Include="src\SceneManager\state-manager.cpp" />
     <ClCompile Include="src\Scripting\logic-system.cpp" />
     <ClCompile Include="src\Scripting\scripting-system.cpp" />
-    <ClCompile Include="src\Scripting\script-component.cpp" />
+    <ClCompile Include="src\GameObject\Components\script-component.cpp" />
     <ClCompile Include="src\Utilities\thread-system.cpp" />
     <ClCompile Include="src\imgui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -186,20 +188,24 @@
     <ClInclude Include="src\Files\assets-system.h" />
     <ClInclude Include="src\Editor\editor-hierarchy-list.h" />
     <ClInclude Include="src\Files\file-system.h" />
-    <ClInclude Include="src\GameObject\renderer-component.h" />
+    <ClInclude Include="src\GameObject\Components\collider-components.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="src\GameObject\Components\renderer-component.h" />
     <ClInclude Include="src\Graphics\camera.h" />
     <ClInclude Include="src\Graphics\fonts.h" />
     <ClInclude Include="src\Graphics\sprite-renderer.h" />
-    <ClInclude Include="src\Graphics\ui-components.h" />
+    <ClInclude Include="src\GameObject\Components\ui-components.h" />
     <ClInclude Include="src\SceneManager\sm.h" />
     <ClInclude Include="src\Scripting\logic-system.h" />
-    <ClInclude Include="src\Scripting\scriptWrappers.h" />
+    <ClInclude Include="src\Scripting\script-wrappers.h" />
     <ClInclude Include="src\Graphics\spritesheet.h" />
     <ClInclude Include="src\Utilities\thread-system.h" />
-    <ClInclude Include="src\Physics\collider.h" />
+    <ClInclude Include="src\GameObject\Components\physics-components.h" />
     <ClInclude Include="src\Physics\collision.h" />
     <ClInclude Include="src\Scripting\compiler.h" />
-    <ClInclude Include="src\GameObject\component.h" />
+    <ClInclude Include="src\GameObject\Components\component.h" />
     <ClInclude Include="src\Editor\editor-consolelog.h" />
     <ClInclude Include="src\CopiumCore\copium-core.h" />
     <ClInclude Include="src\Editor\editor-system.h" />
@@ -223,12 +229,12 @@
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\Graphics\renderer.h" />
     <ClInclude Include="src\SceneManager\scene.h" />
-    <ClInclude Include="src\Scripting\script-component.h" />
+    <ClInclude Include="src\GameObject\Components\script-component.h" />
     <ClInclude Include="src\Scripting\scripting-system.h" />
     <ClInclude Include="src\SceneManager\serializer.h" />
     <ClInclude Include="src\SceneManager\state-manager.h" />
     <ClInclude Include="src\CopiumCore\system-interface.h" />
-    <ClInclude Include="src\GameObject\transform-component.h" />
+    <ClInclude Include="src\GameObject\Components\transform-component.h" />
     <ClInclude Include="src\Graphics\vertex-types.h" />
     <ClInclude Include="src\Windows\windows-input.h" />
     <ClInclude Include="src\Windows\windows-utils.h" />

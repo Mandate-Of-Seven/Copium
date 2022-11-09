@@ -12,20 +12,19 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 *****************************************************************************************/
 #include "pch.h"
 #include "Windows/windows-system.h"
-#include "Windows/windows-input.h"
 #include "Graphics/graphics-system.h"
 #include "Physics/physics-system.h"
-#include "SceneManager/sm.h"
+#include <GameObject/Components/collider-components.h>
+
 
 namespace
 {
-	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
 	Copium::NewSceneManager& sceneManager{ *Copium::NewSceneManager::Instance() };
 }
 
 namespace Copium
 {
-	//Collision::AABB floor = { (Math::Vec2{ -0.8f,-0.55f }), (Math::Vec2{ 0.8f,-0.45f }) }; //position of floor
+	//AABB floor = { (Math::Vec2{ -0.8f,-0.55f }), (Math::Vec2{ 0.8f,-0.45f }) }; //position of floor
 	void PhysicsSystem::init()
 	{
 		systemFlags |= FLAG_RUN_ON_PLAY;
@@ -35,63 +34,33 @@ namespace Copium
 		GameObject* gameobj;
 		if (sceneManager.get_current_scene() != nullptr)
 		{
-			for (size_t a = 0; a < sceneManager.get_current_scene()->get_gameobjectvector().size(); a++)
-			{
-				gameobj = sceneManager.get_current_scene()->get_gameobjectvector()[a];
-				RigidBodyComponent* pRb = gameobj->getComponent<RigidBodyComponent>();
-				if (pRb != nullptr)
-				{
-					Math::Vec2 position{ gameobj->Transform().position.x, gameobj->Transform().position.y };
-					Math::Vec2 size{ gameobj->Transform().scale.x, gameobj->Transform().scale.y };
-					pRb->set_active(true);
-					if (pRb->get_shape() == SQUARE)
-					{
-						pRb->set_AABB(Math::Vec2{ position.x - (0.5f * size.x),position.y - (0.5f * size.y) }, Math::Vec2{ position.x + (0.5f * size.x),position.y - (0.5f * size.y) });
-					}
 
-
-					if (inputSystem.is_key_pressed(GLFW_KEY_I)) // move up
-					{
-						pRb->set_force(Math::Vec2{ 0.0, 0.50 });
-					}
-					if (inputSystem.is_key_pressed(GLFW_KEY_K)) // move down
-					{
-						pRb->set_force(Math::Vec2{ 0.0, -0.50 });
-					}
-					if (inputSystem.is_key_pressed(GLFW_KEY_L)) // move right
-					{
-						pRb->set_force(Math::Vec2{ 0.50, 0.0 });
-					}
-					if (inputSystem.is_key_pressed(GLFW_KEY_J)) // move left
-					{
-						pRb->set_force(Math::Vec2{ -0.50, 0.0 });
-					}
-					if (inputSystem.is_key_pressed(GLFW_KEY_O)) //reset acceleration and velocity values
-					{
-						pRb->set_force(Math::Vec2{ 0.0f,0.0f });
-						pRb->set_acc(Math::Vec2{ 0.0f,0.0f });
-						pRb->set_vel(Math::Vec2{ 0.0f,0.0f });
-					}
-				}
-			}
-
-			if (inputSystem.is_key_pressed(GLFW_KEY_P) && inputSystem.is_key_pressed(GLFW_KEY_LEFT_SHIFT))
-			{
-				PhysicsSystem::toggle_step();
-			}
-			if (stepModeActive == true)
-			{
-				if (inputSystem.is_key_pressed(GLFW_KEY_0))
-				{
-					PhysicsSystem::update_pos();
-					PhysicsSystem::check_collision();
-				}
-			}
-			else
-			{
+			//if (inputSystem.is_key_pressed(GLFW_KEY_P) && inputSystem.is_key_pressed(GLFW_KEY_LEFT_SHIFT))
+			//{
+			//	PhysicsSystem::toggle_step();
+			//}
+			//if (stepModeActive == true)
+			//{
+			//	if (inputSystem.is_key_pressed(GLFW_KEY_0))
+			//	{
+			//		PhysicsSystem::update_pos();
+			//		PhysicsSystem::check_collision();
+			//	}
+			//}
+			//else
+			//{
 				PhysicsSystem::update_pos();
 				PhysicsSystem::check_collision();
-			}
+				for (GameObject* pGameObj : sceneManager.get_current_scene()->get_gameobjectvector())
+				{
+					Rigidbody2D* pRb = pGameObj->getComponent<Rigidbody2D>();
+					if (pRb != nullptr && pRb->Active())
+					{
+						pGameObj->Transform().position.x += pRb->get_vel().x;
+						pGameObj->Transform().position.y += pRb->get_vel().y;
+					}
+				}
+			//}
 		}
 
 
@@ -102,6 +71,7 @@ namespace Copium
 	{
 
 	}
+
 	void PhysicsSystem::update_pos()
 	{
 		float dt = float(WindowsSystem::Instance()->get_delta_time());
@@ -109,66 +79,38 @@ namespace Copium
 		Math::Vec2 velocity;
 		Math::Vec2 acceleration;
 		Math::Vec2 force;
-		Collision::AABB bound;
+
 		for (int a = 0; a < sceneManager.get_current_scene()->get_gameobjectvector().size(); a++)
 		{
 			gameobj = sceneManager.get_current_scene()->get_gameobjectvector()[a];
-			RigidBodyComponent* pRb = gameobj->getComponent<RigidBodyComponent>();
+			Rigidbody2D* pRb = gameobj->getComponent<Rigidbody2D>();
 
-			if (pRb != nullptr)
+			if (pRb != nullptr && pRb->Active())
 			{
 				force = pRb->get_force();
 				velocity = pRb->get_vel();
 				acceleration = pRb->get_acc();
-				Math::Vec2 size{ gameobj->Transform().scale.x, gameobj->Transform().scale.y };
-				Math::Vec2 position{ gameobj->Transform().position.x, gameobj->Transform().position.y };
-				bound = pRb->get_AABB();
 				if (pRb->get_mass() != 0)
 				{
 					if (pRb->get_gravity() == true)
 					{
 						acceleration = (force + gravity) / pRb->get_mass();
-						velocity = velocity + (acceleration * dt * 0.80f);
-						position = position + (velocity);
-
+						velocity += (acceleration * dt);
+						velocity *= 0.99f;
 						pRb->set_acc(acceleration);
 						pRb->set_vel(velocity);
-
-
+						pRb->set_force(Math::Vec2());
 					}
 					else
 					{
-						acceleration += force / pRb->get_mass();
-						velocity = velocity + (acceleration * dt * 0.80f);
-						position = position + (velocity);
+						acceleration = force / pRb->get_mass();
+						velocity += (acceleration * dt);
+						velocity *= 0.99f;
 						pRb->set_acc(acceleration);
 						pRb->set_vel(velocity);
+						pRb->set_force(Math::Vec2());
 					}
 				}
-				if (position.y < -2.0)
-				{
-					position.y = -2.0;
-				}
-				if (position.y > 2.0)
-				{
-					position.y = 2.0;
-				}
-				if (position.x > 2.0)
-				{
-					position.x = 2.0;
-				}
-				if (position.x < -2.0)
-				{
-					position.x = -2.0;
-				}
-				bound.max.x = position.x + (size.x * 1 / 2);
-				bound.max.y = position.y + (size.y * 1 / 2);
-				bound.min.x = position.x - (size.x * 1 / 2);
-				bound.min.y = position.y - (size.y * 1 / 2);
-				pRb->set_AABB(bound.min, bound.max);
-
-				gameobj->Transform().position.x = position.x;
-				gameobj->Transform().position.y = position.y;
 
 			}
 		}
@@ -178,10 +120,10 @@ namespace Copium
 	{
 		GameObject* object1;
 		GameObject* object2;
-
-		for (int a = 0; a < sceneManager.get_current_scene()->get_gameobjectvector().size(); a++)
+		size_t len = sceneManager.get_current_scene()->get_gameobjectvector().size();
+		for (int a = 0; a < len; a++)
 		{
-			for (int b = 0; b < sceneManager.get_current_scene()->get_gameobjectvector().size(); b++)
+			for (int b = 0; b < len; b++)
 			{
 				if (a == b)
 				{
@@ -189,30 +131,37 @@ namespace Copium
 				}
 				object1 = sceneManager.get_current_scene()->get_gameobjectvector()[a];
 				object2 = sceneManager.get_current_scene()->get_gameobjectvector()[b];
-				if (object1->getComponent<RigidBodyComponent>() == nullptr ||
-					object2->getComponent<RigidBodyComponent>() == nullptr)
+				Rigidbody2D* pRb1 = object1->getComponent<Rigidbody2D>();
+				Rigidbody2D* pRb2 = object2->getComponent<Rigidbody2D>();
+				BoxCollider2D* pCol1 = object1->getComponent<BoxCollider2D>();
+				BoxCollider2D* pCol2 = object2->getComponent<BoxCollider2D>();
+				if (!pCol1 || !pCol2)
 				{
-
+					continue;
 				}
-				else
-				{
-					Math::Vec2 velocityA;
-					Math::Vec2 velocityB;
-					Math::Vec2 positionA{ object1->Transform().position.x, object1->Transform().position.y };
-					Math::Vec2 positionB{ object2->Transform().position.x, object2->Transform().position.y };
-					Collision::AABB boundA;
-					Collision::AABB boundB;
+				if (!pRb1)
+					continue;
+				Math::Vec2 velocityA = pRb1->get_vel();
+				Math::Vec2 velocityB;
+				if (pRb2)
+					velocityB = pRb2->get_vel();
 
-					velocityA = object1->getComponent<RigidBodyComponent>()->get_vel();
-					velocityB = object2->getComponent<RigidBodyComponent>()->get_vel();
-					boundA = object1->getComponent<RigidBodyComponent>()->get_AABB();
-					boundB = object2->getComponent<RigidBodyComponent>()->get_AABB();
-					printf("box a:x min %f y min %f \n box a:x max %f y max %f\n", boundA.min.x, boundA.min.y, boundA.max.x, boundA.max.y);
-					printf("box b:x min %f b min %f \n box b:x max %f b max %f\n", boundB.min.x, boundB.min.y, boundB.max.x, boundB.max.y);
-					if ((Collision::collision_rectrect(boundA, velocityA, boundB, velocityB) == true))
+				//if (!pRb1->Active())
+				//	continue;
+
+				AABB boundA = pCol1->getBounds();
+				AABB boundB = pCol2->getBounds();
+				if ((collision_rectrect(boundA, velocityA, boundB, velocityB) == true))
+				{
+					//PRINT("COLLIDING?");
+					//fix collision resolution
+					collisionDirection direct = check_collision_direction(boundA, velocityA, boundB, velocityB);
+					resolve_AABBcollision(object1->Transform(), boundA, boundB, direct);
+					if (pRb1)
 					{
-						object1->getComponent<RigidBodyComponent>()->set_vel(Math::Vec2{ 0.0, 0.0 });
-						object1->getComponent<RigidBodyComponent>()->set_force(Math::Vec2{ 0.0,0.0 });
+						pRb1->set_vel(Math::Vec2(0.0, 0.0));
+						pRb1->set_acc(Math::Vec2(0.0, 0.0));
+						pRb1->set_force(Math::Vec2(0.0, 0.0));
 					}
 				}
 			}

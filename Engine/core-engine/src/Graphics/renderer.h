@@ -142,7 +142,7 @@ namespace Copium
 			The sprite to use to draw
 		*/
 		/***************************************************************************/
-		void draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const SpriteRenderer& _sprite);
+		void draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Sprite& _sprite);
 
 		/***************************************************************************/
 		/*!
@@ -202,7 +202,7 @@ namespace Copium
 			The sprite to use to draw
 		*/
 		/***************************************************************************/
-		void draw_quad(const glm::mat4& _transform, const SpriteRenderer& _sprite);
+		void draw_quad(const glm::mat4& _transform, const Sprite& _sprite);
 
 		/***************************************************************************/
 		/*!

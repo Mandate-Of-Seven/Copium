@@ -25,8 +25,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Files/assets-system.h"
 
 // Bean: remove this after NewManagerInstance is moved
-#include "GameObject/renderer-component.h"
-#include "Graphics/ui-components.h"
+#include "GameObject/Components/renderer-component.h"
+#include "GameObject/Components/ui-components.h"
 #include "SceneManager/sm.h"
 #include "Math/math-library.h"
 
@@ -100,7 +100,7 @@ namespace Copium
 		//glm::vec2 mousePos{0}, centreOfScene{0}, mouseScenePos{0}, mouseToNDC{0}, worldNDC{0};
 		//if (!inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_C))
 		//{
-		//	SpriteRenderer* sprite = new SpriteRenderer;
+		//	Sprite* sprite = new Sprite;
 		//	EditorSystem* editor = EditorSystem::Instance();
 		//	glm::vec2 scenePos = editor->get_scene_view()->get_position();
 		//	glm::vec2 sceneDim = editor->get_scene_view()->get_dimension();
@@ -139,14 +139,14 @@ namespace Copium
 				for (size_t i = 0; i < 10; i++)
 				{
 					GameObject* go = sm->get_gof().build_gameobject();
-					go->addComponent(ComponentType::Renderer);
-					//go->addComponent(ComponentType::RigidBody);
+					go->addComponent(ComponentType::SpriteRenderer);
+					//go->addComponent(ComponentType::Rigidbody);
 
 					float x = rand() % 2000 * 0.1f - 100.f;
 					float y = rand() % 2000 * 0.1f - 100.f;
 
 					go->Transform().set_position({ x, y, 0.f });
-					RendererComponent* rc = reinterpret_cast<RendererComponent*>(go->getComponent(ComponentType::Renderer));
+					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->getComponent(ComponentType::SpriteRenderer));
 					rc->get_sprite_renderer().set_sprite_id(rand() % 7 + 15);
 				}
 			}
@@ -210,7 +210,7 @@ namespace Copium
 		renderer.shutdown();
 		framebuffer.exit();
 
-		for (SpriteRenderer* s : sprites)
+		for (Sprite* s : sprites)
 			delete s;
 	}
 
@@ -508,14 +508,14 @@ namespace Copium
 		{
 			for (GameObject* gameObject : scene->get_gameobjectvector())
 			{
-				for (Component* component : gameObject->getComponents<RendererComponent>())
+				for (Component* component : gameObject->getComponents<SpriteRenderer>())
 				{
 					if (!component->Enabled())
 						continue;
 
-					TransformComponent& t = gameObject->Transform();
-					RendererComponent * rc = reinterpret_cast<RendererComponent*>(component);
-					SpriteRenderer sr = rc->get_sprite_renderer();
+					Transform& t = gameObject->Transform();
+					SpriteRenderer * rc = reinterpret_cast<SpriteRenderer*>(component);
+					Sprite sr = rc->get_sprite_renderer();
 					glm::vec2 size(t.glmScale().x, t.glmScale().y);
 					float rotation = t.glmRotation().z;
 					// Bean: It should be set in inspector view of the renderer component instead
@@ -525,13 +525,13 @@ namespace Copium
 
 					renderer.draw_quad(t.glmPosition(), size, rotation, sr);
 				}
-				for (Component* component : gameObject->getComponents<UIImageComponent>())
+				for (Component* component : gameObject->getComponents<ImageComponent>())
 				{
 					if (!component->Enabled())
 						continue;
-					TransformComponent& t = gameObject->Transform();
-					UIImageComponent* rc = reinterpret_cast<UIImageComponent*>(component);
-					SpriteRenderer sr = rc->get_sprite_renderer();
+					Transform& t = gameObject->Transform();
+					ImageComponent* rc = reinterpret_cast<ImageComponent*>(component);
+					Sprite sr = rc->get_sprite_renderer();
 					glm::vec2 size(t.glmScale().x, t.glmScale().y);
 					float rotation = t.glmRotation().z;
 					// Bean: It should be set in inspector view of the renderer component instead
@@ -541,11 +541,11 @@ namespace Copium
 
 					renderer.draw_quad(t.glmPosition(), size, rotation, sr);
 				}
-				for (Component* component : gameObject->getComponents<UITextComponent>())
+				for (Component* component : gameObject->getComponents<TextComponent>())
 				{
 					if (!component->Enabled())
 						continue;
-					UITextComponent* textComponent = reinterpret_cast<UITextComponent*>(component);
+					TextComponent* textComponent = reinterpret_cast<TextComponent*>(component);
 					textComponent->render();
 				}
 			}

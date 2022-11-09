@@ -62,7 +62,9 @@ namespace Copium
 			The font to use
 		*/
 		/***************************************************************************/
-		void draw_text(std::string _text, const glm::vec3& _position, const glm::vec4& _color, GLfloat _scale, GLuint _fontID);
+		void draw_text(const std::string& _text, const glm::vec2& _position, const glm::vec4& _color, GLfloat _scale, GLuint _fontID);
+
+		glm::vec2 getDimensions(const std::string& _text, GLfloat _scale);
 
 		/***************************************************************************/
 		/*!
@@ -75,6 +77,7 @@ namespace Copium
 		const std::map<char, Character>& get_characters() const { return characters; }
 
 		static Font* getFont(const std::string& name);
+
 
 		static void cleanUp();
 	private:

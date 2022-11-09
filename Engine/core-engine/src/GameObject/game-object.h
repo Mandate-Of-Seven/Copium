@@ -24,7 +24,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Messaging/message-system.h"
 #include <rapidjson/document.h>
 #include "Math/math-library.h"
-#include "GameObject/transform-component.h"
+#include "GameObject/Components/transform-component.h"
 
 //USING
 
@@ -40,7 +40,7 @@ private:
     static GameObjectID count;
     std::list<Component*> components;   //Components for gameObject
     std::string name;                   //Name of gameObject
-    TransformComponent transform;
+    Transform transform;
     GameObject* parent;                 //Pointer to this gameObject's parent
     std::list<GameObject*> children;    //List of pointers to this gameObject's children
 
@@ -64,8 +64,29 @@ public:
         Math::Vec3 _rotation = { 0,0,0 },
         Math::Vec3 _scale = {1,1,1});
 
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Copy Constructs using a deep copy of another GameObject
+    \param rhs
+        Reference to another GameObject
+
+    */
+    /*******************************************************************************/
     GameObject(const GameObject& rhs);
 
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Adds a component using a template
+    \param T
+        Any derived classes of component to be added
+    \return
+        Added component
+    */
+    /*******************************************************************************/
     template <typename T>
     T& addComponent()
     {
@@ -75,6 +96,16 @@ public:
         return *component;
     }
 
+    /*******************************************************************************
+    /*!
+        \brief
+            Gets all components of type from components list
+        \param T
+            Type of component to get
+        \return
+            Vector of components gotten
+    */
+    /*******************************************************************************/
     template <typename T>
     const std::vector<T*>& getComponents()
     {
@@ -94,7 +125,18 @@ public:
         return typedComponents;
     }
 
+    /*******************************************************************************
+    /*!
+        \brief
+            Gets a component of type from components list
+        \param componentType
+            ComponentType of component to get
+        \return
+            Pointer to component gotten
+    */
+    /*******************************************************************************/
     Component* getComponent(ComponentType componentType);
+
     /***************************************************************************/
     /*!
     \brief
@@ -105,8 +147,31 @@ public:
     /**************************************************************************/
     Component* addComponent(ComponentType componentType);
 
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Checks if components list has a component of given type
+    \param componentType
+        Type of component to find
+    \return
+        True if component of type exists in components list
+    */
+    /*******************************************************************************/
     bool hasComponent(ComponentType componentType) const;
 
+
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Template function to add a component to components list
+    \param T
+        Type of component to add
+    \return
+        Pointer to component added
+    */
+    /*******************************************************************************/
     template <typename T>
     T* addComponent(const T& component)
     {
@@ -116,6 +181,17 @@ public:
         return tmp;
     }
 
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Template function to get a component from components list
+    \param T
+        Type of component to get
+    \return
+        Pointer to component gotten
+    */
+    /*******************************************************************************/
     template <typename T>
     T* getComponent()
     {
@@ -144,8 +220,26 @@ public:
     /**************************************************************************/
     void removeComponent(ComponentType componentType);
 
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Deletes a component from components list
+    \param componentID
+        ID of component to match in order to delete it from the components list
+    */
+    /*******************************************************************************/
     void removeComponent(ComponentID componentID);
 
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Template function to delete a component from components list
+    \param T
+        Type of component to delete
+    */
+    /*******************************************************************************/
     template <typename T>
     void removeComponent()
     {
@@ -163,7 +257,7 @@ public:
         Return a copy transform of gameObject
     */
     /**************************************************************************/
-    TransformComponent& Transform();
+    Transform& Transform();
 
     /*******************************************************************************
     /*!
@@ -355,6 +449,14 @@ public:
     /*******************************************************************************/
     bool serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Displays the inspector view with its transform and all its components
+
+    */
+    /*******************************************************************************/
     void inspectorView();
 
 
@@ -366,6 +468,17 @@ public:
     /**************************************************************************/
     ~GameObject();
 
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Mainly waits for scripting to be updated so that it can tell scripting
+           system to remake a copy of this gameObject
+    \param mType
+        Type of message gotten
+
+    */
+    /*******************************************************************************/
     void handleMessage(MESSAGE_TYPE mType);
 };
 

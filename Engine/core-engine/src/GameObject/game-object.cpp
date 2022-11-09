@@ -18,11 +18,12 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include "pch.h"
 #include "GameObject/game-object.h"
-#include "GameObject/renderer-component.h"
-#include "Scripting/script-component.h"
-#include "GameObject/component.h"
-#include "Physics/collider.h"
-#include "Graphics/ui-components.h"
+#include "GameObject/Components/renderer-component.h"
+#include "GameObject/Components/script-component.h"
+#include "GameObject/Components/component.h"
+#include "GameObject/Components/physics-components.h"
+#include "GameObject/Components/collider-components.h"
+#include "GameObject/Components/ui-components.h"
 #include "SceneManager/sm.h"
 
 //USING
@@ -71,24 +72,24 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{ count++ },
             PRINT("ADDED ANIMATOR");
             break;
         }
-        case ComponentType::Collider:
+        case ComponentType::BoxCollider2D:
         {
-            component = new ColliderComponent(*this);
-            *component = *(reinterpret_cast<ColliderComponent*>(pComponent));
+            component = new BoxCollider2D(*this);
+            *component = *(reinterpret_cast<BoxCollider2D*>(pComponent));
             PRINT("ADDED COLLIDER");
             break;
         }
-        case ComponentType::RigidBody:
+        case ComponentType::Rigidbody2D:
         {
-            component = new RigidBodyComponent(*this);
-            *component = *(reinterpret_cast<RigidBodyComponent*>(pComponent));
-            PRINT("ADDED RigidBody");
+            component = new Rigidbody2D(*this);
+            *component = *(reinterpret_cast<Rigidbody2D*>(pComponent));
+            PRINT("ADDED Rigidbody");
             break;
         }
-        case ComponentType::Renderer:
+        case ComponentType::SpriteRenderer:
         {
-            component = new RendererComponent(*this);
-            *component = *(reinterpret_cast<RendererComponent*>(pComponent));
+            component = new SpriteRenderer(*this);
+            *component = *(reinterpret_cast<SpriteRenderer*>(pComponent));
             PRINT("ADDED SPRITE RENDERER");
             break;
         }
@@ -99,24 +100,24 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{ count++ },
             PRINT("ADDED SCRIPT");
             break;
         }
-        case ComponentType::UIButton:
+        case ComponentType::Button:
         {
-            component = new UIButtonComponent(*this);
-            *component = *(reinterpret_cast<UIButtonComponent*>(pComponent));
+            component = new ButtonComponent(*this);
+            *component = *(reinterpret_cast<ButtonComponent*>(pComponent));
             PRINT("ADDED UI BUTTON");
             break;
         }
-        case ComponentType::UIImage:
+        case ComponentType::Image:
         {
-            component = new UIImageComponent(*this);
-            *component = *(reinterpret_cast<UIImageComponent*>(pComponent));
+            component = new ImageComponent(*this);
+            *component = *(reinterpret_cast<ImageComponent*>(pComponent));
             PRINT("ADDED UI IMAGE");
             break;
         }
-        case ComponentType::UIText:
+        case ComponentType::Text:
         {
-            component = new UITextComponent(*this);
-            *component = *(reinterpret_cast<UITextComponent*>(pComponent));
+            component = new TextComponent(*this);
+            *component = *(reinterpret_cast<TextComponent*>(pComponent));
             PRINT("ADDED UI TEXT");
             break;
         }
@@ -163,40 +164,40 @@ Component* GameObject::addComponent(ComponentType componentType)
         component = new AnimatorComponent(*this);
         PRINT("ADDED ANIMATOR");
         break;
-    case ComponentType::Collider:
-        component = new ColliderComponent(*this);
+    case ComponentType::BoxCollider2D:
+        component = new BoxCollider2D(*this);
         PRINT("ADDED COLLIDER");
         break;
-    case ComponentType::RigidBody:
-        component = new RigidBodyComponent(*this);
-        PRINT("ADDED RIGIDBODY");
+    case ComponentType::Rigidbody2D:
+        component = new Rigidbody2D(*this);
+        PRINT("ADDED Rigidbody");
         break;
-    case ComponentType::Renderer:
-        component = new RendererComponent(*this);
+    case ComponentType::SpriteRenderer:
+        component = new SpriteRenderer(*this);
         PRINT("ADDED SPRITE RENDERER");
         break;
     case ComponentType::Script:
         component = new ScriptComponent(*this);
         PRINT("ADDED SCRIPT");
         break;
-    case ComponentType::UIButton:
+    case ComponentType::Button:
         if (hasComponent(componentType))
         {
             break;
         }
-        if (!hasComponent(ComponentType::UIImage))
-            addComponent<UIImageComponent>();
-        if (!hasComponent(ComponentType::UIText))
-            addComponent<UITextComponent>();
-        component = new UIButtonComponent(*this);
+        if (!hasComponent(ComponentType::Image))
+            addComponent<ImageComponent>();
+        if (!hasComponent(ComponentType::Text))
+            addComponent<TextComponent>();
+        component = new ButtonComponent(*this);
         PRINT("ADDED UI BUTTON");
         break;
-    case ComponentType::UIImage:
-        component = new UIImageComponent(*this);
+    case ComponentType::Image:
+        component = new ImageComponent(*this);
         PRINT("ADDED UI IMAGE");
         break;
-    case ComponentType::UIText:
-        component = new UITextComponent(*this);
+    case ComponentType::Text:
+        component = new TextComponent(*this);
         PRINT("ADDED UI TEXT");
         break;
     default:
@@ -259,7 +260,7 @@ bool GameObject::hasComponent(ComponentType componentType) const
     return false;
 }
 
-TransformComponent& GameObject::Transform()  
+Transform& GameObject::Transform()  
 {
     return transform;
 }

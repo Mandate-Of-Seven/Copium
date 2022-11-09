@@ -15,10 +15,12 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
+#include <limits>
 #include "Windows/windows-system.h"
-#include "Physics/collision.h"
+#include <Physics/collision.h>
+#include <GameObject/Components/transform-component.h>
 
-namespace Copium::Collision
+namespace Copium
 {
 
 	bool collision_rectrect(const AABB& aabb1, const Math::Vec2& vel1,
@@ -27,131 +29,123 @@ namespace Copium::Collision
 		if ((aabb1.max.x < aabb2.min.x) || (aabb1.min.x > aabb2.max.x) ||
 			(aabb1.max.y < aabb2.min.y) || (aabb1.min.y > aabb2.max.y))
 			return 0;
-		else
+		//Initialize values to check for collision between moving rectangles
+		Math::Vec2 vB;
+		double tFirst = 0, tLast = Copium::WindowsSystem::Instance()->get_delta_time();
+		vB.x = vel2.x - vel1.x;
+		vB.y = vel2.y - vel1.y;
+		//Object b is moving away from object a on the x axis
+		if (vB.x < 0)
 		{
-
-			//Initialize values to check for collision between moving rectangles
-			Math::Vec2 vB;
-			double tFirst = 0, tLast = Copium::WindowsSystem::Instance()->get_delta_time();
-			vB.x = vel2.x - vel1.x;
-			vB.y = vel2.y - vel1.y;
-			//Object b is moving away from object a on the x axis
-			if (vB.x < 0)
-			{
-				// case 1, b is moving away from a and no collision
-				if (aabb1.min.x > aabb2.max.x)
-				{
-					return 0;
-				}
-				// case 4 1/2
-				if (aabb1.max.x < aabb2.min.x)
-					//tFirst = max((aabb1.min.x - aabb2.max.x) / vB.x, tFirst);
-				{
-					if ((aabb1.max.x - aabb2.min.x / vB.x) > tFirst)
-					{
-						tFirst = (aabb1.max.x - aabb2.min.x) / vB.x;
-					}
-				}
-				// case 4 2/2
-				if (aabb1.min.x < aabb2.max.x)
-					//tLast = min((aabb1.min.x - aabb2.max.x) / vB.x, tLast);
-				{
-					if ((aabb1.min.x - aabb2.max.x / vB.x) < tLast)
-					{
-						tLast = (aabb1.min.x - aabb2.max.x) / vB.x;
-					}
-				}
-			}
-			//Object b is moving towards object a on the x axis
-			if (vB.x > 0)
-			{
-				// case 2 1/2
-				if (aabb1.min.x > aabb2.max.x)
-					//tFirst = max((aabb1.min.x - aabb2.max.x) / vB.x, tFirst);
-				{
-					if ((aabb1.min.x - aabb2.max.x / vB.x) > tFirst)
-					{
-						tFirst = (aabb1.min.x - aabb2.max.x) / vB.x;
-					}
-				}
-				//case 2 2/2
-				if (aabb1.max.x > aabb2.min.x)
-					//tLast = min((aabb1.max.x - aabb2.min.x) / vB.x, tLast);
-				{
-					if ((aabb1.max.x - aabb2.min.x / vB.x) < tLast)
-					{
-						tLast = (aabb1.max.x - aabb2.min.x) / vB.x;
-					}
-				}
-				//case 3, b is moving away from a, no collision
-				if (aabb1.max.x < aabb2.min.x)
-				{
-					return 0;
-				}
-			}
-			//Object b is moving away from object a on the y axis
-			if (vB.y < 0)
-			{
-				// case 1, b is moving away from a and no collision
-				if (aabb1.min.y > aabb2.max.y)
-				{
-					return 0;
-				}
-				// case 4 1/2
-				if (aabb1.max.y < aabb2.min.y)
-					//tFirst = max((aabb1.max.y - aabb2.min.y) / vB.y, tFirst);
-				{
-					if ((aabb1.max.y - aabb2.min.y / vB.y) > tFirst)
-					{
-						tFirst = (aabb1.max.y - aabb2.min.y) / vB.y;
-					}
-				}
-				// case 4 2/2
-				if (aabb1.min.y < aabb2.max.y)
-				{	//tLast = min((aabb1.min.y - aabb2.max.y) / vB.y, tLast);
-					if ((aabb1.min.y - aabb2.max.y / vB.y) < tLast)
-					{
-						tLast = (aabb1.min.y - aabb2.max.y) / vB.y;
-					}
-				}
-			}
-			//Object b is moving towards object a on the y axis
-			if (vB.y > 0)
-			{	// case 2 1/2
-				if (aabb1.min.y > aabb2.max.y)
-				{	//tFirst = max((aabb1.min.y - aabb2.max.y) / vB.y, tFirst);
-					if ((aabb1.min.y - aabb2.max.y / vB.y) > tFirst)
-					{
-						tFirst = (aabb1.min.y - aabb2.max.y) / vB.y;
-					}
-				}
-				//case 2 2/2
-				if (aabb1.max.y > aabb2.min.y)
-				{	//tLast = min((aabb1.max.y - aabb2.min.y) / vB.y, tLast);
-					if ((aabb1.max.y - aabb2.min.y / vB.y) < tLast)
-					{
-						tLast = (aabb1.max.y - aabb2.min.y) / vB.y;
-					}
-				}
-				//case 3, b is moving away from a, no collision
-				if (aabb1.max.y < aabb2.min.y)
-				{
-					return 0;
-				}
-			}
-
-			//case 5, no intersection
-			if (tFirst > tLast)
+			// case 1, b is moving away from a and no collision
+			if (aabb1.min.x > aabb2.max.x)
 			{
 				return 0;
 			}
-			else
+			// case 4 1/2
+			if (aabb1.max.x < aabb2.min.x)
+				//tFirst = max((aabb1.min.x - aabb2.max.x) / vB.x, tFirst);
 			{
-				return 1;
+				if ((aabb1.max.x - aabb2.min.x / vB.x) > tFirst)
+				{
+					tFirst = (aabb1.max.x - aabb2.min.x) / vB.x;
+				}
+			}
+			// case 4 2/2
+			if (aabb1.min.x < aabb2.max.x)
+				//tLast = min((aabb1.min.x - aabb2.max.x) / vB.x, tLast);
+			{
+				if ((aabb1.min.x - aabb2.max.x / vB.x) < tLast)
+				{
+					tLast = (aabb1.min.x - aabb2.max.x) / vB.x;
+				}
 			}
 		}
-			//both objects are colliding
-			//return 1;
+		//Object b is moving towards object a on the x axis
+		if (vB.x > 0)
+		{
+			// case 2 1/2
+			if (aabb1.min.x > aabb2.max.x)
+				//tFirst = max((aabb1.min.x - aabb2.max.x) / vB.x, tFirst);
+			{
+				if ((aabb1.min.x - aabb2.max.x / vB.x) > tFirst)
+				{
+					tFirst = (aabb1.min.x - aabb2.max.x) / vB.x;
+				}
+			}
+			//case 2 2/2
+			if (aabb1.max.x > aabb2.min.x)
+				//tLast = min((aabb1.max.x - aabb2.min.x) / vB.x, tLast);
+			{
+				if ((aabb1.max.x - aabb2.min.x / vB.x) < tLast)
+				{
+					tLast = (aabb1.max.x - aabb2.min.x) / vB.x;
+				}
+			}
+			//case 3, b is moving away from a, no collision
+			if (aabb1.max.x < aabb2.min.x)
+			{
+				return 0;
+			}
+		}
+		//Object b is moving away from object a on the y axis
+		if (vB.y < 0)
+		{
+			// case 1, b is moving away from a and no collision
+			if (aabb1.min.y > aabb2.max.y)
+			{
+				return 0;
+			}
+			// case 4 1/2
+			if (aabb1.max.y < aabb2.min.y)
+				//tFirst = max((aabb1.max.y - aabb2.min.y) / vB.y, tFirst);
+			{
+				if ((aabb1.max.y - aabb2.min.y / vB.y) > tFirst)
+				{
+					tFirst = (aabb1.max.y - aabb2.min.y) / vB.y;
+				}
+			}
+			// case 4 2/2
+			if (aabb1.min.y < aabb2.max.y)
+			{	//tLast = min((aabb1.min.y - aabb2.max.y) / vB.y, tLast);
+				if ((aabb1.min.y - aabb2.max.y / vB.y) < tLast)
+				{
+					tLast = (aabb1.min.y - aabb2.max.y) / vB.y;
+				}
+			}
+		}
+		//Object b is moving towards object a on the y axis
+		if (vB.y > 0)
+		{	// case 2 1/2
+			if (aabb1.min.y > aabb2.max.y)
+			{	//tFirst = max((aabb1.min.y - aabb2.max.y) / vB.y, tFirst);
+				if ((aabb1.min.y - aabb2.max.y / vB.y) > tFirst)
+				{
+					tFirst = (aabb1.min.y - aabb2.max.y) / vB.y;
+				}
+			}
+			//case 2 2/2
+			if (aabb1.max.y > aabb2.min.y)
+			{	//tLast = min((aabb1.max.y - aabb2.min.y) / vB.y, tLast);
+				if ((aabb1.max.y - aabb2.min.y / vB.y) < tLast)
+				{
+					tLast = (aabb1.max.y - aabb2.min.y) / vB.y;
+				}
+			}
+			//case 3, b is moving away from a, no collision
+			if (aabb1.max.y < aabb2.min.y)
+			{
+				return 0;
+			}
+		}
+
+		//case 5, no intersection
+		if (tFirst > tLast)
+		{
+			return 0;
+		}
+		return 1;
+		//both objects are colliding
 
 	}
 	bool collision_pointrect(const Math::Vec2& point,
@@ -276,5 +270,110 @@ namespace Copium::Collision
 			return 0;
 		}
 		return 1;
+	}
+
+	
+	collisionDirection check_collision_direction(const AABB& aabb1, const Math::Vec2& vel1,
+		const AABB& aabb2, const Math::Vec2& vel2)
+	{
+		Math::Vec2 vB = vel1 - vel2;
+
+		float xEntry = 0.0f;
+		float xExit = 0.0f;
+		float yEntry = 0.0f;
+		float yExit = 0.0f;
+		//double tFirst = 0;
+		//double tLast = Copium::WindowsSystem::Instance()->get_delta_time();
+
+		if (vB.x < 0)
+		{
+			xEntry = (aabb1.max.x - aabb2.min.x) / vB.x;
+			xExit = (aabb1.min.x - aabb2.max.x) / vB.x;
+		}
+		if (vB.x > 0)
+		{
+			xEntry = (aabb1.min.x - aabb2.max.x) / vB.x;
+			xExit = (aabb1.max.x - aabb2.min.x) / vB.x;
+		}
+		if (vB.y < 0)
+		{
+			yEntry = (aabb1.max.y - aabb2.min.y) / vB.y;
+			yExit = (aabb1.min.y - aabb2.max.y) / vB.y;
+		}
+		if (vB.y > 0)
+		{	
+			yEntry = (aabb1.min.y - aabb2.max.y) / vB.y;
+			yExit = (aabb1.max.y - aabb2.min.y) / vB.y;			
+		}
+		if (vB.x == 0)
+		{
+			xEntry = std::numeric_limits<float>::infinity();
+			xExit = std::numeric_limits<float>::infinity();
+		}
+		if (vB.y == 0)
+		{
+			yEntry = std::numeric_limits<float>::infinity();
+			yExit = std::numeric_limits<float>::infinity();
+		}
+		//printf("xentry %f yentry y %f\n", xEntry, yEntry);
+		if (xEntry < yEntry)
+		{
+			if (vB.x > 0)
+			{	
+
+				return collisionDirection::RIGHT;
+				
+			}
+			if (vB.x < 0)
+			{	
+				return collisionDirection::LEFT;				
+			}
+		}
+		if (yEntry < xEntry)
+		{
+			if (vB.y < 0)
+			{
+				return collisionDirection::TOP;
+			}
+			if (vB.y > 0)
+			{
+				return collisionDirection::BOTTOM;
+			}
+		}
+		return collisionDirection::NONE;
+	}
+
+	void resolve_AABBcollision(Transform& transform1,AABB& aabb1, AABB& aabb2, collisionDirection direction)
+	{		
+		float resolvePos = 0.0f;
+		if (direction == collisionDirection::TOP)
+		{
+			//std::cout << "resolve top" << std::endl;
+			resolvePos = aabb1.min.y - aabb2.max.y;
+			resolvePos *= 1.05f;
+			transform1.position.y -= resolvePos;
+		}
+		if (direction == collisionDirection::BOTTOM)
+		{
+			//std::cout << "resolve bottom" << std::endl;
+			resolvePos = aabb1.max.y - aabb2.min.y;
+			resolvePos *= 1.05f;
+			transform1.position.y -= resolvePos;
+		}
+		if (direction == collisionDirection::LEFT)
+		{
+			//std::cout << "resolve left" << std::endl;
+			resolvePos = aabb1.min.x - aabb2.max.x;
+			resolvePos *= 1.05f;
+			transform1.position.x -= resolvePos;
+		}
+		if (direction == collisionDirection::RIGHT)
+		{
+			//std::cout << "resolve right" << std::endl;
+			resolvePos = aabb1.max.x - aabb2.min.x;
+			resolvePos *= 1.05f;
+			transform1.position.x -= resolvePos;
+		}
+		
 	}
 }

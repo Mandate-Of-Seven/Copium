@@ -1,11 +1,25 @@
+﻿/*!***************************************************************************************
+\file			logic-system.cpp
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			30/10/2022
+
+\brief
+	This file defines the functions for the Logic System
+
+All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 
 #include "pch.h"
 #include "GameObject/game-object.h"
 #include "Scripting/logic-system.h"
-#include "Scripting/script-component.h"
+#include "GameObject/Components/script-component.h"
 #include "SceneManager/sm.h"
 #include "Messaging/message-system.h"
-#include "Graphics/ui-components.h"
+#include "GameObject/Components/ui-components.h"
 
 namespace Copium
 {
@@ -30,8 +44,8 @@ namespace Copium
 		gameObjects = &pScene->get_gameobjectvector();
 		for (GameObject* pGameObj : *gameObjects)
 		{
-			const std::vector<UIButtonComponent*>& buttonComponents{ pGameObj->getComponents<UIButtonComponent>() };
-			for (UIButtonComponent* pButtonComponent : buttonComponents)
+			const std::vector<ButtonComponent*>& buttonComponents{ pGameObj->getComponents<ButtonComponent>() };
+			for (ButtonComponent* pButtonComponent : buttonComponents)
 			{
 				if (!pButtonComponent)
 					continue;
