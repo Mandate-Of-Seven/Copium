@@ -22,6 +22,9 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/Components/renderer-component.h"
 
 #include <unordered_map>
+
+#define TEXT_BUFFER_SIZE 128
+
 namespace Copium
 {
 	using ButtonCallback = void (*)();
@@ -34,14 +37,27 @@ namespace Copium
 		None,
 	};
 
+	enum class HorizontalAlignment : int
+	{
+		Left = 0,
+		Center,
+		Right,
+	};
+
+	enum class VerticalAlignment : int
+	{
+		Top = 0,
+		Center,
+		Bottom,
+	};
+
 	//Runs after InputSystem
 	class IUIComponent
 	{
-		public:
-			void virtual render() = 0;
 		protected:
 			Math::Vec2 offset;
-			bool percentage;
+			HorizontalAlignment hAlignment{HorizontalAlignment::Center};
+			VerticalAlignment vAlignment{VerticalAlignment::Center};
 	};
 
 	class ButtonComponent final: public Component
@@ -73,6 +89,7 @@ namespace Copium
 			*/
 			/*******************************************************************************/
 			void update();
+
 			/*******************************************************************************
 			/*!
 			*
@@ -125,7 +142,7 @@ namespace Copium
 
 			*/
 			/*******************************************************************************/
-			void inspector_view() {};
+			void inspector_view();
 			/*******************************************************************************
 			/*!
 			*
@@ -148,10 +165,48 @@ namespace Copium
 			*/
 			/*******************************************************************************/
 			TextComponent& operator=(const TextComponent& rhs);
+
+			void deserialize(rapidjson::Value& _value)
+			{
+				if (_value.HasMember("FontName"))
+				{
+					fontName = _value["FontName"].GetString();
+					font = Font::getFont(fontName);
+				}
+				if (_value.HasMember("H_Align"))
+				{
+					hAlignment = (HorizontalAlignment)_value["H_Align"].GetInt();
+					font = Font::getFont(fontName);
+				}
+				if (_value.HasMember("V_Align"))
+				{
+					vAlignment = (VerticalAlignment)_value["V_Align"].GetInt();
+				}
+				if (_value.HasMember("Content"))
+				{
+					strcpy(content, _value["Content"].GetString());
+				}
+			}
+
+			void serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
+			{
+				rapidjson::Value type;
+				std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
+				type.SetString(tc.c_str(), rapidjson::SizeType(tc.length()), _doc.GetAllocator());
+				_value.AddMember("Type", type, _doc.GetAllocator());
+
+				type.SetString(fontName.c_str(), rapidjson::SizeType(fontName.length()), _doc.GetAllocator());
+				_value.AddMember("FontName", type, _doc.GetAllocator());
+				_value.AddMember("H_Align", (int)hAlignment, _doc.GetAllocator());
+				_value.AddMember("V_Align", (int)vAlignment, _doc.GetAllocator());
+
+				type.SetString(content, rapidjson::SizeType(strlen(content)), _doc.GetAllocator());
+				_value.AddMember("Content", type, _doc.GetAllocator());
+			}
 		private:
-			std::string content;
+			char content[TEXT_BUFFER_SIZE];
+			std::string fontName;
 			Font* font;
-			Sprite Sprite;
 		//Display a text
 	};
 

@@ -9,6 +9,7 @@ public class CombatMovement : CopiumScript
     public float MaxTrainSpeed = 1;
     public float TrainAcc = 0.01f;
     public Vector2 force;
+    public Vector3 testing;
 
     bool canMoveLeft = true;
     bool canMoveRight = true;

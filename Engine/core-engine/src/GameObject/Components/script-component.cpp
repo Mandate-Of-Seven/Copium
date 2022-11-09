@@ -247,8 +247,6 @@ namespace Copium
 
 	void ScriptComponent::deserialize(rapidjson::Value& _value)
 	{
-		PRINT("SCRIPT DESERIALIZING!");
-
 		if (_value.HasMember("Name"))
 		{
 			Name(_value["Name"].GetString());
@@ -366,7 +364,6 @@ namespace Copium
 	{
 		if (pScriptClass == nullptr)
 			return;
-		PRINT("SERIALIZING SCRIPT");
 		rapidjson::Value type;
 		std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
 		type.SetString(tc.c_str(), rapidjson::SizeType(tc.length()), _doc.GetAllocator());
@@ -385,7 +382,6 @@ namespace Copium
 			{
 			case FieldType::Float:
 			{
-				PRINT("SCRIPT: FLOAT");
 				_value.AddMember(rapidjson::StringRef(fieldName.c_str()), *reinterpret_cast<float*>(buffer), _doc.GetAllocator());
 				break;
 			}
@@ -416,7 +412,7 @@ namespace Copium
 			}
 			case FieldType::Long:
 			{
-				//_value.AddMember(rapidjson::StringRef(fieldName.c_str()), *reinterpret_cast<long*>(buffer), _doc.GetAllocator());
+				_value.AddMember(rapidjson::StringRef(fieldName.c_str()), *reinterpret_cast<int64_t*>(buffer), _doc.GetAllocator());
 				break;
 			}
 			case FieldType::UShort:
@@ -431,30 +427,25 @@ namespace Copium
 			}
 			case FieldType::ULong:
 			{
-				//_value.AddMember(rapidjson::StringRef(fieldName.c_str()), *reinterpret_cast<uint64_t*>(buffer), _doc.GetAllocator());
+				_value.AddMember(rapidjson::StringRef(fieldName.c_str()), *reinterpret_cast<uint64_t*>(buffer), _doc.GetAllocator());
 				break;
 			}
 			case FieldType::Vector2:
 			{
-				//PRINT("SCRIPT: VEC2");
-				//rapidjson::Value& _v = _value[fieldName.c_str()].GetObj();
-				//float* fBuf = reinterpret_cast<float*> (buffer);
-				//Math::Vec2 tmp{ *(fBuf++),*fBuf };
-				//rapidjson::Value vec2(rapidjson::kObjectType);
-				//tmp.serialize(vec2, _doc);
-				//_value.AddMember(rapidjson::StringRef(fieldName.c_str()), vec2, _doc.GetAllocator());
-				//PRINT("SCRIPT: VEC2 SUCCESS");
+				float* fBuf = reinterpret_cast<float*> (buffer);
+				Math::Vec2 tmp{ *(fBuf++),*fBuf };
+				rapidjson::Value vec2(rapidjson::kObjectType);
+				tmp.serialize(vec2, _doc);
+				_value.AddMember(rapidjson::StringRef(fieldName.c_str()), vec2, _doc.GetAllocator());
 				break;
 			}
 			case FieldType::Vector3:
 			{
-				//PRINT("SCRIPT: VEC3");
-				//rapidjson::Value& _v = _value[fieldName.c_str()].GetObj();
-				//float* fBuf = reinterpret_cast<float*> (buffer);
-				//Math::Vec3 tmp{*(fBuf++),*(fBuf++),*fBuf };
-				//rapidjson::Value vec3(rapidjson::kObjectType);
-				//tmp.serialize(vec3, _doc);
-				//_value.AddMember(rapidjson::StringRef(fieldName.c_str()), vec3, _doc.GetAllocator());
+				float* fBuf = reinterpret_cast<float*> (buffer);
+				Math::Vec3 tmp{ *(fBuf++),*(fBuf++),*fBuf };
+				rapidjson::Value vec3(rapidjson::kObjectType);
+				tmp.serialize(vec3, _doc);
+				_value.AddMember(rapidjson::StringRef(fieldName.c_str()), vec3, _doc.GetAllocator());
 				break;
 			}
 			}

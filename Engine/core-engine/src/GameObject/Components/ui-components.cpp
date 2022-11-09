@@ -111,7 +111,7 @@ namespace Copium
 	}
 
 	TextComponent::TextComponent(GameObject& _gameObj)
-		: Component(_gameObj, ComponentType::Text), font{Font::getFont("corbel")}
+		: Component(_gameObj, ComponentType::Text), font{ Font::getFont("corbel") },fontName{"corbel"}
 	{
 	}
 
@@ -119,16 +119,102 @@ namespace Copium
 	{
 		if (!font)
 			return;
-		font->draw_text("Button!", gameObj.Transform().position.to_glm(), { 1.f, 1.f, 1.f, 1.f }, 0.2f, 0);
+		Transform& trans{ gameObj.Transform() };
+		glm::vec2 pos{ trans.position.to_glm() };
+		float scale = trans.scale.x;
+		if (scale > trans.scale.y)
+			scale = trans.scale.y;
+		glm::vec2 dimensions{ font->getDimensions(content, scale) };
+
+
+		switch (hAlignment)
+		{
+			case HorizontalAlignment::Center:
+			{
+				pos.x -= dimensions.x / 2.f;
+				break;
+			}
+			case HorizontalAlignment::Right:
+			{
+				pos.x -= dimensions.x;
+				break;
+			}
+		}
+		switch (vAlignment)
+		{
+			case VerticalAlignment::Top:
+			{
+				pos.y -= dimensions.y;
+				break;
+			}
+			case VerticalAlignment::Center:
+			{
+				pos.y -= dimensions.y / 2.f;
+				break;
+			}
+		}
+
+		font->draw_text(content, pos, { 1.f, 1.f, 1.f, 1.f }, scale, 0);
 	}
 
 	TextComponent& TextComponent::operator=(const TextComponent& rhs)
 	{
 		offset = rhs.offset;
-		percentage = rhs.percentage;
-		content = rhs.content;
+		memcpy(content, rhs.content, TEXT_BUFFER_SIZE);
 		font = rhs.font;
 		return *this;
+	}
+
+
+	void TextComponent::inspector_view()
+	{
+		float sameLinePadding = 16.f;
+		bool openPopup = false;
+
+		ImGuiColorEditFlags miscFlags = ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip
+			| ImGuiColorEditFlags_NoLabel;
+
+		ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
+			| ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp;
+		if (ImGui::BeginTable("Component UI Text", 2, windowFlags))
+		{
+			ImGui::Indent();
+			// Sprite
+			// Extern source file
+
+			ImGui::TableSetupColumn("Text", 0, 0.4f);
+			ImGui::TableSetupColumn("Input", 0, 0.6f);
+
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("Content:");
+			ImGui::TableNextColumn();
+			ImGui::PushItemWidth(-1);
+			ImGui::InputText("##Text", content, TEXT_BUFFER_SIZE);
+			ImGui::PopItemWidth();
+
+
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("Horizontal Alignment: ");
+			ImGui::TableNextColumn();
+			static const char* const horizontal[] = { "Left", "Center", "Right"};
+			ImGui::PushItemWidth(-1);
+			ImGui::Combo("hAlign", reinterpret_cast<int*>(&hAlignment), horizontal, 3);
+			ImGui::PopItemWidth();
+
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("Vertical Alignment: ");
+			ImGui::TableNextColumn();
+			static const char* const vertical[] = { "Top", "Center", "Bottom" };
+			ImGui::PushItemWidth(-1);
+			ImGui::Combo("vAlign", reinterpret_cast<int*>(&vAlignment), vertical, 3);
+			ImGui::PopItemWidth();
+
+			ImGui::Unindent();
+			ImGui::EndTable();
+		}
 	}
 
 	ImageComponent::ImageComponent(GameObject& _gameObj)
@@ -238,7 +324,6 @@ namespace Copium
 	ImageComponent& ImageComponent::operator=(const ImageComponent& rhs)
 	{
 		offset = rhs.offset;
-		percentage = rhs.percentage;
 		return *this;
 	}
 }
