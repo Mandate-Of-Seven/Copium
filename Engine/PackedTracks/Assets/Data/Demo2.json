@@ -1,0 +1,118 @@
+{
+    "Name": "Demo",
+    "GameObjects": [
+        {
+            "ID": 1,
+            "Name": "Background",
+            "PID": 0,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 16.0,
+                        "Y": 16.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "RendererComponent",
+                    "Sprite ID": 1,
+                    "Sprite Name": "mock-up.png",
+                    "Color": {
+                        "X": 0.9998999834060669,
+                        "Y": 0.9999659061431885,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ],
+            "Children": []
+        },
+        {
+            "ID": 2,
+            "Name": "PlayerTrain",
+            "PID": 0,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": -2.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 5.0,
+                        "Y": 5.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "RendererComponent",
+                    "Sprite ID": 20,
+                    "Sprite Name": "PlayerHead.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {}
+            ],
+            "Children": []
+        },
+        {
+            "ID": 3,
+            "Name": "EnemyTrain",
+            "PID": 0,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 2.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 5.0,
+                        "Y": 5.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "RendererComponent",
+                    "Sprite ID": 16,
+                    "Sprite Name": "EnemyHead.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {}
+            ],
+            "Children": []
+        }
+    ]
+}

@@ -44,6 +44,7 @@ namespace Copium
 		//imgui
 		ImGui::CreateContext();
 		ImGuiIO & io = ImGui::GetIO(); (void) io;
+		io.Fonts->AddFontFromFileTTF("Data\\arial.ttf", 32.f);
 
 		// Only move window from title bar
 		io.ConfigWindowsMoveFromTitleBarOnly = true;

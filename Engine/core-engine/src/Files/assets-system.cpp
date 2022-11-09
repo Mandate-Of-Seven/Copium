@@ -144,12 +144,12 @@ namespace Copium
 		for (int i = 0; i < get_textures().size(); i++)
 		{
 
-			if (!get_textures()[i].get_file_path().compare("Assets/textures/TrackSpriteSheet.png"))
+			if (!get_textures()[i].get_file_path().compare("../PackedTracks/Assets/Textures/TrackSpriteSheet.png"))
 			{
 				Spritesheet ss(get_textures()[i], 1, 8);
 				spritesheets.push_back(ss);
 			}
-			else if (!get_textures()[i].get_file_path().compare("Assets/textures/mock-up.png"))
+			else if (!get_textures()[i].get_file_path().compare("../PackedTracks/Assets/Textures/mock-up.png"))
 			{
 				Spritesheet ss(get_textures()[i], 4, 3);
 				spritesheets.push_back(ss);

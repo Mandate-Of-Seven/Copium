@@ -22,7 +22,7 @@ namespace Copium
 {
 	namespace
 	{
-		std::filesystem::path assets = "Assets";
+		std::filesystem::path assets = "../PackedTracks/Assets";
 
 		const float padding = 16.f;
 		const float thumbnailSize = 128.f;
@@ -35,8 +35,8 @@ namespace Copium
 	{
 		currentDirectory = assets;
 
-		Texture directoryIcon("resources/DirectoryIcon.png");
-		Texture fileIcon("resources/FileIcon.png");
+		Texture directoryIcon("Data/DirectoryIcon.png");
+		Texture fileIcon("Data/FileIcon.png");
 		 
 		icons.push_back(directoryIcon);
 		icons.push_back(fileIcon);

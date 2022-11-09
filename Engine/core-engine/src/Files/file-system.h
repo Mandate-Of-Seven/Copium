@@ -44,9 +44,22 @@ namespace Copium
 		static const std::string scriptsAssemblyPath{ "scripts.dll" };
 		static const std::string projectName = { "PackedTracks\\" };
 		static const std::string projectPath{ "..\\" + projectName };
+		static const std::string assetPath{ projectPath + "Assets" };
 		static const std::string coreScriptsPath{ "..\\CopiumScriptCore"};
-		static const std::string assetPath{ "Assets" };
 	}
+
+	enum FILE_TYPE
+	{
+		AUDIO,
+		FONT,
+		SCENE,
+		SCRIPT,
+		SHADER,
+		SPRITE,
+		TEXT,
+
+		NUM_TYPES
+	};
 
 	class File;
 
@@ -147,9 +160,28 @@ namespace Copium
 		*/
 		/*******************************************************************************/
 		void update_modification_timing();
+
+		const unsigned int& get_id() const { return instanceID; }
+		const std::string& get_name() const { return name; }
+		const FILE_TYPE& get_file_type() const { return fileType; }
+
 	private:
+		unsigned int instanceID; // The id to reference for the asset
+		std::string name; // Name of the asset
+		
 		bool modified;
 		time_t lastModifiedTime;
+
+		FILE_TYPE fileType; // The type of file
+	};
+
+	class Directory
+	{
+	private:
+		unsigned int instanceID; // The id to reference for the asset
+		std::string name; // The name of the asset
+		std::vector<File> files; // Files within the directory
+		std::vector<Directory> folders; // Folders within the directory
 	};
 }
 

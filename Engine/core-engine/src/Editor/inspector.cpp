@@ -49,8 +49,6 @@ namespace Window
         void init()
         {
             isAddingComponent = false;
-            ImGuiIO& io = ImGui::GetIO();
-            io.Fonts->AddFontFromFileTTF("assets\\fonts\\bahnschrift.ttf", 32.f);
             isOpen = true;
 
             for (size_t i{ 0 }; i < 128; ++i)
