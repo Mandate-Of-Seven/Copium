@@ -78,9 +78,11 @@ namespace Copium
 		Scene* currScene = sceneManager.get_current_scene();
 		if (!currScene)
 			return nullptr;
-		GameObject* go = new GameObject(_src);
+		GameObject* go = new GameObject();
 		if (!go)
 			return nullptr;
+
+		*go = _src;
 
 		currScene->add_gameobject(go);
 

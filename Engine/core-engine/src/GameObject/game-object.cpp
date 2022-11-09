@@ -145,6 +145,108 @@ GameObject::GameObject
     PRINT("GAMEOBJECT ID CONSTRUCTED: " << id);
 }
 
+GameObject& GameObject::operator=(const GameObject& _src)
+{
+    std::cout << "gameobject = \n";
+    name = _src.get_name();
+    transform = _src.transform;
+
+    for (Component* co : components)
+    {
+        if (co)
+        {
+            delete co;
+            co = nullptr;
+        }
+    }
+    components.clear();
+
+    for (GameObject* go : children)
+    {
+        if (go)
+        {
+            delete go;
+            go = nullptr;
+        }
+    }
+    children.clear();
+
+    
+    for (Component* pComponent : _src.components)
+    {
+        Component* component = nullptr;
+        switch (pComponent->componentType)
+        {
+        case ComponentType::Animator:
+        {
+            component = new AnimatorComponent(*this);
+            *component = *(reinterpret_cast<AnimatorComponent*>(pComponent));
+            PRINT("ADDED ANIMATOR");
+            break;
+        }
+        case ComponentType::BoxCollider2D:
+        {
+            component = new BoxCollider2D(*this);
+            *component = *(reinterpret_cast<BoxCollider2D*>(pComponent));
+            PRINT("ADDED COLLIDER");
+            break;
+        }
+        case ComponentType::Rigidbody2D:
+        {
+            component = new Rigidbody2D(*this);
+            *component = *(reinterpret_cast<Rigidbody2D*>(pComponent));
+            PRINT("ADDED Rigidbody");
+            break;
+        }
+        case ComponentType::SpriteRenderer:
+        {
+            component = new SpriteRenderer(*this);
+            *component = *(reinterpret_cast<SpriteRenderer*>(pComponent));
+            PRINT("ADDED SPRITE RENDERER");
+            break;
+        }
+        case ComponentType::Script:
+        {
+            component = new ScriptComponent(*this);
+            *component = *(reinterpret_cast<ScriptComponent*>(pComponent));
+            PRINT("ADDED SCRIPT");
+            break;
+        }
+        case ComponentType::Button:
+        {
+            component = new ButtonComponent(*this);
+            *component = *(reinterpret_cast<ButtonComponent*>(pComponent));
+            PRINT("ADDED UI BUTTON");
+            break;
+        }
+        case ComponentType::Image:
+        {
+            component = new ImageComponent(*this);
+            *component = *(reinterpret_cast<ImageComponent*>(pComponent));
+            PRINT("ADDED UI IMAGE");
+            break;
+        }
+        case ComponentType::Text:
+        {
+            component = new TextComponent(*this);
+            *component = *(reinterpret_cast<TextComponent*>(pComponent));
+            PRINT("ADDED UI TEXT");
+            break;
+        }
+        }
+        if (component)
+            components.push_back(component);
+    }
+    for (GameObject* pGameObj : _src.children)
+    {
+        GameObject* child = sceneManager.get_gof().build_gameobject(*pGameObj);
+        children.push_back(child);
+        child->set_parent(this);
+    }
+    return *this;
+}
+
+
 Component* GameObject::getComponent(ComponentType componentType)
 {
     for (Component* pComponent : components)
