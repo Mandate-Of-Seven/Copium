@@ -18,7 +18,7 @@
 	3. de-allocation of resources used by current scene (cleanup before engine close)
 	4. Calling scene's update functions
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************
 ****/
 #include <pch.h>
@@ -27,6 +27,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "../Windows/windows-system.h"
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/prettywriter.h>
+#include <Messaging/message-system.h>
 
 namespace Copium {
 	GameObject* NewSceneManager::findGameObjByID(GameObjectID _ID)
@@ -41,13 +42,26 @@ namespace Copium {
 		return nullptr;
 	}
 
-	NewSceneManager::NewSceneManager() : gof{nullptr}, currentScene{nullptr}, selectedGameObject{nullptr},storageScene{nullptr}
+	GameObject* NewSceneManager::findGameObjByName(const std::string& name)
+	{
+		for (GameObject* pGameObj : currentScene->get_gameobjectvector())
+		{
+			if (pGameObj->get_name() == name)
+			{
+				return pGameObj;
+			}
+		}
+		return nullptr;
+	}
+
+	NewSceneManager::NewSceneManager() : gof{nullptr}, currentScene{nullptr}, selectedGameObject{nullptr}, storageScene{nullptr}
 	{
 		gof = new GameObjectFactory();
 		if (!gof)
 		{
 			std::cout << "Error allocating memory for GameObjectFactory\n";
 		}	
+
 		//std::cout << "sm ctor\n";
 	}
 
@@ -65,6 +79,9 @@ namespace Copium {
 
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		storageScene = nullptr;
+		//gof->register_archetypes("Data/Archetypes");
+
+
 		//std::cout << "No. of GameObjects in scene:" << currentScene->get_gameobjcount() << std::endl;
 	}
 	void NewSceneManager::update()
@@ -88,6 +105,11 @@ namespace Copium {
 			delete currentScene;
 			currentScene = nullptr;
 		}
+		if (storageScene)
+		{
+			delete storageScene;
+			storageScene = nullptr;
+		}
 
 		while (commandManager.undoStack.size() > 0)
 		{
@@ -107,7 +129,7 @@ namespace Copium {
 	bool NewSceneManager::load_scene(const std::string& _filepath)
 	{
 		std::cout << "load_scene\n";
-
+		
 		if (!currentScene)
 		{
 			currentScene = new NormalScene(_filepath);
@@ -128,6 +150,8 @@ namespace Copium {
 			return false;
 		}
 
+		// WAIT
+		MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_SCENE_OPENED);
 
 		if (document.HasMember("Name"))
 		{
@@ -145,6 +169,7 @@ namespace Copium {
 		}
 		
 		ifs.close();
+		MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_SCENE_DESERIALIZED);
 		return true;
 
 	}
@@ -170,6 +195,7 @@ namespace Copium {
 			std::cout << "file exists\n";
 			delete currentScene;
 			currentScene = nullptr;
+			selectedGameObject = nullptr;
 			load_scene(_newfilepath);
 			//Scene* tmp = currentScene;
 			//result = load_scene(_newfilepath);
@@ -203,7 +229,12 @@ namespace Copium {
 	{
 		if (!currentScene)
 		{
-			PRINT("Cannot preview scene as there is no scene! There might be too much copium in your system...\n");
+			PRINT("There is no scene to preview...\n");
+			return false;
+		}
+		if (storageScene)
+		{
+			PRINT("Currently in play mode...\n");
 			return false;
 		}
 		storageScene = currentScene;
@@ -235,6 +266,11 @@ namespace Copium {
 	}
 	bool NewSceneManager::endPreview()
 	{
+		if (!currentScene)
+		{
+			PRINT("There is no scene to stop preview...\n");
+			return false;
+		}
 
 		// Delete memory for the preview scene
 		if (!storageScene)
@@ -251,6 +287,11 @@ namespace Copium {
 
 	bool NewSceneManager::save_scene()
 	{
+		if (!currentScene)
+		{
+			PRINT("There is no scene to save...\n");
+			return false;
+		}
 		double startTime = glfwGetTime();
 		std::cout << "saving scene...\n";
 		if (!save_scene(sceneFilePath))
@@ -262,6 +303,11 @@ namespace Copium {
 	}
 	bool NewSceneManager::save_scene(const std::string& _filepath)
 	{
+		if(!currentScene)
+		{
+			PRINT("There is no scene to save...\n");
+			return false;
+		}
 		rapidjson::Document doc;
 
 		doc.SetObject();
@@ -308,7 +354,8 @@ namespace Copium {
 
 	void create_rapidjson_string(rapidjson::Document& _doc, rapidjson::Value& _value, const std::string& _str)
 	{
-		_value.SetString(_str.c_str(), _str.length(), _doc.GetAllocator());
+		rapidjson::SizeType sz = static_cast<rapidjson::SizeType>(_str.size());
+		_value.SetString(_str.c_str(), sz, _doc.GetAllocator());
 	}
 
 	UndoRedo::CommandManager* NewSceneManager::get_commandmanager()

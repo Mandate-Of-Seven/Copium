@@ -40,8 +40,29 @@ namespace Copium
 		/**************************************************************************/
 		void init();
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			The Update function for LoggingSystem ISystem
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
 		void update();
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			The Exit function for LoggingSystem ISystem.
+			Should do the cleanup for any resources used by this ISystem
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
 		void exit();
 
 		/***************************************************************************/
@@ -118,27 +139,27 @@ namespace
 #define CONSOLE_CRITICAL(...)															\
 							{															\
 								loggingSystem.getConsoleLogger()->critical(__VA_ARGS__); \
-								Window::EditorConsole::add_logEntry(__VA_ARGS__);		\
+								Window::EditorConsole::editorLog.add_logEntry(__VA_ARGS__);		\
 							}
 #define CONSOLE_ERROR(...)																\
 							{															\
 									loggingSystem.getConsoleLogger()->error(__VA_ARGS__);\
-									Window::EditorConsole::add_logEntry(__VA_ARGS__);	\
+									Window::EditorConsole::editorLog.add_logEntry(__VA_ARGS__);	\
 							}
 #define CONSOLE_WARN(...)																\
 							{															\
 									loggingSystem.getConsoleLogger()->warn(__VA_ARGS__); \
-									Window::EditorConsole::add_logEntry(__VA_ARGS__);	\
+									Window::EditorConsole::editorLog.add_logEntry(__VA_ARGS__);	\
 							}
 #define CONSOLE_INFO(...)																\
 							{															\
 									loggingSystem.getConsoleLogger()->info(__VA_ARGS__); \
-									Window::EditorConsole::add_logEntry(__VA_ARGS__);	\
+									Window::EditorConsole::editorLog.add_logEntry(__VA_ARGS__);	\
 							}
 #define CONSOLE_TRACE(...)																\
 							{															\
 									loggingSystem.getConsoleLogger()->trace(__VA_ARGS__);\
-									Window::EditorConsole::add_logEntry(__VA_ARGS__);	\
+									Window::EditorConsole::editorLog.add_logEntry(__VA_ARGS__);	\
 							}
 
 #define FILE_CRITICAL(...)		::spdlog::critical(__VA_ARGS__);

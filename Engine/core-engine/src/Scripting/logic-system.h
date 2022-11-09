@@ -1,18 +1,17 @@
 ﻿/*!***************************************************************************************
-\file			
-\project		
-\author			
-\co-authors		// DELETE IF NOT APPLICABLE
+\file			logic-system.cpp
+\project
+\author			Zacharie Hong
 
 \par			Course: GAM200
-\par			Section: 
-\date			25/10/2022
+\par			Section:
+\date			30/10/2022
 
 \brief
-	// BRIEF DESCRIPTION OF FILE PURPOSE
+	This file declares the functions for the Logic System
 
 All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
-******************************************************************************************/
+*****************************************************************************************/
 
 #pragma once
 
@@ -28,14 +27,40 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 namespace Copium
 {
-	class UIButtonComponent;
 
 	CLASS_SYSTEM(LogicSystem) , public IReceiver
 	{
 	public:
+		/**************************************************************************/
+		/*!
+			\brief
+				Inits logic system
+		*/
+		/**************************************************************************/
 		void init();
+		/**************************************************************************/
+		/*!
+			\brief
+				Calls the update function of UI buttons and Script Components
+		*/
+		/**************************************************************************/
 		void update();
+		/**************************************************************************/
+		/*!
+			\brief
+				Cleanup of logic system
+		*/
+		/**************************************************************************/
 		void exit();
+		/**************************************************************************/
+		/*!
+			\brief
+				Listens to Start play mode so it can call the awake and start of all scripts
+
+			\param mType
+				Type of message dispatched
+		*/
+		/**************************************************************************/
 		void handleMessage(MESSAGE_TYPE mType);
 	};
 }

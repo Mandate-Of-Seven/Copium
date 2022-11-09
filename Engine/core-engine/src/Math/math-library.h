@@ -13,6 +13,7 @@
 	1. 2D vector
 	2. 3D vector
 	3. 3x3 matrix
+	4. 4x4 matrix
 	Each has a class dedicated to it which contains operator overloads.
 	Declarations of functions which perform common mathematical operations for the respective classes
 	are also contained here.
@@ -198,7 +199,7 @@ namespace Copium::Math
 
 		float x, y;
 
-		RTTR_ENABLE();
+		//RTTR_ENABLE();
 
 
 	};

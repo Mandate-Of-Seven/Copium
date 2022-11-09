@@ -26,10 +26,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium {
 
-	#define ANIMATOR_CREATOR "Animator"
-	#define RENDERER_CREATOR "Sprite Renderer"
-	#define COLLIDER_CREATOR "Collider"
-
 	class GameObjectCreator {
 
 	};
@@ -204,6 +200,19 @@ namespace Copium {
 		*/
 		/*******************************************************************************/
 		bool register_archetypes(const std::filesystem::path& _directoryPath);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Get reference of the archetype map
+
+		\return
+			reference to the archetype map
+
+		*/
+		/*******************************************************************************/
+		std::map<std::string, GameObject*>& get_archetype_map();
 
 	private:
 		std::map<std::string, GameObject*> gameObjectCreators;

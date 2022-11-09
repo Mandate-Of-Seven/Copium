@@ -1,5 +1,5 @@
 /*!***************************************************************************************
-\file			Windows/windows-system.h
+\file			windows-system.cpp
 \project
 \author			Sean Ngo
 
@@ -13,7 +13,7 @@
     window and start up an OpenGL context and use GLEW to extract function 
     pointers to OpenGL implementations.
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 
@@ -23,6 +23,7 @@ namespace Copium
 {
     int WindowsSystem::windowWidth;
     int WindowsSystem::windowHeight;
+    bool WindowsSystem::windowFocused;
 
     void WindowsSystem::init()
     {
@@ -34,8 +35,9 @@ namespace Copium
     {
         windowWidth = _width;
         windowHeight = _height;
+        windowFocused = true;
         title = _title;
-
+        
         std::string config("Data\\config.json");
         load_config(config, windowWidth, windowHeight);
 
@@ -71,6 +73,7 @@ namespace Copium
         glfwMakeContextCurrent(window);
 
         glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+        glfwSetWindowFocusCallback(window, window_focus_callback);
 
         // this is the default setting ...
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -168,7 +171,17 @@ namespace Copium
         windowWidth = _width;
         windowHeight = _height;
         glViewport(0, 0, _width, _height);
+
         // later, if working in 3D, we'll have to set the projection matrix here ...
+        (void) _window;
+    }
+
+    void WindowsSystem::window_focus_callback(GLFWwindow* _window, int _focused)
+    {
+#ifdef _DEBUG
+        PRINT("Window focus getting called!!!");
+#endif
+        windowFocused = (bool) _focused;
         (void) _window;
     }
 

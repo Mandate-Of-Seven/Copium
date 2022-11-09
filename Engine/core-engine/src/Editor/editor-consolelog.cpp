@@ -56,10 +56,20 @@ namespace Window
             }
 		}
 
-        void add_logEntry(std::string str)
+        void EditorConsoleLog::add_logEntry(std::string str)
         {
             str += '\n';
             editorLog.AddLog(str.c_str());
+        }
+
+        void EditorConsoleLog::set_performancetext(std::string str)
+        {
+            Window::EditorConsole::editorLog.performanceText = str;
+        }
+
+        std::string EditorConsoleLog::get_performancetext()
+        {
+            return performanceText;
         }
 
 		void init()
@@ -69,7 +79,6 @@ namespace Window
 
 		void update()
 		{
-
 			if (!isOpen)
 			{
 				return;
@@ -121,10 +130,6 @@ namespace Window
             ImGui::SameLine();
             bool copy = ImGui::Button("Copy");
             ImGui::SameLine();
-            if (ImGui::Button("Performance Viewer"))
-            {
-                messageSystem.dispatch(Copium::MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW);
-            }
 
             ImGui::SameLine();
             editorLog.Search.Draw("Search", 200.0f);
@@ -180,6 +185,25 @@ namespace Window
                 ImGui::SetScrollHereY(1.0f);
 
             ImGui::EndChild();
+            ImGui::End();
+            
+
+            ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+            ImGui::SetNextWindowBgAlpha(0.35f);
+
+            // Begin Render Stats
+            ImGui::Begin("Performance Viewer", 0,windowFlags);
+            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 75);
+            if (ImGui::Button("Start Performance Viewer"))
+            {
+                messageSystem.dispatch(Copium::MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW);
+            }
+            
+
+            std::string buffer = Window::EditorConsole::editorLog.get_performancetext();
+            ImGui::Text(buffer.c_str());
+            //PRINT(buffer);
+            // End Performance Stats
             ImGui::End();
 		}
 	}

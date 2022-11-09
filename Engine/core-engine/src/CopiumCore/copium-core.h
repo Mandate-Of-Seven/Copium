@@ -10,10 +10,11 @@
 \brief
 	This file holds the definitions of functions for copium-core.cpp
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
+#ifndef COPIUM_CORE_H
+#define COPIUM_CORE_H
 
-#pragma once
 #include "CopiumCore/system-interface.h"
 #include "Windows/windows-system.h"
 #include "Windows/windows-input.h"
@@ -29,6 +30,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Debugging/logging-system.h"
 #include "Audio/sound-system.h"
 #include "Scripting/logic-system.h"
+//#include "string.h"
 
 namespace Copium
 {
@@ -52,8 +54,9 @@ namespace Copium
 				WindowsSystem::Instance(),
 				pMessageSystem,
 				LoggingSystem::Instance(),
+				ScriptingSystem::Instance(),
 				NewSceneManager::Instance(),
-				SoundSystem::Instance()	,
+				SoundSystem::Instance(),
 				FileSystem::Instance(),
 				AssetsSystem::Instance(),
 				InputSystem::Instance(),
@@ -61,7 +64,6 @@ namespace Copium
 				LogicSystem::Instance(),
 				PhysicsSystem::Instance(),
 				GraphicsSystem::Instance(),
-				ScriptingSystem::Instance(),
 				ThreadSystem::Instance()
 			};
 			for (ISystem* pSystem : systems)
@@ -99,22 +101,39 @@ namespace Copium
 				}
 				else if (pSystem->systemFlags & FLAG_RUN_ON_EDITOR &&!inPlayMode)
 				{
+					double startTime = glfwGetTime();
 					pSystem->update();
+					pSystem->updateTime = glfwGetTime() - startTime;
+					totalUpdateTime += pSystem->updateTime;
 					continue;
 				}
 			}
 
 			if (displayPerformance)
 			{
-				std::cout<<"Start\n";
-				for (ISystem* pSystem : systems)
+				if (performanceCounter >= 0.05f)
 				{
-
-					pSystem->updateTimePercent = (pSystem->updateTime / totalUpdateTime) * 100;
-					std::cout << typeid(*pSystem).name() << ": " << pSystem->updateTimePercent << "%\n";
-
+					//std::cout<<"Start\n";
+					std::string temp = "\n";
+					for (ISystem* pSystem : systems)
+					{
+						pSystem->updateTimePercent = (pSystem->updateTime<=0) ? 0:((pSystem->updateTime / totalUpdateTime) * 100);
+						//std::cout<< pSystem->updateTime << "\n";
+						temp += typeid(*pSystem).name();
+						temp += ": ";
+						temp += std::to_string(pSystem->updateTimePercent);
+						temp += "%%\n\n";
+						//std::cout << typeid(*pSystem).name() << ": " << pSystem->updateTimePercent << "%\n";
+					}
+					//std::cout << temp;
+					Window::EditorConsole::editorLog.set_performancetext(temp);
+					//std::cout << "End\n\n";
+					performanceCounter = 0;
 				}
-				std::cout << "End\n\n";
+				else
+				{
+					performanceCounter += (float)Copium::WindowsSystem::Instance()->get_delta_time();
+				}
 			}
 			frc->end();
 		}
@@ -154,6 +173,7 @@ namespace Copium
 				case MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW:
 				{
 					displayPerformance = !displayPerformance;
+					performanceCounter = 0.05f;
 					break;
 				}
 			}
@@ -163,7 +183,9 @@ namespace Copium
 	private:
 		std::vector<ISystem*> systems;
 		FrameRateController* frc;
+		float performanceCounter = 0;
 		bool displayPerformance = false;
 		bool inPlayMode = false;
 	};
 }
+#endif // !COPIUM_CORE_H

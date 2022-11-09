@@ -16,7 +16,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "pch.h"
 #include "Editor/inspector.h"
-#include "Scripting/script-component.h"
+#include "GameObject/Components/script-component.h"
 
 // Bean: Remove once we can auto select gameobjects
 #include "SceneManager/sm.h"
@@ -99,7 +99,7 @@ namespace Window
                 ImGui::PushItemWidth(-1);
                 filter.Draw("##ComponentName");
                 ImGui::PopItemWidth();
-                std::map<Copium::ComponentType, const std::string>::iterator it;
+                std::map<Copium::ComponentType, std::string>::iterator it;
                 for (it = Copium::MAP_COMPONENT_TYPE_NAME.begin();
                     it != Copium::MAP_COMPONENT_TYPE_NAME.end(); ++it)
                 {
@@ -128,6 +128,8 @@ namespace Window
                 if(ImGui::Button(newScriptPrompt.c_str(), buttonSize)) 
                 {
                     //Ask scripting system query if file exists
+                    scriptingSystem.addEmptyScript(filter.InputBuf);
+                    selectedGameObject->addComponent<Copium::ScriptComponent>().Name(filter.InputBuf);
                     isAddingComponent = false;
                 }
                 ImGui::End();

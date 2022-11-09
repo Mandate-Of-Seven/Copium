@@ -16,10 +16,15 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 *****************************************************************************************/
 #include "Math/math-library.h"
 #include "SceneManager/sm.h"
+
+#ifndef COLLISION_H
+#define COLLISION_H
+
 enum class Shape : int
 {	DOT,
 	SQUARE
 };
+
 enum class collisionDirection : int
 {
 	NONE,
@@ -28,14 +33,71 @@ enum class collisionDirection : int
 	LEFT,
 	RIGHT
 };
-namespace Copium::Collision
+namespace Copium
 {
 	
 	struct AABB
 	{
+		AABB(Math::Vec2 _min = { -0.5f,-0.5f }, Math::Vec2 _max = { 0.5f,0.5f }) : max{ _max }, min{ _min }
+		{
+
+		}
+		/***************************************************************************/
+		/*!
+		\brief
+			Deserialize this AABB's data from the specified rapidjson Value
+
+		\param _value
+			reference to the rapidjson Value from which this AABB's data is deserialized from
+
+		\return
+			void
+		*/
+		/**************************************************************************/
+		void deserialize(rapidjson::Value& _value)
+		{
+			if (_value.HasMember("Min"))
+			{
+				rapidjson::Value& _v = _value["Min"].GetObj();
+				min.deserialize(_v);
+			}
+			if (_value.HasMember("Max"))
+			{
+				rapidjson::Value& _v = _value["Max"].GetObj();
+				max.deserialize(_v);
+			}
+		}
+		/***************************************************************************/
+		/*!
+		\brief
+			Serialize this AABB's data to the specified rapidjson Value
+
+		\param _value
+			reference to the rapidjson Value to which this AABB's data is to be serialized to
+
+		\param _doc
+			reference to the rapidjson Document that is associated with the save file
+
+		\return
+			void
+		*/
+		/**************************************************************************/
+		void serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
+		{
+			rapidjson::Value minimum(rapidjson::kObjectType);
+			rapidjson::Value maximum(rapidjson::kObjectType);
+
+			min.serialize(minimum, _doc);
+			max.serialize(maximum, _doc);
+
+			_value.AddMember("Min", minimum, _doc.GetAllocator());
+			_value.AddMember("Max", maximum, _doc.GetAllocator());
+
+		}
 		Math::Vec2 min;
 		Math::Vec2 max;
 	};
+
 	/***************************************************************************/
    /*!
    \brief
@@ -117,5 +179,7 @@ namespace Copium::Collision
 	
 	*/
 	/**************************************************************************/
-	void resolve_collision(GameObject& aabb1, GameObject& aabb2, collisionDirection direction);
+	void resolve_AABBcollision(Transform& transform1, AABB& aabb1, AABB& aabb2, collisionDirection direction);
 }
+
+#endif // !COLLISION_H

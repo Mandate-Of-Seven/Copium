@@ -30,6 +30,7 @@ extern "C"
 	typedef struct _MonoMethod MonoMethod;
 	typedef struct _MonoObject MonoObject;
 	typedef struct _MonoClassField MonoClassField;
+	typedef struct _MonoType MonoType;
 }
 
 namespace Copium
@@ -37,16 +38,16 @@ namespace Copium
 	enum class FieldType
 	{
 		Float, Double,
-		Bool, Char, Byte, Short, Int, Long,
-		UByte, UShort, UInt, ULong,
+		Bool, Char, Short, Int, Long,
+		UShort, UInt, ULong,
 		Vector2, Vector3, None
 	};
 
 	struct Field
 	{
-		FieldType type;
+		FieldType type{};
 		std::string name;
-		MonoClassField* classField;
+		MonoClassField* classField{nullptr};
 	};
 
 	// ScriptField + data storage
@@ -87,15 +88,20 @@ namespace Copium
 		{ "System.Int16", FieldType::Short },
 		{ "System.Int32", FieldType::Int },
 		{ "System.Int64", FieldType::Long },
-		{ "System.Byte", FieldType::Byte },
 		{ "System.UInt16", FieldType::UShort },
 		{ "System.UInt32", FieldType::UInt },
 		{ "System.UInt64", FieldType::ULong },
-
 		{ "CopiumEngine.Vector2", FieldType::Vector2 },
 		{ "CopiumEngine.Vector3", FieldType::Vector3 }
 	};
 
+	enum class CompilingState
+	{
+		Compiling,
+		SwapAssembly,
+		Deserializing,
+		Wait
+	};
 
 	struct ScriptClass
 	{
@@ -197,18 +203,84 @@ namespace Copium
 		/**************************************************************************/
 		void shutdownMono();
 
+		/**************************************************************************/
+		/*!
+			\brief
+				Cleans up mono and its domains
+			\param mObj
+				Instance to invoke from
+			\param mMethod
+				Method to invoke
+			\param params
+				Parameters to pass into mono function
+		*/
+		/**************************************************************************/
 		void invoke(MonoObject * mObj, MonoMethod * mMethod, void** params = nullptr);
 
+		/**************************************************************************/
+		/*!
+			\brief
+				Listens to MT_REFLECT_CS_GAMEOBJECT to know when to tell scripts
+				to create their version of a gameObject
+			\param mType
+				Message type, used if this listens to two or more messages
+		*/
+		/**************************************************************************/
 		void handleMessage(MESSAGE_TYPE mType);
 
+		/**************************************************************************/
+		/*!
+			\brief
+				Reflects a gameObject of ID into C#
+			\param _ID
+				ID of gameObject to be reflected
+		*/
+		/**************************************************************************/
 		void reflectGameObject(uint64_t _ID);
 
-		void loadAssemblyClasses();
 
+		/**************************************************************************/
+		/*!
+			\brief
+				Reflects a gameObject of ID into C#
+			\param _ID
+				ID of gameObject to be reflected
+		*/
+		/**************************************************************************/
 		MonoObject* cloneInstance(MonoObject* _instance);
 
+
+		/**************************************************************************/
+		/*!
+			\brief
+				Creates a new file
+			\param _name
+				Name of the new script
+		*/
+		/**************************************************************************/
+		void addEmptyScript(const std::string& _name);
+
+
+		/**************************************************************************/
+		/*!
+			\brief
+				Gets the map of names to ScriptClasses
+			\return 
+				Map of names to ScriptClasses
+		*/
+		/**************************************************************************/
 		const std::unordered_map<std::string, ScriptClass*>& getScriptClassMap();
+
+		MonoType* getMonoTypeFromName(std::string& name);
+
 	private:
+
+		/**************************************************************************/
+		/*!
+			\brief
+				Reloads and updates script classes
+		*/
+		/**************************************************************************/
 		void updateScriptClasses();
 
 		/**************************************************************************/
@@ -266,6 +338,7 @@ namespace Copium
 		bool scriptIsLoaded(const std::filesystem::path& filePath);
 		std::unordered_map<std::string, ScriptClass*> scriptClassMap;
 		std::list<File>& scriptFiles;
+		CompilingState compilingState{ CompilingState::Wait };
 	};
 }
 #endif // !SCRIPTING_SYSTEM_H

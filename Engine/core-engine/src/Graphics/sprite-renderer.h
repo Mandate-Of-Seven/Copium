@@ -11,7 +11,7 @@
 	This file holds the sprite's data which is used to render using the Graphics system
 	on to the scene.
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #ifndef SPRITE_RENDERER_H
 #define SPRITE_RENDERER_H
@@ -25,12 +25,35 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 namespace Copium
 {
 	// Bean: Rename to sprite later
-	class SpriteRenderer final
+	class Sprite final
 	{
 	public:
-		// Serialization inherited from Component
+		/***************************************************************************/
+		/*!
+		\brief
+			Loads the values into the engine
+		\param _value
+			The values to reference from
+		\return
+			A boolean to check if all values are loaded
+		*/
+		/***************************************************************************/
 		bool deserialize(rapidjson::Value& _value);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Saves the values into the file
+		\param _value
+			The values to reference from
+		\param _doc
+			The document to save to
+		\return
+			A boolean to check if all values are saved
+		*/
+		/***************************************************************************/
 		bool serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
+
 		// Accessing Properties
 
 		// Name
@@ -68,7 +91,7 @@ namespace Copium
 
 	private:
 		/* Sprite Information ***********************************************************/
-		std::string sprite_name; // Name of sprite
+		std::string sprite_name = "empty"; // Name of sprite
 
 		Texture* refTexture; // Pointer to the texture
 		unsigned int spriteID = 0; // The index of the sprite

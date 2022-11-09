@@ -31,6 +31,7 @@ namespace Window
 			ImGuiTextFilter     Search; //Used to search for specific words
 			ImVector<int>       LineOffsets; // Index to lines offset. We maintain this with AddLog() calls.
 			bool                keepScrolling;  // Keep scrolling if scrollbar is already at the bottom.
+			std::string		    performanceText;
 
 			/***************************************************************************/
 			/*!
@@ -60,21 +61,44 @@ namespace Window
 			*/
 			/**************************************************************************/
 			void    AddLog(const char* fmt, ...) IM_FMTARGS(2);
+
+			/***************************************************************************/
+			/*!
+			\brief
+				Adds a new entry to the editor log. Note that an endline will be appended
+				to the back of your string
+			\param str
+				the message that you wish to add
+			*/
+			/**************************************************************************/
+			void add_logEntry(std::string str);
+
+			/***************************************************************************/
+			/*!
+			\brief
+				Sets the performance text for the performance viewer
+			\param str
+				the message that you wish to add
+			*/
+			/**************************************************************************/
+			void set_performancetext(std::string str);
+
+			/***************************************************************************/
+			/*!
+			\brief
+				gets the performance text from the performance viewer
+			\return
+				the performance text
+			*/
+			/**************************************************************************/
+			std::string get_performancetext();
 		};
 
 
 		static EditorConsoleLog editorLog;
-
-		/***************************************************************************/
-		/*!
-		\brief
-			Adds a new entry to the editor log. Note that an endline will be appended
-			to the back of your string
-		\param str
-			the message that you wish to add
-		*/
-		/**************************************************************************/
-		void add_logEntry(std::string str);
+		
+		
+		
 
 		/***************************************************************************/
 		/*!

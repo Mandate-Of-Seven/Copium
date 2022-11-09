@@ -111,13 +111,55 @@ namespace Copium
 			/**************************************************************************/
 			void init();
 
+			/***************************************************************************/
+			/*!
+			\brief
+				Update to be called for Isystem
+			*/
+			/**************************************************************************/
 			void update();
 
+			/***************************************************************************/
+			/*!
+			\brief
+				Exit to be called for Isystem
+			*/
+			/**************************************************************************/
 			void exit();
 
+			/***************************************************************************/
+			/*!
+			\brief
+				The call back to track mouse scroll
+			*/
+			/**************************************************************************/
 			static void mousescroll_callback(GLFWwindow * window, double xOffset, double yOffset);
+
+			/***************************************************************************/
+			/*!
+			\brief
+				The call back to track mouse position
+			*/
+			/**************************************************************************/
 			static void mousepos_callback(GLFWwindow * window, double xPos, double yPos);
+
+			/***************************************************************************/
+			/*!
+			\brief
+				The call back to track mouse buttons
+			*/
+			/**************************************************************************/
 			static void mousebutton_callback(GLFWwindow * window, int button, int action, int mods);
+
+			/***************************************************************************/
+			/*!
+			\brief
+				The call back to track key presses
+			*/
+			/**************************************************************************/
 			static void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods);
+
+	private:
+		bool printInput = 0;
 	};
 }

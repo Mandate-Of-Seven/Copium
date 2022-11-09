@@ -38,6 +38,7 @@ namespace Copium {
 	{
 	public:
 		GameObject* findGameObjByID(GameObjectID _ID);
+		GameObject* findGameObjByName(const std::string& name);
 
 		NewSceneManager();
 		~NewSceneManager();
@@ -214,19 +215,29 @@ namespace Copium {
 			if there are errors in deallocating memory for the copy of the current scene, return false
 		*/
 		/*******************************************************************************/
-		UndoRedo::CommandManager* get_commandmanager();
-
 		bool endPreview();
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			A getter function for the command manager
+
+		\return
+			a pointer to the undo redo command manager
+		*/
+		/*******************************************************************************/
+		UndoRedo::CommandManager* get_commandmanager();
 
 		GameObject* selectedGameObject;
 
 	private:
 		GameObjectFactory* gof;
-		Scene* currentScene;
-		Scene* storageScene;
+		Scene* currentScene;	// Pointer to the current scene
+		Scene* storageScene;	// Scene Pointer that acts as buffer for preview scene
 		rapidjson::Document document;
 		std::string sceneFilePath;
-		UndoRedo::CommandManager commandManager;
+		UndoRedo::CommandManager commandManager; //for undo and redo
 	};
 
 	/*******************************************************************************

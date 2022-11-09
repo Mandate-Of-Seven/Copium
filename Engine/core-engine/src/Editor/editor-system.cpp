@@ -1,7 +1,8 @@
 /*!***************************************************************************************
-\file			editor-layer.cpp
+\file			editor-system.cpp
 \project
 \author			Sean Ngo
+\co-author		Shawn Tanary
 
 \par			Course: GAM200
 \par			Section:
@@ -10,12 +11,11 @@
 \brief
 	This file holds the definition of functions for the editor.
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 #include "Windows/windows-system.h"
 #include "Editor/editor-system.h"
-#include "Editor/editor-sceneview.h"
 #include "GameObject/game-object.h"
 #include "Editor/inspector.h"
 #include "Editor/editor-consolelog.h"
@@ -30,7 +30,7 @@ namespace Copium
 	namespace
 	{
 		// Our state
-		bool show_demo_window = true;
+		bool show_demo_window = false;
 		ThreadSystem& threadSystem{ *ThreadSystem::Instance() };
 		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 	}
@@ -61,6 +61,7 @@ namespace Copium
 		Window::Hierarchy::init();
 
 		sceneView.init();
+		contentBrowser.init();
 		
 		// Initialize a new editor camera
 		camera.init((float) sceneView.get_width(), (float) sceneView.get_height());
@@ -179,12 +180,21 @@ namespace Copium
 
 					if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
 					{
-						//save sceen as
-						while (!threadSystem.acquireMutex(MutexType::FileSystem));
-						std::string filepath = FileDialogs::save_file("Copium Scene (*.json)\0.json\0");
-						threadSystem.returnMutex(MutexType::FileSystem);
-						std::cout << filepath << std::endl;
-						Copium::NewSceneManager::Instance()->save_scene(filepath);
+						
+						if (Copium::NewSceneManager::Instance()->get_current_scene())
+						{
+							//save sceen as
+							while (!threadSystem.acquireMutex(MutexType::FileSystem));
+							std::string filepath = FileDialogs::save_file("Copium Scene (*.json)\0.json\0");
+							threadSystem.returnMutex(MutexType::FileSystem);
+							std::cout << filepath << std::endl;
+							Copium::NewSceneManager::Instance()->save_scene(filepath);
+						}
+						else
+						{
+							PRINT("There is no scene to save...\n");
+						}
+
 					}
 
 					if (ImGui::MenuItem("Exit"))
@@ -204,13 +214,17 @@ namespace Copium
 					if (ImGui::MenuItem("Play Scene"))
 					{
 						printf("Starting scene\n");
-						NewSceneManager::Instance()->startPreview();
-						messageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
+						if (NewSceneManager::Instance()->startPreview())
+						{
+							messageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
+						}
 					}
 					if (ImGui::MenuItem("Stop Scene"))
 					{
-						NewSceneManager::Instance()->endPreview();
-						messageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
+						if (NewSceneManager::Instance()->endPreview())
+						{
+							messageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
+						}
 					}
 
 					ImGui::EndMenu();
@@ -219,20 +233,20 @@ namespace Copium
 				ImGui::EndMenuBar();
 			}
 
-            //Call all the editor layers updates here
-            Window::Inspector::update();
-            Window::EditorConsole::update();
-			Window::Hierarchy::update();
-            sceneView.update();
 
+            //Call all the editor layers updates here
+			Window::Inspector::update();
+			Window::EditorConsole::update();
+			Window::Hierarchy::update();
+			sceneView.update();
+			contentBrowser.update();
 
 			// demo update
 			if (show_demo_window)
 				ImGui::ShowDemoWindow(&show_demo_window);
 
-
-            // Editor Camera
-            camera.update();
+			// Editor Camera
+			camera.update();
 
             ImGui::End();
 		}
@@ -255,5 +269,12 @@ namespace Copium
 
 		Window::Inspector::exit();
 		sceneView.exit();
+		contentBrowser.exit();
+	}
+
+	void EditorSystem::imguiConsoleAddLog(std::string value)
+	{
+		std::cout << value << "\n";
+		Window::EditorConsole::editorLog.add_logEntry(value);
 	}
 }

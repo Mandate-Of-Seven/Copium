@@ -69,6 +69,18 @@ namespace Copium
 		/*******************************************************************************/
 		void addThread(std::thread* _thread);
 
+
+		/*******************************************************************************
+		/*!
+		*
+			\brief
+				Gets a mutex for a thread to run its critical section
+			\param mutexType
+				Type of mutex to acquire
+			\return
+				True if acquired
+		*/
+		/*******************************************************************************/
 		bool acquireMutex(MutexType mutexType)
 		{
 			if (mutexes[mutexType] == 1)
@@ -77,6 +89,15 @@ namespace Copium
 			return 1;
 		}
 
+		/*******************************************************************************
+		/*!
+		*
+			\brief
+				Returns a mutex
+			\param mutexType
+				Type of mutex to return
+		*/
+		/*******************************************************************************/
 		void returnMutex(MutexType mutexType)
 		{
 			mutexes[mutexType] = 0;
