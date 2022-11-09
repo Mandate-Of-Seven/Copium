@@ -99,7 +99,7 @@ namespace Copium
 						velocity *= 0.99f;
 						pRb->set_acc(acceleration);
 						pRb->set_vel(velocity);
-						pRb->set_force(Math::Vec2());
+						/*pRb->set_force(Math::Vec2());*/
 					}
 					else
 					{
@@ -108,7 +108,7 @@ namespace Copium
 						velocity *= 0.99f;
 						pRb->set_acc(acceleration);
 						pRb->set_vel(velocity);
-						pRb->set_force(Math::Vec2());
+						/*pRb->set_force(Math::Vec2());*/
 					}
 				}
 
@@ -159,9 +159,26 @@ namespace Copium
 					resolve_AABBcollision(object1->Transform(), boundA, boundB, direct);
 					if (pRb1)
 					{
-						pRb1->set_vel(Math::Vec2(0.0, 0.0));
-						pRb1->set_acc(Math::Vec2(0.0, 0.0));
-						pRb1->set_force(Math::Vec2(0.0, 0.0));
+						if (direct == collisionDirection::BOTTOM)
+						{
+							pRb1->set_vel(Math::Vec2(velocityA.x ,0.0));
+							pRb1->set_acc(Math::Vec2(0.0, 0.0));
+						}
+						if (direct == collisionDirection::TOP)
+						{
+							pRb1->set_vel(Math::Vec2(velocityA.x, 0.0));
+							pRb1->set_acc(Math::Vec2(0.0, 0.0));
+						}
+						if (direct == collisionDirection::RIGHT)
+						{
+							pRb1->set_vel(Math::Vec2(0.0, velocityA.y));
+							pRb1->set_acc(Math::Vec2(0.0, 0.0));
+						}
+						if (direct == collisionDirection::LEFT)
+						{
+							pRb1->set_vel(Math::Vec2(0.0, velocityA.y));
+							pRb1->set_acc(Math::Vec2(0.0, 0.0));
+						}
 					}
 				}
 			}
