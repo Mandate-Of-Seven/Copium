@@ -22,8 +22,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <list>
 #include <map>
 
-#define DEFAULT_INSTANCE_ID 1000
-
 namespace Copium
 {
 	/**************************************************************************/
@@ -52,7 +50,6 @@ namespace Copium
 
 	enum FILE_TYPE
 	{
-		DEFAULT, // For empty file type
 		AUDIO,
 		FONT,
 		SCENE,
@@ -65,7 +62,6 @@ namespace Copium
 	};
 
 	class File;
-	class Directory;
 
 	CLASS_SYSTEM(FileSystem)
 	{
@@ -98,10 +94,6 @@ namespace Copium
 		/*******************************************************************************/
 		void exit();
 
-		Directory& get_directory() { return assetsDirectory; }
-		void set_directory(Directory const& _directory) { assetsDirectory = _directory; }
-
-
 		std::list<std::string>& get_filepath_in_directory(const char* _path, const char* _extension);
 		std::list<std::string>& get_filepath_in_directory(const char* _path, const char* _extension1, const char* _extension2);
 
@@ -122,7 +114,6 @@ namespace Copium
 	private:
 		std::map<const char*, std::list<File>> extensionTrackedFiles;
 		std::list<std::string> assetsPath;
-		Directory assetsDirectory;
 	};
 
 	class File final : public std::filesystem::path
@@ -171,47 +162,26 @@ namespace Copium
 		void update_modification_timing();
 
 		const unsigned int& get_id() const { return instanceID; }
-		void set_id(unsigned int const& _id) { instanceID = _id; }
-
 		const std::string& get_name() const { return name; }
-		void set_name(std::string const& _name) { name = _name; }
-
 		const FILE_TYPE& get_file_type() const { return fileType; }
 
 	private:
-		unsigned int instanceID = 0; // The id to reference for the asset
-		std::string name = ""; // Name of the asset
+		unsigned int instanceID; // The id to reference for the asset
+		std::string name; // Name of the asset
 		
-		bool modified = false;
-		time_t lastModifiedTime = 0;
+		bool modified;
+		time_t lastModifiedTime;
 
-		FILE_TYPE fileType = DEFAULT; // The type of file
+		FILE_TYPE fileType; // The type of file
 	};
 
 	class Directory
 	{
-	public:
-		const unsigned int& get_id() const { return instanceID; }
-		void set_id(unsigned int const& _id) { instanceID = _id; }
-
-		const std::string& get_name() const { return name; }
-		void set_name(std::string const& _name) { name = _name; }
-		
-		std::vector<File>& get_files() { return files; }
-		void add_files(File& _file) { files.push_back(_file); }
-
-		std::vector<Directory>& get_child_directory() { return folders; }
-		void add_child_directory(Directory& _directory) { folders.push_back(_directory); }
-
-		Directory* get_parent_directory() { return parentFolder; }
-		void set_parent_directory(Directory* _directory) { parentFolder = _directory; }
-
 	private:
-		unsigned int instanceID = 0; // The id to reference for the asset
-		std::string name = ""; // The name of the asset
+		unsigned int instanceID; // The id to reference for the asset
+		std::string name; // The name of the asset
 		std::vector<File> files; // Files within the directory
 		std::vector<Directory> folders; // Folders within the directory
-		Directory* parentFolder = nullptr; // A reference to the parent directory
 	};
 }
 
