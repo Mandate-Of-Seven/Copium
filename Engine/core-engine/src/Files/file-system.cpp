@@ -57,7 +57,7 @@ namespace Copium
 		{
 			if (dirEntry.is_directory())
 			{
-				assetsDirectory.
+				//assetsDirectory.
 			}
 		}
 	}
