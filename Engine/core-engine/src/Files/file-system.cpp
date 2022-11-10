@@ -49,6 +49,17 @@ namespace Copium
 	void FileSystem::init()
 	{
 		systemFlags |= FLAG_RUN_ON_EDITOR;
+
+		// Instance ID of assets directory is always preset to a default ID
+		assetsDirectory.set_id(DEFAULT_INSTANCE_ID);
+		std::filesystem::path assetsPath = Paths::assetPath;
+		for (auto& dirEntry : std::filesystem::recursive_directory_iterator(assetsPath))
+		{
+			if (dirEntry.is_directory())
+			{
+				assetsDirectory.
+			}
+		}
 	}
 
 	void FileSystem::update()
