@@ -58,6 +58,7 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{ count++ },
     messageSystem.subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
     MESSAGE_CONTAINER::reflectCsGameObject.ID = id;
     messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
+    active = rhs.active;
     transform = rhs.transform;
     name = rhs.name;
     for (Component* pComponent : rhs.components)
@@ -135,9 +136,10 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{ count++ },
 
 GameObject::GameObject
 (Math::Vec3 _position, Math::Vec3 _rotation, Math::Vec3 _scale)
-    : 
-    name{ defaultGameObjName }, parent{nullptr}, parentid{0}, 
-    transform(*this, _position, _rotation, _scale), id{count++}
+    :
+    name{ defaultGameObjName }, parent{ nullptr }, parentid{ 0 },
+    transform(*this, _position, _rotation, _scale), id{ count++ },
+    active{true}
 {
     messageSystem.subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
     MESSAGE_CONTAINER::reflectCsGameObject.ID = id;

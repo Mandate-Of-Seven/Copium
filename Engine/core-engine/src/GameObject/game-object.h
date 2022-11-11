@@ -46,6 +46,7 @@ private:
 
 public:
     const GameObjectID id;                    //Global ID for gameObjects
+    bool active;
 
     /***************************************************************************/
     /*!

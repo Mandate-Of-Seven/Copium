@@ -70,7 +70,21 @@
       <Link>Random.cs</Link>
     </Compile>
     <Compile Include="AIMovement.cs" />
+    <Compile Include="Bullet.cs" />
+    <Compile Include="CombatBulletBody.cs" />
     <Compile Include="CombatMovement.cs" />
+    <Compile Include="Physics.cs" />
+    <Compile Include="Graphics.cs" />
+    <Compile Include="GameData.cs" />
+    <Compile Include="GameManager.cs" />
+    <Compile Include="Gun.cs" />
+    <Compile Include="Item.cs" />
+    <Compile Include="ItemBody.cs" />
+    <Compile Include="MapManager.cs" />
+    <Compile Include="Skill.cs" />
+    <Compile Include="Time.cs" />
+    <Compile Include="Unit.cs" />
+    <Compile Include="UnitBody.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">

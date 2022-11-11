@@ -24,16 +24,37 @@ namespace CopiumEngine
         internal extern static bool HasComponent(ulong ID, Type componentType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static float GetDeltaTime();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void GetLocalScale(ulong ID, out Vector3 scale);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetLocalScale(ulong ID, ref Vector3 scale);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void GetTranslation(ulong ID, out Vector3 translation);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetTranslation(ulong ID, ref Vector3 translation);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetActive(ulong ID, bool _active);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static bool GetActive(ulong ID);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static ulong FindGameObjByName(string name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void RigidbodyAddForce(ulong entityID, ref Vector2 force);
+        internal extern static void RigidbodyAddForce(ulong ID, ref Vector2 force);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void RigidbodyGetVelocity(ulong entIDityID, out Vector2 velocity);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void RigidbodySetVelocity(ulong ID, ref Vector2 velocity);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool GetKey(int keyCode);

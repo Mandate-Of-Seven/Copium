@@ -32,5 +32,15 @@ namespace CopiumEngine
         }
         protected Transform transform;
         protected GameObject gameObject;
+
+        public T GetComponent<T>() where T : Component, new()
+        {
+            return gameObject.GetComponent<T>();
+        }
+
+        public static T Instantiate<T>(T original, Vector3 pos, Vector3 rotation)
+        {
+            return original;
+        }
     }
 }

@@ -188,6 +188,7 @@
     <ClInclude Include="src\Files\assets-system.h" />
     <ClInclude Include="src\Editor\editor-hierarchy-list.h" />
     <ClInclude Include="src\Files\file-system.h" />
+    <ClInclude Include="src\GameObject\components-system.h" />
     <ClInclude Include="src\GameObject\Components\collider-components.h">
       <SubType>
       </SubType>
