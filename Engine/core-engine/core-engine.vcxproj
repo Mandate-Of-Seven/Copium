@@ -96,6 +96,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GameObject\Components\audiosource-component.cpp" />
     <ClCompile Include="src\Audio\sound-system.cpp" />
     <ClCompile Include="src\Debugging\frame-rate-controller.cpp" />
     <ClCompile Include="src\Debugging\logging-system.cpp" />
@@ -181,6 +182,7 @@
     <ClCompile Include="src\Windows\windows-utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\GameObject\Components\audiosource-component.h" />
     <ClInclude Include="src\Debugging\frame-rate-controller.h" />
     <ClInclude Include="src\Editor\editor-camera.h" />
     <ClInclude Include="src\Editor\editor-content-browser.h" />

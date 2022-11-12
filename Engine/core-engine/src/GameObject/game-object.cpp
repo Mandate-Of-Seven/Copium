@@ -24,6 +24,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "GameObject/Components/physics-components.h"
 #include "GameObject/Components/collider-components.h"
 #include "GameObject/Components/ui-components.h"
+#include "GameObject/Components/audiosource-component.h"
 #include "SceneManager/sm.h"
 
 //USING
@@ -301,6 +302,10 @@ Component* GameObject::addComponent(ComponentType componentType)
     case ComponentType::Text:
         component = new TextComponent(*this);
         PRINT("ADDED UI TEXT");
+        break;
+    case ComponentType::AudioSource:
+        component = new AudioSource(*this);
+        PRINT("ADDED AUDIO SOURCE");
         break;
     default:
         PRINT("ADDED NOTHING");

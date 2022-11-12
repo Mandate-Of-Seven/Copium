@@ -41,6 +41,7 @@ enum class ComponentType : int      // Types of Components
     Button,
     Text,
     Image,
+    AudioSource,
     None
 };
 
@@ -53,7 +54,8 @@ static std::map<ComponentType, std::string> MAP_COMPONENT_TYPE_NAME
     {ComponentType::Script,"ScriptComponent"},
     {ComponentType::Button,"ButtonComponent"},
     {ComponentType::Text,"TextComponent"},
-    {ComponentType::Image,"ImageComponent"}
+    {ComponentType::Image,"ImageComponent"},
+    {ComponentType::AudioSource,"AudioSourceComponent"}
 };
 
 class Component

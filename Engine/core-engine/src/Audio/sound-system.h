@@ -68,9 +68,9 @@ namespace Copium
 			\param alias
 				which sound file should be played
 			\param overlap
-				should the audio be able to overlap
+				should the audio be able to overlap (On by default)
 			\param loop
-				should the audio loop
+				should the audio loop (Off by default)
 			\param loopCount
 				to set for FMOD loop count
 			*/
