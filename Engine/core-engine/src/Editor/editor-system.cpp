@@ -146,7 +146,7 @@ namespace Copium
 					{
 						//open scene
 						while (!threadSystem.acquireMutex(MutexType::FileSystem));
-						std::string filepath = FileDialogs::open_file("Copium Scene (*.json)\0*.json\0");
+						std::string filepath = FileDialogs::open_file("Copium Scene (*.scene)\0*.scene\0");
 						threadSystem.returnMutex(MutexType::FileSystem);
 						if (!filepath.empty())
 						{

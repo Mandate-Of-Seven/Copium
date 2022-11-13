@@ -41,7 +41,6 @@ namespace Copium {
 		}
 		return nullptr;
 	}
-
 	GameObject* NewSceneManager::findGameObjByName(const std::string& name)
 	{
 		for (GameObject* pGameObj : currentScene->get_gameobjectvector())
@@ -61,8 +60,6 @@ namespace Copium {
 		{
 			std::cout << "Error allocating memory for GameObjectFactory\n";
 		}	
-
-		//std::cout << "sm ctor\n";
 	}
 
 	NewSceneManager::~NewSceneManager()
@@ -87,7 +84,6 @@ namespace Copium {
 	void NewSceneManager::update()
 	{
 
-		// call current scene's update functions
 	}
 	void NewSceneManager::exit()
 	{
@@ -130,6 +126,12 @@ namespace Copium {
 	bool NewSceneManager::load_scene(const std::string& _filepath)
 	{
 		std::cout << "load_scene\n";
+
+		if (_filepath.find(".scene") == std::string::npos)
+		{
+			Window::EditorConsole::editorLog.add_logEntry("file selected is not a Copium Scene");
+			return false;
+		}
 		
 		if (!currentScene)
 		{
@@ -310,7 +312,12 @@ namespace Copium {
 			PRINT("There is no scene to save...\n");
 			return false;
 		}
-		std::ofstream ofs(_filepath);
+		std::string fp(_filepath);
+		if (fp.find(".scene") == std::string::npos)
+		{
+			fp += ".json";
+		}
+		std::ofstream ofs(fp);
 		rapidjson::Document doc;
 
 		doc.SetObject();

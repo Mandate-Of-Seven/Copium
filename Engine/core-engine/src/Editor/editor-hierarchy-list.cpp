@@ -21,15 +21,13 @@ namespace Window::Hierarchy
 {
 	Copium::Scene * currentScene = nullptr;
 	bool isOpen;
-	int selectedID = -1;
+	Copium::GameObjectID selectedID;
 
 	void init()
 	{
 		isOpen = true;
 		if (Copium::NewSceneManager::Instance())
 			currentScene = Copium::NewSceneManager::Instance()->get_current_scene();
-
-
 	}
 
 	void update()
@@ -50,7 +48,7 @@ namespace Window::Hierarchy
 		{
 			if (ImGui::BeginMenu("Menu"))
 			{
-				// Add menu items
+				 //Add menu items
 				if (ImGui::MenuItem("Create GameObject", nullptr))
 				{
 					if (!currentScene)
@@ -141,11 +139,16 @@ namespace Window::Hierarchy
 			// Display scene name as the rootiest node
 			if (ImGui::TreeNodeEx(currentScene->get_name().c_str(), rootFlags))
 			{
+
+				if (ImGui::IsItemClicked())
+				{
+					//display current scene details
+				}
+
 				bool isSelected = false;
-				Copium::GameObjectID _selectedID = 0;
 				for (size_t i{ 0 }; i < roots.size(); ++i)
 				{
-					isSelected = display_gameobject_advanced(*roots[i], _selectedID);
+					isSelected = display_gameobject_advanced(*roots[i], selectedID);
 				}	
 
 				ImGui::TreePop();
@@ -191,7 +194,6 @@ namespace Window::Hierarchy
 	{
 		bool isSelected = false;
 		ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
-		//int node_clicked = -1;
 
 		if (!_go.is_parent())
 		{
@@ -201,22 +203,20 @@ namespace Window::Hierarchy
 
 		if (_selected == _go.id)
 		{
-			baseFlags |= ImGuiTreeNodeFlags_Selected;
+			baseFlags |= ImGuiTreeNodeFlags_Selected;				
 		}
-			
+
 
 		if (!ImGui::TreeNodeEx(_go.get_name().c_str(), baseFlags))
 			return false;
 
 		if (ImGui::IsItemClicked())
 		{
-			if (!isSelected)
-			{
-				std::cout << _go.get_name() << " is selected\n";
-				_selected = _go.id;
-				isSelected = true;
-				Copium::NewSceneManager::Instance()->set_selected_gameobject(&_go);
-			}
+			std::cout << _go.get_name() << " is selected\n";
+			_selected = _go.id;
+			isSelected = true;
+			Copium::NewSceneManager::Instance()->set_selected_gameobject(&_go);
+
 
 		}
 		// If game object has children, recursively display children
