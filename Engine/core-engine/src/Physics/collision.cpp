@@ -277,7 +277,7 @@ namespace Copium
 		const AABB& aabb2, const Math::Vec2& vel2)
 	{
 		Math::Vec2 vB = vel1 - vel2;
-
+		std::cout << vB.x << " " << vB.y << std::endl;
 		float xEntry = 0.0f;
 		float xExit = 0.0f;
 		float yEntry = 0.0f;
@@ -287,22 +287,22 @@ namespace Copium
 
 		if (vB.x < 0)
 		{
-			xEntry = (aabb1.max.x - aabb2.min.x) / vB.x;
+			xEntry = (aabb1.min.x - aabb2.max.x) / vB.x;
 			xExit = (aabb1.min.x - aabb2.max.x) / vB.x;
 		}
 		if (vB.x > 0)
 		{
-			xEntry = (aabb1.min.x - aabb2.max.x) / vB.x;
+			xEntry = (aabb1.max.x - aabb2.min.x) / vB.x;
 			xExit = (aabb1.max.x - aabb2.min.x) / vB.x;
 		}
 		if (vB.y < 0)
 		{
-			yEntry = (aabb1.max.y - aabb2.min.y) / vB.y;
+			yEntry = (aabb1.min.y - aabb2.max.y) / vB.y;
 			yExit = (aabb1.min.y - aabb2.max.y) / vB.y;
 		}
 		if (vB.y > 0)
 		{	
-			yEntry = (aabb1.min.y - aabb2.max.y) / vB.y;
+			yEntry = (aabb1.max.y - aabb2.min.y) / vB.y;
 			yExit = (aabb1.max.y - aabb2.min.y) / vB.y;			
 		}
 		if (vB.x == 0)
@@ -315,7 +315,7 @@ namespace Copium
 			yEntry = std::numeric_limits<float>::infinity();
 			yExit = std::numeric_limits<float>::infinity();
 		}
-		//printf("xentry %f yentry y %f\n", xEntry, yEntry);
+
 		if (xEntry < yEntry)
 		{
 			if (vB.x > 0)
@@ -331,11 +331,11 @@ namespace Copium
 		}
 		if (yEntry < xEntry)
 		{
-			if (vB.y < 0)
+			if (vB.y > 0)
 			{
 				return collisionDirection::TOP;
 			}
-			if (vB.y > 0)
+			if (vB.y < 0)
 			{
 				return collisionDirection::BOTTOM;
 			}
@@ -348,32 +348,24 @@ namespace Copium
 		float resolvePos = 0.0f;
 		if (direction == collisionDirection::TOP)
 		{
-			//std::cout << "resolve top" << std::endl;
-			resolvePos = aabb1.min.y - aabb2.max.y;
-			resolvePos *= 1.05f;
+			resolvePos = aabb1.max.y - aabb2.min.y;
 			transform1.position.y -= resolvePos;
 		}
 		if (direction == collisionDirection::BOTTOM)
 		{
-			//std::cout << "resolve bottom" << std::endl;
-			resolvePos = aabb1.max.y - aabb2.min.y;
-			resolvePos *= 1.05f;
-			transform1.position.y -= resolvePos;
+			resolvePos = aabb1.min.y - aabb2.max.y;
+			transform1.position.y -= resolvePos;			
 		}
 		if (direction == collisionDirection::LEFT)
 		{
-			//std::cout << "resolve left" << std::endl;
 			resolvePos = aabb1.min.x - aabb2.max.x;
-			resolvePos *= 1.05f;
 			transform1.position.x -= resolvePos;
 		}
 		if (direction == collisionDirection::RIGHT)
 		{
-			//std::cout << "resolve right" << std::endl;
 			resolvePos = aabb1.max.x - aabb2.min.x;
-			resolvePos *= 1.05f;
 			transform1.position.x -= resolvePos;
 		}
-		
+		std::cout << resolvePos << std::endl;
 	}
 }
