@@ -20,6 +20,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 // Bean: Remove once we can auto select gameobjects
 #include "SceneManager/sm.h"
+#include "Files/file-system.h"
 
 
 #define BUTTON_HEIGHT .1 //Percent
@@ -36,6 +37,7 @@ namespace Window
         char nameBuffer[INPUT_BUFFER_SIZE];
         Copium::ScriptingSystem& scriptingSystem{ *Copium::ScriptingSystem::Instance() };
         Copium::NewSceneManager& sceneManager{ *Copium::NewSceneManager::Instance() };
+        Copium::FileSystem& fileSystem{ *Copium::FileSystem::Instance() };
 
         void AlignForWidth(float width, float alignment = 0.5f)
         {
@@ -73,7 +75,8 @@ namespace Window
             }
 
             Copium::GameObject* selectedGameObject = sceneManager.selectedGameObject;
-            if (selectedGameObject)
+            Copium::File* selectedFile = fileSystem.get_selected_file();
+            if (selectedGameObject && !selectedFile)
             {
                 // Set flags for tables
                 selectedGameObject->inspectorView();
@@ -84,6 +87,10 @@ namespace Window
                 if (ImGui::Button("Add Component", buttonSize)) {
                     isAddingComponent = true;
                 }
+            }
+            else if (selectedFile)
+            {
+                selectedFile->inspector_view();
             }
             ImGui::End();
             ImGui::PopStyleVar();

@@ -108,7 +108,9 @@
     <ClCompile Include="src\Editor\editor-undoredo.cpp" />
     <ClCompile Include="src\Editor\inspector.cpp" />
     <ClCompile Include="src\Files\assets-system.cpp" />
+    <ClCompile Include="src\Files\file-directory.cpp" />
     <ClCompile Include="src\Files\file-system.cpp" />
+    <ClCompile Include="src\Files\file.cpp" />
     <ClCompile Include="src\GameObject\Components\collider-components.cpp" />
     <ClCompile Include="src\GameObject\Components\component.cpp" />
     <ClCompile Include="src\GameObject\Components\physics-components.cpp" />
@@ -187,7 +189,9 @@
     <ClInclude Include="src\Editor\editor-undoredo.h" />
     <ClInclude Include="src\Files\assets-system.h" />
     <ClInclude Include="src\Editor\editor-hierarchy-list.h" />
+    <ClInclude Include="src\Files\file-directory.h" />
     <ClInclude Include="src\Files\file-system.h" />
+    <ClInclude Include="src\Files\file.h" />
     <ClInclude Include="src\GameObject\Components\collider-components.h">
       <SubType>
       </SubType>

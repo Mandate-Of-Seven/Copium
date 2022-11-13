@@ -2,7 +2,7 @@
     "Name": "Demo",
     "GameObjects": [
         {
-            "ID": 3,
+            "ID": 1,
             "Name": "Background",
             "PID": 0,
             "Components": [
@@ -39,7 +39,7 @@
             "Children": []
         },
         {
-            "ID": 4,
+            "ID": 2,
             "Name": "PlayerTrain",
             "PID": 0,
             "Components": [
@@ -63,7 +63,7 @@
                 },
                 {
                     "Type": "SpriteRenderer",
-                    "Sprite ID": 20,
+                    "Sprite ID": 9,
                     "Sprite Name": "PlayerHead.png",
                     "Color": {
                         "X": 1.0,
@@ -102,7 +102,7 @@
             "Children": []
         },
         {
-            "ID": 5,
+            "ID": 3,
             "Name": "EnemyTrain",
             "PID": 0,
             "Components": [
@@ -126,7 +126,7 @@
                 },
                 {
                     "Type": "SpriteRenderer",
-                    "Sprite ID": 16,
+                    "Sprite ID": 5,
                     "Sprite Name": "EnemyHead.png",
                     "Color": {
                         "X": 1.0,

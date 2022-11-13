@@ -17,10 +17,12 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define FILE_SYSTEM_H
 
 #include "CopiumCore/system-interface.h"
-#include <filesystem>
+#include "Files/file-directory.h"
+#include "Messaging/message-system.h"
 #include <string>
 #include <list>
 #include <map>
+#include <memory>
 
 #define DEFAULT_INSTANCE_ID 1000
 
@@ -39,7 +41,6 @@ namespace Copium
 			String of bytes read
 	*/
 	/**************************************************************************/
-
 	namespace Paths
 	{
 		static const std::string roslynCompilerPath{ "..\\tools\\Roslyn\\csc" };
@@ -50,24 +51,7 @@ namespace Copium
 		static const std::string coreScriptsPath{ "..\\CopiumScriptCore"};
 	}
 
-	enum FILE_TYPE
-	{
-		DEFAULT, // For empty file type
-		AUDIO,
-		FONT,
-		SCENE,
-		SCRIPT,
-		SHADER,
-		SPRITE,
-		TEXT,
-
-		NUM_TYPES
-	};
-
-	class File;
-	class Directory;
-
-	CLASS_SYSTEM(FileSystem)
+	CLASS_SYSTEM(FileSystem), public IReceiver
 	{
 	public:
 		/*******************************************************************************
@@ -98,9 +82,36 @@ namespace Copium
 		/*******************************************************************************/
 		void exit();
 
-		Directory& get_directory() { return assetsDirectory; }
-		void set_directory(Directory const& _directory) { assetsDirectory = _directory; }
+		void handleMessage(MESSAGE_TYPE mType);
 
+		void init_file_types();
+
+		// Bean: This should be in the directory class
+		void generate_directories(Directory* _directory, std::filesystem::path const& _path);
+
+		// Bean: This should be in the directory class
+		void print_directories(Directory& _directory, int level);
+
+		void update_directories(Directory* _directory);
+
+		Directory* get_directory(std::filesystem::path const& _path);
+		Directory* get_directory(std::string const& _directoryName);
+
+		// Bean: This should be in the directory class
+		void delete_directories(Directory* _directory);
+
+		void update_file_references();
+
+		Directory& get_asset_directory() { return assetsDirectory; }
+		void set_asset_directory(Directory& _directory) { assetsDirectory = _directory; }
+
+		const unsigned int& get_indexes() const { return indexes; }
+
+		const FileType& get_file_type(std::string const& _ext) { return fileTypes[_ext]; }
+		std::unordered_map<FILE_TYPE, std::list<File*>>& get_file_references() { return files; }
+
+		File* get_selected_file() { return selectedFile; }
+		void set_selected_file(File* _file) { selectedFile = _file; }
 
 		std::list<std::string>& get_filepath_in_directory(const char* _path, const char* _extension);
 		std::list<std::string>& get_filepath_in_directory(const char* _path, const char* _extension1, const char* _extension2);
@@ -119,99 +130,21 @@ namespace Copium
 		*/
 		/*******************************************************************************/
 		std::list<File>& get_files_with_extension(const char* _extension);
+
+	private:
+		Directory* get_directory(std::filesystem::path const& _path, Directory* _currentDir);
+		Directory* get_directory(std::string const& _directoryName, Directory* _currentDir);
+		void store_file_references(Directory* _directory);
+
 	private:
 		std::map<const char*, std::list<File>> extensionTrackedFiles;
 		std::list<std::string> assetsPath;
 		Directory assetsDirectory;
-	};
-
-	class File final : public std::filesystem::path
-	{
-	public:
-		/*******************************************************************************
-		/*!
-		*
-			\brief
-				Constructor of a file to use std::filesystem constructor
-		*/
-		/*******************************************************************************/
-		File();
-		/*******************************************************************************
-		/*!
-		*
-			\brief
-				Conversion constructor of a file
-
-			\param pathRef
-				std::filesystem::path to convert into a file
-		*/
-		/*******************************************************************************/
-		File(const std::filesystem::path& pathRef);
-
-		/*******************************************************************************
-		/*!
-		*
-			\brief
-				Uses winAPI to track for modification timings and set modified back to
-				false if it were true
-
-			\return
-				If file was modified, return true, else return false
-		*/
-		/*******************************************************************************/
-		bool is_modified();
-
-		/*******************************************************************************
-		/*!
-		*
-			\brief
-				Queries the system whether the modification timings changed
-		*/
-		/*******************************************************************************/
-		void update_modification_timing();
-
-		const unsigned int& get_id() const { return instanceID; }
-		void set_id(unsigned int const& _id) { instanceID = _id; }
-
-		const std::string& get_name() const { return name; }
-		void set_name(std::string const& _name) { name = _name; }
-
-		const FILE_TYPE& get_file_type() const { return fileType; }
-
-	private:
-		unsigned int instanceID = 0; // The id to reference for the asset
-		std::string name = ""; // Name of the asset
-		
-		bool modified = false;
-		time_t lastModifiedTime = 0;
-
-		FILE_TYPE fileType = DEFAULT; // The type of file
-	};
-
-	class Directory
-	{
-	public:
-		const unsigned int& get_id() const { return instanceID; }
-		void set_id(unsigned int const& _id) { instanceID = _id; }
-
-		const std::string& get_name() const { return name; }
-		void set_name(std::string const& _name) { name = _name; }
-		
-		std::vector<File>& get_files() { return files; }
-		void add_files(File& _file) { files.push_back(_file); }
-
-		std::vector<Directory>& get_child_directory() { return folders; }
-		void add_child_directory(Directory& _directory) { folders.push_back(_directory); }
-
-		Directory* get_parent_directory() { return parentFolder; }
-		void set_parent_directory(Directory* _directory) { parentFolder = _directory; }
-
-	private:
-		unsigned int instanceID = 0; // The id to reference for the asset
-		std::string name = ""; // The name of the asset
-		std::vector<File> files; // Files within the directory
-		std::vector<Directory> folders; // Folders within the directory
-		Directory* parentFolder = nullptr; // A reference to the parent directory
+		unsigned int indexes = 0; // Number of file & directory instances
+		std::unordered_map<std::string, FileType> fileTypes;
+		std::unordered_map<FILE_TYPE, std::list<File*>> files; // A list of files in their categories
+		File* selectedFile;
+		Directory* selectedDirectory;
 	};
 }
 

@@ -24,6 +24,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 namespace Copium
 {
+	class File;
+	class Directory;
+
 	CLASS_SYSTEM(AssetsSystem), public IReceiver
 	{
 	public:
@@ -59,7 +62,7 @@ namespace Copium
 			Loads all assets path in the assets folder
 		*/
 		/**************************************************************************/
-		void load_assets();
+		void load_assets(Directory* _directory);
 
 		/***************************************************************************/
 		/*!
@@ -77,7 +80,7 @@ namespace Copium
 			The file path to load from
 		*/
 		/**************************************************************************/
-		void load_all_textures(std::list<std::string>& _path);
+		void load_all_textures(std::list<File*>& _files);
 
 		/***************************************************************************/
 		/*!
@@ -87,7 +90,7 @@ namespace Copium
 			The file path to load from
 		*/
 		/**************************************************************************/
-		void reload_textures(std::list<std::string>&_path);
+		void reload_textures();
 
 		/***************************************************************************/
 		/*!
@@ -109,12 +112,28 @@ namespace Copium
 		/**************************************************************************/
 		void load_all_shaders(std::list<std::string>& _path);
 
-		std::vector<Texture>& get_textures() { return textures; }
-		std::vector<Spritesheet>& get_spritesheets() { return spritesheets; }
+		const std::vector<Texture>& get_textures() { return textures; }
+		Texture* get_texture(unsigned int const& _index)
+		{
+			if (_index >= textures.size())
+				return nullptr;
+
+			//COPIUM_ASSERT(_index >= textures.size(), "Index is out of bound!");
+			return &textures[_index];
+		}
+
+		const std::vector<Spritesheet>& get_spritesheets() { return spritesheets; }
+		Spritesheet* get_spritesheet(unsigned int const& _index)
+		{
+			if (_index >= spritesheets.size())
+				return nullptr;
+
+			//COPIUM_ASSERT(_index >= spritesheets.size(), "Index is out of bound!");
+			return &spritesheets[_index];
+		}
 
 	private:
 		/* Assets Data ******************************************************************/
-		std::map<std::string, std::list<std::string>> assetFilePath;
 
 		std::vector<Texture> textures;
 		std::vector<Spritesheet> spritesheets;

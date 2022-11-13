@@ -533,6 +533,9 @@ namespace Copium
 
 		for (GLuint i = 1; i < graphics->get_texture_slot_index(); i++)
 		{
+			if (!_sprite.get_texture())
+				break;
+
 			if (graphics->get_texture_slots()[i] == _sprite.get_texture()->get_object_id())
 			{
 				textureIndex = (GLfloat) i;

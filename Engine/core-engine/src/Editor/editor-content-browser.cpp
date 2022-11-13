@@ -14,26 +14,37 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************/
 #include "pch.h"
 
-#include <algorithm>
 #include "Editor/editor-content-browser.h"
 #include "Messaging/message-system.h"
+#include "Files/file-system.h"
+#include "Files/assets-system.h"
 
 namespace Copium
 {
 	namespace
 	{
+		FileSystem* fs = FileSystem::Instance();
+		AssetsSystem* assetSys = AssetsSystem::Instance();
+
 		std::filesystem::path assets = "../PackedTracks/Assets";
 
 		const float padding = 16.f;
 		const float thumbnailSize = 128.f;
+		float imageAR = 1.f, framePadding = 3.f;
 		float cellSize = thumbnailSize + padding;
+		float inc = 0.f;
 
-		int finalCount = 0;
+		bool fileDragging = false;
+
+		//std::filesystem::path currentDirectory;
+		Directory* currentDirectory;
+
+		std::vector<Texture> icons;
 	}
 
 	void EditorContentBrowser::init()
 	{
-		currentDirectory = assets;
+		currentDirectory = &fs->get_asset_directory();
 
 		Texture directoryIcon("Data/DirectoryIcon.png");
 		Texture fileIcon("Data/FileIcon.png");
@@ -46,11 +57,16 @@ namespace Copium
 	{
 		ImGui::Begin("Content Browser");
 
-		if (currentDirectory != std::filesystem::path(assets))
+		if (!fileDragging && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
+			fs->set_selected_file(nullptr);
+		else
+			fileDragging = false;
+
+		if (currentDirectory->path() != std::filesystem::path(assets))
 		{
 			if (ImGui::Button("Back"))
 			{
-				currentDirectory = currentDirectory.parent_path();
+				currentDirectory = currentDirectory->get_parent_directory();
 			}
 		}
 		else
@@ -67,71 +83,145 @@ namespace Copium
 		if (columnCount < 1)
 			columnCount = 1;
 
-		int fileCount = 0;
-		for (auto& dirEntry : std::filesystem::directory_iterator(currentDirectory))
-		{
-			(void) dirEntry;
-			fileCount++;
-		}
+		ImGuiTableFlags tableFlags = ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchSame 
+			| ImGuiTableFlags_PreciseWidths | ImGuiTableFlags_NoPadInnerX;
 
-		if (fileCount >= columnCount)
-			finalCount = columnCount;
-		else
-			finalCount = fileCount;
-
-		ImGuiTableFlags tableFlags = ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp;
-		if (ImGui::BeginTable("Table: Content Browser", finalCount, tableFlags))
+		if (ImGui::BeginTable("Table: Content Browser", columnCount, tableFlags))
 		{
-			ImGui::TableSetupColumn("Column 0: Files", 0, 0.01f);
-			for (int i = 1; i < finalCount; i++)
+			ImGuiTableColumnFlags columnFlags = ImGuiTableColumnFlags_WidthFixed;
+			for (int i = 0; i < columnCount; i++)
 			{
 				std::string str = "Column " + i;
-				str += ": Files";
-				ImGui::TableSetupColumn(str.c_str(), 0, 1.f / finalCount);
+				str += ": Assets";
+
+				ImGui::TableSetupColumn(str.c_str(), columnFlags, cellSize);
 			}
-			ImGui::TableNextColumn();
-			for (auto& dirEntry : std::filesystem::directory_iterator(currentDirectory))
+
+			// Directory/Folder iterator
+			for (auto dirEntry : currentDirectory->get_child_directory())
 			{
-				if (ImGui::TableGetColumnIndex() >= finalCount - 1)
+				if (ImGui::TableGetColumnIndex() >= columnCount - 1)
 				{
 					ImGui::TableNextRow();
-					ImGui::TableNextColumn();
 				}
+				
 				ImGui::TableNextColumn();
 
-				const auto& path = dirEntry.path();
+				const auto& path = dirEntry->path();
 				auto relativePath = std::filesystem::relative(path, assets);
 				std::string fileName = relativePath.filename().string();
 
 				ImGui::PushID(fileName.c_str());
+				ImGui::BeginGroup();
 
-				unsigned int index = (dirEntry.is_directory()) ? 0 : 1;
-				ImTextureID icon = (ImTextureID)(size_t)icons[index].get_object_id();
+				ImTextureID icon = (ImTextureID) (size_t) icons[0].get_object_id();
 				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+				//ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.f, 0.f));
 				ImGui::ImageButton(icon, { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
-				
+
+				if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+				{
+					currentDirectory = dirEntry;
+				}
+				//ImGui::PopStyleVar();
+				ImGui::PopStyleColor();
+
+				float textWidth = ImGui::CalcTextSize(fileName.c_str()).x;
+				float indent = abs((cellSize - textWidth - padding) * 0.5f);
+				ImGui::Indent(indent); 
+				ImGui::Text(fileName.c_str());
+
+				ImGui::EndGroup();
+				ImGui::PopID();
+			}
+
+			// File iterator
+			for (auto& file : currentDirectory->get_files())
+			{
+				if (ImGui::TableGetColumnIndex() >= columnCount - 1)
+				{
+					ImGui::TableNextRow();
+				}
+				ImGui::TableNextColumn();
+
+				ImGui::PushID(file.get_name().c_str());
+				ImGui::BeginGroup();
+
+				// Get the image icon
+				unsigned int objectID = icons[1].get_object_id();
+				for (unsigned int i = 0; i < assetSys->get_textures().size(); i++)
+				{
+					std::string texturePath;
+					switch (file.get_file_type().fileType)
+					{
+					case Copium::AUDIO:
+						break;
+
+					case Copium::FONT:
+						break;
+
+					case Copium::SCENE:
+						break;
+
+					case Copium::SCRIPT:
+						break;
+
+					case Copium::SHADER:
+						break;
+
+					case Copium::SPRITE:
+						texturePath = assetSys->get_texture(i)->get_file_path();
+						if (!file.generic_string().compare(texturePath))
+						{
+							Texture* temp = assetSys->get_texture(i);
+							objectID = temp->get_object_id();
+							float asRatio = temp->get_width() / (float)temp->get_height();
+							imageAR = thumbnailSize / ((asRatio > 0.98f && asRatio < 1.f) ? 1.f : asRatio);
+							imageAR /= thumbnailSize;
+							framePadding = (thumbnailSize - thumbnailSize * imageAR) * 0.5f + 3.f;
+						}
+						break;
+
+					case Copium::TEXT:
+						objectID = icons[1].get_object_id();
+						break;
+					}
+				}
+
+				ImTextureID icon = (ImTextureID) (size_t) objectID;
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.f, framePadding));
+				ImGui::ImageButton(icon, { thumbnailSize, thumbnailSize * imageAR}, { 0, 1 }, { 1, 0 });
+
 				if (ImGui::BeginDragDropSource())
 				{
-					std::string str = path.generic_string();
+					fileDragging = true;
+					std::string str = file.generic_string();
 					const char* filePath = str.c_str();
 					ImGui::SetDragDropPayload("ContentBrowserItem", filePath, str.size() + 1);
-					
+
 					ImGui::EndDragDropSource();
+				}
+
+				if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
+				{
+					fs->set_selected_file(&file);
 				}
 
 				if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 				{
-					if (dirEntry.is_directory())
-					{
-						currentDirectory /= path.filename();
-					}
+					file.access_file();
 				}
+
+				ImGui::PopStyleVar();
 				ImGui::PopStyleColor();
 
-				float textWidth = ImGui::CalcTextSize(fileName.c_str()).x;
-				float indent = (cellSize - textWidth) * 0.5f;
+				float textWidth = ImGui::CalcTextSize(file.get_name().c_str()).x;
+				float indent = (cellSize - textWidth - padding) * 0.5f;
 				ImGui::Indent(indent);
-				ImGui::Text(fileName.c_str());
+				ImGui::Text(file.get_name().c_str());
+
+				ImGui::EndGroup();
 				ImGui::PopID();
 			}
 

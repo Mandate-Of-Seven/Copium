@@ -25,7 +25,7 @@
                     }
                 },
                 {
-                    "Type": "RendererComponent",
+                    "Type": "SpriteRenderer",
                     "Sprite ID": 1,
                     "Sprite Name": "mock-up.png",
                     "Color": {
@@ -62,7 +62,7 @@
                     }
                 },
                 {
-                    "Type": "RendererComponent",
+                    "Type": "SpriteRenderer",
                     "Sprite ID": 20,
                     "Sprite Name": "PlayerHead.png",
                     "Color": {
@@ -100,7 +100,7 @@
                     }
                 },
                 {
-                    "Type": "RendererComponent",
+                    "Type": "SpriteRenderer",
                     "Sprite ID": 16,
                     "Sprite Name": "EnemyHead.png",
                     "Color": {

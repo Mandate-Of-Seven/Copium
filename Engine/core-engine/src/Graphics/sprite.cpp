@@ -28,7 +28,7 @@ namespace Copium
 		spriteID = _value["Sprite ID"].GetUint();
 
 		if(spriteID != 0)
-			refTexture = &AssetsSystem::Instance()->get_textures()[spriteID - 1];
+			refTexture = AssetsSystem::Instance()->get_texture(spriteID - 1);
 
 		if (!_value.HasMember("Sprite Name"))
 			return false;
