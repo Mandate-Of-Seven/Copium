@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using CopiumEngine;
 using static GameData;
 
@@ -7,19 +8,22 @@ public class CombatMovement : CopiumScript
 {
     Rigidbody2D rb;
 
+    public Vector3 hello;
+
     bool inputLeft = false;
-    bool inputRight = false;
+    bool inputRight= false;
 
     bool movingLeft = false;
     bool movingRight = false;
 
     bool canMoveLeft = true;
-    bool canMoveRight = true;
+    bool canMoveRight= true;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        rb = GetComponent<Rigidbody2D>();
+        CurrentGameState = GameState.Combat;
     }
 
     // Update is called once per frame

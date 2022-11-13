@@ -90,6 +90,7 @@ namespace Copium
 				Function called every frame after Update().
 		*/
 		/**************************************************************************/
+		void FixedUpdate();
 		void LateUpdate();
 		/**************************************************************************/
 		/*!

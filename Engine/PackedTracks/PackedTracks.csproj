@@ -81,6 +81,7 @@
     <Compile Include="Item.cs" />
     <Compile Include="ItemBody.cs" />
     <Compile Include="MapManager.cs" />
+    <Compile Include="Shield.cs" />
     <Compile Include="Skill.cs" />
     <Compile Include="Time.cs" />
     <Compile Include="Unit.cs" />

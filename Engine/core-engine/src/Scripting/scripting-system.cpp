@@ -91,7 +91,8 @@ namespace Copium::Utils
 	{
 		std::string typeName = mono_type_get_name(monoType);
 		auto it = fieldTypeMap.find(typeName);
-		COPIUM_ASSERT(it == fieldTypeMap.end(), "Invalid monoType")
+		if (it == fieldTypeMap.end())
+			return FieldType::None;
 		return it->second;
 	}
 }
@@ -110,6 +111,7 @@ namespace Copium
 		mAwake{ mono_class_get_method_from_name(mClass, "Awake", 0) },
 		mStart{ mono_class_get_method_from_name(mClass, "Start", 0) },
 		mUpdate{ mono_class_get_method_from_name(mClass, "Update", 0) },
+		mFixedUpdate{ mono_class_get_method_from_name(mClass, "FixedUpdate", 0) },
 		mLateUpdate{ mono_class_get_method_from_name(mClass, "LateUpdate", 0) },
 		mOnCollisionEnter{ mono_class_get_method_from_name(mClass, "OnCollisionEnter", 0) },
 		mOnCreate{ mono_class_get_method_from_name(mCopiumScript, "OnCreate", 1) }
@@ -123,7 +125,14 @@ namespace Copium
 				{
 					MonoType* type = mono_field_get_type(field);
 					FieldType fieldType = Utils::monoTypeToFieldType(type);
-					mFields[fieldName] = { fieldType, fieldName, field };
+					if (fieldType != FieldType::None)
+					{
+						mFields[fieldName] = { fieldType, fieldName, field };
+					}
+					else
+					{
+						PRINT(name << " FAILED TO GET TYPE OF " << fieldName);
+					}
 				}
 			}
 		}

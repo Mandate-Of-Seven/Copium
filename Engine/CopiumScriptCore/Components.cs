@@ -10,6 +10,11 @@ namespace CopiumEngine
 	{
 		public GameObject gameObject { get; internal set; }
         public Transform transform { get; internal set; }
+
+        public T GetComponent<T>() where T : Component, new()
+        {
+            return gameObject.GetComponent<T>();
+        }
     }
 
     public class Transform : Component
@@ -89,6 +94,11 @@ namespace CopiumEngine
             get;
             set;
         }
+    }
+
+    public class Collider2D : Component
+    {
+
     }
 
     namespace UI

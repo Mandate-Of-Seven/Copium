@@ -22,5 +22,9 @@ namespace CopiumEngine
     {
 
         private static System.Random rnd = new System.Random();
+        public static float Range (float min, float max)
+        {
+            return (float)((max - min) * rnd.NextDouble() + min);
+        }
     }
 }

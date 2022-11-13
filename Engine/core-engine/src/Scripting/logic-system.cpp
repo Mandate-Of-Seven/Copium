@@ -19,6 +19,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/Components/script-component.h"
 #include "SceneManager/sm.h"
 #include "Messaging/message-system.h"
+#include <Windows/windows-system.h>
 #include "GameObject/Components/ui-components.h"
 
 namespace Copium
@@ -28,6 +29,7 @@ namespace Copium
 		NewSceneManager& sceneManager {*NewSceneManager::Instance()};
 		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 		std::vector<GameObject*>* gameObjects;
+		double timeElasped;
 	}
 
 	void LogicSystem::init()
@@ -59,6 +61,17 @@ namespace Copium
 				pScriptComponent->Update();
 				pScriptComponent->LateUpdate();
 			}
+			timeElasped += WindowsSystem::Instance()->get_delta_time();
+			if (timeElasped >= 1 / (double)WindowsSystem::Instance()->get_fps())
+			{
+				timeElasped -= 1 / (double)WindowsSystem::Instance()->get_fps();
+				for (ScriptComponent* pScriptComponent : pScriptComponents)
+				{
+					if (!pScriptComponent)
+						continue;
+					pScriptComponent->FixedUpdate();
+				}
+			}
 		}
 
 	}
@@ -84,5 +97,6 @@ namespace Copium
 				pScriptComponent->Start();
 			}
 		}
+		timeElasped = WindowsSystem::Instance()->get_delta_time();
 	}
 }

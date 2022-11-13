@@ -91,6 +91,12 @@ namespace Copium
 			sS.invoke(mObject, pScriptClass->mUpdate);
 	}
 
+	void ScriptComponent::FixedUpdate()
+	{
+		if (pScriptClass && pScriptClass->mUpdate)
+			sS.invoke(mObject, pScriptClass->mFixedUpdate);
+	}
+
 	void ScriptComponent::LateUpdate()
 	{
 		if (pScriptClass && pScriptClass->mLateUpdate)
@@ -140,7 +146,7 @@ namespace Copium
 			// Extern source file
 			ImGui::TableSetupColumn("Text", 0, 0.4f);
 			ImGui::TableSetupColumn("Input", 0, 0.6f);
-
+			PRINT(name << " INSPECTOR VIEW!");
 			const auto& fieldMap = pScriptClass->mFields;
 			auto it = fieldMap.begin();
 			while (it != fieldMap.end())
@@ -231,6 +237,7 @@ namespace Copium
 				setFieldValue(_name, buffer);
 				++it;
 			}
+
 			ImGui::Unindent();
 			ImGui::EndTable();
 		}
