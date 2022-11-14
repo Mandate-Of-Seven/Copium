@@ -103,7 +103,7 @@ namespace Copium
 			The description of the error
 		*/
 		/***************************************************************************/
-		static void error_callback(int _error, char const * _description);
+		static void error_callback(int _error, char const* _description);
 
 		/***************************************************************************/
 		/*!
@@ -118,7 +118,7 @@ namespace Copium
 			The height to change to
 		*/
 		/***************************************************************************/
-		static void framebuffer_size_callback(GLFWwindow * _window, int _width, int _height);
+		static void framebuffer_size_callback(GLFWwindow* _window, int _width, int _height);
 
 		/***************************************************************************/
 		/*!
@@ -130,7 +130,19 @@ namespace Copium
 			The current focus of the window
 		*/
 		/***************************************************************************/
-		static void window_focus_callback(GLFWwindow * _window, int _focused);
+		static void window_focus_callback(GLFWwindow* _window, int _focused);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			This function is called when an item is dropped into the window
+		\param _window
+			The handle to window that is being dropped onto
+		\param _dropFun
+			The current focus of the window
+		*/
+		/***************************************************************************/
+		static void window_drop_callback(GLFWwindow* _window, int _pathCount, const char* _paths[]);
 
 		// Accessing Properties
 

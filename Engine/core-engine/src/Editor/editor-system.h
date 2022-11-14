@@ -67,6 +67,7 @@ namespace Copium
 		void imguiConsoleAddLog(std::string value);
 		
 		EditorSceneView* get_scene_view() { return &sceneView; }
+		EditorContentBrowser* get_content_browser() { return &contentBrowser; }
 		EditorCamera* get_camera() { return &camera; }
 
 	private:

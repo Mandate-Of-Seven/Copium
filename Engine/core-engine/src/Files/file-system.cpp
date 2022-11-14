@@ -15,15 +15,19 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************/
 #include "pch.h"
 
-//#include <GLFW/glfw3.h>
+#include <GLFW/glfw3.h>
 #include "Files/file-system.h"
 #include <utility>
+
+#include "Editor/editor-system.h"
 
 namespace Copium
 {
 	namespace
 	{
 		namespace fs = std::filesystem;
+
+		EditorSystem* editor = EditorSystem::Instance();
 	}
 
 	void FileSystem::init()
@@ -57,6 +61,67 @@ namespace Copium
 		fileTypes.emplace(std::make_pair(".txt", FileType("Text", TEXT)));
 	}
 
+	void FileSystem::accept_dropped_files(int _pathCount, const char* _paths[])
+	{
+		// Retrieve all paths from the drop and store in a container
+		std::list<fs::path> paths;
+		for (int i = 0; i < _pathCount; i++)
+			paths.push_back(_paths[i]);
+
+		// Check which directory it is currently in
+		Directory* currentDirectory = editor->get_content_browser()->get_current_directory();
+
+		// Create directories / folders / files in the directory
+		for (auto path : paths)
+		{
+			fs::path currentDir = currentDirectory->path().string() + "\\";
+			fs::path pathName = currentDir.string() + path.filename().string();
+			//PRINT("  New path: " << pathName)
+			
+			// Check for duplicate folder / file
+			if (fs::is_directory(path))
+			{
+				Directory* temp = get_directory(pathName, currentDirectory, true);
+				int counter = 1;
+				if (temp != nullptr)
+				{
+					fs::path editedPath;
+					while (temp != nullptr)
+					{
+						editedPath = currentDir.string() + path.stem().string();
+						editedPath += " " + std::to_string(counter++) + path.extension().string();
+						temp = get_directory(editedPath, currentDirectory, true);
+					}
+					fs::copy(path, editedPath, fs::copy_options::recursive);
+				}
+				else
+					fs::copy(path, pathName, fs::copy_options::recursive);
+			}
+			else
+			{
+				File* temp = get_file(pathName, currentDirectory, true);
+				int counter = 1;
+				if (temp != nullptr)
+				{
+					fs::path editedPath;
+					while (temp != nullptr)
+					{
+						editedPath = currentDir.string() + path.stem().string();
+						editedPath += " " + std::to_string(counter++) + path.extension().string();
+						temp = get_file(editedPath, currentDirectory, true);
+					}
+					fs::copy(path, editedPath);
+				}
+				else
+					fs::copy(path, pathName);
+
+			}
+		}
+
+		// Update directory references
+		update_file_references();
+	}
+
 	void FileSystem::update()
 	{
 		
@@ -71,12 +136,12 @@ namespace Copium
 	{
 		if (mType == MESSAGE_TYPE::MT_RELOAD_ASSETS)
 		{
-			//double start = glfwGetTime();
+			double start = glfwGetTime();
 			update_directories(&assetsDirectory);
 			update_file_references();
-			//double end = glfwGetTime();
+			double end = glfwGetTime();
 
-			//PRINT("File time taken to reload: " << end - start);
+			PRINT("File time taken to reload: " << end - start);
 		}
 	}
 
@@ -305,8 +370,19 @@ namespace Copium
 		return nullptr;
 	}
 
-	Directory* FileSystem::get_directory(std::filesystem::path const& _path, Directory* _currentDir)
+	Directory* FileSystem::get_directory(std::filesystem::path const& _path, Directory* _currentDir, bool _withinDirectory)
 	{
+		if (_withinDirectory)
+		{
+			for (Directory* dir : _currentDir->get_child_directory())
+			{
+				if (_path == dir->path())
+					return dir;
+			}
+
+			return nullptr;
+		}
+
 		for (Directory* dir : _currentDir->get_child_directory())
 		{
 			if (_path == dir->path())
@@ -350,6 +426,42 @@ namespace Copium
 				Directory* temp = get_directory(_directoryName, dir);
 				if (temp != nullptr)
 					return temp;
+			}
+		}
+
+		return nullptr;
+	}
+
+	File* FileSystem::get_file(std::filesystem::path const& _path)
+	{
+		if (!assetsDirectory.get_child_directory().empty())
+		{
+			File* file = get_file(_path, &assetsDirectory);
+			if (file != nullptr)
+				return file;
+		}
+
+		return nullptr;
+	}
+
+	File* FileSystem::get_file(std::filesystem::path const& _path, Directory* _currentDir, bool _withinDirectory)
+	{
+		for (File& file : _currentDir->get_files())
+		{
+			if (_path == file)
+				return &file;
+		}
+
+		if (_withinDirectory)
+			return nullptr;
+
+		if (!_currentDir->get_child_directory().empty())
+		{
+			for (Directory* dir : _currentDir->get_child_directory())
+			{
+				File* file = get_file(_path, dir, false);
+				if (file != nullptr)
+					return file;
 			}
 		}
 

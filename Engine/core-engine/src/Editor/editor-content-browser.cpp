@@ -32,12 +32,10 @@ namespace Copium
 		const float thumbnailSize = 128.f;
 		float imageAR = 1.f, framePadding = 3.f;
 		float cellSize = thumbnailSize + padding;
-		float inc = 0.f;
 
 		bool fileDragging = false;
 
 		//std::filesystem::path currentDirectory;
-		Directory* currentDirectory;
 
 		std::vector<Texture> icons;
 	}
@@ -48,9 +46,11 @@ namespace Copium
 
 		Texture directoryIcon("Data/DirectoryIcon.png");
 		Texture fileIcon("Data/FileIcon.png");
+		Texture engineLogo("Data/CopiumLogo.png");
 		 
 		icons.push_back(directoryIcon);
 		icons.push_back(fileIcon);
+		icons.push_back(engineLogo);
 	}
 
 	void EditorContentBrowser::update()
@@ -161,6 +161,9 @@ namespace Copium
 						break;
 
 					case Copium::SCENE:
+						objectID = icons[2].get_object_id();
+						imageAR = 1.f;
+						framePadding = 3.f;
 						break;
 
 					case Copium::SCRIPT:
@@ -184,6 +187,8 @@ namespace Copium
 
 					case Copium::TEXT:
 						objectID = icons[1].get_object_id();
+						imageAR = 1.f;
+						framePadding = 3.f;
 						break;
 					}
 				}

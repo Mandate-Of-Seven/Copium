@@ -18,6 +18,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
+	// Forward declaration of a directory
+	class Directory;
+
 	class EditorContentBrowser
 	{
 	public:
@@ -45,8 +48,10 @@ namespace Copium
 		/***************************************************************************/
 		void exit();
 
+		Directory* get_current_directory() { return currentDirectory; }
+
 	private:
-		
+		Directory* currentDirectory;
 	};
 }
 

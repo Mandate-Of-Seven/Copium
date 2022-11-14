@@ -86,6 +86,8 @@ namespace Copium
 
 		void init_file_types();
 
+		void accept_dropped_files(int _pathCount, const char* _paths[]);
+
 		// Bean: This should be in the directory class
 		void generate_directories(Directory* _directory, std::filesystem::path const& _path);
 
@@ -96,6 +98,8 @@ namespace Copium
 
 		Directory* get_directory(std::filesystem::path const& _path);
 		Directory* get_directory(std::string const& _directoryName);
+
+		File* get_file(std::filesystem::path const& _path);
 
 		// Bean: This should be in the directory class
 		void delete_directories(Directory* _directory);
@@ -132,8 +136,9 @@ namespace Copium
 		std::list<File>& get_files_with_extension(const char* _extension);
 
 	private:
-		Directory* get_directory(std::filesystem::path const& _path, Directory* _currentDir);
+		Directory* get_directory(std::filesystem::path const& _path, Directory* _currentDir, bool _withinDirectory = false);
 		Directory* get_directory(std::string const& _directoryName, Directory* _currentDir);
+		File* get_file(std::filesystem::path const& _path, Directory* _currentDir, bool _withinDirectory = false);
 		void store_file_references(Directory* _directory);
 
 	private:
