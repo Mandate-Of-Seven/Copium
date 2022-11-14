@@ -283,9 +283,7 @@ namespace Copium
 		if(debugMode)
 			draw_debug_info();
 
-		if (NewSceneManager::Instance()->get_current_scene() != nullptr && 
-			!NewSceneManager::Instance()->get_current_scene()->get_name().compare("sandbox"))
-			draw_development();
+		draw_development();
 
 		// Unbind the framebuffer to display renderable
 		// onto the image
@@ -515,7 +513,7 @@ namespace Copium
 
 					Transform& t = gameObject->Transform();
 					SpriteRenderer * rc = reinterpret_cast<SpriteRenderer*>(component);
-					Sprite sr = rc->get_sprite_renderer();
+					Sprite& sr = rc->get_sprite_renderer();
 					glm::vec2 size(t.glmScale().x, t.glmScale().y);
 					float rotation = t.glmRotation().z;
 					// Bean: It should be set in inspector view of the renderer component instead
@@ -531,22 +529,18 @@ namespace Copium
 						continue;
 					Transform& t = gameObject->Transform();
 					ImageComponent* rc = reinterpret_cast<ImageComponent*>(component);
-					Sprite sr = rc->get_sprite_renderer();
+					Sprite* sr = &rc->get_sprite_renderer();
 					glm::vec2 size(t.glmScale().x, t.glmScale().y);
 					float rotation = t.glmRotation().z;
-					// Bean: It should be set in inspector view of the renderer component instead
-					unsigned int id = sr.get_sprite_id() - 1;
-					if (id != -1)
-						sr.set_texture(&assets->get_textures()[id]);
+					if (sr != nullptr)
+					{
+						// Bean: It should be set in inspector view of the renderer component instead
+						unsigned int id = sr->get_sprite_id() - 1;
+						if (id != -1)
+							sr->set_texture(&assets->get_textures()[id]);
+					}
 
-					renderer.draw_quad(t.glmPosition(), size, rotation, sr);
-				}
-				for (Component* component : gameObject->getComponents<TextComponent>())
-				{
-					if (!component->Enabled())
-						continue;
-					TextComponent* textComponent = reinterpret_cast<TextComponent*>(component);
-					textComponent->render();
+					renderer.draw_quad({ rc->Offset(),0 }, size, rotation, *sr);
 				}
 			}
 
@@ -566,7 +560,7 @@ namespace Copium
 	{
 		glm::vec3 position = { 3.f, 0.f, 0.f };
 		glm::vec4 color = { 0.f, 0.f, 0.f, 1.f };
-		Font::getFont("corbel")->draw_text("Corbel Font", position, color, 0.4f + size_x, 0);
+		//Font::getFont("corbel")->draw_text("Corbel Font", position, color, 0.4f + size_x, 0);
 		float red = 0.f, green = 1.f;
 		static float colorTimer = 0.f;
 		colorTimer += (float) WindowsSystem::Instance()->get_delta_time();
@@ -597,11 +591,11 @@ namespace Copium
 
 		position = { 3.f, 2.f, 0.f };
 		color = { red, green, 1.f, 1.f };
-		Font::getFont("Comfortaa-Regular")->draw_text("Hello Professors :D", position, color, 0.6f + size_x, 0);
+		//Font::getFont("Comfortaa-Regular")->draw_text("Hello Professors :D", position, color, 0.6f + size_x, 0);
 
 		// Bean : Testing Animations
 		renderer.begin_batch();
-		AssetsSystem* assets = AssetsSystem::Instance();
+		/*AssetsSystem* assets = AssetsSystem::Instance();
 		if (!assets->get_spritesheets().empty())
 		{
 			position = {-4.f, 1.f, 0.f};
@@ -631,8 +625,24 @@ namespace Copium
 			}
 
 			renderer.draw_quad(position, size, 0.f, assets->get_spritesheets()[animID], animIndex, id);
-		}
+		}*/
 
+		NewSceneManager* sm = NewSceneManager::Instance();
+		Scene* scene = sm->get_current_scene();
+		if (scene != nullptr)
+		{
+			for (GameObject* gameObject : scene->get_gameobjectvector())
+			{
+				for (Component* component : gameObject->getComponents<TextComponent>())
+				{
+					if (!component->Enabled())
+						continue;
+					TextComponent* textComponent = reinterpret_cast<TextComponent*>(component);
+					textComponent->render();
+				}
+			}
+
+		}
 		renderer.end_batch();
 
 		renderer.flush();

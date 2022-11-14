@@ -57,7 +57,7 @@ static void update();
 static void init();
 static void cleanup();
 
-void quitEngine();
+void quitEngine(GLFWwindow* window);
 bool load_config(std::string& _filename, GLint& _w, GLint& _h);
 
 /*                                                      function definitions
@@ -90,9 +90,10 @@ int main()
     Copium::FrameRateController frc(100.0);
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
+    glfwSetWindowCloseCallback(windowsSystem->get_window(), quitEngine);
 
     // Engine Loop
-    while (!glfwWindowShouldClose(windowsSystem->get_window()) && esCurrent != esQuit)
+    while (esCurrent != esQuit)
     {
         SM.add_scene(sandboxScene);
         SM.change_scene(0);
@@ -201,7 +202,6 @@ static void update()
         }
     }
 
-    quitEngine();
 }
 
 /***************************************************************************/
@@ -229,13 +229,9 @@ void cleanup()
     glfwTerminate();
 }
 
-void quitEngine() 
+void quitEngine(GLFWwindow* window)
 {
-    if (inputSystem.is_key_pressed(GLFW_KEY_Q)) 
-    {
-        change_enginestate(esQuit);
-        std::cout << "Copium has been huffed, Engine shutting down" << std::endl;
-    }
+    change_enginestate(esQuit);
 }
 
 bool load_config(std::string& _filename, GLint& _w, GLint& _h)

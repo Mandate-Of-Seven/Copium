@@ -26,7 +26,7 @@ namespace Copium
 
 	void SpriteRenderer::deserialize(rapidjson::Value& _value)
 	{
-		Sprite.deserialize(_value);
+		sprite.deserialize(_value);
 	}
 
 	void SpriteRenderer::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
@@ -37,7 +37,7 @@ namespace Copium
 		_value.AddMember("Type", type, _doc.GetAllocator());
 
 		// Serialize Sprite
-		Sprite.serialize(_value, _doc);
+		sprite.serialize(_value, _doc);
 
 	}
 
@@ -47,12 +47,12 @@ namespace Copium
 		float sameLinePadding = 16.f;
 		bool openPopup = false;
 
-		glm::vec4 clrGLM = Sprite.get_color();
+		glm::vec4 clrGLM = sprite.get_color();
 		ImVec4 color = { clrGLM.r, clrGLM.g, clrGLM.b, clrGLM.a };
 
-		int spriteID = (int)Sprite.get_sprite_id();
+		int spriteID = (int)sprite.get_sprite_id();
 		
-		std::string spriteName = Sprite.get_name();
+		std::string spriteName = sprite.get_name();
 		static ImVec4 backupColor;
 
 		ImGuiColorEditFlags miscFlags = ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip
@@ -105,9 +105,9 @@ namespace Copium
 			ImGui::TableNextColumn();
 			ImGui::Text("Flip");
 			ImGui::TableNextColumn();
-			ImGui::Checkbox("X", Sprite.access_flip_x());
+			ImGui::Checkbox("X", sprite.access_flip_x());
 			ImGui::SameLine(0.f, sameLinePadding);
-			ImGui::Checkbox("Y", Sprite.access_flip_y());
+			ImGui::Checkbox("Y", sprite.access_flip_y());
 
 			ImGui::Unindent();
 			ImGui::EndTable();
@@ -125,19 +125,19 @@ namespace Copium
 			ImGui::Separator();
 			miscFlags = ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview
 				| ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoLabel;
-			ImGui::ColorPicker4("Picker", Sprite.access_color(), miscFlags);
+			ImGui::ColorPicker4("Picker", sprite.access_color(), miscFlags);
 
 			ImGui::EndPopup();
 		}
 
 		if (spriteID >= 0)
-			Sprite.set_sprite_id(spriteID);
-		Sprite.set_name(spriteName);
+			sprite.set_sprite_id(spriteID);
+		sprite.set_name(spriteName);
 	}
 
 	SpriteRenderer& SpriteRenderer::operator=(const SpriteRenderer& rhs)
 	{
-		Sprite = rhs.Sprite;
+		sprite = rhs.sprite;
 		return *this;
 	}
 }

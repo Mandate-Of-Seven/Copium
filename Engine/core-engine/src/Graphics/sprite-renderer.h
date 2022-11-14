@@ -24,7 +24,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 namespace Copium
 {
-	// Bean: Rename to sprite later
 	class Sprite final
 	{
 	public:

@@ -107,7 +107,7 @@ public class CombatMovement : CopiumScript
                 canMoveRight = true;
             }
         }
-        else if (movingLeft && inputLeft && transform.position.x > -4)
+        else if (movingLeft && inputLeft)
         {
             rb.velocity = new Vector2(-TrainSpeed, 0);
 
@@ -116,7 +116,7 @@ public class CombatMovement : CopiumScript
                 TrainSpeed += TrainAcc;
             }
         }
-        else if (movingRight && inputRight && transform.position.x < 7)
+        else if (movingRight && inputRight)
         {
             rb.velocity = new Vector2(TrainSpeed, 0);
 

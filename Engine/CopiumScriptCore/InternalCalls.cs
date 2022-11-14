@@ -64,5 +64,8 @@ namespace CopiumEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool GetKeyUp(int keyCode);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetUICallback(string funcName);
     }
 }

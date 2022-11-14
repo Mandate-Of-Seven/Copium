@@ -112,6 +112,18 @@ namespace Copium
 			*/
 			/*******************************************************************************/
 			ButtonComponent& operator=(const ButtonComponent& rhs);
+
+			void deserialize(rapidjson::Value& _value)
+			{
+			}
+
+			void serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
+			{
+				rapidjson::Value type;
+				std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
+				type.SetString(tc.c_str(), rapidjson::SizeType(tc.length()), _doc.GetAllocator());
+				_value.AddMember("Type", type, _doc.GetAllocator());
+			}
 		private:
 			static const ButtonComponent* hoveredBtn;
 			std::unordered_map<ButtonState, ButtonCallback> mapStateCallbacks;
@@ -176,7 +188,6 @@ namespace Copium
 				if (_value.HasMember("H_Align"))
 				{
 					hAlignment = (HorizontalAlignment)_value["H_Align"].GetInt();
-					font = Font::getFont(fontName);
 				}
 				if (_value.HasMember("V_Align"))
 				{
@@ -185,6 +196,27 @@ namespace Copium
 				if (_value.HasMember("Content"))
 				{
 					strcpy(content, _value["Content"].GetString());
+				}
+				if (_value.HasMember("Font Size"))
+				{
+					fSize = _value["Font Size"].GetFloat();
+				}
+				if (_value.HasMember("r"))
+				{
+					color.r = _value["r"].GetFloat();
+				}
+				if (_value.HasMember("g"))
+				{
+					color.g = _value["g"].GetFloat();
+				}
+				if (_value.HasMember("b"))
+				{
+					color.b = _value["b"].GetFloat();
+
+				}
+				if (_value.HasMember("a"))
+				{
+					color.a = _value["a"].GetFloat();
 				}
 			}
 
@@ -202,11 +234,19 @@ namespace Copium
 
 				type.SetString(content, rapidjson::SizeType(strlen(content)), _doc.GetAllocator());
 				_value.AddMember("Content", type, _doc.GetAllocator());
+
+				_value.AddMember("Font Size", fSize, _doc.GetAllocator());
+				_value.AddMember("r", color.r, _doc.GetAllocator());
+				_value.AddMember("g", color.g, _doc.GetAllocator());
+				_value.AddMember("b", color.b, _doc.GetAllocator());
+				_value.AddMember("a", color.a, _doc.GetAllocator());
 			}
 		private:
 			char content[TEXT_BUFFER_SIZE];
 			std::string fontName;
 			Font* font;
+			float fSize;
+			glm::fvec4 color;
 		//Display a text
 	};
 
@@ -239,9 +279,9 @@ namespace Copium
 
 			*/
 			/*******************************************************************************/
-			void render();
-			const Sprite& get_sprite_renderer() const { return Sprite; }
-			void set_sprite_renderer(const Sprite& _Sprite) { Sprite = _Sprite; }
+			glm::fvec2 Offset();
+			Sprite& get_sprite_renderer() { return sprite; }
+			void set_sprite_renderer(Sprite& _sprite) { sprite = _sprite; }
 
 
 			/*******************************************************************************
@@ -256,8 +296,34 @@ namespace Copium
 			*/
 			/*******************************************************************************/
 			ImageComponent& operator=(const ImageComponent& rhs);
+
+
+			void deserialize(rapidjson::Value& _value)
+			{
+				if (_value.HasMember("H_Align"))
+				{
+					hAlignment = (HorizontalAlignment)_value["H_Align"].GetInt();
+				}
+				if (_value.HasMember("V_Align"))
+				{
+					vAlignment = (VerticalAlignment)_value["V_Align"].GetInt();
+				}
+				sprite.deserialize(_value);
+			}
+
+			void serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
+			{
+				rapidjson::Value type;
+				std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
+				type.SetString(tc.c_str(), rapidjson::SizeType(tc.length()), _doc.GetAllocator());
+				_value.AddMember("Type", type, _doc.GetAllocator());
+
+				_value.AddMember("H_Align", (int)hAlignment, _doc.GetAllocator());
+				_value.AddMember("V_Align", (int)vAlignment, _doc.GetAllocator());
+				sprite.serialize(_value,_doc);
+			}
 		protected:
-			Sprite Sprite;
+			Sprite sprite;
 		//Display an image
 	};
 }
