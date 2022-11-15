@@ -67,5 +67,8 @@ namespace CopiumEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetUICallback(string funcName);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void QuitGame();
     }
 }

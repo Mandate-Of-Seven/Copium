@@ -40,6 +40,35 @@ namespace Copium
 {
 
 GameObjectID GameObject::count = 1;
+Component* GameObject::addComponent(ComponentType componentType)
+{
+    switch (componentType)
+    {
+    case ComponentType::Animator:
+        return &addComponent<Animator>();
+    case ComponentType::BoxCollider2D:
+        return &addComponent<BoxCollider2D>();
+    case ComponentType::Rigidbody2D:
+        return &addComponent<Rigidbody2D>();
+    case ComponentType::SpriteRenderer:
+        return &addComponent<SpriteRenderer>();
+    case ComponentType::Script:
+        return &addComponent<Script>();
+    case ComponentType::Button:
+        return &addComponent<ButtonComponent>();
+    case ComponentType::Image:
+        return &addComponent<ImageComponent>();
+    case ComponentType::Text:
+        return &addComponent<Text>();
+    case ComponentType::AudioSource:
+        return &addComponent<AudioSource>();
+    default:
+        PRINT("ADDED NOTHING");
+        break;
+    }
+    return nullptr;
+}
+    
 
 GameObject::~GameObject()
 {
@@ -64,68 +93,8 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{ count++ },
     name = rhs.name;
     for (Component* pComponent : rhs.components)
     {
-        Component* component = nullptr;
-        switch (pComponent->componentType)
-        {
-        case ComponentType::Animator:
-        {
-            component = new AnimatorComponent(*this);
-            *component = *(reinterpret_cast<AnimatorComponent*>(pComponent));
-            PRINT("ADDED ANIMATOR");
-            break;
-        }
-        case ComponentType::BoxCollider2D:
-        {
-            component = new BoxCollider2D(*this);
-            *component = *(reinterpret_cast<BoxCollider2D*>(pComponent));
-            PRINT("ADDED COLLIDER");
-            break;
-        }
-        case ComponentType::Rigidbody2D:
-        {
-            component = new Rigidbody2D(*this);
-            *component = *(reinterpret_cast<Rigidbody2D*>(pComponent));
-            PRINT("ADDED Rigidbody");
-            break;
-        }
-        case ComponentType::SpriteRenderer:
-        {
-            component = new SpriteRenderer(*this);
-            *component = *(reinterpret_cast<SpriteRenderer*>(pComponent));
-            PRINT("ADDED SPRITE RENDERER");
-            break;
-        }
-        case ComponentType::Script:
-        {
-            component = new ScriptComponent(*this);
-            *component = *(reinterpret_cast<ScriptComponent*>(pComponent));
-            PRINT("ADDED SCRIPT");
-            break;
-        }
-        case ComponentType::Button:
-        {
-            component = new ButtonComponent(*this);
-            *component = *(reinterpret_cast<ButtonComponent*>(pComponent));
-            PRINT("ADDED UI BUTTON");
-            break;
-        }
-        case ComponentType::Image:
-        {
-            component = new ImageComponent(*this);
-            *component = *(reinterpret_cast<ImageComponent*>(pComponent));
-            PRINT("ADDED UI IMAGE");
-            break;
-        }
-        case ComponentType::Text:
-        {
-            component = new TextComponent(*this);
-            *component = *(reinterpret_cast<TextComponent*>(pComponent));
-            PRINT("ADDED UI TEXT");
-            break;
-        }
-        }
-        if (component)
-            components.push_back(component);
+        Component* component = addComponent(pComponent->componentType);
+        *component = *pComponent;
     }
     for (GameObject* pGameObj : rhs.children)
     {
@@ -177,68 +146,7 @@ GameObject& GameObject::operator=(const GameObject& _src)
     
     for (Component* pComponent : _src.components)
     {
-        Component* component = nullptr;
-        switch (pComponent->componentType)
-        {
-        case ComponentType::Animator:
-        {
-            component = new AnimatorComponent(*this);
-            *component = *(reinterpret_cast<AnimatorComponent*>(pComponent));
-            PRINT("ADDED ANIMATOR");
-            break;
-        }
-        case ComponentType::BoxCollider2D:
-        {
-            component = new BoxCollider2D(*this);
-            *component = *(reinterpret_cast<BoxCollider2D*>(pComponent));
-            PRINT("ADDED COLLIDER");
-            break;
-        }
-        case ComponentType::Rigidbody2D:
-        {
-            component = new Rigidbody2D(*this);
-            *component = *(reinterpret_cast<Rigidbody2D*>(pComponent));
-            PRINT("ADDED Rigidbody");
-            break;
-        }
-        case ComponentType::SpriteRenderer:
-        {
-            component = new SpriteRenderer(*this);
-            *component = *(reinterpret_cast<SpriteRenderer*>(pComponent));
-            PRINT("ADDED SPRITE RENDERER");
-            break;
-        }
-        case ComponentType::Script:
-        {
-            component = new ScriptComponent(*this);
-            *component = *(reinterpret_cast<ScriptComponent*>(pComponent));
-            PRINT("ADDED SCRIPT");
-            break;
-        }
-        case ComponentType::Button:
-        {
-            component = new ButtonComponent(*this);
-            *component = *(reinterpret_cast<ButtonComponent*>(pComponent));
-            PRINT("ADDED UI BUTTON");
-            break;
-        }
-        case ComponentType::Image:
-        {
-            component = new ImageComponent(*this);
-            *component = *(reinterpret_cast<ImageComponent*>(pComponent));
-            PRINT("ADDED UI IMAGE");
-            break;
-        }
-        case ComponentType::Text:
-        {
-            component = new TextComponent(*this);
-            *component = *(reinterpret_cast<TextComponent*>(pComponent));
-            PRINT("ADDED UI TEXT");
-            break;
-        }
-        }
-        if (component)
-            components.push_back(component);
+        *addComponent(pComponent->componentType) = pComponent;
     }
     for (GameObject* pGameObj : _src.children)
     {
@@ -260,63 +168,7 @@ Component* GameObject::getComponent(ComponentType componentType)
     return nullptr;
 }
 
-Component* GameObject::addComponent(ComponentType componentType)
-{
-    Component* component = nullptr;
-    switch (componentType)
-    {
-    case ComponentType::Animator:
-        component = new AnimatorComponent(*this);
-        PRINT("ADDED ANIMATOR");
-        break;
-    case ComponentType::BoxCollider2D:
-        component = new BoxCollider2D(*this);
-        PRINT("ADDED COLLIDER");
-        break;
-    case ComponentType::Rigidbody2D:
-        component = new Rigidbody2D(*this);
-        PRINT("ADDED Rigidbody");
-        break;
-    case ComponentType::SpriteRenderer:
-        component = new SpriteRenderer(*this);
-        PRINT("ADDED SPRITE RENDERER");
-        break;
-    case ComponentType::Script:
-        component = new ScriptComponent(*this);
-        PRINT("ADDED SCRIPT");
-        break;
-    case ComponentType::Button:
-        if (hasComponent(componentType))
-        {
-            break;
-        }
-        if (!hasComponent(ComponentType::Image))
-            addComponent<ImageComponent>();
-        if (!hasComponent(ComponentType::Text))
-            addComponent<TextComponent>();
-        component = new ButtonComponent(*this);
-        PRINT("ADDED UI BUTTON");
-        break;
-    case ComponentType::Image:
-        component = new ImageComponent(*this);
-        PRINT("ADDED UI IMAGE");
-        break;
-    case ComponentType::Text:
-        component = new TextComponent(*this);
-        PRINT("ADDED UI TEXT");
-        break;
-    case ComponentType::AudioSource:
-        component = new AudioSource(*this);
-        PRINT("ADDED AUDIO SOURCE");
-        break;
-    default:
-        PRINT("ADDED NOTHING");
-        break;
-    }
-    if (component)
-        components.push_back(component);
-    return component;
-}
+
 
 void GameObject::removeComponent(ComponentType componentType)
 {

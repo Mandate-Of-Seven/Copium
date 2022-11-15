@@ -62,4 +62,6 @@ void init_statemanager(EngineState _initialState);
 /*******************************************************************************/
 void change_enginestate(EngineState _nextState);
 
+void quit_engine();
+
 #endif

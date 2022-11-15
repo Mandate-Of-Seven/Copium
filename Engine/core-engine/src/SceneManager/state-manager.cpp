@@ -57,3 +57,8 @@ void change_enginestate(EngineState _nextState)
 {
 	esCurrent = _nextState;
 }
+
+void quit_engine()
+{
+	esCurrent = esQuit;
+}

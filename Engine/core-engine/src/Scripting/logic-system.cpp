@@ -53,23 +53,25 @@ namespace Copium
 					continue;
 				pButtonComponent->update();
 			}
-			const std::vector<ScriptComponent*>& pScriptComponents{ pGameObj->getComponents<ScriptComponent>() };
-			for (ScriptComponent* pScriptComponent : pScriptComponents)
+			const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };
+			for (Script* pScript : pScripts)
 			{
-				if (!pScriptComponent)
+				if (!pScript)
 					continue;
-				pScriptComponent->Update();
-				pScriptComponent->LateUpdate();
+				pScript->Update();
+				if (pScene != sceneManager.get_current_scene())
+					return;
+				pScript->LateUpdate();
 			}
 			timeElasped += WindowsSystem::Instance()->get_delta_time();
 			if (timeElasped >= 1 / (double)WindowsSystem::Instance()->get_fps())
 			{
 				timeElasped -= 1 / (double)WindowsSystem::Instance()->get_fps();
-				for (ScriptComponent* pScriptComponent : pScriptComponents)
+				for (Script* pScript : pScripts)
 				{
-					if (!pScriptComponent)
+					if (!pScript)
 						continue;
-					pScriptComponent->FixedUpdate();
+					pScript->FixedUpdate();
 				}
 			}
 		}
@@ -90,11 +92,11 @@ namespace Copium
 		gameObjects = &pScene->get_gameobjectvector();
 		for (GameObject* pGameObj : *gameObjects)
 		{
-			const std::vector<ScriptComponent*>& pScriptComponents{ pGameObj->getComponents<ScriptComponent>() };
-			for (ScriptComponent* pScriptComponent : pScriptComponents)
+			const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };
+			for (Script* pScript : pScripts)
 			{
-				pScriptComponent->Awake();
-				pScriptComponent->Start();
+				pScript->Awake();
+				pScript->Start();
 			}
 		}
 		timeElasped = WindowsSystem::Instance()->get_delta_time();

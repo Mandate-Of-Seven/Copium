@@ -71,7 +71,8 @@ namespace Copium
 			*/
 			/*******************************************************************************/
 
-			BoxCollider2D& operator=(const BoxCollider2D& rhs) { boundingBox = rhs.boundingBox; return *this; }
+			BoxCollider2D& operator=(const Component& rhs) 
+			{ boundingBox = reinterpret_cast<const BoxCollider2D*>(&rhs)->boundingBox; return *this; }
 
 			void deserialize(rapidjson::Value& _value)
 			{

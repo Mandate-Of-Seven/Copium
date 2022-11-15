@@ -120,12 +120,12 @@ namespace Copium
 		return *this;
 	}
 
-	TextComponent::TextComponent(GameObject& _gameObj)
+	Text::Text(GameObject& _gameObj)
 		: Component(_gameObj, ComponentType::Text), font{ Font::getFont("corbel") },fontName{"corbel"}, fSize{1.f}, content{"New Text"}, color{255.f}
 	{
 	}
 
-	void TextComponent::render()
+	void Text::render()
 	{
 		if (!font)
 			return;
@@ -168,7 +168,7 @@ namespace Copium
 		font->draw_text(content, pos, color, scale, 0);
 	}
 
-	TextComponent& TextComponent::operator=(const TextComponent& rhs)
+	Text& Text::operator=(const Text& rhs)
 	{
 		offset = rhs.offset;
 		memcpy(content, rhs.content, TEXT_BUFFER_SIZE);
@@ -179,7 +179,7 @@ namespace Copium
 	}
 
 
-	void TextComponent::inspector_view()
+	void Text::inspector_view()
 	{
 		float sameLinePadding = 16.f;
 		bool openPopup = false;

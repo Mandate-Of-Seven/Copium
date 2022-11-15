@@ -30,26 +30,26 @@ extern "C"
 
 namespace Copium
 {
-    class ScriptComponent final : public Component, public IReceiver
+    class Script final : public Component, public IReceiver
     {
     public:
 		/**************************************************************************/
 		/*!
 			\brief
-				Constructs a ScriptComponent
+				Constructs a Script
 
 			\param gameObj
 				Owner of this
 		*/
 		/**************************************************************************/
-		ScriptComponent(GameObject& gameObj);
+		Script(GameObject& gameObj);
 		/**************************************************************************/
 		/*!
 			\brief
 				Deconstructor, removes itself from a list of instances
 		*/
 		/**************************************************************************/
-		~ScriptComponent();
+		~Script();
 		/**************************************************************************/
 		/*!
 			\brief
@@ -145,14 +145,14 @@ namespace Copium
 		/*!
 		*
 		\brief
-			Deep copies a ScriptComponent into another
+			Deep copies a Script into another
 		\param rhs
-			Reference to another ScriptComponent
+			Reference to another Script
 		\return
-			Reference to this ScriptComponent
+			Reference to this Script
 		*/
 		/*******************************************************************************/
-		ScriptComponent& operator=(const ScriptComponent& rhs);
+		Script& operator=(const Component& rhs);
 
 		void deserialize(rapidjson::Value& _value);
 
@@ -165,7 +165,7 @@ namespace Copium
 		MonoObject* mObject;
 		MonoObject* mGameObject;
 		std::string name;
-		const ScriptComponent* reference;
+		const Script* reference;
 		static ScriptingSystem& sS;
     };
 }

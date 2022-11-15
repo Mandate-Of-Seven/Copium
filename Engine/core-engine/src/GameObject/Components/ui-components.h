@@ -134,18 +134,18 @@ namespace Copium
 
 	};
 
-	class TextComponent final : public Component, IUIComponent
+	class Text final : public Component, IUIComponent
 	{
 		public:
 			/**************************************************************************/
 			/*!
 				\brief
-					Constructs a TextComponent
+					Constructs a Text
 				\param gameObj
 					Owner of this
 			*/
 			/**************************************************************************/
-			TextComponent(GameObject& _gameObj);
+			Text(GameObject& _gameObj);
 			/*******************************************************************************
 			/*!
 			*
@@ -169,14 +169,14 @@ namespace Copium
 			/*!
 			*
 			\brief
-				Deep copies a TextComponent into another
+				Deep copies a Text into another
 			\param rhs
-				Reference to another TextComponent
+				Reference to another Text
 			\return
-				Reference to this TextComponent
+				Reference to this Text
 			*/
 			/*******************************************************************************/
-			TextComponent& operator=(const TextComponent& rhs);
+			Text& operator=(const Text& rhs);
 
 			void deserialize(rapidjson::Value& _value)
 			{

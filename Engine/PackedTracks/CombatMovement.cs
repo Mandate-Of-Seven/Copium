@@ -29,6 +29,11 @@ public class CombatMovement : CopiumScript
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
         if (CurrentGameState == GameState.Combat)
         {
             if (Input.GetKey(KeyCode.A))

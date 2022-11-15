@@ -186,14 +186,13 @@ namespace Copium
 
 	void ScriptingSystem::init()
 	{
-		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		initMono();
 		registerScriptWrappers();
 		systemFlags |= FLAG_RUN_ON_EDITOR;
 		ThreadSystem::Instance()->addThread(new std::thread(&ScriptingSystem::recompileThreadWork,this));
-		messageSystem->subscribe(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT, this);
-		messageSystem->subscribe(MESSAGE_TYPE::MT_SCENE_OPENED, this);
-		messageSystem->subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
+		messageSystem.subscribe(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT, this);
+		messageSystem.subscribe(MESSAGE_TYPE::MT_SCENE_OPENED, this);
+		messageSystem.subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
 	}
 
 	void ScriptingSystem::update()
@@ -228,7 +227,10 @@ namespace Copium
 	ScriptClass* ScriptingSystem::getScriptClass(const std::string& _name)
 	{
 		if (mAssemblyImage == nullptr)
+		{
+			PRINT("ASSEMBLY IMAGE NOT LOADED!");
 			return nullptr;
+		}
 		auto namePScriptClassPair = scriptClassMap.find(_name);
 		ScriptClass* pScriptClass{nullptr};
 		if (namePScriptClassPair != scriptClassMap.end())
@@ -310,6 +312,7 @@ namespace Copium
 
 	void ScriptingSystem::swapDll()
 	{
+		PRINT("SWAPPING DLL_____________________________________");
 		unloadAppDomain();
 		createAppDomain();
 		mCoreAssembly = Utils::loadAssembly(Paths::scriptsAssemblyPath);
@@ -320,7 +323,8 @@ namespace Copium
 		updateScriptClasses();
 		if (!mCopiumScript)
 			PRINT("COPIUM SCRIPT CANT BE FOUND");
-		messageSystem->dispatch(MESSAGE_TYPE::MT_SCRIPTING_UPDATED);
+		messageSystem.dispatch(MESSAGE_TYPE::MT_SCRIPTING_UPDATED);
+		PRINT("END SWAP DLL_____________________________________");
 	}
 
 	void ScriptingSystem::invoke(MonoObject* mObj, MonoMethod* mMethod, void** params)
@@ -442,7 +446,7 @@ namespace Copium
 			}
 			case MESSAGE_TYPE::MT_SCENE_DESERIALIZED:
 			{
-				compilingState = CompilingState::Wait;
+				compilingState = CompilingState::SwapAssembly;
 			}
 		}
 	}

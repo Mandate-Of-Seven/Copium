@@ -86,7 +86,7 @@ namespace Copium
 			Reference to this SpriteRenderer
 		*/
 		/*******************************************************************************/
-		SpriteRenderer& operator=(const SpriteRenderer& rhs);
+		SpriteRenderer& operator=(const Component& rhs);
 	protected:
 		Sprite sprite;
 	};

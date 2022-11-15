@@ -18,7 +18,9 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/Components/physics-components.h"
 #include <glm/vec3.hpp>
 #include <Scripting/scripting-system.h>
+#include <Messaging/message-system.h>
 #include <Windows/windows-system.h>
+#include <SceneManager/state-manager.h>
 #include <cstring>
 
 #include "mono/metadata/object.h"
@@ -40,6 +42,7 @@ namespace Copium
 	{
 		InputSystem& inputSystem{ *InputSystem::Instance() };
 		NewSceneManager& sceneManager{ *NewSceneManager::Instance() };
+		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 	}
 
 	//static bool GetKeyDown(int keyCode)
@@ -235,6 +238,17 @@ namespace Copium
 		return gameObj->active;
 	}
 
+	static void QuitGame()
+	{
+		#ifdef GAMEMODE
+		quit_engine();
+		#else
+		if (sceneManager.endPreview())
+			messageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
+		#endif
+		//Scene manager quit
+	}
+
 	/*******************************************************************************
 	/*!
 	\brief
@@ -257,6 +271,7 @@ namespace Copium
 		Register(SetActive);
 		Register(GetActive);
 		Register(GetKeyUp);
+		Register(QuitGame);
 	}
 
 	static void registerComponents()

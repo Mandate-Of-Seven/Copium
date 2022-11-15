@@ -176,12 +176,12 @@ public:
     */
     /*******************************************************************************/
     template <typename T>
-    T* addComponent(const T& component)
+    T& addComponent(const T& component)
     {
         static_assert(std::is_base_of<Component, T>::value);
-        T* tmp = addComponent(component.componentType);
-        *tmp = component;
-        return tmp;
+        T* tmp = new T(this);
+        components.push_back(tmp);
+        return *tmp;
     }
 
     /*******************************************************************************
@@ -198,7 +198,7 @@ public:
     template <typename T>
     T* getComponent()
     {
-
+        //std::is_same<>
         static_assert(std::is_base_of<Component, T>::value);
         std::string tName = typeid(T).name() + std::string("class Copium::").length();
         ComponentType componentType = Component::nameToType(tName);

@@ -135,9 +135,9 @@ namespace Copium
 		sprite.set_name(spriteName);
 	}
 
-	SpriteRenderer& SpriteRenderer::operator=(const SpriteRenderer& rhs)
+	SpriteRenderer& SpriteRenderer::operator=(const Component& rhs)
 	{
-		sprite = rhs.sprite;
+		sprite = (*reinterpret_cast<const SpriteRenderer*>(&rhs)).sprite;
 		return *this;
 	}
 }

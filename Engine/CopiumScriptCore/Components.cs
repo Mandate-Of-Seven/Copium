@@ -110,6 +110,8 @@ namespace CopiumEngine
                 get;
                 set;
             }
+
+
         }
 
         public class Text : Component

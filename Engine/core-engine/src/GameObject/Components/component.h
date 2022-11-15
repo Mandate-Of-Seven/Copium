@@ -20,6 +20,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <map>
 #include <rapidjson/document.h>
 
+
 namespace Copium
 {
 
@@ -45,18 +46,36 @@ enum class ComponentType : int      // Types of Components
     None
 };
 
+class Animator;
+class BoxCollider2D;
+class Rigidbody2D;
+class SpriteRenderer;
+class Script;
+class Transform;
+class Button;
+class Text;
+class BoxCollider2D;
+class AudioSource;
+
 static std::map<ComponentType, std::string> MAP_COMPONENT_TYPE_NAME
 {
-    {ComponentType::Animator,"AnimatorComponent"},
+    {ComponentType::Animator,"Animator"},
     {ComponentType::BoxCollider2D,"BoxCollider2D"},
     {ComponentType::Rigidbody2D,"Rigidbody2D"},
     {ComponentType::SpriteRenderer,"SpriteRenderer"},
     {ComponentType::Script,"ScriptComponent"},
     {ComponentType::Button,"ButtonComponent"},
-    {ComponentType::Text,"TextComponent"},
+    {ComponentType::Text,"Text"},
     {ComponentType::Image,"ImageComponent"},
-    {ComponentType::AudioSource,"AudioSourceComponent"}
+    {ComponentType::AudioSource,"AudioSource"}
 };
+
+template <typename T>
+void assignCast(auto& lhs, const auto& rhs)
+{
+    *reinterpret_cast<T*>(&lhs) = *reinterpret_cast<const T*>(&rhs);
+}
+
 
 class Component
 {
@@ -65,6 +84,7 @@ class Component
 
         const ComponentType componentType;      //Type of component
         const ComponentID id;                   //Id of component
+
 
         /*******************************************************************************
         /*!
@@ -156,22 +176,7 @@ class Component
             //std::cout << "default component dtor\n";
         }
 
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Deep copies a Component into another
-        \param rhs
-            Reference to another Component
-        \return
-            Reference to this Component
-        */
-        /*******************************************************************************/
-        Component& operator=(const Component& rhs)
-        {
-            enabled = rhs.enabled;
-            return *this;
-        }
+
 
         /*******************************************************************************
         /*!
@@ -231,7 +236,7 @@ class Component
 
     
 
-    class AnimatorComponent : public Component
+    class Animator : public Component
     {
     public:
         /***************************************************************************/
@@ -242,7 +247,7 @@ class Component
             Owner of this component
         */
         /**************************************************************************/
-        AnimatorComponent(GameObject& _gameObj);
+        Animator(GameObject& _gameObj);
 
 
         /*******************************************************************************
@@ -260,14 +265,14 @@ class Component
         /*!
         *
         \brief
-            Deep copies a AnimatorComponent into another
+            Deep copies a Animator into another
         \param rhs
-            Reference to another AnimatorComponent
+            Reference to another Animator
         \return
-            Reference to this AnimatorComponent
+            Reference to this Animator
         */
         /*******************************************************************************/
-        AnimatorComponent& operator=(const AnimatorComponent& rhs) { (void)rhs; return *this; }
+        Animator& operator=(const Animator& rhs) { (void)rhs; return *this; }
         /***************************************************************************/
         /*!
         \brief

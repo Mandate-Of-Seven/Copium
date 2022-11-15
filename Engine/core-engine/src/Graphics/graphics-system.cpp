@@ -633,12 +633,12 @@ namespace Copium
 		{
 			for (GameObject* gameObject : scene->get_gameobjectvector())
 			{
-				for (Component* component : gameObject->getComponents<TextComponent>())
+				for (Component* component : gameObject->getComponents<Text>())
 				{
 					if (!component->Enabled())
 						continue;
-					TextComponent* textComponent = reinterpret_cast<TextComponent*>(component);
-					textComponent->render();
+					Text* text = reinterpret_cast<Text*>(component);
+					text->render();
 				}
 			}
 

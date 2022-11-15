@@ -55,7 +55,7 @@
                     }
                 },
                 {
-                    "Type": "ScriptComponent",
+                    "Type": "Script",
                     "Name": "CombatMovement",
                     "hello": {
                         "X": 0.0,
@@ -166,7 +166,7 @@
                     }
                 },
                 {
-                    "Type": "TextComponent",
+                    "Type": "Text",
                     "FontName": "corbel",
                     "H_Align": 1,
                     "V_Align": 1,
@@ -217,7 +217,7 @@
                     }
                 },
                 {
-                    "Type": "TextComponent",
+                    "Type": "Text",
                     "FontName": "corbel",
                     "H_Align": 1,
                     "V_Align": 1,
@@ -271,7 +271,7 @@
                     }
                 },
                 {
-                    "Type": "TextComponent",
+                    "Type": "Text",
                     "FontName": "corbel",
                     "H_Align": 1,
                     "V_Align": 1,

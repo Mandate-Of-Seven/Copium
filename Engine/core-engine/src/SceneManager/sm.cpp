@@ -315,7 +315,7 @@ namespace Copium {
 		std::string fp(_filepath);
 		if (fp.find(".scene") == std::string::npos)
 		{
-			fp += ".json";
+			fp += ".scene";
 		}
 		std::ofstream ofs(fp);
 		rapidjson::Document doc;
