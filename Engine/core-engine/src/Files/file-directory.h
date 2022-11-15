@@ -29,6 +29,9 @@ namespace Copium
 		const unsigned int& get_id() const { return instanceID; }
 		void set_id(unsigned int const& _id) { instanceID = _id; }
 
+		const int& get_file_count() const { return fileCount; }
+		void set_file_count(int const& _count) { fileCount = _count; }
+
 		const std::string& get_name() const { return name; }
 		void set_name(std::string const& _name) { name = _name; }
 
@@ -43,6 +46,7 @@ namespace Copium
 
 	private:
 		unsigned int instanceID = 0; // The id to reference for the asset
+		int fileCount = 0; // The number of files and folders
 		std::string name = ""; // The name of the asset
 		std::vector<File> files; // Files within the directory
 		std::vector<Directory*> folders; // Folders within the directory

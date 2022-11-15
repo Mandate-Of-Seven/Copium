@@ -30,8 +30,6 @@ namespace Copium
 
 	void AssetsSystem::init()
 	{
-		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_RELOAD_ASSETS, this);
-
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		
 		// Bean: In the future, we shall store all extension files in their own extension vectors std::map<std::string, std::vector<std::string>>
@@ -74,11 +72,69 @@ namespace Copium
 			texture.exit();
 	}
 
-	void AssetsSystem::handleMessage(MESSAGE_TYPE mType)
+	void AssetsSystem::load_file(File* _file)
 	{
-		if (mType == MESSAGE_TYPE::MT_RELOAD_ASSETS)
+		FILE_TYPE type = _file->get_file_type().fileType;
+
+		switch (type)
 		{
-			reload_assets();
+		case FOLDER:
+			break;
+
+		case AUDIO:
+			break;
+
+		case FONT:
+			break;
+
+		case SCENE:
+			break;
+
+		case SCRIPT:
+			break;
+
+		case SHADER:
+			break;
+
+		case SPRITE:
+			load_texture(_file);
+			break;
+
+		case TEXT:
+			break;
+		}
+	}
+
+	void AssetsSystem::unload_file(File* _file)
+	{
+		FILE_TYPE type = _file->get_file_type().fileType;
+
+		switch (type)
+		{
+		case FOLDER:
+			break;
+
+		case AUDIO:
+			break;
+
+		case FONT:
+			break;
+
+		case SCENE:
+			break;
+
+		case SCRIPT:
+			break;
+
+		case SHADER:
+			break;
+
+		case SPRITE:
+			unload_texture(_file);
+			break;
+
+		case TEXT:
+			break;
 		}
 	}
 
@@ -96,17 +152,12 @@ namespace Copium
 		load_all_audio(fs->get_filepath_in_directory(Paths::assetPath.c_str(), ".wav"));
 	}
 
-	void AssetsSystem::reload_assets()
-	{
-		reload_textures();
-	}
-
 	void AssetsSystem::load_all_textures(std::list<File*>& _files)
 	{
 		for (File* file : _files)
 		{
 			// Store the texture
-			textures.push_back(Texture(file->generic_string()));
+			load_texture(file);
 		}
 
 		// Bean: This should be done in the animation system or animator component
@@ -126,53 +177,28 @@ namespace Copium
 		}
 	}
 
-	void AssetsSystem::reload_textures()
+	void AssetsSystem::load_texture(File* _file)
 	{
-		//double start = glfwGetTime();
-		for (File* file : fs->get_file_references()[SPRITE])
-		{
-			// Only add new textures
-			bool isNewTexture = true;
-			for (auto texture : textures)
-			{
-				if (!texture.get_file_path().compare(file->generic_string()))
-				{
-					isNewTexture = false;
-					break;
-				}
-			}
+		Texture texture(_file->generic_string());
+		texture.set_id(_file->get_id());
+		textures.push_back(texture);
+	}
 
-			// Generate texture
-			if (isNewTexture)
+	void AssetsSystem::unload_texture(File* _file)
+	{
+		for (auto it = textures.begin(); it != textures.end();)
+		{
+			if (_file->get_id() == (*it).get_id())
 			{
-				textures.push_back(Texture(file->generic_string()));
-				isNewTexture = false;
-			}			
+				(*it).exit();
+				it = textures.erase(it);
+				break;
+			}
+			else
+				++it;
 		}
 
-		for (size_t i = 0; i < textures.size(); i++)
-		{
-			bool hasTexture = false;
-			for (File* file : fs->get_file_references()[SPRITE])
-			{
-				// Check if texture still exists in the assets folder
-				if (!textures[i].get_file_path().compare(file->generic_string()))
-				{
-					hasTexture = true;
-					break;
-				}
-			}
-
-			// If it does not exist in the assets folder, delete it
-			if (!hasTexture)
-			{
-				textures.erase(textures.begin() + i);
-				textures.shrink_to_fit();
-			}
-		}
-
-		//double end = glfwGetTime();
-		//PRINT("Assets time taken to reload: " << end - start);
+		textures.shrink_to_fit();
 	}
 
 	void AssetsSystem::load_all_audio(std::list<std::string>& _path)

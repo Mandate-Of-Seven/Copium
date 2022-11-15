@@ -48,6 +48,8 @@ namespace Copium
 		/***************************************************************************/
 		void exit();
 
+		void inputs();
+
 		Directory* get_current_directory() { return currentDirectory; }
 
 	private:

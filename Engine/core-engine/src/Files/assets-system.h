@@ -18,7 +18,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include <map>
 #include "CopiumCore/system-interface.h"
-#include "Messaging/message-system.h"
 #include "Graphics/textures.h"
 #include "Graphics/spritesheet.h"
 
@@ -27,7 +26,7 @@ namespace Copium
 	class File;
 	class Directory;
 
-	CLASS_SYSTEM(AssetsSystem), public IReceiver
+	CLASS_SYSTEM(AssetsSystem)
 	{
 	public:
 		/***************************************************************************/
@@ -54,7 +53,8 @@ namespace Copium
 		/**************************************************************************/
 		void exit();
 
-		void handleMessage(MESSAGE_TYPE mType);
+		void load_file(File* _file);
+		void unload_file(File* _file);
 
 		/***************************************************************************/
 		/*!
@@ -67,14 +67,6 @@ namespace Copium
 		/***************************************************************************/
 		/*!
 		\brief
-			Reload all assets in the assets folder
-		*/
-		/**************************************************************************/
-		void reload_assets();
-
-		/***************************************************************************/
-		/*!
-		\brief
 			Loads all textures into the engine
 		\param _path
 			The file path to load from
@@ -82,15 +74,8 @@ namespace Copium
 		/**************************************************************************/
 		void load_all_textures(std::list<File*>& _files);
 
-		/***************************************************************************/
-		/*!
-		\brief
-			Loads all textures into the engine
-		\param _path
-			The file path to load from
-		*/
-		/**************************************************************************/
-		void reload_textures();
+		void load_texture(File* _file);
+		void unload_texture(File* _file);
 
 		/***************************************************************************/
 		/*!
@@ -134,7 +119,6 @@ namespace Copium
 
 	private:
 		/* Assets Data ******************************************************************/
-
 		std::vector<Texture> textures;
 		std::vector<Spritesheet> spritesheets;
 	};

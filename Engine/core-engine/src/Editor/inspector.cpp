@@ -76,6 +76,8 @@ namespace Window
 
             Copium::GameObject* selectedGameObject = sceneManager.selectedGameObject;
             Copium::File* selectedFile = fileSystem.get_selected_file();
+            if(selectedFile != nullptr)
+                PRINT(" Selected File: " << selectedFile->generic_string());
             if (selectedGameObject && !selectedFile)
             {
                 // Set flags for tables

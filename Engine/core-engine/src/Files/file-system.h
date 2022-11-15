@@ -18,7 +18,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "CopiumCore/system-interface.h"
 #include "Files/file-directory.h"
-#include "Messaging/message-system.h"
 #include <string>
 #include <list>
 #include <map>
@@ -51,7 +50,7 @@ namespace Copium
 		static const std::string coreScriptsPath{ "..\\CopiumScriptCore"};
 	}
 
-	CLASS_SYSTEM(FileSystem), public IReceiver
+	CLASS_SYSTEM(FileSystem)
 	{
 	public:
 		/*******************************************************************************
@@ -82,8 +81,6 @@ namespace Copium
 		/*******************************************************************************/
 		void exit();
 
-		void handleMessage(MESSAGE_TYPE mType);
-
 		void init_file_types();
 
 		void accept_dropped_files(int _pathCount, const char* _paths[]);
@@ -94,7 +91,9 @@ namespace Copium
 		// Bean: This should be in the directory class
 		void print_directories(Directory& _directory, int level);
 
-		void update_directories(Directory* _directory);
+		void update_directories(Directory* _directory, bool _recursive = true);
+
+		void check_directory_count(Directory* _directory, bool _recursive = true);
 
 		Directory* get_directory(std::filesystem::path const& _path);
 		Directory* get_directory(std::string const& _directoryName);
@@ -140,6 +139,8 @@ namespace Copium
 		Directory* get_directory(std::string const& _directoryName, Directory* _currentDir);
 		File* get_file(std::filesystem::path const& _path, Directory* _currentDir, bool _withinDirectory = false);
 		void store_file_references(Directory* _directory);
+		void add_file_reference(File* _file);
+		void remove_file_reference(File* _file);
 
 	private:
 		std::map<const char*, std::list<File>> extensionTrackedFiles;
@@ -148,8 +149,8 @@ namespace Copium
 		unsigned int indexes = 0; // Number of file & directory instances
 		std::unordered_map<std::string, FileType> fileTypes;
 		std::unordered_map<FILE_TYPE, std::list<File*>> files; // A list of files in their categories
-		File* selectedFile;
-		Directory* selectedDirectory;
+		File* selectedFile = nullptr;
+		Directory* selectedDirectory = nullptr;
 	};
 }
 

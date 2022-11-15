@@ -19,6 +19,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Files/file-system.h"
 #include <utility>
 
+#include "Files/assets-system.h"
 #include "Editor/editor-system.h"
 
 namespace Copium
@@ -27,13 +28,12 @@ namespace Copium
 	{
 		namespace fs = std::filesystem;
 
+		AssetsSystem* assets = AssetsSystem::Instance();
 		EditorSystem* editor = EditorSystem::Instance();
 	}
 
 	void FileSystem::init()
 	{
-		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_RELOAD_ASSETS, this);
-
 		systemFlags |= FLAG_RUN_ON_EDITOR;
 
 		init_file_types();
@@ -117,14 +117,11 @@ namespace Copium
 
 			}
 		}
-
-		// Update directory references
-		update_file_references();
 	}
 
 	void FileSystem::update()
 	{
-		
+		check_directory_count(&assetsDirectory);
 	}
 
 	void FileSystem::exit()
@@ -132,16 +129,33 @@ namespace Copium
 		delete_directories(&assetsDirectory);
 	}
 
-	void FileSystem::handleMessage(MESSAGE_TYPE mType)
+	void FileSystem::check_directory_count(Directory* _directory, bool _recursive)
 	{
-		if (mType == MESSAGE_TYPE::MT_RELOAD_ASSETS)
+		int fileCount = 0;
+		for (auto dirEntry : fs::directory_iterator(_directory->path()))
+		{
+			(void)dirEntry;
+			fileCount++;
+		}
+
+		// Check if there is a change in the number of files
+		if (_directory->get_file_count() != 0 && _directory->get_file_count() != fileCount)
 		{
 			double start = glfwGetTime();
-			update_directories(&assetsDirectory);
-			update_file_references();
+			update_directories(_directory, false);
 			double end = glfwGetTime();
 
 			PRINT("File time taken to reload: " << end - start);
+		}
+
+		_directory->set_file_count(fileCount);
+
+		if (_recursive)
+		{
+			for (Directory* dirEntry : _directory->get_child_directory())
+			{
+				check_directory_count(dirEntry);
+			}
 		}
 	}
 
@@ -149,7 +163,7 @@ namespace Copium
 	{
 		if (fs::exists(_path) && fs::is_directory(_path))
 		{
-			// Assign a path to the directory
+			// Assign the path to the directory
 			_directory->assign(_path);
 
 			// Set instance index
@@ -159,6 +173,7 @@ namespace Copium
 			_directory->set_name(_path.filename().string());
 
 			// Set files and folders within directory
+			int count = 0;
 			for (auto& dirEntry : fs::directory_iterator(_path))
 			{
 				fs::path path = dirEntry.path();
@@ -184,7 +199,11 @@ namespace Copium
 					file.set_file_type(get_file_type(path.extension().string()));
 					_directory->add_files(file);
 				}
+
+				count++;
 			}
+
+			_directory->set_file_count(count);
 		}
 	}
 
@@ -216,7 +235,7 @@ namespace Copium
 		}
 	}
 
-	void FileSystem::update_directories(Directory* _directory)
+	void FileSystem::update_directories(Directory* _directory, bool _recursive)
 	{
 		if (fs::exists(_directory->path()) && fs::is_directory(_directory->path()))
 		{
@@ -287,7 +306,7 @@ namespace Copium
 							file.set_name(path.stem().string());
 							file.set_file_type(get_file_type(path.extension().string()));
 							_directory->add_files(file);
-							files[file.get_file_type().fileType].push_back(&file);
+							add_file_reference(&_directory->get_files().back());
 						}
 					}
 				}
@@ -341,16 +360,22 @@ namespace Copium
 
 					// Delete the file from the vector container
 					if (!hasFile)
+					{
+						remove_file_reference(&(*it));
 						it = (*filesPtr).erase(it);
+					}
 					else
 						it++;
 				}
 				(*filesPtr).shrink_to_fit();
 			}
 
-			for (auto& dirEntry : _directory->get_child_directory())
+			if (_recursive)
 			{
-				update_directories(dirEntry);
+				for (auto& dirEntry : _directory->get_child_directory())
+				{
+					update_directories(dirEntry);
+				}
 			}
 		}
 	}
@@ -494,13 +519,25 @@ namespace Copium
 	{
 		for (auto& fileEntry : _directory->get_files())
 		{
-			files[fileEntry.get_file_type().fileType].push_back(&fileEntry);
+			add_file_reference(&fileEntry);
 		}
 
 		for (auto dirEntry : _directory->get_child_directory())
 		{
 			store_file_references(dirEntry);
 		}
+	}
+
+	void FileSystem::add_file_reference(File* _file)
+	{
+		files[_file->get_file_type().fileType].push_back(_file);
+		assets->load_file(_file);
+	}
+
+	void FileSystem::remove_file_reference(File* _file)
+	{
+		files[_file->get_file_type().fileType].remove(_file);
+		assets->unload_file(_file);
 	}
 
 	std::list<std::string>& FileSystem::get_filepath_in_directory(const char* _path, const char* _extension)
