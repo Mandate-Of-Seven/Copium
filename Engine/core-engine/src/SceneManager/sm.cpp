@@ -125,7 +125,7 @@ namespace Copium {
 
 	bool NewSceneManager::load_scene(const std::string& _filepath)
 	{
-		std::cout << "load_scene\n";
+		std::cout << "loading " << _filepath << std::endl;
 
 		if (_filepath.find(".scene") == std::string::npos)
 		{

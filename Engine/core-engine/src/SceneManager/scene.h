@@ -185,6 +185,8 @@ public:
 	/*******************************************************************************/
 	std::string get_name() const;
 
+	void inspector_view();
+
 private:
 	const std::string filename;
 	std::string name;

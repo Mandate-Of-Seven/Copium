@@ -57,3 +57,18 @@ void change_enginestate(EngineState _nextState)
 {
 	esCurrent = _nextState;
 }
+
+/*******************************************************************************
+/*!
+*
+\brief
+	Specifically quit the engine
+
+\return
+	void
+*/
+/*******************************************************************************/
+void quit_engine()
+{
+	esCurrent = esQuit;
+}

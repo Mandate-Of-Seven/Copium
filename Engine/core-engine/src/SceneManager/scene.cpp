@@ -73,7 +73,10 @@ GameObject* Scene::add_gameobject(GameObject* _gameObj)
 
 void Scene::set_name(const std::string& _name){ name = _name; }
 std::string Scene::get_name() const{ return name; }
+void Scene::inspector_view()
+{
 
+}
 
 // Normal Scene
 NormalScene::NormalScene(){}

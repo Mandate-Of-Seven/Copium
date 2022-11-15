@@ -52,6 +52,13 @@ namespace Copium
 		io.FontGlobalScale = 0.6f;
 		
 		ImGui::StyleColorsDark();
+
+		ImVec4* colours = ImGui::GetStyle().Colors;
+		colours[ImGuiCol_Tab] = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
+		colours[ImGuiCol_WindowBg] = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
+		colours[ImGuiCol_Text] = ImVec4(1.0f, 1.0f, 0.5f, 1.0f);
+
+
 		ImGui_ImplGlfw_InitForOpenGL(windowsSystem->get_window(), true);
 		ImGui_ImplOpenGL3_Init("#version 330");
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;

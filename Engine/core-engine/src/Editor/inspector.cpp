@@ -17,6 +17,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "pch.h"
 #include "Editor/inspector.h"
 #include "GameObject/Components/script-component.h"
+#include "Editor/editor-hierarchy-list.h"
 
 // Bean: Remove once we can auto select gameobjects
 #include "SceneManager/sm.h"
