@@ -11,6 +11,7 @@ namespace Copium
 		public:
 
             AudioSource(GameObject& _gameObj);
+            AudioSource& operator=(const AudioSource& rhs);
 
             /***************************************************************************/
             /*!

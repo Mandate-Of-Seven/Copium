@@ -86,6 +86,10 @@
                             "Y": 0.5
                         }
                     }
+                },
+                {
+                    "Type": "AudioSource",
+                    "Alias": "zap"
                 }
             ],
             "Children": []
@@ -123,10 +127,6 @@
                         "Z": 1.0,
                         "W": 1.0
                     }
-                },
-                {
-                    "Type": "AudioSourceComponent",
-                    "Alias": "zap"
                 }
             ],
             "Children": []

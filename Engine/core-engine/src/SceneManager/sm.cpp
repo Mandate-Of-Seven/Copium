@@ -252,7 +252,7 @@ namespace Copium {
 			return false;
 		}
 
-		currentScene->set_name(storageScene->get_name() + "CLONE");
+		currentScene->set_name(storageScene->get_name() + "\tPREVIEW");
 
 		// Copy game object data
 		for (size_t i{ 0 }; i < storageScene->get_gameobjcount(); ++i)
