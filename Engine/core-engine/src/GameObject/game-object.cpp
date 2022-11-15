@@ -122,6 +122,13 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{ count++ },
             PRINT("ADDED UI TEXT");
             break;
         }
+        case ComponentType::AudioSource:
+        {
+            component = new AudioSource(*this);
+            *component = *(reinterpret_cast<AudioSource*>(pComponent));
+            PRINT("ADDED AUDIO SOURCE");
+            break;
+        }
         }
         if (component)
             components.push_back(component);

@@ -55,7 +55,7 @@ static std::map<ComponentType, std::string> MAP_COMPONENT_TYPE_NAME
     {ComponentType::Button,"ButtonComponent"},
     {ComponentType::Text,"TextComponent"},
     {ComponentType::Image,"ImageComponent"},
-    {ComponentType::AudioSource,"AudioSourceComponent"}
+    {ComponentType::AudioSource,"AudioSource"}
 };
 
 class Component
