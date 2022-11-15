@@ -56,10 +56,6 @@ namespace Copium {
 			++stepCount;
 		}
 
-		// Cap the number of steps
-		if (stepCount > MAX_STEP_COUNT)
-			stepCount = MAX_STEP_COUNT;
-
 		//std::cout << "StepCount: " << stepCount << std::endl;
 
 
