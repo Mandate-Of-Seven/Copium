@@ -21,9 +21,9 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <mono/jit/jit.h>
 namespace Copium
 {
-	ScriptingSystem& ScriptComponent::sS{ *ScriptingSystem::Instance() };
+	ScriptingSystem& Script::sS{ *ScriptingSystem::Instance() };
 
-	ScriptComponent::ScriptComponent(GameObject& _gameObj) :
+	Script::Script(GameObject& _gameObj) :
 		mObject{ nullptr }, pScriptClass{ nullptr }, Component(_gameObj, ComponentType::Script), name{ DEFAULT_SCRIPT_NAME }, reference{nullptr}
 	{
 		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
@@ -31,12 +31,12 @@ namespace Copium
 		instantiate();
 	}
 
-	ScriptComponent::~ScriptComponent()
+	Script::~Script()
 	{
 		MessageSystem::Instance()->unsubscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
 	}
 
-	void ScriptComponent::instantiate()
+	void Script::instantiate()
 	{
 		if (pScriptClass != nullptr)
 		{
@@ -47,6 +47,7 @@ namespace Copium
 			else
 			{
 				mObject = sS.cloneInstance(reference->mObject);
+				reference = nullptr;
 			}
 			GameObjectID _id = gameObj.id;
 			void* param = &_id;
@@ -54,57 +55,65 @@ namespace Copium
 		}
 	}
 
-	void ScriptComponent::handleMessage(MESSAGE_TYPE mType)
+	void Script::handleMessage(MESSAGE_TYPE mType)
 	{
 		//MT_SCRIPTING_UPDATED
 		pScriptClass = sS.getScriptClass(name.c_str());
 		instantiate();
 	}
 
-	const std::string& ScriptComponent::Name() const
+	const std::string& Script::Name() const
 	{
 		return name;
 	}
 
-	void ScriptComponent::Name(const std::string& _name)
+	void Script::Name(const std::string& _name)
 	{
 		name = _name;
 		pScriptClass = sS.getScriptClass(name);
 		instantiate();
 	}
 
-	void ScriptComponent::Awake()
+	void Script::Awake()
 	{
 		if (pScriptClass && pScriptClass->mAwake)
 			sS.invoke(mObject, pScriptClass->mAwake);
 	}
 
-	void ScriptComponent::Start()
+	void Script::Start()
 	{
 		if (pScriptClass && pScriptClass->mStart)
 			sS.invoke(mObject, pScriptClass->mStart);
 	}
 
-	void ScriptComponent::Update()
+	void Script::Update()
 	{
 		if (pScriptClass && pScriptClass->mUpdate)
+		{
 			sS.invoke(mObject, pScriptClass->mUpdate);
+		}
 	}
 
-	void ScriptComponent::LateUpdate()
+	void Script::FixedUpdate()
+	{
+		if (pScriptClass && pScriptClass->mUpdate)
+			sS.invoke(mObject, pScriptClass->mFixedUpdate);
+	}
+
+	void Script::LateUpdate()
 	{
 		if (pScriptClass && pScriptClass->mLateUpdate)
 			sS.invoke(mObject, pScriptClass->mLateUpdate);
 	}
 
-	void ScriptComponent::OnCollisionEnter()
+	void Script::OnCollisionEnter()
 	{
 		if (pScriptClass && pScriptClass->mOnCollisionEnter)
 			sS.invoke(mObject, pScriptClass->mOnCollisionEnter);
 	}
 
 	//Use for serialization
-	bool ScriptComponent::getFieldValue(const std::string& _name, void* outBuffer)
+	bool Script::getFieldValue(const std::string& _name, void* outBuffer)
 	{
 		const auto& it = pScriptClass->mFields.find(_name);
 		if (it == pScriptClass->mFields.end())
@@ -114,7 +123,7 @@ namespace Copium
 		return true;
 	}
 
-	bool ScriptComponent::setFieldValue(const std::string& _name, const void* value)
+	bool Script::setFieldValue(const std::string& _name, const void* value)
 	{
 		const auto& it = pScriptClass->mFields.find(_name);
 		if (it == pScriptClass->mFields.end())
@@ -124,7 +133,7 @@ namespace Copium
 		return true;
 	}
 
-	void ScriptComponent::inspector_view()
+	void Script::inspector_view()
 	{
 		if (!pScriptClass)
 			return;
@@ -140,7 +149,7 @@ namespace Copium
 			// Extern source file
 			ImGui::TableSetupColumn("Text", 0, 0.4f);
 			ImGui::TableSetupColumn("Input", 0, 0.6f);
-
+			PRINT(name << " INSPECTOR VIEW!");
 			const auto& fieldMap = pScriptClass->mFields;
 			auto it = fieldMap.begin();
 			while (it != fieldMap.end())
@@ -231,21 +240,23 @@ namespace Copium
 				setFieldValue(_name, buffer);
 				++it;
 			}
+
 			ImGui::Unindent();
 			ImGui::EndTable();
 		}
 	}
 
-	ScriptComponent& ScriptComponent::operator=(const ScriptComponent& rhs)
+	Component* Script::clone(GameObject& _gameObj) const
 	{
-		pScriptClass = rhs.pScriptClass;
-		name = rhs.name;
-		reference = &rhs;
-		instantiate();
-		return *this;
+		Script* component = new Script(_gameObj);
+		component->pScriptClass;
+		component->name = name;
+		component->reference = this;
+		component->instantiate();
+		return component;
 	}
 
-	void ScriptComponent::deserialize(rapidjson::Value& _value)
+	void Script::deserialize(rapidjson::Value& _value)
 	{
 		if (_value.HasMember("Name"))
 		{
@@ -360,7 +371,7 @@ namespace Copium
 		}
 	}
 
-	void ScriptComponent::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
+	void Script::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
 		if (pScriptClass == nullptr)
 			return;

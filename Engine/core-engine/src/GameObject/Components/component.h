@@ -20,6 +20,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <map>
 #include <rapidjson/document.h>
 
+
 namespace Copium
 {
 
@@ -47,16 +48,17 @@ enum class ComponentType : int      // Types of Components
 
 static std::map<ComponentType, std::string> MAP_COMPONENT_TYPE_NAME
 {
-    {ComponentType::Animator,"AnimatorComponent"},
+    {ComponentType::Animator,"Animator"},
     {ComponentType::BoxCollider2D,"BoxCollider2D"},
     {ComponentType::Rigidbody2D,"Rigidbody2D"},
     {ComponentType::SpriteRenderer,"SpriteRenderer"},
     {ComponentType::Script,"ScriptComponent"},
     {ComponentType::Button,"ButtonComponent"},
-    {ComponentType::Text,"TextComponent"},
+    {ComponentType::Text,"Text"},
     {ComponentType::Image,"ImageComponent"},
     {ComponentType::AudioSource,"AudioSource"}
 };
+
 
 class Component
 {
@@ -65,6 +67,7 @@ class Component
 
         const ComponentType componentType;      //Type of component
         const ComponentID id;                   //Id of component
+
 
         /*******************************************************************************
         /*!
@@ -131,7 +134,7 @@ class Component
         virtual void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
 
-
+        virtual Component* clone(GameObject& _gameObj) const = 0;
 
         /*******************************************************************************
         /*!
@@ -156,22 +159,7 @@ class Component
             //std::cout << "default component dtor\n";
         }
 
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Deep copies a Component into another
-        \param rhs
-            Reference to another Component
-        \return
-            Reference to this Component
-        */
-        /*******************************************************************************/
-        Component& operator=(const Component& rhs)
-        {
-            enabled = rhs.enabled;
-            return *this;
-        }
+
 
         /*******************************************************************************
         /*!
@@ -231,7 +219,7 @@ class Component
 
     
 
-    class AnimatorComponent : public Component
+    class Animator : public Component
     {
     public:
         /***************************************************************************/
@@ -242,7 +230,7 @@ class Component
             Owner of this component
         */
         /**************************************************************************/
-        AnimatorComponent(GameObject& _gameObj);
+        Animator(GameObject& _gameObj);
 
 
         /*******************************************************************************
@@ -256,18 +244,12 @@ class Component
         void inspector_view(){};
 
 
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Deep copies a AnimatorComponent into another
-        \param rhs
-            Reference to another AnimatorComponent
-        \return
-            Reference to this AnimatorComponent
-        */
-        /*******************************************************************************/
-        AnimatorComponent& operator=(const AnimatorComponent& rhs) { (void)rhs; return *this; }
+        virtual Animator* clone(GameObject& _gameObj) const
+        {
+            Animator* component = new Animator(_gameObj);
+            return component;
+        }
+
         /***************************************************************************/
         /*!
         \brief

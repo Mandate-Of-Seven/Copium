@@ -19,6 +19,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/Components/script-component.h"
 #include "SceneManager/sm.h"
 #include "Messaging/message-system.h"
+#include <Windows/windows-system.h>
 #include "GameObject/Components/ui-components.h"
 
 namespace Copium
@@ -28,6 +29,7 @@ namespace Copium
 		NewSceneManager& sceneManager {*NewSceneManager::Instance()};
 		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 		std::vector<GameObject*>* gameObjects;
+		double timeElasped;
 	}
 
 	void LogicSystem::init()
@@ -51,13 +53,26 @@ namespace Copium
 					continue;
 				pButtonComponent->update();
 			}
-			const std::vector<ScriptComponent*>& pScriptComponents{ pGameObj->getComponents<ScriptComponent>() };
-			for (ScriptComponent* pScriptComponent : pScriptComponents)
+			const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };
+			for (Script* pScript : pScripts)
 			{
-				if (!pScriptComponent)
+				if (!pScript)
 					continue;
-				pScriptComponent->Update();
-				pScriptComponent->LateUpdate();
+				pScript->Update();
+				if (pScene != sceneManager.get_current_scene())
+					return;
+				pScript->LateUpdate();
+			}
+			timeElasped += WindowsSystem::Instance()->get_delta_time();
+			if (timeElasped >= 1 / (double)WindowsSystem::Instance()->get_fps())
+			{
+				timeElasped -= 1 / (double)WindowsSystem::Instance()->get_fps();
+				for (Script* pScript : pScripts)
+				{
+					if (!pScript)
+						continue;
+					pScript->FixedUpdate();
+				}
 			}
 		}
 
@@ -77,12 +92,13 @@ namespace Copium
 		gameObjects = &pScene->get_gameobjectvector();
 		for (GameObject* pGameObj : *gameObjects)
 		{
-			const std::vector<ScriptComponent*>& pScriptComponents{ pGameObj->getComponents<ScriptComponent>() };
-			for (ScriptComponent* pScriptComponent : pScriptComponents)
+			const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };
+			for (Script* pScript : pScripts)
 			{
-				pScriptComponent->Awake();
-				pScriptComponent->Start();
+				pScript->Awake();
+				pScript->Start();
 			}
 		}
+		timeElasped = WindowsSystem::Instance()->get_delta_time();
 	}
 }

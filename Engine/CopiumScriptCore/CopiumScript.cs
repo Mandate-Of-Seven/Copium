@@ -19,7 +19,7 @@ using System;
 
 namespace CopiumEngine
 {
-    public class CopiumScript
+    public class CopiumScript : Component
     {
         
         private void OnCreate(ulong ID)
@@ -30,7 +30,15 @@ namespace CopiumEngine
             gameObject = GameObject.FindByID(ID);
             transform = gameObject.transform;
         }
-        protected Transform transform;
-        protected GameObject gameObject;
+
+        public static T Instantiate<T>(T original, Vector3 pos, Vector3 rotation)
+        {
+            return original;
+        }
+
+        public static void Destroy(GameObject gameObj)
+        {
+
+        }
     }
 }

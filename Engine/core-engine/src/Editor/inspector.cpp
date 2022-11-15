@@ -118,7 +118,7 @@ namespace Window
                 {
                     const std::string& name{ nameToScriptClass.filename().stem().string() };
                     if (filter.PassFilter(name.c_str()) && ImGui::Button(name.c_str(), buttonSize)) {
-                        selectedGameObject->addComponent<Copium::ScriptComponent>().Name(name);
+                        selectedGameObject->addComponent<Copium::Script>().Name(name);
                         isAddingComponent = false;
                     }
                 }
@@ -130,7 +130,7 @@ namespace Window
                 {
                     //Ask scripting system query if file exists
                     scriptingSystem.addEmptyScript(filter.InputBuf);
-                    selectedGameObject->addComponent<Copium::ScriptComponent>().Name(filter.InputBuf);
+                    selectedGameObject->addComponent<Copium::Script>().Name(filter.InputBuf);
                     isAddingComponent = false;
                 }
                 ImGui::End();

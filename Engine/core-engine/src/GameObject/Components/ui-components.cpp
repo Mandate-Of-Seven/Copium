@@ -74,8 +74,18 @@ namespace Copium
 
 	ButtonState ButtonComponent::getInternalState() const
 	{
-		static const Math::Vec3& pos{ gameObj.Transform().position };
-		AABB newBounds{ pos + min, pos + max };
+		Math::Vec3 pos{ gameObj.transform.position };
+		Math::Vec3 scale{ gameObj.transform.scale };
+		float x = (max.x - min.x) * scale.x / 2.f;
+		float y = (max.y - min.y) * scale.y / 2.f;
+		Math::Vec2 _min = min;
+		Math::Vec2 _max = max;
+		_min.x = -x;
+		_max.x = +x;
+		_min.y -= y;
+		_max.y += y;
+		AABB newBounds{ _min + pos, _max + pos };
+
 		glm::vec2 scenePos = EditorSystem::Instance()->get_camera()->get_ndc();
 		if (hoveredBtn == nullptr)
 		{
@@ -101,29 +111,31 @@ namespace Copium
 		return ButtonState::None;
 	}
 
-	ButtonComponent& ButtonComponent::operator=(const ButtonComponent& rhs)
+	Component* ButtonComponent::clone(GameObject& _gameObj) const
 	{
-		min = rhs.min;
-		max = rhs.max;
-		state = rhs.state;
-		mapStateCallbacks = rhs.mapStateCallbacks;
-		return *this;
+		auto* component = new ButtonComponent(_gameObj);
+		component->min = min;
+		component->max = max;
+		component->state = state;
+		component->mapStateCallbacks = mapStateCallbacks;
+		return component;
 	}
 
-	TextComponent::TextComponent(GameObject& _gameObj)
-		: Component(_gameObj, ComponentType::Text), font{ Font::getFont("corbel") },fontName{"corbel"}
+	Text::Text(GameObject& _gameObj)
+		: Component(_gameObj, ComponentType::Text), font{ Font::getFont("corbel") },fontName{"corbel"}, fSize{1.f}, content{"New Text"}, color{255.f}
 	{
 	}
 
-	void TextComponent::render()
+	void Text::render()
 	{
 		if (!font)
 			return;
-		Transform& trans{ gameObj.Transform() };
+		Transform& trans{ gameObj.transform };
 		glm::vec2 pos{ trans.position.to_glm() };
 		float scale = trans.scale.x;
 		if (scale > trans.scale.y)
 			scale = trans.scale.y;
+		scale *= fSize;
 		glm::vec2 dimensions{ font->getDimensions(content, scale) };
 
 
@@ -154,19 +166,20 @@ namespace Copium
 			}
 		}
 
-		font->draw_text(content, pos, { 1.f, 1.f, 1.f, 1.f }, scale, 0);
+		font->draw_text(content, pos, color, scale, 0);
 	}
 
-	TextComponent& TextComponent::operator=(const TextComponent& rhs)
+	Component* Text::clone(GameObject& _gameObj) const
 	{
-		offset = rhs.offset;
-		memcpy(content, rhs.content, TEXT_BUFFER_SIZE);
-		font = rhs.font;
-		return *this;
+		Text* component = new Text(_gameObj);
+		memcpy(component->content, content, TEXT_BUFFER_SIZE);
+		component->color = color;
+		component->fSize = fSize;
+		component->font = font;
+		return component;
 	}
 
-
-	void TextComponent::inspector_view()
+	void Text::inspector_view()
 	{
 		float sameLinePadding = 16.f;
 		bool openPopup = false;
@@ -184,6 +197,14 @@ namespace Copium
 
 			ImGui::TableSetupColumn("Text", 0, 0.4f);
 			ImGui::TableSetupColumn("Input", 0, 0.6f);
+
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("Font Size");
+			ImGui::TableNextColumn();
+			ImGui::PushItemWidth(-1);
+			ImGui::InputFloat("##Font Size", &fSize);
+			ImGui::PopItemWidth();
 
 			ImGui::TableNextRow();
 			ImGui::TableNextColumn();
@@ -212,8 +233,30 @@ namespace Copium
 			ImGui::Combo("vAlign", reinterpret_cast<int*>(&vAlignment), vertical, 3);
 			ImGui::PopItemWidth();
 
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("Color");
+			ImGui::TableNextColumn();
+			openPopup = ImGui::ColorButton("Color", *reinterpret_cast<ImVec4*>(&color), miscFlags, ImVec2(FLT_MAX, 0));
+
 			ImGui::Unindent();
 			ImGui::EndTable();
+		}
+
+		if (openPopup)
+		{
+			ImGui::OpenPopup("Color");
+			windowFlags = ImGuiTableFlags_NoBordersInBody;
+		}
+		if (ImGui::BeginPopup("Color", windowFlags))
+		{
+			ImGui::Text("Color");
+			ImGui::Separator();
+			miscFlags = ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview
+				| ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoLabel;
+			ImGui::ColorPicker4("Picker", reinterpret_cast<float*>(&color), miscFlags);
+
+			ImGui::EndPopup();
 		}
 	}
 
@@ -223,22 +266,58 @@ namespace Copium
 
 	}
 
-	void ImageComponent::render()
+	glm::fvec2 ImageComponent::Offset()
 	{
+		Transform& trans{ gameObj.transform };
+		glm::vec2 pos{ trans.position.to_glm() };
+		glm::vec2 dimensions{ sprite.get_size() };
+		if (dimensions.x == 0)
+			dimensions.x = 1.f;
+		if (dimensions.y == 0)
+			dimensions.y = 1.f;
+		dimensions.x *= trans.scale.x;
+		dimensions.y *= trans.scale.y;
 
+		switch (hAlignment)
+		{
+		case HorizontalAlignment::Left:
+		{
+			pos.x += dimensions.x / 2.f;
+			break;
+		}
+		case HorizontalAlignment::Right:
+		{
+			pos.x -= dimensions.x / 2.f;
+			break;
+		}
+		}
+		switch (vAlignment)
+		{
+		case VerticalAlignment::Top:
+		{
+			pos.y -= dimensions.y / 2.f;
+			break;
+		}
+		case VerticalAlignment::Bottom:
+		{
+			pos.y += dimensions.y / 2.f;
+			break;
+		}
+		}
+		return pos;
 	}
 
-	void ImageComponent::inspector_view() 
+	void ImageComponent::inspector_view()
 	{
 		float sameLinePadding = 16.f;
 		bool openPopup = false;
 
-		glm::vec4 clrGLM = Sprite.get_color();
+		glm::vec4 clrGLM = sprite.get_color();
 		ImVec4 color = { clrGLM.r, clrGLM.g, clrGLM.b, clrGLM.a };
 
-		int spriteID = (int)Sprite.get_sprite_id();
+		int spriteID = (int)sprite.get_sprite_id();
 
-		std::string spriteName = Sprite.get_name();
+		std::string spriteName = sprite.get_name();
 		static ImVec4 backupColor;
 
 		ImGuiColorEditFlags miscFlags = ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip
@@ -246,7 +325,7 @@ namespace Copium
 
 		ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
 			| ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp;
-		if (ImGui::BeginTable("ImageComponent", 2, windowFlags))
+		if (ImGui::BeginTable("Component Image Renderer", 2, windowFlags))
 		{
 			ImGui::Indent();
 			// Sprite
@@ -279,6 +358,24 @@ namespace Copium
 				ImGui::EndDragDropTarget();
 			}
 
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("Horizontal Alignment: ");
+			ImGui::TableNextColumn();
+			static const char* const horizontal[] = { "Left", "Center", "Right" };
+			ImGui::PushItemWidth(-1);
+			ImGui::Combo("hAlign", reinterpret_cast<int*>(&hAlignment), horizontal, 3);
+			ImGui::PopItemWidth();
+
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("Vertical Alignment: ");
+			ImGui::TableNextColumn();
+			static const char* const vertical[] = { "Top", "Center", "Bottom" };
+			ImGui::PushItemWidth(-1);
+			ImGui::Combo("vAlign", reinterpret_cast<int*>(&vAlignment), vertical, 3);
+			ImGui::PopItemWidth();
+
 			// Color
 			ImGui::TableNextRow();
 			ImGui::TableNextColumn();
@@ -291,9 +388,9 @@ namespace Copium
 			ImGui::TableNextColumn();
 			ImGui::Text("Flip");
 			ImGui::TableNextColumn();
-			ImGui::Checkbox("X", Sprite.access_flip_x());
+			ImGui::Checkbox("X", sprite.access_flip_x());
 			ImGui::SameLine(0.f, sameLinePadding);
-			ImGui::Checkbox("Y", Sprite.access_flip_y());
+			ImGui::Checkbox("Y", sprite.access_flip_y());
 
 			ImGui::Unindent();
 			ImGui::EndTable();
@@ -311,19 +408,21 @@ namespace Copium
 			ImGui::Separator();
 			miscFlags = ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview
 				| ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoLabel;
-			ImGui::ColorPicker4("Picker", Sprite.access_color(), miscFlags);
+			ImGui::ColorPicker4("Picker", sprite.access_color(), miscFlags);
 
 			ImGui::EndPopup();
 		}
 
 		if (spriteID >= 0)
-			Sprite.set_sprite_id(spriteID);
-		Sprite.set_name(spriteName);
-	};
+			sprite.set_sprite_id(spriteID);
+		sprite.set_name(spriteName);
+	}
 
-	ImageComponent& ImageComponent::operator=(const ImageComponent& rhs)
+	Component* ImageComponent::clone(GameObject& _gameObj) const
 	{
-		offset = rhs.offset;
-		return *this;
+		ImageComponent* component = new ImageComponent(_gameObj);
+		component->offset = offset;
+		component->sprite = sprite;
+		return component;
 	}
 }

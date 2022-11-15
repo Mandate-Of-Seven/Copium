@@ -40,12 +40,13 @@ private:
     static GameObjectID count;
     std::list<Component*> components;   //Components for gameObject
     std::string name;                   //Name of gameObject
-    Transform transform;
     GameObject* parent;                 //Pointer to this gameObject's parent
     std::list<GameObject*> children;    //List of pointers to this gameObject's children
 
 public:
     const GameObjectID id;                    //Global ID for gameObjects
+    bool active;
+    Transform transform;
 
     /***************************************************************************/
     /*!
@@ -175,12 +176,12 @@ public:
     */
     /*******************************************************************************/
     template <typename T>
-    T* addComponent(const T& component)
+    T& addComponent(const T& component)
     {
         static_assert(std::is_base_of<Component, T>::value);
-        T* tmp = addComponent(component.componentType);
-        *tmp = component;
-        return tmp;
+        T* tmp = new T(this);
+        components.push_back(tmp);
+        return *tmp;
     }
 
     /*******************************************************************************
@@ -197,7 +198,7 @@ public:
     template <typename T>
     T* getComponent()
     {
-
+        //std::is_same<>
         static_assert(std::is_base_of<Component, T>::value);
         std::string tName = typeid(T).name() + std::string("class Copium::").length();
         ComponentType componentType = Component::nameToType(tName);
@@ -250,16 +251,6 @@ public:
         ComponentType componentType = Component::nameToType(tName); 
         removeComponent(componentType);
     }
-
-    /***************************************************************************/
-    /*!
-    \brief
-        Getter for gameObject Transform
-    \return
-        Return a copy transform of gameObject
-    */
-    /**************************************************************************/
-    Transform& Transform();
 
     /*******************************************************************************
     /*!

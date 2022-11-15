@@ -172,19 +172,14 @@ public:
     /*******************************************************************************/
     void inspector_view();
 
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Deep copies a Transform into another
-    \param rhs
-        Reference to another Transform
-    \return
-        Reference to this transform
-    */
-    /*******************************************************************************/
-    Transform& operator=(const Transform& rhs);
-
+    Component* clone(GameObject& _gameObj) const
+    {
+        Transform* component = new Transform(_gameObj);
+        component->position = position;
+        component->rotation = rotation;
+        component->scale = scale;
+        return component;
+    }
     RTTR_ENABLE();
     
 };

@@ -34,7 +34,8 @@ namespace Copium::Math
 {
 
 	//Ignore this, for debug purposes
-	class myint {
+	class myint 
+	{
 	public:
 		myint();
 		myint(int32_t _i);

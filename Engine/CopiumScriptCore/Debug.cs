@@ -26,9 +26,9 @@ namespace CopiumEngine
                 Logs a message to Engine Console
         */
         /*******************************************************************************/
-        public static void Log()
+        public static void Log(string message)
         {
-            Console.WriteLine("Debug.Log called");
+            Console.WriteLine(message);
         }
 
         /*******************************************************************************

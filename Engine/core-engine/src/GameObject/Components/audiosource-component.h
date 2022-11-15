@@ -72,6 +72,8 @@ namespace Copium
             */
             /**************************************************************************/
             void stop_sound();
+
+            Component* clone(GameObject& _gameObj) const;
 	};
 
 }

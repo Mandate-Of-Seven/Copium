@@ -18,6 +18,9 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/Components/physics-components.h"
 #include <glm/vec3.hpp>
 #include <Scripting/scripting-system.h>
+#include <Messaging/message-system.h>
+#include <Windows/windows-system.h>
+#include <SceneManager/state-manager.h>
 #include <cstring>
 
 #include "mono/metadata/object.h"
@@ -39,6 +42,7 @@ namespace Copium
 	{
 		InputSystem& inputSystem{ *InputSystem::Instance() };
 		NewSceneManager& sceneManager{ *NewSceneManager::Instance() };
+		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 	}
 
 	//static bool GetKeyDown(int keyCode)
@@ -46,10 +50,10 @@ namespace Copium
 	//	return inputSystem.is_key_pressed(keyCode);
 	//}
 
-	//static bool GetKeyUp(int keyCode)
-	//{
-	//	return false;
-	//}
+	static bool GetKeyUp(int keyCode)
+	{
+		return false;
+	}
 
 	/*******************************************************************************
 	/*!
@@ -83,7 +87,7 @@ namespace Copium
 		{
 			return;
 		}
-		*translation = gameObj->Transform().position;
+		*translation = gameObj->transform.position;
 	}
 
 	/*******************************************************************************
@@ -103,7 +107,7 @@ namespace Copium
 		{
 			return;
 		}
-		gameObj->Transform().position = *val;
+		gameObj->transform.position = *val;
 	}
 
 	/*******************************************************************************
@@ -144,6 +148,43 @@ namespace Copium
 		rb->add_force(*force);
 	}
 
+	static float GetDeltaTime()
+	{
+		return WindowsSystem::Instance()->get_delta_time();
+	}
+
+	static void RigidbodySetVelocity(GameObjectID _ID, Math::Vec2* velocity)
+	{
+		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+		if (gameObj == nullptr)
+		{
+			return;
+		}
+		auto rb = gameObj->getComponent<Rigidbody2D>();
+		if (rb == nullptr)
+		{
+			//LOG SOMETHING TO CONSOLE LIKE THIS OBJ HAS NOT RB
+			return;
+		}
+		rb->set_vel(*velocity);
+	}
+
+	static void RigidbodyGetVelocity(GameObjectID _ID, Math::Vec2* velocity)
+	{
+		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+		if (gameObj == nullptr)
+		{
+			return;
+		}
+		auto rb = gameObj->getComponent<Rigidbody2D>();
+		if (rb == nullptr)
+		{
+			//LOG SOMETHING TO CONSOLE LIKE THIS OBJ HAS NOT RB
+			return;
+		}
+		*velocity = rb->get_vel();
+	}
+
 	static bool HasComponent(GameObjectID _ID, MonoReflectionType* componentType)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
@@ -155,6 +196,57 @@ namespace Copium
 		ComponentType cType = s_EntityHasComponentFuncs[managedType];
 		PRINT(MAP_COMPONENT_TYPE_NAME[cType]);
 		return gameObj->hasComponent(cType);
+	}
+	
+	static void GetLocalScale(GameObjectID _ID, Math::Vec3* scale)
+	{
+		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+		if (gameObj == nullptr)
+		{
+			return;
+		}
+		*scale = gameObj->transform.scale;
+	}
+
+	static void SetLocalScale(GameObjectID _ID, Math::Vec3* scale)
+	{
+		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+		if (gameObj == nullptr)
+		{
+			return;
+		}
+		gameObj->transform.scale = *scale;
+	}
+
+	static void SetActive(GameObjectID _ID, bool _active)
+	{
+		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+		if (gameObj == nullptr)
+		{
+			return;
+		}
+		gameObj->active = _active;
+	}
+
+	static bool GetActive(GameObjectID _ID)
+	{
+		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+		if (gameObj == nullptr)
+		{
+			return false;
+		}
+		return gameObj->active;
+	}
+
+	static void QuitGame()
+	{
+		#ifdef GAMEMODE
+		quit_engine();
+		#else
+		if (sceneManager.endPreview())
+			messageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
+		#endif
+		//Scene manager quit
 	}
 
 	/*******************************************************************************
@@ -171,6 +263,15 @@ namespace Copium
 		Register(FindGameObjByName);
 		Register(HasComponent);
 		Register(RigidbodyAddForce);
+		Register(RigidbodyGetVelocity);
+		Register(RigidbodySetVelocity);
+		Register(SetLocalScale);
+		Register(GetLocalScale);
+		Register(GetDeltaTime);
+		Register(SetActive);
+		Register(GetActive);
+		Register(GetKeyUp);
+		Register(QuitGame);
 	}
 
 	static void registerComponents()

@@ -30,26 +30,26 @@ extern "C"
 
 namespace Copium
 {
-    class ScriptComponent final : public Component, public IReceiver
+    class Script final : public Component, public IReceiver
     {
     public:
 		/**************************************************************************/
 		/*!
 			\brief
-				Constructs a ScriptComponent
+				Constructs a Script
 
 			\param gameObj
 				Owner of this
 		*/
 		/**************************************************************************/
-		ScriptComponent(GameObject& gameObj);
+		Script(GameObject& gameObj);
 		/**************************************************************************/
 		/*!
 			\brief
 				Deconstructor, removes itself from a list of instances
 		*/
 		/**************************************************************************/
-		~ScriptComponent();
+		~Script();
 		/**************************************************************************/
 		/*!
 			\brief
@@ -90,6 +90,7 @@ namespace Copium
 				Function called every frame after Update().
 		*/
 		/**************************************************************************/
+		void FixedUpdate();
 		void LateUpdate();
 		/**************************************************************************/
 		/*!
@@ -140,18 +141,9 @@ namespace Copium
 		/*******************************************************************************/
 		bool setFieldValue(const std::string& name, const void* value);
 
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Deep copies a ScriptComponent into another
-		\param rhs
-			Reference to another ScriptComponent
-		\return
-			Reference to this ScriptComponent
-		*/
-		/*******************************************************************************/
-		ScriptComponent& operator=(const ScriptComponent& rhs);
+
+
+		Component* clone(GameObject& _gameObj) const;
 
 		void deserialize(rapidjson::Value& _value);
 
@@ -164,7 +156,7 @@ namespace Copium
 		MonoObject* mObject;
 		MonoObject* mGameObject;
 		std::string name;
-		const ScriptComponent* reference;
+		const Script* reference;
 		static ScriptingSystem& sS;
     };
 }

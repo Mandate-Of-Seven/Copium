@@ -43,7 +43,7 @@ namespace Copium
     void Component::Enabled(bool _enabled) noexcept { enabled = _enabled; }
 
 
-    AnimatorComponent::AnimatorComponent(GameObject& _gameObj) 
+    Animator::Animator(GameObject& _gameObj) 
         :Component(_gameObj, ComponentType::Animator) { std::cout << "ANIMATOR CONS" << std::endl; }
 
     const std::string& Component::Name() const

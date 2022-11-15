@@ -14,7 +14,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 *****************************************************************************************/
 
 using System;
-using System;
 
 namespace CopiumEngine
 {
@@ -23,5 +22,9 @@ namespace CopiumEngine
     {
 
         private static System.Random rnd = new System.Random();
+        public static float Range (float min, float max)
+        {
+            return (float)((max - min) * rnd.NextDouble() + min);
+        }
     }
 }

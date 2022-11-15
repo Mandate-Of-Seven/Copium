@@ -120,6 +120,7 @@ namespace Copium
 		MonoMethod* mAwake;
 		MonoMethod* mStart;
 		MonoMethod* mUpdate;
+		MonoMethod* mFixedUpdate;
 		MonoMethod* mLateUpdate;
 		MonoMethod* mOnCollisionEnter;
 		MonoMethod* mOnCreate;

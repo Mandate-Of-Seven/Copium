@@ -19,6 +19,7 @@ using System;
 namespace CopiumEngine
 {
 
+
     public class GameObject
     {
         GameObject()
@@ -33,6 +34,15 @@ namespace CopiumEngine
         {
             ID = _ID;
         }
+
+        public bool activeSelf
+        {
+            get
+            {
+                return InternalCalls.GetActive(ID);
+            }
+        }
+
         private static List<GameObject> gameObjects = new List<GameObject>(25000);
         public static GameObject FindByID(ulong _ID)
         {
@@ -72,6 +82,11 @@ namespace CopiumEngine
 
             T component = new T() { gameObject = this };
             return component;
+        }
+
+        public void SetActive(bool _active)
+        {
+            InternalCalls.SetActive(ID, _active);
         }
     }
 }

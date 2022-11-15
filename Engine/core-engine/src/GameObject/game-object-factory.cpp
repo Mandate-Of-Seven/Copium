@@ -132,7 +132,7 @@ namespace Copium
 					//PRINT("Component: " << name);
 					if (key == "Transform")
 						// deserialize transform component
-						go->Transform().deserialize(component);
+						go->transform.deserialize(component);
 					else
 					{
 						Component* tmp = go->addComponent(Component::nameToType(key));
@@ -237,7 +237,7 @@ namespace Copium
 					//PRINT("Component: " << name);
 					if (key == "Transform")
 						// deserialize transform component
-						go->Transform().deserialize(component);
+						go->transform.deserialize(component);
 					else
 					{
 						Component* tmp = go->addComponent(Component::nameToType(key));
