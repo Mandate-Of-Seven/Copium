@@ -16,12 +16,11 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef EDITOR_CONTENT_BROWSER_H
 #define EDITOR_CONTENT_BROWSER_H
 
-#include <string>
-#include "Files/file-system.h"
-#include "Graphics/textures.h"
-
 namespace Copium
 {
+	// Forward declaration of a directory
+	class Directory;
+
 	class EditorContentBrowser
 	{
 	public:
@@ -49,10 +48,12 @@ namespace Copium
 		/***************************************************************************/
 		void exit();
 
-	private:
-		std::filesystem::path currentDirectory;
+		void inputs();
 
-		std::vector<Texture> icons;
+		Directory* get_current_directory() { return currentDirectory; }
+
+	private:
+		Directory* currentDirectory;
 	};
 }
 

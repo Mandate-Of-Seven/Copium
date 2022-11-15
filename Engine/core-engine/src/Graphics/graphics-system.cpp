@@ -18,7 +18,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Windows/windows-system.h"
 
 #include "Graphics/graphics-system.h"
-#include "Graphics/sprite-renderer.h"
+#include "Graphics/spritesheet.h"
 #include "Windows/windows-input.h"
 
 #include "Editor/editor-system.h"
@@ -74,7 +74,10 @@ namespace Copium
 		glUniform1iv(loc, maxTextures, samplers);
 		shaderProgram[TEXT_SHADER].UnUse();*/
 
-		// Parse all textures loaded into the engine into the graphics 
+		// Parse all textures loaded into the engine into the graphics
+		// Bean: Seems like i dont need to parse the textures during startup because the 
+		//		 Renderer.cpp does it for me if the texture has not been stored, enable 
+		//		 to improve runtime rendering(no spikes)
 		parse_textures();
 	}
 
@@ -197,8 +200,6 @@ namespace Copium
 		{
 			rotate += dt * 75;
 		}*/
-		
-		setup_matrices();
 
 		batch_render();
 	}
@@ -209,9 +210,6 @@ namespace Copium
 
 		renderer.shutdown();
 		framebuffer.exit();
-
-		for (Sprite* s : sprites)
-			delete s;
 	}
 
 	// Setup default shaders for the graphics system
@@ -239,18 +237,6 @@ namespace Copium
 		}
 	}
 
-	// Setup default world, view and projection matrices (May include orthographic)
-	void GraphicsSystem::setup_matrices()
-	{
-
-	}
-
-	// Load assets into the game
-	void load_assets()
-	{
-
-	}
-
 	// parse all textures into the game
 	void GraphicsSystem::parse_textures()
 	{
@@ -259,6 +245,7 @@ namespace Copium
 		COPIUM_ASSERT(textureSlotIndex == maxTextures, "Max textures reached! Replace old textures!!");
 
 		// Assign the slot to the texture
+		textureSlotIndex = 1;
 		for (GLuint i = 0; i < assets->get_textures().size(); i++)
 		{
 			textureSlots[textureSlotIndex++] = assets->get_textures()[i].get_object_id();
@@ -352,55 +339,6 @@ namespace Copium
 			renderer.draw_line(pos3_1, pos0_1, color);
 		}
 
-		for (size_t i = 0; i < sprites.size(); i++)
-		{
-			/*PRINT(i + 1 << " : Sprite Data: " << sprites[i]->get_position().x << "," << sprites[i]->get_position().y
-				<< "\t Size: " << sprites[i]->get_size().x << "," << sprites[i]->get_size().y);*/
-			glm::vec3 pos = { sprites[i]->get_position().x + movement_x, sprites[i]->get_position().y + movement_y, 0.f };
-			sprites[i]->set_position(pos);
-			sprites[i]->set_position(pos);
-
-			glm::mat4 translate = {
-				glm::vec4(1.f, 0.f, 0.f, 0.f),
-				glm::vec4(0.f, 1.f, 0.f, 0.f),
-				glm::vec4(pos.x, pos.y, 1.f, 0.f),
-				glm::vec4(0.f, 0.f, 0.f, 1.f)
-			};
-
-			float rad = glm::radians(rotate);
-
-			glm::mat4 rotation = {
-				glm::vec4(cos(rad), sin(rad), 0.f, 0.f),
-				glm::vec4(-sin(rad), cos(rad), 0.f, 0.f),
-				glm::vec4(0.f, 0.f, 1.f, 0.f),
-				glm::vec4(0.f, 0.f, 0.f, 1.f)
-			};
-
-			glm::mat4 transform = translate * rotation;
-
-			glm::vec4 color = { 0.3f, 1.f, 0.3f, 1.f };
-
-			glm::vec4 pos0 = transform * glm::vec4(-sprites[i]->get_size().x / 2, -sprites[i]->get_size().y / 2, 1.f, 1.f);
-			glm::vec4 pos1 = transform * glm::vec4(sprites[i]->get_size().x / 2, -sprites[i]->get_size().y / 2, 1.f, 1.f);
-			glm::vec4 pos2 = transform * glm::vec4(sprites[i]->get_size().x / 2, sprites[i]->get_size().y / 2, 1.f, 1.f);
-			glm::vec4 pos3 = transform * glm::vec4(-sprites[i]->get_size().x / 2, sprites[i]->get_size().y / 2, 1.f, 1.f);
-
-			float minX = fminf(pos0.x, fminf(pos1.x, fminf(pos2.x, pos3.x)));
-			float minY = fminf(pos0.y, fminf(pos1.y, fminf(pos2.y, pos3.y)));
-			float maxX = fmaxf(pos0.x, fmaxf(pos1.x, fmaxf(pos2.x, pos3.x)));
-			float maxY = fmaxf(pos0.y, fmaxf(pos1.y, fmaxf(pos2.y, pos3.y)));
-
-			glm::vec2 pos0_1 = { minX, minY };
-			glm::vec2 pos1_1 = { maxX, minY };
-			glm::vec2 pos2_1 = { maxX, maxY };
-			glm::vec2 pos3_1 = { minX, maxY };
-
-			renderer.draw_line(pos0_1, pos1_1, color);
-			renderer.draw_line(pos1_1, pos2_1, color);
-			renderer.draw_line(pos2_1, pos3_1, color);
-			renderer.draw_line(pos3_1, pos0_1, color);
-		}
-
 		renderer.end_batch();
 
 		renderer.flush();
@@ -473,31 +411,7 @@ namespace Copium
 							Render default sprite (white texture) with color
 				Else
 					Continue
-
-			Bean: To replace the following code with the Theory
 		*/
-		for (size_t i = 0; i < sprites.size(); i++)
-		{
-			/*PRINT(i + 1 << " : Sprite Data: " << sprites[i]->get_position().x << "," << sprites[i]->get_position().y
-				<< "\t Size: " << sprites[i]->get_size().x << "," << sprites[i]->get_size().y);*/
-
-			int textureSelector = i % 5 + 1;
-
-			glm::vec3 pos = { sprites[i]->get_position().x + movement_x, sprites[i]->get_position().y + movement_y, 0.f };
-			glm::vec2 size = { sprites[i]->get_size().x + size_x, sprites[i]->get_size().y + size_y};
-
-			sprites[i]->set_position(pos);
-			sprites[i]->set_size(size);
-
-			// Bean: Set sprite id should be done in the editor or via deserialization
-			sprites[i]->set_sprite_id(assets->get_textures()[i % 4 + 1].get_object_id());
-			sprites[i]->set_texture(&assets->get_textures()[i % 4 + 1]);
-
-			if(textureSelector == 5) // Alpha Colored Square
-				renderer.draw_quad(pos, { 0.1f, 0.1f }, rotate, sprites[i]->get_color());
-			else
-				renderer.draw_quad(pos, size, rotate, *sprites[i]);
-		}
 
 		// Theory WIP
 		NewSceneManager* sm = NewSceneManager::Instance();
@@ -518,8 +432,17 @@ namespace Copium
 					float rotation = t.glmRotation().z;
 					// Bean: It should be set in inspector view of the renderer component instead
 					unsigned int id = sr.get_sprite_id() - 1;
-					if (id != -1)
-						sr.set_texture(&assets->get_textures()[id]);
+
+					// The index of the texture must be less than the size of textures
+					if (id != -1 && id < assets->get_textures().size())
+					{
+						sr.set_texture(assets->get_texture(id));
+					}
+					else
+					{
+						sr.set_sprite_id(0);
+						sr.set_texture(nullptr);
+					}
 
 					renderer.draw_quad(t.glmPosition(), size, rotation, sr);
 				}

@@ -1,5 +1,5 @@
 /*!***************************************************************************************
-\file			sprite-renderer.h
+\file			sprite.h
 \project
 \author			Sean Ngo
 
@@ -62,7 +62,6 @@ namespace Copium
 		// Sprite
 		const unsigned int& get_sprite_id() const { return spriteID; }
 		void set_sprite_id(const unsigned int& _index) { spriteID = _index; }
-		unsigned int* access_sprite_id() { return &spriteID; }
 
 		const Texture* get_texture() const { return refTexture; }
 		void set_texture(Texture* _texture) { refTexture = _texture; }

@@ -110,7 +110,9 @@
     <ClCompile Include="src\Editor\editor-undoredo.cpp" />
     <ClCompile Include="src\Editor\inspector.cpp" />
     <ClCompile Include="src\Files\assets-system.cpp" />
+    <ClCompile Include="src\Files\file-directory.cpp" />
     <ClCompile Include="src\Files\file-system.cpp" />
+    <ClCompile Include="src\Files\file.cpp" />
     <ClCompile Include="src\GameObject\Components\collider-components.cpp" />
     <ClCompile Include="src\GameObject\Components\component.cpp" />
     <ClCompile Include="src\GameObject\Components\physics-components.cpp" />
@@ -122,7 +124,7 @@
     <ClCompile Include="src\Graphics\glslshader.cpp" />
     <ClCompile Include="src\Graphics\graphics-system.cpp" />
     <ClCompile Include="src\Graphics\renderer.cpp" />
-    <ClCompile Include="src\Graphics\sprite-renderer.cpp" />
+    <ClCompile Include="src\Graphics\sprite.cpp" />
     <ClCompile Include="src\Graphics\spritesheet.cpp" />
     <ClCompile Include="src\Graphics\textures.cpp" />
     <ClCompile Include="src\GameObject\Components\ui-components.cpp" />
@@ -191,8 +193,10 @@
     <ClInclude Include="src\Editor\editor-undoredo.h" />
     <ClInclude Include="src\Files\assets-system.h" />
     <ClInclude Include="src\Editor\editor-hierarchy-list.h" />
+    <ClInclude Include="src\Files\file-directory.h" />
     <ClInclude Include="src\Files\file-system.h" />
     <ClInclude Include="src\GameObject\components-system.h" />
+    <ClInclude Include="src\Files\file.h" />
     <ClInclude Include="src\GameObject\Components\collider-components.h">
       <SubType>
       </SubType>
@@ -200,7 +204,7 @@
     <ClInclude Include="src\GameObject\Components\renderer-component.h" />
     <ClInclude Include="src\Graphics\camera.h" />
     <ClInclude Include="src\Graphics\fonts.h" />
-    <ClInclude Include="src\Graphics\sprite-renderer.h" />
+    <ClInclude Include="src\Graphics\sprite.h" />
     <ClInclude Include="src\GameObject\Components\ui-components.h" />
     <ClInclude Include="src\SceneManager\sm.h" />
     <ClInclude Include="src\Scripting\logic-system.h" />

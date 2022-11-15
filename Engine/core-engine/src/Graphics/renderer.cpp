@@ -501,6 +501,7 @@ namespace Copium
 		// Change texture index only if ID retrieved is more than 0 (0 is white texture)
 		if (textureIndex == 0.f && _textureID != 0)
 		{
+			// Add new texture into the texture slot
 			textureIndex = (GLfloat) graphics->get_texture_slot_index();
 			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _textureID;
 			graphics->set_texture_slot_index((GLuint) textureIndex + 1);
@@ -532,7 +533,10 @@ namespace Copium
 
 		for (GLuint i = 1; i < graphics->get_texture_slot_index(); i++)
 		{
-			if (graphics->get_texture_slots()[i] == _sprite.get_sprite_id())
+			if (!_sprite.get_texture())
+				break;
+
+			if (graphics->get_texture_slots()[i] == _sprite.get_texture()->get_object_id())
 			{
 				textureIndex = (GLfloat) i;
 				break;
@@ -542,8 +546,9 @@ namespace Copium
 		// Change texture index only if ID retrieved is more than 0 (0 is white texture)
 		if (textureIndex == 0.f && _sprite.get_sprite_id() != 0)
 		{
+			// Add new texture into the texture slot
 			textureIndex = (GLfloat) graphics->get_texture_slot_index();
-			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _sprite.get_sprite_id();
+			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _sprite.get_texture()->get_object_id();
 			graphics->set_texture_slot_index((GLuint)textureIndex + 1);
 		}
 
@@ -585,6 +590,7 @@ namespace Copium
 		// Change texture index only if ID retrieved is more than 0 (0 is white texture)
 		if (textureIndex == 0.f && _textureID != 0)
 		{
+			// Add new texture into the texture slot
 			textureIndex = (GLfloat) graphics->get_texture_slot_index();
 			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _textureID;
 			graphics->set_texture_slot_index((GLuint) textureIndex + 1);

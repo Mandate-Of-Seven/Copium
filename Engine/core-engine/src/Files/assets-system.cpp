@@ -14,6 +14,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************/
 #include "pch.h"
 
+//#include <GLFW/glfw3.h>
+
 #include "Files/assets-system.h"
 #include "Files/file-system.h"
 #include "Graphics/graphics-system.h"
@@ -21,66 +23,182 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
+	namespace
+	{
+		FileSystem* fs = FileSystem::Instance();
+	}
+
 	void AssetsSystem::init()
 	{
-
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
-		FileSystem* fs = FileSystem::Instance();
 		
 		// Bean: In the future, we shall store all extension files in their own extension vectors std::map<std::string, std::vector<std::string>>
 		// And update when the user adds more files into the system during runtime
+		// Assets should have their own file types for easy access and setting up of image icons etc
+		// Can be a struct or a class
+		// All files should have:
+		// 1. A unique ID
+		// 2. A file path
+		// 3. The extension
+		//
+		// Load all file paths in the asset folder
+		load_assets(&fs->get_asset_directory());
 
-		// Load Textures (.png)
-		load_all_textures(fs->get_filepath_in_directory(Paths::assetPath.c_str(), ".png"));
-		
-		// Load Shaders (.vert & .frag)
-		load_all_shaders(fs->get_filepath_in_directory(Paths::assetPath.c_str(), ".vert", ".frag"));
-		
-		// Load Audio (.wav)
-		load_all_audio(fs->get_filepath_in_directory(Paths::assetPath.c_str(), ".wav"));
-		
-		for (unsigned int i = 0; i < textures.size(); i++)
-		{
-			//std::cout << "Texture: " << textures[i].get_object_id() << " " << textures[i].get_file_path() << "\n";
-		}
 	}
 
 	void AssetsSystem::update()
 	{
+		static int previousFileCount = 0;
 
+		int fileCount = 0;
+		for (auto dirEntry : std::filesystem::recursive_directory_iterator(Paths::assetPath))
+		{
+			(void) dirEntry;
+			fileCount++;
+		}
+
+		// Check if there is a change in the number of files
+		if (previousFileCount != 0 && previousFileCount != fileCount)
+		{
+			MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_RELOAD_ASSETS);
+		}
+
+		previousFileCount = fileCount;
 	}
 	
 	void AssetsSystem::exit()
 	{
-
+		for (Texture& texture : textures)
+			texture.exit();
 	}
 
-	void AssetsSystem::load_all_textures(std::list<std::string>& _path)
+	void AssetsSystem::load_file(File* _file)
 	{
-		for (std::string path : _path)
-		{
-			//std::cout << "Texture: " << path << "\n";
-			// Generate texture
-			Texture texture(path);
+		FILE_TYPE type = _file->get_file_type().fileType;
 
+		switch (type)
+		{
+		case FOLDER:
+			break;
+
+		case AUDIO:
+			break;
+
+		case FONT:
+			break;
+
+		case SCENE:
+			break;
+
+		case SCRIPT:
+			break;
+
+		case SHADER:
+			break;
+
+		case SPRITE:
+			load_texture(_file);
+			break;
+
+		case TEXT:
+			break;
+		}
+	}
+
+	void AssetsSystem::unload_file(File* _file)
+	{
+		FILE_TYPE type = _file->get_file_type().fileType;
+
+		switch (type)
+		{
+		case FOLDER:
+			break;
+
+		case AUDIO:
+			break;
+
+		case FONT:
+			break;
+
+		case SCENE:
+			break;
+
+		case SCRIPT:
+			break;
+
+		case SHADER:
+			break;
+
+		case SPRITE:
+			unload_texture(_file);
+			break;
+
+		case TEXT:
+			break;
+		}
+	}
+
+	void AssetsSystem::load_assets(Directory* _directory)
+	{
+		(void) _directory;
+
+		// Load Textures (.png)
+		load_all_textures(fs->get_file_references()[SPRITE]);
+
+		// Load Shaders (.vert & .frag)
+		load_all_shaders(fs->get_filepath_in_directory(Paths::assetPath.c_str(), ".vert", ".frag"));
+
+		// Load Audio (.wav)
+		load_all_audio(fs->get_filepath_in_directory(Paths::assetPath.c_str(), ".wav"));
+	}
+
+	void AssetsSystem::load_all_textures(std::list<File*>& _files)
+	{
+		for (File* file : _files)
+		{
 			// Store the texture
-			textures.push_back(texture);
+			load_texture(file);
 		}
 
+		// Bean: This should be done in the animation system or animator component
 		for (int i = 0; i < get_textures().size(); i++)
 		{
 
-			if (!get_textures()[i].get_file_path().compare("Assets/textures/TrackSpriteSheet.png"))
+			if (!get_texture(i)->get_file_path().compare("../PackedTracks/Assets/Textures/TrackSpriteSheet.png"))
 			{
 				Spritesheet ss(get_textures()[i], 1, 8);
 				spritesheets.push_back(ss);
 			}
-			else if (!get_textures()[i].get_file_path().compare("Assets/textures/mock-up.png"))
+			else if (!get_texture(i)->get_file_path().compare("../PackedTracks/Assets/Textures/mock-up.png"))
 			{
 				Spritesheet ss(get_textures()[i], 4, 3);
 				spritesheets.push_back(ss);
 			}
 		}
+	}
+
+	void AssetsSystem::load_texture(File* _file)
+	{
+		Texture texture(_file->generic_string());
+		texture.set_id(_file->get_id());
+		textures.push_back(texture);
+	}
+
+	void AssetsSystem::unload_texture(File* _file)
+	{
+		for (auto it = textures.begin(); it != textures.end();)
+		{
+			if (_file->get_id() == (*it).get_id())
+			{
+				(*it).exit();
+				it = textures.erase(it);
+				break;
+			}
+			else
+				++it;
+		}
+
+		textures.shrink_to_fit();
 	}
 
 	void AssetsSystem::load_all_audio(std::list<std::string>& _path)

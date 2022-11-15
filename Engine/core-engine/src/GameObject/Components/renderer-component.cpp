@@ -41,7 +41,6 @@ namespace Copium
 
 	}
 
-
 	void SpriteRenderer::inspector_view()
 	{
 		float sameLinePadding = 16.f;
@@ -58,9 +57,9 @@ namespace Copium
 		ImGuiColorEditFlags miscFlags = ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip
 			| ImGuiColorEditFlags_NoLabel;
 
-		ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
+		ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
 			| ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp;
-		if (ImGui::BeginTable("Component Sprite Renderer", 2, windowFlags))
+		if (ImGui::BeginTable("Component Sprite Renderer", 2, tableFlags))
 		{
 			ImGui::Indent();
 			// Sprite
@@ -79,10 +78,10 @@ namespace Copium
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ContentBrowserItem"))
 				{
 					std::string str = (const char*)(payload->Data);
-					Copium::AssetsSystem* assets = Copium::AssetsSystem::Instance();
+					AssetsSystem* assets = AssetsSystem::Instance();
 					for (int i = 0; i < assets->get_textures().size(); i++)
 					{
-						if (!assets->get_textures()[i].get_file_path().compare(str))
+;						if (!assets->get_texture(i)->get_file_path().compare(str))
 						{
 							spriteID = i + 1;
 						}
@@ -117,9 +116,9 @@ namespace Copium
 		{
 			ImGui::OpenPopup("Color");
 			backupColor = color;
-			windowFlags = ImGuiTableFlags_NoBordersInBody;
+			tableFlags = ImGuiTableFlags_NoBordersInBody;
 		}
-		if (ImGui::BeginPopup("Color", windowFlags))
+		if (ImGui::BeginPopup("Color", tableFlags))
 		{
 			ImGui::Text("Color");
 			ImGui::Separator();
