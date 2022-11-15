@@ -44,9 +44,9 @@ namespace Copium
 	{
 		currentDirectory = &fs->get_asset_directory();
 
-		Texture directoryIcon("Data/DirectoryIcon.png");
-		Texture fileIcon("Data/FileIcon.png");
-		Texture engineLogo("Data/CopiumLogo.png");
+		Texture directoryIcon("Data/Resource/DirectoryIcon.png");
+		Texture fileIcon("Data/Resource/FileIcon.png");
+		Texture engineLogo("Data/Resource/CopiumLogo.png");
 		 
 		icons.push_back(directoryIcon);
 		icons.push_back(fileIcon);

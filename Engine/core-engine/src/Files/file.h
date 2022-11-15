@@ -23,6 +23,7 @@ namespace Copium
 	{
 		FOLDER, // For empty file type
 		AUDIO,
+		CONFIG,
 		FONT,
 		SCENE,
 		SCRIPT,

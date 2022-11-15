@@ -48,6 +48,7 @@ namespace Copium
 		static const std::string projectPath{ "..\\" + projectName };
 		static const std::string assetPath{ projectPath + "Assets" };
 		static const std::string coreScriptsPath{ "..\\CopiumScriptCore"};
+		static const std::string dataPath{ "Data" };
 	}
 
 	CLASS_SYSTEM(FileSystem)

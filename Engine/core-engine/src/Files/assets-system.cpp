@@ -48,22 +48,7 @@ namespace Copium
 
 	void AssetsSystem::update()
 	{
-		static int previousFileCount = 0;
 
-		int fileCount = 0;
-		for (auto dirEntry : std::filesystem::recursive_directory_iterator(Paths::assetPath))
-		{
-			(void) dirEntry;
-			fileCount++;
-		}
-
-		// Check if there is a change in the number of files
-		if (previousFileCount != 0 && previousFileCount != fileCount)
-		{
-			MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_RELOAD_ASSETS);
-		}
-
-		previousFileCount = fileCount;
 	}
 	
 	void AssetsSystem::exit()
@@ -146,7 +131,7 @@ namespace Copium
 		load_all_textures(fs->get_file_references()[SPRITE]);
 
 		// Load Shaders (.vert & .frag)
-		load_all_shaders(fs->get_filepath_in_directory(Paths::assetPath.c_str(), ".vert", ".frag"));
+		load_all_shaders(fs->get_filepath_in_directory(Paths::dataPath.c_str(), ".vert", ".frag"));
 
 		// Load Audio (.wav)
 		load_all_audio(fs->get_filepath_in_directory(Paths::assetPath.c_str(), ".wav"));

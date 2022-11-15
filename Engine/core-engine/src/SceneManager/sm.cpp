@@ -23,8 +23,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 ****/
 #include <pch.h>
 #include "SceneManager/sm.h"
-#include "../Graphics/graphics-system.h"
-#include "../Windows/windows-system.h"
+#include "Graphics/graphics-system.h"
+#include "Windows/windows-system.h"
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/prettywriter.h>
 #include <Messaging/message-system.h>

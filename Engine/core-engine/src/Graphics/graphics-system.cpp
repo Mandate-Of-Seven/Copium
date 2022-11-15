@@ -452,18 +452,24 @@ namespace Copium
 						continue;
 					Transform& t = gameObject->transform;
 					ImageComponent* rc = reinterpret_cast<ImageComponent*>(component);
-					Sprite* sr = &rc->get_sprite_renderer();
+					Sprite& sr = rc->get_sprite_renderer();
 					glm::vec2 size(t.glmScale().x, t.glmScale().y);
 					float rotation = t.glmRotation().z;
-					if (sr != nullptr)
+					// Bean: It should be set in inspector view of the renderer component instead
+					unsigned int id = sr.get_sprite_id() - 1;
+
+					// The index of the texture must be less than the size of textures
+					if (id != -1 && id < assets->get_textures().size())
 					{
-						// Bean: It should be set in inspector view of the renderer component instead
-						unsigned int id = sr->get_sprite_id() - 1;
-						if (id != -1)
-							sr->set_texture(&assets->get_textures()[id]);
+						sr.set_texture(assets->get_texture(id));
+					}
+					else
+					{
+						sr.set_sprite_id(0);
+						sr.set_texture(nullptr);
 					}
 
-					renderer.draw_quad({ rc->Offset(),0 }, size, rotation, *sr);
+					renderer.draw_quad({ rc->Offset(),0 }, size, rotation, sr);
 				}
 			}
 
