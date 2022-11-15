@@ -1,10 +1,22 @@
 #include "pch.h"
 #include "editor-colortheme.h"
+#include <filesystem>
+#include <rapidjson/prettywriter.h>
+#include <rapidjson/istreamwrapper.h>
+#include "Utilities/thread-system.h"
+
 
 namespace Window
 {
+
+
+
 	namespace ColorTheme
 	{
+
+        Copium::ThreadSystem& threadSystem{ *Copium::ThreadSystem::Instance() };
+
+
 		void init()
 		{
             /*
@@ -33,13 +45,22 @@ namespace Window
             if (ImGui::Button("Save Theme"))
             {
                 //Serialize
-                //setTheme(color_for_text, color_for_head, color_for_area, color_for_body, color_for_pops);
+                setTheme(color_for_text, color_for_head, color_for_area, color_for_body, color_for_pops);
+                while (!threadSystem.acquireMutex(Copium::MutexType::FileSystem));
+                std::string fp = Copium::FileDialogs::save_file("Copium Theme (*.theme)\0.theme\0");
+                threadSystem.returnMutex(Copium::MutexType::FileSystem);
+                serialize(fp);
+
             }
             ImGui::SameLine();
             if (ImGui::Button("Load Theme"))
             {
                 //DeSerialize
-               // setTheme(color_for_text, color_for_head, color_for_area, color_for_body, color_for_pops);
+                while (!threadSystem.acquireMutex(Copium::MutexType::FileSystem));
+                std::string fp = Copium::FileDialogs::open_file("Copium Theme (*.theme)\0*.theme\0");
+                threadSystem.returnMutex(Copium::MutexType::FileSystem);
+                deserialize(fp);
+                setTheme(color_for_text, color_for_head, color_for_area, color_for_body, color_for_pops);
             }
             ImGui::End();
             
@@ -66,7 +87,7 @@ namespace Window
             style.Colors[ImGuiCol_ScrollbarGrab] = ImVec4(color_for_head.x, color_for_head.y, color_for_head.z, 0.21f);
             style.Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(color_for_head.x, color_for_head.y, color_for_head.z, 0.78f);
             style.Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(color_for_head.x, color_for_head.y, color_for_head.z, 1.00f);
-            style.Colors[ImGuiCol_CheckMark] = ImVec4(color_for_head.x, color_for_head.y, color_for_head.z, 0.80f);
+            style.Colors[ImGuiCol_CheckMark] = ImVec4(color_for_head.x, color_for_head.y, color_for_head.z, 1.0f);
             style.Colors[ImGuiCol_SliderGrab] = ImVec4(color_for_head.x, color_for_head.y, color_for_head.z, 0.50f);
             style.Colors[ImGuiCol_SliderGrabActive] = ImVec4(color_for_head.x, color_for_head.y, color_for_head.z, 1.00f);
             style.Colors[ImGuiCol_Button] = ImVec4(color_for_head.x, color_for_head.y, color_for_head.z, 0.50f);
@@ -91,5 +112,104 @@ namespace Window
             style.Colors[ImGuiCol_PopupBg] = ImVec4(color_for_pops.x, color_for_pops.y, color_for_pops.z, 0.92f);
             style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(color_for_area.x, color_for_area.y, color_for_area.z, 0.73f);
 		}
+
+
+        void serialize(const std::string& name)
+        {
+            std::string fp(name);
+            if (fp.find(".theme") == std::string::npos)
+            {
+                return;
+            }
+            std::ofstream ofs(fp);  
+            rapidjson::Document doc;
+            doc.SetObject();
+            rapidjson::Value txt(rapidjson::kObjectType), head(rapidjson::kObjectType), body(rapidjson::kObjectType), area(rapidjson::kObjectType), pops(rapidjson::kObjectType);
+            txt.AddMember("R", color_for_text.x, doc.GetAllocator());
+            txt.AddMember("G", color_for_text.y, doc.GetAllocator());
+            txt.AddMember("B", color_for_text.z, doc.GetAllocator());
+            doc.AddMember("Text", txt, doc.GetAllocator());
+
+            head.AddMember("R", color_for_head.x, doc.GetAllocator());
+            head.AddMember("G", color_for_head.y, doc.GetAllocator());
+            head.AddMember("B", color_for_head.z, doc.GetAllocator());
+            doc.AddMember("Head", head, doc.GetAllocator());
+
+            body.AddMember("R", color_for_body.x, doc.GetAllocator());
+            body.AddMember("G", color_for_body.y, doc.GetAllocator());
+            body.AddMember("B", color_for_body.z, doc.GetAllocator());
+            doc.AddMember("Body", body, doc.GetAllocator());
+
+            area.AddMember("R", color_for_area.x, doc.GetAllocator());
+            area.AddMember("G", color_for_area.y, doc.GetAllocator());
+            area.AddMember("B", color_for_area.z, doc.GetAllocator());
+            doc.AddMember("Area", area, doc.GetAllocator());
+
+            pops.AddMember("R", color_for_pops.x, doc.GetAllocator());
+            pops.AddMember("G", color_for_pops.y, doc.GetAllocator());
+            pops.AddMember("B", color_for_pops.z, doc.GetAllocator());
+            doc.AddMember("Pops", pops, doc.GetAllocator());
+
+            rapidjson::StringBuffer sb;
+            rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(sb);
+            doc.Accept(writer);
+            ofs << sb.GetString();
+            ofs.close();
+
+        }
+        void deserialize(const std::string& _filepath)
+        {
+            std::ifstream ifs(_filepath);
+            if (!ifs)
+                return;
+
+            rapidjson::Document doc;
+            rapidjson::IStreamWrapper isw(ifs);
+            if (doc.ParseStream(isw).HasParseError())
+            {
+                ifs.close();
+                return;
+            }
+
+            if (doc.HasMember("Text"))
+            {
+                rapidjson::Value& txt = doc["Text"].GetObj();
+                color_for_text.x = txt["R"].GetFloat();
+                color_for_text.y = txt["G"].GetFloat();
+                color_for_text.z = txt["B"].GetFloat();
+            }
+            if (doc.HasMember("Head"))
+            {
+                rapidjson::Value& head = doc["Head"].GetObj();
+                color_for_head.x = head["R"].GetFloat();
+                color_for_head.y = head["G"].GetFloat();
+                color_for_head.z = head["B"].GetFloat();
+            }
+            if (doc.HasMember("Body"))
+            {
+                rapidjson::Value& body = doc["Body"].GetObj();
+                color_for_body.x = body["R"].GetFloat();
+                color_for_body.y = body["G"].GetFloat();
+                color_for_body.z = body["B"].GetFloat();
+            }
+            if (doc.HasMember("Area"))
+            {
+                rapidjson::Value& area = doc["Area"].GetObj();
+                color_for_area.x = area["R"].GetFloat();
+                color_for_area.y = area["G"].GetFloat();
+                color_for_area.z = area["B"].GetFloat();
+            }
+            if (doc.HasMember("Pops"))
+            {
+                rapidjson::Value& pops = doc["Pops"].GetObj();
+                color_for_pops.x = pops["R"].GetFloat();
+                color_for_pops.y = pops["G"].GetFloat();
+                color_for_pops.z = pops["B"].GetFloat();
+            }
+
+        }
+
+
+
 	}
 }

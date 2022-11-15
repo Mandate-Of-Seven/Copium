@@ -1,6 +1,7 @@
 #pragma once
 #include <imgui.h>
-
+#include <rapidjson/document.h>
+#include "Windows/windows-utils.h"
 
 namespace Window
 {
@@ -37,5 +38,7 @@ namespace Window
 		void update();
 
 		void setTheme(ImVec3 color_for_text, ImVec3 color_for_head, ImVec3 color_for_area, ImVec3 color_for_body, ImVec3 color_for_pops);
+		void serialize(const std::string& _filepath);
+		void deserialize(const std::string& _filepath);
 	}
 }
