@@ -87,7 +87,7 @@ namespace Copium
 		{
 			return;
 		}
-		*translation = gameObj->Transform().position;
+		*translation = gameObj->transform.position;
 	}
 
 	/*******************************************************************************
@@ -107,7 +107,7 @@ namespace Copium
 		{
 			return;
 		}
-		gameObj->Transform().position = *val;
+		gameObj->transform.position = *val;
 	}
 
 	/*******************************************************************************
@@ -205,7 +205,7 @@ namespace Copium
 		{
 			return;
 		}
-		*scale = gameObj->Transform().scale;
+		*scale = gameObj->transform.scale;
 	}
 
 	static void SetLocalScale(GameObjectID _ID, Math::Vec3* scale)
@@ -215,7 +215,7 @@ namespace Copium
 		{
 			return;
 		}
-		gameObj->Transform().scale = *scale;
+		gameObj->transform.scale = *scale;
 	}
 
 	static void SetActive(GameObjectID _ID, bool _active)

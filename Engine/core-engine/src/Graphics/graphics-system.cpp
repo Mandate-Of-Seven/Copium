@@ -145,7 +145,7 @@ namespace Copium
 					float x = rand() % 2000 * 0.1f - 100.f;
 					float y = rand() % 2000 * 0.1f - 100.f;
 
-					go->Transform().set_position({ x, y, 0.f });
+					go->transform.set_position({ x, y, 0.f });
 					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->getComponent(ComponentType::SpriteRenderer));
 					rc->get_sprite_renderer().set_sprite_id(rand() % 7 + 15);
 				}
@@ -305,9 +305,9 @@ namespace Copium
 		{
 			/*PRINT(i + 1 << " : Sprite Data: " << sprites[i]->get_position().x << "," << sprites[i]->get_position().y
 				<< "\t Size: " << sprites[i]->get_size().x << "," << sprites[i]->get_size().y);*/
-			glm::vec3 prePos = scene->get_gameobjectvector()[i]->Transform().glmPosition();
-			glm::vec3 preSize = scene->get_gameobjectvector()[i]->Transform().glmScale();
-			float preRotate = scene->get_gameobjectvector()[i]->Transform().glmRotation().z;
+			glm::vec3 prePos = scene->get_gameobjectvector()[i]->transform.glmPosition();
+			glm::vec3 preSize = scene->get_gameobjectvector()[i]->transform.glmScale();
+			float preRotate = scene->get_gameobjectvector()[i]->transform.glmRotation().z;
 			glm::vec3 pos = { prePos.x + movement_x, prePos.y + movement_y, 0.f };
 			//sprites[i]->set_position(pos);
 
@@ -511,7 +511,7 @@ namespace Copium
 					if (!component->Enabled())
 						continue;
 
-					Transform& t = gameObject->Transform();
+					Transform& t = gameObject->transform;
 					SpriteRenderer * rc = reinterpret_cast<SpriteRenderer*>(component);
 					Sprite& sr = rc->get_sprite_renderer();
 					glm::vec2 size(t.glmScale().x, t.glmScale().y);
@@ -527,7 +527,7 @@ namespace Copium
 				{
 					if (!component->Enabled())
 						continue;
-					Transform& t = gameObject->Transform();
+					Transform& t = gameObject->transform;
 					ImageComponent* rc = reinterpret_cast<ImageComponent*>(component);
 					Sprite* sr = &rc->get_sprite_renderer();
 					glm::vec2 size(t.glmScale().x, t.glmScale().y);

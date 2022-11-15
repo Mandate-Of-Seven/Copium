@@ -74,8 +74,8 @@ namespace Copium
 
 	ButtonState ButtonComponent::getInternalState() const
 	{
-		Math::Vec3 pos{ gameObj.Transform().position };
-		Math::Vec3 scale{ gameObj.Transform().scale };
+		Math::Vec3 pos{ gameObj.transform.position };
+		Math::Vec3 scale{ gameObj.transform.scale };
 		float x = (max.x - min.x) * scale.x / 2.f;
 		float y = (max.y - min.y) * scale.y / 2.f;
 		Math::Vec2 _min = min;
@@ -111,13 +111,14 @@ namespace Copium
 		return ButtonState::None;
 	}
 
-	ButtonComponent& ButtonComponent::operator=(const ButtonComponent& rhs)
+	Component* ButtonComponent::clone(GameObject& _gameObj) const
 	{
-		min = rhs.min;
-		max = rhs.max;
-		state = rhs.state;
-		mapStateCallbacks = rhs.mapStateCallbacks;
-		return *this;
+		auto* component = new ButtonComponent(_gameObj);
+		component->min = min;
+		component->max = max;
+		component->state = state;
+		component->mapStateCallbacks = mapStateCallbacks;
+		return component;
 	}
 
 	Text::Text(GameObject& _gameObj)
@@ -129,7 +130,7 @@ namespace Copium
 	{
 		if (!font)
 			return;
-		Transform& trans{ gameObj.Transform() };
+		Transform& trans{ gameObj.transform };
 		glm::vec2 pos{ trans.position.to_glm() };
 		float scale = trans.scale.x;
 		if (scale > trans.scale.y)
@@ -168,16 +169,15 @@ namespace Copium
 		font->draw_text(content, pos, color, scale, 0);
 	}
 
-	Text& Text::operator=(const Text& rhs)
+	Component* Text::clone(GameObject& _gameObj) const
 	{
-		offset = rhs.offset;
-		memcpy(content, rhs.content, TEXT_BUFFER_SIZE);
-		color = rhs.color;
-		fSize = rhs.fSize;
-		font = rhs.font;
-		return *this;
+		Text* component = new Text(_gameObj);
+		memcpy(component->content, content, TEXT_BUFFER_SIZE);
+		component->color = color;
+		component->fSize = fSize;
+		component->font = font;
+		return component;
 	}
-
 
 	void Text::inspector_view()
 	{
@@ -268,7 +268,7 @@ namespace Copium
 
 	glm::fvec2 ImageComponent::Offset()
 	{
-		Transform& trans{ gameObj.Transform() };
+		Transform& trans{ gameObj.transform };
 		glm::vec2 pos{ trans.position.to_glm() };
 		glm::vec2 dimensions{ sprite.get_size() };
 		if (dimensions.x == 0)
@@ -418,10 +418,11 @@ namespace Copium
 		sprite.set_name(spriteName);
 	}
 
-	ImageComponent& ImageComponent::operator=(const ImageComponent& rhs)
+	Component* ImageComponent::clone(GameObject& _gameObj) const
 	{
-		offset = rhs.offset;
-		sprite = rhs.sprite;
-		return *this;
+		ImageComponent* component = new ImageComponent(_gameObj);
+		component->offset = offset;
+		component->sprite = sprite;
+		return component;
 	}
 }

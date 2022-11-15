@@ -33,7 +33,7 @@ namespace Copium
 		void const Active(bool _active);
 		void const set_gravity(bool _gravity);
 		void const add_acc(Math::Vec2 _acceleration);
-		bool Active();
+		bool Active() { return active; };
 		bool get_gravity();
 		Math::Vec2 get_force();
 		void add_force(Math::Vec2 _force);
@@ -46,14 +46,22 @@ namespace Copium
 		void deserialize(rapidjson::Value& _value);
 		void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 		void inspector_view();
-		
+
+
+		Component* clone(GameObject& _gameObj) const
+		{
+			Rigidbody2D* component = new Rigidbody2D(_gameObj);
+			component->mass = mass;
+			component->active = active;
+			component->affectedGravity = affectedGravity;
+			return component;
+		}
 		
 	private:
 		Math::Vec2 velocity;					//velocity of object
 		Math::Vec2 acceleration;				//acceleration of object
 		Math::Vec2 force;						//forces acting on object
 		float mass;								//mass of object
-		Shape objectShape;						//Shape of object
 		bool active;							//is object active?
 		bool affectedGravity;					//is object affected by gravity?
     };

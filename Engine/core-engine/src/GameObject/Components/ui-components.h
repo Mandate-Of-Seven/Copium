@@ -100,18 +100,9 @@ namespace Copium
 			/*******************************************************************************/
 			void inspector_view() {};
 
-			/*******************************************************************************
-			/*!
-			*
-			\brief
-				Deep copies a ButtonComponent into another
-			\param rhs
-				Reference to another ButtonComponent
-			\return
-				Reference to this ButtonComponent
-			*/
-			/*******************************************************************************/
 			ButtonComponent& operator=(const ButtonComponent& rhs);
+
+			Component* clone(GameObject& _gameObj) const;
 
 			void deserialize(rapidjson::Value& _value)
 			{
@@ -165,18 +156,7 @@ namespace Copium
 			/*******************************************************************************/
 			void render();
 
-			/*******************************************************************************
-			/*!
-			*
-			\brief
-				Deep copies a Text into another
-			\param rhs
-				Reference to another Text
-			\return
-				Reference to this Text
-			*/
-			/*******************************************************************************/
-			Text& operator=(const Text& rhs);
+			Component* clone(GameObject& _gameObj) const;
 
 			void deserialize(rapidjson::Value& _value)
 			{
@@ -283,20 +263,7 @@ namespace Copium
 			Sprite& get_sprite_renderer() { return sprite; }
 			void set_sprite_renderer(Sprite& _sprite) { sprite = _sprite; }
 
-
-			/*******************************************************************************
-			/*!
-			*
-			\brief
-				Deep copies a ImageComponent into another
-			\param rhs
-				Reference to another ImageComponent
-			\return
-				Reference to this ImageComponent
-			*/
-			/*******************************************************************************/
-			ImageComponent& operator=(const ImageComponent& rhs);
-
+			Component* clone(GameObject& _gameObj) const;
 
 			void deserialize(rapidjson::Value& _value)
 			{

@@ -316,13 +316,4 @@ void Transform::inspector_view()
 
 
 }
-
-Transform& Transform::operator=(const Transform& rhs)
-{
-    position = rhs.position;
-    rotation = rhs.rotation;
-    scale = rhs.scale;
-    return *this;
-}
-
 }

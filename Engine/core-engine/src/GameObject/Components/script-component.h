@@ -141,18 +141,9 @@ namespace Copium
 		/*******************************************************************************/
 		bool setFieldValue(const std::string& name, const void* value);
 
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Deep copies a Script into another
-		\param rhs
-			Reference to another Script
-		\return
-			Reference to this Script
-		*/
-		/*******************************************************************************/
-		Script& operator=(const Component& rhs);
+
+
+		Component* clone(GameObject& _gameObj) const;
 
 		void deserialize(rapidjson::Value& _value);
 

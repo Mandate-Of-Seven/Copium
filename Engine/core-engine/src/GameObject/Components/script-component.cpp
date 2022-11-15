@@ -47,6 +47,7 @@ namespace Copium
 			else
 			{
 				mObject = sS.cloneInstance(reference->mObject);
+				reference = nullptr;
 			}
 			GameObjectID _id = gameObj.id;
 			void* param = &_id;
@@ -245,13 +246,14 @@ namespace Copium
 		}
 	}
 
-	Script& Script::operator=(const Component& rhs)
+	Component* Script::clone(GameObject& _gameObj) const
 	{
-		pScriptClass = rhs.pScriptClass;
-		name = rhs.name;
-		reference = &rhs;
-		instantiate();
-		return *this;
+		Script* component = new Script(_gameObj);
+		component->pScriptClass;
+		component->name = name;
+		component->reference = this;
+		component->instantiate();
+		return component;
 	}
 
 	void Script::deserialize(rapidjson::Value& _value)

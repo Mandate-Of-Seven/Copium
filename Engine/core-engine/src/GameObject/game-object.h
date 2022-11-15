@@ -40,13 +40,13 @@ private:
     static GameObjectID count;
     std::list<Component*> components;   //Components for gameObject
     std::string name;                   //Name of gameObject
-    Transform transform;
     GameObject* parent;                 //Pointer to this gameObject's parent
     std::list<GameObject*> children;    //List of pointers to this gameObject's children
 
 public:
     const GameObjectID id;                    //Global ID for gameObjects
     bool active;
+    Transform transform;
 
     /***************************************************************************/
     /*!
@@ -251,16 +251,6 @@ public:
         ComponentType componentType = Component::nameToType(tName); 
         removeComponent(componentType);
     }
-
-    /***************************************************************************/
-    /*!
-    \brief
-        Getter for gameObject Transform
-    \return
-        Return a copy transform of gameObject
-    */
-    /**************************************************************************/
-    Transform& Transform();
 
     /*******************************************************************************
     /*!

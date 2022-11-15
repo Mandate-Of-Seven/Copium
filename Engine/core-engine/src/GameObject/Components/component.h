@@ -46,17 +46,6 @@ enum class ComponentType : int      // Types of Components
     None
 };
 
-class Animator;
-class BoxCollider2D;
-class Rigidbody2D;
-class SpriteRenderer;
-class Script;
-class Transform;
-class Button;
-class Text;
-class BoxCollider2D;
-class AudioSource;
-
 static std::map<ComponentType, std::string> MAP_COMPONENT_TYPE_NAME
 {
     {ComponentType::Animator,"Animator"},
@@ -69,12 +58,6 @@ static std::map<ComponentType, std::string> MAP_COMPONENT_TYPE_NAME
     {ComponentType::Image,"ImageComponent"},
     {ComponentType::AudioSource,"AudioSource"}
 };
-
-template <typename T>
-void assignCast(auto& lhs, const auto& rhs)
-{
-    *reinterpret_cast<T*>(&lhs) = *reinterpret_cast<const T*>(&rhs);
-}
 
 
 class Component
@@ -151,7 +134,7 @@ class Component
         virtual void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
 
-
+        virtual Component* clone(GameObject& _gameObj) const = 0;
 
         /*******************************************************************************
         /*!
@@ -261,18 +244,12 @@ class Component
         void inspector_view(){};
 
 
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Deep copies a Animator into another
-        \param rhs
-            Reference to another Animator
-        \return
-            Reference to this Animator
-        */
-        /*******************************************************************************/
-        Animator& operator=(const Animator& rhs) { (void)rhs; return *this; }
+        virtual Animator* clone(GameObject& _gameObj) const
+        {
+            Animator* component = new Animator(_gameObj);
+            return component;
+        }
+
         /***************************************************************************/
         /*!
         \brief

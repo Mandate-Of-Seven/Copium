@@ -74,19 +74,7 @@ namespace Copium
 		Sprite& get_sprite_renderer() { return sprite; }
 		void set_sprite_renderer(const Sprite& _sprite) { sprite = _sprite; }
 
-
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Deep copies a SpriteRenderer into another
-		\param rhs
-			Reference to another SpriteRenderer
-		\return
-			Reference to this SpriteRenderer
-		*/
-		/*******************************************************************************/
-		SpriteRenderer& operator=(const Component& rhs);
+		Component* clone(GameObject& _gameObj) const;
 	protected:
 		Sprite sprite;
 	};

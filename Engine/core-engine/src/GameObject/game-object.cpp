@@ -39,62 +39,64 @@ namespace
 namespace Copium
 {
 
-GameObjectID GameObject::count = 1;
-Component* GameObject::addComponent(ComponentType componentType)
-{
-    switch (componentType)
+    GameObjectID GameObject::count = 1;
+    Component* GameObject::addComponent(ComponentType componentType)
     {
-    case ComponentType::Animator:
-        return &addComponent<Animator>();
-    case ComponentType::BoxCollider2D:
-        return &addComponent<BoxCollider2D>();
-    case ComponentType::Rigidbody2D:
-        return &addComponent<Rigidbody2D>();
-    case ComponentType::SpriteRenderer:
-        return &addComponent<SpriteRenderer>();
-    case ComponentType::Script:
-        return &addComponent<Script>();
-    case ComponentType::Button:
-        return &addComponent<ButtonComponent>();
-    case ComponentType::Image:
-        return &addComponent<ImageComponent>();
-    case ComponentType::Text:
-        return &addComponent<Text>();
-    case ComponentType::AudioSource:
-        return &addComponent<AudioSource>();
-    default:
-        PRINT("ADDED NOTHING");
-        break;
-    }
-    return nullptr;
-}
-    
-
-GameObject::~GameObject()
-{
-    messageSystem.unsubscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
-    for (std::list<Component*>::iterator iter = components.begin(); iter != components.end(); ++iter)
-    {
-        if (*iter)
+        switch (componentType)
         {
-            delete (*iter);
+        case ComponentType::Animator:
+            return &addComponent<Animator>();
+        case ComponentType::BoxCollider2D:
+            return &addComponent<BoxCollider2D>();
+        case ComponentType::Rigidbody2D:
+            return &addComponent<Rigidbody2D>();
+        case ComponentType::SpriteRenderer:
+            return &addComponent<SpriteRenderer>();
+        case ComponentType::Script:
+            return &addComponent<Script>();
+        case ComponentType::Button:
+            return &addComponent<ButtonComponent>();
+        case ComponentType::Image:
+            return &addComponent<ImageComponent>();
+        case ComponentType::Text:
+            return &addComponent<Text>();
+        case ComponentType::AudioSource:
+            return &addComponent<AudioSource>();
+        default:
+            PRINT("ADDED NOTHING");
+            break;
+        }
+        return nullptr;
+    }
+
+
+    GameObject::~GameObject()
+    {
+        messageSystem.unsubscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
+        for (std::list<Component*>::iterator iter = components.begin(); iter != components.end(); ++iter)
+        {
+            if (*iter)
+            {
+                delete (*iter);
+            }
         }
     }
-}
 
 
-GameObject::GameObject(const GameObject& rhs) : transform(*this), id{ count++ }, parent{ nullptr }, parentid{0}
+    GameObject::GameObject(const GameObject& rhs) : 
+        transform(*this), id{count++}, parent{nullptr}, parentid{0}
 {
     messageSystem.subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
     MESSAGE_CONTAINER::reflectCsGameObject.ID = id;
     messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
+    transform.position = rhs.transform.position;
+    transform.rotation = rhs.transform.rotation;
+    transform.scale = rhs.transform.scale;
     active = rhs.active;
-    transform = rhs.transform;
     name = rhs.name;
     for (Component* pComponent : rhs.components)
     {
-        Component* component = addComponent(pComponent->componentType);
-        *component = *pComponent;
+        components.push_back(pComponent->clone(*this));
     }
     for (GameObject* pGameObj : rhs.children)
     {
@@ -121,8 +123,9 @@ GameObject& GameObject::operator=(const GameObject& _src)
 {
     std::cout << "gameobject = \n";
     name = _src.get_name();
-    transform = _src.transform;
-
+    transform.position = _src.transform.position;
+    transform.rotation = _src.transform.rotation;
+    transform.scale = _src.transform.scale;
     for (Component* co : components)
     {
         if (co)
@@ -146,7 +149,7 @@ GameObject& GameObject::operator=(const GameObject& _src)
     
     for (Component* pComponent : _src.components)
     {
-        *addComponent(pComponent->componentType) = pComponent;
+        components.push_back(pComponent->clone(*this));
     }
     for (GameObject* pGameObj : _src.children)
     {
@@ -219,11 +222,6 @@ bool GameObject::hasComponent(ComponentType componentType) const
         ++it;
     }
     return false;
-}
-
-Transform& GameObject::Transform()  
-{
-    return transform;
 }
 
 void GameObject::set_name(const std::string& _name){ name = _name; }

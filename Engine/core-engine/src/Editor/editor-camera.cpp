@@ -65,7 +65,7 @@ namespace Copium
 					if (!scene->get_gameobjectvector()[i]->get_name().compare("PlayerTrain"))
 					{
 						GameObject* go = scene->get_gameobjectvector()[i];
-						focalPoint = go->Transform().glmPosition(); // Fix the camera onto the player
+						focalPoint = go->transform.glmPosition(); // Fix the camera onto the player
 						//PRINT("Focal point: " << focalPoint.x << " " << focalPoint.y);
 					}
 				}

@@ -12,8 +12,8 @@ namespace Copium
 
 	AABB BoxCollider2D::getBounds() 
 	{
-		Math::Vec3& size{ gameObj.Transform().scale };
-		Math::Vec3& pos{ gameObj.Transform().position };
+		Math::Vec3& size{ gameObj.transform.scale };
+		Math::Vec3& pos{ gameObj.transform.position };
 		float x = (boundingBox.max.x - boundingBox.min.x) * size.x;
 		float y = (boundingBox.max.y - boundingBox.min.y) * size.y;
 		AABB tmp{ boundingBox };
@@ -32,7 +32,7 @@ namespace Copium
 	{
         ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
             | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp;
-        if (ImGui::BeginTable("Component Transform", 2, windowFlags))
+        if (ImGui::BeginTable("Component transform", 2, windowFlags))
         {
             ImGui::Indent();
 

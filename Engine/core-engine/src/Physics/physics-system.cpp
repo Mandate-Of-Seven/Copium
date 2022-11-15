@@ -56,8 +56,8 @@ namespace Copium
 					Rigidbody2D* pRb = pGameObj->getComponent<Rigidbody2D>();
 					if (pRb != nullptr && pRb->Active())
 					{
-						pGameObj->Transform().position.x += pRb->get_vel().x;
-						pGameObj->Transform().position.y += pRb->get_vel().y;
+						pGameObj->transform.position.x += pRb->get_vel().x;
+						pGameObj->transform.position.y += pRb->get_vel().y;
 					}
 				}
 			//}
@@ -156,7 +156,7 @@ namespace Copium
 					//PRINT("COLLIDING?");
 					//fix collision resolution
 					collisionDirection direct = check_collision_direction(boundA, velocityA, boundB, velocityB);
-					resolve_AABBcollision(object1->Transform(), boundA, boundB, direct);
+					resolve_AABBcollision(object1->transform, boundA, boundB, direct);
 					if (pRb1)
 					{
 						if (direct == collisionDirection::BOTTOM)

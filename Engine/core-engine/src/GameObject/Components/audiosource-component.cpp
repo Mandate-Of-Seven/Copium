@@ -127,4 +127,11 @@ namespace Copium
 	{
 		SoundSystem::Instance()->Stop(this->alias);
 	}
+
+	Component* AudioSource::clone(GameObject& _gameObj) const
+	{
+		auto component = new AudioSource(_gameObj);
+		component->alias = alias;
+		return component;
+	}
 }
