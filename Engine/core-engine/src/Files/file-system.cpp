@@ -250,6 +250,9 @@ namespace Copium
 			// There is a change in number of files
 			if (_directory->get_child_directory().size() + _directory->get_files().size() != (size_t)numFiles)
 			{
+				// For checking current directory selection
+				Directory* currentDir = editor->get_content_browser()->get_current_directory();
+
 				// Check for new files and folders
 				for (auto& dirEntry : fs::directory_iterator(_directory->path()))
 				{
@@ -282,6 +285,11 @@ namespace Copium
 
 							// Add folder into this directory
 							_directory->add_child_directory(folder);
+
+							// Bean: This should be moved to a general function
+							// Prevent selection of file / directory
+							if (currentDir->within_directory(folder))
+								selectedDirectory = nullptr;
 						}
 						
 					}
@@ -307,6 +315,11 @@ namespace Copium
 							file.set_file_type(get_file_type(path.extension().string()));
 							_directory->add_files(file);
 							add_file_reference(&_directory->get_files().back());
+
+							// Bean: This should be moved to a general function
+							// Prevent selection of file / directory
+							if (currentDir->within_directory(&file))
+								selectedFile = nullptr;
 						}
 					}
 				}
@@ -329,6 +342,11 @@ namespace Copium
 					// Delete the folder from the vector container
 					if (!hasFolder)
 					{
+						// Bean: This should be moved to a general function
+						// Prevent selection of file / directory
+						if (currentDir == _directory && selectedDirectory != nullptr)
+							selectedDirectory = nullptr;
+
 						iterators.push_back(*it);
 						it = (*dirs).erase(it);
 					}
@@ -361,6 +379,11 @@ namespace Copium
 					// Delete the file from the vector container
 					if (!hasFile)
 					{
+						// Bean: This should be moved to a general function
+						// Prevent selection of file / directory
+						if (currentDir == _directory && selectedFile != nullptr)
+							selectedFile = nullptr;
+
 						remove_file_reference(&(*it));
 						it = (*filesPtr).erase(it);
 					}
@@ -519,7 +542,7 @@ namespace Copium
 	{
 		for (auto& fileEntry : _directory->get_files())
 		{
-			add_file_reference(&fileEntry);
+			files[fileEntry.get_file_type().fileType].push_back(&fileEntry);
 		}
 
 		for (auto dirEntry : _directory->get_child_directory())

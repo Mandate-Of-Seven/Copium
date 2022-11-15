@@ -41,6 +41,9 @@ namespace Copium
 		std::vector<Directory*>& get_child_directory() { return folders; }
 		void add_child_directory(Directory* _directory) { folders.push_back(_directory); }
 
+		bool within_directory(Directory* _directory);
+		bool within_directory(File* _file);
+
 		Directory* get_parent_directory() { return parentFolder; }
 		void set_parent_directory(Directory* _directory) { parentFolder = _directory; }
 

@@ -23,4 +23,26 @@ namespace Copium
 	{
 
 	}
+
+	bool Directory::within_directory(Directory* _directory)
+	{
+		for (auto dirEntry : std::filesystem::directory_iterator(path()))
+		{
+			if (dirEntry.path() == _directory->path())
+				return true;
+		}
+
+		return false;
+	}
+
+	bool Directory::within_directory(File* _file)
+	{
+		for (auto dirEntry : std::filesystem::directory_iterator(path()))
+		{
+			if (dirEntry.path() == *_file)
+				return true;
+		}
+
+		return false;
+	}
 }
