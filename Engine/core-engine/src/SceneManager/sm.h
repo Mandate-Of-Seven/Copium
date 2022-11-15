@@ -229,6 +229,10 @@ namespace Copium {
 		/*******************************************************************************/
 		UndoRedo::CommandManager* get_commandmanager();
 
+		std::string& get_scenefilepath();
+
+		bool create_scene();
+
 		GameObject* selectedGameObject;
 
 	private:

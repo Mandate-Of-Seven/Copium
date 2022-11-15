@@ -55,10 +55,10 @@ namespace Copium
 				pMessageSystem,
 				LoggingSystem::Instance(),
 				ScriptingSystem::Instance(),
-				NewSceneManager::Instance(),
 				SoundSystem::Instance(),
 				FileSystem::Instance(),
 				AssetsSystem::Instance(),
+				NewSceneManager::Instance(),
 				InputSystem::Instance(),
 				EditorSystem::Instance(),
 				LogicSystem::Instance(),
@@ -76,6 +76,8 @@ namespace Copium
 			pMessageSystem->subscribe(MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW, this);
 
 			frc = new FrameRateController;
+
+
 
 		}
 

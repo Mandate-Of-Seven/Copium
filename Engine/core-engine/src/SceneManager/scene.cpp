@@ -24,6 +24,10 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
+Scene::Scene() : name{ "NewScene" }
+{
+
+}
 Scene::Scene(const std::string& _filepath) : filename(_filepath) 
 {
 
@@ -70,6 +74,9 @@ GameObject* Scene::add_gameobject(GameObject* _gameObj)
 void Scene::set_name(const std::string& _name){ name = _name; }
 std::string Scene::get_name() const{ return name; }
 
+
+// Normal Scene
+NormalScene::NormalScene(){}
 NormalScene::NormalScene(const std::string& _filepath) : Scene(_filepath)
 {
 

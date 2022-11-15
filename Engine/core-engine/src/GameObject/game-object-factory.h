@@ -200,6 +200,7 @@ namespace Copium {
 		*/
 		/*******************************************************************************/
 		bool register_archetypes(const std::filesystem::path& _directoryPath);
+		void clear_archetypes();
 
 		/*******************************************************************************
 		/*!

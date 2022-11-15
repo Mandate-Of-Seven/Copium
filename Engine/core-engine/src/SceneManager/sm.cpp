@@ -41,7 +41,6 @@ namespace Copium {
 		}
 		return nullptr;
 	}
-
 	GameObject* NewSceneManager::findGameObjByName(const std::string& name)
 	{
 		for (GameObject* pGameObj : currentScene->get_gameobjectvector())
@@ -61,8 +60,6 @@ namespace Copium {
 		{
 			std::cout << "Error allocating memory for GameObjectFactory\n";
 		}	
-
-		//std::cout << "sm ctor\n";
 	}
 
 	NewSceneManager::~NewSceneManager()
@@ -79,7 +76,7 @@ namespace Copium {
 
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		storageScene = nullptr;
-		//gof->register_archetypes("Data/Archetypes");
+		gof->register_archetypes("Data/Archetypes");
 
 
 		//std::cout << "No. of GameObjects in scene:" << currentScene->get_gameobjcount() << std::endl;
@@ -87,7 +84,6 @@ namespace Copium {
 	void NewSceneManager::update()
 	{
 
-		// call current scene's update functions
 	}
 	void NewSceneManager::exit()
 	{
@@ -95,6 +91,7 @@ namespace Copium {
 
 		if (gof)
 		{
+			gof->clear_archetypes();
 			delete gof;
 			gof = nullptr;
 		}
@@ -129,6 +126,12 @@ namespace Copium {
 	bool NewSceneManager::load_scene(const std::string& _filepath)
 	{
 		std::cout << "load_scene\n";
+
+		if (_filepath.find(".scene") == std::string::npos)
+		{
+			Window::EditorConsole::editorLog.add_logEntry("file selected is not a Copium Scene");
+			return false;
+		}
 		
 		if (!currentScene)
 		{
@@ -292,6 +295,7 @@ namespace Copium {
 			PRINT("There is no scene to save...\n");
 			return false;
 		}
+
 		double startTime = glfwGetTime();
 		std::cout << "saving scene...\n";
 		if (!save_scene(sceneFilePath))
@@ -308,6 +312,12 @@ namespace Copium {
 			PRINT("There is no scene to save...\n");
 			return false;
 		}
+		std::string fp(_filepath);
+		if (fp.find(".scene") == std::string::npos)
+		{
+			fp += ".json";
+		}
+		std::ofstream ofs(fp);
 		rapidjson::Document doc;
 
 		doc.SetObject();
@@ -346,9 +356,7 @@ namespace Copium {
 		rapidjson::StringBuffer sb;
 		rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(sb);
 		doc.Accept(writer);
-		std::ofstream ofs(_filepath);
 		ofs << sb.GetString();
-		//std::cout << sb.GetString() << std::endl;
 		return true;
 	}
 
@@ -363,4 +371,21 @@ namespace Copium {
 		return &commandManager;
 	}
 
+
+	// M3
+	std::string& NewSceneManager::get_scenefilepath() { return sceneFilePath; }
+	bool NewSceneManager::create_scene()
+	{
+		if (currentScene) {
+			delete currentScene;
+			currentScene = nullptr;
+			sceneFilePath.clear();
+		}
+
+		currentScene = new NormalScene();
+		if (!currentScene)
+			return false;
+
+		return true;
+	}
 }

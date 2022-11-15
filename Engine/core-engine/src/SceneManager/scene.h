@@ -37,9 +37,9 @@ namespace Copium
 class Scene 
 {
 public:
+	Scene();
 	Scene(const std::string& _filepath);
 
-	Scene() = delete;
 	Scene(Scene&) = delete;
 	Scene& operator=(Scene&) = delete;
 	virtual ~Scene();
@@ -194,6 +194,7 @@ private:
 class NormalScene : public Scene
 {
 public:
+	NormalScene();
 	NormalScene(const std::string& _filepath);
 	/*******************************************************************************
 	/*!

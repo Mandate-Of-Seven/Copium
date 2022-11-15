@@ -15,20 +15,19 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 #include "Editor/editor-hierarchy-list.h"
 
+
 //M2
 namespace Window::Hierarchy
 {
 	Copium::Scene * currentScene = nullptr;
 	bool isOpen;
-	int selectedID = -1;
+	Copium::GameObjectID selectedID;
 
 	void init()
 	{
 		isOpen = true;
 		if (Copium::NewSceneManager::Instance())
 			currentScene = Copium::NewSceneManager::Instance()->get_current_scene();
-
-
 	}
 
 	void update()
@@ -44,18 +43,28 @@ namespace Window::Hierarchy
 		ImGui::SetNextWindowSize(ImVec2(500, 900), ImGuiCond_FirstUseEver);
 		ImGui::Begin("Hierarchy", &isOpen, ImGuiWindowFlags_MenuBar);
 
+		// Menu Bar
 		if (ImGui::BeginMenuBar())
 		{
 			if (ImGui::BeginMenu("Menu"))
 			{
-				// Add menu items
-				if (ImGui::MenuItem("Add GameObject", nullptr))
+				 //Add menu items
+				if (ImGui::MenuItem("Create GameObject", nullptr))
 				{
-					std::cout << "Add\n";
-					if (!Copium::NewSceneManager::Instance()->get_gof().build_gameobject())
-						std::cout << "Error creating game object\n";
+					if (!currentScene)
+					{
+						Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
+
+					}
+					else
+					{
+						if (!Copium::NewSceneManager::Instance()->get_gof().build_gameobject())
+							std::cout << "Error creating game object\n";
+					}
+
+
 				}
-				if (ImGui::MenuItem("Delete GameObject", nullptr))
+				if (ImGui::MenuItem("Delete Selected GameObject", nullptr))
 				{
 					if (Copium::NewSceneManager::Instance()->get_selected_gameobject())
 					{
@@ -65,10 +74,10 @@ namespace Window::Hierarchy
 					}
 					else
 					{
-						std::cout << "no game object selected, can't delete\n";
+						Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
 					}
 				}
-				if (ImGui::MenuItem("Clone GameObject", nullptr))
+				if (ImGui::MenuItem("Clone Selected GameObject", nullptr))
 				{
 					if (Copium::NewSceneManager::Instance()->get_selected_gameobject())
 					{
@@ -78,10 +87,32 @@ namespace Window::Hierarchy
 					}
 					else
 					{
-						std::cout << "no game object selected, can't clone\n";
+						Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
 					}
+				}				
+				if (ImGui::BeginMenu("Add Archetype"))
+				{
+					if (!currentScene)
+					{
+						Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
+					}
+					else
+					{
+						for (std::map<std::string, Copium::GameObject*>::iterator iter = Copium::NewSceneManager::Instance()->get_gof().get_archetype_map().begin();
+							iter != Copium::NewSceneManager::Instance()->get_gof().get_archetype_map().end(); ++iter)
+						{
+							if (ImGui::MenuItem((*iter).first.c_str()) && currentScene)
+							{
+								Copium::NewSceneManager::Instance()->get_gof().build_gameobject(*(*iter).second);
+							}
+
+						} 
+					}
+
+					ImGui::EndMenu();
 				}
 				ImGui::EndMenu();
+
 			}
 			ImGui::EndMenuBar();
 		}
@@ -108,11 +139,16 @@ namespace Window::Hierarchy
 			// Display scene name as the rootiest node
 			if (ImGui::TreeNodeEx(currentScene->get_name().c_str(), rootFlags))
 			{
+
+				if (ImGui::IsItemClicked())
+				{
+					//display current scene details
+				}
+
 				bool isSelected = false;
-				Copium::GameObjectID _selectedID = 0;
 				for (size_t i{ 0 }; i < roots.size(); ++i)
 				{
-					isSelected = display_gameobject_advanced(*roots[i], _selectedID);
+					isSelected = display_gameobject_advanced(*roots[i], selectedID);
 				}	
 
 				ImGui::TreePop();
@@ -158,7 +194,6 @@ namespace Window::Hierarchy
 	{
 		bool isSelected = false;
 		ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
-		//int node_clicked = -1;
 
 		if (!_go.is_parent())
 		{
@@ -168,22 +203,20 @@ namespace Window::Hierarchy
 
 		if (_selected == _go.id)
 		{
-			baseFlags |= ImGuiTreeNodeFlags_Selected;
+			baseFlags |= ImGuiTreeNodeFlags_Selected;				
 		}
-			
+
 
 		if (!ImGui::TreeNodeEx(_go.get_name().c_str(), baseFlags))
 			return false;
 
 		if (ImGui::IsItemClicked())
 		{
-			if (!isSelected)
-			{
-				std::cout << _go.get_name() << " is selected\n";
-				_selected = _go.id;
-				isSelected = true;
-				Copium::NewSceneManager::Instance()->set_selected_gameobject(&_go);
-			}
+			std::cout << _go.get_name() << " is selected\n";
+			_selected = _go.id;
+			isSelected = true;
+			Copium::NewSceneManager::Instance()->set_selected_gameobject(&_go);
+
 
 		}
 		// If game object has children, recursively display children

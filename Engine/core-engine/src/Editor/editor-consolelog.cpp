@@ -191,7 +191,7 @@ namespace Window
             ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
             ImGui::SetNextWindowBgAlpha(0.35f);
 
-            // Begin Render Stats
+            // Begin Performance Stats
             ImGui::Begin("Performance Viewer", 0,windowFlags);
             ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 75);
             if (ImGui::Button("Start Performance Viewer"))
@@ -202,7 +202,6 @@ namespace Window
 
             std::string buffer = Window::EditorConsole::editorLog.get_performancetext();
             ImGui::Text(buffer.c_str());
-            //PRINT(buffer);
             // End Performance Stats
             ImGui::End();
 		}
