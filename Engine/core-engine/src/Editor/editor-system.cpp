@@ -20,6 +20,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Editor/inspector.h"
 #include "Editor/editor-consolelog.h"
 #include "Editor/editor-hierarchy-list.h"
+#include "Editor/editor-colortheme.h"
 #include "Windows/windows-utils.h"
 #include "Utilities/thread-system.h"
 #include "SceneManager/state-manager.h"
@@ -52,6 +53,7 @@ namespace Copium
 		io.FontGlobalScale = 0.6f;
 		
 		ImGui::StyleColorsDark();
+
 		ImGui_ImplGlfw_InitForOpenGL(windowsSystem->get_window(), true);
 		ImGui_ImplOpenGL3_Init("#version 330");
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -59,6 +61,7 @@ namespace Copium
 		Window::Inspector::init();
 		Window::EditorConsole::init();
 		Window::Hierarchy::init();
+		Window::ColorTheme::init();
 
 		sceneView.init();
 		contentBrowser.init();
@@ -247,6 +250,7 @@ namespace Copium
 
 
             //Call all the editor layers updates here
+			Window::ColorTheme::update();
 			Window::Inspector::update();
 			Window::EditorConsole::update();
 			Window::Hierarchy::update();
