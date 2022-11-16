@@ -17,11 +17,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "pch.h"
 #include "Debugging/frame-rate-controller.h"
 #include <GLFW/glfw3.h>
-#ifdef _WIN32
-#include <Windows.h>
-#else
-#include <unistd.h>
-#endif
 
 namespace Copium {
 	void FrameRateController::init(double _maxFPS)
@@ -48,7 +43,6 @@ namespace Copium {
 	void FrameRateController::start()
 	{
 		frameStart = glfwGetTime();
-
 	}
 
 	void FrameRateController::end()
@@ -56,12 +50,12 @@ namespace Copium {
 		steps = 0;
 		frameEnd = glfwGetTime();
 		deltaTime = frameEnd - frameStart;
-		if (deltaTime < fixedDeltaTime)
+		while (deltaTime < fixedDeltaTime)
 		{
-			Sleep(fixedDeltaTime - deltaTime);
-			deltaTime = fixedDeltaTime;
-			accumulatedTime += deltaTime;
+			frameEnd = glfwGetTime();
+			deltaTime = frameEnd - frameStart;
 		}
+		accumulatedTime += deltaTime;
 		while (accumulatedTime > fixedDeltaTime)
 		{
 			accumulatedTime -= fixedDeltaTime;
