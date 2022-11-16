@@ -22,6 +22,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Graphics/glslshader.h"
 #include "Graphics/framebuffer.h"
 #include "Graphics/renderer.h"
+#include "Graphics/graphics-draw.h"
 #include "Graphics/fonts.h"
 
 #include "SceneManager/scene-manager.h"
@@ -89,7 +90,9 @@ namespace Copium
 
 		// Data Members
 		GLSLShader* const get_shader_program() { return shaderProgram; }
+		Renderer* get_renderer() { return &renderer; }
 		Framebuffer* get_framebuffer() { return &framebuffer; }
+
 
 #pragma region MemberFunctions
 		// Public Member Functions
@@ -128,30 +131,6 @@ namespace Copium
 		/***************************************************************************/
 		void batch_render();
 
-		/***************************************************************************/
-		/*!
-		\brief
-			Draw the debug mode of the engine
-		*/
-		/***************************************************************************/
-		void draw_debug_info();
-
-		/***************************************************************************/
-		/*!
-		\brief
-			Draw the development mode of the engine
-		*/
-		/***************************************************************************/
-		void draw_development();
-
-		/***************************************************************************/
-		/*!
-		\brief
-			Draw the "world" of the engine which is the scene view
-		*/
-		/***************************************************************************/
-		void draw_world();
-
 #pragma endregion MemberFunctions
 #pragma region DataMembers
 	private:
@@ -167,8 +146,8 @@ namespace Copium
 		/* Stored Information ***********************************************************/
 		Renderer renderer;
 		Framebuffer framebuffer;
+		Draw draw;
 
-		bool debugMode = false;
 #pragma endregion DataMembers
 	};
 

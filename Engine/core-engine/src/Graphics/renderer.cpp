@@ -197,6 +197,8 @@ namespace Copium
 
 	void Renderer::begin_batch()
 	{
+		lineWidth = 1.f;
+
 		quadIndexCount = 0;
 		quadBufferPtr = quadBuffer;
 
@@ -267,7 +269,7 @@ namespace Copium
 
 			// End of matrix assignment
 
-			glLineWidth(get_line_width());
+			glLineWidth(lineWidth);
 			glDrawArrays(GL_LINES, 0, lineVertexCount);
 			drawCount++;
 
