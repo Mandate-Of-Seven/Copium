@@ -19,7 +19,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/game-object.h"
 #include "Physics/collision.h"
 #include "Editor/editor-system.h"
-#include "Files/assets-system.h"
+#include <Files/assets-system.h> 
+#include <stdlib.h>  
 
 namespace
 {
@@ -31,10 +32,10 @@ namespace Copium
 	const ButtonComponent* ButtonComponent::hoveredBtn{nullptr};
 
 	ButtonComponent::ButtonComponent(GameObject& _gameObj,Math::Vec2 _min, Math::Vec2 _max) 
-		: Component(_gameObj, ComponentType::Button)
+		: Component(_gameObj, ComponentType::Button), bounds{_min,_max},
+		normalColor{255}, hoverColor{100,255,255,255}, clickedColor{128,128,128,255},
+		targetGraphic{nullptr}
 	{
-		min = _min;
-		max = _max;
 		state = ButtonState::None;
 		for (int i = 0; i <= int(ButtonState::None); ++i)
 		{
@@ -43,8 +44,30 @@ namespace Copium
 	}
 
 
+	void ButtonComponent::updateBounds()
+	{
+		Math::Vec3 pos{ gameObj.transform.position };
+		Math::Vec3 scale{ gameObj.transform.scale };
+		//Get ratio first
+		// Positive ratio, negative ratio for x and y
+		Math::Vec2 _min = bounds.min;
+		Math::Vec2 _max = bounds.max;
+		_min.x *= scale.x;
+		_max.x *= scale.x;
+		_min.y *= scale.y;
+		_max.y *= scale.y;
+		relativeBounds = { _min + pos, _max + pos };
+	}
+
+	const AABB& ButtonComponent::getRelativeBounds() const
+	{
+		return relativeBounds;
+	}
+
+
 	void ButtonComponent::update()
 	{
+		updateBounds();
 		state = getInternalState();
 
 		ButtonCallback callback = mapStateCallbacks[state];
@@ -72,24 +95,98 @@ namespace Copium
 		}
 	}
 
+
+	void ButtonComponent::inspector_view()
+	{
+		float sameLinePadding = 16.f;
+		bool openPopup = false;
+
+		ImGuiColorEditFlags miscFlags = ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip
+			| ImGuiColorEditFlags_NoLabel;
+
+		ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
+			| ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp;
+
+		glm::fvec4* color{&normalColor};
+
+		if (ImGui::BeginTable("Component UI Text", 2, windowFlags))
+		{
+			ImGui::Indent();
+			// Sprite
+			// Extern source file
+
+			ImGui::TableSetupColumn("Text", 0, 0.4f);
+			ImGui::TableSetupColumn("Input", 0, 0.6f);
+
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("Target Graphic");
+			ImGui::TableNextColumn();
+			if (targetGraphic == nullptr)
+				ImGui::Button("Empty", ImVec2(-FLT_MIN, 0.f));
+			else
+				ImGui::Button(targetGraphic->Name().c_str(), ImVec2(-FLT_MIN, 0.f));
+			if (ImGui::BeginDragDropTarget())
+			{
+				const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Text");
+				if (payload)
+				{
+					Text* component = (Text*)payload->Data;
+					PRINT(component->Name());
+					targetGraphic = component;
+				}
+				ImGui::EndDragDropTarget();
+			}
+
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("Normal Color");
+			ImGui::TableNextColumn();
+			openPopup = ImGui::ColorButton("Normal Color", *reinterpret_cast<ImVec4*>(&normalColor), miscFlags, ImVec2(FLT_MAX, 0));
+			if (!openPopup)
+				color = &hoverColor;
+
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("Hovered Color");
+			ImGui::TableNextColumn();
+			openPopup = ImGui::ColorButton("Hovered Color", *reinterpret_cast<ImVec4*>(&hoverColor), miscFlags, ImVec2(FLT_MAX, 0));
+			if (!openPopup)
+				color = &clickedColor;
+
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("Clicked Color");
+			ImGui::TableNextColumn();
+			openPopup = ImGui::ColorButton("Clicked Color", *reinterpret_cast<ImVec4*>(&clickedColor), miscFlags, ImVec2(FLT_MAX, 0));
+
+			ImGui::Unindent();
+			ImGui::EndTable();
+		}
+
+		if (openPopup)
+		{
+			ImGui::OpenPopup("Color");
+			windowFlags = ImGuiTableFlags_NoBordersInBody;
+		}
+		if (ImGui::BeginPopup("Color", windowFlags))
+		{
+			ImGui::Text("Color");
+			ImGui::Separator();
+			miscFlags = ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview
+				| ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoLabel;
+			ImGui::ColorPicker4("Picker", reinterpret_cast<float*>(color), miscFlags);
+
+			ImGui::EndPopup();
+		}
+	}
+
 	ButtonState ButtonComponent::getInternalState() const
 	{
-		Math::Vec3 pos{ gameObj.transform.position };
-		Math::Vec3 scale{ gameObj.transform.scale };
-		float x = (max.x - min.x) * scale.x / 2.f;
-		float y = (max.y - min.y) * scale.y / 2.f;
-		Math::Vec2 _min = min;
-		Math::Vec2 _max = max;
-		_min.x = -x;
-		_max.x = +x;
-		_min.y -= y;
-		_max.y += y;
-		AABB newBounds{ _min + pos, _max + pos };
-
 		glm::vec2 scenePos = EditorSystem::Instance()->get_camera()->get_ndc();
 		if (hoveredBtn == nullptr)
 		{
-			if (static_collision_pointrect(scenePos, newBounds))
+			if (static_collision_pointrect(scenePos, relativeBounds))
 			{
 				if (inputSystem.is_mousebutton_pressed(0))
 				{
@@ -114,15 +211,14 @@ namespace Copium
 	Component* ButtonComponent::clone(GameObject& _gameObj) const
 	{
 		auto* component = new ButtonComponent(_gameObj);
-		component->min = min;
-		component->max = max;
+		component->bounds = bounds;
 		component->state = state;
 		component->mapStateCallbacks = mapStateCallbacks;
 		return component;
 	}
 
 	Text::Text(GameObject& _gameObj)
-		: Component(_gameObj, ComponentType::Text), font{ Font::getFont("corbel") },fontName{"corbel"}, fSize{1.f}, content{"New Text"}, color{255.f}
+		: Component(_gameObj, ComponentType::Text), font{ Font::getFont("corbel") },fontName{"corbel"}, fSize{1.f}, content{"New Text"}
 	{
 	}
 

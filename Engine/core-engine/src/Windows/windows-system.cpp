@@ -113,7 +113,6 @@ namespace Copium
     void WindowsSystem::draw()
     {
         // Printing to Windows Title Bar
-        PRINT("FRAME RATE: " << MyFrameRateController.getFPS());
         std::stringstream sstr;
         sstr << std::fixed << std::setprecision(2) << title << " | FPS: " << MyFrameRateController.getFPS()
             << " | Resolution: " << windowWidth << " by " << windowHeight;

@@ -19,9 +19,9 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/Components/component.h"
 #include "Math/math-library.h"
 #include "Graphics/fonts.h"
-#include "GameObject/Components/renderer-component.h"
-
+#include <Physics/collision.h>
 #include <unordered_map>
+#include <Graphics/sprite.h>
 
 #define TEXT_BUFFER_SIZE 128
 
@@ -58,6 +58,7 @@ namespace Copium
 			Math::Vec2 offset;
 			HorizontalAlignment hAlignment{HorizontalAlignment::Center};
 			VerticalAlignment vAlignment{VerticalAlignment::Center};
+			glm::fvec4 color{255};
 	};
 
 	class ButtonComponent final: public Component
@@ -98,7 +99,7 @@ namespace Copium
 
 			*/
 			/*******************************************************************************/
-			void inspector_view() {};
+			void inspector_view();
 
 			ButtonComponent& operator=(const ButtonComponent& rhs);
 
@@ -107,6 +108,8 @@ namespace Copium
 			void deserialize(rapidjson::Value& _value)
 			{
 			}
+
+			const AABB& getRelativeBounds() const;
 
 			void serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 			{
@@ -118,10 +121,17 @@ namespace Copium
 		private:
 			static const ButtonComponent* hoveredBtn;
 			std::unordered_map<ButtonState, ButtonCallback> mapStateCallbacks;
-			Math::Vec2 min;
-			Math::Vec2 max;
+			AABB bounds;
+			void updateBounds();
+			AABB relativeBounds;
 			ButtonState state;
 			ButtonState getInternalState() const;
+			glm::fvec4 normalColor;
+			glm::fvec4 hoverColor;
+			glm::fvec4 clickedColor;
+			Component* targetGraphic;
+			//friend Text;
+			//friend ImageComponent;
 
 	};
 
@@ -226,7 +236,6 @@ namespace Copium
 			std::string fontName;
 			Font* font;
 			float fSize;
-			glm::fvec4 color;
 		//Display a text
 	};
 

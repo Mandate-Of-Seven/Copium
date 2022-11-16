@@ -29,7 +29,6 @@ public class CombatMovement : CopiumScript
     // Update is called once per frame
     void Update()
     {
-        Console.WriteLine("HELLOWRODL");
         if (Input.GetKey(KeyCode.Escape))
         {
             Application.Quit();

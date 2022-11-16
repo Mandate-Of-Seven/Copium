@@ -341,6 +341,13 @@ void GameObject::inspectorView()
             ImGui::PushID(index);
             if (ImGui::CollapsingHeader(componentName.c_str(), nodeFlags))
             {
+                if (ImGui::BeginDragDropSource())
+                {
+                    static void* payload;
+                    payload = component;
+                    ImGui::SetDragDropPayload(componentName.c_str(), payload, sizeof(void*));
+                    ImGui::EndDragDropSource();
+                }
                 component->inspector_view();
                 if (ImGui::Button("Delete", ImVec2(ImGui::GetWindowSize().x, 0.f)))
                 {

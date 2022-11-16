@@ -64,15 +64,9 @@ namespace Copium
 				if (pScene != sceneManager.get_current_scene())
 					return;
 				pScript->LateUpdate();
-			}
-			timeElasped += MyFrameRateController.getDt();
-			if (timeElasped >= 1 / (double)MyFrameRateController.getFPS())
-			{
-				timeElasped -= 1 / (double)MyFrameRateController.getFPS();
-				for (Script* pScript : pScripts)
+
+				for (size_t i = 0; i < MyFrameRateController.getSteps(); ++i)
 				{
-					if (!pScript)
-						continue;
 					pScript->FixedUpdate();
 				}
 			}

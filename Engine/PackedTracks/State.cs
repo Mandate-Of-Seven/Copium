@@ -6,7 +6,7 @@ using System;
 public class State : CopiumScript
 {
     
-    virtual void enter();
-    virtual void update();
-    virtual void exit();
+/*    virtual void enter() { }
+    virtual void update() { }
+    virtual void exit() { }*/
 }
