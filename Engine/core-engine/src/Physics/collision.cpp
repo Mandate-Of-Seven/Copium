@@ -271,6 +271,94 @@ namespace Copium
 		}
 		return 1;
 	}
+	bool collision_pointcircle(const Math::Vec2& point, const Circle& circle)
+	{
+		float distx = point.x - circle.centre.x;
+		float disty = point.y - circle.centre.y;
+		float distance = sqrtf((distx * distx) + (disty * disty));
+		if (distance <= circle.radius)
+		{
+			return 1;
+		}
+		return 0;
+	}
+	bool collision_circlecircle(const Circle& circle1, const Math::Vec2& vel1,
+		const Circle& circle2, const Math::Vec2& vel2, float& interTime)
+	{
+		Math::Vec2 vB = vel1 - vel2;
+		float vBmag = sqrtf(Math::vec2_dotproduct(vB, vB));
+		Math::Vec2 vBn = vB / vBmag;
+		Circle circle3;
+		circle3.centre = circle2.centre;
+		circle3.radius = circle1.radius + circle2.radius;
+		Math::Vec2 vecBC = circle1.centre - circle2.centre;
+		float m = Math::vec2_dotproduct(vecBC, vBn);
+		float distSqr = Math::vec2_squaredistance(circle1.centre, circle2.centre) - (m * m);
+		float radSqr = circle3.radius * circle3.radius;
+		if (m < 0 && Math::vec2_distance(circle1.centre, circle2.centre) > circle3.radius)
+		{
+			return 0;
+		}
+		if (distSqr >= radSqr)
+		{
+			return 0;
+		}
+		float s = sqrtf(radSqr - distSqr);
+		interTime = (m - s) / vBmag;
+		if (interTime > 0 && interTime < 1)
+		{
+			return 1;
+		}
+		return 0;
+	}
+
+	bool collision_circlesquare(const Circle& circle1, const Math::Vec2& vel1,
+		const AABB& aabb, const Math::Vec2& vel2)
+	{
+		Math::Vec2 pointtoCheck;
+		pointtoCheck = Math::Vec2(circle1.centre.x, circle1.centre.y);
+
+		Math::Vec2 vB = vel1 - vel2;
+		Math::Vec2 pointtoCheckVel;
+		pointtoCheckVel = Math::Vec2(circle1.centre.x + vB.x, circle1.centre.y + vB.y);
+
+		Circle circleTleft;
+		circleTleft.centre = Math::Vec2(aabb.min.x, aabb.max.y);
+		circleTleft.radius = circle1.radius;
+
+		Circle circleTright;
+		circleTright.centre = Math::Vec2(aabb.max.x, aabb.max.y);
+		circleTright.radius = circle1.radius;
+
+		Circle circleBleft;
+		circleBleft.centre = Math::Vec2(aabb.min.x, aabb.min.y);
+		circleBleft.radius = circle1.radius;
+
+		Circle circleBright;
+		circleBright.centre = Math::Vec2(aabb.max.x, aabb.min.y);
+		circleBright.radius = circle1.radius;
+
+		AABB vert;
+		vert.min = Math::Vec2(aabb.min.x, aabb.min.y - circle1.radius);
+		vert.max = Math::Vec2(aabb.max.x, aabb.max.y + circle1.radius);
+		AABB hor;
+		hor.min = Math::Vec2(aabb.min.x - circle1.radius, aabb.min.y);
+		hor.max = Math::Vec2(aabb.max.x + circle1.radius, aabb.max.y);
+
+		if (static_collision_pointrect(pointtoCheck, vert) == 0 && static_collision_pointrect(pointtoCheck, hor) == 0
+			&& collision_pointcircle(pointtoCheck, circleTleft) == 0 && collision_pointcircle(pointtoCheck, circleTright) == 0
+			&& collision_pointcircle(pointtoCheck, circleBleft) == 0 && collision_pointcircle(pointtoCheck, circleBright) == 0)
+		{
+			if (static_collision_pointrect(pointtoCheckVel, vert) == 0 && static_collision_pointrect(pointtoCheckVel, hor) == 0
+				&& collision_pointcircle(pointtoCheckVel, circleTleft) == 0 && collision_pointcircle(pointtoCheckVel, circleTright) == 0
+				&& collision_pointcircle(pointtoCheckVel, circleBleft) == 0 && collision_pointcircle(pointtoCheckVel, circleBright) == 0)
+			{
+				return 0;
+			}
+		}
+		
+		return 1;
+	}
 
 	
 	collisionDirection check_collision_direction(const AABB& aabb1, const Math::Vec2& vel1,
