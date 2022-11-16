@@ -26,7 +26,7 @@
                 },
                 {
                     "Type": "SpriteRenderer",
-                    "Sprite ID": 20,
+                    "Sprite ID": 0,
                     "Sprite Name": "PlayerHead.png",
                     "Color": {
                         "X": 1.0,
@@ -90,7 +90,7 @@
                 },
                 {
                     "Type": "SpriteRenderer",
-                    "Sprite ID": 16,
+                    "Sprite ID": 0,
                     "Sprite Name": "EnemyHead.png",
                     "Color": {
                         "X": 1.0,
@@ -154,7 +154,7 @@
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
-                        "Y": 2.0,
+                        "Y": 1.75,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -174,7 +174,7 @@
                     "H_Align": 1,
                     "V_Align": 1,
                     "Content": "Paused",
-                    "Font Size": 0.75,
+                    "Font Size": 0.5,
                     "r": 1.0,
                     "g": 0.9998999834060669,
                     "b": 0.9998999834060669,

@@ -18,6 +18,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <limits>
 #include "Windows/windows-system.h"
 #include <Physics/collision.h>
+#include <Debugging/frame-rate-controller.h>
 #include <GameObject/Components/transform-component.h>
 
 namespace Copium
@@ -31,7 +32,7 @@ namespace Copium
 			return 0;
 		//Initialize values to check for collision between moving rectangles
 		Math::Vec2 vB;
-		double tFirst = 0, tLast = Copium::WindowsSystem::Instance()->get_delta_time();
+		double tFirst = 0, tLast = MyFrameRateController.getDt();
 		vB.x = vel2.x - vel1.x;
 		vB.y = vel2.y - vel1.y;
 		//Object b is moving away from object a on the x axis
@@ -156,7 +157,7 @@ namespace Copium
 			(point.y < aabb2.min.y) || (point.y > aabb2.max.y))
 		{
 			float tFirst = 0;
-			float tLast = (float)Copium::WindowsSystem::Instance()->get_delta_time();
+			float tLast = (float)MyFrameRateController.getDt();
 
 			//Object b is moving away from object a on the x axis
 			if (vel2.x < 0)
@@ -283,7 +284,7 @@ namespace Copium
 		float yEntry = 0.0f;
 		float yExit = 0.0f;
 		//double tFirst = 0;
-		//double tLast = Copium::WindowsSystem::Instance()->get_delta_time();
+		//double tLast = Copium::MyFrameRateController.deltaTime;
 
 		if (vB.x < 0)
 		{

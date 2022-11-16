@@ -158,9 +158,6 @@ namespace Copium
 
 		const bool& get_window_focused() const { return windowFocused; }
 
-		double const get_fps() { return fps; }
-		double const get_delta_time() { return delta_time; }
-
 		GLFWwindow* get_window() { return window; }
 
 		static bool load_config(std::string& _filename, GLint& _w, GLint& _h);
@@ -172,9 +169,6 @@ namespace Copium
 		static int windowWidth;
 		static int windowHeight;
 		static bool windowFocused;
-
-		double fps = 0; // The frames per second of the engine
-		double delta_time = 0; // Time taken to complete most recent engine loop
 
 		GLFWwindow* window = nullptr;
 	};

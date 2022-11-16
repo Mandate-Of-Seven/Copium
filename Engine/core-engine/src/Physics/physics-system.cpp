@@ -11,7 +11,7 @@
 All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
-#include "Windows/windows-system.h"
+#include <Debugging/frame-rate-controller.h>
 #include "Graphics/graphics-system.h"
 #include "Physics/physics-system.h"
 #include <GameObject/Components/collider-components.h>
@@ -62,8 +62,6 @@ namespace Copium
 				}
 			//}
 		}
-
-
 	}
 
 
@@ -74,7 +72,7 @@ namespace Copium
 
 	void PhysicsSystem::update_pos()
 	{
-		float dt = float(WindowsSystem::Instance()->get_delta_time());
+		float dt = float(FrameRateController::Instance()->getDt());
 		GameObject* gameobj;
 		Math::Vec2 velocity;
 		Math::Vec2 acceleration;

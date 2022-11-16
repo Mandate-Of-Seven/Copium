@@ -16,6 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 *****************************************************************************************/
 #include "pch.h"
 #include "Windows/windows-system.h"
+#include <Debugging/frame-rate-controller.h>
 
 #include "Graphics/graphics-system.h"
 #include "Graphics/spritesheet.h"
@@ -83,7 +84,7 @@ namespace Copium
 
 	void GraphicsSystem::update()
 	{
-		GLfloat dt = (GLfloat) WindowsSystem::Instance()->get_delta_time();
+		GLfloat dt = (GLfloat) MyFrameRateController.getDt();
 		movement_x = movement_y = 0;
 
 		glClearColor(1.f, 1.f, 1.f, 1.f);
@@ -492,7 +493,7 @@ namespace Copium
 		//Font::getFont("corbel")->draw_text("Corbel Font", position, color, 0.4f + size_x, 0);
 		float red = 0.f, green = 1.f;
 		static float colorTimer = 0.f;
-		colorTimer += (float) WindowsSystem::Instance()->get_delta_time();
+		colorTimer += (float) MyFrameRateController.getDt();
 		static bool switcher = false;
 
 		if (colorTimer >= 1.f && switcher)
@@ -532,7 +533,7 @@ namespace Copium
 			static GLuint animIndex = 0;
 			GLuint indexSize = assets->get_spritesheets()[animID].get_size() - 1;
 
-			GLfloat dt = (GLfloat) WindowsSystem::Instance()->get_delta_time();
+			GLfloat dt = (GLfloat) MyFrameRateController.deltaTime;
 			static float animTimer = 0.f;
 			animTimer += dt;
 			if (animTimer > 0.01f && toggleAnimation)

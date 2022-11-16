@@ -16,12 +16,23 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 ******************************************************************************************/
 #include "pch.h"
 #include "Debugging/frame-rate-controller.h"
-#include "Windows/windows-system.h"
+#include <GLFW/glfw3.h>
+#ifdef _WIN32
+#include <Windows.h>
+#else
+#include <unistd.h>
+#endif
 
 namespace Copium {
-	FrameRateController::FrameRateController(double _maxFPS) :
-		frameCount{0}, maxFrameRate{ _maxFPS }, frameRate{ _maxFPS }, minFrameTime{ 1 / _maxFPS },
-		frameStart{ 0.0 }, frameEnd{ 0.0 }, dt{ 0.0 }, accumulatedTime{ 0.0 }, stepCount{ 0 } {}
+	void FrameRateController::init(double _maxFPS)
+	{
+		frameCount = 0;
+		maxFrameRate = _maxFPS; 
+		frameRate = _maxFPS;
+		fixedDeltaTime = 1 / _maxFPS;
+		deltaTime = 0.0;
+		accumulatedTime = 0.0;
+	}
 
 	/*******************************************************************************
 	/*!
@@ -40,33 +51,23 @@ namespace Copium {
 
 	}
 
-	void FrameRateController::update()
-	{
-		stepCount = 0;
-		frameEnd = glfwGetTime();
-		dt = frameEnd - frameStart;
-		// For the next game loop calculation
-		frameStart = glfwGetTime();
-
-		accumulatedTime += dt;
-
-		while (accumulatedTime >= minFrameTime)
-		{
-			accumulatedTime -= minFrameTime;
-			++stepCount;
-		}
-
-		//std::cout << "StepCount: " << stepCount << std::endl;
-
-
-	}
-
 	void FrameRateController::end()
 	{
-		//frameEnd = glfwGetTime();
-		WindowsSystem::Instance()->update_time(0.16);
-		frameRate = WindowsSystem::Instance()->get_fps();
-		++frameCount;
+		steps = 0;
+		frameEnd = glfwGetTime();
+		deltaTime = frameEnd - frameStart;
+		if (deltaTime < fixedDeltaTime)
+		{
+			Sleep(fixedDeltaTime - deltaTime);
+			deltaTime = fixedDeltaTime;
+			accumulatedTime += deltaTime;
+		}
+		while (accumulatedTime > fixedDeltaTime)
+		{
+			accumulatedTime -= fixedDeltaTime;
+			++steps;
+		}
+		frameRate = 1/deltaTime;
 	}
 
 }

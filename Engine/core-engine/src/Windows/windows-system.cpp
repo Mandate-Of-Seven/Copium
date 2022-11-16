@@ -19,6 +19,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include "Windows/windows-system.h"
 #include "Files/file-system.h"
+#include <Debugging/frame-rate-controller.h>
 
 namespace Copium
 {
@@ -112,8 +113,9 @@ namespace Copium
     void WindowsSystem::draw()
     {
         // Printing to Windows Title Bar
+        PRINT("FRAME RATE: " << MyFrameRateController.getFPS());
         std::stringstream sstr;
-        sstr << std::fixed << std::setprecision(2) << title << " | FPS: " << fps 
+        sstr << std::fixed << std::setprecision(2) << title << " | FPS: " << MyFrameRateController.getFPS()
             << " | Resolution: " << windowWidth << " by " << windowHeight;
         glfwSetWindowTitle(window, sstr.str().c_str());
 
@@ -123,35 +125,6 @@ namespace Copium
     void WindowsSystem::exit()
     {
         //glfwTerminate();
-    }
-
-    // Updates the system time
-    void WindowsSystem::update_time(double _fpsInterval)
-    {
-        // get elapsed time (in seconds) between previous and current frames
-        static double prev_time = glfwGetTime();
-        double curr_time = glfwGetTime();
-        delta_time = curr_time - prev_time;
-        prev_time = curr_time;
-
-        // fps calculations
-        static double count = 0.0; // number of game loop iterations
-        static double start_time = glfwGetTime();
-        // get elapsed time since very beginning (in seconds) ...
-        double elapsed_time = curr_time - start_time;
-
-        ++count;
-
-        // update fps at least every 10 seconds ...
-        _fpsInterval = (_fpsInterval < 0.0) ? 0.0 : _fpsInterval;
-        _fpsInterval = (_fpsInterval > 10.0) ? 10.0 : _fpsInterval;
-        if (elapsed_time > _fpsInterval)
-        {
-            fps = count / elapsed_time;
-            start_time = curr_time;
-            count = 0.0;
-            //std::cout << "FPS:" << fps << std::endl;
-        }
     }
 
     void WindowsSystem::error_callback(int _error, char const* _description)

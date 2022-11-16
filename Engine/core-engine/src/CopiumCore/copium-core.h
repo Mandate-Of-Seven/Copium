@@ -29,6 +29,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Debugging/logging-system.h"
 #include "Audio/sound-system.h"
 #include "Scripting/logic-system.h"
+#include <Debugging/frame-rate-controller.h>
 //#include "string.h"
 
 namespace Copium
@@ -127,7 +128,7 @@ namespace Copium
 				}
 				else
 				{
-					performanceCounter += (float)Copium::WindowsSystem::Instance()->get_delta_time();
+					performanceCounter += (float)MyFrameRateController.getDt();
 				}
 			}
 		}

@@ -13,6 +13,9 @@
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
+
+#define MyFrameRateController (*Copium::FrameRateController::Instance())
+
 #ifndef FRAMERATECONTROLLER_H
 #define FRAMERATECONTROLLER_H
 #include "CopiumCore/system-interface.h"
@@ -21,9 +24,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium {
 	
-	class FrameRateController {
+	class FrameRateController : public Singleton<FrameRateController>{
 	public:
-		FrameRateController(double _maxFPS = 60.0);
+		void init(double _maxFPS = 60.0);
 		/*******************************************************************************
 		/*!
 		*
@@ -40,18 +43,6 @@ namespace Copium {
 		/*!
 		*
 		\brief
-			Updates the frame rate controller. Calculates the amount of steps required for current game loop's calculations
-			Note: this function should be called BEFORE updating the systems
-
-		\return
-			void
-		*/
-		/*******************************************************************************/
-		void update();
-		/*******************************************************************************
-		/*!
-		*
-		\brief
 			End the frame rate controller for the frame. 
 			Sets the frameEnd time and increments the frame count.
 			Note: this function should be called at the end of each game loop
@@ -62,14 +53,19 @@ namespace Copium {
 		/*******************************************************************************/
 		void end();
 	private:
-		int frameCount;
-		double frameStart, frameEnd;
-		double minFrameTime;
-		double maxFrameRate;
-		double frameRate;
-		double dt;
-		double accumulatedTime;
-		int stepCount;
+		double frameCount {0};
+		double frameStart {0}, frameEnd {0};
+		double deltaTime {0};
+		double fixedDeltaTime {0};
+		double frameRate {0};
+		double maxFrameRate {0};
+		double accumulatedTime {0};
+		size_t steps{0};
+	public:
+		double getDt() const { return deltaTime; }
+		double getFixedDt() const{ return fixedDeltaTime; }
+		double getFPS() const { return frameRate; }
+		size_t getSteps() const{ return steps; }
 	};
 }
 
