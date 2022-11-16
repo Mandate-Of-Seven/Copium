@@ -23,8 +23,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 ****/
 #include <pch.h>
 #include "SceneManager/sm.h"
-#include "../Graphics/graphics-system.h"
-#include "../Windows/windows-system.h"
+#include "Graphics/graphics-system.h"
+#include "Windows/windows-system.h"
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/prettywriter.h>
 #include <Messaging/message-system.h>
@@ -125,7 +125,7 @@ namespace Copium {
 
 	bool NewSceneManager::load_scene(const std::string& _filepath)
 	{
-		std::cout << "load_scene\n";
+		std::cout << "loading " << _filepath << std::endl;
 
 		if (_filepath.find(".scene") == std::string::npos)
 		{
@@ -252,7 +252,7 @@ namespace Copium {
 			return false;
 		}
 
-		currentScene->set_name(storageScene->get_name() + "CLONE");
+		currentScene->set_name(storageScene->get_name() + "\tPREVIEW");
 
 		// Copy game object data
 		for (size_t i{ 0 }; i < storageScene->get_gameobjcount(); ++i)

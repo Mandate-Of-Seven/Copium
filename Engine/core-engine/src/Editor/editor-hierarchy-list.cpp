@@ -20,14 +20,17 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 namespace Window::Hierarchy
 {
 	Copium::Scene * currentScene = nullptr;
-	bool isOpen;
+	bool isOpen, sceneSelected;
 	Copium::GameObjectID selectedID;
+
 
 	void init()
 	{
 		isOpen = true;
+		sceneSelected = false;
 		if (Copium::NewSceneManager::Instance())
 			currentScene = Copium::NewSceneManager::Instance()->get_current_scene();
+
 	}
 
 	void update()
@@ -136,19 +139,21 @@ namespace Window::Hierarchy
 			if (!currentScene->get_gameobjcount())
 				rootFlags |= ImGuiTreeNodeFlags_Leaf;
 
-			// Display scene name as the rootiest node
-			if (ImGui::TreeNodeEx(currentScene->get_name().c_str(), rootFlags))
-			{
+			
+			size_t offset = currentScene->get_filename().find_last_of("/\\");
+			size_t endOffset = currentScene->get_filename().find(".scene")-1;
+			std::string sceneName = currentScene->get_filename().substr(offset + 1, endOffset-offset);
 
-				if (ImGui::IsItemClicked())
-				{
-					//display current scene details
-				}
+			// Display scene name as the rootiest node
+			if (ImGui::TreeNodeEx(sceneName.c_str(), rootFlags))
+			{
 
 				bool isSelected = false;
 				for (size_t i{ 0 }; i < roots.size(); ++i)
 				{
 					isSelected = display_gameobject_advanced(*roots[i], selectedID);
+					if (isSelected)
+						sceneSelected = false;
 				}	
 
 				ImGui::TreePop();
@@ -210,13 +215,13 @@ namespace Window::Hierarchy
 		if (!ImGui::TreeNodeEx(_go.get_name().c_str(), baseFlags))
 			return false;
 
+
 		if (ImGui::IsItemClicked())
 		{
 			std::cout << _go.get_name() << " is selected\n";
 			_selected = _go.id;
 			isSelected = true;
 			Copium::NewSceneManager::Instance()->set_selected_gameobject(&_go);
-
 
 		}
 		// If game object has children, recursively display children

@@ -347,7 +347,7 @@ namespace Copium
 					Copium::AssetsSystem* assets = Copium::AssetsSystem::Instance();
 					for (int i = 0; i < assets->get_textures().size(); i++)
 					{
-						if (!assets->get_textures()[i].get_file_path().compare(str))
+						if (!assets->get_texture(i)->get_file_path().compare(str))
 						{
 							spriteID = i + 1;
 						}

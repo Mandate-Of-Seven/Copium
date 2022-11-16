@@ -18,6 +18,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "pch.h"
 
 #include "Windows/windows-system.h"
+#include "Files/file-system.h"
 
 namespace Copium
 {
@@ -74,6 +75,7 @@ namespace Copium
 
         glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
         glfwSetWindowFocusCallback(window, window_focus_callback);
+        glfwSetDropCallback(window, window_drop_callback);
 
         // this is the default setting ...
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -152,7 +154,7 @@ namespace Copium
         }
     }
 
-    void WindowsSystem::error_callback(int _error, char const * _description)
+    void WindowsSystem::error_callback(int _error, char const* _description)
     {
 #ifdef _DEBUG
         std::cerr << "GLFW error: " << _description << std::endl;
@@ -160,7 +162,7 @@ namespace Copium
         (void) _error, _description;
     }
 
-    void WindowsSystem::framebuffer_size_callback(GLFWwindow * _window, int _width, int _height)
+    void WindowsSystem::framebuffer_size_callback(GLFWwindow* _window, int _width, int _height)
     {
 #ifdef _DEBUG
         PRINT("Framebuffer size getting called!!!");
@@ -182,6 +184,16 @@ namespace Copium
         PRINT("Window focus getting called!!!");
 #endif
         windowFocused = (bool) _focused;
+        (void) _window;
+    }
+
+    void WindowsSystem::window_drop_callback(GLFWwindow* _window, int _pathCount, const char* _paths[])
+    {
+#ifdef _DEBUG
+        PRINT("Window drop getting called!!!");
+#endif        
+        FileSystem::Instance()->accept_dropped_files(_pathCount, _paths);
+
         (void) _window;
     }
 

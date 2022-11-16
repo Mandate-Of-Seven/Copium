@@ -20,6 +20,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Graphics/vertex-types.h"
 
+#include "Graphics/spritesheet.h"
+#include "Graphics/sprite.h"
+
 namespace Copium 
 {
 

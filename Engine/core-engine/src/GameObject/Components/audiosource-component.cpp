@@ -11,6 +11,12 @@ namespace Copium
 		PRINT("Renderer Component constructed");
 	}
 
+	AudioSource& AudioSource::operator=(const AudioSource& rhs)
+	{
+		alias = rhs.alias;
+		return *this;
+	}
+
 	void AudioSource::deserialize(rapidjson::Value& _value)
 	{
 		if (_value.HasMember("Alias"))

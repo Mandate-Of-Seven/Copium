@@ -62,6 +62,16 @@ void init_statemanager(EngineState _initialState);
 /*******************************************************************************/
 void change_enginestate(EngineState _nextState);
 
+/*******************************************************************************
+/*!
+*
+\brief
+	Specifically quit the engine
+
+\return
+	void
+*/
+/*******************************************************************************/
 void quit_engine();
 
 #endif
