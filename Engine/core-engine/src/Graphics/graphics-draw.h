@@ -74,6 +74,8 @@ namespace Copium
 		void enable(DRAW _draw) { drawMode[_draw] = true; }
 		void disable(DRAW _draw){ drawMode[_draw] = false; }
 
+		const bool& get_draw_mode(DRAW _draw) const { return drawMode[_draw]; }
+
 	private:
 		bool drawMode[NUM_DRAW]{false};
 	};

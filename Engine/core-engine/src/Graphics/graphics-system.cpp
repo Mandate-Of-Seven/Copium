@@ -209,7 +209,10 @@ namespace Copium
 			rotate += dt * 75;
 		}*/
 
-		batch_render();
+		if (draw.get_draw_mode(DRAW::EDITOR))
+			batch_render_editor();
+		else
+			batch_render_game();
 	}
 
 	void GraphicsSystem::exit()
@@ -262,7 +265,7 @@ namespace Copium
 	}
 	
 	// Renders the objects in the engine in batches
-	void GraphicsSystem::batch_render()
+	void GraphicsSystem::batch_render_editor()
 	{
 		// Binds the framebuffer
 		framebuffer.bind();
@@ -278,5 +281,17 @@ namespace Copium
 		// Unbind the framebuffer to display renderable
 		// onto the image
 		framebuffer.unbind();
+	}
+
+	void GraphicsSystem::batch_render_game()
+	{
+		//glEnable(GL_DEPTH_TEST);
+
+		// Clear the screen
+		glClearColor(0.278f, 0.278f, 0.278f, 1.f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		draw.update();
 	}
 }

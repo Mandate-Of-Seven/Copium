@@ -34,6 +34,12 @@ namespace Copium
 		glm::vec4 color;
 	};
 
+	struct CircleVertex
+	{
+		glm::vec3 pos;
+		glm::vec4 color;
+	};
+
 	struct TextVertex
 	{
 		glm::vec3 pos;		// Position of vertex

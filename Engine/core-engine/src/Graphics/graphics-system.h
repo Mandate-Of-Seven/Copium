@@ -30,12 +30,14 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 namespace Copium
 {
 	// Global variables
-	static const GLuint maxQuadCount = 1000; // Number of sprites per batch
-	static const GLuint maxLineCount = 1000; // Number of lines per batch
-	static const GLuint maxTextCount = 1000; // Number of text per batch
+	static const GLuint maxQuadCount = 1000;	// Number of sprites per batch
+	static const GLuint maxLineCount = 1000;	// Number of lines per batch
+	static const GLuint maxCircleCount = 500;	// Number of circles per batch
+	static const GLuint maxTextCount = 1000;	// Number of text per batch
 	static const GLuint maxVertexCount = maxQuadCount * 4;
 	static const GLuint maxIndexCount = maxQuadCount * 6;
 	static const GLuint maxLineVertexCount = maxLineCount * 2;
+	static const GLuint maxCircleVertexCount = maxCircleCount * 2;
 	static const GLuint maxTextVertexCount = maxTextCount * 4;
 	static const GLuint maxTextures = 256;
 
@@ -126,10 +128,18 @@ namespace Copium
 		/***************************************************************************/
 		/*!
 		\brief
-			Renders the objects in the engine in batches
+			Renders the objects in the editor in batches
 		*/
 		/***************************************************************************/
-		void batch_render();
+		void batch_render_editor();
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Renders the objects in the game in batches
+		*/
+		/***************************************************************************/
+		void batch_render_game();
 
 #pragma endregion MemberFunctions
 #pragma region DataMembers

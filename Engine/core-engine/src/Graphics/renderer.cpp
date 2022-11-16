@@ -30,11 +30,14 @@ namespace Copium
 	{
 		graphics = GraphicsSystem::Instance();
 
+		// Setup Quad Vertex Array Object
+		setup_quad_vao();
+
 		// Setup Line Vertex Array Object
 		setup_line_vao();
 
-		// Setup Quad Vertex Array Object
-		setup_quad_vao();
+		// Setup Circle Vertex Array Object
+		setup_circle_vao();
 
 		// Setup Text Vertex Array Object
 		setup_text_vao();
@@ -143,6 +146,27 @@ namespace Copium
 		glLineWidth(1.f);
 	}
 
+	// Setup the circle vertex array object
+	void Renderer::setup_circle_vao()
+	{
+		// Vertex Array Object
+		glCreateVertexArrays(1, &circleVertexArrayID);
+
+		// Line Buffer Object
+		glCreateBuffers(1, &circleVertexBufferID);
+		glNamedBufferStorage(circleVertexBufferID, maxVertexCount * sizeof(CircleVertex), nullptr, GL_DYNAMIC_STORAGE_BIT);
+
+		glEnableVertexArrayAttrib(circleVertexArrayID, 0);
+		glVertexArrayAttribFormat(circleVertexArrayID, 0, 3, GL_FLOAT, GL_FALSE, offsetof(CircleVertex, pos));
+		glVertexArrayAttribBinding(circleVertexArrayID, 0, 2);
+
+		glEnableVertexArrayAttrib(circleVertexArrayID, 1);
+		glVertexArrayAttribFormat(circleVertexArrayID, 1, 4, GL_FLOAT, GL_FALSE, offsetof(CircleVertex, color));
+		glVertexArrayAttribBinding(circleVertexArrayID, 1, 2);
+
+		glLineWidth(1.f);
+	}
+
 	void Renderer::setup_text_vao()
 	{
 		textBuffer = new TextVertex[maxVertexCount];
@@ -156,19 +180,19 @@ namespace Copium
 
 		glEnableVertexArrayAttrib(textVertexArrayID, 0);
 		glVertexArrayAttribFormat(textVertexArrayID, 0, 3, GL_FLOAT, GL_FALSE, offsetof(TextVertex, pos));
-		glVertexArrayAttribBinding(textVertexArrayID, 0, 2);
+		glVertexArrayAttribBinding(textVertexArrayID, 0, 3);
 
 		glEnableVertexArrayAttrib(textVertexArrayID, 1);
 		glVertexArrayAttribFormat(textVertexArrayID, 1, 4, GL_FLOAT, GL_FALSE, offsetof(TextVertex, color));
-		glVertexArrayAttribBinding(textVertexArrayID, 1, 2);
+		glVertexArrayAttribBinding(textVertexArrayID, 1, 3);
 
 		glEnableVertexArrayAttrib(textVertexArrayID, 2);
 		glVertexArrayAttribFormat(textVertexArrayID, 2, 2, GL_FLOAT, GL_FALSE, offsetof(TextVertex, textCoord));
-		glVertexArrayAttribBinding(textVertexArrayID, 2, 2);
+		glVertexArrayAttribBinding(textVertexArrayID, 2, 3);
 
 		/*glEnableVertexArrayAttrib(textVertexArrayID, 3);
 		glVertexArrayAttribFormat(textVertexArrayID, 3, 1, GL_FLOAT, GL_FALSE, offsetof(TextVertex, fontID));
-		glVertexArrayAttribBinding(textVertexArrayID, 3, 2);*/
+		glVertexArrayAttribBinding(textVertexArrayID, 3, 3);*/
 
 		// Setup default text texture coordinates
 		textTextCoord[0] = { 0.f, 0.f };
@@ -641,6 +665,35 @@ namespace Copium
 		lineBufferPtr++;
 
 		lineVertexCount += 2;
+	}
+
+	void Renderer::draw_circle(const glm::vec3& _position, const glm::vec4& _color, GLfloat _radius)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		GraphicsSystem* graphics = GraphicsSystem::Instance();
+		graphics->get_shader_program()[LINE_SHADER].Use();
+
+		GLuint uProjection = glGetUniformLocation(
+			graphics->get_shader_program()[LINE_SHADER].GetHandle(), "uViewProjection");
+
+		glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_projection();
+		glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
+
+		glBindVertexArray(circleVertexArrayID);
+
+		// Update content of VBO memory
+		//glNamedBufferSubData(circleVertexBufferID, 0, sizeof(vertices), vertices);
+		//glVertexArrayVertexBuffer(circleVertexArrayID, 2, circleVertexBufferID, 0, sizeof(TextVertex));
+
+		glDrawArrays(GL_LINE_LOOP, 0, 6);
+
+		glBindVertexArray(0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		graphics->get_shader_program()[TEXT_SHADER].UnUse();
+
+		glDisable(GL_BLEND);
 	}
 
 	void Renderer::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float _scale, GLuint _fontID)
