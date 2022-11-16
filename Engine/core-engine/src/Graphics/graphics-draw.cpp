@@ -209,7 +209,7 @@ namespace Copium
 					renderer->draw_line(pos3_1, pos0_1, color);
 				}
 
-				for (Component* component : gameObject->getComponents<ButtonComponent>())
+				for (Component* component : gameObject->getComponents<Button>())
 				{
 					Transform& t = gameObject->transform;
 
@@ -308,7 +308,7 @@ namespace Copium
 					renderer->draw_line(pos3_1, pos0_1, color);
 				}
 
-				for (Component* component : gameObject->getComponents<ButtonComponent>())
+				for (Component* component : gameObject->getComponents<Button>())
 				{
 					Transform& t = gameObject->transform;
 

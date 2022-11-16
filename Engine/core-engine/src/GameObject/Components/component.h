@@ -53,7 +53,7 @@ static std::map<ComponentType, std::string> MAP_COMPONENT_TYPE_NAME
     {ComponentType::Rigidbody2D,"Rigidbody2D"},
     {ComponentType::SpriteRenderer,"SpriteRenderer"},
     {ComponentType::Script,"Script"},
-    {ComponentType::Button,"ButtonComponent"},
+    {ComponentType::Button,"Button"},
     {ComponentType::Text,"Text"},
     {ComponentType::Image,"ImageComponent"},
     {ComponentType::AudioSource,"AudioSource"}

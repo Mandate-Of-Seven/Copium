@@ -51,6 +51,9 @@ namespace Copium
 		Bottom,
 	};
 
+	class Text;
+	class Image;
+
 	//Runs after InputSystem
 	class IUIComponent
 	{
@@ -58,17 +61,18 @@ namespace Copium
 			Math::Vec2 offset;
 			HorizontalAlignment hAlignment{HorizontalAlignment::Center};
 			VerticalAlignment vAlignment{VerticalAlignment::Center};
-			glm::fvec4 color{255};
+			glm::fvec4 color{1.f};
+			glm::fvec4 layeredColor{ 1.f };
 	};
 
-	class ButtonComponent final: public Component
+	class Button final: public Component
 	{
 		//A screen space box collider
 		public:
 			/**************************************************************************/
 			/*!
 				\brief
-					Constructs a ButtonComponent
+					Constructs a Button
 
 				\param gameObj
 					Owner of this
@@ -78,7 +82,7 @@ namespace Copium
 					Min of bounding box
 			*/
 			/**************************************************************************/
-			ButtonComponent(GameObject& _gameObj,Math::Vec2 _min = {-0.5,-0.5}, Math::Vec2 _max = {0.5,0.5});
+			Button(GameObject& _gameObj,Math::Vec2 _min = {-0.5,-0.5}, Math::Vec2 _max = {0.5,0.5});
 
 
 			/*******************************************************************************
@@ -101,7 +105,7 @@ namespace Copium
 			/*******************************************************************************/
 			void inspector_view();
 
-			ButtonComponent& operator=(const ButtonComponent& rhs);
+			Button& operator=(const Button& rhs);
 
 			Component* clone(GameObject& _gameObj) const;
 
@@ -119,7 +123,7 @@ namespace Copium
 				_value.AddMember("Type", type, _doc.GetAllocator());
 			}
 		private:
-			static const ButtonComponent* hoveredBtn;
+			static const Button* hoveredBtn;
 			std::unordered_map<ButtonState, ButtonCallback> mapStateCallbacks;
 			AABB bounds;
 			void updateBounds();
@@ -129,10 +133,11 @@ namespace Copium
 			glm::fvec4 normalColor;
 			glm::fvec4 hoverColor;
 			glm::fvec4 clickedColor;
-			Component* targetGraphic;
-			//friend Text;
-			//friend ImageComponent;
-
+			Text* targetGraphic;
+			ButtonState previousState{ButtonState::None};
+			glm::fvec4 previousColor;
+			float timer{0};
+			float fadeDuration{0.1};
 	};
 
 	class Text final : public Component, IUIComponent
@@ -236,6 +241,7 @@ namespace Copium
 			std::string fontName;
 			Font* font;
 			float fSize;
+			friend class Button;
 		//Display a text
 	};
 
@@ -300,6 +306,7 @@ namespace Copium
 			}
 		protected:
 			Sprite sprite;
+			friend class Button;
 		//Display an image
 	};
 }

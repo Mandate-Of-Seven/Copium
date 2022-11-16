@@ -55,7 +55,7 @@ namespace Copium
         case ComponentType::Script:
             return &addComponent<Script>();
         case ComponentType::Button:
-            return &addComponent<ButtonComponent>();
+            return &addComponent<Button>();
         case ComponentType::Image:
             return &addComponent<ImageComponent>();
         case ComponentType::Text:
@@ -343,9 +343,9 @@ void GameObject::inspectorView()
             {
                 if (ImGui::BeginDragDropSource())
                 {
-                    static void* payload;
-                    payload = component;
-                    ImGui::SetDragDropPayload(componentName.c_str(), payload, sizeof(void*));
+                    static size_t container{};
+                    container = (size_t)component;
+                    ImGui::SetDragDropPayload(componentName.c_str(), &container, sizeof(size_t));
                     ImGui::EndDragDropSource();
                 }
                 component->inspector_view();

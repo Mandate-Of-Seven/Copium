@@ -47,12 +47,12 @@ namespace Copium
 		gameObjects = &pScene->get_gameobjectvector();
 		for (GameObject* pGameObj : *gameObjects)
 		{
-			const std::vector<ButtonComponent*>& buttonComponents{ pGameObj->getComponents<ButtonComponent>() };
-			for (ButtonComponent* pButtonComponent : buttonComponents)
+			const std::vector<Button*>& Buttons{ pGameObj->getComponents<Button>() };
+			for (Button* pButton : Buttons)
 			{
-				if (!pButtonComponent)
+				if (!pButton)
 					continue;
-				pButtonComponent->update();
+				pButton->update();
 			}
 			const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };
 			for (Script* pScript : pScripts)
