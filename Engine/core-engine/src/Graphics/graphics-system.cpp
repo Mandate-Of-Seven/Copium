@@ -48,6 +48,10 @@ namespace Copium
 	{
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 
+		// Bean: 3D Depth Testing
+		//glEnable(GL_DEPTH_TEST);
+		//glEnable(GL_STENCIL_TEST);
+
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 
 		// Initialise Sub systems
@@ -89,7 +93,7 @@ namespace Copium
 		movement_x = movement_y = 0;
 
 		glClearColor(1.f, 1.f, 1.f, 1.f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		//glClear(GL_COLOR_BUFFER_BIT);
 
 		/*if (inputSystem.is_key_held(GLFW_KEY_A))
 			movement_x -= dt;
@@ -269,12 +273,11 @@ namespace Copium
 	{
 		// Binds the framebuffer
 		framebuffer.bind();
-		//glEnable(GL_DEPTH_TEST);
 		
 		// Clear the screen
 		glClearColor(0.278f, 0.278f, 0.278f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		draw.update();
 
@@ -285,10 +288,9 @@ namespace Copium
 
 	void GraphicsSystem::batch_render_game()
 	{
-		//glEnable(GL_DEPTH_TEST);
-
 		// Clear the screen
 		glClearColor(0.278f, 0.278f, 0.278f, 1.f);
+
 		glClear(GL_COLOR_BUFFER_BIT);
 		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

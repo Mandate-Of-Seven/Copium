@@ -272,7 +272,7 @@ namespace Copium
 		glm::vec4 color = { 0.1f, 1.f, 0.1f, 1.f };
 		glm::vec2 worldNDC{ 0 };
 		glm::vec2 scale = { 0.01f, 0.01f };
-		glm::vec2 cameraPos = editorSys->get_camera()->get_position();
+		glm::vec2 cameraPos = editorSys->get_camera()->get_eye();
 		float zoom = editorSys->get_camera()->get_zoom();
 
 		worldNDC = { cameraPos.x, cameraPos.y };

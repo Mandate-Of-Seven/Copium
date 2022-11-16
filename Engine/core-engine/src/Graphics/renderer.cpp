@@ -235,12 +235,12 @@ namespace Copium
 
 	void Renderer::flush()
 	{
-
+		// Alpha blending for transparent objects
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		if (quadIndexCount)
 		{
-			// Alpha blending for transparent objects
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			
 
 			graphics->get_shader_program()[QUAD_SHADER].Use();
 			glBindVertexArray(quadVertexArrayID);
@@ -250,9 +250,9 @@ namespace Copium
 				graphics->get_shader_program()[QUAD_SHADER].GetHandle(), "uViewProjection");
 			GLuint uTransform = glGetUniformLocation(
 				graphics->get_shader_program()[QUAD_SHADER].GetHandle(), "uTransform");
-			glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_projection();
+			glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_view_proj_matrix();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
-			glm::vec3 pos = EditorSystem::Instance()->get_camera()->get_position();
+			glm::vec3 pos = EditorSystem::Instance()->get_camera()->get_eye();
 			glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
 			glUniformMatrix4fv(uTransform, 1, GL_FALSE, glm::value_ptr(transform));
 			
@@ -276,7 +276,7 @@ namespace Copium
 			graphics->set_texture_slot_index(1);
 			glBindVertexArray(0);
 			graphics->get_shader_program()[QUAD_SHADER].UnUse();
-			glDisable(GL_BLEND);
+			//glDisable(GL_BLEND);
 		}
 
 		if (lineVertexCount)
@@ -288,7 +288,7 @@ namespace Copium
 			GLuint uProjection = glGetUniformLocation(
 				graphics->get_shader_program()[LINE_SHADER].GetHandle(), "uViewProjection");
 
-			glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_projection();
+			glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_view_proj_matrix();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
 			// End of matrix assignment
@@ -304,8 +304,8 @@ namespace Copium
 		if (textVertexCount)
 		{
 			// Alpha blending for transparent objects
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			//glEnable(GL_BLEND);
+			//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			graphics->get_shader_program()[TEXT_SHADER].Use();
 			glActiveTexture(GL_TEXTURE0);
@@ -322,7 +322,7 @@ namespace Copium
 			GLuint uProjection = glGetUniformLocation(
 				graphics->get_shader_program()[TEXT_SHADER].GetHandle(), "uViewProjection");
 
-			glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_projection();
+			glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_view_proj_matrix();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
 			// End of matrix assignment
@@ -334,7 +334,7 @@ namespace Copium
 			glBindVertexArray(0);
 			glBindTexture(GL_TEXTURE_2D, 0);
 			graphics->get_shader_program()[TEXT_SHADER].UnUse();
-			glDisable(GL_BLEND);
+			//glDisable(GL_BLEND);
 		}
 		
 	}
@@ -678,7 +678,7 @@ namespace Copium
 		GLuint uProjection = glGetUniformLocation(
 			graphics->get_shader_program()[LINE_SHADER].GetHandle(), "uViewProjection");
 
-		glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_projection();
+		glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_view_proj_matrix();
 		glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
 		glBindVertexArray(circleVertexArrayID);
