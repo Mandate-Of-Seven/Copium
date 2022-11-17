@@ -321,25 +321,31 @@ void GameObject::inspectorView()
     ImGui::InputText("##gameObjName", buffer,256);
     ImGui::PopItemWidth();
     name = buffer;
-    ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
+    /*ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
+        | ImGuiTableFlags_ScrollY;*/
+    ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_Borders
         | ImGuiTableFlags_ScrollY;
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);
     ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed;
-    if (ImGui::CollapsingHeader("Transform", nodeFlags))
-    {
-        transform.inspector_view();     
-    }
     if (ImGui::BeginTable("Components", 1, tableFlags, ImVec2(0.f, ImGui::GetWindowSize().y/2.f)))
     {
         ImGui::TableNextRow();
         ImGui::TableNextColumn();
         static std::vector<ComponentID> componentsToDelete;
         componentsToDelete.clear();
+
         int index = 0;
+        ImGui::PushID(index++);
+        if (ImGui::CollapsingHeader("Transform", nodeFlags))
+        {
+            transform.inspector_view();
+        }
+        ImGui::PopID();
+
         for (Component* component : components)
         {
             const std::string& componentName{ component->Name() };
-            ImGui::PushID(index);
+            ImGui::PushID(index++);
             if (ImGui::CollapsingHeader(componentName.c_str(), nodeFlags))
             {
                 component->inspector_view();
@@ -350,7 +356,6 @@ void GameObject::inspectorView()
                 }
             }
             ImGui::PopID();
-            ++index;
             ImGui::TableNextColumn();
         }
         for (ComponentID componentId : componentsToDelete)

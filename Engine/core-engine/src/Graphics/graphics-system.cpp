@@ -49,14 +49,16 @@ namespace Copium
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 
 		// Bean: 3D Depth Testing
-		//glEnable(GL_DEPTH_TEST);
+		glEnable(GL_DEPTH_TEST);
+		glAlphaFunc(GL_GREATER, 0.5);
+		glEnable(GL_ALPHA_TEST);
 		//glEnable(GL_STENCIL_TEST);
 
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 
 		// Initialise Sub systems
 		renderer.init();
-
+ 
 		glm::vec2 size = EditorSystem::Instance()->get_scene_view()->get_dimension();
 		framebuffer.set_size((GLuint)size.x, (GLuint)size.y);
 		framebuffer.init();
@@ -91,9 +93,6 @@ namespace Copium
 	{
 		GLfloat dt = (GLfloat) WindowsSystem::Instance()->get_delta_time();
 		movement_x = movement_y = 0;
-
-		glClearColor(1.f, 1.f, 1.f, 1.f);
-		//glClear(GL_COLOR_BUFFER_BIT);
 
 		/*if (inputSystem.is_key_held(GLFW_KEY_A))
 			movement_x -= dt;
@@ -213,6 +212,10 @@ namespace Copium
 			rotate += dt * 75;
 		}*/
 
+		
+		// Clear the screen
+		glClearColor(0.278f, 0.278f, 0.278f, 1.f);
+
 		if (draw.get_draw_mode(DRAW::EDITOR))
 			batch_render_editor();
 		else
@@ -273,14 +276,11 @@ namespace Copium
 	{
 		// Binds the framebuffer
 		framebuffer.bind();
-		
-		// Clear the screen
-		glClearColor(0.278f, 0.278f, 0.278f, 1.f);
-		glClear(GL_COLOR_BUFFER_BIT);
-		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+		// Clear the screen bits
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		draw.update();
-
 		// Unbind the framebuffer to display renderable
 		// onto the image
 		framebuffer.unbind();
@@ -288,11 +288,8 @@ namespace Copium
 
 	void GraphicsSystem::batch_render_game()
 	{
-		// Clear the screen
-		glClearColor(0.278f, 0.278f, 0.278f, 1.f);
-
-		glClear(GL_COLOR_BUFFER_BIT);
-		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// Clear the screen bits
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		draw.update();
 	}

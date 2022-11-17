@@ -235,12 +235,12 @@ namespace Copium
 
 	void Renderer::flush()
 	{
-		// Alpha blending for transparent objects
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		
 		if (quadIndexCount)
 		{
-			
+			// Alpha blending for transparent objects
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			graphics->get_shader_program()[QUAD_SHADER].Use();
 			glBindVertexArray(quadVertexArrayID);
@@ -276,7 +276,7 @@ namespace Copium
 			graphics->set_texture_slot_index(1);
 			glBindVertexArray(0);
 			graphics->get_shader_program()[QUAD_SHADER].UnUse();
-			//glDisable(GL_BLEND);
+			glDisable(GL_BLEND);
 		}
 
 		if (lineVertexCount)
@@ -304,8 +304,8 @@ namespace Copium
 		if (textVertexCount)
 		{
 			// Alpha blending for transparent objects
-			//glEnable(GL_BLEND);
-			//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			graphics->get_shader_program()[TEXT_SHADER].Use();
 			glActiveTexture(GL_TEXTURE0);
@@ -334,7 +334,7 @@ namespace Copium
 			glBindVertexArray(0);
 			glBindTexture(GL_TEXTURE_2D, 0);
 			graphics->get_shader_program()[TEXT_SHADER].UnUse();
-			//glDisable(GL_BLEND);
+			glDisable(GL_BLEND);
 		}
 		
 	}
@@ -656,11 +656,11 @@ namespace Copium
 			begin_batch();
 		}
 
-		lineBufferPtr->pos = glm::vec3(_position0, 0);
+		lineBufferPtr->pos = glm::vec3(_position0, -100.f);
 		lineBufferPtr->color = _color;
 		lineBufferPtr++;
 
-		lineBufferPtr->pos = glm::vec3(_position1, 0);
+		lineBufferPtr->pos = glm::vec3(_position1, -100.f);
 		lineBufferPtr->color = _color;
 		lineBufferPtr++;
 

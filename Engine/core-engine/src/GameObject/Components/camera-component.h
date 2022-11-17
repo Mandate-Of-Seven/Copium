@@ -40,7 +40,7 @@ namespace Copium
 
         */
         /*******************************************************************************/
-        void inspector_view() {};
+        void inspector_view();
 
 
         virtual Camera* clone(GameObject& _gameObj) const

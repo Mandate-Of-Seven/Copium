@@ -15,6 +15,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 #include "pch.h"
 
+#include <GL/glew.h> // for access to OpenGL API declarations 
+
 #include "Graphics/graphics-draw.h"
 
 #include "Files/assets-system.h"
@@ -161,6 +163,8 @@ namespace Copium
 
 	void Draw::editor()
 	{
+		// Bean: this should be the background color of the camera
+		//glClearColor(0.278f, 0.278f, 0.278f, 1.f);
 		renderer->begin_batch();
 
 		// Grid system

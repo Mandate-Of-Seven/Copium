@@ -205,8 +205,8 @@ namespace Copium
 			
 			if (orthographicSize <= nearClip)
 				orthographicSize = nearClip;
-			if (orthographicSize >= farClip)
-				orthographicSize = farClip - 1.f;
+			if (orthographicSize >= 100.f)
+				orthographicSize = 99.f;
 
 
 			update_ortho_projection();

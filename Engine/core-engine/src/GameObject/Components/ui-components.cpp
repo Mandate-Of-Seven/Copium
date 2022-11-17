@@ -131,7 +131,7 @@ namespace Copium
 		if (!font)
 			return;
 		Transform& trans{ gameObj.transform };
-		glm::vec2 pos{ trans.position.to_glm() };
+		glm::vec3 pos{ trans.position.to_glm() };
 		float scale = trans.scale.x;
 		if (scale > trans.scale.y)
 			scale = trans.scale.y;

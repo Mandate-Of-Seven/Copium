@@ -23,7 +23,7 @@ namespace Copium
 	void BaseCamera::init(float _width, float _height, bool _orthographic)
 	{
 		// Setting up data
-		viewer = { 0.f, 0.f, 10.f };
+		viewer = { 0.f, 0.f, -10.f };
 		focalPoint = { viewer.x, viewer.y, 0.f };
 		/*viewer = { 0.f, 0.f, 0.f };
 		focalPoint = { viewer.x, viewer.y, 0.f };*/
@@ -44,7 +44,7 @@ namespace Copium
 		// Setting up projection data
 		aspect = width / height;
 		nearClip = 0.03f;
-		farClip = 100.f;
+		farClip = 500.f;
 
 		if (orthographic)
 		{

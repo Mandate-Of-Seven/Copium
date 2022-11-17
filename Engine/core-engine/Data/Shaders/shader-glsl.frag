@@ -25,5 +25,14 @@ uniform sampler2D uTextures[32];
 void main()
 {
 	int index = int(vTextureIndex);
-	fFragColor = texture(uTextures[index], vTextureCoordinate) * vInterpColor;
+	if(index >= 0)
+	{
+		fFragColor = texture(uTextures[index], vTextureCoordinate) * vInterpColor;
+		if(fFragColor.a < 0.5)
+			discard;
+	}
+	else
+	{
+		fFragColor = vInterpColor;
+	}
 }

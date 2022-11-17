@@ -63,6 +63,9 @@ namespace Copium
 
 		glm::vec3 calculate_position();
 
+		void set_bg_color(glm::vec4 const& _color) { backgroundColor = _color; }
+		const glm::vec4& get_bg_color() const { return backgroundColor; }
+
 	protected:
 
 		/* Camera Data ******************************************************************/
