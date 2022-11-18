@@ -343,9 +343,9 @@ void GameObject::inspectorView()
             {
                 if (ImGui::BeginDragDropSource())
                 {
-                    static size_t container{};
-                    container = (size_t)component;
-                    ImGui::SetDragDropPayload(componentName.c_str(), &container, sizeof(size_t));
+                    static void* container;
+                    container = component;
+                    ImGui::SetDragDropPayload(componentName.c_str(), &container, sizeof(void*));
                     ImGui::EndDragDropSource();
                 }
                 component->inspector_view();

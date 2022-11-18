@@ -187,6 +187,8 @@ public:
 
 	void inspector_view();
 
+	GameObjectID assignGameObjID() const;
+
 private:
 	const std::string filename;
 	std::string name;

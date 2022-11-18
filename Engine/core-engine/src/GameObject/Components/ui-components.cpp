@@ -13,6 +13,7 @@
 All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
+
 #include "pch.h"
 #include "Windows/windows-input.h"
 #include "GameObject/Components/ui-components.h"
@@ -123,11 +124,6 @@ namespace Copium
 			break;
 		}
 		}
-		//PRINT("R " << targetGraphic->layeredColor.r);
-		//PRINT("G " << targetGraphic->layeredColor.g);
-		//PRINT("B " << targetGraphic->layeredColor.b);
-		//PRINT("A " << targetGraphic->layeredColor.a);
-		//PRINT("Timer " << timer);
 		if (timer < fadeDuration)
 			timer += (float)MyFrameRateController.getDt();
 		else if (timer > fadeDuration)
@@ -171,12 +167,12 @@ namespace Copium
 				const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Text");
 				if (payload)
 				{
-					Text* pText = (Text*)(*reinterpret_cast<size_t*>(payload->Data));
+					Text* pText = (Text*)(*reinterpret_cast<void**>(payload->Data));
 					if (pText != targetGraphic)
 					{
 						if (targetGraphic)
 							targetGraphic->layeredColor = { 1.f ,1.f,1.f,1.f};
-						targetGraphic = (Text*)(*reinterpret_cast<size_t*>(payload->Data));
+						targetGraphic = pText;
 					}
 				}
 				ImGui::EndDragDropTarget();
