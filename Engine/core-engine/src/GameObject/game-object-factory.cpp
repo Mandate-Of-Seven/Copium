@@ -21,6 +21,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <rttr/registration>
 #include <filesystem>
 #include <Editor/editor-undoredo.h>
+#include <Editor/editor-system.h>
 
 namespace 
 {
@@ -84,6 +85,10 @@ namespace Copium
 			return nullptr;
 
 		*go = _src;
+
+		std::cout << "building obj\n";
+		//UndoRedo::Command* tempUndo = new UndoRedo::GameObjectCommand(_src, true);
+		//EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
 
 		currScene->add_gameobject(go);
 
@@ -180,9 +185,8 @@ namespace Copium
 		if (!_go)
 			return false;
 
-		UndoRedo::Command* tempUndo = new UndoRedo::GameObjectCommand(*_go);
-		NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
-		std::cout << "test\n";
+		UndoRedo::Command* tempUndo = new UndoRedo::GameObjectCommand(*_go,false);
+		EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
 
 		// Deattach children from this game object (if any)
 		for (std::list<GameObject*>::iterator iter = _go->mchildList().begin(); iter != _go->mchildList().end(); ++iter)
@@ -201,16 +205,16 @@ namespace Copium
 			{
 				delete _go;
 				currScene->get_gameobjectvector()[i] = nullptr;
-				std::cout << "trimming go vector\n";
+				//std::cout << "trimming go vector\n";
 				currScene->get_gameobjectvector().erase(currScene->get_gameobjectvector().begin() + i);
 				currScene->get_gameobjectvector().shrink_to_fit();
-				std::cout << "Number of GameObjects left: " << currScene->get_gameobjcount() << std::endl;
+				//std::cout << "Number of GameObjects left: " << currScene->get_gameobjcount() << std::endl;
 				break;
 
 			}
 		}
 
-		std::cout << "Number of Game Objects left: " << currScene->get_gameobjcount() << std::endl;
+		//std::cout << "Number of Game Objects left: " << currScene->get_gameobjcount() << std::endl;
 
 		return true;
 

@@ -29,7 +29,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/game-object-factory.h"
 #include "CopiumCore/system-interface.h"
 #include "SceneManager/scene.h"
-#include "Editor/editor-undoredo.h"
 #include <filesystem>
 
 namespace Copium {
@@ -217,18 +216,6 @@ namespace Copium {
 		/*******************************************************************************/
 		bool endPreview();
 
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			A getter function for the command manager
-
-		\return
-			a pointer to the undo redo command manager
-		*/
-		/*******************************************************************************/
-		UndoRedo::CommandManager* get_commandmanager();
-
 		std::string& get_scenefilepath();
 
 		bool create_scene();
@@ -241,7 +228,7 @@ namespace Copium {
 		Scene* storageScene;	// Scene Pointer that acts as buffer for preview scene
 		rapidjson::Document document;
 		std::string sceneFilePath;
-		UndoRedo::CommandManager commandManager; //for undo and redo
+		
 	};
 
 	/*******************************************************************************

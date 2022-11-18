@@ -22,6 +22,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "GameObject\Components\transform-component.h"
 #include <rttr/registration>
 #include "Editor/editor-undoredo.h"
+#include "Editor/editor-system.h"
 #include "SceneManager/sm.h"
 
 //RTTR_REGISTRATION{
@@ -122,7 +123,7 @@ void Transform::inspector_view()
                 if (temp!=position.x)
                 {
                     UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&position.x, temp);
-                    NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
                     temp = position.x;
                 }
             }
@@ -143,7 +144,7 @@ void Transform::inspector_view()
                 if (temp != position.y)
                 {
                     UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&position.y, temp);
-                    NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
                     temp = position.y;
                 }
             }
@@ -163,7 +164,7 @@ void Transform::inspector_view()
                 if (temp != position.z)
                 {
                     UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&position.z, temp);
-                    NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
                     temp = position.z;
                 }
             }
@@ -192,7 +193,7 @@ void Transform::inspector_view()
                 if (temp != rotation.x)
                 {
                     UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&rotation.x, temp);
-                    NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
                     temp = rotation.x;
                 }
             }
@@ -212,7 +213,7 @@ void Transform::inspector_view()
                 if (temp != rotation.y)
                 {
                     UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&rotation.y, temp);
-                    NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
                     temp = rotation.y;
                 }
             }
@@ -232,7 +233,7 @@ void Transform::inspector_view()
                 if (temp != rotation.z)
                 {
                     UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&rotation.z, temp);
-                    NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
                     temp = rotation.z;
                 }
             }
@@ -261,7 +262,7 @@ void Transform::inspector_view()
                 if (temp != scale.x)
                 {
                     UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&scale.x, temp);
-                    NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
                     temp = scale.x;
                 }
             }
@@ -281,7 +282,7 @@ void Transform::inspector_view()
                 if (temp != scale.y)
                 {
                     UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&scale.y, temp);
-                    NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
                     temp = scale.y;
                 }
             }
@@ -301,7 +302,7 @@ void Transform::inspector_view()
                 if (temp != scale.z)
                 {
                     UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&scale.z, temp);
-                    NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
                     temp = scale.z;
                 }
             }

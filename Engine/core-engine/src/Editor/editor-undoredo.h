@@ -30,6 +30,7 @@ namespace Copium
 				virtual void Undo(std::stack<Command*>* stackPointer) = 0;
 				virtual void Redo(std::stack<Command*>* stackPointer) = 0;
 				virtual void printCommand() = 0;
+				virtual bool getDeleting() = 0;
 
 		};
 
@@ -81,6 +82,8 @@ namespace Copium
 				/**************************************************************************/
 				void printCommand()override;
 
+				bool getDeleting()override { return false; }
+
 				float* pointer;//pointer to what was changed
 				float value;//original value
 		};
@@ -95,7 +98,9 @@ namespace Copium
 					Constructor for a game object command
 				*/
 				/**************************************************************************/
-				GameObjectCommand(GameObject& _value);
+				//GameObjectCommand(GameObject& _value);
+
+				GameObjectCommand(GameObject& _value,bool _deleting);
 
 				/***************************************************************************/
 				/*!
@@ -131,10 +136,14 @@ namespace Copium
 					Prints information about the command
 				*/
 				/**************************************************************************/
-				void printCommand()override;
+				void printCommand() override;
+
+				bool getDeleting() override;
 
 				//GameObject* pointer;//pointer to what was changed
+				GameObject* pointer;//only use if deleting
 				GameObject value;//original value
+				bool deleting;// should it add or delete a gameobject
 		};
 
 		//contains a stack of commands for undo and redo

@@ -287,11 +287,30 @@ namespace Copium
 		Window::Inspector::exit();
 		sceneView.exit();
 		contentBrowser.exit();
+
+		while (commandManager.undoStack.size() > 0)
+		{
+			UndoRedo::Command* temp = EditorSystem::Instance()->get_commandmanager()->undoStack.top();
+			EditorSystem::Instance()->get_commandmanager()->undoStack.pop();
+			delete temp;
+		}
+
+		while (commandManager.redoStack.size() > 0)
+		{
+			UndoRedo::Command* temp = EditorSystem::Instance()->get_commandmanager()->redoStack.top();
+			EditorSystem::Instance()->get_commandmanager()->redoStack.pop();
+			delete temp;
+		}
 	}
 
 	void EditorSystem::imguiConsoleAddLog(std::string value)
 	{
 		std::cout << value << "\n";
 		Window::EditorConsole::editorLog.add_logEntry(value);
+	}
+
+	UndoRedo::CommandManager* EditorSystem::get_commandmanager()
+	{
+		return &commandManager;
 	}
 }

@@ -171,11 +171,11 @@ static void update()
 {   
     if (inputSystem.is_key_pressed(GLFW_KEY_Z))//undo
     {
-        if (!Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack.empty())
+        if (!Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.empty())
         {
-            Copium::UndoRedo::Command* temp = Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack.top();
-            Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack.top()->Undo(&Copium::NewSceneManager::Instance()->get_commandmanager()->redoStack);
-            Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack.pop();
+            Copium::UndoRedo::Command* temp = Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.top();
+            Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.top()->Undo(&Copium::EditorSystem::Instance()->get_commandmanager()->redoStack);
+            Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.pop();
             delete temp;
         }
         else
@@ -188,11 +188,11 @@ static void update()
     if (inputSystem.is_key_pressed(GLFW_KEY_X) )//redo
     {
         
-        if (!Copium::NewSceneManager::Instance()->get_commandmanager()->redoStack.empty())
+        if (!Copium::EditorSystem::Instance()->get_commandmanager()->redoStack.empty())
         {
-            Copium::UndoRedo::Command* temp = Copium::NewSceneManager::Instance()->get_commandmanager()->redoStack.top();
-            Copium::NewSceneManager::Instance()->get_commandmanager()->redoStack.top()->Redo(&Copium::NewSceneManager::Instance()->get_commandmanager()->undoStack);
-            Copium::NewSceneManager::Instance()->get_commandmanager()->redoStack.pop();
+            Copium::UndoRedo::Command* temp = Copium::EditorSystem::Instance()->get_commandmanager()->redoStack.top();
+            Copium::EditorSystem::Instance()->get_commandmanager()->redoStack.top()->Redo(&Copium::EditorSystem::Instance()->get_commandmanager()->undoStack);
+            Copium::EditorSystem::Instance()->get_commandmanager()->redoStack.pop();
             delete temp;
         }
         else

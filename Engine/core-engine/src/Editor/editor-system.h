@@ -19,6 +19,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor/editor-sceneview.h"
 #include "Editor/editor-content-browser.h"
 #include "Editor/editor-camera.h"
+#include "Editor/editor-undoredo.h"
 
 namespace Copium
 {
@@ -65,6 +66,18 @@ namespace Copium
 		*/
 		/***************************************************************************/
 		void imguiConsoleAddLog(std::string value);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			A getter function for the command manager
+
+		\return
+			a pointer to the undo redo command manager
+		*/
+		/*******************************************************************************/
+		UndoRedo::CommandManager* get_commandmanager();
 		
 		EditorSceneView* get_scene_view() { return &sceneView; }
 		EditorContentBrowser* get_content_browser() { return &contentBrowser; }
@@ -74,6 +87,7 @@ namespace Copium
 		EditorSceneView sceneView;
 		EditorContentBrowser contentBrowser;
 		EditorCamera camera;
+		UndoRedo::CommandManager commandManager; //for undo and redo
 	};
 }
 #endif // !EDITOR_SYSTEM_H

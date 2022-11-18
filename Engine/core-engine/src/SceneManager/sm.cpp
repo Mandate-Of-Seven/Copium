@@ -108,19 +108,7 @@ namespace Copium {
 			storageScene = nullptr;
 		}
 
-		while (commandManager.undoStack.size() > 0)
-		{
-			UndoRedo::Command* temp = NewSceneManager::Instance()->get_commandmanager()->undoStack.top();
-			NewSceneManager::Instance()->get_commandmanager()->undoStack.pop();
-			delete temp;
-		}
-
-		while (commandManager.redoStack.size() > 0)
-		{
-			UndoRedo::Command* temp = NewSceneManager::Instance()->get_commandmanager()->redoStack.top();
-			NewSceneManager::Instance()->get_commandmanager()->redoStack.pop();
-			delete temp;
-		}
+		
 	}
 
 	bool NewSceneManager::load_scene(const std::string& _filepath)
@@ -364,11 +352,6 @@ namespace Copium {
 	{
 		rapidjson::SizeType sz = static_cast<rapidjson::SizeType>(_str.size());
 		_value.SetString(_str.c_str(), sz, _doc.GetAllocator());
-	}
-
-	UndoRedo::CommandManager* NewSceneManager::get_commandmanager()
-	{
-		return &commandManager;
 	}
 
 
