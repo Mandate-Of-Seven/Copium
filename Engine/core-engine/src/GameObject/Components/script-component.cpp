@@ -51,7 +51,7 @@ namespace Copium
 			}
 			GameObjectID _id = gameObj.id;
 			void* param = &_id;
-			sS.invoke(mObject, pScriptClass->mOnCreate, &param);
+			sS.invoke(mObject, pScriptClass->mMethods["OnCreate"], &param);
 		}
 	}
 
@@ -74,42 +74,15 @@ namespace Copium
 		instantiate();
 	}
 
-	void Script::Awake()
+	void Script::invoke(const std::string& methodName)
 	{
-		if (pScriptClass && pScriptClass->mAwake)
-			sS.invoke(mObject, pScriptClass->mAwake);
-	}
-
-	void Script::Start()
-	{
-		if (pScriptClass && pScriptClass->mStart)
-			sS.invoke(mObject, pScriptClass->mStart);
-	}
-
-	void Script::Update()
-	{
-		if (pScriptClass && pScriptClass->mUpdate)
+		if (!pScriptClass)
+			return;
+		auto method = pScriptClass->mMethods.find(methodName);
+		if (method != pScriptClass->mMethods.end())
 		{
-			sS.invoke(mObject, pScriptClass->mUpdate);
+			sS.invoke(mObject, (*method).second);
 		}
-	}
-
-	void Script::FixedUpdate()
-	{
-		if (pScriptClass && pScriptClass->mUpdate)
-			sS.invoke(mObject, pScriptClass->mFixedUpdate);
-	}
-
-	void Script::LateUpdate()
-	{
-		if (pScriptClass && pScriptClass->mLateUpdate)
-			sS.invoke(mObject, pScriptClass->mLateUpdate);
-	}
-
-	void Script::OnCollisionEnter()
-	{
-		if (pScriptClass && pScriptClass->mOnCollisionEnter)
-			sS.invoke(mObject, pScriptClass->mOnCollisionEnter);
 	}
 
 	//Use for serialization

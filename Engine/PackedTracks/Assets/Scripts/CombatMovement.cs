@@ -115,7 +115,7 @@ public class CombatMovement : CopiumScript
         }
         else if (movingLeft && inputLeft)
         {
-            rb.velocity = new Vector2(-TrainSpeed, 0);
+            rb.velocity = new Vector2(-0.1f, 0);
 
             if (TrainSpeed < MaxTrainSpeed)
             {
@@ -124,7 +124,7 @@ public class CombatMovement : CopiumScript
         }
         else if (movingRight && inputRight)
         {
-            rb.velocity = new Vector2(TrainSpeed, 0);
+            rb.velocity = new Vector2(0.1f, 0);
 
             if (TrainSpeed < MaxTrainSpeed)
             {

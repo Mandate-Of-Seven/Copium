@@ -115,8 +115,6 @@ namespace Copium
 			return nullptr;
 		}
 
-		std::cout << "Object name: " << go->get_name() << std::endl;
-
 		if (_value.HasMember("Components")) 
 		{
 			rapidjson::Value& compArr = _value["Components"].GetArray();

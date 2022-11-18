@@ -116,15 +116,10 @@ namespace Copium
 		/**************************************************************************/
 		ScriptClass(const std::string& _name, MonoClass* _mClass);
 		const		std::string name;
-		MonoClass*	mClass;
-		MonoMethod* mAwake;
-		MonoMethod* mStart;
-		MonoMethod* mUpdate;
-		MonoMethod* mFixedUpdate;
-		MonoMethod* mLateUpdate;
-		MonoMethod* mOnCollisionEnter;
-		MonoMethod* mOnCreate;
-		std::map<std::string, Field> mFields;
+		MonoClass* mClass;
+		std::unordered_map<std::string, MonoMethod*> mMethods;
+		std::unordered_map<std::string, Field> mFields;
+
 	};
 
 	CLASS_SYSTEM(ScriptingSystem), IReceiver

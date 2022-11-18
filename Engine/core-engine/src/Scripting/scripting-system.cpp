@@ -107,15 +107,14 @@ namespace Copium
 	#pragma region Struct ScriptMethods
 		ScriptClass::ScriptClass(const std::string& _name, MonoClass* _mClass) : 
 		mClass{ _mClass},
-		name{_name},
-		mAwake{ mono_class_get_method_from_name(mClass, "Awake", 0) },
-		mStart{ mono_class_get_method_from_name(mClass, "Start", 0) },
-		mUpdate{ mono_class_get_method_from_name(mClass, "Update", 0) },
-		mFixedUpdate{ mono_class_get_method_from_name(mClass, "FixedUpdate", 0) },
-		mLateUpdate{ mono_class_get_method_from_name(mClass, "LateUpdate", 0) },
-		mOnCollisionEnter{ mono_class_get_method_from_name(mClass, "OnCollisionEnter", 0) },
-		mOnCreate{ mono_class_get_method_from_name(mCopiumScript, "OnCreate", 1) }
+		name{_name}
 		{
+			void* methodIterator = nullptr;
+			while (MonoMethod* method = mono_class_get_methods(_mClass, &methodIterator))
+			{
+				mMethods[mono_method_get_name(method)] = method;
+			}
+
 			void* iterator = nullptr;
 			while (MonoClassField* field = mono_class_get_fields(mClass, &iterator))
 			{

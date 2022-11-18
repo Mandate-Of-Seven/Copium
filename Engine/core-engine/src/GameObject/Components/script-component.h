@@ -69,7 +69,7 @@ namespace Copium
 				Function called at the very start of game object.
 		*/
 		/**************************************************************************/
-		void Awake();
+		void invoke(const std::string& methodName);
 		/**************************************************************************/
 		/*!
 			\brief

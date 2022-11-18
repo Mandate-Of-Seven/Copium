@@ -167,6 +167,7 @@ namespace Copium
 			//LOG SOMETHING TO CONSOLE LIKE THIS OBJ HAS NOT RB
 			return;
 		}
+		PRINT((* velocity).x);
 		rb->set_vel(*velocity);
 	}
 
