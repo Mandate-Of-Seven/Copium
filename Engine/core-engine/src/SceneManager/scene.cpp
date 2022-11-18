@@ -65,24 +65,39 @@ void Scene::draw_scene()
 
 GameObjectID Scene::assignGameObjID() const
 {
-	static std::list<GameObjectID> assignedIds{};
+	static std::list<size_t> assignedIds{};
 	assignedIds.clear();
-	GameObjectID lowestUnassigned{};
 	if (gameObjects.size() == 0)
 	{
 		return 0;
 	}
-	if (gameObjects.size() == 1)
-	{
-		if (gameObjects.front()->id == 0)
-			return 1;
-		return 0;
-	}
+	assignedIds.push_back(gameObjects.front()->id);
 	//Look through IDs
-	GameObjectID prevId = gameObjects[0]->id;
 	for (size_t i = 1; i < gameObjects.size(); ++i)
 	{
-		GameObjectID Id = gameObjects[0]->id;
+		size_t id = gameObjects[i]->id;
+		size_t prevId = 0;
+		for (auto j = assignedIds.begin(); j != assignedIds.end(); ++j)
+		{
+			if (id >= prevId && id < *j)
+			{
+				assignedIds.insert(j, id);
+				break;
+			}
+			prevId = *j;
+		}
+		if (prevId == assignedIds.back())
+			assignedIds.push_back(id);
+	}
+
+	size_t prevId = 0;
+	for (auto j = assignedIds.begin(); j != assignedIds.end(); ++j)
+	{
+		if (prevId != *j)
+		{
+			return prevId;
+		}
+		++prevId;
 	}
 }
 
