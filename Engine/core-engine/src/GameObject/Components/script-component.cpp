@@ -145,11 +145,9 @@ namespace Copium
 		if (ImGui::BeginTable(name.c_str(), 2, windowFlags))
 		{
 			ImGui::Indent();
-			// Sprite
 			// Extern source file
 			ImGui::TableSetupColumn("Text", 0, 0.4f);
 			ImGui::TableSetupColumn("Input", 0, 0.6f);
-			PRINT(name << " INSPECTOR VIEW!");
 			const auto& fieldMap = pScriptClass->mFields;
 			auto it = fieldMap.begin();
 			while (it != fieldMap.end())
@@ -249,7 +247,7 @@ namespace Copium
 	Component* Script::clone(GameObject& _gameObj) const
 	{
 		Script* component = new Script(_gameObj);
-		component->pScriptClass;
+		component->pScriptClass = pScriptClass;
 		component->name = name;
 		component->reference = this;
 		component->instantiate();

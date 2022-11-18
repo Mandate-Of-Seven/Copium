@@ -20,6 +20,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "SceneManager/sm.h"
 #include "Messaging/message-system.h"
 #include <Windows/windows-system.h>
+#include <Debugging/frame-rate-controller.h>
 #include "GameObject/Components/ui-components.h"
 
 namespace Copium
@@ -46,31 +47,26 @@ namespace Copium
 		gameObjects = &pScene->get_gameobjectvector();
 		for (GameObject* pGameObj : *gameObjects)
 		{
-			const std::vector<ButtonComponent*>& buttonComponents{ pGameObj->getComponents<ButtonComponent>() };
-			for (ButtonComponent* pButtonComponent : buttonComponents)
+			const std::vector<Button*>& Buttons{ pGameObj->getComponents<Button>() };
+			for (Button* pButton : Buttons)
 			{
-				if (!pButtonComponent)
+				if (!pButton)
 					continue;
-				pButtonComponent->update();
+				pButton->update();
 			}
 			const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };
 			for (Script* pScript : pScripts)
 			{
+				//PRINT("HELLO!");
 				if (!pScript)
 					continue;
 				pScript->Update();
 				if (pScene != sceneManager.get_current_scene())
 					return;
 				pScript->LateUpdate();
-			}
-			timeElasped += WindowsSystem::Instance()->get_delta_time();
-			if (timeElasped >= 1 / (double)WindowsSystem::Instance()->get_fps())
-			{
-				timeElasped -= 1 / (double)WindowsSystem::Instance()->get_fps();
-				for (Script* pScript : pScripts)
+
+				for (size_t i = 0; i < MyFrameRateController.getSteps(); ++i)
 				{
-					if (!pScript)
-						continue;
 					pScript->FixedUpdate();
 				}
 			}
@@ -99,6 +95,6 @@ namespace Copium
 				pScript->Start();
 			}
 		}
-		timeElasped = WindowsSystem::Instance()->get_delta_time();
+		timeElasped = MyFrameRateController.getDt();
 	}
 }

@@ -62,6 +62,45 @@ void Scene::draw_scene()
 	std::cout << "scene drawn by default\n";
 }
 
+
+GameObjectID Scene::assignGameObjID() const
+{
+	static std::list<size_t> assignedIds{};
+	assignedIds.clear();
+	if (gameObjects.size() == 0)
+	{
+		return 0;
+	}
+	assignedIds.push_back(gameObjects.front()->id);
+	//Look through IDs
+	for (size_t i = 1; i < gameObjects.size(); ++i)
+	{
+		size_t id = gameObjects[i]->id;
+		size_t prevId = 0;
+		for (auto j = assignedIds.begin(); j != assignedIds.end(); ++j)
+		{
+			if (id >= prevId && id < *j)
+			{
+				assignedIds.insert(j, id);
+				break;
+			}
+			prevId = *j;
+		}
+		if (prevId == assignedIds.back())
+			assignedIds.push_back(id);
+	}
+
+	size_t prevId = 0;
+	for (auto j = assignedIds.begin(); j != assignedIds.end(); ++j)
+	{
+		if (prevId != *j)
+		{
+			return prevId;
+		}
+		++prevId;
+	}
+}
+
 std::string Scene::get_filename() const {return filename;}
 size_t Scene::get_gameobjcount() const { return gameObjects.size(); }
 std::vector<GameObject*>& Scene::get_gameobjectvector() { return gameObjects;}

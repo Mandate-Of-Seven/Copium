@@ -1,8 +1,8 @@
 {
-    "Name": "Demo",
+    "Name": "Demo\tPREVIEW",
     "GameObjects": [
         {
-            "ID": 21,
+            "ID": 3,
             "Name": "PlayerTrain",
             "PID": 0,
             "Components": [
@@ -26,7 +26,7 @@
                 },
                 {
                     "Type": "SpriteRenderer",
-                    "Sprite ID": 20,
+                    "Sprite ID": 0,
                     "Sprite Name": "PlayerHead.png",
                     "Color": {
                         "X": 1.0,
@@ -54,11 +54,11 @@
                     }
                 },
                 {
-                    "Type": "ScriptComponent",
+                    "Type": "Script",
                     "Name": "CombatMovement",
                     "hello": {
                         "X": 0.0,
-                        "Y": 5.0,
+                        "Y": 0.0,
                         "Z": 0.0
                     }
                 }
@@ -66,7 +66,7 @@
             "Children": []
         },
         {
-            "ID": 22,
+            "ID": 4,
             "Name": "EnemyTrain",
             "PID": 0,
             "Components": [
@@ -90,7 +90,7 @@
                 },
                 {
                     "Type": "SpriteRenderer",
-                    "Sprite ID": 16,
+                    "Sprite ID": 0,
                     "Sprite Name": "EnemyHead.png",
                     "Color": {
                         "X": 1.0,
@@ -103,7 +103,7 @@
             "Children": []
         },
         {
-            "ID": 23,
+            "ID": 5,
             "Name": "Panel",
             "PID": 0,
             "Components": [
@@ -146,7 +146,7 @@
             "Children": []
         },
         {
-            "ID": 24,
+            "ID": 6,
             "Name": "PauseMenu",
             "PID": 0,
             "Components": [
@@ -154,7 +154,7 @@
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
-                        "Y": 2.0,
+                        "Y": 1.75,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -174,17 +174,17 @@
                     "H_Align": 1,
                     "V_Align": 1,
                     "Content": "Paused",
-                    "Font Size": 0.75,
+                    "Font Size": 0.5,
                     "r": 1.0,
                     "g": 0.9998999834060669,
                     "b": 0.9998999834060669,
-                    "a": 255.0
+                    "a": 1.0
                 }
             ],
             "Children": []
         },
         {
-            "ID": 25,
+            "ID": 7,
             "Name": "ResumeButton",
             "PID": 0,
             "Components": [
@@ -229,16 +229,16 @@
                     "r": 0.9998999834060669,
                     "g": 0.9999713897705078,
                     "b": 1.0,
-                    "a": 255.0
+                    "a": 1.0
                 },
                 {
-                    "Type": "ButtonComponent"
+                    "Type": "Button"
                 }
             ],
             "Children": []
         },
         {
-            "ID": 26,
+            "ID": 8,
             "Name": "QuitButton",
             "PID": 0,
             "Components": [
@@ -283,10 +283,7 @@
                     "r": 0.9998999834060669,
                     "g": 0.9999713897705078,
                     "b": 1.0,
-                    "a": 255.0
-                },
-                {
-                    "Type": "ButtonComponent"
+                    "a": 1.0
                 }
             ],
             "Children": []

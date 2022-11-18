@@ -59,13 +59,10 @@ void Transform::deserialize(rapidjson::Value& _value)
 {
 	rapidjson::Value& _v = _value["Pos"].GetObj();
 	position.deserialize(_v);
-	std::cout << "Position:" << position;
 	_v = _value["Rot"].GetObj();
 	rotation.deserialize(_v);
-	std::cout << "Rotation:" << rotation;
 	_v = _value["Scale"].GetObj();
 	scale.deserialize(_v);
-	std::cout << "Scale:" << scale;
 }
 
 // M2

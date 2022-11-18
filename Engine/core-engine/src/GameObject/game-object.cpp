@@ -55,7 +55,7 @@ namespace Copium
         case ComponentType::Script:
             return &addComponent<Script>();
         case ComponentType::Button:
-            return &addComponent<ButtonComponent>();
+            return &addComponent<Button>();
         case ComponentType::Image:
             return &addComponent<ImageComponent>();
         case ComponentType::Text:
@@ -121,7 +121,6 @@ GameObject::GameObject
 
 GameObject& GameObject::operator=(const GameObject& _src)
 {
-    std::cout << "gameobject = \n";
     name = _src.get_name();
     transform.position = _src.transform.position;
     transform.rotation = _src.transform.rotation;
@@ -342,9 +341,12 @@ void GameObject::inspectorView()
             ImGui::PushID(index);
             if (ImGui::CollapsingHeader(componentName.c_str(), nodeFlags))
             {
-                if (parent != nullptr)
+                if (ImGui::BeginDragDropSource())
                 {
-                    Transform tmp();
+                    static void* container;
+                    container = component;
+                    ImGui::SetDragDropPayload(componentName.c_str(), &container, sizeof(void*));
+                    ImGui::EndDragDropSource();
                 }
                 component->inspector_view();
                 if (ImGui::Button("Delete", ImVec2(ImGui::GetWindowSize().x, 0.f)))

@@ -52,8 +52,8 @@ static std::map<ComponentType, std::string> MAP_COMPONENT_TYPE_NAME
     {ComponentType::BoxCollider2D,"BoxCollider2D"},
     {ComponentType::Rigidbody2D,"Rigidbody2D"},
     {ComponentType::SpriteRenderer,"SpriteRenderer"},
-    {ComponentType::Script,"ScriptComponent"},
-    {ComponentType::Button,"ButtonComponent"},
+    {ComponentType::Script,"Script"},
+    {ComponentType::Button,"Button"},
     {ComponentType::Text,"Text"},
     {ComponentType::Image,"ImageComponent"},
     {ComponentType::AudioSource,"AudioSource"}
