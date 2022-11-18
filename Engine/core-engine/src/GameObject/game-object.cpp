@@ -342,6 +342,10 @@ void GameObject::inspectorView()
             ImGui::PushID(index);
             if (ImGui::CollapsingHeader(componentName.c_str(), nodeFlags))
             {
+                if (parent != nullptr)
+                {
+                    Transform tmp();
+                }
                 component->inspector_view();
                 if (ImGui::Button("Delete", ImVec2(ImGui::GetWindowSize().x, 0.f)))
                 {

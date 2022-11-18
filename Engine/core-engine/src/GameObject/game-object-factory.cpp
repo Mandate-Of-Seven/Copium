@@ -30,13 +30,10 @@ namespace Copium
 {
 	GameObjectFactory::GameObjectFactory()
 	{
-		std::cout << "GOF ctor\n";
-		//register_archetypes("Data/Archetypes");
 
 	}
 	GameObjectFactory::~GameObjectFactory()
 	{
-		//clear_archetypes();
 	}
 
 	GameObject* GameObjectFactory::build_gameobject()
@@ -185,9 +182,17 @@ namespace Copium
 			GameObjectID id{ 0 };
 			(*iter)->set_parent(nullptr);
 			(*iter)->set_ppid(id);
+			delete_gameobject(*iter);
 		}
 
 		std::cout << "Deleting " << _go->get_name() << std::endl;
+		
+		if (_go->has_parent())
+		{
+			GameObject* p = _go->get_parent();
+			p->deattach_child(_go);
+
+		}
 
 		//Iterate through currentScene vector and destroy
 		for (size_t i{ 0 }; i < currScene->get_gameobjectvector().size(); ++i)
@@ -318,6 +323,27 @@ namespace Copium
 		return gameObjectCreators;
 	}
 
+
+	// M3
+	GameObject* GameObjectFactory::create_child(GameObject& _parent)
+	{
+		Scene* currScene = sceneManager.get_current_scene();
+		GameObject* newChild = new GameObject();
+		for (std::vector<GameObject*>::iterator iter = currScene->get_gameobjectvector().begin(); iter != currScene->get_gameobjectvector().end(); ++iter)
+		{
+			if ((*iter)->id == _parent.id)
+			{
+				currScene->get_gameobjectvector().insert(iter + 1, newChild);
+				_parent.attach_child(newChild);
+
+
+				return newChild;
+			}
+		}
+
+		return nullptr;
+
+	}
 
 
 }

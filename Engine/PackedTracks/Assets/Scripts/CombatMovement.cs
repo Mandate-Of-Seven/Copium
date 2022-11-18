@@ -44,6 +44,7 @@ public class CombatMovement : CopiumScript
                 {
                     movingLeft = true;
                     canMoveRight = false;
+                    
                 }
 
             }

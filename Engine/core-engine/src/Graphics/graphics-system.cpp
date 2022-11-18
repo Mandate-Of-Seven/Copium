@@ -444,7 +444,18 @@ namespace Copium
 						sr.set_texture(nullptr);
 					}
 
-					renderer.draw_quad(t.glmPosition(), size, rotation, sr);
+					if (gameObject->get_parent() != nullptr)
+					{
+						GameObject* tmp = gameObject->get_parent();
+						Transform& pt = tmp->transform;
+						renderer.draw_quad(t.glmPosition() + pt.glmPosition(), size, rotation + pt.glmRotation().z, sr);
+
+					}
+					else
+					{
+						renderer.draw_quad(t.glmPosition(), size, rotation, sr);
+
+					}
 				}
 				for (Component* component : gameObject->getComponents<ImageComponent>())
 				{

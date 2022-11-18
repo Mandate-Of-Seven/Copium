@@ -60,14 +60,10 @@ namespace Copium {
 		if (stepCount > MAX_STEP_COUNT)
 			stepCount = MAX_STEP_COUNT;
 
-		//std::cout << "StepCount: " << stepCount << std::endl;
-
-
 	}
 
 	void FrameRateController::end()
 	{
-		//frameEnd = glfwGetTime();
 		WindowsSystem::Instance()->update_time(0.16);
 		frameRate = WindowsSystem::Instance()->get_fps();
 		++frameCount;

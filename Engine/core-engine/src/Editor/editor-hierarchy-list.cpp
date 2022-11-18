@@ -93,6 +93,15 @@ namespace Window::Hierarchy
 						Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
 					}
 				}				
+				if (ImGui::MenuItem("Create a Child GameObject"))
+				{
+					Copium::NewSceneManager* nsm = Copium::NewSceneManager::Instance();
+					if (nsm->get_selected_gameobject())
+					{
+						nsm->get_gof().create_child(*nsm->get_selected_gameobject());
+					}
+				}
+
 				if (ImGui::BeginMenu("Add Archetype"))
 				{
 					if (!currentScene)
@@ -139,10 +148,19 @@ namespace Window::Hierarchy
 			if (!currentScene->get_gameobjcount())
 				rootFlags |= ImGuiTreeNodeFlags_Leaf;
 
-			
-			size_t offset = currentScene->get_filename().find_last_of("/\\");
-			size_t endOffset = currentScene->get_filename().find(".scene")-1;
-			std::string sceneName = currentScene->get_filename().substr(offset + 1, endOffset-offset);
+
+			std::string sceneName;
+			if (currentScene->get_filename().empty())
+			{
+				sceneName = currentScene->get_name();
+			}
+			else
+			{
+				size_t offset = currentScene->get_filename().find_last_of("/\\");
+				size_t endOffset = currentScene->get_filename().find(".scene")-1;
+				sceneName = currentScene->get_filename().substr(offset + 1, endOffset-offset);
+
+			}
 
 			// Display scene name as the rootiest node
 			if (ImGui::TreeNodeEx(sceneName.c_str(), rootFlags))
