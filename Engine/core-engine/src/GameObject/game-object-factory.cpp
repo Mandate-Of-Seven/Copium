@@ -20,6 +20,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/Components/renderer-component.h"
 #include <rttr/registration>
 #include <filesystem>
+#include <Editor/editor-undoredo.h>
 
 namespace 
 {
@@ -179,6 +180,10 @@ namespace Copium
 		if (!_go)
 			return false;
 
+		UndoRedo::Command* tempUndo = new UndoRedo::GameObjectCommand(*_go);
+		NewSceneManager::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+		std::cout << "test\n";
+
 		// Deattach children from this game object (if any)
 		for (std::list<GameObject*>::iterator iter = _go->mchildList().begin(); iter != _go->mchildList().end(); ++iter)
 		{
@@ -317,7 +322,6 @@ namespace Copium
 	{
 		return gameObjectCreators;
 	}
-
 
 
 }

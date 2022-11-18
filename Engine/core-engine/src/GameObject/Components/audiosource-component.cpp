@@ -67,7 +67,6 @@ namespace Copium
 				{
 					stop_sound();//stop any currently playing audio
 					std::string str = (const char*)(payload->Data);
-					Copium::AssetsSystem* assets = Copium::AssetsSystem::Instance();
 					Copium::SoundSystem* soundsystem = Copium::SoundSystem::Instance();
 
 					size_t lastSlash = str.find_last_of("/");

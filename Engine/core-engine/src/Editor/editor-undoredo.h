@@ -30,6 +30,7 @@ namespace Copium
 				virtual void Undo(std::stack<Command*>* stackPointer) = 0;
 				virtual void Redo(std::stack<Command*>* stackPointer) = 0;
 				virtual void printCommand() = 0;
+
 		};
 
 		//a derived subclass specifically for transform components
@@ -94,7 +95,7 @@ namespace Copium
 					Constructor for a game object command
 				*/
 				/**************************************************************************/
-				GameObjectCommand(GameObject* _pointer, GameObject _value);
+				GameObjectCommand(GameObject& _value);
 
 				/***************************************************************************/
 				/*!
@@ -132,7 +133,7 @@ namespace Copium
 				/**************************************************************************/
 				void printCommand()override;
 
-				GameObject* pointer;//pointer to what was changed
+				//GameObject* pointer;//pointer to what was changed
 				GameObject value;//original value
 		};
 

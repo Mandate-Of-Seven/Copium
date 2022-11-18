@@ -122,6 +122,11 @@ GameObject::GameObject
 GameObject& GameObject::operator=(const GameObject& _src)
 {
     std::cout << "gameobject = \n";
+    std::cout << _src.get_name() << std::endl;
+
+    if (_src.get_name().empty())
+    {
+    }
     name = _src.get_name();
     transform.position = _src.transform.position;
     transform.rotation = _src.transform.rotation;

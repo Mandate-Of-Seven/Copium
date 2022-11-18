@@ -16,7 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "pch.h"
 #include "Editor/editor-undoredo.h"
-
+#include "GameObject/game-object-factory.h"
 
 namespace Copium
 {
@@ -89,10 +89,11 @@ namespace Copium
 
 
 	//GameObject UndoRedo not ready
-	UndoRedo::GameObjectCommand::GameObjectCommand(GameObject* _pointer, GameObject _value)
+	UndoRedo::GameObjectCommand::GameObjectCommand(GameObject& _value)
 	{
-		this->pointer = _pointer;
-		//this->value(_value);//no assignment operator yet
+		std::cout << "undo\n";
+		std::cout << _value.get_name() << std::endl;
+		this->value = _value;
 	}
 
 	UndoRedo::GameObjectCommand::~GameObjectCommand()
@@ -107,11 +108,12 @@ namespace Copium
 			PRINT("Invalid stack pointer");
 			return;
 		}
-		Command* temp = new GameObjectCommand(this->pointer, *this->pointer);
+		Command* temp = new GameObjectCommand(this->value);
 		stackPointer->push(temp);
-		if (this->pointer != nullptr)
+		if (!this->value.get_name().empty())
 		{
-			//*this->pointer = this->value;//no assignment operator
+			//std::cout << "this->value.get_name()" << std::endl;
+			
 		}
 		else
 		{
@@ -121,35 +123,13 @@ namespace Copium
 
 	void UndoRedo::GameObjectCommand::Redo(std::stack<Command*>* stackPointer)
 	{
-		if (!stackPointer)
-		{
-			PRINT("Invalid stack pointer");
-			return;
-		}
-		Command* temp = new GameObjectCommand(this->pointer, *this->pointer);
-		stackPointer->push(temp);
-
-		if (this->pointer)
-		{
-			//*this->pointer = this->value;//no assignment operator
-		}
-		else
-		{
-			std::cout << "The pointer is invalid, skipping redo command";
-		}
+		
 	}
 
 	void UndoRedo::GameObjectCommand::printCommand()
 	{
-		if (this->pointer)
-		{
-			std::cout << "The command's pointer is valid";
-		}
-		else
-		{
-			std::cout << "The command's pointer is valid";
-		}
 
 		//print GameObject data
 	}
+
 }
