@@ -109,6 +109,7 @@ namespace Copium
 		mClass{ _mClass},
 		name{_name}
 		{
+			mMethods["OnCreate"] = mono_class_get_method_from_name(mCopiumScript, "OnCreate", 1);
 			void* methodIterator = nullptr;
 			while (MonoMethod* method = mono_class_get_methods(_mClass, &methodIterator))
 			{

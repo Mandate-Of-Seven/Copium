@@ -310,6 +310,10 @@
                         "Y": 1.0,
                         "Z": 1.0
                     }
+                },
+                {
+                    "Type": "Script",
+                    "Name": "GameManager"
                 }
             ],
             "Children": []

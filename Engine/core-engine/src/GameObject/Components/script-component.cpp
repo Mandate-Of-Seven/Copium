@@ -78,7 +78,7 @@ namespace Copium
 	{
 		if (!pScriptClass)
 			return;
-		auto method = pScriptClass->mMethods.find(methodName);
+		std::unordered_map<std::string,MonoMethod*>::iterator method = pScriptClass->mMethods.find(methodName);
 		if (method != pScriptClass->mMethods.end())
 		{
 			sS.invoke(mObject, (*method).second);
