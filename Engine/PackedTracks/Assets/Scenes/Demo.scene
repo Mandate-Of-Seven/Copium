@@ -1,8 +1,11 @@
 {
     "Name": "Demo\tPREVIEW",
+    "Unused GIDs": [
+        7
+    ],
     "GameObjects": [
         {
-            "ID": 3,
+            "ID": 1,
             "Name": "PlayerTrain",
             "PID": 0,
             "Components": [
@@ -52,21 +55,12 @@
                             "Y": 0.5
                         }
                     }
-                },
-                {
-                    "Type": "Script",
-                    "Name": "CombatMovement",
-                    "hello": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    }
                 }
             ],
             "Children": []
         },
         {
-            "ID": 4,
+            "ID": 2,
             "Name": "EnemyTrain",
             "PID": 0,
             "Components": [
@@ -103,7 +97,7 @@
             "Children": []
         },
         {
-            "ID": 5,
+            "ID": 3,
             "Name": "Panel",
             "PID": 0,
             "Components": [
@@ -146,7 +140,7 @@
             "Children": []
         },
         {
-            "ID": 6,
+            "ID": 4,
             "Name": "PauseMenu",
             "PID": 0,
             "Components": [
@@ -184,7 +178,7 @@
             "Children": []
         },
         {
-            "ID": 7,
+            "ID": 5,
             "Name": "ResumeButton",
             "PID": 0,
             "Components": [
@@ -238,7 +232,7 @@
             "Children": []
         },
         {
-            "ID": 8,
+            "ID": 6,
             "Name": "QuitButton",
             "PID": 0,
             "Components": [

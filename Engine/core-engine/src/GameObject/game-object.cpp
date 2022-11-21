@@ -84,7 +84,7 @@ namespace Copium
 
 
     GameObject::GameObject(const GameObject& rhs) : 
-        transform(*this), id{count++}, parent{nullptr}, parentid{0}
+        transform(*this), id{0}, parent{nullptr}, parentid{0}
 {
     messageSystem.subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
     MESSAGE_CONTAINER::reflectCsGameObject.ID = id;
@@ -110,7 +110,7 @@ GameObject::GameObject
 (Math::Vec3 _position, Math::Vec3 _rotation, Math::Vec3 _scale)
     :
     name{ defaultGameObjName }, parent{ nullptr }, parentid{ 0 },
-    transform(*this, _position, _rotation, _scale), id{ count++ },
+    transform(*this, _position, _rotation, _scale), id{ 0 },
     active{true}
 {
     messageSystem.subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
@@ -288,6 +288,8 @@ bool GameObject::deattach_child(GameObject* _child)
 bool GameObject::deserialize(rapidjson::Value& _value) {
     if (!_value.HasMember("ID"))
         return false;
+
+    id = _value["ID"].GetUint64();
 
     if (!_value.HasMember("Name"))
         return false;
