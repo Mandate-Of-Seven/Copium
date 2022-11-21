@@ -131,7 +131,7 @@ namespace Copium
 		glVertexArrayAttribBinding(fontVertexArrayID, 3, 2);*/
 	}
 
-	void Font::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, GLfloat _scale, GLuint _fontID)
+	void Font::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, GLfloat _scale, GLuint _fontID, BaseCamera* _camera)
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -142,7 +142,7 @@ namespace Copium
 		GLuint uProjection = glGetUniformLocation(
 			graphics->get_shader_program()[TEXT_SHADER].GetHandle(), "uViewProjection");
 
-		glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_view_proj_matrix();
+		glm::mat4 projection = _camera->get_view_proj_matrix();
 		glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
 		glActiveTexture(GL_TEXTURE0);

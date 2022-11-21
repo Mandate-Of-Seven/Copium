@@ -94,6 +94,7 @@ namespace Copium
 		width = _width;
 		height = _height;
 
+		PRINT("  Resize framebuffer " << width << " " << height);
 		init();
 	}
 

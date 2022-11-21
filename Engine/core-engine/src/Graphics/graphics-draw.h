@@ -16,23 +16,17 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef GRAPHICS_DRAW_H
 #define GRAPHICS_DRAW_H
 
+#include "Graphics/graphics-typedef.h"
+#include "Graphics/renderer.h"
+
 namespace Copium
 {
-	enum DRAW
-	{
-		EDITOR,
-		WORLD,
-		DEBUG,
-		DEVELOPMENT,
-		NUM_DRAW
-	};
-
 	class Draw
 	{
 	public:
-		void init();
+		void init(BaseCamera* _camera);
 
-		void update();
+		void update(CameraType _type);
 
 		void exit();
 
@@ -76,8 +70,13 @@ namespace Copium
 
 		const bool& get_draw_mode(DRAW _draw) const { return drawMode[_draw]; }
 
+		Renderer* get_renderer() { return &renderer; }
+
 	private:
 		bool drawMode[NUM_DRAW]{false};
+
+		Renderer renderer;
+		BaseCamera* camera;
 	};
 }
 #endif // !GRAPHICS_DRAW_H

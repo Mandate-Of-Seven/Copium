@@ -18,10 +18,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <GL/glew.h> // for access to OpenGL API declarations 
 
 #include "Graphics/graphics-draw.h"
-
+#include "Graphics/graphics-system.h"
 #include "Files/assets-system.h"
 #include "Editor/editor-system.h"
-#include "Graphics/graphics-system.h"
 
 // Bean: remove this after NewManagerInstance is moved
 #include "GameObject/Components/renderer-component.h"
@@ -36,22 +35,51 @@ namespace Copium
 	{
 		AssetsSystem* assets = AssetsSystem::Instance();
 		EditorSystem* editorSys = EditorSystem::Instance();
-		GraphicsSystem* graphicsSys = GraphicsSystem::Instance();
+		GraphicsSystem* graphics = GraphicsSystem::Instance();
 		NewSceneManager* sm = NewSceneManager::Instance();
-		Renderer* renderer;
+		
 	}
 
-	void Draw::init()
+	void Draw::init(BaseCamera* _camera)
 	{
-		renderer = graphicsSys->get_renderer();
+		camera = _camera;
+		renderer.init(_camera);
 
 		enable(DRAW::EDITOR);
 		enable(DRAW::WORLD);
 		enable(DRAW::DEVELOPMENT);
 	}
 
-	void Draw::update()
+	void Draw::update(CameraType _type)
 	{
+		switch (_type)
+		{
+		case NONE:
+			for (bool& value : drawMode) value = false;
+			break;
+		case GAME:
+			for (bool& value : drawMode) value = false;
+			drawMode[DRAW::WORLD] = true;
+			drawMode[DRAW::DEVELOPMENT] = true;
+			break;
+		case SCENEVIEW:
+			drawMode[DRAW::EDITOR] = true;
+			drawMode[DRAW::WORLD] = true;
+			drawMode[DRAW::DEVELOPMENT] = true;
+			break;
+		case PREVIEW:
+			for (bool& value : drawMode) value = false;
+			drawMode[DRAW::WORLD] = true;
+			break;
+		}
+
+		// Clear the screen
+		glm::vec4 clr = camera->get_bg_color();
+		glClearColor(clr.r, clr.g, clr.b, clr.a);
+
+		// Clear the screen bits
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		if(drawMode[DRAW::EDITOR])
 			editor();
 
@@ -67,12 +95,12 @@ namespace Copium
 
 	void Draw::exit()
 	{
-
+		renderer.shutdown();
 	}
 
 	void Draw::world()
 	{
-		renderer->begin_batch();
+		renderer.begin_batch();
 
 		/*
 			Bean Theory:
@@ -120,7 +148,7 @@ namespace Copium
 						sr.set_texture(nullptr);
 					}
 
-					renderer->draw_quad(t.glmPosition(), size, rotation, sr);
+					renderer.draw_quad(t.glmPosition(), size, rotation, sr);
 				}
 				for (Component* component : gameObject->getComponents<ImageComponent>())
 				{
@@ -145,7 +173,7 @@ namespace Copium
 						sr.set_texture(nullptr);
 					}
 
-					renderer->draw_quad({ rc->Offset(),0 }, size, rotation, sr);
+					renderer.draw_quad({ rc->Offset(),0 }, size, rotation, sr);
 				}
 			}
 
@@ -154,18 +182,18 @@ namespace Copium
 		// Bean : Testing Text
 		/*glm::vec3 position = { 0.f, -1.f, 0.f };
 		color = { 1.f, 1.f, 0.f, 1.f };
-		renderer->draw_text("Testing Arial", position, color, 0.1f, 0);*/
+		renderer.draw_text("Testing Arial", position, color, 0.1f, 0);*/
 
-		renderer->end_batch();
+		renderer.end_batch();
 
-		renderer->flush();
+		renderer.flush();
 	}
 
 	void Draw::editor()
 	{
 		// Bean: this should be the background color of the camera
 		//glClearColor(0.278f, 0.278f, 0.278f, 1.f);
-		renderer->begin_batch();
+		renderer.begin_batch();
 
 		// Grid system
 		glm::vec4 color = { 1.f, 1.f, 1.f, 0.4f };
@@ -173,8 +201,8 @@ namespace Copium
 		float numDivision = 24.f, iteration = (end - start) / numDivision;
 		for (float i = start; i < end + iteration; i += iteration)
 		{
-			renderer->draw_line({ i, start }, { i, end }, color);
-			renderer->draw_line({ start, i }, { end, i }, color);
+			renderer.draw_line({ i, start }, { i, end }, color);
+			renderer.draw_line({ start, i }, { end, i }, color);
 		}
 
 		float subDivision = 5.f;
@@ -183,8 +211,8 @@ namespace Copium
 		start = -10.f, end = -start;
 		for (float i = start; i <= end; i += iteration)
 		{
-			renderer->draw_line({ i, start }, { i, end }, color);
-			renderer->draw_line({ start, i }, { end, i }, color);
+			renderer.draw_line({ i, start }, { i, end }, color);
+			renderer.draw_line({ start, i }, { end, i }, color);
 		}
 
 		// Colliders
@@ -207,10 +235,10 @@ namespace Copium
 					glm::vec2 pos2_1 = { bounds.max.to_glm()};
 					glm::vec2 pos3_1 = { bounds.min.x, bounds.max.y };
 
-					renderer->draw_line(pos0_1, pos1_1, color);
-					renderer->draw_line(pos1_1, pos2_1, color);
-					renderer->draw_line(pos2_1, pos3_1, color);
-					renderer->draw_line(pos3_1, pos0_1, color);
+					renderer.draw_line(pos0_1, pos1_1, color);
+					renderer.draw_line(pos1_1, pos2_1, color);
+					renderer.draw_line(pos2_1, pos3_1, color);
+					renderer.draw_line(pos3_1, pos0_1, color);
 				}
 
 				for (Component* component : gameObject->getComponents<ButtonComponent>())
@@ -256,22 +284,22 @@ namespace Copium
 					glm::vec2 pos2_1 = { maxX, maxY };
 					glm::vec2 pos3_1 = { minX, maxY };
 
-					renderer->draw_line(pos0_1, pos1_1, color);
-					renderer->draw_line(pos1_1, pos2_1, color);
-					renderer->draw_line(pos2_1, pos3_1, color);
-					renderer->draw_line(pos3_1, pos0_1, color);
+					renderer.draw_line(pos0_1, pos1_1, color);
+					renderer.draw_line(pos1_1, pos2_1, color);
+					renderer.draw_line(pos2_1, pos3_1, color);
+					renderer.draw_line(pos3_1, pos0_1, color);
 				}
 			}
 		}
 
-		renderer->end_batch();
+		renderer.end_batch();
 
-		renderer->flush();
+		renderer.flush();
 	}
 
 	void Draw::debug()
 	{
-		renderer->begin_batch();
+		renderer.begin_batch();
 		// Bean: Temporary green dot in the centre of the scene
 		glm::vec4 color = { 0.1f, 1.f, 0.1f, 1.f };
 		glm::vec2 worldNDC{ 0 };
@@ -282,14 +310,14 @@ namespace Copium
 		worldNDC = { cameraPos.x, cameraPos.y };
 		scale *= zoom;
 
-		renderer->end_batch();
-		renderer->flush();
+		renderer.end_batch();
+		renderer.flush();
 
-		renderer->begin_batch();
+		renderer.begin_batch();
 
 		// Button Colliders
 		Scene* scene = sm->get_current_scene();
-		renderer->set_line_width(1.5f);
+		renderer.set_line_width(1.5f);
 		if (scene != nullptr)
 		{
 			for (GameObject* gameObject : scene->get_gameobjectvector())
@@ -306,10 +334,10 @@ namespace Copium
 					glm::vec2 pos2_1 = { bounds.max.to_glm() };
 					glm::vec2 pos3_1 = { bounds.min.x, bounds.max.y };
 
-					renderer->draw_line(pos0_1, pos1_1, color);
-					renderer->draw_line(pos1_1, pos2_1, color);
-					renderer->draw_line(pos2_1, pos3_1, color);
-					renderer->draw_line(pos3_1, pos0_1, color);
+					renderer.draw_line(pos0_1, pos1_1, color);
+					renderer.draw_line(pos1_1, pos2_1, color);
+					renderer.draw_line(pos2_1, pos3_1, color);
+					renderer.draw_line(pos3_1, pos0_1, color);
 				}
 
 				for (Component* component : gameObject->getComponents<ButtonComponent>())
@@ -355,24 +383,24 @@ namespace Copium
 					glm::vec2 pos2_1 = { maxX, maxY };
 					glm::vec2 pos3_1 = { minX, maxY };
 
-					renderer->draw_line(pos0_1, pos1_1, color);
-					renderer->draw_line(pos1_1, pos2_1, color);
-					renderer->draw_line(pos2_1, pos3_1, color);
-					renderer->draw_line(pos3_1, pos0_1, color);
+					renderer.draw_line(pos0_1, pos1_1, color);
+					renderer.draw_line(pos1_1, pos2_1, color);
+					renderer.draw_line(pos2_1, pos3_1, color);
+					renderer.draw_line(pos3_1, pos0_1, color);
 				}
 			}
 		}
 
-		renderer->draw_quad({ worldNDC.x, worldNDC.y , 1.f }, scale, 0.f, color);
+		renderer.draw_quad({ worldNDC.x, worldNDC.y , 1.f }, scale, 0.f, color);
 
-		renderer->end_batch();
-		renderer->flush();
+		renderer.end_batch();
+		renderer.flush();
 	}
 
 	void Draw::development()
 	{
 		// Bean : Testing Animations
-		renderer->begin_batch();
+		renderer.begin_batch();
 		/*AssetsSystem* assets = AssetsSystem::Instance();
 		if (!assets->get_spritesheets().empty())
 		{
@@ -402,7 +430,7 @@ namespace Copium
 					id = i + 1;
 			}
 
-			renderer->draw_quad(position, size, 0.f, assets->get_spritesheets()[animID], animIndex, id);
+			renderer.draw_quad(position, size, 0.f, assets->get_spritesheets()[animID], animIndex, id);
 		}*/
 
 		Scene* scene = sm->get_current_scene();
@@ -415,14 +443,14 @@ namespace Copium
 					if (!component->Enabled())
 						continue;
 					Text* text = reinterpret_cast<Text*>(component);
-					text->render();
+					text->render(camera);
 				}
 			}
 
 		}
 
-		renderer->end_batch();
+		renderer.end_batch();
 
-		renderer->flush();
+		renderer.flush();
 	}
 }

@@ -19,6 +19,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define RENDERER_H
 
 #include "Graphics/vertex-types.h"
+#include "Graphics/glslshader.h"
 
 #include "Graphics/spritesheet.h"
 #include "Graphics/sprite.h"
@@ -28,6 +29,7 @@ namespace Copium
 
 	// Forward declare
 	class GraphicsSystem;
+	class BaseCamera;
 
 	// Renders objects in the game / scene
 	// Checks objects that have the Renderer component 
@@ -43,7 +45,7 @@ namespace Copium
 			the elements of the object to be used for rendering
 		*/
 		/***************************************************************************/
-		void init(); // Initializes the renderer by storing a handle to VAO
+		void init(BaseCamera* _camera); // Initializes the renderer by storing a handle to VAO
 
 		/***************************************************************************/
 		/*!
@@ -380,6 +382,7 @@ namespace Copium
 		glm::vec2 textTextCoord[6];
 
 		GraphicsSystem* graphics = nullptr; // A pointer to the instance of graphics system
+		BaseCamera* camera = nullptr;		// A pointer to the camera that holds this renderer class
 	};
 }
 

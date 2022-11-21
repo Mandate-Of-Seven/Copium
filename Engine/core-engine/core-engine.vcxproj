@@ -97,6 +97,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Editor\editor-colortheme.cpp" />
+    <ClCompile Include="src\Editor\editor-game.cpp" />
     <ClCompile Include="src\GameObject\Components\audiosource-component.cpp" />
     <ClCompile Include="src\Audio\sound-system.cpp" />
     <ClCompile Include="src\Debugging\frame-rate-controller.cpp" />
@@ -189,6 +190,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Editor\editor-colortheme.h" />
+    <ClInclude Include="src\Editor\editor-game.h" />
     <ClInclude Include="src\GameObject\Components\audiosource-component.h" />
     <ClInclude Include="src\Debugging\frame-rate-controller.h" />
     <ClInclude Include="src\Editor\editor-camera.h" />
@@ -209,6 +211,7 @@
     <ClInclude Include="src\Graphics\base-camera.h" />
     <ClInclude Include="src\Graphics\fonts.h" />
     <ClInclude Include="src\Graphics\graphics-draw.h" />
+    <ClInclude Include="src\Graphics\graphics-typedef.h" />
     <ClInclude Include="src\Graphics\sprite.h" />
     <ClInclude Include="src\GameObject\Components\ui-components.h" />
     <ClInclude Include="src\SceneManager\sm.h" />

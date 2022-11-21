@@ -15,7 +15,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
-#include <glm/glm.hpp>
+#include "Graphics/glslshader.h"
 
 namespace Copium
 {

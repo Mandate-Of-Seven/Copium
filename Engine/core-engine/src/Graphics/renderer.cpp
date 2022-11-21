@@ -26,9 +26,10 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
-	void Renderer::init()
+	void Renderer::init(BaseCamera* _camera)
 	{
 		graphics = GraphicsSystem::Instance();
+		camera = _camera;
 
 		// Setup Quad Vertex Array Object
 		setup_quad_vao();
@@ -248,13 +249,13 @@ namespace Copium
 			// Bean: Matrix assignment to be placed somewhere else
 			GLuint uProjection = glGetUniformLocation(
 				graphics->get_shader_program()[QUAD_SHADER].GetHandle(), "uViewProjection");
-			GLuint uTransform = glGetUniformLocation(
-				graphics->get_shader_program()[QUAD_SHADER].GetHandle(), "uTransform");
-			glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_view_proj_matrix();
+			/*GLuint uTransform = glGetUniformLocation(
+				graphics->get_shader_program()[QUAD_SHADER].GetHandle(), "uTransform");*/
+			glm::mat4 projection = camera->get_view_proj_matrix();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
-			glm::vec3 pos = EditorSystem::Instance()->get_camera()->get_eye();
-			glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
-			glUniformMatrix4fv(uTransform, 1, GL_FALSE, glm::value_ptr(transform));
+			//glm::vec3 pos = camera->get_eye();
+			//glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
+			//glUniformMatrix4fv(uTransform, 1, GL_FALSE, glm::value_ptr(transform));
 			
 			/*PRINT("Transform Matrix:");
 			for (int i = 0; i < 4; i++)
@@ -288,7 +289,7 @@ namespace Copium
 			GLuint uProjection = glGetUniformLocation(
 				graphics->get_shader_program()[LINE_SHADER].GetHandle(), "uViewProjection");
 
-			glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_view_proj_matrix();
+			glm::mat4 projection = camera->get_view_proj_matrix();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
 			// End of matrix assignment
@@ -322,7 +323,7 @@ namespace Copium
 			GLuint uProjection = glGetUniformLocation(
 				graphics->get_shader_program()[TEXT_SHADER].GetHandle(), "uViewProjection");
 
-			glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_view_proj_matrix();
+			glm::mat4 projection = camera->get_view_proj_matrix();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
 			// End of matrix assignment
@@ -678,7 +679,7 @@ namespace Copium
 		GLuint uProjection = glGetUniformLocation(
 			graphics->get_shader_program()[LINE_SHADER].GetHandle(), "uViewProjection");
 
-		glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_view_proj_matrix();
+		glm::mat4 projection = camera->get_view_proj_matrix();
 		glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
 		glBindVertexArray(circleVertexArrayID);
@@ -696,55 +697,56 @@ namespace Copium
 		glDisable(GL_BLEND);
 	}
 
-	void Renderer::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float _scale, GLuint _fontID)
+	/*void Renderer::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float _scale, GLuint _fontID)
 	{
-		//if (textVertexCount >= maxTextCount)
-		//{
-		//	end_batch();
-		//	flush();
-		//	begin_batch();
-		//}
+		if (textVertexCount >= maxTextCount)
+		{
+			end_batch();
+			flush();
+			begin_batch();
+		}
 
-		//float x = _position.x;
-		//float y = _position.y;
+		float x = _position.x;
+		float y = _position.y;
 
-		//Font font = graphics->get_font(_fontID);
-		//std::map<char, Character> chars = font.get_characters();
-		//
-		//std::string::const_iterator c;
-		//for (c = _text.begin(); c != _text.end(); c++)
-		//{
-		//	Character ch = chars[*c];
+		Font font = graphics->get_font(_fontID);
+		std::map<char, Character> chars = font.get_characters();
+		
+		std::string::const_iterator c;
+		for (c = _text.begin(); c != _text.end(); c++)
+		{
+			Character ch = chars[*c];
 
-		//	float xpos = x + ch.bearing.x * (_scale * 0.01f);
-		//	float ypos = y - (ch.size.y - ch.bearing.y) * (_scale * 0.01f);
+			float xpos = x + ch.bearing.x * (_scale * 0.01f);
+			float ypos = y - (ch.size.y - ch.bearing.y) * (_scale * 0.01f);
 
-		//	float w = ch.size.x * (_scale * 0.01f);
-		//	float h = ch.size.y * (_scale * 0.01f);
+			float w = ch.size.x * (_scale * 0.01f);
+			float h = ch.size.y * (_scale * 0.01f);
 
-		//	// Update VBO for each character
-		//	glm::vec3 textVertexPosition[6] = {
-		//		glm::vec3(xpos, ypos + h, 0.f),
-		//		glm::vec3(xpos, ypos, 0.f),
-		//		glm::vec3(xpos + w, ypos, 0.f),
-		//		glm::vec3(xpos, ypos + h, 0.f),
-		//		glm::vec3(xpos + w, ypos, 0.f),
-		//		glm::vec3(xpos + w, ypos + h, 0.f)
-		//	};
+			// Update VBO for each character
+			glm::vec3 textVertexPosition[6] = {
+				glm::vec3(xpos, ypos + h, 0.f),
+				glm::vec3(xpos, ypos, 0.f),
+				glm::vec3(xpos + w, ypos, 0.f),
+				glm::vec3(xpos, ypos + h, 0.f),
+				glm::vec3(xpos + w, ypos, 0.f),
+				glm::vec3(xpos + w, ypos + h, 0.f)
+			};
 
-		//	for (GLint i = 0; i < 6; i++)
-		//	{
-		//		textBufferPtr->pos = textVertexPosition[i];
-		//		textBufferPtr->textCoord = textTextCoord[i];
-		//		textBufferPtr->color = _color;
-		//		textBufferPtr++;
-		//	}
+			for (GLint i = 0; i < 6; i++)
+			{
+				textBufferPtr->pos = textVertexPosition[i];
+				textBufferPtr->textCoord = textTextCoord[i];
+				textBufferPtr->color = _color;
+				textBufferPtr++;
+			}
 
-		//	x += (ch.advance >> 6) * (_scale * 0.01f); // Bitshift by 6 to get value in pixels
-		//
-		//	textVertexCount += 6;
-		//}
-		//
-		//textCount++;
+			x += (ch.advance >> 6) * (_scale * 0.01f); // Bitshift by 6 to get value in pixels
+		
+			textVertexCount += 6;
+		}
+		
+		textCount++;
 	}
+	*/
 }

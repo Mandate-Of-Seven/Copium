@@ -126,7 +126,7 @@ namespace Copium
 	{
 	}
 
-	void Text::render()
+	void Text::render(BaseCamera* _camera)
 	{
 		if (!font)
 			return;
@@ -166,7 +166,7 @@ namespace Copium
 			}
 		}
 
-		font->draw_text(content, pos, color, scale, 0);
+		font->draw_text(content, pos, color, scale, 0, _camera);
 	}
 
 	Component* Text::clone(GameObject& _gameObj) const
@@ -181,7 +181,6 @@ namespace Copium
 
 	void Text::inspector_view()
 	{
-		float sameLinePadding = 16.f;
 		bool openPopup = false;
 
 		ImGuiColorEditFlags miscFlags = ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip

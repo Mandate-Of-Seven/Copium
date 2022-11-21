@@ -18,13 +18,14 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include "pch.h"
 #include "GameObject/game-object.h"
-#include "GameObject/Components/renderer-component.h"
-#include "GameObject/Components/script-component.h"
+#include "GameObject/Components/audiosource-component.h"
+#include "GameObject/Components/camera-component.h"
+#include "GameObject/Components/collider-components.h"
 #include "GameObject/Components/component.h"
 #include "GameObject/Components/physics-components.h"
-#include "GameObject/Components/collider-components.h"
+#include "GameObject/Components/renderer-component.h"
+#include "GameObject/Components/script-component.h"
 #include "GameObject/Components/ui-components.h"
-#include "GameObject/Components/audiosource-component.h"
 #include "SceneManager/sm.h"
 
 //USING
@@ -48,6 +49,8 @@ namespace Copium
             return &addComponent<Animator>();
         case ComponentType::BoxCollider2D:
             return &addComponent<BoxCollider2D>();
+        case ComponentType::Camera:
+            return &addComponent<Camera>();
         case ComponentType::Rigidbody2D:
             return &addComponent<Rigidbody2D>();
         case ComponentType::SpriteRenderer:
@@ -63,7 +66,7 @@ namespace Copium
         case ComponentType::AudioSource:
             return &addComponent<AudioSource>();
         default:
-            PRINT("ADDED NOTHING");
+            PRINT("ADDED NOTHING, MAYBE ADDED THE COMPONENT TO THE GAMEOBJECT.CPP");
             break;
         }
         return nullptr;

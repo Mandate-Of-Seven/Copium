@@ -33,7 +33,7 @@ namespace Copium
 	namespace
 	{
 		// Our state
-		bool show_demo_window = true;
+		bool show_demo_window = false;
 		ThreadSystem& threadSystem{ *ThreadSystem::Instance() };
 		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 		InputSystem& inputSystem{ *InputSystem::Instance() };
@@ -70,6 +70,7 @@ namespace Copium
 		Window::ColorTheme::init();
 
 		sceneView.init();
+		game.init();
 		contentBrowser.init();
 		
 		// Initialize a new editor camera
@@ -78,22 +79,23 @@ namespace Copium
 
 	void EditorSystem::update()
 	{
-		static bool enableEditor = true;
-
 		if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_E))
 		{
 			enableEditor = !enableEditor;
 			if (!enableEditor)
 			{
 				// Swap camera
-				graphicsSystem.get_framebuffer()->exit();
+				//camera.get_framebuffer()->exit();
 				glm::vec2 dimension = { windowsSystem.get_window_width(), windowsSystem.get_window_height() };
-				glViewport(0, 0, dimension.x, dimension.y);
-				//graphicsSystem.get_framebuffer()->resize(dimension.x, dimension.y);
-				//sceneView.resize_sceneview(dimension);
+				// Game Camera
+				if (!graphicsSystem.get_cameras().empty())
+				{
+					(*graphicsSystem.get_cameras().begin())->on_resize(dimension.x, dimension.y);
+					glViewport(0, 0, dimension.x, dimension.y);
+				}
 			}
 			else
-				graphicsSystem.get_framebuffer()->init();
+				camera.get_framebuffer()->init();
 		}
 
 		// Start the Dear ImGui frame
@@ -280,6 +282,7 @@ namespace Copium
 			Window::EditorConsole::update();
 			Window::Hierarchy::update();
 			sceneView.update();
+			game.update();
 			contentBrowser.update();
 
 			// demo update
@@ -288,6 +291,12 @@ namespace Copium
 
 			// Editor Camera
 			camera.update();
+
+			// Game Camera
+			if (!graphicsSystem.get_cameras().empty())
+			{
+				(*graphicsSystem.get_cameras().begin())->update();
+			}
 
             ImGui::End();
 		}		
@@ -309,7 +318,9 @@ namespace Copium
 
 		Window::Inspector::exit();
 		sceneView.exit();
+		game.exit();
 		contentBrowser.exit();
+		camera.exit();
 	}
 
 	void EditorSystem::imguiConsoleAddLog(std::string value)

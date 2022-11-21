@@ -19,33 +19,35 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include "Graphics/graphics-system.h"
 #include "Graphics/spritesheet.h"
+#include "Graphics/fonts.h"
 #include "Windows/windows-input.h"
 
 #include "Editor/editor-system.h"
 #include "Files/assets-system.h"
 
 // Bean: remove this after NewManagerInstance is moved
-#include "GameObject/Components/renderer-component.h"
-#include "GameObject/Components/ui-components.h"
 #include "SceneManager/sm.h"
-#include "Math/math-library.h"
-
-namespace
-{
-	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance()};
-}
+#include "GameObject/Components/renderer-component.h"
+#include "GameObject/Components/camera-component.h"
 
 namespace Copium
 {
-	// Temporary global variables
-	GLfloat movement_x = 0.f, movement_y = 0.f;
-	GLfloat size_x = 0.f, size_y = 0.f;
-	GLfloat rotate = 0.f;
-	bool massSpawn = false, toggleAnimation = false;
-	int animID = 0;
+	namespace
+	{
+		InputSystem& inputSystem{ *InputSystem::Instance() };
+		MessageSystem& messageSystem{ *MessageSystem::Instance() };
+
+		// Temporary global variables
+		GLfloat movement_x = 0.f, movement_y = 0.f;
+		GLfloat size_x = 0.f, size_y = 0.f;
+		GLfloat rotate = 0.f;
+		bool massSpawn = false, toggleAnimation = false;
+		int animID = 0;
+	}
 
 	void GraphicsSystem::init()
 	{
+		messageSystem.subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 
 		// Bean: 3D Depth Testing
@@ -56,14 +58,7 @@ namespace Copium
 
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 
-		// Initialise Sub systems
-		renderer.init();
- 
-		glm::vec2 size = EditorSystem::Instance()->get_scene_view()->get_dimension();
-		framebuffer.set_size((GLuint)size.x, (GLuint)size.y);
-		framebuffer.init();
-
-		draw.init();
+		//renderer.init();
 
 		// Bind textures to quad fragment shader
 		shaderProgram[QUAD_SHADER].Use();
@@ -87,6 +82,10 @@ namespace Copium
 		//		 Renderer.cpp does it for me if the texture has not been stored, enable 
 		//		 to improve runtime rendering(no spikes)
 		parse_textures();
+
+		// Bean: Checking for archetypes, to be removed once we found a better implementation
+		loaded = true;
+		cameras.pop_front();
 	}
 
 	void GraphicsSystem::update()
@@ -180,55 +179,33 @@ namespace Copium
 		{
 			animID = (animID == 1) ? 0 : 1;
 		}
-
-		static bool debugMode = false;
-		if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_D))
-		{
-			debugMode = !debugMode;
-		}
-
-		if (debugMode)
-			draw.enable(DRAW::DEBUG);
-		else if (!debugMode)
-			draw.disable(DRAW::DEBUG);
-		
-		if (inputSystem.is_key_held(GLFW_KEY_Z) && inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT))
-		{
-			size_x -= dt;
-			size_y -= dt;
-		}
-		else if (inputSystem.is_key_held(GLFW_KEY_Z))
-		{
-			size_x += dt;
-			size_y += dt;
-		}
-
-		/*if (inputSystem.is_key_held(GLFW_KEY_R) && inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT))
-		{
-			rotate -= dt * 75;
-		}
-		else if (inputSystem.is_key_held(GLFW_KEY_R))
-		{
-			rotate += dt * 75;
-		}*/
-
-		
-		// Clear the screen
-		glClearColor(0.278f, 0.278f, 0.278f, 1.f);
-
-		if (draw.get_draw_mode(DRAW::EDITOR))
-			batch_render_editor();
-		else
-			batch_render_game();
+	
+		batch_render();
 	}
 
 	void GraphicsSystem::exit()
 	{
-		Font::cleanUp();
+		//renderer.shutdown();
 
-		renderer.shutdown();
-		framebuffer.exit();
-		draw.exit();
+		Font::cleanUp();
+	}
+
+	void GraphicsSystem::handleMessage(MESSAGE_TYPE mType)
+	{
+		if (mType == MESSAGE_TYPE::MT_SCENE_DESERIALIZED)
+		{
+			cameras.clear();
+			NewSceneManager* sm = NewSceneManager::Instance();
+			Scene* scene = sm->get_current_scene();
+			for (GameObject* gameObject : scene->get_gameobjectvector())
+			{
+				if (gameObject->hasComponent(ComponentType::Camera))
+				{
+					Camera* camera = reinterpret_cast<Camera*>(gameObject->getComponent(ComponentType::Camera));
+					cameras.push_back(camera);
+				}
+			}
+		}
 	}
 
 	// Setup default shaders for the graphics system
@@ -270,27 +247,12 @@ namespace Copium
 			textureSlots[textureSlotIndex++] = assets->get_textures()[i].get_object_id();
 		}
 	}
-	
-	// Renders the objects in the engine in batches
-	void GraphicsSystem::batch_render_editor()
+
+	void GraphicsSystem::batch_render()
 	{
-		// Binds the framebuffer
-		framebuffer.bind();
-
-		// Clear the screen bits
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		draw.update();
-		// Unbind the framebuffer to display renderable
-		// onto the image
-		framebuffer.unbind();
-	}
-
-	void GraphicsSystem::batch_render_game()
-	{
-		// Clear the screen bits
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		draw.update();
+		for (auto& camera : cameras)
+		{
+			camera->update();
+		}
 	}
 }

@@ -16,25 +16,29 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef BASE_CAMERA_H
 #define BASE_CAMERA_H
 
-#include <glm/glm.hpp>
+#include <rapidjson/document.h>
+
+#include "Graphics/graphics-typedef.h"
+#include "Graphics/framebuffer.h"
+#include "Graphics/graphics-draw.h"
 
 namespace Copium
 {
-	enum CameraType
-	{
-		NONE,
-		GAME,		// In game camera / play mode
-		SCENEVIEW,	// The editor camera
-		PREVIEW		// The preview camera in the editor
-	};
-
 	// Base camera which contains data
 	class BaseCamera
 	{
 	public:
-		void init(float _width, float _height, bool _orthographic = true);
+		bool deserialize(rapidjson::Value& _value);
+
+		bool serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
+
+		void init(float _width, float _height, CameraType _cameraType = NONE, bool _orthographic = true);
 		
 		void update();
+
+		void draw_camera();
+
+		void exit();
 
 		const glm::vec3& get_eye() const { return viewer; }
 
@@ -48,12 +52,18 @@ namespace Copium
 		float get_pitch() const { return pitch; }
 		float get_yaw() const { return yaw; }
 
-		// Matrices
 		void on_resize(float _width, float _height);
+		void on_inspector_change();
 
+		// Matrices
 		glm::mat4 get_projection() const { return projMatrix; }
 		glm::mat4 get_view_matrix() const { return viewMatrix; }
 		glm::mat4 get_view_proj_matrix() const { return viewProjMatrix; }
+
+		Framebuffer* get_framebuffer() { return &framebuffer; }
+
+		void set_bg_color(glm::vec4 const& _color) { backgroundColor = _color; }
+		const glm::vec4& get_bg_color() const { return backgroundColor; }
 
 	protected:
 		void update_ortho_projection();
@@ -62,9 +72,6 @@ namespace Copium
 		void update_view_matrix();
 
 		glm::vec3 calculate_position();
-
-		void set_bg_color(glm::vec4 const& _color) { backgroundColor = _color; }
-		const glm::vec4& get_bg_color() const { return backgroundColor; }
 
 	protected:
 
@@ -100,6 +107,10 @@ namespace Copium
 
 		glm::mat4 cameraToNDC{ 0 };
 		glm::mat4 ndcToViewport{ 0 };
+
+		/* Stored Information ***********************************************************/
+		Framebuffer framebuffer;
+		Draw draw;
 	};
 }
 #endif // !BASE_CAMERA_H

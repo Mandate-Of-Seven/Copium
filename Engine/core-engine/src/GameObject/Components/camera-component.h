@@ -18,6 +18,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
+    // Forward declaration of the transform class for the gameobject
+    class Transform;
+
 	class Camera : public Component, public BaseCamera
 	{
     public:
@@ -27,10 +30,47 @@ namespace Copium
             Constructor for camera component
         \param _gameObj
             Owner of this component
+        \param _archetype
+            Check if the camera object is an archetype
         */
         /**************************************************************************/
         Camera(GameObject& _gameObj);
 
+        ~Camera();
+
+        /*******************************************************************************
+        /*!
+        *
+        \brief
+            Deserialize this renderer component's data from the specified rapidjson Value
+
+        \param _value
+            reference to the rapidjson Value which the renderer component's data deserializes its data from
+
+        \return
+            void
+
+        */
+        /*******************************************************************************/
+        void deserialize(rapidjson::Value& _value);
+        /*******************************************************************************
+        /*!
+        *
+        \brief
+            Serialize this renderer component's data to the specified rapidjson Value
+
+        \param _value
+            reference to the rapidjson Value which the renderer component's data is to serialize its data to
+
+        \param _doc
+            reference to the rapidjson Document which is associated to the save file which the data is being saved to
+
+        \return
+            void
+
+        */
+        /*******************************************************************************/
+        void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
         /*******************************************************************************
         /*!
@@ -42,22 +82,13 @@ namespace Copium
         /*******************************************************************************/
         void inspector_view();
 
-
         virtual Camera* clone(GameObject& _gameObj) const
         {
             Camera* component = new Camera(_gameObj);
             return component;
         }
 
-        /***************************************************************************/
-        /*!
-        \brief
-            Deserialize this component's data from specified rapidjson value
-        */
-        /**************************************************************************/
-        //void deserialize(rapidjson::Value& _value);
-
     protected:
-		
+        GameObject* gameObject; // Reference to the gameobject
 	};
 }

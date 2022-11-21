@@ -35,7 +35,7 @@ namespace Copium
 
 	void EditorCamera::init(float _width, float _height, bool _orthographic)
 	{
-		BaseCamera::init(_width, _height, _orthographic);
+		BaseCamera::init(_width, _height, CameraType::SCENEVIEW, _orthographic);
 		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
 		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
 	}
@@ -68,6 +68,17 @@ namespace Copium
 				}
 			}
 		}
+
+		static bool debugMode = false;
+		if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_D))
+		{
+			debugMode = !debugMode;
+		}
+
+		if (debugMode)
+			draw.enable(DRAW::DEBUG);
+		else if (!debugMode)
+			draw.disable(DRAW::DEBUG);
 
 		BaseCamera::update();
 	}
