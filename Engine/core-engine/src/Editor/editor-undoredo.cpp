@@ -89,9 +89,9 @@ namespace Copium
 
 
 	//GameObject UndoRedo not ready
-	UndoRedo::GameObjectCommand::GameObjectCommand(GameObject* _pointer, GameObject _value)
+	UndoRedo::GameObjectCommand::GameObjectCommand(GameObject* _pointer, GameObject& _value)
 	{
-		this->pointer = _pointer;
+		//this->pointer = _pointer;
 		//this->value(_value);//no assignment operator yet
 	}
 

@@ -52,7 +52,7 @@ namespace Copium {
 			pointer to the new game object
 		*/
 		/*******************************************************************************/
-		GameObject* build_gameobject();
+		GameObject* instantiate();
 
 		/*******************************************************************************
 		/*!
@@ -65,9 +65,9 @@ namespace Copium {
 			pointer to the new game object (head of the tree)
 		*/
 		/*******************************************************************************/
-		GameObject* build_gameobject(GameObject& _src);
+		GameObject* instantiate(GameObject& _src);
 		// Set up for future
-		//GameObject* build_gameobject(prefab);
+		//GameObject* instantiate(prefab);
 
 		/*******************************************************************************
 		/*!
@@ -80,7 +80,7 @@ namespace Copium {
 			pointer to the new game object
 		*/
 		/*******************************************************************************/
-		GameObject* build_gameobject(rapidjson::Value& _value);
+		GameObject* instantiate(rapidjson::Value& _value);
 		/*******************************************************************************
 		/*!
 		*
@@ -112,22 +112,7 @@ namespace Copium {
 			on failure, return false
 		*/
 		/*******************************************************************************/
-		bool delete_gameobject(GameObject* _go);
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Clones a game object and places the clone into the current scene
-			NOTE: This function does NOT clone the children
-
-		\param _src
-			Ptr to a game object that is to be cloned
-
-		\return
-			pointer to the new game object(clone)
-		*/
-		/*******************************************************************************/
-		GameObject* clone_gameobject(GameObject* _src);
+		bool destroy(GameObject* _go);
 
 		/*******************************************************************************
 		/*!
@@ -181,7 +166,7 @@ namespace Copium {
 
 		*/
 		/*******************************************************************************/
-		GameObject* build_gameobject(const std::string& _archetype);
+		GameObject* instantiate(const std::string& _archetype);
 
 		/*******************************************************************************
 		/*!
@@ -219,7 +204,6 @@ namespace Copium {
 
 	private:
 		std::map<std::string, GameObject*> gameObjectCreators;
-		friend GameObject;
 	};
 
 }

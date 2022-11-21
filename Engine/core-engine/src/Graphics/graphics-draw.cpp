@@ -92,7 +92,7 @@ namespace Copium
 		Scene* scene = sm->get_current_scene();
 		if (scene != nullptr)
 		{
-			for (GameObject* gameObject : scene->get_gameobjectvector())
+			for (GameObject* gameObject : scene->gameObjects)
 			{
 				for (Component* component : gameObject->getComponents<SpriteRenderer>())
 				{
@@ -102,8 +102,8 @@ namespace Copium
 					Transform& t = gameObject->transform;
 					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(component);
 					Sprite& sr = rc->get_sprite_renderer();
-					glm::vec2 size(t.glmScale().x, t.glmScale().y);
-					float rotation = t.glmRotation().z;
+					glm::vec2 size(t.scale.x, t.scale.y);
+					float rotation = t.rotation.z;
 					// Bean: It should be set in inspector view of the renderer component instead
 					unsigned int id = sr.get_sprite_id() - 1;
 
@@ -118,14 +118,14 @@ namespace Copium
 						sr.set_texture(nullptr);
 					}
 
-					if (gameObject->has_parent())
+					if (gameObject->transform.hasParent())
 					{
-						Transform& t1 = gameObject->get_parent()->transform;
-						renderer->draw_quad(t.glmPosition() + t1.glmPosition(), size, rotation, sr);
+						Transform& t1 = *gameObject->transform.parent;
+						renderer->draw_quad(t.position + t1.position, size, rotation, sr);
 
 					}
 
-					renderer->draw_quad(t.glmPosition(), size, rotation, sr);
+					renderer->draw_quad(t.position.glmVec3, size, rotation, sr);
 				}
 				for (Component* component : gameObject->getComponents<ImageComponent>())
 				{
@@ -134,8 +134,8 @@ namespace Copium
 					Transform& t = gameObject->transform;
 					ImageComponent* rc = reinterpret_cast<ImageComponent*>(component);
 					Sprite& sr = rc->get_sprite_renderer();
-					glm::vec2 size(t.glmScale().x, t.glmScale().y);
-					float rotation = t.glmRotation().z;
+					glm::vec2 size(t.scale.x, t.scale.y);
+					float rotation = t.rotation.z;
 					// Bean: It should be set in inspector view of the renderer component instead
 					unsigned int id = sr.get_sprite_id() - 1;
 
@@ -220,9 +220,9 @@ namespace Copium
 				{
 					Transform& t = gameObject->transform;
 
-					glm::vec3 position = t.glmPosition();
-					glm::vec2 size(t.glmScale().x, t.glmScale().y);
-					float rotation = t.glmRotation().z;
+					glm::vec3 position = t.position;
+					glm::vec2 size(t.scale.x, t.scale.y);
+					float rotation = t.rotation.z;
 
 					glm::mat4 translate = {
 						glm::vec4(1.f, 0.f, 0.f, 0.f),
@@ -295,7 +295,7 @@ namespace Copium
 		renderer->set_line_width(1.5f);
 		if (scene != nullptr)
 		{
-			for (GameObject* gameObject : scene->get_gameobjectvector())
+			for (GameObject* gameObject : scene->gameObjects)
 			{
 				for (Component* component : gameObject->getComponents<BoxCollider2D>())
 				{
@@ -319,9 +319,9 @@ namespace Copium
 				{
 					Transform& t = gameObject->transform;
 
-					glm::vec3 position = t.glmPosition();
-					glm::vec2 size(t.glmScale().x, t.glmScale().y);
-					float rotation = t.glmRotation().z;
+					glm::vec3 position = t.position;
+					glm::vec2 size(t.scale.x, t.scale.y);
+					float rotation = t.rotation.z;
 
 					glm::mat4 translate = {
 						glm::vec4(1.f, 0.f, 0.f, 0.f),
@@ -411,7 +411,7 @@ namespace Copium
 		Scene* scene = sm->get_current_scene();
 		if (scene != nullptr)
 		{
-			for (GameObject* gameObject : scene->get_gameobjectvector())
+			for (GameObject* gameObject : scene->gameObjects)
 			{
 				for (Component* component : gameObject->getComponents<Text>())
 				{

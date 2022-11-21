@@ -32,9 +32,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 namespace Copium {
 	GameObject* NewSceneManager::findGameObjByID(GameObjectID _ID)
 	{
-		for (GameObject* pGameObj : currentScene->get_gameobjectvector())
+		for (GameObject* pGameObj : currentScene->gameObjects)
 		{
-			if (pGameObj->id == _ID)
+			if (pGameObj->getId() == _ID)
 			{
 				return pGameObj;
 			}
@@ -43,7 +43,7 @@ namespace Copium {
 	}
 	GameObject* NewSceneManager::findGameObjByName(const std::string& name)
 	{
-		for (GameObject* pGameObj : currentScene->get_gameobjectvector())
+		for (GameObject* pGameObj : currentScene->gameObjects)
 		{
 			if (pGameObj->get_name() == name)
 			{
@@ -178,7 +178,7 @@ namespace Copium {
 			for (rapidjson::Value::ValueIterator iter = _gameObjArr.Begin(); iter != _gameObjArr.End(); ++iter)
 			{
 				GameObject* tmpGO = nullptr;
-				tmpGO = gof->build_gameobject(*iter);
+				tmpGO = gof->instantiate(*iter);
 			}
 		}
 		
@@ -263,10 +263,10 @@ namespace Copium {
 		for (size_t i{ 0 }; i < storageScene->get_gameobjcount(); ++i)
 		{
 			// Build a game object copy from original scene
-			GameObject* rhs = storageScene->get_gameobjectvector()[i];
-			if (rhs && !rhs->get_parent())
+			GameObject* rhs = storageScene->gameObjects[i];
+			if (rhs && !rhs->transform.hasParent())
 			{
-				gof->build_gameobject(*rhs);
+				gof->instantiate(*rhs);
 			}
 		}
 		selectedGameObject = nullptr;
@@ -337,24 +337,22 @@ namespace Copium {
 		doc.AddMember("Unused GIDs", ugids, doc.GetAllocator());
 
 		std::vector<GameObject*> roots;
-		for (size_t i{ 0 }; i < currentScene->get_gameobjcount(); ++i) {
-			GameObject* tmp = currentScene->get_gameobjectvector()[i];
-			if (!tmp->has_parent())
-				roots.emplace_back(tmp);
+		for (GameObject* pGameObject : currentScene->gameObjects)
+		{
+			if (!pGameObject->transform.hasParent())
+				roots.emplace_back(pGameObject);
 		}
-
 		//Create array of game objects
 		rapidjson::Value gameObjects(rapidjson::kArrayType);
-		for (size_t i{ 0 }; i < roots.size(); ++i) {
-
-			GameObject* tmp = roots[i];
-			if (tmp->has_parent())
+		for (GameObject* pGameObject : currentScene->gameObjects)
+		{
+			if (pGameObject->transform.hasParent())
 				continue;
 
 			rapidjson::Value go(rapidjson::kObjectType);
-			tmp->serialize(go, doc);
+			pGameObject->serialize(go, doc);
 
-			
+
 			//rapidjson::Value components(rapidjson::kArrayType);
 			// Insert transform component into component array
 

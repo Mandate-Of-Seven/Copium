@@ -65,7 +65,6 @@ void Scene::draw_scene()
 
 GameObjectID Scene::assignGameObjID()
 {
-
 	if (!unusedGIDs.empty())
 	{
 		// Pop the first unused GID
@@ -89,7 +88,7 @@ std::vector<GameObjectID>& Scene::get_unusedgids() { return unusedGIDs; }
 
 std::string Scene::get_filename() const {return filename;}
 size_t Scene::get_gameobjcount() const { return gameObjects.size(); }
-std::vector<GameObject*>& Scene::get_gameobjectvector() { return gameObjects;}
+
 GameObject* Scene::add_gameobject(GameObject* _gameObj) 
 {
 	gameObjects.push_back(_gameObj);

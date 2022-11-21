@@ -59,13 +59,13 @@ namespace Copium
 			{
 				zoomLevel = 5.f;
 				update_ortho_projection(aspectRatio, zoomLevel);
-				for (size_t i = 0; i < scene->get_gameobjectvector().size(); i++)
+				for (size_t i = 0; i < scene->gameObjects.size(); i++)
 				{
 					// If the object is the player
-					if (!scene->get_gameobjectvector()[i]->get_name().compare("PlayerTrain"))
+					if (!scene->gameObjects[i]->get_name().compare("PlayerTrain"))
 					{
-						GameObject* go = scene->get_gameobjectvector()[i];
-						focalPoint = go->transform.glmPosition(); // Fix the camera onto the player
+						GameObject* go = scene->gameObjects[i];
+						focalPoint = go->transform.position; // Fix the camera onto the player
 						//PRINT("Focal point: " << focalPoint.x << " " << focalPoint.y);
 					}
 				}

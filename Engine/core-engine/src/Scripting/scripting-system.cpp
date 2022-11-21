@@ -335,8 +335,6 @@ namespace Copium
 		}
 	}
 
-	
-
 	void ScriptingSystem::updateScriptFiles()
 	{
 		//Check for new files
@@ -432,7 +430,6 @@ namespace Copium
 
 	void ScriptingSystem::handleMessage(MESSAGE_TYPE mType)
 	{
-		//MT_REFLECT_CS_GAMEOBJECT
 		switch (mType)
 		{
 			case MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT:

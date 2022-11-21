@@ -37,6 +37,7 @@ namespace Copium
 class Scene 
 {
 public:
+	std::vector<GameObject*> gameObjects;	//Vector should be in order
 	Scene();
 	Scene(const std::string& _filepath);
 
@@ -133,17 +134,7 @@ public:
 	*/
 	/*******************************************************************************/
 	size_t get_gameobjcount() const;
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Returns reference to the GameObject* vector
 
-	\return
-		reference to the GameObject* vector
-	*/
-	/*******************************************************************************/
-	std::vector<GameObject*>& get_gameobjectvector();
 	/*******************************************************************************
 	/*!
 	*
@@ -194,7 +185,6 @@ public:
 private:
 	const std::string filename;
 	std::string name;
-	std::vector<GameObject*> gameObjects;	//Vector should be in order
 	std::vector<GameObjectID> unusedGIDs;
 	std::vector<uint64_t> unusedCIDs;
 };

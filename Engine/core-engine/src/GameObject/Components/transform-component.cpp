@@ -42,32 +42,39 @@ Transform::Transform
 	:Component(_gameObj, ComponentType::Transform),
 	position {_position}, rotation{ _rotation }, scale{ _scale }, parent{ nullptr }{}
 
-glm::vec3 Transform::glmPosition() const { return position.to_glm(); }
-void Transform::set_position(const Math::Vec3& _position) { position = _position; }
-
-const Math::Vec3& Transform::get_rotation() { return rotation; }
-glm::vec3 Transform::glmRotation() const { return rotation.to_glm(); }
-void Transform::set_rotation(const Math::Vec3& _rotation) { rotation = _rotation; }
-
-const Math::Vec3& Transform::get_scale() { return scale; }
-glm::vec3 Transform::glmScale() const { return scale.to_glm(); }
-void Transform::set_scale(const Math::Vec3& _scale) { scale = _scale; }
-
 float temp;
 
 void Transform::deserialize(rapidjson::Value& _value)
 {
-	rapidjson::Value& _v = _value["Pos"].GetObj();
-	position.deserialize(_v);
-	_v = _value["Rot"].GetObj();
-	rotation.deserialize(_v);
-	_v = _value["Scale"].GetObj();
-	scale.deserialize(_v);
+    if (_value.HasMember("Pos"))
+	    position.deserialize(_value["Pos"].GetObj());
+    if (_value.HasMember("Rot"))
+	    rotation.deserialize(_value["Rot"].GetObj());
+    if (_value.HasMember("Scale"))
+	    scale.deserialize(_value["Scale"].GetObj());
 }
 
 // M2
 void Transform::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 {
+    if (parent)
+    {
+        _value.AddMember("PID", parent->id, _doc.GetAllocator());
+    }
+    else
+    {
+        _value.AddMember("PID", 0, _doc.GetAllocator());
+    }
+    //Recursively serialize children and their children and so on
+    rapidjson::Value _children(rapidjson::kArrayType);
+    for (Transform* pTransform : children)
+    {
+        rapidjson::Value child(rapidjson::kObjectType);
+        pTransform->serialize(child, _doc);
+        _children.PushBack(child, _doc.GetAllocator());
+    }
+    _value.AddMember("Children", _children, _doc.GetAllocator());
+
     rapidjson::Value _pos(rapidjson::kObjectType);
     rapidjson::Value _rot(rapidjson::kObjectType);
     rapidjson::Value _scale(rapidjson::kObjectType);
@@ -84,7 +91,6 @@ void Transform::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
     _value.AddMember("Pos", _pos, _doc.GetAllocator());
     _value.AddMember("Rot", _rot, _doc.GetAllocator());
     _value.AddMember("Scale", _scale, _doc.GetAllocator());
-
 }
 
 

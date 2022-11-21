@@ -41,9 +41,9 @@ int serialize_scene(const std::string& _filename, Scene* _scene)
 	for(size_t i{0}; i < _scene->get_gameobjcount(); ++i)
 	{
 		//if game object is a pure parent (no parent)
-		if (!_scene->get_gameobjectvector()[i]->has_parent())
+		if (!_scene->gameObjects[i]->has_parent())
 		{
-			parents.push_back(_scene->get_gameobjectvector()[i]);
+			parents.push_back(_scene->gameObjects[i]);
 		}
 	}
 

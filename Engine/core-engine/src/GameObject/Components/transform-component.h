@@ -27,14 +27,28 @@ namespace Copium
 
 class Transform : public Component
 {
-private:
-    Transform* parent;
-    std::list<Transform*> childList;
-
 public:
+    Transform* parent = nullptr;
+    std::list<Transform*> children;
     Math::Vec3 position;
     Math::Vec3 rotation;
     Math::Vec3 scale;
+
+    bool hasParent()
+    {
+        return parent;
+    }
+
+    void setParent(Transform* _parent)
+    {
+        //Previously had a parent
+        if (parent)
+            parent->children.remove(this);
+        parent = _parent;
+        //_parent might be nullptr
+        if (_parent)
+            _parent->children.push_back(this);
+    }
 
     /***************************************************************************/
     /*!
@@ -48,85 +62,6 @@ public:
         Math::Vec3 _position = Math::Vec3(),
         Math::Vec3 _rotation = Math::Vec3(),
         Math::Vec3 _scale = {1,1,1});
-
-    /***************************************************************************/
-    /*!
-    \brief
-        Gets Position vector and converts it to glm::vec3
-    \return
-        Position of transform as a glm::vec3
-    */
-    /**************************************************************************/
-    glm::vec3 glmPosition() const;
-
-    /***************************************************************************/
-    /*!
-    \brief
-        Setter for Position
-    \param _position
-        Position to set for transform
-    */
-    /**************************************************************************/
-    void set_position(const Math::Vec3& _position);
-
-
-    /***************************************************************************/
-    /*!
-    \brief
-        Getter for Rotation
-    \return
-        Rotation of transform
-    */
-    /**************************************************************************/
-    const Math::Vec3& get_rotation();
-    /***************************************************************************/
-    /*!
-    \brief
-        Gets Rotation vector and converts it to glm::vec3
-    \return
-        Rotation of transform as a glm::vec3
-    */
-    /**************************************************************************/
-    glm::vec3 glmRotation() const;
-
-    /***************************************************************************/
-    /*!
-    \brief
-        Setter for Rotation
-    \param _rotation
-        Rotation to set for transform
-    */
-    /**************************************************************************/
-    void set_rotation(const Math::Vec3& _rotation);
-
-    /***************************************************************************/
-    /*!
-    \brief
-        Getter for Scale
-    \return
-        Scale of transform
-    */
-    /**************************************************************************/
-    const Math::Vec3& get_scale();
-    /***************************************************************************/
-    /*!
-    \brief
-        Gets Scale vector and converts it to glm::vec3
-    \return
-        Scale of transform as a glm::vec3
-    */
-    /**************************************************************************/
-    glm::vec3 glmScale() const;
-
-    /***************************************************************************/
-    /*!
-    \brief
-        Setter for Scale
-    \param _rotation
-        Scale to set for transform
-    */
-    /**************************************************************************/
-    void set_scale(const Math::Vec3& _scale);
 
     /***************************************************************************/
     /*!

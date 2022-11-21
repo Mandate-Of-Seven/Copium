@@ -51,7 +51,7 @@ namespace Copium
 			//{
 				PhysicsSystem::update_pos();
 				PhysicsSystem::check_collision();
-				for (GameObject* pGameObj : sceneManager.get_current_scene()->get_gameobjectvector())
+				for (GameObject* pGameObj : sceneManager.get_current_scene()->gameObjects)
 				{
 					Rigidbody2D* pRb = pGameObj->getComponent<Rigidbody2D>();
 					if (pRb != nullptr && pRb->Active())
@@ -78,9 +78,9 @@ namespace Copium
 		Math::Vec2 acceleration;
 		Math::Vec2 force;
 
-		for (int a = 0; a < sceneManager.get_current_scene()->get_gameobjectvector().size(); a++)
+		for (int a = 0; a < sceneManager.get_current_scene()->gameObjects.size(); a++)
 		{
-			gameobj = sceneManager.get_current_scene()->get_gameobjectvector()[a];
+			gameobj = sceneManager.get_current_scene()->gameObjects[a];
 			Rigidbody2D* pRb = gameobj->getComponent<Rigidbody2D>();
 
 			if (pRb != nullptr && pRb->Active())
@@ -118,7 +118,7 @@ namespace Copium
 	{
 		GameObject* object1;
 		GameObject* object2;
-		size_t len = sceneManager.get_current_scene()->get_gameobjectvector().size();
+		size_t len = sceneManager.get_current_scene()->gameObjects.size();
 		for (int a = 0; a < len; a++)
 		{
 			for (int b = 0; b < len; b++)
@@ -127,8 +127,8 @@ namespace Copium
 				{
 					continue;
 				}
-				object1 = sceneManager.get_current_scene()->get_gameobjectvector()[a];
-				object2 = sceneManager.get_current_scene()->get_gameobjectvector()[b];
+				object1 = sceneManager.get_current_scene()->gameObjects[a];
+				object2 = sceneManager.get_current_scene()->gameObjects[b];
 				Rigidbody2D* pRb1 = object1->getComponent<Rigidbody2D>();
 				Rigidbody2D* pRb2 = object2->getComponent<Rigidbody2D>();
 				BoxCollider2D* pCol1 = object1->getComponent<BoxCollider2D>();

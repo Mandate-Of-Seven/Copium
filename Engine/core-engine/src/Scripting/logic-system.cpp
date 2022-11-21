@@ -44,7 +44,7 @@ namespace Copium
 		Scene* pScene = sceneManager.get_current_scene();
 		if (pScene == nullptr)
 			return;
-		gameObjects = &pScene->get_gameobjectvector();
+		gameObjects = &pScene->gameObjects;
 		for (GameObject* pGameObj : *gameObjects)
 		{
 			const std::vector<Button*>& Buttons{ pGameObj->getComponents<Button>() };
@@ -84,7 +84,7 @@ namespace Copium
 		Scene* pScene = sceneManager.get_current_scene();
 		if (pScene == nullptr)
 			return;
-		gameObjects = &pScene->get_gameobjectvector();
+		gameObjects = &pScene->gameObjects;
 		for (GameObject* pGameObj : *gameObjects)
 		{
 			const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };

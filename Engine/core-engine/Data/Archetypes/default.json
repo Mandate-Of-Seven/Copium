@@ -1,8 +1,6 @@
 {
   "Archetype": "Default",
   "Name": "Default Game Object",
-  "ID": 0,
-  "PID": 0,
   "Components": [
     {
       "Type": "Transform",

@@ -38,8 +38,6 @@ namespace
 
 namespace Copium
 {
-
-    GameObjectID GameObject::count = 1;
     Component* GameObject::addComponent(ComponentType componentType)
     {
         switch (componentType)
@@ -84,7 +82,7 @@ namespace Copium
 
 
     GameObject::GameObject(const GameObject& rhs) : 
-        transform(*this), id{0}, parent{nullptr}, parentid{0}
+        transform(*this), id{0}
 {
     messageSystem.subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
     MESSAGE_CONTAINER::reflectCsGameObject.ID = id;
@@ -98,25 +96,25 @@ namespace Copium
     {
         components.push_back(pComponent->clone(*this));
     }
-    for (GameObject* pGameObj : rhs.children)
-    {
-        GameObject* child = sceneManager.get_gof().build_gameobject(*pGameObj);
-        children.push_back(child);
-        child->set_parent(this);
-    }
+    //for (Transform* pTransform : rhs.children)
+    //{
+    //    GameObject* child = sceneManager.get_gof().instantiate(*pGameObj);
+    //    children.push_back(child);
+    //    child->set_parent(this);
+    //}
 }
 
 GameObject::GameObject
-(Math::Vec3 _position, Math::Vec3 _rotation, Math::Vec3 _scale)
+(GameObjectID _id, Math::Vec3 _position, Math::Vec3 _rotation, Math::Vec3 _scale)
     :
-    name{ defaultGameObjName }, parent{ nullptr }, parentid{ 0 },
-    transform(*this, _position, _rotation, _scale), id{ 0 },
-    active{true}
+    name{ defaultGameObjName },
+    transform(*this, _position, _rotation, _scale),
+    active{true},
+    id{ _id }
 {
     messageSystem.subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
     MESSAGE_CONTAINER::reflectCsGameObject.ID = id;
     messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
-    PRINT("GAMEOBJECT ID CONSTRUCTED: " << id);
 }
 
 GameObject& GameObject::operator=(const GameObject& _src)
@@ -134,27 +132,10 @@ GameObject& GameObject::operator=(const GameObject& _src)
         }
     }
     components.clear();
-
-    for (GameObject* go : children)
-    {
-        if (go)
-        {
-            delete go;
-            go = nullptr;
-        }
-    }
-    children.clear();
-
     
     for (Component* pComponent : _src.components)
     {
         components.push_back(pComponent->clone(*this));
-    }
-    for (GameObject* pGameObj : _src.children)
-    {
-        GameObject* child = sceneManager.get_gof().build_gameobject(*pGameObj);
-        children.push_back(child);
-        child->set_parent(this);
     }
     return *this;
 }
@@ -226,80 +207,12 @@ bool GameObject::hasComponent(ComponentType componentType) const
 void GameObject::set_name(const std::string& _name){ name = _name; }
 std::string GameObject::get_name() const{ return name; }
 
-void GameObject::set_ppid(GameObjectID& _id) { parentid = _id; }
-GameObjectID GameObject::get_ppid() const { return parentid; }
-
-bool GameObject::is_parent() const 
-{
-    if (children.size())
-        return true;
-    else
-        return false;
-}
-bool GameObject::has_parent() const
-{
-    if (parent)
-        return true;
-    else
-        return false;
-}
-GameObject* GameObject::get_parent() { return parent; }
-void GameObject::set_parent(GameObject* _parent) { parent = _parent; }
-
-const std::list<GameObject*>& GameObject::childList() const
-{
-    return children;
-}
-
-std::list<GameObject*>& GameObject::mchildList()
-{
-    return children;
-}
-
-bool GameObject::attach_child(GameObject* _child)
-{
-    if (!_child)
-        return false;
-
-    children.push_back(_child);
-    _child->set_parent(this);
-    _child->parentid = id;
-    std::cout << "child attached\n";
-
-    return true;
-
-}
-bool GameObject::deattach_child(GameObject* _child)
-{
-    for (std::list<GameObject*>::iterator iter = children.begin(); iter != children.end(); ++iter)
-    {
-        if (*iter == _child)
-        {
-            _child->parent = nullptr;
-            _child->parentid = 0;
-            children.erase(iter);
-            return true;
-        }
-    }
-
-    return false;
-}
-
 bool GameObject::deserialize(rapidjson::Value& _value) {
-    if (!_value.HasMember("ID"))
-        return false;
-
-    id = _value["ID"].GetUint64();
 
     if (!_value.HasMember("Name"))
         return false;
    
     name = _value["Name"].GetString();
-
-    if (!_value.HasMember("PID"))
-        return false;
-
-    parentid = _value["PID"].GetInt();
 
     return true;
 }
@@ -371,17 +284,13 @@ void GameObject::inspectorView()
 }
 
 
-// M2
 bool GameObject::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 {
-
     _value.AddMember("ID", id, _doc.GetAllocator());
 
     rapidjson::Value _name;
     _name.SetString(name.c_str(), rapidjson::SizeType(name.length()), _doc.GetAllocator());
     _value.AddMember("Name", _name, _doc.GetAllocator());
-
-    _value.AddMember("PID", parentid, _doc.GetAllocator());
 
     rapidjson::Value _components(rapidjson::kArrayType);
     rapidjson::Value transformComponent(rapidjson::kObjectType);
@@ -395,17 +304,7 @@ bool GameObject::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
         _components.PushBack(comp, _doc.GetAllocator());
     }
     _value.AddMember("Components", _components, _doc.GetAllocator());
-    
 
-    //Recursively serialize children and their children and so on
-    rapidjson::Value _children(rapidjson::kArrayType);
-    for (std::list<GameObject*>::const_iterator cit = childList().cbegin(); cit != childList().cend(); ++cit)
-    {
-        rapidjson::Value cgo(rapidjson::kObjectType);
-        (*cit)->serialize(cgo, _doc);
-        _children.PushBack(cgo, _doc.GetAllocator());
-    }
-    _value.AddMember("Children", _children, _doc.GetAllocator());
     return true;
 
 }

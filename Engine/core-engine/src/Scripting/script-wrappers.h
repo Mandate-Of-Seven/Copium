@@ -130,7 +130,7 @@ namespace Copium
 		{
 			return GameObjectID(- 1);
 		}
-		return gameObj->id;
+		return gameObj->getId();
 	}
 
 	static void RigidbodyAddForce(GameObjectID _ID, Math::Vec2* force)
@@ -151,7 +151,7 @@ namespace Copium
 
 	static float GetDeltaTime()
 	{
-		return MyFrameRateController.getDt();
+		return (float)MyFrameRateController.getDt();
 	}
 
 	static void RigidbodySetVelocity(GameObjectID _ID, Math::Vec2* velocity)
