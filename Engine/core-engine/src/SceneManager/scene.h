@@ -187,12 +187,16 @@ public:
 
 	void inspector_view();
 
-	GameObjectID assignGameObjID() const;
+	GameObjectID assignGameObjID();
+	void add_unused_gid(GameObjectID _id);
+	std::vector<GameObjectID>& get_unusedgids();
 
 private:
 	const std::string filename;
 	std::string name;
 	std::vector<GameObject*> gameObjects;	//Vector should be in order
+	std::vector<GameObjectID> unusedGIDs;
+	std::vector<uint64_t> unusedCIDs;
 };
 
 class NormalScene : public Scene

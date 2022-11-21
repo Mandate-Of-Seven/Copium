@@ -65,11 +65,10 @@ namespace Copium
 			tmp->set_name(tmp->get_name() + postfix);
 		}
 		currScene->add_gameobject(tmp);
+		tmp->id = currScene->assignGameObjID();
 
 		return tmp;
 	}
-
-
 	GameObject* GameObjectFactory::build_gameobject(GameObject& _src)
 	{
 		Scene* currScene = sceneManager.get_current_scene();
@@ -99,7 +98,6 @@ namespace Copium
 		return go;
 
 	}
-
 	GameObject* GameObjectFactory::build_gameobject(rapidjson::Value& _value) {
 
 		Scene* currScene = sceneManager.get_current_scene();
@@ -192,6 +190,10 @@ namespace Copium
 
 		}
 
+		// Add the game object's ID to unused pile
+		currScene->add_unused_gid(_go->id);
+
+
 		//Iterate through currentScene vector and destroy
 		for (size_t i{ 0 }; i < currScene->get_gameobjectvector().size(); ++i)
 		{
@@ -208,7 +210,7 @@ namespace Copium
 			}
 		}
 
-		std::cout << "Number of Game Objects left: " << currScene->get_gameobjcount() << std::endl;
+
 
 		return true;
 

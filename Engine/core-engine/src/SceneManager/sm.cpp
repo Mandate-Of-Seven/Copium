@@ -129,7 +129,7 @@ namespace Copium {
 
 		if (_filepath.find(".scene") == std::string::npos)
 		{
-			Window::EditorConsole::editorLog.add_logEntry("file selected is not a Copium Scene");
+			Window::EditorConsole::editorLog.add_logEntry("file selected is not a Copium Scene!");
 			return false;
 		}
 		
@@ -140,8 +140,6 @@ namespace Copium {
 
 		sceneFilePath = _filepath;
 
-		//gof->link_to_scene(currentScene);
-			
 		std::ifstream ifs(_filepath);
 		if (!ifs)
 			return false;
@@ -159,6 +157,19 @@ namespace Copium {
 		if (document.HasMember("Name"))
 		{
 			currentScene->set_name(document["Name"].GetString());
+		}
+
+		if (document.HasMember("Unused GIDs"))
+		{
+			std::cout << "Adding unused gids: ";
+			rapidjson::Value& _arr = document["Unused GIDs"].GetArray();
+			for (rapidjson::Value::ValueIterator iter = _arr.Begin(); iter != _arr.End(); ++iter)
+			{
+				GameObjectID id = (*iter).GetUint64();
+				currentScene->add_unused_gid(id);
+				std::cout << id << ' ';
+			}
+			std::cout << std::endl;
 		}
 
 		if (document.HasMember("GameObjects"))
@@ -186,13 +197,8 @@ namespace Copium {
 			return result;
 		}
 
-
-		// offer the option to save before exiting
-
-
 		// Clear game objects in scene
 		// Deserialize from new file and overwrite other scene data
-		
 		if (std::filesystem::exists(_newfilepath))
 		{
 			std::cout << "file exists\n";
@@ -218,7 +224,6 @@ namespace Copium {
 	{
 		return *gof;
 	}
-
 	Scene* NewSceneManager::get_current_scene()
 	{
 		return currentScene;
@@ -324,6 +329,12 @@ namespace Copium {
 		rapidjson::Value name;
 		create_rapidjson_string(doc, name,  currentScene->get_name());
 		doc.AddMember("Name", name, doc.GetAllocator());
+		rapidjson::Value ugids(rapidjson::kArrayType);
+		for (GameObjectID id : currentScene->get_unusedgids())
+		{
+			ugids.PushBack(id, doc.GetAllocator());
+		}
+		doc.AddMember("Unused GIDs", ugids, doc.GetAllocator());
 
 		std::vector<GameObject*> roots;
 		for (size_t i{ 0 }; i < currentScene->get_gameobjcount(); ++i) {

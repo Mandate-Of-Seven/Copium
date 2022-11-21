@@ -44,7 +44,7 @@ private:
     std::list<GameObject*> children;    //List of pointers to this gameObject's children
 
 public:
-    const GameObjectID id;                    //Global ID for gameObjects
+    GameObjectID id;                    //Global ID for gameObjects
     bool active;
     Transform transform;
 

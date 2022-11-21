@@ -63,43 +63,29 @@ void Scene::draw_scene()
 }
 
 
-GameObjectID Scene::assignGameObjID() const
+GameObjectID Scene::assignGameObjID()
 {
-	static std::list<size_t> assignedIds{};
-	assignedIds.clear();
-	if (gameObjects.size() == 0)
+
+	if (!unusedGIDs.empty())
 	{
-		return 0;
-	}
-	assignedIds.push_back(gameObjects.front()->id);
-	//Look through IDs
-	for (size_t i = 1; i < gameObjects.size(); ++i)
-	{
-		size_t id = gameObjects[i]->id;
-		size_t prevId = 0;
-		for (auto j = assignedIds.begin(); j != assignedIds.end(); ++j)
-		{
-			if (id >= prevId && id < *j)
-			{
-				assignedIds.insert(j, id);
-				break;
-			}
-			prevId = *j;
-		}
-		if (prevId == assignedIds.back())
-			assignedIds.push_back(id);
+		// Pop the first unused GID
+		GameObjectID id = unusedGIDs[0];
+		unusedGIDs.erase(unusedGIDs.begin());
+		std::cout << "taking over unused ID: " << id << std::endl;
+		return id;
 	}
 
-	size_t prevId = 0;
-	for (auto j = assignedIds.begin(); j != assignedIds.end(); ++j)
-	{
-		if (prevId != *j)
-		{
-			return prevId;
-		}
-		++prevId;
-	}
+	GameObjectID id = (GameObjectID)gameObjects.size();
+	std::cout << "assigning new ID " << id << std::endl;
+	return id;
 }
+void Scene::add_unused_gid(GameObjectID _id)
+{
+	unusedGIDs.emplace_back(_id);
+	//Sort?
+}
+std::vector<GameObjectID>& Scene::get_unusedgids() { return unusedGIDs; }
+
 
 std::string Scene::get_filename() const {return filename;}
 size_t Scene::get_gameobjcount() const { return gameObjects.size(); }
