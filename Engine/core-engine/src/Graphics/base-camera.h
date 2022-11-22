@@ -41,6 +41,7 @@ namespace Copium
 		void exit();
 
 		const glm::vec3& get_eye() const { return viewer; }
+		const glm::vec2& get_dimension() const { return glm::vec2(width, height); }
 
 		// Directional Properties
 		glm::vec3 get_right_direction() const;

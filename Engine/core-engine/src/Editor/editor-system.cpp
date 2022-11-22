@@ -151,6 +151,7 @@ namespace Copium
 
             // Submit the DockSpace
             ImGuiIO& io = ImGui::GetIO();
+
 			ImGuiID dockspace_id = 0;
             if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
             {

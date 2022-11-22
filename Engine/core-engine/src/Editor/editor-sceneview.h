@@ -55,6 +55,8 @@ namespace Copium
 		*/
 		/***************************************************************************/
 		void resize_sceneview(glm::vec2 _newDimension);
+
+		void check_click();
 		
 		// Accessing Properties
 

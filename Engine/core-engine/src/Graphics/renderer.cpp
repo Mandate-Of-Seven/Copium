@@ -93,6 +93,10 @@ namespace Copium
 		glVertexArrayAttribFormat(quadVertexArrayID, 3, 1, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, texID));
 		glVertexArrayAttribBinding(quadVertexArrayID, 3, 0);
 
+		glEnableVertexArrayAttrib(quadVertexArrayID, 4);
+		glVertexArrayAttribFormat(quadVertexArrayID, 4, 1, GL_INT, GL_FALSE, offsetof(QuadVertex, entityID));
+		glVertexArrayAttribBinding(quadVertexArrayID, 4, 0);
+
 		// Element Buffer Object
 		GLushort indices[maxIndexCount];
 		GLushort offset = 0;
@@ -496,6 +500,7 @@ namespace Copium
 			quadBufferPtr->textCoord = quadTextCoord[i];
 			quadBufferPtr->color = _color;
 			quadBufferPtr->texID = textureIndex;
+			quadBuffer->entityID = quadCount;
 			quadBufferPtr++;
 		}
 
