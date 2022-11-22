@@ -31,16 +31,21 @@ extern "C"
 	typedef struct _MonoObject MonoObject;
 	typedef struct _MonoClassField MonoClassField;
 	typedef struct _MonoType MonoType;
+	typedef struct _MonoString MonoString;
 }
 
 namespace Copium
 {
+	using FieldFlag = uint8_t;
+	#define FieldFlagList	0b00000001
+	#define FieldFlagScript 0b00000010
+
 	enum class FieldType
 	{
 		Float, Double,
 		Bool, Char, Short, Int, Long,
 		UShort, UInt, ULong,
-		Vector2, Vector3, None
+		Vector2, Vector3, GameObject, Text, Button, Camera ,None
 	};
 
 	struct Field
@@ -48,6 +53,7 @@ namespace Copium
 		FieldType type{};
 		std::string name;
 		MonoClassField* classField{nullptr};
+		FieldFlag flags;
 	};
 
 	// ScriptField + data storage
@@ -81,18 +87,22 @@ namespace Copium
 
 	static std::unordered_map<std::string, FieldType> fieldTypeMap =
 	{
-		{ "System.Single", FieldType::Float },
-		{ "System.Double", FieldType::Double },
-		{ "System.Boolean", FieldType::Bool },
-		{ "System.Char", FieldType::Char },
-		{ "System.Int16", FieldType::Short },
-		{ "System.Int32", FieldType::Int },
-		{ "System.Int64", FieldType::Long },
-		{ "System.UInt16", FieldType::UShort },
-		{ "System.UInt32", FieldType::UInt },
-		{ "System.UInt64", FieldType::ULong },
-		{ "CopiumEngine.Vector2", FieldType::Vector2 },
-		{ "CopiumEngine.Vector3", FieldType::Vector3 }
+		{ "System.Single",				FieldType::Float		},
+		{ "System.Double",				FieldType::Double		},
+		{ "System.Boolean",				FieldType::Bool			},
+		{ "System.Char",				FieldType::Char			},
+		{ "System.Int16",				FieldType::Short		},
+		{ "System.Int32",				FieldType::Int			},
+		{ "System.Int64",				FieldType::Long			},
+		{ "System.UInt16",				FieldType::UShort		},
+		{ "System.UInt32",				FieldType::UInt			},
+		{ "System.UInt64",				FieldType::ULong		},
+		{ "CopiumEngine.Vector2",		FieldType::Vector2		},
+		{ "CopiumEngine.Vector3",		FieldType::Vector3		},
+		{ "CopiumEngine.GameObject",	FieldType::GameObject	},
+		{ "CopiumEngine.UI.Button",		FieldType::Button		},
+		{ "CopiumEngine.UI.Text",		FieldType::Text			},
+		{ "CopiumEngine.Camera",		FieldType::Camera		},
 	};
 
 	enum class CompilingState
@@ -269,6 +279,7 @@ namespace Copium
 
 		MonoType* getMonoTypeFromName(std::string& name);
 
+		MonoString* createMonoString(const char* str);
 	private:
 
 		/**************************************************************************/

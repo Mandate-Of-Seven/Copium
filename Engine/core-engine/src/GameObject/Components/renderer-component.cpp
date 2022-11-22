@@ -21,7 +21,6 @@ namespace Copium
 
 	SpriteRenderer::SpriteRenderer(GameObject& _gameObj) :Component(_gameObj, ComponentType::SpriteRenderer)
 	{
-		PRINT("Renderer Component constructed");
 	}
 
 	void SpriteRenderer::deserialize(rapidjson::Value& _value)

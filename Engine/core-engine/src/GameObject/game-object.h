@@ -39,7 +39,6 @@ private:
     friend class GameObjectFactory;
     std::list<Component*> components;   //Components for gameObject
     std::string name;                   //Name of gameObject
-    GameObjectID id = 0;
 
     /***************************************************************************/
     /*!
@@ -72,17 +71,11 @@ private:
 
     GameObject& operator=(const GameObject& _src);
 
-    void setId(GameObjectID _id)
-    {
-        id = _id;
-    }
-
 public:           //Global ID for gameObjects
+
+    const GameObjectID id;
     bool active;
     Transform transform;
-
-    GameObjectID getId() const {return id;}
-
     /*******************************************************************************
     /*!
     *

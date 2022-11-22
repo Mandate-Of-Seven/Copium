@@ -49,7 +49,7 @@ namespace Copium
 				mObject = sS.cloneInstance(reference->mObject);
 				reference = nullptr;
 			}
-			GameObjectID _id = gameObj.getId();
+			GameObjectID _id = gameObj.id;
 			void* param = &_id;
 			sS.invoke(mObject, pScriptClass->mMethods["OnCreate"], &param);
 		}
@@ -236,7 +236,6 @@ namespace Copium
 
 		if (pScriptClass == nullptr)
 			return;
-		PRINT("SCRIPTS DLL WAS LOADED!");
 
 		const auto& fieldMap = pScriptClass->mFields;
 		auto it = fieldMap.begin();
@@ -322,7 +321,6 @@ namespace Copium
 			}
 			case FieldType::Vector2:
 			{
-				PRINT("DESERIALIZING VECTORRRRRRRRRRR2");
 				rapidjson::Value& _v = _value[_name.c_str()].GetObj();
 				Math::Vec2 tmp;
 				tmp.deserialize(_v);
@@ -331,7 +329,6 @@ namespace Copium
 			}
 			case FieldType::Vector3:
 			{
-				PRINT("DESERIALIZING VECTORRRRRRRRRRR3");
 				rapidjson::Value& _v = _value[_name.c_str()].GetObj();
 				Math::Vec3 tmp;
 				tmp.deserialize(_v);

@@ -34,7 +34,7 @@ namespace Copium {
 	{
 		for (GameObject* pGameObj : currentScene->gameObjects)
 		{
-			if (pGameObj->getId() == _ID)
+			if (pGameObj->id == _ID)
 			{
 				return pGameObj;
 			}

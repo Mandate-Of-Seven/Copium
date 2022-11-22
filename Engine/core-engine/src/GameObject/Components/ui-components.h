@@ -143,6 +143,8 @@ namespace Copium
 	class Text final : public Component, IUIComponent
 	{
 		public:
+
+			char content[TEXT_BUFFER_SIZE];
 			/**************************************************************************/
 			/*!
 				\brief
@@ -237,7 +239,6 @@ namespace Copium
 				_value.AddMember("a", color.a, _doc.GetAllocator());
 			}
 		private:
-			char content[TEXT_BUFFER_SIZE];
 			std::string fontName;
 			Font* font;
 			float fSize;

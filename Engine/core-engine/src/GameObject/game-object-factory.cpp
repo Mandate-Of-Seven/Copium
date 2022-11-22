@@ -73,7 +73,7 @@ namespace Copium
 		Scene* currScene = sceneManager.get_current_scene();
 		if (!currScene)
 			return nullptr;
-		GameObject* go = new GameObject(_src.getId());
+		GameObject* go = new GameObject(_src.id);
 		if (!go)
 			return nullptr;
 
@@ -114,10 +114,14 @@ namespace Copium
 		}
 
 		if (!go)
+		{
+			PRINT("FAILED TO DESERIALIZE");
 			return nullptr;
+		}
 
 		if (!go->deserialize(_value))
 		{
+			PRINT("FAILED TO DESERIALIZE");
 			delete go;
 			return nullptr;
 		}
@@ -147,6 +151,8 @@ namespace Copium
 			}
 		}
 
+		currScene->add_gameobject(go);
+
 		// Deserialize children (if any)
 		if (_value.HasMember("Children")) {
 			rapidjson::Value& childArr = _value["Children"].GetArray();
@@ -156,6 +162,9 @@ namespace Copium
 				cgo->transform.setParent(&go->transform);
 			}
 		}
+
+
+
 		return go;
 	}
 

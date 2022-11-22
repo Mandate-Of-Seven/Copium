@@ -81,12 +81,8 @@ namespace Copium
     }
 
 
-    GameObject::GameObject(const GameObject& rhs) : 
-        transform(*this), id{0}
+GameObject::GameObject(const GameObject& rhs) : transform(*this), id{rhs.id}
 {
-    messageSystem.subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
-    MESSAGE_CONTAINER::reflectCsGameObject.ID = id;
-    messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
     transform.position = rhs.transform.position;
     transform.rotation = rhs.transform.rotation;
     transform.scale = rhs.transform.scale;
@@ -96,6 +92,9 @@ namespace Copium
     {
         components.push_back(pComponent->clone(*this));
     }
+    messageSystem.subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
+    MESSAGE_CONTAINER::reflectCsGameObject.ID = id;
+    messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
     //for (Transform* pTransform : rhs.children)
     //{
     //    GameObject* child = sceneManager.get_gof().instantiate(*pGameObj);

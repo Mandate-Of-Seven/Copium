@@ -120,6 +120,7 @@ namespace Copium
 			while (MonoClassField* field = mono_class_get_fields(mClass, &iterator))
 			{
 				const char* fieldName = mono_field_get_name(field);
+				//static const char* typeName = f
 				uint32_t flags = mono_field_get_flags(field);
 				if (flags & FIELD_ATTRIBUTE_PUBLIC)
 				{
@@ -131,7 +132,7 @@ namespace Copium
 					}
 					else
 					{
-						PRINT(name << " FAILED TO GET TYPE OF " << fieldName);
+						PRINT(mono_type_get_name(type) << " FAILED TO GET TYPE OF " << fieldName);
 					}
 				}
 			}
@@ -428,6 +429,12 @@ namespace Copium
 		mono_runtime_invoke(mSetID, mInstance, &param, nullptr);
 	}
 
+
+	MonoString* ScriptingSystem::createMonoString(const char* str)
+	{
+		return mono_string_new(mAppDomain, str);
+	}
+
 	void ScriptingSystem::handleMessage(MESSAGE_TYPE mType)
 	{
 		switch (mType)
@@ -435,15 +442,19 @@ namespace Copium
 			case MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT:
 			{
 				reflectGameObject(MESSAGE_CONTAINER::reflectCsGameObject.ID);
+				break;
 			}
 			case MESSAGE_TYPE::MT_SCENE_OPENED:
 			{
-				while (compilingState == CompilingState::Compiling);
+				while (compilingState != CompilingState::Wait);
+				swapDll();
 				compilingState = CompilingState::Deserializing;
+				break;
 			}
 			case MESSAGE_TYPE::MT_SCENE_DESERIALIZED:
 			{
-				compilingState = CompilingState::SwapAssembly;
+				compilingState = CompilingState::Wait;
+				break;
 			}
 		}
 	}

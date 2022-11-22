@@ -11,6 +11,23 @@ namespace CopiumEngine
 		public GameObject gameObject { get; internal set; }
         public Transform transform { get; internal set; }
 
+        public bool enabled
+        {
+            get
+            {
+                return InternalCalls.GetComponentEnabled(gameObject.ID, ID);
+            }
+            set
+            {
+                InternalCalls.SetComponentEnabled(gameObject.ID,ID,value);
+            }
+        }
+
+        ulong ID;
+
+        void SetID(ulong _ID)
+            { ID = _ID; }
+
         public T GetComponent<T>() where T : Component, new()
         {
             return gameObject.GetComponent<T>();
@@ -91,8 +108,15 @@ namespace CopiumEngine
     {
         public Color color
         {
-            get;
-            set;
+            get
+            {
+                InternalCalls.GetSpriteRendererColor(gameObject.ID, out Color color);
+                return color;
+            }
+            set
+            {
+                InternalCalls.SetSpriteRendererColor(gameObject.ID, ref value);
+            }
         }
     }
 

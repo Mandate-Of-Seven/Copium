@@ -22,6 +22,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <Windows/windows-system.h>
 #include <Debugging/frame-rate-controller.h>
 #include <SceneManager/state-manager.h>
+#include <GameObject/Components/ui-components.h>
 #include <cstring>
 
 #include "mono/metadata/object.h"
@@ -44,6 +45,7 @@ namespace Copium
 		InputSystem& inputSystem{ *InputSystem::Instance() };
 		NewSceneManager& sceneManager{ *NewSceneManager::Instance() };
 		MessageSystem& messageSystem{ *MessageSystem::Instance() };
+		ScriptingSystem& scriptingSystem{ *ScriptingSystem::Instance() };
 	}
 
 	//static bool GetKeyDown(int keyCode)
@@ -130,7 +132,7 @@ namespace Copium
 		{
 			return GameObjectID(- 1);
 		}
-		return gameObj->getId();
+		return gameObj->id;
 	}
 
 	static void RigidbodyAddForce(GameObjectID _ID, Math::Vec2* force)
@@ -251,6 +253,38 @@ namespace Copium
 		//Scene manager quit
 	}
 
+	static void GetTextString(GameObjectID gameObjID, ComponentID compID, MonoString* str)
+	{
+		GameObject* gameObj = sceneManager.findGameObjByID(gameObjID);
+		if (gameObj == nullptr)
+			return;
+		for (Text* text : gameObj->getComponents<Text>())
+		{
+			if (text->id == compID)
+			{
+				str = scriptingSystem.createMonoString(text->content);
+				return;
+			}
+		}
+	}
+
+	static void SetTextString(GameObjectID gameObjID, ComponentID compID, MonoString* str)
+	{
+		GameObject* gameObj = sceneManager.findGameObjByID(gameObjID);
+		if (gameObj == nullptr)
+			return;
+		for (Text* text : gameObj->getComponents<Text>())
+		{
+			if (text->id == compID)
+			{
+				char* monoStr = mono_string_to_utf8(str);
+				strcpy(text->content, monoStr);
+				mono_free(monoStr);
+				return;
+			}
+		}
+	}
+
 	/*******************************************************************************
 	/*!
 	\brief
@@ -272,6 +306,8 @@ namespace Copium
 		Register(GetDeltaTime);
 		Register(SetActive);
 		Register(GetActive);
+		Register(GetTextString);
+		Register(SetTextString);
 		Register(GetKeyUp);
 		Register(QuitGame);
 	}

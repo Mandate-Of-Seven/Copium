@@ -21,10 +21,31 @@ namespace CopiumEngine
     public static class InternalCalls
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static float GetDeltaTime();
+
+        #region COMPONENT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static bool GetComponentEnabled(ulong gameObjID,ulong compId);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetComponentEnabled(ulong gameObjID, ulong compId, bool enabled);
+        #endregion
+
+        #region GAMEOBJECT
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static bool HasComponent(ulong ID, Type componentType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static float GetDeltaTime();
+        internal extern static void SetActive(ulong ID, bool _active);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static bool GetActive(ulong ID);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static ulong FindGameObjByName(string name);
+        #endregion
+
+        #region TRANSFORM
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void GetLocalScale(ulong ID, out Vector3 scale);
@@ -38,14 +59,9 @@ namespace CopiumEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetTranslation(ulong ID, ref Vector3 translation);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetActive(ulong ID, bool _active);
+        #endregion
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static bool GetActive(ulong ID);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static ulong FindGameObjByName(string name);
+        #region RIGIDBODY2D
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void RigidbodyAddForce(ulong ID, ref Vector2 force);
@@ -55,7 +71,24 @@ namespace CopiumEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void RigidbodySetVelocity(ulong ID, ref Vector2 velocity);
+        #endregion
 
+        #region SPRITE_RENDERER
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetSpriteRendererColor(ulong ID, out Color color);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetSpriteRendererColor(ulong ID, ref Color color);
+
+        #endregion
+
+        #region UI
+        public static extern void SetUIInteractable(bool isInteractable);
+        public static extern bool GetUIInteractable();
+
+        #endregion
+
+        #region INPUT
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool GetKey(int keyCode);
 
@@ -64,6 +97,15 @@ namespace CopiumEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool GetKeyUp(int keyCode);
+        #endregion
+
+        #region TEXT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void GetTextString(ulong gameObjID, ulong compID,out string str);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetTextString(ulong gameObjID, ulong compID,ref string str);
+        #endregion
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetUICallback(string funcName);

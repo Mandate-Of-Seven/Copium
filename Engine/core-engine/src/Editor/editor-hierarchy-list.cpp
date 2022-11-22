@@ -224,7 +224,7 @@ namespace Window::Hierarchy
 		}
 			
 
-		if (_selected == _go.getId())
+		if (_selected == _go.id)
 		{
 			baseFlags |= ImGuiTreeNodeFlags_Selected;				
 		}
@@ -237,7 +237,7 @@ namespace Window::Hierarchy
 		if (ImGui::IsItemClicked())
 		{
 			std::cout << _go.get_name() << " is selected\n";
-			_selected = _go.getId();
+			_selected = _go.id;
 			isSelected = true;
 			Copium::NewSceneManager::Instance()->set_selected_gameobject(&_go);
 
