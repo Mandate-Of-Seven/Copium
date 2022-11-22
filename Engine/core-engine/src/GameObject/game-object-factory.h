@@ -215,7 +215,10 @@ namespace Copium {
 		/*******************************************************************************/
 		std::map<std::string, GameObject*>& get_archetype_map();
 
+		//M3
 		GameObject* create_child(GameObject& _parent);
+		void delete_component(GameObject* _go);
+
 
 	private:
 		std::map<std::string, GameObject*> gameObjectCreators;

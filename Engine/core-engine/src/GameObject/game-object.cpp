@@ -40,6 +40,16 @@ namespace Copium
 {
 
     GameObjectID GameObject::count = 1;
+    ComponentID GameObject::assign_id()
+    {
+        if (!sceneManager.get_current_scene())
+        {
+            return 0;
+        }
+        //sceneManager.get_current_scene()->incr_component_count();
+        return sceneManager.get_current_scene()->assignComponentID();
+    }
+
     Component* GameObject::addComponent(ComponentType componentType)
     {
         switch (componentType)
@@ -94,6 +104,7 @@ namespace Copium
     transform.scale = rhs.transform.scale;
     active = rhs.active;
     name = rhs.name;
+    transform.id = assign_id();
     for (Component* pComponent : rhs.components)
     {
         components.push_back(pComponent->clone(*this));
@@ -117,6 +128,7 @@ GameObject::GameObject
     MESSAGE_CONTAINER::reflectCsGameObject.ID = id;
     messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
     PRINT("GAMEOBJECT ID CONSTRUCTED: " << id);
+    transform.id = assign_id();
 }
 
 GameObject& GameObject::operator=(const GameObject& _src)
@@ -129,11 +141,12 @@ GameObject& GameObject::operator=(const GameObject& _src)
     {
         if (co)
         {
+            sceneManager.get_current_scene()->add_unused_cid(co->id);
             delete co;
             co = nullptr;
         }
     }
-    components.clear();
+    components.clear(); 
 
     for (GameObject* go : children)
     {
@@ -355,7 +368,9 @@ void GameObject::inspectorView()
                 {
                     PRINT("ID: " << component->id);
                     componentsToDelete.push_back(component->id);
+                    NewSceneManager::Instance()->get_current_scene()->add_unused_cid(component->id);
                 }
+
             }
             ImGui::PopID();
             ++index;

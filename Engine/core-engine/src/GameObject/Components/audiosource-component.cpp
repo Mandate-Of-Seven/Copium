@@ -19,6 +19,7 @@ namespace Copium
 
 	void AudioSource::deserialize(rapidjson::Value& _value)
 	{
+		Component::deserialize(_value);
 		if (_value.HasMember("Alias"))
 		{
 			alias = _value["Alias"].GetString();
@@ -28,6 +29,7 @@ namespace Copium
 	void AudioSource::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
 		std::cout << "serializing audio component\n";
+		Component::serialize(_value, _doc);
 		rapidjson::Value type;
 		std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
 		type.SetString(tc.c_str(), (rapidjson::SizeType)tc.length(), _doc.GetAllocator());

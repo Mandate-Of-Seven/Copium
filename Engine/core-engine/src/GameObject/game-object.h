@@ -79,6 +79,8 @@ public:
 
     GameObject& operator=(const GameObject& _src);
 
+    ComponentID assign_id();
+
     /*******************************************************************************
     /*!
     *
@@ -96,6 +98,10 @@ public:
         static_assert(std::is_base_of<Component, T>::value);
         T* component = new T(*this);
         components.push_back(component);
+
+        component->id = assign_id();
+
+
         return *component;
     }
 

@@ -53,7 +53,7 @@ namespace Copium {
 		return nullptr;
 	}
 
-	NewSceneManager::NewSceneManager() : gof{nullptr}, currentScene{nullptr}, selectedGameObject{nullptr}, storageScene{nullptr}
+	NewSceneManager::NewSceneManager() : gof{nullptr}, currentScene{nullptr}, selectedGameObject{nullptr}, storageScene{nullptr}, currSceneState{Scene::SceneState::edit}
 	{
 		gof = new GameObjectFactory();
 		if (!gof)
@@ -257,8 +257,6 @@ namespace Copium {
 			return false;
 		}
 
-		currentScene->set_name(storageScene->get_name() + "\tPREVIEW");
-
 		// Copy game object data
 		for (size_t i{ 0 }; i < storageScene->get_gameobjcount(); ++i)
 		{
@@ -270,6 +268,10 @@ namespace Copium {
 			}
 		}
 		selectedGameObject = nullptr;
+
+		currSceneState = Scene::SceneState::play;
+		currentScene->set_state(Scene::SceneState::play);
+
 		return true;
 	}
 	bool NewSceneManager::endPreview()
@@ -289,6 +291,10 @@ namespace Copium {
 		currentScene = storageScene;
 		storageScene = nullptr;
 		selectedGameObject = nullptr;
+
+		currSceneState = Scene::SceneState::edit;
+		currentScene->set_state(Scene::SceneState::edit);
+
 		return true;
 
 	}
@@ -317,6 +323,13 @@ namespace Copium {
 			PRINT("There is no scene to save...\n");
 			return false;
 		}
+
+		if (currSceneState != Scene::SceneState::edit)
+		{
+			Window::EditorConsole::editorLog.add_logEntry("go to edit mode then save la");
+			return false;
+		}
+
 		std::string fp(_filepath);
 		if (fp.find(".scene") == std::string::npos)
 		{
@@ -399,4 +412,5 @@ namespace Copium {
 
 		return true;
 	}
+	Scene* NewSceneManager::get_storage_scene() { return storageScene; }
 }

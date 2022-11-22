@@ -57,6 +57,8 @@ float temp;
 
 void Transform::deserialize(rapidjson::Value& _value)
 {
+    std::cout << "Deserializing transform\n";
+    Component::deserialize(_value);
 	rapidjson::Value& _v = _value["Pos"].GetObj();
 	position.deserialize(_v);
 	_v = _value["Rot"].GetObj();
@@ -68,6 +70,8 @@ void Transform::deserialize(rapidjson::Value& _value)
 // M2
 void Transform::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 {
+    Component::serialize(_value, _doc);
+
     rapidjson::Value _pos(rapidjson::kObjectType);
     rapidjson::Value _rot(rapidjson::kObjectType);
     rapidjson::Value _scale(rapidjson::kObjectType);

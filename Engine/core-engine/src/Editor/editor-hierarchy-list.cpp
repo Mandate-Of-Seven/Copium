@@ -159,7 +159,10 @@ namespace Window::Hierarchy
 				size_t offset = currentScene->get_filename().find_last_of("/\\");
 				size_t endOffset = currentScene->get_filename().find(".scene")-1;
 				sceneName = currentScene->get_filename().substr(offset + 1, endOffset-offset);
-
+				if (currentScene->get_state() == Copium::Scene::SceneState::play)
+				{
+					sceneName += "\t PREVIEWING";
+				}
 			}
 
 			// Display scene name as the rootiest node

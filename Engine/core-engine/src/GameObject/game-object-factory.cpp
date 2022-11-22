@@ -80,6 +80,15 @@ namespace Copium
 
 		*go = _src;
 
+		unsigned count{ 0 };
+		for (GameObject* g : currScene->get_gameobjectvector())
+		{
+			if (g->get_name().find("New GameObject") != std::string::npos)
+				++count;
+		}
+		if(count)
+			go->set_name(go->get_name() + '(' + std::to_string(count) + ')');
+
 		currScene->add_gameobject(go);
 
 		//for (std::list<GameObject*>::iterator iter = _src.mchildList().begin(); iter != _src.mchildList().end(); ++iter)
@@ -95,6 +104,7 @@ namespace Copium
 		//	go->attach_child(cgo);
 
 		//}
+		go->id = currScene->assignGameObjID();
 		return go;
 
 	}
@@ -112,6 +122,8 @@ namespace Copium
 			delete go;
 			return nullptr;
 		}
+		//go->id = currScene->assignGameObjID();
+
 
 		std::cout << "Object name: " << go->get_name() << std::endl;
 
@@ -230,8 +242,6 @@ namespace Copium
 			return nullptr;
 		}
 
-		//std::cout << "Object name: " << go->get_name() << std::endl;
-
 		if (_value.HasMember("Components"))
 		{
 			rapidjson::Value& compArr = _value["Components"].GetArray();
@@ -315,9 +325,17 @@ namespace Copium
 	bool GameObjectFactory::add_component(const std::string& _key, GameObject* _go)
 	{
 		
+		std::cout << "adding component\n";
 		Component* tmp = _go->addComponent(Component::nameToType(_key));
+		Scene* currScene = sceneManager.get_current_scene();
+		if (currScene)
+		{
+			currScene->assignComponentID();
+			currScene->incr_component_count();
+		}
 		return tmp != nullptr;
 	}
+	
 
 
 	std::map<std::string, GameObject*>& GameObjectFactory::get_archetype_map()
@@ -346,6 +364,8 @@ namespace Copium
 		return nullptr;
 
 	}
-
+	void GameObjectFactory::delete_component(GameObject* _go)
+	{
+	}
 
 }
