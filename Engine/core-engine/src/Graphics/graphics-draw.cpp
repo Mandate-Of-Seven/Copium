@@ -92,48 +92,6 @@ namespace Copium
 
 		if (drawMode[DRAW::DEVELOPMENT])
 			development();
-
-		// Mouse picking
-		if (drawMode[DRAW::EDITOR] && false)
-		{
-			if (ImGui::IsMouseReleased(ImGuiMouseButton_Left))
-			{
-				/*glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/
-				EditorSceneView* sceneView = EditorSystem::Instance()->get_scene_view();
-				glm::vec2 mousePos = inputSystem->get_mouseposition().to_glm();
-				glm::vec2 scenePos = sceneView->get_position();
-				glm::vec2 sceneDim = sceneView->get_dimension();
-				glm::vec2 bottomLeftScene = { scenePos.x, scenePos.y + sceneDim.y + 23.2f };
-				glm::vec2 pos = { mousePos.x - bottomLeftScene.x, bottomLeftScene.y - mousePos.y };
-
-				glFlush();
-				glFinish();
-
-				glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-				PRINT("Start mouse picking");
-				unsigned char pixel_data[4] = { 0, 0, 0, 0 };
-				glReadPixels(pos.x, pos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &pixel_data);
-				PRINT("  Position: " << pos.x << " " << pos.y);
-
-				int pickedID =
-					pixel_data[0] +
-					pixel_data[1] * 256 +
-					pixel_data[2] * 256 * 256;
-
-				if (pickedID == 0x00ffffff)
-				{
-					PRINT("  Background");
-				}
-				else
-				{
-					PRINT("  ID: " << pickedID);
-				}
-
-				PRINT("");
-			}
-		}
 	}
 
 	void Draw::exit()

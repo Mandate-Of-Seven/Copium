@@ -77,14 +77,12 @@ namespace Copium
 		ImGui::End();
 
 		// Mouse picking
-		//check_click();
-
-		if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && windowHovered)
+		if (ImGui::IsMouseReleased(ImGuiMouseButton_Left) && windowHovered)
 		{
 			Scene* scene = sm.get_current_scene();
 			if (scene != nullptr)
 			{
-				std::vector<GameObject*> possibleGameObjects;
+				std::vector<GameObject*> pGameObjs; // Possible selectable gameobjects
 				for (GameObject* gameObject : scene->get_gameobjectvector())
 				{
 					Transform& t = gameObject->transform;
@@ -103,55 +101,68 @@ namespace Copium
 					{
 						if (mousePosition.y > min.y && mousePosition.y < max.y)
 						{
-							possibleGameObjects.push_back(gameObject);
+							pGameObjs.push_back(gameObject);
 						}
 					}
 				}
 
-				// Sort base on depth
-
-				if (!possibleGameObjects.empty())
+				// Ensure that the container is not empty
+				if (!pGameObjs.empty())
 				{
-					// If selected gameobject is one of the possible gameobjects
-					for (int i = 0; i < possibleGameObjects.size(); i++)
+					// Sort base on depth value
+					std::sort(pGameObjs.begin(), pGameObjs.end(),
+						[](GameObject* lhs, GameObject* rhs) -> bool
+						{return (lhs->transform.position.z > rhs->transform.position.z); });
+
+					bool selected = false;
+					for (int i = 0; i < pGameObjs.size(); i++)
 					{
 						// Get the next gameobject after
-						if (sm.get_selected_gameobject() == possibleGameObjects[i])
+						if (sm.get_selected_gameobject() == pGameObjs[i])
 						{
-							if (i + 1 < possibleGameObjects.size())
+							if (i + 1 < pGameObjs.size())
 							{
-								sm.set_selected_gameobject(possibleGameObjects[i + 1]);
+								sm.set_selected_gameobject(pGameObjs[i + 1]);
+								selected = true;
 								break;
 							}
-							else if (i + 1 >= possibleGameObjects.size())
+							else if (i + 1 >= pGameObjs.size())
 							{
-								sm.set_selected_gameobject(possibleGameObjects[0]);
+								sm.set_selected_gameobject(pGameObjs[0]);
+								selected = true;
 								break;
 							}
 						}
 					}
 
 					// If there is no selected gameobject
-					if (sm.selectedGameObject == nullptr)
+					if (sm.get_selected_gameobject() == nullptr || !selected)
 					{
-						GameObject* selectObject = possibleGameObjects.front();
-						for (GameObject* gameObject : possibleGameObjects)
+						GameObject* selectObject = pGameObjs.front();
+						if (sm.selectedGameObject != selectObject)
 						{
-							// Select closest gameobject
-							float depth = gameObject->transform.glmPosition().z;
-
-							if (depth > selectObject->transform.glmPosition().z)
+							for (GameObject* gameObject : pGameObjs)
 							{
-								selectObject = gameObject;
+								// Select closest gameobject
+								float depth = gameObject->transform.glmPosition().z;
+
+								if (depth > selectObject->transform.glmPosition().z)
+								{
+									selectObject = gameObject;
+								}
 							}
+							sm.set_selected_gameobject(selectObject);
 						}
-						sm.set_selected_gameobject(selectObject);
 					}
 
-					PRINT("Set object to: " << sm.selectedGameObject->get_name());
+					//PRINT("Set object to: " << sm.selectedGameObject->get_name());
 				}
+				else
+					sm.set_selected_gameobject(nullptr);
 			}
 		}
+		/*else if(!windowHovered && ImGui::IsMouseDown(ImGuiMouseButton_Left))
+			sm.set_selected_gameobject(nullptr);*/
 	}
 
 	void EditorSceneView::exit()
@@ -173,42 +184,5 @@ namespace Copium
 			sceneHeight = (int)sceneDimension.y;
 			camera.on_resize(sceneDimension.x, sceneDimension.y);
 		}
-	}
-
-	void EditorSceneView::check_click()
-	{
-		ImGuiIO& io = ImGui::GetIO();
-
-		static float clickTime = 0.f;
-		clickTime = io.MouseClickedTime[ImGuiMouseButton_Left];
-		static float previousClickTime = 0.f;
-
-		static bool doubleClick = false;
-		static bool singleClick = false;
-		
-		static float timer = 0.f;
-		timer += (float)WindowsSystem::Instance()->get_delta_time();
-		if (io.MouseClicked[ImGuiMouseButton_Left])
-		{
-			doubleClick = singleClick = false;
-			float timeTaken = clickTime - previousClickTime;
-			PRINT("Time: " << timer);
-			PRINT("Click time: " << timeTaken);
-			if (timeTaken < io.MouseDoubleClickTime)
-			{
-				PRINT("Double Click");
-				doubleClick = true;
-				timer = 0.f;
-			}
-			else if(timer > io.MouseDoubleClickTime)
-			{
-				PRINT("Single Click");
-				singleClick = true;
-				timer = 0.f;
-			}
-			PRINT("");
-		}
-
-		previousClickTime = clickTime;
 	}
 }
