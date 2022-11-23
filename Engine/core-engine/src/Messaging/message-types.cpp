@@ -18,4 +18,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 namespace Copium::MESSAGE_CONTAINER
 {
 	REFLECT_CS_GAMEOBJECT reflectCsGameObject;
+	ADD_OR_DELETE_GAMEOBJECT addOrDeleteGameObject;
+	ADD_OR_DELETE_COMPONENT addOrDeleteComponent;
 }

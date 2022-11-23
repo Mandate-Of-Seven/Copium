@@ -131,6 +131,38 @@ namespace Copium
 				ImGui::Text(_name.c_str());
 				ImGui::TableNextColumn();
 				ImGui::PushItemWidth(-FLT_MIN);
+				if (it->second.type == FieldType::Component)
+				{
+					ImGui::Button(it->second.typeName.c_str(), ImVec2(-FLT_MIN, 0.f));
+					if (ImGui::BeginDragDropTarget())
+					{
+						//GameObject ID, Component ID
+						const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(it->second.typeName.c_str());
+						if (payload)
+						{
+							Component* pComponent = (Component*)(*reinterpret_cast<void**>(payload->Data));
+
+						}
+						ImGui::EndDragDropTarget();
+					}
+					++it;
+					continue;
+				}
+				else if (it->second.type == FieldType::GameObject)
+				{
+					ImGui::Button("None(GameObject)", ImVec2(-FLT_MIN, 0.f));
+					if (ImGui::BeginDragDropTarget())
+					{
+						//GameObject ID, Component ID
+						const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject");
+						if (payload)
+						{
+							Component* pComponent = (Component*)(*reinterpret_cast<void**>(payload->Data));
+
+						}
+						ImGui::EndDragDropTarget();
+					}
+				}
 				getFieldValue(_name, buffer);
 				switch (it->second.type)
 				{

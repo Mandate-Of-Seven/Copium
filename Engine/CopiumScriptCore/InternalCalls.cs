@@ -83,7 +83,9 @@ namespace CopiumEngine
         #endregion
 
         #region UI
+        [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetUIInteractable(bool isInteractable);
+        [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool GetUIInteractable();
 
         #endregion

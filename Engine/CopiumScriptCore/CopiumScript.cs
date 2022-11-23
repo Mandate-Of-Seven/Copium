@@ -21,7 +21,6 @@ namespace CopiumEngine
 {
     public class CopiumScript : Component
     {
-        
         private void OnCreate(ulong ID)
         {
             Console.WriteLine("GameObject Created in CS: " + ID);

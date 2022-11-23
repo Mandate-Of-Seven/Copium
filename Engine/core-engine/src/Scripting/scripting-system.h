@@ -38,20 +38,19 @@ namespace Copium
 {
 	using FieldFlag = uint8_t;
 	#define FieldFlagList	0b00000001
-	#define FieldFlagScript 0b00000010
 
 	enum class FieldType
 	{
 		Float, Double,
 		Bool, Char, Short, Int, Long,
 		UShort, UInt, ULong,
-		Vector2, Vector3, GameObject, Text, Button, Camera ,None
+		Vector2, Vector3, GameObject, Component ,None
 	};
 
 	struct Field
 	{
 		FieldType type{};
-		std::string name;
+		std::string typeName;
 		MonoClassField* classField{nullptr};
 		FieldFlag flags;
 	};
@@ -100,9 +99,6 @@ namespace Copium
 		{ "CopiumEngine.Vector2",		FieldType::Vector2		},
 		{ "CopiumEngine.Vector3",		FieldType::Vector3		},
 		{ "CopiumEngine.GameObject",	FieldType::GameObject	},
-		{ "CopiumEngine.UI.Button",		FieldType::Button		},
-		{ "CopiumEngine.UI.Text",		FieldType::Text			},
-		{ "CopiumEngine.Camera",		FieldType::Camera		},
 	};
 
 	enum class CompilingState
@@ -233,16 +229,6 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		void handleMessage(MESSAGE_TYPE mType);
-
-		/**************************************************************************/
-		/*!
-			\brief
-				Reflects a gameObject of ID into C#
-			\param _ID
-				ID of gameObject to be reflected
-		*/
-		/**************************************************************************/
-		void reflectGameObject(uint64_t _ID);
 
 
 		/**************************************************************************/

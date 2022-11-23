@@ -25,7 +25,7 @@ namespace CopiumEngine
         GameObject()
         {
             transform = new Transform();
-            transform.gameObject = this;
+            transform.Initialize(this, 0);
             gameObjects.Add(this);
         }
         public Transform transform;
@@ -44,6 +44,8 @@ namespace CopiumEngine
         }
 
         private static List<GameObject> gameObjects = new List<GameObject>(25000);
+        private List<Component> components = new List<Component>(5);
+
         public static GameObject FindByID(ulong _ID)
         {
             foreach (GameObject gameObj in gameObjects)
@@ -82,6 +84,30 @@ namespace CopiumEngine
 
             T component = new T() { gameObject = this };
             return component;
+        }
+
+        private void AttachComponentByID(ulong componentID)
+        {
+            foreach (Component component in components)
+            {
+                if (component.ID == componentID)
+                    return;
+            }
+            Component component1 = new Component();
+            component1.Initialize(this, componentID);
+            components.Add(component1);
+        }
+
+        private void RemoveComponentByID(ulong componentID)
+        {
+            foreach (Component component in components)
+            {
+                if (component.ID == componentID)
+                {
+                    components.Remove(component);
+                    return;
+                }
+            }
         }
 
         public void SetActive(bool _active)

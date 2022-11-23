@@ -14,6 +14,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 
 #include <cstdint>
+#include <vector>
 
 #ifndef MESSAGE_TYPES_H
 #define MESSAGE_TYPES_H
@@ -36,6 +37,9 @@ namespace Copium
         MT_SCENE_OPENED,
         MT_SCENE_DESERIALIZED,
         MT_RELOAD_ASSETS,
+        MT_ADD_COMPONENT,
+        MT_DELETE_GAMEOBJECT,
+        MT_DELETE_COMPONENT,
         MT_NONE // END, DO NOT INSERT BEYOND
     };
 
@@ -73,10 +77,24 @@ namespace Copium
 
         struct REFLECT_CS_GAMEOBJECT
         {
-            uint64_t ID;
+            uint64_t gameObjID;
+            std::vector<uint64_t> componentIDs;
+        };
+
+        struct ADD_OR_DELETE_GAMEOBJECT
+        {
+            uint64_t gameObjID;
+        };
+
+        struct ADD_OR_DELETE_COMPONENT
+        {
+            uint64_t gameObjID;
+            uint64_t componentID;
         };
 
         extern REFLECT_CS_GAMEOBJECT reflectCsGameObject;
+        extern ADD_OR_DELETE_GAMEOBJECT addOrDeleteGameObject;
+        extern ADD_OR_DELETE_COMPONENT addOrDeleteComponent;
         extern FILESYSTEM_MUTEX fileSystemMutex;
     }
     //static std::vector<MESSAGE_CONTAINERS::MOUSE_MOVED> QUEUE_MOUSE_MOVED;

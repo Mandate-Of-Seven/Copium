@@ -6,10 +6,17 @@ using System.Threading.Tasks;
 
 namespace CopiumEngine
 {
-	public abstract class Component
-	{
-		public GameObject gameObject { get; internal set; }
+    public class Component
+    {
+        public GameObject gameObject { get; internal set; }
         public Transform transform { get; internal set; }
+
+        public void Initialize (GameObject _gameObject, ulong _ID)
+        {
+            gameObject = _gameObject;
+            transform = gameObject.transform;
+            ID = _ID;
+        }
 
         public bool enabled
         {
@@ -23,7 +30,7 @@ namespace CopiumEngine
             }
         }
 
-        ulong ID;
+        public ulong ID;
 
         void SetID(ulong _ID)
             { ID = _ID; }
@@ -101,7 +108,6 @@ namespace CopiumEngine
 
     public class Camera : Component
     {
-
     }
 
     public class SpriteRenderer : Component
@@ -122,11 +128,11 @@ namespace CopiumEngine
 
     public class Collider2D : Component
     {
-
     }
 
     namespace UI
     {
+
         public class Button : Component
         {
             public bool interactable

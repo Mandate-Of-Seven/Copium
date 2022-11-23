@@ -88,12 +88,15 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{rhs.id}
     transform.scale = rhs.transform.scale;
     active = rhs.active;
     name = rhs.name;
+
+    messageSystem.subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
+    MESSAGE_CONTAINER::reflectCsGameObject.gameObjID = id;
+    MESSAGE_CONTAINER::reflectCsGameObject.componentIDs.clear();
     for (Component* pComponent : rhs.components)
     {
+        MESSAGE_CONTAINER::reflectCsGameObject.componentIDs.push_back(pComponent->id);
         components.push_back(pComponent->clone(*this));
     }
-    messageSystem.subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
-    MESSAGE_CONTAINER::reflectCsGameObject.ID = id;
     messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
     //for (Transform* pTransform : rhs.children)
     //{
@@ -112,7 +115,12 @@ GameObject::GameObject
     id{ _id }
 {
     messageSystem.subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
-    MESSAGE_CONTAINER::reflectCsGameObject.ID = id;
+    MESSAGE_CONTAINER::reflectCsGameObject.gameObjID = id;
+    MESSAGE_CONTAINER::reflectCsGameObject.componentIDs.clear();
+    for (Component* pComponent : components)
+    {
+        MESSAGE_CONTAINER::reflectCsGameObject.componentIDs.push_back(pComponent->id);
+    }
     messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
 }
 
@@ -219,9 +227,14 @@ bool GameObject::deserialize(rapidjson::Value& _value) {
 
 void GameObject::handleMessage(MESSAGE_TYPE mType)
 {
-    using namespace Copium;
     //MT_SCRIPTING_UPDATED
-    MESSAGE_CONTAINER::reflectCsGameObject.ID = id;
+    messageSystem.subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
+    MESSAGE_CONTAINER::reflectCsGameObject.gameObjID = id;
+    MESSAGE_CONTAINER::reflectCsGameObject.componentIDs.clear();
+    for (Component* pComponent : components)
+    {
+        MESSAGE_CONTAINER::reflectCsGameObject.componentIDs.push_back(pComponent->id);
+    }
     messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
 }
 
