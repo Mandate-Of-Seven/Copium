@@ -38,8 +38,6 @@ namespace
 
 namespace Copium
 {
-
-    GameObjectID GameObject::count = 1;
     ComponentID GameObject::assign_id()
     {
         if (!sceneManager.get_current_scene())

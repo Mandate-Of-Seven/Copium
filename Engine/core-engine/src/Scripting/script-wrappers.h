@@ -37,7 +37,7 @@ namespace Copium
 {
 	#define Register(METHOD) mono_add_internal_call("CopiumEngine.InternalCalls::"#METHOD,METHOD)
 
-	static std::unordered_map<MonoType*, ComponentType> s_EntityHasComponentFuncs;
+	static std::unordered_map<std::string, ComponentType> s_EntityHasComponentFuncs;
 
 
 	namespace
@@ -197,8 +197,8 @@ namespace Copium
 			return false;
 		}
 		MonoType* managedType = mono_reflection_type_get_type(componentType);
-		ComponentType cType = s_EntityHasComponentFuncs[managedType];
-		PRINT(MAP_COMPONENT_TYPE_NAME[cType]);
+		ComponentType cType = s_EntityHasComponentFuncs[mono_type_get_name(managedType)];
+		PRINT((int)cType);
 		return gameObj->hasComponent(cType);
 	}
 	
@@ -323,7 +323,8 @@ namespace Copium
 			MonoType* mType = ScriptingSystem::Instance()->getMonoTypeFromName(name);
 			if (mType != nullptr)
 			{
-				s_EntityHasComponentFuncs.insert(std::make_pair(mType, (ComponentType)i));
+				PRINT(name);
+				s_EntityHasComponentFuncs.insert(std::make_pair(name, (ComponentType)i));
 			}
 			++i;
 		}

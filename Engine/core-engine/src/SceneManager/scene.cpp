@@ -68,7 +68,6 @@ void Scene::draw_scene()
 
 std::string Scene::get_filename() const {return filename;}
 size_t Scene::get_gameobjcount() const { return gameObjects.size(); }
-std::vector<GameObject*>& Scene::get_gameobjectvector() { return gameObjects;}
 GameObject* Scene::add_gameobject(GameObject* _gameObj) 
 {
 	gameObjects.push_back(_gameObj);
@@ -127,26 +126,8 @@ void Scene::add_unused_gid(GameObjectID _id)
 	//Sort?
 }
 std::vector<GameObjectID>& Scene::get_unusedgids() { return unusedGIDs; }
-
-
-std::string Scene::get_filename() const {return filename;}
-size_t Scene::get_gameobjcount() const { return gameObjects.size(); }
-
-GameObject* Scene::add_gameobject(GameObject* _gameObj) 
-{
-	gameObjects.push_back(_gameObj);
-	return _gameObj;
-}
-
-void Scene::set_name(const std::string& _name){ name = _name; }
-std::string Scene::get_name() const{ return name; }
-void Scene::inspector_view()
-{
-
-}
 Scene::SceneState Scene::get_state() const { return currSceneState; }
 void Scene::set_state(SceneState _newState) { currSceneState = _newState; }
-
 // Normal Scene
 NormalScene::NormalScene(){}
 NormalScene::NormalScene(const std::string& _filepath) : Scene(_filepath)

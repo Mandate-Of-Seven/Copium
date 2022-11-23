@@ -8,8 +8,11 @@ namespace CopiumEngine
 {
     public class Component
     {
-        public GameObject gameObject { get; internal set; }
-        public Transform transform { get; internal set; }
+        public ulong ID;
+        public GameObject gameObject { 
+            get; internal set; }
+        public Transform transform { 
+            get; internal set; }
 
         public void Initialize (GameObject _gameObject, ulong _ID)
         {
@@ -29,8 +32,6 @@ namespace CopiumEngine
                 InternalCalls.SetComponentEnabled(gameObject.ID,ID,value);
             }
         }
-
-        public ulong ID;
 
         void SetID(ulong _ID)
             { ID = _ID; }

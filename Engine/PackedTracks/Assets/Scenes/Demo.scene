@@ -3,13 +3,15 @@
     "Unused GIDs": [
         7
     ],
+    "Unused CIDs": [],
     "GameObjects": [
         {
             "ID": 1,
             "Name": "PlayerTrain",
-            "PID": 0,
             "Components": [
                 {
+                    "PID": 0,
+                    "Children": [],
                     "ID": 1,
                     "Type": "Transform",
                     "Pos": {
@@ -58,17 +60,32 @@
                             "Y": 0.5
                         }
                     }
+                },
+                {
+                    "ID": 18,
+                    "Type": "Script",
+                    "Name": "CombatMovement",
+                    "hello": {
+                        "X": 0.0,
+                        "Y": 0.5,
+                        "Z": 0.0
+                    }
+                },
+                {
+                    "ID": 19,
+                    "Type": "Script",
+                    "Name": "AIMovement"
                 }
-            ],
-            "Children": []
+            ]
         },
         {
             "ID": 2,
             "Name": "EnemyTrain",
-            "PID": 0,
             "Components": [
                 {
-                    "ID": 5,
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 6,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -98,16 +115,16 @@
                         "W": 1.0
                     }
                 }
-            ],
-            "Children": []
+            ]
         },
         {
             "ID": 3,
             "Name": "Panel",
-            "PID": 0,
             "Components": [
                 {
-                    "ID": 7,
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 8,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -143,16 +160,16 @@
                     "Type": "AudioSource",
                     "Alias": "zap"
                 }
-            ],
-            "Children": []
+            ]
         },
         {
             "ID": 4,
             "Name": "PauseMenu",
-            "PID": 0,
             "Components": [
                 {
-                    "ID": 10,
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 11,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -182,16 +199,16 @@
                     "b": 0.9998999834060669,
                     "a": 1.0
                 }
-            ],
-            "Children": []
+            ]
         },
         {
             "ID": 5,
             "Name": "ResumeButton",
-            "PID": 0,
             "Components": [
                 {
-                    "ID": 12,
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 13,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -234,16 +251,16 @@
                     "b": 1.0,
                     "a": 1.0
                 }
-            ],
-            "Children": []
+            ]
         },
         {
             "ID": 6,
             "Name": "QuitButton",
-            "PID": 0,
             "Components": [
                 {
-                    "ID": 15,
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 16,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -286,8 +303,7 @@
                     "b": 1.0,
                     "a": 1.0
                 }
-            ],
-            "Children": []
+            ]
         }
     ]
 }

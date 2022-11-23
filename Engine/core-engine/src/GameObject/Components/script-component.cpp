@@ -131,6 +131,8 @@ namespace Copium
 				ImGui::Text(_name.c_str());
 				ImGui::TableNextColumn();
 				ImGui::PushItemWidth(-FLT_MIN);
+
+				getFieldValue(_name, buffer);
 				if (it->second.type == FieldType::Component)
 				{
 					ImGui::Button(it->second.typeName.c_str(), ImVec2(-FLT_MIN, 0.f));
@@ -145,8 +147,6 @@ namespace Copium
 						}
 						ImGui::EndDragDropTarget();
 					}
-					++it;
-					continue;
 				}
 				else if (it->second.type == FieldType::GameObject)
 				{
@@ -157,13 +157,12 @@ namespace Copium
 						const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject");
 						if (payload)
 						{
-							Component* pComponent = (Component*)(*reinterpret_cast<void**>(payload->Data));
-
+							GameObject* pComponent = (GameObject*)(*reinterpret_cast<void**>(payload->Data));
 						}
 						ImGui::EndDragDropTarget();
 					}
 				}
-				getFieldValue(_name, buffer);
+
 				switch (it->second.type)
 				{
 				case FieldType::Float:

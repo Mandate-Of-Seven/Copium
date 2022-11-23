@@ -75,12 +75,14 @@ namespace CopiumEngine
             return InternalCalls.HasComponent(ID, componentType);
         }
 
-
         //COME BACK AND OPTIMISE THIS BECAUSE ITS CREATING A NEW COMPONENT EVERYTIME
         public T GetComponent<T>() where T : Component, new()
         {
             if (!HasComponent<T>())
+            {
+                Console.WriteLine("DOES NOT HAVE COMPONENT!: " + ID);
                 return null;
+            }
 
             T component = new T() { gameObject = this };
             return component;

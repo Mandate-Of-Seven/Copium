@@ -37,7 +37,6 @@ class GameObject final : public IReceiver
 {
 private:
     friend class GameObjectFactory;
-    std::list<Component*> components;   //Components for gameObject
     std::string name;                   //Name of gameObject
 
     /***************************************************************************/
@@ -76,6 +75,7 @@ public:           //Global ID for gameObjects
     const GameObjectID id;
     bool active;
     Transform transform;
+    std::list<Component*> components;   //Components for gameObject
     ComponentID assign_id();
 
     /*******************************************************************************

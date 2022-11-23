@@ -80,7 +80,7 @@ namespace Copium
 		*go = _src;
 
 		unsigned count{ 0 };
-		for (GameObject* g : currScene->get_gameobjectvector())
+		for (GameObject* g : currScene->gameObjects)
 		{
 			if (g->get_name().find("New GameObject") != std::string::npos)
 				++count;
@@ -103,7 +103,6 @@ namespace Copium
 		//	go->attach_child(cgo);
 
 		//}
-		go->id = currScene->assignGameObjID();
 		return go;
 
 	}

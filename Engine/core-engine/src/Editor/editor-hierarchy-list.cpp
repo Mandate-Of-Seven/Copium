@@ -235,7 +235,23 @@ namespace Window::Hierarchy
 
 		if (!ImGui::TreeNodeEx(_go.get_name().c_str(), baseFlags))
 			return false;
-
+		if (ImGui::BeginDragDropSource())
+		{
+			static void* container;
+			container = &_go;
+			ImGui::SetDragDropPayload("GameObject", &container, sizeof(void*));
+			ImGui::EndDragDropSource();
+		}
+		//for (const auto& pComponent : _go.components)
+		//{
+		//	if (ImGui::BeginDragDropSource())
+		//	{
+		//		static void* container;
+		//		container = pComponent;
+		//		ImGui::SetDragDropPayload(pComponent->Name().c_str(), &container, sizeof(void*));
+		//		ImGui::EndDragDropSource();
+		//	}
+		//}
 
 		if (ImGui::IsItemClicked())
 		{
