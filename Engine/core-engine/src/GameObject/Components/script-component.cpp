@@ -261,6 +261,7 @@ namespace Copium
 
 	void Script::deserialize(rapidjson::Value& _value)
 	{
+		Component::deserialize(_value);
 		if (_value.HasMember("Name"))
 		{
 			Name(_value["Name"].GetString());
@@ -377,6 +378,7 @@ namespace Copium
 	{
 		if (pScriptClass == nullptr)
 			return;
+		Component::serialize(_value, _doc);
 		rapidjson::Value type;
 		std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
 		type.SetString(tc.c_str(), rapidjson::SizeType(tc.length()), _doc.GetAllocator());

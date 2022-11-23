@@ -25,11 +25,13 @@ namespace Copium
 
 	void SpriteRenderer::deserialize(rapidjson::Value& _value)
 	{
+		Component::deserialize(_value);
 		sprite.deserialize(_value);
 	}
 
 	void SpriteRenderer::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
+		Component::serialize(_value, _doc);
 		rapidjson::Value type;
 		std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
 		type.SetString(tc.c_str(), (rapidjson::SizeType)tc.length(), _doc.GetAllocator());

@@ -7,10 +7,10 @@
         {
             "ID": 1,
             "Name": "PlayerTrain",
+            "PID": 0,
             "Components": [
                 {
-                    "PID": 0,
-                    "Children": [],
+                    "ID": 1,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -29,8 +29,9 @@
                     }
                 },
                 {
+                    "ID": 2,
                     "Type": "SpriteRenderer",
-                    "Sprite ID": 9,
+                    "Sprite ID": 0,
                     "Sprite Name": "PlayerHead.png",
                     "Color": {
                         "X": 1.0,
@@ -40,6 +41,7 @@
                     }
                 },
                 {
+                    "ID": 3,
                     "Type": "Rigidbody2D",
                     "Grav": false,
                     "Active": true
@@ -56,25 +58,17 @@
                             "Y": 0.5
                         }
                     }
-                },
-                {
-                    "Type": "Script",
-                    "Name": "CombatMovement",
-                    "hello": {
-                        "X": 1.0,
-                        "Y": 0.5,
-                        "Z": 0.0
-                    }
                 }
-            ]
+            ],
+            "Children": []
         },
         {
             "ID": 2,
             "Name": "EnemyTrain",
+            "PID": 0,
             "Components": [
                 {
-                    "PID": 0,
-                    "Children": [],
+                    "ID": 5,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -93,8 +87,9 @@
                     }
                 },
                 {
+                    "ID": 6,
                     "Type": "SpriteRenderer",
-                    "Sprite ID": 5,
+                    "Sprite ID": 0,
                     "Sprite Name": "EnemyHead.png",
                     "Color": {
                         "X": 1.0,
@@ -103,15 +98,16 @@
                         "W": 1.0
                     }
                 }
-            ]
+            ],
+            "Children": []
         },
         {
             "ID": 3,
             "Name": "Panel",
+            "PID": 0,
             "Components": [
                 {
-                    "PID": 0,
-                    "Children": [],
+                    "ID": 7,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -143,18 +139,20 @@
                     }
                 },
                 {
+                    "ID": 9,
                     "Type": "AudioSource",
                     "Alias": "zap"
                 }
-            ]
+            ],
+            "Children": []
         },
         {
             "ID": 4,
             "Name": "PauseMenu",
+            "PID": 0,
             "Components": [
                 {
-                    "PID": 0,
-                    "Children": [],
+                    "ID": 10,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -184,15 +182,16 @@
                     "b": 0.9998999834060669,
                     "a": 1.0
                 }
-            ]
+            ],
+            "Children": []
         },
         {
             "ID": 5,
             "Name": "ResumeButton",
+            "PID": 0,
             "Components": [
                 {
-                    "PID": 0,
-                    "Children": [],
+                    "ID": 12,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -234,19 +233,17 @@
                     "g": 0.9999713897705078,
                     "b": 1.0,
                     "a": 1.0
-                },
-                {
-                    "Type": "Button"
                 }
-            ]
+            ],
+            "Children": []
         },
         {
             "ID": 6,
             "Name": "QuitButton",
+            "PID": 0,
             "Components": [
                 {
-                    "PID": 0,
-                    "Children": [],
+                    "ID": 15,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -289,37 +286,8 @@
                     "b": 1.0,
                     "a": 1.0
                 }
-            ]
-        },
-        {
-            "ID": 9,
-            "Name": "GameManager",
-            "Components": [
-                {
-                    "PID": 0,
-                    "Children": [],
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                },
-                {
-                    "Type": "Script",
-                    "Name": "GameManager"
-                }
-            ]
+            ],
+            "Children": []
         }
     ]
 }

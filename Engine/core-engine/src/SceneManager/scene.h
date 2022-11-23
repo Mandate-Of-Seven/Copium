@@ -20,7 +20,7 @@
 	Note: this is the latest version of our scene class, use this
 
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #pragma once
 #ifndef SCENE_H
@@ -38,6 +38,14 @@ class Scene
 {
 public:
 	std::vector<GameObject*> gameObjects;	//Vector should be in order
+
+	enum class SceneState : char {
+		edit = 0, 
+		play,
+		paused
+	};
+
+
 	Scene();
 	Scene(const std::string& _filepath);
 
@@ -181,12 +189,22 @@ public:
 	GameObjectID assignGameObjID();
 	void add_unused_gid(GameObjectID _id);
 	std::vector<GameObjectID>& get_unusedgids();
+	void incr_component_count();
+	unsigned int get_component_count() const;
+	ComponentID assignComponentID();
+	void add_unused_cid(ComponentID _id);
+	std::vector<ComponentID>& get_unusedcids();
+	SceneState get_state() const;
+	void set_state(SceneState _newState);
 
 private:
 	const std::string filename;
 	std::string name;
 	std::vector<GameObjectID> unusedGIDs;
 	std::vector<uint64_t> unusedCIDs;
+	unsigned int numberOfComponents;
+	SceneState currSceneState;
+
 };
 
 class NormalScene : public Scene

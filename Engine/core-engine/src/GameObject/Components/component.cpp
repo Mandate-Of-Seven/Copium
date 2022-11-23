@@ -31,9 +31,15 @@ namespace Copium
 
     void Component::deserialize(rapidjson::Value& _value)
     {
-        //std::cout << "default deserialization\n";
+        std::cout <<  "deserializing CID\n";
+        if (_value.HasMember("ID"))
+        {
+            id = _value["ID"].GetUint64();
+        }
     }
-    void Component::serialize(rapidjson::Value& _value, rapidjson::Document& _doc) {
+    void Component::serialize(rapidjson::Value& _value, rapidjson::Document& _doc) 
+    {
+        _value.AddMember("ID", id, _doc.GetAllocator());
 
     }
 

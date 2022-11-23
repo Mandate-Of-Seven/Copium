@@ -66,7 +66,7 @@ class Component
         Component(const Component&) = delete;
 
         const ComponentType componentType;      //Type of component
-        const ComponentID id;                   //Id of component
+        ComponentID id;                   //Id of component
 
 
         /*******************************************************************************

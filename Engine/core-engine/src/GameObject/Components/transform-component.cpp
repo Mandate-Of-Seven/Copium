@@ -74,6 +74,7 @@ void Transform::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
         _children.PushBack(child, _doc.GetAllocator());
     }
     _value.AddMember("Children", _children, _doc.GetAllocator());
+    Component::serialize(_value, _doc);
 
     rapidjson::Value _pos(rapidjson::kObjectType);
     rapidjson::Value _rot(rapidjson::kObjectType);

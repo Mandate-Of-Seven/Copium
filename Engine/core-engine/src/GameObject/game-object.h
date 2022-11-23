@@ -76,6 +76,8 @@ public:           //Global ID for gameObjects
     const GameObjectID id;
     bool active;
     Transform transform;
+    ComponentID assign_id();
+
     /*******************************************************************************
     /*!
     *
@@ -96,6 +98,10 @@ public:           //Global ID for gameObjects
         MESSAGE_CONTAINER::addOrDeleteComponent.gameObjID = id;
         MESSAGE_CONTAINER::addOrDeleteComponent.componentID = component->id;
         MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_ADD_COMPONENT);
+
+        component->id = assign_id();
+
+
         return *component;
     }
 
