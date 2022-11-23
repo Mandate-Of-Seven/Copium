@@ -60,6 +60,10 @@
                         "Z": 1.0,
                         "W": 1.0
                     }
+                },
+                {
+                    "Type": "AudioSource",
+                    "Alias": ""
                 }
             ],
             "Children": []

@@ -92,6 +92,16 @@ namespace Window
 			*/
 			/**************************************************************************/
 			std::string get_performancetext();
+
+			/***************************************************************************/
+			/*!
+			\brief
+				sets the console to be in focus and bring it to the front
+			\return
+				nothing
+			*/
+			/**************************************************************************/
+			void bring_to_front();
 		};
 
 

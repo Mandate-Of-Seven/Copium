@@ -73,6 +73,8 @@ namespace Copium
             /**************************************************************************/
             void stop_sound();
 
+            void set_alias(std::string s) { alias = s; }
+
             Component* clone(GameObject& _gameObj) const;
 	};
 

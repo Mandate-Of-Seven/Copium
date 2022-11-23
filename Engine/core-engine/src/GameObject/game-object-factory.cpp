@@ -69,6 +69,8 @@ namespace Copium
 			std::string postfix('(' + std::to_string(count) + ')');
 			tmp->set_name(tmp->get_name() + postfix);
 		}
+
+
 		currScene->add_gameobject(tmp);
 
 		return tmp;
@@ -87,8 +89,7 @@ namespace Copium
 		*go = _src;
 
 		std::cout << "building obj\n";
-		//UndoRedo::Command* tempUndo = new UndoRedo::GameObjectCommand(_src, true);
-		//EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+		
 
 		currScene->add_gameobject(go);
 
@@ -184,9 +185,6 @@ namespace Copium
 			return false;
 		if (!_go)
 			return false;
-
-		UndoRedo::Command* tempUndo = new UndoRedo::GameObjectCommand(*_go,false);
-		EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
 
 		// Deattach children from this game object (if any)
 		for (std::list<GameObject*>::iterator iter = _go->mchildList().begin(); iter != _go->mchildList().end(); ++iter)

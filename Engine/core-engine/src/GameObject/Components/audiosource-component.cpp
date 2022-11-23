@@ -42,7 +42,6 @@ namespace Copium
 
 	void AudioSource::inspector_view()
 	{
-		float sameLinePadding = 16.f;
 		static float f1 = 0.5f;
 
         ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
@@ -65,24 +64,37 @@ namespace Copium
 			{
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ContentBrowserItem"))
 				{
-					stop_sound();//stop any currently playing audio
 					std::string str = (const char*)(payload->Data);
-					Copium::SoundSystem* soundsystem = Copium::SoundSystem::Instance();
+					size_t fileDot = str.find_last_of(".");
+					std::string extension = str.substr(fileDot,str.size());
 
-					size_t lastSlash = str.find_last_of("/");
-					std::string temp = str.substr(lastSlash + 1);
-					size_t lastDot = temp.find_last_of(".");
-					alias = temp.substr(0, lastDot);
-					//std::cout << "Alias: " << temp << "\n";
-
-					if (soundsystem->soundList.find(alias) == soundsystem->soundList.end())//if its true it means file doesnt exist yet
+					if (extension == ".wav")
 					{
-						std::cout << "New sound file detected: "<< str << " / Alias ("<<alias << ")\n";
-						SoundSystem::Instance()->CreateSound(str, alias);
+						stop_sound();//stop any currently playing audio
+
+						Copium::SoundSystem* soundsystem = Copium::SoundSystem::Instance();
+
+						size_t lastSlash = str.find_last_of("/");
+						std::string temp = str.substr(lastSlash + 1);
+						size_t lastDot = temp.find_last_of(".");
+						alias = temp.substr(0, lastDot);
+						//std::cout << "Alias: " << temp << "\n";
+
+						if (soundsystem->soundList.find(alias) == soundsystem->soundList.end())//if its true it means file doesnt exist yet
+						{
+							std::cout << "New sound file detected: " << str << " / Alias (" << alias << ")\n";
+							SoundSystem::Instance()->CreateSound(str, alias);
+						}
+						else
+						{
+							soundsystem->soundList[alias].first->getVolume(&f1);
+						}
 					}
 					else
 					{
-						soundsystem->soundList[alias].first->getVolume(&f1);
+						std::cout << "Wrong file type\n";
+						Window::EditorConsole::editorLog.add_logEntry("AudioSource only accepts the.wav file format");
+						Window::EditorConsole::editorLog.bring_to_front();
 					}
 					
 				}

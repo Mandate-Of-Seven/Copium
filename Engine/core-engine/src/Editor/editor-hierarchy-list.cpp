@@ -14,7 +14,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 #include "pch.h"
 #include "Editor/editor-hierarchy-list.h"
-
+#include <Editor/editor-undoredo.h>
+#include <Editor/editor-system.h>
 
 //M2
 namespace Window::Hierarchy
@@ -61,8 +62,16 @@ namespace Window::Hierarchy
 					}
 					else
 					{
-						if (!Copium::NewSceneManager::Instance()->get_gof().build_gameobject())
+						Copium::GameObject* temp;
+						if (temp = Copium::NewSceneManager::Instance()->get_gof().build_gameobject())
+						{
+							Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::GameObjectCommand(*temp, true);
+							Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+						}
+						else
+						{
 							std::cout << "Error creating game object\n";
+						}
 					}
 
 
@@ -72,6 +81,8 @@ namespace Window::Hierarchy
 					if (Copium::NewSceneManager::Instance()->get_selected_gameobject())
 					{
 						std::cout << "Delete\n";
+						Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::GameObjectCommand(*Copium::NewSceneManager::Instance()->get_selected_gameobject(),false);
+						Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
 						Copium::NewSceneManager::Instance()->get_gof().delete_gameobject(Copium::NewSceneManager::Instance()->get_selected_gameobject());
 						Copium::NewSceneManager::Instance()->set_selected_gameobject(nullptr);
 					}

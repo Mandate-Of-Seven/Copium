@@ -72,6 +72,12 @@ namespace Window
             return performanceText;
         }
 
+        void EditorConsoleLog::bring_to_front()
+        {
+            ImGui::SetWindowFocus("Console Log");
+        }
+
+
 		void init()
 		{
             isOpen = true;

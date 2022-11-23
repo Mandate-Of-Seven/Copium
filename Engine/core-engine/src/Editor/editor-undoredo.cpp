@@ -86,15 +86,8 @@ namespace Copium
 	}
 
 
-	//GameObject UndoRedo not ready
-	//UndoRedo::GameObjectCommand::GameObjectCommand(GameObject& _value)
-	//{
-	//	//std::cout << "undo\n";
-	//	//std::cout << _value.get_name() << std::endl;
-	//	this->value = _value;
-	//	this->deleting = false;
-	//	std::cout << "Hello2";
-	//}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 	UndoRedo::GameObjectCommand::GameObjectCommand(GameObject& _value,bool _deleting)
 	{
@@ -106,7 +99,7 @@ namespace Copium
 
 	UndoRedo::GameObjectCommand::~GameObjectCommand()
 	{
-		std::cout << this->pointer << std::endl;
+		//std::cout << this->pointer << std::endl;
 	}
 
 	void UndoRedo::GameObjectCommand::Undo(std::stack<Command*>* stackPointer)
@@ -126,8 +119,8 @@ namespace Copium
 			{
 				std::cout << "Delete" << std::endl;
 				NewSceneManager::Instance()->get_gof().delete_gameobject(this->pointer);
-				//Command* temp = new GameObjectCommand(this->value, false);
-				//stackPointer->push(temp);
+				Command* temp = new GameObjectCommand(this->value, false);
+				stackPointer->push(temp);
 			}
 			else
 			{
@@ -167,8 +160,8 @@ namespace Copium
 			{
 				std::cout << "Delete" << std::endl;
 				NewSceneManager::Instance()->get_gof().delete_gameobject(this->pointer);
-				//Command* temp = new GameObjectCommand(this->value, false);
-				//stackPointer->push(temp);
+				Command* temp = new GameObjectCommand(this->value, false);
+				stackPointer->push(temp);
 			}
 			else
 			{
