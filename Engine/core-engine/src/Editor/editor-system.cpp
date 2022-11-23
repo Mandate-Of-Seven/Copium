@@ -246,6 +246,29 @@ namespace Copium
 					ImGui::EndMenu();
 				}
 
+				//if your IMGUI window can be closed,you should make the bool inline in the header and include it here to be able to reopen it
+				if (ImGui::BeginMenu("Windows"))
+				{
+					if (ImGui::MenuItem("Hierarchy"))
+					{
+						Window::Hierarchy::isHierarchyOpen = true;
+					}
+					if (ImGui::MenuItem("Console Log"))
+					{
+						Window::EditorConsole::isConsoleLogOpen = true;
+					}
+					if (ImGui::MenuItem("Theme generator"))
+					{
+						Window::ColorTheme::isColorThemeOpen = true;
+					}
+					if (ImGui::MenuItem("Inspector"))
+					{
+						Window::Inspector::isInspectorOpen = true;
+					}
+
+					ImGui::EndMenu();
+				}
+
 				ImGui::EndMenuBar();
 			}
 

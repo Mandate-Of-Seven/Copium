@@ -24,6 +24,8 @@ namespace Window
 {
 	namespace EditorConsole
 	{
+		inline bool isConsoleLogOpen;
+
 
 		struct EditorConsoleLog
 		{

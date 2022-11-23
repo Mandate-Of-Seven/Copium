@@ -25,7 +25,7 @@ namespace Window
 {
 	namespace EditorConsole
 	{
-		bool isOpen;
+		
 
 		EditorConsoleLog::EditorConsoleLog()
 		{
@@ -80,18 +80,18 @@ namespace Window
 
 		void init()
 		{
-            isOpen = true;
+            isConsoleLogOpen = true;
 		}
 
 		void update()
 		{
-			if (!isOpen)
+			if (!isConsoleLogOpen)
 			{
 				return;
 			}
 
             ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
-			if (!ImGui::Begin("Console Log", &isOpen))//return early if minimised
+			if (!ImGui::Begin("Console Log", &isConsoleLogOpen))//return early if minimised
 			{
 
 				ImGui::End();

@@ -8,6 +8,8 @@ namespace Window
 {
 	namespace ColorTheme
 	{
+		inline bool isColorThemeOpen;
+
 		struct ImVec3
 		{
 			float x, y, z;

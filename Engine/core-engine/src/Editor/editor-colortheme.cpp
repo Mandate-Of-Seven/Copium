@@ -25,13 +25,17 @@ namespace Window
                                              Window::ColorTheme::color_for_area, Window::ColorTheme::color_for_body,
                                              Window::ColorTheme::color_for_pops);
              */
-
+            isColorThemeOpen = true;
 		}
 
 		void update()
 		{
-            
-            ImGui::Begin("Theme generator");
+            if (!isColorThemeOpen)
+            {
+                return;
+            }
+
+            ImGui::Begin("Theme generator",&isColorThemeOpen);
             ImGui::ColorEdit3("Text Color", (float*)&color_for_text, ImGuiColorEditFlags_PickerHueBar);
             ImGui::ColorEdit3("Head Color", (float*)&color_for_head, ImGuiColorEditFlags_PickerHueBar);
             ImGui::ColorEdit3("Area Color", (float*)&color_for_area, ImGuiColorEditFlags_PickerHueBar);

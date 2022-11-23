@@ -33,7 +33,6 @@ namespace Window
 
 	namespace Inspector
 	{
-        bool isOpen;
         bool isAddingComponent;
         char nameBuffer[INPUT_BUFFER_SIZE];
         Copium::ScriptingSystem& scriptingSystem{ *Copium::ScriptingSystem::Instance() };
@@ -52,7 +51,7 @@ namespace Window
         void init()
         {
             isAddingComponent = false;
-            isOpen = true;
+            isInspectorOpen = true;
 
             for (size_t i{ 0 }; i < 128; ++i)
             {
@@ -62,13 +61,13 @@ namespace Window
 
         void update()
         {
-            if (!isOpen)
+            if (!isInspectorOpen)
                 return;
 
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
             ImGui::SetNextWindowSizeConstraints(ImVec2(320, 180), ImVec2(FLT_MAX, FLT_MAX));
 
-            if (!ImGui::Begin("Inspector", &isOpen))
+            if (!ImGui::Begin("Inspector", &isInspectorOpen))
             {
                 ImGui::End();
                 ImGui::PopStyleVar();

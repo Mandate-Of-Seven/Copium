@@ -30,6 +30,8 @@ namespace Window
 {
 	namespace Inspector
 	{
+		inline bool isInspectorOpen;
+
 		/***************************************************************************/
 		/*!
 		\brief

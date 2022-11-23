@@ -21,13 +21,13 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 namespace Window::Hierarchy
 {
 	Copium::Scene * currentScene = nullptr;
-	bool isOpen, sceneSelected;
+	bool sceneSelected;
 	Copium::GameObjectID selectedID;
 
 
 	void init()
 	{
-		isOpen = true;
+		Window::Hierarchy::isHierarchyOpen = true;
 		sceneSelected = false;
 		if (Copium::NewSceneManager::Instance())
 			currentScene = Copium::NewSceneManager::Instance()->get_current_scene();
@@ -36,8 +36,11 @@ namespace Window::Hierarchy
 
 	void update()
 	{
-		if (!isOpen)
+		if (!Window::Hierarchy::isHierarchyOpen)
+		{
+			//std::cout << "Test\n";
 			return;
+		}
 
 		// Handle scene change
 		if (currentScene != Copium::NewSceneManager::Instance()->get_current_scene())
@@ -45,7 +48,7 @@ namespace Window::Hierarchy
 
 
 		ImGui::SetNextWindowSize(ImVec2(500, 900), ImGuiCond_FirstUseEver);
-		ImGui::Begin("Hierarchy", &isOpen, ImGuiWindowFlags_MenuBar);
+		ImGui::Begin("Hierarchy", &Window::Hierarchy::isHierarchyOpen, ImGuiWindowFlags_MenuBar);
 
 		// Menu Bar
 		if (ImGui::BeginMenuBar())

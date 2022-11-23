@@ -21,7 +21,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Window::Hierarchy
 {
-
+	inline bool isHierarchyOpen;
 
 	/*******************************************************************************
 	/*!
