@@ -33,7 +33,7 @@ namespace Copium
 	namespace
 	{
 		// Our state
-		bool show_demo_window = false;
+		bool show_demo_window = true;
 		ThreadSystem& threadSystem{ *ThreadSystem::Instance() };
 		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 		InputSystem& inputSystem{ *InputSystem::Instance() };

@@ -326,13 +326,12 @@ void GameObject::inspectorView()
     name = buffer;
     /*ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
         | ImGuiTableFlags_ScrollY;*/
-    ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_Borders
+    ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
         | ImGuiTableFlags_ScrollY;
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);
-    ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed;
-    if (ImGui::BeginTable("Components", 1, tableFlags, ImVec2(0.f, ImGui::GetWindowSize().y/2.f)))
+    ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth;
+    if (ImGui::BeginTable("Components", 1, tableFlags, ImVec2(0.f, ImGui::GetWindowSize().y * 0.8f)))
     {
-        ImGui::TableNextRow();
         ImGui::TableNextColumn();
         static std::vector<ComponentID> componentsToDelete;
         componentsToDelete.clear();
@@ -347,6 +346,7 @@ void GameObject::inspectorView()
 
         for (Component* component : components)
         {
+            ImGui::TableNextColumn();
             const std::string& componentName{ component->Name() };
             ImGui::PushID(index++);
             if (ImGui::CollapsingHeader(componentName.c_str(), nodeFlags))
@@ -359,7 +359,6 @@ void GameObject::inspectorView()
                 }
             }
             ImGui::PopID();
-            ImGui::TableNextColumn();
         }
         for (ComponentID componentId : componentsToDelete)
         {
