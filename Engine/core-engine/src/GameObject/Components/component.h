@@ -144,7 +144,7 @@ class Component
 
         */
         /*******************************************************************************/
-        virtual void inspector_view() = 0;
+        virtual void inspector_view();
 
         /*******************************************************************************
         /*!
@@ -187,6 +187,10 @@ class Component
         bool Enabled() const noexcept;
 
         void Enabled(bool) noexcept;
+
+        bool& get_enabled();
+
+
         GameObject& gameObj;
     protected:
 

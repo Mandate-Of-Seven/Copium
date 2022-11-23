@@ -95,7 +95,7 @@ namespace Copium
 					pSystem->updateTime = glfwGetTime() - startTime;
 					totalUpdateTime += pSystem->updateTime;
 				}
-				else if (pSystem->systemFlags & FLAG_RUN_ON_EDITOR &&!inPlayMode)
+				else if (pSystem->systemFlags & FLAG_RUN_ON_EDITOR && !inPlayMode)
 				{
 					double startTime = glfwGetTime();
 					pSystem->update();

@@ -94,6 +94,9 @@ namespace Copium
 		{
 			for (GameObject* gameObject : scene->get_gameobjectvector())
 			{
+				if (!gameObject->active)
+					continue;
+
 				for (Component* component : gameObject->getComponents<SpriteRenderer>())
 				{
 					if (!component->Enabled())
@@ -124,8 +127,12 @@ namespace Copium
 						renderer->draw_quad(t.glmPosition() + t1.glmPosition(), size, rotation, sr);
 
 					}
+					else 
+					{
+						renderer->draw_quad(t.glmPosition(), size, rotation, sr);
 
-					renderer->draw_quad(t.glmPosition(), size, rotation, sr);
+					}
+
 				}
 				for (Component* component : gameObject->getComponents<ImageComponent>())
 				{

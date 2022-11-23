@@ -261,6 +261,8 @@ bool load_config(std::string& _filename, GLint& _w, GLint& _h)
     }
     std::cout << "Loading from config...\n" << "Window Width:" << _w << '\n'
         << "Window Height:" << _h << std::endl;
+
     return true;
 }
+
 

@@ -175,6 +175,10 @@ namespace Copium
 
 			void deserialize(rapidjson::Value& _value)
 			{
+				if (_value.HasMember("ID"))
+				{
+					id = _value["ID"].GetUint64();
+				}
 				if (_value.HasMember("FontName"))
 				{
 					fontName = _value["FontName"].GetString();
@@ -221,6 +225,8 @@ namespace Copium
 				std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
 				type.SetString(tc.c_str(), rapidjson::SizeType(tc.length()), _doc.GetAllocator());
 				_value.AddMember("Type", type, _doc.GetAllocator());
+
+				_value.AddMember("ID", id, _doc.GetAllocator());
 
 				type.SetString(fontName.c_str(), rapidjson::SizeType(fontName.length()), _doc.GetAllocator());
 				_value.AddMember("FontName", type, _doc.GetAllocator());
@@ -282,6 +288,11 @@ namespace Copium
 
 			void deserialize(rapidjson::Value& _value)
 			{
+				if (_value.HasMember("ID"))
+				{
+					id = _value["ID"].GetUint64();
+				}
+
 				if (_value.HasMember("H_Align"))
 				{
 					hAlignment = (HorizontalAlignment)_value["H_Align"].GetInt();
@@ -299,6 +310,8 @@ namespace Copium
 				std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
 				type.SetString(tc.c_str(), rapidjson::SizeType(tc.length()), _doc.GetAllocator());
 				_value.AddMember("Type", type, _doc.GetAllocator());
+
+				_value.AddMember("ID", id, _doc.GetAllocator());
 
 				_value.AddMember("H_Align", (int)hAlignment, _doc.GetAllocator());
 				_value.AddMember("V_Align", (int)vAlignment, _doc.GetAllocator());

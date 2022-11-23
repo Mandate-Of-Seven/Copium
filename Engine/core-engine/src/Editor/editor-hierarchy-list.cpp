@@ -24,6 +24,7 @@ namespace Window::Hierarchy
 	Copium::GameObjectID selectedID;
 
 
+
 	void init()
 	{
 		isOpen = true;
@@ -45,6 +46,7 @@ namespace Window::Hierarchy
 
 		ImGui::SetNextWindowSize(ImVec2(500, 900), ImGuiCond_FirstUseEver);
 		ImGui::Begin("Hierarchy", &isOpen, ImGuiWindowFlags_MenuBar);
+		Copium::NewSceneManager* nsm = Copium::NewSceneManager::Instance();
 
 		// Menu Bar
 		if (ImGui::BeginMenuBar())
@@ -95,7 +97,6 @@ namespace Window::Hierarchy
 				}				
 				if (ImGui::MenuItem("Create a Child GameObject"))
 				{
-					Copium::NewSceneManager* nsm = Copium::NewSceneManager::Instance();
 					if (nsm->get_selected_gameobject())
 					{
 						nsm->get_gof().create_child(*nsm->get_selected_gameobject());
@@ -172,7 +173,8 @@ namespace Window::Hierarchy
 				bool isSelected = false;
 				for (size_t i{ 0 }; i < roots.size(); ++i)
 				{
-					isSelected = display_gameobject_advanced(*roots[i], selectedID);
+					display_gameobject_advanced(*(roots[i]), selectedID);
+					
 					if (isSelected)
 						sceneSelected = false;
 				}	
@@ -235,6 +237,7 @@ namespace Window::Hierarchy
 
 		if (!ImGui::TreeNodeEx(_go.get_name().c_str(), baseFlags))
 			return false;
+
 
 
 		if (ImGui::IsItemClicked())

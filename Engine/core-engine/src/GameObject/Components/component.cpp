@@ -48,6 +48,7 @@ namespace Copium
 
     void Component::Enabled(bool _enabled) noexcept { enabled = _enabled; }
 
+    bool& Component::get_enabled() { return enabled; }
 
     Animator::Animator(GameObject& _gameObj) 
         :Component(_gameObj, ComponentType::Animator) { std::cout << "ANIMATOR CONS" << std::endl; }
@@ -55,5 +56,11 @@ namespace Copium
     const std::string& Component::Name() const
     {
         return MAP_COMPONENT_TYPE_NAME[componentType];
+    }
+
+    void Component::inspector_view()
+    {
+        ImGui::Checkbox("##Active", &enabled);
+        ImGui::SameLine();
     }
 }

@@ -329,12 +329,16 @@ void GameObject::handleMessage(MESSAGE_TYPE mType)
 
 void GameObject::inspectorView()
 {
+
+    ImGui::Checkbox("##Active", &active);
+    ImGui::SameLine();
     static char buffer[256];
     strcpy(buffer, name.c_str());
     ImGui::PushItemWidth(-1);
-    ImGui::InputText("##gameObjName", buffer,256);
+    ImGui::InputText("##gameObjName", buffer, 256);
     ImGui::PopItemWidth();
     name = buffer;
+
     ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
         | ImGuiTableFlags_ScrollY;
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);
@@ -352,6 +356,8 @@ void GameObject::inspectorView()
         int index = 0;
         for (Component* component : components)
         {
+            ImGui::Checkbox("##Active", &component->get_enabled());
+            ImGui::SameLine();
             const std::string& componentName{ component->Name() };
             ImGui::PushID(index);
             if (ImGui::CollapsingHeader(componentName.c_str(), nodeFlags))

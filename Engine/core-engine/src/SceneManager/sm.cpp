@@ -30,6 +30,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <Messaging/message-system.h>
 
 namespace Copium {
+
+	std::string prefix("../PackedTracks/Assets/Scenes/");
+
 	GameObject* NewSceneManager::findGameObjByID(GameObjectID _ID)
 	{
 		for (GameObject* pGameObj : currentScene->get_gameobjectvector())
@@ -77,6 +80,7 @@ namespace Copium {
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		storageScene = nullptr;
 		gof->register_archetypes("Data/Archetypes");
+		load_scene(prefix + "Demo.scene");
 
 
 		//std::cout << "No. of GameObjects in scene:" << currentScene->get_gameobjcount() << std::endl;
@@ -332,13 +336,13 @@ namespace Copium {
 	{
 		if(!currentScene)
 		{
-			PRINT("There is no scene to save...\n");
+			Window::EditorConsole::editorLog.add_logEntry("No Scene loaded, cannot perform save!");
 			return false;
 		}
 
 		if (currSceneState != Scene::SceneState::edit)
 		{
-			Window::EditorConsole::editorLog.add_logEntry("go to edit mode then save la");
+			Window::EditorConsole::editorLog.add_logEntry("In edit mode, cannot perform save!");
 			return false;
 		}
 
