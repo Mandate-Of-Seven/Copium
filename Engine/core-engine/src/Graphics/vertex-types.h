@@ -26,9 +26,16 @@ namespace Copium
 		glm::vec4 color;	// Color of vertex
 		glm::vec2 textCoord;// Texture coordinate of vertex
 		float texID;		// Texture index
+		int entityID;		// Index of the entity
 	};
 
 	struct LineVertex
+	{
+		glm::vec3 pos;
+		glm::vec4 color;
+	};
+
+	struct CircleVertex
 	{
 		glm::vec3 pos;
 		glm::vec4 color;

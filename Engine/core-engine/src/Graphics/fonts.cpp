@@ -131,7 +131,7 @@ namespace Copium
 		glVertexArrayAttribBinding(fontVertexArrayID, 3, 2);*/
 	}
 
-	void Font::draw_text(const std::string& _text, const glm::vec2& _position, const glm::vec4& _color, GLfloat _scale, GLuint _fontID)
+	void Font::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, GLfloat _scale, GLuint _fontID, BaseCamera* _camera)
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -142,7 +142,7 @@ namespace Copium
 		GLuint uProjection = glGetUniformLocation(
 			graphics->get_shader_program()[TEXT_SHADER].GetHandle(), "uViewProjection");
 
-		glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_projection();
+		glm::mat4 projection = _camera->get_view_proj_matrix();
 		glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
 		glActiveTexture(GL_TEXTURE0);
@@ -150,6 +150,7 @@ namespace Copium
 
 		float x = _position.x;
 		float y = _position.y;
+		float z = _position.z;
 
 		glm::vec2 fontTextCoord[6] = {
 			glm::vec2(0.f, 0.f),
@@ -181,12 +182,12 @@ namespace Copium
 
 			// Update VBO for each character
 			TextVertex vertices[6];
-			vertices[0].pos = glm::vec3(xpos, ypos + h, 0.f);
-			vertices[1].pos = glm::vec3(xpos, ypos, 0.f);
-			vertices[2].pos = glm::vec3(xpos + w, ypos, 0.f);
-			vertices[3].pos = glm::vec3(xpos, ypos + h, 0.f);
-			vertices[4].pos = glm::vec3(xpos + w, ypos, 0.f);
-			vertices[5].pos = glm::vec3(xpos + w, ypos + h, 0.f);
+			vertices[0].pos = glm::vec3(xpos, ypos + h, z);
+			vertices[1].pos = glm::vec3(xpos, ypos, z);
+			vertices[2].pos = glm::vec3(xpos + w, ypos, z);
+			vertices[3].pos = glm::vec3(xpos, ypos + h, z);
+			vertices[4].pos = glm::vec3(xpos + w, ypos, z);
+			vertices[5].pos = glm::vec3(xpos + w, ypos + h, z);
 
 			for (int i = 0; i < 6; i++)
 			{

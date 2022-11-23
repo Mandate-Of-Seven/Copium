@@ -16,19 +16,19 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Editor/editor-sceneview.h"
 #include "Editor/editor-system.h"
-#include "Graphics/graphics-system.h"
 #include "SceneManager/sm.h"
 #include "Windows/windows-system.h"
 
 namespace Copium
 {
-	// Bean: Temporary global variable
-	GraphicsSystem* graphics;
+	namespace
+	{
+		EditorCamera& camera{ *EditorSystem::Instance()->get_camera() };
+		NewSceneManager& sm{ *NewSceneManager::Instance() };
+	}
 
 	void EditorSceneView::init()
 	{
-		graphics = GraphicsSystem::Instance();
-
 		sceneDimension = { sceneWidth, sceneHeight };
 	}
 
@@ -43,8 +43,8 @@ namespace Copium
 		windowFocused = ImGui::IsWindowFocused();
 		windowHovered = ImGui::IsWindowHovered();
 		scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
-
-		unsigned int textureID = graphics->get_framebuffer()->get_color_attachment_id();
+		
+		unsigned int textureID = camera.get_framebuffer()->get_color_attachment_id();
 		ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
 		resize_sceneview(*((glm::vec2*) &viewportEditorSize));
 		ImGui::Image((void*) (size_t) textureID, ImVec2{ (float)sceneWidth, (float)sceneHeight }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
@@ -60,7 +60,7 @@ namespace Copium
 		// Begin Render Stats
 		ImGui::Begin("Renderer Stats", 0, windowFlags);
 
-		Scene* scene = NewSceneManager::Instance()->get_current_scene();
+		Scene* scene = sm.get_current_scene();
 		size_t gameobjectCount = 0;
 		if (scene != nullptr)
 			gameobjectCount = scene->get_gameobjcount();
@@ -75,6 +75,94 @@ namespace Copium
 
 		// End Render Stats
 		ImGui::End();
+
+		// Mouse picking
+		if (ImGui::IsMouseReleased(ImGuiMouseButton_Left) && windowHovered)
+		{
+			Scene* scene = sm.get_current_scene();
+			if (scene != nullptr)
+			{
+				std::vector<GameObject*> pGameObjs; // Possible selectable gameobjects
+				for (GameObject* gameObject : scene->get_gameobjectvector())
+				{
+					Transform& t = gameObject->transform;
+					glm::vec2 mousePosition = glm::vec3(camera.get_ndc(), 0.f);
+					glm::vec2 objPosition = glm::vec2(t.glmPosition().x, t.glmPosition().y);
+					// Not Within bounds
+					if (glm::distance(objPosition, mousePosition)
+						> glm::length(camera.get_dimension()))
+						continue;
+
+					glm::vec2 min = glm::vec2(objPosition.x - t.glmScale().x * 0.5f, objPosition.y - t.glmScale().y * 0.5f);
+					glm::vec2 max = glm::vec2(objPosition.x + t.glmScale().x * 0.5f, objPosition.y + t.glmScale().y * 0.5f);
+
+					// Check AABB
+					if (mousePosition.x > min.x && mousePosition.x < max.x)
+					{
+						if (mousePosition.y > min.y && mousePosition.y < max.y)
+						{
+							pGameObjs.push_back(gameObject);
+						}
+					}
+				}
+
+				// Ensure that the container is not empty
+				if (!pGameObjs.empty())
+				{
+					// Sort base on depth value
+					std::sort(pGameObjs.begin(), pGameObjs.end(),
+						[](GameObject* lhs, GameObject* rhs) -> bool
+						{return (lhs->transform.position.z > rhs->transform.position.z); });
+
+					bool selected = false;
+					for (int i = 0; i < pGameObjs.size(); i++)
+					{
+						// Get the next gameobject after
+						if (sm.get_selected_gameobject() == pGameObjs[i])
+						{
+							if (i + 1 < pGameObjs.size())
+							{
+								sm.set_selected_gameobject(pGameObjs[i + 1]);
+								selected = true;
+								break;
+							}
+							else if (i + 1 >= pGameObjs.size())
+							{
+								sm.set_selected_gameobject(pGameObjs[0]);
+								selected = true;
+								break;
+							}
+						}
+					}
+
+					// If there is no selected gameobject
+					if (sm.get_selected_gameobject() == nullptr || !selected)
+					{
+						GameObject* selectObject = pGameObjs.front();
+						if (sm.selectedGameObject != selectObject)
+						{
+							for (GameObject* gameObject : pGameObjs)
+							{
+								// Select closest gameobject
+								float depth = gameObject->transform.glmPosition().z;
+
+								if (depth > selectObject->transform.glmPosition().z)
+								{
+									selectObject = gameObject;
+								}
+							}
+							sm.set_selected_gameobject(selectObject);
+						}
+					}
+
+					//PRINT("Set object to: " << sm.selectedGameObject->get_name());
+				}
+				else
+					sm.set_selected_gameobject(nullptr);
+			}
+		}
+		/*else if(!windowHovered && ImGui::IsMouseDown(ImGuiMouseButton_Left))
+			sm.set_selected_gameobject(nullptr);*/
 	}
 
 	void EditorSceneView::exit()
@@ -94,8 +182,7 @@ namespace Copium
 			sceneDimension = { _newDimension.x, _newDimension.y };
 			sceneWidth = (int)sceneDimension.x;
 			sceneHeight = (int)sceneDimension.y;
-			graphics->get_framebuffer()->resize(sceneWidth, sceneHeight);
-			EditorSystem::Instance()->get_camera()->on_resize(sceneDimension.x, sceneDimension.y);
+			camera.on_resize(sceneDimension.x, sceneDimension.y);
 		}
 	}
 }

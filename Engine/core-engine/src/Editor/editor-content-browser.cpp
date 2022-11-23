@@ -33,8 +33,6 @@ namespace Copium
 		float imageAR = 1.f, framePadding = 3.f;
 		float cellSize = thumbnailSize + padding;
 
-		bool fileDragging = false;
-
 		//std::filesystem::path currentDirectory;
 
 		std::vector<Texture> icons;
@@ -198,7 +196,6 @@ namespace Copium
 
 				if (ImGui::BeginDragDropSource())
 				{
-					fileDragging = true;
 					std::string str = file.generic_string();
 					const char* filePath = str.c_str();
 					ImGui::SetDragDropPayload("ContentBrowserItem", filePath, str.size() + 1);
@@ -226,12 +223,10 @@ namespace Copium
 
 	void EditorContentBrowser::inputs()
 	{
-		if (!fileDragging && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+		if (!ImGui::IsMouseDragging(ImGuiMouseButton_Left) && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
 			fs->set_selected_file(nullptr);
-		else
-			fileDragging = false;
 
-		if (ImGui::IsWindowFocused() && ImGui::IsAnyItemHovered())
+		if (ImGui::IsWindowFocused())
 		{
 			if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 			{
@@ -247,13 +242,15 @@ namespace Copium
 						currentDirectory = dir;
 				}
 			}
-
-			if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+			
+			if (!ImGui::IsMouseDragging(ImGuiMouseButton_Left) && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
 			{
 				for (File& file : currentDirectory->get_files())
 				{
 					if (file.get_id() == ImGui::GetHoveredID())
+					{
 						fs->set_selected_file(&file);
+					}
 				}
 			}
 		}

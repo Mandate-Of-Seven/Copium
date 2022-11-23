@@ -97,6 +97,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Editor\editor-colortheme.cpp" />
+    <ClCompile Include="src\Editor\editor-game.cpp" />
     <ClCompile Include="src\GameObject\Components\audiosource-component.cpp" />
     <ClCompile Include="src\Audio\sound-system.cpp" />
     <ClCompile Include="src\Debugging\frame-rate-controller.cpp" />
@@ -113,15 +114,18 @@
     <ClCompile Include="src\Files\file-directory.cpp" />
     <ClCompile Include="src\Files\file-system.cpp" />
     <ClCompile Include="src\Files\file.cpp" />
+    <ClCompile Include="src\GameObject\Components\camera-component.cpp" />
     <ClCompile Include="src\GameObject\Components\collider-components.cpp" />
     <ClCompile Include="src\GameObject\Components\component.cpp" />
     <ClCompile Include="src\GameObject\Components\physics-components.cpp" />
     <ClCompile Include="src\GameObject\game-object-factory.cpp" />
     <ClCompile Include="src\GameObject\game-object.cpp" />
     <ClCompile Include="src\GameObject\Components\renderer-component.cpp" />
+    <ClCompile Include="src\Graphics\base-camera.cpp" />
     <ClCompile Include="src\Graphics\fonts.cpp" />
     <ClCompile Include="src\Graphics\framebuffer.cpp" />
     <ClCompile Include="src\Graphics\glslshader.cpp" />
+    <ClCompile Include="src\Graphics\graphics-draw.cpp" />
     <ClCompile Include="src\Graphics\graphics-system.cpp" />
     <ClCompile Include="src\Graphics\renderer.cpp" />
     <ClCompile Include="src\Graphics\sprite.cpp" />
@@ -186,6 +190,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Editor\editor-colortheme.h" />
+    <ClInclude Include="src\Editor\editor-game.h" />
     <ClInclude Include="src\GameObject\Components\audiosource-component.h" />
     <ClInclude Include="src\Debugging\frame-rate-controller.h" />
     <ClInclude Include="src\Editor\editor-camera.h" />
@@ -197,13 +202,16 @@
     <ClInclude Include="src\Files\file-system.h" />
     <ClInclude Include="src\GameObject\components-system.h" />
     <ClInclude Include="src\Files\file.h" />
+    <ClInclude Include="src\GameObject\Components\camera-component.h" />
     <ClInclude Include="src\GameObject\Components\collider-components.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="src\GameObject\Components\renderer-component.h" />
-    <ClInclude Include="src\Graphics\camera.h" />
+    <ClInclude Include="src\Graphics\base-camera.h" />
     <ClInclude Include="src\Graphics\fonts.h" />
+    <ClInclude Include="src\Graphics\graphics-draw.h" />
+    <ClInclude Include="src\Graphics\graphics-typedef.h" />
     <ClInclude Include="src\Graphics\sprite.h" />
     <ClInclude Include="src\GameObject\Components\ui-components.h" />
     <ClInclude Include="src\SceneManager\sm.h" />

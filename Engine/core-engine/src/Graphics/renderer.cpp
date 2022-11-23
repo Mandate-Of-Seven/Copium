@@ -26,15 +26,19 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
-	void Renderer::init()
+	void Renderer::init(BaseCamera* _camera)
 	{
 		graphics = GraphicsSystem::Instance();
+		camera = _camera;
+
+		// Setup Quad Vertex Array Object
+		setup_quad_vao();
 
 		// Setup Line Vertex Array Object
 		setup_line_vao();
 
-		// Setup Quad Vertex Array Object
-		setup_quad_vao();
+		// Setup Circle Vertex Array Object
+		setup_circle_vao();
 
 		// Setup Text Vertex Array Object
 		setup_text_vao();
@@ -88,6 +92,10 @@ namespace Copium
 		glEnableVertexArrayAttrib(quadVertexArrayID, 3);
 		glVertexArrayAttribFormat(quadVertexArrayID, 3, 1, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, texID));
 		glVertexArrayAttribBinding(quadVertexArrayID, 3, 0);
+
+		glEnableVertexArrayAttrib(quadVertexArrayID, 4);
+		glVertexArrayAttribFormat(quadVertexArrayID, 4, 1, GL_INT, GL_FALSE, offsetof(QuadVertex, entityID));
+		glVertexArrayAttribBinding(quadVertexArrayID, 4, 0);
 
 		// Element Buffer Object
 		GLushort indices[maxIndexCount];
@@ -143,6 +151,27 @@ namespace Copium
 		glLineWidth(1.f);
 	}
 
+	// Setup the circle vertex array object
+	void Renderer::setup_circle_vao()
+	{
+		// Vertex Array Object
+		glCreateVertexArrays(1, &circleVertexArrayID);
+
+		// Line Buffer Object
+		glCreateBuffers(1, &circleVertexBufferID);
+		glNamedBufferStorage(circleVertexBufferID, maxVertexCount * sizeof(CircleVertex), nullptr, GL_DYNAMIC_STORAGE_BIT);
+
+		glEnableVertexArrayAttrib(circleVertexArrayID, 0);
+		glVertexArrayAttribFormat(circleVertexArrayID, 0, 3, GL_FLOAT, GL_FALSE, offsetof(CircleVertex, pos));
+		glVertexArrayAttribBinding(circleVertexArrayID, 0, 2);
+
+		glEnableVertexArrayAttrib(circleVertexArrayID, 1);
+		glVertexArrayAttribFormat(circleVertexArrayID, 1, 4, GL_FLOAT, GL_FALSE, offsetof(CircleVertex, color));
+		glVertexArrayAttribBinding(circleVertexArrayID, 1, 2);
+
+		glLineWidth(1.f);
+	}
+
 	void Renderer::setup_text_vao()
 	{
 		textBuffer = new TextVertex[maxVertexCount];
@@ -156,19 +185,19 @@ namespace Copium
 
 		glEnableVertexArrayAttrib(textVertexArrayID, 0);
 		glVertexArrayAttribFormat(textVertexArrayID, 0, 3, GL_FLOAT, GL_FALSE, offsetof(TextVertex, pos));
-		glVertexArrayAttribBinding(textVertexArrayID, 0, 2);
+		glVertexArrayAttribBinding(textVertexArrayID, 0, 3);
 
 		glEnableVertexArrayAttrib(textVertexArrayID, 1);
 		glVertexArrayAttribFormat(textVertexArrayID, 1, 4, GL_FLOAT, GL_FALSE, offsetof(TextVertex, color));
-		glVertexArrayAttribBinding(textVertexArrayID, 1, 2);
+		glVertexArrayAttribBinding(textVertexArrayID, 1, 3);
 
 		glEnableVertexArrayAttrib(textVertexArrayID, 2);
 		glVertexArrayAttribFormat(textVertexArrayID, 2, 2, GL_FLOAT, GL_FALSE, offsetof(TextVertex, textCoord));
-		glVertexArrayAttribBinding(textVertexArrayID, 2, 2);
+		glVertexArrayAttribBinding(textVertexArrayID, 2, 3);
 
 		/*glEnableVertexArrayAttrib(textVertexArrayID, 3);
 		glVertexArrayAttribFormat(textVertexArrayID, 3, 1, GL_FLOAT, GL_FALSE, offsetof(TextVertex, fontID));
-		glVertexArrayAttribBinding(textVertexArrayID, 3, 2);*/
+		glVertexArrayAttribBinding(textVertexArrayID, 3, 3);*/
 
 		// Setup default text texture coordinates
 		textTextCoord[0] = { 0.f, 0.f };
@@ -197,6 +226,8 @@ namespace Copium
 
 	void Renderer::begin_batch()
 	{
+		lineWidth = 1.f;
+
 		quadIndexCount = 0;
 		quadBufferPtr = quadBuffer;
 
@@ -209,7 +240,7 @@ namespace Copium
 
 	void Renderer::flush()
 	{
-
+		
 		if (quadIndexCount)
 		{
 			// Alpha blending for transparent objects
@@ -222,13 +253,13 @@ namespace Copium
 			// Bean: Matrix assignment to be placed somewhere else
 			GLuint uProjection = glGetUniformLocation(
 				graphics->get_shader_program()[QUAD_SHADER].GetHandle(), "uViewProjection");
-			GLuint uTransform = glGetUniformLocation(
-				graphics->get_shader_program()[QUAD_SHADER].GetHandle(), "uTransform");
-			glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_projection();
+			/*GLuint uTransform = glGetUniformLocation(
+				graphics->get_shader_program()[QUAD_SHADER].GetHandle(), "uTransform");*/
+			glm::mat4 projection = camera->get_view_proj_matrix();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
-			glm::vec3 pos = EditorSystem::Instance()->get_camera()->get_position();
-			glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
-			glUniformMatrix4fv(uTransform, 1, GL_FALSE, glm::value_ptr(transform));
+			//glm::vec3 pos = camera->get_eye();
+			//glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
+			//glUniformMatrix4fv(uTransform, 1, GL_FALSE, glm::value_ptr(transform));
 			
 			/*PRINT("Transform Matrix:");
 			for (int i = 0; i < 4; i++)
@@ -262,12 +293,12 @@ namespace Copium
 			GLuint uProjection = glGetUniformLocation(
 				graphics->get_shader_program()[LINE_SHADER].GetHandle(), "uViewProjection");
 
-			glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_projection();
+			glm::mat4 projection = camera->get_view_proj_matrix();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
 			// End of matrix assignment
 
-			glLineWidth(get_line_width());
+			glLineWidth(lineWidth);
 			glDrawArrays(GL_LINES, 0, lineVertexCount);
 			drawCount++;
 
@@ -296,7 +327,7 @@ namespace Copium
 			GLuint uProjection = glGetUniformLocation(
 				graphics->get_shader_program()[TEXT_SHADER].GetHandle(), "uViewProjection");
 
-			glm::mat4 projection = EditorSystem::Instance()->get_camera()->get_projection();
+			glm::mat4 projection = camera->get_view_proj_matrix();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
 			// End of matrix assignment
@@ -469,6 +500,7 @@ namespace Copium
 			quadBufferPtr->textCoord = quadTextCoord[i];
 			quadBufferPtr->color = _color;
 			quadBufferPtr->texID = textureIndex;
+			quadBuffer->entityID = quadCount;
 			quadBufferPtr++;
 		}
 
@@ -630,66 +662,96 @@ namespace Copium
 			begin_batch();
 		}
 
-		lineBufferPtr->pos = glm::vec3(_position0, 0);
+		lineBufferPtr->pos = glm::vec3(_position0, -100.f);
 		lineBufferPtr->color = _color;
 		lineBufferPtr++;
 
-		lineBufferPtr->pos = glm::vec3(_position1, 0);
+		lineBufferPtr->pos = glm::vec3(_position1, -100.f);
 		lineBufferPtr->color = _color;
 		lineBufferPtr++;
 
 		lineVertexCount += 2;
 	}
 
-	void Renderer::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float _scale, GLuint _fontID)
+	void Renderer::draw_circle(const glm::vec3& _position, const glm::vec4& _color, GLfloat _radius)
 	{
-		//if (textVertexCount >= maxTextCount)
-		//{
-		//	end_batch();
-		//	flush();
-		//	begin_batch();
-		//}
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		//float x = _position.x;
-		//float y = _position.y;
+		GraphicsSystem* graphics = GraphicsSystem::Instance();
+		graphics->get_shader_program()[LINE_SHADER].Use();
 
-		//Font font = graphics->get_font(_fontID);
-		//std::map<char, Character> chars = font.get_characters();
-		//
-		//std::string::const_iterator c;
-		//for (c = _text.begin(); c != _text.end(); c++)
-		//{
-		//	Character ch = chars[*c];
+		GLuint uProjection = glGetUniformLocation(
+			graphics->get_shader_program()[LINE_SHADER].GetHandle(), "uViewProjection");
 
-		//	float xpos = x + ch.bearing.x * (_scale * 0.01f);
-		//	float ypos = y - (ch.size.y - ch.bearing.y) * (_scale * 0.01f);
+		glm::mat4 projection = camera->get_view_proj_matrix();
+		glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
-		//	float w = ch.size.x * (_scale * 0.01f);
-		//	float h = ch.size.y * (_scale * 0.01f);
+		glBindVertexArray(circleVertexArrayID);
 
-		//	// Update VBO for each character
-		//	glm::vec3 textVertexPosition[6] = {
-		//		glm::vec3(xpos, ypos + h, 0.f),
-		//		glm::vec3(xpos, ypos, 0.f),
-		//		glm::vec3(xpos + w, ypos, 0.f),
-		//		glm::vec3(xpos, ypos + h, 0.f),
-		//		glm::vec3(xpos + w, ypos, 0.f),
-		//		glm::vec3(xpos + w, ypos + h, 0.f)
-		//	};
+		// Update content of VBO memory
+		//glNamedBufferSubData(circleVertexBufferID, 0, sizeof(vertices), vertices);
+		//glVertexArrayVertexBuffer(circleVertexArrayID, 2, circleVertexBufferID, 0, sizeof(TextVertex));
 
-		//	for (GLint i = 0; i < 6; i++)
-		//	{
-		//		textBufferPtr->pos = textVertexPosition[i];
-		//		textBufferPtr->textCoord = textTextCoord[i];
-		//		textBufferPtr->color = _color;
-		//		textBufferPtr++;
-		//	}
+		glDrawArrays(GL_LINE_LOOP, 0, 6);
 
-		//	x += (ch.advance >> 6) * (_scale * 0.01f); // Bitshift by 6 to get value in pixels
-		//
-		//	textVertexCount += 6;
-		//}
-		//
-		//textCount++;
+		glBindVertexArray(0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		graphics->get_shader_program()[TEXT_SHADER].UnUse();
+
+		glDisable(GL_BLEND);
 	}
+
+	/*void Renderer::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float _scale, GLuint _fontID)
+	{
+		if (textVertexCount >= maxTextCount)
+		{
+			end_batch();
+			flush();
+			begin_batch();
+		}
+
+		float x = _position.x;
+		float y = _position.y;
+
+		Font font = graphics->get_font(_fontID);
+		std::map<char, Character> chars = font.get_characters();
+		
+		std::string::const_iterator c;
+		for (c = _text.begin(); c != _text.end(); c++)
+		{
+			Character ch = chars[*c];
+
+			float xpos = x + ch.bearing.x * (_scale * 0.01f);
+			float ypos = y - (ch.size.y - ch.bearing.y) * (_scale * 0.01f);
+
+			float w = ch.size.x * (_scale * 0.01f);
+			float h = ch.size.y * (_scale * 0.01f);
+
+			// Update VBO for each character
+			glm::vec3 textVertexPosition[6] = {
+				glm::vec3(xpos, ypos + h, 0.f),
+				glm::vec3(xpos, ypos, 0.f),
+				glm::vec3(xpos + w, ypos, 0.f),
+				glm::vec3(xpos, ypos + h, 0.f),
+				glm::vec3(xpos + w, ypos, 0.f),
+				glm::vec3(xpos + w, ypos + h, 0.f)
+			};
+
+			for (GLint i = 0; i < 6; i++)
+			{
+				textBufferPtr->pos = textVertexPosition[i];
+				textBufferPtr->textCoord = textTextCoord[i];
+				textBufferPtr->color = _color;
+				textBufferPtr++;
+			}
+
+			x += (ch.advance >> 6) * (_scale * 0.01f); // Bitshift by 6 to get value in pixels
+		
+			textVertexCount += 6;
+		}
+		
+		textCount++;
+	}
+	*/
 }

@@ -51,6 +51,9 @@ namespace Copium
 		Bottom,
 	};
 
+	// Bean: Temporary forward declaration of BaseCamera class to render text
+	class BaseCamera;
+
 	//Runs after InputSystem
 	class IUIComponent
 	{
@@ -154,7 +157,7 @@ namespace Copium
 
 			*/
 			/*******************************************************************************/
-			void render();
+			void render(BaseCamera* _camera);
 
 			Component* clone(GameObject& _gameObj) const;
 

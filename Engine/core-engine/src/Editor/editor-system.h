@@ -17,6 +17,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "CopiumCore/system-interface.h"
 #include "Editor/editor-sceneview.h"
+#include "Editor/editor-game.h"
 #include "Editor/editor-content-browser.h"
 #include "Editor/editor-camera.h"
 
@@ -66,12 +67,17 @@ namespace Copium
 		/***************************************************************************/
 		void imguiConsoleAddLog(std::string value);
 		
+		bool is_enabled() { return enableEditor; }
+
 		EditorSceneView* get_scene_view() { return &sceneView; }
 		EditorContentBrowser* get_content_browser() { return &contentBrowser; }
 		EditorCamera* get_camera() { return &camera; }
 
 	private:
+		bool enableEditor = true;
+
 		EditorSceneView sceneView;
+		EditorGame game;
 		EditorContentBrowser contentBrowser;
 		EditorCamera camera;
 	};

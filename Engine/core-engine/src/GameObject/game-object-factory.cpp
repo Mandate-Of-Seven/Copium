@@ -234,7 +234,7 @@ namespace Copium
 				if (component.HasMember("Type"))
 				{
 					std::string key = component["Type"].GetString();
-					//PRINT("Component: " << name);
+					//PRINT("Component: " << key);
 					if (key == "Transform")
 						// deserialize transform component
 						go->transform.deserialize(component);

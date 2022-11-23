@@ -126,12 +126,12 @@ namespace Copium
 	{
 	}
 
-	void Text::render()
+	void Text::render(BaseCamera* _camera)
 	{
 		if (!font)
 			return;
 		Transform& trans{ gameObj.transform };
-		glm::vec2 pos{ trans.position.to_glm() };
+		glm::vec3 pos{ trans.position.to_glm() };
 		float scale = trans.scale.x;
 		if (scale > trans.scale.y)
 			scale = trans.scale.y;
@@ -166,7 +166,7 @@ namespace Copium
 			}
 		}
 
-		font->draw_text(content, pos, color, scale, 0);
+		font->draw_text(content, pos, color, scale, 0, _camera);
 	}
 
 	Component* Text::clone(GameObject& _gameObj) const
@@ -181,7 +181,6 @@ namespace Copium
 
 	void Text::inspector_view()
 	{
-		float sameLinePadding = 16.f;
 		bool openPopup = false;
 
 		ImGuiColorEditFlags miscFlags = ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip

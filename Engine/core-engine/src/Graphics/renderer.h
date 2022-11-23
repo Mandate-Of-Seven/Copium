@@ -19,6 +19,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define RENDERER_H
 
 #include "Graphics/vertex-types.h"
+#include "Graphics/glslshader.h"
 
 #include "Graphics/spritesheet.h"
 #include "Graphics/sprite.h"
@@ -28,6 +29,7 @@ namespace Copium
 
 	// Forward declare
 	class GraphicsSystem;
+	class BaseCamera;
 
 	// Renders objects in the game / scene
 	// Checks objects that have the Renderer component 
@@ -43,7 +45,7 @@ namespace Copium
 			the elements of the object to be used for rendering
 		*/
 		/***************************************************************************/
-		void init(); // Initializes the renderer by storing a handle to VAO
+		void init(BaseCamera* _camera); // Initializes the renderer by storing a handle to VAO
 
 		/***************************************************************************/
 		/*!
@@ -71,6 +73,14 @@ namespace Copium
 		*/
 		/***************************************************************************/
 		void setup_line_vao();
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Setup the cirlce's vertex array object along with its data
+		*/
+		/***************************************************************************/
+		void setup_circle_vao();
 
 		/***************************************************************************/
 		/*!
@@ -237,6 +247,8 @@ namespace Copium
 		/***************************************************************************/
 		void draw_line(const glm::vec2& _position0, const glm::vec2& _position1, const glm::vec4& _color);
 
+		void draw_circle(const glm::vec3& _position, const glm::vec4& _color, GLfloat _radius);
+
 		/***************************************************************************/
 		/*!
 		\brief
@@ -269,6 +281,9 @@ namespace Copium
 
 		void set_line_width(GLfloat _lineWidth) { lineWidth = _lineWidth; }
 		GLfloat get_line_width() const { return lineWidth; }
+
+		void set_circle_width(GLfloat _circleWidth) { circleWidth = _circleWidth; }
+		GLfloat get_circle_width() const { return circleWidth; }
 
 		/***************************************************************************/
 		/*!
@@ -326,24 +341,29 @@ namespace Copium
 
 		/* Render Data ******************************************************************/
 
-		GLuint drawCount = 0; // The amount of draw calls
-		GLuint quadCount = 0; // The amount of quads drawn
-		GLuint lineCount = 0; // The amount of lines drawn
-		GLuint textCount = 0; // The amount of text drawn
+		GLuint drawCount = 0;	// The amount of draw calls
+		GLuint quadCount = 0;	// The amount of quads drawn
+		GLuint lineCount = 0;	// The amount of lines drawn
+		GLuint circleCount = 0; // The amount of circle drawn
+		GLuint textCount = 0;	// The amount of text drawn
 
-		GLuint quadVertexArrayID = 0; // Handle to Quad Vertex Array Object
-		GLuint lineVertexArrayID = 0; // Handle to Line Vertex Array Object
-		GLuint textVertexArrayID = 0; // Handle to Text Vertex Array Object
+		GLuint quadVertexArrayID = 0;	// Handle to Quad Vertex Array Object
+		GLuint lineVertexArrayID = 0;	// Handle to Line Vertex Array Object
+		GLuint circleVertexArrayID = 0; // Handle to Circle Vertex Array Object
+		GLuint textVertexArrayID = 0;	// Handle to Text Vertex Array Object
 
-		GLuint quadVertexBufferID = 0; // Handle to Quad Vertex Buffer Object
-		GLuint quadIndexBufferID = 0; // Handle to Quad Index Buffer
-		GLuint quadIndexCount = 0; // Number of elements in the Quad object
+		GLuint quadVertexBufferID = 0;	// Handle to Quad Vertex Buffer Object
+		GLuint quadIndexBufferID = 0;	// Handle to Quad Index Buffer
+		GLuint quadIndexCount = 0;		// Number of elements in the Quad object
 
-		GLuint lineVertexBufferID = 0; // Handle to Line Vertex Buffer Object
-		GLuint lineVertexCount = 0; // Number of elements in the Line object
+		GLuint lineVertexBufferID = 0;	// Handle to Line Vertex Buffer Object
+		GLuint lineVertexCount = 0;		// Number of elements in the Line object
 
-		GLuint textVertexBufferID = 0; // Handle to Text Vertex Buffer Object
-		GLuint textVertexCount = 0; // Number of elements in the Text object
+		GLuint circleVertexBufferID = 0;// Handle to Circle Vertex Buffer Object
+		GLuint circleVertexCount = 0;	// Number of elements in the Circle object
+
+		GLuint textVertexBufferID = 0;	// Handle to Text Vertex Buffer Object
+		GLuint textVertexCount = 0;		// Number of elements in the Text object
 
 		QuadVertex* quadBuffer = nullptr;
 		QuadVertex* quadBufferPtr = nullptr;
@@ -351,6 +371,8 @@ namespace Copium
 		LineVertex* lineBuffer = nullptr;
 		LineVertex* lineBufferPtr = nullptr;
 		GLfloat lineWidth = 1.f;
+
+		GLfloat circleWidth = 1.f;
 
 		TextVertex* textBuffer = nullptr;
 		TextVertex* textBufferPtr = nullptr;
@@ -360,6 +382,7 @@ namespace Copium
 		glm::vec2 textTextCoord[6];
 
 		GraphicsSystem* graphics = nullptr; // A pointer to the instance of graphics system
+		BaseCamera* camera = nullptr;		// A pointer to the camera that holds this renderer class
 	};
 }
 
