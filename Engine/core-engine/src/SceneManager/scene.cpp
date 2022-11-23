@@ -105,6 +105,7 @@ void Scene::add_unused_cid(ComponentID _id)
 {
 	unusedCIDs.emplace_back(_id);
 }
+std::vector<ComponentID>& Scene::get_unusedcids() { return unusedCIDs; }
 GameObjectID Scene::assignGameObjID()
 {
 

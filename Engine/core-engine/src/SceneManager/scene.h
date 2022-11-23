@@ -202,6 +202,7 @@ public:
 	unsigned int get_component_count() const;
 	ComponentID assignComponentID();
 	void add_unused_cid(ComponentID _id);
+	std::vector<ComponentID>& get_unusedcids();
 	SceneState get_state() const;
 	void set_state(SceneState _newState);
 

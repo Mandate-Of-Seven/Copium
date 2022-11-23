@@ -171,6 +171,18 @@ namespace Copium {
 			}
 			std::cout << std::endl;
 		}
+		if (document.HasMember("Unused CIDs"))
+		{
+			rapidjson::Value& arr = document["Unused CIDs"].GetArray();
+			for (rapidjson::Value::ValueIterator iter = arr.Begin(); iter != arr.End(); ++iter)
+			{
+				ComponentID id = (*iter).GetUint64();
+				currentScene->add_unused_cid(id);
+				std::cout << id << ' ';
+			}
+			std::cout << std::endl;
+
+		}
 
 		if (document.HasMember("GameObjects"))
 		{
@@ -342,12 +354,21 @@ namespace Copium {
 		rapidjson::Value name;
 		create_rapidjson_string(doc, name,  currentScene->get_name());
 		doc.AddMember("Name", name, doc.GetAllocator());
+
+		// Serialize UGIDse
 		rapidjson::Value ugids(rapidjson::kArrayType);
 		for (GameObjectID id : currentScene->get_unusedgids())
 		{
 			ugids.PushBack(id, doc.GetAllocator());
 		}
 		doc.AddMember("Unused GIDs", ugids, doc.GetAllocator());
+		// Serialize UCIDs
+		rapidjson::Value ucids(rapidjson::kArrayType);
+		for (ComponentID id : currentScene->get_unusedcids())
+		{
+			ucids.PushBack(id, doc.GetAllocator());
+		}
+		doc.AddMember("Unused CIDs", ucids, doc.GetAllocator());
 
 		std::vector<GameObject*> roots;
 		for (size_t i{ 0 }; i < currentScene->get_gameobjcount(); ++i) {
