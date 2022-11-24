@@ -21,6 +21,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <mono/jit/jit.h>
 namespace Copium
 {
+	char Script::buffer[128];
 	ScriptingSystem& Script::sS{ *ScriptingSystem::Instance() };
 
 	Script::Script(GameObject& _gameObj) :
@@ -132,7 +133,6 @@ namespace Copium
 				ImGui::TableNextColumn();
 				ImGui::PushItemWidth(-FLT_MIN);
 
-				getFieldValue(_name, buffer);
 				if (it->second.type == FieldType::Component)
 				{
 					auto componentRef = fieldComponentReferences.find(it->first);
@@ -158,11 +158,19 @@ namespace Copium
 							GameObjectID gameObjID = pComponent->gameObj.id;
 							void* params[2] = { &componentID, &gameObjID };
 							MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindComponentByID"], mObject, params, nullptr);
+							MonoClass* mComponentClass = mono_object_get_class(result);
+							void* iter = nullptr;
+							while (MonoClassField* field = mono_class_get_fields(mComponentClass,&iter))
+							{
+								mono_field_get_value(result, field, buffer + mono_field_get_offset(field));
+							}
+							mono_field_set_value(mObject, it->second.classField, buffer);
 							fieldComponentReferences[_name] = pComponent;
-							PRINT(mono_class_get_name(mono_object_get_class(result)));
 						}
 						ImGui::EndDragDropTarget();
 					}
+					++it;
+					continue;
 				}
 				else if (it->second.type == FieldType::GameObject)
 				{
@@ -187,8 +195,11 @@ namespace Copium
 						}
 						ImGui::EndDragDropTarget();
 					}
+					++it;
+					continue;
 				}
 
+				getFieldValue(_name, buffer);
 				switch (it->second.type)
 				{
 				case FieldType::Float:

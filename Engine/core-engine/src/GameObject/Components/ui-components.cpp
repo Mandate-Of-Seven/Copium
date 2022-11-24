@@ -76,8 +76,6 @@ namespace Copium
 		{
 			timer = 0;
 			previousState = state;
-			if (targetGraphic)
-				previousColor = targetGraphic->layeredColor;
 		}
 		ButtonCallback callback = mapStateCallbacks[state];
 		if (callback != nullptr)
@@ -110,17 +108,17 @@ namespace Copium
 		{
 		case ButtonState::OnClick:
 		{
-			targetGraphic->layeredColor = Linear(previousColor, clickedColor, timer / fadeDuration);
+			targetGraphic->color = Linear(previousColor, clickedColor, timer / fadeDuration);
 			break;
 		}
 		case ButtonState::OnHover:
 		{
-			targetGraphic->layeredColor = Linear(previousColor, hoverColor, timer / fadeDuration);
+			targetGraphic->color = Linear(previousColor, hoverColor, timer / fadeDuration);
 			break;
 		}
 		default:
 		{
-			targetGraphic->layeredColor = Linear(previousColor, normalColor, timer / fadeDuration);
+			targetGraphic->color = Linear(previousColor, normalColor, timer / fadeDuration);
 			break;
 		}
 		}
@@ -171,7 +169,7 @@ namespace Copium
 					if (pText != targetGraphic)
 					{
 						if (targetGraphic)
-							targetGraphic->layeredColor = { 1.f ,1.f,1.f,1.f};
+							targetGraphic->color = { 1.f ,1.f,1.f,1.f};
 						targetGraphic = pText;
 					}
 				}
@@ -317,14 +315,7 @@ namespace Copium
 				break;
 			}
 		}
-		glm::fvec4 mixedColor;
-		mixedColor.a = 1 - (1 - layeredColor.a) * (1 - color.a); // 0.75
-		if (mixedColor.a < 0.01f)
-			return;
-		mixedColor.r = layeredColor.r * layeredColor.a / mixedColor.a + color.r * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.67
-		mixedColor.g = layeredColor.g * layeredColor.a / mixedColor.a + color.g * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.33
-		mixedColor.b = layeredColor.b * layeredColor.a / mixedColor.a + color.b * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.00
-		font->draw_text(content, pos, mixedColor, scale, 0, _camera);
+		font->draw_text(content, pos, color, scale, 0, _camera);
 	}
 
 	Component* Text::clone(GameObject& _gameObj) const
@@ -412,6 +403,7 @@ namespace Copium
 				| ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoLabel;
 			ImGui::ColorPicker4("Picker", reinterpret_cast<float*>(&color), miscFlags);
 
+			PRINT(color.r << ' ' << color.g << ' ' << color.b << ' ' << color.a);
 			ImGui::EndPopup();
 		}
 	}

@@ -188,7 +188,7 @@ namespace Copium
 						sr.set_texture(nullptr);
 					}
 
-					renderer.draw_quad({ rc->Offset(),0 }, size, rotation, sr);
+					renderer.draw_quad({ rc->Offset(),t.position.z }, size, rotation, sr);
 				}
 			}
 

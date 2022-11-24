@@ -6,7 +6,7 @@ using static GameData;
 
 public class CombatMovement : CopiumScript
 {
-    Rigidbody2D rb;
+    public Rigidbody2D rb;
 
     public Vector3 hello;
 
@@ -22,9 +22,6 @@ public class CombatMovement : CopiumScript
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        if (rb == null)
-            Console.WriteLine("RB WAS NULL");
         CurrentGameState = GameState.Combat;
     }
 
@@ -75,9 +72,8 @@ public class CombatMovement : CopiumScript
     private void FixedUpdate()
     {
         if (rb == null)
-            Console.WriteLine("RB WAS NULL");
+            return;
         rb.velocity = Vector3.zero;
-        Console.WriteLine("HELLO1");
         if (CurrentGameState != GameState.Combat)
         {
             rb.velocity = rb.velocity * 0f;
@@ -90,7 +86,6 @@ public class CombatMovement : CopiumScript
             canMoveLeft = true;
             canMoveRight = true;
         }
-        Console.WriteLine("HELLO2");
         if (transform.position.x < -4.5)
         {
             rb.velocity = rb.velocity * 0f;
@@ -99,8 +94,6 @@ public class CombatMovement : CopiumScript
         {
             rb.velocity = rb.velocity * 0f;
         }
-
-        Console.WriteLine("HELLO3");
         if (movingLeft && inputRight || movingRight && inputLeft || inputLeft && inputRight)
         {
             if (TrainSpeed > 1)
@@ -159,7 +152,5 @@ public class CombatMovement : CopiumScript
                 canMoveRight = true;
             }
         }
-
-        Console.WriteLine("HELLO5");
     }
 }

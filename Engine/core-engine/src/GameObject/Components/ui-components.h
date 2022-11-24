@@ -64,7 +64,6 @@ namespace Copium
 			HorizontalAlignment hAlignment{HorizontalAlignment::Center};
 			VerticalAlignment vAlignment{VerticalAlignment::Center};
 			glm::fvec4 color{1.f};
-			glm::fvec4 layeredColor{ 1.f };
 	};
 
 	class Button final: public Component

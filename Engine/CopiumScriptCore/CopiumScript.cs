@@ -23,9 +23,9 @@ namespace CopiumEngine
     {
         private void OnCreate(ulong ID)
         {
-            Console.WriteLine("GameObject Created in CS: " + ID);
             if (gameObject != null && ID == gameObject.ID)
                 return;
+            Console.WriteLine(this.GetType().Name + " Script linked with GameObject of ID: (" + ID + ") in C#");
             gameObject = GameObject.FindByID(ID);
             transform = gameObject.transform;
         }
@@ -40,7 +40,9 @@ namespace CopiumEngine
             foreach (Component component in GameObject.components)
             {
                 if (component.ID == componentID)
+                {
                     return component;
+                }
             }
             Component component1 = new Component();
             component1.Initialize(GameObject.FindByID(gameObjectID), componentID);

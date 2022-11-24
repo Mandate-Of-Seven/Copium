@@ -244,7 +244,6 @@ bool GameObject::deserialize(rapidjson::Value& _value) {
 void GameObject::handleMessage(MESSAGE_TYPE mType)
 {
     //MT_SCRIPTING_UPDATED
-    messageSystem.subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
     MESSAGE_CONTAINER::reflectCsGameObject.gameObjID = id;
     MESSAGE_CONTAINER::reflectCsGameObject.componentIDs.clear();
     for (Component* pComponent : components)

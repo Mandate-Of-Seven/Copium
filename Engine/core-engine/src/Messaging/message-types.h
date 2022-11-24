@@ -40,6 +40,7 @@ namespace Copium
         MT_ADD_COMPONENT,
         MT_DELETE_GAMEOBJECT,
         MT_DELETE_COMPONENT,
+        MT_ENGINE_INITIALIZED,
         MT_NONE // END, DO NOT INSERT BEYOND
     };
 

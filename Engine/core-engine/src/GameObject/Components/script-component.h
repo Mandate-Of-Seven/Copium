@@ -149,7 +149,7 @@ namespace Copium
 
 	private:
 		void instantiate();
-		char buffer[32];
+		static char buffer[128];
 		ScriptClass* pScriptClass;
 		MonoObject* mObject;
 		std::string name;

@@ -9,11 +9,8 @@ namespace CopiumEngine
     public class Component
     {
         public ulong ID;
-        public GameObject gameObject { 
-            get; internal set; }
-        public Transform transform { 
-            get; internal set; }
-
+        public GameObject gameObject;
+        public Transform transform;
         public void Initialize (GameObject _gameObject, ulong _ID)
         {
             gameObject = _gameObject;

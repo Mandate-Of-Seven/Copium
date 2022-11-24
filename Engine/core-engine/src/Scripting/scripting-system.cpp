@@ -221,6 +221,7 @@ namespace Copium
 		messageSystem.subscribe(MESSAGE_TYPE::MT_DELETE_COMPONENT, this);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_SCENE_OPENED, this);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
+		messageSystem.subscribe(MESSAGE_TYPE::MT_ENGINE_INITIALIZED, this);
 	}
 
 	void ScriptingSystem::update()
@@ -361,6 +362,17 @@ namespace Copium
 		{
 			mono_runtime_invoke(mMethod, mObj, params, nullptr);
 		}
+	}
+
+	MonoObject* ScriptingSystem::getFieldMonoObject(MonoClassField* mField, MonoObject* mObject)
+	{
+		if (mAppDomain == nullptr)
+		{
+			PRINT("APP DOMAIN WAS NULL");
+			return nullptr;
+		}
+		return mono_field_get_value_object(mAppDomain, mField, mObject);
+
 	}
 
 	void ScriptingSystem::updateScriptFiles()
@@ -504,6 +516,16 @@ namespace Copium
 				break;
 			}
 			case MESSAGE_TYPE::MT_ADD_COMPONENT:
+			{
+				if (!mAssemblyImage)
+					return;
+				MonoObject* mGameObj = monoGameObjects[MESSAGE_CONTAINER::addOrDeleteComponent.gameObjID];
+				//MonoMethod* mAttachComponentByID = mono_class_get_method_from_name(mGameObject, "AttachComponentByID", 1);
+				//void* param = &MESSAGE_CONTAINER::addOrDeleteComponent.componentID;
+				//mono_runtime_invoke(mAttachComponentByID, mGameObj, &param, nullptr);
+				break;
+			}
+			case MESSAGE_TYPE::MT_ENGINE_INITIALIZED:
 			{
 				if (!mAssemblyImage)
 					return;
