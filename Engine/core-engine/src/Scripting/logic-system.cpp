@@ -44,7 +44,7 @@ namespace Copium
 		Scene* pScene = sceneManager.get_current_scene();
 		if (pScene == nullptr)
 			return;
-		gameObjects = &pScene->get_gameobjectvector();
+		gameObjects = &pScene->gameObjects;
 		for (GameObject* pGameObj : *gameObjects)
 		{
 			const std::vector<Button*>& Buttons{ pGameObj->getComponents<Button>() };
@@ -60,14 +60,13 @@ namespace Copium
 				//PRINT("HELLO!");
 				if (!pScript)
 					continue;
-				pScript->Update();
+				pScript->invoke("Update");
 				if (pScene != sceneManager.get_current_scene())
 					return;
-				pScript->LateUpdate();
 
 				for (size_t i = 0; i < MyFrameRateController.getSteps(); ++i)
 				{
-					pScript->FixedUpdate();
+					pScript->invoke("FixedUpdate");
 				}
 			}
 		}
@@ -85,14 +84,14 @@ namespace Copium
 		Scene* pScene = sceneManager.get_current_scene();
 		if (pScene == nullptr)
 			return;
-		gameObjects = &pScene->get_gameobjectvector();
+		gameObjects = &pScene->gameObjects;
 		for (GameObject* pGameObj : *gameObjects)
 		{
 			const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };
 			for (Script* pScript : pScripts)
 			{
-				pScript->Awake();
-				pScript->Start();
+				pScript->invoke("Awake");
+				pScript->invoke("Start");
 			}
 		}
 		timeElasped = MyFrameRateController.getDt();

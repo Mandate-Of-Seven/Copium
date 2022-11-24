@@ -25,7 +25,7 @@ namespace CopiumEngine
         GameObject()
         {
             transform = new Transform();
-            transform.gameObject = this;
+            transform.Initialize(this, 0);
             gameObjects.Add(this);
         }
         public Transform transform;
@@ -43,7 +43,9 @@ namespace CopiumEngine
             }
         }
 
-        private static List<GameObject> gameObjects = new List<GameObject>(25000);
+        public static List<GameObject> gameObjects = new List<GameObject>(25000);
+        public static List<Component> components = new List<Component>(125000);
+
         public static GameObject FindByID(ulong _ID)
         {
             foreach (GameObject gameObj in gameObjects)
@@ -73,15 +75,31 @@ namespace CopiumEngine
             return InternalCalls.HasComponent(ID, componentType);
         }
 
-
         //COME BACK AND OPTIMISE THIS BECAUSE ITS CREATING A NEW COMPONENT EVERYTIME
         public T GetComponent<T>() where T : Component, new()
         {
             if (!HasComponent<T>())
+            {
+                Console.WriteLine("DOES NOT HAVE COMPONENT!: " + ID);
                 return null;
+            }
 
             T component = new T() { gameObject = this };
             return component;
+        }
+
+
+
+        private void RemoveComponentByID(ulong componentID)
+        {
+            foreach (Component component in components)
+            {
+                if (component.ID == componentID)
+                {
+                    components.Remove(component);
+                    return;
+                }
+            }
         }
 
         public void SetActive(bool _active)

@@ -51,7 +51,7 @@ namespace Copium
 			}
 			GameObjectID _id = gameObj.id;
 			void* param = &_id;
-			sS.invoke(mObject, pScriptClass->mOnCreate, &param);
+			sS.invoke(mObject, pScriptClass->mMethods["OnCreate"], &param);
 		}
 	}
 
@@ -74,42 +74,15 @@ namespace Copium
 		instantiate();
 	}
 
-	void Script::Awake()
+	void Script::invoke(const std::string& methodName)
 	{
-		if (pScriptClass && pScriptClass->mAwake)
-			sS.invoke(mObject, pScriptClass->mAwake);
-	}
-
-	void Script::Start()
-	{
-		if (pScriptClass && pScriptClass->mStart)
-			sS.invoke(mObject, pScriptClass->mStart);
-	}
-
-	void Script::Update()
-	{
-		if (pScriptClass && pScriptClass->mUpdate)
+		if (!pScriptClass)
+			return;
+		std::unordered_map<std::string,MonoMethod*>::iterator method = pScriptClass->mMethods.find(methodName);
+		if (method != pScriptClass->mMethods.end())
 		{
-			sS.invoke(mObject, pScriptClass->mUpdate);
+			sS.invoke(mObject, (*method).second);
 		}
-	}
-
-	void Script::FixedUpdate()
-	{
-		if (pScriptClass && pScriptClass->mUpdate)
-			sS.invoke(mObject, pScriptClass->mFixedUpdate);
-	}
-
-	void Script::LateUpdate()
-	{
-		if (pScriptClass && pScriptClass->mLateUpdate)
-			sS.invoke(mObject, pScriptClass->mLateUpdate);
-	}
-
-	void Script::OnCollisionEnter()
-	{
-		if (pScriptClass && pScriptClass->mOnCollisionEnter)
-			sS.invoke(mObject, pScriptClass->mOnCollisionEnter);
 	}
 
 	//Use for serialization
@@ -158,7 +131,64 @@ namespace Copium
 				ImGui::Text(_name.c_str());
 				ImGui::TableNextColumn();
 				ImGui::PushItemWidth(-FLT_MIN);
+
 				getFieldValue(_name, buffer);
+				if (it->second.type == FieldType::Component)
+				{
+					auto componentRef = fieldComponentReferences.find(it->first);
+					if (componentRef == fieldComponentReferences.end())
+					{
+						std::string displayName = "None(" + it->second.typeName + ")";
+						ImGui::Button(displayName.c_str(), ImVec2(-FLT_MIN, 0.f));
+					}
+					else
+					{
+						std::string displayName = (*componentRef).second->gameObj.get_name() + "(" + it->second.typeName + ")";
+						ImGui::Button(displayName.c_str(), ImVec2(-FLT_MIN, 0.f));
+					}
+						
+					if (ImGui::BeginDragDropTarget())
+					{
+						//GameObject ID, Component ID
+						const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(it->second.typeName.c_str());
+						if (payload)
+						{
+							Component* pComponent = (Component*)(*reinterpret_cast<void**>(payload->Data));
+							ComponentID componentID = pComponent->id;
+							GameObjectID gameObjID = pComponent->gameObj.id;
+							void* params[2] = { &componentID, &gameObjID };
+							MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindComponentByID"], mObject, params, nullptr);
+							fieldComponentReferences[_name] = pComponent;
+							PRINT(mono_class_get_name(mono_object_get_class(result)));
+						}
+						ImGui::EndDragDropTarget();
+					}
+				}
+				else if (it->second.type == FieldType::GameObject)
+				{
+					auto gameObjRef = fieldGameObjReferences.find(it->first);
+					if (gameObjRef == fieldGameObjReferences.end())
+					{
+						ImGui::Button("None(GameObject)", ImVec2(-FLT_MIN, 0.f));
+					}
+					else
+					{
+						std::string displayName = (*gameObjRef).second->get_name() + "(GameObject)";
+						ImGui::Button(displayName.c_str(), ImVec2(-FLT_MIN, 0.f));
+					}
+					if (ImGui::BeginDragDropTarget())
+					{
+						//GameObject ID, Component ID
+						const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject");
+						if (payload)
+						{
+							GameObject* pGameObj = (GameObject*)(*reinterpret_cast<void**>(payload->Data));
+							fieldGameObjReferences[_name] = pGameObj;
+						}
+						ImGui::EndDragDropTarget();
+					}
+				}
+
 				switch (it->second.type)
 				{
 				case FieldType::Float:
@@ -264,7 +294,6 @@ namespace Copium
 
 		if (pScriptClass == nullptr)
 			return;
-		PRINT("SCRIPTS DLL WAS LOADED!");
 
 		const auto& fieldMap = pScriptClass->mFields;
 		auto it = fieldMap.begin();

@@ -3,12 +3,15 @@ using System.Collections.Generic;
 
 namespace CopiumEngine
 {
-    public class Color
+    public struct Color
     {
         private float r, g, b, a;
-        public Color(float r,float g, float b, float a = 1f)
+        public Color(float _r,float _g, float _b, float _a = 1f)
         {
-
+            r = _r;
+            g = _g;
+            b = _b;
+            a = _a;
         }
 
         static public Color red = new Color(1f, 0f, 0f, 1f);

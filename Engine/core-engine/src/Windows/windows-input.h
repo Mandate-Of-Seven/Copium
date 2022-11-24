@@ -17,7 +17,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium::Math 
 {
-	struct Vec2;
+	union Vec2;
 }
 
 struct GLFWwindow;

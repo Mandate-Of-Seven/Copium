@@ -17,7 +17,7 @@
 	Contains definitions for NormalScene class which is a derived class from Scene class.
 	Note: this is the latest version of our scene class, use this
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "pch.h"
 #include "SceneManager/scene.h"
@@ -68,7 +68,6 @@ void Scene::draw_scene()
 
 std::string Scene::get_filename() const {return filename;}
 size_t Scene::get_gameobjcount() const { return gameObjects.size(); }
-std::vector<GameObject*>& Scene::get_gameobjectvector() { return gameObjects;}
 GameObject* Scene::add_gameobject(GameObject* _gameObj) 
 {
 	gameObjects.push_back(_gameObj);
@@ -108,7 +107,6 @@ void Scene::add_unused_cid(ComponentID _id)
 std::vector<ComponentID>& Scene::get_unusedcids() { return unusedCIDs; }
 GameObjectID Scene::assignGameObjID()
 {
-
 	if (!unusedGIDs.empty())
 	{
 		// Pop the first unused GID
@@ -130,7 +128,6 @@ void Scene::add_unused_gid(GameObjectID _id)
 std::vector<GameObjectID>& Scene::get_unusedgids() { return unusedGIDs; }
 Scene::SceneState Scene::get_state() const { return currSceneState; }
 void Scene::set_state(SceneState _newState) { currSceneState = _newState; }
-
 // Normal Scene
 NormalScene::NormalScene(){}
 NormalScene::NormalScene(const std::string& _filepath) : Scene(_filepath)

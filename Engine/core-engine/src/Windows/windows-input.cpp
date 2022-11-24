@@ -122,14 +122,12 @@ Copium::Math::Vec2 InputSystem::get_mouseposition()
 
 float InputSystem::get_mouseX()
 {
-    auto [xPos, yPos] = get_mouseposition();
-    return xPos;
+    return get_mouseposition().x;
 }
 
 float InputSystem::get_mouseY()
 {
-    auto [xPos, yPos] = get_mouseposition();
-    return yPos;
+    return get_mouseposition().y;
 }
 
 double InputSystem::get_mousescroll()

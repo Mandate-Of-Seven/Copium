@@ -21,7 +21,6 @@ namespace CopiumEngine
 {
     public class CopiumScript : Component
     {
-        
         private void OnCreate(ulong ID)
         {
             Console.WriteLine("GameObject Created in CS: " + ID);
@@ -34,6 +33,19 @@ namespace CopiumEngine
         public static T Instantiate<T>(T original, Vector3 pos, Vector3 rotation)
         {
             return original;
+        }
+
+        private Component FindComponentByID(ulong componentID, ulong gameObjectID)
+        {
+            foreach (Component component in GameObject.components)
+            {
+                if (component.ID == componentID)
+                    return component;
+            }
+            Component component1 = new Component();
+            component1.Initialize(GameObject.FindByID(gameObjectID), componentID);
+            GameObject.components.Add(component1);
+            return component1;
         }
 
         public static void Destroy(GameObject gameObj)

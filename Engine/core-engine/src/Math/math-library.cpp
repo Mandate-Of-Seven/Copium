@@ -32,22 +32,22 @@ namespace Copium::Math
 	#define PI			3.14159265358f
 
 	//Setting up for RTTR implementation----------
-	RTTR_REGISTRATION
-	{
-		using namespace rttr;
-	registration::class_<myint>("myint")
-		.property("I", &myint::i);
+	//RTTR_REGISTRATION
+	//{
+	//	using namespace rttr;
+	//registration::class_<myint>("myint")
+	//	.property("I", &myint::i);
 
 
-	registration::class_<Vec2>("Vec2")
-		.property("x", &Vec2::x)
-		.property("y", &Vec2::y);
+	//registration::class_<Vec2>("Vec2")
+	//	.property("x", &Vec2::x)
+	//	.property("y", &Vec2::y);
 
-	registration::class_<Vec3>("Vec3")
-		.property("x", &Vec3::x)
-		.property("y", &Vec3::y)
-		.property("z", &Vec3::z);
-	}
+	//registration::class_<Vec3>("Vec3")
+	//	.property("x", &Vec3::x)
+	//	.property("y", &Vec3::y)
+	//	.property("z", &Vec3::z);
+	//}
 
 	myint::myint() : i{0} {}
 	myint::myint(int32_t _i) : i{_i} {}
@@ -55,24 +55,11 @@ namespace Copium::Math
 
 	// Vec2-----------------------------------------
 	// Vec2 Constructors
-	Vec2::Vec2(): x{0.0}, y{0.0} {}
-	Vec2::Vec2(Vec3 _v) : x{_v.x}, y{ _v.y} {}
+	Vec2::Vec2() : data{ 0.0f } {}
 	Vec2::Vec2(float _x, float _y) : x{_x}, y{_y} {}
 	Vec2::Vec2(glm::vec2& _v) : x{_v.x}, y{_v.y} {}
 
 	// Vec2 Assignment Operators + Unary Operator
-	Vec2& Vec2::operator= (const Vec2& _rhs)
-	{
-		x = _rhs.x;
-		y = _rhs.y;
-		return *this;
-	}
-	Vec2& Vec2::operator= (const glm::vec2& _rhs)
-	{
-		x = _rhs.x;
-		y = _rhs.y;
-		return *this;
-	}
 	Vec2& Vec2::operator+= (const Vec2& _rhs)
 	{
 		x += _rhs.x;
@@ -190,25 +177,10 @@ namespace Copium::Math
 
 	// Vec3-----------------------------------------
 	// Vec3 Constructors
-	Vec3::Vec3(): x{0.0}, y{0.0}, z{0.0} {}
+	Vec3::Vec3() : data{0.0f} {}
 	Vec3::Vec3(float _x, float _y, float _z): x{_x}, y{_y}, z{_z} {}
 	Vec3::Vec3(glm::vec3& _v): x{_v.x}, y{_v.y}, z{_v.z} {}
 
-	// Vec3 Assignment Operators + Unary Operator
-	Vec3& Vec3::operator= (const Vec3& _rhs)
-	{
-		x = _rhs.x;
-		y = _rhs.y;
-		z = _rhs.z;
-		return *this;
-	}
-	Vec3& Vec3::operator= (const glm::vec3& _rhs)
-	{
-		x = _rhs.x;
-		y = _rhs.y;
-		z = _rhs.z;
-		return *this;
-	}
 	Vec3& Vec3::operator+= (const Vec3& _rhs)
 	{
 		x += _rhs.x;
@@ -241,13 +213,6 @@ namespace Copium::Math
 	{
 		return Vec3(-x, -y, -z);
 	}
-
-	glm::vec3 Vec3::to_glm() const
-	{
-		return glm::vec3(x, y, z);
-	}
-
-
 	// Vec3 Binary Operators
 	Vec3 operator+ (const Vec3& _lhs, const Vec3& _rhs)
 	{

@@ -30,6 +30,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <glm/vec2.hpp>
 #include <glm/mat3x3.hpp>
 
+#pragma warning(disable : 4201)
+
 namespace Copium::Math 
 {
 
@@ -43,45 +45,37 @@ namespace Copium::Math
 		RTTR_ENABLE();
 	};
 
-	struct Vec3;
+	union Vec3;
 
-	struct Vec2 {
+	union Vec2 {
 	public:
+		struct
+		{
+			float x, y;
+		};
+		float data[2];
+		glm::vec2 glmVec2;
+
+		Vec2& operator= (const Vec2& _rhs)
+		{
+			x = _rhs.x;
+			y = _rhs.y;
+			return *this;
+		}
+
+		operator glm::vec2()
+		{
+			return glmVec2;
+		}
+
 		// Constructors
 		Vec2();
-		Vec2(Vec3 _v);
 		Vec2(float _x, float _y);
 		Vec2(glm::vec2& _v);
 
+		//operator glm::vec2&(){}
+
 		// Assignment operators
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			= operator overload. Copy the specified Vec2 into this Vec2
-
-		\param _rhs
-			read-only reference to the Vec2 which will be copied into this Vec2
-
-		\return
-			reference to this Vec2
-		*/
-		/*******************************************************************************/
-		Vec2& operator= (const Vec2& _rhs);
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			= operator overload. Copy the data in a glm::vec2 into this Vec2
-
-		\param _rhs
-			read-only reference to the glm::vec2 which will be copied into this Vec2
-
-		\return
-			reference to this Vec2
-		*/
-		/*******************************************************************************/
-		Vec2& operator= (const glm::vec2& _rhs);
 		/*******************************************************************************
 		/*!
 		*
@@ -197,12 +191,7 @@ namespace Copium::Math
 		*/
 		/*******************************************************************************/
 		glm::vec2 to_glm() const;
-
-		float x, y;
-
 		//RTTR_ENABLE();
-
-
 	};
 
 	// Vec2 Binary Operators
@@ -426,40 +415,18 @@ namespace Copium::Math
 	/*******************************************************************************/
 	std::ostream& operator<<(std::ostream& _os, const Vec2& _v);
 
-	struct Vec3 {
+	union Vec3 {
+		struct
+		{
+			float x, y, z;
+		};
+		float data[3];
+		glm::vec3 glmVec3;
 		//Ctors
+		
 		Vec3();
 		Vec3(float _x, float _y, float _z);
 		Vec3(glm::vec3& _v);
-
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			= operator overload. Copy the values in specified Vec3 into this Vec3
-
-		\param _rhs
-			read-only reference to the Vec3 whose values is to be copied
-
-		\return
-			reference to this Vec3
-		*/
-		/*******************************************************************************/
-		Vec3& operator= (const Vec3& _rhs);
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			= operator overload. Copy the data in a glm::vec3 into this Vec3
-
-		\param _rhs
-			read-only reference to the glm::vec3 which will be copied into this Vec3
-
-		\return
-			reference to this Vec3
-		*/
-		/*******************************************************************************/
-		Vec3& operator= (const glm::vec3& _rhs);
 		/*******************************************************************************
 		/*!
 		*
@@ -564,23 +531,24 @@ namespace Copium::Math
 		/*******************************************************************************/
 		bool serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
+		Vec3& operator= (const Vec3& _rhs)
+		{
+			x = _rhs.x;
+			y = _rhs.y;
+			z = _rhs.z;
+			return *this;
+		}
 
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Creates a glm::vec3 and copies the data from this Vec3 into the glm::vec3
+		operator glm::vec3()
+		{
+			return glmVec3;
+		}
 
-		\return
-			the resulting glm::vec3
-		*/
-		/*******************************************************************************/
-		glm::vec3 to_glm() const;
-
+		operator Vec2()
+		{
+			return { x,y };
+		}
 		//RTTR_ENABLE();
-
-		float x, y, z;
-
 	};
 
 	// Vec3 Binary Operators

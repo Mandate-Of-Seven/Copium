@@ -69,7 +69,7 @@ namespace Copium
 				Function called at the very start of game object.
 		*/
 		/**************************************************************************/
-		void Awake();
+		void invoke(const std::string& methodName);
 		/**************************************************************************/
 		/*!
 			\brief
@@ -141,8 +141,6 @@ namespace Copium
 		/*******************************************************************************/
 		bool setFieldValue(const std::string& name, const void* value);
 
-
-
 		Component* clone(GameObject& _gameObj) const;
 
 		void deserialize(rapidjson::Value& _value);
@@ -154,9 +152,10 @@ namespace Copium
 		char buffer[32];
 		ScriptClass* pScriptClass;
 		MonoObject* mObject;
-		MonoObject* mGameObject;
 		std::string name;
-		const Script* reference;
+		const Script* reference{ nullptr };
+		std::unordered_map<std::string, GameObject*> fieldGameObjReferences;
+		std::unordered_map<std::string, Component*> fieldComponentReferences;
 		static ScriptingSystem& sS;
     };
 }

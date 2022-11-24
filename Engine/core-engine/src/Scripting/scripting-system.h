@@ -31,23 +31,28 @@ extern "C"
 	typedef struct _MonoObject MonoObject;
 	typedef struct _MonoClassField MonoClassField;
 	typedef struct _MonoType MonoType;
+	typedef struct _MonoString MonoString;
 }
 
 namespace Copium
 {
+	using FieldFlag = uint8_t;
+	#define FieldFlagList	0b00000001
+
 	enum class FieldType
 	{
 		Float, Double,
 		Bool, Char, Short, Int, Long,
 		UShort, UInt, ULong,
-		Vector2, Vector3, None
+		Vector2, Vector3, GameObject, Component ,None
 	};
 
 	struct Field
 	{
 		FieldType type{};
-		std::string name;
+		std::string typeName;
 		MonoClassField* classField{nullptr};
+		FieldFlag flags;
 	};
 
 	// ScriptField + data storage
@@ -81,18 +86,19 @@ namespace Copium
 
 	static std::unordered_map<std::string, FieldType> fieldTypeMap =
 	{
-		{ "System.Single", FieldType::Float },
-		{ "System.Double", FieldType::Double },
-		{ "System.Boolean", FieldType::Bool },
-		{ "System.Char", FieldType::Char },
-		{ "System.Int16", FieldType::Short },
-		{ "System.Int32", FieldType::Int },
-		{ "System.Int64", FieldType::Long },
-		{ "System.UInt16", FieldType::UShort },
-		{ "System.UInt32", FieldType::UInt },
-		{ "System.UInt64", FieldType::ULong },
-		{ "CopiumEngine.Vector2", FieldType::Vector2 },
-		{ "CopiumEngine.Vector3", FieldType::Vector3 }
+		{ "System.Single",				FieldType::Float		},
+		{ "System.Double",				FieldType::Double		},
+		{ "System.Boolean",				FieldType::Bool			},
+		{ "System.Char",				FieldType::Char			},
+		{ "System.Int16",				FieldType::Short		},
+		{ "System.Int32",				FieldType::Int			},
+		{ "System.Int64",				FieldType::Long			},
+		{ "System.UInt16",				FieldType::UShort		},
+		{ "System.UInt32",				FieldType::UInt			},
+		{ "System.UInt64",				FieldType::ULong		},
+		{ "CopiumEngine.Vector2",		FieldType::Vector2		},
+		{ "CopiumEngine.Vector3",		FieldType::Vector3		},
+		{ "CopiumEngine.GameObject",	FieldType::GameObject	},
 	};
 
 	enum class CompilingState
@@ -116,15 +122,10 @@ namespace Copium
 		/**************************************************************************/
 		ScriptClass(const std::string& _name, MonoClass* _mClass);
 		const		std::string name;
-		MonoClass*	mClass;
-		MonoMethod* mAwake;
-		MonoMethod* mStart;
-		MonoMethod* mUpdate;
-		MonoMethod* mFixedUpdate;
-		MonoMethod* mLateUpdate;
-		MonoMethod* mOnCollisionEnter;
-		MonoMethod* mOnCreate;
-		std::map<std::string, Field> mFields;
+		MonoClass* mClass;
+		std::unordered_map<std::string, MonoMethod*> mMethods;
+		std::unordered_map<std::string, Field> mFields;
+
 	};
 
 	CLASS_SYSTEM(ScriptingSystem), IReceiver
@@ -229,16 +230,6 @@ namespace Copium
 		/**************************************************************************/
 		void handleMessage(MESSAGE_TYPE mType);
 
-		/**************************************************************************/
-		/*!
-			\brief
-				Reflects a gameObject of ID into C#
-			\param _ID
-				ID of gameObject to be reflected
-		*/
-		/**************************************************************************/
-		void reflectGameObject(uint64_t _ID);
-
 
 		/**************************************************************************/
 		/*!
@@ -274,6 +265,7 @@ namespace Copium
 
 		MonoType* getMonoTypeFromName(std::string& name);
 
+		MonoString* createMonoString(const char* str);
 	private:
 
 		/**************************************************************************/

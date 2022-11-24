@@ -8,7 +8,6 @@ namespace Copium
 {
 	AudioSource::AudioSource(GameObject& _gameObj) :Component(_gameObj, ComponentType::AudioSource)
 	{
-		PRINT("Renderer Component constructed");
 	}
 
 	AudioSource& AudioSource::operator=(const AudioSource& rhs)

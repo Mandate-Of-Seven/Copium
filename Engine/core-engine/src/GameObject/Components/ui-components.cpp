@@ -283,7 +283,7 @@ namespace Copium
 		if (!font)
 			return;
 		Transform& trans{ gameObj.transform };
-		glm::vec3 pos{ trans.position.to_glm() };
+		Math::Vec2 pos{ trans.position };
 		float scale = trans.scale.x;
 		if (scale > trans.scale.y)
 			scale = trans.scale.y;
@@ -425,7 +425,7 @@ namespace Copium
 	glm::fvec2 ImageComponent::Offset()
 	{
 		Transform& trans{ gameObj.transform };
-		glm::vec2 pos{ trans.position.to_glm() };
+		Math::Vec2 pos{ trans.position };
 		glm::vec2 dimensions{ sprite.get_size() };
 		if (dimensions.x == 0)
 			dimensions.x = 1.f;

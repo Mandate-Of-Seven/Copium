@@ -6,10 +6,35 @@ using System.Threading.Tasks;
 
 namespace CopiumEngine
 {
-	public abstract class Component
-	{
-		public GameObject gameObject { get; internal set; }
-        public Transform transform { get; internal set; }
+    public class Component
+    {
+        public ulong ID;
+        public GameObject gameObject { 
+            get; internal set; }
+        public Transform transform { 
+            get; internal set; }
+
+        public void Initialize (GameObject _gameObject, ulong _ID)
+        {
+            gameObject = _gameObject;
+            transform = gameObject.transform;
+            ID = _ID;
+        }
+
+        public bool enabled
+        {
+            get
+            {
+                return InternalCalls.GetComponentEnabled(gameObject.ID, ID);
+            }
+            set
+            {
+                InternalCalls.SetComponentEnabled(gameObject.ID,ID,value);
+            }
+        }
+
+        void SetID(ulong _ID)
+            { ID = _ID; }
 
         public T GetComponent<T>() where T : Component, new()
         {
@@ -84,25 +109,31 @@ namespace CopiumEngine
 
     public class Camera : Component
     {
-
     }
 
     public class SpriteRenderer : Component
     {
         public Color color
         {
-            get;
-            set;
+            get
+            {
+                InternalCalls.GetSpriteRendererColor(gameObject.ID, out Color color);
+                return color;
+            }
+            set
+            {
+                InternalCalls.SetSpriteRendererColor(gameObject.ID, ref value);
+            }
         }
     }
 
     public class Collider2D : Component
     {
-
     }
 
     namespace UI
     {
+
         public class Button : Component
         {
             public bool interactable

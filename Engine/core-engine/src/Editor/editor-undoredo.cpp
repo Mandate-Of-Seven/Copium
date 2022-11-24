@@ -11,7 +11,7 @@
 	This file holds functions to undo and redo changes made in gameobjects as well as
 	transform components.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 #include "pch.h"

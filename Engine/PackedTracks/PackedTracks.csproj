@@ -70,11 +70,9 @@
     <Compile Include="..\CopiumScriptCore\Random.cs">
       <Link>Random.cs</Link>
     </Compile>
-    <Compile Include="AIMovement.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="Bullet.cs" />
     <Compile Include="CombatBulletBody.cs" />
-    <Compile Include="CombatMovement.cs" />
     <Compile Include="Physics.cs" />
     <Compile Include="Graphics.cs" />
     <Compile Include="GameData.cs" />

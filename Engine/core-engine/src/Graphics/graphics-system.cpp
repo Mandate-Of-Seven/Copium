@@ -147,14 +147,14 @@ namespace Copium
 			{
 				for (size_t i = 0; i < 10; i++)
 				{
-					GameObject* go = sm->get_gof().build_gameobject();
+					GameObject* go = sm->get_gof().instantiate();
 					go->addComponent(ComponentType::SpriteRenderer);
 					//go->addComponent(ComponentType::Rigidbody);
 
 					float x = rand() % 2000 * 0.1f - 100.f;
 					float y = rand() % 2000 * 0.1f - 100.f;
 
-					go->transform.set_position({ x, y, 0.f });
+					go->transform.position = { x, y, 0.f };
 					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->getComponent(ComponentType::SpriteRenderer));
 					rc->get_sprite_renderer().set_sprite_id(rand() % 7 + 15);
 				}

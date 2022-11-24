@@ -2,59 +2,59 @@ using System.Collections;
 using System.Collections.Generic;
 using CopiumEngine;
 using CopiumEngine.UI;
+using System;
 using static GameData;
 using static Unitf;
 
 public class GameManager : CopiumScript
 {
-    List<UnitBody> playerTrainList = new List<UnitBody>();
+    public List<UnitBody> playerTrainList = new List<UnitBody>();
 
+    public List<UnitBody> enemyTrainList = new List<UnitBody>();
 
-    List<UnitBody> enemyTrainList = new List<UnitBody>();
-
-    GameObject HeatBar;
+    public GameObject HeatBar;
 
     public List<ItemBody> playerInventory = new List<ItemBody>();
 
-    Camera MainCam;
+    public Camera MainCam;
     public delegate void SetUp();
     SetUp SetUpF;
     SetUp TutSetUpF;
 
-    GameObject MenuCanvas;
-    Vector3 menuCamPos = new Vector3(0, 15, -10);
+    public GameObject MenuCanvas;
+    Vector3 menuCamPos = new Vector3(0, 15, -100);
 
-    GameObject CombatCanvas;
-    Vector3 combatCamPos = new Vector3(0, 0, -10);
-    GameObject playerTrainGO;
+    public GameObject CombatCanvas;
+    Vector3 combatCamPos = new Vector3(0, 0, -100);
+    public GameObject playerTrainGO;
     Vector2 playerTrainStartingPos = new Vector2(0.5f, -2);
-    GameObject enemyTrainGO;
-    Vector2 enemyTrainStartingPos = new Vector2(0.5f, 3.5f);
+    public GameObject enemyTrainGO;
+    Vector2 enemyTrainStartingPos = new Vector2(0.5f, 4.5f);
     bool combatEnd = false;
-    GameObject victoryText;
+    public GameObject victoryText;
     float victoryTimer = 2f;
 
-    GameObject ResultCanvas;
+    public GameObject ResultCanvas;
 
-    GameObject PrepCanvas;
-    GameObject PrepCanvasBGImg;
-    Vector3 prepCamPos = new Vector3(0, -15, -10);
-    GameObject PrepGOs;
-    GameObject PrepButtonGO;
-    Button PrepButtonComp;
-    Text PrepButtonTMP;
+    public GameObject PrepCanvas;
+    public GameObject PrepCanvasBGImg;
+    Vector3 prepCamPos = new Vector3(0, -15, -100);
+    public GameObject PrepGOs;
+    public GameObject PrepButtonGO;
+    public Button PrepButtonComp;
+    public Text PrepButtonTMP;
 
-    GameObject TutCanvas;
-    Button Tut0ButtonComp;
+    public GameObject TutCanvas;
+    public Button Tut0ButtonComp;
 
-    GameObject TopBlackScreen;
-    GameObject BotBlackScreen;
+    public GameObject TopBlackScreen;
+    public GameObject BotBlackScreen;
     float clapVelo = 0f;
     float clapTimer = 0.5f;
     bool clap = false;
     bool unclap = false;
-    
-    MapManager mapManager;
+
+    public MapManager mapManager;
 
     int lootCounter = 0;
 
@@ -76,23 +76,31 @@ public class GameManager : CopiumScript
     // Start is called before the first frame update
     void Start()
     {
+        Console.WriteLine("STOPPED AT Turn off all canvas");
         TurnOffAllCanvas();
 
+        Console.WriteLine("STOPPED AT Set Main cam");
         MainCam.transform.position = menuCamPos;
+        Console.WriteLine("STOPPED AT SET ACTIVE");
         MenuCanvas.SetActive(true);
-
+        Console.WriteLine("STOPPED AT ADDING PLAYER UNITS");
         PlayerUnits.Add(new Unit("Basic unit", 10, new Bullet("test bullet", 2, 10), new Gun("test gun", 0.5f), new Skill("Shoot", 0, 0.25f)));
         PlayerUnits.Add(new Unit("Empty unit", 10, new Bullet("test bullet", 2, 10), new Gun("test gun", 0.5f), null));
         PlayerUnits.Add(new Unit("Empty unit", 10, new Bullet("test bullet", 2, 10), new Gun("test gun", 0.5f), null));
 
+        Console.WriteLine("STOPPED AT ADDING ENEMY UNITS");
         EnemyUnits.Add(new Unit("test unit", 6, new Bullet("test bullet", 1, 5), new Gun("test gun", 1), new Skill("Blank", 0, 10)));
         EnemyUnits.Add(new Unit("test unit", 6, new Bullet("test bullet", 1, 6), new Gun("test gun", 2), new Skill("Blank", 0, 10)));
         EnemyUnits.Add(new Unit("test unit", 6, new Bullet("test bullet", 1, 7), new Gun("test gun", 3), new Skill("Blank", 0, 10)));
 
+
+        Console.WriteLine("STOPPED AT PREP ALL UNITS");
         PrepAllUnits();
 
+        Console.WriteLine("STOPPED AT INTERACTABLE");
         Tut0ButtonComp.interactable = false;
 
+        Console.WriteLine("STOPPED AT PREP ALL ITEMS");
         PrepAllItems();
     }
 

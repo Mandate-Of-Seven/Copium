@@ -36,17 +36,8 @@ using GameObjectID = uint64_t;
 class GameObject final : public IReceiver
 {
 private:
-    GameObjectID parentid;
-    static GameObjectID count;
-    std::list<Component*> components;   //Components for gameObject
+    friend class GameObjectFactory;
     std::string name;                   //Name of gameObject
-    GameObject* parent;                 //Pointer to this gameObject's parent
-    std::list<GameObject*> children;    //List of pointers to this gameObject's children
-
-public:
-    GameObjectID id;                    //Global ID for gameObjects
-    bool active;
-    Transform transform;
 
 
     /***************************************************************************/
@@ -61,10 +52,10 @@ public:
         Scale of transform to initialize with
     */
     /**************************************************************************/
-    GameObject(
+    GameObject(GameObjectID _id,
         Math::Vec3 _position = { 0,0,0 },
         Math::Vec3 _rotation = { 0,0,0 },
-        Math::Vec3 _scale = {1,1,1});
+        Math::Vec3 _scale = { 1,1,1 });
 
     /*******************************************************************************
     /*!
@@ -80,6 +71,12 @@ public:
 
     GameObject& operator=(const GameObject& _src);
 
+public:           //Global ID for gameObjects
+
+    const GameObjectID id;
+    bool active;
+    Transform transform;
+    std::list<Component*> components;   //Components for gameObject
     ComponentID assign_id();
 
     /*******************************************************************************
@@ -99,6 +96,9 @@ public:
         static_assert(std::is_base_of<Component, T>::value);
         T* component = new T(*this);
         components.push_back(component);
+        MESSAGE_CONTAINER::addOrDeleteComponent.gameObjID = id;
+        MESSAGE_CONTAINER::addOrDeleteComponent.componentID = component->id;
+        MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_ADD_COMPONENT);
 
         component->id = assign_id();
 
@@ -188,6 +188,10 @@ public:
         static_assert(std::is_base_of<Component, T>::value);
         T* tmp = new T(this);
         components.push_back(tmp);
+
+        MESSAGE_CONTAINER::addOrDeleteComponent.gameObjID = id;
+        MESSAGE_CONTAINER::addOrDeleteComponent.componentID = component->id;
+        MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_ADD_COMPONENT);
         return *tmp;
     }
 
@@ -289,135 +293,6 @@ public:
     /*!
     *
     \brief
-        Check if the game object is a parent
-
-    \return
-        if gameobject is a parent, return true
-        if gameobject is not a parent, return false
-    */
-    /*******************************************************************************/
-    bool is_parent() const;
-
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Check if the game object has a parent
-
-    \return
-        if gameobject has a parent, return true
-        if gameobject does not have a parent, return false
-    */
-    /*******************************************************************************/
-    bool has_parent() const;
-
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Accessor for this game object's parent (if any)
-
-    \return
-        pointer to the parent game object
-        if this game object does not have a parent, returns nullptr
-    */
-    /*******************************************************************************/
-    GameObject* get_parent();
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Sets the parent of this gameobject
-
-    \param _parent
-         ptr to the gameobject which will become the parent of this game object
-
-    \return
-        void
-    */
-    /*******************************************************************************/
-    void set_parent(GameObject* _parent);
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Returns a list that contains pointers to this game object's children (read-only)
-
-    \return
-        reference to the list containing the pointers to this game object's children
-    */
-    /*******************************************************************************/
-    const std::list<GameObject*>& childList() const;
-
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Returns a list that contains pointers to this game object's children
-
-    \return
-        reference to the list containing the pointers to this game object's children
-    */
-    /*******************************************************************************/
-    std::list<GameObject*>& mchildList();
-
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Attach a child to this game object
-
-    \return
-        if specified child game object is valid, return true
-        if specified child game object is not valid, return false
-    */
-    /*******************************************************************************/
-    bool attach_child(GameObject* _child);
-
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Detach a child from this game object. Removes specified child from this game object's childlist.
-        Note: if specified game object is not a child of this game object, returns false
-
-    \return
-        if specified child game object is successfully detached, return true
-        if specified child game object is not a child of this game object, return false
-    */
-    /*******************************************************************************/
-    bool deattach_child(GameObject* _child);
-
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Set the parentid of this gameobject
-
-    \param _id
-        reference to a GameObjectID whose value is to be set to this gameobject's parentid
-
-    \return
-        void
-    */
-    /*******************************************************************************/
-    void set_ppid(GameObjectID& _id);
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Get the parentid of this gameobject
-
-    \return
-        parent id of this gameobject
-    */
-    /*******************************************************************************/
-    GameObjectID get_ppid() const;
-
-    /*******************************************************************************
-    /*!
-    *
-    \brief
         Deserialize GameObject data from rapidJson value and populate this GameObject with the data
 
     \param  _value
@@ -481,7 +356,6 @@ public:
     /*******************************************************************************/
     void handleMessage(MESSAGE_TYPE mType);
 };
-
 
 }
 

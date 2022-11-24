@@ -20,7 +20,7 @@
 	Note: this is the latest version of our scene class, use this
 
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #pragma once
 #ifndef SCENE_H
@@ -37,6 +37,7 @@ namespace Copium
 class Scene 
 {
 public:
+	std::vector<GameObject*> gameObjects;	//Vector should be in order
 
 	enum class SceneState : char {
 		edit = 0, 
@@ -141,17 +142,7 @@ public:
 	*/
 	/*******************************************************************************/
 	size_t get_gameobjcount() const;
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Returns reference to the GameObject* vector
 
-	\return
-		reference to the GameObject* vector
-	*/
-	/*******************************************************************************/
-	std::vector<GameObject*>& get_gameobjectvector();
 	/*******************************************************************************
 	/*!
 	*
@@ -209,7 +200,6 @@ public:
 private:
 	const std::string filename;
 	std::string name;
-	std::vector<GameObject*> gameObjects;	//Vector should be in order
 	std::vector<GameObjectID> unusedGIDs;
 	std::vector<uint64_t> unusedCIDs;
 	unsigned int numberOfComponents;

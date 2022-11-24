@@ -222,8 +222,6 @@ namespace Copium
 		for (char c : _text)
 		{
 			Character& ch = characters[c];
-			float xpos = x + ch.bearing.x * (_scale * 0.01f);
-			float ypos = y - (ch.size.y - ch.bearing.y) * (_scale * 0.01f);
 			float scaledY = ch.size.y * (_scale * 0.01f);
 			if (scaledY > y)
 				y = scaledY;
