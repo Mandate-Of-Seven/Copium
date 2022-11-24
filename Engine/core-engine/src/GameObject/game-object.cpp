@@ -341,14 +341,12 @@ void GameObject::inspectorView()
     ImGui::InputText("##gameObjName", buffer, 256);
     ImGui::PopItemWidth();
     name = buffer;
-
     ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
         | ImGuiTableFlags_ScrollY;
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);
-    ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed;
-    if (ImGui::BeginTable("Components", 1, tableFlags, ImVec2(0.f, ImGui::GetWindowSize().y/2.f)))
+    ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth;
+    if (ImGui::BeginTable("Components", 1, tableFlags, ImVec2(0.f, ImGui::GetWindowSize().y * 0.8f)))
     {
-        ImGui::TableNextRow();
         ImGui::TableNextColumn();
         static std::vector<ComponentID> componentsToDelete;
         componentsToDelete.clear();
@@ -386,7 +384,6 @@ void GameObject::inspectorView()
 
             }
             ImGui::PopID();
-            ImGui::TableNextColumn();
         }
         for (ComponentID componentId : componentsToDelete)
         {

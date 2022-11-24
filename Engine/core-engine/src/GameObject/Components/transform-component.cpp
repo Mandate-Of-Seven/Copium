@@ -96,22 +96,35 @@ void Transform::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 void Transform::inspector_view()
 {
     ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
-        | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp;
+        | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
+        | ImGuiTableFlags_PadOuterX;
+    
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 0));
+    ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 2));
     if (ImGui::BeginTable("Component Transform", 2, windowFlags))
     {
+        windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
+            | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp;
+        
         ImGui::Indent();
 
         ImGui::TableSetupColumn("Text", 0, 0.4f);
         ImGui::TableSetupColumn("Input", 0, 0.6f);
 
-        ImGui::TableNextRow();
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
+        ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
+
         ImGui::TableNextColumn();
+        ImGui::AlignTextToFramePadding();
         ImGui::Text("Position");
         ImGui::TableNextColumn();
+
         if (ImGui::BeginTable("Component Transform: Position", 3, windowFlags))
         {
             ImGui::TableNextColumn();
             ImGui::PushID(0);
+            ImGui::AlignTextToFramePadding();
             ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
             ImGui::InputFloat("", &position.x);
             if (ImGui::IsItemActivated())
@@ -128,7 +141,6 @@ void Transform::inspector_view()
                     temp = position.x;
                 }
             }
-
             ImGui::PopID();
 
             ImGui::TableNextColumn();
@@ -176,12 +188,14 @@ void Transform::inspector_view()
 
         ImGui::TableNextRow();
         ImGui::TableNextColumn();
+        ImGui::AlignTextToFramePadding();
         ImGui::Text("Rotation");
         ImGui::TableNextColumn();
         if (ImGui::BeginTable("Component Transform: Rotation", 3, windowFlags))
         {
             ImGui::TableNextColumn();
             ImGui::PushID(0);
+            ImGui::AlignTextToFramePadding();
             ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
             ImGui::InputFloat("", &rotation.x);
             if (ImGui::IsItemActivated())
@@ -245,12 +259,14 @@ void Transform::inspector_view()
 
         ImGui::TableNextRow();
         ImGui::TableNextColumn();
+        ImGui::AlignTextToFramePadding();
         ImGui::Text("Scale");
         ImGui::TableNextColumn();
         if (ImGui::BeginTable("Component Transform: Scale", 3, windowFlags))
         {
             ImGui::TableNextColumn();
             ImGui::PushID(0);
+            ImGui::AlignTextToFramePadding();
             ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
             ImGui::InputFloat("", &scale.x);
             if (ImGui::IsItemActivated())
@@ -312,10 +328,14 @@ void Transform::inspector_view()
             ImGui::EndTable();
         }
 
+        ImGui::PopStyleVar();
+        ImGui::PopStyleVar();
+        ImGui::PopStyleVar();
         ImGui::Unindent();
         ImGui::EndTable();
     }
-
-
+    ImGui::PopStyleVar();
+    ImGui::PopStyleVar();
+   
 }
 }

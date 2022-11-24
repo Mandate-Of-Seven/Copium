@@ -81,9 +81,15 @@ namespace Window
                 // Set flags for tables
                 selectedGameObject->inspectorView();
 
+
+                // Bean: This should be in the selected gameobject inspector view along the isAddingComponent part
+                float textWidth = ImGui::CalcTextSize("Add Component").x;
+                float padding = 150.f;
+                float indent = (ImGui::GetContentRegionAvail().x - textWidth - padding) * 0.5f;
+                ImGui::Indent(indent);
+
                 //AlignForWidth(buttonSize.x);
-                ImVec2 buttonSize = ImGui::GetWindowSize();
-                buttonSize.y *= (float)BUTTON_HEIGHT;
+                ImVec2 buttonSize(textWidth + padding, 0.f);
                 if (ImGui::Button("Add Component", buttonSize)) {
                     isAddingComponent = true;
                 }
@@ -92,8 +98,10 @@ namespace Window
             {
                 selectedFile->inspector_view();
             }
-            ImGui::End();
+            
             ImGui::PopStyleVar();
+            ImGui::End();
+            
             if (isAddingComponent)
             {
                 ImGui::Begin("Add Component", &isAddingComponent);
