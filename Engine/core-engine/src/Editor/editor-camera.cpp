@@ -32,13 +32,10 @@ namespace
 
 namespace Copium
 {
-	void EditorCamera::init(float _width, float _height, bool _rotation)
-	{
-		aspectRatio = _width / _height;
-		width = int(_width);
-		height = int(_height);
-		update_ortho_projection(aspectRatio, zoomLevel);
 
+	void EditorCamera::init(float _width, float _height, bool _orthographic)
+	{
+		BaseCamera::init(_width, _height, CameraType::SCENEVIEW, _orthographic);
 		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
 		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
 	}
@@ -57,8 +54,8 @@ namespace Copium
 			Scene* scene = sm->get_current_scene();
 			if (scene != nullptr && !scene->get_name().compare("DemoCLONE"))
 			{
-				zoomLevel = 5.f;
-				update_ortho_projection(aspectRatio, zoomLevel);
+				orthographic = 5.f;
+				update_ortho_projection();
 				for (size_t i = 0; i < scene->get_gameobjectvector().size(); i++)
 				{
 					// If the object is the player
@@ -72,7 +69,18 @@ namespace Copium
 			}
 		}
 
-		update_view_matrix();
+		static bool debugMode = false;
+		if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_D))
+		{
+			debugMode = !debugMode;
+		}
+
+		if (debugMode)
+			draw.enable(DRAW::DEBUG);
+		else if (!debugMode)
+			draw.disable(DRAW::DEBUG);
+
+		BaseCamera::update();
 	}
 
 	void EditorCamera::handleMessage(MESSAGE_TYPE _mType)
@@ -87,31 +95,17 @@ namespace Copium
 		}
 	}
 
-	void EditorCamera::update_ortho_projection(float _aspectRatio, float _zoomLevel)
-	{
-		float ar = _aspectRatio;
-		float zl = _zoomLevel;
-		orthoProjMatrix = glm::ortho(-ar * zl, ar * zl, -zl, zl, nearClip, farClip);
-		projMatrix = orthoProjMatrix * viewMatrix;
-	}
-
-	void EditorCamera::update_ortho_projection(float _left, float _right, float _bottom, float _top)
-	{
-		orthoProjMatrix = glm::ortho(_left, _right, _bottom, _top, nearClip, farClip);
-		projMatrix = orthoProjMatrix * viewMatrix;
-	}
-
-	void EditorCamera::update_view_matrix()
+	/*void EditorCamera::update_view_matrix()
 	{
 		set_position(calculate_position());
 
-		glm::vec3 pos = get_position();
+		glm::vec3 viewer = get_position();
 
 		glm::mat4 translate = {
 			glm::vec4(1.f, 0.f, 0.f, 0.f),
 			glm::vec4(0.f, 1.f, 0.f, 0.f),
 			glm::vec4(0.f, 0.f, 1.f, 0.f),
-			glm::vec4(pos.x, pos.y, pos.z, 1.f)
+			glm::vec4(viewer.x, viewer.y, viewer.z, 1.f)
 		};
 
 		float rad = glm::radians(get_angle());
@@ -128,19 +122,10 @@ namespace Copium
 		viewMatrix = glm::inverse(viewMatrix);
 
 		projMatrix = orthoProjMatrix * viewMatrix;
-	}
-
-	void EditorCamera::on_resize(float _width, float _height)
-	{
-		width = (int)_width;
-		height = (int)_height;
-		aspectRatio = _width / _height;
-		update_ortho_projection(aspectRatio, zoomLevel);
-	}
+	}*/
 
 	glm::vec2 EditorCamera::get_ndc() const
 	{
-		glm::vec3 pos = get_position();
 		EditorSceneView* sceneView = EditorSystem::Instance()->get_scene_view();
 		glm::vec2 scenePos = sceneView->get_position();
 		glm::vec2 sceneDim = sceneView->get_dimension();
@@ -148,45 +133,33 @@ namespace Copium
 		glm::vec2 centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
 		glm::vec2 mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
 		glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
-		mouseToNDC *= zoomLevel;
-		glm::vec2 worldNDC = { mouseToNDC.x + pos.x, mouseToNDC.y + pos.y };
+		mouseToNDC *= orthographicSize;
+		glm::vec2 worldNDC = { mouseToNDC.x + viewer.x, mouseToNDC.y + viewer.y };
 		return worldNDC;
 	}
 
 	void EditorCamera::mouse_controls()
 	{
-		glm::vec3 pos = get_position();
-
 		// Bean: shouldnt be necessary here
 		// Clamping camera within boundary
-		if (pos.x > 100.f)
+		if (viewer.x > 100.f)
 		{
-			focalPoint = glm::vec3(100.f, pos.y, 0.f);
+			focalPoint = glm::vec3(100.f, viewer.y, 0.f);
 		}
-		if (pos.x < -100.f)
+		if (viewer.x < -100.f)
 		{
-			focalPoint = glm::vec3(-100.f, pos.y, 0.f);
+			focalPoint = glm::vec3(-100.f, viewer.y, 0.f);
 		}
-		if (pos.y > 100.f)
+		if (viewer.y > 100.f)
 		{
-			focalPoint = glm::vec3(pos.x, 100.f, 0.f);
+			focalPoint = glm::vec3(viewer.x, 100.f, 0.f);
 		}
-		if (pos.y < -100.f)
+		if (viewer.y < -100.f)
 		{
-			focalPoint = glm::vec3(pos.x, -100.f, 0.f);
+			focalPoint = glm::vec3(viewer.x, -100.f, 0.f);
 		}
 		
-		// Bean: This needs to be refactored to some function
-		// Calculate delta drag
-		EditorSceneView* sceneView = EditorSystem::Instance()->get_scene_view();
-		glm::vec2 scenePos = sceneView->get_position();
-		glm::vec2 sceneDim = sceneView->get_dimension();
-		Math::Vec2 mousePos = inputSystem.get_mouseposition();
-		glm::vec2 centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
-		glm::vec2 mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
-		glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
-		mouseToNDC *= zoomLevel;
-		glm::vec2 worldNDC = { mouseToNDC.x + pos.x, mouseToNDC.y + pos.y };
+		glm::vec2 worldNDC = get_ndc();
 		glm::vec2 delta = (worldNDC - mousePosition) * 4.f;
 		mousePosition = worldNDC;
 
@@ -239,60 +212,25 @@ namespace Copium
 		int scroll = (int) inputSystem.get_mousescroll();
 		if (scroll && !enableCamera)
 		{
-			zoomLevel -= scroll * 0.1f * get_zoom_speed(); // Zoom In
+			orthographicSize -= scroll * 0.1f * get_zoom_speed(); // Zoom In
 			
-			if (zoomLevel <= nearClip)
-				zoomLevel = nearClip;
-			if (zoomLevel >= farClip)
-				zoomLevel = farClip;
+			if (orthographicSize <= nearClip)
+				orthographicSize = nearClip;
+			if (orthographicSize >= 100.f)
+				orthographicSize = 99.f;
 
 
-			update_ortho_projection(aspectRatio, zoomLevel);
+			update_ortho_projection();
 		}
 
 		//scroll = inputSystem.get_mousescroll();
 	}
 
-	glm::vec3 EditorCamera::calculate_position()
-	{
-		return focalPoint - get_forward_direction() * zoomLevel;
-	}
-
-	glm::vec3 EditorCamera::get_right_direction() const
-	{
-		return glm::rotate(get_orientation(), glm::vec3(1.f, 0.f, 0.f));
-	}
-
-	glm::vec3 EditorCamera::get_up_direction() const
-	{
-		return glm::rotate(get_orientation(), glm::vec3(0.f, 1.f, 0.f));
-	}
-
-	glm::vec3 EditorCamera::get_forward_direction() const
-	{
-		return glm::rotate(get_orientation(), glm::vec3(0.f, 0.f, -1.f));
-	}
-
-	glm::quat EditorCamera::get_orientation() const
-	{
-		return glm::quat(glm::vec3(-pitch, -yaw, 0.f));
-	}
-
-	glm::vec2 EditorCamera::get_pan_speed() const
-	{
-		glm::vec2 speed;
-		float x = std::min(width / 1000.f, 2.4f); // Max speed is 2.4
-		speed.x = 0.04f * (x * x) - 0.1778f * x + 0.3f;
-		float y = std::min(height / 1000.f, 2.4f); // Max speed is 2.4
-		speed.y = 0.04f * (y * y) - 0.1778f * y + 0.3f;
-		return speed;
-	}
-
 	float EditorCamera::get_zoom_speed() const
 	{
-		float tempDistance = zoomLevel * 0.2f;
-		tempDistance = std::max(zoomLevel, 0.f); // Max distance is 0
-		float speed = zoomLevel * zoomLevel;
+		float tempDistance = orthographicSize * 0.2f;
+		tempDistance = std::max(orthographicSize, 0.f); // Max distance is 0
+		float speed = orthographicSize * orthographicSize;
 		speed = std::min(speed, 50.f); // The max speed currently is 50
 		return speed;
 	}

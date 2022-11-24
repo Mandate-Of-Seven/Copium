@@ -25,6 +25,6 @@ uniform sampler2D uFont;
 void main()
 {
 	int index = int(vFontIndex);
-	vec4 sampled = vec4(1.0, 1.0, 1.0, texture(uFont, vTextureCoordinate).r); 
+	vec4 sampled = vec4(1.0, 1.0, 1.0, texture(uFont, vTextureCoordinate).r);
 	fFragColor = vInterpColor * sampled;
 }

@@ -21,7 +21,20 @@
         "Y": 1,
         "Z": 1
       }
-
+    },
+    {
+      "Type": "Camera",
+      "Color": {
+        "X": 0.0,
+        "Y": 0.0,
+        "Z": 0.0,
+        "W": 255.0
+      },
+      "Projection": true,
+      "Clipping Planes": {
+        "Near": 0.03,
+        "Far": 500.0
+      }
     }
   ],
   "Children": [

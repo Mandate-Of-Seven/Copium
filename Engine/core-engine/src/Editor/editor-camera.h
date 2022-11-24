@@ -15,28 +15,28 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef EDITOR_CAMERA_H
 #define EDITOR_CAMERA_H
 
-#include "Graphics/camera.h"
+#include "Graphics/base-camera.h"
 #include "Messaging/message-system.h"
 
 namespace Copium
 {
 	// Editor camera which moves around in the scene view
-	class EditorCamera : public Camera, public IReceiver
+	class EditorCamera : public BaseCamera, public IReceiver
 	{
 	public:
 		/***************************************************************************/
 		/*!
 		\brief
-			Initializes the editor camera
+			Constructs the editor camera
 		\param _width
 			The width of the screen
 		\param _height
 			The height of the screen
-		\param _rotation
-			Is there rotation
+		\param _orthographic
+			Is it orthographic or perspective projection
 		*/
 		/**************************************************************************/
-		void init(float _width, float _height, bool _rotation = false);
+		void init(float _width, float _height, bool _orthographic = true);
 		
 		/***************************************************************************/
 		/*!
@@ -58,51 +58,20 @@ namespace Copium
 		void handleMessage(MESSAGE_TYPE _mType);
 
 		// Accessing Properties
-
-		// Directional Properties
-		glm::vec3 get_right_direction() const;
-		glm::vec3 get_up_direction() const;
-		glm::vec3 get_forward_direction() const;
-		glm::quat get_orientation() const;
-		glm::vec2 get_pan_speed() const;
-
-		float get_zoom() const { return zoomLevel; }
+		float get_zoom() const { return orthographicSize; }
 		float get_zoom_speed() const;
-		float get_pitch() const { return pitch; }
-		float get_yaw() const { return yaw; }
 		glm::vec2 get_ndc() const;
 
-		// Matrices
-		void on_resize(float _width, float _height);
-
-		glm::mat4 get_projection() const { return projMatrix; }
-		glm::mat4 get_ortho_projection() const { return orthoProjMatrix; }
-		glm::mat4 get_view_matrix() const { return viewMatrix; }
-
 	private:
-		void update_ortho_projection(float _aspectRatio, float _zoomLevel);
-		void update_ortho_projection(float _left, float _right, float _bottom, float _top);
-
-		void update_view_matrix();
 		void mouse_controls();
-
-		glm::vec3 calculate_position();
 
 	private:
 		/* Camera Data ******************************************************************/
-		glm::vec3 focalPoint{0};
 		glm::vec2 mousePosition{0};
+		
+		bool dynamicClipping = false; // Bean: To be implemented in the future
 
-		float aspectRatio = 0.f;
-		float nearClip = 0.1f, farClip = 100.f; // Orthographic projection's view box
-		float zoomLevel = 4.f; // To zoom in and out
-		float pitch = 0.f, yaw = 0.f; // For rotation
-		int width = 0, height = 0;
-
-		/* Matrices & Projection ********************************************************/
-		glm::mat4 projMatrix{0};
-		glm::mat4 viewMatrix{0};
-		glm::mat4 orthoProjMatrix{0};
+		float cameraSpeed = 1.f;
 	};
 }
 #endif // !EDITOR_CAMERA_H

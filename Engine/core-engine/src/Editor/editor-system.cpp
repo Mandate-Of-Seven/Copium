@@ -15,6 +15,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 *****************************************************************************************/
 #include "pch.h"
 #include "Windows/windows-system.h"
+#include "Windows/windows-input.h"
 #include "Editor/editor-system.h"
 #include "GameObject/game-object.h"
 #include "Editor/inspector.h"
@@ -25,22 +26,26 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Utilities/thread-system.h"
 #include "SceneManager/state-manager.h"
 #include "Messaging/message-system.h"
+#include "Graphics/graphics-system.h"
 
 namespace Copium
 {
 	namespace
 	{
 		// Our state
-		bool show_demo_window = true;
+		bool show_demo_window = false;
 		ThreadSystem& threadSystem{ *ThreadSystem::Instance() };
 		MessageSystem& messageSystem{ *MessageSystem::Instance() };
+		InputSystem& inputSystem{ *InputSystem::Instance() };
+		WindowsSystem& windowsSystem{ *WindowsSystem::Instance() };
+		GraphicsSystem& graphicsSystem{ *GraphicsSystem::Instance() };
 	}
 
 	void EditorSystem::init()
 	{
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		//PRINT("FLAGS: " << systemFlags);
-		WindowsSystem* windowsSystem = WindowsSystem::Instance();
+		
 
 		//imgui
 		ImGui::CreateContext();
@@ -55,7 +60,7 @@ namespace Copium
 		
 		ImGui::StyleColorsDark();
 
-		ImGui_ImplGlfw_InitForOpenGL(windowsSystem->get_window(), true);
+		ImGui_ImplGlfw_InitForOpenGL(windowsSystem.get_window(), true);
 		ImGui_ImplOpenGL3_Init("#version 330");
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		ImGui::GetIO().ConfigDockingWithShift = true;
@@ -65,6 +70,7 @@ namespace Copium
 		Window::ColorTheme::init();
 
 		sceneView.init();
+		game.init();
 		contentBrowser.init();
 		
 		// Initialize a new editor camera
@@ -73,12 +79,32 @@ namespace Copium
 
 	void EditorSystem::update()
 	{
+		if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_E))
+		{
+			enableEditor = !enableEditor;
+			if (!enableEditor)
+			{
+				// Swap camera
+				//camera.get_framebuffer()->exit();
+				glm::vec2 dimension = { windowsSystem.get_window_width(), windowsSystem.get_window_height() };
+				// Game Camera
+				if (!graphicsSystem.get_cameras().empty())
+				{
+					(*graphicsSystem.get_cameras().begin())->on_resize(dimension.x, dimension.y);
+					glViewport(0, 0, dimension.x, dimension.y);
+				}
+			}
+			else
+				camera.get_framebuffer()->init();
+		}
+
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
 		//Dockspace
+		if(enableEditor)
 		{
             static bool p_open = true;
             static bool opt_fullscreen = true;
@@ -125,6 +151,7 @@ namespace Copium
 
             // Submit the DockSpace
             ImGuiIO& io = ImGui::GetIO();
+
 			ImGuiID dockspace_id = 0;
             if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
             {
@@ -279,6 +306,7 @@ namespace Copium
 			Window::EditorConsole::update();
 			Window::Hierarchy::update();
 			sceneView.update();
+			game.update();
 			contentBrowser.update();
 
 			// demo update
@@ -288,9 +316,14 @@ namespace Copium
 			// Editor Camera
 			camera.update();
 
-            ImGui::End();
-		}
+			// Game Camera
+			if (!graphicsSystem.get_cameras().empty())
+			{
+				(*graphicsSystem.get_cameras().begin())->update();
+			}
 
+            ImGui::End();
+		}		
 		
 		ImGui::EndFrame();
 	}
@@ -309,6 +342,7 @@ namespace Copium
 
 		Window::Inspector::exit();
 		sceneView.exit();
+		game.exit();
 		contentBrowser.exit();
 
 		while (commandManager.undoStack.size() > 0)
@@ -324,6 +358,7 @@ namespace Copium
 			EditorSystem::Instance()->get_commandmanager()->redoStack.pop();
 			delete temp;
 		}
+		camera.exit();
 	}
 
 	void EditorSystem::imguiConsoleAddLog(std::string value)

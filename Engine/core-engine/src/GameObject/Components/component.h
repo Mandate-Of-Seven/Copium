@@ -34,29 +34,31 @@ using ComponentID = uint64_t;
 enum class ComponentType : int      // Types of Components
 {
     Animator,
+    AudioSource,
     BoxCollider2D,
+    Button,
+    Camera,
+    Image,
     Rigidbody2D,
     SpriteRenderer,
     Script,
     Transform,
-    Button,
     Text,
-    Image,
-    AudioSource,
     None
 };
 
 static std::map<ComponentType, std::string> MAP_COMPONENT_TYPE_NAME
 {
     {ComponentType::Animator,"Animator"},
+    {ComponentType::AudioSource,"AudioSource"},
     {ComponentType::BoxCollider2D,"BoxCollider2D"},
+    {ComponentType::Button,"ButtonComponent"},
+    {ComponentType::Camera,"Camera"},
+    {ComponentType::Image,"ImageComponent"},
     {ComponentType::Rigidbody2D,"Rigidbody2D"},
     {ComponentType::SpriteRenderer,"SpriteRenderer"},
     {ComponentType::Script,"ScriptComponent"},
-    {ComponentType::Button,"ButtonComponent"},
     {ComponentType::Text,"Text"},
-    {ComponentType::Image,"ImageComponent"},
-    {ComponentType::AudioSource,"AudioSource"}
 };
 
 

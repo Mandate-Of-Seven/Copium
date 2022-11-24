@@ -98,6 +98,26 @@ namespace Copium
 		Math::Vec2 max;
 	};
 
+	struct Circle
+	{
+		Circle(Math::Vec2 _centre = { 0.5f, 0.5f }, float _radius = { 0.5f }) : centre(_centre), radius(_radius)
+		{
+
+		}
+		Math::Vec2 centre;
+		float radius;
+	};
+
+	struct Ray
+	{
+		Ray(Math::Vec2 _pt0 = { 0.5f, 0.5f }, Math::Vec2 _dir = {0.5f, 0.0f}) : pt0(_pt0), dir(_dir)
+		{
+
+		}
+		Math::Vec2 pt0;
+		Math::Vec2 dir;
+	};
+
 	/***************************************************************************/
    /*!
    \brief
@@ -145,6 +165,14 @@ namespace Copium
 	*/
 	/**************************************************************************/
 	bool static_collision_pointrect(const Math::Vec2& point,const AABB& aabb2);
+
+	bool collision_pointcircle(const Math::Vec2& point, const Circle& circle);
+
+	bool collision_circlecircle(const Circle& circle1, const Math::Vec2& vel1,
+		const Circle& circle2, const Math::Vec2& vel2, float& interTime);
+
+	bool collision_circlesquare(const Circle& circle1, const Math::Vec2& vel1,
+		const AABB& aabb, const Math::Vec2& vel2);
 
 	/***************************************************************************/
 	/*!

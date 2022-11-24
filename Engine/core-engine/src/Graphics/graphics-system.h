@@ -20,21 +20,20 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "CopiumCore/system-interface.h"
 
 #include "Graphics/glslshader.h"
-#include "Graphics/framebuffer.h"
-#include "Graphics/renderer.h"
-#include "Graphics/fonts.h"
-
-#include "SceneManager/scene-manager.h"
+#include "Graphics/base-camera.h"
+#include "Messaging/message-system.h"
 
 namespace Copium
 {
 	// Global variables
-	static const GLuint maxQuadCount = 1000; // Number of sprites per batch
-	static const GLuint maxLineCount = 1000; // Number of lines per batch
-	static const GLuint maxTextCount = 1000; // Number of text per batch
+	static const GLuint maxQuadCount = 1000;	// Number of sprites per batch
+	static const GLuint maxLineCount = 1000;	// Number of lines per batch
+	static const GLuint maxCircleCount = 500;	// Number of circles per batch
+	static const GLuint maxTextCount = 1000;	// Number of text per batch
 	static const GLuint maxVertexCount = maxQuadCount * 4;
 	static const GLuint maxIndexCount = maxQuadCount * 6;
 	static const GLuint maxLineVertexCount = maxLineCount * 2;
+	static const GLuint maxCircleVertexCount = maxCircleCount * 2;
 	static const GLuint maxTextVertexCount = maxTextCount * 4;
 	static const GLuint maxTextures = 256;
 
@@ -46,7 +45,8 @@ namespace Copium
 		NUM_SHADERS
 	};
 
-	CLASS_SYSTEM(GraphicsSystem) // Inherits from System
+	// Inherits from System
+	CLASS_SYSTEM(GraphicsSystem), public IReceiver
 	{
 	public:
 		// Constructors
@@ -75,6 +75,15 @@ namespace Copium
 		/***************************************************************************/
 		void exit();
 
+		/**************************************************************************/
+		/*!
+			\brief
+			Interface function for MessageSystem to call for IReceivers to handle
+			a messageType
+		*/
+		/**************************************************************************/
+		void handleMessage(MESSAGE_TYPE mType);
+
 		// Accessing Properties
 
 		// Texture Properties
@@ -89,7 +98,10 @@ namespace Copium
 
 		// Data Members
 		GLSLShader* const get_shader_program() { return shaderProgram; }
-		Framebuffer* get_framebuffer() { return &framebuffer; }
+
+		const bool& is_loaded() const { return loaded; }
+		
+		std::list<BaseCamera*>& get_cameras() { return cameras; }
 
 #pragma region MemberFunctions
 		// Public Member Functions
@@ -123,34 +135,10 @@ namespace Copium
 		/***************************************************************************/
 		/*!
 		\brief
-			Renders the objects in the engine in batches
+			Renders all objects in the camera container in batches
 		*/
 		/***************************************************************************/
 		void batch_render();
-
-		/***************************************************************************/
-		/*!
-		\brief
-			Draw the debug mode of the engine
-		*/
-		/***************************************************************************/
-		void draw_debug_info();
-
-		/***************************************************************************/
-		/*!
-		\brief
-			Draw the development mode of the engine
-		*/
-		/***************************************************************************/
-		void draw_development();
-
-		/***************************************************************************/
-		/*!
-		\brief
-			Draw the "world" of the engine which is the scene view
-		*/
-		/***************************************************************************/
-		void draw_world();
 
 #pragma endregion MemberFunctions
 #pragma region DataMembers
@@ -165,10 +153,10 @@ namespace Copium
 		GLSLShader shaderProgram[NUM_SHADERS]; // Shader program to use
 
 		/* Stored Information ***********************************************************/
-		Renderer renderer;
-		Framebuffer framebuffer;
+		bool loaded = false;
 
-		bool debugMode = false;
+		std::list<BaseCamera*> cameras; // Stores the reference to the cameras in the engine
+
 #pragma endregion DataMembers
 	};
 

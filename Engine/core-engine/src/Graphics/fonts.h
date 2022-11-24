@@ -33,6 +33,9 @@ namespace Copium
 		unsigned int advance; // Offset to advance to next glyph
 	};
 
+	// Bean: Temporary forward declaration of BaseCamera class to render text
+	class BaseCamera;
+
 	class Font
 	{
 	public:
@@ -62,7 +65,7 @@ namespace Copium
 			The font to use
 		*/
 		/***************************************************************************/
-		void draw_text(const std::string& _text, const glm::vec2& _position, const glm::vec4& _color, GLfloat _scale, GLuint _fontID);
+		void draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, GLfloat _scale, GLuint _fontID, BaseCamera* _camera);
 
 		glm::vec2 getDimensions(const std::string& _text, GLfloat _scale);
 
