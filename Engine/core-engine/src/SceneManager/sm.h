@@ -40,6 +40,7 @@ namespace Copium {
 	public:
 		GameObject* findGameObjByID(GameObjectID _ID);
 		GameObject* findGameObjByName(const std::string& name);
+		
 
 		NewSceneManager();
 		~NewSceneManager();

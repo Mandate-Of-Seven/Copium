@@ -28,6 +28,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/prettywriter.h>
 #include <Messaging/message-system.h>
+#include "GameObject/Components/ui-components.h"
 
 namespace Copium {
 
@@ -174,7 +175,50 @@ namespace Copium {
 		}
 		
 		ifs.close();
+
+
+		// Linkage of ui components to each other
+		for (GameObject* go : currentScene->gameObjects)
+		{
+			if (go->hasComponent(ComponentType::Button))
+			{
+				ComponentID id = go->getComponent(ComponentType::Button)->id;
+				for (GameObject* go1 : currentScene->gameObjects)
+				{
+					if (go1 == go)
+						continue;
+
+					if (!go->hasComponent(ComponentType::Text))
+						continue;
+
+					ComponentID tid = go1->getComponent(ComponentType::Text)->id;
+					if (tid == id)
+					{
+						Button* btn = reinterpret_cast<Button*>(go->getComponent(ComponentType::Button));
+						Text* txt = reinterpret_cast<Text*>(go1->getComponent(ComponentType::Text));
+						btn->set_targetgraphic(txt);
+						
+					}
+					break;
+
+				}
+				
+			}
+		}
+
+
+
+
+
+
+
 		MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_SCENE_DESERIALIZED);
+
+
+
+
+
+
 		return true;
 
 	}

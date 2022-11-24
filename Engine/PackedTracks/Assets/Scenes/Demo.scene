@@ -1,8 +1,6 @@
 {
     "Name": "Demo\tPREVIEW",
-    "Unused GIDs": [
-        7
-    ],
+    "Unused GIDs": [],
     "Unused CIDs": [],
     "GameObjects": [
         {
@@ -85,7 +83,7 @@
                 {
                     "PID": 0,
                     "Children": [],
-                    "ID": 6,
+                    "ID": 7,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -124,7 +122,7 @@
                 {
                     "PID": 0,
                     "Children": [],
-                    "ID": 8,
+                    "ID": 9,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -170,7 +168,7 @@
                 {
                     "PID": 0,
                     "Children": [],
-                    "ID": 11,
+                    "ID": 12,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -210,7 +208,7 @@
                 {
                     "PID": 0,
                     "Children": [],
-                    "ID": 13,
+                    "ID": 14,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -264,7 +262,7 @@
                 {
                     "PID": 0,
                     "Children": [],
-                    "ID": 16,
+                    "ID": 17,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -308,6 +306,38 @@
                     "g": 0.9999713897705078,
                     "b": 1.0,
                     "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 7,
+            "Name": "Test Button",
+            "Components": [
+                {
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 20,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ButtonComponent",
+                    "ID": 22,
+                    "Graphic ID": 0
                 }
             ]
         }
