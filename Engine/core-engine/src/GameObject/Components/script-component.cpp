@@ -16,7 +16,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "pch.h"
 #include "GameObject/Components/script-component.h"
 #include "GameObject/game-object.h"
-
+#include "SceneManager/sm.h"
 #define DEFAULT_SCRIPT_NAME "NewScript"
 #include <mono/jit/jit.h>
 namespace Copium
@@ -24,7 +24,7 @@ namespace Copium
 	ScriptingSystem& Script::sS{ *ScriptingSystem::Instance() };
 
 	Script::Script(GameObject& _gameObj) :
-		mObject{ nullptr }, pScriptClass{ nullptr }, Component(_gameObj, ComponentType::Script), name{ DEFAULT_SCRIPT_NAME }, reference{nullptr}
+		mObject{ nullptr }, pScriptClass{ nullptr }, Component(_gameObj, ComponentType::Script), name{ DEFAULT_SCRIPT_NAME }, reference{nullptr}, isAddingGameObjectReference{false}
 	{
 		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
 		pScriptClass = sS.getScriptClass(name);
@@ -170,6 +170,46 @@ namespace Copium
 					if (gameObjRef == fieldGameObjReferences.end())
 					{
 						ImGui::Button("None(GameObject)", ImVec2(-FLT_MIN, 0.f));
+
+						// Matthew's stuff
+						if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+						{
+							std::cout << "double clicked on game object reference field\n";
+							isAddingGameObjectReference = true;
+
+						}
+
+						if (isAddingGameObjectReference)
+						{
+							// Open pop-up window
+							ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+							ImGui::SetNextWindowPos(ImVec2(0.f, 0.f), ImGuiCond_FirstUseEver);
+							ImGui::Begin("Add GameObject Reference", &isAddingGameObjectReference);
+							ImVec2 buttonSize = ImGui::GetWindowSize();
+							buttonSize.y *= (float)0.1;
+							static ImGuiTextFilter filter;
+							ImGui::PushItemWidth(-1);
+							filter.Draw("##GameObjectName");
+							ImGui::PopItemWidth();
+							// Iterate through game object list
+							Scene* scene = Copium::NewSceneManager::Instance()->get_current_scene();
+							for (Copium::GameObject* go : scene->gameObjects)
+							{
+								if (ImGui::Button(go->get_name().c_str(), buttonSize))
+								{
+									if (filter.PassFilter(go->get_name().c_str()))
+									{
+										isAddingGameObjectReference = false;
+										fieldGameObjReferences[_name] = go;
+
+									}
+								}
+							}
+							ImGui::End();
+
+
+						}
+
 					}
 					else
 					{
