@@ -169,6 +169,7 @@ namespace Copium
 				{
 					if (!component->Enabled())
 						continue;
+
 					Transform& t = gameObject->transform;
 					ImageComponent* rc = reinterpret_cast<ImageComponent*>(component);
 					Sprite& sr = rc->get_sprite_renderer();
@@ -189,6 +190,14 @@ namespace Copium
 					}
 
 					renderer.draw_quad({ rc->Offset(),t.position.z }, size, rotation, sr);
+				}
+				for (Component* component : gameObject->getComponents<Text>())
+				{
+					if (!component->Enabled())
+						continue;
+
+					Text* text = reinterpret_cast<Text*>(component);
+					text->render(camera);
 				}
 			}
 
@@ -448,7 +457,8 @@ namespace Copium
 			renderer.draw_quad(position, size, 0.f, assets->get_spritesheets()[animID], animIndex, id);
 		}*/
 
-		Scene* scene = sm->get_current_scene();
+
+		/*Scene* scene = sm->get_current_scene();
 		if (scene != nullptr)
 		{
 			for (GameObject* gameObject : scene->gameObjects)
@@ -457,15 +467,16 @@ namespace Copium
 				{
 					if (!component->Enabled())
 						continue;
+
 					Text* text = reinterpret_cast<Text*>(component);
 					text->render(camera);
 				}
 			}
-
-		}
+		}*/
 
 		renderer.end_batch();
 
 		renderer.flush();
+
 	}
 }

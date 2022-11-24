@@ -315,7 +315,20 @@ namespace Copium
 				break;
 			}
 		}
-		font->draw_text(content, pos, color, scale, 0, _camera);
+		glm::fvec4 mixedColor;
+		mixedColor.a = 1 - (1 - layeredColor.a) * (1 - color.a); // 0.75
+		if (mixedColor.a < 0.01f)
+			return;
+		mixedColor.r = layeredColor.r * layeredColor.a / mixedColor.a + color.r * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.67
+		mixedColor.g = layeredColor.g * layeredColor.a / mixedColor.a + color.g * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.33
+		mixedColor.b = layeredColor.b * layeredColor.a / mixedColor.a + color.b * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.00
+		
+
+		/*PRINT("Color: " << color.r << " " << color.g << " " << color.b << " " << color.a);
+		PRINT("Layered Color: " << layeredColor.r << " " << layeredColor.g << " " << layeredColor.b << " " << layeredColor.a);
+		PRINT("Mixed Color: " << mixedColor.r << " " << mixedColor.g << " " << mixedColor.b << " " << mixedColor.a);
+		*/
+		font->draw_text(content, pos, mixedColor, scale, 0, _camera);
 	}
 
 	Component* Text::clone(GameObject& _gameObj) const
