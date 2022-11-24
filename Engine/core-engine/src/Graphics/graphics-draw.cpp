@@ -155,12 +155,12 @@ namespace Copium
 					if (gameObject->has_parent())
 					{
 						Transform& t1 = gameObject->get_parent()->transform;
-						renderer->draw_quad(t.glmPosition() + t1.glmPosition(), size, rotation, sr);
+						renderer.draw_quad(t.glmPosition() + t1.glmPosition(), size, rotation, sr);
 
 					}
 					else 
 					{
-						renderer->draw_quad(t.glmPosition(), size, rotation, sr);
+						renderer.draw_quad(t.glmPosition(), size, rotation, sr);
 
 					}
 

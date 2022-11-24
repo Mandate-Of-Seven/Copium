@@ -90,7 +90,7 @@ namespace Copium
 	void GraphicsSystem::update()
 	{
 		GLfloat dt = (GLfloat) MyFrameRateController.getDt();
-		movement_x = movement_y = 0;
+		//movement_x = movement_y = 0;
 
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);

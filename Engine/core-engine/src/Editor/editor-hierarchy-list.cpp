@@ -110,9 +110,9 @@ namespace Window::Hierarchy
 				}				
 				if (ImGui::MenuItem("Create a Child GameObject"))
 				{
-					if (nsm->get_selected_gameobject())
+					if (MyNewSceneManager.get_selected_gameobject())
 					{
-						nsm->get_gof().create_child(*nsm->get_selected_gameobject());
+						MyNewSceneManager.get_gof().create_child(*MyNewSceneManager.get_selected_gameobject());
 					}
 				}
 

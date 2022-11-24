@@ -31,6 +31,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "SceneManager/scene.h"
 #include <filesystem>
 
+#define MyNewSceneManager (*Copium::NewSceneManager::Instance())
+
 namespace Copium {
 
 	CLASS_SYSTEM(NewSceneManager)
@@ -229,7 +231,6 @@ namespace Copium {
 		Scene* storageScene;	// Scene Pointer that acts as buffer for preview scene
 		rapidjson::Document document;
 		std::string sceneFilePath;
-		UndoRedo::CommandManager commandManager; //for undo and redo
 		Scene::SceneState currSceneState;
 	};
 
