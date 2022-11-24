@@ -157,6 +157,7 @@ namespace Copium
 		std::unordered_map<std::string, GameObject*> fieldGameObjReferences;
 		std::unordered_map<std::string, Component*> fieldComponentReferences;
 		static ScriptingSystem& sS;
+		bool isAddingGameObjectReference;
     };
 }
 

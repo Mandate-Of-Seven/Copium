@@ -285,10 +285,11 @@ void GameObject::inspectorView()
 
         for (Component* component : components)
         {
+            ImGui::PushID(index++);
+
             ImGui::Checkbox("##Active", &component->get_enabled());
             ImGui::SameLine();
             const std::string& componentName{ component->Name() };
-            ImGui::PushID(index++);
             if (ImGui::CollapsingHeader(componentName.c_str(), nodeFlags))
             {
                 if (ImGui::BeginDragDropSource())
