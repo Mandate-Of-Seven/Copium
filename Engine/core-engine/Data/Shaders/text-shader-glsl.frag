@@ -27,4 +27,6 @@ void main()
 	int index = int(vFontIndex);
 	vec4 sampled = vec4(1.0, 1.0, 1.0, texture(uFont, vTextureCoordinate).r);
 	fFragColor = vInterpColor * sampled;
+	if(fFragColor.a < 0.5)
+			discard;
 }
