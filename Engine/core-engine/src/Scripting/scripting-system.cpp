@@ -464,12 +464,12 @@ namespace Copium
 				void* param = &MESSAGE_CONTAINER::reflectCsGameObject.gameObjID;
 				mono_runtime_object_init(mInstance);
 				mono_runtime_invoke(mSetID, mInstance, &param, nullptr);
-				MonoMethod* mAttachComponentByID = mono_class_get_method_from_name(mGameObject, "AttachComponentByID", 1);
-				for (uint64_t componentID : MESSAGE_CONTAINER::reflectCsGameObject.componentIDs)
-				{
-					void* param = &componentID;
-					mono_runtime_invoke(mAttachComponentByID, mInstance,&param,nullptr);
-				}
+				//MonoMethod* mAttachComponentByID = mono_class_get_method_from_name(mGameObject, "AttachComponentByID", 1);
+				//for (uint64_t componentID : MESSAGE_CONTAINER::reflectCsGameObject.componentIDs)
+				//{
+				//	void* param = &componentID;
+				//	mono_runtime_invoke(mAttachComponentByID, mInstance,&param,nullptr);
+				//}
 				break;
 			}
 			case MESSAGE_TYPE::MT_SCENE_OPENED:
