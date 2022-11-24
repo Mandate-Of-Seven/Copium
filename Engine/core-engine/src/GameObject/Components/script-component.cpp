@@ -135,7 +135,18 @@ namespace Copium
 				getFieldValue(_name, buffer);
 				if (it->second.type == FieldType::Component)
 				{
-					ImGui::Button(it->second.typeName.c_str(), ImVec2(-FLT_MIN, 0.f));
+					auto componentRef = fieldComponentReferences.find(it->first);
+					if (componentRef == fieldComponentReferences.end())
+					{
+						std::string displayName = "None(" + it->second.typeName + ")";
+						ImGui::Button(displayName.c_str(), ImVec2(-FLT_MIN, 0.f));
+					}
+					else
+					{
+						std::string displayName = (*componentRef).second->gameObj.get_name() + "(" + it->second.typeName + ")";
+						ImGui::Button(displayName.c_str(), ImVec2(-FLT_MIN, 0.f));
+					}
+						
 					if (ImGui::BeginDragDropTarget())
 					{
 						//GameObject ID, Component ID
@@ -143,21 +154,36 @@ namespace Copium
 						if (payload)
 						{
 							Component* pComponent = (Component*)(*reinterpret_cast<void**>(payload->Data));
-
+							ComponentID componentID = pComponent->id;
+							GameObjectID gameObjID = pComponent->gameObj.id;
+							void* params[2] = { &componentID, &gameObjID };
+							MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindComponentByID"], mObject, params, nullptr);
+							fieldComponentReferences[_name] = pComponent;
+							PRINT(mono_class_get_name(mono_object_get_class(result)));
 						}
 						ImGui::EndDragDropTarget();
 					}
 				}
 				else if (it->second.type == FieldType::GameObject)
 				{
-					ImGui::Button("None(GameObject)", ImVec2(-FLT_MIN, 0.f));
+					auto gameObjRef = fieldGameObjReferences.find(it->first);
+					if (gameObjRef == fieldGameObjReferences.end())
+					{
+						ImGui::Button("None(GameObject)", ImVec2(-FLT_MIN, 0.f));
+					}
+					else
+					{
+						std::string displayName = (*gameObjRef).second->get_name() + "(GameObject)";
+						ImGui::Button(displayName.c_str(), ImVec2(-FLT_MIN, 0.f));
+					}
 					if (ImGui::BeginDragDropTarget())
 					{
 						//GameObject ID, Component ID
 						const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject");
 						if (payload)
 						{
-							GameObject* pComponent = (GameObject*)(*reinterpret_cast<void**>(payload->Data));
+							GameObject* pGameObj = (GameObject*)(*reinterpret_cast<void**>(payload->Data));
+							fieldGameObjReferences[_name] = pGameObj;
 						}
 						ImGui::EndDragDropTarget();
 					}

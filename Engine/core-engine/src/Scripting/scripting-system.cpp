@@ -31,7 +31,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "mono/metadata/tabledefs.h"
 
 #define SECONDS_TO_RECOMPILE 5
-
 namespace
 {
 	Copium::MessageSystem* messageSystem{ Copium::MessageSystem::Instance() };
@@ -111,6 +110,7 @@ namespace Copium
 		name{ _name }
 	{
 		mMethods["OnCreate"] = mono_class_get_method_from_name(mCopiumScript, "OnCreate", 1);
+		mMethods["FindComponentByID"] = mono_class_get_method_from_name(mCopiumScript, "FindComponentByID", 2);
 		void* methodIterator = nullptr;
 		while (MonoMethod* method = mono_class_get_methods(_mClass, &methodIterator))
 		{
@@ -154,6 +154,8 @@ namespace Copium
 					size_t offset = typeName.rfind(".");
 					if (offset == std::string::npos)
 						offset = 0;
+					else
+						++offset;
 					mFields[fieldName] = { fieldType ,typeName.substr(offset),field, flag };
 				}
 			}
@@ -498,7 +500,7 @@ namespace Copium
 				MonoObject* mGameObj = monoGameObjects[MESSAGE_CONTAINER::addOrDeleteComponent.gameObjID];
 				MonoMethod* mRemoveComponentByID = mono_class_get_method_from_name(mGameObject, "RemoveComponentByID", 1);
 				void* param = &MESSAGE_CONTAINER::addOrDeleteComponent.componentID;
-				mono_runtime_invoke(mRemoveComponentByID, mGameObj, &param, nullptr);
+				//mono_runtime_invoke(mRemoveComponentByID, mGameObj, &param, nullptr);
 				break;
 			}
 			case MESSAGE_TYPE::MT_ADD_COMPONENT:
@@ -506,9 +508,9 @@ namespace Copium
 				if (!mAssemblyImage)
 					return;
 				MonoObject* mGameObj = monoGameObjects[MESSAGE_CONTAINER::addOrDeleteComponent.gameObjID];
-				MonoMethod* mAttachComponentByID = mono_class_get_method_from_name(mGameObject, "AttachComponentByID", 1);
-				void* param = &MESSAGE_CONTAINER::addOrDeleteComponent.componentID;
-				mono_runtime_invoke(mAttachComponentByID, mGameObj, &param, nullptr);
+				//MonoMethod* mAttachComponentByID = mono_class_get_method_from_name(mGameObject, "AttachComponentByID", 1);
+				//void* param = &MESSAGE_CONTAINER::addOrDeleteComponent.componentID;
+				//mono_runtime_invoke(mAttachComponentByID, mGameObj, &param, nullptr);
 				break;
 			}
 		}

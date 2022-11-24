@@ -137,7 +137,7 @@ namespace Copium
 			ButtonState previousState{ButtonState::None};
 			glm::fvec4 previousColor;
 			float timer{0};
-			float fadeDuration{0.1};
+			float fadeDuration{0.1f};
 	};
 
 	class Text final : public Component, IUIComponent

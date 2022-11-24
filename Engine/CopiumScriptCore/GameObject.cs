@@ -43,8 +43,8 @@ namespace CopiumEngine
             }
         }
 
-        private static List<GameObject> gameObjects = new List<GameObject>(25000);
-        private List<Component> components = new List<Component>(5);
+        public static List<GameObject> gameObjects = new List<GameObject>(25000);
+        public static List<Component> components = new List<Component>(125000);
 
         public static GameObject FindByID(ulong _ID)
         {
@@ -88,17 +88,7 @@ namespace CopiumEngine
             return component;
         }
 
-        private void AttachComponentByID(ulong componentID)
-        {
-            foreach (Component component in components)
-            {
-                if (component.ID == componentID)
-                    return;
-            }
-            Component component1 = new Component();
-            component1.Initialize(this, componentID);
-            components.Add(component1);
-        }
+
 
         private void RemoveComponentByID(ulong componentID)
         {
