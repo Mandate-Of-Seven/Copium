@@ -89,11 +89,11 @@ namespace Copium
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-	UndoRedo::GameObjectCommand::GameObjectCommand(GameObject& _value,bool _deleting)
+	UndoRedo::GameObjectCommand::GameObjectCommand(GameObject* _value,bool _deleting)
 	{
 		std::cout << "gameobj cmd\n";
-		this->value = _value;
-		this->pointer = &_value;
+		this->value = MyGOF.clone(*_value,nullptr);
+		this->pointer = _value;
 		this->deleting = _deleting;
 	}
 
@@ -115,10 +115,10 @@ namespace Copium
 		if (isDeleting)
 		{
 			
-			if (!this->value.get_name().empty())
+			if (!value->get_name().empty())
 			{
 				std::cout << "Delete" << std::endl;
-				NewSceneManager::Instance()->get_gof().delete_gameobject(this->pointer);
+				MyGOF.destroy(this->pointer);
 				Command* temp = new GameObjectCommand(this->value, false);
 				stackPointer->push(temp);
 			}
@@ -129,11 +129,11 @@ namespace Copium
 		}
 		else
 		{
-			if (!this->value.get_name().empty())
+			if (!value->get_name().empty())
 			{
 				std::cout << "Create" << std::endl;
-				GameObject* newObj = NewSceneManager::Instance()->get_gof().build_gameobject(this->value);
-				Command* temp = new GameObjectCommand(*newObj, true);
+				GameObject* newObj = MyGOF.instantiate(*this->value);
+				Command* temp = new GameObjectCommand(newObj, true);
 				stackPointer->push(temp);
 			}
 			else
@@ -156,10 +156,10 @@ namespace Copium
 		if (isDeleting)
 		{
 
-			if (!this->value.get_name().empty())
+			if (!value->get_name().empty())
 			{
 				std::cout << "Delete" << std::endl;
-				NewSceneManager::Instance()->get_gof().delete_gameobject(this->pointer);
+				MyGOF.destroy(this->pointer);
 				Command* temp = new GameObjectCommand(this->value, false);
 				stackPointer->push(temp);
 			}
@@ -170,11 +170,11 @@ namespace Copium
 		}
 		else
 		{
-			if (!this->value.get_name().empty())
+			if (!value->get_name().empty())
 			{
 				std::cout << "Create" << std::endl;
-				GameObject* newObj = NewSceneManager::Instance()->get_gof().build_gameobject(this->value);
-				Command* temp = new GameObjectCommand(*newObj, true);
+				GameObject* newObj = MyGOF.instantiate(*this->value);
+				Command* temp = new GameObjectCommand(newObj, true);
 				stackPointer->push(temp);
 			}
 			else
@@ -186,10 +186,10 @@ namespace Copium
 
 	void UndoRedo::GameObjectCommand::printCommand()
 	{
-		if (!this->value.get_name().empty())
+		if (!value->get_name().empty())
 		{
-			std::cout << this->value.get_name() << " - ";
-			std::cout << this->value.get_ppid() << std::endl;
+			std::cout << value->get_name() << " - ";
+			std::cout << value->transform.parent->id << std::endl;
 		}
 	}
 

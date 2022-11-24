@@ -77,7 +77,7 @@ namespace Copium
 		Scene* currScene = sceneManager.get_current_scene();
 		if (!currScene)
 			return nullptr;
-		GameObject* go = new GameObject(_src.id);
+		GameObject* go = new GameObject(currScene->assignGameObjID());
 		if (!go)
 			return nullptr;
 
@@ -108,8 +108,45 @@ namespace Copium
 
 		//}
 		return go;
-
 	}
+
+	GameObject* GameObjectFactory::clone(GameObject& _src, Scene* scene)
+	{
+		GameObject* go = new GameObject(_src.id);
+		if (!go)
+			return nullptr;
+
+		*go = _src;
+
+		unsigned count{ 0 };
+		if (scene)
+			for (GameObject* g : scene->gameObjects)
+			{
+				if (g->get_name().find(_src.name) != std::string::npos)
+					++count;
+			}
+		if (count)
+			go->name += '(' + std::to_string(count) + ')';
+
+		if (scene)
+			scene->add_gameobject(go);
+
+		//for (std::list<GameObject*>::iterator iter = _src.mchildList().begin(); iter != _src.mchildList().end(); ++iter)
+		//{
+		//	if (!(*iter))
+		//		continue;
+		//	//std::cout << "adding a child\n";
+		//	GameObject* cgo = instantiate(*(*iter));
+		//	if (!cgo)
+		//		break;
+
+		//	cgo->set_parent(go);
+		//	go->attach_child(cgo);
+
+		//}
+		return go;
+	}
+
 	GameObject* GameObjectFactory::instantiate(rapidjson::Value& _value) 
 	{
 		Scene* currScene = sceneManager.get_current_scene();

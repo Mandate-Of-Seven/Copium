@@ -143,18 +143,6 @@ namespace Copium {
 		/*!
 		*
 		\brief
-			Get reference to the GOF in the SM
-
-		\return
-			reference to the GOF
-		*/
-		/*******************************************************************************/
-		GameObjectFactory& get_gof();
-
-		/*******************************************************************************
-		/*!
-		*
-		\brief
 			Get pointer to the current scene
 
 		\return
@@ -226,7 +214,6 @@ namespace Copium {
 		GameObject* selectedGameObject;
 
 	private:
-		GameObjectFactory* gof;
 		Scene* currentScene;	// Pointer to the current scene
 		Scene* storageScene;	// Scene Pointer that acts as buffer for preview scene
 		rapidjson::Document document;

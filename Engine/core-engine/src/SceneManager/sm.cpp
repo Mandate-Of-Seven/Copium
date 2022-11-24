@@ -56,13 +56,8 @@ namespace Copium {
 		return nullptr;
 	}
 
-	NewSceneManager::NewSceneManager() : gof{nullptr}, currentScene{nullptr}, selectedGameObject{nullptr}, storageScene{nullptr}, currSceneState{Scene::SceneState::edit}
+	NewSceneManager::NewSceneManager() : currentScene{nullptr}, selectedGameObject{nullptr}, storageScene{nullptr}, currSceneState{Scene::SceneState::edit}
 	{
-		gof = new GameObjectFactory();
-		if (!gof)
-		{
-			std::cout << "Error allocating memory for GameObjectFactory\n";
-		}	
 	}
 
 	NewSceneManager::~NewSceneManager()
@@ -79,7 +74,7 @@ namespace Copium {
 
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		storageScene = nullptr;
-		gof->register_archetypes("Data/Archetypes");
+		MyGOF.register_archetypes("Data/Archetypes");
 		load_scene(prefix + "Demo.scene");
 
 
@@ -92,14 +87,6 @@ namespace Copium {
 	void NewSceneManager::exit()
 	{
 		selectedGameObject = nullptr;
-
-		if (gof)
-		{
-			gof->clear_archetypes();
-			delete gof;
-			gof = nullptr;
-		}
-
 
 		if (currentScene)
 		{
@@ -182,7 +169,7 @@ namespace Copium {
 			for (rapidjson::Value::ValueIterator iter = _gameObjArr.Begin(); iter != _gameObjArr.End(); ++iter)
 			{
 				GameObject* tmpGO = nullptr;
-				tmpGO = gof->instantiate(*iter);
+				tmpGO = MyGOF.instantiate(*iter);
 			}
 		}
 		
@@ -224,10 +211,6 @@ namespace Copium {
 
 	}
 
-	GameObjectFactory& NewSceneManager::get_gof()
-	{
-		return *gof;
-	}
 	Scene* NewSceneManager::get_current_scene()
 	{
 		return currentScene;
@@ -268,7 +251,7 @@ namespace Copium {
 			GameObject* rhs = storageScene->gameObjects[i];
 			if (rhs && !rhs->transform.hasParent())
 			{
-				gof->instantiate(*rhs);
+				MyGOF.instantiate(*rhs);
 			}
 		}
 		selectedGameObject = nullptr;

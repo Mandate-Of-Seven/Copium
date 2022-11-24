@@ -18,13 +18,16 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #ifndef GAME_OBJECT_FACTORY_H
 #define GAME_OBJECT_FACTORY_H
 #include "CopiumCore/system-interface.h"
-#include "GameObject/game-object.h"
-#include "SceneManager/scene.h"
+#include <CopiumCore/system-interface.h>
 
 #include <rapidjson/document.h>
 #include <rapidjson/istreamwrapper.h>
 
+#define MyGOF (*Copium::GameObjectFactory::Instance())
+
 namespace Copium {
+	class GameObject;
+	class Scene;
 
 	class GameObjectCreator {
 
@@ -36,7 +39,8 @@ namespace Copium {
 	};
 	
 
-	class GameObjectFactory {
+	class GameObjectFactory : public Singleton<GameObjectFactory>
+	{
 		
 	public:
 		GameObjectFactory();
@@ -58,7 +62,7 @@ namespace Copium {
 		/*!
 		*
 		\brief
-			Build a game object that is a copy of specified game object.
+			ASSIGNS new ID and builds a game object that is a copy of specified game object.
 			Note: if the specified game object has a family tree, the whole tree is duplicated.
 
 		\return
@@ -68,6 +72,20 @@ namespace Copium {
 		GameObject* instantiate(GameObject& _src);
 		// Set up for future
 		//GameObject* instantiate(prefab);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			DOES NOT ASSIGN new ID and build a game object that is a copy of specified game object.
+			Adds the created gameObject into given scene.
+			Note: if the specified game object has a family tree, the whole tree is duplicated.
+
+		\return
+			pointer to the new game object (head of the tree)
+		*/
+		/*******************************************************************************/
+		GameObject* clone(GameObject& _src, Scene* scene);
 
 		/*******************************************************************************
 		/*!

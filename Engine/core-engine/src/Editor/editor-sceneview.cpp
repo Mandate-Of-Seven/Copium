@@ -83,18 +83,18 @@ namespace Copium
 			if (scene != nullptr)
 			{
 				std::vector<GameObject*> pGameObjs; // Possible selectable gameobjects
-				for (GameObject* gameObject : scene->get_gameobjectvector())
+				for (GameObject* gameObject : scene->gameObjects)
 				{
 					Transform& t = gameObject->transform;
 					glm::vec2 mousePosition = glm::vec3(camera.get_ndc(), 0.f);
-					glm::vec2 objPosition = glm::vec2(t.glmPosition().x, t.glmPosition().y);
+					glm::vec2 objPosition = glm::vec2(t.position.x, t.position.y);
 					// Not Within bounds
 					if (glm::distance(objPosition, mousePosition)
 						> glm::length(camera.get_dimension()))
 						continue;
 
-					glm::vec2 min = glm::vec2(objPosition.x - t.glmScale().x * 0.5f, objPosition.y - t.glmScale().y * 0.5f);
-					glm::vec2 max = glm::vec2(objPosition.x + t.glmScale().x * 0.5f, objPosition.y + t.glmScale().y * 0.5f);
+					glm::vec2 min = glm::vec2(objPosition.x - t.scale.x * 0.5f, objPosition.y - t.scale.y * 0.5f);
+					glm::vec2 max = glm::vec2(objPosition.x + t.scale.x * 0.5f, objPosition.y + t.scale.y * 0.5f);
 
 					// Check AABB
 					if (mousePosition.x > min.x && mousePosition.x < max.x)
@@ -144,9 +144,9 @@ namespace Copium
 							for (GameObject* gameObject : pGameObjs)
 							{
 								// Select closest gameobject
-								float depth = gameObject->transform.glmPosition().z;
+								float depth = gameObject->transform.position.z;
 
-								if (depth > selectObject->transform.glmPosition().z)
+								if (depth > selectObject->transform.position.z)
 								{
 									selectObject = gameObject;
 								}

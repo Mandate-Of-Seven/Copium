@@ -241,7 +241,6 @@ bool GameObject::deserialize(rapidjson::Value& _value) {
     return true;
 }
 
-
 void GameObject::handleMessage(MESSAGE_TYPE mType)
 {
     //MT_SCRIPTING_UPDATED

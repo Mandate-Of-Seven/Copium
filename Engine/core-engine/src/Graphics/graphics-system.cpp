@@ -84,7 +84,7 @@ namespace Copium
 
 		// Bean: Checking for archetypes, to be removed once we found a better implementation
 		loaded = true;
-		cameras.pop_front();
+		//cameras.pop_front();
 	}
 
 	void GraphicsSystem::update()
@@ -147,7 +147,7 @@ namespace Copium
 			{
 				for (size_t i = 0; i < 10; i++)
 				{
-					GameObject* go = sm->get_gof().instantiate();
+					GameObject* go = MyGOF.instantiate();
 					go->addComponent(ComponentType::SpriteRenderer);
 					//go->addComponent(ComponentType::Rigidbody);
 
@@ -199,7 +199,7 @@ namespace Copium
 			cameras.clear();
 			NewSceneManager* sm = NewSceneManager::Instance();
 			Scene* scene = sm->get_current_scene();
-			for (GameObject* gameObject : scene->get_gameobjectvector())
+			for (GameObject* gameObject : scene->gameObjects)
 			{
 				if (gameObject->hasComponent(ComponentType::Camera))
 				{

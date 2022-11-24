@@ -142,6 +142,6 @@ namespace Copium
 			ImGui::EndPopup();
 		}
 
-		focalPoint = gameObject->transform.glmPosition();
+		focalPoint = gameObject->transform.position;
 	}
 } 

@@ -100,7 +100,7 @@ namespace Copium
 				/**************************************************************************/
 				//GameObjectCommand(GameObject& _value);
 
-				GameObjectCommand(GameObject& _value,bool _deleting);
+				GameObjectCommand(GameObject* _value,bool _deleting);
 
 				/***************************************************************************/
 				/*!
@@ -142,7 +142,7 @@ namespace Copium
 
 				//GameObject* pointer;//pointer to what was changed
 				GameObject* pointer;//only use if deleting
-				GameObject value;//original value
+				GameObject* value;//original value
 				bool deleting;// should it add or delete a gameobject
 		};
 

@@ -283,7 +283,7 @@ namespace Copium
 		if (!font)
 			return;
 		Transform& trans{ gameObj.transform };
-		Math::Vec2 pos{ trans.position };
+		Math::Vec3 pos{ trans.position };
 		float scale = trans.scale.x;
 		if (scale > trans.scale.y)
 			scale = trans.scale.y;
