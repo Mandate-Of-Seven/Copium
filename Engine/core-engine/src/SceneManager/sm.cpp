@@ -75,7 +75,7 @@ namespace Copium {
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		storageScene = nullptr;
 		MyGOF.register_archetypes("Data/Archetypes");
-		load_scene(prefix + "Demo.scene");
+		//load_scene(prefix + "Demo.scene");
 
 
 		//std::cout << "No. of GameObjects in scene:" << currentScene->get_gameobjcount() << std::endl;
