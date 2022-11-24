@@ -25,11 +25,11 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Physics/physics-system.h"
 #include "Graphics/graphics-system.h"
 #include "Utilities/thread-system.h"
-#include "Debugging/frame-rate-controller.h"
 #include "SceneManager/sm.h"
 #include "Debugging/logging-system.h"
 #include "Audio/sound-system.h"
 #include "Scripting/logic-system.h"
+#include <Debugging/frame-rate-controller.h>
 //#include "string.h"
 
 namespace Copium
@@ -37,7 +37,7 @@ namespace Copium
 	CLASS_SYSTEM(CopiumCore) , public IReceiver
 	{
 	public:
-		CopiumCore() : frc{ nullptr } {}
+		CopiumCore() {}
 
 		/**************************************************************************/
 		/*!
@@ -74,11 +74,6 @@ namespace Copium
 			pMessageSystem->subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
 			pMessageSystem->subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
 			pMessageSystem->subscribe(MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW, this);
-
-			frc = new FrameRateController;
-
-
-
 		}
 
 		/**************************************************************************/
@@ -91,7 +86,6 @@ namespace Copium
 		void update()
 		{
 			double totalUpdateTime = 0;
-			frc->update();
 			for (ISystem* pSystem : systems)
 			{
 				if (pSystem->systemFlags & FLAG_RUN_ON_PLAY && inPlayMode)
@@ -101,7 +95,7 @@ namespace Copium
 					pSystem->updateTime = glfwGetTime() - startTime;
 					totalUpdateTime += pSystem->updateTime;
 				}
-				else if (pSystem->systemFlags & FLAG_RUN_ON_EDITOR &&!inPlayMode)
+				else if (pSystem->systemFlags & FLAG_RUN_ON_EDITOR && !inPlayMode)
 				{
 					double startTime = glfwGetTime();
 					pSystem->update();
@@ -134,10 +128,9 @@ namespace Copium
 				}
 				else
 				{
-					performanceCounter += (float)Copium::WindowsSystem::Instance()->get_delta_time();
+					performanceCounter += (float)MyFrameRateController.getDt();
 				}
 			}
-			frc->end();
 		}
 
 		/**************************************************************************/
@@ -153,9 +146,6 @@ namespace Copium
 			{
 				systems[i]->exit();
 			}
-
-			delete frc;
-			frc = nullptr;
 		}
 
 		void handleMessage(MESSAGE_TYPE mType)
@@ -184,7 +174,6 @@ namespace Copium
 		bool get_inplaymode() { return inPlayMode; }
 	private:
 		std::vector<ISystem*> systems;
-		FrameRateController* frc;
 		float performanceCounter = 0;
 		bool displayPerformance = false;
 		bool inPlayMode = false;

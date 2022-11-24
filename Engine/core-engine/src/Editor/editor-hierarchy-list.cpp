@@ -10,7 +10,7 @@
 \brief
 	Definition of functions that handle initialization and update of Hierarchy List
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 #include "Editor/editor-hierarchy-list.h"
@@ -23,6 +23,7 @@ namespace Window::Hierarchy
 	Copium::Scene * currentScene = nullptr;
 	bool sceneSelected;
 	Copium::GameObjectID selectedID;
+
 
 
 	void init()
@@ -107,6 +108,14 @@ namespace Window::Hierarchy
 						Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
 					}
 				}				
+				if (ImGui::MenuItem("Create a Child GameObject"))
+				{
+					if (nsm->get_selected_gameobject())
+					{
+						nsm->get_gof().create_child(*nsm->get_selected_gameobject());
+					}
+				}
+
 				if (ImGui::BeginMenu("Add Archetype"))
 				{
 					if (!currentScene)
@@ -153,10 +162,22 @@ namespace Window::Hierarchy
 			if (!currentScene->get_gameobjcount())
 				rootFlags |= ImGuiTreeNodeFlags_Leaf;
 
-			
-			size_t offset = currentScene->get_filename().find_last_of("/\\");
-			size_t endOffset = currentScene->get_filename().find(".scene")-1;
-			std::string sceneName = currentScene->get_filename().substr(offset + 1, endOffset-offset);
+
+			std::string sceneName;
+			if (currentScene->get_filename().empty())
+			{
+				sceneName = currentScene->get_name();
+			}
+			else
+			{
+				size_t offset = currentScene->get_filename().find_last_of("/\\");
+				size_t endOffset = currentScene->get_filename().find(".scene")-1;
+				sceneName = currentScene->get_filename().substr(offset + 1, endOffset-offset);
+				if (currentScene->get_state() == Copium::Scene::SceneState::play)
+				{
+					sceneName += "\t PREVIEWING";
+				}
+			}
 
 			// Display scene name as the rootiest node
 			if (ImGui::TreeNodeEx(sceneName.c_str(), rootFlags))
@@ -165,7 +186,8 @@ namespace Window::Hierarchy
 				bool isSelected = false;
 				for (size_t i{ 0 }; i < roots.size(); ++i)
 				{
-					isSelected = display_gameobject_advanced(*roots[i], selectedID);
+					display_gameobject_advanced(*(roots[i]), selectedID);
+					
 					if (isSelected)
 						sceneSelected = false;
 				}	
@@ -228,6 +250,7 @@ namespace Window::Hierarchy
 
 		if (!ImGui::TreeNodeEx(_go.get_name().c_str(), baseFlags))
 			return false;
+
 
 
 		if (ImGui::IsItemClicked())

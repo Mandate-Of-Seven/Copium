@@ -1,12 +1,17 @@
 {
-    "Name": "Demo",
+    "Name": "Demo\tPREVIEW",
+    "Unused GIDs": [
+        7
+    ],
+    "Unused CIDs": [],
     "GameObjects": [
         {
-            "ID": 21,
+            "ID": 1,
             "Name": "PlayerTrain",
             "PID": 0,
             "Components": [
                 {
+                    "ID": 1,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -25,8 +30,9 @@
                     }
                 },
                 {
+                    "ID": 2,
                     "Type": "SpriteRenderer",
-                    "Sprite ID": 20,
+                    "Sprite ID": 0,
                     "Sprite Name": "PlayerHead.png",
                     "Color": {
                         "X": 1.0,
@@ -36,6 +42,7 @@
                     }
                 },
                 {
+                    "ID": 3,
                     "Type": "Rigidbody2D",
                     "Grav": false,
                     "Active": true
@@ -52,25 +59,17 @@
                             "Y": 0.5
                         }
                     }
-                },
-                {
-                    "Type": "ScriptComponent",
-                    "Name": "CombatMovement",
-                    "hello": {
-                        "X": 0.0,
-                        "Y": 5.0,
-                        "Z": 0.0
-                    }
                 }
             ],
             "Children": []
         },
         {
-            "ID": 22,
+            "ID": 2,
             "Name": "EnemyTrain",
             "PID": 0,
             "Components": [
                 {
+                    "ID": 5,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -89,8 +88,9 @@
                     }
                 },
                 {
+                    "ID": 6,
                     "Type": "SpriteRenderer",
-                    "Sprite ID": 16,
+                    "Sprite ID": 0,
                     "Sprite Name": "EnemyHead.png",
                     "Color": {
                         "X": 1.0,
@@ -103,11 +103,12 @@
             "Children": []
         },
         {
-            "ID": 23,
+            "ID": 3,
             "Name": "Panel",
             "PID": 0,
             "Components": [
                 {
+                    "ID": 7,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -127,6 +128,7 @@
                 },
                 {
                     "Type": "ImageComponent",
+                    "ID": 8,
                     "H_Align": 1,
                     "V_Align": 1,
                     "Sprite ID": 0,
@@ -139,6 +141,7 @@
                     }
                 },
                 {
+                    "ID": 9,
                     "Type": "AudioSource",
                     "Alias": "zap"
                 }
@@ -146,15 +149,16 @@
             "Children": []
         },
         {
-            "ID": 24,
+            "ID": 4,
             "Name": "PauseMenu",
             "PID": 0,
             "Components": [
                 {
+                    "ID": 10,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
-                        "Y": 2.0,
+                        "Y": 1.75,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -170,25 +174,27 @@
                 },
                 {
                     "Type": "Text",
+                    "ID": 11,
                     "FontName": "corbel",
                     "H_Align": 1,
                     "V_Align": 1,
                     "Content": "Paused",
-                    "Font Size": 0.75,
+                    "Font Size": 0.5,
                     "r": 1.0,
                     "g": 0.9998999834060669,
                     "b": 0.9998999834060669,
-                    "a": 255.0
+                    "a": 1.0
                 }
             ],
             "Children": []
         },
         {
-            "ID": 25,
+            "ID": 5,
             "Name": "ResumeButton",
             "PID": 0,
             "Components": [
                 {
+                    "ID": 12,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -208,6 +214,7 @@
                 },
                 {
                     "Type": "ImageComponent",
+                    "ID": 13,
                     "H_Align": 1,
                     "V_Align": 1,
                     "Sprite ID": 0,
@@ -221,6 +228,7 @@
                 },
                 {
                     "Type": "Text",
+                    "ID": 14,
                     "FontName": "corbel",
                     "H_Align": 1,
                     "V_Align": 1,
@@ -229,20 +237,18 @@
                     "r": 0.9998999834060669,
                     "g": 0.9999713897705078,
                     "b": 1.0,
-                    "a": 255.0
-                },
-                {
-                    "Type": "ButtonComponent"
+                    "a": 1.0
                 }
             ],
             "Children": []
         },
         {
-            "ID": 26,
+            "ID": 6,
             "Name": "QuitButton",
             "PID": 0,
             "Components": [
                 {
+                    "ID": 15,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -262,6 +268,7 @@
                 },
                 {
                     "Type": "ImageComponent",
+                    "ID": 16,
                     "H_Align": 1,
                     "V_Align": 1,
                     "Sprite ID": 0,
@@ -275,6 +282,7 @@
                 },
                 {
                     "Type": "Text",
+                    "ID": 17,
                     "FontName": "corbel",
                     "H_Align": 1,
                     "V_Align": 1,
@@ -283,10 +291,7 @@
                     "r": 0.9998999834060669,
                     "g": 0.9999713897705078,
                     "b": 1.0,
-                    "a": 255.0
-                },
-                {
-                    "Type": "ButtonComponent"
+                    "a": 1.0
                 }
             ],
             "Children": []

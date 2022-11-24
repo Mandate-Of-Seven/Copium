@@ -44,9 +44,10 @@ private:
     std::list<GameObject*> children;    //List of pointers to this gameObject's children
 
 public:
-    const GameObjectID id;                    //Global ID for gameObjects
+    GameObjectID id;                    //Global ID for gameObjects
     bool active;
     Transform transform;
+
 
     /***************************************************************************/
     /*!
@@ -79,6 +80,8 @@ public:
 
     GameObject& operator=(const GameObject& _src);
 
+    ComponentID assign_id();
+
     /*******************************************************************************
     /*!
     *
@@ -96,6 +99,10 @@ public:
         static_assert(std::is_base_of<Component, T>::value);
         T* component = new T(*this);
         components.push_back(component);
+
+        component->id = assign_id();
+
+
         return *component;
     }
 

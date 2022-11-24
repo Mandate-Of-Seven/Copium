@@ -87,7 +87,7 @@ int main()
     copiumCore.init();
 
     Copium::SceneManager SM;
-    Copium::FrameRateController frc(100.0);
+    MyFrameRateController.init(100);
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
     glfwSetWindowCloseCallback(windowsSystem->get_window(), quitEngine);
@@ -119,7 +119,7 @@ int main()
 
                 while (SM.current == SM.next) 
                 {
-                    frc.start();
+                    MyFrameRateController.start();
 
                     SM.update_scene();         //UPDATE STATE
                     SM.draw_scene();           //DRAW STATE
@@ -130,7 +130,7 @@ int main()
                         SM.change_scene(gsQuit);
 
                     draw();
-                    frc.end();
+                    MyFrameRateController.end();
                 }
 
                 SM.free_scene();                 //FREE STATE
@@ -261,6 +261,8 @@ bool load_config(std::string& _filename, GLint& _w, GLint& _h)
     }
     std::cout << "Loading from config...\n" << "Window Width:" << _w << '\n'
         << "Window Height:" << _h << std::endl;
+
     return true;
 }
+
 

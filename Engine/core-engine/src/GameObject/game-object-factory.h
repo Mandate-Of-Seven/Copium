@@ -12,7 +12,7 @@
 	The GameObjectFactory is responsible for the creation, management and destruction of game objects.
 	Note: The GameObjectFactory will also place the created gameobjects inside the current scene.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #ifndef GAME_OBJECT_FACTORY_H
@@ -215,7 +215,10 @@ namespace Copium {
 		/*******************************************************************************/
 		std::map<std::string, GameObject*>& get_archetype_map();
 
-		
+		//M3
+		GameObject* create_child(GameObject& _parent);
+		void delete_component(GameObject* _go);
+
 
 	private:
 		std::map<std::string, GameObject*> gameObjectCreators;

@@ -30,6 +30,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <Messaging/message-system.h>
 
 namespace Copium {
+
+	std::string prefix("../PackedTracks/Assets/Scenes/");
+
 	GameObject* NewSceneManager::findGameObjByID(GameObjectID _ID)
 	{
 		for (GameObject* pGameObj : currentScene->get_gameobjectvector())
@@ -53,7 +56,7 @@ namespace Copium {
 		return nullptr;
 	}
 
-	NewSceneManager::NewSceneManager() : gof{nullptr}, currentScene{nullptr}, selectedGameObject{nullptr}, storageScene{nullptr}
+	NewSceneManager::NewSceneManager() : gof{nullptr}, currentScene{nullptr}, selectedGameObject{nullptr}, storageScene{nullptr}, currSceneState{Scene::SceneState::edit}
 	{
 		gof = new GameObjectFactory();
 		if (!gof)
@@ -77,6 +80,7 @@ namespace Copium {
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		storageScene = nullptr;
 		gof->register_archetypes("Data/Archetypes");
+		load_scene(prefix + "Demo.scene");
 
 
 		//std::cout << "No. of GameObjects in scene:" << currentScene->get_gameobjcount() << std::endl;
@@ -117,7 +121,7 @@ namespace Copium {
 
 		if (_filepath.find(".scene") == std::string::npos)
 		{
-			Window::EditorConsole::editorLog.add_logEntry("file selected is not a Copium Scene");
+			Window::EditorConsole::editorLog.add_logEntry("file selected is not a Copium Scene!");
 			return false;
 		}
 		
@@ -128,8 +132,6 @@ namespace Copium {
 
 		sceneFilePath = _filepath;
 
-		//gof->link_to_scene(currentScene);
-			
 		std::ifstream ifs(_filepath);
 		if (!ifs)
 			return false;
@@ -147,6 +149,31 @@ namespace Copium {
 		if (document.HasMember("Name"))
 		{
 			currentScene->set_name(document["Name"].GetString());
+		}
+
+		if (document.HasMember("Unused GIDs"))
+		{
+			std::cout << "Adding unused gids: ";
+			rapidjson::Value& _arr = document["Unused GIDs"].GetArray();
+			for (rapidjson::Value::ValueIterator iter = _arr.Begin(); iter != _arr.End(); ++iter)
+			{
+				GameObjectID id = (*iter).GetUint64();
+				currentScene->add_unused_gid(id);
+				std::cout << id << ' ';
+			}
+			std::cout << std::endl;
+		}
+		if (document.HasMember("Unused CIDs"))
+		{
+			rapidjson::Value& arr = document["Unused CIDs"].GetArray();
+			for (rapidjson::Value::ValueIterator iter = arr.Begin(); iter != arr.End(); ++iter)
+			{
+				ComponentID id = (*iter).GetUint64();
+				currentScene->add_unused_cid(id);
+				std::cout << id << ' ';
+			}
+			std::cout << std::endl;
+
 		}
 
 		if (document.HasMember("GameObjects"))
@@ -174,13 +201,8 @@ namespace Copium {
 			return result;
 		}
 
-
-		// offer the option to save before exiting
-
-
 		// Clear game objects in scene
 		// Deserialize from new file and overwrite other scene data
-		
 		if (std::filesystem::exists(_newfilepath))
 		{
 			std::cout << "file exists\n";
@@ -206,7 +228,6 @@ namespace Copium {
 	{
 		return *gof;
 	}
-
 	Scene* NewSceneManager::get_current_scene()
 	{
 		return currentScene;
@@ -240,8 +261,6 @@ namespace Copium {
 			return false;
 		}
 
-		currentScene->set_name(storageScene->get_name() + "\tPREVIEW");
-
 		// Copy game object data
 		for (size_t i{ 0 }; i < storageScene->get_gameobjcount(); ++i)
 		{
@@ -253,6 +272,10 @@ namespace Copium {
 			}
 		}
 		selectedGameObject = nullptr;
+
+		currSceneState = Scene::SceneState::play;
+		currentScene->set_state(Scene::SceneState::play);
+
 		return true;
 	}
 	bool NewSceneManager::endPreview()
@@ -272,6 +295,10 @@ namespace Copium {
 		currentScene = storageScene;
 		storageScene = nullptr;
 		selectedGameObject = nullptr;
+
+		currSceneState = Scene::SceneState::edit;
+		currentScene->set_state(Scene::SceneState::edit);
+
 		return true;
 
 	}
@@ -297,9 +324,16 @@ namespace Copium {
 	{
 		if(!currentScene)
 		{
-			PRINT("There is no scene to save...\n");
+			Window::EditorConsole::editorLog.add_logEntry("No Scene loaded, cannot perform save!");
 			return false;
 		}
+
+		if (currSceneState != Scene::SceneState::edit)
+		{
+			Window::EditorConsole::editorLog.add_logEntry("In edit mode, cannot perform save!");
+			return false;
+		}
+
 		std::string fp(_filepath);
 		if (fp.find(".scene") == std::string::npos)
 		{
@@ -312,6 +346,21 @@ namespace Copium {
 		rapidjson::Value name;
 		create_rapidjson_string(doc, name,  currentScene->get_name());
 		doc.AddMember("Name", name, doc.GetAllocator());
+
+		// Serialize UGIDse
+		rapidjson::Value ugids(rapidjson::kArrayType);
+		for (GameObjectID id : currentScene->get_unusedgids())
+		{
+			ugids.PushBack(id, doc.GetAllocator());
+		}
+		doc.AddMember("Unused GIDs", ugids, doc.GetAllocator());
+		// Serialize UCIDs
+		rapidjson::Value ucids(rapidjson::kArrayType);
+		for (ComponentID id : currentScene->get_unusedcids())
+		{
+			ucids.PushBack(id, doc.GetAllocator());
+		}
+		doc.AddMember("Unused CIDs", ucids, doc.GetAllocator());
 
 		std::vector<GameObject*> roots;
 		for (size_t i{ 0 }; i < currentScene->get_gameobjcount(); ++i) {
@@ -371,4 +420,5 @@ namespace Copium {
 
 		return true;
 	}
+	Scene* NewSceneManager::get_storage_scene() { return storageScene; }
 }

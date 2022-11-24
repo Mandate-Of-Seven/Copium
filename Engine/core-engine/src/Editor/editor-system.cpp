@@ -242,7 +242,11 @@ namespace Copium
 
 					if (ImGui::MenuItem("Exit"))
 					{
-
+						Scene* s = NewSceneManager::Instance()->get_storage_scene();
+						if (s)
+						{
+							NewSceneManager::Instance()->endPreview();
+						}
 						//exit game engine
 						change_enginestate(EngineState::esQuit);
 						std::cout << "Copium has been huffed, Engine shutting down" << std::endl;

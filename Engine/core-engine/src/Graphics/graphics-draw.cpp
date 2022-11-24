@@ -11,7 +11,7 @@
 	This file holds the definitions of functions which emcompasses the drawing aspect
 	of the graphic's system.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 
@@ -125,6 +125,9 @@ namespace Copium
 		{
 			for (GameObject* gameObject : scene->get_gameobjectvector())
 			{
+				if (!gameObject->active)
+					continue;
+
 				for (Component* component : gameObject->getComponents<SpriteRenderer>())
 				{
 					if (!component->Enabled())
@@ -149,7 +152,18 @@ namespace Copium
 						sr.set_texture(nullptr);
 					}
 
-					renderer.draw_quad(t.glmPosition(), size, rotation, sr);
+					if (gameObject->has_parent())
+					{
+						Transform& t1 = gameObject->get_parent()->transform;
+						renderer->draw_quad(t.glmPosition() + t1.glmPosition(), size, rotation, sr);
+
+					}
+					else 
+					{
+						renderer->draw_quad(t.glmPosition(), size, rotation, sr);
+
+					}
+
 				}
 				for (Component* component : gameObject->getComponents<ImageComponent>())
 				{
@@ -242,7 +256,7 @@ namespace Copium
 					renderer.draw_line(pos3_1, pos0_1, color);
 				}
 
-				for (Component* component : gameObject->getComponents<ButtonComponent>())
+				for (Component* component : gameObject->getComponents<Button>())
 				{
 					Transform& t = gameObject->transform;
 
@@ -341,7 +355,7 @@ namespace Copium
 					renderer.draw_line(pos3_1, pos0_1, color);
 				}
 
-				for (Component* component : gameObject->getComponents<ButtonComponent>())
+				for (Component* component : gameObject->getComponents<Button>())
 				{
 					Transform& t = gameObject->transform;
 

@@ -32,13 +32,10 @@ namespace Copium
 {
 	GameObjectFactory::GameObjectFactory()
 	{
-		std::cout << "GOF ctor\n";
-		//register_archetypes("Data/Archetypes");
 
 	}
 	GameObjectFactory::~GameObjectFactory()
 	{
-		//clear_archetypes();
 	}
 
 	GameObject* GameObjectFactory::build_gameobject()
@@ -72,11 +69,10 @@ namespace Copium
 
 
 		currScene->add_gameobject(tmp);
+		tmp->id = currScene->assignGameObjID();
 
 		return tmp;
 	}
-
-
 	GameObject* GameObjectFactory::build_gameobject(GameObject& _src)
 	{
 		Scene* currScene = sceneManager.get_current_scene();
@@ -88,8 +84,14 @@ namespace Copium
 
 		*go = _src;
 
-		std::cout << "building obj\n";
-		
+		unsigned count{ 0 };
+		for (GameObject* g : currScene->get_gameobjectvector())
+		{
+			if (g->get_name().find("New GameObject") != std::string::npos)
+				++count;
+		}
+		if(count)
+			go->set_name(go->get_name() + '(' + std::to_string(count) + ')');
 
 		currScene->add_gameobject(go);
 
@@ -106,10 +108,10 @@ namespace Copium
 		//	go->attach_child(cgo);
 
 		//}
+		go->id = currScene->assignGameObjID();
 		return go;
 
 	}
-
 	GameObject* GameObjectFactory::build_gameobject(rapidjson::Value& _value) {
 
 		Scene* currScene = sceneManager.get_current_scene();
@@ -124,6 +126,8 @@ namespace Copium
 			delete go;
 			return nullptr;
 		}
+		//go->id = currScene->assignGameObjID();
+
 
 		std::cout << "Object name: " << go->get_name() << std::endl;
 
@@ -192,9 +196,21 @@ namespace Copium
 			GameObjectID id{ 0 };
 			(*iter)->set_parent(nullptr);
 			(*iter)->set_ppid(id);
+			delete_gameobject(*iter);
 		}
 
 		std::cout << "Deleting " << _go->get_name() << std::endl;
+		
+		if (_go->has_parent())
+		{
+			GameObject* p = _go->get_parent();
+			p->deattach_child(_go);
+
+		}
+
+		// Add the game object's ID to unused pile
+		currScene->add_unused_gid(_go->id);
+
 
 		//Iterate through currentScene vector and destroy
 		for (size_t i{ 0 }; i < currScene->get_gameobjectvector().size(); ++i)
@@ -212,7 +228,6 @@ namespace Copium
 			}
 		}
 
-		//std::cout << "Number of Game Objects left: " << currScene->get_gameobjcount() << std::endl;
 
 		return true;
 
@@ -229,8 +244,6 @@ namespace Copium
 			delete go;
 			return nullptr;
 		}
-
-		//std::cout << "Object name: " << go->get_name() << std::endl;
 
 		if (_value.HasMember("Components"))
 		{
@@ -315,9 +328,17 @@ namespace Copium
 	bool GameObjectFactory::add_component(const std::string& _key, GameObject* _go)
 	{
 		
+		std::cout << "adding component\n";
 		Component* tmp = _go->addComponent(Component::nameToType(_key));
+		Scene* currScene = sceneManager.get_current_scene();
+		if (currScene)
+		{
+			currScene->assignComponentID();
+			currScene->incr_component_count();
+		}
 		return tmp != nullptr;
 	}
+	
 
 
 	std::map<std::string, GameObject*>& GameObjectFactory::get_archetype_map()
@@ -325,5 +346,29 @@ namespace Copium
 		return gameObjectCreators;
 	}
 
+
+	// M3
+	GameObject* GameObjectFactory::create_child(GameObject& _parent)
+	{
+		Scene* currScene = sceneManager.get_current_scene();
+		GameObject* newChild = new GameObject();
+		for (std::vector<GameObject*>::iterator iter = currScene->get_gameobjectvector().begin(); iter != currScene->get_gameobjectvector().end(); ++iter)
+		{
+			if ((*iter)->id == _parent.id)
+			{
+				currScene->get_gameobjectvector().insert(iter + 1, newChild);
+				_parent.attach_child(newChild);
+
+
+				return newChild;
+			}
+		}
+
+		return nullptr;
+
+	}
+	void GameObjectFactory::delete_component(GameObject* _go)
+	{
+	}
 
 }

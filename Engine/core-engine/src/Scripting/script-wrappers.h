@@ -20,6 +20,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <Scripting/scripting-system.h>
 #include <Messaging/message-system.h>
 #include <Windows/windows-system.h>
+#include <Debugging/frame-rate-controller.h>
 #include <SceneManager/state-manager.h>
 #include <cstring>
 
@@ -150,7 +151,7 @@ namespace Copium
 
 	static float GetDeltaTime()
 	{
-		return WindowsSystem::Instance()->get_delta_time();
+		return MyFrameRateController.getDt();
 	}
 
 	static void RigidbodySetVelocity(GameObjectID _ID, Math::Vec2* velocity)

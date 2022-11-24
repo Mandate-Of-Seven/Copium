@@ -41,6 +41,16 @@ namespace Copium
 {
 
     GameObjectID GameObject::count = 1;
+    ComponentID GameObject::assign_id()
+    {
+        if (!sceneManager.get_current_scene())
+        {
+            return 0;
+        }
+        //sceneManager.get_current_scene()->incr_component_count();
+        return sceneManager.get_current_scene()->assignComponentID();
+    }
+
     Component* GameObject::addComponent(ComponentType componentType)
     {
         switch (componentType)
@@ -58,7 +68,7 @@ namespace Copium
         case ComponentType::Script:
             return &addComponent<Script>();
         case ComponentType::Button:
-            return &addComponent<ButtonComponent>();
+            return &addComponent<Button>();
         case ComponentType::Image:
             return &addComponent<ImageComponent>();
         case ComponentType::Text:
@@ -87,7 +97,7 @@ namespace Copium
 
 
     GameObject::GameObject(const GameObject& rhs) : 
-        transform(*this), id{count++}, parent{nullptr}, parentid{0}
+        transform(*this), id{0}, parent{nullptr}, parentid{0}
 {
     messageSystem.subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
     MESSAGE_CONTAINER::reflectCsGameObject.ID = id;
@@ -97,6 +107,7 @@ namespace Copium
     transform.scale = rhs.transform.scale;
     active = rhs.active;
     name = rhs.name;
+    transform.id = assign_id();
     for (Component* pComponent : rhs.components)
     {
         components.push_back(pComponent->clone(*this));
@@ -113,23 +124,18 @@ GameObject::GameObject
 (Math::Vec3 _position, Math::Vec3 _rotation, Math::Vec3 _scale)
     :
     name{ defaultGameObjName }, parent{ nullptr }, parentid{ 0 },
-    transform(*this, _position, _rotation, _scale), id{ count++ },
+    transform(*this, _position, _rotation, _scale), id{ 0 },
     active{true}
 {
     messageSystem.subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
     MESSAGE_CONTAINER::reflectCsGameObject.ID = id;
     messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
     PRINT("GAMEOBJECT ID CONSTRUCTED: " << id);
+    transform.id = assign_id();
 }
 
 GameObject& GameObject::operator=(const GameObject& _src)
 {
-    std::cout << "gameobject = \n";
-    std::cout << _src.get_name() << std::endl;
-
-    if (_src.get_name().empty())
-    {
-    }
     name = _src.get_name();
     transform.position = _src.transform.position;
     transform.rotation = _src.transform.rotation;
@@ -138,11 +144,12 @@ GameObject& GameObject::operator=(const GameObject& _src)
     {
         if (co)
         {
+            sceneManager.get_current_scene()->add_unused_cid(co->id);
             delete co;
             co = nullptr;
         }
     }
-    components.clear();
+    components.clear(); 
 
     for (GameObject* go : children)
     {
@@ -298,6 +305,8 @@ bool GameObject::deserialize(rapidjson::Value& _value) {
     if (!_value.HasMember("ID"))
         return false;
 
+    id = _value["ID"].GetUint64();
+
     if (!_value.HasMember("Name"))
         return false;
    
@@ -323,15 +332,17 @@ void GameObject::handleMessage(MESSAGE_TYPE mType)
 
 void GameObject::inspectorView()
 {
+
+    ImGui::Checkbox("##Active", &active);
+    ImGui::SameLine();
     static char buffer[256];
     strcpy(buffer, name.c_str());
     ImGui::PushItemWidth(-1);
-    ImGui::InputText("##gameObjName", buffer,256);
+    ImGui::InputText("##gameObjName", buffer, 256);
     ImGui::PopItemWidth();
     name = buffer;
-    /*ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
-        | ImGuiTableFlags_ScrollY;*/
-    ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_Borders
+
+    ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
         | ImGuiTableFlags_ScrollY;
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);
     ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed;
@@ -352,16 +363,27 @@ void GameObject::inspectorView()
 
         for (Component* component : components)
         {
+            ImGui::Checkbox("##Active", &component->get_enabled());
+            ImGui::SameLine();
             const std::string& componentName{ component->Name() };
             ImGui::PushID(index++);
             if (ImGui::CollapsingHeader(componentName.c_str(), nodeFlags))
             {
+                if (ImGui::BeginDragDropSource())
+                {
+                    static void* container;
+                    container = component;
+                    ImGui::SetDragDropPayload(componentName.c_str(), &container, sizeof(void*));
+                    ImGui::EndDragDropSource();
+                }
                 component->inspector_view();
                 if (ImGui::Button("Delete", ImVec2(ImGui::GetWindowSize().x, 0.f)))
                 {
                     PRINT("ID: " << component->id);
                     componentsToDelete.push_back(component->id);
+                    NewSceneManager::Instance()->get_current_scene()->add_unused_cid(component->id);
                 }
+
             }
             ImGui::PopID();
             ImGui::TableNextColumn();

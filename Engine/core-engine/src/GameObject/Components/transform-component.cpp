@@ -58,20 +58,21 @@ float temp;
 
 void Transform::deserialize(rapidjson::Value& _value)
 {
+    std::cout << "Deserializing transform\n";
+    Component::deserialize(_value);
 	rapidjson::Value& _v = _value["Pos"].GetObj();
 	position.deserialize(_v);
-	std::cout << "Position:" << position;
 	_v = _value["Rot"].GetObj();
 	rotation.deserialize(_v);
-	std::cout << "Rotation:" << rotation;
 	_v = _value["Scale"].GetObj();
 	scale.deserialize(_v);
-	std::cout << "Scale:" << scale;
 }
 
 // M2
 void Transform::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 {
+    Component::serialize(_value, _doc);
+
     rapidjson::Value _pos(rapidjson::kObjectType);
     rapidjson::Value _rot(rapidjson::kObjectType);
     rapidjson::Value _scale(rapidjson::kObjectType);

@@ -25,8 +25,7 @@ namespace Copium
 	float Rigidbody2D::get_mass() { return mass; }
 	void Rigidbody2D::deserialize(rapidjson::Value& _value)
 	{
-		// deserializeee
-
+		Component::deserialize(_value);
 		if (_value.HasMember("Grav"))
 			affectedGravity = _value["Grav"].GetBool();
 
@@ -37,6 +36,7 @@ namespace Copium
 	{
 
 		std::cout << "serializing Rigidbody component\n";
+		Component::serialize(_value, _doc);
 		rapidjson::Value type;
 		std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
 		type.SetString(tc.c_str(), rapidjson::SizeType(tc.length()), _doc.GetAllocator());

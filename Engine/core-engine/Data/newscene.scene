@@ -2,7 +2,7 @@
     "Name": "NewScene",
     "GameObjects": [
         {
-            "ID": 3,
+            "ID": 1,
             "Name": "New GameObject",
             "PID": 0,
             "Components": [
@@ -23,35 +23,9 @@
                         "Y": 1.0,
                         "Z": 1.0
                     }
-                }
-            ],
-            "Children": []
-        },
-        {
-            "ID": 4,
-            "Name": "New GameObject(1)",
-            "PID": 0,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 3.0,
-                        "Y": 2.0,
-                        "Z": 1.0
-                    }
                 },
                 {
-                    "Type": "SpriteRenderer",
+                    "Type": "RendererComponent",
                     "Sprite ID": 0,
                     "Sprite Name": "empty",
                     "Color": {
@@ -59,36 +33,6 @@
                         "Y": 1.0,
                         "Z": 1.0,
                         "W": 1.0
-                    }
-                },
-                {
-                    "Type": "AudioSource",
-                    "Alias": ""
-                }
-            ],
-            "Children": []
-        },
-        {
-            "ID": 5,
-            "Name": "New GameObject(2)",
-            "PID": 0,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
                     }
                 }
             ],

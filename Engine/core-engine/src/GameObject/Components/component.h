@@ -57,7 +57,8 @@ static std::map<ComponentType, std::string> MAP_COMPONENT_TYPE_NAME
     {ComponentType::Image,"ImageComponent"},
     {ComponentType::Rigidbody2D,"Rigidbody2D"},
     {ComponentType::SpriteRenderer,"SpriteRenderer"},
-    {ComponentType::Script,"ScriptComponent"},
+    {ComponentType::Script,"Script"},
+    {ComponentType::Button,"Button"},
     {ComponentType::Text,"Text"},
 };
 
@@ -68,7 +69,7 @@ class Component
         Component(const Component&) = delete;
 
         const ComponentType componentType;      //Type of component
-        const ComponentID id;                   //Id of component
+        ComponentID id;                   //Id of component
 
 
         /*******************************************************************************
@@ -146,7 +147,7 @@ class Component
 
         */
         /*******************************************************************************/
-        virtual void inspector_view() = 0;
+        virtual void inspector_view();
 
         /*******************************************************************************
         /*!
@@ -189,6 +190,10 @@ class Component
         bool Enabled() const noexcept;
 
         void Enabled(bool) noexcept;
+
+        bool& get_enabled();
+
+
         GameObject& gameObj;
     protected:
 

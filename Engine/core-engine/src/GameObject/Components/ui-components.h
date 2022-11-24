@@ -19,9 +19,9 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/Components/component.h"
 #include "Math/math-library.h"
 #include "Graphics/fonts.h"
-#include "GameObject/Components/renderer-component.h"
-
+#include <Physics/collision.h>
 #include <unordered_map>
+#include <Graphics/sprite.h>
 
 #define TEXT_BUFFER_SIZE 128
 
@@ -53,6 +53,8 @@ namespace Copium
 
 	// Bean: Temporary forward declaration of BaseCamera class to render text
 	class BaseCamera;
+	class Text;
+	class Image;
 
 	//Runs after InputSystem
 	class IUIComponent
@@ -61,16 +63,18 @@ namespace Copium
 			Math::Vec2 offset;
 			HorizontalAlignment hAlignment{HorizontalAlignment::Center};
 			VerticalAlignment vAlignment{VerticalAlignment::Center};
+			glm::fvec4 color{1.f};
+			glm::fvec4 layeredColor{ 1.f };
 	};
 
-	class ButtonComponent final: public Component
+	class Button final: public Component
 	{
 		//A screen space box collider
 		public:
 			/**************************************************************************/
 			/*!
 				\brief
-					Constructs a ButtonComponent
+					Constructs a Button
 
 				\param gameObj
 					Owner of this
@@ -80,7 +84,7 @@ namespace Copium
 					Min of bounding box
 			*/
 			/**************************************************************************/
-			ButtonComponent(GameObject& _gameObj,Math::Vec2 _min = {-0.5,-0.5}, Math::Vec2 _max = {0.5,0.5});
+			Button(GameObject& _gameObj,Math::Vec2 _min = {-0.5,-0.5}, Math::Vec2 _max = {0.5,0.5});
 
 
 			/*******************************************************************************
@@ -101,15 +105,17 @@ namespace Copium
 
 			*/
 			/*******************************************************************************/
-			void inspector_view() {};
+			void inspector_view();
 
-			ButtonComponent& operator=(const ButtonComponent& rhs);
+			Button& operator=(const Button& rhs);
 
 			Component* clone(GameObject& _gameObj) const;
 
 			void deserialize(rapidjson::Value& _value)
 			{
 			}
+
+			const AABB& getRelativeBounds() const;
 
 			void serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 			{
@@ -119,13 +125,21 @@ namespace Copium
 				_value.AddMember("Type", type, _doc.GetAllocator());
 			}
 		private:
-			static const ButtonComponent* hoveredBtn;
+			static const Button* hoveredBtn;
 			std::unordered_map<ButtonState, ButtonCallback> mapStateCallbacks;
-			Math::Vec2 min;
-			Math::Vec2 max;
+			AABB bounds;
+			void updateBounds();
+			AABB relativeBounds;
 			ButtonState state;
 			ButtonState getInternalState() const;
-
+			glm::fvec4 normalColor;
+			glm::fvec4 hoverColor;
+			glm::fvec4 clickedColor;
+			Text* targetGraphic;
+			ButtonState previousState{ButtonState::None};
+			glm::fvec4 previousColor;
+			float timer{0};
+			float fadeDuration{0.1};
 	};
 
 	class Text final : public Component, IUIComponent
@@ -163,6 +177,10 @@ namespace Copium
 
 			void deserialize(rapidjson::Value& _value)
 			{
+				if (_value.HasMember("ID"))
+				{
+					id = _value["ID"].GetUint64();
+				}
 				if (_value.HasMember("FontName"))
 				{
 					fontName = _value["FontName"].GetString();
@@ -210,6 +228,8 @@ namespace Copium
 				type.SetString(tc.c_str(), rapidjson::SizeType(tc.length()), _doc.GetAllocator());
 				_value.AddMember("Type", type, _doc.GetAllocator());
 
+				_value.AddMember("ID", id, _doc.GetAllocator());
+
 				type.SetString(fontName.c_str(), rapidjson::SizeType(fontName.length()), _doc.GetAllocator());
 				_value.AddMember("FontName", type, _doc.GetAllocator());
 				_value.AddMember("H_Align", (int)hAlignment, _doc.GetAllocator());
@@ -229,7 +249,7 @@ namespace Copium
 			std::string fontName;
 			Font* font;
 			float fSize;
-			glm::fvec4 color;
+			friend class Button;
 		//Display a text
 	};
 
@@ -270,6 +290,11 @@ namespace Copium
 
 			void deserialize(rapidjson::Value& _value)
 			{
+				if (_value.HasMember("ID"))
+				{
+					id = _value["ID"].GetUint64();
+				}
+
 				if (_value.HasMember("H_Align"))
 				{
 					hAlignment = (HorizontalAlignment)_value["H_Align"].GetInt();
@@ -288,12 +313,15 @@ namespace Copium
 				type.SetString(tc.c_str(), rapidjson::SizeType(tc.length()), _doc.GetAllocator());
 				_value.AddMember("Type", type, _doc.GetAllocator());
 
+				_value.AddMember("ID", id, _doc.GetAllocator());
+
 				_value.AddMember("H_Align", (int)hAlignment, _doc.GetAllocator());
 				_value.AddMember("V_Align", (int)vAlignment, _doc.GetAllocator());
 				sprite.serialize(_value,_doc);
 			}
 		protected:
 			Sprite sprite;
+			friend class Button;
 		//Display an image
 	};
 }

@@ -219,6 +219,7 @@ namespace Copium {
 		std::string& get_scenefilepath();
 
 		bool create_scene();
+		Scene* get_storage_scene();
 
 		GameObject* selectedGameObject;
 
@@ -228,7 +229,8 @@ namespace Copium {
 		Scene* storageScene;	// Scene Pointer that acts as buffer for preview scene
 		rapidjson::Document document;
 		std::string sceneFilePath;
-		
+		UndoRedo::CommandManager commandManager; //for undo and redo
+		Scene::SceneState currSceneState;
 	};
 
 	/*******************************************************************************
