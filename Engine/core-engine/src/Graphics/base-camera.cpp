@@ -111,8 +111,9 @@ namespace Copium
 
 		// Calculating projection
 		viewMatrix = glm::lookAt(viewer, focalPoint, upVector);
-		projMatrix = glm::ortho(width, height, nearClip, farClip);
-		viewProjMatrix = projMatrix * viewMatrix;
+		update_ortho_projection();
+		//projMatrix = glm::ortho(width, height, nearClip, farClip);
+		//viewProjMatrix = projMatrix * viewMatrix;
 
 		// Initialise Sub systems
 		framebuffer.set_size((unsigned int) _width, (unsigned int) _height);
@@ -180,11 +181,11 @@ namespace Copium
 
 	void BaseCamera::on_resize(float _width, float _height)
 	{
-		framebuffer.resize((GLuint)_width, (GLuint) _height);
-
 		width = _width;
 		height = _height;
-		aspect = _width / _height;
+		aspect = width / height;
+
+		framebuffer.resize((GLuint) width, (GLuint) height);
 		update_ortho_projection();
 	}
 

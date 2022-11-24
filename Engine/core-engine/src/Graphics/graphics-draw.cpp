@@ -96,6 +96,7 @@ namespace Copium
 
 	void Draw::exit()
 	{
+		camera = nullptr;
 		renderer.shutdown();
 	}
 
