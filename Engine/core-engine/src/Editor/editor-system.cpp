@@ -210,7 +210,7 @@ namespace Copium
 						if (NewSceneManager::Instance()->get_scenefilepath().empty()) {
 							//save sceen as
 							while (!threadSystem.acquireMutex(MutexType::FileSystem));
-							std::string filepath = FileDialogs::save_file("Copium Scene (*.json)\0.json\0");
+							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
 							std::cout << filepath << std::endl;
 							Copium::NewSceneManager::Instance()->save_scene(filepath);
@@ -228,7 +228,7 @@ namespace Copium
 						{
 							//save sceen as
 							while (!threadSystem.acquireMutex(MutexType::FileSystem));
-							std::string filepath = FileDialogs::save_file("Copium Scene (*.json)\0.json\0");
+							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
 							std::cout << filepath << std::endl;
 							Copium::NewSceneManager::Instance()->save_scene(filepath);

@@ -77,6 +77,9 @@ namespace Copium
 		Component* clone(GameObject& _gameObj) const;
 	protected:
 		Sprite sprite;
+
+	private:
+		bool isAddingSprite;
 	};
 }
 #endif // !RENDERER_COMPONENT_H

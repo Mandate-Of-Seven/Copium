@@ -206,18 +206,7 @@ namespace Copium {
 			}
 		}
 
-
-
-
-
-
-
 		MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_SCENE_DESERIALIZED);
-
-
-
-
-
 
 		return true;
 
