@@ -242,6 +242,15 @@ namespace Copium
 						currentDirectory = dir;
 				}
 			}
+
+			if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+			{
+				for (Directory* dir : currentDirectory->get_child_directory())
+				{
+					if (dir->get_id() == ImGui::GetHoveredID())
+						fs->set_selected_directory(dir);
+				}
+			}
 			
 			if (!ImGui::IsMouseDragging(ImGuiMouseButton_Left) && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
 			{

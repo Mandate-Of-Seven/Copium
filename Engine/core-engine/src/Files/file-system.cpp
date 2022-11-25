@@ -17,10 +17,11 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include <GLFW/glfw3.h>
 #include "Files/file-system.h"
-#include <utility>
+#include <utility> 
 
 #include "Files/assets-system.h"
 #include "Editor/editor-system.h"
+#include "Windows/windows-input.h"
 
 namespace Copium
 {
@@ -30,6 +31,7 @@ namespace Copium
 
 		AssetsSystem* assets = AssetsSystem::Instance();
 		EditorSystem* editor = EditorSystem::Instance();
+		InputSystem* input = InputSystem::Instance();
 	}
 
 	void FileSystem::init()
@@ -123,6 +125,13 @@ namespace Copium
 
 	void FileSystem::update()
 	{
+		if (input->is_key_pressed(GLFW_KEY_DELETE))
+		{
+			delete_from_browser();
+		}
+
+
+
 		check_directory_count(&assetsDirectory);
 	}
 
@@ -563,6 +572,28 @@ namespace Copium
 	{
 		files[_file->get_file_type().fileType].remove(_file);
 		assets->unload_file(_file);
+	}
+
+	void FileSystem::delete_from_browser()
+	{
+		if (selectedFile != nullptr)
+		{
+			assets->unload_file(selectedFile);
+			std::cout << "Deleting: " << selectedFile->filename() << " With result: " << DeleteFile(selectedFile->c_str()) << std::endl;
+
+		}
+		else if (selectedDirectory != nullptr)
+		{
+			fs::path tmp = "../PackedTracks/Assets/" + selectedDirectory->get_name();
+			if (std::filesystem::remove_all(tmp))
+			{
+				std::cout << "Delete complete\n";
+			}
+			else
+			{
+				std::cout << "Delete failed, could not find folder at: " << tmp << std::endl;
+			}
+		}
 	}
 
 	std::list<std::string>& FileSystem::get_filepath_in_directory(const char* _path, const char* _extension)

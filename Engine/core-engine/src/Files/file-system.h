@@ -117,6 +117,11 @@ namespace Copium
 		File* get_selected_file() { return selectedFile; }
 		void set_selected_file(File* _file) { selectedFile = _file; }
 
+		Directory* get_selected_directory() { return selectedDirectory; }
+		void set_selected_directory(Directory* _directory) { selectedDirectory = _directory; }
+
+		void delete_from_browser();
+
 		std::list<std::string>& get_filepath_in_directory(const char* _path, const char* _extension);
 		std::list<std::string>& get_filepath_in_directory(const char* _path, const char* _extension1, const char* _extension2);
 
