@@ -54,7 +54,7 @@ namespace Copium
 		float get_yaw() const { return yaw; }
 
 		void on_resize(float _width, float _height);
-		void on_inspector_change();
+		void update_ortho_projection();
 
 		// Matrices
 		glm::mat4 get_projection() const { return projMatrix; }
@@ -67,7 +67,7 @@ namespace Copium
 		const glm::vec4& get_bg_color() const { return backgroundColor; }
 
 	protected:
-		void update_ortho_projection();
+		
 		void update_ortho_projection(float _left, float _right, float _bottom, float _top);
 
 		void update_view_matrix();

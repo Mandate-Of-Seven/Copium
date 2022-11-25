@@ -72,6 +72,15 @@ namespace Copium
 		/*!
 		*
 		\brief
+			Set the game in windowed fullscreen
+		*/
+		/*******************************************************************************/
+		void playMode(bool _enabled);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
 			A getter function for the command manager
 
 		\return
