@@ -224,7 +224,6 @@ class Component
         Component(GameObject& _gameObj, ComponentType _componentType);
     private:
         const bool allowMultiple = false;   //Can gameObjects only have one of this Component?
-        static ComponentID count;
         bool enabled;
 };
 

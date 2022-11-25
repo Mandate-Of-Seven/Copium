@@ -289,7 +289,6 @@ namespace Copium
 	Component* Button::clone(GameObject& _gameObj) const
 	{
 		auto* component = new Button(_gameObj);
-		component->id = id;
 		component->bounds = bounds;
 		component->state = state;
 		component->mapStateCallbacks = mapStateCallbacks;

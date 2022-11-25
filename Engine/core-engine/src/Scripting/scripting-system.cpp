@@ -216,12 +216,11 @@ namespace Copium
 		systemFlags |= FLAG_RUN_ON_EDITOR;
 		ThreadSystem::Instance()->addThread(new std::thread(&ScriptingSystem::recompileThreadWork, this));
 		messageSystem.subscribe(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT, this);
-		messageSystem.subscribe(MESSAGE_TYPE::MT_ADD_COMPONENT, this);
-		messageSystem.subscribe(MESSAGE_TYPE::MT_DELETE_GAMEOBJECT, this);
-		messageSystem.subscribe(MESSAGE_TYPE::MT_DELETE_COMPONENT, this);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_SCENE_OPENED, this);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_ENGINE_INITIALIZED, this);
+		messageSystem.subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
+		messageSystem.subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
 	}
 
 	void ScriptingSystem::update()
@@ -496,35 +495,6 @@ namespace Copium
 				compilingState = CompilingState::Wait;
 				break;
 			}
-			case MESSAGE_TYPE::MT_DELETE_GAMEOBJECT:
-			{
-				if (!mAssemblyImage)
-					return;
-				MonoObject* mGameObj = monoGameObjects[MESSAGE_CONTAINER::addOrDeleteComponent.gameObjID];
-				mono_free(mGameObj);
-				PRINT("FREED GAME OBJECT FROM MONO");
-				break;
-			}
-			case MESSAGE_TYPE::MT_DELETE_COMPONENT:
-			{
-				if (!mAssemblyImage)
-					return;
-				MonoObject* mGameObj = monoGameObjects[MESSAGE_CONTAINER::addOrDeleteComponent.gameObjID];
-				MonoMethod* mRemoveComponentByID = mono_class_get_method_from_name(mGameObject, "RemoveComponentByID", 1);
-				void* param = &MESSAGE_CONTAINER::addOrDeleteComponent.componentID;
-				//mono_runtime_invoke(mRemoveComponentByID, mGameObj, &param, nullptr);
-				break;
-			}
-			case MESSAGE_TYPE::MT_ADD_COMPONENT:
-			{
-				if (!mAssemblyImage)
-					return;
-				MonoObject* mGameObj = monoGameObjects[MESSAGE_CONTAINER::addOrDeleteComponent.gameObjID];
-				//MonoMethod* mAttachComponentByID = mono_class_get_method_from_name(mGameObject, "AttachComponentByID", 1);
-				//void* param = &MESSAGE_CONTAINER::addOrDeleteComponent.componentID;
-				//mono_runtime_invoke(mAttachComponentByID, mGameObj, &param, nullptr);
-				break;
-			}
 			case MESSAGE_TYPE::MT_ENGINE_INITIALIZED:
 			{
 				if (!mAssemblyImage)
@@ -534,6 +504,18 @@ namespace Copium
 				//void* param = &MESSAGE_CONTAINER::addOrDeleteComponent.componentID;
 				//mono_runtime_invoke(mAttachComponentByID, mGameObj, &param, nullptr);
 				break;
+			}
+			case MESSAGE_TYPE::MT_START_PREVIEW:
+			{
+				//while (compilingState == CompilingState::Compiling);
+				//if (compilingState == CompilingState::SwapAssembly)
+				//	swapDll();
+				compilingState = CompilingState::Previewing;
+				//swapDll();
+			}
+			case MESSAGE_TYPE::MT_STOP_PREVIEW:
+			{
+				compilingState = CompilingState::Wait;
 			}
 		}
 	}

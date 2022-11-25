@@ -61,6 +61,21 @@ namespace Copium
 		//MT_SCRIPTING_UPDATED
 		pScriptClass = sS.getScriptClass(name.c_str());
 		instantiate();
+		for (auto pair : fieldComponentReferences)
+		{
+			PRINT("Component References: ", pair.first);
+			Component* pComponent{pair.second};
+			GameObjectID gameObjID = pComponent->gameObj.id;
+			void* params[2] = { &pComponent->id, &gameObjID };
+			MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindComponentByID"], mObject, params, nullptr);
+			MonoClass* mComponentClass = mono_object_get_class(result);
+			void* iter = nullptr;
+			while (MonoClassField* field = mono_class_get_fields(mComponentClass, &iter))
+			{
+				mono_field_get_value(result, field, buffer + mono_field_get_offset(field));
+			}
+			mono_field_set_value(mObject, pScriptClass->mFields[pair.first].classField, buffer);
+		}
 	}
 
 	const std::string& Script::Name() const
@@ -140,6 +155,7 @@ namespace Copium
 					{
 						std::string displayName = "None(" + it->second.typeName + ")";
 						ImGui::Button(displayName.c_str(), ImVec2(-FLT_MIN, 0.f));
+						PRINT(it->first);
 					}
 					else
 					{
@@ -334,6 +350,21 @@ namespace Copium
 		return component;
 	}
 
+
+	void Script::previewLink(Component* rhs)
+	{
+		Script* scriptRhs = reinterpret_cast<Script*>(rhs);
+		for (auto pair : scriptRhs->fieldGameObjReferences)
+		{
+			fieldGameObjReferences[pair.first] = MyNewSceneManager.findGameObjByID(pair.second->id);
+		}
+
+		for (auto pair : scriptRhs->fieldComponentReferences)
+		{
+			fieldComponentReferences[pair.first] = MyNewSceneManager.findComponentByID(pair.second->id);
+		}
+	}
+
 	void Script::deserialize(rapidjson::Value& _value)
 	{
 		Component::deserialize(_value);
@@ -449,6 +480,37 @@ namespace Copium
 		}
 	}
 
+	void Script::deserializeLink(rapidjson::Value& _value)
+	{
+		const auto& fieldMap = pScriptClass->mFields;
+		auto it = fieldMap.begin();
+
+		while (it != fieldMap.end())
+		{
+			const std::string& _name{ it->first };
+			if (!_value.HasMember(_name.c_str()))
+			{
+				++it;
+				continue;
+			}
+			switch (it->second.type)
+			{
+				case FieldType::Component:
+				{
+					fieldComponentReferences[_name] = MyNewSceneManager.findComponentByID(_value[_name.c_str()].GetUint64());
+
+					break;
+				}
+				case FieldType::GameObject:
+				{
+					fieldGameObjReferences[_name] = MyNewSceneManager.findGameObjByID(_value[_name.c_str()].GetUint64());
+					break;
+				}
+			}
+			++it;
+		}
+	}
+
 	void Script::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
 		if (pScriptClass == nullptr)
@@ -540,6 +602,22 @@ namespace Copium
 			}
 			}
 			++it;
+		}
+
+		auto gameObjsIt = fieldGameObjReferences.begin();
+		while (gameObjsIt != fieldGameObjReferences.end())
+		{
+			const std::string& fieldName{ gameObjsIt->first };
+			_value.AddMember(rapidjson::StringRef(fieldName.c_str()), (*gameObjsIt).second->id, _doc.GetAllocator());
+			++gameObjsIt;
+		}
+
+		auto componentsIt = fieldComponentReferences.begin();
+		while (componentsIt != fieldComponentReferences.end())
+		{
+			const std::string& fieldName{ componentsIt->first };
+			_value.AddMember(rapidjson::StringRef(fieldName.c_str()), (*componentsIt).second->id, _doc.GetAllocator());
+			++componentsIt;
 		}
 	}
 }

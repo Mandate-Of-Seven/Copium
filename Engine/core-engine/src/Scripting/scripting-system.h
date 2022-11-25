@@ -106,7 +106,8 @@ namespace Copium
 		Compiling,
 		SwapAssembly,
 		Deserializing,
-		Wait
+		Wait,
+		Previewing,
 	};
 
 	struct ScriptClass

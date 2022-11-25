@@ -12,7 +12,7 @@
                 {
                     "PID": 0,
                     "Children": [],
-                    "ID": 19,
+                    "ID": 1,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -69,7 +69,9 @@
                         "X": 0.0,
                         "Y": 0.0,
                         "Z": 0.0
-                    }
+                    },
+                    "CombatMovement": 3,
+                    "rb": 3
                 }
             ]
         },
@@ -80,7 +82,7 @@
                 {
                     "PID": 0,
                     "Children": [],
-                    "ID": 5,
+                    "ID": 6,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -119,7 +121,7 @@
                 {
                     "PID": 0,
                     "Children": [],
-                    "ID": 7,
+                    "ID": 8,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -165,7 +167,7 @@
                 {
                     "PID": 0,
                     "Children": [],
-                    "ID": 10,
+                    "ID": 11,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -205,7 +207,7 @@
                 {
                     "PID": 0,
                     "Children": [],
-                    "ID": 12,
+                    "ID": 13,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -264,7 +266,7 @@
                 {
                     "PID": 0,
                     "Children": [],
-                    "ID": 16,
+                    "ID": 17,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,

@@ -58,12 +58,12 @@ namespace Copium
 				FileSystem::Instance(),
 				AssetsSystem::Instance(),
 				NewSceneManager::Instance(),
+				ScriptingSystem::Instance(),
 				InputSystem::Instance(),
 				EditorSystem::Instance(),
 				LogicSystem::Instance(),
 				PhysicsSystem::Instance(),
 				GraphicsSystem::Instance(),
-				ScriptingSystem::Instance(),
 				ThreadSystem::Instance()
 			};
 			for (ISystem* pSystem : systems)

@@ -71,6 +71,8 @@
       <Link>Random.cs</Link>
     </Compile>
     <Compile Include="Application.cs" />
+    <Compile Include="Assets\Scripts\AIMovement.cs" />
+    <Compile Include="Assets\Scripts\CombatMovement.cs" />
     <Compile Include="Bullet.cs" />
     <Compile Include="CombatBulletBody.cs" />
     <Compile Include="Physics.cs" />

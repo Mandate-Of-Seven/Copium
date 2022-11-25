@@ -22,6 +22,7 @@ public class CombatMovement : CopiumScript
     // Start is called before the first frame update
     void Start()
     {
+        Console.WriteLine("COMBAT MOVEMENT STARTED");
         CurrentGameState = GameState.Combat;
     }
 
@@ -33,44 +34,53 @@ public class CombatMovement : CopiumScript
             Application.Quit();
         }
 
-        if (CurrentGameState == GameState.Combat)
+        Console.WriteLine(rb.ID);
+        if (rb == null)
+        {
+            Console.WriteLine("RB WAS NULL");
+        }
+
+            if (CurrentGameState == GameState.Combat)
         {
             if (Input.GetKey(KeyCode.A))
             {
-                inputLeft = true;
+                rb.velocity = new Vector2(-0.5f,0f);
+/*                inputLeft = true;
 
                 if (canMoveLeft)
                 {
                     movingLeft = true;
                     canMoveRight = false;
                     
-                }
+                }*/
 
             }
             if (Input.GetKey(KeyCode.D))
             {
-                inputRight = true;
+                rb.velocity = new Vector2(0.5f,0f);
+/*                inputRight = true;
 
                 if (canMoveRight)
                 {
                     movingRight = true;
                     canMoveLeft = false;
-                }
+                }*/
             }
 
-            if (Input.GetKeyUp(KeyCode.A))
+/*            if (Input.GetKeyUp(KeyCode.A))
             {
                 inputLeft = false;
             }
             if (Input.GetKeyUp(KeyCode.D))
             {
                 inputRight = false;
-            }
+            }*/
         }
     }
 
     private void FixedUpdate()
     {
+        return;
         if (rb == null)
             return;
         rb.velocity = Vector3.zero;

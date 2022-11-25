@@ -20,9 +20,10 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Messaging/message-types.h"
 #include <unordered_map>
 
+#define MyMessageSystem (*Copium::MessageSystem::Instance())
+
 namespace Copium
 {
-
     class IReceiver
     {
         public:

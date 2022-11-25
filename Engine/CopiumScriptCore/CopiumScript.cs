@@ -37,6 +37,7 @@ namespace CopiumEngine
 
         private Component FindComponentByID(ulong componentID, ulong gameObjectID)
         {
+            Console.WriteLine("FINDING COMPONENT BY ID IN C#______________________________________________");
             foreach (Component component in GameObject.components)
             {
                 if (component.ID == componentID)

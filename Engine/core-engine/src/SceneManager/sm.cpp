@@ -27,7 +27,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Windows/windows-system.h"
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/prettywriter.h>
-#include <Messaging/message-system.h>
 #include "GameObject/Components/ui-components.h"
 
 namespace Copium {
@@ -400,7 +399,7 @@ namespace Copium {
 	void NewSceneManager::backUpCurrScene()
 	{
 		storageScene = currentScene;
-		currentScene = new NormalScene(storageScene->get_filename());
+		currentScene = new NormalScene();
 
 		if (!currentScene)
 		{
@@ -422,7 +421,6 @@ namespace Copium {
 
 		for (size_t goIndex{ 0 }; goIndex < storageScene->get_gameobjcount(); ++goIndex)
 		{
-			// Build a game object copy from original scene
 			GameObject* currGameObj = currentScene->gameObjects[goIndex];
 			GameObject* storedGameObj = storageScene->gameObjects[goIndex];
 			for (size_t compIndex{ 0 }; compIndex < currGameObj->components.size(); ++compIndex)

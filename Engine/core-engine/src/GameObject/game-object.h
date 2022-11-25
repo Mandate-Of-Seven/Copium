@@ -96,9 +96,6 @@ public:           //Global ID for gameObjects
         static_assert(std::is_base_of<Component, T>::value);
         T* component = new T(*this);
         components.push_back(component);
-        MESSAGE_CONTAINER::addOrDeleteComponent.gameObjID = id;
-        MESSAGE_CONTAINER::addOrDeleteComponent.componentID = component->id;
-        MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_ADD_COMPONENT);
 
         component->id = assign_id();
 

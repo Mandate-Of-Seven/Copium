@@ -116,8 +116,6 @@ namespace Copium
 		if (!go)
 			return nullptr;
 
-		*go = _src;
-
 		unsigned count{ 0 };
 		if (scene)
 			for (GameObject* g : scene->gameObjects)
@@ -144,6 +142,7 @@ namespace Copium
 		//	go->attach_child(cgo);
 
 		//}
+		PRINT("bleep");
 		return go;
 	}
 

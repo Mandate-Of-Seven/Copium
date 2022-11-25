@@ -87,16 +87,15 @@ void Scene::incr_component_count() { ++numberOfComponents; }
 unsigned int Scene::get_component_count() const { return numberOfComponents; }
 ComponentID Scene::assignComponentID()
 {
-	PRINT("SCENE NAME: " << name);
 	if (unusedCIDs.empty())
 	{
 		incr_component_count();
-		std::cout << "Assigning Component ID: " << numberOfComponents << std::endl;
+		//std::cout << "Assigning Component ID: " << numberOfComponents << std::endl;
 		return static_cast<ComponentID>(numberOfComponents);
 	}
 	else {
 		ComponentID cid = unusedCIDs.front();
-		std::cout << "Taking over cid: " << cid << std::endl;
+		//std::cout << "Taking over cid: " << cid << std::endl;
 		unusedCIDs.erase(unusedCIDs.begin());
 		return cid;
 	}
