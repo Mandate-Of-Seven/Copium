@@ -85,7 +85,7 @@ namespace Copium
 			*/
 			/**************************************************************************/
 			Button(GameObject& _gameObj,Math::Vec2 _min = {-0.5,-0.5}, Math::Vec2 _max = {0.5,0.5});
-
+			~Button();
 
 			/*******************************************************************************
 			/*!
@@ -111,19 +111,13 @@ namespace Copium
 
 			Component* clone(GameObject& _gameObj) const;
 
-			void deserialize(rapidjson::Value& _value)
-			{
-			}
+			void deserialize(rapidjson::Value& _value);
+			void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
+			void set_targetgraphic(Text* _txt);
+			Text* get_targetgraphic();
 
 			const AABB& getRelativeBounds() const;
 
-			void serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
-			{
-				rapidjson::Value type;
-				std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
-				type.SetString(tc.c_str(), rapidjson::SizeType(tc.length()), _doc.GetAllocator());
-				_value.AddMember("Type", type, _doc.GetAllocator());
-			}
 		private:
 			static const Button* hoveredBtn;
 			std::unordered_map<ButtonState, ButtonCallback> mapStateCallbacks;
@@ -136,6 +130,7 @@ namespace Copium
 			glm::fvec4 hoverColor;
 			glm::fvec4 clickedColor;
 			Text* targetGraphic;
+			GameObjectID targetGraphicID;
 			ButtonState previousState{ButtonState::None};
 			glm::fvec4 previousColor;
 			float timer{0};

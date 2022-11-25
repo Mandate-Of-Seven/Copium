@@ -19,7 +19,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 namespace Copium
 {
 
-	SpriteRenderer::SpriteRenderer(GameObject& _gameObj) :Component(_gameObj, ComponentType::SpriteRenderer)
+	SpriteRenderer::SpriteRenderer(GameObject& _gameObj) :Component(_gameObj, ComponentType::SpriteRenderer), isAddingSprite{false}
 	{
 	}
 
@@ -74,6 +74,45 @@ namespace Copium
 			ImGui::Text("Sprite");
 			ImGui::TableNextColumn();
 			ImGui::Button(spriteName.c_str(), ImVec2(-FLT_MIN, 0.f));
+
+			// Pop up window for sprite selection
+			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+			{
+				isAddingSprite = true;
+			}
+			if (isAddingSprite)
+			{
+				// Open pop-up window
+				ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+				ImGui::SetNextWindowPos(ImVec2(0.f, 0.f), ImGuiCond_FirstUseEver);
+				ImGui::Begin("Add Sprite", &isAddingSprite);
+				ImVec2 buttonSize = ImGui::GetWindowSize();
+				buttonSize.y *= (float)0.1;
+				static ImGuiTextFilter filter;
+				ImGui::PushItemWidth(-1);
+				filter.Draw("##SpriteName");
+				ImGui::PopItemWidth();
+				AssetsSystem* assets = AssetsSystem::Instance();
+				for (int i = 0; i < assets->get_textures().size(); i++)
+				{
+					size_t startPos = assets->get_texture(i)->get_file_path().find_last_of('/');
+					std::string name = assets->get_texture(i)->get_file_path().substr(startPos + 1, assets->get_texture(i)->get_file_path().length() - startPos);
+					if (ImGui::Button(name.c_str(), buttonSize))
+					{
+						if (filter.PassFilter(name.c_str()))
+						{
+							spriteName = name;
+							isAddingSprite = false;
+							spriteID = i + 1;
+						}
+					}
+
+				}
+				ImGui::End();
+
+
+			}
+
 			if (ImGui::BeginDragDropTarget())
 			{
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ContentBrowserItem"))

@@ -31,8 +31,8 @@ namespace
 
 namespace Copium
 {
+	//Button------------/
 	const Button* Button::hoveredBtn{nullptr};
-
 	Button::Button(GameObject& _gameObj,Math::Vec2 _min, Math::Vec2 _max) 
 		: Component(_gameObj, ComponentType::Button), bounds{_min,_max},
 		normalColor{1.f,1.f,1.f,0.5f}, hoverColor{0.5f,1.f,1.f,0.5f}, clickedColor{0.5f},
@@ -45,7 +45,10 @@ namespace Copium
 			mapStateCallbacks.insert({ButtonState(i),nullptr});
 		}
 	}
-
+	Button::~Button()
+	{
+		std::cout << "button dtor\n";
+	}
 
 	void Button::updateBounds()
 	{
@@ -273,6 +276,48 @@ namespace Copium
 		return component;
 	}
 
+	void Button::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
+	{
+		rapidjson::Value type;
+		std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
+		type.SetString(tc.c_str(), rapidjson::SizeType(tc.length()), _doc.GetAllocator());
+		_value.AddMember("Type", type, _doc.GetAllocator());
+
+		_value.AddMember("ID", id, _doc.GetAllocator());
+
+		if (targetGraphic)
+			_value.AddMember("Graphic ID", targetGraphic->id, _doc.GetAllocator());
+		else
+			_value.AddMember("Graphic ID", 0, _doc.GetAllocator());
+
+	}
+	void Button::deserialize(rapidjson::Value& _value)
+	{
+
+		if (_value.HasMember("ID"))
+		{
+			id = _value["ID"].GetUint64();
+		}
+
+		if (_value.HasMember("Graphic ID"))
+		{
+			targetGraphicID = _value["Graphic ID"].GetUint64();
+		}
+
+
+	}
+
+	void Button::set_targetgraphic(Text* _txt)
+	{
+		targetGraphic = _txt;
+		if (targetGraphic)
+			targetGraphicID = _txt->id;
+	}
+	Text* Button::get_targetgraphic() { return targetGraphic; }
+	
+	//----------------/
+
+	//Text------------/
 	Text::Text(GameObject& _gameObj)
 		: Component(_gameObj, ComponentType::Text), font{ Font::getFont("corbel") },fontName{"corbel"}, fSize{1.f}, content{"New Text"}
 	{
@@ -420,7 +465,9 @@ namespace Copium
 			ImGui::EndPopup();
 		}
 	}
+	//-----------------/
 
+	//Image------------/
 	ImageComponent::ImageComponent(GameObject& _gameObj)
 		: Component(_gameObj, ComponentType::Image)
 	{
@@ -586,4 +633,6 @@ namespace Copium
 		component->sprite = sprite;
 		return component;
 	}
+	//-----------------/
+
 }

@@ -179,14 +179,13 @@ namespace Copium
 					{
 						ImGui::Button("None(GameObject)", ImVec2(-FLT_MIN, 0.f));
 
-						// Matthew's stuff
+						// Matthew's stuff/////
 						if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 						{
 							std::cout << "double clicked on game object reference field\n";
 							isAddingGameObjectReference = true;
 
 						}
-
 						if (isAddingGameObjectReference)
 						{
 							// Open pop-up window
@@ -217,7 +216,7 @@ namespace Copium
 
 
 						}
-
+						///////////////////////
 					}
 					else
 					{
