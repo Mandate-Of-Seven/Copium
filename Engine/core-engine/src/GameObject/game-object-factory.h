@@ -70,6 +70,7 @@ namespace Copium {
 		*/
 		/*******************************************************************************/
 		GameObject* instantiate(GameObject& _src);
+
 		// Set up for future
 		//GameObject* instantiate(prefab);
 
@@ -99,22 +100,7 @@ namespace Copium {
 		*/
 		/*******************************************************************************/
 		GameObject* instantiate(rapidjson::Value& _value);
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Link this GameObjectFactory to a Scene object
-			Note: whenever a new scene is loaded in, this function should be called by the SceneManager that
-			owns this GameObjectFactory
 
-		\param _s
-			Ptr to the Scene that this GameObjectFactory needs to be linked to
-			
-		\return
-			pointer to the new game object
-		*/
-		/*******************************************************************************/
-		//void link_to_scene(Scene* _s);
 		/*******************************************************************************
 		/*!
 		*
@@ -203,6 +189,17 @@ namespace Copium {
 		*/
 		/*******************************************************************************/
 		bool register_archetypes(const std::filesystem::path& _directoryPath);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Clear the memory allocated to the Original Archetype templates
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
 		void clear_archetypes();
 
 		/*******************************************************************************
@@ -219,12 +216,26 @@ namespace Copium {
 		std::map<std::string, GameObject*>& get_archetype_map();
 
 		//M3
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Create a default child game object and attach it to the specified game object which will be the parent
+
+		\param _parent
+			reference to the parent of the newly created child game object
+
+		\return
+			ptr to thew newly created child game object
+
+		*/
+		/*******************************************************************************/
 		GameObject* create_child(GameObject& _parent);
-		void delete_component(GameObject* _go);
 
 
 	private:
-		std::map<std::string, GameObject*> gameObjectCreators;
+		std::map<std::string, GameObject*> archetypes;
 	};
 
 	

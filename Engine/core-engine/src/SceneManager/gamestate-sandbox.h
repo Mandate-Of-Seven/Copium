@@ -20,7 +20,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #pragma once
 #include "SceneManager/state-manager.h"
 #include "SceneManager/scene.h"
-#include "SceneManager/serializer.h"
 #include "Math/math-library.h"
 
 class SceneSandbox : public Copium::Scene 

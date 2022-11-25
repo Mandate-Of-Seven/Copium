@@ -186,15 +186,126 @@ public:
 
 	void inspector_view();
 
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Assign a game object ID. If there are unused GIDs, the first one in the list is popped and assigned, otherwise
+		assign new id based on number of game objects are present in the scene.
+
+	\return
+		the assigned GameObjectID
+	*/
+	/*******************************************************************************/
 	GameObjectID assignGameObjID();
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Add a GID to the unused list so that it can be reused at a later stage
+
+	\param _id
+		the GameObjectID to put in the unused list
+
+	\return
+		void
+	*/
+	/*******************************************************************************/
 	void add_unused_gid(GameObjectID _id);
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Gets reference to the unused GID list
+
+	\return
+		reference to the unused GID list
+	*/
+	/*******************************************************************************/
 	std::vector<GameObjectID>& get_unusedgids();
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Increment the component counter by 1
+
+	\return
+		void
+	*/
+	/*******************************************************************************/
 	void incr_component_count();
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Get the component count in the scene
+
+	\return
+		number of components in the scene
+	*/
+	/*******************************************************************************/
 	unsigned int get_component_count() const;
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Assign a unique component id. If there is an unused component id, reuse it, otherwise
+		assign a new id based on number of components in the scene
+
+	\return
+		the assigned component id
+	*/
+	/*******************************************************************************/
 	ComponentID assignComponentID();
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Add a CID to the unused CID list
+
+	\param _id
+		the component id to add to the unused list
+
+	\return
+		void
+	*/
+	/*******************************************************************************/
 	void add_unused_cid(ComponentID _id);
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Gets reference to the unused CID list
+
+	\return
+		reference to the unused CID list
+	*/
+	/*******************************************************************************/
 	std::vector<ComponentID>& get_unusedcids();
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Gets the current scene state
+
+	\return
+		the current scene state
+	*/
+	/*******************************************************************************/
 	SceneState get_state() const;
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Set the current scene state to specified scene state
+
+	\param _newState
+		the new scene state to set the current scene state to 
+
+	\return
+		void
+	*/
+	/*******************************************************************************/
 	void set_state(SceneState _newState);
 
 private:

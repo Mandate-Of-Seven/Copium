@@ -333,7 +333,7 @@ namespace Copium
 			if (tmp)
 			{
 				std::cout << "Registering " << doc["Archetype"].GetString() << std::endl;
-				gameObjectCreators.emplace(doc["Archetype"].GetString(), tmp);
+				archetypes.emplace(doc["Archetype"].GetString(), tmp);
 			}
 
 			ifs.close();
@@ -343,7 +343,7 @@ namespace Copium
 	}
 	void GameObjectFactory::clear_archetypes()
 	{
-		for (std::map<std::string, GameObject*>::iterator iter = gameObjectCreators.begin(); iter != gameObjectCreators.end(); ++iter)
+		for (std::map<std::string, GameObject*>::iterator iter = archetypes.begin(); iter != archetypes.end(); ++iter)
 		{
 			if ((*iter).second != nullptr) {
 				delete (*iter).second;
@@ -354,10 +354,10 @@ namespace Copium
 
 	GameObject* GameObjectFactory::instantiate(const std::string& _archetype)
 	{
-		if (gameObjectCreators.find(_archetype) == gameObjectCreators.end())
+		if (archetypes.find(_archetype) == archetypes.end())
 			return nullptr;
 		std::cout << "Making an archetype: " << _archetype << std::endl;
-		GameObject* tmp = instantiate(*gameObjectCreators[_archetype]);
+		GameObject* tmp = instantiate(*archetypes[_archetype]);
 		return tmp;
 	}
 	bool GameObjectFactory::add_component(const std::string& _key, GameObject* _go)
@@ -378,7 +378,7 @@ namespace Copium
 
 	std::map<std::string, GameObject*>& GameObjectFactory::get_archetype_map()
 	{
-		return gameObjectCreators;
+		return archetypes;
 	}
 
 	GameObject* GameObjectFactory::create_child(GameObject& _parent)
@@ -399,9 +399,6 @@ namespace Copium
 
 		return nullptr;
 
-	}
-	void GameObjectFactory::delete_component(GameObject* _go)
-	{
 	}
 
 }

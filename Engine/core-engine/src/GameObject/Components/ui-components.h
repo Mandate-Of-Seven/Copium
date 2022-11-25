@@ -85,7 +85,6 @@ namespace Copium
 			*/
 			/**************************************************************************/
 			Button(GameObject& _gameObj,Math::Vec2 _min = {-0.5,-0.5}, Math::Vec2 _max = {0.5,0.5});
-			~Button();
 
 			/*******************************************************************************
 			/*!
@@ -111,9 +110,64 @@ namespace Copium
 
 			Component* clone(GameObject& _gameObj) const;
 
+			/*******************************************************************************
+			/*!
+			*
+			\brief
+				Deserialize this button component's data from the specified rapidjson Value
+
+			\param _value
+				reference to the rapidjson Value which the button component's data deserializes its data from
+
+			\return
+				void
+
+			*/
+			/*******************************************************************************/
 			void deserialize(rapidjson::Value& _value);
+			/*******************************************************************************
+			/*!
+			*
+			\brief
+				Serialize this button component's data to the specified rapidjson Value
+
+			\param _value
+				reference to the rapidjson Value which the button component's data is to serialize its data to
+
+			\param _doc
+				reference to the rapidjson Document which is associated to the save file which the data is being saved to
+
+			\return
+				void
+
+			*/
+			/*******************************************************************************/
 			void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
+
+			/*******************************************************************************
+			/*!
+			*
+			\brief
+				Set the target graphic for this button
+
+			\param _txt
+				ptr to the Text component which will serve as the target graphic for this Button component
+
+			\return
+				void
+			*/
+			/*******************************************************************************/
 			void set_targetgraphic(Text* _txt);
+			/*******************************************************************************
+			/*!
+			*
+			\brief
+				Get the target graphic for this button
+
+			\return
+				the target graphic attached to this button component
+			*/
+			/*******************************************************************************/
 			Text* get_targetgraphic();
 
 			const AABB& getRelativeBounds() const;
@@ -172,81 +226,13 @@ namespace Copium
 
 			Component* clone(GameObject& _gameObj) const;
 
-			void deserialize(rapidjson::Value& _value)
-			{
-				if (_value.HasMember("ID"))
-				{
-					id = _value["ID"].GetUint64();
-				}
-				if (_value.HasMember("FontName"))
-				{
-					fontName = _value["FontName"].GetString();
-					font = Font::getFont(fontName);
-				}
-				if (_value.HasMember("H_Align"))
-				{
-					hAlignment = (HorizontalAlignment)_value["H_Align"].GetInt();
-				}
-				if (_value.HasMember("V_Align"))
-				{
-					vAlignment = (VerticalAlignment)_value["V_Align"].GetInt();
-				}
-				if (_value.HasMember("Content"))
-				{
-					strcpy(content, _value["Content"].GetString());
-				}
-				if (_value.HasMember("Font Size"))
-				{
-					fSize = _value["Font Size"].GetFloat();
-				}
-				if (_value.HasMember("r"))
-				{
-					color.r = _value["r"].GetFloat();
-				}
-				if (_value.HasMember("g"))
-				{
-					color.g = _value["g"].GetFloat();
-				}
-				if (_value.HasMember("b"))
-				{
-					color.b = _value["b"].GetFloat();
-
-				}
-				if (_value.HasMember("a"))
-				{
-					color.a = _value["a"].GetFloat();
-				}
-			}
-
-			void serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
-			{
-				rapidjson::Value type;
-				std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
-				type.SetString(tc.c_str(), rapidjson::SizeType(tc.length()), _doc.GetAllocator());
-				_value.AddMember("Type", type, _doc.GetAllocator());
-
-				_value.AddMember("ID", id, _doc.GetAllocator());
-
-				type.SetString(fontName.c_str(), rapidjson::SizeType(fontName.length()), _doc.GetAllocator());
-				_value.AddMember("FontName", type, _doc.GetAllocator());
-				_value.AddMember("H_Align", (int)hAlignment, _doc.GetAllocator());
-				_value.AddMember("V_Align", (int)vAlignment, _doc.GetAllocator());
-
-				type.SetString(content, rapidjson::SizeType(strlen(content)), _doc.GetAllocator());
-				_value.AddMember("Content", type, _doc.GetAllocator());
-
-				_value.AddMember("Font Size", fSize, _doc.GetAllocator());
-				_value.AddMember("r", color.r, _doc.GetAllocator());
-				_value.AddMember("g", color.g, _doc.GetAllocator());
-				_value.AddMember("b", color.b, _doc.GetAllocator());
-				_value.AddMember("a", color.a, _doc.GetAllocator());
-			}
+			void deserialize(rapidjson::Value& _value);
+			void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 		private:
 			std::string fontName;
 			Font* font;
 			float fSize;
 			friend class Button;
-		//Display a text
 	};
 
 	class ImageComponent final : public Component, IUIComponent
