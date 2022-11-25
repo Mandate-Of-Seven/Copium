@@ -21,6 +21,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 ******************************************************************************************/
 #include "pch.h"
 #include "SceneManager/scene.h"
+#include <SceneManager/sm.h>
 
 namespace Copium
 {
@@ -86,6 +87,7 @@ void Scene::incr_component_count() { ++numberOfComponents; }
 unsigned int Scene::get_component_count() const { return numberOfComponents; }
 ComponentID Scene::assignComponentID()
 {
+	PRINT("SCENE NAME: " << name);
 	if (unusedCIDs.empty())
 	{
 		incr_component_count();

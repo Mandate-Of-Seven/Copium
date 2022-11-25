@@ -84,7 +84,7 @@ namespace Copium
     GameObject::~GameObject()
     {
         messageSystem.unsubscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
-        for (std::list<Component*>::iterator iter = components.begin(); iter != components.end(); ++iter)
+        for (auto iter = components.begin(); iter != components.end(); ++iter)
         {
             if (*iter)
             {
@@ -105,11 +105,14 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{rhs.id}
     messageSystem.subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
     MESSAGE_CONTAINER::reflectCsGameObject.gameObjID = id;
     MESSAGE_CONTAINER::reflectCsGameObject.componentIDs.clear();
-    transform.id = assign_id();
+    transform.id = rhs.transform.id;
     for (Component* pComponent : rhs.components)
     {
         MESSAGE_CONTAINER::reflectCsGameObject.componentIDs.push_back(pComponent->id);
-        components.push_back(pComponent->clone(*this));
+        Component* newComponent = pComponent->clone(*this);
+        newComponent->id = pComponent->id;
+        PRINT(newComponent->id);
+        components.push_back(newComponent);
     }
     messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
     //for (Transform* pTransform : rhs.children)
@@ -332,7 +335,7 @@ bool GameObject::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
     rapidjson::Value transformComponent(rapidjson::kObjectType);
     transform.serialize(transformComponent, _doc);
     _components.PushBack(transformComponent, _doc.GetAllocator());
-    for (std::list<Component*>::iterator iter = components.begin(); iter != components.end(); ++iter)
+    for (auto iter = components.begin(); iter != components.end(); ++iter)
     {
         rapidjson::Value comp(rapidjson::kObjectType);
         // Serialize each component

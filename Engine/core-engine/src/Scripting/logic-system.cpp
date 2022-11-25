@@ -47,6 +47,10 @@ namespace Copium
 		gameObjects = &pScene->gameObjects;
 		for (GameObject* pGameObj : *gameObjects)
 		{
+			//for (Component* pComponent : pGameObj->components)
+			//{
+			//	PRINT(pComponent->Name() << ":  " << pComponent->id);
+			//}
 			const std::vector<Button*>& Buttons{ pGameObj->getComponents<Button>() };
 			for (Button* pButton : Buttons)
 			{

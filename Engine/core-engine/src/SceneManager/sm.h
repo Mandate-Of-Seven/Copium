@@ -40,7 +40,7 @@ namespace Copium {
 	public:
 		GameObject* findGameObjByID(GameObjectID _ID);
 		GameObject* findGameObjByName(const std::string& name);
-		
+		Component* findComponentByID(ComponentID _ID);
 
 		NewSceneManager();
 		~NewSceneManager();
@@ -79,6 +79,9 @@ namespace Copium {
 		*/
 		/*******************************************************************************/
 		void exit();
+
+		void backUpCurrScene();
+
 		/*******************************************************************************
 		/*!
 		*

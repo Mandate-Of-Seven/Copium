@@ -57,6 +57,21 @@ namespace Copium {
 		return nullptr;
 	}
 
+	Component* NewSceneManager::findComponentByID(ComponentID _ID)
+	{
+		for (GameObject* pGameObj : currentScene->gameObjects)
+		{
+			for (Component* pComponent : pGameObj->components)
+			{	
+				if (pComponent->id == _ID)
+				{
+					return pComponent;
+				}
+			}
+		}
+		return nullptr;
+	}
+
 	NewSceneManager::NewSceneManager() : currentScene{nullptr}, selectedGameObject{nullptr}, storageScene{nullptr}, currSceneState{Scene::SceneState::edit}
 	{
 	}
@@ -172,39 +187,28 @@ namespace Copium {
 				GameObject* tmpGO = nullptr;
 				tmpGO = MyGOF.instantiate(*iter);
 			}
+
+			// Linkage of components to each other
+			auto gameObjectIt = _gameObjArr.Begin();
+			for (GameObject* go : currentScene->gameObjects)
+			{
+				if ((*gameObjectIt).HasMember("Components"))
+				{
+					rapidjson::Value& compArr = (*gameObjectIt)["Components"].GetArray();
+					auto componentIt = compArr.Begin();
+					for (Component* component : go->components)
+					{
+						//Offset TransformComponent
+						++componentIt;
+						component->deserializeLink(*componentIt);
+					}
+				}
+				++gameObjectIt;
+			}
 		}
 		
 		ifs.close();
 
-
-		// Linkage of ui components to each other
-		for (GameObject* go : currentScene->gameObjects)
-		{
-			if (go->hasComponent(ComponentType::Button))
-			{
-				ComponentID id = go->getComponent(ComponentType::Button)->id;
-				for (GameObject* go1 : currentScene->gameObjects)
-				{
-					if (go1 == go)
-						continue;
-
-					if (!go->hasComponent(ComponentType::Text))
-						continue;
-
-					ComponentID tid = go1->getComponent(ComponentType::Text)->id;
-					if (tid == id)
-					{
-						Button* btn = reinterpret_cast<Button*>(go->getComponent(ComponentType::Button));
-						Text* txt = reinterpret_cast<Text*>(go1->getComponent(ComponentType::Text));
-						btn->set_targetgraphic(txt);
-						
-					}
-					break;
-
-				}
-				
-			}
-		}
 
 		MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_SCENE_DESERIALIZED);
 
@@ -265,28 +269,10 @@ namespace Copium {
 			PRINT("Currently in play mode...\n");
 			return false;
 		}
-		storageScene = currentScene;
-		currentScene = nullptr;
 
-		// Make copy 
-		currentScene = new NormalScene(storageScene->get_filename());
-		if (!currentScene)
-		{
-			currentScene = storageScene;
-			storageScene = nullptr;
-			return false;
-		}
+		backUpCurrScene();
 
-		// Copy game object data
-		for (size_t i{ 0 }; i < storageScene->get_gameobjcount(); ++i)
-		{
-			// Build a game object copy from original scene
-			GameObject* rhs = storageScene->gameObjects[i];
-			if (rhs && !rhs->transform.hasParent())
-			{
-				MyGOF.instantiate(*rhs);
-			}
-		}
+
 		selectedGameObject = nullptr;
 
 		currSceneState = Scene::SceneState::play;
@@ -409,6 +395,41 @@ namespace Copium {
 		doc.Accept(writer);
 		ofs << sb.GetString();
 		return true;
+	}
+
+	void NewSceneManager::backUpCurrScene()
+	{
+		storageScene = currentScene;
+		currentScene = new NormalScene(storageScene->get_filename());
+
+		if (!currentScene)
+		{
+			currentScene = storageScene;
+			storageScene = nullptr;
+			return;
+		}
+
+		currentScene->unusedCIDs = storageScene->unusedCIDs;
+		currentScene->unusedGIDs = storageScene->unusedGIDs;
+		// Copy game object data
+		for (const GameObject* gameObj : storageScene->gameObjects)
+		{
+			if (gameObj && !gameObj->transform.hasParent())
+			{
+				MyGOF.clone(*gameObj, currentScene);
+			}
+		}
+
+		for (size_t goIndex{ 0 }; goIndex < storageScene->get_gameobjcount(); ++goIndex)
+		{
+			// Build a game object copy from original scene
+			GameObject* currGameObj = currentScene->gameObjects[goIndex];
+			GameObject* storedGameObj = storageScene->gameObjects[goIndex];
+			for (size_t compIndex{ 0 }; compIndex < currGameObj->components.size(); ++compIndex)
+			{
+				currGameObj->components[compIndex]->previewLink(storedGameObj->components[compIndex]);
+			}
+		}
 	}
 
 	void create_rapidjson_string(rapidjson::Document& _doc, rapidjson::Value& _value, const std::string& _str)

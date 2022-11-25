@@ -107,6 +107,10 @@ namespace Copium
 			/*******************************************************************************/
 			void inspector_view();
 
+			void deserializeLink (rapidjson::Value& _value);
+
+			void previewLink(Component* rhs);
+
 			Button& operator=(const Button& rhs);
 
 			Component* clone(GameObject& _gameObj) const;
@@ -130,7 +134,6 @@ namespace Copium
 			glm::fvec4 hoverColor;
 			glm::fvec4 clickedColor;
 			Text* targetGraphic;
-			GameObjectID targetGraphicID;
 			ButtonState previousState{ButtonState::None};
 			glm::fvec4 previousColor;
 			float timer{0};

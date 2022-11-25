@@ -110,9 +110,9 @@ namespace Copium
 		return go;
 	}
 
-	GameObject* GameObjectFactory::clone(GameObject& _src, Scene* scene)
+	GameObject* GameObjectFactory::clone(const GameObject& _src, Scene* scene)
 	{
-		GameObject* go = new GameObject(_src.id);
+		GameObject* go = new GameObject(_src);
 		if (!go)
 			return nullptr;
 

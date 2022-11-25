@@ -34,7 +34,7 @@ public:
     Math::Vec3 rotation;
     Math::Vec3 scale;
 
-    bool hasParent()
+    bool hasParent() const
     {
         return parent;
     }

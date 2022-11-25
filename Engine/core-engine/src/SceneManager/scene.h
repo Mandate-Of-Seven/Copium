@@ -34,6 +34,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 namespace Copium
 {
 
+class NewSceneManager;
+
 class Scene 
 {
 public:
@@ -204,6 +206,7 @@ private:
 	std::vector<uint64_t> unusedCIDs;
 	unsigned int numberOfComponents;
 	SceneState currSceneState;
+	friend class NewSceneManager;
 
 };
 

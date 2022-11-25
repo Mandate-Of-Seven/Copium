@@ -24,6 +24,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <stdlib.h>  
 #include <Utilities/easing.h>
 #include <Debugging/frame-rate-controller.h>
+#include <SceneManager/sm.h>
 namespace
 {
 	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
@@ -133,6 +134,24 @@ namespace Copium
 			timer = fadeDuration;
 	}
 
+
+	void Button::deserializeLink(rapidjson::Value& _value) 
+	{
+		if (_value.HasMember("Graphic ID"))
+		{
+			ComponentID targetGraphicID = _value["Graphic ID"].GetUint64();
+			targetGraphic = reinterpret_cast<Text*>(MyNewSceneManager.findComponentByID(targetGraphicID));
+		}
+	}
+
+	void Button::previewLink(Component* rhs) 
+	{
+		ComponentID _ID = reinterpret_cast<Button*>(rhs)->targetGraphic->id;
+		PRINT(_ID);
+		Component* foundText = MyNewSceneManager.findComponentByID(_ID);
+		if (foundText)
+			targetGraphic = reinterpret_cast<Text*>(foundText);
+	}
 
 	void Button::inspector_view()
 	{
@@ -270,6 +289,7 @@ namespace Copium
 	Component* Button::clone(GameObject& _gameObj) const
 	{
 		auto* component = new Button(_gameObj);
+		component->id = id;
 		component->bounds = bounds;
 		component->state = state;
 		component->mapStateCallbacks = mapStateCallbacks;
@@ -298,20 +318,11 @@ namespace Copium
 		{
 			id = _value["ID"].GetUint64();
 		}
-
-		if (_value.HasMember("Graphic ID"))
-		{
-			targetGraphicID = _value["Graphic ID"].GetUint64();
-		}
-
-
 	}
 
 	void Button::set_targetgraphic(Text* _txt)
 	{
 		targetGraphic = _txt;
-		if (targetGraphic)
-			targetGraphicID = _txt->id;
 	}
 	Text* Button::get_targetgraphic() { return targetGraphic; }
 	

@@ -76,7 +76,7 @@ public:           //Global ID for gameObjects
     const GameObjectID id;
     bool active;
     Transform transform;
-    std::list<Component*> components;   //Components for gameObject
+    std::vector<Component*> components;   //Components for gameObject
     ComponentID assign_id();
 
     /*******************************************************************************
