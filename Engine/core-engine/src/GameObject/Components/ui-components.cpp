@@ -35,7 +35,7 @@ namespace Copium
 
 	Button::Button(GameObject& _gameObj,Math::Vec2 _min, Math::Vec2 _max) 
 		: Component(_gameObj, ComponentType::Button), bounds{_min,_max},
-		normalColor{1.f}, hoverColor{0.5f,1.f,1.f,1.f}, clickedColor{0.5f,0.5f,0.5f,1.f},
+		normalColor{1.f,1.f,1.f,0.5f}, hoverColor{0.5f,1.f,1.f,0.5f}, clickedColor{0.5f},
 		targetGraphic{nullptr}
 	{
 		previousColor = normalColor;
@@ -76,6 +76,8 @@ namespace Copium
 		{
 			timer = 0;
 			previousState = state;
+			if (targetGraphic)
+				previousColor = targetGraphic->layeredColor;
 		}
 		ButtonCallback callback = mapStateCallbacks[state];
 		if (callback != nullptr)
@@ -108,17 +110,17 @@ namespace Copium
 		{
 		case ButtonState::OnClick:
 		{
-			targetGraphic->color = Linear(previousColor, clickedColor, timer / fadeDuration);
+			targetGraphic->layeredColor = Linear(previousColor, clickedColor, timer / fadeDuration);
 			break;
 		}
 		case ButtonState::OnHover:
 		{
-			targetGraphic->color = Linear(previousColor, hoverColor, timer / fadeDuration);
+			targetGraphic->layeredColor = Linear(previousColor, hoverColor, timer / fadeDuration);
 			break;
 		}
 		default:
 		{
-			targetGraphic->color = Linear(previousColor, normalColor, timer / fadeDuration);
+			targetGraphic->layeredColor = Linear(previousColor, normalColor, timer / fadeDuration);
 			break;
 		}
 		}
@@ -169,7 +171,7 @@ namespace Copium
 					if (pText != targetGraphic)
 					{
 						if (targetGraphic)
-							targetGraphic->color = { 1.f ,1.f,1.f,1.f};
+							targetGraphic->layeredColor = {0,0,0,0};
 						targetGraphic = pText;
 					}
 				}
@@ -322,10 +324,8 @@ namespace Copium
 		mixedColor.r = layeredColor.r * layeredColor.a / mixedColor.a + color.r * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.67
 		mixedColor.g = layeredColor.g * layeredColor.a / mixedColor.a + color.g * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.33
 		mixedColor.b = layeredColor.b * layeredColor.a / mixedColor.a + color.b * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.00
-		
-
+	
 		/*PRINT("Color: " << color.r << " " << color.g << " " << color.b << " " << color.a);
-		PRINT("Layered Color: " << layeredColor.r << " " << layeredColor.g << " " << layeredColor.b << " " << layeredColor.a);
 		PRINT("Mixed Color: " << mixedColor.r << " " << mixedColor.g << " " << mixedColor.b << " " << mixedColor.a);
 		*/
 		font->draw_text(content, pos, mixedColor, scale, 0, _camera);
@@ -416,7 +416,7 @@ namespace Copium
 				| ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoLabel;
 			ImGui::ColorPicker4("Picker", reinterpret_cast<float*>(&color), miscFlags);
 
-			PRINT(color.r << ' ' << color.g << ' ' << color.b << ' ' << color.a);
+			//PRINT(color.r << ' ' << color.g << ' ' << color.b << ' ' << color.a);
 			ImGui::EndPopup();
 		}
 	}

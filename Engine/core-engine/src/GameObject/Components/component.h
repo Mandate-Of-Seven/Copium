@@ -52,7 +52,7 @@ static std::map<ComponentType, std::string> MAP_COMPONENT_TYPE_NAME
     {ComponentType::Animator,"Animator"},
     {ComponentType::AudioSource,"AudioSource"},
     {ComponentType::BoxCollider2D,"BoxCollider2D"},
-    {ComponentType::Button,"ButtonComponent"},
+    {ComponentType::Button,"Button"},
     {ComponentType::Camera,"Camera"},
     {ComponentType::Image,"ImageComponent"},
     {ComponentType::Rigidbody2D,"Rigidbody2D"},
