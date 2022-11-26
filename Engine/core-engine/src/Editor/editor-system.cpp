@@ -27,6 +27,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "SceneManager/state-manager.h"
 #include "Messaging/message-system.h"
 #include "Graphics/graphics-system.h"
+#include <ImGuizmo.h>
+
 
 namespace Copium
 {
@@ -105,6 +107,8 @@ namespace Copium
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+		ImGuizmo::BeginFrame();
+
 
 		//Dockspace
 		if(enableEditor)

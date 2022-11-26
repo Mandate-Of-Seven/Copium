@@ -11,14 +11,19 @@
 	This file holds the definition of functions for the scene view of the editor, where
 	the user can view the scene.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
-
+#include <GL/glew.h>
 #include "Editor/editor-sceneview.h"
 #include "Editor/editor-system.h"
-#include "SceneManager/sm.h"
 #include "Windows/windows-system.h"
+#include "glm/gtc/matrix_transform.hpp"
+#include <glm/gtc/type_ptr.hpp>
+
+#include <ImGuizmo.h>
+
+
 
 namespace Copium
 {
@@ -49,7 +54,9 @@ namespace Copium
 		ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
 		resize_sceneview(*((glm::vec2*) &viewportEditorSize));
 		ImGui::Image((void*) (size_t) textureID, ImVec2{ (float)sceneWidth, (float)sceneHeight }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
-
+		// Gizmos
+		Scene* scene = sm.get_current_scene();
+		EditorSceneView::update_gizmos();
 		ImGui::End();
 		ImGui::PopStyleVar();
 		// End Scene View
@@ -61,7 +68,7 @@ namespace Copium
 		// Begin Render Stats
 		ImGui::Begin("Renderer Stats", 0, windowFlags);
 
-		Scene* scene = sm.get_current_scene();
+		
 		size_t gameobjectCount = 0;
 		if (scene != nullptr)
 			gameobjectCount = scene->get_gameobjcount();
@@ -182,6 +189,76 @@ namespace Copium
 			sceneWidth = (int)sceneDimension.x;
 			sceneHeight = (int)sceneDimension.y;
 			camera.on_resize(sceneDimension.x, sceneDimension.y);
+		}
+	}
+
+	void EditorSceneView::update_gizmos()
+	{
+		static ImGuizmo::OPERATION currop = ImGuizmo::OPERATION::TRANSLATE;
+		GameObject* currObj = sm.get_selected_gameobject();
+		if (currObj)
+		{
+			Transform& trf = currObj->transform;
+			glm::vec2 size(trf.scale.x, trf.scale.y);
+			float rot = trf.rotation.z;
+			rot = float(rot * (3.1416/180));
+			const glm::vec3& pos = trf.position;
+
+			ImGuizmo::SetOrthographic(true);
+			ImGuizmo::SetDrawlist();
+
+
+			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, (float)sceneWidth, (float)sceneHeight);
+			const glm::mat4 camProj = camera.get_projection();
+			glm::mat4 camView = camera.get_view_matrix();
+			glm::mat4 translate = glm::translate(glm::mat4(1.f), pos);
+			glm::mat4 rotation = {
+			glm::vec4(cos(rot), sin(rot), 0.f, 0.f),
+			glm::vec4(-sin(rot), cos(rot), 0.f, 0.f),
+			glm::vec4(0.f, 0.f, 1.f, 0.f),
+			glm::vec4(0.f, 0.f, 0.f, 1.f)
+			};
+
+			glm::mat4 scale = {
+				glm::vec4(size.x, 0.f, 0.f, 0.f),
+				glm::vec4(0.f, size.y, 0.f, 0.f),
+				glm::vec4(0.f, 0.f, 1.f, 0.f),
+				glm::vec4(0.f, 0.f, 0.f, 1.f)
+			};
+			glm::mat4 transform = translate * rotation * scale;
+			if (ImGui::IsKeyReleased(ImGuiKey_W))
+			{
+				currop = ImGuizmo::OPERATION::TRANSLATE;
+
+			}
+			if (ImGui::IsKeyReleased(ImGuiKey_R))
+			{
+				currop = ImGuizmo::OPERATION::SCALE;
+
+			}
+			if (ImGui::IsKeyReleased(ImGuiKey_E))
+			{	
+				currop = ImGuizmo::OPERATION::ROTATE;
+
+			}
+			ImGuizmo::Manipulate(glm::value_ptr(camView), glm::value_ptr(camProj),
+				currop, ImGuizmo::LOCAL, glm::value_ptr(transform));
+			if (ImGuizmo::IsUsing())
+			{
+				float newTranslate[3]; 
+				float newRotate[3];
+				float newScale[3];
+				ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), newTranslate, newRotate, newScale);
+				glm::vec3 nTranslation{ newTranslate[0], newTranslate[1], newTranslate[2] };
+				glm::vec3 nRotation{ newRotate[0], newRotate[1], newRotate[2] };
+				glm::vec3 nScale{ newScale[0], newScale[1], newScale[2] };
+				trf.position = nTranslation;
+				trf.scale = nScale;
+				trf.rotation.z = nRotation.z;
+				
+
+			}
+
 		}
 	}
 }
