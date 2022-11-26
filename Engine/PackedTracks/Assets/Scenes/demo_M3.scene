@@ -112,6 +112,125 @@
                     "Active": true
                 }
             ]
+        },
+        {
+            "ID": 2,
+            "Name": "bullet",
+            "Components": [
+                {
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 9,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": -15.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 10,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 4,
+            "Name": "top shredder",
+            "Components": [
+                {
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 15,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 10.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider2D",
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -3.0,
+                            "Y": -0.5
+                        },
+                        "Max": {
+                            "X": 3.0,
+                            "Y": 0.5
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 3,
+            "Name": "bot shredder",
+            "Components": [
+                {
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 16,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": -10.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider2D",
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -3.0,
+                            "Y": -0.5
+                        },
+                        "Max": {
+                            "X": 3.0,
+                            "Y": 0.5
+                        }
+                    }
+                }
+            ]
         }
     ]
 }

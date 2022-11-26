@@ -48,13 +48,13 @@ public class AIMovement : CopiumScript
                 currentAIState = AIState.Chase;
             }else
             {
-                Console.WriteLine(PlayerTrainGO.transform.position.x);
+                Console.WriteLine("Player X Pos: " + PlayerTrainGO.transform.position.x);
             }
         }
 
         if (CurrentGameState == GameState.Combat && currentAIState == AIState.Chase)
         {
-            Console.WriteLine("bleep");
+            //Console.WriteLine("bleep");
             if (self.transform.position.x < PlayerTrainGO.transform.position.x)
             {
                 //AIMoveRight();
