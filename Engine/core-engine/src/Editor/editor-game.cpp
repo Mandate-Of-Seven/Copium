@@ -8,7 +8,8 @@
 \date			21/11/2022
 
 \brief
-	This file holds the definitions of the functions in the editor game gui
+	This file holds the definitions of the functions in the editor game gui where the
+	user can play the game in this GUI
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
@@ -27,6 +28,8 @@ namespace Copium
 	{
 		GraphicsSystem* graphics = GraphicsSystem::Instance();
 		BaseCamera* gameCamera = nullptr;
+
+		float padding = 16.f;
 	}
 
 	void EditorGame::init()
@@ -46,15 +49,18 @@ namespace Copium
 		windowHovered = ImGui::IsWindowHovered();
 		scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
 		
-		ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
-
 		unsigned int textureID = 0;
 		if (!graphics->get_cameras().empty())
 		{
 			gameCamera = *graphics->get_cameras().begin();
 			textureID = gameCamera->get_framebuffer()->get_color_attachment_id();
-			resize_game(*((glm::vec2*) &viewportEditorSize));
 		}
+
+		ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
+		resize_game(*((glm::vec2*) &viewportEditorSize));
+		float indent = (viewportEditorSize.x - sceneWidth) * 0.5f;
+		if(indent > 0)
+			ImGui::Indent(indent);
 		ImGui::Image((void*) (size_t) textureID, ImVec2{ (float) sceneWidth, (float) sceneHeight }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
 
 		ImGui::End();
@@ -76,15 +82,32 @@ namespace Copium
 		// Only if the current scene dimension is not the same as new dimension
 		if (_newDimension.x != 0 && _newDimension.y != 0)
 		{
+			float aspect = 16.f / 9.f;
+			bool modified = false;
 			_newDimension = glm::floor(_newDimension);
-			glm::vec2 gameDimension = gameCamera->get_framebuffer()->get_size();
-			if (sceneDimension != _newDimension || gameDimension != _newDimension)
+
+			glm::vec2 adjusted  = sceneDimension;
+			if (adjusted.y > _newDimension.y || adjusted.y != _newDimension.y)
 			{
-				sceneDimension = { _newDimension.x, _newDimension.y };
-				sceneWidth = (int) sceneDimension.x;
-				sceneHeight = (int) sceneDimension.y;
-				gameCamera->on_resize(sceneDimension.x, sceneDimension.y);
+				modified = true;
+				adjusted = { _newDimension.y * aspect, _newDimension.y };
 			}
+
+			if (adjusted.x > _newDimension.x - padding)
+			{
+				modified = true;
+				adjusted = { _newDimension.x - padding, (_newDimension.x - padding) / aspect };
+			}
+
+			if (!modified)
+				return;
+
+			sceneDimension = adjusted;
+			sceneWidth = (int) sceneDimension.x;
+			sceneHeight = (int) sceneDimension.y;
+
+			if(gameCamera)
+				gameCamera->on_resize(sceneDimension.x, sceneDimension.y);
 		}
 	}
 }

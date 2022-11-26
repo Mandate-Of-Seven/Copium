@@ -8,7 +8,8 @@
 \date			20/10/2022
 
 \brief
-	Contains function declarations for Assets system
+	Contains function declarations for Assets system which allows for laoding and unloading
+	of assets from the File system.
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
@@ -53,7 +54,24 @@ namespace Copium
 		/**************************************************************************/
 		void exit();
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Loads a file into the asset system
+		\param _file
+			The file to load
+		*/
+		/**************************************************************************/
 		void load_file(File* _file);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Unloads a file from the asset system
+		\param _file
+			The file to unload
+		*/
+		/**************************************************************************/
 		void unload_file(File* _file);
 
 		/***************************************************************************/
@@ -74,7 +92,24 @@ namespace Copium
 		/**************************************************************************/
 		void load_all_textures(std::list<File*>& _files);
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Loads a single texture from a file path
+		\param _fie
+			The file path to load from
+		*/
+		/**************************************************************************/
 		void load_texture(File* _file);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Unloads a single texture from a file path
+		\param _fie
+			The file path to unload from
+		*/
+		/**************************************************************************/
 		void unload_texture(File* _file);
 
 		/***************************************************************************/

@@ -38,7 +38,7 @@ namespace Copium
 
 	Camera::~Camera()
 	{
-		PRINT("Camera Component deconstructed");
+		PRINT("  Camera Component deconstructed");
 
 		BaseCamera::exit();
 		graphics->get_cameras().remove(this);

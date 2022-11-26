@@ -8,7 +8,9 @@
 \date			01/11/2022
 
 \brief
-	Contains function declarations for the editor content browser
+	Contains function declarations for the editor content browser, where users can view
+	and interact with the items in the assets folder.
+
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
@@ -48,6 +50,13 @@ namespace Copium
 		/***************************************************************************/
 		void exit();
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Selects items within the content browser and respond accordingly based 
+			on whether it is a file or directory
+		*/
+		/***************************************************************************/
 		void inputs();
 
 		Directory* get_current_directory() { return currentDirectory; }

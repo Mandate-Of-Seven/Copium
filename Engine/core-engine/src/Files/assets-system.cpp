@@ -8,7 +8,8 @@
 \date			20/10/2022
 
 \brief
-	Contains function definitions for Assets system
+	This file contains functions for the Assets system where the user can load and unload
+	assets that are retrieved from the File system into the engine.
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/

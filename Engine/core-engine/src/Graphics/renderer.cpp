@@ -98,7 +98,7 @@ namespace Copium
 		glVertexArrayAttribBinding(quadVertexArrayID, 4, 0);
 
 		// Element Buffer Object
-		GLushort indices[maxIndexCount];
+		GLushort indices[maxIndexCount]{0};
 		GLushort offset = 0;
 		for (GLuint i = 0; i < maxIndexCount; i += 6)
 		{
@@ -678,7 +678,6 @@ namespace Copium
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		GraphicsSystem* graphics = GraphicsSystem::Instance();
 		graphics->get_shader_program()[LINE_SHADER].Use();
 
 		GLuint uProjection = glGetUniformLocation(

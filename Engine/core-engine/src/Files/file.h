@@ -45,50 +45,56 @@ namespace Copium
 	public:
 		/*******************************************************************************
 		/*!
-		*
-			\brief
-				Constructor of a file to use std::filesystem constructor
+		\brief
+			Constructor of a file to use std::filesystem constructor
 		*/
 		/*******************************************************************************/
 		File();
+
 		/*******************************************************************************
 		/*!
-		*
-			\brief
-				Conversion constructor of a file
-
-			\param pathRef
-				std::filesystem::path to convert into a file
+		\brief
+			Conversion constructor of a file
+		\param pathRef
+			std::filesystem::path to convert into a file
 		*/
 		/*******************************************************************************/
 		File(const std::filesystem::path& pathRef);
 
 		/*******************************************************************************
 		/*!
-		*
-			\brief
-				Uses winAPI to track for modification timings and set modified back to
-				false if it were true
-
-			\return
-				If file was modified, return true, else return false
+		\brief
+			Uses winAPI to track for modification timings and set modified back to
+			false if it were true
+		\return
+			If file was modified, return true, else return false
 		*/
 		/*******************************************************************************/
 		bool is_modified();
 
 		/*******************************************************************************
 		/*!
-		*
-			\brief
-				Queries the system whether the modification timings changed
+		\brief
+			Queries the system whether the modification timings changed
 		*/
 		/*******************************************************************************/
 		void update_modification_timing();
 
-		// Bean: When user double clicks
+		/*******************************************************************************
+		/*!
+		\brief
+			Access the file when the user double clicks on the file
+		*/
+		/*******************************************************************************/
 		void access_file();
 
-		// Bean: When user clicks on the file to view
+		/*******************************************************************************
+		/*!
+		\brief
+			Shows the file information when the user selects the file in the content 
+			browser
+		*/
+		/*******************************************************************************/
 		void inspector_view();
 
 		const unsigned int& get_id() const { return instanceID; }

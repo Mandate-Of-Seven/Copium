@@ -23,7 +23,13 @@ namespace Copium
 	class Directory final : public std::filesystem::directory_entry
 	{
 	public:
-		// Bean: When user clicks on the file to view
+		/*******************************************************************************
+		/*!
+		\brief
+			Shows the directory information when the user selects the directory in the 
+			content browser
+		*/
+		/*******************************************************************************/
 		void inspector_view();
 
 		const unsigned int& get_id() const { return instanceID; }
@@ -41,11 +47,32 @@ namespace Copium
 		std::vector<Directory*>& get_child_directory() { return folders; }
 		void add_child_directory(Directory* _directory) { folders.push_back(_directory); }
 
-		bool within_directory(Directory* _directory);
-		bool within_directory(File* _file);
-
 		Directory* get_parent_directory() { return parentFolder; }
 		void set_parent_directory(Directory* _directory) { parentFolder = _directory; }
+
+		/*******************************************************************************
+		/*!
+		\brief
+			Check if the specified directory in the parameter is within this directory
+		\param _directory
+			The directory to check if it is within this directory
+		\return
+			True if it is, else false
+		*/
+		/*******************************************************************************/
+		bool within_directory(Directory* _directory);
+
+		/*******************************************************************************
+		/*!
+		\brief
+			Check if the specified file in the parameter is within this directory
+		\param _file
+			The file to check if it is within this directory
+		\return
+			True if it is, else false
+		*/
+		/*******************************************************************************/
+		bool within_directory(File* _file);
 
 	private:
 		unsigned int instanceID = 0; // The id to reference for the asset
