@@ -8,6 +8,7 @@ public class CombatMovement : CopiumScript
 {
     public Rigidbody2D rb;
     public GameObject gameObj;
+    public GameObject gameObj2;
 
     public Vector3 hello;
 
@@ -30,6 +31,10 @@ public class CombatMovement : CopiumScript
     // Update is called once per frame
     void Update()
     {
+        if (gameObj == null)
+        {
+            return;
+        }
         if (Input.GetKey(KeyCode.Escape))
         {
             Application.Quit();
@@ -168,5 +173,10 @@ public class CombatMovement : CopiumScript
     void OnCollisionEnter2D(Collision2D collision)
     {
         Console.WriteLine("HELLO!");
+    }
+
+    void ButtonClickedEffect()
+    {
+        Console.WriteLine("I AM CLICKED!!");
     }
 }

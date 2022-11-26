@@ -147,7 +147,7 @@
                 {
                     "PID": 0,
                     "Children": [],
-                    "ID": 9,
+                    "ID": 11,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -193,7 +193,7 @@
                 {
                     "PID": 0,
                     "Children": [],
-                    "ID": 12,
+                    "ID": 14,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -233,7 +233,7 @@
                 {
                     "PID": 0,
                     "Children": [],
-                    "ID": 14,
+                    "ID": 16,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -281,7 +281,8 @@
                 {
                     "Type": "Button",
                     "ID": 23,
-                    "Graphic ID": 14
+                    "Graphic ID": 14,
+                    "Callback": ""
                 }
             ]
         },
@@ -292,7 +293,7 @@
                 {
                     "PID": 0,
                     "Children": [],
-                    "ID": 18,
+                    "ID": 20,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -340,7 +341,18 @@
                 {
                     "Type": "Button",
                     "ID": 22,
-                    "Graphic ID": 17
+                    "Graphic ID": 17,
+                    "Callback": "ButtonClickedEffect"
+                },
+                {
+                    "ID": 24,
+                    "Type": "Script",
+                    "Name": "CombatMovement",
+                    "hello": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    }
                 }
             ]
         }
