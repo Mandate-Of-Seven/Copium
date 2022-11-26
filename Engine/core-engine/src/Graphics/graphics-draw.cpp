@@ -192,6 +192,11 @@ namespace Copium
 
 					renderer.draw_quad({ rc->Offset(),t.position.z }, size, rotation, sr);
 				}
+
+			}
+
+			for (GameObject* gameObject : scene->gameObjects)
+			{
 				for (Component* component : gameObject->getComponents<Text>())
 				{
 					if (!component->Enabled())
@@ -201,7 +206,6 @@ namespace Copium
 					text->render(camera);
 				}
 			}
-
 		}
 
 		// Bean : Testing Text

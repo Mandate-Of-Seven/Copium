@@ -51,16 +51,6 @@ namespace Copium
 		PRINT("");*/
 	}
 
-	void FileSystem::update()
-	{
-		check_directory_count(&assetsDirectory);
-	}
-
-	void FileSystem::exit()
-	{
-		delete_directories(&assetsDirectory);
-	}
-
 	void FileSystem::init_file_types()
 	{
 		fileTypes.emplace(std::make_pair("", FileType("Folder", FOLDER)));
@@ -149,36 +139,6 @@ namespace Copium
 	void FileSystem::exit()
 	{
 		delete_directories(&assetsDirectory);
-	}
-
-	void FileSystem::check_directory_count(Directory* _directory, bool _recursive)
-	{
-		int fileCount = 0;
-		for (auto dirEntry : fs::directory_iterator(_directory->path()))
-		{
-			(void)dirEntry;
-			fileCount++;
-		}
-
-		// Check if there is a change in the number of files
-		if (_directory->get_file_count() != 0 && _directory->get_file_count() != fileCount)
-		{
-			double start = glfwGetTime();
-			update_directories(_directory, false);
-			double end = glfwGetTime();
-
-			PRINT("File time taken to reload: " << end - start);
-		}
-
-		_directory->set_file_count(fileCount);
-
-		if (_recursive)
-		{
-			for (Directory* dirEntry : _directory->get_child_directory())
-			{
-				check_directory_count(dirEntry);
-			}
-		}
 	}
 
 	void FileSystem::generate_directories(Directory* _directory, std::filesystem::path const& _path)
@@ -568,12 +528,6 @@ namespace Copium
 		return nullptr;
 	}
 
-	void FileSystem::update_file_references()
-	{
-		files.clear();
-		store_file_references(&assetsDirectory);
-	}
-
 	void FileSystem::delete_directories(Directory* _directory)
 	{
 		if (!_directory->get_child_directory().empty())
@@ -594,31 +548,6 @@ namespace Copium
 	{
 		files.clear();
 		store_file_references(&assetsDirectory);
-	}
-
-	void FileSystem::store_file_references(Directory* _directory)
-	{
-		for (auto& fileEntry : _directory->get_files())
-		{
-			files[fileEntry.get_file_type().fileType].push_back(&fileEntry);
-		}
-
-		for (auto dirEntry : _directory->get_child_directory())
-		{
-			store_file_references(dirEntry);
-		}
-	}
-
-	void FileSystem::add_file_reference(File* _file)
-	{
-		files[_file->get_file_type().fileType].push_back(_file);
-		assets->load_file(_file);
-	}
-
-	void FileSystem::remove_file_reference(File* _file)
-	{
-		files[_file->get_file_type().fileType].remove(_file);
-		assets->unload_file(_file);
 	}
 
 	void FileSystem::delete_from_browser()
