@@ -106,7 +106,8 @@ namespace Copium
 		Compiling,
 		SwapAssembly,
 		Deserializing,
-		Wait
+		Wait,
+		Previewing,
 	};
 
 	struct ScriptClass
@@ -266,6 +267,8 @@ namespace Copium
 		MonoType* getMonoTypeFromName(std::string& name);
 
 		MonoString* createMonoString(const char* str);
+
+		MonoObject* getFieldMonoObject(MonoClassField* mField, MonoObject* mObject);
 	private:
 
 		/**************************************************************************/

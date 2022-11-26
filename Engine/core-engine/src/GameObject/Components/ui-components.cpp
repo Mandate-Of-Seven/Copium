@@ -24,6 +24,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <stdlib.h>  
 #include <Utilities/easing.h>
 #include <Debugging/frame-rate-controller.h>
+#include <SceneManager/sm.h>
 namespace
 {
 	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
@@ -35,8 +36,8 @@ namespace Copium
 	const Button* Button::hoveredBtn{nullptr};
 	Button::Button(GameObject& _gameObj,Math::Vec2 _min, Math::Vec2 _max) 
 		: Component(_gameObj, ComponentType::Button), bounds{_min,_max},
-		normalColor{1.f}, hoverColor{0.5f,1.f,1.f,1.f}, clickedColor{0.5f,0.5f,0.5f,1.f},
-		targetGraphic{nullptr}, targetGraphicID{0}
+		normalColor{1.f,1.f,1.f,0.5f}, hoverColor{0.5f,1.f,1.f,0.5f}, clickedColor{0.5f},
+		targetGraphic{nullptr}
 	{
 		previousColor = normalColor;
 		state = ButtonState::None;
@@ -130,6 +131,24 @@ namespace Copium
 	}
 
 
+	void Button::deserializeLink(rapidjson::Value& _value) 
+	{
+		if (_value.HasMember("Graphic ID"))
+		{
+			ComponentID targetGraphicID = _value["Graphic ID"].GetUint64();
+			targetGraphic = reinterpret_cast<Text*>(MyNewSceneManager.findComponentByID(targetGraphicID));
+		}
+	}
+
+	void Button::previewLink(Component* rhs) 
+	{
+		ComponentID _ID = reinterpret_cast<Button*>(rhs)->targetGraphic->id;
+		PRINT(_ID);
+		Component* foundText = MyNewSceneManager.findComponentByID(_ID);
+		if (foundText)
+			targetGraphic = reinterpret_cast<Text*>(foundText);
+	}
+
 	void Button::inspector_view()
 	{
 		bool openPopup = false;
@@ -170,7 +189,7 @@ namespace Copium
 					if (pText != targetGraphic)
 					{
 						if (targetGraphic)
-							targetGraphic->layeredColor = { 1.f ,1.f,1.f,1.f};
+							targetGraphic->layeredColor = {0,0,0,0};
 						targetGraphic = pText;
 					}
 				}
@@ -294,20 +313,11 @@ namespace Copium
 		{
 			id = _value["ID"].GetUint64();
 		}
-
-		if (_value.HasMember("Graphic ID"))
-		{
-			targetGraphicID = _value["Graphic ID"].GetUint64();
-		}
-
-
 	}
 
 	void Button::set_targetgraphic(Text* _txt)
 	{
 		targetGraphic = _txt;
-		if (targetGraphic)
-			targetGraphicID = _txt->id;
 	}
 	Text* Button::get_targetgraphic() { return targetGraphic; }
 	
@@ -365,6 +375,10 @@ namespace Copium
 		mixedColor.r = layeredColor.r * layeredColor.a / mixedColor.a + color.r * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.67
 		mixedColor.g = layeredColor.g * layeredColor.a / mixedColor.a + color.g * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.33
 		mixedColor.b = layeredColor.b * layeredColor.a / mixedColor.a + color.b * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.00
+	
+		/*PRINT("Color: " << color.r << " " << color.g << " " << color.b << " " << color.a);
+		PRINT("Mixed Color: " << mixedColor.r << " " << mixedColor.g << " " << mixedColor.b << " " << mixedColor.a);
+		*/
 		font->draw_text(content, pos, mixedColor, scale, 0, _camera);
 	}
 
@@ -453,6 +467,7 @@ namespace Copium
 				| ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoLabel;
 			ImGui::ColorPicker4("Picker", reinterpret_cast<float*>(&color), miscFlags);
 
+			//PRINT(color.r << ' ' << color.g << ' ' << color.b << ' ' << color.a);
 			ImGui::EndPopup();
 		}
 	}

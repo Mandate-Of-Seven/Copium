@@ -285,6 +285,26 @@ namespace Copium
 		}
 	}
 
+	static GameObjectID CloneGameObject(GameObjectID ID)
+	{
+		GameObject* toBeCloned = MyNewSceneManager.findGameObjByID(ID);
+		if (toBeCloned)
+		{
+			GameObject* clone = MyGOF.instantiate(*toBeCloned);
+			if (clone)
+				return clone->id;
+		}
+		return 0;
+	}
+
+	static GameObjectID InstantiateGameObject()
+	{
+		GameObject* clone = MyGOF.instantiate();
+		if (clone)
+			return clone->id;
+		return 0;
+	}
+
 	/*******************************************************************************
 	/*!
 	\brief
@@ -308,6 +328,8 @@ namespace Copium
 		Register(GetActive);
 		Register(GetTextString);
 		Register(SetTextString);
+		Register(CloneGameObject);
+		Register(InstantiateGameObject);
 		Register(GetKeyUp);
 		Register(QuitGame);
 	}

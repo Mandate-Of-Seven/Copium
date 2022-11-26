@@ -21,10 +21,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 namespace Copium
 {
-    ComponentID Component::count = 0;
-
     Component::Component(GameObject& _gameObj, ComponentType _componentType) 
-        : gameObj{ _gameObj }, componentType{ _componentType }, enabled{ true }, id{count++} {}
+        : gameObj{ _gameObj }, componentType{ _componentType }, enabled{ true }, id{0} {}
 
     void Component::destroy() {}
 

@@ -111,6 +111,7 @@ namespace Copium
 	{
 		mMethods["OnCreate"] = mono_class_get_method_from_name(mCopiumScript, "OnCreate", 1);
 		mMethods["FindComponentByID"] = mono_class_get_method_from_name(mCopiumScript, "FindComponentByID", 2);
+		mMethods["FindGameObjectByID"] = mono_class_get_method_from_name(mCopiumScript, "FindGameObjectByID", 1);
 		void* methodIterator = nullptr;
 		while (MonoMethod* method = mono_class_get_methods(_mClass, &methodIterator))
 		{
@@ -216,11 +217,11 @@ namespace Copium
 		systemFlags |= FLAG_RUN_ON_EDITOR;
 		ThreadSystem::Instance()->addThread(new std::thread(&ScriptingSystem::recompileThreadWork, this));
 		messageSystem.subscribe(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT, this);
-		messageSystem.subscribe(MESSAGE_TYPE::MT_ADD_COMPONENT, this);
-		messageSystem.subscribe(MESSAGE_TYPE::MT_DELETE_GAMEOBJECT, this);
-		messageSystem.subscribe(MESSAGE_TYPE::MT_DELETE_COMPONENT, this);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_SCENE_OPENED, this);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
+		messageSystem.subscribe(MESSAGE_TYPE::MT_ENGINE_INITIALIZED, this);
+		messageSystem.subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
+		messageSystem.subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
 	}
 
 	void ScriptingSystem::update()
@@ -363,6 +364,17 @@ namespace Copium
 		}
 	}
 
+	MonoObject* ScriptingSystem::getFieldMonoObject(MonoClassField* mField, MonoObject* mObject)
+	{
+		if (mAppDomain == nullptr)
+		{
+			PRINT("APP DOMAIN WAS NULL");
+			return nullptr;
+		}
+		return mono_field_get_value_object(mAppDomain, mField, mObject);
+
+	}
+
 	void ScriptingSystem::updateScriptFiles()
 	{
 		//Check for new files
@@ -421,7 +433,6 @@ namespace Copium
 
 	void ScriptingSystem::tryRecompileDll()
 	{
-		compilingState = CompilingState::Wait;
 		bool startCompiling = false;
 		for (File& scriptFile : scriptFiles)
 		{
@@ -433,6 +444,8 @@ namespace Copium
 				compilingState = CompilingState::SwapAssembly;
 			}
 		}
+		if (!startCompiling)
+			compilingState = CompilingState::Wait;
 	}
 
 	bool ScriptingSystem::scriptIsLoaded(const std::filesystem::path& filePath)
@@ -464,19 +477,19 @@ namespace Copium
 				void* param = &MESSAGE_CONTAINER::reflectCsGameObject.gameObjID;
 				mono_runtime_object_init(mInstance);
 				mono_runtime_invoke(mSetID, mInstance, &param, nullptr);
-				MonoMethod* mAttachComponentByID = mono_class_get_method_from_name(mGameObject, "AttachComponentByID", 1);
-				for (uint64_t componentID : MESSAGE_CONTAINER::reflectCsGameObject.componentIDs)
-				{
-					void* param = &componentID;
-					mono_runtime_invoke(mAttachComponentByID, mInstance,&param,nullptr);
-				}
+				//MonoMethod* mAttachComponentByID = mono_class_get_method_from_name(mGameObject, "AttachComponentByID", 1);
+				//for (uint64_t componentID : MESSAGE_CONTAINER::reflectCsGameObject.componentIDs)
+				//{
+				//	void* param = &componentID;
+				//	mono_runtime_invoke(mAttachComponentByID, mInstance,&param,nullptr);
+				//}
 				break;
 			}
 			case MESSAGE_TYPE::MT_SCENE_OPENED:
 			{
-				while (compilingState != CompilingState::Wait);
-				swapDll();
+				while (compilingState == CompilingState::Compiling);
 				compilingState = CompilingState::Deserializing;
+				swapDll();
 				break;
 			}
 			case MESSAGE_TYPE::MT_SCENE_DESERIALIZED:
@@ -484,26 +497,7 @@ namespace Copium
 				compilingState = CompilingState::Wait;
 				break;
 			}
-			case MESSAGE_TYPE::MT_DELETE_GAMEOBJECT:
-			{
-				if (!mAssemblyImage)
-					return;
-				MonoObject* mGameObj = monoGameObjects[MESSAGE_CONTAINER::addOrDeleteComponent.gameObjID];
-				mono_free(mGameObj);
-				PRINT("FREED GAME OBJECT FROM MONO");
-				break;
-			}
-			case MESSAGE_TYPE::MT_DELETE_COMPONENT:
-			{
-				if (!mAssemblyImage)
-					return;
-				MonoObject* mGameObj = monoGameObjects[MESSAGE_CONTAINER::addOrDeleteComponent.gameObjID];
-				MonoMethod* mRemoveComponentByID = mono_class_get_method_from_name(mGameObject, "RemoveComponentByID", 1);
-				void* param = &MESSAGE_CONTAINER::addOrDeleteComponent.componentID;
-				//mono_runtime_invoke(mRemoveComponentByID, mGameObj, &param, nullptr);
-				break;
-			}
-			case MESSAGE_TYPE::MT_ADD_COMPONENT:
+			case MESSAGE_TYPE::MT_ENGINE_INITIALIZED:
 			{
 				if (!mAssemblyImage)
 					return;
@@ -512,6 +506,18 @@ namespace Copium
 				//void* param = &MESSAGE_CONTAINER::addOrDeleteComponent.componentID;
 				//mono_runtime_invoke(mAttachComponentByID, mGameObj, &param, nullptr);
 				break;
+			}
+			case MESSAGE_TYPE::MT_START_PREVIEW:
+			{
+				//while (compilingState == CompilingState::Compiling);
+				//if (compilingState == CompilingState::SwapAssembly)
+				//	swapDll();
+				compilingState = CompilingState::Previewing;
+				//swapDll();
+			}
+			case MESSAGE_TYPE::MT_STOP_PREVIEW:
+			{
+				compilingState = CompilingState::Wait;
 			}
 		}
 	}

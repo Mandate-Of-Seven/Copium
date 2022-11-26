@@ -199,7 +199,6 @@
     <ClInclude Include="src\Editor\editor-hierarchy-list.h" />
     <ClInclude Include="src\Files\file-directory.h" />
     <ClInclude Include="src\Files\file-system.h" />
-    <ClInclude Include="src\GameObject\components-system.h" />
     <ClInclude Include="src\Files\file.h" />
     <ClInclude Include="src\GameObject\Components\camera-component.h" />
     <ClInclude Include="src\GameObject\Components\collider-components.h">

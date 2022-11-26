@@ -23,9 +23,9 @@ namespace CopiumEngine
     {
         private void OnCreate(ulong ID)
         {
-            Console.WriteLine("GameObject Created in CS: " + ID);
             if (gameObject != null && ID == gameObject.ID)
                 return;
+            Console.WriteLine(this.GetType().Name + " Script linked with GameObject of ID: (" + ID + ") in C#");
             gameObject = GameObject.FindByID(ID);
             transform = gameObject.transform;
         }
@@ -37,15 +37,45 @@ namespace CopiumEngine
 
         private Component FindComponentByID(ulong componentID, ulong gameObjectID)
         {
+            Console.WriteLine("FINDING COMPONENT BY ID IN C#______________________________________________");
             foreach (Component component in GameObject.components)
             {
                 if (component.ID == componentID)
+                {
                     return component;
+                }
             }
             Component component1 = new Component();
             component1.Initialize(GameObject.FindByID(gameObjectID), componentID);
             GameObject.components.Add(component1);
             return component1;
+        }
+
+        private GameObject FindGameObjectByID(ulong gameObjectID)
+        {
+            Console.WriteLine("FINDING GAMEOBJECT BY ID IN C#______________________________________________");
+            foreach (GameObject gameObject in GameObject.gameObjects)
+            {
+                if (gameObject.ID == gameObjectID)
+                {
+                    return gameObject;
+                }
+            }
+            return null;
+        }
+
+        public GameObject Instantiate(GameObject original)
+        {
+            GameObject gameObject = new GameObject();
+            gameObject.ID = InternalCalls.CloneGameObject(original.ID);
+            return gameObject;
+        }
+
+        public GameObject Instantiate()
+        {
+            GameObject gameObject = new GameObject();
+            gameObject.ID = InternalCalls.InstantiateGameObject();
+            return gameObject;
         }
 
         public static void Destroy(GameObject gameObj)

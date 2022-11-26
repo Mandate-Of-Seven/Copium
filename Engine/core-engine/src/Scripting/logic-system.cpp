@@ -44,16 +44,9 @@ namespace Copium
 		Scene* pScene = sceneManager.get_current_scene();
 		if (pScene == nullptr)
 			return;
-		gameObjects = &pScene->gameObjects;
-		for (GameObject* pGameObj : *gameObjects)
+		for (size_t i = 0; i < pScene->gameObjects.size(); ++i)
 		{
-			const std::vector<Button*>& Buttons{ pGameObj->getComponents<Button>() };
-			for (Button* pButton : Buttons)
-			{
-				if (!pButton)
-					continue;
-				pButton->update();
-			}
+			GameObject* pGameObj = pScene->gameObjects[i];
 			const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };
 			for (Script* pScript : pScripts)
 			{
@@ -69,6 +62,20 @@ namespace Copium
 					pScript->invoke("FixedUpdate");
 				}
 			}
+		}
+		for (GameObject* pGameObj : pScene->gameObjects)
+		{
+			//for (Component* pComponent : pGameObj->components)
+			//{
+			//	PRINT(pComponent->Name() << ":  " << pComponent->id);
+			//}
+			//const std::vector<Button*>& Buttons{ pGameObj->getComponents<Button>() };
+			//for (Button* pButton : Buttons)
+			//{
+			//	if (!pButton)
+			//		continue;
+			//	pButton->update();
+			//}
 		}
 
 	}

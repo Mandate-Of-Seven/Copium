@@ -52,7 +52,7 @@ static std::map<ComponentType, std::string> MAP_COMPONENT_TYPE_NAME
     {ComponentType::Animator,"Animator"},
     {ComponentType::AudioSource,"AudioSource"},
     {ComponentType::BoxCollider2D,"BoxCollider2D"},
-    {ComponentType::Button,"ButtonComponent"},
+    {ComponentType::Button,"Button"},
     {ComponentType::Camera,"Camera"},
     {ComponentType::Image,"ImageComponent"},
     {ComponentType::Rigidbody2D,"Rigidbody2D"},
@@ -139,6 +139,10 @@ class Component
 
         virtual Component* clone(GameObject& _gameObj) const = 0;
 
+        virtual void deserializeLink(rapidjson::Value& _value) {};
+
+        virtual void previewLink(Component* rhs) {};
+
         /*******************************************************************************
         /*!
         *
@@ -220,7 +224,6 @@ class Component
         Component(GameObject& _gameObj, ComponentType _componentType);
     private:
         const bool allowMultiple = false;   //Can gameObjects only have one of this Component?
-        static ComponentID count;
         bool enabled;
 };
 

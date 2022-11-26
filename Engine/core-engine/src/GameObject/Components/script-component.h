@@ -30,6 +30,17 @@ extern "C"
 
 namespace Copium
 {
+	struct FieldData
+	{
+		template <typename T>
+		FieldData(const T& _data)
+		{
+			data = new char[sizeof(T)];
+			memcpy(data,&_data, sizeof(T));
+		}
+		char* data;
+	};
+
     class Script final : public Component, public IReceiver
     {
     public:
@@ -145,17 +156,22 @@ namespace Copium
 
 		void deserialize(rapidjson::Value& _value);
 
+		void deserializeLink(rapidjson::Value& _value);
+
+		void previewLink(Component* rhs);
+
 		void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
 	private:
 		void instantiate();
-		char buffer[32];
+		static char buffer[128];
 		ScriptClass* pScriptClass;
 		MonoObject* mObject;
 		std::string name;
 		const Script* reference{ nullptr };
 		std::unordered_map<std::string, GameObject*> fieldGameObjReferences;
 		std::unordered_map<std::string, Component*> fieldComponentReferences;
+		std::unordered_map<std::string, FieldData*> fieldDataReferences;
 		static ScriptingSystem& sS;
 		bool isAddingGameObjectReference;
     };

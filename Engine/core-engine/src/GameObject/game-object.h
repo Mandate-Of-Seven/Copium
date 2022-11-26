@@ -76,7 +76,7 @@ public:
     const GameObjectID id;
     bool active;
     Transform transform;
-    std::list<Component*> components;   //Components for gameObject
+    std::vector<Component*> components;   //Components for gameObject
     ComponentID assign_id();
 
     /*******************************************************************************
@@ -96,9 +96,6 @@ public:
         static_assert(std::is_base_of<Component, T>::value);
         T* component = new T(*this);
         components.push_back(component);
-        MESSAGE_CONTAINER::addOrDeleteComponent.gameObjID = id;
-        MESSAGE_CONTAINER::addOrDeleteComponent.componentID = component->id;
-        MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_ADD_COMPONENT);
 
         component->id = assign_id();
 

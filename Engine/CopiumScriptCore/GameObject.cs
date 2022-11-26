@@ -18,11 +18,9 @@ using System;
 
 namespace CopiumEngine
 {
-
-
     public class GameObject
     {
-        GameObject()
+        public GameObject()
         {
             transform = new Transform();
             transform.Initialize(this, 0);

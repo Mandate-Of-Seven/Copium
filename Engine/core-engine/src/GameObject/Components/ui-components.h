@@ -64,7 +64,7 @@ namespace Copium
 			HorizontalAlignment hAlignment{HorizontalAlignment::Center};
 			VerticalAlignment vAlignment{VerticalAlignment::Center};
 			glm::fvec4 color{1.f};
-			glm::fvec4 layeredColor{ 1.f };
+			glm::fvec4 layeredColor{ 0.f };
 	};
 
 	class Button final: public Component
@@ -105,6 +105,10 @@ namespace Copium
 			*/
 			/*******************************************************************************/
 			void inspector_view();
+
+			void deserializeLink (rapidjson::Value& _value);
+
+			void previewLink(Component* rhs);
 
 			Button& operator=(const Button& rhs);
 
@@ -184,7 +188,6 @@ namespace Copium
 			glm::fvec4 hoverColor;
 			glm::fvec4 clickedColor;
 			Text* targetGraphic;
-			GameObjectID targetGraphicID;
 			ButtonState previousState{ButtonState::None};
 			glm::fvec4 previousColor;
 			float timer{0};

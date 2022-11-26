@@ -86,7 +86,7 @@ namespace Copium {
 			pointer to the new game object (head of the tree)
 		*/
 		/*******************************************************************************/
-		GameObject* clone(GameObject& _src, Scene* scene);
+		GameObject* clone(const GameObject& _src, Scene* scene);
 
 		/*******************************************************************************
 		/*!

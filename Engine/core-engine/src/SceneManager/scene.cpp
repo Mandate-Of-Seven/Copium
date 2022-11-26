@@ -21,6 +21,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 ******************************************************************************************/
 #include "pch.h"
 #include "SceneManager/scene.h"
+#include <SceneManager/sm.h>
 
 namespace Copium
 {
@@ -89,12 +90,12 @@ ComponentID Scene::assignComponentID()
 	if (unusedCIDs.empty())
 	{
 		incr_component_count();
-		std::cout << "Assigning Component ID: " << numberOfComponents << std::endl;
+		//std::cout << "Assigning Component ID: " << numberOfComponents << std::endl;
 		return static_cast<ComponentID>(numberOfComponents);
 	}
 	else {
 		ComponentID cid = unusedCIDs.front();
-		std::cout << "Taking over cid: " << cid << std::endl;
+		//std::cout << "Taking over cid: " << cid << std::endl;
 		unusedCIDs.erase(unusedCIDs.begin());
 		return cid;
 	}
