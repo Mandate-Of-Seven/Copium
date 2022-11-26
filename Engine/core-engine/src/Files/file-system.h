@@ -12,7 +12,7 @@
 	Contains function declarations for the File system to load file and folders into the
 	engine.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #ifndef FILE_SYSTEM_H
@@ -221,6 +221,10 @@ namespace Copium
 
 		File* get_selected_file() { return selectedFile; }
 		void set_selected_file(File* _file) { selectedFile = _file; }
+		Directory* get_selected_directory() { return selectedDirectory; }
+		void set_selected_directory(Directory* _directory) { selectedDirectory = _directory; }
+
+		void delete_from_browser();
 
 		/*******************************************************************************
 		/*!
@@ -235,6 +239,7 @@ namespace Copium
 			Reference to list of files with the extension
 		*/
 		/*******************************************************************************/
+
 		std::list<std::string>& get_filepath_in_directory(const char* _path, const char* _extension);
 		
 		/*******************************************************************************

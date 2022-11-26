@@ -122,6 +122,9 @@ namespace Copium
 		/**************************************************************************/
 		void load_all_audio(std::list<std::string>& _path);
 
+		void load_audio(File * _file);
+		void unload_audio(File * _file);
+
 		/***************************************************************************/
 		/*!
 		\brief
