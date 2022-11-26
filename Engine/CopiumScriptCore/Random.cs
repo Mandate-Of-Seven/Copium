@@ -18,7 +18,7 @@ using System;
 namespace CopiumEngine
 {
 
-    public static class Random
+    public static class RNG
     {
 
         private static System.Random rnd = new System.Random();

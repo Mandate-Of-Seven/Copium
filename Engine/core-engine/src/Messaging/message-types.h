@@ -21,6 +21,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
+    class GameObject;
     enum class MESSAGE_TYPE
     {
         //MT = MESSAGE_TYPE
@@ -39,6 +40,7 @@ namespace Copium
         MT_RELOAD_ASSETS,
         MT_ENGINE_INITIALIZED,
         MT_WAIT_SYSTEMS_TO_PREVIEW,
+        MT_COLLISION_ENTER,
         MT_NONE // END, DO NOT INSERT BEYOND
     };
 
@@ -85,6 +87,12 @@ namespace Copium
             uint64_t gameObjID;
         };
 
+        struct COLLISION_ENTER
+        {
+            GameObject* collided;
+            GameObject* collidee;
+        };
+
         struct ADD_OR_DELETE_COMPONENT
         {
             uint64_t gameObjID;
@@ -95,6 +103,7 @@ namespace Copium
         extern ADD_OR_DELETE_GAMEOBJECT addOrDeleteGameObject;
         extern ADD_OR_DELETE_COMPONENT addOrDeleteComponent;
         extern FILESYSTEM_MUTEX fileSystemMutex;
+        extern COLLISION_ENTER collisionEnter;
     }
     //static std::vector<MESSAGE_CONTAINERS::MOUSE_MOVED> QUEUE_MOUSE_MOVED;
     //static std::vector<MESSAGE_CONTAINERS::KEY_PRESSED> QUEUE_KEY_PRESSED;

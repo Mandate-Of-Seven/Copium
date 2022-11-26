@@ -269,6 +269,8 @@ namespace Copium
 		MonoString* createMonoString(const char* str);
 
 		MonoObject* getFieldMonoObject(MonoClassField* mField, MonoObject* mObject);
+
+		void instantiateCollision2D(GameObject& collided, GameObject& collidee);
 	private:
 
 		/**************************************************************************/

@@ -43,6 +43,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CopiumScriptCore\Application.cs">
+      <Link>Application.cs</Link>
+    </Compile>
+    <Compile Include="..\CopiumScriptCore\Collision.cs">
+      <Link>Collision.cs</Link>
+    </Compile>
     <Compile Include="..\CopiumScriptCore\Components.cs">
       <Link>Components.cs</Link>
     </Compile>
@@ -70,7 +76,6 @@
     <Compile Include="..\CopiumScriptCore\Random.cs">
       <Link>Random.cs</Link>
     </Compile>
-    <Compile Include="Application.cs" />
     <Compile Include="Assets\Scripts\AIMovement.cs" />
     <Compile Include="Assets\Scripts\Bullet.cs" />
     <Compile Include="Assets\Scripts\CombatBulletBody.cs" />

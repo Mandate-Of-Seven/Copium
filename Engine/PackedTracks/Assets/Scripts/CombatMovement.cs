@@ -45,7 +45,7 @@ public class CombatMovement : CopiumScript
             if (Input.GetKey(KeyCode.A))
             {
                 canMoveRight = false;
-                Instantiate(gameObj);
+                //Instantiate(gameObj);
                 gameObj.transform.position += new Vector2(-0.5f,0f);
 /*                inputLeft = true;
 
@@ -164,5 +164,9 @@ public class CombatMovement : CopiumScript
                 canMoveRight = true;
             }
         }
+    }
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        Console.WriteLine("HELLO!");
     }
 }

@@ -162,6 +162,7 @@ namespace Copium
 
 		void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
+		friend class ScriptingSystem;
 	private:
 		void instantiate();
 		static char buffer[128];

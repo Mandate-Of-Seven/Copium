@@ -52,12 +52,12 @@
                     "Type": "BoxCollider2D",
                     "BoundingBox": {
                         "Min": {
-                            "X": -0.5,
-                            "Y": -0.5
+                            "X": -0.30000001192092896,
+                            "Y": -0.25
                         },
                         "Max": {
-                            "X": 0.5,
-                            "Y": 0.5
+                            "X": 0.30000001192092896,
+                            "Y": 0.25
                         }
                     }
                 },
@@ -70,7 +70,7 @@
                         "Y": 0.0,
                         "Z": 0.0
                     },
-                    "gameObj": 2,
+                    "gameObj": 1,
                     "rb": 3
                 }
             ]
@@ -86,7 +86,7 @@
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
-                        "Y": 0.0,
+                        "Y": -5.0,
                         "Z": -10.0
                     },
                     "Rot": {
@@ -111,6 +111,32 @@
                         "Z": 0.9998999834060669,
                         "W": 1.0
                     }
+                },
+                {
+                    "Type": "BoxCollider2D",
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.30000001192092896,
+                            "Y": -0.25
+                        },
+                        "Max": {
+                            "X": 0.30000001192092896,
+                            "Y": 0.25
+                        }
+                    }
+                },
+                {
+                    "ID": 22,
+                    "Type": "Script",
+                    "Name": "AIMovement",
+                    "PlayerTrainGO": 1,
+                    "rb": 23
+                },
+                {
+                    "ID": 23,
+                    "Type": "Rigidbody2D",
+                    "Grav": false,
+                    "Active": true
                 }
             ]
         },
@@ -121,7 +147,7 @@
                 {
                     "PID": 0,
                     "Children": [],
-                    "ID": 8,
+                    "ID": 9,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -167,7 +193,7 @@
                 {
                     "PID": 0,
                     "Children": [],
-                    "ID": 11,
+                    "ID": 12,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -207,7 +233,7 @@
                 {
                     "PID": 0,
                     "Children": [],
-                    "ID": 13,
+                    "ID": 14,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -266,7 +292,7 @@
                 {
                     "PID": 0,
                     "Children": [],
-                    "ID": 17,
+                    "ID": 18,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,

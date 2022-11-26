@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CopiumEngine;
 using static GameData;
+using System;
 
 public class AIMovement : CopiumScript
 {
@@ -25,6 +26,7 @@ public class AIMovement : CopiumScript
     // Start is called before the first frame update
     void Start()
     {
+        Console.WriteLine("AI MOVEMENT! STARTED");
         GetPlayerPos();
     }
 
@@ -38,17 +40,17 @@ public class AIMovement : CopiumScript
             {
                 DoAIThings();
 
-                AITimer = Random.Range(1f,2f);
+                AITimer = RNG.Range(1f,2f);
             }
         }
 
         if (CurrentGameState == GameState.Combat && currentAIState == AIState.Chase)
         {
-            if (this.transform.position.x < waypoint.x + Random.Range(1f,2f))
+            if (this.transform.position.x < waypoint.x + RNG.Range(1f,2f))
             {
                 AIMoveRight();
             }
-            else if (this.transform.position.x > waypoint.x + Random.Range(1f, 2f))
+            else if (this.transform.position.x > waypoint.x + RNG.Range(1f, 2f))
             {
                 AIMoveLeft();
             }
