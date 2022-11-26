@@ -194,11 +194,12 @@ namespace Copium
 		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
 		if (gameObj == nullptr)
 		{
+			PRINT("CANT FIND GAMEOBJECT");
 			return false;
 		}
 		MonoType* managedType = mono_reflection_type_get_type(componentType);
 		ComponentType cType = s_EntityHasComponentFuncs[mono_type_get_name(managedType)];
-		PRINT((int)cType);
+		PRINT("Component Type: " << MAP_COMPONENT_TYPE_NAME[cType] << int(cType));
 		return gameObj->hasComponent(cType);
 	}
 	

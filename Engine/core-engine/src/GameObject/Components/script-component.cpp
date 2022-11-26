@@ -148,6 +148,17 @@ namespace Copium
 		return true;
 	}
 
+	const std::vector<std::string>& Script::getFunctionNames()
+	{
+		static std::vector<std::string> functionNames;
+		functionNames.clear();
+		for (auto pair : pScriptClass->mMethods)
+		{
+			functionNames.push_back(pair.first);
+		}
+		return functionNames;
+	}
+
 	void Script::inspector_view()
 	{
 		if (!pScriptClass)
@@ -182,7 +193,7 @@ namespace Copium
 					{
 						std::string displayName = "None(" + it->second.typeName + ")";
 						ImGui::Button(displayName.c_str(), ImVec2(-FLT_MIN, 0.f));
-						PRINT(it->first);
+						//PRINT(it->first);
 					}
 					else
 					{
@@ -244,6 +255,7 @@ namespace Copium
 						// Open pop-up window
 						ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
 						ImGui::SetNextWindowPos(ImVec2(0.f, 0.f), ImGuiCond_FirstUseEver);
+						ImGui::PushID(counter++);
 						ImGui::Begin("Add GameObject Reference", &isAddingGameObjectReference);
 						ImVec2 buttonSize = ImGui::GetWindowSize();
 						buttonSize.y *= (float)0.1;
@@ -278,6 +290,7 @@ namespace Copium
 							}
 						}
 						ImGui::End();
+						ImGui::PopID();
 					}
 					ImGui::PopID();
 

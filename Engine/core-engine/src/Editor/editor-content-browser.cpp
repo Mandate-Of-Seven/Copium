@@ -8,7 +8,8 @@
 \date			01/11/2022
 
 \brief
-	Contains function definitions for the editor content browser.
+	Contains function definitions for the editor content browser, where the user can view
+	and interact with the items in the assets folder.
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
@@ -221,6 +222,11 @@ namespace Copium
 		ImGui::End();
 	}
 
+	void EditorContentBrowser::exit()
+	{
+
+	}
+
 	void EditorContentBrowser::inputs()
 	{
 		if (!ImGui::IsMouseDragging(ImGuiMouseButton_Left) && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
@@ -242,6 +248,15 @@ namespace Copium
 						currentDirectory = dir;
 				}
 			}
+
+			if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+			{
+				for (Directory* dir : currentDirectory->get_child_directory())
+				{
+					if (dir->get_id() == ImGui::GetHoveredID())
+						fs->set_selected_directory(dir);
+				}
+			}
 			
 			if (!ImGui::IsMouseDragging(ImGuiMouseButton_Left) && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
 			{
@@ -254,10 +269,5 @@ namespace Copium
 				}
 			}
 		}
-	}
-
-	void EditorContentBrowser::exit()
-	{
-
 	}
 }

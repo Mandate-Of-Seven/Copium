@@ -178,7 +178,7 @@ namespace Copium
 
 		private:
 			static const Button* hoveredBtn;
-			std::unordered_map<ButtonState, ButtonCallback> mapStateCallbacks;
+			std::string callbackName;
 			AABB bounds;
 			void updateBounds();
 			AABB relativeBounds;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using CopiumEngine;
 using static GameData;
+using System;
 
 public class AIMovement : CopiumScript
 {
@@ -27,6 +28,7 @@ public class AIMovement : CopiumScript
     // Start is called before the first frame update
     void Start()
     {
+        Console.WriteLine("AI MOVEMENT! STARTED");
         GetPlayerPos();
         Console.WriteLine("Ai Movement Started");
     }

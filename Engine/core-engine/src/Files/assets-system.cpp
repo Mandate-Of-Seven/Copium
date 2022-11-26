@@ -8,7 +8,8 @@
 \date			20/10/2022
 
 \brief
-	Contains function definitions for Assets system
+	This file contains functions for the Assets system where the user can load and unload
+	assets that are retrieved from the File system into the engine.
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
@@ -196,6 +197,44 @@ namespace Copium
 			size_t lastDot = temp.find_last_of(".");
 			//std::cout << "Alias: " << temp.substr(0, lastDot) << "\n";
 			SoundSystem::Instance()->CreateSound(path, temp.substr(0, lastDot));
+		}
+	}
+
+	void load_audio(File* _file)
+	{
+		if (_file->extension() ==".wav")
+		{
+			//std::cout << _file->get_name() << " "<<_file->filename();
+			std::string temp = _file->filename().string();
+			size_t lastDot = temp.find_last_of(".");
+			SoundSystem::Instance()->CreateSound(_file->filename().string(), temp.substr(0,lastDot));
+			SoundSystem::Instance()->SetVolume(temp.substr(0, lastDot), 1.0f);
+		}
+		else
+		{
+			std::cout << _file->get_name() << " is not a .wav file!\n";
+		}
+	}
+	void unload_audio(File* _file)
+	{
+		if (_file->extension() == ".wav")
+		{
+			std::string temp = _file->filename().string();
+			size_t lastDot = temp.find_last_of(".");
+			std::string targetAlias = temp.substr(0, lastDot);
+			for (auto iter = SoundSystem::Instance()->soundList.begin(); iter != SoundSystem::Instance()->soundList.end();iter++)
+			{
+				if ((*iter).first == targetAlias)
+				{
+					SoundSystem::Instance()->soundList.erase(iter);
+					std::cout << "Unloading audio file: " << targetAlias << " from sound list\n";
+					break;
+				}
+			}
+		}
+		else
+		{
+			std::cout << _file->get_name() << " is not a .wav file!\n";
 		}
 	}
 

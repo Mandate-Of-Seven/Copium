@@ -65,17 +65,15 @@ namespace Copium
 		}
 		for (GameObject* pGameObj : pScene->gameObjects)
 		{
-			//for (Component* pComponent : pGameObj->components)
-			//{
-			//	PRINT(pComponent->Name() << ":  " << pComponent->id);
-			//}
-			//const std::vector<Button*>& Buttons{ pGameObj->getComponents<Button>() };
-			//for (Button* pButton : Buttons)
-			//{
-			//	if (!pButton)
-			//		continue;
-			//	pButton->update();
-			//}
+			const std::vector<Button*>& Buttons{ pGameObj->getComponents<Button>() };
+			for (Button* pButton : Buttons)
+			{
+				if (!pButton)
+					continue;
+				pButton->update();
+				if (pScene != sceneManager.get_current_scene())
+					return;
+			}
 		}
 
 	}

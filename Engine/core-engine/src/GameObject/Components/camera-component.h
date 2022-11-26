@@ -30,54 +30,48 @@ namespace Copium
             Constructor for camera component
         \param _gameObj
             Owner of this component
-        \param _archetype
-            Check if the camera object is an archetype
         */
         /**************************************************************************/
         Camera(GameObject& _gameObj);
 
+        /***************************************************************************/
+        /*!
+        \brief
+            Destructs the camera, exits the base camera and remove it from the 
+            graphics render pipeline
+        */
+        /**************************************************************************/
         ~Camera();
 
         /*******************************************************************************
         /*!
-        *
         \brief
             Deserialize this renderer component's data from the specified rapidjson Value
-
         \param _value
-            reference to the rapidjson Value which the renderer component's data deserializes its data from
-
-        \return
-            void
-
+            reference to the rapidjson Value which the renderer component's data 
+            deserializes its data 
         */
         /*******************************************************************************/
         void deserialize(rapidjson::Value& _value);
+
         /*******************************************************************************
         /*!
-        *
         \brief
             Serialize this renderer component's data to the specified rapidjson Value
-
         \param _value
-            reference to the rapidjson Value which the renderer component's data is to serialize its data to
-
+            reference to the rapidjson Value which the renderer component's data is to 
+            serialize its data to
         \param _doc
-            reference to the rapidjson Document which is associated to the save file which the data is being saved to
-
-        \return
-            void
-
+            reference to the rapidjson Document which is associated to the save file
+            which the data is being saved to
         */
         /*******************************************************************************/
         void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
         /*******************************************************************************
         /*!
-        *
         \brief
             Displays the inspector view with its fields
-
         */
         /*******************************************************************************/
         void inspector_view();

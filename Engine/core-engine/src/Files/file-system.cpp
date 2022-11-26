@@ -2,25 +2,27 @@
 \file			file-system.cpp
 \project
 \author			Zacharie Hong
-\co-authors
+\co-authors		Sean Ngo
 
 \par			Course: GAM200
 \par			Section:
 \date			26/09/2022
 
 \brief
-	Contains function definitions for the FileSystem
+	Contains function definitions for the File system which loads files and folders into 
+	the engine. This system checks for file modifications within a specific assets folder.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "pch.h"
 
 #include <GLFW/glfw3.h>
 #include "Files/file-system.h"
-#include <utility>
+#include <utility> 
 
 #include "Files/assets-system.h"
 #include "Editor/editor-system.h"
+#include "Windows/windows-input.h"
 
 namespace Copium
 {
@@ -30,6 +32,7 @@ namespace Copium
 
 		AssetsSystem* assets = AssetsSystem::Instance();
 		EditorSystem* editor = EditorSystem::Instance();
+		InputSystem* input = InputSystem::Instance();
 	}
 
 	void FileSystem::init()
@@ -123,42 +126,19 @@ namespace Copium
 
 	void FileSystem::update()
 	{
+		if (input->is_key_pressed(GLFW_KEY_DELETE))
+		{
+			delete_from_browser();
+		}
+
+
+
 		check_directory_count(&assetsDirectory);
 	}
 
 	void FileSystem::exit()
 	{
 		delete_directories(&assetsDirectory);
-	}
-
-	void FileSystem::check_directory_count(Directory* _directory, bool _recursive)
-	{
-		int fileCount = 0;
-		for (auto dirEntry : fs::directory_iterator(_directory->path()))
-		{
-			(void)dirEntry;
-			fileCount++;
-		}
-
-		// Check if there is a change in the number of files
-		if (_directory->get_file_count() != 0 && _directory->get_file_count() != fileCount)
-		{
-			double start = glfwGetTime();
-			update_directories(_directory, false);
-			double end = glfwGetTime();
-
-			PRINT("File time taken to reload: " << end - start);
-		}
-
-		_directory->set_file_count(fileCount);
-
-		if (_recursive)
-		{
-			for (Directory* dirEntry : _directory->get_child_directory())
-			{
-				check_directory_count(dirEntry);
-			}
-		}
 	}
 
 	void FileSystem::generate_directories(Directory* _directory, std::filesystem::path const& _path)
@@ -209,14 +189,14 @@ namespace Copium
 		}
 	}
 
-	void FileSystem::print_directories(Directory& _directory, int level)
+	void FileSystem::print_directories(Directory& _directory, int _level)
 	{
 		std::string space = "";
-		for (int i = 0; i < level; i++)
+		for (int i = 0; i < _level; i++)
 		{
 			space += "  ";
 		}
-		level++;
+		_level++;
 
 		PRINT(space << "Directory: " << _directory.get_id() << " " << _directory.get_name());
 
@@ -224,7 +204,7 @@ namespace Copium
 		{
 			for (auto dir : _directory.get_child_directory())
 			{
-				print_directories(*dir, level);
+				print_directories(*dir, _level);
 			}
 		}
 		
@@ -405,6 +385,36 @@ namespace Copium
 		}
 	}
 
+	void FileSystem::check_directory_count(Directory* _directory, bool _recursive)
+	{
+		int fileCount = 0;
+		for (auto dirEntry : fs::directory_iterator(_directory->path()))
+		{
+			(void)dirEntry;
+			fileCount++;
+		}
+
+		// Check if there is a change in the number of files
+		if (_directory->get_file_count() != 0 && _directory->get_file_count() != fileCount)
+		{
+			double start = glfwGetTime();
+			update_directories(_directory, false);
+			double end = glfwGetTime();
+
+			PRINT("File time taken to reload: " << end - start);
+		}
+
+		_directory->set_file_count(fileCount);
+
+		if (_recursive)
+		{
+			for (Directory* dirEntry : _directory->get_child_directory())
+			{
+				check_directory_count(dirEntry);
+			}
+		}
+	}
+
 	Directory* FileSystem::get_directory(std::filesystem::path const& _path)
 	{
 		if (_path == assetsDirectory.path())
@@ -540,29 +550,26 @@ namespace Copium
 		store_file_references(&assetsDirectory);
 	}
 
-	void FileSystem::store_file_references(Directory* _directory)
+	void FileSystem::delete_from_browser()
 	{
-		for (auto& fileEntry : _directory->get_files())
+		if (selectedFile != nullptr)
 		{
-			files[fileEntry.get_file_type().fileType].push_back(&fileEntry);
-		}
+			assets->unload_file(selectedFile);
+			std::cout << "Deleting: " << selectedFile->filename() << " With result: " << DeleteFile(selectedFile->c_str()) << std::endl;
 
-		for (auto dirEntry : _directory->get_child_directory())
+		}
+		else if (selectedDirectory != nullptr)
 		{
-			store_file_references(dirEntry);
+			fs::path tmp = "../PackedTracks/Assets/" + selectedDirectory->get_name();
+			if (std::filesystem::remove_all(tmp))
+			{
+				std::cout << "Delete complete\n";
+			}
+			else
+			{
+				std::cout << "Delete failed, could not find folder at: " << tmp << std::endl;
+			}
 		}
-	}
-
-	void FileSystem::add_file_reference(File* _file)
-	{
-		files[_file->get_file_type().fileType].push_back(_file);
-		assets->load_file(_file);
-	}
-
-	void FileSystem::remove_file_reference(File* _file)
-	{
-		files[_file->get_file_type().fileType].remove(_file);
-		assets->unload_file(_file);
 	}
 
 	std::list<std::string>& FileSystem::get_filepath_in_directory(const char* _path, const char* _extension)
@@ -620,5 +627,30 @@ namespace Copium
 		if (extensionTrackedFiles.count(_extension) == 0)
 			extensionTrackedFiles.emplace(std::make_pair(_extension, std::list<File>()));
 		return extensionTrackedFiles[_extension];
+	}
+
+	void FileSystem::store_file_references(Directory* _directory)
+	{
+		for (auto& fileEntry : _directory->get_files())
+		{
+			files[fileEntry.get_file_type().fileType].push_back(&fileEntry);
+		}
+
+		for (auto dirEntry : _directory->get_child_directory())
+		{
+			store_file_references(dirEntry);
+		}
+	}
+
+	void FileSystem::add_file_reference(File* _file)
+	{
+		files[_file->get_file_type().fileType].push_back(_file);
+		assets->load_file(_file);
+	}
+
+	void FileSystem::remove_file_reference(File* _file)
+	{
+		files[_file->get_file_type().fileType].remove(_file);
+		assets->unload_file(_file);
 	}
 }

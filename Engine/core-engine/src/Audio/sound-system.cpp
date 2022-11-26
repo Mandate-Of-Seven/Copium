@@ -95,6 +95,10 @@ void SoundSystem::CreateSound(std::string fileName, std::string alias)
 	}
 }
 
+void DeleteSound()
+{
+
+}
 // Play sound
 void SoundSystem::Play(std::string alias, bool overLap, bool loop, int loopCount)
 {

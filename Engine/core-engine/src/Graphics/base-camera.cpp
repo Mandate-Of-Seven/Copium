@@ -8,7 +8,8 @@
 \date			16/11/2022
 
 \brief
-	This file contains the definitions of the functions of the base camera class.
+	This file contains the definitions of the functions of the base camera class which
+	draws the objects within the camera using orthographic or perspective projection
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
@@ -71,7 +72,6 @@ namespace Copium
 		return true;
 	}
 
-
 	void BaseCamera::init(float _width, float _height, CameraType _cameraType, bool _orthographic)
 	{
 		// Setting up data
@@ -111,8 +111,9 @@ namespace Copium
 
 		// Calculating projection
 		viewMatrix = glm::lookAt(viewer, focalPoint, upVector);
-		projMatrix = glm::ortho(width, height, nearClip, farClip);
-		viewProjMatrix = projMatrix * viewMatrix;
+		update_ortho_projection();
+		//projMatrix = glm::ortho(width, height, nearClip, farClip);
+		//viewProjMatrix = projMatrix * viewMatrix;
 
 		// Initialise Sub systems
 		framebuffer.set_size((unsigned int) _width, (unsigned int) _height);
@@ -149,6 +150,46 @@ namespace Copium
 		draw.exit();
 	}
 
+	glm::vec3 BaseCamera::get_right_direction() const
+	{
+		return glm::rotate(get_orientation(), glm::vec3(1.f, 0.f, 0.f));
+	}
+
+	glm::vec3 BaseCamera::get_up_direction() const
+	{
+		return glm::rotate(get_orientation(), glm::vec3(0.f, 1.f, 0.f));
+	}
+
+	glm::vec3 BaseCamera::get_forward_direction() const
+	{
+		return glm::rotate(get_orientation(), glm::vec3(0.f, 0.f, -1.f));
+	}
+
+	glm::quat BaseCamera::get_orientation() const
+	{
+		return glm::quat(glm::vec3(-pitch, -yaw, 0.f));
+	}
+
+	glm::vec2 BaseCamera::get_pan_speed() const
+	{
+		glm::vec2 speed;
+		float x = std::min(width / 1000.f, 2.4f); // Max speed is 2.4
+		speed.x = 0.04f * (x * x) - 0.1778f * x + 0.3f;
+		float y = std::min(height / 1000.f, 2.4f); // Max speed is 2.4
+		speed.y = 0.04f * (y * y) - 0.1778f * y + 0.3f;
+		return speed;
+	}
+
+	void BaseCamera::on_resize(float _width, float _height)
+	{
+		width = _width;
+		height = _height;
+		aspect = width / height;
+
+		framebuffer.resize((GLuint) width, (GLuint) height);
+		update_ortho_projection();
+	}
+
 	void BaseCamera::update_ortho_projection()
 	{
 		float ar = aspect;
@@ -178,48 +219,8 @@ namespace Copium
 		//viewProjMatrix = viewMatrix * projMatrix;
 	}
 
-	void BaseCamera::on_resize(float _width, float _height)
-	{
-		framebuffer.resize((GLuint)_width, (GLuint) _height);
-
-		width = _width;
-		height = _height;
-		aspect = _width / _height;
-		update_ortho_projection();
-	}
-
 	glm::vec3 BaseCamera::calculate_position()
 	{
 		return focalPoint - get_forward_direction() * orthographicSize;
-	}
-
-	glm::vec3 BaseCamera::get_right_direction() const
-	{
-		return glm::rotate(get_orientation(), glm::vec3(1.f, 0.f, 0.f));
-	}
-
-	glm::vec3 BaseCamera::get_up_direction() const
-	{
-		return glm::rotate(get_orientation(), glm::vec3(0.f, 1.f, 0.f));
-	}
-
-	glm::vec3 BaseCamera::get_forward_direction() const
-	{
-		return glm::rotate(get_orientation(), glm::vec3(0.f, 0.f, -1.f));
-	}
-
-	glm::quat BaseCamera::get_orientation() const
-	{
-		return glm::quat(glm::vec3(-pitch, -yaw, 0.f));
-	}
-
-	glm::vec2 BaseCamera::get_pan_speed() const
-	{
-		glm::vec2 speed;
-		float x = std::min(width / 1000.f, 2.4f); // Max speed is 2.4
-		speed.x = 0.04f * (x * x) - 0.1778f * x + 0.3f;
-		float y = std::min(height / 1000.f, 2.4f); // Max speed is 2.4
-		speed.y = 0.04f * (y * y) - 0.1778f * y + 0.3f;
-		return speed;
 	}
 }

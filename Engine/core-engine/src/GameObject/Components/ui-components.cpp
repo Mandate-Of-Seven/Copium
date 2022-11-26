@@ -25,6 +25,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <Utilities/easing.h>
 #include <Debugging/frame-rate-controller.h>
 #include <SceneManager/sm.h>
+#include <GameObject/Components/script-component.h>
 namespace
 {
 	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
@@ -41,10 +42,6 @@ namespace Copium
 	{
 		previousColor = normalColor;
 		state = ButtonState::None;
-		for (int i = 0; i <= int(ButtonState::None); ++i)
-		{
-			mapStateCallbacks.insert({ ButtonState(i),nullptr });
-		}
 	}
 
 	void Button::updateBounds()
@@ -79,51 +76,39 @@ namespace Copium
 			if (targetGraphic)
 				previousColor = targetGraphic->layeredColor;
 		}
-		ButtonCallback callback = mapStateCallbacks[state];
-		if (callback != nullptr)
-		{
-			callback();
-		}
-		switch (state)
-		{
-			case ButtonState::OnClick:
-			{
-				PRINT("UI: Clicking on " << gameObj.get_name());
-				break;
-			}
-			case ButtonState::OnHover:
-			{
-				PRINT("UI: Hovering on " << gameObj.get_name());
-				break;
-			}
-			case ButtonState::OnRelease:
-			{
-				PRINT("UI: Released on " << gameObj.get_name());
-				break;
-			}
-		}
-		if (targetGraphic == nullptr)
-		{
-			return;
-		}
 		switch (state)
 		{
 		case ButtonState::OnClick:
 		{
-			targetGraphic->layeredColor = Linear(previousColor, clickedColor, timer / fadeDuration);
+			if (targetGraphic)
+				targetGraphic->layeredColor = Linear(previousColor, clickedColor, timer / fadeDuration);
+			Script* script = gameObj.getComponent<Script>();
+			if (script)
+			{
+				script->invoke(callbackName);
+			}
 			break;
 		}
 		case ButtonState::OnHover:
 		{
-			targetGraphic->layeredColor = Linear(previousColor, hoverColor, timer / fadeDuration);
+			if (targetGraphic)
+				targetGraphic->layeredColor = Linear(previousColor, hoverColor, timer / fadeDuration);
+			break;
+		}
+		case ButtonState::OnRelease:
+		{
+			PRINT("UI: Released on " << gameObj.get_name());
 			break;
 		}
 		default:
 		{
-			targetGraphic->layeredColor = Linear(previousColor, normalColor, timer / fadeDuration);
+			if (targetGraphic)
+				targetGraphic->layeredColor = Linear(previousColor, normalColor, timer / fadeDuration);
 			break;
 		}
 		}
+		if (targetGraphic == nullptr)
+			return;
 		if (timer < fadeDuration)
 			timer += (float)MyFrameRateController.getDt();
 		else if (timer > fadeDuration)
@@ -160,6 +145,8 @@ namespace Copium
 			| ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp;
 
 		static glm::fvec4* pColor{nullptr};
+
+
 
 		if (ImGui::BeginTable("Component UI Text", 2, windowFlags))
 		{
@@ -233,6 +220,31 @@ namespace Copium
 			ImGui::PushItemWidth(-1);
 			ImGui::SliderFloat("##Fade Duration", &fadeDuration, 0.01f, 1.f);
 			ImGui::PopItemWidth();
+			Script* script = gameObj.getComponent<Script>();
+			if (script)
+			{
+				ImGui::TableNextRow();
+				ImGui::TableNextColumn();
+				ImGui::Text("On Click Callback: ");
+				ImGui::TableNextColumn();
+				int count = 0;
+				const std::vector<std::string>& functionNames = script->getFunctionNames();
+				int index{ 0 };
+				ImGui::PushItemWidth(-1);
+				if (ImGui::BeginCombo("##functions", callbackName.c_str())) // The second parameter is the label previewed before opening the combo.
+				{
+					for (const std::string& str : functionNames)
+					{
+						bool is_selected = (callbackName.c_str() == str.c_str()); // You can store your selection however you want, outside or inside your objects
+						if (ImGui::Selectable(str.c_str(), is_selected))
+							callbackName = str;
+							if (is_selected)
+								ImGui::SetItemDefaultFocus();   // You may set the initial focus when opening the combo (scrolling + for keyboard navigation support)
+					}
+					ImGui::EndCombo();
+				}
+				ImGui::PopItemWidth();
+			}
 
 			ImGui::Unindent();
 			ImGui::EndTable();
@@ -287,7 +299,7 @@ namespace Copium
 		auto* component = new Button(_gameObj);
 		component->bounds = bounds;
 		component->state = state;
-		component->mapStateCallbacks = mapStateCallbacks;
+		component->callbackName = callbackName;
 		return component;
 	}
 
@@ -305,6 +317,9 @@ namespace Copium
 		else
 			_value.AddMember("Graphic ID", 0, _doc.GetAllocator());
 
+		rapidjson::Value rjName;
+		rjName.SetString(callbackName.c_str(), _doc.GetAllocator());
+		_value.AddMember("Callback", rjName, _doc.GetAllocator());
 	}
 	void Button::deserialize(rapidjson::Value& _value)
 	{
@@ -312,6 +327,11 @@ namespace Copium
 		if (_value.HasMember("ID"))
 		{
 			id = _value["ID"].GetUint64();
+		}
+
+		if (_value.HasMember("Callback"))
+		{
+			callbackName = _value["Callback"].GetString();
 		}
 	}
 
@@ -368,7 +388,7 @@ namespace Copium
 				break;
 			}
 		}
-		glm::fvec4 mixedColor;
+		glm::fvec4 mixedColor{0};
 		mixedColor.a = 1 - (1 - layeredColor.a) * (1 - color.a); // 0.75
 		if (mixedColor.a < 0.01f)
 			return;
@@ -596,7 +616,7 @@ namespace Copium
 		bool openPopup = false;
 
 		glm::vec4 clrGLM = sprite.get_color();
-		ImVec4 color = { clrGLM.r, clrGLM.g, clrGLM.b, clrGLM.a };
+		ImVec4 clrIM = { clrGLM.r, clrGLM.g, clrGLM.b, clrGLM.a };
 
 		int spriteID = (int)sprite.get_sprite_id();
 
@@ -664,7 +684,7 @@ namespace Copium
 			ImGui::TableNextColumn();
 			ImGui::Text("Color");
 			ImGui::TableNextColumn();
-			openPopup = ImGui::ColorButton("Color", color, miscFlags, ImVec2(FLT_MAX, 0));
+			openPopup = ImGui::ColorButton("Color", clrIM, miscFlags, ImVec2(FLT_MAX, 0));
 
 			// Flip
 			ImGui::TableNextRow();
@@ -682,7 +702,7 @@ namespace Copium
 		if (openPopup)
 		{
 			ImGui::OpenPopup("Color");
-			backupColor = color;
+			backupColor = clrIM;
 			windowFlags = ImGuiTableFlags_NoBordersInBody;
 		}
 		if (ImGui::BeginPopup("Color", windowFlags))

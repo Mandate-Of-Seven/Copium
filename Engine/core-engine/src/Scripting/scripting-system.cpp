@@ -24,6 +24,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Messaging/message-system.h"
 #include "Messaging/message-types.h"
 #include "Scripting/script-wrappers.h"
+#include <GameObject/Components/script-component.h>
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
@@ -40,6 +41,7 @@ namespace
 	MonoImage* mAssemblyImage{ nullptr };	//LOADED IMAGE OF SCRIPTS.DLL
 	MonoClass* mGameObject{ nullptr };
 	MonoClass* mCopiumScript{ nullptr };
+	MonoClass* mCollision2D{ nullptr };
 	std::unordered_map<uint64_t,MonoObject*> monoGameObjects{};
 }
 
@@ -163,7 +165,24 @@ namespace Copium
 		}
 	}
 #pragma endregion
+	void ScriptingSystem::instantiateCollision2D(GameObject& collided, GameObject& collidee)
+	{
+		MonoObject* collisionData = mono_object_new(mAppDomain, mCollision2D);
+		MonoMethod* constructor = mono_class_get_method_from_name(mCollision2D, ".ctor", 1);
+		GameObjectID gameObjID = collidee.id;
+		void* data = mono_object_unbox(collisionData);
+		void* param = &gameObjID;
+		mono_runtime_invoke(constructor, collisionData, &param, nullptr);
+		for (Script* script : collided.getComponents<Script>())
+		{
+			auto pair = script->pScriptClass->mMethods.find("OnCollisionEnter2D");
+			if (pair != script->pScriptClass->mMethods.end())
+			{
 
+				mono_runtime_invoke((*pair).second, script->mObject, &data, nullptr);
+			}
+		}
+	}
 
 	void ScriptingSystem::addEmptyScript(const std::string& _name)
 	{
@@ -222,6 +241,7 @@ namespace Copium
 		messageSystem.subscribe(MESSAGE_TYPE::MT_ENGINE_INITIALIZED, this);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
+		messageSystem.subscribe(MESSAGE_TYPE::MT_COLLISION_ENTER, this);
 	}
 
 	void ScriptingSystem::update()
@@ -349,6 +369,7 @@ namespace Copium
 		//Update scriptClasses
 		mGameObject = mono_class_from_name(mAssemblyImage, "CopiumEngine", "GameObject");
 		mCopiumScript = mono_class_from_name(mAssemblyImage, "CopiumEngine", "CopiumScript");
+		mCollision2D = mono_class_from_name(mAssemblyImage, "CopiumEngine", "Collision2D");
 		updateScriptClasses();
 		if (!mCopiumScript)
 			PRINT("COPIUM SCRIPT CANT BE FOUND");
@@ -514,10 +535,19 @@ namespace Copium
 				//	swapDll();
 				compilingState = CompilingState::Previewing;
 				//swapDll();
+				break;
 			}
 			case MESSAGE_TYPE::MT_STOP_PREVIEW:
 			{
 				compilingState = CompilingState::Wait;
+				break;
+			}
+			case MESSAGE_TYPE::MT_COLLISION_ENTER:
+			{
+				GameObject* collidee = MESSAGE_CONTAINER::collisionEnter.collidee;
+				GameObject* collided = MESSAGE_CONTAINER::collisionEnter.collided;
+				instantiateCollision2D(*collided, *collidee);
+				break;
 			}
 		}
 	}

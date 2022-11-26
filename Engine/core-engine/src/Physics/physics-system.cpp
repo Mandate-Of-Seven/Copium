@@ -15,6 +15,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Graphics/graphics-system.h"
 #include "Physics/physics-system.h"
 #include <GameObject/Components/collider-components.h>
+#include <Messaging/message-system.h>
 
 
 namespace
@@ -31,7 +32,7 @@ namespace Copium
 	}
 	void PhysicsSystem::update()
 	{
-		GameObject* gameobj;
+		//GameObject* gameobj;
 		if (sceneManager.get_current_scene() != nullptr)
 		{
 
@@ -151,7 +152,10 @@ namespace Copium
 				AABB boundB = pCol2->getBounds();
 				if ((collision_rectrect(boundA, velocityA, boundB, velocityB) == true))
 				{
-					//PRINT("COLLIDING?");
+					MESSAGE_CONTAINER::collisionEnter.collided = object1;
+					MESSAGE_CONTAINER::collisionEnter.collidee = object2;
+					MyMessageSystem.dispatch(MESSAGE_TYPE::MT_COLLISION_ENTER);
+					PRINT("COLLIDING?");
 					//fix collision resolution
 					collisionDirection direct = check_collision_direction(boundA, velocityA, boundB, velocityB);
 					resolve_AABBcollision(object1->transform, boundA, boundB, direct);

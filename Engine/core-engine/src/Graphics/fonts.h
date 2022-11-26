@@ -79,10 +79,26 @@ namespace Copium
 
 		const std::map<char, Character>& get_characters() const { return characters; }
 
-		static Font* getFont(const std::string& name);
+		/***************************************************************************/
+		/*!
+		\brief
+			Gets the current font
+		\param _text
+			The text to load onto the screen
+		\return
+			The font
+		*/
+		/***************************************************************************/
+		static Font* getFont(const std::string& _name);
 
-
+		/***************************************************************************/
+		/*!
+		\brief
+			Deletes the fonts in the engine
+		*/
+		/***************************************************************************/
 		static void cleanUp();
+
 	private:
 		Font(const std::string& name);
 		static std::unordered_map<std::string, Font*> mapNameFonts;

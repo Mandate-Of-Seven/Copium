@@ -2,6 +2,7 @@
 \file			editor-system.h
 \project
 \author			Sean Ngo
+\co-author		Shawn Tanary
 
 \par			Course: GAM200
 \par			Section:
@@ -67,6 +68,15 @@ namespace Copium
 		*/
 		/***************************************************************************/
 		void imguiConsoleAddLog(std::string value);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Set the game in windowed fullscreen
+		*/
+		/*******************************************************************************/
+		void playMode(bool _enabled);
 
 		/*******************************************************************************
 		/*!

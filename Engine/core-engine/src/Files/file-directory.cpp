@@ -8,7 +8,8 @@
 \date			10/11/2022
 
 \brief
-	Contains function definitions for the file directory
+	Contains function definitions for the file directory, a class that is part of the 
+	file system
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
@@ -18,7 +19,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
-
 	void Directory::inspector_view()
 	{
 

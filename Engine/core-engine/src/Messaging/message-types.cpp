@@ -20,4 +20,5 @@ namespace Copium::MESSAGE_CONTAINER
 	REFLECT_CS_GAMEOBJECT reflectCsGameObject;
 	ADD_OR_DELETE_GAMEOBJECT addOrDeleteGameObject;
 	ADD_OR_DELETE_COMPONENT addOrDeleteComponent;
+	COLLISION_ENTER collisionEnter;
 }

@@ -29,9 +29,9 @@ namespace Copium
 {
 	std::unordered_map<std::string, Font*> Font::mapNameFonts;
 
-	Font::Font(const std::string& name)
+	Font::Font(const std::string& _name)
 	{
-		std::string path = Paths::assetPath + "/Fonts/" + name + ".ttf";
+		std::string path = Paths::assetPath + "/Fonts/" + _name + ".ttf";
 		FT_Library ft;
 		COPIUM_ASSERT(FT_Init_FreeType(&ft), "Could not initialize FreeType Library");
 
@@ -78,21 +78,20 @@ namespace Copium
 		FT_Done_FreeType(ft);
 
 #if defined(DEBUG) | defined(_DEBUG)
-		PRINT("Font " << name << " loaded...");
+		PRINT("Font " << _name << " loaded...");
 #endif
 	}
 
-	Font* Font::getFont(const std::string& name)
+	Font* Font::getFont(const std::string& _name)
 	{
-		auto pairNameFont = mapNameFonts.find(name);
+		auto pairNameFont = mapNameFonts.find(_name);
 		if (pairNameFont != mapNameFonts.end())
 			return pairNameFont->second;
-		Font* pFont = new Font(name);
+		Font* pFont = new Font(_name);
 		pFont->setup_font_vao();
-		mapNameFonts.emplace(std::make_pair(name, pFont));
+		mapNameFonts.emplace(std::make_pair(_name, pFont));
 		return pFont;
 	}
-
 
 	void Font::cleanUp()
 	{
@@ -212,7 +211,6 @@ namespace Copium
 
 		glDisable(GL_BLEND);
 	}
-
 
 	glm::vec2 Font::getDimensions(const std::string& _text, GLfloat _scale)
 	{

@@ -11,7 +11,7 @@
 	This file holds the definitions of functions which emcompasses the drawing aspect
 	of the graphic's system.
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 
@@ -96,6 +96,7 @@ namespace Copium
 
 	void Draw::exit()
 	{
+		camera = nullptr;
 		renderer.shutdown();
 	}
 
@@ -191,6 +192,11 @@ namespace Copium
 
 					renderer.draw_quad({ rc->Offset(),t.position.z }, size, rotation, sr);
 				}
+
+			}
+
+			for (GameObject* gameObject : scene->gameObjects)
+			{
 				for (Component* component : gameObject->getComponents<Text>())
 				{
 					if (!component->Enabled())
@@ -200,7 +206,6 @@ namespace Copium
 					text->render(camera);
 				}
 			}
-
 		}
 
 		// Bean : Testing Text
@@ -267,6 +272,7 @@ namespace Copium
 
 				for (Component* component : gameObject->getComponents<Button>())
 				{
+					(void) component;
 					Transform& t = gameObject->transform;
 
 					glm::vec3 position = t.position;
@@ -291,7 +297,7 @@ namespace Copium
 
 					glm::mat4 transform = translate * rotate;
 
-					glm::vec4 color = { 0.3f, 1.f, 0.3f, 1.f };
+					color = { 0.3f, 1.f, 0.3f, 1.f };
 
 					glm::vec4 pos0 = transform * glm::vec4(-size.x / 2, -size.y / 2, 1.f, 1.f);
 					glm::vec4 pos1 = transform * glm::vec4(size.x / 2, -size.y / 2, 1.f, 1.f);
@@ -366,6 +372,7 @@ namespace Copium
 
 				for (Component* component : gameObject->getComponents<Button>())
 				{
+					(void) component;
 					Transform& t = gameObject->transform;
 
 					glm::vec3 position = t.position;
@@ -390,7 +397,7 @@ namespace Copium
 
 					glm::mat4 transform = translate * rotate;
 
-					glm::vec4 color = { 0.3f, 1.f, 0.3f, 1.f };
+					color = { 0.3f, 1.f, 0.3f, 1.f };
 
 					glm::vec4 pos0 = transform * glm::vec4(-size.x / 2, -size.y / 2, 1.f, 1.f);
 					glm::vec4 pos1 = transform * glm::vec4(size.x / 2, -size.y / 2, 1.f, 1.f);

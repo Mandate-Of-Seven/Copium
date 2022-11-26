@@ -77,7 +77,7 @@ namespace Copium
 	private:
 		/* Scene Data *******************************************************************/
 		bool windowFocused = false, windowHovered = false;
-		int sceneWidth = 1280, sceneHeight = 720; // The dimension of the viewport
+		int sceneWidth = 0, sceneHeight = 0; // The dimension of the viewport
 		glm::vec2 sceneDimension{ 0 }; // The dimension of the viewport as vector 2
 		glm::vec2 scenePosition{ 0 }; // The position of the viewport
 	};

@@ -66,8 +66,8 @@ namespace Window::Hierarchy
 					}
 					else
 					{
-						Copium::GameObject* temp;
-						if (temp = MyGOF.instantiate())
+						Copium::GameObject* temp = MyGOF.instantiate();
+						if (temp)
 						{
 							Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::GameObjectCommand(temp, true);
 							Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);

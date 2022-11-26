@@ -16,6 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define EDITOR_SCENEVIEW_H
 
 #include <glm/vec2.hpp>
+#include "SceneManager/sm.h"
 
 namespace Copium
 {
@@ -55,6 +56,15 @@ namespace Copium
 		*/
 		/***************************************************************************/
 		void resize_sceneview(glm::vec2 _newDimension);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Updates the gizmos of selected object. Currently allows for scaling,
+			rotating and translating of selected object.
+		*/
+		/***************************************************************************/
+		void update_gizmos();
 		
 		// Accessing Properties
 

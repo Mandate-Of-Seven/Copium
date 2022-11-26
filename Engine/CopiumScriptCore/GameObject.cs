@@ -81,7 +81,6 @@ namespace CopiumEngine
                 Console.WriteLine("DOES NOT HAVE COMPONENT!: " + ID);
                 return null;
             }
-
             T component = new T() { gameObject = this };
             return component;
         }
