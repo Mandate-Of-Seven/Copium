@@ -172,11 +172,12 @@ public class CombatMovement : CopiumScript
     }
     void OnCollisionEnter2D(Collision2D collision)
     {
-        Console.WriteLine("HELLO!");
+        Console.WriteLine("COLLIDING FROM C#!");
     }
 
     void ButtonClickedEffect()
     {
         Console.WriteLine("I AM CLICKED!!");
+        Application.Quit();
     }
 }

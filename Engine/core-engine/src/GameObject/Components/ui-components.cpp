@@ -82,49 +82,37 @@ namespace Copium
 		}
 		switch (state)
 		{
-			case ButtonState::OnClick:
-			{
-				Script* script = gameObj.getComponent<Script>();
-				if (script)
-				{
-					script->invoke(callbackName);
-				}
-				//PRINT("UI: Clicking on " << gameObj.get_name());
-				break;
-			}
-			case ButtonState::OnHover:
-			{
-				//PRINT("UI: Hovering on " << gameObj.get_name());
-				break;
-			}
-			case ButtonState::OnRelease:
-			{
-				PRINT("UI: Released on " << gameObj.get_name());
-				break;
-			}
-		}
-		if (targetGraphic == nullptr)
-		{
-			return;
-		}
-		switch (state)
-		{
 		case ButtonState::OnClick:
 		{
-			targetGraphic->layeredColor = Linear(previousColor, clickedColor, timer / fadeDuration);
+			if (targetGraphic)
+				targetGraphic->layeredColor = Linear(previousColor, clickedColor, timer / fadeDuration);
+			Script* script = gameObj.getComponent<Script>();
+			if (script)
+			{
+				script->invoke(callbackName);
+			}
 			break;
 		}
 		case ButtonState::OnHover:
 		{
-			targetGraphic->layeredColor = Linear(previousColor, hoverColor, timer / fadeDuration);
+			if (targetGraphic)
+				targetGraphic->layeredColor = Linear(previousColor, hoverColor, timer / fadeDuration);
+			break;
+		}
+		case ButtonState::OnRelease:
+		{
+			PRINT("UI: Released on " << gameObj.get_name());
 			break;
 		}
 		default:
 		{
-			targetGraphic->layeredColor = Linear(previousColor, normalColor, timer / fadeDuration);
+			if (targetGraphic)
+				targetGraphic->layeredColor = Linear(previousColor, normalColor, timer / fadeDuration);
 			break;
 		}
 		}
+		if (targetGraphic == nullptr)
+			return;
 		if (timer < fadeDuration)
 			timer += (float)MyFrameRateController.getDt();
 		else if (timer > fadeDuration)

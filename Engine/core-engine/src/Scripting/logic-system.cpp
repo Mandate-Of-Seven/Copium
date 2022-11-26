@@ -71,6 +71,8 @@ namespace Copium
 				if (!pButton)
 					continue;
 				pButton->update();
+				if (pScene != sceneManager.get_current_scene())
+					return;
 			}
 		}
 
