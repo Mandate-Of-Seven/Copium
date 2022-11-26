@@ -111,6 +111,7 @@ namespace Copium
 	{
 		mMethods["OnCreate"] = mono_class_get_method_from_name(mCopiumScript, "OnCreate", 1);
 		mMethods["FindComponentByID"] = mono_class_get_method_from_name(mCopiumScript, "FindComponentByID", 2);
+		mMethods["FindGameObjectByID"] = mono_class_get_method_from_name(mCopiumScript, "FindGameObjectByID", 1);
 		void* methodIterator = nullptr;
 		while (MonoMethod* method = mono_class_get_methods(_mClass, &methodIterator))
 		{
@@ -432,7 +433,6 @@ namespace Copium
 
 	void ScriptingSystem::tryRecompileDll()
 	{
-		compilingState = CompilingState::Wait;
 		bool startCompiling = false;
 		for (File& scriptFile : scriptFiles)
 		{
@@ -444,6 +444,8 @@ namespace Copium
 				compilingState = CompilingState::SwapAssembly;
 			}
 		}
+		if (!startCompiling)
+			compilingState = CompilingState::Wait;
 	}
 
 	bool ScriptingSystem::scriptIsLoaded(const std::filesystem::path& filePath)
@@ -485,9 +487,9 @@ namespace Copium
 			}
 			case MESSAGE_TYPE::MT_SCENE_OPENED:
 			{
-				while (compilingState != CompilingState::Wait);
-				swapDll();
+				while (compilingState == CompilingState::Compiling);
 				compilingState = CompilingState::Deserializing;
+				swapDll();
 				break;
 			}
 			case MESSAGE_TYPE::MT_SCENE_DESERIALIZED:

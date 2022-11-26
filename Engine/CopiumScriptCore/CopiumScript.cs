@@ -51,6 +51,33 @@ namespace CopiumEngine
             return component1;
         }
 
+        private GameObject FindGameObjectByID(ulong gameObjectID)
+        {
+            Console.WriteLine("FINDING GAMEOBJECT BY ID IN C#______________________________________________");
+            foreach (GameObject gameObject in GameObject.gameObjects)
+            {
+                if (gameObject.ID == gameObjectID)
+                {
+                    return gameObject;
+                }
+            }
+            return null;
+        }
+
+        public GameObject Instantiate(GameObject original)
+        {
+            GameObject gameObject = new GameObject();
+            gameObject.ID = InternalCalls.CloneGameObject(original.ID);
+            return gameObject;
+        }
+
+        public GameObject Instantiate()
+        {
+            GameObject gameObject = new GameObject();
+            gameObject.ID = InternalCalls.InstantiateGameObject();
+            return gameObject;
+        }
+
         public static void Destroy(GameObject gameObj)
         {
 

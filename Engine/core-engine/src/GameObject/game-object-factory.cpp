@@ -142,7 +142,6 @@ namespace Copium
 		//	go->attach_child(cgo);
 
 		//}
-		PRINT("bleep");
 		return go;
 	}
 

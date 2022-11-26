@@ -119,6 +119,11 @@ namespace Copium {
 
 	bool NewSceneManager::load_scene(const std::string& _filepath)
 	{
+		if (currSceneState == Scene::SceneState::play)
+		{
+			PRINT("CANT LOAD SCENE IN PLAY MODE");
+			return false;
+		}
 		std::cout << "loading " << _filepath << std::endl;
 
 		if (_filepath.find(".scene") == std::string::npos)
@@ -216,6 +221,11 @@ namespace Copium {
 	}
 	bool NewSceneManager::change_scene(const std::string& _newfilepath)
 	{
+		if (currSceneState == Scene::SceneState::play)
+		{
+			PRINT("CANT LOAD SCENE IN PLAY MODE");
+			return false;
+		}
 		bool result = false;
 
 		// No scene loaded, therefore cannot change
@@ -269,10 +279,14 @@ namespace Copium {
 			return false;
 		}
 
+		GameObjectID prevSelected = 0;
+		if (selectedGameObject)
+			prevSelected = selectedGameObject->id;
+
 		backUpCurrScene();
 
-
-		selectedGameObject = nullptr;
+		if (prevSelected)
+			selectedGameObject = findGameObjByID(prevSelected);
 
 		currSceneState = Scene::SceneState::play;
 		currentScene->set_state(Scene::SceneState::play);
@@ -290,12 +304,17 @@ namespace Copium {
 		// Delete memory for the preview scene
 		if (!storageScene)
 			return false;
-		delete currentScene;
 
-		// Swap the original unmodified scene back to current scene
+		Scene* tmp = currentScene;
 		currentScene = storageScene;
 		storageScene = nullptr;
-		selectedGameObject = nullptr;
+
+		if (selectedGameObject)
+		{
+			selectedGameObject = findGameObjByID(selectedGameObject->id);
+		}
+
+		delete tmp;
 
 		currSceneState = Scene::SceneState::edit;
 		currentScene->set_state(Scene::SceneState::edit);
@@ -435,7 +454,6 @@ namespace Copium {
 		rapidjson::SizeType sz = static_cast<rapidjson::SizeType>(_str.size());
 		_value.SetString(_str.c_str(), sz, _doc.GetAllocator());
 	}
-
 
 	// M3
 	std::string& NewSceneManager::get_scenefilepath() { return sceneFilePath; }

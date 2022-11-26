@@ -7,6 +7,7 @@ using static GameData;
 public class CombatMovement : CopiumScript
 {
     public Rigidbody2D rb;
+    public GameObject gameObj;
 
     public Vector3 hello;
 
@@ -34,17 +35,18 @@ public class CombatMovement : CopiumScript
             Application.Quit();
         }
 
-        Console.WriteLine(rb.ID);
         if (rb == null)
         {
             Console.WriteLine("RB WAS NULL");
         }
 
-            if (CurrentGameState == GameState.Combat)
+        if (CurrentGameState == GameState.Combat)
         {
             if (Input.GetKey(KeyCode.A))
             {
-                rb.velocity = new Vector2(-0.5f,0f);
+                canMoveRight = false;
+                Instantiate(gameObj);
+                gameObj.transform.position += new Vector2(-0.5f,0f);
 /*                inputLeft = true;
 
                 if (canMoveLeft)
@@ -57,14 +59,14 @@ public class CombatMovement : CopiumScript
             }
             if (Input.GetKey(KeyCode.D))
             {
-                rb.velocity = new Vector2(0.5f,0f);
-/*                inputRight = true;
+                gameObj.transform.position += new Vector2(0.5f, 0f);
+                /*                inputRight = true;
 
-                if (canMoveRight)
-                {
-                    movingRight = true;
-                    canMoveLeft = false;
-                }*/
+                                if (canMoveRight)
+                                {
+                                    movingRight = true;
+                                    canMoveLeft = false;
+                                }*/
             }
 
 /*            if (Input.GetKeyUp(KeyCode.A))
