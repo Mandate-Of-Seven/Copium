@@ -1,0 +1,117 @@
+{
+    "Name": "NewScene",
+    "Unused GIDs": [],
+    "Unused CIDs": [],
+    "GameObjects": [
+        {
+            "ID": 0,
+            "Name": "player",
+            "Components": [
+                {
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 1,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": -5.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 3,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 10,
+                    "Sprite Name": "PlayerHead2.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "ID": 5,
+                    "Type": "Rigidbody2D",
+                    "Grav": false,
+                    "Active": true
+                },
+                {
+                    "ID": 6,
+                    "Type": "Script",
+                    "Name": "CombatMovement",
+                    "hello": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "gameObj": 0,
+                    "rb": 5
+                }
+            ]
+        },
+        {
+            "ID": 1,
+            "Name": "enemy",
+            "Components": [
+                {
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 5,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 5.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 4,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 6,
+                    "Sprite Name": "EnemyHead2.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "ID": 7,
+                    "Type": "Script",
+                    "Name": "AIMovement",
+                    "PlayerTrainGO": 0,
+                    "self": 1,
+                    "rb": 8
+                },
+                {
+                    "ID": 8,
+                    "Type": "Rigidbody2D",
+                    "Grav": false,
+                    "Active": true
+                }
+            ]
+        }
+    ]
+}

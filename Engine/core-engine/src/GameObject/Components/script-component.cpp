@@ -23,6 +23,7 @@ namespace Copium
 {
 	char Script::buffer[128];
 	ScriptingSystem& Script::sS{ *ScriptingSystem::Instance() };
+	const Copium::Field* field;
 
 	Script::Script(GameObject& _gameObj) :
 		mObject{ nullptr }, pScriptClass{ nullptr }, Component(_gameObj, ComponentType::Script), name{ DEFAULT_SCRIPT_NAME }, reference{nullptr}, isAddingGameObjectReference{false}
@@ -175,7 +176,7 @@ namespace Copium
 			ImGui::TableSetupColumn("Input", 0, 0.6f);
 			const auto& fieldMap = pScriptClass->mFields;
 			auto it = fieldMap.begin();
-			size_t counter = 0;
+			int counter{ 0 };
 			while (it != fieldMap.end())
 			{
 				ImGui::TableNextRow();
@@ -227,6 +228,7 @@ namespace Copium
 				}
 				else if (it->second.type == FieldType::GameObject)
 				{
+					ImGui::PushID(counter++);
 					auto gameObjRef = fieldGameObjReferences.find(it->first);
 					if (gameObjRef == fieldGameObjReferences.end())
 					{
@@ -238,14 +240,17 @@ namespace Copium
 						std::string displayName = (*gameObjRef).second->get_name() + "(GameObject)";
 						ImGui::Button(displayName.c_str(), ImVec2(-FLT_MIN, 0.f));
 					}
+
+
 					// Matthew's stuff/////
 					if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 					{
 						std::cout << "double clicked on game object reference field\n";
 						isAddingGameObjectReference = true;
+						field = &it->second;
 
 					}
-					if (isAddingGameObjectReference)
+					if (isAddingGameObjectReference && field == &it->second)
 					{
 						// Open pop-up window
 						ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
@@ -266,6 +271,7 @@ namespace Copium
 							{
 								if (filter.PassFilter(go->get_name().c_str()))
 								{
+									std::cout << it->first << std::endl;
 									isAddingGameObjectReference = false;
 									GameObjectID gameObjID = go->id;
 									void* param = &gameObjID;
@@ -278,6 +284,7 @@ namespace Copium
 									}
 									mono_field_set_value(mObject, it->second.classField, buffer);
 									fieldGameObjReferences[_name] = go;
+									field = nullptr;
 									break;
 								}
 							}
@@ -285,6 +292,8 @@ namespace Copium
 						ImGui::End();
 						ImGui::PopID();
 					}
+					ImGui::PopID();
+
 
 					if (ImGui::BeginDragDropTarget())
 					{

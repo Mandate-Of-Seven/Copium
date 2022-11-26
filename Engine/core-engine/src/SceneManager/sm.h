@@ -210,9 +210,42 @@ namespace Copium {
 		/*******************************************************************************/
 		bool endPreview();
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Get this scene's filepath
+
+		\return
+			reference to this scene's filepath string
+		*/
+		/*******************************************************************************/
 		std::string& get_scenefilepath();
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Create an empty scene 
+
+		\return
+			if success, return true
+			if there are errors in allocating memory for the empty scene, return false
+		*/
+		/*******************************************************************************/
 		bool create_scene();
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Get a ptr to the storage scene.
+
+		\return
+			return ptr to the storage scene 
+			Note: if there is no storage scene, nullptr should be returned
+		*/
+		/*******************************************************************************/
 		Scene* get_storage_scene();
 
 		GameObject* selectedGameObject;

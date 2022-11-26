@@ -24,7 +24,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "GameObject/game-object-factory.h"
 
 #include "Windows/windows-system.h"
-#include "SceneManager/serializer.h"
 #include <rapidjson/prettywriter.h>
 
 // Global variables

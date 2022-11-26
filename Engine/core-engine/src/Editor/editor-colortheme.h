@@ -34,7 +34,35 @@ namespace Window
 					  Copium::Math::Vec3 color_for_area, Copium::Math::Vec3 color_for_body, 
 					  Copium::Math::Vec3 color_for_pops);
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Serialize the current 5 main colors in the current theme
+
+		\param _filepath
+			read-only reference to the .theme file to serialize the data to
+
+		\return
+			void
+
+		*/
+		/*******************************************************************************/
 		void serialize(const std::string& _filepath);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Deserialize the 5 main colors
+
+		\param _filepath
+			read-only reference to the .theme file to deserialize the data from
+
+		\return
+			void
+
+		*/
+		/*******************************************************************************/
 		void deserialize(const std::string& _filepath);
 	}
 }

@@ -71,8 +71,8 @@ private:
 
     GameObject& operator=(const GameObject& _src);
 
-public:           //Global ID for gameObjects
-
+public:           
+    //Global ID for gameObjects
     const GameObjectID id;
     bool active;
     Transform transform;

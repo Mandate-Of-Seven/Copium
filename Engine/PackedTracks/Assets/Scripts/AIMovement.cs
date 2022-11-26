@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using CopiumEngine;
 using static GameData;
 using System;
@@ -10,6 +11,7 @@ public class AIMovement : CopiumScript
     AIState currentAIState = AIState.Idle;
 
     public GameObject PlayerTrainGO;
+    public GameObject self;
     Vector2 waypoint;
     float AITimer = 0.5f;
 
@@ -28,31 +30,45 @@ public class AIMovement : CopiumScript
     {
         Console.WriteLine("AI MOVEMENT! STARTED");
         GetPlayerPos();
+        Console.WriteLine("Ai Movement Started");
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (CurrentGameState == GameState.Combat)
-        {
-            AITimer -= Time.deltaTime;
-            if (AITimer < 0)
-            {
-                DoAIThings();
 
-                AITimer = RNG.Range(1f,2f);
+        if(currentAIState == AIState.Idle)
+        {
+            Console.WriteLine("AI is Idle");
+        }
+
+        if(CurrentGameState == GameState.Combat && currentAIState == AIState.Idle)
+        {
+            if(self.transform.position.x != PlayerTrainGO.transform.position.x)
+            {
+                Console.WriteLine("bleep");
+                currentAIState = AIState.Chase;
+            }else
+            {
+                Console.WriteLine(PlayerTrainGO.transform.position.x);
             }
         }
 
         if (CurrentGameState == GameState.Combat && currentAIState == AIState.Chase)
         {
-            if (this.transform.position.x < waypoint.x + RNG.Range(1f,2f))
+            Console.WriteLine("bleep");
+            if (self.transform.position.x < PlayerTrainGO.transform.position.x)
             {
-                AIMoveRight();
+                //AIMoveRight();
+                self.transform.position += new Vector2(0.1f, 0f);
             }
-            else if (this.transform.position.x > waypoint.x + RNG.Range(1f, 2f))
+            else if (self.transform.position.x > PlayerTrainGO.transform.position.x)
             {
-                AIMoveLeft();
+                //AIMoveLeft();
+                self.transform.position += new Vector2(-0.1f, 0f);
+            }else
+            {
+                currentAIState = AIState.Idle;
             }
         }
     }
@@ -135,6 +151,7 @@ public class AIMovement : CopiumScript
 
     void DoAIThings()
     {
+        //Console.WriteLine("AI check");
         if (currentAIState == AIState.Idle)
         {
             waypoint = PlayerTrainGO.transform.position;

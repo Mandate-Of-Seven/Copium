@@ -43,10 +43,6 @@ namespace Copium
 		previousColor = normalColor;
 		state = ButtonState::None;
 	}
-	Button::~Button()
-	{
-		std::cout << "button dtor\n";
-	}
 
 	void Button::updateBounds()
 	{
@@ -494,6 +490,75 @@ namespace Copium
 			//PRINT(color.r << ' ' << color.g << ' ' << color.b << ' ' << color.a);
 			ImGui::EndPopup();
 		}
+	}
+
+	void Text::deserialize(rapidjson::Value& _value)
+	{
+		if (_value.HasMember("ID"))
+		{
+			id = _value["ID"].GetUint64();
+		}
+		if (_value.HasMember("FontName"))
+		{
+			fontName = _value["FontName"].GetString();
+			font = Font::getFont(fontName);
+		}
+		if (_value.HasMember("H_Align"))
+		{
+			hAlignment = (HorizontalAlignment)_value["H_Align"].GetInt();
+		}
+		if (_value.HasMember("V_Align"))
+		{
+			vAlignment = (VerticalAlignment)_value["V_Align"].GetInt();
+		}
+		if (_value.HasMember("Content"))
+		{
+			strcpy(content, _value["Content"].GetString());
+		}
+		if (_value.HasMember("Font Size"))
+		{
+			fSize = _value["Font Size"].GetFloat();
+		}
+		if (_value.HasMember("r"))
+		{
+			color.r = _value["r"].GetFloat();
+		}
+		if (_value.HasMember("g"))
+		{
+			color.g = _value["g"].GetFloat();
+		}
+		if (_value.HasMember("b"))
+		{
+			color.b = _value["b"].GetFloat();
+
+		}
+		if (_value.HasMember("a"))
+		{
+			color.a = _value["a"].GetFloat();
+		}
+	}
+	void Text::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
+	{
+		rapidjson::Value type;
+		std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
+		type.SetString(tc.c_str(), rapidjson::SizeType(tc.length()), _doc.GetAllocator());
+		_value.AddMember("Type", type, _doc.GetAllocator());
+
+		_value.AddMember("ID", id, _doc.GetAllocator());
+
+		type.SetString(fontName.c_str(), rapidjson::SizeType(fontName.length()), _doc.GetAllocator());
+		_value.AddMember("FontName", type, _doc.GetAllocator());
+		_value.AddMember("H_Align", (int)hAlignment, _doc.GetAllocator());
+		_value.AddMember("V_Align", (int)vAlignment, _doc.GetAllocator());
+
+		type.SetString(content, rapidjson::SizeType(strlen(content)), _doc.GetAllocator());
+		_value.AddMember("Content", type, _doc.GetAllocator());
+
+		_value.AddMember("Font Size", fSize, _doc.GetAllocator());
+		_value.AddMember("r", color.r, _doc.GetAllocator());
+		_value.AddMember("g", color.g, _doc.GetAllocator());
+		_value.AddMember("b", color.b, _doc.GetAllocator());
+		_value.AddMember("a", color.a, _doc.GetAllocator());
 	}
 	//-----------------/
 
