@@ -317,7 +317,7 @@ namespace Copium
 				break;
 			}
 		}
-		glm::fvec4 mixedColor;
+		glm::fvec4 mixedColor{0};
 		mixedColor.a = 1 - (1 - layeredColor.a) * (1 - color.a); // 0.75
 		if (mixedColor.a < 0.01f)
 			return;
@@ -475,7 +475,7 @@ namespace Copium
 		bool openPopup = false;
 
 		glm::vec4 clrGLM = sprite.get_color();
-		ImVec4 color = { clrGLM.r, clrGLM.g, clrGLM.b, clrGLM.a };
+		ImVec4 clrIM = { clrGLM.r, clrGLM.g, clrGLM.b, clrGLM.a };
 
 		int spriteID = (int)sprite.get_sprite_id();
 
@@ -543,7 +543,7 @@ namespace Copium
 			ImGui::TableNextColumn();
 			ImGui::Text("Color");
 			ImGui::TableNextColumn();
-			openPopup = ImGui::ColorButton("Color", color, miscFlags, ImVec2(FLT_MAX, 0));
+			openPopup = ImGui::ColorButton("Color", clrIM, miscFlags, ImVec2(FLT_MAX, 0));
 
 			// Flip
 			ImGui::TableNextRow();
@@ -561,7 +561,7 @@ namespace Copium
 		if (openPopup)
 		{
 			ImGui::OpenPopup("Color");
-			backupColor = color;
+			backupColor = clrIM;
 			windowFlags = ImGuiTableFlags_NoBordersInBody;
 		}
 		if (ImGui::BeginPopup("Color", windowFlags))

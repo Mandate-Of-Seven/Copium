@@ -24,10 +24,32 @@ namespace Copium
 	class Draw
 	{
 	public:
+		/***************************************************************************/
+		/*!
+		\brief
+			Initializes the systems of the graphics render pipeline
+		\param _camera
+			The camera to draw to
+		*/
+		/***************************************************************************/
 		void init(BaseCamera* _camera);
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Update the various draw of the engine
+		\param _type
+			The camera type to check to render certain parts of the view
+		*/
+		/***************************************************************************/
 		void update(CameraType _type);
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Exits the graphics drawing system along with its sub system - renderer
+		*/
+		/***************************************************************************/
 		void exit();
 
 		/***************************************************************************/

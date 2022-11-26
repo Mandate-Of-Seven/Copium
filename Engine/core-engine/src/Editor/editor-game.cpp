@@ -8,7 +8,8 @@
 \date			21/11/2022
 
 \brief
-	This file holds the definitions of the functions in the editor game gui
+	This file holds the definitions of the functions in the editor game gui where the
+	user can play the game in this GUI
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/

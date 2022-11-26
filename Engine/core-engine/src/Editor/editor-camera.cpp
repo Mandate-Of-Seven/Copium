@@ -8,7 +8,8 @@
 \date			15/10/2022
 
 \brief
-	Contains function definitions for the editor camera.
+	Contains function definitions for the editor camera which draws the view in the
+	scene view.
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
@@ -32,7 +33,6 @@ namespace
 
 namespace Copium
 {
-
 	void EditorCamera::init(float _width, float _height, bool _orthographic)
 	{
 		BaseCamera::init(_width, _height, CameraType::SCENEVIEW, _orthographic);
@@ -54,7 +54,7 @@ namespace Copium
 			Scene* scene = sm->get_current_scene();
 			if (scene != nullptr && !scene->get_name().compare("DemoCLONE"))
 			{
-				orthographic = 5.f;
+				orthographicSize = 5.f;
 				update_ortho_projection();
 				for (GameObject* pGameObj : scene->gameObjects)
 				{
@@ -94,34 +94,14 @@ namespace Copium
 		}
 	}
 
-	/*void EditorCamera::update_view_matrix()
+	float EditorCamera::get_zoom_speed() const
 	{
-		set_position(calculate_position());
-
-		glm::vec3 viewer = get_position();
-
-		glm::mat4 translate = {
-			glm::vec4(1.f, 0.f, 0.f, 0.f),
-			glm::vec4(0.f, 1.f, 0.f, 0.f),
-			glm::vec4(0.f, 0.f, 1.f, 0.f),
-			glm::vec4(viewer.x, viewer.y, viewer.z, 1.f)
-		};
-
-		float rad = glm::radians(get_angle());
-
-		glm::mat4 rotate = {
-			glm::vec4(cos(rad), sin(rad), 0.f, 0.f),
-			glm::vec4(-sin(rad), cos(rad), 0.f, 0.f),
-			glm::vec4(0.f, 0.f, 1.f, 0.f),
-			glm::vec4(0.f, 0.f, 0.f, 1.f)
-		};
-
-		viewMatrix = translate * rotate;
-
-		viewMatrix = glm::inverse(viewMatrix);
-
-		projMatrix = orthoProjMatrix * viewMatrix;
-	}*/
+		float tempDistance = orthographicSize * 0.2f;
+		tempDistance = std::max(orthographicSize, 0.f); // Max distance is 0
+		float speed = orthographicSize * orthographicSize;
+		speed = std::min(speed, 50.f); // The max speed currently is 50
+		return speed;
+	}
 
 	glm::vec2 EditorCamera::get_ndc() const
 	{
@@ -223,14 +203,5 @@ namespace Copium
 		}
 
 		//scroll = inputSystem.get_mousescroll();
-	}
-
-	float EditorCamera::get_zoom_speed() const
-	{
-		float tempDistance = orthographicSize * 0.2f;
-		tempDistance = std::max(orthographicSize, 0.f); // Max distance is 0
-		float speed = orthographicSize * orthographicSize;
-		speed = std::min(speed, 50.f); // The max speed currently is 50
-		return speed;
 	}
 }

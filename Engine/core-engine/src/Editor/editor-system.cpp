@@ -9,7 +9,7 @@
 \date			16/09/2022
 
 \brief
-	This file holds the definition of functions for the editor.
+	This file holds the definition of functions for the editor system.
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/

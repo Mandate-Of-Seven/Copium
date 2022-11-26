@@ -8,7 +8,7 @@
 \date			15/10/2022
 
 \brief
-	Contains the function declarations of the editor camera.
+	Contains the function declarations of the editor camera in the scene view.
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
@@ -59,10 +59,33 @@ namespace Copium
 
 		// Accessing Properties
 		float get_zoom() const { return orthographicSize; }
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Gets the orthographic size of the camera
+		*/
+		/**************************************************************************/
 		float get_zoom_speed() const;
+		
+		/***************************************************************************/
+		/*!
+		\brief
+			Gets the normalize device coordinates of the current mouse position
+		\return
+			The position in vector 2
+		*/
+		/**************************************************************************/
 		glm::vec2 get_ndc() const;
 
 	private:
+		/***************************************************************************/
+		/*!
+		\brief
+			The input from the user to move the camera around in the scene view in
+			the editor
+		*/
+		/**************************************************************************/
 		void mouse_controls();
 
 	private:

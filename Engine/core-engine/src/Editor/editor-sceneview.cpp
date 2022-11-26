@@ -8,7 +8,8 @@
 \date			16/09/2022
 
 \brief
-	This file holds the definition of functions for the scene view of the editor.
+	This file holds the definition of functions for the scene view of the editor, where
+	the user can view the scene.
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
@@ -79,7 +80,7 @@ namespace Copium
 		// Mouse picking
 		if (ImGui::IsMouseReleased(ImGuiMouseButton_Left) && windowHovered)
 		{
-			Scene* scene = sm.get_current_scene();
+			scene = sm.get_current_scene();
 			if (scene != nullptr)
 			{
 				std::vector<GameObject*> pGameObjs; // Possible selectable gameobjects
@@ -161,8 +162,6 @@ namespace Copium
 					sm.set_selected_gameobject(nullptr);
 			}
 		}
-		/*else if(!windowHovered && ImGui::IsMouseDown(ImGuiMouseButton_Left))
-			sm.set_selected_gameobject(nullptr);*/
 	}
 
 	void EditorSceneView::exit()

@@ -2,6 +2,7 @@
 \file			editor-system.h
 \project
 \author			Sean Ngo
+\co-author		Shawn Tanary
 
 \par			Course: GAM200
 \par			Section:

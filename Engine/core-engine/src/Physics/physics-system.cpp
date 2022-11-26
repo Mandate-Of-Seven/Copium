@@ -31,7 +31,7 @@ namespace Copium
 	}
 	void PhysicsSystem::update()
 	{
-		GameObject* gameobj;
+		//GameObject* gameobj;
 		if (sceneManager.get_current_scene() != nullptr)
 		{
 
