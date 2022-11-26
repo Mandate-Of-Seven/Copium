@@ -10,6 +10,8 @@ public class CombatMovement : CopiumScript
     public GameObject gameObj;
 
     public Vector3 hello;
+    float MaxTrainSpeed = 1.0f;
+    Vector2 velocity = new Vector2(0f, 0f);
 
     bool inputLeft = false;
     bool inputRight= false;
@@ -35,49 +37,44 @@ public class CombatMovement : CopiumScript
             Application.Quit();
         }
 
+
+        if(CurrentGameState != GameState.Combat)
+        {
+            inputLeft = false;
+            inputRight = false;
+
+            movingLeft = false;
+            movingRight = false;
+
+            canMoveLeft = true;
+            canMoveRight = true;
+        }
+
         if (rb == null)
         {
             Console.WriteLine("RB WAS NULL");
-        }
-
-        if (CurrentGameState == GameState.Combat)
+        }else
         {
-            if (Input.GetKey(KeyCode.A))
+            if (CurrentGameState == GameState.Combat)
             {
-                canMoveRight = false;
-                Instantiate(gameObj);
-                gameObj.transform.position += new Vector2(-0.5f,0f);
-/*                inputLeft = true;
-
-                if (canMoveLeft)
+                if (Input.GetKey(KeyCode.A))
                 {
-                    movingLeft = true;
-                    canMoveRight = false;
-                    
-                }*/
+                    //Instantiate(gameObj);
+                    velocity = new Vector2(-0.1f, 0f);
+                    gameObj.transform.position += velocity;
 
+                }
+                if (Input.GetKey(KeyCode.D))
+                {
+                    velocity = new Vector2(0.1f, 0f);
+                    gameObj.transform.position += velocity;
+                    Console.WriteLine("d");
+                }
+    
             }
-            if (Input.GetKey(KeyCode.D))
-            {
-                gameObj.transform.position += new Vector2(0.5f, 0f);
-                /*                inputRight = true;
-
-                                if (canMoveRight)
-                                {
-                                    movingRight = true;
-                                    canMoveLeft = false;
-                                }*/
-            }
-
-/*            if (Input.GetKeyUp(KeyCode.A))
-            {
-                inputLeft = false;
-            }
-            if (Input.GetKeyUp(KeyCode.D))
-            {
-                inputRight = false;
-            }*/
         }
+
+ 
     }
 
     private void FixedUpdate()

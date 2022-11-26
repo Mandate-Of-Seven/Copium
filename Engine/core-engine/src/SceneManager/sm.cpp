@@ -359,6 +359,11 @@ namespace Copium {
 		{
 			fp += ".scene";
 		}
+
+		if (sceneFilePath.empty())
+		{
+			sceneFilePath = fp;
+		}
 		std::ofstream ofs(fp);
 		rapidjson::Document doc;
 
