@@ -9,13 +9,9 @@
 namespace Window
 {
 
-
-
 	namespace ColorTheme
 	{
-
         Copium::ThreadSystem& threadSystem{ *Copium::ThreadSystem::Instance() };
-
 
 		void init()
 		{

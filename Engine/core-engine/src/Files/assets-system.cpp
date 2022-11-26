@@ -199,6 +199,44 @@ namespace Copium
 		}
 	}
 
+	void load_audio(File* _file)
+	{
+		if (_file->extension() ==".wav")
+		{
+			//std::cout << _file->get_name() << " "<<_file->filename();
+			std::string temp = _file->filename().string();
+			size_t lastDot = temp.find_last_of(".");
+			SoundSystem::Instance()->CreateSound(_file->filename().string(), temp.substr(0,lastDot));
+			SoundSystem::Instance()->SetVolume(temp.substr(0, lastDot), 1.0f);
+		}
+		else
+		{
+			std::cout << _file->get_name() << " is not a .wav file!\n";
+		}
+	}
+	void unload_audio(File* _file)
+	{
+		if (_file->extension() == ".wav")
+		{
+			std::string temp = _file->filename().string();
+			size_t lastDot = temp.find_last_of(".");
+			std::string targetAlias = temp.substr(0, lastDot);
+			for (auto iter = SoundSystem::Instance()->soundList.begin(); iter != SoundSystem::Instance()->soundList.end();iter++)
+			{
+				if ((*iter).first == targetAlias)
+				{
+					SoundSystem::Instance()->soundList.erase(iter);
+					std::cout << "Unloading audio file: " << targetAlias << " from sound list\n";
+					break;
+				}
+			}
+		}
+		else
+		{
+			std::cout << _file->get_name() << " is not a .wav file!\n";
+		}
+	}
+
 	void AssetsSystem::load_all_shaders(std::list<std::string>& _path)
 	{
 		for (auto it = _path.begin(); it != _path.end(); it++)
