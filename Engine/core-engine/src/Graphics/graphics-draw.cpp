@@ -100,124 +100,6 @@ namespace Copium
 		renderer.shutdown();
 	}
 
-	void Draw::world()
-	{
-		renderer.begin_batch();
-
-		/*
-			Bean Theory:
-			For each gameobject, check if it has a renderer component
-				If it does:
-					Check if it is active
-						If not: Continue
-					Check if it has a spriteID of not 0 (default)
-						If it does:
-							Render sprite with color
-						Else
-							Render default sprite (white texture) with color
-				Else
-					Continue
-		*/
-
-		// Theory WIP
-		
-		Scene* scene = sm->get_current_scene();
-		if (scene != nullptr)
-		{
-			for (GameObject* gameObject : scene->gameObjects)
-			{
-				if (!gameObject->active)
-					continue;
-
-				for (Component* component : gameObject->getComponents<SpriteRenderer>())
-				{
-					if (!component->Enabled())
-						continue;
-
-					Transform& t = gameObject->transform;
-					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(component);
-					Sprite& sr = rc->get_sprite_renderer();
-					glm::vec2 size(t.scale.x, t.scale.y);
-					float rotation = t.rotation.z;
-					// Bean: It should be set in inspector view of the renderer component instead
-					unsigned int id = sr.get_sprite_id() - 1;
-
-					// The index of the texture must be less than the size of textures
-					if (id != -1 && id < assets->get_textures().size())
-					{
-						sr.set_texture(assets->get_texture(id));
-					}
-					else
-					{
-						sr.set_sprite_id(0);
-						sr.set_texture(nullptr);
-					}
-
-					if (gameObject->transform.hasParent())
-					{
-						Transform& t1 = *gameObject->transform.parent;
-						renderer.draw_quad(t.position + t1.position, size, rotation, sr);
-
-					}
-					else 
-					{
-						renderer.draw_quad(t.position, size, rotation, sr);
-
-					}
-
-				}
-				for (Component* component : gameObject->getComponents<ImageComponent>())
-				{
-					if (!component->Enabled())
-						continue;
-
-					Transform& t = gameObject->transform;
-					ImageComponent* rc = reinterpret_cast<ImageComponent*>(component);
-					Sprite& sr = rc->get_sprite_renderer();
-					glm::vec2 size(t.scale.x, t.scale.y);
-					float rotation = t.rotation.z;
-					// Bean: It should be set in inspector view of the renderer component instead
-					unsigned int id = sr.get_sprite_id() - 1;
-
-					// The index of the texture must be less than the size of textures
-					if (id != -1 && id < assets->get_textures().size())
-					{
-						sr.set_texture(assets->get_texture(id));
-					}
-					else
-					{
-						sr.set_sprite_id(0);
-						sr.set_texture(nullptr);
-					}
-
-					renderer.draw_quad({ rc->Offset(),t.position.z }, size, rotation, sr);
-				}
-
-			}
-
-			for (GameObject* gameObject : scene->gameObjects)
-			{
-				for (Component* component : gameObject->getComponents<Text>())
-				{
-					if (!component->Enabled())
-						continue;
-
-					Text* text = reinterpret_cast<Text*>(component);
-					text->render(camera);
-				}
-			}
-		}
-
-		// Bean : Testing Text
-		/*glm::vec3 position = { 0.f, -1.f, 0.f };
-		color = { 1.f, 1.f, 0.f, 1.f };
-		renderer.draw_text("Testing Arial", position, color, 0.1f, 0);*/
-
-		renderer.end_batch();
-
-		renderer.flush();
-	}
-
 	void Draw::editor()
 	{
 		// Bean: this should be the background color of the camera
@@ -321,6 +203,124 @@ namespace Copium
 				}
 			}
 		}
+
+		renderer.end_batch();
+
+		renderer.flush();
+	}
+
+	void Draw::world()
+	{
+		renderer.begin_batch();
+
+		/*
+			Bean Theory:
+			For each gameobject, check if it has a renderer component
+				If it does:
+					Check if it is active
+						If not: Continue
+					Check if it has a spriteID of not 0 (default)
+						If it does:
+							Render sprite with color
+						Else
+							Render default sprite (white texture) with color
+				Else
+					Continue
+		*/
+
+		// Theory WIP
+		
+		Scene* scene = sm->get_current_scene();
+		if (scene != nullptr)
+		{
+			for (GameObject* gameObject : scene->gameObjects)
+			{
+				if (!gameObject->active)
+					continue;
+
+				for (Component* component : gameObject->getComponents<SpriteRenderer>())
+				{
+					if (!component->Enabled())
+						continue;
+
+					Transform& t = gameObject->transform;
+					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(component);
+					Sprite& sr = rc->get_sprite_renderer();
+					glm::vec2 size(t.scale.x, t.scale.y);
+					float rotation = t.rotation.z;
+					// Bean: It should be set in inspector view of the renderer component instead
+					unsigned int id = sr.get_sprite_id() - 1;
+
+					// The index of the texture must be less than the size of textures
+					if (id != -1 && id < assets->get_textures().size())
+					{
+						sr.set_texture(assets->get_texture(id));
+					}
+					else
+					{
+						sr.set_sprite_id(0);
+						sr.set_texture(nullptr);
+					}
+
+					if (gameObject->transform.hasParent())
+					{
+						Transform& t1 = *gameObject->transform.parent;
+						renderer.draw_quad(t.position + t1.position, size, rotation, sr);
+
+					}
+					else 
+					{
+						renderer.draw_quad(t.position, size, rotation, sr);
+
+					}
+
+				}
+				for (Component* component : gameObject->getComponents<ImageComponent>())
+				{
+					if (!component->Enabled())
+						continue;
+
+					Transform& t = gameObject->transform;
+					ImageComponent* rc = reinterpret_cast<ImageComponent*>(component);
+					Sprite& sr = rc->get_sprite_renderer();
+					glm::vec2 size(t.scale.x, t.scale.y);
+					float rotation = t.rotation.z;
+					// Bean: It should be set in inspector view of the renderer component instead
+					unsigned int id = sr.get_sprite_id() - 1;
+
+					// The index of the texture must be less than the size of textures
+					if (id != -1 && id < assets->get_textures().size())
+					{
+						sr.set_texture(assets->get_texture(id));
+					}
+					else
+					{
+						sr.set_sprite_id(0);
+						sr.set_texture(nullptr);
+					}
+
+					renderer.draw_quad({ rc->Offset(),t.position.z }, size, rotation, sr);
+				}
+
+			}
+
+			/*for (GameObject* gameObject : scene->gameObjects)
+			{
+				for (Component* component : gameObject->getComponents<Text>())
+				{
+					if (!component->Enabled())
+						continue;
+
+					Text* text = reinterpret_cast<Text*>(component);
+					text->render(camera);
+				}
+			}*/
+		}
+
+		// Bean : Testing Text
+		/*glm::vec3 position = { 0.f, -1.f, 0.f };
+		color = { 1.f, 1.f, 0.f, 1.f };
+		renderer.draw_text("Testing Arial", position, color, 0.1f, 0);*/
 
 		renderer.end_batch();
 
@@ -465,7 +465,7 @@ namespace Copium
 		}*/
 
 
-		/*Scene* scene = sm->get_current_scene();
+		Scene* scene = sm->get_current_scene();
 		if (scene != nullptr)
 		{
 			for (GameObject* gameObject : scene->gameObjects)
@@ -479,7 +479,7 @@ namespace Copium
 					text->render(camera);
 				}
 			}
-		}*/
+		}
 
 		renderer.end_batch();
 

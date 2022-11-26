@@ -43,7 +43,7 @@ namespace Copium
 	void EditorCamera::update()
 	{
 		EditorSceneView* sceneView = EditorSystem::Instance()->get_scene_view();
-		if (sceneView->is_window_hovered())
+		if (sceneView->is_window_focused() || sceneView->is_window_hovered())
 		{
 			mouse_controls();
 		}
@@ -69,9 +69,12 @@ namespace Copium
 		}
 
 		static bool debugMode = false;
-		if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_D))
+		if (sceneView->is_window_focused() || sceneView->is_window_hovered())
 		{
-			debugMode = !debugMode;
+			if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_D))
+			{
+				debugMode = !debugMode;
+			}
 		}
 
 		if (debugMode)
@@ -97,8 +100,8 @@ namespace Copium
 	float EditorCamera::get_zoom_speed() const
 	{
 		float tempDistance = orthographicSize * 0.2f;
-		tempDistance = std::max(orthographicSize, 0.f); // Max distance is 0
-		float speed = orthographicSize * orthographicSize;
+		tempDistance = std::max(orthographicSize, 0.25f); // Min speed is 0
+		float speed = tempDistance * tempDistance;
 		speed = std::min(speed, 50.f); // The max speed currently is 50
 		return speed;
 	}
@@ -109,6 +112,7 @@ namespace Copium
 		glm::vec2 scenePos = sceneView->get_position();
 		glm::vec2 sceneDim = sceneView->get_dimension();
 		Math::Vec2 mousePos = inputSystem.get_mouseposition();
+		//PRINT("Mouse position: " << mousePos.x << " " << mousePos.y);
 		glm::vec2 centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
 		glm::vec2 mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
 		glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
@@ -119,35 +123,23 @@ namespace Copium
 
 	void EditorCamera::mouse_controls()
 	{
-		// Bean: shouldnt be necessary here
-		// Clamping camera within boundary
-		if (viewer.x > 100.f)
-		{
-			focalPoint = glm::vec3(100.f, viewer.y, 0.f);
-		}
-		if (viewer.x < -100.f)
-		{
-			focalPoint = glm::vec3(-100.f, viewer.y, 0.f);
-		}
-		if (viewer.y > 100.f)
-		{
-			focalPoint = glm::vec3(viewer.x, 100.f, 0.f);
-		}
-		if (viewer.y < -100.f)
-		{
-			focalPoint = glm::vec3(viewer.x, -100.f, 0.f);
-		}
-		
 		glm::vec2 worldNDC = get_ndc();
 		glm::vec2 delta = (worldNDC - mousePosition) * 4.f;
+		
 		mousePosition = worldNDC;
 
 		// Movement using right click and drag
 		if (inputSystem.is_mousebutton_pressed(1) || inputSystem.is_mousebutton_pressed(2))
 		{
+			ImGui::SetNextWindowFocus();
 			glm::vec2 speed = get_pan_speed();
 			focalPoint += -get_up_direction() * delta.y * speed.y;
 			focalPoint += -get_right_direction() * delta.x * speed.x;
+			
+			// Bean: shouldnt be necessary here
+			// Clamping camera within boundary
+			focalPoint.x = std::clamp(focalPoint.x, -100.f, 100.f);
+			focalPoint.y = std::clamp(focalPoint.y, -100.f, 100.f);
 		}
 
 		//if (inputSystem.is_key_held(GLFW_KEY_LEFT_CONTROL))
@@ -191,14 +183,9 @@ namespace Copium
 		int scroll = (int) inputSystem.get_mousescroll();
 		if (scroll && !enableCamera)
 		{
-			orthographicSize -= scroll * 0.1f * get_zoom_speed(); // Zoom In
-			
-			if (orthographicSize <= nearClip)
-				orthographicSize = nearClip;
-			if (orthographicSize >= 100.f)
-				orthographicSize = 99.f;
+			orthographicSize -= scroll * 0.1f * get_zoom_speed();
 
-
+			orthographicSize = std::clamp(orthographicSize, 0.5f, 100.f);
 			update_ortho_projection();
 		}
 
