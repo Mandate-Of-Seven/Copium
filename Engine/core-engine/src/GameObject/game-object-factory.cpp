@@ -116,6 +116,9 @@ namespace Copium
 		if (!go)
 			return nullptr;
 
+		//if (scene)
+		//	scene->add_gameobject(go);
+
 		unsigned count{ 0 };
 		if (scene)
 			for (GameObject* g : scene->gameObjects)
@@ -126,8 +129,7 @@ namespace Copium
 		if (count)
 			go->name += '(' + std::to_string(count) + ')';
 
-		if (scene)
-			scene->add_gameobject(go);
+
 
 		//for (std::list<GameObject*>::iterator iter = _src.mchildList().begin(); iter != _src.mchildList().end(); ++iter)
 		//{
@@ -212,8 +214,6 @@ namespace Copium
 				cgo->transform.setParent(&go->transform);
 			}
 		}
-
-
 
 		return go;
 	}
@@ -383,16 +383,26 @@ namespace Copium
 	{
 		Scene* currScene = sceneManager.get_current_scene();
 		GameObject* newChild = new GameObject(currScene->assignGameObjID());
-		auto it = currScene->gameObjects.begin();
-		for (auto pGameObject : currScene->gameObjects)
+		//auto it = currScene->gameObjects.begin();
+		//for (auto pGameObject : currScene->gameObjects)
+		//{
+		//	if (pGameObject->id == _parent.id)
+		//	{
+		//		currScene->gameObjects.insert(it + 1, newChild);
+		//		_parent.transform.setParent(&newChild->transform);
+		//		return newChild;
+		//	}
+		//	++it;
+		//}
+		
+		for (auto iter = currScene->gameObjects.begin(); iter != currScene->gameObjects.end(); ++iter)
 		{
-			if (pGameObject->id == _parent.id)
+			if ((*iter)->id == _parent.id)
 			{
-				currScene->gameObjects.insert(it + 1, newChild);
-				_parent.transform.setParent(&newChild->transform);
+				currScene->gameObjects.insert(iter + 1, newChild);
+				newChild->transform.setParent(&_parent.transform);
 				return newChild;
 			}
-			++it;
 		}
 
 		return nullptr;

@@ -11,6 +11,7 @@ public class AIMovement : CopiumScript
 
     public GameObject PlayerTrainGO;
     public GameObject self;
+    
     Vector2 waypoint;
     float AITimer = 0.5f;
 
@@ -44,7 +45,7 @@ public class AIMovement : CopiumScript
         {
             if(self.transform.position.x != PlayerTrainGO.transform.position.x)
             {
-                //Console.WriteLine("bleep");
+                Console.WriteLine("bleep");
                 currentAIState = AIState.Chase;
             }else
             {

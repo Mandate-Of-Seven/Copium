@@ -55,7 +55,6 @@ namespace Copium {
 		}
 		return nullptr;
 	}
-
 	Component* NewSceneManager::findComponentByID(ComponentID _ID)
 	{
 		for (GameObject* pGameObj : currentScene->gameObjects)
@@ -379,6 +378,7 @@ namespace Copium {
 			ugids.PushBack(id, doc.GetAllocator());
 		}
 		doc.AddMember("Unused GIDs", ugids, doc.GetAllocator());
+
 		// Serialize UCIDs
 		rapidjson::Value ucids(rapidjson::kArrayType);
 		for (ComponentID id : currentScene->get_unusedcids())
@@ -434,6 +434,7 @@ namespace Copium {
 
 		currentScene->unusedCIDs = storageScene->unusedCIDs;
 		currentScene->unusedGIDs = storageScene->unusedGIDs;
+
 		// Copy game object data
 		for (const GameObject* gameObj : storageScene->gameObjects)
 		{
@@ -442,6 +443,9 @@ namespace Copium {
 				MyGOF.clone(*gameObj, currentScene);
 			}
 		}
+
+		std::cout << "Storage scene game object count: " << storageScene->gameObjects.size() << std::endl;
+		std::cout << "Preview scene game object count: " << currentScene->gameObjects.size() << std::endl;
 
 		for (size_t goIndex{ 0 }; goIndex < storageScene->get_gameobjcount(); ++goIndex)
 		{
