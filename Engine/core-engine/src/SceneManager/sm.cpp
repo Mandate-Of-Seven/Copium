@@ -447,6 +447,7 @@ namespace Copium {
 		{
 			GameObject* currGameObj = currentScene->gameObjects[goIndex];
 			GameObject* storedGameObj = storageScene->gameObjects[goIndex];
+			std::cout << "Name comparisons: " << currGameObj->get_name() << '|' << storedGameObj->get_name() << std::endl;
 			for (size_t compIndex{ 0 }; compIndex < currGameObj->components.size(); ++compIndex)
 			{
 				currGameObj->components[compIndex]->previewLink(storedGameObj->components[compIndex]);
