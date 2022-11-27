@@ -135,7 +135,7 @@ namespace Copium
 			False if operation failed, true if it was successful
 		*/
 		/*******************************************************************************/
-		bool getFieldValue(const std::string& name, char* buffer);
+		bool getFieldValue(const std::string& name, char* buffer) const;
 
 		/*******************************************************************************
 		/*!
@@ -164,12 +164,14 @@ namespace Copium
 
 		const std::vector<std::string>& getFunctionNames();
 
+		ScriptClass* pScriptClass;
+
+		MonoObject* mObject;
+
 		friend class ScriptingSystem;
 	private:
 		void instantiate();
-		static char buffer[128];
-		ScriptClass* pScriptClass;
-		MonoObject* mObject;
+		char buffer[128];
 		std::string name;
 		const Script* reference{ nullptr };
 		std::unordered_map<std::string, GameObject*> fieldGameObjReferences;

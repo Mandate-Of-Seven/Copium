@@ -123,13 +123,14 @@ void Transform::inspector_view()
         ImGui::Text("Position");
         ImGui::TableNextColumn();
 
+        // Stop repeating your code chibai
         if (ImGui::BeginTable("Component Transform: Position", 3, windowFlags))
         {
             ImGui::TableNextColumn();
             ImGui::PushID(0);
             ImGui::AlignTextToFramePadding();
             ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-            ImGui::InputFloat("", &position.x);
+            ImGui::DragFloat("", &position.x, 0.15f);
             if (ImGui::IsItemActivated())
             {
                 temp = position.x;
@@ -149,7 +150,7 @@ void Transform::inspector_view()
             ImGui::TableNextColumn();
             ImGui::PushID(1);
             ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-            ImGui::InputFloat("", &position.y);
+            ImGui::DragFloat("", &position.y, 0.15f);
             if (ImGui::IsItemActivated())
             {
                 temp = position.y;
@@ -169,7 +170,7 @@ void Transform::inspector_view()
             ImGui::TableNextColumn();
             ImGui::PushID(2);
             ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-            ImGui::InputFloat("", &position.z);
+            ImGui::DragFloat("", &position.z, 0.15f);
             if (ImGui::IsItemActivated())
             {
                 temp = position.z;
@@ -200,7 +201,7 @@ void Transform::inspector_view()
             ImGui::PushID(0);
             ImGui::AlignTextToFramePadding();
             ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-            ImGui::InputFloat("", &rotation.x);
+            ImGui::DragFloat("", &rotation.x, 0.15f);
             if (ImGui::IsItemActivated())
             {
                 temp = rotation.x;
@@ -220,7 +221,7 @@ void Transform::inspector_view()
             ImGui::TableNextColumn();
             ImGui::PushID(1);
             ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-            ImGui::InputFloat("", &rotation.y);
+            ImGui::DragFloat("", &rotation.y, 0.15f);
             if (ImGui::IsItemActivated())
             {
                 temp = rotation.y;
@@ -240,7 +241,7 @@ void Transform::inspector_view()
             ImGui::TableNextColumn();
             ImGui::PushID(2);
             ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-            ImGui::InputFloat("", &rotation.z);
+            ImGui::DragFloat("", &rotation.z, 0.15f);
             if (ImGui::IsItemActivated())
             {
                 temp = rotation.z;
@@ -271,7 +272,7 @@ void Transform::inspector_view()
             ImGui::PushID(0);
             ImGui::AlignTextToFramePadding();
             ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-            ImGui::InputFloat("", &scale.x);
+            ImGui::DragFloat("", &scale.x, 0.15f);
             if (ImGui::IsItemActivated())
             {
                 temp = scale.x;
@@ -291,7 +292,7 @@ void Transform::inspector_view()
             ImGui::TableNextColumn();
             ImGui::PushID(1);
             ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-            ImGui::InputFloat("", &scale.y);
+            ImGui::DragFloat("", &scale.y, 0.15f);
             if (ImGui::IsItemActivated())
             {
                 temp = scale.y;
@@ -311,7 +312,7 @@ void Transform::inspector_view()
             ImGui::TableNextColumn();
             ImGui::PushID(2);
             ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-            ImGui::InputFloat("", &scale.z);
+            ImGui::DragFloat("", &scale.z, 0.15f);
             if (ImGui::IsItemActivated())
             {
                 temp = scale.z;

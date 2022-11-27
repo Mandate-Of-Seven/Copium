@@ -247,17 +247,6 @@ namespace Copium
 
 	void ScriptingSystem::update()
 	{
-		if (MyNewSceneManager.get_current_scene())
-		for (GameObject* gameObj : MyNewSceneManager.get_current_scene()->gameObjects)
-		{
-			char outbuffer[200];
-			Script* script = gameObj->getComponent<Script>();
-			if (script)
-			{
-				if (script->getFieldValue("gameObj", outbuffer));
-					PRINT(script->name << " GAMEOBJ ID: " << *reinterpret_cast<uint64_t*>(outbuffer + 24));
-			}
-		}
 		if (compilingState == CompilingState::SwapAssembly)
 		{
 			swapDll();
@@ -405,7 +394,6 @@ namespace Copium
 			return nullptr;
 		}
 		return mono_field_get_value_object(mAppDomain, mField, mObject);
-
 	}
 
 	void ScriptingSystem::updateScriptFiles()

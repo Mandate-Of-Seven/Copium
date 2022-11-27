@@ -21,7 +21,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <mono/jit/jit.h>
 namespace Copium
 {
-	char Script::buffer[128];
 	ScriptingSystem& Script::sS{ *ScriptingSystem::Instance() };
 	const Copium::Field* field;
 
@@ -99,8 +98,7 @@ namespace Copium
 				}
 				mono_field_set_value(mObject, pScriptClass->mFields[pair.first].classField, buffer);
 			}
-			//mono_field_get_value(mObject, pScriptClass->mFields["gameObj"].classField, buffer);
-			//PRINT("GAMEOBJ ID: " << *reinterpret_cast<uint64_t*>(buffer + 24));
+
 			break;
 
 		}
@@ -130,7 +128,7 @@ namespace Copium
 	}
 
 	//Use for serialization
-	bool Script::getFieldValue(const std::string& _name, char* outBuffer)
+	bool Script::getFieldValue(const std::string& _name, char* outBuffer) const
 	{
 		auto it = pScriptClass->mFields.find(_name);
 		if (it == pScriptClass->mFields.end())
@@ -411,6 +409,10 @@ namespace Copium
 
 	Component* Script::clone(GameObject& _gameObj) const
 	{
+		//if (getFieldValue("gameObj", outBuffer))
+		//	PRINT("GAMEOBJ ID THERE: " << *reinterpret_cast<uint64_t*>(outBuffer + 24));
+		//PRINT("Gameobj id: " << gameObj.id);
+		//mono_field_get_value(mObject, pScriptClass->mFields["gameObj"].classField, buffer);
 		Script* component = new Script(_gameObj);
 		component->pScriptClass = pScriptClass;
 		component->name = name;
