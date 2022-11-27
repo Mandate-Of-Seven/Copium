@@ -21,6 +21,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Graphics/graphics-system.h"
 #include "Files/assets-system.h"
 #include "Editor/editor-system.h"
+#include "../Debugging/frame-rate-controller.h"
 #include "Windows/windows-input.h"
 
 // Bean: remove this after NewManagerInstance is moved
@@ -262,16 +263,44 @@ namespace Copium
 						sr.set_texture(nullptr);
 					}
 
-					if (gameObject->transform.hasParent())
+					// Bean: Temporary animation conditions
+					if (!assets->get_spritesheets().empty() && !gameObject->get_name().compare("Animation - Track"))
+					{
+						int animID = 1;
+						static GLuint animIndex = 0;
+						GLuint indexSize = assets->get_spritesheets()[animID].get_size() - 1;
+
+						GLfloat dt = (GLfloat) MyFrameRateController.getDt();
+						static float animTimer = 0.f;
+						animTimer += dt;
+						if (animTimer > 0.01f)
+						{
+							animTimer = 0.f;
+							animIndex++;
+						}
+
+						if (animIndex > indexSize)
+						{
+							animIndex = 0;
+						}
+
+						GLuint id = 0;
+						for (GLuint i = 0; i < assets->get_textures().size(); ++i)
+						{
+							if (assets->get_textures()[i].get_object_id() == assets->get_spritesheets()[animID].get_texture().get_object_id())
+								id = i + 1;
+						}
+
+						renderer.draw_quad(t.position, size, 0.f, assets->get_spritesheets()[animID], animIndex, id);
+					}
+					else if (gameObject->transform.hasParent())
 					{
 						Transform& t1 = *gameObject->transform.parent;
 						renderer.draw_quad(t.position + t1.position, size, rotation, sr);
-
 					}
-					else 
+					else
 					{
 						renderer.draw_quad(t.position, size, rotation, sr);
-
 					}
 
 				}
@@ -301,11 +330,6 @@ namespace Copium
 
 					renderer.draw_quad({ rc->Offset(),t.position.z }, size, rotation, sr);
 				}
-
-			}
-
-			/*for (GameObject* gameObject : scene->gameObjects)
-			{
 				for (Component* component : gameObject->getComponents<Text>())
 				{
 					if (!component->Enabled())
@@ -314,7 +338,7 @@ namespace Copium
 					Text* text = reinterpret_cast<Text*>(component);
 					text->render(camera);
 				}
-			}*/
+			}
 		}
 
 		// Bean : Testing Text
@@ -432,40 +456,9 @@ namespace Copium
 	{
 		// Bean : Testing Animations
 		renderer.begin_batch();
-		/*AssetsSystem* assets = AssetsSystem::Instance();
-		if (!assets->get_spritesheets().empty())
-		{
-			position = {-4.f, 1.f, 0.f};
-			glm::vec2 size(2.f, 2.f);
-			static GLuint animIndex = 0;
-			GLuint indexSize = assets->get_spritesheets()[animID].get_size() - 1;
 
-			GLfloat dt = (GLfloat) WindowsSystem::Instance()->get_delta_time();
-			static float animTimer = 0.f;
-			animTimer += dt;
-			if (animTimer > 0.01f && toggleAnimation)
-			{
-				animTimer = 0.f;
-				animIndex++;
-			}
-
-			if (animIndex > indexSize)
-			{
-				animIndex = 0;
-			}
-
-			GLuint id = 0;
-			for (GLuint i = 0; i < assets->get_textures().size(); ++i)
-			{
-				if (assets->get_textures()[i].get_object_id() == assets->get_spritesheets()[animID].get_texture().get_object_id())
-					id = i + 1;
-			}
-
-			renderer.draw_quad(position, size, 0.f, assets->get_spritesheets()[animID], animIndex, id);
-		}*/
-
-
-		Scene* scene = sm->get_current_scene();
+		// Bean: Enable if depth testing is disabled
+		/*Scene* scene = sm->get_current_scene();
 		if (scene != nullptr)
 		{
 			for (GameObject* gameObject : scene->gameObjects)
@@ -479,7 +472,7 @@ namespace Copium
 					text->render(camera);
 				}
 			}
-		}
+		}*/
 
 		renderer.end_batch();
 

@@ -131,7 +131,7 @@ namespace Copium
 		// Movement using right click and drag
 		if (inputSystem.is_mousebutton_pressed(1) || inputSystem.is_mousebutton_pressed(2))
 		{
-			ImGui::SetNextWindowFocus();
+			ImGui::SetWindowFocus("Scene View");
 			glm::vec2 speed = get_pan_speed();
 			focalPoint += -get_up_direction() * delta.y * speed.y;
 			focalPoint += -get_right_direction() * delta.x * speed.x;
@@ -140,6 +140,10 @@ namespace Copium
 			// Clamping camera within boundary
 			focalPoint.x = std::clamp(focalPoint.x, -100.f, 100.f);
 			focalPoint.y = std::clamp(focalPoint.y, -100.f, 100.f);
+		}
+		else
+		{
+			ImGui::SetWindowFocus();
 		}
 
 		//if (inputSystem.is_key_held(GLFW_KEY_LEFT_CONTROL))

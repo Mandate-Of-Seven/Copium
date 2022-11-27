@@ -40,8 +40,6 @@ namespace Copium
 
 	void EditorSceneView::update()
 	{
-		camera.update();
-
 		// Scene view settings
 		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoCollapse;
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });

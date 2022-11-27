@@ -14,8 +14,8 @@
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
-                        "Y": -5.0,
-                        "Z": 0.0
+                        "Y": -4.0,
+                        "Z": -3.0
                     },
                     "Rot": {
                         "X": 0.0,
@@ -23,16 +23,16 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
+                        "X": 2.0,
+                        "Y": 2.0,
                         "Z": 1.0
                     }
                 },
                 {
                     "ID": 3,
                     "Type": "SpriteRenderer",
-                    "Sprite ID": 10,
-                    "Sprite Name": "PlayerHead2.png",
+                    "Sprite ID": 21,
+                    "Sprite Name": "player_train_head.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
@@ -71,8 +71,8 @@
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
-                        "Y": 5.0,
-                        "Z": 0.0
+                        "Y": 4.0,
+                        "Z": -3.0
                     },
                     "Rot": {
                         "X": 0.0,
@@ -80,16 +80,16 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
+                        "X": 2.0,
+                        "Y": 2.0,
                         "Z": 1.0
                     }
                 },
                 {
                     "ID": 4,
                     "Type": "SpriteRenderer",
-                    "Sprite ID": 6,
-                    "Sprite Name": "EnemyHead2.png",
+                    "Sprite ID": 15,
+                    "Sprite Name": "enemy_train_head.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
@@ -110,6 +110,515 @@
                     "Type": "Rigidbody2D",
                     "Grav": false,
                     "Active": true
+                }
+            ]
+        },
+        {
+            "ID": 2,
+            "Name": "Background",
+            "Components": [
+                {
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 9,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": -10.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 5.0,
+                        "Y": 5.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 10,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 11,
+                    "Sprite Name": "background(tile).png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 3,
+            "Name": "Camera",
+            "Components": [
+                {
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 11,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Camera",
+                    "Color": {
+                        "X": 0.6373943090438843,
+                        "Y": 0.6373305320739746,
+                        "Z": 0.6373305320739746,
+                        "W": 1.0
+                    },
+                    "Projection": true,
+                    "Clipping Planes": {
+                        "Near": 0.029999999329447746,
+                        "Far": 100.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 4,
+            "Name": "Animation - Track",
+            "Components": [
+                {
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 13,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": -0.07500052452087402,
+                        "Z": -5.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 20.0,
+                        "Y": 13.380000114440918,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 14,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 2,
+                    "Sprite Name": "TrackSpriteSheet.png",
+                    "Color": {
+                        "X": 0.00009999999747378752,
+                        "Y": 0.00009998999303206801,
+                        "Z": 0.00009998999303206801,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 5,
+            "Name": "Enemy Train Body 1",
+            "Components": [
+                {
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 16,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -2.0,
+                        "Y": 4.0,
+                        "Z": -3.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.0,
+                        "Y": 2.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 17,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 14,
+                    "Sprite Name": "enemy_train_back.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 6,
+            "Name": "Enemy Train Body 2",
+            "Components": [
+                {
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 18,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -4.0,
+                        "Y": 4.0,
+                        "Z": -3.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.0,
+                        "Y": 2.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 0,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 14,
+                    "Sprite Name": "enemy_train_back.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 8,
+            "Name": "Enemy Train Body 3",
+            "Components": [
+                {
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 21,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -6.0,
+                        "Y": 4.0,
+                        "Z": -3.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.0,
+                        "Y": 2.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 0,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 14,
+                    "Sprite Name": "enemy_train_back.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 9,
+            "Name": "Gun 1",
+            "Components": [
+                {
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 22,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -1.9999995231628418,
+                        "Y": 3.75,
+                        "Z": -2.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 180.0
+                    },
+                    "Scale": {
+                        "X": 0.30000001192092896,
+                        "Y": 0.30000001192092896,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 0,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 24,
+                    "Sprite Name": "Enemy Gun New.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 7,
+            "Name": "Gun 2",
+            "Components": [
+                {
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 23,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -4.0,
+                        "Y": 3.75,
+                        "Z": -2.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 180.0
+                    },
+                    "Scale": {
+                        "X": 0.30000001192092896,
+                        "Y": 0.30000001192092896,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 0,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 24,
+                    "Sprite Name": "Enemy Gun New.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 10,
+            "Name": "Gun 3",
+            "Components": [
+                {
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 24,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -6.0,
+                        "Y": 3.75,
+                        "Z": -2.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 180.0
+                    },
+                    "Scale": {
+                        "X": 0.30000001192092896,
+                        "Y": 0.30000001192092896,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 0,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 24,
+                    "Sprite Name": "Enemy Gun New.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 11,
+            "Name": "Player Train Body 1",
+            "Components": [
+                {
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 25,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -2.0,
+                        "Y": -4.0,
+                        "Z": -3.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.0,
+                        "Y": 2.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 0,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 20,
+                    "Sprite Name": "player_train_back.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 12,
+            "Name": "Player Train Body 2",
+            "Components": [
+                {
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 26,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -4.0,
+                        "Y": -4.0,
+                        "Z": -3.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.0,
+                        "Y": 2.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 0,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 20,
+                    "Sprite Name": "player_train_back.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 13,
+            "Name": "Player Train Body 3",
+            "Components": [
+                {
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 27,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -6.0,
+                        "Y": -4.0,
+                        "Z": -3.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.0,
+                        "Y": 2.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 0,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 20,
+                    "Sprite Name": "player_train_back.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 14,
+            "Name": "Gun 1",
+            "Components": [
+                {
+                    "PID": 0,
+                    "Children": [],
+                    "ID": 28,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -2.0,
+                        "Y": -3.75,
+                        "Z": -2.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 0.30000001192092896,
+                        "Y": 0.30000001192092896,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 0,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 25,
+                    "Sprite Name": "Player Gun New.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
                 }
             ]
         }
