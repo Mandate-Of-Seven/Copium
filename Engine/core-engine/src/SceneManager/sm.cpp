@@ -102,6 +102,11 @@ namespace Copium {
 	{
 		selectedGameObject = nullptr;
 
+		if (currSceneState == Scene::SceneState::play)
+		{
+			endPreview();
+		}
+
 		if (currentScene)
 		{
 			delete currentScene;
