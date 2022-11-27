@@ -22,7 +22,7 @@ namespace CopiumEngine
         Collision2D(ulong _gameObjectID)
         {
             gameObject = null;
-            foreach (GameObject gameObj in GameObject.gameObjects)
+            foreach (GameObject gameObj in Instances.gameObjects)
             {
                 if (gameObj.ID == _gameObjectID)
                 {

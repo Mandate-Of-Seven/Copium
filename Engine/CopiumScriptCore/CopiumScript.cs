@@ -37,8 +37,7 @@ namespace CopiumEngine
 
         private Component FindComponentByID(ulong componentID, ulong gameObjectID)
         {
-            Console.WriteLine("FINDING COMPONENT BY ID IN C#______________________________________________");
-            foreach (Component component in GameObject.components)
+            foreach (Component component in Instances.components)
             {
                 if (component.ID == componentID)
                 {
@@ -47,14 +46,13 @@ namespace CopiumEngine
             }
             Component component1 = new Component();
             component1.Initialize(GameObject.FindByID(gameObjectID), componentID);
-            GameObject.components.Add(component1);
+            Instances.components.Add(component1);
             return component1;
         }
 
         private GameObject FindGameObjectByID(ulong gameObjectID)
         {
-            Console.WriteLine("FINDING GAMEOBJECT BY ID IN C#______________________________________________");
-            foreach (GameObject gameObject in GameObject.gameObjects)
+            foreach (GameObject gameObject in Instances.gameObjects)
             {
                 if (gameObject.ID == gameObjectID)
                 {

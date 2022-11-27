@@ -25,6 +25,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Messaging/message-types.h"
 #include "Scripting/script-wrappers.h"
 #include <GameObject/Components/script-component.h>
+#include <SceneManager/sm.h>
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
@@ -393,7 +394,6 @@ namespace Copium
 			return nullptr;
 		}
 		return mono_field_get_value_object(mAppDomain, mField, mObject);
-
 	}
 
 	void ScriptingSystem::updateScriptFiles()
