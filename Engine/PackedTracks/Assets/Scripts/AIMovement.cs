@@ -28,7 +28,6 @@ public class AIMovement : CopiumScript
     // Start is called before the first frame update
     void Start()
     {
-        Console.WriteLine("AI MOVEMENT! STARTED");
         GetPlayerPos();
         Console.WriteLine("Ai Movement Started");
     }
@@ -36,27 +35,26 @@ public class AIMovement : CopiumScript
     // Update is called once per frame
     void Update()
     {
-
-        if(currentAIState == AIState.Idle)
+        if (currentAIState == AIState.Idle)
         {
-            Console.WriteLine("AI is Idle");
+            //Console.WriteLine("AI is Idle");
         }
 
         if(CurrentGameState == GameState.Combat && currentAIState == AIState.Idle)
         {
             if(self.transform.position.x != PlayerTrainGO.transform.position.x)
             {
-                Console.WriteLine("bleep");
+                //Console.WriteLine("bleep");
                 currentAIState = AIState.Chase;
             }else
             {
-                Console.WriteLine(PlayerTrainGO.transform.position.x);
+                //Console.WriteLine(PlayerTrainGO.transform.position.x);
             }
         }
 
         if (CurrentGameState == GameState.Combat && currentAIState == AIState.Chase)
         {
-            Console.WriteLine("bleep");
+            //Console.WriteLine("bleep");
             if (self.transform.position.x < PlayerTrainGO.transform.position.x)
             {
                 //AIMoveRight();

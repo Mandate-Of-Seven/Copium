@@ -28,7 +28,6 @@ namespace Copium
 	Script::Script(GameObject& _gameObj) :
 		mObject{ nullptr }, pScriptClass{ nullptr }, Component(_gameObj, ComponentType::Script), name{ DEFAULT_SCRIPT_NAME }, reference{nullptr}, isAddingGameObjectReference{false}
 	{
-		PRINT("SCRIPT CREATED!");
 		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
 		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
 		pScriptClass = sS.getScriptClass(name);
@@ -53,6 +52,7 @@ namespace Copium
 			{
 				mObject = sS.cloneInstance(reference->mObject);
 				reference = nullptr;
+				return;
 			}
 			GameObjectID _id = gameObj.id;
 			void* param = &_id;
@@ -68,7 +68,6 @@ namespace Copium
 		case MESSAGE_TYPE::MT_SCRIPTING_UPDATED:
 			pScriptClass = sS.getScriptClass(name.c_str());
 			instantiate();
-			PRINT("SCRIPTING UPDATED");
 		case MESSAGE_TYPE::MT_SCENE_DESERIALIZED:
 			for (auto pair : fieldComponentReferences)
 			{
@@ -93,12 +92,15 @@ namespace Copium
 				MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindGameObjectByID"], mObject, &params, nullptr);
 				MonoClass* mGameObjectClass = mono_object_get_class(result);
 				void* iter = nullptr;
+
 				while (MonoClassField* field = mono_class_get_fields(mGameObjectClass, &iter))
 				{
 					mono_field_get_value(result, field, buffer + mono_field_get_offset(field));
 				}
 				mono_field_set_value(mObject, pScriptClass->mFields[pair.first].classField, buffer);
 			}
+			//mono_field_get_value(mObject, pScriptClass->mFields["gameObj"].classField, buffer);
+			//PRINT("GAMEOBJ ID: " << *reinterpret_cast<uint64_t*>(buffer + 24));
 			break;
 
 		}
@@ -128,17 +130,17 @@ namespace Copium
 	}
 
 	//Use for serialization
-	bool Script::getFieldValue(const std::string& _name, void* outBuffer)
+	bool Script::getFieldValue(const std::string& _name, char* outBuffer)
 	{
-		const auto& it = pScriptClass->mFields.find(_name);
+		auto it = pScriptClass->mFields.find(_name);
 		if (it == pScriptClass->mFields.end())
 			return false;
 		const Field& field = it->second;
-		mono_field_get_value(mObject, field.classField, buffer);
+		mono_field_get_value(mObject, field.classField, outBuffer);
 		return true;
 	}
 
-	bool Script::setFieldValue(const std::string& _name, const void* value)
+	bool Script::setFieldValue(const std::string& _name, const char* value)
 	{
 		const auto& it = pScriptClass->mFields.find(_name);
 		if (it == pScriptClass->mFields.end())
@@ -276,9 +278,9 @@ namespace Copium
 									GameObjectID gameObjID = go->id;
 									void* param = &gameObjID;
 									MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindGameObjectByID"], mObject, &param, nullptr);
-									MonoClass* mComponentClass = mono_object_get_class(result);
+									MonoClass* mGameObjClass = mono_object_get_class(result);
 									void* iter = nullptr;
-									while (MonoClassField* field = mono_class_get_fields(mComponentClass, &iter))
+									while (MonoClassField* field = mono_class_get_fields(mGameObjClass, &iter))
 									{
 										mono_field_get_value(result, field, buffer + mono_field_get_offset(field));
 									}
@@ -565,7 +567,6 @@ namespace Copium
 				case FieldType::Component:
 				{
 					fieldComponentReferences[_name] = MyNewSceneManager.findComponentByID(_value[_name.c_str()].GetUint64());
-
 					break;
 				}
 				case FieldType::GameObject:

@@ -135,7 +135,7 @@ namespace Copium
 			False if operation failed, true if it was successful
 		*/
 		/*******************************************************************************/
-		bool getFieldValue(const std::string& name, void* buffer);
+		bool getFieldValue(const std::string& name, char* buffer);
 
 		/*******************************************************************************
 		/*!
@@ -150,7 +150,7 @@ namespace Copium
 			False if operation failed, true if it was successful
 		*/
 		/*******************************************************************************/
-		bool setFieldValue(const std::string& name, const void* value);
+		bool setFieldValue(const std::string& name, const char* value);
 
 		Component* clone(GameObject& _gameObj) const;
 

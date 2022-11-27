@@ -25,6 +25,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Messaging/message-types.h"
 #include "Scripting/script-wrappers.h"
 #include <GameObject/Components/script-component.h>
+#include <SceneManager/sm.h>
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
@@ -246,6 +247,17 @@ namespace Copium
 
 	void ScriptingSystem::update()
 	{
+		if (MyNewSceneManager.get_current_scene())
+		for (GameObject* gameObj : MyNewSceneManager.get_current_scene()->gameObjects)
+		{
+			char outbuffer[200];
+			Script* script = gameObj->getComponent<Script>();
+			if (script)
+			{
+				if (script->getFieldValue("gameObj", outbuffer));
+					PRINT(script->name << " GAMEOBJ ID: " << *reinterpret_cast<uint64_t*>(outbuffer + 24));
+			}
+		}
 		if (compilingState == CompilingState::SwapAssembly)
 		{
 			swapDll();

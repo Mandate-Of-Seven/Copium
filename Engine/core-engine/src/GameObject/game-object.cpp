@@ -106,17 +106,14 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{rhs.id}
     MESSAGE_CONTAINER::reflectCsGameObject.gameObjID = id;
     MESSAGE_CONTAINER::reflectCsGameObject.componentIDs.clear();
     transform.id = rhs.transform.id;
-    PRINT("TRANSFORM: " << transform.id);
     for (Component* pComponent : rhs.components)
     {
         MESSAGE_CONTAINER::reflectCsGameObject.componentIDs.push_back(pComponent->id);
         Component* newComponent = pComponent->clone(*this);
         newComponent->id = pComponent->id;
-        PRINT("OLD: " << " " << pComponent->id);
-        PRINT("NEW: " << newComponent->id);
         components.push_back(newComponent);
     }
-    messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
+    //messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
     //for (Transform* pTransform : rhs.children)
     //{
     //    GameObject* child = sceneManager.get_gof().instantiate(*pGameObj);
