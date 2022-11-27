@@ -44,7 +44,7 @@ namespace Copium
 		state = ButtonState::None;
 	}
 
-	void Button::updateBounds()
+	void Button::updateBounds() 
 	{
 		Math::Vec3 pos{ gameObj.transform.position };
 		Math::Vec3 scale{ gameObj.transform.scale };
@@ -80,6 +80,7 @@ namespace Copium
 		{
 		case ButtonState::OnClick:
 		{
+			PRINT("UI: CRICKING on " << gameObj.get_name());
 			if (targetGraphic)
 				targetGraphic->layeredColor = Linear(previousColor, clickedColor, timer / fadeDuration);
 			Script* script = gameObj.getComponent<Script>();
@@ -91,6 +92,7 @@ namespace Copium
 		}
 		case ButtonState::OnHover:
 		{
+			PRINT("UI: HOVERING on " << gameObj.get_name());
 			if (targetGraphic)
 				targetGraphic->layeredColor = Linear(previousColor, hoverColor, timer / fadeDuration);
 			break;
@@ -246,6 +248,40 @@ namespace Copium
 				ImGui::PopItemWidth();
 			}
 
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("Bounds");
+			ImGui::TableNextColumn();
+			if (ImGui::BeginTable("Component AABB", 4, windowFlags))
+			{
+				ImGui::TableNextRow();
+				ImGui::TableNextColumn();
+				ImGui::PushID(0);
+				ImGui::Text("minX"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+				ImGui::InputFloat("", &bounds.min.x);
+				ImGui::PopID();
+
+				ImGui::TableNextColumn();
+				ImGui::PushID(1);
+				ImGui::Text("minY"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+				ImGui::InputFloat("", &bounds.min.y);
+				ImGui::PopID();
+
+				ImGui::TableNextColumn();
+				ImGui::PushID(2);
+				ImGui::Text("maxX"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+				ImGui::InputFloat("", &bounds.max.x);
+				ImGui::PopID();
+
+				ImGui::TableNextColumn();
+				ImGui::PushID(3);
+				ImGui::Text("maxY"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+				ImGui::InputFloat("", &bounds.max.y);
+				ImGui::PopID();
+
+				ImGui::EndTable();
+			}
+
 			ImGui::Unindent();
 			ImGui::EndTable();
 		}
@@ -272,7 +308,7 @@ namespace Copium
 		glm::vec2 scenePos = EditorSystem::Instance()->get_camera()->get_ndc();
 		if (hoveredBtn == nullptr)
 		{
-			if (static_collision_pointrect(scenePos, relativeBounds))
+			if (static_collision_pointrect(scenePos, getBounds()))
 			{
 				if (inputSystem.is_mousebutton_pressed(0))
 				{
@@ -317,6 +353,10 @@ namespace Copium
 		else
 			_value.AddMember("Graphic ID", 0, _doc.GetAllocator());
 
+		rapidjson::Value bb(rapidjson::kObjectType);
+		bounds.serialize(bb, _doc);
+		_value.AddMember("BoundingBox", bb, _doc.GetAllocator());
+
 		rapidjson::Value rjName;
 		rjName.SetString(callbackName.c_str(), _doc.GetAllocator());
 		_value.AddMember("Callback", rjName, _doc.GetAllocator());
@@ -333,6 +373,30 @@ namespace Copium
 		{
 			callbackName = _value["Callback"].GetString();
 		}
+
+		if (_value.HasMember("BoundingBox"))
+		{
+			rapidjson::Value& _v = _value["BoundingBox"].GetObj();
+			bounds.deserialize(_v);
+		}
+	}
+
+	AABB Button::getBounds() const
+	{
+		Math::Vec3& size{ gameObj.transform.scale };
+		Math::Vec3& pos{ gameObj.transform.position };
+		float x = (bounds.max.x - bounds.min.x) * size.x;
+		float y = (bounds.max.y - bounds.min.y) * size.y;
+		AABB tmp{ bounds };
+		tmp.max.x *= x;
+		tmp.min.x *= x;
+		tmp.max.y *= y;
+		tmp.min.y *= y;
+		tmp.max.x += pos.x;
+		tmp.min.x += pos.x;
+		tmp.max.y += pos.y;
+		tmp.min.y += pos.y;
+		return tmp;
 	}
 
 	void Button::set_targetgraphic(Text* _txt)

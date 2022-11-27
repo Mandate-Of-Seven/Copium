@@ -55,7 +55,12 @@ namespace Copium
 
 	static bool GetKeyUp(int keyCode)
 	{
-		return false;
+		return  inputSystem.is_key_pressed(keyCode);
+	}
+
+	static bool GetKeyDown(int keyCode)
+	{
+		return  inputSystem.is_key_pressed(keyCode);
 	}
 
 	/*******************************************************************************
@@ -230,7 +235,7 @@ namespace Copium
 		{
 			return;
 		}
-		gameObj->active = _active;
+		gameObj->setActive(_active);
 	}
 
 	static bool GetActive(GameObjectID _ID)
@@ -240,7 +245,7 @@ namespace Copium
 		{
 			return false;
 		}
-		return gameObj->active;
+		return gameObj->isActive();
 	}
 
 	static void QuitGame()
@@ -315,6 +320,8 @@ namespace Copium
 	static void registerScriptWrappers()
 	{
 		Register(GetKey);
+		Register(GetKeyUp);
+		Register(GetKeyDown);
 		Register(GetTranslation);
 		Register(SetTranslation);
 		Register(FindGameObjByName);
@@ -331,7 +338,6 @@ namespace Copium
 		Register(SetTextString);
 		Register(CloneGameObject);
 		Register(InstantiateGameObject);
-		Register(GetKeyUp);
 		Register(QuitGame);
 	}
 

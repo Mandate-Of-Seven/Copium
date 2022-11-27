@@ -22,6 +22,8 @@ namespace Copium::Math
 
 struct GLFWwindow;
 
+#define COPIUM_MAX_KEYS 400
+
 namespace Copium
 {
 	CLASS_SYSTEM(InputSystem)
@@ -159,6 +161,7 @@ namespace Copium
 			/**************************************************************************/
 			static void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods);
 
+			static short keys[COPIUM_MAX_KEYS];
 	private:
 		bool printInput = 0;
 	};

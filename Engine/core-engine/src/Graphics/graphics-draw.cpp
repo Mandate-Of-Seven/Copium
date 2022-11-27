@@ -155,47 +155,12 @@ namespace Copium
 
 				for (Component* component : gameObject->getComponents<Button>())
 				{
-					(void) component;
-					Transform& t = gameObject->transform;
-
-					glm::vec3 position = t.position;
-					glm::vec2 size(t.scale.x, t.scale.y);
-					float rotation = t.rotation.z;
-
-					glm::mat4 translate = {
-						glm::vec4(1.f, 0.f, 0.f, 0.f),
-						glm::vec4(0.f, 1.f, 0.f, 0.f),
-						glm::vec4(position.x, position.y, 1.f, 0.f),
-						glm::vec4(0.f, 0.f, 0.f, 1.f)
-					};
-
-					float rad = glm::radians(rotation);
-
-					glm::mat4 rotate = {
-						glm::vec4(cos(rad), sin(rad), 0.f, 0.f),
-						glm::vec4(-sin(rad), cos(rad), 0.f, 0.f),
-						glm::vec4(0.f, 0.f, 1.f, 0.f),
-						glm::vec4(0.f, 0.f, 0.f, 1.f)
-					};
-
-					glm::mat4 transform = translate * rotate;
-
-					color = { 0.3f, 1.f, 0.3f, 1.f };
-
-					glm::vec4 pos0 = transform * glm::vec4(-size.x / 2, -size.y / 2, 1.f, 1.f);
-					glm::vec4 pos1 = transform * glm::vec4(size.x / 2, -size.y / 2, 1.f, 1.f);
-					glm::vec4 pos2 = transform * glm::vec4(size.x / 2, size.y / 2, 1.f, 1.f);
-					glm::vec4 pos3 = transform * glm::vec4(-size.x / 2, size.y / 2, 1.f, 1.f);
-
-					float minX = fminf(pos0.x, fminf(pos1.x, fminf(pos2.x, pos3.x)));
-					float minY = fminf(pos0.y, fminf(pos1.y, fminf(pos2.y, pos3.y)));
-					float maxX = fmaxf(pos0.x, fmaxf(pos1.x, fmaxf(pos2.x, pos3.x)));
-					float maxY = fmaxf(pos0.y, fmaxf(pos1.y, fmaxf(pos2.y, pos3.y)));
-
-					glm::vec2 pos0_1 = { minX, minY };
-					glm::vec2 pos1_1 = { maxX, minY };
-					glm::vec2 pos2_1 = { maxX, maxY };
-					glm::vec2 pos3_1 = { minX, maxY };
+					Button* collider = reinterpret_cast<Button*>(component);
+					AABB bounds = collider->getBounds();
+					glm::vec2 pos0_1 = { bounds.min.to_glm() };
+					glm::vec2 pos1_1 = { bounds.max.x, bounds.min.y };
+					glm::vec2 pos2_1 = { bounds.max.to_glm() };
+					glm::vec2 pos3_1 = { bounds.min.x, bounds.max.y };
 
 					renderer.draw_line(pos0_1, pos1_1, color);
 					renderer.draw_line(pos1_1, pos2_1, color);
@@ -236,7 +201,7 @@ namespace Copium
 		{
 			for (GameObject* gameObject : scene->gameObjects)
 			{
-				if (!gameObject->active)
+				if (!gameObject->isActive())
 					continue;
 
 				for (Component* component : gameObject->getComponents<SpriteRenderer>())

@@ -21,14 +21,12 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Windows/windows-input.h"
 #include "Windows/windows-system.h"
 
-#define COPIUM_MAX_KEYS 400
 #define COPIUM_MAX_MOUSEBUTTONS 5
 
 // Bean: Temporary for window systems declaration
 namespace
 {
     Copium::WindowsSystem * windowsSystem = Copium::WindowsSystem::Instance();
-    short keys[COPIUM_MAX_KEYS];
     short mouseButtons[COPIUM_MAX_MOUSEBUTTONS];
     double mouseScrollOffset;
 
@@ -36,6 +34,7 @@ namespace
 
 namespace Copium
 {
+    short InputSystem::keys[COPIUM_MAX_KEYS];
 
 void InputSystem::init()
 {

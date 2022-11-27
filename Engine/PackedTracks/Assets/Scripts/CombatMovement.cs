@@ -37,11 +37,6 @@ public class CombatMovement : CopiumScript
         {
             return;
         }
-        if (Input.GetKey(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
-
 
         if(CurrentGameState != GameState.Combat)
         {
@@ -176,9 +171,4 @@ public class CombatMovement : CopiumScript
         Console.WriteLine("COLLIDING FROM C#!");
     }
 
-    void ButtonClickedEffect()
-    {
-        Console.WriteLine("I AM CLICKED!!");
-        Application.Quit();
-    }
 }

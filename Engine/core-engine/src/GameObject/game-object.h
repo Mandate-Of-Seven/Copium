@@ -38,7 +38,7 @@ class GameObject final : public IReceiver
 private:
     friend class GameObjectFactory;
     std::string name;                   //Name of gameObject
-
+    bool active;
 
     /***************************************************************************/
     /*!
@@ -74,10 +74,13 @@ private:
 public:           
     //Global ID for gameObjects
     const GameObjectID id;
-    bool active;
     Transform transform;
     std::vector<Component*> components;   //Components for gameObject
     ComponentID assign_id();
+
+    bool isActive();
+
+    void setActive(bool _active);
 
     /*******************************************************************************
     /*!

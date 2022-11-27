@@ -35,6 +35,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 namespace Copium {
 
+	class Camera;
+
 	CLASS_SYSTEM(NewSceneManager)
 	{
 	public:
@@ -249,6 +251,7 @@ namespace Copium {
 		Scene* get_storage_scene();
 
 		GameObject* selectedGameObject;
+		Camera* mainCamera{nullptr};
 
 	private:
 		Scene* currentScene;	// Pointer to the current scene

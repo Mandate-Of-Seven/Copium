@@ -316,7 +316,7 @@ namespace Copium
 							void* param = &gameObjID;
 							MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindGameObjectByID"], mObject, &param, nullptr);
 							MonoClass* mComponentClass = mono_object_get_class(result);
-							fieldDataReferences.insert({ it->first,FieldData(mono_object_get_size(result)) });
+									fieldDataReferences.insert({ it->first,FieldData(mono_object_get_size(result)) });
 							void* iter = nullptr;
 							while (MonoClassField* field = mono_class_get_fields(mComponentClass, &iter))
 							{

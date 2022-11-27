@@ -13,6 +13,7 @@ public class Manager : CopiumScript
 
     void Start()
     {
+        CurrentGameState = GameState.Combat;
         Console.WriteLine("Manager Start");
         panel.SetActive(false);
     }
@@ -20,29 +21,30 @@ public class Manager : CopiumScript
     void Update()
     {
 
-        if(Input.GetKey(KeyCode.P))
+        if(Input.GetKeyDown(KeyCode.Escape))
         {
-            Console.WriteLine("Pause Game");
-            CurrentGameState = GameState.Menu;
-            if(panel != null)
+            if (CurrentGameState == GameState.Combat)
             {
-                //panel.active = true;
-                panel.SetActive(true);
+                Console.WriteLine("Pause Game");
+                CurrentGameState = GameState.Menu;
+                if (panel != null)
+                {
+                    //panel.active = true;
+                    panel.SetActive(true);
+                }
+
+            }
+            else
+            {
+                Console.WriteLine("Unpause Game");
+                CurrentGameState = GameState.Combat;
+                if (panel != null)
+                {
+                    //panel.active = false;
+                    panel.SetActive(false);
+                }
             }
         }
-
-
-        if(Input.GetKey(KeyCode.U))
-        {
-            Console.WriteLine("Unpause Game");
-            CurrentGameState = GameState.Combat;
-            if(panel != null)
-            {
-                //panel.active = false;
-                panel.SetActive(false);
-            }        
-        }
-
 
         if(CurrentGameState == GameState.Combat && panel.activeSelf == true)
         {

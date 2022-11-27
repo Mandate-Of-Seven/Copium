@@ -27,6 +27,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Windows/windows-system.h"
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/prettywriter.h>
+#include <GameObject/Components/camera-component.h>
 #include "GameObject/Components/ui-components.h"
 
 namespace Copium {
@@ -291,6 +292,21 @@ namespace Copium {
 
 		backUpCurrScene();
 
+		for (GameObject* gameObj : currentScene->gameObjects)
+		{
+			mainCamera = gameObj->getComponent<Camera>();
+			if (mainCamera)
+				break;
+		}
+
+		if (mainCamera == nullptr)
+		{
+			delete currentScene;
+			currentScene = storageScene;
+			storageScene = 0;
+			return false;
+		}
+
 		if (prevSelected)
 			selectedGameObject = findGameObjByID(prevSelected);
 
@@ -304,6 +320,7 @@ namespace Copium {
 		if (!currentScene)
 		{
 			PRINT("There is no scene to stop preview...\n");
+			
 			return false;
 		}
 
@@ -313,6 +330,7 @@ namespace Copium {
 
 		Scene* tmp = currentScene;
 		currentScene = storageScene;
+		mainCamera = nullptr;
 		storageScene = nullptr;
 
 		if (selectedGameObject)

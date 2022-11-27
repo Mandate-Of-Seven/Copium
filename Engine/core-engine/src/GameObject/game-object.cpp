@@ -95,6 +95,21 @@ namespace Copium
     }
 
 
+    bool GameObject::isActive()
+    {
+        if (transform.hasParent())
+        {
+            return transform.parent->gameObj.isActive();
+        }
+        return active;
+    }
+
+    void GameObject::setActive(bool _active)
+    {
+        active = _active;
+    }
+
+
 GameObject::GameObject(const GameObject& rhs) : transform(*this), id{rhs.id}
 {
     transform.position = rhs.transform.position;

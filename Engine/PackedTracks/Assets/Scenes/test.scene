@@ -1,7 +1,10 @@
 {
     "Name": "NewScene",
     "Unused GIDs": [],
-    "Unused CIDs": [],
+    "Unused CIDs": [
+        29,
+        26
+    ],
     "GameObjects": [
         {
             "ID": 1,
@@ -229,7 +232,7 @@
             "Components": [
                 {
                     "PID": 1,
-                    "ID": 16,
+                    "ID": 15,
                     "Type": "Transform",
                     "Pos": {
                         "X": -1.0,
@@ -267,7 +270,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 19,
+                    "ID": 17,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.00036183817428536713,
@@ -307,7 +310,7 @@
             "Components": [
                 {
                     "PID": 7,
-                    "ID": 21,
+                    "ID": 19,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -329,6 +332,16 @@
                     "Type": "Button",
                     "ID": 22,
                     "Graphic ID": 25,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.5,
+                            "Y": -0.5
+                        },
+                        "Max": {
+                            "X": 0.5,
+                            "Y": 0.5
+                        }
+                    },
                     "Callback": "ResumeGame"
                 },
                 {
@@ -357,12 +370,6 @@
                     "g": 1.0,
                     "b": 1.0,
                     "a": 1.0
-                },
-                {
-                    "ID": 26,
-                    "Type": "Script",
-                    "Name": "Manager",
-                    "panel": 6
                 }
             ]
         },
@@ -372,7 +379,7 @@
             "Components": [
                 {
                     "PID": 7,
-                    "ID": 27,
+                    "ID": 24,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -403,12 +410,6 @@
                         "Z": 0.0941176488995552,
                         "W": 0.7843137383460999
                     }
-                },
-                {
-                    "ID": 29,
-                    "Type": "Script",
-                    "Name": "Manager",
-                    "panel": 9
                 }
             ]
         }
