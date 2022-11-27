@@ -22,6 +22,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <Windows/windows-system.h>
 #include <Debugging/frame-rate-controller.h>
 #include "GameObject/Components/ui-components.h"
+#include "../Game/game-nonscript.h"
 
 namespace Copium
 {
@@ -31,6 +32,7 @@ namespace Copium
 		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 		std::vector<GameObject*>* gameObjects;
 		double timeElasped;
+		Game game;
 	}
 
 	void LogicSystem::init()
@@ -76,6 +78,8 @@ namespace Copium
 			}
 		}
 
+		// Bean: Temporary for hardcoded scripts
+		game.update();
 	}
 
 	void LogicSystem::exit()
@@ -100,5 +104,8 @@ namespace Copium
 			}
 		}
 		timeElasped = MyFrameRateController.getDt();
+
+		// Bean: Temporary for hardcoded scripts
+		game.init();
 	}
 }

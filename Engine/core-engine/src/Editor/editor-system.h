@@ -93,6 +93,7 @@ namespace Copium
 		bool is_enabled() { return enableEditor; }
 
 		EditorSceneView* get_scene_view() { return &sceneView; }
+		EditorGame* get_game_view() { return &game; }
 		EditorContentBrowser* get_content_browser() { return &contentBrowser; }
 		EditorCamera* get_camera() { return &camera; }
 

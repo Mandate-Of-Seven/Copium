@@ -40,6 +40,8 @@ namespace Copium
 		GraphicsSystem* graphics = GraphicsSystem::Instance();
 		NewSceneManager* sm = NewSceneManager::Instance();
 		InputSystem* inputSystem = InputSystem::Instance();
+
+		bool toggleAnim = false;
 	}
 
 	void Draw::init(BaseCamera* _camera)
@@ -113,8 +115,8 @@ namespace Copium
 		float numDivision = 24.f, iteration = (end - start) / numDivision;
 		for (float i = start; i < end + iteration; i += iteration)
 		{
-			renderer.draw_line({ i, start }, { i, end }, color);
-			renderer.draw_line({ start, i }, { end, i }, color);
+			renderer.draw_line({ i, start, -100.f }, { i, end, -100.f }, color);
+			renderer.draw_line({ start, i, -100.f }, { end, i, -100.f }, color);
 		}
 
 		float subDivision = 5.f;
@@ -123,8 +125,8 @@ namespace Copium
 		start = -10.f, end = -start;
 		for (float i = start; i <= end; i += iteration)
 		{
-			renderer.draw_line({ i, start }, { i, end }, color);
-			renderer.draw_line({ start, i }, { end, i }, color);
+			renderer.draw_line({ i, start, -100.f }, { i, end, -100.f }, color);
+			renderer.draw_line({ start, i, -100.f }, { end, i, -100.f }, color);
 		}
 
 		// Colliders
@@ -142,10 +144,10 @@ namespace Copium
 
 					BoxCollider2D* collider = reinterpret_cast<BoxCollider2D*>(component);
 					AABB bounds = collider->getBounds();
-					glm::vec2 pos0_1 = { bounds.min.to_glm()};
-					glm::vec2 pos1_1 = { bounds.max.x, bounds.min.y };
-					glm::vec2 pos2_1 = { bounds.max.to_glm()};
-					glm::vec2 pos3_1 = { bounds.min.x, bounds.max.y };
+					glm::vec3 pos0_1 = { bounds.min.to_glm(), 0.f };
+					glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y, 0.f };
+					glm::vec3 pos2_1 = { bounds.max.to_glm(), 0.f };
+					glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y, 0.f };
 
 					renderer.draw_line(pos0_1, pos1_1, color);
 					renderer.draw_line(pos1_1, pos2_1, color);
@@ -192,10 +194,10 @@ namespace Copium
 					float maxX = fmaxf(pos0.x, fmaxf(pos1.x, fmaxf(pos2.x, pos3.x)));
 					float maxY = fmaxf(pos0.y, fmaxf(pos1.y, fmaxf(pos2.y, pos3.y)));
 
-					glm::vec2 pos0_1 = { minX, minY };
-					glm::vec2 pos1_1 = { maxX, minY };
-					glm::vec2 pos2_1 = { maxX, maxY };
-					glm::vec2 pos3_1 = { minX, maxY };
+					glm::vec3 pos0_1 = { minX, minY, 0.f };
+					glm::vec3 pos1_1 = { maxX, minY, 0.f };
+					glm::vec3 pos2_1 = { maxX, maxY, 0.f };
+					glm::vec3 pos3_1 = { minX, maxY, 0.f };
 
 					renderer.draw_line(pos0_1, pos1_1, color);
 					renderer.draw_line(pos1_1, pos2_1, color);
@@ -234,6 +236,11 @@ namespace Copium
 		Scene* scene = sm->get_current_scene();
 		if (scene != nullptr)
 		{
+			if (scene->get_state() == Scene::SceneState::play)
+				toggleAnim = true;
+			else
+				toggleAnim = false;
+
 			for (GameObject* gameObject : scene->gameObjects)
 			{
 				if (!gameObject->active)
@@ -273,7 +280,7 @@ namespace Copium
 						GLfloat dt = (GLfloat) MyFrameRateController.getDt();
 						static float animTimer = 0.f;
 						animTimer += dt;
-						if (animTimer > 0.01f)
+						if (animTimer > 0.01f && toggleAnim)
 						{
 							animTimer = 0.f;
 							animIndex++;
@@ -383,10 +390,10 @@ namespace Copium
 
 					BoxCollider2D* collider = reinterpret_cast<BoxCollider2D*>(component);
 					AABB bounds = collider->getBounds();
-					glm::vec2 pos0_1 = { bounds.min.to_glm() };
-					glm::vec2 pos1_1 = { bounds.max.x, bounds.min.y };
-					glm::vec2 pos2_1 = { bounds.max.to_glm() };
-					glm::vec2 pos3_1 = { bounds.min.x, bounds.max.y };
+					glm::vec3 pos0_1 = { bounds.min.to_glm(), 0.f };
+					glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y, 0.f };
+					glm::vec3 pos2_1 = { bounds.max.to_glm() , 0.f };
+					glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y, 0.f };
 
 					renderer.draw_line(pos0_1, pos1_1, color);
 					renderer.draw_line(pos1_1, pos2_1, color);
@@ -433,10 +440,10 @@ namespace Copium
 					float maxX = fmaxf(pos0.x, fmaxf(pos1.x, fmaxf(pos2.x, pos3.x)));
 					float maxY = fmaxf(pos0.y, fmaxf(pos1.y, fmaxf(pos2.y, pos3.y)));
 
-					glm::vec2 pos0_1 = { minX, minY };
-					glm::vec2 pos1_1 = { maxX, minY };
-					glm::vec2 pos2_1 = { maxX, maxY };
-					glm::vec2 pos3_1 = { minX, maxY };
+					glm::vec3 pos0_1 = { minX, minY, 0.f };
+					glm::vec3 pos1_1 = { maxX, minY, 0.f };
+					glm::vec3 pos2_1 = { maxX, maxY, 0.f };
+					glm::vec3 pos3_1 = { minX, maxY, 0.f };
 
 					renderer.draw_line(pos0_1, pos1_1, color);
 					renderer.draw_line(pos1_1, pos2_1, color);

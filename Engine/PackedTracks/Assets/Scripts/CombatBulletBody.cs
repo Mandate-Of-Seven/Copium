@@ -46,14 +46,14 @@ public class CombatBulletBody : CopiumScript
         if (collision.GetComponent<UnitBody>() != null)
         {
 
-            if (isPlayer && collision.GetComponent<UnitBody>().thisUnitFaction == UnitBody.UnitFaction.Enemy)
+            if (isPlayer && collision.GetComponent<UnitBody>().thisUnitFaction == 1)
             {
                 Instantiate(HitAnim, transform.position, transform.rotation);
                 DamageUnit(collision.GetComponent<UnitBody>().thisUnit, bullet);
 
                 Destroy(this.gameObject);
             }
-            else if (!isPlayer && collision.GetComponent<UnitBody>().thisUnitFaction == UnitBody.UnitFaction.Player)
+            else if (!isPlayer && collision.GetComponent<UnitBody>().thisUnitFaction == 0)
             {
                 Instantiate(HitAnim, transform.position, transform.rotation);
                 DamageUnit(collision.GetComponent<UnitBody>().thisUnit, bullet);

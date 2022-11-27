@@ -653,7 +653,7 @@ namespace Copium
 		quadCount++;
 	}
 
-	void Renderer::draw_line(const glm::vec2& _position0, const glm::vec2& _position1, const glm::vec4& _color)
+	void Renderer::draw_line(const glm::vec3& _position0, const glm::vec3& _position1, const glm::vec4& _color)
 	{
 		if (lineVertexCount >= maxLineCount)
 		{
@@ -662,11 +662,11 @@ namespace Copium
 			begin_batch();
 		}
 
-		lineBufferPtr->pos = glm::vec3(_position0, -100.f);
+		lineBufferPtr->pos = _position0;
 		lineBufferPtr->color = _color;
 		lineBufferPtr++;
 
-		lineBufferPtr->pos = glm::vec3(_position1, -100.f);
+		lineBufferPtr->pos = _position1;
 		lineBufferPtr->color = _color;
 		lineBufferPtr++;
 
