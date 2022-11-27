@@ -87,7 +87,7 @@ namespace Copium
                     }
                 }
 
-                if(gameObj->transform.position.y > 100.f || gameObj->transform.position.y < -100.f)
+                if(gameObj->transform.position.y > 20.f || gameObj->transform.position.y < -20.f)
                     MyGOF.destroy(gameObj);
 
                 if (!gameObj->active)
@@ -116,29 +116,32 @@ namespace Copium
 
     bool Game::unit_body(GameObject* _gameObj)
     {
-        if (!editorSys->get_game_view()->is_window_focused())
-            return false;
-
         // Shoot bullets
-        if (_gameObj->transform.position.y > 0.f) // Enemy
+        if (_gameObj->transform.hasParent()) // Enemy
         {
-            static double timer = 0;
-            timer += MyFrameRateController.getDt();
+            Math::Vec3 pos = (*_gameObj->transform.parent).position + _gameObj->transform.position;
+            glm::vec3 pScale = (*_gameObj->transform.parent).scale.glmVec3 * _gameObj->transform.scale.glmVec3;
 
-            if (enemyBullet != nullptr && timer >= 0.5)
+            if (pos.y > 0.f) // enemy
             {
-                GameObject* go = MyGOF.instantiate(*enemyBullet);
-                go->set_name("Enemy Bullet (Clone)");
-                
-                go->transform.position = _gameObj->transform.position;
-                go->transform.position.y -= _gameObj->transform.scale.y * 0.5f;;
-                Rigidbody2D* rb = go->getComponent<Rigidbody2D>();
-                if (rb != nullptr)
-                    rb->set_vel(Math::Vec2(0, -0.25f));
+                static double timer = 0;
+                timer += MyFrameRateController.getDt();
 
-                timer = 0.0;
+                if (enemyBullet != nullptr && timer >= 0.5)
+                {
+                    GameObject* go = MyGOF.instantiate(*enemyBullet);
+                    go->set_name("Enemy Bullet (Clone)");
 
-                return true;
+                    go->transform.position = pos;
+                    go->transform.position.y -= pScale.y * 0.25f;
+                    Rigidbody2D* rb = go->getComponent<Rigidbody2D>();
+                    if (rb != nullptr)
+                        rb->set_vel(Math::Vec2(0, -0.25f));
+
+                    timer = 0.0;
+
+                    return true;
+                }
             }
         }
         else if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !_gameObj->get_name().compare("player")) // Left mouse button
@@ -150,6 +153,7 @@ namespace Copium
                 if (player != nullptr)
                 {
                     go->transform.position = player->transform.position;
+                    go->transform.position.x -= 2.f;
                     go->transform.position.y += 0.6f;
                     Rigidbody2D* rb = go->getComponent<Rigidbody2D>();
                     if (rb != nullptr)
