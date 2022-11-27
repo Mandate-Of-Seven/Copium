@@ -95,7 +95,7 @@ namespace Copium
 					{
 						acceleration = (force + gravity) / pRb->get_mass();
 						velocity += (acceleration * dt);
-						velocity *= 0.99f;
+						//velocity *= 0.99f;
 						pRb->set_acc(acceleration);
 						pRb->set_vel(velocity);
 						/*pRb->set_force(Math::Vec2());*/
@@ -104,7 +104,7 @@ namespace Copium
 					{
 						acceleration = force / pRb->get_mass();
 						velocity += (acceleration * dt);
-						velocity *= 0.99f;
+						//velocity *= 0.99f;
 						pRb->set_acc(acceleration);
 						pRb->set_vel(velocity);
 						/*pRb->set_force(Math::Vec2());*/
@@ -155,7 +155,7 @@ namespace Copium
 					MESSAGE_CONTAINER::collisionEnter.collided = object1;
 					MESSAGE_CONTAINER::collisionEnter.collidee = object2;
 					MyMessageSystem.dispatch(MESSAGE_TYPE::MT_COLLISION_ENTER);
-					PRINT("COLLIDING?");
+					//PRINT("COLLIDING?");
 					//fix collision resolution
 					collisionDirection direct = check_collision_direction(boundA, velocityA, boundB, velocityB);
 					resolve_AABBcollision(object1->transform, boundA, boundB, direct);

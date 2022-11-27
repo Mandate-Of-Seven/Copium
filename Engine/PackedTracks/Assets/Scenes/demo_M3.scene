@@ -1,20 +1,25 @@
 {
     "Name": "NewScene",
-    "Unused GIDs": [],
+    "Unused GIDs": [
+        9,
+        7,
+        22,
+        23
+    ],
     "Unused CIDs": [],
     "GameObjects": [
         {
-            "ID": 1,
-            "Name": "enemy",
+            "ID": 17,
+            "Name": "player",
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 1,
+                    "ID": 62,
                     "Type": "Transform",
                     "Pos": {
-                        "X": -0.44999998807907104,
-                        "Y": 6.099999904632568,
-                        "Z": 0.0
+                        "X": 0.0,
+                        "Y": -4.0,
+                        "Z": -3.0
                     },
                     "Rot": {
                         "X": 0.0,
@@ -22,15 +27,92 @@
                         "Z": 0.0
                     },
                     "Scale": {
+                        "X": 2.0,
+                        "Y": 2.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 3,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 22,
+                    "Sprite Name": "player_train_head.png",
+                    "Color": {
                         "X": 1.0,
                         "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "ID": 5,
+                    "Type": "Rigidbody2D",
+                    "Grav": false,
+                    "Active": false
+                },
+                {
+                    "ID": 39,
+                    "Type": "Script",
+                    "Name": "UnitBody",
+                    "thisUnitFaction": 0,
+                    "thisUnitRef": 0,
+                    "AutoAttackTimer": 0.0
+                },
+                {
+                    "Type": "BoxCollider2D",
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.10000000149011612,
+                            "Y": -0.10000000149011612
+                        },
+                        "Max": {
+                            "X": 0.10000000149011612,
+                            "Y": 0.10000000149011612
+                        }
+                    }
+                },
+                {
+                    "ID": 58,
+                    "Type": "Script",
+                    "Name": "CombatMovement",
+                    "hello": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "gameObj": 17,
+                    "rb": 5
+                }
+            ]
+        },
+        {
+            "ID": 1,
+            "Name": "enemy",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 5,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 4.0,
+                        "Z": -3.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.0,
+                        "Y": 2.0,
                         "Z": 1.0
                     }
                 },
                 {
                     "ID": 4,
                     "Type": "SpriteRenderer",
-                    "Sprite ID": 15,
+                    "Sprite ID": 16,
                     "Sprite Name": "enemy_train_head.png",
                     "Color": {
                         "X": 1.0,
@@ -40,124 +122,81 @@
                     }
                 },
                 {
+                    "ID": 7,
+                    "Type": "Script",
+                    "Name": "AIMovement",
+                    "AITimer": 0.75,
+                    "enemySpeed": 0.10000000149011612,
+                    "PlayerTrainGO": 17,
+                    "self": 1,
+                    "rb": 8
+                },
+                {
                     "ID": 8,
                     "Type": "Rigidbody2D",
                     "Grav": false,
                     "Active": true
-                }
-            ]
-        },
-        {
-            "ID": 7,
-            "Name": "New GameObject",
-            "Components": [
-                {
-                    "PID": 1,
-                    "ID": 4,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 4,
-            "Name": "top shredder",
-            "Components": [
-                {
-                    "PID": 0,
-                    "ID": 5,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 10.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
                 },
                 {
                     "Type": "BoxCollider2D",
                     "BoundingBox": {
                         "Min": {
-                            "X": -3.0,
-                            "Y": -0.5
+                            "X": -0.10000000149011612,
+                            "Y": -0.10000000149011612
                         },
                         "Max": {
-                            "X": 3.0,
-                            "Y": 0.5
+                            "X": 0.10000000149011612,
+                            "Y": 0.10000000149011612
                         }
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 2,
+            "Name": "Background",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 10,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": -10.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 5.0,
+                        "Y": 5.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 10,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 11,
+                    "Sprite Name": "background(tile).png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
                     }
                 }
             ]
         },
         {
             "ID": 3,
-            "Name": "bot shredder",
+            "Name": "Camera",
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 7,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": -10.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                },
-                {
-                    "Type": "BoxCollider2D",
-                    "BoundingBox": {
-                        "Min": {
-                            "X": -3.0,
-                            "Y": -0.5
-                        },
-                        "Max": {
-                            "X": 3.0,
-                            "Y": 0.5
-                        }
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 5,
-            "Name": "camera",
-            "Components": [
-                {
-                    "PID": 0,
-                    "ID": 9,
+                    "ID": 12,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -178,88 +217,22 @@
                 {
                     "Type": "Camera",
                     "Color": {
-                        "X": 0.27799999713897705,
-                        "Y": 0.27799999713897705,
-                        "Z": 0.27799999713897705,
+                        "X": 0.6373943090438843,
+                        "Y": 0.6373305320739746,
+                        "Z": 0.6373305320739746,
                         "W": 1.0
                     },
                     "Projection": true,
                     "Clipping Planes": {
                         "Near": 0.029999999329447746,
-                        "Far": 500.0
+                        "Far": 100.0
                     }
                 }
             ]
         },
         {
-            "ID": 6,
-            "Name": "panel",
-            "Components": [
-                {
-                    "PID": 0,
-                    "ID": 11,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 30.0,
-                        "Y": 30.0,
-                        "Z": 1.0
-                    }
-                },
-                {
-                    "Type": "ImageComponent",
-                    "ID": 18,
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Sprite ID": 0,
-                    "Sprite Name": "empty",
-                    "Color": {
-                        "X": 0.12156862765550613,
-                        "Y": 0.12156862765550613,
-                        "Z": 0.12156862765550613,
-                        "W": 0.7843137383460999
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 7,
-            "Name": "manager",
-            "Components": [
-                {
-                    "PID": 0,
-                    "ID": 13,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 8,
-            "Name": "New GameObject(1)",
+            "ID": 4,
+            "Name": "Animation - Track",
             "Components": [
                 {
                     "PID": 0,
@@ -267,8 +240,8 @@
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
+                        "Y": -0.07500052452087402,
+                        "Z": -5.0
                     },
                     "Rot": {
                         "X": 0.0,
@@ -276,74 +249,630 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
+                        "X": 20.0,
+                        "Y": 13.380000114440918,
                         "Z": 1.0
                     }
-                }
-            ]
-        },
-        {
-            "ID": 11,
-            "Name": "New GameObject",
-            "Components": [
+                },
                 {
-                    "PID": 14,
-                    "ID": 17,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
+                    "ID": 14,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 2,
+                    "Sprite Name": "TrackSpriteSheet.png",
+                    "Color": {
+                        "X": 0.00009999999747378752,
+                        "Y": 0.00009998999303206801,
+                        "Z": 0.00009998999303206801,
+                        "W": 1.0
                     }
                 }
             ]
         },
         {
-            "ID": 9,
-            "Name": "New GameObject(2)",
-            "Components": [
-                {
-                    "PID": 0,
-                    "ID": 15,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 10,
-            "Name": "New GameObject(3)",
+            "ID": 15,
+            "Name": "Player Bullet",
             "Components": [
                 {
                     "PID": 0,
                     "ID": 16,
                     "Type": "Transform",
                     "Pos": {
+                        "X": 20.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 37,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 13,
+                    "Sprite Name": "Circle.png",
+                    "Color": {
+                        "X": 0.0,
+                        "Y": 0.38868141174316406,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider2D",
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.25,
+                            "Y": -0.25
+                        },
+                        "Max": {
+                            "X": 0.25,
+                            "Y": 0.25
+                        }
+                    }
+                },
+                {
+                    "ID": 39,
+                    "Type": "Rigidbody2D",
+                    "Grav": false,
+                    "Active": true
+                }
+            ]
+        },
+        {
+            "ID": 16,
+            "Name": "Enemy Bullet",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 20,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 20.0,
+                        "Y": 1.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 0,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 13,
+                    "Sprite Name": "Circle.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 0.037880122661590576,
+                        "Z": 0.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider2D",
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.25,
+                            "Y": -0.25
+                        },
+                        "Max": {
+                            "X": 0.25,
+                            "Y": 0.25
+                        }
+                    }
+                },
+                {
+                    "ID": 0,
+                    "Type": "Rigidbody2D",
+                    "Grav": false,
+                    "Active": true
+                }
+            ]
+        },
+        {
+            "ID": 18,
+            "Name": "Player Train Body 1",
+            "Components": [
+                {
+                    "PID": 17,
+                    "ID": 24,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -2.0,
+                        "Y": 0.0,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.0,
+                        "Y": 2.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 54,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 21,
+                    "Sprite Name": "player_train_back.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider2D",
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.3499999940395355,
+                            "Y": -0.2199999988079071
+                        },
+                        "Max": {
+                            "X": 0.3499999940395355,
+                            "Y": 0.2199999988079071
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 11,
+            "Name": "Gun 1",
+            "Components": [
+                {
+                    "PID": 17,
+                    "ID": 27,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -1.9500000476837158,
+                        "Y": 0.35899999737739563,
+                        "Z": 2.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 0.30000001192092896,
+                        "Y": 0.30000001192092896,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 59,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 26,
+                    "Sprite Name": "Player Gun New.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 13,
+            "Name": "Player Train Body 2",
+            "Components": [
+                {
+                    "PID": 17,
+                    "ID": 29,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -4.0,
+                        "Y": 0.0,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.0,
+                        "Y": 2.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 50,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 21,
+                    "Sprite Name": "player_train_back.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider2D",
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.3499999940395355,
+                            "Y": -0.2199999988079071
+                        },
+                        "Max": {
+                            "X": 0.3499999940395355,
+                            "Y": 0.2199999988079071
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 19,
+            "Name": "Player Train Body 3",
+            "Components": [
+                {
+                    "PID": 17,
+                    "ID": 32,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -6.0,
+                        "Y": 0.0,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.0,
+                        "Y": 2.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 52,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 21,
+                    "Sprite Name": "player_train_back.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider2D",
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.3499999940395355,
+                            "Y": -0.2199999988079071
+                        },
+                        "Max": {
+                            "X": 0.3499999940395355,
+                            "Y": 0.2199999988079071
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 14,
+            "Name": "Enemy Train Body 1",
+            "Components": [
+                {
+                    "PID": 1,
+                    "ID": 35,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -2.0,
+                        "Y": 0.0,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.0,
+                        "Y": 2.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 62,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 15,
+                    "Sprite Name": "enemy_train_back.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider2D",
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.3499999940395355,
+                            "Y": -0.2199999988079071
+                        },
+                        "Max": {
+                            "X": 0.3499999940395355,
+                            "Y": 0.2199999988079071
+                        }
+                    }
+                },
+                {
+                    "ID": 66,
+                    "Type": "Script",
+                    "Name": "UnitBody",
+                    "thisUnitFaction": 0,
+                    "thisUnitRef": 0,
+                    "AutoAttackTimer": 0.0
+                }
+            ]
+        },
+        {
+            "ID": 12,
+            "Name": "Enemy Train Body 2",
+            "Components": [
+                {
+                    "PID": 1,
+                    "ID": 39,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -4.0,
+                        "Y": 0.0,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.0,
+                        "Y": 2.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 64,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 15,
+                    "Sprite Name": "enemy_train_back.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider2D",
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.3499999940395355,
+                            "Y": -0.2199999988079071
+                        },
+                        "Max": {
+                            "X": 0.3499999940395355,
+                            "Y": 0.2199999988079071
+                        }
+                    }
+                },
+                {
+                    "ID": 67,
+                    "Type": "Script",
+                    "Name": "UnitBody",
+                    "thisUnitFaction": 0,
+                    "thisUnitRef": 0,
+                    "AutoAttackTimer": 0.0
+                }
+            ]
+        },
+        {
+            "ID": 20,
+            "Name": "Enemy Train Body 3",
+            "Components": [
+                {
+                    "PID": 1,
+                    "ID": 43,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -6.0,
+                        "Y": 0.0,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.0,
+                        "Y": 2.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 68,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 15,
+                    "Sprite Name": "enemy_train_back.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider2D",
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.3499999940395355,
+                            "Y": -0.2199999988079071
+                        },
+                        "Max": {
+                            "X": 0.3499999940395355,
+                            "Y": 0.2199999988079071
+                        }
+                    }
+                },
+                {
+                    "ID": 70,
+                    "Type": "Script",
+                    "Name": "UnitBody",
+                    "thisUnitFaction": 0,
+                    "thisUnitRef": 0,
+                    "AutoAttackTimer": 0.0
+                }
+            ]
+        },
+        {
+            "ID": 5,
+            "Name": "Gun 1",
+            "Components": [
+                {
+                    "PID": 1,
+                    "ID": 47,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -2.0,
+                        "Y": 0.0,
+                        "Z": 2.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 180.0
+                    },
+                    "Scale": {
+                        "X": 0.30000001192092896,
+                        "Y": 0.30000001192092896,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 77,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 25,
+                    "Sprite Name": "Enemy Gun New.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 6,
+            "Name": "Gun 2",
+            "Components": [
+                {
+                    "PID": 1,
+                    "ID": 49,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -4.0,
+                        "Y": 0.0,
+                        "Z": 2.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 180.0
+                    },
+                    "Scale": {
+                        "X": 0.30000001192092896,
+                        "Y": 0.30000001192092896,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 78,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 25,
+                    "Sprite Name": "Enemy Gun New.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 8,
+            "Name": "Gun 3",
+            "Components": [
+                {
+                    "PID": 1,
+                    "ID": 51,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -6.0,
+                        "Y": 0.0,
+                        "Z": 2.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 180.0
+                    },
+                    "Scale": {
+                        "X": 0.30000001192092896,
+                        "Y": 0.30000001192092896,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 79,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 25,
+                    "Sprite Name": "Enemy Gun New.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 10,
+            "Name": "Mr Head",
+            "Components": [
+                {
+                    "PID": 17,
+                    "ID": 53,
+                    "Type": "Transform",
+                    "Pos": {
                         "X": 0.0,
                         "Y": 0.0,
                         "Z": 0.0
@@ -357,6 +886,58 @@
                         "X": 1.0,
                         "Y": 1.0,
                         "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider2D",
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.5,
+                            "Y": -0.32499998807907104
+                        },
+                        "Max": {
+                            "X": 0.5,
+                            "Y": 0.32499998807907104
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 21,
+            "Name": "Mr Head",
+            "Components": [
+                {
+                    "PID": 1,
+                    "ID": 55,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider2D",
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.5,
+                            "Y": -0.32499998807907104
+                        },
+                        "Max": {
+                            "X": 0.5,
+                            "Y": 0.32499998807907104
+                        }
                     }
                 }
             ]

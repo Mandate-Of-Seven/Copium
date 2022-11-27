@@ -19,12 +19,14 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Graphics/base-camera.h"
 #include "Editor/editor-system.h"
+#include "Windows/windows-input.h"
 
 namespace Copium
 {
 	namespace
 	{
 		EditorSystem& editorSystem{ *EditorSystem::Instance() };
+		InputSystem& inputSystem{ *InputSystem::Instance() };
 	}
 
 	bool BaseCamera::deserialize(rapidjson::Value& _value)
@@ -222,5 +224,34 @@ namespace Copium
 	glm::vec3 BaseCamera::calculate_position()
 	{
 		return focalPoint - get_forward_direction() * orthographicSize;
+	}
+
+	glm::vec2 BaseCamera::get_game_ndc()
+	{
+		EditorGame* gameView = editorSystem.get_game_view();
+		
+		glm::vec2 sceneDim(width, height);
+		glm::vec2 scenePos = gameView->get_position();
+		if (!editorSystem.is_enabled())
+		{
+			scenePos = { 0.f, 0.f };
+		}
+
+		//PRINT("Scene Dimension: " << width << " " << height);
+		Math::Vec2 mousePos = inputSystem.get_mouseposition();
+		//PRINT("Mouse position : " << mousePos.x << " " << mousePos.y);
+		glm::vec2 centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
+		glm::vec2 mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
+		glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
+
+		if (!editorSystem.is_enabled())
+		{
+			mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 };
+		}
+
+		mouseToNDC *= orthographicSize;
+		glm::vec2 worldNDC = { mouseToNDC.x + viewer.x, mouseToNDC.y + viewer.y };
+		//PRINT("World position : " << worldNDC.x << " " << worldNDC.y);
+		return worldNDC;
 	}
 }

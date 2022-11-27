@@ -121,6 +121,7 @@
     <ClCompile Include="src\GameObject\game-object-factory.cpp" />
     <ClCompile Include="src\GameObject\game-object.cpp" />
     <ClCompile Include="src\GameObject\Components\renderer-component.cpp" />
+    <ClCompile Include="src\Game\game-nonscript.cpp" />
     <ClCompile Include="src\Graphics\base-camera.cpp" />
     <ClCompile Include="src\Graphics\fonts.cpp" />
     <ClCompile Include="src\Graphics\framebuffer.cpp" />
@@ -221,6 +222,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="src\GameObject\Components\renderer-component.h" />
+    <ClInclude Include="src\Game\game-nonscript.h" />
     <ClInclude Include="src\Graphics\base-camera.h" />
     <ClInclude Include="src\Graphics\fonts.h" />
     <ClInclude Include="src\Graphics\graphics-draw.h" />

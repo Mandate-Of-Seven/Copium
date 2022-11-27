@@ -89,11 +89,11 @@ namespace Copium
 	{
 		if (_mType == MESSAGE_TYPE::MT_START_PREVIEW)
 		{
-			enableCamera = true;
+			//enableCamera = true;
 		}
 		else if (_mType == MESSAGE_TYPE::MT_STOP_PREVIEW)
 		{
-			enableCamera = false;
+			//enableCamera = false;
 		}
 	}
 

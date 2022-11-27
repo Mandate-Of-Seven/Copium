@@ -87,16 +87,16 @@ namespace Copium
 			if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_E))
 			{
 				tempMode = !tempMode;
-				//if (tempMode)
-				//{
-				//	if (NewSceneManager::Instance()->endPreview())
-				//		messageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
-				//}
-				//else
-				//{
-				//	if (NewSceneManager::Instance()->startPreview())
-				//		messageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
-				//}
+				/*if (tempMode)
+				{
+					if (NewSceneManager::Instance()->endPreview())
+						messageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
+				}
+				else
+				{
+					if (NewSceneManager::Instance()->startPreview())
+						messageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
+				}*/
 			}
 		}
 

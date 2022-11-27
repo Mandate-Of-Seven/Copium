@@ -245,7 +245,7 @@ namespace Copium
 			The color of the line
 		*/
 		/***************************************************************************/
-		void draw_line(const glm::vec2& _position0, const glm::vec2& _position1, const glm::vec4& _color);
+		void draw_line(const glm::vec3& _position0, const glm::vec3& _position1, const glm::vec4& _color);
 
 		void draw_circle(const glm::vec3& _position, const glm::vec4& _color, GLfloat _radius);
 

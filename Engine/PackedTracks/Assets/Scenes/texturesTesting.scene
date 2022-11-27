@@ -9,7 +9,6 @@
             "Components": [
                 {
                     "PID": 0,
-                    "Children": [],
                     "ID": 1,
                     "Type": "Transform",
                     "Pos": {
@@ -67,7 +66,6 @@
             "Components": [
                 {
                     "PID": 0,
-                    "Children": [],
                     "ID": 5,
                     "Type": "Transform",
                     "Pos": {
@@ -106,7 +104,6 @@
             "Components": [
                 {
                     "PID": 0,
-                    "Children": [],
                     "ID": 7,
                     "Type": "Transform",
                     "Pos": {
@@ -152,7 +149,6 @@
             "Components": [
                 {
                     "PID": 0,
-                    "Children": [],
                     "ID": 10,
                     "Type": "Transform",
                     "Pos": {
@@ -192,7 +188,6 @@
             "Components": [
                 {
                     "PID": 0,
-                    "Children": [],
                     "ID": 12,
                     "Type": "Transform",
                     "Pos": {
@@ -246,7 +241,6 @@
             "Components": [
                 {
                     "PID": 0,
-                    "Children": [],
                     "ID": 15,
                     "Type": "Transform",
                     "Pos": {
@@ -300,7 +294,6 @@
             "Components": [
                 {
                     "PID": 0,
-                    "Children": [],
                     "ID": 18,
                     "Type": "Transform",
                     "Pos": {
@@ -339,7 +332,6 @@
             "Components": [
                 {
                     "PID": 0,
-                    "Children": [],
                     "ID": 20,
                     "Type": "Transform",
                     "Pos": {
@@ -370,6 +362,84 @@
                     "Clipping Planes": {
                         "Near": 0.029999999329447746,
                         "Far": 500.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 11,
+            "Name": "Parent",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 22,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 10,
+            "Name": "Child",
+            "Components": [
+                {
+                    "PID": 11,
+                    "ID": 23,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 11,
+            "Name": "2nd Child",
+            "Components": [
+                {
+                    "PID": 11,
+                    "ID": 24,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
                     }
                 }
             ]

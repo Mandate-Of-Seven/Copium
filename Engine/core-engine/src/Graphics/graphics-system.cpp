@@ -204,5 +204,8 @@ namespace Copium
 		{
 			camera->update();
 		}
+
+		if(!cameras.empty())
+			(*cameras.begin())->get_game_ndc();
 	}
 }
