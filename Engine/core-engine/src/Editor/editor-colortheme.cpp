@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			editor-colortheme.cpp
+\project
+\author			Shawn Tanary
+
+\par			Course: GAM200
+\par			Section:
+\date			25/11/2022
+
+\brief
+    Contains the function declarations of the editor-colortheme
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 #include "pch.h"
 #include "editor-colortheme.h"
 #include <filesystem>

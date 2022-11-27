@@ -2,6 +2,7 @@
 \file			assets-system.h
 \project
 \author			Sean Ngo
+				Shawn Tanary
 
 \par			Course: GAM200
 \par			Section:

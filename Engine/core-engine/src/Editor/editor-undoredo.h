@@ -5,7 +5,7 @@
 
 \par			Course: GAM200
 \par			Section:
-\date			28/10/2022
+\date			25/11/2022
 
 \brief
 	This file holds functions to undo and redo changes made in gameobjects as well as 
@@ -35,7 +35,7 @@ namespace Copium
 		};
 
 		//a derived subclass specifically for transform components
-		class TransformCommand : public Command
+		class TransformCommand final : public Command
 		{
 			public:
 				/***************************************************************************/
@@ -89,7 +89,7 @@ namespace Copium
 		};
 
 		//a derived subclass specifically for game objects
-		class GameObjectCommand : public Command
+		class GameObjectCommand final : public Command
 		{
 			public:
 				/***************************************************************************/
