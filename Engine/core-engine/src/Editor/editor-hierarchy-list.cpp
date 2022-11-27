@@ -62,7 +62,6 @@ namespace Window::Hierarchy
 					if (!currentScene)
 					{
 						Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
-
 					}
 					else
 					{
@@ -155,7 +154,7 @@ namespace Window::Hierarchy
 			for (size_t i{ 0 }; i < currentScene->get_gameobjcount(); ++i)
 			{
 				Copium::GameObject* tmp = currentScene->gameObjects[i];
-				if (tmp->transform.parent == nullptr)
+				if (!tmp->transform.hasParent())
 					roots.push_back(tmp);
 			}
 
@@ -219,7 +218,7 @@ namespace Window::Hierarchy
 			return;
 
 		// If game object has children, recursively display children
-		if(transform.children.empty())
+		if(!transform.children.empty())
 		{
 			for (auto iter = transform.children.begin(); iter != transform.children.end(); ++iter)
 			{

@@ -80,6 +80,8 @@ public:
 
     void deserializeLink(rapidjson::Value& _value);
 
+    void previewLink(Component* rhs);
+
     /*******************************************************************************
     /*!
     *

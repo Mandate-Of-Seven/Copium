@@ -199,8 +199,10 @@ namespace Copium {
 				{
 					rapidjson::Value& compArr = (*gameObjectIt)["Components"].GetArray();
 					auto componentIt = compArr.Begin();
+					go->transform.deserializeLink(*componentIt);
 					for (Component* component : go->components)
 					{
+						PRINT(component->Name());
 						//Offset TransformComponent
 						++componentIt;
 						component->deserializeLink(*componentIt);
@@ -435,10 +437,7 @@ namespace Copium {
 		// Copy game object data
 		for (const GameObject* gameObj : storageScene->gameObjects)
 		{
-			if (gameObj && !gameObj->transform.hasParent())
-			{
-				MyGOF.clone(*gameObj, currentScene);
-			}
+			MyGOF.clone(*gameObj, currentScene);
 		}
 
 		std::cout << "Storage scene game object count: " << storageScene->gameObjects.size() << std::endl;
@@ -448,6 +447,7 @@ namespace Copium {
 		{
 			GameObject* currGameObj = currentScene->gameObjects[goIndex];
 			GameObject* storedGameObj = storageScene->gameObjects[goIndex];
+			currGameObj->transform.previewLink(&storedGameObj->transform);
 			std::cout << "Name comparisons: " << currGameObj->get_name() << '|' << storedGameObj->get_name() << std::endl;
 			for (size_t compIndex{ 0 }; compIndex < currGameObj->components.size(); ++compIndex)
 			{

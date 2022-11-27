@@ -113,7 +113,7 @@ GameObjectID Scene::assignGameObjID()
 		return id;
 	}
 
-	GameObjectID id = (GameObjectID)gameObjects.size();
+	GameObjectID id = (GameObjectID)gameObjects.size() + 1;
 	std::cout << "assigning new ID " << id << std::endl;
 	return id;
 }

@@ -126,15 +126,15 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{rhs.id}
         components.push_back(newComponent);
     }
 
-    if(MyNewSceneManager.get_current_scene())
-        MyNewSceneManager.get_current_scene()->add_gameobject(this);
+    //if(MyNewSceneManager.get_current_scene())
+    //    MyNewSceneManager.get_current_scene()->add_gameobject(this);
 
     //messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
-    for (Transform* pTransform : rhs.transform.children)
-    {
-        GameObject* child = new GameObject(pTransform->gameObj);
-        child->transform.setParent(&transform);
-    }
+    //for (Transform* pTransform : rhs.transform.children)
+    //{
+    //    GameObject* child = new GameObject(pTransform->gameObj);
+    //    child->transform.setParent(&transform);
+    //}
 
 
 }

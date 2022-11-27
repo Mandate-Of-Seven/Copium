@@ -116,18 +116,24 @@ namespace Copium
 		if (!go)
 			return nullptr;
 
-		//if (scene)
-		//	scene->add_gameobject(go);
-
-		unsigned count{ 0 };
 		if (scene)
-			for (GameObject* g : scene->gameObjects)
-			{
-				if (g->get_name().find(_src.name) != std::string::npos)
-					++count;
-			}
-		if (count)
-			go->name += '(' + std::to_string(count) + ')';
+		{
+			scene->add_gameobject(go);
+			//for (Transform* transform : go->transform.children)
+			//{
+			//	
+			//}
+		}
+
+		//unsigned count{ 0 };
+		//if (scene)
+		//	for (GameObject* g : scene->gameObjects)
+		//	{
+		//		if (g->get_name().find(_src.name) != std::string::npos)
+		//			++count;
+		//	}
+		//if (count)
+		//	go->name += '(' + std::to_string(count) + ')';
 
 
 
@@ -206,14 +212,14 @@ namespace Copium
 		currScene->add_gameobject(go);
 
 		// Deserialize children (if any)
-		if (_value.HasMember("Children")) {
-			rapidjson::Value& childArr = _value["Children"].GetArray();
-			for (rapidjson::Value::ValueIterator iter = childArr.Begin(); iter != childArr.End(); ++iter)
-			{
-				GameObject* cgo = instantiate(*iter);
-				cgo->transform.setParent(&go->transform);
-			}
-		}
+		//if (_value.HasMember("Children")) {
+		//	rapidjson::Value& childArr = _value["Children"].GetArray();
+		//	for (rapidjson::Value::ValueIterator iter = childArr.Begin(); iter != childArr.End(); ++iter)
+		//	{
+		//		GameObject* cgo = instantiate(*iter);
+		//		cgo->transform.setParent(&go->transform);
+		//	}
+		//}
 
 		return go;
 	}
@@ -383,6 +389,8 @@ namespace Copium
 	{
 		Scene* currScene = sceneManager.get_current_scene();
 		GameObject* newChild = new GameObject(currScene->assignGameObjID());
+		newChild->transform.setParent(&_parent.transform);
+		currScene->add_gameobject(newChild);
 		//auto it = currScene->gameObjects.begin();
 		//for (auto pGameObject : currScene->gameObjects)
 		//{
@@ -395,17 +403,18 @@ namespace Copium
 		//	++it;
 		//}
 		
-		for (auto iter = currScene->gameObjects.begin(); iter != currScene->gameObjects.end(); ++iter)
-		{
-			if ((*iter)->id == _parent.id)
-			{
-				currScene->gameObjects.insert(iter + 1, newChild);
-				newChild->transform.setParent(&_parent.transform);
-				return newChild;
-			}
-		}
+		//for (auto iter = currScene->gameObjects.begin(); iter != currScene->gameObjects.end(); ++iter)
+		//{
+		//	if ((*iter)->id == _parent.id)
+		//	{
+		//		//currScene->gameObjects.insert(iter + 1, newChild);
+		//		currScene->add_gameobject(newChild);
+		//		newChild->transform.setParent(&_parent.transform);
+		//		return newChild;
+		//	}
+		//}
 
-		return nullptr;
+		return newChild;
 
 	}
 

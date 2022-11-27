@@ -42,7 +42,6 @@ namespace Copium {
 	/*******************************************************************************/
 	void FrameRateController::start()
 	{
-		PRINT(frameRate);
 		frameStart = glfwGetTime();
 	}
 

@@ -4,86 +4,16 @@
     "Unused CIDs": [],
     "GameObjects": [
         {
-            "ID": 0,
-            "Name": "player",
+            "ID": 1,
+            "Name": "enemy",
             "Components": [
                 {
                     "PID": 0,
                     "ID": 1,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 0.0,
-                        "Y": -4.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                },
-                {
-                    "ID": 3,
-                    "Type": "SpriteRenderer",
-                    "Sprite ID": 21,
-                    "Sprite Name": "player_train_head.png",
-                    "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
-                        "W": 1.0
-                    }
-                },
-                {
-                    "ID": 5,
-                    "Type": "Rigidbody2D",
-                    "Grav": false,
-                    "Active": true
-                }
-            ]
-        },
-        {
-            "ID": 7,
-            "Name": "New GameObject",
-            "Components": [
-                {
-                    "PID": 1,
-                    "ID": 16,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 1,
-            "Name": "enemy",
-            "Components": [
-                {
-                    "PID": 0,
-                    "ID": 4,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 4.0,
+                        "X": -0.44999998807907104,
+                        "Y": 6.099999904632568,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -118,12 +48,38 @@
             ]
         },
         {
+            "ID": 7,
+            "Name": "New GameObject",
+            "Components": [
+                {
+                    "PID": 1,
+                    "ID": 4,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
             "ID": 4,
             "Name": "top shredder",
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 7,
+                    "ID": 5,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -162,7 +118,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 9,
+                    "ID": 7,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -201,7 +157,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 11,
+                    "ID": 9,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -241,7 +197,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 13,
+                    "ID": 11,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -281,7 +237,111 @@
             "Components": [
                 {
                     "PID": 0,
+                    "ID": 13,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 8,
+            "Name": "New GameObject(1)",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 14,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 11,
+            "Name": "New GameObject",
+            "Components": [
+                {
+                    "PID": 14,
+                    "ID": 17,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 9,
+            "Name": "New GameObject(2)",
+            "Components": [
+                {
+                    "PID": 0,
                     "ID": 15,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 10,
+            "Name": "New GameObject(3)",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 16,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,

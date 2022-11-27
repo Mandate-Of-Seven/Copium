@@ -60,7 +60,9 @@ void Transform::deserializeLink(rapidjson::Value& _value)
 {
     if (_value.HasMember("PID"))
     {
-       setParent(&MyNewSceneManager.findGameObjByID(_value["PID"].GetUint64())->transform);
+        GameObjectID gameObjID = _value["PID"].GetUint64();
+        if (gameObjID)
+            setParent(&MyNewSceneManager.findGameObjByID(gameObjID)->transform);
     }
 }
 
@@ -69,7 +71,7 @@ void Transform::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 {
     if (parent)
     {
-        _value.AddMember("PID", parent->id, _doc.GetAllocator());
+        _value.AddMember("PID", parent->gameObj.id, _doc.GetAllocator());
     }
     else
     {
@@ -352,5 +354,13 @@ void Transform::inspector_view()
     ImGui::PopStyleVar();
     ImGui::PopStyleVar();
    
+}
+
+void Transform::previewLink(Component* rhs)
+{
+    PRINT("LINKING TRANSFORM");
+    Transform* transform = reinterpret_cast<Transform*>(rhs);
+    if (transform->hasParent())
+        setParent(&MyNewSceneManager.findGameObjByID(transform->parent->gameObj.id)->transform);
 }
 }
