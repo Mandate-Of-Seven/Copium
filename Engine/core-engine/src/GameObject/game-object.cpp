@@ -27,6 +27,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "GameObject/Components/script-component.h"
 #include "GameObject/Components/ui-components.h"
 #include "SceneManager/sm.h"
+#include <mono/jit/jit.h>
 
 //USING
 
@@ -106,17 +107,25 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{rhs.id}
     MESSAGE_CONTAINER::reflectCsGameObject.gameObjID = id;
     MESSAGE_CONTAINER::reflectCsGameObject.componentIDs.clear();
     transform.id = rhs.transform.id;
-    PRINT("TRANSFORM: " << transform.id);
     for (Component* pComponent : rhs.components)
     {
-        MESSAGE_CONTAINER::reflectCsGameObject.componentIDs.push_back(pComponent->id);
+
         Component* newComponent = pComponent->clone(*this);
         newComponent->id = pComponent->id;
-        PRINT("OLD: " << " " << pComponent->id);
-        PRINT("NEW: " << newComponent->id);
+        static char buffer[128];
+        if (pComponent->componentType == ComponentType::Script)
+        {
+            Script* pScript = reinterpret_cast<Script*>(pComponent);
+            if (pScript->getFieldValue("gameObj", buffer))
+            {
+                PRINT("GAMEOBJ ID HERE: " << *reinterpret_cast<uint64_t*>(buffer + 24));
+                PRINT("Gameobj id: " << id);
+            }
+
+        }
         components.push_back(newComponent);
     }
-    messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
+    //messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
     //for (Transform* pTransform : rhs.children)
     //{
     //    GameObject* child = sceneManager.get_gof().instantiate(*pGameObj);

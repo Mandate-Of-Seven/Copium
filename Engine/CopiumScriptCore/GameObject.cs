@@ -24,10 +24,10 @@ namespace CopiumEngine
         {
             transform = new Transform();
             transform.Initialize(this, 0);
-            gameObjects.Add(this);
+            Instances.gameObjects.Add(this);
         }
-        public Transform transform;
         public ulong ID;
+        public Transform transform;
         private void setID(ulong _ID)
         {
             ID = _ID;
@@ -40,13 +40,9 @@ namespace CopiumEngine
                 return InternalCalls.GetActive(ID);
             }
         }
-
-        public static List<GameObject> gameObjects = new List<GameObject>(25000);
-        public static List<Component> components = new List<Component>(125000);
-
         public static GameObject FindByID(ulong _ID)
         {
-            foreach (GameObject gameObj in gameObjects)
+            foreach (GameObject gameObj in Instances.gameObjects)
             {
                 if (gameObj.ID == _ID)
                 {
@@ -58,7 +54,7 @@ namespace CopiumEngine
         public static GameObject FindByName(string name)
         {
             ulong _ID = InternalCalls.FindGameObjByName(name);
-            foreach (GameObject gameObj in gameObjects)
+            foreach (GameObject gameObj in Instances.gameObjects)
             {
                 if (gameObj.ID == _ID)
                 {
@@ -89,11 +85,11 @@ namespace CopiumEngine
 
         private void RemoveComponentByID(ulong componentID)
         {
-            foreach (Component component in components)
+            foreach (Component component in Instances.components)
             {
                 if (component.ID == componentID)
                 {
-                    components.Remove(component);
+                    Instances.components.Remove(component);
                     return;
                 }
             }
@@ -103,5 +99,11 @@ namespace CopiumEngine
         {
             InternalCalls.SetActive(ID, _active);
         }
+    }
+
+    public static class Instances
+    {
+        public static List<GameObject> gameObjects = new List<GameObject>(25000);
+        public static List<Component> components = new List<Component>(125000);
     }
 }

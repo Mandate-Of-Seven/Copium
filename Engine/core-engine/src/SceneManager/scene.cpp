@@ -63,10 +63,6 @@ void Scene::draw_scene()
 	std::cout << "scene drawn by default\n";
 }
 
-
-
-
-
 std::string Scene::get_filename() const {return filename;}
 size_t Scene::get_gameobjcount() const { return gameObjects.size(); }
 GameObject* Scene::add_gameobject(GameObject* _gameObj) 
