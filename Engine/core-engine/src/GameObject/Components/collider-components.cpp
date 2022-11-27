@@ -7,13 +7,22 @@ namespace Copium
 {
     BoxCollider2D::BoxCollider2D(GameObject& _gameObj):Component(_gameObj, ComponentType::BoxCollider2D) 
     {
-
+        
     }
 
 	AABB BoxCollider2D::getBounds() 
 	{
-		Math::Vec3& size{ gameObj.transform.scale };
-		Math::Vec3& pos{ gameObj.transform.position };
+		Math::Vec3 size{ gameObj.transform.scale };
+		Math::Vec3 pos{ gameObj.transform.position };
+
+        if (gameObj.transform.hasParent())
+        {
+            size.x *= (*gameObj.transform.parent).scale.x;
+            size.y *= (*gameObj.transform.parent).scale.y;
+            size.z *= (*gameObj.transform.parent).scale.z;
+            pos += (*gameObj.transform.parent).position;
+        }
+
 		float x = (boundingBox.max.x - boundingBox.min.x) * size.x;
 		float y = (boundingBox.max.y - boundingBox.min.y) * size.y;
 		AABB tmp{ boundingBox };

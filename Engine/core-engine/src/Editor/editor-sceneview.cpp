@@ -226,6 +226,38 @@ namespace Copium
 				glm::vec4(0.f, 0.f, 0.f, 1.f)
 			};
 			glm::mat4 transform = translate * rotation * scale;
+
+			/*glm::mat4 pTranslate, pRotate, pScale, pTransform, totalTransform;
+			if (currObj->transform.hasParent())
+			{
+				pTranslate = glm::translate(glm::mat4(1.f), (*currObj->transform.parent).position.glmVec3);
+
+				float pRot = (*currObj->transform.parent).rotation.z;
+				pRot = float(pRot * (3.1416 / 180));
+				pRotate = {
+					glm::vec4(cos(pRot), sin(pRot), 0.f, 0.f),
+					glm::vec4(-sin(pRot), cos(pRot), 0.f, 0.f),
+					glm::vec4(0.f, 0.f, 1.f, 0.f),
+					glm::vec4(0.f, 0.f, 0.f, 1.f)
+				};
+
+				glm::vec3 scale = (*currObj->transform.parent).scale.glmVec3;
+				pScale = {
+					glm::vec4(scale.x, 0.f, 0.f, 0.f),
+					glm::vec4(0.f, scale.y, 0.f, 0.f),
+					glm::vec4(0.f, 0.f, 1.f, 0.f),
+					glm::vec4(0.f, 0.f, 0.f, 1.f)
+				};
+
+				pTransform = pTranslate * pRotate * pScale;
+
+				totalTransform = pTransform;
+			}
+			else
+			{
+				totalTransform = transform;
+			}*/
+
 			if (ImGui::IsKeyReleased(ImGuiKey_W))
 			{
 				currop = ImGuizmo::OPERATION::TRANSLATE;
