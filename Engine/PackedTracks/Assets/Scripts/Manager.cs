@@ -43,6 +43,12 @@ public class Manager : CopiumScript
             }        
         }
 
+
+        if(CurrentGameState == GameState.Combat && panel.activeSelf == true)
+        {
+            panel.SetActive(false);
+        }
+
         // if(panel != null && CurrentGameState == GameState.Menu)
         // {
         //     //Console.WriteLine("bleep");
@@ -54,6 +60,15 @@ public class Manager : CopiumScript
 
 
 
+    }
+
+
+
+    void ResumeGame()
+    {
+        Console.WriteLine("clicking resume btn");
+        CurrentGameState = GameState.Combat;
+        panel.SetActive(false);
     }
 }
 
