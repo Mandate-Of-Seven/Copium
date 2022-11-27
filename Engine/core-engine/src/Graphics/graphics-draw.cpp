@@ -159,10 +159,10 @@ namespace Copium
 				{
 					Button* collider = reinterpret_cast<Button*>(component);
 					AABB bounds = collider->getBounds();
-					glm::vec2 pos0_1 = { bounds.min.to_glm() };
-					glm::vec2 pos1_1 = { bounds.max.x, bounds.min.y };
-					glm::vec2 pos2_1 = { bounds.max.to_glm() };
-					glm::vec2 pos3_1 = { bounds.min.x, bounds.max.y };
+					glm::vec3 pos0_1 = { bounds.min.to_glm(),0.f };
+					glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y,0.f };
+					glm::vec3 pos2_1 = { bounds.max.to_glm(),0.f };
+					glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y,0.f };
 
 					renderer.draw_line(pos0_1, pos1_1, color);
 					renderer.draw_line(pos1_1, pos2_1, color);
@@ -256,14 +256,14 @@ namespace Copium
 							animIndex = 0;
 						}
 
-						GLuint id = 0;
+						GLuint nid = 0;
 						for (GLuint i = 0; i < assets->get_textures().size(); ++i)
 						{
 							if (assets->get_textures()[i].get_object_id() == assets->get_spritesheets()[animID].get_texture().get_object_id())
-								id = i + 1;
+								nid = i + 1;
 						}
 
-						renderer.draw_quad(t.position, size, 0.f, assets->get_spritesheets()[animID], animIndex, id);
+						renderer.draw_quad(t.position, size, 0.f, assets->get_spritesheets()[animID], animIndex, nid);
 					}
 					else if (gameObject->transform.hasParent())
 					{

@@ -72,6 +72,8 @@ namespace Copium
             //for(auto gameObj = scene->gameObjects.begin(); gameObj != scene->gameObjects.end(); ++gameObj)
             for (auto gameObj : scene->gameObjects)
             {
+                if (!gameObj)
+                    continue;
                 for (auto component : gameObj->getComponents<Script>())
                 {
                     // If the gameobject contains a unit body
@@ -89,13 +91,19 @@ namespace Copium
                     }
                 }
 
-                if(gameObj->transform.position.y > 10.f || gameObj->transform.position.y < -10.f)
-                    MyGOF.destroy(gameObj);
-
-                if (!gameObj->active)
+                if (gameObj->get_name().find("Bullet") != std::string::npos)
                 {
-                    MyGOF.destroy(gameObj);
-                    return;
+                    if (gameObj->transform.position.y > 7.f || gameObj->transform.position.y < -7.f)
+                    {
+                        MyGOF.destroy(gameObj);
+                        return;
+                    }
+
+                    if (!gameObj->isActive())
+                    {
+                        MyGOF.destroy(gameObj);
+                        return;
+                    }
                 }
             }
         }
@@ -113,7 +121,7 @@ namespace Copium
             GameObject* collided = MESSAGE_CONTAINER::collisionEnter.collided;
 
             if(!collided->get_name().compare("Enemy Bullet (Clone)") || !collided->get_name().compare("Player Bullet (Clone)"))
-                collided->active = false;
+                collided->setActive(false);
         }
     }
 

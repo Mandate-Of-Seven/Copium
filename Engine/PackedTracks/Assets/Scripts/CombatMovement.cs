@@ -166,6 +166,7 @@ public class CombatMovement : CopiumScript
             }
         }
     }
+
     void OnCollisionEnter2D(Collision2D collision)
     {
         //Console.WriteLine("COLLIDING FROM C#!");

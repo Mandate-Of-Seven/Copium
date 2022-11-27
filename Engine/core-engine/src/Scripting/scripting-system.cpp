@@ -527,7 +527,7 @@ namespace Copium
 			{
 				if (!mAssemblyImage)
 					return;
-				MonoObject* mGameObj = monoGameObjects[MESSAGE_CONTAINER::addOrDeleteComponent.gameObjID];
+				//MonoObject* mGameObj = monoGameObjects[MESSAGE_CONTAINER::addOrDeleteComponent.gameObjID];
 				//MonoMethod* mAttachComponentByID = mono_class_get_method_from_name(mGameObject, "AttachComponentByID", 1);
 				//void* param = &MESSAGE_CONTAINER::addOrDeleteComponent.componentID;
 				//mono_runtime_invoke(mAttachComponentByID, mGameObj, &param, nullptr);

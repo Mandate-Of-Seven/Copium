@@ -85,6 +85,7 @@ namespace Copium
     GameObject::~GameObject()
     {
         messageSystem.unsubscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
+
         for (auto iter = components.begin(); iter != components.end(); ++iter)
         {
             if (*iter)
@@ -127,11 +128,6 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{rhs.id}
 
         Component* newComponent = pComponent->clone(*this);
         newComponent->id = pComponent->id;
-        if (pComponent->componentType == ComponentType::Script)
-        {
-            Script* pScript = reinterpret_cast<Script*>(pComponent);
-
-        }
         components.push_back(newComponent);
     }
 

@@ -109,12 +109,12 @@ GameObjectID Scene::assignGameObjID()
 		// Pop the first unused GID
 		GameObjectID id = unusedGIDs[0];
 		unusedGIDs.erase(unusedGIDs.begin());
-		std::cout << "taking over unused ID: " << id << std::endl;
+		//std::cout << "taking over unused ID: " << id << std::endl;
 		return id;
 	}
 
 	GameObjectID id = (GameObjectID)gameObjects.size() + 1;
-	std::cout << "assigning new ID " << id << std::endl;
+	//std::cout << "assigning new ID " << id << std::endl;
 	return id;
 }
 void Scene::add_unused_gid(GameObjectID _id)

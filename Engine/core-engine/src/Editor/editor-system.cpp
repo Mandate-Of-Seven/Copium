@@ -393,7 +393,7 @@ namespace Copium
 			if (!graphicsSystem.get_cameras().empty())
 			{
 				(*graphicsSystem.get_cameras().begin())->on_resize(dimension.x, dimension.y);
-				glViewport(0, 0, dimension.x, dimension.y);
+				glViewport(0, 0, (GLsizei)dimension.x, (GLsizei)dimension.y);
 			}
 		}
 		else if(_enabled)

@@ -242,26 +242,28 @@ namespace Copium
 			destroy(&pTransform->gameObj);
 		}
 
-		std::cout << "Deleting " << _go->get_name() << std::endl;
+		//std::cout << "Deleting " << _go->get_name() << std::endl;
 		
 		if (_go->transform.hasParent())
 		{
 			_go->transform.setParent(nullptr);
 		}
 
+		currScene->gameObjects.erase(std::remove_if(currScene->gameObjects.begin(), currScene->gameObjects.end(), [&](GameObject* gameObj) {return gameObj==_go;}));
+
 		//Iterate through currentScene vector and destroy
-		for (size_t i{ 0 }; i < currScene->gameObjects.size(); ++i)
-		{
-			if (currScene->gameObjects[i] == _go)
-			{
-				delete _go;
-				currScene->gameObjects[i] = nullptr;
-				std::cout << "trimming go vector\n";
-				currScene->gameObjects.erase(currScene->gameObjects.begin() + i);
-				std::cout << "Number of GameObjects left: " << currScene->get_gameobjcount() << std::endl;
-				break;
-			}
-		}
+		//for (size_t i{ 0 }; i < currScene->gameObjects.size(); ++i)
+		//{
+		//	if (currScene->gameObjects[i] == _go)
+		//	{
+		//		delete _go;
+		//		currScene->gameObjects[i] = nullptr;
+		//		//std::cout << "trimming go vector\n";
+		//		currScene->gameObjects.erase(currScene->gameObjects.begin() + i);
+		//		//std::cout << "Number of GameObjects left: " << currScene->get_gameobjcount() << std::endl;
+		//		break;
+		//	}
+		//}
 		return true;
 	}
 

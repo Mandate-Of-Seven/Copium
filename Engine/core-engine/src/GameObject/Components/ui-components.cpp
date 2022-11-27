@@ -26,6 +26,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <Debugging/frame-rate-controller.h>
 #include <SceneManager/sm.h>
 #include <GameObject/Components/script-component.h>
+#include <GameObject/Components/camera-component.h>
 namespace
 {
 	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
@@ -229,9 +230,7 @@ namespace Copium
 				ImGui::TableNextColumn();
 				ImGui::Text("On Click Callback: ");
 				ImGui::TableNextColumn();
-				int count = 0;
 				const std::vector<std::string>& functionNames = script->getFunctionNames();
-				int index{ 0 };
 				ImGui::PushItemWidth(-1);
 				if (ImGui::BeginCombo("##functions", callbackName.c_str())) // The second parameter is the label previewed before opening the combo.
 				{
@@ -305,7 +304,8 @@ namespace Copium
 
 	ButtonState Button::getInternalState() const
 	{
-		glm::vec2 scenePos = EditorSystem::Instance()->get_camera()->get_ndc();
+		glm::vec2 scenePos = MyNewSceneManager.mainCamera->get_game_ndc();
+		PRINT("x: " << scenePos.x << " , y: " << scenePos.y);
 		if (hoveredBtn == nullptr)
 		{
 			if (static_collision_pointrect(scenePos, getBounds()))

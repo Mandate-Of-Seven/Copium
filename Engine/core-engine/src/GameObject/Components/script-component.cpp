@@ -79,25 +79,25 @@ namespace Copium
 				MonoClass* mComponentClass = mono_object_get_class(result);
 				fieldDataReferences.insert({ pair.first,FieldData(mono_object_get_size(result)) });
 				void* iter = nullptr;
-				while (MonoClassField* field = mono_class_get_fields(mComponentClass, &iter))
+				while (MonoClassField* _field = mono_class_get_fields(mComponentClass, &iter))
 				{
-					mono_field_get_value(result, field, fieldDataReferences[pair.first].data + mono_field_get_offset(field));
+					mono_field_get_value(result, _field, fieldDataReferences[pair.first].data + mono_field_get_offset(_field));
 				}
 				mono_field_set_value(mObject, pScriptClass->mFields[pair.first].classField, fieldDataReferences[pair.first].data);
 			}
 
 			for (auto pair : fieldGameObjReferences)
 			{
-				GameObject* gameObj{ pair.second };
-				GameObjectID gameObjID = gameObj->id;
+				GameObject* _gameObj{ pair.second };
+				GameObjectID gameObjID = _gameObj->id;
 				void* params = &gameObjID;
 				MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindGameObjectByID"], mObject, &params, nullptr);
 				MonoClass* mGameObjectClass = mono_object_get_class(result);
 				fieldDataReferences.insert({ pair.first,FieldData(mono_object_get_size(result))});
 				void* iter = nullptr;
-				while (MonoClassField* field = mono_class_get_fields(mGameObjectClass, &iter))
+				while (MonoClassField* _field = mono_class_get_fields(mGameObjectClass, &iter))
 				{
-					mono_field_get_value(result, field, fieldDataReferences[pair.first].data + mono_field_get_offset(field));
+					mono_field_get_value(result, _field, fieldDataReferences[pair.first].data + mono_field_get_offset(_field));
 				}
 				mono_field_set_value(mObject, pScriptClass->mFields[pair.first].classField, fieldDataReferences[pair.first].data);
 				//if (name == "AIMovement")
@@ -141,8 +141,8 @@ namespace Copium
 		auto it = pScriptClass->mFields.find(_name);
 		if (it == pScriptClass->mFields.end())
 			return false;
-		const Field& field = it->second;
-		mono_field_get_value(mObject, field.classField, outBuffer);
+		const Field& _field = it->second;
+		mono_field_get_value(mObject, _field.classField, outBuffer);
 		return true;
 	}
 
@@ -151,8 +151,8 @@ namespace Copium
 		const auto& it = pScriptClass->mFields.find(_name);
 		if (it == pScriptClass->mFields.end())
 			return false;
-		const Field& field = it->second;
-		mono_field_set_value(mObject, field.classField, (void*)value);
+		const Field& _field = it->second;
+		mono_field_set_value(mObject, _field.classField, (void*)value);
 		return true;
 	}
 
@@ -223,9 +223,9 @@ namespace Copium
 							fieldDataReferences.insert({ it->first,FieldData(mono_object_get_size(result)) });
 							MonoClass* mComponentClass = mono_object_get_class(result);
 							void* iter = nullptr;
-							while (MonoClassField* field = mono_class_get_fields(mComponentClass,&iter))
+							while (MonoClassField* _field = mono_class_get_fields(mComponentClass,&iter))
 							{
-								mono_field_get_value(result, field, fieldDataReferences[it->first].data + mono_field_get_offset(field));
+								mono_field_get_value(result, _field, fieldDataReferences[it->first].data + mono_field_get_offset(_field));
 							}
 							mono_field_set_value(mObject, it->second.classField, fieldDataReferences[it->first].data);
 							fieldComponentReferences[_name] = pComponent;
@@ -287,9 +287,9 @@ namespace Copium
 									MonoClass* mGameObjClass = mono_object_get_class(result);
 									void* iter = nullptr;
 									fieldDataReferences.insert({ it->first,FieldData(mono_object_get_size(result)) });
-									while (MonoClassField* field = mono_class_get_fields(mGameObjClass, &iter))
+									while (MonoClassField* _field = mono_class_get_fields(mGameObjClass, &iter))
 									{
-										mono_field_get_value(result, field, fieldDataReferences[it->first].data + mono_field_get_offset(field));
+										mono_field_get_value(result, _field, fieldDataReferences[it->first].data + mono_field_get_offset(_field));
 									}
 									mono_field_set_value(mObject, it->second.classField, fieldDataReferences[it->first].data);
 									fieldGameObjReferences[_name] = go;
@@ -318,9 +318,9 @@ namespace Copium
 							MonoClass* mComponentClass = mono_object_get_class(result);
 									fieldDataReferences.insert({ it->first,FieldData(mono_object_get_size(result)) });
 							void* iter = nullptr;
-							while (MonoClassField* field = mono_class_get_fields(mComponentClass, &iter))
+							while (MonoClassField* _field = mono_class_get_fields(mComponentClass, &iter))
 							{
-								mono_field_get_value(result, field, fieldDataReferences[it->first].data + mono_field_get_offset(field));
+								mono_field_get_value(result, _field, fieldDataReferences[it->first].data + mono_field_get_offset(_field));
 							}
 							mono_field_set_value(mObject, it->second.classField, fieldDataReferences[it->first].data);
 							fieldGameObjReferences[_name] = pGameObj;

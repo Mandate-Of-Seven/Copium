@@ -139,9 +139,9 @@ class Component
 
         virtual Component* clone(GameObject& _gameObj) const = 0;
 
-        virtual void deserializeLink(rapidjson::Value& _value) {};
+        virtual void deserializeLink(rapidjson::Value& _value) { (void)_value; };
 
-        virtual void previewLink(Component* rhs) {};
+        virtual void previewLink(Component* rhs) { (void)rhs; };
 
         /*******************************************************************************
         /*!

@@ -9,13 +9,14 @@ public class Manager : CopiumScript
 {
 
     public GameObject panel;
-
+    public GameObject howToPlay;
 
     void Start()
     {
         CurrentGameState = GameState.Combat;
         Console.WriteLine("Manager Start");
         panel.SetActive(false);
+        howToPlay.SetActive(false);
     }
 
     void Update()
@@ -32,7 +33,6 @@ public class Manager : CopiumScript
                     //panel.active = true;
                     panel.SetActive(true);
                 }
-
             }
             else
             {
@@ -43,6 +43,7 @@ public class Manager : CopiumScript
                     //panel.active = false;
                     panel.SetActive(false);
                 }
+                howToPlay.SetActive(false);
             }
         }
 

@@ -1,11 +1,6 @@
 {
     "Name": "NewScene",
-    "Unused GIDs": [
-        9,
-        7,
-        22,
-        23
-    ],
+    "Unused GIDs": [],
     "Unused CIDs": [],
     "GameObjects": [
         {
@@ -14,7 +9,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 62,
+                    "ID": 1,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -91,7 +86,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 5,
+                    "ID": 7,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -158,7 +153,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 10,
+                    "ID": 12,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -196,11 +191,11 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 12,
+                    "ID": 14,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
-                        "Y": 0.0,
+                        "Y": -0.8438939452171326,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -236,7 +231,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 14,
+                    "ID": 16,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -274,7 +269,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 16,
+                    "ID": 18,
                     "Type": "Transform",
                     "Pos": {
                         "X": 20.0,
@@ -331,7 +326,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 20,
+                    "ID": 22,
                     "Type": "Transform",
                     "Pos": {
                         "X": 20.0,
@@ -388,11 +383,11 @@
             "Components": [
                 {
                     "PID": 17,
-                    "ID": 24,
+                    "ID": 26,
                     "Type": "Transform",
                     "Pos": {
                         "X": -2.0,
-                        "Y": 0.0,
+                        "Y": -0.0,
                         "Z": 1.0
                     },
                     "Rot": {
@@ -439,7 +434,7 @@
             "Components": [
                 {
                     "PID": 17,
-                    "ID": 27,
+                    "ID": 29,
                     "Type": "Transform",
                     "Pos": {
                         "X": -1.9500000476837158,
@@ -477,7 +472,7 @@
             "Components": [
                 {
                     "PID": 17,
-                    "ID": 29,
+                    "ID": 31,
                     "Type": "Transform",
                     "Pos": {
                         "X": -4.0,
@@ -528,7 +523,7 @@
             "Components": [
                 {
                     "PID": 17,
-                    "ID": 32,
+                    "ID": 34,
                     "Type": "Transform",
                     "Pos": {
                         "X": -6.0,
@@ -579,7 +574,7 @@
             "Components": [
                 {
                     "PID": 1,
-                    "ID": 35,
+                    "ID": 37,
                     "Type": "Transform",
                     "Pos": {
                         "X": -2.0,
@@ -638,7 +633,7 @@
             "Components": [
                 {
                     "PID": 1,
-                    "ID": 39,
+                    "ID": 41,
                     "Type": "Transform",
                     "Pos": {
                         "X": -4.0,
@@ -697,7 +692,7 @@
             "Components": [
                 {
                     "PID": 1,
-                    "ID": 43,
+                    "ID": 45,
                     "Type": "Transform",
                     "Pos": {
                         "X": -6.0,
@@ -756,7 +751,7 @@
             "Components": [
                 {
                     "PID": 1,
-                    "ID": 47,
+                    "ID": 49,
                     "Type": "Transform",
                     "Pos": {
                         "X": -2.0,
@@ -794,7 +789,7 @@
             "Components": [
                 {
                     "PID": 1,
-                    "ID": 49,
+                    "ID": 51,
                     "Type": "Transform",
                     "Pos": {
                         "X": -4.0,
@@ -832,7 +827,7 @@
             "Components": [
                 {
                     "PID": 1,
-                    "ID": 51,
+                    "ID": 53,
                     "Type": "Transform",
                     "Pos": {
                         "X": -6.0,
@@ -870,7 +865,7 @@
             "Components": [
                 {
                     "PID": 17,
-                    "ID": 53,
+                    "ID": 55,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -909,7 +904,7 @@
             "Components": [
                 {
                     "PID": 1,
-                    "ID": 55,
+                    "ID": 57,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -939,6 +934,1008 @@
                             "Y": 0.32499998807907104
                         }
                     }
+                }
+            ]
+        },
+        {
+            "ID": 9,
+            "Name": "PauseMenu",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 59,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 7,
+            "Name": "Manager",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 60,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 77,
+                    "Type": "Script",
+                    "Name": "Manager",
+                    "panel": 9,
+                    "howToPlay": 27
+                }
+            ]
+        },
+        {
+            "ID": 22,
+            "Name": "Border",
+            "Components": [
+                {
+                    "PID": 9,
+                    "ID": 62,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": -0.014000000432133675,
+                        "Z": -0.3499999940395355
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 6.0,
+                        "Y": 2.2809998989105225,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 68,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 18,
+                    "Sprite Name": "Pause Menu Stuff-04.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 23,
+            "Name": "BlackBG",
+            "Components": [
+                {
+                    "PID": 9,
+                    "ID": 64,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": -0.4000000059604645
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 100.0,
+                        "Y": 240.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 69,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
+                    "Color": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0,
+                        "W": 0.7215686440467834
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 24,
+            "Name": "ResumeButton",
+            "Components": [
+                {
+                    "PID": 9,
+                    "ID": 66,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.44999998807907104,
+                        "Z": -0.30000001192092896
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.399999976158142,
+                        "Y": 0.25,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 70,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 19,
+                    "Sprite Name": "Pause Menu Test2-03.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 71,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Resume Game",
+                    "Font Size": 1.0,
+                    "r": 0.9998999834060669,
+                    "g": 1.0,
+                    "b": 0.9999280571937561,
+                    "a": 1.0
+                },
+                {
+                    "Type": "Button",
+                    "ID": 78,
+                    "Graphic ID": 71,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.949999988079071,
+                            "Y": -1.0
+                        },
+                        "Max": {
+                            "X": 0.949999988079071,
+                            "Y": 1.0
+                        }
+                    },
+                    "Callback": "ResumeGame"
+                },
+                {
+                    "ID": 81,
+                    "Type": "Script",
+                    "Name": "ResumeButton"
+                }
+            ]
+        },
+        {
+            "ID": 25,
+            "Name": "QuitButton",
+            "Components": [
+                {
+                    "PID": 9,
+                    "ID": 71,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": -3.312000036239624,
+                        "Z": -0.30000001192092896
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.399999976158142,
+                        "Y": 0.25,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 73,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Quit Game",
+                    "Font Size": 1.0,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 74,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 19,
+                    "Sprite Name": "Pause Menu Test2-03.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "Button",
+                    "ID": 80,
+                    "Graphic ID": 73,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.949999988079071,
+                            "Y": -1.0
+                        },
+                        "Max": {
+                            "X": 0.949999988079071,
+                            "Y": 1.0
+                        }
+                    },
+                    "Callback": "QuitGame"
+                },
+                {
+                    "ID": 82,
+                    "Type": "Script",
+                    "Name": "QuitButton"
+                }
+            ]
+        },
+        {
+            "ID": 26,
+            "Name": "HowToPlayButton",
+            "Components": [
+                {
+                    "PID": 9,
+                    "ID": 76,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": -1.4839999675750732,
+                        "Z": -0.30000001192092896
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.399999976158142,
+                        "Y": 0.25,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 75,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 19,
+                    "Sprite Name": "Pause Menu Test2-03.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 76,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "How to Play",
+                    "Font Size": 1.0,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                },
+                {
+                    "Type": "Button",
+                    "ID": 79,
+                    "Graphic ID": 76,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.949999988079071,
+                            "Y": -1.0
+                        },
+                        "Max": {
+                            "X": 0.949999988079071,
+                            "Y": 1.0
+                        }
+                    },
+                    "Callback": "OpenHowToPlay"
+                },
+                {
+                    "ID": 83,
+                    "Type": "Script",
+                    "Name": "HowToPlay",
+                    "howToPlayPanel": 27
+                }
+            ]
+        },
+        {
+            "ID": 27,
+            "Name": "HowToPlay",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 81,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 28,
+            "Name": "Title",
+            "Components": [
+                {
+                    "PID": 9,
+                    "ID": 82,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 2.8340001106262207,
+                        "Z": -0.30000001192092896
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.7999999523162842,
+                        "Y": 1.7999999523162842,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 78,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 17,
+                    "Sprite Name": "Logo.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 29,
+            "Name": "Panel",
+            "Components": [
+                {
+                    "PID": 27,
+                    "ID": 84,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": -0.15000000596046448
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 4.150000095367432,
+                        "Y": 2.200000047683716,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 87,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 19,
+                    "Sprite Name": "Pause Menu Test2-03.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 30,
+            "Name": "HTPtitle",
+            "Components": [
+                {
+                    "PID": 27,
+                    "ID": 86,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 3.0474469661712646,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 88,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "How to Play",
+                    "Font Size": 0.5,
+                    "r": 0.9630511999130249,
+                    "g": 1.0,
+                    "b": 0.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 31,
+            "Name": "Back",
+            "Components": [
+                {
+                    "PID": 27,
+                    "ID": 88,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 5.794167995452881,
+                        "Y": 3.0577216148376465,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 0.32499998807907104,
+                        "Y": 0.30000001192092896,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 89,
+                    "Type": "Script",
+                    "Name": "HowToPlay",
+                    "howToPlayPanel": 27
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 90,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 19,
+                    "Sprite Name": "Pause Menu Test2-03.png",
+                    "Color": {
+                        "X": 0.6737520098686218,
+                        "Y": 0.0,
+                        "Z": 0.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 91,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "X",
+                    "Font Size": 1.0,
+                    "r": 1.0,
+                    "g": 0.6385669112205505,
+                    "b": 0.6385669112205505,
+                    "a": 1.0
+                },
+                {
+                    "Type": "Button",
+                    "ID": 92,
+                    "Graphic ID": 91,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.5,
+                            "Y": -0.5
+                        },
+                        "Max": {
+                            "X": 0.5,
+                            "Y": 0.5
+                        }
+                    },
+                    "Callback": "CloseHowToPlay"
+                }
+            ]
+        },
+        {
+            "ID": 32,
+            "Name": "Akey",
+            "Components": [
+                {
+                    "PID": 27,
+                    "ID": 93,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -5.739999771118164,
+                        "Y": -1.1330000162124634,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 0.25,
+                        "Y": 0.20000000298023224,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 99,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "A",
+                    "Font Size": 1.0,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 100,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 19,
+                    "Sprite Name": "Pause Menu Test2-03.png",
+                    "Color": {
+                        "X": 0.0,
+                        "Y": 0.049327850341796875,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 33,
+            "Name": "Dkey",
+            "Components": [
+                {
+                    "PID": 27,
+                    "ID": 96,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -5.688000202178955,
+                        "Y": -2.4820001125335693,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 0.25,
+                        "Y": 0.20000000298023224,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 97,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 19,
+                    "Sprite Name": "Pause Menu Test2-03.png",
+                    "Color": {
+                        "X": 0.0,
+                        "Y": 0.04865455627441406,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 98,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "D",
+                    "Font Size": 1.0,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 34,
+            "Name": "TrainHead",
+            "Components": [
+                {
+                    "PID": 27,
+                    "ID": 99,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -3.369999885559082,
+                        "Y": 1.0470000505447388,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.5,
+                        "Y": 2.5,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 101,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 22,
+                    "Sprite Name": "player_train_head.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 35,
+            "Name": "AInstructions",
+            "Components": [
+                {
+                    "PID": 27,
+                    "ID": 101,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -2.6419999599456787,
+                        "Y": -1.0360000133514404,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 103,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Key  to move train left",
+                    "Font Size": 0.20000000298023224,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 36,
+            "Name": "DInstructions",
+            "Components": [
+                {
+                    "PID": 27,
+                    "ID": 103,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -2.549999952316284,
+                        "Y": -2.4000000953674316,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 105,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Key to move train right",
+                    "Font Size": 0.20000000298023224,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 37,
+            "Name": "MouseControls",
+            "Components": [
+                {
+                    "PID": 27,
+                    "ID": 105,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -3.0,
+                        "Y": -3.450000047683716,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 107,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Left Click to shoot bullets",
+                    "Font Size": 0.20000000298023224,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 38,
+            "Name": "EnemyHead",
+            "Components": [
+                {
+                    "PID": 27,
+                    "ID": 107,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 3.5999999046325684,
+                        "Y": 1.0499999523162842,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.25,
+                        "Y": 2.25,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 109,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 16,
+                    "Sprite Name": "enemy_train_head.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 39,
+            "Name": "EnemyInstructions",
+            "Components": [
+                {
+                    "PID": 27,
+                    "ID": 109,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 3.5999999046325684,
+                        "Y": -1.0499999523162842,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 112,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Avoid getting hit by the enemy's bullets",
+                    "Font Size": 0.15000000596046448,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 40,
+            "Name": "EnemyInstructions1",
+            "Components": [
+                {
+                    "PID": 27,
+                    "ID": 111,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 3.5999999046325684,
+                        "Y": -2.4000000953674316,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 113,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Reduce the health of all enemy",
+                    "Font Size": 0.20000000298023224,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 41,
+            "Name": "EnemyInstructions2",
+            "Components": [
+                {
+                    "PID": 27,
+                    "ID": 113,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 2.25,
+                        "Y": -3.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 115,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "segments to zero",
+                    "Font Size": 0.20000000298023224,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
                 }
             ]
         }
