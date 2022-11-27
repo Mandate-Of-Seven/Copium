@@ -99,7 +99,8 @@ namespace Copium
 				adjusted = { _newDimension.x - padding, (_newDimension.x - padding) / aspect };
 			}
 
-			if (!modified)
+			// If there isnt any changes to the dimension or no modifications, return
+			if (adjusted == sceneDimension || !modified)
 				return;
 
 			sceneDimension = adjusted;

@@ -21,7 +21,22 @@ namespace Copium
 {
 	void Directory::inspector_view()
 	{
+		if (ImGui::BeginTable("Table: Folder View", 1))
+		{
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
 
+			std::string str = "Instance ID: " + std::to_string(instanceID);
+			ImGui::Text(str.c_str());
+
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+
+			str = "Folder name: " + name;
+			ImGui::Text(str.c_str());
+
+			ImGui::EndTable();
+		}
 	}
 
 	bool Directory::within_directory(Directory* _directory)

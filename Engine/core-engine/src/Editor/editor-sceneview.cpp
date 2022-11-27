@@ -46,6 +46,7 @@ namespace Copium
 
 		// Begin Scene View
 		ImGui::Begin("Scene View", 0, windowFlags);
+
 		windowFocused = ImGui::IsWindowFocused();
 		windowHovered = ImGui::IsWindowHovered();
 		scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
@@ -67,7 +68,6 @@ namespace Copium
 
 		// Begin Render Stats
 		ImGui::Begin("Renderer Stats", 0, windowFlags);
-
 		
 		size_t gameobjectCount = 0;
 		if (scene != nullptr)

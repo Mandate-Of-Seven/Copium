@@ -40,8 +40,7 @@ namespace Copium
 
 		// Temporary global variables
 		GLfloat rotate = 0.f;
-		bool massSpawn = false, toggleAnimation = false;
-		int animID = 0;
+		bool massSpawn = false;
 	}
 
 	void GraphicsSystem::init()
@@ -50,9 +49,9 @@ namespace Copium
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 
 		// Bean: 3D Depth Testing
-	/*	glEnable(GL_DEPTH_TEST);
+		glEnable(GL_DEPTH_TEST);
 		glAlphaFunc(GL_GREATER, 0.5);
-		glEnable(GL_ALPHA_TEST);*/
+		glEnable(GL_ALPHA_TEST);
 		//glEnable(GL_STENCIL_TEST);
 
 		glClearColor(1.f, 1.f, 1.f, 1.f);
@@ -94,7 +93,7 @@ namespace Copium
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_C))
+		if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_C) && inputSystem.is_key_pressed(GLFW_KEY_S))
 		{
 			massSpawn = !massSpawn;
 		}
@@ -131,16 +130,6 @@ namespace Copium
 		{
 			NewSceneManager* sm = NewSceneManager::Instance();
 			PRINT("Number of Gameobjects: " << sm->get_current_scene()->get_gameobjcount());
-		}
-
-		if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_A))
-		{
-			toggleAnimation = !toggleAnimation;
-		}
-
-		if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_S))
-		{
-			animID = (animID == 1) ? 0 : 1;
 		}
 	
 		batch_render();
