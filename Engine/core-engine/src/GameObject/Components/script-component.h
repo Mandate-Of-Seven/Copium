@@ -32,13 +32,30 @@ namespace Copium
 {
 	struct FieldData
 	{
-		template <typename T>
-		FieldData(const T& _data)
+		FieldData(size_t _size = 0, void* _data = nullptr)
 		{
-			data = new char[sizeof(T)];
-			memcpy(data,&_data, sizeof(T));
+			size = _size;
+			if (size)
+				data = new char[size];
+			else
+				data = nullptr;
+			if (_data)
+				memcpy(data,_data,size);
+		}
+		FieldData(const FieldData& rhs)
+		{
+			size = rhs.size;
+			data = new char[size];
+			memcpy(data, rhs.data, size);
+		}
+
+		~FieldData()
+		{
+			if (data)
+				delete[] data;
 		}
 		char* data;
+		size_t size;
 	};
 
     class Script final : public Component, public IReceiver
@@ -171,12 +188,12 @@ namespace Copium
 		friend class ScriptingSystem;
 	private:
 		void instantiate();
-		char buffer[128];
+		static char buffer[128];
 		std::string name;
 		const Script* reference{ nullptr };
 		std::unordered_map<std::string, GameObject*> fieldGameObjReferences;
 		std::unordered_map<std::string, Component*> fieldComponentReferences;
-		std::unordered_map<std::string, FieldData*> fieldDataReferences;
+		std::unordered_map<std::string, FieldData> fieldDataReferences;
 		static ScriptingSystem& sS;
 		bool isAddingGameObjectReference;
     };

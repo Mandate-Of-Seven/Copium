@@ -112,15 +112,9 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{rhs.id}
 
         Component* newComponent = pComponent->clone(*this);
         newComponent->id = pComponent->id;
-        static char buffer[128];
         if (pComponent->componentType == ComponentType::Script)
         {
             Script* pScript = reinterpret_cast<Script*>(pComponent);
-            if (pScript->getFieldValue("gameObj", buffer))
-            {
-                PRINT("GAMEOBJ ID HERE: " << *reinterpret_cast<uint64_t*>(buffer + 24));
-                PRINT("Gameobj id: " << id);
-            }
 
         }
         components.push_back(newComponent);
@@ -155,7 +149,7 @@ GameObject::GameObject
         MESSAGE_CONTAINER::reflectCsGameObject.componentIDs.push_back(pComponent->id);
     }
     messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
-    PRINT("GAMEOBJECT ID CONSTRUCTED: " << id);
+    //PRINT("GAMEOBJECT ID CONSTRUCTED: " << id);
     transform.id = assign_id();
 }
 

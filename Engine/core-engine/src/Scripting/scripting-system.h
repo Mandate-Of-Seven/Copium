@@ -232,6 +232,7 @@ namespace Copium
 		void handleMessage(MESSAGE_TYPE mType);
 
 
+
 		/**************************************************************************/
 		/*!
 			\brief
@@ -242,6 +243,7 @@ namespace Copium
 		/**************************************************************************/
 		MonoObject* cloneInstance(MonoObject* _instance);
 
+		MonoObject* createInstance(MonoClass* _mClass);
 
 		/**************************************************************************/
 		/*!
