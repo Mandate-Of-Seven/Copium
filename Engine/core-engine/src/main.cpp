@@ -87,7 +87,7 @@ int main()
     copiumCore.init();
 
     Copium::SceneManager SM;
-    MyFrameRateController.init(100);
+    MyFrameRateController.init(60);
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
     glfwSetWindowCloseCallback(windowsSystem->get_window(), quitEngine);
