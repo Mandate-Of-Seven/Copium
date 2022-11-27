@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System;
 using CopiumEngine;
 using static GameData;
-using System;
 
 public class AIMovement : CopiumScript
 {
@@ -12,6 +11,7 @@ public class AIMovement : CopiumScript
 
     public GameObject PlayerTrainGO;
     public GameObject self;
+    
     Vector2 waypoint;
     float AITimer = 0.5f;
 
@@ -29,7 +29,8 @@ public class AIMovement : CopiumScript
     void Start()
     {
         GetPlayerPos();
-        Console.WriteLine("Ai Movement Started");
+        Console.WriteLine("Player ID:" + PlayerTrainGO.ID);
+
     }
 
     // Update is called once per frame
@@ -44,7 +45,7 @@ public class AIMovement : CopiumScript
         {
             if(self.transform.position.x != PlayerTrainGO.transform.position.x)
             {
-                //Console.WriteLine("bleep");
+                Console.WriteLine("bleep");
                 currentAIState = AIState.Chase;
             }else
             {

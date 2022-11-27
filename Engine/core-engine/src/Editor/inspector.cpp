@@ -76,6 +76,7 @@ namespace Window
 
             Copium::GameObject* selectedGameObject = sceneManager.selectedGameObject;
             Copium::File* selectedFile = fileSystem.get_selected_file();
+            Copium::Directory* selectedDirectory = fileSystem.get_selected_directory();
             if (selectedGameObject && !selectedFile)
             {
                 // Set flags for tables
@@ -97,6 +98,10 @@ namespace Window
             else if (selectedFile)
             {
                 selectedFile->inspector_view();
+            }
+            else if (selectedDirectory)
+            {
+                selectedDirectory->inspector_view();
             }
             
             ImGui::PopStyleVar();

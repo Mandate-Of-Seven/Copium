@@ -22,7 +22,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "Files/assets-system.h"
 #include "Editor/editor-system.h"
-#include "Windows/windows-input.h"
 
 namespace Copium
 {
@@ -32,7 +31,6 @@ namespace Copium
 
 		AssetsSystem* assets = AssetsSystem::Instance();
 		EditorSystem* editor = EditorSystem::Instance();
-		InputSystem* input = InputSystem::Instance();
 	}
 
 	void FileSystem::init()
@@ -126,13 +124,6 @@ namespace Copium
 
 	void FileSystem::update()
 	{
-		if (input->is_key_pressed(GLFW_KEY_DELETE))
-		{
-			delete_from_browser();
-		}
-
-
-
 		check_directory_count(&assetsDirectory);
 	}
 

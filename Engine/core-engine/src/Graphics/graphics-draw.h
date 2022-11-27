@@ -55,20 +55,20 @@ namespace Copium
 		/***************************************************************************/
 		/*!
 		\brief
-			Draw the "world" of the engine which is the scene view also when the 
-			player plays the game
-		*/
-		/***************************************************************************/
-		void world();
-
-		/***************************************************************************/
-		/*!
-		\brief
 			Draw the editor mode of the engine where the grids, gizmos and 
 			information of the gameobjects are shown
 		*/
 		/***************************************************************************/
 		void editor();
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Draw the "world" of the engine which is the scene view also when the
+			player plays the game
+		*/
+		/***************************************************************************/
+		void world();
 
 		/***************************************************************************/
 		/*!

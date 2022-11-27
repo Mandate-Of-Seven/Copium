@@ -230,7 +230,10 @@ namespace Copium
 	void EditorContentBrowser::inputs()
 	{
 		if (!ImGui::IsMouseDragging(ImGuiMouseButton_Left) && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
+		{
 			fs->set_selected_file(nullptr);
+			fs->set_selected_directory(nullptr);
+		}
 
 		if (ImGui::IsWindowFocused())
 		{
@@ -249,15 +252,6 @@ namespace Copium
 				}
 			}
 
-			if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
-			{
-				for (Directory* dir : currentDirectory->get_child_directory())
-				{
-					if (dir->get_id() == ImGui::GetHoveredID())
-						fs->set_selected_directory(dir);
-				}
-			}
-			
 			if (!ImGui::IsMouseDragging(ImGuiMouseButton_Left) && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
 			{
 				for (File& file : currentDirectory->get_files())
@@ -267,6 +261,17 @@ namespace Copium
 						fs->set_selected_file(&file);
 					}
 				}
+
+				for (Directory* dir : currentDirectory->get_child_directory())
+				{
+					if (dir->get_id() == ImGui::GetHoveredID())
+						fs->set_selected_directory(dir);
+				}
+			}
+			
+			if (ImGui::IsKeyPressed(ImGuiKey_Delete))
+			{
+				fs->delete_from_browser();
 			}
 		}
 	}
