@@ -140,6 +140,9 @@ namespace Copium
 		float get_pitch() const { return pitch; }
 		float get_yaw() const { return yaw; }
 
+		CameraType get_type() { return cameraType; }
+		glm::vec2 get_game_ndc();
+
 		/***************************************************************************/
 		/*!
 		\brief

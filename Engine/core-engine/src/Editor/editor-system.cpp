@@ -100,11 +100,11 @@ namespace Copium
 			}
 		}
 
-		/*if (tempMode != enableEditor)
+		if (tempMode != enableEditor)
 		{
 			enableEditor = tempMode;
 			playMode(enableEditor);
-		}*/
+		}
 
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();

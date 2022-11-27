@@ -63,19 +63,19 @@ public class CombatMovement : CopiumScript
         {
             if (CurrentGameState == GameState.Combat)
             {
-                if (Input.GetKey(KeyCode.A))
+                if (Input.GetKey(KeyCode.A) && gameObj.transform.position.x > -6)
                 {
 
-                    Console.WriteLine("MOVE LEFT!!");
+                    //Console.WriteLine("MOVE LEFT!!");
                     //Instantiate(gameObj);
                     velocity = new Vector2(-0.1f, 0f);
                     gameObj.transform.position += velocity;
 
                 }
-                if (Input.GetKey(KeyCode.D))
+                if (Input.GetKey(KeyCode.D) && gameObj.transform.position.x < 10)
                 {
                     velocity = new Vector2(0.1f, 0f);
-                    Console.WriteLine("MOVE RIGHT!!");
+                    //Console.WriteLine("MOVE RIGHT!!");
                     gameObj.transform.position += velocity;
 
                 }
@@ -173,7 +173,7 @@ public class CombatMovement : CopiumScript
     }
     void OnCollisionEnter2D(Collision2D collision)
     {
-        Console.WriteLine("COLLIDING FROM C#!");
+        //Console.WriteLine("COLLIDING FROM C#!");
     }
 
     void ButtonClickedEffect()

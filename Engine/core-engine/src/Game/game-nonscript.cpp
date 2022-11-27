@@ -36,6 +36,8 @@ namespace Copium
     GameObject* enemyBullet;
     GameObject* player;
 
+    std::unordered_map<GameObject*, double> enemy;
+
     void Game::init()
     {
         messageSystem->subscribe(MESSAGE_TYPE::MT_COLLISION_ENTER, this);
@@ -87,7 +89,7 @@ namespace Copium
                     }
                 }
 
-                if(gameObj->transform.position.y > 20.f || gameObj->transform.position.y < -20.f)
+                if(gameObj->transform.position.y > 10.f || gameObj->transform.position.y < -10.f)
                     MyGOF.destroy(gameObj);
 
                 if (!gameObj->active)
@@ -110,7 +112,8 @@ namespace Copium
         {
             GameObject* collided = MESSAGE_CONTAINER::collisionEnter.collided;
 
-            collided->active = false;
+            if(!collided->get_name().compare("Enemy Bullet (Clone)") || !collided->get_name().compare("Player Bullet (Clone)"))
+                collided->active = false;
         }
     }
 
@@ -124,10 +127,32 @@ namespace Copium
 
             if (pos.y > 0.f) // enemy
             {
-                static double timer = 0;
+                if (enemy.empty())
+                {
+                    enemy.emplace(std::make_pair(_gameObj, 0.0));
+                }
+                else
+                {
+                    bool isIn = false;
+                    for (auto object : enemy)
+                    {
+                        if (object.first->id == _gameObj->id)
+                        {
+                            isIn = true;
+                            break;
+                        }
+                    }
+
+                    if (!isIn)
+                    {
+                        enemy.emplace(std::make_pair(_gameObj, 0.0));
+                    }
+                }
+
+                double &timer = (*enemy.find(_gameObj)).second;
                 timer += MyFrameRateController.getDt();
 
-                if (enemyBullet != nullptr && timer >= 0.5)
+                if (enemyBullet != nullptr && timer >= rand() % 100 * 0.01)
                 {
                     GameObject* go = MyGOF.instantiate(*enemyBullet);
                     go->set_name("Enemy Bullet (Clone)");
