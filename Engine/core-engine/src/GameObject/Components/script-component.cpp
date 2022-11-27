@@ -37,6 +37,7 @@ namespace Copium
 	{
 		MessageSystem::Instance()->unsubscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
 		MessageSystem::Instance()->unsubscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
+		
 	}
 
 	void Script::instantiate()
@@ -90,18 +91,24 @@ namespace Copium
 				void* params = &gameObjID;
 				MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindGameObjectByID"], mObject, &params, nullptr);
 				MonoClass* mGameObjectClass = mono_object_get_class(result);
+				fieldDataReferences[pair.first] = new char[mono_object_get_size(result)];
 				void* iter = nullptr;
-
 				while (MonoClassField* field = mono_class_get_fields(mGameObjectClass, &iter))
 				{
-					mono_field_get_value(result, field, buffer + mono_field_get_offset(field));
+					PRINT(mono_field_get_offset(field));
+					mono_field_get_value(result, field, fieldDataReferences[pair.first] + mono_field_get_offset(field));
 				}
-				mono_field_set_value(mObject, pScriptClass->mFields[pair.first].classField, buffer);
+				mono_field_set_value(mObject, pScriptClass->mFields[pair.first].classField, fieldDataReferences[pair.first]);
+				//if (name == "AIMovement")
+				//{
+				//	mono_field_get_value(mObject, pScriptClass->mFields["PlayerTrainGO"].classField,buffer);
+				//	PRINT("PLAYERTRAINGO: " << *reinterpret_cast<uint64_t*>(buffer + 24));
+				//}
 			}
-
 			break;
 
 		}
+
 	}
 
 	const std::string& Script::Name() const
@@ -409,9 +416,6 @@ namespace Copium
 
 	Component* Script::clone(GameObject& _gameObj) const
 	{
-		//if (getFieldValue("gameObj", outBuffer))
-		//	PRINT("GAMEOBJ ID THERE: " << *reinterpret_cast<uint64_t*>(outBuffer + 24));
-		//PRINT("Gameobj id: " << gameObj.id);
 		//mono_field_get_value(mObject, pScriptClass->mFields["gameObj"].classField, buffer);
 		Script* component = new Script(_gameObj);
 		component->pScriptClass = pScriptClass;
@@ -434,6 +438,12 @@ namespace Copium
 		{
 			fieldComponentReferences[pair.first] = MyNewSceneManager.findComponentByID(pair.second->id);
 		}
+
+		for (auto pair : scriptRhs->fieldDataReferences)
+		{
+
+		}
+		
 	}
 
 	void Script::deserialize(rapidjson::Value& _value)

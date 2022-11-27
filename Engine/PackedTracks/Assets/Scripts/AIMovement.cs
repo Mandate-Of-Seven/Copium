@@ -11,7 +11,9 @@ public class AIMovement : CopiumScript
 
     public GameObject PlayerTrainGO;
     public GameObject self;
-    
+    public GameObject dsa;
+    public GameObject sealf;
+
     Vector2 waypoint;
     float AITimer = 0.5f;
 
@@ -58,12 +60,12 @@ public class AIMovement : CopiumScript
             if (self.transform.position.x < PlayerTrainGO.transform.position.x)
             {
                 //AIMoveRight();
-                self.transform.position += new Vector2(0.1f, 0f);
+                self.transform.position += new Vector2(0.03f, 0f);
             }
             else if (self.transform.position.x > PlayerTrainGO.transform.position.x)
             {
                 //AIMoveLeft();
-                self.transform.position += new Vector2(-0.1f, 0f);
+                self.transform.position += new Vector2(-0.03f, 0f);
             }else
             {
                 currentAIState = AIState.Idle;

@@ -147,6 +147,8 @@
                     "Name": "AIMovement",
                     "PlayerTrainGO": 1,
                     "self": 3,
+                    "dsa": 5,
+                    "sealf": 7,
                     "rb": 16
                 }
             ]

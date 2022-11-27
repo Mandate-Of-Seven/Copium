@@ -452,6 +452,11 @@ namespace Copium
 		return mono_object_clone(_instance);
 	}
 
+	MonoObject* ScriptingSystem::createInstance(MonoClass* _mClass)
+	{
+		return mono_object_new(mAppDomain,_mClass);
+	}
+
 	void ScriptingSystem::tryRecompileDll()
 	{
 		bool startCompiling = false;

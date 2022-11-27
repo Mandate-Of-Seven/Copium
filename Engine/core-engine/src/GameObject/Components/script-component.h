@@ -30,16 +30,6 @@ extern "C"
 
 namespace Copium
 {
-	struct FieldData
-	{
-		template <typename T>
-		FieldData(const T& _data)
-		{
-			data = new char[sizeof(T)];
-			memcpy(data,&_data, sizeof(T));
-		}
-		char* data;
-	};
 
     class Script final : public Component, public IReceiver
     {
@@ -176,7 +166,7 @@ namespace Copium
 		const Script* reference{ nullptr };
 		std::unordered_map<std::string, GameObject*> fieldGameObjReferences;
 		std::unordered_map<std::string, Component*> fieldComponentReferences;
-		std::unordered_map<std::string, FieldData*> fieldDataReferences;
+		std::unordered_map<std::string, char*> fieldDataReferences;
 		static ScriptingSystem& sS;
 		bool isAddingGameObjectReference;
     };

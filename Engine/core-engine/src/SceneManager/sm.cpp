@@ -440,15 +440,15 @@ namespace Copium {
 			MyGOF.clone(*gameObj, currentScene);
 		}
 
-		std::cout << "Storage scene game object count: " << storageScene->gameObjects.size() << std::endl;
-		std::cout << "Preview scene game object count: " << currentScene->gameObjects.size() << std::endl;
+		//std::cout << "Storage scene game object count: " << storageScene->gameObjects.size() << std::endl;
+		//std::cout << "Preview scene game object count: " << currentScene->gameObjects.size() << std::endl;
 
 		for (size_t goIndex{ 0 }; goIndex < storageScene->get_gameobjcount(); ++goIndex)
 		{
 			GameObject* currGameObj = currentScene->gameObjects[goIndex];
 			GameObject* storedGameObj = storageScene->gameObjects[goIndex];
 			currGameObj->transform.previewLink(&storedGameObj->transform);
-			std::cout << "Name comparisons: " << currGameObj->get_name() << '|' << storedGameObj->get_name() << std::endl;
+			//std::cout << "Name comparisons: " << currGameObj->get_name() << '|' << storedGameObj->get_name() << std::endl;
 			for (size_t compIndex{ 0 }; compIndex < currGameObj->components.size(); ++compIndex)
 			{
 				currGameObj->components[compIndex]->previewLink(storedGameObj->components[compIndex]);
