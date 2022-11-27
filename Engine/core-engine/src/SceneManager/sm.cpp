@@ -397,9 +397,6 @@ namespace Copium {
 		rapidjson::Value gameObjects(rapidjson::kArrayType);
 		for (GameObject* pGameObject : currentScene->gameObjects)
 		{
-			if (pGameObject->transform.hasParent())
-				continue;
-
 			rapidjson::Value go(rapidjson::kObjectType);
 			pGameObject->serialize(go, doc);
 

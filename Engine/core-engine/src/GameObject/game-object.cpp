@@ -360,14 +360,14 @@ bool GameObject::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
     }
     _value.AddMember("Components", _components, _doc.GetAllocator());
 
-    rapidjson::Value kids(rapidjson::kArrayType);
-    for (auto iter = transform.children.begin(); iter != transform.children.end(); ++iter)
-    {
-        rapidjson::Value cgo(rapidjson::kObjectType);
-        (*iter)->gameObj.serialize(cgo, _doc);
-        kids.PushBack(cgo, _doc.GetAllocator());
-    }
-    _value.AddMember("Children", kids, _doc.GetAllocator());
+    //rapidjson::Value kids(rapidjson::kArrayType);
+    //for (auto iter = transform.children.begin(); iter != transform.children.end(); ++iter)
+    //{
+    //    rapidjson::Value cgo(rapidjson::kObjectType);
+    //    (*iter)->gameObj.serialize(cgo, _doc);
+    //    kids.PushBack(cgo, _doc.GetAllocator());
+    //}
+    //_value.AddMember("Children", kids, _doc.GetAllocator());
 
     return true;
 
