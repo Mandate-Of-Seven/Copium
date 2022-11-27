@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System;
 using CopiumEngine;
 using static GameData;
-using System;
 
 public class AIMovement : CopiumScript
 {
@@ -30,7 +29,8 @@ public class AIMovement : CopiumScript
     {
         Console.WriteLine("AI MOVEMENT! STARTED");
         GetPlayerPos();
-        Console.WriteLine("Ai Movement Started");
+        Console.WriteLine("Player ID:" + PlayerTrainGO.ID);
+
     }
 
     // Update is called once per frame
@@ -39,14 +39,14 @@ public class AIMovement : CopiumScript
 
         if(currentAIState == AIState.Idle)
         {
-            Console.WriteLine("AI is Idle");
+            //Console.WriteLine("AI is Idle");
         }
 
         if(CurrentGameState == GameState.Combat && currentAIState == AIState.Idle)
         {
             if(self.transform.position.x != PlayerTrainGO.transform.position.x)
             {
-                Console.WriteLine("bleep");
+                //Console.WriteLine("bleep");
                 currentAIState = AIState.Chase;
             }else
             {
