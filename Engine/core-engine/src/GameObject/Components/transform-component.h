@@ -78,6 +78,10 @@ public:
     /**************************************************************************/
     void deserialize(rapidjson::Value& _value);
 
+    void deserializeLink(rapidjson::Value& _value);
+
+    void previewLink(Component* rhs);
+
     /*******************************************************************************
     /*!
     *

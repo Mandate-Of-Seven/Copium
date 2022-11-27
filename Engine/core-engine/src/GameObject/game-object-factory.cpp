@@ -116,18 +116,26 @@ namespace Copium
 		if (!go)
 			return nullptr;
 
-		unsigned count{ 0 };
 		if (scene)
-			for (GameObject* g : scene->gameObjects)
-			{
-				if (g->get_name().find(_src.name) != std::string::npos)
-					++count;
-			}
-		if (count)
-			go->name += '(' + std::to_string(count) + ')';
-
-		if (scene)
+		{
 			scene->add_gameobject(go);
+			//for (Transform* transform : go->transform.children)
+			//{
+			//	
+			//}
+		}
+
+		//unsigned count{ 0 };
+		//if (scene)
+		//	for (GameObject* g : scene->gameObjects)
+		//	{
+		//		if (g->get_name().find(_src.name) != std::string::npos)
+		//			++count;
+		//	}
+		//if (count)
+		//	go->name += '(' + std::to_string(count) + ')';
+
+
 
 		//for (std::list<GameObject*>::iterator iter = _src.mchildList().begin(); iter != _src.mchildList().end(); ++iter)
 		//{
@@ -204,16 +212,14 @@ namespace Copium
 		currScene->add_gameobject(go);
 
 		// Deserialize children (if any)
-		if (_value.HasMember("Children")) {
-			rapidjson::Value& childArr = _value["Children"].GetArray();
-			for (rapidjson::Value::ValueIterator iter = childArr.Begin(); iter != childArr.End(); ++iter)
-			{
-				GameObject* cgo = instantiate(*iter);
-				cgo->transform.setParent(&go->transform);
-			}
-		}
-
-
+		//if (_value.HasMember("Children")) {
+		//	rapidjson::Value& childArr = _value["Children"].GetArray();
+		//	for (rapidjson::Value::ValueIterator iter = childArr.Begin(); iter != childArr.End(); ++iter)
+		//	{
+		//		GameObject* cgo = instantiate(*iter);
+		//		cgo->transform.setParent(&go->transform);
+		//	}
+		//}
 
 		return go;
 	}
@@ -383,19 +389,32 @@ namespace Copium
 	{
 		Scene* currScene = sceneManager.get_current_scene();
 		GameObject* newChild = new GameObject(currScene->assignGameObjID());
-		auto it = currScene->gameObjects.begin();
-		for (auto pGameObject : currScene->gameObjects)
-		{
-			if (pGameObject->id == _parent.id)
-			{
-				currScene->gameObjects.insert(it + 1, newChild);
-				_parent.transform.setParent(&newChild->transform);
-				return newChild;
-			}
-			++it;
-		}
+		newChild->transform.setParent(&_parent.transform);
+		currScene->add_gameobject(newChild);
+		//auto it = currScene->gameObjects.begin();
+		//for (auto pGameObject : currScene->gameObjects)
+		//{
+		//	if (pGameObject->id == _parent.id)
+		//	{
+		//		currScene->gameObjects.insert(it + 1, newChild);
+		//		_parent.transform.setParent(&newChild->transform);
+		//		return newChild;
+		//	}
+		//	++it;
+		//}
+		
+		//for (auto iter = currScene->gameObjects.begin(); iter != currScene->gameObjects.end(); ++iter)
+		//{
+		//	if ((*iter)->id == _parent.id)
+		//	{
+		//		//currScene->gameObjects.insert(iter + 1, newChild);
+		//		currScene->add_gameobject(newChild);
+		//		newChild->transform.setParent(&_parent.transform);
+		//		return newChild;
+		//	}
+		//}
 
-		return nullptr;
+		return newChild;
 
 	}
 

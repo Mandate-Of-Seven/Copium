@@ -125,13 +125,18 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{rhs.id}
         }
         components.push_back(newComponent);
     }
+
+    //if(MyNewSceneManager.get_current_scene())
+    //    MyNewSceneManager.get_current_scene()->add_gameobject(this);
+
     //messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
-    //for (Transform* pTransform : rhs.children)
+    //for (Transform* pTransform : rhs.transform.children)
     //{
-    //    GameObject* child = sceneManager.get_gof().instantiate(*pGameObj);
-    //    children.push_back(child);
-    //    child->set_parent(this);
+    //    GameObject* child = new GameObject(pTransform->gameObj);
+    //    child->transform.setParent(&transform);
     //}
+
+
 }
 
 GameObject::GameObject
@@ -354,6 +359,15 @@ bool GameObject::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
         _components.PushBack(comp, _doc.GetAllocator());
     }
     _value.AddMember("Components", _components, _doc.GetAllocator());
+
+    //rapidjson::Value kids(rapidjson::kArrayType);
+    //for (auto iter = transform.children.begin(); iter != transform.children.end(); ++iter)
+    //{
+    //    rapidjson::Value cgo(rapidjson::kObjectType);
+    //    (*iter)->gameObj.serialize(cgo, _doc);
+    //    kids.PushBack(cgo, _doc.GetAllocator());
+    //}
+    //_value.AddMember("Children", kids, _doc.GetAllocator());
 
     return true;
 

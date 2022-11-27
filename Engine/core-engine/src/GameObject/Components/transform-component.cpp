@@ -55,27 +55,38 @@ void Transform::deserialize(rapidjson::Value& _value)
 	    scale.deserialize(_value["Scale"].GetObj());
 }
 
+
+void Transform::deserializeLink(rapidjson::Value& _value)
+{
+    if (_value.HasMember("PID"))
+    {
+        GameObjectID gameObjID = _value["PID"].GetUint64();
+        if (gameObjID)
+            setParent(&MyNewSceneManager.findGameObjByID(gameObjID)->transform);
+    }
+}
+
 // M2
 void Transform::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 {
     if (parent)
     {
-        _value.AddMember("PID", parent->id, _doc.GetAllocator());
+        _value.AddMember("PID", parent->gameObj.id, _doc.GetAllocator());
     }
     else
     {
         _value.AddMember("PID", 0, _doc.GetAllocator());
     }
     //Recursively serialize children and their children and so on
-    rapidjson::Value _children(rapidjson::kArrayType);
-    for (Transform* pTransform : children)
-    {
-        rapidjson::Value child(rapidjson::kObjectType);
-        pTransform->serialize(child, _doc);
-        _children.PushBack(child, _doc.GetAllocator());
-    }
-    _value.AddMember("Children", _children, _doc.GetAllocator());
-    Component::serialize(_value, _doc);
+    //rapidjson::Value _children(rapidjson::kArrayType);
+    //for (Transform* pTransform : children)
+    //{
+    //    rapidjson::Value child(rapidjson::kObjectType);
+    //    pTransform->serialize(child, _doc);
+    //    _children.PushBack(child, _doc.GetAllocator());
+    //}
+    //_value.AddMember("Children", _children, _doc.GetAllocator());
+    //Component::serialize(_value, _doc);
 
     rapidjson::Value _pos(rapidjson::kObjectType);
     rapidjson::Value _rot(rapidjson::kObjectType);
@@ -83,6 +94,9 @@ void Transform::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 
     rapidjson::Value type;
     std::string tc = "Transform";
+
+    Component::serialize(_value, _doc);
+
     type.SetString(tc.c_str(), rapidjson::SizeType(tc.length()), _doc.GetAllocator());
     _value.AddMember("Type", type, _doc.GetAllocator()); 
 
@@ -123,7 +137,6 @@ void Transform::inspector_view()
         ImGui::Text("Position");
         ImGui::TableNextColumn();
 
-        // Stop repeating your code chibai
         if (ImGui::BeginTable("Component Transform: Position", 3, windowFlags))
         {
             ImGui::TableNextColumn();
@@ -341,5 +354,13 @@ void Transform::inspector_view()
     ImGui::PopStyleVar();
     ImGui::PopStyleVar();
    
+}
+
+void Transform::previewLink(Component* rhs)
+{
+    PRINT("LINKING TRANSFORM");
+    Transform* transform = reinterpret_cast<Transform*>(rhs);
+    if (transform->hasParent())
+        setParent(&MyNewSceneManager.findGameObjByID(transform->parent->gameObj.id)->transform);
 }
 }

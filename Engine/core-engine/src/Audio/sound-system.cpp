@@ -41,22 +41,22 @@ void SoundSystem::init()
 
 void SoundSystem::update()
 {
-	soundSystem->update();
-	if (inputSystem.is_key_pressed(GLFW_KEY_1))
-	{
-		Copium::SoundSystem::Instance()->Play("zap", true, false);
-		std::cout << "Zap sound is being played\n";
-	}
-	if (inputSystem.is_key_pressed(GLFW_KEY_2))
-	{
-		Copium::SoundSystem::Instance()->Play("reeling", true, false);
-		std::cout << "Reeling sound is being played\n";
-	}
-	if (inputSystem.is_key_pressed(GLFW_KEY_3))
-	{
-		Copium::SoundSystem::Instance()->Play("testbgm", false, true);
-		std::cout << "BGM is being played\n";
-	}
+	//soundSystem->update();
+	//if (inputSystem.is_key_pressed(GLFW_KEY_1))
+	//{
+	//	Copium::SoundSystem::Instance()->Play("zap", true, false);
+	//	std::cout << "Zap sound is being played\n";
+	//}
+	//if (inputSystem.is_key_pressed(GLFW_KEY_2))
+	//{
+	//	Copium::SoundSystem::Instance()->Play("reeling", true, false);
+	//	std::cout << "Reeling sound is being played\n";
+	//}
+	//if (inputSystem.is_key_pressed(GLFW_KEY_3))
+	//{
+	//	Copium::SoundSystem::Instance()->Play("testbgm", false, true);
+	//	std::cout << "BGM is being played\n";
+	//}
 }
 
 void SoundSystem::exit()

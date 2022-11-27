@@ -182,7 +182,6 @@
                     "Type": "Button",
                     "ID": 10,
                     "Graphic ID": 9,
-                    "Callback": ""
                 }
             ]
         }

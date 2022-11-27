@@ -62,7 +62,6 @@ namespace Window::Hierarchy
 					if (!currentScene)
 					{
 						Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
-
 					}
 					else
 					{
@@ -155,7 +154,7 @@ namespace Window::Hierarchy
 			for (size_t i{ 0 }; i < currentScene->get_gameobjcount(); ++i)
 			{
 				Copium::GameObject* tmp = currentScene->gameObjects[i];
-				if (tmp->transform.parent == nullptr)
+				if (!tmp->transform.hasParent())
 					roots.push_back(tmp);
 			}
 
@@ -207,7 +206,7 @@ namespace Window::Hierarchy
 		const Copium::Transform& transform{ _go.transform };
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen;
 		// Prevent arrow from showing up which will cause assert if no children
-		if (transform.parent == nullptr)
+		if (!transform.children.empty())
 			flags |= ImGuiTreeNodeFlags_Leaf;
 		else
 		{
@@ -219,7 +218,7 @@ namespace Window::Hierarchy
 			return;
 
 		// If game object has children, recursively display children
-		if(transform.children.empty())
+		if(!transform.children.empty())
 		{
 			for (auto iter = transform.children.begin(); iter != transform.children.end(); ++iter)
 			{
@@ -236,7 +235,7 @@ namespace Window::Hierarchy
 		bool isSelected = false;
 		ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 
-		if (_go.transform.parent == nullptr)
+		if (_go.transform.children.empty())
 		{
 			baseFlags |= ImGuiTreeNodeFlags_Leaf;
 		}
@@ -250,6 +249,7 @@ namespace Window::Hierarchy
 
 		if (!ImGui::TreeNodeEx(_go.get_name().c_str(), baseFlags))
 			return false;
+
 		if (ImGui::BeginDragDropSource())
 		{
 			static void* container;
@@ -277,8 +277,9 @@ namespace Window::Hierarchy
 			Copium::NewSceneManager::Instance()->set_selected_gameobject(&_go);
 
 		}
+
 		// If game object has children, recursively display children
-		if (_go.transform.parent)
+		if (!_go.transform.children.empty())
 		{
 			for (auto pChild : _go.transform.children)
 			{

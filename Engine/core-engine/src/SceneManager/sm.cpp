@@ -55,7 +55,6 @@ namespace Copium {
 		}
 		return nullptr;
 	}
-
 	Component* NewSceneManager::findComponentByID(ComponentID _ID)
 	{
 		for (GameObject* pGameObj : currentScene->gameObjects)
@@ -200,8 +199,10 @@ namespace Copium {
 				{
 					rapidjson::Value& compArr = (*gameObjectIt)["Components"].GetArray();
 					auto componentIt = compArr.Begin();
+					go->transform.deserializeLink(*componentIt);
 					for (Component* component : go->components)
 					{
+						PRINT(component->Name());
 						//Offset TransformComponent
 						++componentIt;
 						component->deserializeLink(*componentIt);
@@ -379,6 +380,7 @@ namespace Copium {
 			ugids.PushBack(id, doc.GetAllocator());
 		}
 		doc.AddMember("Unused GIDs", ugids, doc.GetAllocator());
+
 		// Serialize UCIDs
 		rapidjson::Value ucids(rapidjson::kArrayType);
 		for (ComponentID id : currentScene->get_unusedcids())
@@ -397,9 +399,6 @@ namespace Copium {
 		rapidjson::Value gameObjects(rapidjson::kArrayType);
 		for (GameObject* pGameObject : currentScene->gameObjects)
 		{
-			if (pGameObject->transform.hasParent())
-				continue;
-
 			rapidjson::Value go(rapidjson::kObjectType);
 			pGameObject->serialize(go, doc);
 
@@ -434,19 +433,22 @@ namespace Copium {
 
 		currentScene->unusedCIDs = storageScene->unusedCIDs;
 		currentScene->unusedGIDs = storageScene->unusedGIDs;
+
 		// Copy game object data
 		for (const GameObject* gameObj : storageScene->gameObjects)
 		{
-			if (gameObj && !gameObj->transform.hasParent())
-			{
-				MyGOF.clone(*gameObj, currentScene);
-			}
+			MyGOF.clone(*gameObj, currentScene);
 		}
+
+		std::cout << "Storage scene game object count: " << storageScene->gameObjects.size() << std::endl;
+		std::cout << "Preview scene game object count: " << currentScene->gameObjects.size() << std::endl;
 
 		for (size_t goIndex{ 0 }; goIndex < storageScene->get_gameobjcount(); ++goIndex)
 		{
 			GameObject* currGameObj = currentScene->gameObjects[goIndex];
 			GameObject* storedGameObj = storageScene->gameObjects[goIndex];
+			currGameObj->transform.previewLink(&storedGameObj->transform);
+			std::cout << "Name comparisons: " << currGameObj->get_name() << '|' << storedGameObj->get_name() << std::endl;
 			for (size_t compIndex{ 0 }; compIndex < currGameObj->components.size(); ++compIndex)
 			{
 				currGameObj->components[compIndex]->previewLink(storedGameObj->components[compIndex]);

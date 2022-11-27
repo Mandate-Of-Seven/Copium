@@ -75,8 +75,9 @@ public class CombatMovement : CopiumScript
                 if (Input.GetKey(KeyCode.D))
                 {
                     velocity = new Vector2(0.1f, 0f);
-                    gameObj.transform.position += velocity;
                     Console.WriteLine("MOVE RIGHT!!");
+                    gameObj.transform.position += velocity;
+
                 }
     
             }
