@@ -1,16 +1,15 @@
 ﻿/*!***************************************************************************************
 ****
-\file			
+\file			collider-components.h
 \project		
-\author			
-\co-authors		// DELETE IF NOT APPLICABLE
+\author			Abdul Hadi
 
 \par			Course: GAM200
 \par			Section: 
-\date			//DATE LAST MODIFIED
+\date			28/11/2022
 
 \brief
-	// BRIEF DESCRIPTION OF FILE PURPOSE
+	This file contains the 2dboxCollider component, for performing collision.
 
 All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************
@@ -51,20 +50,11 @@ namespace Copium
 			/*******************************************************************************/
 			void inspector_view();
 
-			/***************************************************************************/
-			/*!
-			\brief
-				Deserialize this component's data from specified rapidjson value
-			*/
-			/**************************************************************************/
-			//void deserialize(rapidjson::Value& _value);
-
 			/*******************************************************************************
 			/*!
-			*
 			\brief
 				Deep copies a BoxCollider2DComponent into another
-			\param rhs
+			\param gameobj
 				Reference to another BoxCollider2DComponent
 			\return
 				Reference to this BoxCollider2DComponent
@@ -77,7 +67,20 @@ namespace Copium
 				component->boundingBox = boundingBox;
 				return component;
 			}
+			/*******************************************************************************
+			/*!
+			*
+			\brief
+				Deserialize this renderer component's data from the specified rapidjson Value
 
+			\param _value
+				reference to the rapidjson Value which the renderer component's data 
+				deserializes its data from
+
+			\return
+				void
+			*/
+			/*******************************************************************************/
 			void deserialize(rapidjson::Value& _value)
 			{
 				if (_value.HasMember("BoundingBox"))
@@ -86,7 +89,21 @@ namespace Copium
 					boundingBox.deserialize(_v);
 				}
 			}
-
+			/*******************************************************************************
+			/*!
+			*
+			\brief
+			Serialize this renderer component's data to the specified rapidjson Value
+			\param _value
+			reference to the rapidjson Value which the renderer component's data is to 
+			serialize its data to
+			\param _doc
+			reference to the rapidjson Document which is associated to the save file which 
+			the data is being saved to
+			\return
+			void
+			*/
+			/*******************************************************************************/
 			void serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 			{
 				rapidjson::Value type;
@@ -98,7 +115,13 @@ namespace Copium
 				boundingBox.serialize(bb, _doc);
 				_value.AddMember("BoundingBox", bb, _doc.GetAllocator());
 			}
-
+			/*******************************************************************************
+			/*!
+			*	
+			\brief
+			Gets the current bounding box of the component
+			*/
+			/*******************************************************************************/
 			AABB getBounds();
 		private:
 			AABB boundingBox;			//bounding box of object
