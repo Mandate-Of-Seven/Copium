@@ -1,4 +1,19 @@
-﻿using System;
+﻿/*!***************************************************************************************
+****
+\file			Components.cs
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			28/11/2022
+
+\brief
+    Components reflections to C++ components
+
+All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

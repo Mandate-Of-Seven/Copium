@@ -1,7 +1,8 @@
 /*!***************************************************************************************
 \file			component.cpp
 \project
-\author			Zacharie Hong
+\author			Zacharie Hong (50%)
+\co-author      Matthew Lau (50%)
 
 \par			Course: GAM200
 \par			Section:
@@ -45,8 +46,6 @@ namespace Copium
     bool Component::Enabled() const noexcept{ return enabled;}
 
     void Component::Enabled(bool _enabled) noexcept { enabled = _enabled; }
-
-    bool& Component::get_enabled() { return enabled; }
 
     Animator::Animator(GameObject& _gameObj) 
         :Component(_gameObj, ComponentType::Animator) { std::cout << "ANIMATOR CONS" << std::endl; }

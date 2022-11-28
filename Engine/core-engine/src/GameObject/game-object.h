@@ -1,8 +1,8 @@
 ﻿/*!***************************************************************************************
 \file			game-object.h
 \project        
-\author			Zacharie Hong
-\co-authors     Matthew Lau
+\author			Zacharie Hong (50%)
+\co-authors     Matthew Lau (50%)
 
 \par			Course: GAM200
 \par			Section:
@@ -69,6 +69,18 @@ private:
     /*******************************************************************************/
     GameObject(const GameObject& rhs);
 
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Copy assignment operator, only usable by GOF
+    \param _src
+        GameObject to copy from
+    \return
+        Ref to this gameObject after copy assignment
+
+    */
+    /*******************************************************************************/
     GameObject& operator=(const GameObject& _src);
 
 public:           
@@ -78,8 +90,26 @@ public:
     std::vector<Component*> components;   //Components for gameObject
     ComponentID assign_id();
 
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Checks whether a gameobject is active depending on their parent
+    \return
+        Whether a gameObject is active based on its parent's activeness
+    */
+    /*******************************************************************************/
     bool isActive();
 
+    /*******************************************************************************
+    /*!
+    *
+    \brief
+        Sets a gameeobject's activeness
+    \param _active
+        Bool to set activeness of gameObject
+    */
+    /*******************************************************************************/
     void setActive(bool _active);
 
     /*******************************************************************************

@@ -13,6 +13,7 @@
 
 All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
+
 #include "pch.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -35,7 +36,6 @@ namespace
 namespace Copium
 {
     short InputSystem::keys[COPIUM_MAX_KEYS];
-
 void InputSystem::init()
 {
     systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;

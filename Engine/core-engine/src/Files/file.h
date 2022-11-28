@@ -37,7 +37,7 @@ namespace Copium
 	struct FileType
 	{
 		std::string stringType;
-		FILE_TYPE fileType;
+		FILE_TYPE fileType{};
 	};
 
 	class File final : public std::filesystem::path

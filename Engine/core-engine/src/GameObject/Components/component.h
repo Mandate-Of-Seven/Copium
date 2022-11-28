@@ -1,7 +1,8 @@
 /*!***************************************************************************************
 \file			component.h
 \project        
-\author			Zacharie Hong
+\author			Zacharie Hong (50%)
+\co-author      Matthew Lau (50%)
 
 \par			Course: GAM200
 \par			Section:
@@ -104,6 +105,15 @@ class Component
         /**************************************************************************/
         virtual void destroy();
 
+        /***************************************************************************/
+        /*!
+        \brief
+            Overridable name function for scripts to return their scriptname as their
+            name
+        \return
+            Const reference to the name of this component
+        */
+        /**************************************************************************/
         virtual const std::string& Name() const;
 
         /***************************************************************************/
@@ -136,11 +146,36 @@ class Component
         /**************************************************************************/
         virtual void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
-
+        /***************************************************************************/
+        /*!
+        \brief
+            Clone function for preview mode and editor mode
+        \param _gameObj
+            GameObject to clone from
+        \return
+            Reference to the cloned component in current scene
+        */
+        /**************************************************************************/
         virtual Component* clone(GameObject& _gameObj) const = 0;
 
+        /***************************************************************************/
+        /*!
+        \brief
+            Links references to other gameObjects or components on deserialization
+        \param _value
+            Json value to get ID of references
+        */
+        /**************************************************************************/
         virtual void deserializeLink(rapidjson::Value& _value) { (void)_value; };
 
+        /***************************************************************************/
+        /*!
+        \brief
+            Links references to other gameObjects or components on serialization
+        \param rhs
+            Reference component to know which gameObject to assign itself to
+        */
+        /**************************************************************************/
         virtual void previewLink(Component* rhs) { (void)rhs; };
 
         /*******************************************************************************
@@ -191,12 +226,31 @@ class Component
             return *self;
         }
 
+
+        /***************************************************************************/
+        /*!
+        \brief
+            Clone function for preview mode and editor mode
+        \param _gameObj
+            GameObject to clone from
+        \return
+            Reference to the cloned component in current scene
+        */
+        /**************************************************************************/
         bool Enabled() const noexcept;
 
+
+        /***************************************************************************/
+        /*!
+        \brief
+            Clone function for preview mode and editor mode
+        \param _gameObj
+            GameObject to clone from
+        \return
+            Reference to the cloned component in current scene
+        */
+        /**************************************************************************/
         void Enabled(bool) noexcept;
-
-        bool& get_enabled();
-
 
         GameObject& gameObj;
     protected:
@@ -254,6 +308,16 @@ class Component
         void inspector_view(){};
 
 
+        /***************************************************************************/
+        /*!
+        \brief
+            Clone function for preview mode and editor mode
+        \param _gameObj
+            GameObject to clone from
+        \return
+            Reference to the cloned component in current scene
+        */
+        /**************************************************************************/
         virtual Animator* clone(GameObject& _gameObj) const
         {
             Animator* component = new Animator(_gameObj);

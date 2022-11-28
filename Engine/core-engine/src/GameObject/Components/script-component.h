@@ -32,6 +32,19 @@ namespace Copium
 {
 	struct FieldData
 	{
+		/***************************************************************************/
+		/*!
+		\brief
+			Stores data of a given buffer to prevent out of scope destruction.
+			Aka assigns memory from the heap
+
+		\param _size
+			Size of buffer
+
+		\param _data
+			Data to store and copy from
+		*/
+		/**************************************************************************/
 		FieldData(size_t _size = 0, void* _data = nullptr)
 		{
 			size = _size;
@@ -42,6 +55,16 @@ namespace Copium
 			if (_data)
 				memcpy(data,_data,size);
 		}
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Copy constructor
+
+		\param rhs
+			FieldData to store and copy from
+		*/
+		/**************************************************************************/
 		FieldData(const FieldData& rhs)
 		{
 			size = rhs.size;
@@ -49,6 +72,12 @@ namespace Copium
 			memcpy(data, rhs.data, size);
 		}
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Destructor that frees memory
+		*/
+		/**************************************************************************/
 		~FieldData()
 		{
 			if (data)
@@ -87,9 +116,25 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		void handleMessage(MESSAGE_TYPE mType);
-
+		/***************************************************************************/
+		/*!
+		\brief
+			Name function for scripts to return their scriptname as their
+			name
+		\return
+			Const reference to the name of this component
+		*/
+		/**************************************************************************/
 		const std::string& Name() const;
-
+		/***************************************************************************/
+		/*!
+		\brief
+			Name function for scripts to set a new name, instantiate a different
+			kind of class in Mono
+		\param _name
+			Name to change to
+		*/
+		/**************************************************************************/
 		void Name(const std::string& _name);
 		/**************************************************************************/
 		/*!
@@ -98,35 +143,6 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		void invoke(const std::string& methodName);
-		/**************************************************************************/
-		/*!
-			\brief
-				Function called right after Awake().
-		*/
-		/**************************************************************************/
-		void Start();
-		/**************************************************************************/
-		/*!
-			\brief
-				Function called every frame.
-		*/
-		/**************************************************************************/
-		void Update();
-		/**************************************************************************/
-		/*!
-			\brief
-				Function called every frame after Update().
-		*/
-		/**************************************************************************/
-		void FixedUpdate();
-		void LateUpdate();
-		/**************************************************************************/
-		/*!
-			\brief
-				Function called when object collides with something.
-		*/
-		/**************************************************************************/
-		void OnCollisionEnter();
 
 		/*******************************************************************************
 		/*!
@@ -169,16 +185,74 @@ namespace Copium
 		/*******************************************************************************/
 		bool setFieldValue(const std::string& name, const char* value);
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Clone function for preview mode and editor mode
+		\param _gameObj
+			GameObject to clone from
+		\return
+			Reference to the cloned component in current scene
+		*/
+		/**************************************************************************/
 		Component* clone(GameObject& _gameObj) const;
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Deserializes this component's data from a rapidjson value.
+
+		\param _value
+			reference to the rapidjson value that contains the data of the component
+
+		\return
+			void
+		*/
+		/**************************************************************************/
 		void deserialize(rapidjson::Value& _value);
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Links references to other gameObjects or components on deserialization
+		\param _value
+			Json value to get ID of references
+		*/
+		/**************************************************************************/
 		void deserializeLink(rapidjson::Value& _value);
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Links references to other gameObjects or components on serialization
+		\param rhs
+			Reference component to know which gameObject to assign itself to
+		*/
+		/**************************************************************************/
 		void previewLink(Component* rhs);
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Serializes this component's data to a rapidjson value.
+
+		\param _value
+			reference to the rapidjson value that will contain the data of the component
+
+		\return
+			void
+		*/
+		/**************************************************************************/
 		void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Gets the function names in this script
+		\return
+			Vector of strings of functions in this script
+		*/
+		/**************************************************************************/
 		const std::vector<std::string>& getFunctionNames();
 
 		ScriptClass* pScriptClass;

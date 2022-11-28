@@ -15,6 +15,7 @@
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
+
 #ifndef WINDOW_SYSTEMS_H
 #define WINDOW_SYSTEMS_H
 

@@ -1,4 +1,21 @@
-#pragma once
+﻿/*!***************************************************************************************
+\file			easing.h
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			28/11/2022
+
+\brief
+    This file holds the define of functions to interpolate float and struct of floats
+
+All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
+#ifndef EASING_H
+
+#define EASING_H
 
 #include <stdlib.h>
 #include <math.h>
@@ -7,6 +24,20 @@
 
 namespace Copium
 {
+    /***************************************************************************/
+    /*!
+    \brief
+        Linear interpolation for struct of floats and floats
+    \param start
+        Starting value
+    \param end
+        Max value
+    \param value
+        Time value of interpolation between 0 & 1
+    \return
+        New container
+    */
+    /**************************************************************************/
     template <typename T,size_t SZ=sizeof(T)/sizeof(float)>
     static T Linear(T start, T end, float value)
     {
@@ -25,3 +56,4 @@ namespace Copium
         return container;
     }
 }
+#endif // !EASING_H

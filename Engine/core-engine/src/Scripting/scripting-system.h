@@ -52,37 +52,8 @@ namespace Copium
 		FieldType type{};
 		std::string typeName;
 		MonoClassField* classField{nullptr};
-		FieldFlag flags;
+		FieldFlag flags{0};
 	};
-
-	// ScriptField + data storage
-	struct FieldInstance
-	{
-		Field Field;
-
-		FieldInstance()
-		{
-			memset(m_Buffer, 0, sizeof(m_Buffer));
-		}
-
-		template<typename T>
-		T GetValue()
-		{
-			static_assert(sizeof(T) <= 16, "Type too large!");
-			return *(T*)m_Buffer;
-		}
-
-		template<typename T>
-		void SetValue(T value)
-		{
-			static_assert(sizeof(T) <= 16, "Type too large!");
-			memcpy(m_Buffer, &value, sizeof(T));
-		}
-	private:
-		uint8_t m_Buffer[16];
-	};
-
-	using FieldMap = std::unordered_map<std::string, FieldInstance>;
 
 	static std::unordered_map<std::string, FieldType> fieldTypeMap =
 	{
@@ -243,6 +214,16 @@ namespace Copium
 		/**************************************************************************/
 		MonoObject* cloneInstance(MonoObject* _instance);
 
+		/*******************************************************************************
+		/*!
+		\brief
+			Creates an instance of a given class
+		\param _mClass
+			Class to make object from
+		\return
+			MonoObject of a class
+		*/
+		/*******************************************************************************/
 		MonoObject* createInstance(MonoClass* _mClass);
 
 		/**************************************************************************/
@@ -266,12 +247,52 @@ namespace Copium
 		/**************************************************************************/
 		const std::unordered_map<std::string, ScriptClass*>& getScriptClassMap();
 
+		/*******************************************************************************
+		/*!
+		\brief
+			Finds a type in C# mono using a string and returns the monoType
+		\param name
+			Name of type to find
+		\return
+			MonoType found
+		*/
+		/*******************************************************************************/
 		MonoType* getMonoTypeFromName(std::string& name);
 
+		/*******************************************************************************
+		/*!
+		\brief
+			Converts a C string into a mono string
+		\param str
+			Str to convert into mono string
+		\return
+			Mono version of given string
+		*/
+		/*******************************************************************************/
 		MonoString* createMonoString(const char* str);
 
+		/**************************************************************************/
+		/*!
+			\brief
+				Creates a collision data for scripts
+			\param collided
+				Rhs gameobject
+			\param collidee
+				Lhs gameObject
+		*/
+		/**************************************************************************/
 		MonoObject* getFieldMonoObject(MonoClassField* mField, MonoObject* mObject);
 
+		/**************************************************************************/
+		/*!
+			\brief
+				Creates a collision data for scripts
+			\param collided
+				Rhs gameobject
+			\param collidee
+				Lhs gameObject
+		*/
+		/**************************************************************************/
 		void instantiateCollision2D(GameObject& collided, GameObject& collidee);
 	private:
 

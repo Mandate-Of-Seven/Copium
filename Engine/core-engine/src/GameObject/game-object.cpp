@@ -1,7 +1,8 @@
 ﻿/*!***************************************************************************************
 \file			game-object.cpp
 \project
-\author			Zacharie Hong (50%), Matthew Lau (50%)
+\author			Zacharie Hong (50%), 
+\co-author      Matthew Lau (50%)
 
 \par			Course: GAM200
 \par			Section:
@@ -310,8 +311,9 @@ void GameObject::inspectorView()
         for (Component* component : components)
         {
             ImGui::PushID(index++);
-
-            ImGui::Checkbox("##Active", &component->get_enabled());
+            bool enabled = component->Enabled();
+            ImGui::Checkbox("##Active", &enabled);
+            component->Enabled(enabled);
             ImGui::SameLine();
             const std::string& componentName{ component->Name() };
             if (ImGui::CollapsingHeader(componentName.c_str(), nodeFlags))

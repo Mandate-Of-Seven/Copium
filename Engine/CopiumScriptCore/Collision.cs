@@ -1,24 +1,31 @@
 ﻿/*!***************************************************************************************
-\file			Random.cs
-\project
+****
+\file			Collision.cs
 \author			Zacharie Hong
 
 \par			Course: GAM200
 \par			Section:
-\date			1/11/2022
+\date			28/11/2022
 
 \brief
-	This file contains definitions for C# Random
+    Defines a struct to store collision data
 
 All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
-*****************************************************************************************/
-
-using System;
+******************************************************************************************/
 
 namespace CopiumEngine
 {
     public struct Collision2D
     {
+        /*******************************************************************************
+        /*!
+        * 
+        \brief
+            Constructor that takes in ID to know which gameObject was collided
+        \param _gameObjectID
+            ID of gameObject that was collided
+        */
+        /*******************************************************************************/
         Collision2D(ulong _gameObjectID)
         {
             gameObject = null;

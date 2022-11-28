@@ -35,7 +35,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "SceneManager/state-manager.h"
 #include "SceneManager/scene-manager.h"
 #include "Editor/inspector.h"
-
 #include "CopiumCore/copium-core.h"
 #include "Debugging/frame-rate-controller.h"
 namespace
@@ -229,11 +228,21 @@ void cleanup()
     glfwTerminate();
 }
 
-void quitEngine(GLFWwindow* window)
-{
-    change_enginestate(esQuit);
-}
+/***************************************************************************/
+/*!
+\brief
+    Load the config to set width and height to
 
+\param _filename
+    Filename of config files
+
+\param _w
+    Width of window
+
+\param _h
+    Height of window
+*/
+/**************************************************************************/
 bool load_config(std::string& _filename, GLint& _w, GLint& _h)
 {
     std::ifstream ifs(_filename);
