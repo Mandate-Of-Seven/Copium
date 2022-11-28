@@ -30,6 +30,7 @@ namespace Copium
         MT_KEY_PRESSED,
         MT_COLLIDED,
         MT_SCRIPTING_UPDATED,
+        MT_CREATE_CS_GAMEOBJECT,
         MT_REFLECT_CS_GAMEOBJECT,
         MT_START_PREVIEW,
         MT_STOP_PREVIEW,

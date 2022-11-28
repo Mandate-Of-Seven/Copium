@@ -1,0 +1,12 @@
+    /***************************************************************************/
+    /*!
+    \brief       
+        Concatenates two matrices together
+    \param lhs
+        Row matrix to concatenate
+    \param rhs
+        Column matrix to concatenate
+    \return
+        New matrix of concatenated values
+    */
+    /***************************************************************************/

@@ -1,0 +1,448 @@
+{
+    "Name": "Demo",
+    "Unused GIDs": [],
+    "Unused CIDs": [],
+    "GameObjects": [
+        {
+            "ID": 3,
+            "Name": "PlayerTrain",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 1,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 1.0,
+                        "Y": -2.0,
+                        "Z": -10.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 5.0,
+                        "Y": 5.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 2,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 9,
+                    "Sprite Name": "PlayerHead.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "ID": 3,
+                    "Type": "Rigidbody2D",
+                    "Grav": false,
+                    "Active": true
+                },
+                {
+                    "Type": "BoxCollider2D",
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.5,
+                            "Y": -0.5
+                        },
+                        "Max": {
+                            "X": 0.5,
+                            "Y": 0.5
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 4,
+            "Name": "EnemyTrain",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 5,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 2.2337818145751953,
+                        "Y": 2.108254909515381,
+                        "Z": -2.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 5.0,
+                        "Y": 5.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 6,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 5,
+                    "Sprite Name": "EnemyHead.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 0.9998999834060669,
+                        "Z": 0.9998999834060669,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 5,
+            "Name": "Panel",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 7,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -6.0,
+                        "Y": 0.0,
+                        "Z": -10.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 6.0,
+                        "Y": 8.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 8,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
+                    "Color": {
+                        "X": 0.4215642213821411,
+                        "Y": 0.4215220510959625,
+                        "Z": 0.4215220510959625,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "ID": 9,
+                    "Type": "AudioSource",
+                    "Alias": "zap"
+                }
+            ]
+        },
+        {
+            "ID": 6,
+            "Name": "PauseMenu",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 10,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 2.1256961822509766,
+                        "Y": 0.0,
+                        "Z": -5.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 11,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Paused",
+                    "Font Size": 0.75,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 7,
+            "Name": "ResumeButton",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 12,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -6.0,
+                        "Y": 0.0,
+                        "Z": -5.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 3.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 14,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Resume",
+                    "Font Size": 0.25,
+                    "r": 0.9998999834060669,
+                    "g": 0.9999713897705078,
+                    "b": 1.0,
+                    "a": 255.0
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 13,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
+                    "Color": {
+                        "X": 0.25837570428848267,
+                        "Y": 0.25834986567497253,
+                        "Z": 0.25834986567497253,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 8,
+            "Name": "QuitButton",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 15,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 4.0,
+                        "Y": 2.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 3.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 17,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
+                    "Color": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 18,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Quit Game",
+                    "Font Size": 0.20000000298023224,
+                    "r": 0.9998999834060669,
+                    "g": 0.9999713897705078,
+                    "b": 1.0,
+                    "a": 255.0
+                }
+            ]
+        },
+        {
+            "ID": 9,
+            "Name": "Alpha",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 18,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 2.0,
+                        "Z": -1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 10.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 21,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
+                    "Color": {
+                        "X": 0.800000011920929,
+                        "Y": 0.14745096862316132,
+                        "Z": 0.14745096862316132,
+                        "W": 0.6235294342041016
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 10,
+            "Name": "Camera Object",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 20,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 1.369091510772705,
+                        "Y": -0.2886803448200226,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Camera",
+                    "Color": {
+                        "X": 0.4584132432937622,
+                        "Y": 0.45836740732192993,
+                        "Z": 0.45836740732192993,
+                        "W": 1.0
+                    },
+                    "Projection": true,
+                    "Clipping Planes": {
+                        "Near": 0.029999999329447746,
+                        "Far": 500.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 11,
+            "Name": "Parent",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 22,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 10,
+            "Name": "Child",
+            "Components": [
+                {
+                    "PID": 11,
+                    "ID": 23,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 11,
+            "Name": "2nd Child",
+            "Components": [
+                {
+                    "PID": 11,
+                    "ID": 24,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        }
+    ]
+}

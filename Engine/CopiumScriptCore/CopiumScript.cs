@@ -59,6 +59,7 @@ namespace CopiumEngine
                     return gameObject;
                 }
             }
+            Console.WriteLine("Couldnt find gameObject in C#");
             return null;
         }
 

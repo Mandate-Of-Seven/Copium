@@ -91,6 +91,7 @@ namespace Copium
 		UndoRedo::CommandManager* get_commandmanager();
 		
 		bool is_enabled() { return enableEditor; }
+		void set_enabled(bool _setter) { enableEditor = _setter; }
 
 		EditorSceneView* get_scene_view() { return &sceneView; }
 		EditorGame* get_game_view() { return &game; }

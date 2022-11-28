@@ -178,8 +178,8 @@ namespace Copium
 
 			const AABB& getRelativeBounds() const;
 
-		private:
 			static const Button* hoveredBtn;
+		private:
 			std::string callbackName;
 			AABB bounds;
 			void updateBounds();
