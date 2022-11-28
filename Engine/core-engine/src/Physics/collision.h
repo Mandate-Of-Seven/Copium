@@ -165,12 +165,55 @@ namespace Copium
 	*/
 	/**************************************************************************/
 	bool static_collision_pointrect(const Math::Vec2& point,const AABB& aabb2);
-
+	/***************************************************************************/
+	/*!
+	\brief
+	Checks for static collision between a point and a circle
+	\param point
+	The point to check for collision
+	\param circle
+	The circle of the second object to check
+	\return
+	1 if the objects are colliding, 0 otherwise.
+	*/
+	/**************************************************************************/
 	bool collision_pointcircle(const Math::Vec2& point, const Circle& circle);
-
+	/***************************************************************************/
+	/*!
+	\brief
+	Checks for collision between two circles
+	\param circle1
+	The first circle to check
+	\param vel1
+	The velocity of the first object
+	\param circle2
+	The second circle to check
+	\param vel1
+	The velocity of the second object
+	\param interTime
+	the time of intersections between the two objects
+	\return
+	1 if the objects are colliding, 0 otherwise.
+	*/
+	/**************************************************************************/
 	bool collision_circlecircle(const Circle& circle1, const Math::Vec2& vel1,
 		const Circle& circle2, const Math::Vec2& vel2, float& interTime);
-
+	/***************************************************************************/
+	/*!
+	\brief
+	Checks for collision between circle and a square
+	\param circle1
+	The first circle to check
+	\param vel1
+	The velocity of the first object
+	\param aabb
+	The AABB of the second object to check
+	\param vel2
+	Velocity of the second object.
+	\return
+	1 if the objects are colliding, 0 otherwise.
+	*/
+	/**************************************************************************/
 	bool collision_circlesquare(const Circle& circle1, const Math::Vec2& vel1,
 		const AABB& aabb, const Math::Vec2& vel2);
 

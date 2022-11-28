@@ -455,6 +455,6 @@ namespace Copium
 			resolvePos = aabb1.max.x - aabb2.min.x;
 			transform1.position.x -= resolvePos;
 		}
-		std::cout << resolvePos << std::endl;
+		/*std::cout << resolvePos << std::endl;*/
 	}
 }
