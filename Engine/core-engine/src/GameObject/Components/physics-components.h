@@ -28,9 +28,7 @@ namespace Copium
 		void const set_vel(Math::Vec2 _velocity);
 		void const set_acc(Math::Vec2 _acceleration);
 		void const set_force(Math::Vec2 _force);
-		void const set_shape(Shape _objectShape);
 		void const set_mass(float _mass);
-		void const Active(bool _active);
 		void const set_gravity(bool _gravity);
 		void const add_acc(Math::Vec2 _acceleration);
 		bool Active() { return active; };

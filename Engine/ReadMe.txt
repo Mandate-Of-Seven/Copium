@@ -1,25 +1,24 @@
+=====MANDATE OF SEVEN=====
 
------SPECIAL INPUTS-----
+===PACKED TRACKS===
 
----AUDIO---
-Press "1" and "2" keys will play an audio file.
+=CONCEPT=
+Packed Tracks is an action game shooter where you engage in combat with enemy trains. For every train you defeat, you will be able to
+receive attachments to place on your train.
 
---GRAPHICS--
-C Key: Create Sprite. Sprite will be created at mouse position.
-LEFT SHIFT + C Key: Toggle mass spawning. Spawns 2500+ Gameobjects in the viewport
-Z Key: Scale up sprite size
-LEFT SHIFT + Z Key: Scale down sprite size
-R Key: Rotate sprite clockwise
-LEFT SHIFT + R Key: Rotate sprite counter-clockwise
-LEFT SHIFT + D Key: Toggle debug mode. Debug mode will draw collision box of sprite.
+You can traverse through a node map to visit different areas, and battle other trains.
 
---PHYSICS--
-B Key: Create rigid body. Rigid body will only be created if there are sprites available.
-I Key: Increase upwards acceleration of first rigid body.
-K Key: Increase downwards acceleration of first rigid body.
-L Key: Increase acceleration to the right of first rigid body.
-J Key: Increase acceleration to the left of first rigid body.
-O Key: Resets acceleration and velocity of first rigid body back to 0.
-LEFT SHIFT + P: Toggle step mode. In step mode, physics will only update with user input.
-0 Key: Update Physics if in step mode.
+There is also a heat system, a scarce resource which you have to manage, as it can power you up, but your run ends if you run out of it!
 
+
+=GAME INPUT=
+A and D to move train left and right
+Left mouse button to shoot.
+Escape key to pause game
+
+=USAGE=
+The game will directly start on startup.
+On pause screen there is a resume, how to play and quit button
+Resume will return to gameplay
+How to play will bring up a tutorial on how to play the game
+Quit will exit the program.
