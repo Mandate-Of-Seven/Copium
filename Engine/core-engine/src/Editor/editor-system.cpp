@@ -83,7 +83,7 @@ namespace Copium
 
 	void EditorSystem::update()
 	{
-		if (!enableEditor)
+		if (game.is_window_focused())
 		{
 			if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_E))
 			{
@@ -370,11 +370,11 @@ namespace Copium
 	{
 		if (_mType == MESSAGE_TYPE::MT_START_PREVIEW)
 		{
-			tempMode = false;
+			//tempMode = false;
 		}
 		else if (_mType == MESSAGE_TYPE::MT_STOP_PREVIEW)
 		{
-			tempMode = true;
+			//tempMode = true;
 		}
 	}
 

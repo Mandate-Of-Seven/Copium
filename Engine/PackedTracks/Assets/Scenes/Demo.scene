@@ -1,11 +1,11 @@
 {
-    "Name": "NewScene",
+    "Name": "Demo",
     "Unused GIDs": [],
     "Unused CIDs": [],
     "GameObjects": [
         {
             "ID": 1,
-            "Name": "New GameObject",
+            "Name": "Main Camera",
             "Components": [
                 {
                     "PID": 0,
@@ -26,12 +26,26 @@
                         "Y": 1.0,
                         "Z": 1.0
                     }
+                },
+                {
+                    "Type": "Camera",
+                    "Color": {
+                        "X": 0.27799999713897705,
+                        "Y": 0.27799999713897705,
+                        "Z": 0.27799999713897705,
+                        "W": 1.0
+                    },
+                    "Projection": true,
+                    "Clipping Planes": {
+                        "Near": 0.029999999329447746,
+                        "Far": 500.0
+                    }
                 }
             ]
         },
         {
             "ID": 2,
-            "Name": "New GameObject(1)",
+            "Name": "Player",
             "Components": [
                 {
                     "PID": 0,
@@ -48,9 +62,21 @@
                         "Z": 0.0
                     },
                     "Scale": {
+                        "X": 2.0,
+                        "Y": 2.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 4,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 22,
+                    "Sprite Name": "player_train_head.png",
+                    "Color": {
                         "X": 1.0,
                         "Y": 1.0,
-                        "Z": 1.0
+                        "Z": 1.0,
+                        "W": 1.0
                     }
                 }
             ]
