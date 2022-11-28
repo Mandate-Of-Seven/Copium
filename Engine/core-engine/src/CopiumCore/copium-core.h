@@ -75,10 +75,9 @@ namespace Copium
 			pMessageSystem->subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
 			pMessageSystem->subscribe(MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW, this);
 
-			//MyNewSceneManager.load_scene("../PackedTracks/Assets/Scenes/demo_M3.scene");
-			//MyNewSceneManager.startPreview();
-			//pMessageSystem->dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
-			//EditorSystem::Instance()->set_enabled(false);
+			MyNewSceneManager.load_scene("../PackedTracks/Assets/Scenes/demo_M3.scene");
+			MyNewSceneManager.startPreview();
+			pMessageSystem->dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
 		}
 
 		/**************************************************************************/

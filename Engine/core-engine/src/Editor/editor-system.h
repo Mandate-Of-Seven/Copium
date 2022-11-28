@@ -22,10 +22,11 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor/editor-content-browser.h"
 #include "Editor/editor-camera.h"
 #include "Editor/editor-undoredo.h"
+#include "Messaging/message-system.h"
 
 namespace Copium
 {
-	CLASS_SYSTEM(EditorSystem)
+	CLASS_SYSTEM(EditorSystem), IReceiver
 	{
 	public:
 		/***************************************************************************/
@@ -61,6 +62,15 @@ namespace Copium
 		/***************************************************************************/
 		void exit();
 
+		/**************************************************************************/
+		/*!
+		\brief
+			Interface function for MessageSystem to call for IReceivers to handle
+			a messageType
+		*/
+		/**************************************************************************/
+		void handleMessage(MESSAGE_TYPE _mType);
+
 		/***************************************************************************/
 		/*!
 		\brief
@@ -91,7 +101,6 @@ namespace Copium
 		UndoRedo::CommandManager* get_commandmanager();
 		
 		bool is_enabled() { return enableEditor; }
-		void set_enabled(bool _setter) { enableEditor = _setter; }
 
 		EditorSceneView* get_scene_view() { return &sceneView; }
 		EditorGame* get_game_view() { return &game; }
