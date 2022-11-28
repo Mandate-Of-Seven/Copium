@@ -63,7 +63,6 @@ namespace Copium
 
 	void Script::handleMessage(MESSAGE_TYPE mType)
 	{
-		//MT_SCRIPTING_UPDATED
 		switch (mType)
 		{
 		case MESSAGE_TYPE::MT_SCRIPTING_UPDATED:
@@ -92,6 +91,11 @@ namespace Copium
 				GameObjectID gameObjID = _gameObj->id;
 				void* params = &gameObjID;
 				MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindGameObjectByID"], mObject, &params, nullptr);
+				if (!result)
+				{
+					PRINT(name << " " << pair.first << " was null");
+					continue;
+				}
 				MonoClass* mGameObjectClass = mono_object_get_class(result);
 				fieldDataReferences.insert({ pair.first,FieldData(mono_object_get_size(result))});
 				void* iter = nullptr;

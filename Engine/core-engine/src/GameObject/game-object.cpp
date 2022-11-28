@@ -119,7 +119,7 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{rhs.id}
     active = rhs.active;
     name = rhs.name;
     PRINT("GAMEOBJECT COPY CONSTRUCTOR!");
-    messageSystem.subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
+    messageSystem.subscribe(MESSAGE_TYPE::MT_CREATE_CS_GAMEOBJECT, this);
     MESSAGE_CONTAINER::reflectCsGameObject.gameObjID = id;
     MESSAGE_CONTAINER::reflectCsGameObject.componentIDs.clear();
     transform.id = rhs.transform.id;
@@ -152,7 +152,7 @@ GameObject::GameObject
     active{true},
     id{ _id }
 {
-    messageSystem.subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
+    messageSystem.subscribe(MESSAGE_TYPE::MT_CREATE_CS_GAMEOBJECT, this);
     MESSAGE_CONTAINER::reflectCsGameObject.gameObjID = id;
     MESSAGE_CONTAINER::reflectCsGameObject.componentIDs.clear();
     for (Component* pComponent : components)

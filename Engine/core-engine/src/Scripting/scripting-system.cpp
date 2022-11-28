@@ -374,6 +374,7 @@ namespace Copium
 		updateScriptClasses();
 		if (!mCopiumScript)
 			PRINT("COPIUM SCRIPT CANT BE FOUND");
+		messageSystem.dispatch(MESSAGE_TYPE::MT_CREATE_CS_GAMEOBJECT);
 		messageSystem.dispatch(MESSAGE_TYPE::MT_SCRIPTING_UPDATED);
 		PRINT("END SWAP DLL_____________________________________");
 	}

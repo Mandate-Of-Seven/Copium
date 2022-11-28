@@ -90,7 +90,7 @@ namespace Copium {
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		storageScene = nullptr;
 		MyGOF.register_archetypes("Data/Archetypes");
-		//load_scene(prefix + "Demo.scene");
+		//load_scene(prefix + "demo_M3.scene");
 
 
 		//std::cout << "No. of GameObjects in scene:" << currentScene->get_gameobjcount() << std::endl;
@@ -332,6 +332,8 @@ namespace Copium {
 		currentScene = storageScene;
 		mainCamera = nullptr;
 		storageScene = nullptr;
+
+		Button::hoveredBtn = nullptr;
 
 		if (selectedGameObject)
 		{
