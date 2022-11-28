@@ -90,7 +90,7 @@ namespace Copium
 
 	void LogicSystem::exit()
 	{
-
+		game.exit();
 	}
 
 	void LogicSystem::handleMessage(MESSAGE_TYPE mType)

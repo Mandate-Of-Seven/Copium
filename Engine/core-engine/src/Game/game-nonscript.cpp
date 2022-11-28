@@ -72,40 +72,45 @@ namespace Copium
             //for(auto gameObj = scene->gameObjects.begin(); gameObj != scene->gameObjects.end(); ++gameObj)
             for (auto gameObj : scene->gameObjects)
             {
-                if (!gameObj)
-                    continue;
-                for (auto component : gameObj->getComponents<Script>())
-                {
-                    // If the gameobject contains a unit body
-                    if (!component->Name().compare("UnitBody")) 
-                    {
-                        // Run functions
-                        if (unit_body(gameObj))
-                            return;
-                    }
-                }
+                //if (!gameObj)
+                //    continue;
 
-                if (gameObj->get_name().find("Bullet") != std::string::npos)
-                {
-                    if (gameObj->transform.position.y > 7.f || gameObj->transform.position.y < -7.f)
-                    {
-                        MyGOF.destroy(gameObj);
-                        return;
-                    }
+                //for (auto component : gameObj->getComponents<Script>())
+                //{
+                //    // If the gameobject contains a unit body
+                //    if (!component->Name().compare("UnitBody")) 
+                //    {
+                //        // Run functions
+                //        if (unit_body(gameObj))
+                //            return;
+                //    }
+                //}
 
-                    if (!gameObj->isActive())
-                    {
-                        MyGOF.destroy(gameObj);
-                        return;
-                    }
-                }
+
+                //if (gameObj->get_name().find("Bullet") != std::string::npos)
+                //{
+                //    if (gameObj->transform.position.y > 7.f || gameObj->transform.position.y < -7.f)
+                //    {
+                //        MyGOF.destroy(gameObj);
+                //        return;
+                //    }
+
+                //    if (!gameObj->isActive())
+                //    {
+                //        MyGOF.destroy(gameObj);
+                //        return;
+                //    }
+                //}
             }
         }
     }
 
     void Game::exit()
     {
-        
+        enemy.clear();
+        player = nullptr;
+        playerBullet = nullptr;
+        enemyBullet = nullptr;
     }
 
     void Game::handleMessage(MESSAGE_TYPE _mType)
