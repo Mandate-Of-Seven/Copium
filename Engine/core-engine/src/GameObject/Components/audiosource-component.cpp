@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			audiosource-component.cpp
+\project
+\author			Shawn Tanary
+
+\par			Course: GAM200
+\par			Section:
+\date			25/11/2022
+
+\brief
+	This file holds the declaration of functions for audiosource-component.cpp.
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 #include "pch.h"
 #include "audiosource-component.h"
 #include "Files/assets-system.h"

@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			editor-colortheme.h
+\project
+\author			Shawn Tanary
+
+\par			Course: GAM200
+\par			Section:
+\date			25/11/2022
+
+\brief
+	Contains the function declarations of the editor-colortheme
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 #pragma once
 #include <imgui.h>
 #include <rapidjson/document.h>
@@ -10,6 +24,7 @@ namespace Window
 	{
 		inline bool isColorThemeOpen;
 
+		//the default values
 		static Copium::Math::Vec3 color_for_text = Copium::Math::Vec3(255.f / 255.f, 233.f / 255.f, 0.f / 255.f);
 		static Copium::Math::Vec3 color_for_head = Copium::Math::Vec3(238.f / 255.f, 5.f / 255.f, 43.f / 255.f);
 		static Copium::Math::Vec3 color_for_area = Copium::Math::Vec3(238.f / 255.f, 75.f / 255.f, 43.f / 255.f);
@@ -26,41 +41,77 @@ namespace Window
 		};
 
 		
-
+		/***************************************************************************/
+		/*!
+		\brief
+			Initializes the editor color theme picker
+		*/
+		/***************************************************************************/
 		void init();
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Updates the editor color theme picker
+		*/
+		/***************************************************************************/
 		void update();
 
+		/*******************************************************************************
+			/*!
+			*
+			\brief
+				Serialize this transform component's data to the specified rapidjson Value
+
+			\param color_for_text
+				the color to use for the text
+
+			\param color_for_head
+				the color to use for the head
+
+			\param color_for_area
+				the color to use for the area
+
+			\param color_for_body
+				the color to use for the body
+
+			\param color_for_pops
+				the color to use for the pop ups
+
+			\return
+				void
+			*/
+			/*******************************************************************************/
 		void setTheme(Copium::Math::Vec3 color_for_text, Copium::Math::Vec3 color_for_head, 
 					  Copium::Math::Vec3 color_for_area, Copium::Math::Vec3 color_for_body, 
 					  Copium::Math::Vec3 color_for_pops);
 
 		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Serialize the current 5 main colors in the current theme
+			/*!
+			*
+			\brief
+				Serialize the data to the specified rapidjson file path
 
-		\param _filepath
-			read-only reference to the .theme file to serialize the data to
+			\param _filepath
+				reference to the  filepath to serialize its data to
 
-		\return
-			void
-
+			\return
+				void
 		*/
 		/*******************************************************************************/
 		void serialize(const std::string& _filepath);
+
 		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Deserialize the 5 main colors
+			/*!
+			*
+			\brief
+				Deserialize the data to the specified rapidjson file path
 
-		\param _filepath
-			read-only reference to the .theme file to deserialize the data from
+			\param _filepath
+				reference to the  filepath to deserialize its data from
 
-		\return
-			void
-
+			\return
+				void
 		*/
 		/*******************************************************************************/
 		void deserialize(const std::string& _filepath);

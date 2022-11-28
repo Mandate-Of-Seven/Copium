@@ -350,19 +350,26 @@ namespace Copium
 		game.exit();
 		contentBrowser.exit();
 
+
+		std::cout << "Before deleting, Undo stack: " << commandManager.undoStack.size() << ", Redo stack:" << commandManager.redoStack.size()<<"\n";
 		while (commandManager.undoStack.size() > 0)
 		{
 			UndoRedo::Command* temp = EditorSystem::Instance()->get_commandmanager()->undoStack.top();
-			EditorSystem::Instance()->get_commandmanager()->undoStack.pop();
 			delete temp;
+			EditorSystem::Instance()->get_commandmanager()->undoStack.pop();
+			
 		}
 
 		while (commandManager.redoStack.size() > 0)
 		{
 			UndoRedo::Command* temp = EditorSystem::Instance()->get_commandmanager()->redoStack.top();
-			EditorSystem::Instance()->get_commandmanager()->redoStack.pop();
 			delete temp;
+			EditorSystem::Instance()->get_commandmanager()->redoStack.pop();
+			
 		}
+		std::cout << "After deleting, Undo stack: " << commandManager.undoStack.size() << ", Redo stack:" << commandManager.redoStack.size() << "\n";
+		
+
 		camera.exit();
 	}
 

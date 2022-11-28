@@ -5,7 +5,7 @@
 
 \par			Course: GAM200
 \par			Section:
-\date			28/10/2022
+\date			25/11/2022
 
 \brief
 	This file holds functions to undo and redo changes made in gameobjects as well as
@@ -99,7 +99,9 @@ namespace Copium
 
 	UndoRedo::GameObjectCommand::~GameObjectCommand()
 	{
-		//std::cout << this->pointer << std::endl;
+		std::cout<<"Undo Redo being destroyed: " << this->value->get_name()<<" | "<<this->value << "\n\n";
+		//MyGOF.destroy(this->value);
+		delete this->value;
 	}
 
 	void UndoRedo::GameObjectCommand::Undo(std::stack<Command*>* stackPointer)
@@ -114,7 +116,6 @@ namespace Copium
 
 		if (isDeleting)
 		{
-			
 			if (!value->get_name().empty())
 			{
 				std::cout << "Delete" << std::endl;
@@ -189,7 +190,6 @@ namespace Copium
 		if (!value->get_name().empty())
 		{
 			std::cout << value->get_name() << " - ";
-			std::cout << value->transform.parent->id << std::endl;
 		}
 	}
 

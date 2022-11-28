@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			editor-colortheme.cpp
+\project
+\author			Shawn Tanary
+
+\par			Course: GAM200
+\par			Section:
+\date			25/11/2022
+
+\brief
+    Contains the function declarations of the editor-colortheme
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 #include "pch.h"
 #include "editor-colortheme.h"
 #include <filesystem>
@@ -61,7 +75,10 @@ namespace Window
                 std::string fp = Copium::FileDialogs::open_file("Copium Theme (*.theme)\0*.theme\0");
                 threadSystem.returnMutex(Copium::MutexType::FileSystem);
                 deserialize(fp);
-                setTheme(color_for_text, color_for_head, color_for_area, color_for_body, color_for_pops);
+                if (fp.size())
+                {
+                    setTheme(color_for_text, color_for_head, color_for_area, color_for_body, color_for_pops);
+                }
             }
             ImGui::End();
             
