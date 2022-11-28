@@ -11,7 +11,7 @@
 	This file holds the definition of functions for the scene view of the editor, where
 	the user can view the scene.
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 #include <GL/glew.h>

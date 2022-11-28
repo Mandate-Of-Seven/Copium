@@ -137,10 +137,14 @@ namespace Copium
 		/**************************************************************************/
 		glm::vec2 get_pan_speed() const;
 
-		float get_pitch() const { return pitch; }
-		float get_yaw() const { return yaw; }
-
-		CameraType get_type() { return cameraType; }
+		/***************************************************************************/
+		/*!
+		\brief
+			Gets the mouse in world position relative to the game camera
+		\return
+			The mouse in world position
+		*/
+		/**************************************************************************/
 		glm::vec2 get_game_ndc();
 
 		/***************************************************************************/
@@ -162,6 +166,12 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		void update_ortho_projection();
+
+
+		float get_pitch() const { return pitch; }
+		float get_yaw() const { return yaw; }
+
+		CameraType get_type() { return cameraType; }
 
 		// Matrices
 		glm::mat4 get_projection() const { return projMatrix; }

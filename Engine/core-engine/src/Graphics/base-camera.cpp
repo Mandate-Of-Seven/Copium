@@ -184,6 +184,37 @@ namespace Copium
 		return speed;
 	}
 
+	glm::vec2 BaseCamera::get_game_ndc()
+	{
+		EditorGame* gameView = editorSystem.get_game_view();
+
+		glm::vec2 scenePos = gameView->get_position();
+		scenePos.x += gameView->get_indent();
+		glm::vec2 sceneDim = gameView->get_dimension();
+		if (!editorSystem.is_enabled())
+		{
+			scenePos = { 0.f, 0.f };
+			sceneDim = glm::vec2(windowSystem.get_window_width(), windowSystem.get_window_height());
+		}
+
+		//PRINT("Scene Dimension: " << scenePos.x << " " << scenePos.y);
+		Math::Vec2 mousePos = inputSystem.get_mouseposition();
+		//PRINT("Mouse position : " << mousePos.x << " " << mousePos.y);
+		glm::vec2 centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
+		glm::vec2 mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
+		glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
+
+		if (!editorSystem.is_enabled())
+		{
+			mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 };
+		}
+
+		mouseToNDC *= orthographicSize;
+		glm::vec2 worldNDC = { mouseToNDC.x + viewer.x, mouseToNDC.y + viewer.y };
+		//PRINT("~: " << worldNDC.x << ", " << worldNDC.y);
+		return worldNDC;
+	}
+
 	void BaseCamera::on_resize(float _width, float _height)
 	{
 		width = _width;
@@ -226,48 +257,5 @@ namespace Copium
 	glm::vec3 BaseCamera::calculate_position()
 	{
 		return focalPoint - get_forward_direction() * orthographicSize;
-	}
-
-	glm::vec2 BaseCamera::get_game_ndc()
-	{
-		//EditorSceneView* sceneView = EditorSystem::Instance()->get_scene_view();
-		//glm::vec2 scenePos = sceneView->get_position();
-		//glm::vec2 sceneDim = sceneView->get_dimension();
-		//Math::Vec2 mousePos = inputSystem.get_mouseposition();
-		////PRINT("Mouse position: " << mousePos.x << " " << mousePos.y);
-		//glm::vec2 centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
-		//glm::vec2 mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
-		//glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
-		//mouseToNDC *= orthographicSize;
-		//glm::vec2 worldNDC = { mouseToNDC.x + viewer.x, mouseToNDC.y + viewer.y };
-		//return worldNDC;
-
-		EditorGame* gameView = editorSystem.get_game_view();
-		
-		glm::vec2 scenePos = gameView->get_position();
-		scenePos.x += gameView->get_indent();
-		glm::vec2 sceneDim = gameView->get_dimension();
-		if (!editorSystem.is_enabled())
-		{
-			scenePos = { 0.f, 0.f };
-			sceneDim = glm::vec2(windowSystem.get_window_width(), windowSystem.get_window_height());
-		}
-
-		//PRINT("Scene Dimension: " << scenePos.x << " " << scenePos.y);
-		Math::Vec2 mousePos = inputSystem.get_mouseposition();
-		//PRINT("Mouse position : " << mousePos.x << " " << mousePos.y);
-		glm::vec2 centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
-		glm::vec2 mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
-		glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
-
-		if (!editorSystem.is_enabled())
-		{
-			mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 };
-		}
-
-		mouseToNDC *= orthographicSize;
-		glm::vec2 worldNDC = { mouseToNDC.x + viewer.x, mouseToNDC.y + viewer.y };
-		//PRINT("~: " << worldNDC.x << ", " << worldNDC.y);
-		return worldNDC;
 	}
 }
