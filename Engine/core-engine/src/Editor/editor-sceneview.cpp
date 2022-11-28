@@ -31,11 +31,24 @@ namespace Copium
 	{
 		EditorCamera& camera{ *EditorSystem::Instance()->get_camera() };
 		NewSceneManager& sm{ *NewSceneManager::Instance() };
+		bool inOp = false;
 	}
 
 	void EditorSceneView::init()
 	{
 		sceneDimension = { sceneWidth, sceneHeight };
+	}
+
+	glm::vec2 update_position(Transform* _t, glm::vec2 const& _pos)
+	{
+		glm::vec2 tempPos = _pos;
+		if (_t->hasParent())
+		{
+			tempPos += glm::vec2(_t->parent->position.x, _t->parent->position.y);
+			tempPos = update_position(_t->parent, tempPos);
+		}
+		//PRINT("Cur : " << tempPos.x << " " << tempPos.y);
+		return tempPos;
 	}
 
 	void EditorSceneView::update()
@@ -55,13 +68,15 @@ namespace Copium
 		ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
 		resize_sceneview(*((glm::vec2*) &viewportEditorSize));
 		ImGui::Image((void*) (size_t) textureID, ImVec2{ (float)sceneWidth, (float)sceneHeight }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
+		
 		// Gizmos
 		Scene* scene = sm.get_current_scene();
-		EditorSceneView::update_gizmos();
+		update_gizmos();
+
 		ImGui::End();
 		ImGui::PopStyleVar();
 		// End Scene View
-		
+
 		// Render stats settings
 		windowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
 		ImGui::SetNextWindowBgAlpha(0.35f); // Transparent background
@@ -85,7 +100,8 @@ namespace Copium
 		ImGui::End();
 
 		// Mouse picking
-		if (ImGui::IsMouseReleased(ImGuiMouseButton_Left) && windowHovered)
+		bool mouseReleased = ImGui::IsMouseReleased(ImGuiMouseButton_Left);
+		if (!inOp && mouseReleased && windowHovered)
 		{
 			scene = sm.get_current_scene();
 			if (scene != nullptr)
@@ -96,6 +112,9 @@ namespace Copium
 					Transform& t = gameObject->transform;
 					glm::vec2 mousePosition = glm::vec3(camera.get_ndc(), 0.f);
 					glm::vec2 objPosition = glm::vec2(t.position.x, t.position.y);
+
+					objPosition = update_position(&t, objPosition);
+
 					// Not Within bounds
 					if (glm::distance(objPosition, mousePosition)
 						> glm::length(camera.get_dimension()))
@@ -169,6 +188,8 @@ namespace Copium
 					sm.set_selected_gameobject(nullptr);
 			}
 		}
+
+		inOp = ImGuizmo::IsUsing();
 	}
 
 	void EditorSceneView::exit()
@@ -287,10 +308,7 @@ namespace Copium
 				trf.position = nTranslation;
 				trf.scale = nScale;
 				trf.rotation.z = nRotation.z;
-				
-
 			}
-
 		}
 	}
 }

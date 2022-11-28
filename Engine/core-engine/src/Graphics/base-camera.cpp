@@ -267,7 +267,7 @@ namespace Copium
 
 		mouseToNDC *= orthographicSize;
 		glm::vec2 worldNDC = { mouseToNDC.x + viewer.x, mouseToNDC.y + viewer.y };
-		PRINT("~: " << worldNDC.x << ", " << worldNDC.y);
+		//PRINT("~: " << worldNDC.x << ", " << worldNDC.y);
 		return worldNDC;
 	}
 }
