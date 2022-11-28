@@ -75,7 +75,10 @@ namespace Window
                 std::string fp = Copium::FileDialogs::open_file("Copium Theme (*.theme)\0*.theme\0");
                 threadSystem.returnMutex(Copium::MutexType::FileSystem);
                 deserialize(fp);
-                setTheme(color_for_text, color_for_head, color_for_area, color_for_body, color_for_pops);
+                if (fp.size())
+                {
+                    setTheme(color_for_text, color_for_head, color_for_area, color_for_body, color_for_pops);
+                }
             }
             ImGui::End();
             
