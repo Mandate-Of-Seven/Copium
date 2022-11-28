@@ -8,7 +8,7 @@
 \date			27/11/2022
 
 \brief
-    This file implements the bullets shooting in the game
+    This file implements the bullets shooting in the game.
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
@@ -81,12 +81,6 @@ namespace Copium
                     {
                         // Run functions
                         if (unit_body(gameObj))
-                            return;
-                    }
-                    // If the gameobject contains a combat bullet body
-                    else if (!component->Name().compare("CombatBulletBody"))
-                    {
-                        if (combat_bullet_body())
                             return;
                     }
                 }
@@ -197,11 +191,6 @@ namespace Copium
             }
         }
 
-        return false;
-    }
-
-    bool Game::combat_bullet_body()
-    {
         return false;
     }
 }

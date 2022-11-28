@@ -46,9 +46,10 @@ namespace Copium
 
 	void EditorSystem::init()
 	{
+		messageSystem.subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
+		messageSystem.subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		//PRINT("FLAGS: " << systemFlags);
-		
 
 		//imgui
 		ImGui::CreateContext();
@@ -82,7 +83,7 @@ namespace Copium
 
 	void EditorSystem::update()
 	{
-		if (!enableEditor)
+		if (game.is_window_focused())
 		{
 			if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_E))
 			{
@@ -263,7 +264,6 @@ namespace Copium
 						printf("Starting scene\n");
 						if (NewSceneManager::Instance()->startPreview())
 						{
-							tempMode = false;
 							messageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
 						}
 					}
@@ -364,6 +364,18 @@ namespace Copium
 			delete temp;
 		}
 		camera.exit();
+	}
+
+	void EditorSystem::handleMessage(MESSAGE_TYPE _mType)
+	{
+		if (_mType == MESSAGE_TYPE::MT_START_PREVIEW)
+		{
+			//tempMode = false;
+		}
+		else if (_mType == MESSAGE_TYPE::MT_STOP_PREVIEW)
+		{
+			//tempMode = true;
+		}
 	}
 
 	void EditorSystem::imguiConsoleAddLog(std::string value)
