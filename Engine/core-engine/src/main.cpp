@@ -231,6 +231,19 @@ void cleanup()
 /***************************************************************************/
 /*!
 \brief
+    Sets the state of the engine to quit
+\param window
+    The window reference
+*/
+/**************************************************************************/
+void quitEngine(GLFWwindow* window)
+{
+    change_enginestate(esQuit);
+}
+
+/***************************************************************************/
+/*!
+\brief
     Load the config to set width and height to
 
 \param _filename
