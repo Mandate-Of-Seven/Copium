@@ -88,6 +88,10 @@ namespace Copium
 			if (script)
 			{
 				script->invoke(callbackName);
+				if (!gameObj.isActive())
+				{
+					hoveredBtn = nullptr;
+				}
 			}
 			break;
 		}
@@ -131,7 +135,6 @@ namespace Copium
 	void Button::previewLink(Component* rhs) 
 	{
 		ComponentID _ID = reinterpret_cast<Button*>(rhs)->targetGraphic->id;
-		PRINT(_ID);
 		Component* foundText = MyNewSceneManager.findComponentByID(_ID);
 		if (foundText)
 			targetGraphic = reinterpret_cast<Text*>(foundText);
@@ -304,8 +307,8 @@ namespace Copium
 
 	ButtonState Button::getInternalState() const
 	{
-		glm::vec2 scenePos = MyNewSceneManager.mainCamera->get_game_ndc();
-		PRINT("x: " << scenePos.x << " , y: " << scenePos.y);
+		glm::vec2 scenePos = EditorSystem::Instance()->get_camera()->get_ndc();//MyNewSceneManager.mainCamera->get_game_ndc();
+		//PRINT("x: " << scenePos.x << " , y: " << scenePos.y);
 		if (hoveredBtn == nullptr)
 		{
 			if (static_collision_pointrect(scenePos, getBounds()))
