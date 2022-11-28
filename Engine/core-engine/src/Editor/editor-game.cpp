@@ -58,7 +58,7 @@ namespace Copium
 
 		ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
 		resize_game(*((glm::vec2*) &viewportEditorSize));
-		float indent = (viewportEditorSize.x - sceneWidth) * 0.5f;
+		indent = (viewportEditorSize.x - sceneWidth) * 0.5f;
 		if(indent > 0)
 			ImGui::Indent(indent);
 		ImGui::Image((void*) (size_t) textureID, ImVec2{ (float) sceneWidth, (float) sceneHeight }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
