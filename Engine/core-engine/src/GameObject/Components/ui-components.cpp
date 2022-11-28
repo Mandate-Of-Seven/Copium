@@ -131,7 +131,7 @@ namespace Copium
 	void Button::previewLink(Component* rhs) 
 	{
 		ComponentID _ID = reinterpret_cast<Button*>(rhs)->targetGraphic->id;
-		PRINT(_ID);
+
 		Component* foundText = MyNewSceneManager.findComponentByID(_ID);
 		if (foundText)
 			targetGraphic = reinterpret_cast<Text*>(foundText);
@@ -305,7 +305,7 @@ namespace Copium
 	ButtonState Button::getInternalState() const
 	{
 		glm::vec2 scenePos = MyNewSceneManager.mainCamera->get_game_ndc();
-		PRINT("x: " << scenePos.x << " , y: " << scenePos.y);
+		//PRINT("x: " << scenePos.x << " , y: " << scenePos.y);
 		if (hoveredBtn == nullptr)
 		{
 			if (static_collision_pointrect(scenePos, getBounds()))
@@ -396,6 +396,8 @@ namespace Copium
 		tmp.min.x += pos.x;
 		tmp.max.y += pos.y;
 		tmp.min.y += pos.y;
+		//PRINT("X: " << tmp.min.x << ", " << tmp.max.x);
+		//PRINT("Y: " << tmp.min.y << ", " << tmp.max.y);
 		return tmp;
 	}
 

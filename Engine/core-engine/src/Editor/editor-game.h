@@ -62,6 +62,8 @@ namespace Copium
 		const bool& is_window_focused() { return windowFocused; }
 		const bool& is_window_hovered() { return windowHovered; }
 
+		const float& get_indent() { return indent; }
+
 		int const get_width() { return sceneWidth; }
 		void const set_width(int _width) { sceneWidth = _width; }
 
@@ -77,6 +79,7 @@ namespace Copium
 	private:
 		/* Scene Data *******************************************************************/
 		bool windowFocused = false, windowHovered = false;
+		float indent = 0.f;
 		int sceneWidth = 0, sceneHeight = 0; // The dimension of the viewport
 		glm::vec2 sceneDimension{ 0 }; // The dimension of the viewport as vector 2
 		glm::vec2 scenePosition{ 0 }; // The position of the viewport
