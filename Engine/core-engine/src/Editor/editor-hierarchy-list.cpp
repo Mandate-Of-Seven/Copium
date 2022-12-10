@@ -16,6 +16,9 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Editor/editor-hierarchy-list.h"
 #include <Editor/editor-undoredo.h>
 #include <Editor/editor-system.h>
+#include "Windows/windows-input.h"
+#include "Windows/windows-system.h"
+
 
 //M2
 namespace Window::Hierarchy
@@ -23,7 +26,7 @@ namespace Window::Hierarchy
 	Copium::Scene * currentScene = nullptr;
 	bool sceneSelected;
 	Copium::GameObjectID selectedID;
-
+	Copium::InputSystem* inputSystem = nullptr;
 
 
 	void init()
@@ -33,6 +36,7 @@ namespace Window::Hierarchy
 		if (Copium::NewSceneManager::Instance())
 			currentScene = Copium::NewSceneManager::Instance()->get_current_scene();
 
+		inputSystem = Copium::InputSystem::Instance();
 	}
 
 	void update()
@@ -94,7 +98,7 @@ namespace Window::Hierarchy
 						Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
 					}
 				}
-				if (ImGui::MenuItem("Clone Selected GameObject", nullptr))
+				if (ImGui::MenuItem("Clone Selected GameObject", "Ctrl+D"))
 				{
 					if (Copium::NewSceneManager::Instance()->get_selected_gameobject())
 					{
@@ -114,7 +118,6 @@ namespace Window::Hierarchy
 						MyGOF.create_child(*MyNewSceneManager.get_selected_gameobject());
 					}
 				}
-
 				if (ImGui::BeginMenu("Add Archetype"))
 				{
 					if (!currentScene)
@@ -141,7 +144,19 @@ namespace Window::Hierarchy
 			}
 			ImGui::EndMenuBar();
 		}
-
+		if (inputSystem->is_key_held(GLFW_KEY_LEFT_CONTROL) && inputSystem->is_key_pressed(GLFW_KEY_D))
+		{
+			if (Copium::NewSceneManager::Instance()->get_selected_gameobject())
+			{
+				std::cout << "Clone\n";
+				MyGOF.instantiate(*Copium::NewSceneManager::Instance()->get_selected_gameobject());
+				MyNewSceneManager.set_selected_gameobject(nullptr);
+			}
+			else
+			{
+				Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
+			}
+		}
 		ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, 10.f);
 
 		ImGuiTreeNodeFlags rootFlags = ImGuiTreeNodeFlags_DefaultOpen;

@@ -82,6 +82,18 @@ namespace Copium {
 		/*******************************************************************************/
 		void exit();
 
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Back up the current scene into storage scene and make a new scene which will be a copy of the original scene
+			Note: the new current scene will be used for the preview
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
 		void backUpCurrScene();
 
 		/*******************************************************************************
