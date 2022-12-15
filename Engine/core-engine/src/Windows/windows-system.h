@@ -93,6 +93,24 @@ namespace Copium
 		/***************************************************************************/
 		void update_time(double _fpsInterval = 1.0);
 
+		// Window Modes
+		/***************************************************************************/
+		/*!
+		\brief
+			Toggles the window mode of the engine to either be in fullscreen or 
+			maximized. Note that this function only takes in the primary window of
+			the system, and does not apply fullscreen on the monitor that it is
+			currently on if said monitor is a secondary monitor
+		\param _enable
+			If true, enable fullscreen, else maxmize the window
+		\param _width
+			The width of the window
+		\param _height
+			The height of the window
+		*/
+		/***************************************************************************/
+		void Fullscreen(bool _enable, int _width, int _height);
+
 		// Callbacks
 		/***************************************************************************/
 		/*!
@@ -170,6 +188,7 @@ namespace Copium
 		static int windowWidth;
 		static int windowHeight;
 		static bool windowFocused;
+		static bool windowFullscreen;
 
 		GLFWwindow* window = nullptr;
 	};

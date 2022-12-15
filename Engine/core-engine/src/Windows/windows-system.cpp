@@ -28,6 +28,7 @@ namespace Copium
     int WindowsSystem::windowWidth;
     int WindowsSystem::windowHeight;
     bool WindowsSystem::windowFocused;
+    bool WindowsSystem::windowFullscreen;
 
     void WindowsSystem::init()
     {
@@ -40,6 +41,7 @@ namespace Copium
         windowWidth = _width;
         windowHeight = _height;
         windowFocused = true;
+        windowFullscreen = false;
         title = _title;
         
         std::string config("Data\\config.json");
@@ -112,21 +114,7 @@ namespace Copium
         if (InputSystem::Instance()->is_key_pressed(GLFW_KEY_F))
         {
             fullscreen = !fullscreen;
-
-            if (fullscreen)
-            {
-                GLFWmonitor* currentMonitor = glfwGetPrimaryMonitor();
-                int width, height;
-                glfwGetMonitorWorkarea(currentMonitor, NULL, NULL, &width, &height);
-                if (currentMonitor != nullptr)
-                {
-                    glfwSetWindowMonitor(window, currentMonitor, 0, 0, width, height, 0);
-                }
-            }
-            else
-            {
-                glfwSetWindowMonitor(window, NULL, (int)(windowWidth * 0.1f), (int)(windowHeight * 0.1f), 1600, 900, 0);
-            }
+            Fullscreen(fullscreen, 1600, 900);
         }
 
         if (!glfwWindowShouldClose(window))
@@ -147,6 +135,36 @@ namespace Copium
     void WindowsSystem::exit()
     {
         //glfwTerminate();
+    }
+
+    void WindowsSystem::Fullscreen(bool _enable, int _width, int _height)
+    {
+        // Dont update if it is already in the selected window mode
+        if (_enable == windowFullscreen)
+            return;
+
+        if (_enable != windowFullscreen)
+        {
+            windowFullscreen = _enable;
+
+            // If enabled, set window to fullscreen
+            if (windowFullscreen)
+            {
+                GLFWmonitor* currentMonitor = glfwGetPrimaryMonitor();
+                int width, height;
+                glfwGetMonitorWorkarea(currentMonitor, NULL, NULL, &width, &height);
+                if (currentMonitor != nullptr)
+                {
+                    glfwSetWindowMonitor(window, currentMonitor, 0, 0, width, height, 0);
+                }
+            }
+            // Set to maximized
+            else
+            {
+                glfwSetWindowMonitor(window, NULL, _width * 0.1f, _height * 0.1f, _width, _height, 0);
+                glfwMaximizeWindow(window);
+            }
+        }
     }
 
     void WindowsSystem::error_callback(int _error, char const* _description)
