@@ -22,6 +22,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Graphics/graphics-system.h"
 
+#define AspectRatio 16.f/9.f
+
 namespace Copium
 {
 	namespace
@@ -82,7 +84,6 @@ namespace Copium
 		// Only if the current scene dimension is not the same as new dimension
 		if (_newDimension.x != 0 && _newDimension.y != 0)
 		{
-			float aspect = 16.f / 9.f;
 			bool modified = false;
 			_newDimension = glm::floor(_newDimension);
 
@@ -90,13 +91,13 @@ namespace Copium
 			if (adjusted.y > _newDimension.y || adjusted.y != _newDimension.y)
 			{
 				modified = true;
-				adjusted = { _newDimension.y * aspect, _newDimension.y };
+				adjusted = { _newDimension.y * AspectRatio, _newDimension.y };
 			}
 
 			if (adjusted.x > _newDimension.x - padding)
 			{
 				modified = true;
-				adjusted = { _newDimension.x - padding, (_newDimension.x - padding) / aspect };
+				adjusted = { _newDimension.x - padding, (_newDimension.x - padding) / AspectRatio };
 			}
 
 			// If there isnt any changes to the dimension or no modifications, return

@@ -21,6 +21,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Windows/windows-system.h"
 #include "Files/file-system.h"
 #include <Debugging/frame-rate-controller.h>
+#include "Windows/windows-input.h"
 
 namespace Copium
 {
@@ -107,7 +108,28 @@ namespace Copium
 
     void WindowsSystem::update()
     {
-        if(!glfwWindowShouldClose(window))
+        static bool fullscreen = false;
+        if (InputSystem::Instance()->is_key_pressed(GLFW_KEY_F))
+        {
+            fullscreen = !fullscreen;
+
+            if (fullscreen)
+            {
+                GLFWmonitor* currentMonitor = glfwGetPrimaryMonitor();
+                int width, height;
+                glfwGetMonitorWorkarea(currentMonitor, NULL, NULL, &width, &height);
+                if (currentMonitor != nullptr)
+                {
+                    glfwSetWindowMonitor(window, currentMonitor, 0, 0, width, height, 0);
+                }
+            }
+            else
+            {
+                glfwSetWindowMonitor(window, NULL, (int)(windowWidth * 0.1f), (int)(windowHeight * 0.1f), 1600, 900, 0);
+            }
+        }
+
+        if (!glfwWindowShouldClose(window))
             glfwPollEvents();
     }
 
