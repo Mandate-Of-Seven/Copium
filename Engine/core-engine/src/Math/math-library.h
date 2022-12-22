@@ -29,6 +29,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <rapidjson/document.h>
 #include <glm/vec2.hpp>
 #include <glm/mat3x3.hpp>
+#include "Math/Vector4.h"
 
 #pragma warning(disable : 4201)
 
@@ -47,6 +48,7 @@ namespace Copium::Math
 
 	union Vec3;
 
+	// Vec2 ////////////////////
 	union Vec2 {
 	public:
 		struct
@@ -56,6 +58,13 @@ namespace Copium::Math
 		float data[2];
 		glm::vec2 glmVec2;
 
+		// Constructors
+		Vec2();
+		Vec2(float _x, float _y);
+		Vec2(glm::vec2& _v);
+		Vec2(const Vec2& _src);
+
+		// Copy assignment operator overload
 		Vec2& operator= (const Vec2& _rhs)
 		{
 			x = _rhs.x;
@@ -63,19 +72,7 @@ namespace Copium::Math
 			return *this;
 		}
 
-		operator glm::vec2()
-		{
-			return glmVec2;
-		}
-
-		// Constructors
-		Vec2();
-		Vec2(float _x, float _y);
-		Vec2(glm::vec2& _v);
-
-		//operator glm::vec2&(){}
-
-		// Assignment operators
+		// Compound assignment operators
 		/*******************************************************************************
 		/*!
 		*
@@ -144,7 +141,11 @@ namespace Copium::Math
 			the resultant Vec2
 		*/
 		/*******************************************************************************/
-		Vec2 operator -() const;	
+		Vec2 operator -() const;
+
+		// Comparison operators
+		bool operator==(const Vec2& _rhs);
+		bool operator!=(const Vec2& _rhs);
 
 		/*******************************************************************************
 		/*!
@@ -180,6 +181,7 @@ namespace Copium::Math
 		/*******************************************************************************/
 		bool serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
+		// Conversion operators		
 		/*******************************************************************************
 		/*!
 		*
@@ -191,7 +193,17 @@ namespace Copium::Math
 		*/
 		/*******************************************************************************/
 		glm::vec2 to_glm() const;
-		//RTTR_ENABLE();
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Returns this Vec2 as a glm::vec2
+
+		\return
+			this Vec2 as a glm::vec2
+		*/
+		/*******************************************************************************/
+		operator glm::vec2();
 	};
 
 	// Vec2 Binary Operators
@@ -395,8 +407,6 @@ namespace Copium::Math
 	*/
 	/*******************************************************************************/
 	float vec2_crossproductmag(const Vec2& _v1, const Vec2& _v2);
-
-
 	/*******************************************************************************
 	/*!
 	*
@@ -414,7 +424,9 @@ namespace Copium::Math
 	*/
 	/*******************************************************************************/
 	std::ostream& operator<<(std::ostream& _os, const Vec2& _v);
+	////////////////////////////
 
+	// Vec3 ////////////////////
 	union Vec3 {
 		struct
 		{
@@ -422,11 +434,23 @@ namespace Copium::Math
 		};
 		float data[3];
 		glm::vec3 glmVec3;
-		//Ctors
-		
+
+		// Constructors
 		Vec3();
 		Vec3(float _x, float _y, float _z);
 		Vec3(glm::vec3& _v);
+		Vec3(const Vec3& _src);
+
+		// Copy assignment operator overload
+		Vec3& operator= (const Vec3& _rhs)
+		{
+			x = _rhs.x;
+			y = _rhs.y;
+			z = _rhs.z;
+			return *this;
+		}
+
+		// Compound assignment operator overloads
 		/*******************************************************************************
 		/*!
 		*
@@ -484,6 +508,7 @@ namespace Copium::Math
 		/*******************************************************************************/
 		Vec3& operator/= (float _rhs);
 
+		// Unary operator overloads
 		/*******************************************************************************
 		/*!
 		*
@@ -496,6 +521,11 @@ namespace Copium::Math
 		/*******************************************************************************/
 		Vec3 operator- () const;
 
+		// Comparison operators
+		bool operator==(const Vec3& _rhs);
+		bool operator!=(const Vec3& _rhs);
+
+		// De/serialization
 		/*******************************************************************************
 		/*!
 		*
@@ -511,7 +541,6 @@ namespace Copium::Math
 		*/
 		/*******************************************************************************/
 		bool deserialize(rapidjson::Value& _value);
-
 		/*******************************************************************************
 		/*!
 		*
@@ -531,24 +560,36 @@ namespace Copium::Math
 		/*******************************************************************************/
 		bool serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
-		Vec3& operator= (const Vec3& _rhs)
-		{
-			x = _rhs.x;
-			y = _rhs.y;
-			z = _rhs.z;
-			return *this;
-		}
+		// Conversion operators
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Returns this Vec3 as a glm::vec3
 
+		\return
+			this Vec3 as a glm::vec3
+		*/
+		/*******************************************************************************/
 		operator glm::vec3()
 		{
 			return glmVec3;
 		}
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Returns a Vec2 which is made by converting this Vec3 to a Vec2. Conversion is done by taking 
+			the x and y value of this Vec3
 
+		\return
+			the resultant Vec2
+		*/
+		/*******************************************************************************/
 		operator Vec2()
 		{
 			return { x,y };
 		}
-		//RTTR_ENABLE();
 	};
 
 	// Vec3 Binary Operators
@@ -769,15 +810,26 @@ namespace Copium::Math
 	*/
 	/*******************************************************************************/
 	std::ostream& operator<<(std::ostream& _os, const Vec3& _v);
+	////////////////////////////
+	
+	// Matrix3x3 ////////////////////
+	union Matrix3x3 {
+	public:		
+		
+		float data[3][3];
+		float m[9];
+		glm::mat3x3 glmMat3x3;
 
-	struct Matrix3x3 {
-	public:
+		// Constructors
 		Matrix3x3();
 		Matrix3x3(const float(&_rhs)[9]);
 		Matrix3x3(float _00, float _01, float _02,
 					float _10, float _11, float _12,
 					float _20, float _21, float _22);
 		Matrix3x3(const glm::mat3x3& _rhs);
+		Matrix3x3(const Matrix3x3& _src);
+
+		// Copy assignment operator overloads
 		/*******************************************************************************
 		/*!
 		*
@@ -806,6 +858,8 @@ namespace Copium::Math
 		*/
 		/*******************************************************************************/
 		Matrix3x3& operator= (const glm::mat3x3& _rhs);
+		
+		// Compound assignment operator overloads
 		/*******************************************************************************
 		/*!
 		*
@@ -823,7 +877,7 @@ namespace Copium::Math
 		/*******************************************************************************/
 		Matrix3x3& operator*= (const Matrix3x3& _rhs);
 
-
+		// Conversion operator overloads
 		/*******************************************************************************
 		/*!
 		*
@@ -835,10 +889,22 @@ namespace Copium::Math
 		*/
 		/*******************************************************************************/
 		glm::mat3x3 to_glm() const;
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Returns this Matrix3x3 as a glm::mat3x3
 
-		float m[3][3];
+		\return
+			this Matrix3x3 as a glm::mat3x3
+		*/
+		/*******************************************************************************/
+		operator glm::mat3x3();
+
+
 	};
 
+	// Matrix3x3 Binary operators
 	/*******************************************************************************
 	/*!
 	*
@@ -856,7 +922,25 @@ namespace Copium::Math
 	*/
 	/*******************************************************************************/
 	Matrix3x3 operator* (const Matrix3x3& _lhs, const Matrix3x3& _rhs);
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Compute the resulting Vec3 from multiplying Matrix3x3 to a Vec3
 
+	\param _lhs
+		the Matrix3x3 in the operation
+
+	\param _rhs
+		the Vec3 in the operation
+
+	\return
+		the resultant Vec3 from the multiplication
+	*/
+	/*******************************************************************************/
+	Vec3 operator*(const Matrix3x3& _lhs, const Vec3& _rhs);
+
+	// Matrix3x3 functions
 	/*******************************************************************************
 	/*!
 	*
@@ -871,7 +955,6 @@ namespace Copium::Math
 	*/
 	/*******************************************************************************/
 	void matrix3x3_identity(Matrix3x3& _mtx);
-
 	/*******************************************************************************
 	/*!
 	*
@@ -892,7 +975,6 @@ namespace Copium::Math
 	*/
 	/*******************************************************************************/
 	void matrix3x3_translate(Matrix3x3& _mtx, float _x, float _y);
-
 	/*******************************************************************************
 	/*!
 	*
@@ -913,7 +995,6 @@ namespace Copium::Math
 	*/
 	/*******************************************************************************/
 	void matrix3x3_scale(Matrix3x3& _mtx, float _x, float _y);
-
 	/*******************************************************************************
 	/*!
 	*
@@ -932,7 +1013,6 @@ namespace Copium::Math
 	*/
 	/*******************************************************************************/
 	void matrix3x3_rotrad(Matrix3x3& _mtx, float _angle);
-
 	/*******************************************************************************
 	/*!
 	*
@@ -951,7 +1031,6 @@ namespace Copium::Math
 	*/
 	/*******************************************************************************/
 	void matrix3x3_rotdeg(Matrix3x3& _mtx, float _angle);
-
 	/*******************************************************************************
 	/*!
 	*
@@ -969,7 +1048,6 @@ namespace Copium::Math
 	*/
 	/*******************************************************************************/
 	void matrix3x3_transpose(Matrix3x3& _mtx, const Matrix3x3& _rhs);
-
 	/*******************************************************************************
 	/*!
 	*
@@ -1005,12 +1083,18 @@ namespace Copium::Math
 	*/
 	/*******************************************************************************/
 	std::ostream& operator<<(std::ostream& _os, const Matrix3x3& _mtx);
+	////////////////////////////
 
 
-	
-	struct Matrix4x4
+	// Matrix4x4 ////////////////////
+	union Matrix4x4
 	{
 	public:
+
+		float m[4][4];
+		float data[16];
+		glm::mat4x4 glmMat4x4;
+
 		/*******************************************************************************
 		/*!
 		*
@@ -1165,118 +1249,18 @@ namespace Copium::Math
 		*/
 		/*******************************************************************************/
 		glm::mat4x4 to_glm() const;
-
-		struct Matrix4x4Proxy
-		{
-			/*******************************************************************************
-			/*!
-			*
-			\brief
-				Constructor for Matrix4x4Proxy.
-
-			\param _parent
-				reference to the parent Matrix4x4
-
-			\param _row
-				the index of the row to provide access to
-
-			\return
-				void
-			*/
-			/*******************************************************************************/
-			Matrix4x4Proxy(Matrix4x4& _parent, size_t _row);
-			/*******************************************************************************
-			/*!
-			*
-			\brief
-				[] operator overload. Provides access to the element in its parent Matrix4x4 in 
-				row index: rowIndex and at specified column.
-				E.g. [i] will access m[rowIndex][i] in parent Matrix4x4
-
-			\param _col
-				index of the column the element is in
-
-			\return
-				reference to the accessed element
-			*/
-			/*******************************************************************************/
-			float& operator[](size_t _col);
-
-			Matrix4x4& parent;
-			size_t rowIndex;
-		};
-		struct Matrix4x4ProxyConst
-		{
-			/*******************************************************************************
-			/*!
-			*
-			\brief
-				Constructor for Matrix4x4ProxyConst.
-
-			\param _parent
-				read-only reference to the parent Matrix4x4
-
-			\param _row
-				the index of the row to provide access to
-
-			\return
-				void
-			*/
-			/*******************************************************************************/
-			Matrix4x4ProxyConst(const Matrix4x4& _parent, size_t _row);
-			/*******************************************************************************
-			/*!
-			*
-			\brief
-				[] operator overload. Provides read-only access to the element in its parent Matrix4x4 in
-				row index: rowIndex and at specified column.
-				E.g. [i] will access m[rowIndex][i] in parent Matrix4x4
-
-			\param _col
-				index of the column the element is in
-
-			\return
-				read-only reference to the accessed element
-			*/
-			/*******************************************************************************/
-			const float& operator[](size_t _col);
-
-			const Matrix4x4& parent;
-			size_t rowIndex;
-		};
-
 		/*******************************************************************************
 		/*!
 		*
 		\brief
-			[] operator overload. Creates a Matrix4x4Proxy object which will give access to the row in the Matrix4x4
-			whose index is specified.
-
-		\param _row
-			index of the row to access
+			Returns this Matrix4x4 as a glm::Mat4x4
 
 		\return
-			copy of the Matrix4x4Proxy object
+			this Matrix4x4 as a glm::Mat4x4
 		*/
 		/*******************************************************************************/
-		Matrix4x4Proxy operator[](size_t _row);
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			[] operator overload. Creates a Matrix4x4ProxyConst object which will give read-only access to the row in the Matrix4x4
-			whose index is specified.
+		operator glm::mat4x4();
 
-		\param _row
-			index of the row to access
-
-		\return
-			copy of the Matrix4x4ProxyConst object
-		*/
-		/*******************************************************************************/
-		Matrix4x4ProxyConst operator[](size_t _row) const;
-
-		float m[4][4];
 	};
 
 	/*******************************************************************************
@@ -1347,6 +1331,7 @@ namespace Copium::Math
 	*/
 	/*******************************************************************************/
 	Matrix4x4 operator*(float _scalar, const Matrix4x4& _mtx);
+	Vec4 operator*(const Matrix4x4& _mat, const Vec4& _vec4);
 
 	/*******************************************************************************
 	/*!
@@ -1498,6 +1483,7 @@ namespace Copium::Math
 	*/
 	/*******************************************************************************/
 	std::ostream& operator<<(std::ostream& _os, const Matrix4x4& _mtx);
+	////////////////////////////
 
 	/*******************************************************************************
 	/*!
@@ -1550,5 +1536,5 @@ namespace Copium::Math
 	/*******************************************************************************/
 	bool deserialize_color(rapidjson::Value& _value, glm::vec4& _v);
 }
-#endif
+#endif !MATH_LIBRARY_H
  

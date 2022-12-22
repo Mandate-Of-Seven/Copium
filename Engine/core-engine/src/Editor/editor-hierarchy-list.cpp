@@ -27,16 +27,17 @@ namespace Window::Hierarchy
 	bool sceneSelected;
 	Copium::GameObjectID selectedID;
 	Copium::InputSystem* inputSystem = nullptr;
-
+	bool dragging;
 
 	void init()
 	{
 		Window::Hierarchy::isHierarchyOpen = true;
 		sceneSelected = false;
-		if (Copium::NewSceneManager::Instance())
-			currentScene = Copium::NewSceneManager::Instance()->get_current_scene();
+		if (Copium::SceneManager::Instance())
+			currentScene = Copium::SceneManager::Instance()->get_current_scene();
 
 		inputSystem = Copium::InputSystem::Instance();
+		dragging = false;
 	}
 
 	void update()
@@ -48,8 +49,8 @@ namespace Window::Hierarchy
 		}
 
 		// Handle scene change
-		if (currentScene != Copium::NewSceneManager::Instance()->get_current_scene())
-			currentScene = Copium::NewSceneManager::Instance()->get_current_scene();
+		if (currentScene != Copium::SceneManager::Instance()->get_current_scene())
+			currentScene = Copium::SceneManager::Instance()->get_current_scene();
 
 
 		ImGui::SetNextWindowSize(ImVec2(500, 900), ImGuiCond_FirstUseEver);
@@ -72,8 +73,14 @@ namespace Window::Hierarchy
 						Copium::GameObject* temp = MyGOF.instantiate();
 						if (temp)
 						{
-							Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::GameObjectCommand(temp, true);
-							Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+							std::shared_ptr<Copium::GameObject>* sptr = MySceneManager.find_gameobject_sptr(temp);
+							if (sptr)
+							{
+								Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::GameObjectCommand(*MySceneManager.find_gameobject_sptr(temp), true);
+								Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+								tempUndo->printCommand();
+							}
+
 						}
 						else
 						{
@@ -85,13 +92,13 @@ namespace Window::Hierarchy
 				}
 				if (ImGui::MenuItem("Delete Selected GameObject", nullptr))
 				{
-					if (Copium::NewSceneManager::Instance()->get_selected_gameobject())
+					if (Copium::SceneManager::Instance()->get_selected_gameobject())
 					{
 						std::cout << "Delete\n";
-						Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::GameObjectCommand(MyNewSceneManager.get_selected_gameobject(),false);
+						Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::GameObjectCommand(MySceneManager.get_selected_gameobject_sptr(),false);
 						Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
-						MyGOF.destroy(MyNewSceneManager.get_selected_gameobject());
-						MyNewSceneManager.set_selected_gameobject(nullptr);
+						MyGOF.destroy(MySceneManager.get_selected_gameobject());
+						MySceneManager.set_selected_gameobject(nullptr);
 					}
 					else
 					{
@@ -100,11 +107,11 @@ namespace Window::Hierarchy
 				}
 				if (ImGui::MenuItem("Clone Selected GameObject", "Ctrl+D"))
 				{
-					if (Copium::NewSceneManager::Instance()->get_selected_gameobject())
+					if (Copium::SceneManager::Instance()->get_selected_gameobject())
 					{
 						std::cout << "Clone\n";
-						MyGOF.instantiate(*Copium::NewSceneManager::Instance()->get_selected_gameobject());
-						MyNewSceneManager.set_selected_gameobject(nullptr);
+						MyGOF.instantiate(*Copium::SceneManager::Instance()->get_selected_gameobject());
+						MySceneManager.set_selected_gameobject(nullptr);
 					}
 					else
 					{
@@ -113,9 +120,9 @@ namespace Window::Hierarchy
 				}				
 				if (ImGui::MenuItem("Create a Child GameObject"))
 				{
-					if (MyNewSceneManager.get_selected_gameobject())
+					if (MySceneManager.get_selected_gameobject())
 					{
-						MyGOF.create_child(*MyNewSceneManager.get_selected_gameobject());
+						MyGOF.create_child(*MySceneManager.get_selected_gameobject());
 					}
 				}
 				if (ImGui::BeginMenu("Add Archetype"))
@@ -144,21 +151,40 @@ namespace Window::Hierarchy
 			}
 			ImGui::EndMenuBar();
 		}
+
+		//KeyBoard Shortcuts//
 		if (inputSystem->is_key_held(GLFW_KEY_LEFT_CONTROL) && inputSystem->is_key_pressed(GLFW_KEY_D))
 		{
-			if (Copium::NewSceneManager::Instance()->get_selected_gameobject())
+			if (Copium::SceneManager::Instance()->get_selected_gameobject())
 			{
 				std::cout << "Clone\n";
-				MyGOF.instantiate(*Copium::NewSceneManager::Instance()->get_selected_gameobject());
-				MyNewSceneManager.set_selected_gameobject(nullptr);
+				MyGOF.instantiate(*Copium::SceneManager::Instance()->get_selected_gameobject());
+				MySceneManager.set_selected_gameobject(nullptr);
 			}
 			else
 			{
-				Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
+				Window::EditorConsole::editorLog.add_logEntry("No scene is loaded!");
 			}
 		}
-		ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, 10.f);
+		if (Copium::SceneManager::Instance()->get_selected_gameobject() && inputSystem->is_key_pressed(GLFW_KEY_BACKSPACE))
+		{
+			if (Copium::SceneManager::Instance()->get_selected_gameobject())
+			{
+				std::cout << "Delete\n";
+				Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::GameObjectCommand(MySceneManager.get_selected_gameobject_sptr(), false);
+				Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+				MyGOF.destroy(MySceneManager.get_selected_gameobject());
+				MySceneManager.set_selected_gameobject(nullptr);
+			}
+			else
+			{
+				Window::EditorConsole::editorLog.add_logEntry("No scene is loaded!");
+			}
+		}
+		///////////////////
 
+
+		ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, 10.f);
 		ImGuiTreeNodeFlags rootFlags = ImGuiTreeNodeFlags_DefaultOpen;
 		
 		// Ensure that game objects are displayed only if there is a current scene loaded
@@ -204,6 +230,7 @@ namespace Window::Hierarchy
 					
 					if (isSelected)
 						sceneSelected = false;
+
 				}	
 
 				ImGui::TreePop();
@@ -250,27 +277,50 @@ namespace Window::Hierarchy
 		bool isSelected = false;
 		ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 
+
+		// If root node does not have children, it is simply a leaf node (end of the branch)
 		if (_go.transform.children.empty())
 		{
 			baseFlags |= ImGuiTreeNodeFlags_Leaf;
 		}
 			
-
+		// If there is a node that is already selected, set the selected flag
 		if (_selected == _go.id)
 		{
 			baseFlags |= ImGuiTreeNodeFlags_Selected;				
 		}
-
 
 		if (!ImGui::TreeNodeEx(_go.get_name().c_str(), baseFlags))
 			return false;
 
 		if (ImGui::BeginDragDropSource())
 		{
-			static void* container;
+			static void* container; 
 			container = &_go;
 			ImGui::SetDragDropPayload("GameObject", &container, sizeof(void*));
 			ImGui::EndDragDropSource();
+
+			//std::cout << "ID of selected Game Object: " << _selected << std::endl;
+
+		}
+
+		if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
+		{
+			if (!_go.transform.hasParent())
+			{
+				//std::cout << "ID of selected Game Object: " << _selected << std::endl;
+				int n_next = (ImGui::GetMouseDragDelta(0).y < 0.f ? -1 : 1);
+				//std::cout << "move up or down: " << n_next << std::endl;
+				dragging = true;
+			}
+
+
+
+		}			
+		if (dragging && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
+		{
+			dragging = false;
+			PRINT("mouse released over: " << _go.id);
 		}
 		//for (const auto& pComponent : _go.components)
 		//{
@@ -284,12 +334,13 @@ namespace Window::Hierarchy
 		//}
 
 
+
 		if (ImGui::IsItemClicked())
 		{
 			std::cout << _go.get_name() << " is selected\n";
 			_selected = _go.id;
 			isSelected = true;
-			Copium::NewSceneManager::Instance()->set_selected_gameobject(&_go);
+			Copium::SceneManager::Instance()->set_selected_gameobject(&_go);
 
 		}
 

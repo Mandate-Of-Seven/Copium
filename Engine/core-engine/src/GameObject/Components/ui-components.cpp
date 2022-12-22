@@ -24,7 +24,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <stdlib.h>  
 #include <Utilities/easing.h>
 #include <Debugging/frame-rate-controller.h>
-#include <SceneManager/sm.h>
+#include <SceneManager/scene-manager.h>
 #include <GameObject/Components/script-component.h>
 #include <GameObject/Components/camera-component.h>
 namespace
@@ -128,7 +128,7 @@ namespace Copium
 		if (_value.HasMember("Graphic ID"))
 		{
 			ComponentID targetGraphicID = _value["Graphic ID"].GetUint64();
-			targetGraphic = reinterpret_cast<Text*>(MyNewSceneManager.findComponentByID(targetGraphicID));
+			targetGraphic = reinterpret_cast<Text*>(MySceneManager.findComponentByID(targetGraphicID));
 		}
 	}
 
@@ -136,7 +136,7 @@ namespace Copium
 	{
 		ComponentID _ID = reinterpret_cast<Button*>(rhs)->targetGraphic->id;
 
-		Component* foundText = MyNewSceneManager.findComponentByID(_ID);
+		Component* foundText = MySceneManager.findComponentByID(_ID);
 		if (foundText)
 			targetGraphic = reinterpret_cast<Text*>(foundText);
 	}
@@ -308,7 +308,7 @@ namespace Copium
 
 	ButtonState Button::getInternalState() const
 	{
-		glm::vec2 scenePos = MyNewSceneManager.mainCamera->get_game_ndc();
+		glm::vec2 scenePos = MySceneManager.mainCamera->get_game_ndc();
 		//PRINT("x: " << scenePos.x << " , y: " << scenePos.y);
 		if (hoveredBtn == nullptr)
 		{

@@ -28,7 +28,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "GameObject/Components/renderer-component.h"
 #include "GameObject/Components/ui-components.h"
 #include "GameObject/Components/collider-components.h"
-#include "SceneManager/sm.h"
+#include "SceneManager/scene-manager.h"
 #include "Math/math-library.h"
 
 namespace Copium
@@ -38,7 +38,7 @@ namespace Copium
 		AssetsSystem* assets = AssetsSystem::Instance();
 		EditorSystem* editorSys = EditorSystem::Instance();
 		GraphicsSystem* graphics = GraphicsSystem::Instance();
-		NewSceneManager* sm = NewSceneManager::Instance();
+		SceneManager* sm = SceneManager::Instance();
 		InputSystem* inputSystem = InputSystem::Instance();
 
 		bool toggleAnim = false;
@@ -268,7 +268,11 @@ namespace Copium
 					else if (gameObject->transform.hasParent())
 					{
 						Transform& t1 = *gameObject->transform.parent;
-						renderer.draw_quad(t.position + t1.position, size, rotation, sr);
+						Copium::Math::Matrix3x3 rot;
+						Copium::Math::matrix3x3_rotdeg(rot, t1.rotation.z);
+						Copium::Math::Vec3 intermediate = (rot * t.position);
+
+						renderer.draw_quad(intermediate + t1.position, size, rotation+t1.rotation.z, sr);
 					}
 					else
 					{

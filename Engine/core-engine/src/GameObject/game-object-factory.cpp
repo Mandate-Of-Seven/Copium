@@ -16,7 +16,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 ******************************************************************************************/
 #include <pch.h>
 #include "GameObject/game-object-factory.h"
-#include "SceneManager/sm.h"
+#include "SceneManager/scene-manager.h"
 #include "GameObject/Components/renderer-component.h"
 #include <rttr/registration>
 #include <filesystem>
@@ -25,7 +25,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 namespace 
 {
-	Copium::NewSceneManager& sceneManager{ *Copium::NewSceneManager::Instance() };
+	Copium::SceneManager& sceneManager{ *Copium::SceneManager::Instance() };
 	Copium::MessageSystem& messageSystem{ *Copium::MessageSystem::Instance() };
 }
 
@@ -250,7 +250,16 @@ namespace Copium
 		}
 
 		currScene->gameObjects.erase(std::remove_if(currScene->gameObjects.begin(), currScene->gameObjects.end(), [&](GameObject* gameObj) {return gameObj==_go;}));
-
+		std::cout << "number of game objects left: " << currScene->get_gameobjcount() << std::endl;
+		for (size_t i{ 0 }; i < currScene->gameObjectSPTRS.size(); ++i)
+		{
+			if (currScene->gameObjectSPTRS[i].get() == _go)
+			{
+				std::cout << "take out of sptr vector\n";
+				currScene->gameObjectSPTRS.erase(currScene->gameObjectSPTRS.begin() + i);
+				break;
+			}
+		}
 		//Iterate through currentScene vector and destroy
 		//for (size_t i{ 0 }; i < currScene->gameObjects.size(); ++i)
 		//{

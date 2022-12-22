@@ -16,7 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 
 #include "../Game/game-nonscript.h"
-#include "../SceneManager/sm.h"
+#include "../SceneManager/scene-manager.h"
 #include "../GameObject/Components/script-component.h"
 #include "../GameObject/Components/renderer-component.h"
 #include "../GameObject/Components/physics-components.h"
@@ -29,7 +29,7 @@ namespace Copium
 {
     AssetsSystem* assets = AssetsSystem::Instance();
     EditorSystem* editorSys = EditorSystem::Instance();
-    NewSceneManager* sm = NewSceneManager::Instance();
+    SceneManager* sm = SceneManager::Instance();
     MessageSystem* messageSystem = MessageSystem::Instance();
 
     GameObject* playerBullet;

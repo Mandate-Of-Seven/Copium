@@ -16,7 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "CopiumCore/system-interface.h"
 #include "Math/math-library.h"
 #include "GameObject/Components/physics-components.h"
-#include "SceneManager/sm.h"
+#include "SceneManager/scene-manager.h"
 
 
 namespace Copium

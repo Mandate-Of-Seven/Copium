@@ -16,7 +16,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "pch.h"
 #include "GameObject/Components/script-component.h"
 #include "GameObject/game-object.h"
-#include "SceneManager/sm.h"
+#include "SceneManager/scene-manager.h"
 #define DEFAULT_SCRIPT_NAME "NewScript"
 #include <mono/jit/jit.h>
 namespace Copium
@@ -277,7 +277,7 @@ namespace Copium
 						filter.Draw("##GameObjectName");
 						ImGui::PopItemWidth();
 						// Iterate through game object list
-						Scene* scene = Copium::NewSceneManager::Instance()->get_current_scene();
+						Scene* scene = Copium::SceneManager::Instance()->get_current_scene();
 						for (Copium::GameObject* go : scene->gameObjects)
 						{
 							if (ImGui::Button(go->get_name().c_str(), buttonSize))
@@ -438,12 +438,12 @@ namespace Copium
 		Script* scriptRhs = reinterpret_cast<Script*>(rhs);
 		for (auto pair : scriptRhs->fieldGameObjReferences)
 		{
-			fieldGameObjReferences[pair.first] = MyNewSceneManager.findGameObjByID(pair.second->id);
+			fieldGameObjReferences[pair.first] = MySceneManager.findGameObjByID(pair.second->id);
 		}
 
 		for (auto pair : scriptRhs->fieldComponentReferences)
 		{
-			fieldComponentReferences[pair.first] = MyNewSceneManager.findComponentByID(pair.second->id);
+			fieldComponentReferences[pair.first] = MySceneManager.findComponentByID(pair.second->id);
 		}
 
 		for (auto pair : scriptRhs->fieldDataReferences)
@@ -585,12 +585,12 @@ namespace Copium
 			{
 				case FieldType::Component:
 				{
-					fieldComponentReferences[_name] = MyNewSceneManager.findComponentByID(_value[_name.c_str()].GetUint64());
+					fieldComponentReferences[_name] = MySceneManager.findComponentByID(_value[_name.c_str()].GetUint64());
 					break;
 				}
 				case FieldType::GameObject:
 				{
-					fieldGameObjReferences[_name] = MyNewSceneManager.findGameObjByID(_value[_name.c_str()].GetUint64());
+					fieldGameObjReferences[_name] = MySceneManager.findGameObjByID(_value[_name.c_str()].GetUint64());
 					break;
 				}
 			}

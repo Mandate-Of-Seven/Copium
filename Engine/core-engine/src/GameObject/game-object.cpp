@@ -26,7 +26,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "GameObject/Components/renderer-component.h"
 #include "GameObject/Components/script-component.h"
 #include "GameObject/Components/ui-components.h"
-#include "SceneManager/sm.h"
+#include "SceneManager/scene-manager.h"
 #include <mono/jit/jit.h>
 
 //USING
@@ -35,7 +35,7 @@ namespace
 {
     const std::string defaultGameObjName = "New GameObject"; // Append (No.) if its not the first
     Copium::MessageSystem& messageSystem{*Copium::MessageSystem::Instance()};
-    Copium::NewSceneManager& sceneManager{ *Copium::NewSceneManager::Instance() };
+    Copium::SceneManager& sceneManager{ *Copium::SceneManager::Instance() };
 }
 
 namespace Copium
@@ -84,6 +84,7 @@ namespace Copium
 
     GameObject::~GameObject()
     {
+        std::cout << "GameObject destructed\n";
         messageSystem.unsubscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
 
         for (auto iter = components.begin(); iter != components.end(); ++iter)
@@ -131,8 +132,8 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{rhs.id}
         components.push_back(newComponent);
     }
 
-    //if(MyNewSceneManager.get_current_scene())
-    //    MyNewSceneManager.get_current_scene()->add_gameobject(this);
+    //if(MySceneManager.get_current_scene())
+    //    MySceneManager.get_current_scene()->add_gameobject(this);
 
     //messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
     //for (Transform* pTransform : rhs.transform.children)
@@ -328,7 +329,7 @@ void GameObject::inspectorView()
                 {
                     PRINT("ID: " << component->id);
                     componentsToDelete.push_back(component->id);
-                    NewSceneManager::Instance()->get_current_scene()->add_unused_cid(component->id);
+                    SceneManager::Instance()->get_current_scene()->add_unused_cid(component->id);
                 }
 
             }

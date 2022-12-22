@@ -30,7 +30,7 @@ namespace Copium
 	namespace
 	{
 		EditorCamera& camera{ *EditorSystem::Instance()->get_camera() };
-		NewSceneManager& sm{ *NewSceneManager::Instance() };
+		SceneManager& sm{ *SceneManager::Instance() };
 		bool inOp = false;
 	}
 

@@ -14,7 +14,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 *****************************************************************************************/
 
 #include "Windows\windows-input.h"
-#include "SceneManager\sm.h"
+#include "SceneManager\scene-manager.h"
 #include "GameObject/Components/physics-components.h"
 #include <glm/vec3.hpp>
 #include <Scripting/scripting-system.h>
@@ -43,7 +43,7 @@ namespace Copium
 	namespace
 	{
 		InputSystem& inputSystem{ *InputSystem::Instance() };
-		NewSceneManager& sceneManager{ *NewSceneManager::Instance() };
+		SceneManager& sceneManager{ *SceneManager::Instance() };
 		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 		ScriptingSystem& scriptingSystem{ *ScriptingSystem::Instance() };
 	}
@@ -295,7 +295,7 @@ namespace Copium
 
 	static GameObjectID CloneGameObject(GameObjectID ID)
 	{
-		GameObject* toBeCloned = MyNewSceneManager.findGameObjByID(ID);
+		GameObject* toBeCloned = MySceneManager.findGameObjByID(ID);
 		if (toBeCloned)
 		{
 			GameObject* clone = MyGOF.instantiate(*toBeCloned);
