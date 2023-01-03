@@ -165,7 +165,7 @@ namespace Copium
 #ifdef _DEBUG
         PRINT("Window drop getting called!!!");
 #endif        
-        FileSystem::Instance()->accept_dropped_files(_pathCount, _paths);
+        FileSystem::Instance().accept_dropped_files(_pathCount, _paths);
 
         (void) _window;
     }

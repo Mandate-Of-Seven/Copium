@@ -3,8 +3,8 @@
 
 namespace Copium
 {
-	Rigidbody2D::Rigidbody2D(GameObject& _gameObj)
-		:Component(_gameObj, ComponentType::Rigidbody2D) {
+	Rigidbody2D::Rigidbody2D(ComponentID _entityID)
+		:Component(_entityID, ComponentType::Rigidbody2D) {
 		velocity = Math::Vec2(0.0, 0.0);
 		acceleration = Math::Vec2(0.0, 0.0);
 		force = Math::Vec2(0.0, 0.0);

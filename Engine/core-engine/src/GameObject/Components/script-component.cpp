@@ -22,22 +22,22 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 namespace Copium
 {
 	char Script::buffer[128];
-	ScriptingSystem& Script::sS{ *ScriptingSystem::Instance() };
+	ScriptingSystem& Script::sS{ ScriptingSystem::Instance() };
 	const Copium::Field* field;
 
-	Script::Script(GameObject& _gameObj) :
-		mObject{ nullptr }, pScriptClass{ nullptr }, Component(_gameObj, ComponentType::Script), name{ DEFAULT_SCRIPT_NAME }, reference{nullptr}, isAddingGameObjectReference{false}
+	Script::Script(ComponentID _entityID) :
+		mObject{ nullptr }, pScriptClass{ nullptr }, Component(_entityID, ComponentType::Script), name{ DEFAULT_SCRIPT_NAME }, reference{nullptr}, isAddingGameObjectReference{false}
 	{
-		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
-		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
+		MessageSystem::Instance().subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
+		MessageSystem::Instance().subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
 		pScriptClass = sS.getScriptClass(name);
 		instantiate();
 	}
 
 	Script::~Script()
 	{
-		MessageSystem::Instance()->unsubscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
-		MessageSystem::Instance()->unsubscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
+		MessageSystem::Instance().unsubscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
+		MessageSystem::Instance().unsubscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
 		
 	}
 
@@ -55,7 +55,7 @@ namespace Copium
 				reference = nullptr;
 				return;
 			}
-			GameObjectID _id = gameObj.id;
+			GameObjectID _id = entityID;
 			void* param = &_id;
 			sS.invoke(mObject, pScriptClass->mMethods["OnCreate"], &param);
 		}
@@ -72,7 +72,7 @@ namespace Copium
 			for (auto pair : fieldComponentReferences)
 			{
 				Component* pComponent{ pair.second };
-				GameObjectID gameObjID = pComponent->gameObj.id;
+				GameObjectID gameObjID = pComponent->entityID;
 				void* params[2] = { &pComponent->id, &gameObjID };
 				MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindComponentByID"], mObject, params, nullptr);
 				MonoClass* mComponentClass = mono_object_get_class(result);
@@ -209,7 +209,7 @@ namespace Copium
 					}
 					else
 					{
-						std::string displayName = (*componentRef).second->gameObj.get_name() + "(" + it->second.typeName + ")";
+						std::string displayName = "NAME PLACEHOLDER";//(*componentRef).second->gameObj.get_name() + "(" + it->second.typeName + ")";
 						ImGui::Button(displayName.c_str(), ImVec2(-FLT_MIN, 0.f));
 					}
 						
@@ -221,7 +221,7 @@ namespace Copium
 						{
 							Component* pComponent = (Component*)(*reinterpret_cast<void**>(payload->Data));
 							ComponentID componentID = pComponent->id;
-							GameObjectID gameObjID = pComponent->gameObj.id;
+							GameObjectID gameObjID = pComponent->entityID;
 							void* params[2] = { &componentID, &gameObjID };
 							MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindComponentByID"], mObject, params, nullptr);
 							fieldDataReferences.insert({ it->first,FieldData(mono_object_get_size(result)) });
@@ -277,7 +277,7 @@ namespace Copium
 						filter.Draw("##GameObjectName");
 						ImGui::PopItemWidth();
 						// Iterate through game object list
-						Scene* scene = Copium::NewSceneManager::Instance()->get_current_scene();
+						Scene* scene = Copium::NewSceneManager::Instance().get_current_scene();
 						for (Copium::GameObject* go : scene->gameObjects)
 						{
 							if (ImGui::Button(go->get_name().c_str(), buttonSize))
@@ -421,10 +421,10 @@ namespace Copium
 		}
 	}
 
-	Component* Script::clone(GameObject& _gameObj) const
+	Component* Script::clone(ComponentID _entityID) const
 	{
 		//mono_field_get_value(mObject, pScriptClass->mFields["gameObj"].classField, buffer);
-		Script* component = new Script(_gameObj);
+		Script* component = new Script(_entityID);
 		component->pScriptClass = pScriptClass;
 		component->name = name;
 		component->reference = this;

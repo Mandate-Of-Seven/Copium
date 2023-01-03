@@ -26,7 +26,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 namespace
 {
-	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
+	Copium::InputSystem& inputSystem{Copium::InputSystem::Instance() };
 
 	bool enableCamera = false;
 }
@@ -36,13 +36,13 @@ namespace Copium
 	void EditorCamera::init(float _width, float _height, bool _orthographic)
 	{
 		BaseCamera::init(_width, _height, CameraType::SCENEVIEW, _orthographic);
-		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
-		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
+		MessageSystem::Instance().subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
+		MessageSystem::Instance().subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
 	}
 
 	void EditorCamera::update()
 	{
-		EditorSceneView* sceneView = EditorSystem::Instance()->get_scene_view();
+		EditorSceneView* sceneView = EditorSystem::Instance().get_scene_view();
 		if (sceneView->is_window_focused() || sceneView->is_window_hovered())
 		{
 			mouse_controls();
@@ -50,8 +50,8 @@ namespace Copium
 
 		if (enableCamera)
 		{
-			NewSceneManager* sm = NewSceneManager::Instance();
-			Scene* scene = sm->get_current_scene();
+			NewSceneManager& sm = NewSceneManager::Instance();
+			Scene* scene = sm.get_current_scene();
 			if (scene != nullptr && !scene->get_name().compare("DemoCLONE"))
 			{
 				orthographicSize = 5.f;
@@ -108,7 +108,7 @@ namespace Copium
 
 	glm::vec2 EditorCamera::get_ndc() const
 	{
-		EditorSceneView* sceneView = EditorSystem::Instance()->get_scene_view();
+		EditorSceneView* sceneView = EditorSystem::Instance().get_scene_view();
 		glm::vec2 scenePos = sceneView->get_position();
 		glm::vec2 sceneDim = sceneView->get_dimension();
 		Math::Vec2 mousePos = inputSystem.get_mouseposition();

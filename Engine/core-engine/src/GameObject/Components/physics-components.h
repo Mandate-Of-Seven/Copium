@@ -30,7 +30,7 @@ namespace Copium
 		Owner of this component
 		*/
 		/**************************************************************************/
-		Rigidbody2D(GameObject& _gameObj);
+		Rigidbody2D(ComponentID _entityID);
 		/***************************************************************************/
 		/*!
 		\brief
@@ -198,9 +198,9 @@ namespace Copium
 		Reference to this Rigidbody2DComponent
 		*/
 		/*******************************************************************************/
-		Component* clone(GameObject& _gameObj) const
+		Component* clone(ComponentID _entityID) const
 		{
-			Rigidbody2D* component = new Rigidbody2D(_gameObj);
+			Rigidbody2D* component = new Rigidbody2D(entityID);
 			component->mass = mass;
 			component->active = active;
 			component->affectedGravity = affectedGravity;

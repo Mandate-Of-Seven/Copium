@@ -99,7 +99,7 @@ namespace Copium
 				Owner of this
 		*/
 		/**************************************************************************/
-		Script(GameObject& gameObj);
+		Script(ComponentID _entityID);
 		/**************************************************************************/
 		/*!
 			\brief
@@ -195,7 +195,7 @@ namespace Copium
 			Reference to the cloned component in current scene
 		*/
 		/**************************************************************************/
-		Component* clone(GameObject& _gameObj) const;
+		Component* clone(ComponentID _entityID) const;
 
 		/***************************************************************************/
 		/*!

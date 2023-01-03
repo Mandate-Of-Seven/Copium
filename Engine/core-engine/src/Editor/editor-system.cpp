@@ -36,11 +36,11 @@ namespace Copium
 	{
 		// Our state
 		bool show_demo_window = false;
-		ThreadSystem& threadSystem{ *ThreadSystem::Instance() };
-		MessageSystem& messageSystem{ *MessageSystem::Instance() };
-		InputSystem& inputSystem{ *InputSystem::Instance() };
-		WindowsSystem& windowsSystem{ *WindowsSystem::Instance() };
-		GraphicsSystem& graphicsSystem{ *GraphicsSystem::Instance() };
+		ThreadSystem& threadSystem{ ThreadSystem::Instance() };
+		MessageSystem& messageSystem{ MessageSystem::Instance() };
+		InputSystem& inputSystem{ InputSystem::Instance() };
+		WindowsSystem& windowsSystem{ WindowsSystem::Instance() };
+		GraphicsSystem& graphicsSystem{ GraphicsSystem::Instance() };
 		bool tempMode = true;
 	}
 
@@ -171,7 +171,7 @@ namespace Copium
 					if (ImGui::MenuItem("New", "Ctrl+N"))
 					{
 						//create new scene
-						Copium::NewSceneManager::Instance()->create_scene();
+						Copium::NewSceneManager::Instance().create_scene();
 					}
 
 					if (ImGui::MenuItem("Open...", "Ctrl+O"))
@@ -185,13 +185,13 @@ namespace Copium
 							std::cout << filepath << std::endl;
 
 
-							if (Copium::NewSceneManager::Instance()->get_current_scene() != nullptr)
+							if (Copium::NewSceneManager::Instance().get_current_scene() != nullptr)
 							{
 								std::cout << "change scene\n";
-								Copium::NewSceneManager::Instance()->change_scene(filepath);
+								Copium::NewSceneManager::Instance().change_scene(filepath);
 							}
 							else {
-								if (Copium::NewSceneManager::Instance()->load_scene(filepath))
+								if (Copium::NewSceneManager::Instance().load_scene(filepath))
 									std::cout << "loading success\n";
 								else
 									std::cout << "loading fail\n";
@@ -208,31 +208,31 @@ namespace Copium
 					if (ImGui::MenuItem("Save", "Ctrl+S"))
 					{
 						//save scene
-						if (NewSceneManager::Instance()->get_scenefilepath().empty()) {
+						if (MyNewSceneManager.get_scenefilepath().empty()) {
 							//save sceen as
 							while (!threadSystem.acquireMutex(MutexType::FileSystem));
 							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
 							std::cout << filepath << std::endl;
-							Copium::NewSceneManager::Instance()->save_scene(filepath);
+							Copium::NewSceneManager::Instance().save_scene(filepath);
 						}
 						else 
 						{
-							NewSceneManager::Instance()->save_scene();
+							MyNewSceneManager.save_scene();
 						}
 					}
 
 					if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
 					{
 						
-						if (Copium::NewSceneManager::Instance()->get_current_scene())
+						if (Copium::NewSceneManager::Instance().get_current_scene())
 						{
 							//save sceen as
 							while (!threadSystem.acquireMutex(MutexType::FileSystem));
 							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
 							std::cout << filepath << std::endl;
-							Copium::NewSceneManager::Instance()->save_scene(filepath);
+							Copium::NewSceneManager::Instance().save_scene(filepath);
 						}
 						else
 						{
@@ -243,10 +243,10 @@ namespace Copium
 
 					if (ImGui::MenuItem("Exit"))
 					{
-						Scene* s = NewSceneManager::Instance()->get_storage_scene();
+						Scene* s = MyNewSceneManager.get_storage_scene();
 						if (s)
 						{
-							NewSceneManager::Instance()->endPreview();
+							MyNewSceneManager.endPreview();
 						}
 						//exit game engine
 						change_enginestate(EngineState::esQuit);
@@ -262,14 +262,14 @@ namespace Copium
 					if (ImGui::MenuItem("Play Scene"))
 					{
 						printf("Starting scene\n");
-						if (NewSceneManager::Instance()->startPreview())
+						if (MyNewSceneManager.startPreview())
 						{
 							messageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
 						}
 					}
 					if (ImGui::MenuItem("Stop Scene"))
 					{
-						if (NewSceneManager::Instance()->endPreview())
+						if (MyNewSceneManager.endPreview())
 						{
 							messageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
 						}
@@ -354,17 +354,17 @@ namespace Copium
 		std::cout << "Before deleting, Undo stack: " << commandManager.undoStack.size() << ", Redo stack:" << commandManager.redoStack.size()<<"\n";
 		while (commandManager.undoStack.size() > 0)
 		{
-			UndoRedo::Command* temp = EditorSystem::Instance()->get_commandmanager()->undoStack.top();
+			UndoRedo::Command* temp = EditorSystem::Instance().get_commandmanager()->undoStack.top();
 			delete temp;
-			EditorSystem::Instance()->get_commandmanager()->undoStack.pop();
+			EditorSystem::Instance().get_commandmanager()->undoStack.pop();
 			
 		}
 
 		while (commandManager.redoStack.size() > 0)
 		{
-			UndoRedo::Command* temp = EditorSystem::Instance()->get_commandmanager()->redoStack.top();
+			UndoRedo::Command* temp = EditorSystem::Instance().get_commandmanager()->redoStack.top();
 			delete temp;
-			EditorSystem::Instance()->get_commandmanager()->redoStack.pop();
+			EditorSystem::Instance().get_commandmanager()->redoStack.pop();
 			
 		}
 		std::cout << "After deleting, Undo stack: " << commandManager.undoStack.size() << ", Redo stack:" << commandManager.redoStack.size() << "\n";

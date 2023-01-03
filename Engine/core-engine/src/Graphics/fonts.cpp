@@ -135,11 +135,11 @@ namespace Copium
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		GraphicsSystem* graphics = GraphicsSystem::Instance();
-		graphics->get_shader_program()[TEXT_SHADER].Use();
+		GraphicsSystem& graphics = GraphicsSystem::Instance();
+		graphics.get_shader_program()[TEXT_SHADER].Use();
 
 		GLuint uProjection = glGetUniformLocation(
-			graphics->get_shader_program()[TEXT_SHADER].GetHandle(), "uViewProjection");
+			graphics.get_shader_program()[TEXT_SHADER].GetHandle(), "uViewProjection");
 
 		glm::mat4 projection = _camera->get_view_proj_matrix();
 		glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
@@ -207,7 +207,7 @@ namespace Copium
 		}
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
-		graphics->get_shader_program()[TEXT_SHADER].UnUse();
+		graphics.get_shader_program()[TEXT_SHADER].UnUse();
 
 		glDisable(GL_BLEND);
 	}

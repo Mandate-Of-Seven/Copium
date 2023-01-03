@@ -26,9 +26,9 @@ namespace Copium
 {
 	namespace
 	{
-		EditorSystem& editorSystem{ *EditorSystem::Instance() };
-		InputSystem& inputSystem{ *InputSystem::Instance() };
-		WindowsSystem& windowSystem{ *WindowsSystem::Instance() };
+		EditorSystem& editorSystem{ EditorSystem::Instance() };
+		InputSystem& inputSystem{ InputSystem::Instance() };
+		WindowsSystem& windowSystem{ WindowsSystem::Instance() };
 	}
 
 	bool BaseCamera::deserialize(rapidjson::Value& _value)

@@ -16,11 +16,12 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Physics/physics-system.h"
 #include <GameObject/Components/collider-components.h>
 #include <Messaging/message-system.h>
+#include "Events/events-system.h"
 
 
 namespace
 {
-	Copium::NewSceneManager& sceneManager{ *Copium::NewSceneManager::Instance() };
+	Copium::NewSceneManager& sceneManager{Copium::NewSceneManager::Instance() };
 }
 
 namespace Copium
@@ -73,7 +74,7 @@ namespace Copium
 
 	void PhysicsSystem::update_pos()
 	{
-		float dt = float(FrameRateController::Instance()->getDt());
+		float dt = float(FrameRateController::Instance().getDt());
 		GameObject* gameobj;
 		Math::Vec2 velocity;
 		Math::Vec2 acceleration;

@@ -18,22 +18,22 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "GameObject/Components/camera-component.h"
 #include "Graphics/graphics-system.h"
 #include "../game-object.h"
+#include <SceneManager/sm.h>
 
 namespace Copium
 {
 	namespace
 	{
-		GraphicsSystem* graphics = GraphicsSystem::Instance();
+		GraphicsSystem& graphics = GraphicsSystem::Instance();
 	}
 
-	Camera::Camera(GameObject& _gameObj) : Component(_gameObj, ComponentType::Camera)
+	Camera::Camera(ComponentID _entityID) : Component(_entityID, ComponentType::Camera)
 	{
 		PRINT("  Camera Component constructed");
 
 		// Bean: Checking for archetypes
 		BaseCamera::init(1280.f, 720.f, CameraType::GAME, true);
-		graphics->get_cameras().push_back(this);
-		gameObject = &_gameObj;
+		graphics.get_cameras().push_back(this);
 	}
 
 	Camera::~Camera()
@@ -41,7 +41,7 @@ namespace Copium
 		PRINT("  Camera Component deconstructed");
 
 		BaseCamera::exit();
-		graphics->get_cameras().remove(this);
+		graphics.get_cameras().remove(this);
 	}
 
 	void Camera::deserialize(rapidjson::Value& _value)
@@ -142,6 +142,6 @@ namespace Copium
 			ImGui::EndPopup();
 		}
 
-		focalPoint = gameObject->transform.position;
+		focalPoint = MyNewSceneManager.findGameObjByID(entityID)->transform.position;
 	}
 } 

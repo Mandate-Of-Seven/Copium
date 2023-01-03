@@ -28,6 +28,8 @@ namespace Copium
 class Transform : public Component
 {
 public:
+    Transform() = default;
+
     Transform* parent = nullptr;
     std::list<Transform*> children;
     Math::Vec3 position;
@@ -58,7 +60,7 @@ public:
     */
     /**************************************************************************/
     Transform(
-        GameObject& _gameObj,
+        ComponentID _entityID,
         Math::Vec3 _position = Math::Vec3(),
         Math::Vec3 _rotation = Math::Vec3(),
         Math::Vec3 _scale = {1,1,1});
@@ -111,16 +113,14 @@ public:
     /*******************************************************************************/
     void inspector_view();
 
-    Component* clone(GameObject& _gameObj) const
+    Component* clone(ComponentID _entityID) const
     {
-        Transform* component = new Transform(_gameObj);
+        Transform* component = new Transform(_entityID);
         component->position = position;
         component->rotation = rotation;
         component->scale = scale;
         return component;
     }
-    RTTR_ENABLE();
-    
 };
 
 }

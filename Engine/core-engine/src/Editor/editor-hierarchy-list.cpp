@@ -30,8 +30,7 @@ namespace Window::Hierarchy
 	{
 		Window::Hierarchy::isHierarchyOpen = true;
 		sceneSelected = false;
-		if (Copium::NewSceneManager::Instance())
-			currentScene = Copium::NewSceneManager::Instance()->get_current_scene();
+		currentScene = Copium::NewSceneManager::Instance().get_current_scene();
 
 	}
 
@@ -44,8 +43,8 @@ namespace Window::Hierarchy
 		}
 
 		// Handle scene change
-		if (currentScene != Copium::NewSceneManager::Instance()->get_current_scene())
-			currentScene = Copium::NewSceneManager::Instance()->get_current_scene();
+		if (currentScene != Copium::NewSceneManager::Instance().get_current_scene())
+			currentScene = Copium::NewSceneManager::Instance().get_current_scene();
 
 
 		ImGui::SetNextWindowSize(ImVec2(500, 900), ImGuiCond_FirstUseEver);
@@ -65,11 +64,11 @@ namespace Window::Hierarchy
 					}
 					else
 					{
-						Copium::GameObject* temp = MyGOF.instantiate();
+						Copium::GameObject* temp = GOF.instantiate();
 						if (temp)
 						{
 							Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::GameObjectCommand(temp, true);
-							Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+							Copium::EditorSystem::Instance().get_commandmanager()->undoStack.push(tempUndo);
 						}
 						else
 						{
@@ -81,12 +80,12 @@ namespace Window::Hierarchy
 				}
 				if (ImGui::MenuItem("Delete Selected GameObject", nullptr))
 				{
-					if (Copium::NewSceneManager::Instance()->get_selected_gameobject())
+					if (Copium::NewSceneManager::Instance().get_selected_gameobject())
 					{
 						std::cout << "Delete\n";
 						Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::GameObjectCommand(MyNewSceneManager.get_selected_gameobject(),false);
-						Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
-						MyGOF.destroy(MyNewSceneManager.get_selected_gameobject());
+						Copium::EditorSystem::Instance().get_commandmanager()->undoStack.push(tempUndo);
+						GOF.destroy(MyNewSceneManager.get_selected_gameobject());
 						MyNewSceneManager.set_selected_gameobject(nullptr);
 					}
 					else
@@ -96,10 +95,10 @@ namespace Window::Hierarchy
 				}
 				if (ImGui::MenuItem("Clone Selected GameObject", nullptr))
 				{
-					if (Copium::NewSceneManager::Instance()->get_selected_gameobject())
+					if (Copium::NewSceneManager::Instance().get_selected_gameobject())
 					{
 						std::cout << "Clone\n";
-						MyGOF.instantiate(*Copium::NewSceneManager::Instance()->get_selected_gameobject());
+						GOF.instantiate(*Copium::NewSceneManager::Instance().get_selected_gameobject());
 						MyNewSceneManager.set_selected_gameobject(nullptr);
 					}
 					else
@@ -111,7 +110,7 @@ namespace Window::Hierarchy
 				{
 					if (MyNewSceneManager.get_selected_gameobject())
 					{
-						MyGOF.create_child(*MyNewSceneManager.get_selected_gameobject());
+						GOF.create_child(*MyNewSceneManager.get_selected_gameobject());
 					}
 				}
 
@@ -123,12 +122,12 @@ namespace Window::Hierarchy
 					}
 					else
 					{
-						for (std::map<std::string, Copium::GameObject*>::iterator iter = MyGOF.get_archetype_map().begin();
-							iter != MyGOF.get_archetype_map().end(); ++iter)
+						for (std::map<std::string, Copium::GameObject*>::iterator iter = GOF.get_archetype_map().begin();
+							iter != GOF.get_archetype_map().end(); ++iter)
 						{
 							if (ImGui::MenuItem((*iter).first.c_str()) && currentScene)
 							{
-								MyGOF.instantiate(*(*iter).second);
+								GOF.instantiate(*(*iter).second);
 							}
 
 						} 
@@ -222,7 +221,7 @@ namespace Window::Hierarchy
 		{
 			for (auto iter = transform.children.begin(); iter != transform.children.end(); ++iter)
 			{
-				display_gameobject((*iter)->gameObj);
+				display_gameobject(*MyNewSceneManager.findGameObjByID((*iter)->entityID));
 			}
 		}
 
@@ -274,7 +273,7 @@ namespace Window::Hierarchy
 			std::cout << _go.get_name() << " is selected\n";
 			_selected = _go.id;
 			isSelected = true;
-			Copium::NewSceneManager::Instance()->set_selected_gameobject(&_go);
+			Copium::NewSceneManager::Instance().set_selected_gameobject(&_go);
 
 		}
 
@@ -283,7 +282,7 @@ namespace Window::Hierarchy
 		{
 			for (auto pChild : _go.transform.children)
 			{
-				isSelected = display_gameobject_advanced(pChild->gameObj, _selected);
+				isSelected = display_gameobject_advanced(*MyNewSceneManager.findGameObjByID(pChild->entityID), _selected);
 			}
 		}
 
@@ -308,7 +307,7 @@ namespace Window::Hierarchy
 			clicked = 0;
 
 			// Use Shawn's debug system
-			if (!MyGOF.instantiate())
+			if (!GOF.instantiate())
 				std::cout << "Error creating game object\n";
 
 

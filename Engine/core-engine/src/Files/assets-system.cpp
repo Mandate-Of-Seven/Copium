@@ -27,7 +27,7 @@ namespace Copium
 {
 	namespace
 	{
-		FileSystem* fs = FileSystem::Instance();
+		FileSystem& fs = FileSystem::Instance();
 	}
 
 	void AssetsSystem::init()
@@ -44,7 +44,7 @@ namespace Copium
 		// 3. The extension
 		//
 		// Load all file paths in the asset folder
-		load_assets(&fs->get_asset_directory());
+		load_assets(&fs.get_asset_directory());
 
 	}
 
@@ -130,13 +130,13 @@ namespace Copium
 		(void) _directory;
 
 		// Load Textures (.png)
-		load_all_textures(fs->get_file_references()[SPRITE]);
+		load_all_textures(fs.get_file_references()[SPRITE]);
 
 		// Load Shaders (.vert & .frag)
-		load_all_shaders(fs->get_filepath_in_directory(Paths::dataPath.c_str(), ".vert", ".frag"));
+		load_all_shaders(fs.get_filepath_in_directory(Paths::dataPath.c_str(), ".vert", ".frag"));
 
 		// Load Audio (.wav)
-		load_all_audio(fs->get_filepath_in_directory(Paths::assetPath.c_str(), ".wav"));
+		load_all_audio(fs.get_filepath_in_directory(Paths::assetPath.c_str(), ".wav"));
 	}
 
 	void AssetsSystem::load_all_textures(std::list<File*>& _files)
@@ -197,7 +197,7 @@ namespace Copium
 			std::string temp = path.substr(lastSlash + 1);
 			size_t lastDot = temp.find_last_of(".");
 			//std::cout << "Alias: " << temp.substr(0, lastDot) << "\n";
-			SoundSystem::Instance()->CreateSound(path, temp.substr(0, lastDot));
+			SoundSystem::Instance().CreateSound(path, temp.substr(0, lastDot));
 		}
 	}
 
@@ -208,8 +208,8 @@ namespace Copium
 			//std::cout << _file->get_name() << " "<<_file->filename();
 			std::string temp = _file->filename().string();
 			size_t lastDot = temp.find_last_of(".");
-			SoundSystem::Instance()->CreateSound(_file->filename().string(), temp.substr(0,lastDot));
-			SoundSystem::Instance()->SetVolume(temp.substr(0, lastDot), 1.0f);
+			SoundSystem::Instance().CreateSound(_file->filename().string(), temp.substr(0,lastDot));
+			SoundSystem::Instance().SetVolume(temp.substr(0, lastDot), 1.0f);
 		}
 		else
 		{
@@ -223,11 +223,11 @@ namespace Copium
 			std::string temp = _file->filename().string();
 			size_t lastDot = temp.find_last_of(".");
 			std::string targetAlias = temp.substr(0, lastDot);
-			for (auto iter = SoundSystem::Instance()->soundList.begin(); iter != SoundSystem::Instance()->soundList.end();iter++)
+			for (auto iter = SoundSystem::Instance().soundList.begin(); iter != SoundSystem::Instance().soundList.end();iter++)
 			{
 				if ((*iter).first == targetAlias)
 				{
-					SoundSystem::Instance()->soundList.erase(iter);
+					SoundSystem::Instance().soundList.erase(iter);
 					std::cout << "Unloading audio file: " << targetAlias << " from sound list\n";
 					break;
 				}
@@ -246,7 +246,7 @@ namespace Copium
 			// Bean: This is slightly hardcored because it depends on the file arrangement
 			std::string fragShader = it->c_str();
 			std::string vtxShader = (++it)->c_str();
-			GraphicsSystem::Instance()->setup_shader_program(vtxShader, fragShader);
+			GraphicsSystem::Instance().setup_shader_program(vtxShader, fragShader);
 		}
 	}
 }

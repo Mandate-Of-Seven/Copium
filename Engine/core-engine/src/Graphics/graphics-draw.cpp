@@ -35,11 +35,11 @@ namespace Copium
 {
 	namespace
 	{
-		AssetsSystem* assets = AssetsSystem::Instance();
-		EditorSystem* editorSys = EditorSystem::Instance();
-		GraphicsSystem* graphics = GraphicsSystem::Instance();
-		NewSceneManager* sm = NewSceneManager::Instance();
-		InputSystem* inputSystem = InputSystem::Instance();
+		AssetsSystem& assets = AssetsSystem::Instance();
+		EditorSystem& editorSys = EditorSystem::Instance();
+		GraphicsSystem& graphics = GraphicsSystem::Instance();
+		NewSceneManager& sm = NewSceneManager::Instance();
+		InputSystem& inputSystem = InputSystem::Instance();
 
 		bool toggleAnim = false;
 	}
@@ -130,11 +130,11 @@ namespace Copium
 		}
 
 		// Colliders
-		Scene* scene = sm->get_current_scene();
+		Scene* scene = sm.get_current_scene();
 		if (scene != nullptr)
 		{
 			color = { 0.3f, 1.f, 0.3f, 1.f };
-			GameObject* gameObject = sm->get_selected_gameobject();
+			GameObject* gameObject = sm.get_selected_gameobject();
 			if (gameObject != nullptr)
 			{
 				for (Component* component : gameObject->getComponents<BoxCollider2D>())
@@ -198,7 +198,7 @@ namespace Copium
 
 		// Theory WIP
 		
-		Scene* scene = sm->get_current_scene();
+		Scene* scene = sm.get_current_scene();
 		if (scene != nullptr)
 		{
 			if (scene->get_state() == Scene::SceneState::play)
@@ -225,9 +225,9 @@ namespace Copium
 					unsigned int id = sr.get_sprite_id() - 1;
 
 					// The index of the texture must be less than the size of textures
-					if (id != -1 && id < assets->get_textures().size())
+					if (id != -1 && id < assets.get_textures().size())
 					{
-						sr.set_texture(assets->get_texture(id));
+						sr.set_texture(assets.get_texture(id));
 					}
 					else
 					{
@@ -236,11 +236,11 @@ namespace Copium
 					}
 
 					// Bean: Temporary animation conditions
-					if (!assets->get_spritesheets().empty() && !gameObject->get_name().compare("Animation - Track"))
+					if (!assets.get_spritesheets().empty() && !gameObject->get_name().compare("Animation - Track"))
 					{
 						int animID = 1;
 						static GLuint animIndex = 0;
-						GLuint indexSize = assets->get_spritesheets()[animID].get_size() - 1;
+						GLuint indexSize = assets.get_spritesheets()[animID].get_size() - 1;
 
 						GLfloat dt = (GLfloat) MyFrameRateController.getDt();
 						static float animTimer = 0.f;
@@ -257,13 +257,13 @@ namespace Copium
 						}
 
 						GLuint nid = 0;
-						for (GLuint i = 0; i < assets->get_textures().size(); ++i)
+						for (GLuint i = 0; i < assets.get_textures().size(); ++i)
 						{
-							if (assets->get_textures()[i].get_object_id() == assets->get_spritesheets()[animID].get_texture().get_object_id())
+							if (assets.get_textures()[i].get_object_id() == assets.get_spritesheets()[animID].get_texture().get_object_id())
 								nid = i + 1;
 						}
 
-						renderer.draw_quad(t.position, size, 0.f, assets->get_spritesheets()[animID], animIndex, nid);
+						renderer.draw_quad(t.position, size, 0.f, assets.get_spritesheets()[animID], animIndex, nid);
 					}
 					else if (gameObject->transform.hasParent())
 					{
@@ -290,9 +290,9 @@ namespace Copium
 					unsigned int id = sr.get_sprite_id() - 1;
 
 					// The index of the texture must be less than the size of textures
-					if (id != -1 && id < assets->get_textures().size())
+					if (id != -1 && id < assets.get_textures().size())
 					{
-						sr.set_texture(assets->get_texture(id));
+						sr.set_texture(assets.get_texture(id));
 					}
 					else
 					{
@@ -330,8 +330,8 @@ namespace Copium
 		glm::vec4 color = { 0.1f, 1.f, 0.1f, 1.f };
 		glm::vec2 worldNDC{ 0 };
 		glm::vec2 scale = { 0.01f, 0.01f };
-		glm::vec2 cameraPos = editorSys->get_camera()->get_eye();
-		float zoom = editorSys->get_camera()->get_zoom();
+		glm::vec2 cameraPos = editorSys.get_camera()->get_eye();
+		float zoom = editorSys.get_camera()->get_zoom();
 
 		worldNDC = { cameraPos.x, cameraPos.y };
 		scale *= zoom;
@@ -342,7 +342,7 @@ namespace Copium
 		renderer.begin_batch();
 
 		// Button Colliders
-		Scene* scene = sm->get_current_scene();
+		Scene* scene = sm.get_current_scene();
 		renderer.set_line_width(1.5f);
 		if (scene != nullptr)
 		{
@@ -430,7 +430,7 @@ namespace Copium
 		renderer.begin_batch();
 
 		// Bean: Enable if depth testing is disabled
-		/*Scene* scene = sm->get_current_scene();
+		/*Scene* scene = sm.get_current_scene();
 		if (scene != nullptr)
 		{
 			for (GameObject* gameObject : scene->gameObjects)

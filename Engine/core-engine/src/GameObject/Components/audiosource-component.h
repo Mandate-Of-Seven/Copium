@@ -33,7 +33,7 @@ namespace Copium
                 reference to game object that this belongs to
             */
             /**************************************************************************/
-            AudioSource(GameObject& _gameObj);
+            AudioSource(ComponentID _entityID);
 
             /***************************************************************************/
             /*!
@@ -129,7 +129,7 @@ namespace Copium
                 return a pointer to the clone
             */
             /**************************************************************************/
-            Component* clone(GameObject& _gameObj) const;
+            Component* clone(ComponentID _entityID) const;
 	};
 
 }

@@ -18,7 +18,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 namespace
 {
-    Copium::MessageSystem& messageSystem { *Copium::MessageSystem::Instance() };
+    Copium::MessageSystem& messageSystem { Copium::MessageSystem::Instance() };
 }
 
 namespace Window

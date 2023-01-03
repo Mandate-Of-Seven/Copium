@@ -32,7 +32,7 @@ namespace Copium
             Owner of this component
         */
         /**************************************************************************/
-        Camera(GameObject& _gameObj);
+        Camera(ComponentID _entityID);
 
         /***************************************************************************/
         /*!
@@ -76,13 +76,10 @@ namespace Copium
         /*******************************************************************************/
         void inspector_view();
 
-        virtual Camera* clone(GameObject& _gameObj) const
+        virtual Camera* clone(ComponentID _entityID) const
         {
-            Camera* component = new Camera(_gameObj);
+            Camera* component = new Camera(_entityID);
             return component;
         }
-
-    protected:
-        GameObject* gameObject; // Reference to the gameobject
 	};
 }

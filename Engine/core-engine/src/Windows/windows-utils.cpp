@@ -39,11 +39,8 @@ namespace Copium
 		ZeroMemory(&ofn, sizeof(OPENFILENAME));
 		ofn.lStructSize = sizeof(OPENFILENAME);
 
-		// Set native window
-		if (!Copium::WindowsSystem::Instance())
-			return std::string();
 
-		ofn.hwndOwner = glfwGetWin32Window(Copium::WindowsSystem::Instance()->get_window());
+		ofn.hwndOwner = glfwGetWin32Window(Copium::WindowsSystem::Instance().get_window());
 		if (ofn.hwndOwner == nullptr)
 			return std::string();
 
@@ -67,11 +64,8 @@ namespace Copium
 		ZeroMemory(&ofn, sizeof(OPENFILENAME));
 		ofn.lStructSize = sizeof(OPENFILENAME);
 
-		// Set native window
-		if (!Copium::WindowsSystem::Instance())
-			return std::string();
 
-		ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)Copium::WindowsSystem::Instance()->get_window());
+		ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)Copium::WindowsSystem::Instance().get_window());
 		if (ofn.hwndOwner == nullptr)
 			return std::string();
 

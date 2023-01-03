@@ -127,7 +127,7 @@ public:
     T& addComponent()
     {
         static_assert(std::is_base_of<Component, T>::value);
-        T* component = new T(*this);
+        T* component = new T(id);
         components.push_back(component);
 
         component->id = assign_id();
@@ -221,7 +221,7 @@ public:
 
         MESSAGE_CONTAINER::addOrDeleteComponent.gameObjID = id;
         MESSAGE_CONTAINER::addOrDeleteComponent.componentID = component->id;
-        MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_ADD_COMPONENT);
+        MessageSystem::Instance().dispatch(MESSAGE_TYPE::MT_ADD_COMPONENT);
         return *tmp;
     }
 

@@ -29,15 +29,15 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <GameObject/Components/camera-component.h>
 namespace
 {
-	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
+	Copium::InputSystem& inputSystem{ Copium::InputSystem::Instance() };
 }
 
 namespace Copium
 {
 	//Button------------/
 	const Button* Button::hoveredBtn{nullptr};
-	Button::Button(GameObject& _gameObj,Math::Vec2 _min, Math::Vec2 _max) 
-		: Component(_gameObj, ComponentType::Button), bounds{_min,_max},
+	Button::Button(ComponentID _entityID,Math::Vec2 _min, Math::Vec2 _max) 
+		: Component(_entityID, ComponentType::Button), bounds{_min,_max},
 		normalColor{1.f,1.f,1.f,0.5f}, hoverColor{0.5f,1.f,1.f,0.5f}, clickedColor{0.5f},
 		targetGraphic{nullptr}
 	{
@@ -47,6 +47,7 @@ namespace Copium
 
 	void Button::updateBounds() 
 	{
+		GameObject& gameObj = *MyNewSceneManager.findGameObjByID(entityID);
 		Math::Vec3 pos{ gameObj.transform.position };
 		Math::Vec3 scale{ gameObj.transform.scale };
 		//Get ratio first
@@ -68,6 +69,7 @@ namespace Copium
 
 	void Button::update()
 	{
+		GameObject& gameObj = *MyNewSceneManager.findGameObjByID(entityID);
 		updateBounds();
 		state = getInternalState();
 		if (previousState != state)
@@ -143,6 +145,7 @@ namespace Copium
 
 	void Button::inspector_view()
 	{
+		GameObject& gameObj = *MyNewSceneManager.findGameObjByID(entityID);
 		bool openPopup = false;
 
 		ImGuiColorEditFlags miscFlags = ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip
@@ -172,7 +175,7 @@ namespace Copium
 			else
 			{
 
-				ImGui::Button((targetGraphic->Name() + " (" + targetGraphic->gameObj.get_name() + ")").c_str(), ImVec2(-FLT_MIN, 0.f));
+				ImGui::Button((targetGraphic->Name() + " (" + MyNewSceneManager.findGameObjByID(targetGraphic->entityID)->get_name() + ")").c_str(), ImVec2(-FLT_MIN, 0.f));
 			}
 			if (ImGui::BeginDragDropTarget())
 			{
@@ -334,9 +337,9 @@ namespace Copium
 		return ButtonState::None;
 	}
 
-	Component* Button::clone(GameObject& _gameObj) const
+	Component* Button::clone(ComponentID _entityID) const
 	{
-		auto* component = new Button(_gameObj);
+		auto* component = new Button(_entityID);
 		component->bounds = bounds;
 		component->state = state;
 		component->callbackName = callbackName;
@@ -387,6 +390,7 @@ namespace Copium
 
 	AABB Button::getBounds() const
 	{
+		GameObject& gameObj = *MyNewSceneManager.findGameObjByID(entityID);
 		Math::Vec3& size{ gameObj.transform.scale };
 		Math::Vec3& pos{ gameObj.transform.position };
 		float x = (bounds.max.x - bounds.min.x) * size.x;
@@ -414,13 +418,14 @@ namespace Copium
 	//----------------/
 
 	//Text------------/
-	Text::Text(GameObject& _gameObj)
-		: Component(_gameObj, ComponentType::Text), font{ Font::getFont("corbel") },fontName{"corbel"}, fSize{1.f}, content{"New Text"}
+	Text::Text(ComponentID _entityID)
+		: Component(_entityID, ComponentType::Text), font{ Font::getFont("corbel") },fontName{"corbel"}, fSize{1.f}, content{"New Text"}
 	{
 	}
 
 	void Text::render(BaseCamera* _camera)
 	{
+		GameObject& gameObj = *MyNewSceneManager.findGameObjByID(entityID);
 		if (!font)
 			return;
 		Transform& trans{ gameObj.transform };
@@ -472,9 +477,9 @@ namespace Copium
 		font->draw_text(content, pos, mixedColor, scale, 0, _camera);
 	}
 
-	Component* Text::clone(GameObject& _gameObj) const
+	Component* Text::clone(ComponentID _entityID) const
 	{
-		Text* component = new Text(_gameObj);
+		Text* component = new Text(_entityID);
 		memcpy(component->content, content, TEXT_BUFFER_SIZE);
 		component->color = color;
 		component->fSize = fSize;
@@ -633,15 +638,15 @@ namespace Copium
 	//-----------------/
 
 	//Image------------/
-	ImageComponent::ImageComponent(GameObject& _gameObj)
-		: Component(_gameObj, ComponentType::Image)
+	ImageComponent::ImageComponent(ComponentID _entityID)
+		: Component(_entityID, ComponentType::Image)
 	{
 
 	}
 
 	glm::fvec2 ImageComponent::Offset()
 	{
-		Transform& trans{ gameObj.transform };
+		Transform& trans{ MyNewSceneManager.findGameObjByID(entityID)->transform};
 		Math::Vec2 pos{ trans.position };
 		glm::vec2 dimensions{ sprite.get_size() };
 		if (dimensions.x == 0)
@@ -717,10 +722,10 @@ namespace Copium
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ContentBrowserItem"))
 				{
 					std::string str = (const char*)(payload->Data);
-					Copium::AssetsSystem* assets = Copium::AssetsSystem::Instance();
-					for (int i = 0; i < assets->get_textures().size(); i++)
+					Copium::AssetsSystem& assets = Copium::AssetsSystem::Instance();
+					for (int i = 0; i < assets.get_textures().size(); i++)
 					{
-						if (!assets->get_texture(i)->get_file_path().compare(str))
+						if (!assets.get_texture(i)->get_file_path().compare(str))
 						{
 							spriteID = i + 1;
 						}
@@ -791,9 +796,9 @@ namespace Copium
 		sprite.set_name(spriteName);
 	}
 
-	Component* ImageComponent::clone(GameObject& _gameObj) const
+	Component* ImageComponent::clone(ComponentID _entityID) const
 	{
-		ImageComponent* component = new ImageComponent(_gameObj);
+		ImageComponent* component = new ImageComponent(_entityID);
 		component->offset = offset;
 		component->sprite = sprite;
 		return component;

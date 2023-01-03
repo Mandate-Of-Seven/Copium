@@ -23,7 +23,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <rapidjson/document.h>
 #include <rapidjson/istreamwrapper.h>
 
-#define MyGOF (*Copium::GameObjectFactory::Instance())
+#define GOF (Copium::GameObjectFactory::Instance())
 
 namespace Copium {
 	class GameObject;

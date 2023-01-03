@@ -121,6 +121,7 @@
     <ClCompile Include="src\GameObject\Components\collider-components.cpp" />
     <ClCompile Include="src\GameObject\Components\component.cpp" />
     <ClCompile Include="src\GameObject\Components\physics-components.cpp" />
+    <ClCompile Include="src\GameObject\ecs.cpp" />
     <ClCompile Include="src\GameObject\game-object-factory.cpp" />
     <ClCompile Include="src\GameObject\game-object.cpp" />
     <ClCompile Include="src\GameObject\Components\renderer-component.cpp" />
@@ -214,6 +215,7 @@
   <ItemGroup>
     <ClInclude Include="src\Editor\editor-colortheme.h" />
     <ClInclude Include="src\Editor\editor-game.h" />
+    <ClInclude Include="src\GameObject\components.h" />
     <ClInclude Include="src\GameObject\Components\audiosource-component.h" />
     <ClInclude Include="src\Debugging\frame-rate-controller.h" />
     <ClInclude Include="src\Editor\editor-camera.h" />
@@ -230,6 +232,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="src\GameObject\Components\renderer-component.h" />
+    <ClInclude Include="src\GameObject\ecs.h" />
     <ClInclude Include="src\Game\game-nonscript.h" />
     <ClInclude Include="src\Graphics\base-camera.h" />
     <ClInclude Include="src\Graphics\fonts.h" />
@@ -242,6 +245,7 @@
     <ClInclude Include="src\Scripting\script-wrappers.h" />
     <ClInclude Include="src\Graphics\spritesheet.h" />
     <ClInclude Include="src\Utilities\easing.h" />
+    <ClInclude Include="src\Utilities\sparse-set.h" />
     <ClInclude Include="src\Utilities\thread-system.h" />
     <ClInclude Include="src\GameObject\Components\physics-components.h" />
     <ClInclude Include="src\Physics\collision.h" />

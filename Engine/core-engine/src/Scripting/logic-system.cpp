@@ -28,8 +28,8 @@ namespace Copium
 {
 	namespace
 	{
-		NewSceneManager& sceneManager {*NewSceneManager::Instance()};
-		MessageSystem& messageSystem{ *MessageSystem::Instance() };
+		NewSceneManager& sceneManager {NewSceneManager::Instance()};
+		MessageSystem& messageSystem{ MessageSystem::Instance() };
 		std::vector<GameObject*>* gameObjects;
 		double timeElasped;
 		Game game;

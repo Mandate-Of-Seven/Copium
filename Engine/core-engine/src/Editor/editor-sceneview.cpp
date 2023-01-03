@@ -29,8 +29,8 @@ namespace Copium
 {
 	namespace
 	{
-		EditorCamera& camera{ *EditorSystem::Instance()->get_camera() };
-		NewSceneManager& sm{ *NewSceneManager::Instance() };
+		EditorCamera& camera{ *EditorSystem::Instance().get_camera() };
+		NewSceneManager& sm{ NewSceneManager::Instance() };
 		bool inOp = false;
 	}
 
@@ -200,7 +200,7 @@ namespace Copium
 	void EditorSceneView::resize_sceneview(glm::vec2 _newDimension)
 	{
 		// Only resize if the window is focused
-		if (!WindowsSystem::Instance()->get_window_focused())
+		if (!WindowsSystem::Instance().get_window_focused())
 			return;
 
 		// Only if the current scene dimension is not the same as new dimension

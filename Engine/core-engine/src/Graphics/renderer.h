@@ -381,7 +381,6 @@ namespace Copium
 		glm::vec2 quadTextCoord[4];
 		glm::vec2 textTextCoord[6];
 
-		GraphicsSystem* graphics = nullptr; // A pointer to the instance of graphics system
 		BaseCamera* camera = nullptr;		// A pointer to the camera that holds this renderer class
 	};
 }

@@ -19,7 +19,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 namespace Copium
 {
 
-	SpriteRenderer::SpriteRenderer(GameObject& _gameObj) :Component(_gameObj, ComponentType::SpriteRenderer), isAddingSprite{false}
+	SpriteRenderer::SpriteRenderer(ComponentID _entityID) :Component(_entityID, ComponentType::SpriteRenderer), isAddingSprite{false}
 	{
 	}
 
@@ -92,11 +92,11 @@ namespace Copium
 				ImGui::PushItemWidth(-1);
 				filter.Draw("##SpriteName");
 				ImGui::PopItemWidth();
-				AssetsSystem* assets = AssetsSystem::Instance();
-				for (int i = 0; i < assets->get_textures().size(); i++)
+				AssetsSystem& assets = AssetsSystem::Instance();
+				for (int i = 0; i < assets.get_textures().size(); i++)
 				{
-					size_t startPos = assets->get_texture(i)->get_file_path().find_last_of('/');
-					std::string name = assets->get_texture(i)->get_file_path().substr(startPos + 1, assets->get_texture(i)->get_file_path().length() - startPos);
+					size_t startPos = assets.get_texture(i)->get_file_path().find_last_of('/');
+					std::string name = assets.get_texture(i)->get_file_path().substr(startPos + 1, assets.get_texture(i)->get_file_path().length() - startPos);
 					if (ImGui::Button(name.c_str(), buttonSize))
 					{
 						if (filter.PassFilter(name.c_str()))
@@ -118,10 +118,10 @@ namespace Copium
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ContentBrowserItem"))
 				{
 					std::string str = (const char*)(payload->Data);
-					AssetsSystem* assets = AssetsSystem::Instance();
-					for (int i = 0; i < assets->get_textures().size(); i++)
+					AssetsSystem& assets = AssetsSystem::Instance();
+					for (int i = 0; i < assets.get_textures().size(); i++)
 					{
-;						if (!assets->get_texture(i)->get_file_path().compare(str))
+;						if (!assets.get_texture(i)->get_file_path().compare(str))
 						{
 							spriteID = i + 1;
 						}
@@ -175,9 +175,9 @@ namespace Copium
 	}
 
 
-	Component* SpriteRenderer::clone(GameObject& _gameObj) const
+	Component* SpriteRenderer::clone(ComponentID _entityID) const
 	{
-		SpriteRenderer* component = new SpriteRenderer(_gameObj);
+		SpriteRenderer* component = new SpriteRenderer(_entityID);
 		component->sprite = sprite;
 		return component;
 	}

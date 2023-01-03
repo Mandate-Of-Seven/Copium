@@ -35,8 +35,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 namespace 
 {
     const std::string defaultGameObjName = "New GameObject"; // Append (No.) if its not the first
-    Copium::MessageSystem& messageSystem{*Copium::MessageSystem::Instance()};
-    Copium::NewSceneManager& sceneManager{ *Copium::NewSceneManager::Instance() };
+    Copium::MessageSystem& messageSystem{Copium::MessageSystem::Instance()};
+    Copium::NewSceneManager& sceneManager{ Copium::NewSceneManager::Instance() };
 }
 
 namespace Copium
@@ -55,8 +55,6 @@ namespace Copium
     {
         switch (componentType)
         {
-        case ComponentType::Animator:
-            return &addComponent<Animator>();
         case ComponentType::BoxCollider2D:
             return &addComponent<BoxCollider2D>();
         case ComponentType::Camera:
@@ -101,7 +99,7 @@ namespace Copium
     {
         if (transform.hasParent())
         {
-            return transform.parent->gameObj.isActive();
+            return MyNewSceneManager.findGameObjByID(transform.parent->entityID)->isActive();
         }
         return active;
     }
@@ -112,7 +110,7 @@ namespace Copium
     }
 
 
-GameObject::GameObject(const GameObject& rhs) : transform(*this), id{rhs.id}
+GameObject::GameObject(const GameObject& rhs) : transform(rhs.id), id{rhs.id}
 {
     transform.position = rhs.transform.position;
     transform.rotation = rhs.transform.rotation;
@@ -127,7 +125,7 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{rhs.id}
     for (Component* pComponent : rhs.components)
     {
 
-        Component* newComponent = pComponent->clone(*this);
+        Component* newComponent = pComponent->clone(id);
         newComponent->id = pComponent->id;
         components.push_back(newComponent);
     }
@@ -149,7 +147,7 @@ GameObject::GameObject
 (GameObjectID _id, Math::Vec3 _position, Math::Vec3 _rotation, Math::Vec3 _scale)
     :
     name{ defaultGameObjName },
-    transform(*this, _position, _rotation, _scale),
+    transform(id, _position, _rotation, _scale),
     active{true},
     id{ _id }
 {
@@ -184,7 +182,7 @@ GameObject& GameObject::operator=(const GameObject& _src)
     
     for (Component* pComponent : _src.components)
     {
-        components.push_back(pComponent->clone(*this));
+        components.push_back(pComponent->clone(id));
     }
     return *this;
 }
@@ -330,7 +328,7 @@ void GameObject::inspectorView()
                 {
                     PRINT("ID: " << component->id);
                     componentsToDelete.push_back(component->id);
-                    NewSceneManager::Instance()->get_current_scene()->add_unused_cid(component->id);
+                    MyNewSceneManager.get_current_scene()->add_unused_cid(component->id);
                 }
 
             }

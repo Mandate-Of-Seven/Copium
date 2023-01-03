@@ -29,8 +29,8 @@ namespace Copium
 	{
 		namespace fs = std::filesystem;
 
-		AssetsSystem* assets = AssetsSystem::Instance();
-		EditorSystem* editor = EditorSystem::Instance();
+		AssetsSystem& assets = AssetsSystem::Instance();
+		EditorSystem& editor = EditorSystem::Instance();
 	}
 
 	void FileSystem::init()
@@ -72,7 +72,7 @@ namespace Copium
 			paths.push_back(_paths[i]);
 
 		// Check which directory it is currently in
-		Directory* currentDirectory = editor->get_content_browser()->get_current_directory();
+		Directory* currentDirectory = editor.get_content_browser()->get_current_directory();
 
 		// Create directories / folders / files in the directory
 		for (auto path : paths)
@@ -224,7 +224,7 @@ namespace Copium
 			if (_directory->get_child_directory().size() + _directory->get_files().size() != (size_t)numFiles)
 			{
 				// For checking current directory selection
-				Directory* currentDir = editor->get_content_browser()->get_current_directory();
+				Directory* currentDir = editor.get_content_browser()->get_current_directory();
 
 				// Check for new files and folders
 				for (auto& dirEntry : fs::directory_iterator(_directory->path()))
@@ -545,7 +545,7 @@ namespace Copium
 	{
 		if (selectedFile != nullptr)
 		{
-			assets->unload_file(selectedFile);
+			assets.unload_file(selectedFile);
 			std::cout << "Deleting: " << selectedFile->filename() << " With result: " << DeleteFile(selectedFile->c_str()) << std::endl;
 
 		}
@@ -636,12 +636,12 @@ namespace Copium
 	void FileSystem::add_file_reference(File* _file)
 	{
 		files[_file->get_file_type().fileType].push_back(_file);
-		assets->load_file(_file);
+		assets.load_file(_file);
 	}
 
 	void FileSystem::remove_file_reference(File* _file)
 	{
 		files[_file->get_file_type().fileType].remove(_file);
-		assets->unload_file(_file);
+		assets.unload_file(_file);
 	}
 }

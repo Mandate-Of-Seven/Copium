@@ -27,7 +27,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 // Bean: Temporary for window systems declaration
 namespace
 {
-    Copium::WindowsSystem * windowsSystem = Copium::WindowsSystem::Instance();
+    Copium::WindowsSystem& windowsSystem = Copium::WindowsSystem::Instance();
     short mouseButtons[COPIUM_MAX_MOUSEBUTTONS];
     double mouseScrollOffset;
 
@@ -43,10 +43,10 @@ void InputSystem::init()
     {
         keys[i] = 0;
     }
-    glfwSetKeyCallback(windowsSystem->get_window(), key_callback);
-    glfwSetMouseButtonCallback(windowsSystem->get_window(), mousebutton_callback);
-    glfwSetScrollCallback(windowsSystem->get_window(), mousescroll_callback);
-    glfwSetCursorPosCallback(windowsSystem->get_window(), mousepos_callback);
+    glfwSetKeyCallback(windowsSystem.get_window(), key_callback);
+    glfwSetMouseButtonCallback(windowsSystem.get_window(), mousebutton_callback);
+    glfwSetScrollCallback(windowsSystem.get_window(), mousescroll_callback);
+    glfwSetCursorPosCallback(windowsSystem.get_window(), mousepos_callback);
     std::cout << "Input init was called" << std::endl;
 }
 
@@ -94,7 +94,7 @@ bool InputSystem::is_mousebutton_pressed(int button)
 
 Copium::Math::Vec2 InputSystem::get_mouseposition()
 {
-    auto& window = *windowsSystem->get_window();
+    auto& window = *windowsSystem.get_window();
     double xPos, yPos;
     glfwGetCursorPos(&window, &xPos, &yPos);
 
@@ -102,18 +102,18 @@ Copium::Math::Vec2 InputSystem::get_mouseposition()
     {
         xPos = 0;
     }
-    else if (xPos > windowsSystem->get_window_width())
+    else if (xPos > windowsSystem.get_window_width())
     {
-        xPos = windowsSystem->get_window_width();
+        xPos = windowsSystem.get_window_width();
     }
 
     if (yPos < 0)
     {
         yPos = 0;
     }
-    else if (yPos > windowsSystem->get_window_height())
+    else if (yPos > windowsSystem.get_window_height())
     {
-        yPos = windowsSystem->get_window_height();
+        yPos = windowsSystem.get_window_height();
     }
 
     return { (float)xPos , (float)yPos };

@@ -35,7 +35,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #define SECONDS_TO_RECOMPILE 5
 namespace
 {
-	Copium::MessageSystem* messageSystem{ Copium::MessageSystem::Instance() };
+	Copium::MessageSystem& messageSystem{ Copium::MessageSystem::Instance() };
 	MonoDomain* mRootDomain{ nullptr };		//JIT RUNTIME DOMAIN
 	MonoDomain* mAppDomain{ nullptr };		//APP DOMAIN
 	MonoAssembly* mCoreAssembly{ nullptr };	//ASSEMBLY OF SCRIPTS.DLL
@@ -102,7 +102,7 @@ namespace Copium::Utils
 
 namespace Copium
 {
-	ScriptingSystem& sS{ *ScriptingSystem::Instance() };
+	ScriptingSystem& sS{ ScriptingSystem::Instance() };
 	bool scriptIsLoaded(const std::filesystem::path&);
 	bool scriptPathExists(const std::filesystem::path& filePath);
 	//ScriptingEngine Namespace Functions
@@ -204,7 +204,7 @@ namespace Copium
 
 	void ScriptingSystem::recompileThreadWork()
 	{
-		ThreadSystem& tSys = *ThreadSystem::Instance();
+		ThreadSystem& tSys = ThreadSystem::Instance();
 		while (!tSys.Quit())
 		{
 			while (compilingState != CompilingState::Wait);
@@ -220,7 +220,7 @@ namespace Copium
 	}
 
 	ScriptingSystem::ScriptingSystem() :
-		scriptFiles{ FileSystem::Instance()->get_files_with_extension(".cs") }
+		scriptFiles{ FileSystem::Instance().get_files_with_extension(".cs") }
 	{
 
 	}
@@ -235,7 +235,7 @@ namespace Copium
 		initMono();
 		registerScriptWrappers();
 		systemFlags |= FLAG_RUN_ON_EDITOR;
-		ThreadSystem::Instance()->addThread(new std::thread(&ScriptingSystem::recompileThreadWork, this));
+		ThreadSystem::Instance().addThread(new std::thread(&ScriptingSystem::recompileThreadWork, this));
 		messageSystem.subscribe(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT, this);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_SCENE_OPENED, this);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);

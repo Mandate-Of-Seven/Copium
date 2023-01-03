@@ -20,7 +20,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
-	AudioSource::AudioSource(GameObject& _gameObj) :Component(_gameObj, ComponentType::AudioSource)
+	AudioSource::AudioSource(ComponentID _entityID) :Component(_entityID, ComponentType::AudioSource)
 	{
 	}
 
@@ -87,7 +87,7 @@ namespace Copium
 					{
 						stop_sound();//stop any currently playing audio
 
-						Copium::SoundSystem* soundsystem = Copium::SoundSystem::Instance();
+						Copium::SoundSystem& soundsystem = Copium::SoundSystem::Instance();
 
 						size_t lastSlash = str.find_last_of("/");
 						std::string temp = str.substr(lastSlash + 1);
@@ -95,14 +95,14 @@ namespace Copium
 						alias = temp.substr(0, lastDot);
 						//std::cout << "Alias: " << temp << "\n";
 
-						if (soundsystem->soundList.find(alias) == soundsystem->soundList.end())//if its true it means file doesnt exist yet
+						if (soundsystem.soundList.find(alias) == soundsystem.soundList.end())//if its true it means file doesnt exist yet
 						{
 							std::cout << "New sound file detected: " << str << " / Alias (" << alias << ")\n";
-							SoundSystem::Instance()->CreateSound(str, alias);
+							SoundSystem::Instance().CreateSound(str, alias);
 						}
 						else
 						{
-							soundsystem->soundList[alias].first->getVolume(&f1);
+							soundsystem.soundList[alias].first->getVolume(&f1);
 						}
 					}
 					else
@@ -118,7 +118,7 @@ namespace Copium
 
 			
 			ImGui::SliderFloat("Volume", &f1, 0.0f, 1.0f, "%.2f");
-			SoundSystem::Instance()->soundList[alias].first->setVolume(f1);
+			SoundSystem().soundList[alias].first->setVolume(f1);
 
 			if (ImGui::Button("Preview"))
 			{
@@ -152,17 +152,17 @@ namespace Copium
 
 	void AudioSource::play_sound()
 	{
-		SoundSystem::Instance()->Play(this->alias);
+		SoundSystem::Instance().Play(this->alias);
 	}
 
 	void AudioSource::stop_sound()
 	{
-		SoundSystem::Instance()->Stop(this->alias);
+		SoundSystem::Instance().Stop(this->alias);
 	}
 
-	Component* AudioSource::clone(GameObject& _gameObj) const
+	Component* AudioSource::clone(ComponentID _entityID) const
 	{
-		auto component = new AudioSource(_gameObj);
+		auto component = new AudioSource(_entityID);
 		component->alias = alias;
 		return component;
 	}

@@ -84,7 +84,7 @@ namespace Copium
 					Min of bounding box
 			*/
 			/**************************************************************************/
-			Button(GameObject& _gameObj,Math::Vec2 _min = {-0.5,-0.5}, Math::Vec2 _max = {0.5,0.5});
+			Button(ComponentID _entityID,Math::Vec2 _min = {-0.5,-0.5}, Math::Vec2 _max = {0.5,0.5});
 
 			/*******************************************************************************
 			/*!
@@ -112,7 +112,7 @@ namespace Copium
 
 			Button& operator=(const Button& rhs);
 
-			Component* clone(GameObject& _gameObj) const;
+			Component* clone(ComponentID _entityID) const;
 
 			/*******************************************************************************
 			/*!
@@ -209,7 +209,7 @@ namespace Copium
 					Owner of this
 			*/
 			/**************************************************************************/
-			Text(GameObject& _gameObj);
+			Text(ComponentID _entityID);
 			/*******************************************************************************
 			/*!
 			*
@@ -229,7 +229,7 @@ namespace Copium
 			/*******************************************************************************/
 			void render(BaseCamera* _camera);
 
-			Component* clone(GameObject& _gameObj) const;
+			Component* clone(ComponentID _entityID) const;
 
 			void deserialize(rapidjson::Value& _value);
 			void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
@@ -251,7 +251,7 @@ namespace Copium
 					Owner of this
 			*/
 			/**************************************************************************/
-			ImageComponent(GameObject& _gameObj);
+			ImageComponent(ComponentID _entityID);
 			/*******************************************************************************
 			/*!
 			*
@@ -273,7 +273,7 @@ namespace Copium
 			Sprite& get_sprite_renderer() { return sprite; }
 			void set_sprite_renderer(Sprite& _sprite) { sprite = _sprite; }
 
-			Component* clone(GameObject& _gameObj) const;
+			Component* clone(ComponentID _entityID) const;
 
 			void deserialize(rapidjson::Value& _value)
 			{

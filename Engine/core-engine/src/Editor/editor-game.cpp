@@ -26,7 +26,7 @@ namespace Copium
 {
 	namespace
 	{
-		GraphicsSystem* graphics = GraphicsSystem::Instance();
+		GraphicsSystem& graphics = GraphicsSystem::Instance();
 		BaseCamera* gameCamera = nullptr;
 
 		float padding = 16.f;
@@ -50,9 +50,9 @@ namespace Copium
 		scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
 		
 		unsigned int textureID = 0;
-		if (!graphics->get_cameras().empty())
+		if (!graphics.get_cameras().empty())
 		{
-			gameCamera = *graphics->get_cameras().begin();
+			gameCamera = *graphics.get_cameras().begin();
 			textureID = gameCamera->get_framebuffer()->get_color_attachment_id();
 		}
 
@@ -76,7 +76,7 @@ namespace Copium
 	void EditorGame::resize_game(glm::vec2 _newDimension)
 	{
 		// Only resize if the window is focused
-		if (!WindowsSystem::Instance()->get_window_focused())
+		if (!WindowsSystem::Instance().get_window_focused())
 			return;
 
 		// Only if the current scene dimension is not the same as new dimension

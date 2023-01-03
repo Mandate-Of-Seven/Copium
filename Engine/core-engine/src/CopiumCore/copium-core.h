@@ -47,33 +47,33 @@ namespace Copium
 		/**************************************************************************/
 		void init()
 		{
-			MessageSystem* pMessageSystem = MessageSystem::Instance();
+			MessageSystem& messageSystem = MessageSystem::Instance();
 			systems =
 			{
 				//Put in sequence of calls
-				WindowsSystem::Instance(),
-				pMessageSystem,
-				LoggingSystem::Instance(),
-				SoundSystem::Instance(),
-				FileSystem::Instance(),
-				AssetsSystem::Instance(),
-				NewSceneManager::Instance(),
-				ScriptingSystem::Instance(),
-				InputSystem::Instance(),
-				EditorSystem::Instance(),
-				LogicSystem::Instance(),
-				PhysicsSystem::Instance(),
-				GraphicsSystem::Instance(),
-				ThreadSystem::Instance()
+				&WindowsSystem::Instance(),
+				&messageSystem,
+				&LoggingSystem::Instance(),
+				&SoundSystem::Instance(),
+				&FileSystem::Instance(),
+				&AssetsSystem::Instance(),
+				&NewSceneManager::Instance(),
+				&ScriptingSystem::Instance(),
+				&InputSystem::Instance(),
+				&EditorSystem::Instance(),
+				&LogicSystem::Instance(),
+				&PhysicsSystem::Instance(),
+				&GraphicsSystem::Instance(),
+				&ThreadSystem::Instance()
 			};
 			for (ISystem* pSystem : systems)
 			{
 				pSystem->init();
 			}
 
-			pMessageSystem->subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
-			pMessageSystem->subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
-			pMessageSystem->subscribe(MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW, this);
+			messageSystem.subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
+			messageSystem.subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
+			messageSystem.subscribe(MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW, this);
 		}
 
 		/**************************************************************************/

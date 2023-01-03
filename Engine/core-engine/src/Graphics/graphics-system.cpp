@@ -35,8 +35,8 @@ namespace Copium
 {
 	namespace
 	{
-		InputSystem& inputSystem{ *InputSystem::Instance() };
-		MessageSystem& messageSystem{ *MessageSystem::Instance() };
+		InputSystem& inputSystem{ InputSystem::Instance() };
+		MessageSystem& messageSystem{ MessageSystem::Instance() };
 
 		// Temporary global variables
 		GLfloat rotate = 0.f;
@@ -101,13 +101,13 @@ namespace Copium
 		// Mass spawning
 		if (massSpawn)
 		{
-			NewSceneManager* sm = NewSceneManager::Instance();
-			Scene* scene = sm->get_current_scene();
+			NewSceneManager& sm = NewSceneManager::Instance();
+			Scene* scene = sm.get_current_scene();
 			if (scene != nullptr)
 			{
 				for (size_t i = 0; i < 10; i++)
 				{
-					GameObject* go = MyGOF.instantiate();
+					GameObject* go = GOF.instantiate();
 					go->addComponent(ComponentType::SpriteRenderer);
 					//go->addComponent(ComponentType::Rigidbody);
 
@@ -128,8 +128,8 @@ namespace Copium
 
 		if (inputSystem.is_key_pressed(GLFW_KEY_Y))
 		{
-			NewSceneManager* sm = NewSceneManager::Instance();
-			PRINT("Number of Gameobjects: " << sm->get_current_scene()->get_gameobjcount());
+			NewSceneManager& sm = NewSceneManager::Instance();
+			PRINT("Number of Gameobjects: " << sm.get_current_scene()->get_gameobjcount());
 		}
 	
 		batch_render();
@@ -145,8 +145,8 @@ namespace Copium
 		if (mType == MESSAGE_TYPE::MT_SCENE_DESERIALIZED)
 		{
 			cameras.clear();
-			NewSceneManager* sm = NewSceneManager::Instance();
-			Scene* scene = sm->get_current_scene();
+			NewSceneManager& sm = NewSceneManager::Instance();
+			Scene* scene = sm.get_current_scene();
 			for (GameObject* gameObject : scene->gameObjects)
 			{
 				if (gameObject->hasComponent(ComponentType::Camera))
@@ -186,15 +186,15 @@ namespace Copium
 	// parse all textures into the game
 	void GraphicsSystem::parse_textures()
 	{
-		AssetsSystem* assets = AssetsSystem::Instance();
+		AssetsSystem& assets = AssetsSystem::Instance();
 		// Check for texture slots
 		COPIUM_ASSERT(textureSlotIndex == maxTextures, "Max textures reached! Replace old textures!!");
 
 		// Assign the slot to the texture
 		textureSlotIndex = 1;
-		for (GLuint i = 0; i < assets->get_textures().size(); i++)
+		for (GLuint i = 0; i < assets.get_textures().size(); i++)
 		{
-			textureSlots[textureSlotIndex++] = assets->get_textures()[i].get_object_id();
+			textureSlots[textureSlotIndex++] = assets.get_textures()[i].get_object_id();
 		}
 	}
 

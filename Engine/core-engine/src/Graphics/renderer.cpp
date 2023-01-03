@@ -26,9 +26,13 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
+	namespace
+	{
+		GraphicsSystem& graphics = GraphicsSystem::Instance();
+	}
+
 	void Renderer::init(BaseCamera* _camera)
 	{
-		graphics = GraphicsSystem::Instance();
 		camera = _camera;
 
 		// Setup Quad Vertex Array Object
@@ -43,7 +47,7 @@ namespace Copium
 		// Setup Text Vertex Array Object
 		setup_text_vao();
 
-		GLuint texture = graphics->get_white_texture();
+		GLuint texture = graphics.get_white_texture();
 		glCreateTextures(GL_TEXTURE_2D, 1, &texture);
 		glTextureStorage2D(texture, 1, GL_RGBA8, 1, 1);
 
@@ -56,12 +60,12 @@ namespace Copium
 		GLuint color = 0xFFFFFFFF;
 		glTextureSubImage2D(texture, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &color);
 
-		graphics->get_texture_slots().resize(maxTextures);
-		graphics->get_texture_slots()[0] = texture;
+		graphics.get_texture_slots().resize(maxTextures);
+		graphics.get_texture_slots()[0] = texture;
 
 		for (GLuint i = 1; i < maxTextures; i++)
 		{
-			graphics->get_texture_slots()[i] = 0;
+			graphics.get_texture_slots()[i] = 0;
 		}
 	}
 
@@ -217,7 +221,7 @@ namespace Copium
 		glDeleteBuffers(1, &lineVertexBufferID);
 		glDeleteBuffers(1, &textVertexBufferID);
 		glDeleteBuffers(1, &quadIndexBufferID);
-		glDeleteTextures(1, &graphics->get_white_texture());
+		glDeleteTextures(1, &graphics.get_white_texture());
 
 		delete[] quadBuffer;
 		delete[] lineBuffer;
@@ -247,14 +251,14 @@ namespace Copium
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			graphics->get_shader_program()[QUAD_SHADER].Use();
+			graphics.get_shader_program()[QUAD_SHADER].Use();
 			glBindVertexArray(quadVertexArrayID);
 
 			// Bean: Matrix assignment to be placed somewhere else
 			GLuint uProjection = glGetUniformLocation(
-				graphics->get_shader_program()[QUAD_SHADER].GetHandle(), "uViewProjection");
+				graphics.get_shader_program()[QUAD_SHADER].GetHandle(), "uViewProjection");
 			/*GLuint uTransform = glGetUniformLocation(
-				graphics->get_shader_program()[QUAD_SHADER].GetHandle(), "uTransform");*/
+				graphics.get_shader_program()[QUAD_SHADER].GetHandle(), "uTransform");*/
 			glm::mat4 projection = camera->get_view_proj_matrix();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 			//glm::vec3 pos = camera->get_eye();
@@ -272,26 +276,26 @@ namespace Copium
 			}*/
 			// End of matrix assignment
 			
-			for (GLuint i = 0; i < graphics->get_texture_slot_index(); i++)
-				glBindTextureUnit(i, graphics->get_texture_slots()[i]);
+			for (GLuint i = 0; i < graphics.get_texture_slot_index(); i++)
+				glBindTextureUnit(i, graphics.get_texture_slots()[i]);
 
 			glDrawElements(GL_TRIANGLES, quadIndexCount, GL_UNSIGNED_SHORT, NULL);
 			drawCount++;
 
-			graphics->set_texture_slot_index(1);
+			graphics.set_texture_slot_index(1);
 			glBindVertexArray(0);
-			graphics->get_shader_program()[QUAD_SHADER].UnUse();
+			graphics.get_shader_program()[QUAD_SHADER].UnUse();
 			glDisable(GL_BLEND);
 		}
 
 		if (lineVertexCount)
 		{
-			graphics->get_shader_program()[LINE_SHADER].Use();
+			graphics.get_shader_program()[LINE_SHADER].Use();
 			glBindVertexArray(lineVertexArrayID);
 
 			// Bean: Matrix assignment to be placed somewhere else
 			GLuint uProjection = glGetUniformLocation(
-				graphics->get_shader_program()[LINE_SHADER].GetHandle(), "uViewProjection");
+				graphics.get_shader_program()[LINE_SHADER].GetHandle(), "uViewProjection");
 
 			glm::mat4 projection = camera->get_view_proj_matrix();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
@@ -303,7 +307,7 @@ namespace Copium
 			drawCount++;
 
 			glBindVertexArray(0);
-			graphics->get_shader_program()[LINE_SHADER].UnUse();
+			graphics.get_shader_program()[LINE_SHADER].UnUse();
 		}
 
 		if (textVertexCount)
@@ -312,7 +316,7 @@ namespace Copium
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			graphics->get_shader_program()[TEXT_SHADER].Use();
+			graphics.get_shader_program()[TEXT_SHADER].Use();
 			glActiveTexture(GL_TEXTURE0);
 			glBindVertexArray(textVertexArrayID);
 
@@ -325,7 +329,7 @@ namespace Copium
 
 			// Bean: Matrix assignment to be placed somewhere else
 			GLuint uProjection = glGetUniformLocation(
-				graphics->get_shader_program()[TEXT_SHADER].GetHandle(), "uViewProjection");
+				graphics.get_shader_program()[TEXT_SHADER].GetHandle(), "uViewProjection");
 
 			glm::mat4 projection = camera->get_view_proj_matrix();
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
@@ -338,7 +342,7 @@ namespace Copium
 
 			glBindVertexArray(0);
 			glBindTexture(GL_TEXTURE_2D, 0);
-			graphics->get_shader_program()[TEXT_SHADER].UnUse();
+			graphics.get_shader_program()[TEXT_SHADER].UnUse();
 			glDisable(GL_BLEND);
 		}
 		
@@ -521,9 +525,9 @@ namespace Copium
 
 		GLfloat textureIndex = 0.f;
 
-		for (GLuint i = 1; i < graphics->get_texture_slot_index(); i++)
+		for (GLuint i = 1; i < graphics.get_texture_slot_index(); i++)
 		{
-			if (graphics->get_texture_slots()[i] == _textureID)
+			if (graphics.get_texture_slots()[i] == _textureID)
 			{
 				textureIndex = (GLfloat) i;
 				break;
@@ -534,9 +538,9 @@ namespace Copium
 		if (textureIndex == 0.f && _textureID != 0)
 		{
 			// Add new texture into the texture slot
-			textureIndex = (GLfloat) graphics->get_texture_slot_index();
-			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _textureID;
-			graphics->set_texture_slot_index((GLuint) textureIndex + 1);
+			textureIndex = (GLfloat) graphics.get_texture_slot_index();
+			graphics.get_texture_slots()[graphics.get_texture_slot_index()] = _textureID;
+			graphics.set_texture_slot_index((GLuint) textureIndex + 1);
 		}
 
 		for (GLint i = 0; i < 4; i++)
@@ -563,12 +567,12 @@ namespace Copium
 
 		GLfloat textureIndex = 0.f;
 
-		for (GLuint i = 1; i < graphics->get_texture_slot_index(); i++)
+		for (GLuint i = 1; i < graphics.get_texture_slot_index(); i++)
 		{
 			if (!_sprite.get_texture())
 				break;
 
-			if (graphics->get_texture_slots()[i] == _sprite.get_texture()->get_object_id())
+			if (graphics.get_texture_slots()[i] == _sprite.get_texture()->get_object_id())
 			{
 				textureIndex = (GLfloat) i;
 				break;
@@ -579,9 +583,9 @@ namespace Copium
 		if (textureIndex == 0.f && _sprite.get_sprite_id() != 0)
 		{
 			// Add new texture into the texture slot
-			textureIndex = (GLfloat) graphics->get_texture_slot_index();
-			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _sprite.get_texture()->get_object_id();
-			graphics->set_texture_slot_index((GLuint)textureIndex + 1);
+			textureIndex = (GLfloat) graphics.get_texture_slot_index();
+			graphics.get_texture_slots()[graphics.get_texture_slot_index()] = _sprite.get_texture()->get_object_id();
+			graphics.set_texture_slot_index((GLuint)textureIndex + 1);
 		}
 
 		for (GLint i = 0; i < 4; i++)
@@ -610,9 +614,9 @@ namespace Copium
 
 		GLfloat textureIndex = 0.f;
 
-		for (GLuint i = 1; i < graphics->get_texture_slot_index(); i++)
+		for (GLuint i = 1; i < graphics.get_texture_slot_index(); i++)
 		{
-			if (graphics->get_texture_slots()[i] == _textureID)
+			if (graphics.get_texture_slots()[i] == _textureID)
 			{
 				textureIndex = (GLfloat) i;
 				break;
@@ -623,9 +627,9 @@ namespace Copium
 		if (textureIndex == 0.f && _textureID != 0)
 		{
 			// Add new texture into the texture slot
-			textureIndex = (GLfloat) graphics->get_texture_slot_index();
-			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _textureID;
-			graphics->set_texture_slot_index((GLuint) textureIndex + 1);
+			textureIndex = (GLfloat) graphics.get_texture_slot_index();
+			graphics.get_texture_slots()[graphics.get_texture_slot_index()] = _textureID;
+			graphics.set_texture_slot_index((GLuint) textureIndex + 1);
 		}
 
 		glm::vec2 offset = _spritesheet.get_offsets()[_offsetID];
@@ -678,10 +682,10 @@ namespace Copium
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		graphics->get_shader_program()[LINE_SHADER].Use();
+		graphics.get_shader_program()[LINE_SHADER].Use();
 
 		GLuint uProjection = glGetUniformLocation(
-			graphics->get_shader_program()[LINE_SHADER].GetHandle(), "uViewProjection");
+			graphics.get_shader_program()[LINE_SHADER].GetHandle(), "uViewProjection");
 
 		glm::mat4 projection = camera->get_view_proj_matrix();
 		glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
@@ -696,7 +700,7 @@ namespace Copium
 
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
-		graphics->get_shader_program()[TEXT_SHADER].UnUse();
+		graphics.get_shader_program()[TEXT_SHADER].UnUse();
 
 		glDisable(GL_BLEND);
 	}
@@ -713,7 +717,7 @@ namespace Copium
 		float x = _position.x;
 		float y = _position.y;
 
-		Font font = graphics->get_font(_fontID);
+		Font font = graphics.get_font(_fontID);
 		std::map<char, Character> chars = font.get_characters();
 		
 		std::string::const_iterator c;

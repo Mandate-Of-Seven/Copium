@@ -5,13 +5,14 @@
 
 namespace Copium
 {
-    BoxCollider2D::BoxCollider2D(GameObject& _gameObj):Component(_gameObj, ComponentType::BoxCollider2D) 
+    BoxCollider2D::BoxCollider2D(ComponentID _entityID):Component(_entityID, ComponentType::BoxCollider2D)
     {
         
     }
 
 	AABB BoxCollider2D::getBounds() 
 	{
+        GameObject& gameObj = *MyNewSceneManager.findGameObjByID(entityID);
 		Math::Vec3 size{ gameObj.transform.scale };
 		Math::Vec3 pos{ gameObj.transform.position };
 

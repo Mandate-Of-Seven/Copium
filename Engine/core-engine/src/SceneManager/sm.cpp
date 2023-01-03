@@ -88,7 +88,7 @@ namespace Copium {
 
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		storageScene = nullptr;
-		MyGOF.register_archetypes("Data/Archetypes");
+		GOF.register_archetypes("Data/Archetypes");
 		//load_scene(prefix + "demo_M3.scene");
 
 
@@ -155,7 +155,7 @@ namespace Copium {
 		}
 
 		// WAIT
-		MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_SCENE_OPENED);
+		MessageSystem::Instance().dispatch(MESSAGE_TYPE::MT_SCENE_OPENED);
 
 		if (document.HasMember("Name"))
 		{
@@ -193,7 +193,7 @@ namespace Copium {
 			for (rapidjson::Value::ValueIterator iter = _gameObjArr.Begin(); iter != _gameObjArr.End(); ++iter)
 			{
 				GameObject* tmpGO = nullptr;
-				tmpGO = MyGOF.instantiate(*iter);
+				tmpGO = GOF.instantiate(*iter);
 			}
 
 			// Linkage of components to each other
@@ -220,7 +220,7 @@ namespace Copium {
 		ifs.close();
 
 
-		MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_SCENE_DESERIALIZED);
+		MessageSystem::Instance().dispatch(MESSAGE_TYPE::MT_SCENE_DESERIALIZED);
 
 		return true;
 
@@ -461,7 +461,7 @@ namespace Copium {
 		// Copy game object data
 		for (const GameObject* gameObj : storageScene->gameObjects)
 		{
-			MyGOF.clone(*gameObj, currentScene);
+			GOF.clone(*gameObj, currentScene);
 		}
 
 		//std::cout << "Storage scene game object count: " << storageScene->gameObjects.size() << std::endl;

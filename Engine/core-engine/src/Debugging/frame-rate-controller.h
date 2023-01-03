@@ -14,7 +14,7 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
-#define MyFrameRateController (*Copium::FrameRateController::Instance())
+#define MyFrameRateController Copium::FrameRateController::Instance()
 
 #ifndef FRAMERATECONTROLLER_H
 #define FRAMERATECONTROLLER_H

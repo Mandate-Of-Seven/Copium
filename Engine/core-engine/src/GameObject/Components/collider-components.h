@@ -38,7 +38,7 @@ namespace Copium
 				Owner of this component
 			*/
 			/**************************************************************************/
-			BoxCollider2D(GameObject& _gameObj);
+			BoxCollider2D(ComponentID _entityID);
 
 			/*******************************************************************************
 			/*!
@@ -61,9 +61,9 @@ namespace Copium
 			*/
 			/*******************************************************************************/
 
-			Component* clone(GameObject& _gameObj) const
+			Component* clone(ComponentID _entityID) const
 			{ 
-				BoxCollider2D* component = new BoxCollider2D(_gameObj);
+				BoxCollider2D* component = new BoxCollider2D(_entityID);
 				component->boundingBox = boundingBox;
 				return component;
 			}

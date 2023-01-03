@@ -30,6 +30,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/Components/renderer-component.h"
 #include "Editor/editor-undoredo.h"
 #include "GameObject/Components/ui-components.h"
+#include "Events/events-system.h"
 
 //State Manager
 #include "SceneManager/state-manager.h"
@@ -37,15 +38,18 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Editor/inspector.h"
 #include "CopiumCore/copium-core.h"
 #include "Debugging/frame-rate-controller.h"
+
+#include <GameObject/ecs.h>
+
 namespace
 {
     // Our state
     float recompileTimer = 0;
-    Copium::CopiumCore& copiumCore{ *Copium::CopiumCore::Instance()};
-    Copium::SoundSystem& soundSystem{ *Copium::SoundSystem::Instance()};
-    Copium::InputSystem& inputSystem { *Copium::InputSystem::Instance()};
-    Copium::WindowsSystem* windowsSystem = Copium::WindowsSystem::Instance();
-    Copium::NewSceneManager* sceneManager = Copium::NewSceneManager::Instance();
+    Copium::CopiumCore& copiumCore{ Copium::CopiumCore::Instance()};
+    Copium::SoundSystem& soundSystem{ Copium::SoundSystem::Instance()};
+    Copium::InputSystem& inputSystem { Copium::InputSystem::Instance()};
+    Copium::WindowsSystem& windowsSystem = Copium::WindowsSystem::Instance();
+    Copium::NewSceneManager& sceneManager = Copium::NewSceneManager::Instance();
 }
 
 ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -89,8 +93,10 @@ int main()
     MyFrameRateController.init(60);
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
-    glfwSetWindowCloseCallback(windowsSystem->get_window(), quitEngine);
+    glfwSetWindowCloseCallback(windowsSystem.get_window(), quitEngine);
 
+    PRINT("ADDRESS1 : " << &Copium::MainComponents::GetArray<Copium::Transform>());
+    PRINT("ADDRESS2 : " << &Copium::BackupComponents::GetArray<Copium::Transform>());
     // Engine Loop
     while (esCurrent != esQuit)
     {
@@ -170,11 +176,11 @@ static void update()
 {   
     if (inputSystem.is_key_pressed(GLFW_KEY_Z))//undo
     {
-        if (!Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.empty())
+        if (!Copium::EditorSystem::Instance().get_commandmanager()->undoStack.empty())
         {
-            Copium::UndoRedo::Command* temp = Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.top();
-            Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.top()->Undo(&Copium::EditorSystem::Instance()->get_commandmanager()->redoStack);
-            Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.pop();
+            Copium::UndoRedo::Command* temp = Copium::EditorSystem::Instance().get_commandmanager()->undoStack.top();
+            Copium::EditorSystem::Instance().get_commandmanager()->undoStack.top()->Undo(&Copium::EditorSystem::Instance().get_commandmanager()->redoStack);
+            Copium::EditorSystem::Instance().get_commandmanager()->undoStack.pop();
             delete temp;
         }
         else
@@ -187,11 +193,11 @@ static void update()
     if (inputSystem.is_key_pressed(GLFW_KEY_X) )//redo
     {
         
-        if (!Copium::EditorSystem::Instance()->get_commandmanager()->redoStack.empty())
+        if (!Copium::EditorSystem::Instance().get_commandmanager()->redoStack.empty())
         {
-            Copium::UndoRedo::Command* temp = Copium::EditorSystem::Instance()->get_commandmanager()->redoStack.top();
-            Copium::EditorSystem::Instance()->get_commandmanager()->redoStack.top()->Redo(&Copium::EditorSystem::Instance()->get_commandmanager()->undoStack);
-            Copium::EditorSystem::Instance()->get_commandmanager()->redoStack.pop();
+            Copium::UndoRedo::Command* temp = Copium::EditorSystem::Instance().get_commandmanager()->redoStack.top();
+            Copium::EditorSystem::Instance().get_commandmanager()->redoStack.top()->Redo(&Copium::EditorSystem::Instance().get_commandmanager()->undoStack);
+            Copium::EditorSystem::Instance().get_commandmanager()->redoStack.pop();
             delete temp;
         }
         else
@@ -212,8 +218,8 @@ static void update()
 /**************************************************************************/
 static void draw() 
 {
-    Copium::EditorSystem::Instance()->draw();
-    Copium::WindowsSystem::Instance()->draw();
+    Copium::EditorSystem::Instance().draw();
+    Copium::WindowsSystem::Instance().draw();
 }
 
 /***************************************************************************/

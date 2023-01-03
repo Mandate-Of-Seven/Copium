@@ -132,7 +132,7 @@ namespace Copium
 
 namespace
 {
-	Copium::LoggingSystem& loggingSystem{*Copium::LoggingSystem::Instance()};
+	Copium::LoggingSystem& loggingSystem{Copium::LoggingSystem::Instance()};
 }
 
 //User Macros

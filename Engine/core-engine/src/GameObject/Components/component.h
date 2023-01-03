@@ -25,10 +25,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 namespace Copium
 {
 
-class GameObject;
-
-    //USING
-
 using ComponentID = uint64_t;
 
 
@@ -67,10 +63,12 @@ static std::map<ComponentType, std::string> MAP_COMPONENT_TYPE_NAME
 class Component
 {
     public:
+        Component():componentType(ComponentType::None){}
         Component(const Component&) = delete;
 
         const ComponentType componentType;      //Type of component
         ComponentID id;                   //Id of component
+        ComponentID entityID;
 
 
         /*******************************************************************************
@@ -156,7 +154,7 @@ class Component
             Reference to the cloned component in current scene
         */
         /**************************************************************************/
-        virtual Component* clone(GameObject& _gameObj) const = 0;
+        virtual Component* clone(ComponentID _entityID) const = 0;
 
         /***************************************************************************/
         /*!
@@ -251,19 +249,7 @@ class Component
         */
         /**************************************************************************/
         void Enabled(bool) noexcept;
-
-        GameObject& gameObj;
     protected:
-
-        /***************************************************************************/
-        /*!
-        \brief
-            Hidden base class default constructor to prevent creation and force
-            derived classes from inheriting
-        */
-        /**************************************************************************/
-        Component() = delete;
-
         /***************************************************************************/
         /*!
         \brief
@@ -275,65 +261,11 @@ class Component
             Type of component to be defined by derived classes
         */
         /**************************************************************************/
-        Component(GameObject& _gameObj, ComponentType _componentType);
+        Component(ComponentID gameObjectID, ComponentType _componentType);
     private:
         const bool allowMultiple = false;   //Can gameObjects only have one of this Component?
         bool enabled;
 };
-
-    
-
-    class Animator : public Component
-    {
-    public:
-        /***************************************************************************/
-        /*!
-        \brief
-            Constructor for animator Components
-        \param _gameObj
-            Owner of this component
-        */
-        /**************************************************************************/
-        Animator(GameObject& _gameObj);
-
-
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Displays the inspector view with its fields
-
-        */
-        /*******************************************************************************/
-        void inspector_view(){};
-
-
-        /***************************************************************************/
-        /*!
-        \brief
-            Clone function for preview mode and editor mode
-        \param _gameObj
-            GameObject to clone from
-        \return
-            Reference to the cloned component in current scene
-        */
-        /**************************************************************************/
-        virtual Animator* clone(GameObject& _gameObj) const
-        {
-            Animator* component = new Animator(_gameObj);
-            return component;
-        }
-
-        /***************************************************************************/
-        /*!
-        \brief
-            Deserialize this component's data from specified rapidjson value
-        */
-        /**************************************************************************/
-        //void deserialize(rapidjson::Value& _value);
-    protected:
-
-    };
 
 }
 #endif // !COMPONENT_H

@@ -39,8 +39,8 @@ namespace Copium
 
 
 Transform::Transform
-	(GameObject& _gameObj,Math::Vec3 _position, Math::Vec3 _rotation, Math::Vec3 _scale)
-	:Component(_gameObj, ComponentType::Transform),
+	(ComponentID _entityID,Math::Vec3 _position, Math::Vec3 _rotation, Math::Vec3 _scale)
+	:Component(_entityID, ComponentType::Transform),
 	position {_position}, rotation{ _rotation }, scale{ _scale }, parent{ nullptr }{}
 
 float temp;
@@ -71,7 +71,7 @@ void Transform::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 {
     if (parent)
     {
-        _value.AddMember("PID", parent->gameObj.id, _doc.GetAllocator());
+        _value.AddMember("PID", parent->entityID, _doc.GetAllocator());
     }
     else
     {
@@ -154,7 +154,7 @@ void Transform::inspector_view()
                 if (temp!=position.x)
                 {
                     UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&position.x, temp);
-                    EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    EditorSystem::Instance().get_commandmanager()->undoStack.push(tempUndo);
                     temp = position.x;
                 }
             }
@@ -174,7 +174,7 @@ void Transform::inspector_view()
                 if (temp != position.y)
                 {
                     UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&position.y, temp);
-                    EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    EditorSystem::Instance().get_commandmanager()->undoStack.push(tempUndo);
                     temp = position.y;
                 }
             }
@@ -194,7 +194,7 @@ void Transform::inspector_view()
                 if (temp != position.z)
                 {
                     UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&position.z, temp);
-                    EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    EditorSystem::Instance().get_commandmanager()->undoStack.push(tempUndo);
                     temp = position.z;
                 }
             }
@@ -225,7 +225,7 @@ void Transform::inspector_view()
                 if (temp != rotation.x)
                 {
                     UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&rotation.x, temp);
-                    EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    EditorSystem::Instance().get_commandmanager()->undoStack.push(tempUndo);
                     temp = rotation.x;
                 }
             }
@@ -245,7 +245,7 @@ void Transform::inspector_view()
                 if (temp != rotation.y)
                 {
                     UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&rotation.y, temp);
-                    EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    EditorSystem::Instance().get_commandmanager()->undoStack.push(tempUndo);
                     temp = rotation.y;
                 }
             }
@@ -265,7 +265,7 @@ void Transform::inspector_view()
                 if (temp != rotation.z)
                 {
                     UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&rotation.z, temp);
-                    EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    EditorSystem::Instance().get_commandmanager()->undoStack.push(tempUndo);
                     temp = rotation.z;
                 }
             }
@@ -296,7 +296,7 @@ void Transform::inspector_view()
                 if (temp != scale.x)
                 {
                     UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&scale.x, temp);
-                    EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    EditorSystem::Instance().get_commandmanager()->undoStack.push(tempUndo);
                     temp = scale.x;
                 }
             }
@@ -316,7 +316,7 @@ void Transform::inspector_view()
                 if (temp != scale.y)
                 {
                     UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&scale.y, temp);
-                    EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    EditorSystem::Instance().get_commandmanager()->undoStack.push(tempUndo);
                     temp = scale.y;
                 }
             }
@@ -336,7 +336,7 @@ void Transform::inspector_view()
                 if (temp != scale.z)
                 {
                     UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&scale.z, temp);
-                    EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+                    EditorSystem::Instance().get_commandmanager()->undoStack.push(tempUndo);
                     temp = scale.z;
                 }
             }
@@ -361,6 +361,6 @@ void Transform::previewLink(Component* rhs)
     PRINT("LINKING TRANSFORM");
     Transform* transform = reinterpret_cast<Transform*>(rhs);
     if (transform->hasParent())
-        setParent(&MyNewSceneManager.findGameObjByID(transform->parent->gameObj.id)->transform);
+        setParent(&MyNewSceneManager.findGameObjByID(transform->parent->entityID)->transform);
 }
 }

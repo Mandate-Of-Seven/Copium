@@ -1,4 +1,4 @@
-/*!***************************************************************************************
+/*!******************************************************fs.*********************************
 \file			editor-content-browser.cpp
 \project
 \author			Sean Ngo
@@ -24,8 +24,8 @@ namespace Copium
 {
 	namespace
 	{
-		FileSystem* fs = FileSystem::Instance();
-		AssetsSystem* assetSys = AssetsSystem::Instance();
+		FileSystem& fs = FileSystem::Instance();
+		AssetsSystem& assetSys = AssetsSystem::Instance();
 
 		std::filesystem::path assets = "../PackedTracks/Assets";
 
@@ -41,7 +41,7 @@ namespace Copium
 
 	void EditorContentBrowser::init()
 	{
-		currentDirectory = &fs->get_asset_directory();
+		currentDirectory = &fs.get_asset_directory();
 
 		Texture directoryIcon("Data/Resource/DirectoryIcon.png");
 		Texture fileIcon("Data/Resource/FileIcon.png");
@@ -69,7 +69,7 @@ namespace Copium
 		{
 			if (ImGui::Button("Reload"))
 			{
-				MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_RELOAD_ASSETS);
+				MessageSystem::Instance().dispatch(MESSAGE_TYPE::MT_RELOAD_ASSETS);
 			}
 		}
 
@@ -145,7 +145,7 @@ namespace Copium
 
 				// Get the image icon
 				unsigned int objectID = icons[1].get_object_id();
-				for (unsigned int i = 0; i < assetSys->get_textures().size(); i++)
+				for (unsigned int i = 0; i < assetSys.get_textures().size(); i++)
 				{
 					std::string texturePath;
 					switch (file.get_file_type().fileType)
@@ -169,10 +169,10 @@ namespace Copium
 						break;
 
 					case Copium::SPRITE:
-						texturePath = assetSys->get_texture(i)->get_file_path();
+						texturePath = assetSys.get_texture(i)->get_file_path();
 						if (!file.generic_string().compare(texturePath))
 						{
-							Texture* temp = assetSys->get_texture(i);
+							Texture* temp = assetSys.get_texture(i);
 							objectID = temp->get_object_id();
 							float asRatio = temp->get_width() / (float)temp->get_height();
 							imageAR = thumbnailSize / ((asRatio > 0.98f && asRatio < 1.f) ? 1.f : asRatio);
@@ -231,8 +231,8 @@ namespace Copium
 	{
 		if (!ImGui::IsMouseDragging(ImGuiMouseButton_Left) && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
 		{
-			fs->set_selected_file(nullptr);
-			fs->set_selected_directory(nullptr);
+			fs.set_selected_file(nullptr);
+			fs.set_selected_directory(nullptr);
 		}
 
 		if (ImGui::IsWindowFocused())
@@ -258,20 +258,20 @@ namespace Copium
 				{
 					if (file.get_id() == ImGui::GetHoveredID())
 					{
-						fs->set_selected_file(&file);
+						fs.set_selected_file(&file);
 					}
 				}
 
 				for (Directory* dir : currentDirectory->get_child_directory())
 				{
 					if (dir->get_id() == ImGui::GetHoveredID())
-						fs->set_selected_directory(dir);
+						fs.set_selected_directory(dir);
 				}
 			}
 			
 			if (ImGui::IsKeyPressed(ImGuiKey_Delete))
 			{
-				fs->delete_from_browser();
+				fs.delete_from_browser();
 			}
 		}
 	}

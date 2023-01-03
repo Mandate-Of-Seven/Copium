@@ -25,7 +25,7 @@ namespace Copium
 	class SpriteRenderer : public Component
 	{
 	public:
-		SpriteRenderer(GameObject& _gameObj);
+		SpriteRenderer(ComponentID _entityID);
 
 		/*******************************************************************************
 		/*!
@@ -74,7 +74,7 @@ namespace Copium
 		Sprite& get_sprite_renderer() { return sprite; }
 		void set_sprite_renderer(const Sprite& _sprite) { sprite = _sprite; }
 
-		Component* clone(GameObject& _gameObj) const;
+		Component* clone(ComponentID _entityID) const;
 	protected:
 		Sprite sprite;
 

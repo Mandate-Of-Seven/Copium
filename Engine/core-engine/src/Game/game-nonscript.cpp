@@ -27,10 +27,10 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
-    AssetsSystem* assets = AssetsSystem::Instance();
-    EditorSystem* editorSys = EditorSystem::Instance();
-    NewSceneManager* sm = NewSceneManager::Instance();
-    MessageSystem* messageSystem = MessageSystem::Instance();
+    AssetsSystem& assets = AssetsSystem::Instance();
+    EditorSystem& editorSys = EditorSystem::Instance();
+    NewSceneManager& sm = NewSceneManager::Instance();
+    MessageSystem& messageSystem = MessageSystem::Instance();
 
     GameObject* playerBullet;
     GameObject* enemyBullet;
@@ -40,9 +40,9 @@ namespace Copium
 
     void Game::init()
     {
-        messageSystem->subscribe(MESSAGE_TYPE::MT_COLLISION_ENTER, this);
+        messageSystem.subscribe(MESSAGE_TYPE::MT_COLLISION_ENTER, this);
 
-        Scene* scene = sm->get_current_scene();
+        Scene* scene = sm.get_current_scene();
         if (scene != nullptr && scene->get_state() == Scene::SceneState::play)
         {
             for (auto gameObj : scene->gameObjects)
@@ -66,7 +66,7 @@ namespace Copium
 
     void Game::update()
     {
-        Scene* scene = sm->get_current_scene();
+        Scene* scene = sm.get_current_scene();
         if(scene != nullptr && scene->get_state() == Scene::SceneState::play)
         {
             //for(auto gameObj = scene->gameObjects.begin(); gameObj != scene->gameObjects.end(); ++gameObj)
@@ -91,13 +91,13 @@ namespace Copium
                 //{
                 //    if (gameObj->transform.position.y > 7.f || gameObj->transform.position.y < -7.f)
                 //    {
-                //        MyGOF.destroy(gameObj);
+                //        GOF.destroy(gameObj);
                 //        return;
                 //    }
 
                 //    if (!gameObj->isActive())
                 //    {
-                //        MyGOF.destroy(gameObj);
+                //        GOF.destroy(gameObj);
                 //        return;
                 //    }
                 //}
@@ -161,7 +161,7 @@ namespace Copium
 
                 if (enemyBullet != nullptr && timer >= rand() % 100 * 0.01)
                 {
-                    GameObject* go = MyGOF.instantiate(*enemyBullet);
+                    GameObject* go = GOF.instantiate(*enemyBullet);
                     go->set_name("Enemy Bullet (Clone)");
 
                     go->transform.position = pos;
@@ -180,7 +180,7 @@ namespace Copium
         {
             if (playerBullet != nullptr)
             {
-                GameObject* go = MyGOF.instantiate(*playerBullet);
+                GameObject* go = GOF.instantiate(*playerBullet);
                 go->set_name("Player Bullet (Clone)");
                 if (player != nullptr)
                 {

@@ -42,10 +42,10 @@ namespace Copium
 
 	namespace
 	{
-		InputSystem& inputSystem{ *InputSystem::Instance() };
-		NewSceneManager& sceneManager{ *NewSceneManager::Instance() };
-		MessageSystem& messageSystem{ *MessageSystem::Instance() };
-		ScriptingSystem& scriptingSystem{ *ScriptingSystem::Instance() };
+		InputSystem& inputSystem{ InputSystem::Instance() };
+		NewSceneManager& sceneManager{ NewSceneManager::Instance() };
+		MessageSystem& messageSystem{ MessageSystem::Instance() };
+		ScriptingSystem& scriptingSystem{ ScriptingSystem::Instance() };
 	}
 
 	//static bool GetKeyDown(int keyCode)
@@ -432,7 +432,7 @@ namespace Copium
 		GameObject* toBeCloned = MyNewSceneManager.findGameObjByID(ID);
 		if (toBeCloned)
 		{
-			GameObject* clone = MyGOF.instantiate(*toBeCloned);
+			GameObject* clone = GOF.instantiate(*toBeCloned);
 			if (clone)
 				return clone->id;
 		}
@@ -449,7 +449,7 @@ namespace Copium
 	/*******************************************************************************/
 	static GameObjectID InstantiateGameObject()
 	{
-		GameObject* clone = MyGOF.instantiate();
+		GameObject* clone = GOF.instantiate();
 		if (clone)
 			return clone->id;
 		return 0;
@@ -499,7 +499,7 @@ namespace Copium
 		while (i != end)
 		{
 			std::string name = "CopiumEngine." + MAP_COMPONENT_TYPE_NAME[(ComponentType)i];
-			MonoType* mType = ScriptingSystem::Instance()->getMonoTypeFromName(name);
+			MonoType* mType = ScriptingSystem::Instance().getMonoTypeFromName(name);
 			if (mType != nullptr)
 			{
 				PRINT(name);

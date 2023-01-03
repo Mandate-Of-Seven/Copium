@@ -25,8 +25,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 namespace 
 {
-	Copium::NewSceneManager& sceneManager{ *Copium::NewSceneManager::Instance() };
-	Copium::MessageSystem& messageSystem{ *Copium::MessageSystem::Instance() };
+	Copium::NewSceneManager& sceneManager{ Copium::NewSceneManager::Instance() };
+	Copium::MessageSystem& messageSystem{ Copium::MessageSystem::Instance() };
 }
 
 namespace Copium 
@@ -239,7 +239,7 @@ namespace Copium
 		for (auto pTransform : _go->transform.children)
 		{
 			pTransform->setParent(nullptr);
-			destroy(&pTransform->gameObj);
+			destroy(MyNewSceneManager.findGameObjByID(pTransform->entityID));
 		}
 
 		//std::cout << "Deleting " << _go->get_name() << std::endl;

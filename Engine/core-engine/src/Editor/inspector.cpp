@@ -35,9 +35,9 @@ namespace Window
 	{
         bool isAddingComponent;
         char nameBuffer[INPUT_BUFFER_SIZE];
-        Copium::ScriptingSystem& scriptingSystem{ *Copium::ScriptingSystem::Instance() };
-        Copium::NewSceneManager& sceneManager{ *Copium::NewSceneManager::Instance() };
-        Copium::FileSystem& fileSystem{ *Copium::FileSystem::Instance() };
+        Copium::ScriptingSystem& scriptingSystem{ Copium::ScriptingSystem::Instance() };
+        Copium::NewSceneManager& sceneManager{ Copium::NewSceneManager::Instance() };
+        Copium::FileSystem& fileSystem{ Copium::FileSystem::Instance() };
 
         void AlignForWidth(float width, float alignment = 0.5f)
         {

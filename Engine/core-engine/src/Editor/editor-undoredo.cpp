@@ -92,7 +92,7 @@ namespace Copium
 	UndoRedo::GameObjectCommand::GameObjectCommand(GameObject* _value,bool _deleting)
 	{
 		std::cout << "gameobj cmd\n";
-		this->value = MyGOF.clone(*_value,nullptr);
+		this->value = GOF.clone(*_value,nullptr);
 		this->pointer = _value;
 		this->deleting = _deleting;
 	}
@@ -100,7 +100,7 @@ namespace Copium
 	UndoRedo::GameObjectCommand::~GameObjectCommand()
 	{
 		std::cout<<"Undo Redo being destroyed: " << this->value->get_name()<<" | "<<this->value << "\n\n";
-		//MyGOF.destroy(this->value);
+		//GOF.destroy(this->value);
 		delete this->value;
 	}
 
@@ -119,7 +119,7 @@ namespace Copium
 			if (!value->get_name().empty())
 			{
 				std::cout << "Delete" << std::endl;
-				MyGOF.destroy(this->pointer);
+				GOF.destroy(this->pointer);
 				Command* temp = new GameObjectCommand(this->value, false);
 				stackPointer->push(temp);
 			}
@@ -133,7 +133,7 @@ namespace Copium
 			if (!value->get_name().empty())
 			{
 				std::cout << "Create" << std::endl;
-				GameObject* newObj = MyGOF.instantiate(*this->value);
+				GameObject* newObj = GOF.instantiate(*this->value);
 				Command* temp = new GameObjectCommand(newObj, true);
 				stackPointer->push(temp);
 			}
@@ -160,7 +160,7 @@ namespace Copium
 			if (!value->get_name().empty())
 			{
 				std::cout << "Delete" << std::endl;
-				MyGOF.destroy(this->pointer);
+				GOF.destroy(this->pointer);
 				Command* temp = new GameObjectCommand(this->value, false);
 				stackPointer->push(temp);
 			}
@@ -174,7 +174,7 @@ namespace Copium
 			if (!value->get_name().empty())
 			{
 				std::cout << "Create" << std::endl;
-				GameObject* newObj = MyGOF.instantiate(*this->value);
+				GameObject* newObj = GOF.instantiate(*this->value);
 				Command* temp = new GameObjectCommand(newObj, true);
 				stackPointer->push(temp);
 			}

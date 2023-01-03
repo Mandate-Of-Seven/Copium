@@ -57,10 +57,10 @@ namespace Copium
         Pointer to unique class T.
     */
     /**************************************************************************/
-        static T* Instance()
+        static T& Instance()
         {   
             static T instance;
-            return &instance;
+            return instance;
         }
     protected:
         Singleton<T>() 
