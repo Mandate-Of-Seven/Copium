@@ -31,33 +31,16 @@ namespace Copium::Math
 	#define EPSILON		0.0001f
 	#define PI			3.14159265358f
 
-	//Setting up for RTTR implementation----------
-	//RTTR_REGISTRATION
-	//{
-	//	using namespace rttr;
-	//registration::class_<myint>("myint")
-	//	.property("I", &myint::i);
-
-
-	//registration::class_<Vec2>("Vec2")
-	//	.property("x", &Vec2::x)
-	//	.property("y", &Vec2::y);
-
-	//registration::class_<Vec3>("Vec3")
-	//	.property("x", &Vec3::x)
-	//	.property("y", &Vec3::y)
-	//	.property("z", &Vec3::z);
-	//}
-
 	myint::myint() : i{0} {}
 	myint::myint(int32_t _i) : i{_i} {}
 
 
-	// Vec2-----------------------------------------
-	// Vec2 Constructors
+	// Vec2 ////////////////////
+	// Constructors
 	Vec2::Vec2() : data{ 0.0f } {}
 	Vec2::Vec2(float _x, float _y) : x{_x}, y{_y} {}
 	Vec2::Vec2(glm::vec2& _v) : x{_v.x}, y{_v.y} {}
+	Vec2::Vec2(const Vec2& _src) : x{_src.x}, y{_src.y} {}
 
 	// Vec2 Assignment Operators + Unary Operator
 	Vec2& Vec2::operator+= (const Vec2& _rhs)
@@ -89,9 +72,27 @@ namespace Copium::Math
 		return Vec2(-x, -y);
 	}
 
+	// Comparison operators
+	bool Vec2::operator==(const Vec2& _rhs)
+	{
+		if ((x != _rhs.x) || (y != _rhs.y))
+			return false;
+
+		return true;
+	}
+	bool Vec2::operator!=(const Vec2& _rhs)
+	{
+		return !(*this == _rhs);
+	}
+
+	// Conversions
 	glm::vec2 Vec2::to_glm() const
 	{
 		return glm::vec2(x, y);
+	}
+	Vec2::operator glm::vec2()
+	{
+		return glmVec2;
 	}
 
 	// Vec2 Binary Operators
@@ -116,7 +117,7 @@ namespace Copium::Math
 		return Vec2(_lhs.x / _rhs, _lhs.y / _rhs);
 	}
 
-	// Vec2 Functions
+	// Vec2 vector operations
 	void vec2_normalize(Vec2& _result, const Vec2& _src)
 	{
 		Vec2 v(_src.x / vec2_length(_src), _src.y / vec2_length(_src));
@@ -149,6 +150,8 @@ namespace Copium::Math
 	{
 		return (_v1.x * _v2.y - _v1.y * _v2.x);
 	}
+
+	// Vec2 misc operations
 	std::ostream& operator<<(std::ostream& _os, const Vec2& _v) 
 	{
 		_os << "x:" << _v.x << " " << "y:" << _v.y << std::endl;
@@ -173,14 +176,17 @@ namespace Copium::Math
 		return true;
 
 	}
+	////////////////////////////
 
 
-	// Vec3-----------------------------------------
-	// Vec3 Constructors
+	// Vec3 ////////////////////
+	// Constructors
 	Vec3::Vec3() : data{0.0f} {}
 	Vec3::Vec3(float _x, float _y, float _z): x{_x}, y{_y}, z{_z} {}
 	Vec3::Vec3(glm::vec3& _v): x{_v.x}, y{_v.y}, z{_v.z} {}
+	Vec3::Vec3(const Vec3& _src) : x{_src.x}, y{_src.y}, z{_src.z} {}
 
+	// Compound arithmetic operator overloads
 	Vec3& Vec3::operator+= (const Vec3& _rhs)
 	{
 		x += _rhs.x;
@@ -209,11 +215,30 @@ namespace Copium::Math
 		z /= _rhs;
 		return *this;
 	}
+
+	// Unary operator overloads
 	Vec3 Vec3::operator- () const
 	{
 		return Vec3(-x, -y, -z);
 	}
-	// Vec3 Binary Operators
+
+	// Comparison operators
+	bool Vec3::operator==(const Vec3& _rhs)
+	{
+		for (int i{ 0 }; i < 3; ++i)
+		{
+			if (data[i] != _rhs.data[i])
+				return false;
+		}
+
+		return true;
+	}
+	bool Vec3::operator!=(const Vec3& _rhs)
+	{
+		return !(*this == _rhs);
+	}
+
+	// Binary arithmetic operator overloads
 	Vec3 operator+ (const Vec3& _lhs, const Vec3& _rhs)
 	{
 		return Vec3(_lhs.x + _rhs.x, _lhs.y + _rhs.y, _lhs.z + _rhs.z);
@@ -235,7 +260,7 @@ namespace Copium::Math
 		return Vec3(_lhs.x / _rhs, _lhs.y / _rhs, _lhs.z / _rhs);
 	}
 
-	// Vec3 Functions
+	// Vec3 vector operations
 	void vec3_normalize(Vec3& _result, const Vec3& _src)
 	{
 		Vec3 v(_src.x / vec3_length(_src), _src.y / vec3_length(_src), _src.z / vec3_length(_src));
@@ -276,6 +301,8 @@ namespace Copium::Math
 		vz = _v1.x * _v2.y - _v1.y * _v2.x;
 		return Vec3(vx, vy, vz);
 	}
+
+	// Vec3 misc operations
 	std::ostream& operator<<(std::ostream& _os, const Vec3& _v) 
 	{
 		_os << "x:" << _v.x << " y:" << _v.y << " z:" << _v.z << std::endl;
@@ -299,45 +326,40 @@ namespace Copium::Math
 		_value.AddMember("Z", z, _doc.GetAllocator());
 		return true;
 	}
+	////////////////////////////
 
 
 
-	// Matrix3x3-----------------------------------------
+	// Matrix3x3 ////////////////////
+	// Matrix3x3 constructors
 	Matrix3x3::Matrix3x3()
 	{
-		for (int i{ 0 }; i < 3; ++i)
+		for (int i{ 0 }; i < 9; ++i)
 		{
-			for (int j{ 0 }; j < 3; ++j)
-			{
-				m[i][j] = 0.0;
-			}
+			m[i] = 0.0f;
 		}
 	}
 	Matrix3x3::Matrix3x3(const float(&_rhs)[9]) {
-		for (int i{ 0 }, k{ 0 }; i < 3; ++i)
+		for (int i{ 0 }; i < 9; ++i)
 		{
-			for (int j{ 0 }; j < 3; ++j)
-			{
-				m[i][j] = _rhs[k];
-				++k;
-			}
+			m[i] = _rhs[i];
 		}
 	}
 	Matrix3x3::Matrix3x3(float _00, float _01, float _02,
 							float _10, float _11, float _12,
 							float _20, float _21, float _22)
 	{
-		m[0][0] = _00;
-		m[0][1] = _01;
-		m[0][2] = _02;
+		m[0] = _00;
+		m[1] = _01;
+		m[2] = _02;
 
-		m[1][0] = _10;
-		m[1][1] = _11;
-		m[1][2] = _12;
+		m[3] = _10;
+		m[4] = _11;
+		m[5] = _12;
 
-		m[2][0] = _20;
-		m[2][1] = _21;
-		m[2][2] = _22;
+		m[6] = _20;
+		m[7] = _21;
+		m[8] = _22;
 
 	}
 	Matrix3x3::Matrix3x3(const glm::mat3x3& _rhs)
@@ -346,18 +368,26 @@ namespace Copium::Math
 		{
 			for (int j{ 0 }; j < 3; ++j)
 			{
-				m[i][j] = _rhs[j][i];
+				data[i][j] = _rhs[j][i];
 			}
 		}
 	}
+	Matrix3x3::Matrix3x3(const Matrix3x3& _src)
+	{
+		for (int i{ 0 }; i < 9; ++i)
+		{
+			m[i] = _src.m[i];
+		}
+	}
 
+	// Copy assignment operator overloads
 	Matrix3x3& Matrix3x3::operator= (const Matrix3x3& _rhs)
 	{
 		for (int i{ 0 }; i < 3; ++i)
 		{
 			for (int j{ 0 }; j < 3; ++j)
 			{
-				m[i][j] = _rhs.m[i][j];
+				data[i][j] = _rhs.data[i][j];
 			}
 		}
 
@@ -369,13 +399,14 @@ namespace Copium::Math
 		{
 			for (int j{ 0 }; j < 3; ++j)
 			{
-				m[i][j] = _rhs[i][j];
+				data[i][j] = _rhs[i][j];
 			}
 		}
 
 		return *this;
 	}
 
+	// Compound assignment operator overloads
 	Matrix3x3& Matrix3x3::operator*= (const Matrix3x3& _rhs)
 	{
 		Matrix3x3 result;
@@ -383,29 +414,47 @@ namespace Copium::Math
 
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 3; ++j) {
-				result.m[i][j] = result.m[i][0] * _rhs.m[0][j]
-					+ result.m[i][1] * _rhs.m[1][j]
-					+ result.m[i][2] * _rhs.m[2][j];
+				result.data[i][j] = result.data[i][0] * _rhs.data[0][j]
+					+ result.data[i][1] * _rhs.data[1][j]
+					+ result.data[i][2] * _rhs.data[2][j];
 			}
 		}
 
 		*this = result;
 		return *this;
 	}
-	Matrix3x3 operator* (const Matrix3x3& _lhs, const Matrix3x3& _rhs) {
+
+	// Binary operator overloads
+	Matrix3x3 operator* (const Matrix3x3& _lhs, const Matrix3x3& _rhs) 
+	{
 		Matrix3x3 result;
 		result = _lhs;
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 3; ++j) {
 
-				result.m[i][j] = _lhs.m[i][0] * _rhs.m[0][j]
-					+ _lhs.m[i][1] * _rhs.m[1][j]
-					+ _lhs.m[i][2] * _rhs.m[2][j];
+				result.data[i][j] = _lhs.data[i][0] * _rhs.data[0][j]
+					+ _lhs.data[i][1] * _rhs.data[1][j]
+					+ _lhs.data[i][2] * _rhs.data[2][j];
 			}
 		}
 		return result;
 	}
+	Vec3 operator*(const Matrix3x3& _lhs, const Vec3& _rhs)
+	{
+		Vec3 result;
+		for (int i{ 0 }; i < 3; ++i)
+		{
+			for (int j{ 0 }; j < 3; ++j)
+			{
+				result.data[i] += (_lhs.data[i][j] * _rhs.data[j]);
+			}
 
+		}
+		return result;
+
+	}
+
+	// Conversions
 	glm::mat3x3 Matrix3x3::to_glm() const
 	{
 		glm::mat3x3 tmp;
@@ -413,23 +462,25 @@ namespace Copium::Math
 		{
 			for (int j{ 0 }; j < 3; ++j)
 			{
-				tmp[j][i] = (float) m[i][j];
+				tmp[j][i] = data[i][j];
 			}
 		}
 
 		return tmp;
 	}
+	Matrix3x3::operator glm::mat3x3() { return glmMat3x3; }
 
+	// Matrix3x3 matrix operations
 	void matrix3x3_identity(Matrix3x3& _mtx) 
 	{
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 3; ++j) {
 
 				if (i == j) {
-					_mtx.m[i][j] = 1.0f;
+					_mtx.data[i][j] = 1.0f;
 				}
 				else {
-					_mtx.m[i][j] = 0.0f;
+					_mtx.data[i][j] = 0.0f;
 				}
 
 
@@ -439,24 +490,24 @@ namespace Copium::Math
 	void matrix3x3_translate(Matrix3x3& _mtx, float _x, float _y) 
 	{
 		matrix3x3_identity(_mtx);
-		_mtx.m[0][2] = _x;
-		_mtx.m[1][2] = _y;
+		_mtx.data[0][2] = _x;
+		_mtx.data[1][2] = _y;
 
 	}
 	void matrix3x3_scale(Matrix3x3& _mtx, float _x, float _y)
 	{
 		matrix3x3_identity(_mtx);
-		_mtx.m[0][0] = _x;
-		_mtx.m[1][1] = _y;
+		_mtx.data[0][0] = _x;
+		_mtx.data[1][1] = _y;
 	}
 	void matrix3x3_rotrad(Matrix3x3& _mtx, float _angle) 
 	{
 		matrix3x3_identity(_mtx);
 
-		_mtx.m[0][0] = cosf((float) _angle);
-		_mtx.m[0][1] = -sinf((float) _angle);
-		_mtx.m[1][0] = sinf((float) _angle);
-		_mtx.m[1][1] = cosf((float) _angle);
+		_mtx.data[0][0] = cosf((float) _angle);
+		_mtx.data[0][1] = -sinf((float) _angle);
+		_mtx.data[1][0] = sinf((float) _angle);
+		_mtx.data[1][1] = cosf((float) _angle);
 	}
 	void matrix3x3_rotdeg(Matrix3x3& _mtx, float _angle) 
 	{
@@ -465,10 +516,10 @@ namespace Copium::Math
 		//Convert to radian
 		float result = _angle * (PI / 180.0f);
 
-		_mtx.m[0][0] = cosf((float) result);
-		_mtx.m[0][1] = -sinf((float) result);
-		_mtx.m[1][0] = sinf((float) result);
-		_mtx.m[1][1] = cosf((float) result);
+		_mtx.data[0][0] = cosf((float) result);
+		_mtx.data[0][1] = -sinf((float) result);
+		_mtx.data[1][0] = sinf((float) result);
+		_mtx.data[1][1] = cosf((float) result);
 
 	}
 	void matrix3x3_transpose(Matrix3x3& _mtx, const Matrix3x3& _rhs) 
@@ -477,24 +528,24 @@ namespace Copium::Math
 		float tmp;
 
 		//Swap values across the diagonal
-		tmp = _mtx.m[0][1];
-		_mtx.m[0][1] = _mtx.m[1][0];
-		_mtx.m[1][0] = tmp;
+		tmp = _mtx.data[0][1];
+		_mtx.data[0][1] = _mtx.data[1][0];
+		_mtx.data[1][0] = tmp;
 
-		tmp = _mtx.m[0][2];
-		_mtx.m[0][2] = _mtx.m[2][0];
-		_mtx.m[2][0] = tmp;
+		tmp = _mtx.data[0][2];
+		_mtx.data[0][2] = _mtx.data[2][0];
+		_mtx.data[2][0] = tmp;
 
-		tmp = _mtx.m[1][2];
-		_mtx.m[1][2] = _mtx.m[2][1];
-		_mtx.m[2][1] = tmp;
+		tmp = _mtx.data[1][2];
+		_mtx.data[1][2] = _mtx.data[2][1];
+		_mtx.data[2][1] = tmp;
 
 	}
 	void matrix3x3_inverse(Matrix3x3* _dest, float* _determinant, const Matrix3x3& _src) 
 	{
-		*_determinant = _src.m[0][0] * (_src.m[1][1] * _src.m[2][2] - _src.m[1][2] * _src.m[2][1])
-			- _src.m[0][1] * (_src.m[1][0] * _src.m[2][2] - _src.m[1][2] * _src.m[2][0])
-			+ _src.m[0][2] * (_src.m[1][0] * _src.m[2][1] - _src.m[2][0] * _src.m[1][2]);
+		*_determinant = _src.data[0][0] * (_src.data[1][1] * _src.data[2][2] - _src.data[1][2] * _src.data[2][1])
+			- _src.data[0][1] * (_src.data[1][0] * _src.data[2][2] - _src.data[1][2] * _src.data[2][0])
+			+ _src.data[0][2] * (_src.data[1][0] * _src.data[2][1] - _src.data[2][0] * _src.data[1][2]);
 		if (*_determinant <= EPSILON) {
 			_dest = nullptr;
 			return;
@@ -505,27 +556,27 @@ namespace Copium::Math
 		tmp = _src;
 
 		//Compute Matrix of Minors
-		tmp.m[0][0] = _src.m[1][1] * _src.m[2][2] - _src.m[1][2] * _src.m[2][1];
-		tmp.m[0][1] = _src.m[1][0] * _src.m[2][2] - _src.m[1][2] * _src.m[2][0];
-		tmp.m[0][2] = _src.m[1][0] * _src.m[2][1] - _src.m[1][1] * _src.m[2][0];
+		tmp.data[0][0] = _src.data[1][1] * _src.data[2][2] - _src.data[1][2] * _src.data[2][1];
+		tmp.data[0][1] = _src.data[1][0] * _src.data[2][2] - _src.data[1][2] * _src.data[2][0];
+		tmp.data[0][2] = _src.data[1][0] * _src.data[2][1] - _src.data[1][1] * _src.data[2][0];
 
-		tmp.m[1][0] = _src.m[0][1] * _src.m[2][2] - _src.m[0][2] * _src.m[2][1];
-		tmp.m[1][1] = _src.m[0][0] * _src.m[2][2] - _src.m[0][2] * _src.m[2][0];
-		tmp.m[1][2] = _src.m[0][0] * _src.m[2][1] - _src.m[0][1] * _src.m[2][0];
+		tmp.data[1][0] = _src.data[0][1] * _src.data[2][2] - _src.data[0][2] * _src.data[2][1];
+		tmp.data[1][1] = _src.data[0][0] * _src.data[2][2] - _src.data[0][2] * _src.data[2][0];
+		tmp.data[1][2] = _src.data[0][0] * _src.data[2][1] - _src.data[0][1] * _src.data[2][0];
 
-		tmp.m[2][0] = _src.m[0][1] * _src.m[1][2] - _src.m[0][2] * _src.m[1][1];
-		tmp.m[2][1] = _src.m[0][0] * _src.m[1][2] - _src.m[0][2] * _src.m[1][0];
-		tmp.m[2][2] = _src.m[0][0] * _src.m[1][1] - _src.m[0][1] * _src.m[1][0];
+		tmp.data[2][0] = _src.data[0][1] * _src.data[1][2] - _src.data[0][2] * _src.data[1][1];
+		tmp.data[2][1] = _src.data[0][0] * _src.data[1][2] - _src.data[0][2] * _src.data[1][0];
+		tmp.data[2][2] = _src.data[0][0] * _src.data[1][1] - _src.data[0][1] * _src.data[1][0];
 
 		//Compute Matrix of Cofactors
 		for (int i = 0; i < 3; ++i) {
 			if (i % 2 == 0) {
-				_dest->m[i][0] = -_dest->m[i][0];
-				_dest->m[i][2] = -_dest->m[i][2];
+				_dest->data[i][0] = -_dest->data[i][0];
+				_dest->data[i][2] = -_dest->data[i][2];
 
 			}
 			else {
-				_dest->m[i][1] = -_dest->m[i][1];
+				_dest->data[i][1] = -_dest->data[i][1];
 			}
 
 		}
@@ -536,7 +587,7 @@ namespace Copium::Math
 		//Multiply Adjugate by 1/determinant
 		for (int i{ 0 }; i < 3; ++i) {
 			for (int j{ 0 }; j < 3; ++j) {
-				tmp.m[i][j] *= (1.0f / (*_determinant));
+				tmp.data[i][j] *= (1.0f / (*_determinant));
 			}
 		}
 
@@ -544,12 +595,14 @@ namespace Copium::Math
 		*_dest = tmp;
 
 	}
+
+	// Misc operations
 	std::ostream& operator<<(std::ostream& _os, const Matrix3x3& _mtx)
 	{
 		_os << '{';
 		for (int i{ 0 }; i < 3; ++i) {
 			for (int j{ 0 }; j < 3; ++j) {
-				_os << _mtx.m[i][j];
+				_os << _mtx.data[i][j];
 				if (j == 2)
 					_os << '\n';
 				else
@@ -560,20 +613,10 @@ namespace Copium::Math
 		_os << "}\n";
 		return _os;
 	}
+	////////////////////////////
 
-	float deg_to_rad(float _angle)
-	{
-		float result = _angle * (PI / 180.0f);
-		return result;
-	}
-	float rad_to_deg(float _angle)
-	{
-		float result = _angle * (180.0f / PI);
-		return result;
-	}
-
-	//M2
-	// Matrix4x4-----------------------------------------
+	// Matrix4x4 ////////////////////
+	// Constructors
 	Matrix4x4::Matrix4x4()
 	{
 		for (size_t i{ 0 }; i < 4; ++i)
@@ -584,7 +627,6 @@ namespace Copium::Math
 			}
 		}
 	}
-
 	Matrix4x4::Matrix4x4(const float(&_rhs)[16])
 	{
 		for (int i{ 0 }, k{ 0 }; i < 4; ++i)
@@ -629,7 +671,6 @@ namespace Copium::Math
 		}
 
 	}
-
 	Matrix4x4::Matrix4x4(const Matrix4x4& _rhs)
 	{
 		for (size_t i{ 0 }; i < 4; ++i)
@@ -640,7 +681,6 @@ namespace Copium::Math
 			}
 		}
 	}
-
 	Matrix4x4::Matrix4x4(const glm::vec4& _r0, const glm::vec4& _r1, const glm::vec4& _r2, const glm::vec4& _r3)
 	{
 		for (unsigned int i{ 0 }; i < 4; ++i)
@@ -652,6 +692,7 @@ namespace Copium::Math
 		}
 	}
 
+	// Copy assignment operator overloads
 	Matrix4x4& Matrix4x4::operator=(const Matrix4x4& _rhs)
 	{
 		for (unsigned int i{ 0 }; i < 4; ++i)
@@ -678,6 +719,8 @@ namespace Copium::Math
 		}
 		return *this;
 	}
+
+	// Compound assignment operator overloads
 	Matrix4x4& Matrix4x4::operator*=(const Matrix4x4& _rhs)
 	{
 		Matrix4x4 tmp(*this);
@@ -694,26 +737,8 @@ namespace Copium::Math
 		}
 		return *this;
 	}
-	Matrix4x4::Matrix4x4Proxy::Matrix4x4Proxy(Matrix4x4& _parent, size_t _row) : parent{ _parent }, rowIndex{ _row }{}
-	Matrix4x4::Matrix4x4Proxy Matrix4x4::operator[](size_t _row)
-	{
-		return Matrix4x4::Matrix4x4Proxy(*this, _row);
-	}
-	float& Matrix4x4::Matrix4x4Proxy::operator[](size_t _col)
-	{
-		return parent.m[rowIndex][_col];
-	}
 
-	Matrix4x4::Matrix4x4ProxyConst::Matrix4x4ProxyConst(const Matrix4x4& _parent, size_t _row) : parent{_parent}, rowIndex{_row}{}
-	Matrix4x4::Matrix4x4ProxyConst Matrix4x4::operator[](size_t _row) const
-	{
-		return Matrix4x4::Matrix4x4ProxyConst(*this, _row);
-	}
-	const float& Matrix4x4::Matrix4x4ProxyConst::operator[](size_t _col)
-	{
-		return parent.m[rowIndex][_col];
-	}
-
+	// Conversions
 	glm::mat4x4 Matrix4x4::to_glm() const
 	{
 		glm::mat4x4 tmp{};
@@ -726,7 +751,9 @@ namespace Copium::Math
 		}
 		return tmp;
 	}
+	Matrix4x4::operator glm::mat4x4() { return glmMat4x4; }
 
+	// Binary operator overloads
 	Matrix4x4 operator+(const Matrix4x4& _lhs, const Matrix4x4& _rhs)
 	{
 		Matrix4x4 tmp;
@@ -769,6 +796,21 @@ namespace Copium::Math
 		}
 		return tmp;
 	}
+	Vec4 operator*(const Matrix4x4& _mat, const Vec4& _vec4)
+	{
+		Vec4 result;
+		for (int i{ 0 }; i < 3; ++i)
+		{
+			for (int j{ 0 }; j < 3; ++j)
+			{
+				result.data[i] += (_mat.m[i][j] * _vec4.data[j]);
+			}
+
+		}
+		return result;
+	}
+
+	// Matrix4x4 matrix operations
 	void matrix4x4_identity(Matrix4x4& _rhs)
 	{
 		for (size_t i{ 0 }; i < 4; ++i)
@@ -833,6 +875,7 @@ namespace Copium::Math
 		_mtx.m[1][1] = cos(_deg);
 	}
 
+	// Misc operations
 	std::ostream& operator<<(std::ostream& _os, const Matrix4x4& _mtx)
 	{
 		_os << '{';
@@ -853,8 +896,9 @@ namespace Copium::Math
 		_os << "}";
 		return _os;
 	}
+	////////////////////////////
 
-	// Deserialize support 
+	// Deserialize glm color 
 	bool deserialize_color(rapidjson::Value& _value, glm::vec4& _v)
 	{
 		if (!_value.HasMember("R"))
@@ -872,6 +916,18 @@ namespace Copium::Math
 		_v[3] = _value["A"].GetFloat();
 		return true;
 
+	}
+
+	// Degree to Radian conversions
+	float deg_to_rad(float _angle)
+	{
+		float result = _angle * (PI / 180.0f);
+		return result;
+	}
+	float rad_to_deg(float _angle)
+	{
+		float result = _angle * (180.0f / PI);
+		return result;
 	}
 
 }

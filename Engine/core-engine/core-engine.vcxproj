@@ -159,6 +159,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Math\math-library.cpp" />
     <ClCompile Include="src\GameObject\Components\transform-component.cpp" />
+    <ClCompile Include="src\Math\Vector4.cpp" />
     <ClCompile Include="src\Messaging\message-system.cpp" />
     <ClCompile Include="src\Messaging\message-types.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -170,10 +171,8 @@
     </ClCompile>
     <ClCompile Include="src\Physics\collision.cpp" />
     <ClCompile Include="src\Physics\physics-system.cpp" />
-    <ClCompile Include="src\SceneManager\gamestate-sandbox.cpp" />
     <ClCompile Include="src\SceneManager\scene.cpp" />
     <ClCompile Include="src\SceneManager\scene-manager.cpp" />
-    <ClCompile Include="src\SceneManager\sm.cpp" />
     <ClCompile Include="src\SceneManager\state-manager.cpp" />
     <ClCompile Include="src\Scripting\logic-system.cpp" />
     <ClCompile Include="src\Scripting\scripting-system.cpp" />
@@ -237,7 +236,8 @@
     <ClInclude Include="src\Graphics\graphics-typedef.h" />
     <ClInclude Include="src\Graphics\sprite.h" />
     <ClInclude Include="src\GameObject\Components\ui-components.h" />
-    <ClInclude Include="src\SceneManager\sm.h" />
+    <ClInclude Include="src\Math\Vector4.h" />
+    <ClInclude Include="src\SceneManager\scene-manager.h" />
     <ClInclude Include="src\Scripting\logic-system.h" />
     <ClInclude Include="src\Scripting\script-wrappers.h" />
     <ClInclude Include="src\Graphics\spritesheet.h" />
@@ -254,11 +254,9 @@
     <ClInclude Include="src\Graphics\framebuffer.h" />
     <ClInclude Include="src\GameObject\game-object-factory.h" />
     <ClInclude Include="src\GameObject\game-object.h" />
-    <ClInclude Include="src\SceneManager\gamestate-sandbox.h" />
     <ClInclude Include="src\Physics\physics-system.h" />
     <ClInclude Include="src\Audio\sound-system.h" />
     <ClInclude Include="src\Graphics\textures.h" />
-    <ClInclude Include="src\SceneManager\scene-manager.h" />
     <ClInclude Include="src\Windows\windows-system.h" />
     <ClInclude Include="src\Graphics\glslshader.h" />
     <ClInclude Include="src\Graphics\graphics-system.h" />

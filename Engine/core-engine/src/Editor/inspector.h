@@ -23,7 +23,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 //INCLUDES
 
 #include <imgui.h>
-#include "SceneManager/sm.h"
+#include "SceneManager/scene-manager.h"
 #include "GameObject/game-object.h"
 
 namespace Window

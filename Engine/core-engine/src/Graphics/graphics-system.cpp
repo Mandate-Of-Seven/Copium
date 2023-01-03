@@ -27,7 +27,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Files/assets-system.h"
 
 // Bean: remove this after NewManagerInstance is moved
-#include "SceneManager/sm.h"
+#include "SceneManager/scene-manager.h"
 #include "GameObject/Components/renderer-component.h"
 #include "GameObject/Components/camera-component.h"
 
@@ -101,7 +101,7 @@ namespace Copium
 		// Mass spawning
 		if (massSpawn)
 		{
-			NewSceneManager* sm = NewSceneManager::Instance();
+			SceneManager* sm = SceneManager::Instance();
 			Scene* scene = sm->get_current_scene();
 			if (scene != nullptr)
 			{
@@ -128,7 +128,7 @@ namespace Copium
 
 		if (inputSystem.is_key_pressed(GLFW_KEY_Y))
 		{
-			NewSceneManager* sm = NewSceneManager::Instance();
+			SceneManager* sm = SceneManager::Instance();
 			PRINT("Number of Gameobjects: " << sm->get_current_scene()->get_gameobjcount());
 		}
 	
@@ -145,7 +145,7 @@ namespace Copium
 		if (mType == MESSAGE_TYPE::MT_SCENE_DESERIALIZED)
 		{
 			cameras.clear();
-			NewSceneManager* sm = NewSceneManager::Instance();
+			SceneManager* sm = SceneManager::Instance();
 			Scene* scene = sm->get_current_scene();
 			for (GameObject* gameObject : scene->gameObjects)
 			{

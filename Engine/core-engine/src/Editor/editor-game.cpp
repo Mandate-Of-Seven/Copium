@@ -17,7 +17,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Editor/editor-game.h"
 #include "Editor/editor-system.h"
-#include "SceneManager/sm.h"
+#include "SceneManager/scene-manager.h"
 #include "Windows/windows-system.h"
 
 #include "Graphics/graphics-system.h"
