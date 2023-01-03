@@ -18,10 +18,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Windows/windows-utils.h"
 #include "Math/math-library.h"
 
-namespace Window
+namespace Copium
 {
-	namespace ColorTheme
-	{
 		inline bool isColorThemeOpen;
 
 		//the default values
@@ -31,89 +29,94 @@ namespace Window
 		static Copium::Math::Vec3 color_for_body = Copium::Math::Vec3(238.f / 255.f, 155.f / 255.f, 43.f / 255.f);
 		static Copium::Math::Vec3 color_for_pops = Copium::Math::Vec3(238.f / 255.f, 105.f / 255.f, 43.f / 255.f);
 
-		struct ColorPreset
+
+		class EditorColorTheme 
 		{
-			ImVec4 color_for_text;
-			ImVec4 color_for_head;
-			ImVec4 color_for_area;
-			ImVec4 color_for_body;
-			ImVec4 color_for_pops;
-		};
+		public:
 
-		
-		/***************************************************************************/
-		/*!
-		\brief
-			Initializes the editor color theme picker
-		*/
-		/***************************************************************************/
-		void init();
+			struct ColorPreset
+			{
+				ImVec4 color_for_text;
+				ImVec4 color_for_head;
+				ImVec4 color_for_area;
+				ImVec4 color_for_body;
+				ImVec4 color_for_pops;
+			};
 
-		/***************************************************************************/
-		/*!
-		\brief
-			Updates the editor color theme picker
-		*/
-		/***************************************************************************/
-		void update();
 
-		/*******************************************************************************
+			/***************************************************************************/
 			/*!
-			*
 			\brief
-				Serialize this transform component's data to the specified rapidjson Value
+				Initializes the editor color theme picker
+			*/
+			/***************************************************************************/
+			void init();
 
-			\param color_for_text
-				the color to use for the text
+			/***************************************************************************/
+			/*!
+			\brief
+				Updates the editor color theme picker
+			*/
+			/***************************************************************************/
+			void update();
 
-			\param color_for_head
-				the color to use for the head
+			/*******************************************************************************
+				/*!
+				*
+				\brief
+					Serialize this transform component's data to the specified rapidjson Value
 
-			\param color_for_area
-				the color to use for the area
+				\param color_for_text
+					the color to use for the text
 
-			\param color_for_body
-				the color to use for the body
+				\param color_for_head
+					the color to use for the head
 
-			\param color_for_pops
-				the color to use for the pop ups
+				\param color_for_area
+					the color to use for the area
 
-			\return
-				void
+				\param color_for_body
+					the color to use for the body
+
+				\param color_for_pops
+					the color to use for the pop ups
+
+				\return
+					void
+				*/
+				/*******************************************************************************/
+			void setTheme(Copium::Math::Vec3 color_for_text, Copium::Math::Vec3 color_for_head,
+				Copium::Math::Vec3 color_for_area, Copium::Math::Vec3 color_for_body,
+				Copium::Math::Vec3 color_for_pops);
+
+			/*******************************************************************************
+				/*!
+				*
+				\brief
+					Serialize the data to the specified rapidjson file path
+
+				\param _filepath
+					reference to the  filepath to serialize its data to
+
+				\return
+					void
 			*/
 			/*******************************************************************************/
-		void setTheme(Copium::Math::Vec3 color_for_text, Copium::Math::Vec3 color_for_head, 
-					  Copium::Math::Vec3 color_for_area, Copium::Math::Vec3 color_for_body, 
-					  Copium::Math::Vec3 color_for_pops);
+			void serialize(const std::string& _filepath);
 
-		/*******************************************************************************
-			/*!
-			*
-			\brief
-				Serialize the data to the specified rapidjson file path
+			/*******************************************************************************
+				/*!
+				*
+				\brief
+					Deserialize the data to the specified rapidjson file path
 
-			\param _filepath
-				reference to the  filepath to serialize its data to
+				\param _filepath
+					reference to the  filepath to deserialize its data from
 
-			\return
-				void
-		*/
-		/*******************************************************************************/
-		void serialize(const std::string& _filepath);
-
-		/*******************************************************************************
-			/*!
-			*
-			\brief
-				Deserialize the data to the specified rapidjson file path
-
-			\param _filepath
-				reference to the  filepath to deserialize its data from
-
-			\return
-				void
-		*/
-		/*******************************************************************************/
-		void deserialize(const std::string& _filepath);
-	}
+				\return
+					void
+			*/
+			/*******************************************************************************/
+			void deserialize(const std::string& _filepath);
+		};
 }

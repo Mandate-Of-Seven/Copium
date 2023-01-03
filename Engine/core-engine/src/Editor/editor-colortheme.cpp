@@ -20,14 +20,11 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Utilities/thread-system.h"
 
 
-namespace Window
+namespace Copium
 {
-
-	namespace ColorTheme
-	{
         Copium::ThreadSystem& threadSystem{ *Copium::ThreadSystem::Instance() };
 
-		void init()
+		void EditorColorTheme::init()
 		{
             //Force hotdog stand theme on them
             /*
@@ -38,7 +35,7 @@ namespace Window
             isColorThemeOpen = true;
 		}
 
-		void update()
+		void EditorColorTheme::update()
 		{
             if (!isColorThemeOpen)
             {
@@ -84,7 +81,7 @@ namespace Window
             
 		}
 
-		void setTheme(Copium::Math::Vec3 _color_for_text, Copium::Math::Vec3 _color_for_head, Copium::Math::Vec3 _color_for_area, Copium::Math::Vec3 _color_for_body, Copium::Math::Vec3 _color_for_pops)
+		void EditorColorTheme::setTheme(Copium::Math::Vec3 _color_for_text, Copium::Math::Vec3 _color_for_head, Copium::Math::Vec3 _color_for_area, Copium::Math::Vec3 _color_for_body, Copium::Math::Vec3 _color_for_pops)
 		{
             ImGuiStyle& style = ImGui::GetStyle();
 
@@ -132,7 +129,7 @@ namespace Window
 		}
 
 
-        void serialize(const std::string& name)
+        void EditorColorTheme::serialize(const std::string& name)
         {
             std::string fp(name);
             if (fp.find(".theme") == std::string::npos)
@@ -175,7 +172,7 @@ namespace Window
             ofs.close();
 
         }
-        void deserialize(const std::string& _filepath)
+        void EditorColorTheme::deserialize(const std::string& _filepath)
         {
             std::ifstream ifs(_filepath);
             if (!ifs)
@@ -227,7 +224,4 @@ namespace Window
 
         }
 
-
-
 	}
-}
