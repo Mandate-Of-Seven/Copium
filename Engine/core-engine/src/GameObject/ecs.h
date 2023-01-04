@@ -28,6 +28,12 @@ namespace Copium
     struct ComponentGroup
     {
         template <typename T>
+        static constexpr bool Has()
+        {
+            return contains<T, Component...>();
+        }
+
+        template <typename T>
         static SparseSet<T,MAX_ENTITIES>& GetArray()
         {
             static_assert(contains<T, Component...>());
@@ -44,17 +50,12 @@ namespace Copium
     struct Entity
     {
         std::string name;
-        template<typename T>
-        void AddComponent();
-        template<typename T>
-        void RemoveComponent();
-        template<typename T>
-        bool HasComponent();
     private:
         friend class EntityManager;
+        std::bitset<MAX_COMPONENTS> componentsBitset;
     };
 
-    class EntityManager
+    class EntityComponentSystem
     {
         SparseSet<Entity, MAX_ENTITIES> entities;
         std::bitset<MAX_ENTITIES> activeEntities;
@@ -64,7 +65,53 @@ namespace Copium
         bool GetActive(EntityID id) { return activeEntities.test(id); }
         void DestroyEntity(EntityID idToDelete);
         void DestroyEntity(Entity* pEntity);
+        template<typename T>
+        T* AddComponent(EntityID id);
+        template<typename T>
+        T* GetComponent(EntityID id);
+        template<typename T>
+        void RemoveComponent(EntityID id);
+        template<typename T>
+        bool HasComponent(EntityID id);
     };
+
+    template <typename T>
+    T* EntityComponentSystem::AddComponent(EntityID id)
+    {
+        static_assert(MainComponents::Has<T>());
+        COPIUM_ASSERT(entities.DenseExists(id), "ENTITY DOES NOT EXIST");
+        entities.DenseGet(id).componentsBitset.set(GetComponentType<T>());
+        return &MainComponents::GetArray<T>()[id];
+    }
+
+    template <typename T>
+    T* EntityComponentSystem::GetComponent(EntityID id)
+    {
+        static_assert(MainComponents::Has<T>());
+        COPIUM_ASSERT(entities.DenseExists(id), "ENTITY DOES NOT EXIST");
+        if (entities.DenseGet(id).componentsBitset.test(GetComponentType<T>()))
+        {
+            return &MainComponents::GetArray<T>()[id];
+        }
+        return nullptr;
+    }
+
+    template <typename T>
+    void EntityComponentSystem::RemoveComponent(EntityID id)
+    {
+        static_assert(MainComponents::Has<T>());
+        COPIUM_ASSERT(entities.DenseExists(id), "ENTITY DOES NOT EXIST");
+        COPIUM_ASSERT(HasComponent<T>(id), typeid(T).name());
+        entities.DenseGet(id).componentsBitset.set(GetComponentType<T>(), 0);
+    }
+    
+    template <typename T>
+    bool EntityComponentSystem::HasComponent(EntityID id)
+    {
+        static_assert(MainComponents::Has<T>());
+        COPIUM_ASSERT(entities.DenseExists(id), "ENTITY DOES NOT EXIST");
+        return entities.DenseGet(id).componentsBitset.test(GetComponentType<T>());
+    }
 }
 
 #endif // !ECS_H

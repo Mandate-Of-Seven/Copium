@@ -19,6 +19,21 @@ public:
         return indexes[sparseIndex];
     }
 
+    T& DenseGet(size_t denseIndex)
+    {
+        return data[denseIndex];
+    }
+
+    bool DenseExists(size_t denseIndex)
+    {
+        for (size_t i : indexes)
+        {
+            if (i == denseIndex)
+                return true;
+        }
+        return false;
+    }
+
 private:
     T data[N];
     size_t indexes[N];

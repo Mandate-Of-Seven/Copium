@@ -3,12 +3,8 @@
 
 namespace Copium
 {
-	//bool Entity::IsActive()
-	//{
-	//	return componentBitset.test(0);
-	//}
 
-	EntityID EntityManager::InstantiateEntity()
+	EntityID EntityComponentSystem::InstantiateEntity()
 	{
 		size_t sparseIndex = entities.Add();
 		size_t denseIndex = entities.GetDenseIndex(sparseIndex);
@@ -17,12 +13,12 @@ namespace Copium
 	}
 
 	//Delete
-	void EntityManager::DestroyEntity(EntityID idToDelete)
+	void EntityComponentSystem::DestroyEntity(EntityID idToDelete)
 	{
 		entities.Delete(idToDelete);
 	}
 
-	void EntityManager::DestroyEntity(Entity* pEntity)
+	void EntityComponentSystem::DestroyEntity(Entity* pEntity)
 	{
 		entities.Delete(pEntity);
 	}

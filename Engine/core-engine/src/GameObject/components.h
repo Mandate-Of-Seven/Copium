@@ -2,6 +2,9 @@
 
 #include <GameObject/Components/transform-component.h>
 
+#ifndef COMPONENTS_H
+#define COMPONENTS_H
+
 namespace Copium
 {
 	#define RegisterComponent(Type)template <> ComponentType GetComponentType<Type>(){return ComponentType::Type;}
@@ -22,3 +25,6 @@ namespace Copium
 	//	Transforms(const Transforms&) = default;
 	//};
 }
+
+
+#endif // !COMPONENTS_H

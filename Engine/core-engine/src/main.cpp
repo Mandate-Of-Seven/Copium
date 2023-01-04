@@ -94,9 +94,6 @@ int main()
     std::string str = "blah";
     SceneSandbox* sandboxScene = new SceneSandbox(str);
     glfwSetWindowCloseCallback(windowsSystem.get_window(), quitEngine);
-
-    PRINT("ADDRESS1 : " << &Copium::MainComponents::GetArray<Copium::Transform>());
-    PRINT("ADDRESS2 : " << &Copium::BackupComponents::GetArray<Copium::Transform>());
     // Engine Loop
     while (esCurrent != esQuit)
     {
