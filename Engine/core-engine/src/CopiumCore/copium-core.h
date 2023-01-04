@@ -25,7 +25,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Physics/physics-system.h"
 #include "Graphics/graphics-system.h"
 #include "Utilities/thread-system.h"
-#include "SceneManager/sm.h"
+#include "SceneManager/scene-manager.h"
 #include "Debugging/logging-system.h"
 #include "Audio/sound-system.h"
 #include "Scripting/logic-system.h"

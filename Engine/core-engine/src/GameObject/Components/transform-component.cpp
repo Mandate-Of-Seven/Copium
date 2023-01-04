@@ -23,7 +23,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <rttr/registration>
 #include "Editor/editor-undoredo.h"
 #include "Editor/editor-system.h"
-#include "SceneManager/sm.h"
+#include "SceneManager/scene-manager.h"
 
 //RTTR_REGISTRATION{
 //	using namespace rttr;
@@ -62,7 +62,7 @@ void Transform::deserializeLink(rapidjson::Value& _value)
     {
         GameObjectID gameObjID = _value["PID"].GetUint64();
         if (gameObjID)
-            setParent(&MyNewSceneManager.findGameObjByID(gameObjID)->transform);
+            setParent(&MySceneManager.findGameObjByID(gameObjID)->transform);
     }
 }
 
@@ -361,6 +361,6 @@ void Transform::previewLink(Component* rhs)
     PRINT("LINKING TRANSFORM");
     Transform* transform = reinterpret_cast<Transform*>(rhs);
     if (transform->hasParent())
-        setParent(&MyNewSceneManager.findGameObjByID(transform->parent->entityID)->transform);
+        setParent(&MySceneManager.findGameObjByID(transform->parent->entityID)->transform);
 }
 }

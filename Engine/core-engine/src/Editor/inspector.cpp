@@ -20,7 +20,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Editor/editor-hierarchy-list.h"
 
 // Bean: Remove once we can auto select gameobjects
-#include "SceneManager/sm.h"
+#include "SceneManager/scene-manager.h"
 #include "Files/file-system.h"
 
 
@@ -35,9 +35,9 @@ namespace Window
 	{
         bool isAddingComponent;
         char nameBuffer[INPUT_BUFFER_SIZE];
-        Copium::ScriptingSystem& scriptingSystem{ Copium::ScriptingSystem::Instance() };
-        Copium::NewSceneManager& sceneManager{ Copium::NewSceneManager::Instance() };
-        Copium::FileSystem& fileSystem{ Copium::FileSystem::Instance() };
+        Copium::ScriptingSystem& scriptingSystem{ *Copium::ScriptingSystem::Instance() };
+        Copium::SceneManager& sceneManager{ *Copium::SceneManager::Instance() };
+        Copium::FileSystem& fileSystem{ *Copium::FileSystem::Instance() };
 
         void AlignForWidth(float width, float alignment = 0.5f)
         {

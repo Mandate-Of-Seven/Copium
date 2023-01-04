@@ -16,6 +16,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #pragma once
 
 #include <stack>
+#include <memory>
 #include "GameObject/game-object.h"
 
 namespace Copium
@@ -100,7 +101,8 @@ namespace Copium
 				/**************************************************************************/
 				//GameObjectCommand(GameObject& _value);
 
-				GameObjectCommand(GameObject* _value,bool _deleting);
+				//GameObjectCommand(GameObject* _value,bool _deleting);
+				GameObjectCommand(std::shared_ptr<GameObject>& p, bool _deleting);
 
 				/***************************************************************************/
 				/*!
@@ -144,6 +146,10 @@ namespace Copium
 				GameObject* pointer;//only use if deleting
 				GameObject* value;//original value
 				bool deleting;// should it add or delete a gameobject
+
+
+				// M4
+				std::shared_ptr<GameObject> sptr;
 		};
 
 		//contains a stack of commands for undo and redo

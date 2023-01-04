@@ -21,7 +21,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 ******************************************************************************************/
 #include "pch.h"
 #include "SceneManager/scene.h"
-#include <SceneManager/sm.h>
+#include <SceneManager/scene-manager.h>
 
 namespace Copium
 {
@@ -44,8 +44,8 @@ Scene::~Scene()
 		if (gameObjects[i] != nullptr)
 		{
 			//std::cout << "deleting a game object\n";
-			delete gameObjects[i];
-			gameObjects[i] = nullptr;
+			//delete gameObjects[i];
+			//gameObjects[i] = nullptr;
 		}
 		
 	}
@@ -67,7 +67,17 @@ std::string Scene::get_filename() const {return filename;}
 size_t Scene::get_gameobjcount() const { return gameObjects.size(); }
 GameObject* Scene::add_gameobject(GameObject* _gameObj) 
 {
+	std::shared_ptr<GameObject> sptr(_gameObj, [](GameObject* _go) {
+		std::cout << "shared_ptr dtor\n";
+		if (_go)
+		{
+			delete _go;
+			_go = nullptr;
+		}
+	});
 	gameObjects.push_back(_gameObj);
+	gameObjectSPTRS.push_back(sptr);
+	std::cout << "SPTR reference count:" << sptr.use_count() << std::endl;
 	return _gameObj;
 }
 

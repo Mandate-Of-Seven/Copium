@@ -30,17 +30,18 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <string>
 #include <vector>
 #include <GameObject/game-object.h>
+#include <memory>
 
 namespace Copium
 {
 
-class NewSceneManager;
+class SceneManager;
 
 class Scene 
 {
 public:
 	std::vector<GameObject*> gameObjects;	//Vector should be in order
-
+	std::vector<std::shared_ptr<GameObject>> gameObjectSPTRS;
 	enum class SceneState : char {
 		edit = 0, 
 		play,
@@ -317,7 +318,7 @@ private:
 	std::vector<uint64_t> unusedCIDs;
 	unsigned int numberOfComponents;
 	SceneState currSceneState;
-	friend class NewSceneManager;
+	friend class SceneManager;
 
 };
 

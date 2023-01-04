@@ -25,7 +25,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/Components/script-component.h"
 #include "Debugging/logging-system.h"
 #include "Audio/sound-system.h"
-#include "SceneManager/sm.h"
+#include "SceneManager/scene-manager.h"
 #include "GameObject/Components/component.h"
 #include "GameObject/Components/renderer-component.h"
 #include "Editor/editor-undoredo.h"
@@ -34,7 +34,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 //State Manager
 #include "SceneManager/state-manager.h"
-#include "SceneManager/scene-manager.h"
+
 #include "Editor/inspector.h"
 #include "CopiumCore/copium-core.h"
 #include "Debugging/frame-rate-controller.h"
@@ -48,8 +48,8 @@ namespace
     Copium::CopiumCore& copiumCore{ Copium::CopiumCore::Instance()};
     Copium::SoundSystem& soundSystem{ Copium::SoundSystem::Instance()};
     Copium::InputSystem& inputSystem { Copium::InputSystem::Instance()};
-    Copium::WindowsSystem& windowsSystem = Copium::WindowsSystem::Instance();
-    Copium::NewSceneManager& sceneManager = Copium::NewSceneManager::Instance();
+    Copium::WindowsSystem& windowsSystem {Copium::WindowsSystem::Instance()};
+    Copium::SceneManager& sceneManager {Copium::SceneManager::Instance()};
 }
 
 ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -88,61 +88,21 @@ int main()
 
     init();
     copiumCore.init();
-
-    Copium::SceneManager SM;
     MyFrameRateController.init(60);
-    std::string str = "blah";
-    SceneSandbox* sandboxScene = new SceneSandbox(str);
     glfwSetWindowCloseCallback(windowsSystem.get_window(), quitEngine);
+
     // Engine Loop
     while (esCurrent != esQuit)
     {
-        SM.add_scene(sandboxScene);
-        SM.change_scene(0);
 
         if (esCurrent == esActive) 
         {
-            std::cout << "scene active" << std::endl;
-            while (SM.current != gsQuit) 
-            {
-                //If game state is not set to restart, update the state manager and load in the next game state
-                if (SM.current == gsRestart) 
-                {
-                    SM.current = SM.previous;
-                    SM.next = SM.current;
-                }
-                else 
-                {
-                    //checks for change in scene
-                    SM.load_scene();             //LOAD STATE
-                }
+            MyFrameRateController.start();
+            copiumCore.update();
+            update();
 
-                SM.init_scene();                 //INIT STATE
-
-                while (SM.current == SM.next) 
-                {
-                    MyFrameRateController.start();
-
-                    SM.update_scene();         //UPDATE STATE
-                    SM.draw_scene();           //DRAW STATE
-                    copiumCore.update();
-                    update();
-                    //button.update();
-                    if (esCurrent == esQuit)
-                        SM.change_scene(gsQuit);
-
-                    draw();
-                    MyFrameRateController.end();
-                }
-
-                SM.free_scene();                 //FREE STATE
-
-                if (SM.next != gsRestart)
-                    SM.unload_scene();           //UNLOAD STATE
-
-                SM.previous = SM.current;
-                SM.current = SM.next;
-            }
+            draw();
+            MyFrameRateController.end();
         }
     }
     copiumCore.exit();

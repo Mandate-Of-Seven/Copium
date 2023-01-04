@@ -14,7 +14,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 *****************************************************************************************/
 
 #include "Windows\windows-input.h"
-#include "SceneManager\sm.h"
+#include "SceneManager\scene-manager.h"
 #include "GameObject/Components/physics-components.h"
 #include <glm/vec3.hpp>
 #include <Scripting/scripting-system.h>
@@ -42,10 +42,10 @@ namespace Copium
 
 	namespace
 	{
-		InputSystem& inputSystem{ InputSystem::Instance() };
-		NewSceneManager& sceneManager{ NewSceneManager::Instance() };
-		MessageSystem& messageSystem{ MessageSystem::Instance() };
-		ScriptingSystem& scriptingSystem{ ScriptingSystem::Instance() };
+		InputSystem& inputSystem{ *InputSystem::Instance() };
+		SceneManager& sceneManager{ *SceneManager::Instance() };
+		MessageSystem& messageSystem{ *MessageSystem::Instance() };
+		ScriptingSystem& scriptingSystem{ *ScriptingSystem::Instance() };
 	}
 
 	//static bool GetKeyDown(int keyCode)
@@ -140,16 +140,6 @@ namespace Copium
 		return gameObj->id;
 	}
 
-	/*******************************************************************************
-	/*!
-	\brief
-		Adds force to a gameobject with a rigidbody component
-	\param _ID
-		ID of gameObject to look for
-	\param force
-		Force to add
-	*/
-	/*******************************************************************************/
 	static void RigidbodyAddForce(GameObjectID _ID, Math::Vec2* force)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
@@ -166,29 +156,11 @@ namespace Copium
 		rb->add_force(*force);
 	}
 
-	/*******************************************************************************
-	/*!
-	\brief
-		Gets the delta time from the engine
-	\return
-		Delta time
-	*/
-	/*******************************************************************************/
 	static float GetDeltaTime()
 	{
 		return (float)MyFrameRateController.getDt();
 	}
 
-	/*******************************************************************************
-	/*!
-	\brief
-		Sets the velocity of a rigidbody
-	\param _ID
-		GameObject of ID with a rigidbody
-	\param velocity
-		Velocity to set rigidbody to
-	*/
-	/*******************************************************************************/
 	static void RigidbodySetVelocity(GameObjectID _ID, Math::Vec2* velocity)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
@@ -206,16 +178,6 @@ namespace Copium
 		rb->set_vel(*velocity);
 	}
 
-	/*******************************************************************************
-	/*!
-	\brief
-		Gets the velocity of a rigidbody
-	\param _ID
-		GameObject of ID with a rigidbody
-	\param velocity
-		Velocity to store rigidbody's velocity
-	*/
-	/*******************************************************************************/
 	static void RigidbodyGetVelocity(GameObjectID _ID, Math::Vec2* velocity)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
@@ -232,18 +194,6 @@ namespace Copium
 		*velocity = rb->get_vel();
 	}
 
-	/*******************************************************************************
-	/*!
-	\brief
-		Checks if a gameobject of given ID has a component
-	\param _ID
-		GameObject of ID to check for component
-	\param componentType
-		Type of component
-	\return 
-		True if gameobject of ID has component of type
-	*/
-	/*******************************************************************************/
 	static bool HasComponent(GameObjectID _ID, MonoReflectionType* componentType)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
@@ -258,18 +208,6 @@ namespace Copium
 		return gameObj->hasComponent(cType);
 	}
 	
-	/*******************************************************************************
-	/*!
-	\brief
-		Checks if a gameobject of given ID has a component
-	\param _ID
-		GameObject of ID to check for component
-	\param componentType
-		Type of component
-	\return
-		True if gameobject of ID has component of type
-	*/
-	/*******************************************************************************/
 	static void GetLocalScale(GameObjectID _ID, Math::Vec3* scale)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
@@ -280,18 +218,6 @@ namespace Copium
 		*scale = gameObj->transform.scale;
 	}
 
-	/*******************************************************************************
-	/*!
-	\brief
-		Checks if a gameobject of given ID has a component
-	\param _ID
-		GameObject of ID to check for component
-	\param componentType
-		Type of component
-	\return
-		True if gameobject of ID has component of type
-	*/
-	/*******************************************************************************/
 	static void SetLocalScale(GameObjectID _ID, Math::Vec3* scale)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
@@ -302,16 +228,6 @@ namespace Copium
 		gameObj->transform.scale = *scale;
 	}
 
-	/*******************************************************************************
-	/*!
-	\brief
-		Set active a gameObject
-	\param _ID
-		GameObject of ID to set active
-	\param _active
-		Bool to set active to
-	*/
-	/*******************************************************************************/
 	static void SetActive(GameObjectID _ID, bool _active)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
@@ -322,16 +238,6 @@ namespace Copium
 		gameObj->setActive(_active);
 	}
 
-	/*******************************************************************************
-	/*!
-	\brief
-		Get active a gameObject
-	\param _ID
-		GameObject of ID to get active
-	\return 
-		Bool to whether gameobject was active
-	*/
-	/*******************************************************************************/
 	static bool GetActive(GameObjectID _ID)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
@@ -342,12 +248,6 @@ namespace Copium
 		return gameObj->isActive();
 	}
 
-	/*******************************************************************************
-	/*!
-	\brief
-		Quits the game or preview mode depending on macros defined
-	*/
-	/*******************************************************************************/
 	static void QuitGame()
 	{
 		if (sceneManager.endPreview())
@@ -361,18 +261,6 @@ namespace Copium
 		//Scene manager quit
 	}
 
-	/*******************************************************************************
-	/*!
-	\brief
-		Gets the string of a text component
-	\param gameObjID
-		ID of gameObject that has this component
-	\param compID
-		Component ID of text component
-	\param str
-		String of text component to store
-	*/
-	/*******************************************************************************/
 	static void GetTextString(GameObjectID gameObjID, ComponentID compID, MonoString* str)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(gameObjID);
@@ -388,18 +276,6 @@ namespace Copium
 		}
 	}
 
-	/*******************************************************************************
-	/*!
-	\brief
-		Sets the string of a text component
-	\param gameObjID
-		ID of gameObject that has this component
-	\param compID
-		Component ID of text component
-	\param str
-		String to set text component
-	*/
-	/*******************************************************************************/
 	static void SetTextString(GameObjectID gameObjID, ComponentID compID, MonoString* str)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(gameObjID);
@@ -417,39 +293,21 @@ namespace Copium
 		}
 	}
 
-	/*******************************************************************************
-	/*!
-	\brief
-		Clones a gameObject
-	\param ID
-		ID of gameObject to be cloned
-	\return
-		GameObject ID of the cloned gameObject
-	*/
-	/*******************************************************************************/
 	static GameObjectID CloneGameObject(GameObjectID ID)
 	{
-		GameObject* toBeCloned = MyNewSceneManager.findGameObjByID(ID);
+		GameObject* toBeCloned = MySceneManager.findGameObjByID(ID);
 		if (toBeCloned)
 		{
-			GameObject* clone = GOF.instantiate(*toBeCloned);
+			GameObject* clone = MyGOF.instantiate(*toBeCloned);
 			if (clone)
 				return clone->id;
 		}
 		return 0;
 	}
 
-	/*******************************************************************************
-	/*!
-	\brief
-		Creates a blank gameObject
-	\return
-		GameObject ID of the new gameObject
-	*/
-	/*******************************************************************************/
 	static GameObjectID InstantiateGameObject()
 	{
-		GameObject* clone = GOF.instantiate();
+		GameObject* clone = MyGOF.instantiate();
 		if (clone)
 			return clone->id;
 		return 0;
@@ -485,12 +343,6 @@ namespace Copium
 		Register(QuitGame);
 	}
 
-	/*******************************************************************************
-	/*!
-	\brief
-		Registers component type names in mono to C++ defined component types
-	*/
-	/*******************************************************************************/
 	static void registerComponents()
 	{
 		s_EntityHasComponentFuncs.clear();
@@ -499,7 +351,7 @@ namespace Copium
 		while (i != end)
 		{
 			std::string name = "CopiumEngine." + MAP_COMPONENT_TYPE_NAME[(ComponentType)i];
-			MonoType* mType = ScriptingSystem::Instance().getMonoTypeFromName(name);
+			MonoType* mType = ScriptingSystem::Instance()->getMonoTypeFromName(name);
 			if (mType != nullptr)
 			{
 				PRINT(name);

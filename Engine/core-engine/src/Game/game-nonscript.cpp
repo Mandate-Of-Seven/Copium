@@ -16,7 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 
 #include "../Game/game-nonscript.h"
-#include "../SceneManager/sm.h"
+#include "../SceneManager/scene-manager.h"
 #include "../GameObject/Components/script-component.h"
 #include "../GameObject/Components/renderer-component.h"
 #include "../GameObject/Components/physics-components.h"
@@ -27,10 +27,10 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
-    AssetsSystem& assets = AssetsSystem::Instance();
-    EditorSystem& editorSys = EditorSystem::Instance();
-    NewSceneManager& sm = NewSceneManager::Instance();
-    MessageSystem& messageSystem = MessageSystem::Instance();
+    AssetsSystem* assets = AssetsSystem::Instance();
+    EditorSystem* editorSys = EditorSystem::Instance();
+    SceneManager* sm = SceneManager::Instance();
+    MessageSystem* messageSystem = MessageSystem::Instance();
 
     GameObject* playerBullet;
     GameObject* enemyBullet;
@@ -40,9 +40,9 @@ namespace Copium
 
     void Game::init()
     {
-        messageSystem.subscribe(MESSAGE_TYPE::MT_COLLISION_ENTER, this);
+        messageSystem->subscribe(MESSAGE_TYPE::MT_COLLISION_ENTER, this);
 
-        Scene* scene = sm.get_current_scene();
+        Scene* scene = sm->get_current_scene();
         if (scene != nullptr && scene->get_state() == Scene::SceneState::play)
         {
             for (auto gameObj : scene->gameObjects)
@@ -66,51 +66,46 @@ namespace Copium
 
     void Game::update()
     {
-        Scene* scene = sm.get_current_scene();
+        Scene* scene = sm->get_current_scene();
         if(scene != nullptr && scene->get_state() == Scene::SceneState::play)
         {
             //for(auto gameObj = scene->gameObjects.begin(); gameObj != scene->gameObjects.end(); ++gameObj)
             for (auto gameObj : scene->gameObjects)
             {
-                //if (!gameObj)
-                //    continue;
+                if (!gameObj)
+                    continue;
+                for (auto component : gameObj->getComponents<Script>())
+                {
+                    // If the gameobject contains a unit body
+                    if (!component->Name().compare("UnitBody")) 
+                    {
+                        // Run functions
+                        if (unit_body(gameObj))
+                            return;
+                    }
+                }
 
-                //for (auto component : gameObj->getComponents<Script>())
-                //{
-                //    // If the gameobject contains a unit body
-                //    if (!component->Name().compare("UnitBody")) 
-                //    {
-                //        // Run functions
-                //        if (unit_body(gameObj))
-                //            return;
-                //    }
-                //}
+                if (gameObj->get_name().find("Bullet") != std::string::npos)
+                {
+                    if (gameObj->transform.position.y > 7.f || gameObj->transform.position.y < -7.f)
+                    {
+                        MyGOF.destroy(gameObj);
+                        return;
+                    }
 
-
-                //if (gameObj->get_name().find("Bullet") != std::string::npos)
-                //{
-                //    if (gameObj->transform.position.y > 7.f || gameObj->transform.position.y < -7.f)
-                //    {
-                //        GOF.destroy(gameObj);
-                //        return;
-                //    }
-
-                //    if (!gameObj->isActive())
-                //    {
-                //        GOF.destroy(gameObj);
-                //        return;
-                //    }
-                //}
+                    if (!gameObj->isActive())
+                    {
+                        MyGOF.destroy(gameObj);
+                        return;
+                    }
+                }
             }
         }
     }
 
     void Game::exit()
     {
-        enemy.clear();
-        player = nullptr;
-        playerBullet = nullptr;
-        enemyBullet = nullptr;
+        
     }
 
     void Game::handleMessage(MESSAGE_TYPE _mType)
@@ -161,7 +156,7 @@ namespace Copium
 
                 if (enemyBullet != nullptr && timer >= rand() % 100 * 0.01)
                 {
-                    GameObject* go = GOF.instantiate(*enemyBullet);
+                    GameObject* go = MyGOF.instantiate(*enemyBullet);
                     go->set_name("Enemy Bullet (Clone)");
 
                     go->transform.position = pos;
@@ -180,7 +175,7 @@ namespace Copium
         {
             if (playerBullet != nullptr)
             {
-                GameObject* go = GOF.instantiate(*playerBullet);
+                GameObject* go = MyGOF.instantiate(*playerBullet);
                 go->set_name("Player Bullet (Clone)");
                 if (player != nullptr)
                 {

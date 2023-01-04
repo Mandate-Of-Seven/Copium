@@ -16,7 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define EDITOR_SCENEVIEW_H
 
 #include <glm/vec2.hpp>
-#include "SceneManager/sm.h"
+#include "SceneManager/scene-manager.h"
 
 namespace Copium
 {

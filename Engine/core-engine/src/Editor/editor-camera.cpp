@@ -22,7 +22,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Windows/windows-input.h"
 #include "Editor/editor-camera.h"
 #include "Editor/editor-system.h"
-#include "SceneManager/sm.h"
+#include "SceneManager/scene-manager.h"
 
 namespace
 {
@@ -50,8 +50,8 @@ namespace Copium
 
 		if (enableCamera)
 		{
-			NewSceneManager& sm = NewSceneManager::Instance();
-			Scene* scene = sm.get_current_scene();
+			SceneManager* sm = SceneManager::Instance();
+			Scene* scene = sm->get_current_scene();
 			if (scene != nullptr && !scene->get_name().compare("DemoCLONE"))
 			{
 				orthographicSize = 5.f;

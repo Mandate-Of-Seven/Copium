@@ -15,7 +15,7 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "Math/math-library.h"
-#include "SceneManager/sm.h"
+#include "SceneManager/scene-manager.h"
 
 #ifndef COLLISION_H
 #define COLLISION_H

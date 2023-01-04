@@ -10,13 +10,13 @@
 \brief
 	Contains function definitions for files
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "pch.h"
 
 #include "Files/file.h"
 #include "Windows/windows-utils.h"
-#include "SceneManager/sm.h"
+#include "SceneManager/scene-manager.h"
 
 // Bean: Temporary for executing file
 //#include <shellapi.h>
@@ -59,14 +59,14 @@ namespace Copium
 	{
 		if (fileType.fileType == SCENE)
 		{
-			if (Copium::NewSceneManager::Instance().get_current_scene() != nullptr)
+			if (Copium::SceneManager::Instance()->get_current_scene() != nullptr)
 			{
 				std::cout << "change scene\n";
-				Copium::NewSceneManager::Instance().change_scene(string().c_str());
+				Copium::SceneManager::Instance()->change_scene(string().c_str());
 			}
 			else
 			{
-				if (Copium::NewSceneManager::Instance().load_scene(string().c_str()))
+				if (Copium::SceneManager::Instance()->load_scene(string().c_str()))
 					std::cout << "loading success\n";
 				else
 					std::cout << "loading fail\n";

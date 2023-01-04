@@ -5,7 +5,7 @@
 
 \par			Course: GAM200
 \par			Section:
-\date			25/11/2022
+\date			28/10/2022
 
 \brief
 	This file holds functions to undo and redo changes made in gameobjects as well as
@@ -17,7 +17,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "pch.h"
 #include "Editor/editor-undoredo.h"
 #include "GameObject/game-object-factory.h"
-#include "SceneManager/sm.h"
+#include "SceneManager/scene-manager.h"
 
 namespace Copium
 {
@@ -89,19 +89,75 @@ namespace Copium
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-	UndoRedo::GameObjectCommand::GameObjectCommand(GameObject* _value,bool _deleting)
+	//UndoRedo::GameObjectCommand::GameObjectCommand(std:* _value, bool _deleting) : sptr{new GameObject*(_value), [](GameObject** _go)
+	//{
+	//		std::cout << "gameobj cmd delete called\n";
+	//		if (*_go)
+	//		{
+	//			std::cout << "go is still alive\n";
+	//			delete *_go; 
+	//			(*_go) = nullptr;
+	//		}
+	//		delete _go;
+	//			
+	//} }
+	//{
+	//	std::cout << "gameobj cmd\n";
+	//	std::cout << "reference count: " << sptr.use_count() << std::endl;
+
+
+	//	if (_deleting)
+	//	{
+	//		std::cout << "marked for deletion\n";
+	//		value = _value;
+	//		pointer = _value;
+	//	}
+	//	else
+	//	{
+	//		std::cout << "transfer ownership\n";
+	//		//this->value = MyGOF.clone(*_value,nullptr);
+	//		value = _value;
+	//		pointer = _value;
+
+	//	}
+
+	//	deleting = _deleting;
+	//	std::cout << (*sptr) << std::endl;
+
+	//}
+	UndoRedo::GameObjectCommand::GameObjectCommand(std::shared_ptr<GameObject>& p, bool _deleting) : sptr{p}
 	{
-		std::cout << "gameobj cmd\n";
-		this->value = GOF.clone(*_value,nullptr);
-		this->pointer = _value;
-		this->deleting = _deleting;
+		std::cout << "gameobjcmd sharedptr ctor\n";
+		std::cout << "reference count: " << sptr.use_count() << std::endl;
+
+
+		if (_deleting)
+		{
+			std::cout << "marked for deletion\n";
+
+		}
+		else
+		{
+			std::cout << "transfer ownership\n";
+
+
+		}
+
+		value =  &(*sptr);
+		pointer = &(*sptr);
+		deleting = _deleting;
+
 	}
+
 
 	UndoRedo::GameObjectCommand::~GameObjectCommand()
 	{
-		std::cout<<"Undo Redo being destroyed: " << this->value->get_name()<<" | "<<this->value << "\n\n";
-		//GOF.destroy(this->value);
-		delete this->value;
+		std::cout << "game obj command destructed\n";
+		std::cout << "reference count: " << sptr.use_count() << std::endl;
+		//std::cout << "Undo Redo being destroyed: " << this->value->get_name() << " | " << this->value << "\n\n";
+		//MyGOF.destroy(this->value);
+		//delete this->value;
+
 	}
 
 	void UndoRedo::GameObjectCommand::Undo(std::stack<Command*>* stackPointer)
@@ -116,11 +172,12 @@ namespace Copium
 
 		if (isDeleting)
 		{
+			
 			if (!value->get_name().empty())
 			{
-				std::cout << "Delete" << std::endl;
-				GOF.destroy(this->pointer);
-				Command* temp = new GameObjectCommand(this->value, false);
+				std::cout << "Deleting game object" << std::endl;
+				MyGOF.destroy(this->pointer);
+				Command* temp = new GameObjectCommand(sptr, false);
 				stackPointer->push(temp);
 			}
 			else
@@ -133,8 +190,10 @@ namespace Copium
 			if (!value->get_name().empty())
 			{
 				std::cout << "Create" << std::endl;
-				GameObject* newObj = GOF.instantiate(*this->value);
-				Command* temp = new GameObjectCommand(newObj, true);
+				//GameObject* newObj = MyGOF.instantiate(*this->value);
+				Copium::SceneManager::Instance()->get_current_scene()->gameObjects.push_back(value);
+				Copium::SceneManager::Instance()->get_current_scene()->gameObjectSPTRS.push_back(sptr);				
+				Command* temp = new GameObjectCommand(sptr, true);
 				stackPointer->push(temp);
 			}
 			else
@@ -143,7 +202,6 @@ namespace Copium
 			}
 		}
 	}
-
 	void UndoRedo::GameObjectCommand::Redo(std::stack<Command*>* stackPointer)
 	{
 		if (!stackPointer)
@@ -151,7 +209,7 @@ namespace Copium
 			PRINT("Invalid stack pointer");
 			return;
 		}
-
+		std::cout << "redo\n";
 		bool isDeleting = this->deleting;
 
 		if (isDeleting)
@@ -160,8 +218,8 @@ namespace Copium
 			if (!value->get_name().empty())
 			{
 				std::cout << "Delete" << std::endl;
-				GOF.destroy(this->pointer);
-				Command* temp = new GameObjectCommand(this->value, false);
+				MyGOF.destroy(this->pointer);
+				Command* temp = new GameObjectCommand(sptr, false);
 				stackPointer->push(temp);
 			}
 			else
@@ -174,8 +232,12 @@ namespace Copium
 			if (!value->get_name().empty())
 			{
 				std::cout << "Create" << std::endl;
-				GameObject* newObj = GOF.instantiate(*this->value);
-				Command* temp = new GameObjectCommand(newObj, true);
+				//GameObject* newObj = MyGOF.instantiate(*this->value);
+				Copium::SceneManager::Instance()->get_current_scene()->gameObjects.push_back(value);
+				Copium::SceneManager::Instance()->get_current_scene()->gameObjectSPTRS.push_back(sptr);
+
+
+				Command* temp = new GameObjectCommand(sptr, true);
 				stackPointer->push(temp);
 			}
 			else
@@ -184,13 +246,14 @@ namespace Copium
 			}
 		}
 	}
-
 	void UndoRedo::GameObjectCommand::printCommand()
 	{
+		std::cout << "//Printing Command Info//\n";
 		if (!value->get_name().empty())
 		{
-			std::cout << value->get_name() << " - ";
+			std::cout << value->get_name() << std::endl;
 		}
+		std::cout << "//End Command Info//\n";
 	}
 
 	bool UndoRedo::GameObjectCommand::getDeleting()

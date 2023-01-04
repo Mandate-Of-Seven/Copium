@@ -17,7 +17,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/game-object.h"
 #include "Scripting/logic-system.h"
 #include "GameObject/Components/script-component.h"
-#include "SceneManager/sm.h"
+#include "SceneManager/scene-manager.h"
 #include "Messaging/message-system.h"
 #include <Windows/windows-system.h>
 #include <Debugging/frame-rate-controller.h>
@@ -28,8 +28,8 @@ namespace Copium
 {
 	namespace
 	{
-		NewSceneManager& sceneManager {NewSceneManager::Instance()};
-		MessageSystem& messageSystem{ MessageSystem::Instance() };
+		SceneManager& sceneManager {*SceneManager::Instance()};
+		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 		std::vector<GameObject*>* gameObjects;
 		double timeElasped;
 		Game game;
@@ -90,7 +90,7 @@ namespace Copium
 
 	void LogicSystem::exit()
 	{
-		game.exit();
+
 	}
 
 	void LogicSystem::handleMessage(MESSAGE_TYPE mType)
