@@ -212,6 +212,7 @@
     <ClCompile Include="src\Windows\windows-utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Animation\animation-struct.h" />
     <ClInclude Include="src\Animation\animation-system.h" />
     <ClInclude Include="src\Editor\editor-colortheme.h" />
     <ClInclude Include="src\Editor\editor-game.h" />

@@ -173,27 +173,10 @@ namespace Copium
 
 		// Element Buffer Object
 		GLushort indices[maxCircleIndexCount]{ 0 };
-		GLint counter = 0;
-		bool indexRestart = false;
-		/*for (GLint i = 0; i < maxCircleIndexCount; i++)
+		GLushort counter = 0;
+		for (GLushort i = 0; i < maxCircleIndexCount; i += (circleVertices + 1))
 		{
-			if (counter % circleVertices || counter == 0 || indexRestart)
-			{
-				indices[i] = counter;
-				counter++;
-				indexRestart = false;
-			}
-			else
-			{
-				indices[i] = maxCircleIndexCount + 1;
-				indexRestart = true;
-			}	
-		}*/
-
-		for (GLint i = 0; i < maxCircleIndexCount; i += (circleVertices + 1))
-		{
-
-			for (GLint j = 0; j < circleVertices; j++)
+			for (GLushort j = 0; j < circleVertices; j++)
 			{
 				indices[i + j] = counter;
 				counter++;
