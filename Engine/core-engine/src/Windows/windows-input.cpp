@@ -36,6 +36,10 @@ namespace
 namespace Copium
 {
     short InputSystem::keys[COPIUM_MAX_KEYS];
+    bool doubleClicked;
+    double InputSystem::prevClickTime;
+    Copium::Math::Vec2 InputSystem::prevClickPos;
+
 void InputSystem::init()
 {
     systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
@@ -43,16 +47,16 @@ void InputSystem::init()
     {
         keys[i] = 0;
     }
-    glfwSetKeyCallback(windowsSystem->get_window(), key_callback);
+    /*glfwSetKeyCallback(windowsSystem->get_window(), key_callback);
     glfwSetMouseButtonCallback(windowsSystem->get_window(), mousebutton_callback);
     glfwSetScrollCallback(windowsSystem->get_window(), mousescroll_callback);
     glfwSetCursorPosCallback(windowsSystem->get_window(), mousepos_callback);
-    std::cout << "Input init was called" << std::endl;
+    std::cout << "Input init was called" << std::endl;*/
 }
 
 void InputSystem::update() 
 {
-
+    
 }
 
 void InputSystem::exit() {}
@@ -86,6 +90,18 @@ bool InputSystem::is_mousebutton_pressed(int button)
     
     if (mouseButtons[button])
     {
+        return true;
+    }
+
+    return false;
+}
+
+bool InputSystem::is_doubleclicked()
+{
+    if (doubleClicked)
+    {
+        doubleClicked = false;
+        std::cout << "DOUBLE CLICK \n";
         return true;
     }
 
@@ -160,12 +176,14 @@ void InputSystem::mousebutton_callback(GLFWwindow* window, int button, int actio
 {
     (void) mods, window; // Bean: to prevent warning, remove later
     int target = 0;
+    double timeDiff;
+    float vecDiff;
     switch (button) 
     {
         case GLFW_MOUSE_BUTTON_LEFT:
             target = GLFW_MOUSE_BUTTON_LEFT;
         #ifdef _DEBUG               
-            //std::cout << "Left mouse button ";
+            std::cout << "Left mouse button ";
         #endif
         break;
 
@@ -201,15 +219,36 @@ void InputSystem::mousebutton_callback(GLFWwindow* window, int button, int actio
     {
         case GLFW_PRESS:
             mouseButtons[target] = 1;
+
+            if (target == GLFW_MOUSE_BUTTON_LEFT)
+            {
+                timeDiff = glfwGetTime() - prevClickTime;
+                vecDiff = Copium::Math::vec2_distance(InputSystem::Instance()->get_mouseposition(), prevClickPos);
+
+                if (timeDiff <= 0.3 && vecDiff <= 50) //double clicks should be faster than 300ms
+                {
+                    /*
+                    std::cout << "DOUBLE CLICK \n";
+                    std::cout << InputSystem::Instance()->get_mouseposition();
+                    std::cout << prevClickPos;
+                    std::cout << vecDiff;
+                    */
+                    doubleClicked = true;
+                }
+
+                prevClickPos = InputSystem::Instance()->get_mouseposition();
+                prevClickTime = glfwGetTime();
+            }
+
         #ifdef _DEBUG
-            //std::cout << "pressed!!!" << std::endl;
+            std::cout << "pressed!!!"<<"\n";
         #endif
         break;
 
         case GLFW_RELEASE:
             mouseButtons[target] = 0;
         #ifdef _DEBUG
-            //std::cout << "released!!!" << std::endl;
+            std::cout << "released!!!" << std::endl;
         #endif
         break;
     }

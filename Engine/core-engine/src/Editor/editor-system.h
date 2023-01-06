@@ -21,6 +21,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor/editor-game.h"
 #include "Editor/editor-content-browser.h"
 #include "Editor/editor-camera.h"
+#include "Editor/editor-colortheme.h"
 #include "Editor/editor-undoredo.h"
 #include "Editor/editor-hierarchy-list.h"
 #include "Editor/inspector.h"
@@ -118,6 +119,7 @@ namespace Copium
 		EditorGame game;
 		EditorContentBrowser contentBrowser;
 		EditorCamera camera;
+		EditorColorTheme colorTheme;
 		EditorHierarchyList hierarchyList;
 		EditorInspector inspector;
 		UndoRedo::CommandManager commandManager; //for undo and redo

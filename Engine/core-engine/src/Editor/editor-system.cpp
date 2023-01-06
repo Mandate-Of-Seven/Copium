@@ -20,7 +20,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "GameObject/game-object.h"
 #include "Editor/inspector.h"
 #include "Editor/editor-consolelog.h"
-//#include "Editor/editor-hierarchy-list.h"
+#include "Editor/editor-hierarchy-list.h"
 #include "Editor/editor-colortheme.h"
 #include "Windows/windows-utils.h"
 #include "Utilities/thread-system.h"
@@ -70,15 +70,13 @@ namespace Copium
 		ImGui::GetIO().ConfigDockingWithShift = true;
 		//Window::Inspector::init();
 		Window::EditorConsole::init();
-		//Window::Hierarchy::init();
-		Window::ColorTheme::init();
+		Window::Hierarchy::init();
+		//Window::ColorTheme::init();
 
 		sceneView.init();
 		game.init();
 		contentBrowser.init();
-		hierarchyList.init();
-		inspector.init();
-		
+		colorTheme.init();
 		// Initialize a new editor camera
 		camera.init((float) sceneView.get_width(), (float) sceneView.get_height());
 	}
@@ -294,7 +292,7 @@ namespace Copium
 					}
 					if (ImGui::MenuItem("Theme generator"))
 					{
-						Window::ColorTheme::isColorThemeOpen = true;
+						Copium::isColorThemeOpen = true;
 					}
 					if (ImGui::MenuItem("Inspector"))
 					{
@@ -387,15 +385,15 @@ namespace Copium
 
 
             //Call all the editor layers updates here
-			Window::ColorTheme::update();
-			//Window::Inspector::update();
+			
+			colorTheme.update();
+			Window::Inspector::update();
 			Window::EditorConsole::update();
 			//Window::Hierarchy::update();
 			sceneView.update();
 			game.update();
 			contentBrowser.update();
-			hierarchyList.update();
-			inspector.update();
+			
 
 			// demo update
 			if (show_demo_window)
