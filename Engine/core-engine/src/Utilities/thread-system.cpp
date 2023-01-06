@@ -18,7 +18,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
-	void ThreadSystem::init()
+	void ThreadSystem::Init()
 	{
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		quit = false;
@@ -28,7 +28,7 @@ namespace Copium
 		}
 	}
 
-	void ThreadSystem::update()
+	void ThreadSystem::Update()
 	{
 
 	}
@@ -38,7 +38,7 @@ namespace Copium
 		threads.push_back(_thread);
 	}
 
-	void ThreadSystem::exit()
+	void ThreadSystem::Exit()
 	{
 		quit = true;
 		PRINT("Exiting all threads...");

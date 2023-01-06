@@ -24,11 +24,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "../Debugging/frame-rate-controller.h"
 #include "Windows/windows-input.h"
 
-// Bean: remove this after NewManagerInstance is moved
-#include "GameObject/Components/renderer-component.h"
-#include "GameObject/Components/ui-components.h"
-#include "GameObject/Components/collider-components.h"
-#include "SceneManager/scene-manager.h"
 #include "Math/math-library.h"
 
 namespace Copium
@@ -38,7 +33,6 @@ namespace Copium
 		AssetsSystem& assets = AssetsSystem::Instance();
 		EditorSystem& editorSys = EditorSystem::Instance();
 		GraphicsSystem& graphics = GraphicsSystem::Instance();
-		SceneManager& sm = SceneManager::Instance();
 		InputSystem& inputSystem = InputSystem::Instance();
 
 		bool toggleAnim = false;
@@ -97,7 +91,7 @@ namespace Copium
 			development();
 	}
 
-	void Draw::exit()
+	void Draw::Exit()
 	{
 		camera = nullptr;
 		renderer.shutdown();
@@ -130,47 +124,47 @@ namespace Copium
 		}
 
 		// Colliders
-		Scene* scene = sm.get_current_scene();
-		if (scene != nullptr)
-		{
-			color = { 0.3f, 1.f, 0.3f, 1.f };
-			GameObject* gameObject = sm.get_selected_gameobject();
-			if (gameObject != nullptr)
-			{
-				for (Component* component : gameObject->getComponents<BoxCollider2D>())
-				{
-					if (!component->Enabled())
-						continue;
+		//Scene* scene = sm.get_current_scene();
+		//if (scene != nullptr)
+		//{
+		//	color = { 0.3f, 1.f, 0.3f, 1.f };
+		//	GameObject* gameObject = sm.get_selected_gameobject();
+		//	if (gameObject != nullptr)
+		//	{
+		//		for (Component* component : gameObject->getComponents<BoxCollider2D>())
+		//		{
+		//			if (!component->Enabled())
+		//				continue;
 
-					BoxCollider2D* collider = reinterpret_cast<BoxCollider2D*>(component);
-					AABB bounds = collider->getBounds();
-					glm::vec3 pos0_1 = { bounds.min.to_glm(), 0.f };
-					glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y, 0.f };
-					glm::vec3 pos2_1 = { bounds.max.to_glm(), 0.f };
-					glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y, 0.f };
+		//			BoxCollider2D* collider = reinterpret_cast<BoxCollider2D*>(component);
+		//			AABB bounds = collider->getBounds();
+		//			glm::vec3 pos0_1 = { bounds.min.to_glm(), 0.f };
+		//			glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y, 0.f };
+		//			glm::vec3 pos2_1 = { bounds.max.to_glm(), 0.f };
+		//			glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y, 0.f };
 
-					renderer.draw_line(pos0_1, pos1_1, color);
-					renderer.draw_line(pos1_1, pos2_1, color);
-					renderer.draw_line(pos2_1, pos3_1, color);
-					renderer.draw_line(pos3_1, pos0_1, color);
-				}
+		//			renderer.draw_line(pos0_1, pos1_1, color);
+		//			renderer.draw_line(pos1_1, pos2_1, color);
+		//			renderer.draw_line(pos2_1, pos3_1, color);
+		//			renderer.draw_line(pos3_1, pos0_1, color);
+		//		}
 
-				for (Component* component : gameObject->getComponents<Button>())
-				{
-					Button* collider = reinterpret_cast<Button*>(component);
-					AABB bounds = collider->getBounds();
-					glm::vec3 pos0_1 = { bounds.min.to_glm(),0.f };
-					glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y,0.f };
-					glm::vec3 pos2_1 = { bounds.max.to_glm(),0.f };
-					glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y,0.f };
+		//		for (Component* component : gameObject->getComponents<Button>())
+		//		{
+		//			Button* collider = reinterpret_cast<Button*>(component);
+		//			AABB bounds = collider->getBounds();
+		//			glm::vec3 pos0_1 = { bounds.min.to_glm(),0.f };
+		//			glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y,0.f };
+		//			glm::vec3 pos2_1 = { bounds.max.to_glm(),0.f };
+		//			glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y,0.f };
 
-					renderer.draw_line(pos0_1, pos1_1, color);
-					renderer.draw_line(pos1_1, pos2_1, color);
-					renderer.draw_line(pos2_1, pos3_1, color);
-					renderer.draw_line(pos3_1, pos0_1, color);
-				}
-			}
-		}
+		//			renderer.draw_line(pos0_1, pos1_1, color);
+		//			renderer.draw_line(pos1_1, pos2_1, color);
+		//			renderer.draw_line(pos2_1, pos3_1, color);
+		//			renderer.draw_line(pos3_1, pos0_1, color);
+		//		}
+		//	}
+		//}
 
 		renderer.end_batch();
 
@@ -198,124 +192,124 @@ namespace Copium
 
 		// Theory WIP
 		
-		Scene* scene = sm.get_current_scene();
-		if (scene != nullptr)
-		{
-			if (scene->get_state() == Scene::SceneState::play)
-				toggleAnim = true;
-			else
-				toggleAnim = false;
+		//Scene* scene = sm.get_current_scene();
+		//if (scene != nullptr)
+		//{
+		//	if (scene->get_state() == Scene::SceneState::play)
+		//		toggleAnim = true;
+		//	else
+		//		toggleAnim = false;
 
-			for (GameObject* gameObject : scene->gameObjects)
-			{
-				if (!gameObject->isActive())
-					continue;
+		//	for (GameObject* gameObject : scene->gameObjects)
+		//	{
+		//		if (!gameObject->isActive())
+		//			continue;
 
-				for (Component* component : gameObject->getComponents<SpriteRenderer>())
-				{
-					if (!component->Enabled())
-						continue;
+		//		for (Component* component : gameObject->getComponents<SpriteRenderer>())
+		//		{
+		//			if (!component->Enabled())
+		//				continue;
 
-					Transform& t = gameObject->transform;
-					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(component);
-					Sprite& sr = rc->get_sprite_renderer();
-					glm::vec2 size(t.scale.x, t.scale.y);
-					float rotation = t.rotation.z;
-					// Bean: It should be set in inspector view of the renderer component instead
-					unsigned int id = sr.get_sprite_id() - 1;
+		//			Transform& t = gameObject->transform;
+		//			SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(component);
+		//			Sprite& sr = rc->get_sprite_renderer();
+		//			glm::vec2 size(t.scale.x, t.scale.y);
+		//			float rotation = t.rotation.z;
+		//			// Bean: It should be set in inspector view of the renderer component instead
+		//			unsigned int id = sr.get_sprite_id() - 1;
 
-					// The index of the texture must be less than the size of textures
-					if (id != -1 && id < assets.get_textures().size())
-					{
-						sr.set_texture(assets.get_texture(id));
-					}
-					else
-					{
-						sr.set_sprite_id(0);
-						sr.set_texture(nullptr);
-					}
+		//			// The index of the texture must be less than the size of textures
+		//			if (id != -1 && id < assets.get_textures().size())
+		//			{
+		//				sr.set_texture(assets.get_texture(id));
+		//			}
+		//			else
+		//			{
+		//				sr.set_sprite_id(0);
+		//				sr.set_texture(nullptr);
+		//			}
 
-					// Bean: Temporary animation conditions
-					if (!assets.get_spritesheets().empty() && !gameObject->get_name().compare("Animation - Track"))
-					{
-						int animID = 1;
-						static GLuint animIndex = 0;
-						GLuint indexSize = assets.get_spritesheets()[animID].get_size() - 1;
+		//			// Bean: Temporary animation conditions
+		//			if (!assets.get_spritesheets().empty() && !gameObject->get_name().compare("Animation - Track"))
+		//			{
+		//				int animID = 1;
+		//				static GLuint animIndex = 0;
+		//				GLuint indexSize = assets.get_spritesheets()[animID].get_size() - 1;
 
-						GLfloat dt = (GLfloat) MyFrameRateController.getDt();
-						static float animTimer = 0.f;
-						animTimer += dt;
-						if (animTimer > 0.01f && toggleAnim)
-						{
-							animTimer = 0.f;
-							animIndex++;
-						}
+		//				GLfloat dt = (GLfloat) MyFrameRateController.getDt();
+		//				static float animTimer = 0.f;
+		//				animTimer += dt;
+		//				if (animTimer > 0.01f && toggleAnim)
+		//				{
+		//					animTimer = 0.f;
+		//					animIndex++;
+		//				}
 
-						if (animIndex > indexSize)
-						{
-							animIndex = 0;
-						}
+		//				if (animIndex > indexSize)
+		//				{
+		//					animIndex = 0;
+		//				}
 
-						GLuint nid = 0;
-						for (GLuint i = 0; i < assets.get_textures().size(); ++i)
-						{
-							if (assets.get_textures()[i].get_object_id() == assets.get_spritesheets()[animID].get_texture().get_object_id())
-								nid = i + 1;
-						}
+		//				GLuint nid = 0;
+		//				for (GLuint i = 0; i < assets.get_textures().size(); ++i)
+		//				{
+		//					if (assets.get_textures()[i].get_object_id() == assets.get_spritesheets()[animID].get_texture().get_object_id())
+		//						nid = i + 1;
+		//				}
 
-						renderer.draw_quad(t.position, size, 0.f, assets.get_spritesheets()[animID], animIndex, nid);
-					}
-					else if (gameObject->transform.hasParent())
-					{
-						Transform& t1 = *gameObject->transform.parent;
-						Copium::Math::Matrix3x3 rot;
-						Copium::Math::matrix3x3_rotdeg(rot, t1.rotation.z);
-						Copium::Math::Vec3 intermediate = (rot * t.position);
+		//				renderer.draw_quad(t.position, size, 0.f, assets.get_spritesheets()[animID], animIndex, nid);
+		//			}
+		//			else if (gameObject->transform.hasParent())
+		//			{
+		//				Transform& t1 = *gameObject->transform.parent;
+		//				Copium::Math::Matrix3x3 rot;
+		//				Copium::Math::matrix3x3_rotdeg(rot, t1.rotation.z);
+		//				Copium::Math::Vec3 intermediate = (rot * t.position);
 
-						renderer.draw_quad(intermediate + t1.position, size, rotation+t1.rotation.z, sr);
-					}
-					else
-					{
-						renderer.draw_quad(t.position, size, rotation, sr);
-					}
+		//				renderer.draw_quad(intermediate + t1.position, size, rotation+t1.rotation.z, sr);
+		//			}
+		//			else
+		//			{
+		//				renderer.draw_quad(t.position, size, rotation, sr);
+		//			}
 
-				}
-				for (Component* component : gameObject->getComponents<ImageComponent>())
-				{
-					if (!component->Enabled())
-						continue;
+		//		}
+		//		for (Component* component : gameObject->getComponents<ImageComponent>())
+		//		{
+		//			if (!component->Enabled())
+		//				continue;
 
-					Transform& t = gameObject->transform;
-					ImageComponent* rc = reinterpret_cast<ImageComponent*>(component);
-					Sprite& sr = rc->get_sprite_renderer();
-					glm::vec2 size(t.scale.x, t.scale.y);
-					float rotation = t.rotation.z;
-					// Bean: It should be set in inspector view of the renderer component instead
-					unsigned int id = sr.get_sprite_id() - 1;
+		//			Transform& t = gameObject->transform;
+		//			ImageComponent* rc = reinterpret_cast<ImageComponent*>(component);
+		//			Sprite& sr = rc->get_sprite_renderer();
+		//			glm::vec2 size(t.scale.x, t.scale.y);
+		//			float rotation = t.rotation.z;
+		//			// Bean: It should be set in inspector view of the renderer component instead
+		//			unsigned int id = sr.get_sprite_id() - 1;
 
-					// The index of the texture must be less than the size of textures
-					if (id != -1 && id < assets.get_textures().size())
-					{
-						sr.set_texture(assets.get_texture(id));
-					}
-					else
-					{
-						sr.set_sprite_id(0);
-						sr.set_texture(nullptr);
-					}
+		//			// The index of the texture must be less than the size of textures
+		//			if (id != -1 && id < assets.get_textures().size())
+		//			{
+		//				sr.set_texture(assets.get_texture(id));
+		//			}
+		//			else
+		//			{
+		//				sr.set_sprite_id(0);
+		//				sr.set_texture(nullptr);
+		//			}
 
-					renderer.draw_quad({ rc->Offset(),t.position.z }, size, rotation, sr);
-				}
-				for (Component* component : gameObject->getComponents<Text>())
-				{
-					if (!component->Enabled())
-						continue;
+		//			renderer.draw_quad({ rc->Offset(),t.position.z }, size, rotation, sr);
+		//		}
+		//		for (Component* component : gameObject->getComponents<Text>())
+		//		{
+		//			if (!component->Enabled())
+		//				continue;
 
-					Text* text = reinterpret_cast<Text*>(component);
-					text->render(camera);
-				}
-			}
-		}
+		//			Text* text = reinterpret_cast<Text*>(component);
+		//			text->render(camera);
+		//		}
+		//	}
+		//}
 
 		// Bean : Testing Text
 		/*glm::vec3 position = { 0.f, -1.f, 0.f };
@@ -346,7 +340,7 @@ namespace Copium
 		renderer.begin_batch();
 
 		// Button Colliders
-		Scene* scene = sm.get_current_scene();
+		/*Scene* scene = sm.get_current_scene();
 		renderer.set_line_width(1.5f);
 		if (scene != nullptr)
 		{
@@ -420,7 +414,7 @@ namespace Copium
 					renderer.draw_line(pos3_1, pos0_1, color);
 				}
 			}
-		}
+		}*/
 
 		renderer.draw_quad({ worldNDC.x, worldNDC.y , 1.f }, scale, 0.f, color);
 

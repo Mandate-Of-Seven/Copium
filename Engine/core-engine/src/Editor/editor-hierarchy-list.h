@@ -16,8 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef SCENE_HIERARCHY_LIST_H
 #define SCENE_HIERARCHY_LIST_H
 #include <imgui.h>
-#include "SceneManager/scene-manager.h"
-#include "GameObject/game-object.h"
+#include <GameObject/ecs.h>
 
 namespace Window::Hierarchy
 {
@@ -33,7 +32,7 @@ namespace Window::Hierarchy
 		void
 	*/
 	/*******************************************************************************/
-	void init();
+	void Init();
 
 	/*******************************************************************************
 	/*!
@@ -46,7 +45,7 @@ namespace Window::Hierarchy
 		void
 	*/
 	/*******************************************************************************/
-	void update();
+	void Update();
 
 	/*******************************************************************************
 	/*!
@@ -63,7 +62,7 @@ namespace Window::Hierarchy
 		void
 	*/
 	/*******************************************************************************/
-	void display_gameobject(const Copium::GameObject& _go);
+	void display_gameobject(EntityID entityID);
 
 	/*******************************************************************************
 	/*!
@@ -85,7 +84,7 @@ namespace Window::Hierarchy
 		if a game object is selected return true
 	*/
 	/*******************************************************************************/
-	bool display_gameobject_advanced(Copium::GameObject& _go, Copium::GameObjectID& _selected);
+	bool display_gameobject_advanced(Copium::Entity& entity);
 
 	/*******************************************************************************
 	/*!

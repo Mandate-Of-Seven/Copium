@@ -1,3 +1,6 @@
+#ifndef SPARSE_SET_H
+#define SPARSE_SET_H
+
 template <typename T, size_t N>
 class SparseSet
 {
@@ -11,6 +14,11 @@ public:
     void Delete(size_t indexToDelete);
 
     void Delete(T* toDelete);
+
+    size_t GetSize()
+    {
+        return size;
+    }
 
     T& operator[] (size_t i);
 
@@ -104,3 +112,5 @@ T& SparseSet<T, N>::operator[] (size_t i)
 {
     return data[indexes[i]];
 }
+
+#endif // !SPARSE_SET_H

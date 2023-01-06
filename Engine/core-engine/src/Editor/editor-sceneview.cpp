@@ -20,8 +20,10 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Windows/windows-system.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include <glm/gtc/type_ptr.hpp>
+#include <GameObject/ecs.h>
 
 #include <ImGuizmo.h>
+#include <imgui/include/imgui.h>
 
 
 
@@ -29,29 +31,29 @@ namespace Copium
 {
 	namespace
 	{
-		EditorCamera& camera{ *EditorSystem::Instance()->get_camera() };
-		SceneManager& sm{ SceneManager::Instance() };
+		EditorCamera& camera{ *EditorSystem::Instance().get_camera() };
+		//SceneManager& sm{ SceneManager::Instance() };
 		bool inOp = false;
 	}
 
-	void EditorSceneView::init()
+	void EditorSceneView::Init()
 	{
 		sceneDimension = { sceneWidth, sceneHeight };
 	}
 
-	glm::vec2 update_position(Transform* _t, glm::vec2 const& _pos)
-	{
-		glm::vec2 tempPos = _pos;
-		if (_t->hasParent())
-		{
-			tempPos += glm::vec2(_t->parent->position.x, _t->parent->position.y);
-			tempPos = update_position(_t->parent, tempPos);
-		}
-		//PRINT("Cur : " << tempPos.x << " " << tempPos.y);
-		return tempPos;
-	}
+	//glm::vec2 update_position(Transform* _t, glm::vec2 const& _pos)
+	//{
+	//	glm::vec2 tempPos = _pos;
+	//	if (_t->hasParent())
+	//	{
+	//		tempPos += glm::vec2(_t->parent->position.x, _t->parent->position.y);
+	//		tempPos = update_position(_t->parent, tempPos);
+	//	}
+	//	//PRINT("Cur : " << tempPos.x << " " << tempPos.y);
+	//	return tempPos;
+	//}
 
-	void EditorSceneView::update()
+	void EditorSceneView::Update()
 	{
 		// Scene view settings
 		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoCollapse;
@@ -70,7 +72,7 @@ namespace Copium
 		ImGui::Image((void*) (size_t) textureID, ImVec2{ (float)sceneWidth, (float)sceneHeight }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
 		
 		// Gizmos
-		Scene* scene = sm.get_current_scene();
+		//Scene* scene = sm.get_current_scene();
 		update_gizmos();
 
 		ImGui::End();
@@ -84,14 +86,14 @@ namespace Copium
 		// Begin Render Stats
 		ImGui::Begin("Renderer Stats", 0, windowFlags);
 		
-		size_t gameobjectCount = 0;
-		if (scene != nullptr)
-			gameobjectCount = scene->get_gameobjcount();
+		//size_t gameobjectCount = 0;
+		//if (scene != nullptr)
+		//	gameobjectCount = scene->get_gameobjcount();
 
 		ImGui::Text("Render Stats");
 		char buffer[64];
-		sprintf(buffer, "GameObject Count: %zd", (size_t)gameobjectCount);
-		ImGui::Text(buffer);
+		//sprintf(buffer, "GameObject Count: %zd", (size_t)gameobjectCount);
+		//ImGui::Text(buffer);
 
 		sprintf(buffer, "Viewport Dimensions: %d by %d", sceneWidth, sceneHeight);
 		ImGui::Text(buffer);
@@ -103,96 +105,96 @@ namespace Copium
 		bool mouseReleased = ImGui::IsMouseReleased(ImGuiMouseButton_Left);
 		if (!inOp && mouseReleased && windowHovered)
 		{
-			scene = sm.get_current_scene();
-			if (scene != nullptr)
-			{
-				std::vector<GameObject*> pGameObjs; // Possible selectable gameobjects
-				for (GameObject* gameObject : scene->gameObjects)
-				{
-					Transform& t = gameObject->transform;
-					glm::vec2 mousePosition = glm::vec3(camera.get_ndc(), 0.f);
-					glm::vec2 objPosition = glm::vec2(t.position.x, t.position.y);
+			//scene = sm.get_current_scene();
+			//if (scene != nullptr)
+			//{
+			//	std::vector<GameObject*> pGameObjs; // Possible selectable gameobjects
+			//	for (GameObject* gameObject : scene->gameObjects)
+			//	{
+			//		Transform& t = gameObject->transform;
+			//		glm::vec2 mousePosition = glm::vec3(camera.get_ndc(), 0.f);
+			//		glm::vec2 objPosition = glm::vec2(t.position.x, t.position.y);
 
-					objPosition = update_position(&t, objPosition);
+			//		objPosition = update_position(&t, objPosition);
 
-					// Not Within bounds
-					if (glm::distance(objPosition, mousePosition)
-						> glm::length(camera.get_dimension()))
-						continue;
+			//		// Not Within bounds
+			//		if (glm::distance(objPosition, mousePosition)
+			//			> glm::length(camera.get_dimension()))
+			//			continue;
 
-					glm::vec2 min = glm::vec2(objPosition.x - t.scale.x * 0.5f, objPosition.y - t.scale.y * 0.5f);
-					glm::vec2 max = glm::vec2(objPosition.x + t.scale.x * 0.5f, objPosition.y + t.scale.y * 0.5f);
+			//		glm::vec2 min = glm::vec2(objPosition.x - t.scale.x * 0.5f, objPosition.y - t.scale.y * 0.5f);
+			//		glm::vec2 max = glm::vec2(objPosition.x + t.scale.x * 0.5f, objPosition.y + t.scale.y * 0.5f);
 
-					// Check AABB
-					if (mousePosition.x > min.x && mousePosition.x < max.x)
-					{
-						if (mousePosition.y > min.y && mousePosition.y < max.y)
-						{
-							pGameObjs.push_back(gameObject);
-						}
-					}
-				}
+			//		// Check AABB
+			//		if (mousePosition.x > min.x && mousePosition.x < max.x)
+			//		{
+			//			if (mousePosition.y > min.y && mousePosition.y < max.y)
+			//			{
+			//				pGameObjs.push_back(gameObject);
+			//			}
+			//		}
+			//	}
 
-				// Ensure that the container is not empty
-				if (!pGameObjs.empty())
-				{
-					// Sort base on depth value
-					std::sort(pGameObjs.begin(), pGameObjs.end(),
-						[](GameObject* lhs, GameObject* rhs) -> bool
-						{return (lhs->transform.position.z > rhs->transform.position.z); });
+			//	// Ensure that the container is not empty
+			//	if (!pGameObjs.empty())
+			//	{
+			//		// Sort base on depth value
+			//		std::sort(pGameObjs.begin(), pGameObjs.end(),
+			//			[](GameObject* lhs, GameObject* rhs) -> bool
+			//			{return (lhs->transform.position.z > rhs->transform.position.z); });
 
-					bool selected = false;
-					for (int i = 0; i < pGameObjs.size(); i++)
-					{
-						// Get the next gameobject after
-						if (sm.get_selected_gameobject() == pGameObjs[i])
-						{
-							if (i + 1 < pGameObjs.size())
-							{
-								sm.set_selected_gameobject(pGameObjs[i + 1]);
-								selected = true;
-								break;
-							}
-							else if (i + 1 >= pGameObjs.size())
-							{
-								sm.set_selected_gameobject(pGameObjs[0]);
-								selected = true;
-								break;
-							}
-						}
-					}
+			//		bool selected = false;
+			//		for (int i = 0; i < pGameObjs.size(); i++)
+			//		{
+			//			// Get the next gameobject after
+			//			if (sm.get_selected_gameobject() == pGameObjs[i])
+			//			{
+			//				if (i + 1 < pGameObjs.size())
+			//				{
+			//					sm.set_selected_gameobject(pGameObjs[i + 1]);
+			//					selected = true;
+			//					break;
+			//				}
+			//				else if (i + 1 >= pGameObjs.size())
+			//				{
+			//					sm.set_selected_gameobject(pGameObjs[0]);
+			//					selected = true;
+			//					break;
+			//				}
+			//			}
+			//		}
 
-					// If there is no selected gameobject
-					if (sm.get_selected_gameobject() == nullptr || !selected)
-					{
-						GameObject* selectObject = pGameObjs.front();
-						if (sm.selectedGameObject != selectObject)
-						{
-							for (GameObject* gameObject : pGameObjs)
-							{
-								// Select closest gameobject
-								float depth = gameObject->transform.position.z;
+			//		// If there is no selected gameobject
+			//		if (sm.get_selected_gameobject() == nullptr || !selected)
+			//		{
+			//			GameObject* selectObject = pGameObjs.front();
+			//			if (sm.selectedGameObject != selectObject)
+			//			{
+			//				for (GameObject* gameObject : pGameObjs)
+			//				{
+			//					// Select closest gameobject
+			//					float depth = gameObject->transform.position.z;
 
-								if (depth > selectObject->transform.position.z)
-								{
-									selectObject = gameObject;
-								}
-							}
-							sm.set_selected_gameobject(selectObject);
-						}
-					}
+			//					if (depth > selectObject->transform.position.z)
+			//					{
+			//						selectObject = gameObject;
+			//					}
+			//				}
+			//				sm.set_selected_gameobject(selectObject);
+			//			}
+			//		}
 
-					//PRINT("Set object to: " << sm.selectedGameObject->get_name());
-				}
-				else
-					sm.set_selected_gameobject(nullptr);
-			}
+			//		//PRINT("Set object to: " << sm.selectedGameObject->get_name());
+			//	}
+			//	else
+			//		sm.set_selected_gameobject(nullptr);
+			//}
 		}
 
 		inOp = ImGuizmo::IsUsing();
 	}
 
-	void EditorSceneView::exit()
+	void EditorSceneView::Exit()
 	{
 		
 	}
@@ -215,100 +217,100 @@ namespace Copium
 
 	void EditorSceneView::update_gizmos()
 	{
-		static ImGuizmo::OPERATION currop = ImGuizmo::OPERATION::TRANSLATE;
-		GameObject* currObj = sm.get_selected_gameobject();
-		if (currObj)
-		{
-			Transform& trf = currObj->transform;
-			glm::vec2 size(trf.scale.x, trf.scale.y);
-			float rot = trf.rotation.z;
-			rot = float(rot * (3.1416/180));
-			const glm::vec3& pos = trf.position;
+		//static ImGuizmo::OPERATION currop = ImGuizmo::OPERATION::TRANSLATE;
+		//GameObject* currObj = sm.get_selected_gameobject();
+		//if (currObj)
+		//{
+		//	Transform& trf = currObj->transform;
+		//	glm::vec2 size(trf.scale.x, trf.scale.y);
+		//	float rot = trf.rotation.z;
+		//	rot = float(rot * (3.1416/180));
+		//	const glm::vec3& pos = trf.position;
 
-			ImGuizmo::SetOrthographic(true);
-			ImGuizmo::SetDrawlist();
+		//	ImGuizmo::SetOrthographic(true);
+		//	ImGuizmo::SetDrawlist();
 
 
-			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, (float)sceneWidth, (float)sceneHeight);
-			const glm::mat4 camProj = camera.get_projection();
-			glm::mat4 camView = camera.get_view_matrix();
-			glm::mat4 translate = glm::translate(glm::mat4(1.f), pos);
-			glm::mat4 rotation = {
-			glm::vec4(cos(rot), sin(rot), 0.f, 0.f),
-			glm::vec4(-sin(rot), cos(rot), 0.f, 0.f),
-			glm::vec4(0.f, 0.f, 1.f, 0.f),
-			glm::vec4(0.f, 0.f, 0.f, 1.f)
-			};
+		//	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, (float)sceneWidth, (float)sceneHeight);
+		//	const glm::mat4 camProj = camera.get_projection();
+		//	glm::mat4 camView = camera.get_view_matrix();
+		//	glm::mat4 translate = glm::translate(glm::mat4(1.f), pos);
+		//	glm::mat4 rotation = {
+		//	glm::vec4(cos(rot), sin(rot), 0.f, 0.f),
+		//	glm::vec4(-sin(rot), cos(rot), 0.f, 0.f),
+		//	glm::vec4(0.f, 0.f, 1.f, 0.f),
+		//	glm::vec4(0.f, 0.f, 0.f, 1.f)
+		//	};
 
-			glm::mat4 scale = {
-				glm::vec4(size.x, 0.f, 0.f, 0.f),
-				glm::vec4(0.f, size.y, 0.f, 0.f),
-				glm::vec4(0.f, 0.f, 1.f, 0.f),
-				glm::vec4(0.f, 0.f, 0.f, 1.f)
-			};
-			glm::mat4 transform = translate * rotation * scale;
+		//	//glm::mat4 scale = {
+		//	//	glm::vec4(size.x, 0.f, 0.f, 0.f),
+		//	//	glm::vec4(0.f, size.y, 0.f, 0.f),
+		//	//	glm::vec4(0.f, 0.f, 1.f, 0.f),
+		//	//	glm::vec4(0.f, 0.f, 0.f, 1.f)
+		//	//};
+		//	//glm::mat4 transform = translate * rotation * scale;
 
-			/*glm::mat4 pTranslate, pRotate, pScale, pTransform, totalTransform;
-			if (currObj->transform.hasParent())
-			{
-				pTranslate = glm::translate(glm::mat4(1.f), (*currObj->transform.parent).position.glmVec3);
+		//	/*glm::mat4 pTranslate, pRotate, pScale, pTransform, totalTransform;
+		//	if (currObj->transform.hasParent())
+		//	{
+		//		pTranslate = glm::translate(glm::mat4(1.f), (*currObj->transform.parent).position.glmVec3);
 
-				float pRot = (*currObj->transform.parent).rotation.z;
-				pRot = float(pRot * (3.1416 / 180));
-				pRotate = {
-					glm::vec4(cos(pRot), sin(pRot), 0.f, 0.f),
-					glm::vec4(-sin(pRot), cos(pRot), 0.f, 0.f),
-					glm::vec4(0.f, 0.f, 1.f, 0.f),
-					glm::vec4(0.f, 0.f, 0.f, 1.f)
-				};
+		//		float pRot = (*currObj->transform.parent).rotation.z;
+		//		pRot = float(pRot * (3.1416 / 180));
+		//		pRotate = {
+		//			glm::vec4(cos(pRot), sin(pRot), 0.f, 0.f),
+		//			glm::vec4(-sin(pRot), cos(pRot), 0.f, 0.f),
+		//			glm::vec4(0.f, 0.f, 1.f, 0.f),
+		//			glm::vec4(0.f, 0.f, 0.f, 1.f)
+		//		};
 
-				glm::vec3 scale = (*currObj->transform.parent).scale.glmVec3;
-				pScale = {
-					glm::vec4(scale.x, 0.f, 0.f, 0.f),
-					glm::vec4(0.f, scale.y, 0.f, 0.f),
-					glm::vec4(0.f, 0.f, 1.f, 0.f),
-					glm::vec4(0.f, 0.f, 0.f, 1.f)
-				};
+		//		glm::vec3 scale = (*currObj->transform.parent).scale.glmVec3;
+		//		pScale = {
+		//			glm::vec4(scale.x, 0.f, 0.f, 0.f),
+		//			glm::vec4(0.f, scale.y, 0.f, 0.f),
+		//			glm::vec4(0.f, 0.f, 1.f, 0.f),
+		//			glm::vec4(0.f, 0.f, 0.f, 1.f)
+		//		};
 
-				pTransform = pTranslate * pRotate * pScale;
+		//		pTransform = pTranslate * pRotate * pScale;
 
-				totalTransform = pTransform;
-			}
-			else
-			{
-				totalTransform = transform;
-			}*/
+		//		totalTransform = pTransform;
+		//	}
+		//	else
+		//	{
+		//		totalTransform = transform;
+		//	}*/
 
-			if (ImGui::IsKeyReleased(ImGuiKey_W))
-			{
-				currop = ImGuizmo::OPERATION::TRANSLATE;
+		//	//if (ImGui::IsKeyReleased(ImGuiKey_W))
+		//	//{
+		//	//	currop = ImGuizmo::OPERATION::TRANSLATE;
 
-			}
-			if (ImGui::IsKeyReleased(ImGuiKey_R))
-			{
-				currop = ImGuizmo::OPERATION::SCALE;
+		//	//}
+		//	//if (ImGui::IsKeyReleased(ImGuiKey_R))
+		//	//{
+		//	//	currop = ImGuizmo::OPERATION::SCALE;
 
-			}
-			if (ImGui::IsKeyReleased(ImGuiKey_E))
-			{	
-				currop = ImGuizmo::OPERATION::ROTATE;
+		//	//}
+		//	//if (ImGui::IsKeyReleased(ImGuiKey_E))
+		//	//{	
+		//	//	currop = ImGuizmo::OPERATION::ROTATE;
 
-			}
-			ImGuizmo::Manipulate(glm::value_ptr(camView), glm::value_ptr(camProj),
-				currop, ImGuizmo::LOCAL, glm::value_ptr(transform));
-			if (ImGuizmo::IsUsing())
-			{
-				float newTranslate[3]; 
-				float newRotate[3];
-				float newScale[3];
-				ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), newTranslate, newRotate, newScale);
-				glm::vec3 nTranslation{ newTranslate[0], newTranslate[1], newTranslate[2] };
-				glm::vec3 nRotation{ newRotate[0], newRotate[1], newRotate[2] };
-				glm::vec3 nScale{ newScale[0], newScale[1], newScale[2] };
-				trf.position = nTranslation;
-				trf.scale = nScale;
-				trf.rotation.z = nRotation.z;
-			}
-		}
+		//	//}
+		//	//ImGuizmo::Manipulate(glm::value_ptr(camView), glm::value_ptr(camProj),
+		//	//	currop, ImGuizmo::LOCAL, glm::value_ptr(transform));
+		//	//if (ImGuizmo::IsUsing())
+		//	//{
+		//	//	float newTranslate[3]; 
+		//	//	float newRotate[3];
+		//	//	float newScale[3];
+		//	//	ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), newTranslate, newRotate, newScale);
+		//	//	glm::vec3 nTranslation{ newTranslate[0], newTranslate[1], newTranslate[2] };
+		//	//	glm::vec3 nRotation{ newRotate[0], newRotate[1], newRotate[2] };
+		//	//	glm::vec3 nScale{ newScale[0], newScale[1], newScale[2] };
+		//	//	trf.position = nTranslation;
+		//	//	trf.scale = nScale;
+		//	//	trf.rotation.z = nRotation.z;
+		//	//}
+		//}
 	}
 }

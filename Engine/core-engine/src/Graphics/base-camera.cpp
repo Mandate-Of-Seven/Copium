@@ -21,6 +21,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor/editor-system.h"
 #include "Windows/windows-system.h"
 #include "Windows/windows-input.h"
+#include <Math/math-library.h>
 
 namespace Copium
 {
@@ -121,11 +122,11 @@ namespace Copium
 
 		// Initialise Sub systems
 		framebuffer.set_size((unsigned int) _width, (unsigned int) _height);
-		framebuffer.init();
+		framebuffer.Init();
 		draw.init(this);
 	}
 
-	void BaseCamera::update()
+	void BaseCamera::Update()
 	{
 		update_view_matrix();
 
@@ -148,10 +149,10 @@ namespace Copium
 		}	
 	}
 
-	void BaseCamera::exit()
+	void BaseCamera::Exit()
 	{
-		framebuffer.exit();
-		draw.exit();
+		framebuffer.Exit();
+		draw.Exit();
 	}
 
 	glm::vec3 BaseCamera::get_right_direction() const

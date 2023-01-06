@@ -16,7 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define EDITOR_SCENEVIEW_H
 
 #include <glm/vec2.hpp>
-#include "SceneManager/scene-manager.h"
+
 
 namespace Copium
 {
@@ -29,7 +29,7 @@ namespace Copium
 			Initializes the editor scene view
 		*/
 		/***************************************************************************/
-		void init();
+		void Init();
 
 		/***************************************************************************/
 		/*!
@@ -37,7 +37,7 @@ namespace Copium
 			Updates the editor scene view
 		*/
 		/***************************************************************************/
-		void update();
+		void Update();
 
 		/***************************************************************************/
 		/*!
@@ -45,7 +45,7 @@ namespace Copium
 			Exits the editor scene view
 		*/
 		/***************************************************************************/
-		void exit();
+		void Exit();
 
 		/***************************************************************************/
 		/*!

@@ -50,7 +50,7 @@ namespace Copium
 			Exits the graphics drawing system along with its sub system - renderer
 		*/
 		/***************************************************************************/
-		void exit();
+		void Exit();
 
 		/***************************************************************************/
 		/*!

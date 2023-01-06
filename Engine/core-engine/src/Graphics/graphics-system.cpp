@@ -27,9 +27,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Files/assets-system.h"
 
 // Bean: remove this after NewManagerInstance is moved
-#include "SceneManager/scene-manager.h"
-#include "GameObject/Components/renderer-component.h"
-#include "GameObject/Components/camera-component.h"
 
 namespace Copium
 {
@@ -43,7 +40,7 @@ namespace Copium
 		bool massSpawn = false;
 	}
 
-	void GraphicsSystem::init()
+	void GraphicsSystem::Init()
 	{
 		messageSystem.subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
@@ -56,7 +53,7 @@ namespace Copium
 
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 
-		//renderer.init();
+		//renderer.Init();
 
 		// Bind textures to quad fragment shader
 		shaderProgram[QUAD_SHADER].Use();
@@ -86,7 +83,7 @@ namespace Copium
 		//cameras.pop_front();
 	}
 
-	void GraphicsSystem::update()
+	void GraphicsSystem::Update()
 	{
 		//GLfloat dt = (GLfloat) MyFrameRateController.getDt();
 
@@ -99,50 +96,50 @@ namespace Copium
 		}
 
 		// Mass spawning
-		if (massSpawn)
-		{
-			SceneManager& sm = SceneManager::Instance();
-			Scene* scene = sm.get_current_scene();
-			if (scene != nullptr)
-			{
-				for (size_t i = 0; i < 10; i++)
-				{
-					GameObject* go = GOF.instantiate();
-					go->addComponent(ComponentType::SpriteRenderer);
-					//go->addComponent(ComponentType::Rigidbody);
+		//if (massSpawn)
+		//{
+		//	SceneManager& sm = SceneManager::Instance();
+		//	Scene* scene = sm.get_current_scene();
+		//	if (scene != nullptr)
+		//	{
+		//		for (size_t i = 0; i < 10; i++)
+		//		{
+		//			GameObject* go = GOF.instantiate();
+		//			go->addComponent(ComponentType::SpriteRenderer);
+		//			//go->addComponent(ComponentType::Rigidbody);
 
-					float x = rand() % 2000 * 0.1f - 100.f;
-					float y = rand() % 2000 * 0.1f - 100.f;
+		//			float x = rand() % 2000 * 0.1f - 100.f;
+		//			float y = rand() % 2000 * 0.1f - 100.f;
 
-					go->transform.position = { x, y, 0.f };
-					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->getComponent(ComponentType::SpriteRenderer));
-					rc->get_sprite_renderer().set_sprite_id(rand() % 7 + 15);
-				}
-			}
-		}
+		//			go->transform.position = { x, y, 0.f };
+		//			SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->getComponent(ComponentType::SpriteRenderer));
+		//			rc->get_sprite_renderer().set_sprite_id(rand() % 7 + 15);
+		//		}
+		//	}
+		//}
 
 		/*PRINT("Mouse position: " << mousePos.x << ", " << mousePos.y);
 		PRINT("Centre position: " << centreOfScene.x << ", " << centreOfScene.y);
 		PRINT("Mouse NDC position: " << mouseToNDC.x << ", " << mouseToNDC.y);
 		PRINT("World NDC position: " << worldNDC.x << ", " << worldNDC.y);*/
 
-		if (inputSystem.is_key_pressed(GLFW_KEY_Y))
+		/*if (inputSystem.is_key_pressed(GLFW_KEY_Y))
 		{
 			SceneManager& sm = SceneManager::Instance();
 			PRINT("Number of Gameobjects: " << sm.get_current_scene()->get_gameobjcount());
-		}
+		}*/
 	
 		batch_render();
 	}
 
-	void GraphicsSystem::exit()
+	void GraphicsSystem::Exit()
 	{
 		Font::cleanUp();
 	}
 
 	void GraphicsSystem::handleMessage(MESSAGE_TYPE mType)
 	{
-		if (mType == MESSAGE_TYPE::MT_SCENE_DESERIALIZED)
+		/*if (mType == MESSAGE_TYPE::MT_SCENE_DESERIALIZED)
 		{
 			cameras.clear();
 			SceneManager& sm = SceneManager::Instance();
@@ -155,7 +152,7 @@ namespace Copium
 					cameras.push_back(camera);
 				}
 			}
-		}
+		}*/
 	}
 
 	// Setup default shaders for the graphics system
@@ -202,7 +199,7 @@ namespace Copium
 	{
 		for (auto& camera : cameras)
 		{
-			camera->update();
+			camera->Update();
 		}
 	}
 }

@@ -28,7 +28,7 @@ namespace Copium
     int WindowsSystem::windowHeight;
     bool WindowsSystem::windowFocused;
 
-    void WindowsSystem::init()
+    void WindowsSystem::Init()
     {
         systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
         init_system(1600, 900, "Copium");
@@ -105,7 +105,7 @@ namespace Copium
         glViewport(0, 0, windowWidth, windowHeight);
     }
 
-    void WindowsSystem::update()
+    void WindowsSystem::Update()
     {
         if(!glfwWindowShouldClose(window))
             glfwPollEvents();
@@ -122,7 +122,7 @@ namespace Copium
         glfwSwapBuffers(window);
     }
 
-    void WindowsSystem::exit()
+    void WindowsSystem::Exit()
     {
         //glfwTerminate();
     }

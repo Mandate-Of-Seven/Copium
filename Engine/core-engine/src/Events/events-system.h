@@ -25,12 +25,14 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <typeindex>
 #include <CopiumCore/system-interface.h>
 
+#define MyEventSystem Copium::EventSystem::Instance()
 
 namespace Copium
 {
 
     class IEventHandler
     {
+    public:
         void exec(IEvent* evnt) 
         {
             call(evnt);
@@ -65,6 +67,11 @@ namespace Copium
     private:
         std::map<std::type_index, HandlerList*> subscribers;
     public:
+        void Init(){}
+        void Update(){}
+        void Exit(){}
+
+
         template<typename EventType>
         void publish(EventType* evnt)
         {
@@ -74,7 +81,7 @@ namespace Copium
                 return;
             }
 
-            for (auto& handler : *handlers) {
+            for (auto handler : *handlers) {
                 if (handler != nullptr) {
                     handler->exec(evnt);
                 }

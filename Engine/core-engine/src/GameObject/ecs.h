@@ -3,64 +3,30 @@
 
 #include <string>
 #include <bitset>
-#include <map>
 #include <CopiumCore/system-interface.h>
 #include <Debugging/logging-system.h>
+#include <CopiumCore/system-interface.h>
 
 #include <GameObject/components.h>
-//#include <GameObject/Components/transform-component.h>
 #include <Utilities/sparse-set.h>
+#include <GameObject/entity.h>
+#include <Events/events-system.h>
 
-
-
-#define MAX_COMPONENTS 16
-#define MAX_ENTITIES 100000
+#define MyECS Copium::EntityComponentSystem::Instance()
 
 namespace Copium
 {
-    template<typename T, typename... Ts>
-    constexpr bool contains()
-    {
-        return std::disjunction_v<std::is_same<T, Ts>...>;
-    }
-
-    template<size_t ID,typename... Component>
-    struct ComponentGroup
-    {
-        template <typename T>
-        static constexpr bool Has()
-        {
-            return contains<T, Component...>();
-        }
-
-        template <typename T>
-        static SparseSet<T,MAX_ENTITIES>& GetArray()
-        {
-            static_assert(contains<T, Component...>());
-            static SparseSet<T, MAX_ENTITIES> components;
-            return components;
-        }
-    };
-
-    using MainComponents    =   ComponentGroup<0, Transform>;
-    using BackupComponents  =   ComponentGroup<1, Transform>;
-
-    using EntityID = size_t;
-
-    struct Entity
-    {
-        std::string name;
-    private:
-        friend class EntityManager;
-        std::bitset<MAX_COMPONENTS> componentsBitset;
-    };
-
-    class EntityComponentSystem
+    CLASS_SYSTEM(EntityComponentSystem)
     {
         SparseSet<Entity, MAX_ENTITIES> entities;
+        //SparseSet<Entity, MAX_ENTITIES> backUpEntities;
         std::bitset<MAX_ENTITIES> activeEntities;
+        //std::bitset<MAX_ENTITIES> activeBackUpEntities;
     public:
-        EntityID InstantiateEntity();
+        void Init();
+        void Update();
+        void Exit();
+    private:
         void SetActive(EntityID id, bool active = true) { activeEntities.set(id, active); }
         bool GetActive(EntityID id) { return activeEntities.test(id); }
         void DestroyEntity(EntityID idToDelete);
@@ -73,14 +39,35 @@ namespace Copium
         void RemoveComponent(EntityID id);
         template<typename T>
         bool HasComponent(EntityID id);
+
+        //Events Callbacks
+        void CallbackGetEntitiesPtr(GetEntitiesEvent* pEvent);
+        void CallbackInstantiateEntity(InstantiateEntityEvent* pEvent);
+        void CallbackGetEntityByID(GetEntityEvent* pEvent);
+        void CallbackGetEntityActive(GetEntityActiveEvent* pEvent);
+        void CallbackSetEntityActive(SetEntityActiveEvent* pEvent);
+        template <typename T>
+        void CallbackGetComponent(GetComponentEvent<T>* pEvent);
+        template <typename T>
+        void CallbackRemoveComponent(RemoveComponentEvent<T>* pEvent);
+        template <typename T>
+        void CallbackHasComponent(HasComponentEvent<T>* pEvent);
+        template <typename T>
+        void CallbackGetComponentEnabled(GetComponentEnabledEvent<T>* pEvent);
+        template <typename T>
+        void CallbackSetComponentEnabled(SetComponentEnabledEvent<T>* pEvent);
+
+        void SubscribeComponentCallbacks() {}
+        template <typename Component, typename... Components>
+        void SubscribeComponentCallbacks(Pack<Component, Components...> components);
     };
 
     template <typename T>
     T* EntityComponentSystem::AddComponent(EntityID id)
     {
         static_assert(MainComponents::Has<T>());
-        COPIUM_ASSERT(entities.DenseExists(id), "ENTITY DOES NOT EXIST");
-        entities.DenseGet(id).componentsBitset.set(GetComponentType<T>());
+        COPIUM_ASSERT(!entities.DenseExists(id), "ENTITY DOES NOT EXIST");
+        entities.DenseGet(id).componentsBitset.set(static_cast<size_t>(GetComponentType<T>()));
         return &MainComponents::GetArray<T>()[id];
     }
 
@@ -88,8 +75,9 @@ namespace Copium
     T* EntityComponentSystem::GetComponent(EntityID id)
     {
         static_assert(MainComponents::Has<T>());
-        COPIUM_ASSERT(entities.DenseExists(id), "ENTITY DOES NOT EXIST");
-        if (entities.DenseGet(id).componentsBitset.test(GetComponentType<T>()))
+        COPIUM_ASSERT(!entities.DenseExists(id), "ENTITY DOES NOT EXIST");
+        //PRINT("Getting Component " << typeid(T).name() << "of ID: " << id);
+        if (entities.DenseGet(id).componentsBitset.test((size_t)GetComponentType<T>()))
         {
             return &MainComponents::GetArray<T>()[id];
         }
@@ -100,17 +88,66 @@ namespace Copium
     void EntityComponentSystem::RemoveComponent(EntityID id)
     {
         static_assert(MainComponents::Has<T>());
-        COPIUM_ASSERT(entities.DenseExists(id), "ENTITY DOES NOT EXIST");
-        COPIUM_ASSERT(HasComponent<T>(id), typeid(T).name());
-        entities.DenseGet(id).componentsBitset.set(GetComponentType<T>(), 0);
+        COPIUM_ASSERT(!entities.DenseExists(id), "ENTITY DOES NOT EXIST");
+        COPIUM_ASSERT(!HasComponent<T>(id), typeid(T).name());
+        entities.DenseGet(id).componentsBitset.set((size_t)GetComponentType<T>(), 0);
     }
     
     template <typename T>
     bool EntityComponentSystem::HasComponent(EntityID id)
     {
         static_assert(MainComponents::Has<T>());
-        COPIUM_ASSERT(entities.DenseExists(id), "ENTITY DOES NOT EXIST");
-        return entities.DenseGet(id).componentsBitset.test(GetComponentType<T>());
+        COPIUM_ASSERT(!entities.DenseExists(id), "ENTITY DOES NOT EXIST");
+        return entities.DenseGet(id).componentsBitset.test((size_t)GetComponentType<T>());
+    }
+
+    template <typename T>
+    void EntityComponentSystem::CallbackGetComponent(GetComponentEvent<T>* pEvent)
+    {
+        pEvent->pComponent = GetComponent<T>(pEvent->id);
+    }
+
+
+    template <typename T>
+    void EntityComponentSystem::CallbackRemoveComponent(RemoveComponentEvent<T>* pEvent)
+    {
+        RemoveComponent<T>(pEvent->id);
+    }
+
+    template <typename T>
+    void EntityComponentSystem::CallbackHasComponent(HasComponentEvent<T>* pEvent)
+    {
+        HasComponent<T>(pEvent->id);
+    }
+
+    template <typename Component, typename... Components>
+    void EntityComponentSystem::SubscribeComponentCallbacks(Pack<Component, Components...> components)
+    {
+        MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackGetComponent<Component>);
+        MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackRemoveComponent<Component>);
+        MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackGetComponentEnabled<Component>);
+        MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackSetComponentEnabled<Component>);
+        if constexpr (sizeof...(Components) == 0)
+        {
+            return;
+        }
+        else
+        {
+            GetComponentSubscribe(Pack<Components...>());
+        }
+    }
+
+    template <typename T>
+    void EntityComponentSystem::CallbackGetComponentEnabled(GetComponentEnabledEvent<T>* pEvent)
+    {
+        MainComponents::ComponentEnabled<T>(pEvent->id, &pEvent->enabled, false);
+    }
+
+    template <typename T>
+    void EntityComponentSystem::CallbackSetComponentEnabled(SetComponentEnabledEvent<T>* pEvent)
+    {
+        bool val = pEvent->enabled;
+        MainComponents::ComponentEnabled<T>(pEvent->id, &val, true);
     }
 }
 

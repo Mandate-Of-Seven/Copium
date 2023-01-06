@@ -15,7 +15,7 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "Math/math-library.h"
-#include "SceneManager/scene-manager.h"
+
 
 #ifndef COLLISION_H
 #define COLLISION_H
@@ -33,6 +33,7 @@ enum class collisionDirection : int
 	LEFT,
 	RIGHT
 };
+
 namespace Copium
 {
 	
@@ -250,7 +251,7 @@ namespace Copium
 	
 	*/
 	/**************************************************************************/
-	void resolve_AABBcollision(Transform& transform1, AABB& aabb1, AABB& aabb2, collisionDirection direction);
+	//void resolve_AABBcollision(Transform& transform1, AABB& aabb1, AABB& aabb2, collisionDirection direction);
 }
 
 #endif // !COLLISION_H

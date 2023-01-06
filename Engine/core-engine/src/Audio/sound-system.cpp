@@ -29,7 +29,7 @@ namespace Copium
 {
 
 // Initialize sound system
-void SoundSystem::init()
+void SoundSystem::Init()
 {
 	systemFlags |= FLAG_RUN_ON_PLAY;
 	FMOD::System_Create(&soundSystem);
@@ -39,9 +39,9 @@ void SoundSystem::init()
 	std::cout << "Sound init was called" << std::endl;
 }
 
-void SoundSystem::update()
+void SoundSystem::Update()
 {
-	//soundSystem->update();
+	//soundSystem->Update();
 	//if (inputSystem.is_key_pressed(GLFW_KEY_1))
 	//{
 	//	Copium::SoundSystem::Instance().Play("zap", true, false);
@@ -59,7 +59,7 @@ void SoundSystem::update()
 	//}
 }
 
-void SoundSystem::exit()
+void SoundSystem::Exit()
 {
 	std::map<std::string, std::pair<FMOD::SoundGroup*, FMOD::Sound*>>::iterator soundIt;
 	for (soundIt = soundList.begin(); soundIt != soundList.end(); soundIt++)

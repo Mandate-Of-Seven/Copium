@@ -23,8 +23,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 //INCLUDES
 
 #include <imgui.h>
-#include "SceneManager/scene-manager.h"
-#include "GameObject/game-object.h"
 
 namespace Window
 {
@@ -38,21 +36,21 @@ namespace Window
 			Initialize function called at the start of program to reset fields
 		*/
 		/**************************************************************************/
-		void init();
+		void Init();
 		/***************************************************************************/
 		/*!
 		\brief
 			Update function called every frame for ImGui window
 		*/
 		/**************************************************************************/
-		void update();
+		void Update();
 		/***************************************************************************/
 		/*!
 		\brief
 			Exit function called at end of program
 		*/
 		/**************************************************************************/
-		void exit();
+		void Exit();
 	}
 }
 

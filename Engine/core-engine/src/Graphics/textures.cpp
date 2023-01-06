@@ -68,7 +68,7 @@ namespace Copium
 		stbi_image_free(data);
 	}
 
-	void Texture::exit()
+	void Texture::Exit()
 	{
 		glDeleteTextures(1, &textureObjectID);
 	}

@@ -19,17 +19,16 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Windows/windows-system.h"
 #include "Windows/windows-input.h"
 #include "Messaging/message-system.h"
+#include "Files/file-system.h"
 #include "Files/assets-system.h"
 #include "Editor/editor-system.h"
-#include "Scripting/scripting-system.h"
-#include "Physics/physics-system.h"
 #include "Graphics/graphics-system.h"
 #include "Utilities/thread-system.h"
-#include "SceneManager/scene-manager.h"
+
 #include "Debugging/logging-system.h"
 #include "Audio/sound-system.h"
-#include "Scripting/logic-system.h"
 #include <Debugging/frame-rate-controller.h>
+#include <GameObject/ecs.h>
 //#include "string.h"
 
 namespace Copium
@@ -45,7 +44,7 @@ namespace Copium
 			Initializes all the systems that are Instantiated under vector systems
 		*/
 		/**************************************************************************/
-		void init()
+		void Init()
 		{
 			MessageSystem& messageSystem = MessageSystem::Instance();
 			systems =
@@ -54,21 +53,21 @@ namespace Copium
 				&WindowsSystem::Instance(),
 				&messageSystem,
 				&LoggingSystem::Instance(),
-				&SoundSystem::Instance(),
+				&MyECS,
+				//&SoundSystem::Instance(),
 				&FileSystem::Instance(),
 				&AssetsSystem::Instance(),
-				&NewSceneManager::Instance(),
-				&ScriptingSystem::Instance(),
+				//&ScriptingSystem::Instance(),
 				&InputSystem::Instance(),
 				&EditorSystem::Instance(),
-				&LogicSystem::Instance(),
-				&PhysicsSystem::Instance(),
+				//&LogicSystem::Instance(),
+				//&PhysicsSystem::Instance(),
 				&GraphicsSystem::Instance(),
 				&ThreadSystem::Instance()
 			};
 			for (ISystem* pSystem : systems)
 			{
-				pSystem->init();
+				pSystem->Init();
 			}
 
 			messageSystem.subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
@@ -83,7 +82,7 @@ namespace Copium
 			if it should only be update in play mode or not
 		*/
 		/**************************************************************************/
-		void update()
+		void Update()
 		{
 			double totalUpdateTime = 0;
 			for (ISystem* pSystem : systems)
@@ -91,14 +90,14 @@ namespace Copium
 				if (pSystem->systemFlags & FLAG_RUN_ON_PLAY && inPlayMode)
 				{
 					double startTime = glfwGetTime();
-					pSystem->update();
+					pSystem->Update();
 					pSystem->updateTime = glfwGetTime() - startTime;
 					totalUpdateTime += pSystem->updateTime;
 				}
 				else if (pSystem->systemFlags & FLAG_RUN_ON_EDITOR && !inPlayMode)
 				{
 					double startTime = glfwGetTime();
-					pSystem->update();
+					pSystem->Update();
 					pSystem->updateTime = glfwGetTime() - startTime;
 					totalUpdateTime += pSystem->updateTime;
 					continue;
@@ -140,11 +139,11 @@ namespace Copium
 			called at engine exit
 		*/
 		/**************************************************************************/
-		void exit()
+		void Exit()
 		{
 			for(int i = (int)systems.size() - 1; i >= 0; --i)
 			{
-				systems[i]->exit();
+				systems[i]->Exit();
 			}
 		}
 

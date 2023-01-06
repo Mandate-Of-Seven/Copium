@@ -53,7 +53,7 @@ namespace Copium
         }
     }
 
-    void MessageSystem::init()
+    void MessageSystem::Init()
     {
         for (int i = 0; i < int(MESSAGE_TYPE::MT_NONE); ++i)
         {
@@ -61,12 +61,12 @@ namespace Copium
         }
     }
 
-    void MessageSystem::update()
+    void MessageSystem::Update()
     {
 
     }
 
-    void MessageSystem::exit()
+    void MessageSystem::Exit()
     {
 
     }

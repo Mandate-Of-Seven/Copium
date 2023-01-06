@@ -118,7 +118,7 @@ namespace Window
 			Initialize function called at the start of program to reset fields
 		*/
 		/**************************************************************************/
-		void init();
+		void Init();
 
 		/***************************************************************************/
 		/*!
@@ -126,7 +126,7 @@ namespace Window
 			Update function called every frame for ImGui window
 		*/
 		/**************************************************************************/
-		void update();
+		void Update();
 	}
 }
 

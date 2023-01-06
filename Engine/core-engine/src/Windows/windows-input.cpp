@@ -36,7 +36,7 @@ namespace
 namespace Copium
 {
     short InputSystem::keys[COPIUM_MAX_KEYS];
-void InputSystem::init()
+void InputSystem::Init()
 {
     systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
     for (int i = 0; i < 400; i++)
@@ -50,12 +50,12 @@ void InputSystem::init()
     std::cout << "Input init was called" << std::endl;
 }
 
-void InputSystem::update() 
+void InputSystem::Update() 
 {
 
 }
 
-void InputSystem::exit() {}
+void InputSystem::Exit() {}
 
 bool InputSystem::is_key_pressed(int keycode)
 {

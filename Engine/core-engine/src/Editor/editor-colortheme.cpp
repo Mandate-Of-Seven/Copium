@@ -27,7 +27,7 @@ namespace Window
 	{
         Copium::ThreadSystem& threadSystem{ Copium::ThreadSystem::Instance()};
 
-		void init()
+		void Init()
 		{
             //Force hotdog stand theme on them
             /*
@@ -38,7 +38,7 @@ namespace Window
             isColorThemeOpen = true;
 		}
 
-		void update()
+		void Update()
 		{
             if (!isColorThemeOpen)
             {

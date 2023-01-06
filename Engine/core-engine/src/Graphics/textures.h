@@ -40,7 +40,7 @@ namespace Copium
 			Delete texture object id
 		*/
 		/***************************************************************************/
-		void exit();
+		void Exit();
 
 		const unsigned int& get_id() const { return instanceID; }
 		void set_id(unsigned int const& _id) { instanceID = _id; }

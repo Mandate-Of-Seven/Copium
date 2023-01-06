@@ -78,12 +78,12 @@ namespace Window
         }
 
 
-		void init()
+		void Init()
 		{
             isConsoleLogOpen = true;
 		}
 
-		void update()
+		void Update()
 		{
 			if (!isConsoleLogOpen)
 			{

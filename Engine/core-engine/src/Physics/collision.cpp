@@ -19,7 +19,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Windows/windows-system.h"
 #include <Physics/collision.h>
 #include <Debugging/frame-rate-controller.h>
-#include <GameObject/Components/transform-component.h>
+#include "GameObject/components.h"
 
 namespace Copium
 {

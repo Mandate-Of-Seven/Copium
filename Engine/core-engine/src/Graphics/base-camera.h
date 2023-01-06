@@ -75,7 +75,7 @@ namespace Copium
 			Update the camera matrices and draw the objects within the camera
 		*/
 		/**************************************************************************/
-		void update();
+		void Update();
 
 		/***************************************************************************/
 		/*!
@@ -91,7 +91,7 @@ namespace Copium
 			Exits the camera and the framebuffer
 		*/
 		/**************************************************************************/
-		void exit();
+		void Exit();
 
 		const glm::vec3& get_eye() const { return viewer; }
 		const glm::vec2& get_dimension() { return dimension = glm::vec2(width, height); }

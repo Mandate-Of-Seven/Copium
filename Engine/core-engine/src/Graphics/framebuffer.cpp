@@ -19,7 +19,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
-	void Framebuffer::init()
+	void Framebuffer::Init()
 	{
 		if (get_buffer_object_id())
 		{
@@ -95,7 +95,7 @@ namespace Copium
 		height = _height;
 
 		PRINT("  Resize framebuffer " << width << " " << height);
-		init();
+		Init();
 	}
 
 	void Framebuffer::set_size(GLuint _width, GLuint _height)
@@ -104,7 +104,7 @@ namespace Copium
 		height = _height;
 	}
 
-	void Framebuffer::exit()
+	void Framebuffer::Exit()
 	{
 		glDeleteFramebuffers(1, &get_buffer_object_id());
 		glDeleteTextures(1, &colorAttachment);

@@ -39,7 +39,7 @@ namespace Copium
 		std::vector<Texture> icons;
 	}
 
-	void EditorContentBrowser::init()
+	void EditorContentBrowser::Init()
 	{
 		currentDirectory = &fs.get_asset_directory();
 
@@ -52,7 +52,7 @@ namespace Copium
 		icons.push_back(engineLogo);
 	}
 
-	void EditorContentBrowser::update()
+	void EditorContentBrowser::Update()
 	{
 		ImGui::Begin("Content Browser");
 
@@ -222,7 +222,7 @@ namespace Copium
 		ImGui::End();
 	}
 
-	void EditorContentBrowser::exit()
+	void EditorContentBrowser::Exit()
 	{
 
 	}

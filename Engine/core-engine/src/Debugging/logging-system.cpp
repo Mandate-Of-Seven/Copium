@@ -16,7 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 namespace Copium 
 {
-    void LoggingSystem::init()
+    void LoggingSystem::Init()
     {
         systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
         auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
@@ -37,12 +37,12 @@ namespace Copium
         std::cout << "Logging init was called" << std::endl;
     }
 
-    void LoggingSystem::update()
+    void LoggingSystem::Update()
     {
 
     }
 
-    void LoggingSystem::exit()
+    void LoggingSystem::Exit()
     {
 
     }

@@ -33,7 +33,7 @@ namespace Copium
 		EditorSystem& editor = EditorSystem::Instance();
 	}
 
-	void FileSystem::init()
+	void FileSystem::Init()
 	{
 		systemFlags |= FLAG_RUN_ON_EDITOR;
 
@@ -122,12 +122,12 @@ namespace Copium
 		}
 	}
 
-	void FileSystem::update()
+	void FileSystem::Update()
 	{
 		check_directory_count(&assetsDirectory);
 	}
 
-	void FileSystem::exit()
+	void FileSystem::Exit()
 	{
 		delete_directories(&assetsDirectory);
 	}

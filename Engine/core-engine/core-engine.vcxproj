@@ -101,7 +101,6 @@
   <ItemGroup>
     <ClCompile Include="src\Editor\editor-colortheme.cpp" />
     <ClCompile Include="src\Editor\editor-game.cpp" />
-    <ClCompile Include="src\GameObject\Components\audiosource-component.cpp" />
     <ClCompile Include="src\Audio\sound-system.cpp" />
     <ClCompile Include="src\Debugging\frame-rate-controller.cpp" />
     <ClCompile Include="src\Debugging\logging-system.cpp" />
@@ -111,21 +110,14 @@
     <ClCompile Include="src\Editor\editor-hierarchy-list.cpp" />
     <ClCompile Include="src\Editor\editor-sceneview.cpp" />
     <ClCompile Include="src\Editor\editor-system.cpp" />
-    <ClCompile Include="src\Editor\editor-undoredo.cpp" />
     <ClCompile Include="src\Editor\inspector.cpp" />
+    <ClCompile Include="src\Events\events-system.cpp" />
+    <ClCompile Include="src\Events\events.cpp" />
     <ClCompile Include="src\Files\assets-system.cpp" />
     <ClCompile Include="src\Files\file-directory.cpp" />
     <ClCompile Include="src\Files\file-system.cpp" />
     <ClCompile Include="src\Files\file.cpp" />
-    <ClCompile Include="src\GameObject\Components\camera-component.cpp" />
-    <ClCompile Include="src\GameObject\Components\collider-components.cpp" />
-    <ClCompile Include="src\GameObject\Components\component.cpp" />
-    <ClCompile Include="src\GameObject\Components\physics-components.cpp" />
     <ClCompile Include="src\GameObject\ecs.cpp" />
-    <ClCompile Include="src\GameObject\game-object-factory.cpp" />
-    <ClCompile Include="src\GameObject\game-object.cpp" />
-    <ClCompile Include="src\GameObject\Components\renderer-component.cpp" />
-    <ClCompile Include="src\Game\game-nonscript.cpp" />
     <ClCompile Include="src\Graphics\base-camera.cpp" />
     <ClCompile Include="src\Graphics\fonts.cpp" />
     <ClCompile Include="src\Graphics\framebuffer.cpp" />
@@ -136,7 +128,6 @@
     <ClCompile Include="src\Graphics\sprite.cpp" />
     <ClCompile Include="src\Graphics\spritesheet.cpp" />
     <ClCompile Include="src\Graphics\textures.cpp" />
-    <ClCompile Include="src\GameObject\Components\ui-components.cpp" />
     <ClCompile Include="src\imgui\GraphEditor.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -159,7 +150,6 @@
     </ClCompile>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Math\math-library.cpp" />
-    <ClCompile Include="src\GameObject\Components\transform-component.cpp" />
     <ClCompile Include="src\Math\Vector4.cpp" />
     <ClCompile Include="src\Messaging\message-system.cpp" />
     <ClCompile Include="src\Messaging\message-types.cpp">
@@ -171,13 +161,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Physics\collision.cpp" />
-    <ClCompile Include="src\Physics\physics-system.cpp" />
-    <ClCompile Include="src\SceneManager\scene.cpp" />
-    <ClCompile Include="src\SceneManager\scene-manager.cpp" />
     <ClCompile Include="src\SceneManager\state-manager.cpp" />
-    <ClCompile Include="src\Scripting\logic-system.cpp" />
-    <ClCompile Include="src\Scripting\scripting-system.cpp" />
-    <ClCompile Include="src\GameObject\Components\script-component.cpp" />
     <ClCompile Include="src\Utilities\thread-system.cpp" />
     <ClCompile Include="src\imgui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -212,53 +196,38 @@
     <ClCompile Include="src\Windows\windows-utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\config.h" />
     <ClInclude Include="src\Editor\editor-colortheme.h" />
     <ClInclude Include="src\Editor\editor-game.h" />
+    <ClInclude Include="src\Events\events-system.h" />
+    <ClInclude Include="src\Events\events.h" />
     <ClInclude Include="src\GameObject\components.h" />
-    <ClInclude Include="src\GameObject\Components\audiosource-component.h" />
     <ClInclude Include="src\Debugging\frame-rate-controller.h" />
     <ClInclude Include="src\Editor\editor-camera.h" />
     <ClInclude Include="src\Editor\editor-content-browser.h" />
-    <ClInclude Include="src\Editor\editor-undoredo.h" />
     <ClInclude Include="src\Files\assets-system.h" />
     <ClInclude Include="src\Editor\editor-hierarchy-list.h" />
     <ClInclude Include="src\Files\file-directory.h" />
     <ClInclude Include="src\Files\file-system.h" />
     <ClInclude Include="src\Files\file.h" />
-    <ClInclude Include="src\GameObject\Components\camera-component.h" />
-    <ClInclude Include="src\GameObject\Components\collider-components.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="src\GameObject\Components\renderer-component.h" />
     <ClInclude Include="src\GameObject\ecs.h" />
-    <ClInclude Include="src\Game\game-nonscript.h" />
+    <ClInclude Include="src\GameObject\entity.h" />
     <ClInclude Include="src\Graphics\base-camera.h" />
     <ClInclude Include="src\Graphics\fonts.h" />
     <ClInclude Include="src\Graphics\graphics-draw.h" />
     <ClInclude Include="src\Graphics\graphics-typedef.h" />
     <ClInclude Include="src\Graphics\sprite.h" />
-    <ClInclude Include="src\GameObject\Components\ui-components.h" />
     <ClInclude Include="src\Math\Vector4.h" />
-    <ClInclude Include="src\SceneManager\scene-manager.h" />
-    <ClInclude Include="src\Scripting\logic-system.h" />
-    <ClInclude Include="src\Scripting\script-wrappers.h" />
     <ClInclude Include="src\Graphics\spritesheet.h" />
     <ClInclude Include="src\Utilities\easing.h" />
     <ClInclude Include="src\Utilities\sparse-set.h" />
     <ClInclude Include="src\Utilities\thread-system.h" />
-    <ClInclude Include="src\GameObject\Components\physics-components.h" />
     <ClInclude Include="src\Physics\collision.h" />
-    <ClInclude Include="src\Scripting\compiler.h" />
-    <ClInclude Include="src\GameObject\Components\component.h" />
     <ClInclude Include="src\Editor\editor-consolelog.h" />
     <ClInclude Include="src\CopiumCore\copium-core.h" />
     <ClInclude Include="src\Editor\editor-system.h" />
     <ClInclude Include="src\Editor\editor-sceneview.h" />
     <ClInclude Include="src\Graphics\framebuffer.h" />
-    <ClInclude Include="src\GameObject\game-object-factory.h" />
-    <ClInclude Include="src\GameObject\game-object.h" />
-    <ClInclude Include="src\Physics\physics-system.h" />
     <ClInclude Include="src\Audio\sound-system.h" />
     <ClInclude Include="src\Graphics\textures.h" />
     <ClInclude Include="src\Windows\windows-system.h" />
@@ -271,12 +240,8 @@
     <ClInclude Include="src\Messaging\message-types.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\Graphics\renderer.h" />
-    <ClInclude Include="src\SceneManager\scene.h" />
-    <ClInclude Include="src\GameObject\Components\script-component.h" />
-    <ClInclude Include="src\Scripting\scripting-system.h" />
     <ClInclude Include="src\SceneManager\state-manager.h" />
     <ClInclude Include="src\CopiumCore\system-interface.h" />
-    <ClInclude Include="src\GameObject\Components\transform-component.h" />
     <ClInclude Include="src\Graphics\vertex-types.h" />
     <ClInclude Include="src\Windows\windows-input.h" />
     <ClInclude Include="src\Windows\windows-utils.h" />

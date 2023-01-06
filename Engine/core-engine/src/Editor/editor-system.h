@@ -21,8 +21,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor/editor-game.h"
 #include "Editor/editor-content-browser.h"
 #include "Editor/editor-camera.h"
-#include "Editor/editor-undoredo.h"
-#include "Messaging/message-system.h"
+#include <config.h>
+
+#define MyEditorSystem Copium::EditorSystem::Instance()
 
 namespace Copium
 {
@@ -36,7 +37,7 @@ namespace Copium
 			the engine
 		*/
 		/***************************************************************************/
-		void init();
+		void Init();
 
 		/***************************************************************************/
 		/*!
@@ -44,7 +45,7 @@ namespace Copium
 			Updates the editors in the engine
 		*/
 		/***************************************************************************/
-		void update();
+		void Update();
 
 		/***************************************************************************/
 		/*!
@@ -60,7 +61,7 @@ namespace Copium
 			Shutdown Imgui and its components
 		*/
 		/***************************************************************************/
-		void exit();
+		void Exit();
 
 		/**************************************************************************/
 		/*!
@@ -98,7 +99,7 @@ namespace Copium
 			a pointer to the undo redo command manager
 		*/
 		/*******************************************************************************/
-		UndoRedo::CommandManager* get_commandmanager();
+		//UndoRedo::CommandManager* get_commandmanager();
 		
 		bool is_enabled() { return enableEditor; }
 
@@ -107,14 +108,17 @@ namespace Copium
 		EditorContentBrowser* get_content_browser() { return &contentBrowser; }
 		EditorCamera* get_camera() { return &camera; }
 
+		EntityID GetSelectedEntityID() { return selectedEntityID; }
+		void SetSelectedEntityID(EntityID newEntityID) { selectedEntityID = newEntityID; }
+
 	private:
 		bool enableEditor = true;
-
+		EntityID selectedEntityID{};
 		EditorSceneView sceneView;
 		EditorGame game;
 		EditorContentBrowser contentBrowser;
 		EditorCamera camera;
-		UndoRedo::CommandManager commandManager; //for undo and redo
+		//UndoRedo::CommandManager commandManager; //for undo and redo
 	};
 }
 #endif // !EDITOR_SYSTEM_H

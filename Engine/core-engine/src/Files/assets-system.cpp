@@ -30,7 +30,7 @@ namespace Copium
 		FileSystem& fs = FileSystem::Instance();
 	}
 
-	void AssetsSystem::init()
+	void AssetsSystem::Init()
 	{
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		
@@ -48,15 +48,15 @@ namespace Copium
 
 	}
 
-	void AssetsSystem::update()
+	void AssetsSystem::Update()
 	{
 
 	}
 	
-	void AssetsSystem::exit()
+	void AssetsSystem::Exit()
 	{
 		for (Texture& texture : textures)
-			texture.exit();
+			texture.Exit();
 	}
 
 	void AssetsSystem::load_file(File* _file)
@@ -177,7 +177,7 @@ namespace Copium
 		{
 			if (_file->get_id() == (*it).get_id())
 			{
-				(*it).exit();
+				(*it).Exit();
 				it = textures.erase(it);
 				break;
 			}

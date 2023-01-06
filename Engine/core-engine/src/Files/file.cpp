@@ -16,7 +16,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "Files/file.h"
 #include "Windows/windows-utils.h"
-#include "SceneManager/scene-manager.h"
+
 
 // Bean: Temporary for executing file
 //#include <shellapi.h>
@@ -59,18 +59,18 @@ namespace Copium
 	{
 		if (fileType.fileType == SCENE)
 		{
-			if (Copium::SceneManager::Instance()->get_current_scene() != nullptr)
-			{
-				std::cout << "change scene\n";
-				Copium::SceneManager::Instance()->change_scene(string().c_str());
-			}
-			else
-			{
-				if (Copium::SceneManager::Instance()->load_scene(string().c_str()))
-					std::cout << "loading success\n";
-				else
-					std::cout << "loading fail\n";
-			}
+			//if (Copium::SceneManager::Instance().get_current_scene() != nullptr)
+			//{
+			//	std::cout << "change scene\n";
+			//	Copium::SceneManager::Instance().change_scene(string().c_str());
+			//}
+			//else
+			//{
+			//	if (Copium::SceneManager::Instance().load_scene(string().c_str()))
+			//		std::cout << "loading success\n";
+			//	else
+			//		std::cout << "loading fail\n";
+			//}
 		}
 		else
 		{

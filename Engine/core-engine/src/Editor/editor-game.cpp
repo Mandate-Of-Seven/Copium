@@ -17,7 +17,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Editor/editor-game.h"
 #include "Editor/editor-system.h"
-#include "SceneManager/scene-manager.h"
+
 #include "Windows/windows-system.h"
 
 #include "Graphics/graphics-system.h"
@@ -32,12 +32,12 @@ namespace Copium
 		float padding = 16.f;
 	}
 
-	void EditorGame::init()
+	void EditorGame::Init()
 	{
 		sceneDimension = { sceneWidth, sceneHeight };
 	}
 
-	void EditorGame::update()
+	void EditorGame::Update()
 	{
 		// Game view settings
 		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoCollapse;
@@ -68,7 +68,7 @@ namespace Copium
 		// End Game View
 	}
 
-	void EditorGame::exit()
+	void EditorGame::Exit()
 	{
 
 	}

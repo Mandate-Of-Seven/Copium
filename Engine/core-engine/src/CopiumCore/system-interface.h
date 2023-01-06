@@ -86,19 +86,19 @@ namespace Copium
             Runs when engine starts
         */
         /**************************************************************************/
-        virtual void init()     = 0;
+        virtual void Init()     = 0;
         /*!
           \brief
             Runs every frame of the engine
         */
         /**************************************************************************/
-        virtual void update()   = 0;
+        virtual void Update()   = 0;
         /*!
           \brief
             Run when the engine exits
         */
         /**************************************************************************/
-        virtual void exit()     = 0;
+        virtual void Exit()     = 0;
 
         double updateTime = 0.0;
         double updateTimePercent =0.0;

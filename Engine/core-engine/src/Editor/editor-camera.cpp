@@ -22,7 +22,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Windows/windows-input.h"
 #include "Editor/editor-camera.h"
 #include "Editor/editor-system.h"
-#include "SceneManager/scene-manager.h"
+
 
 namespace
 {
@@ -40,7 +40,7 @@ namespace Copium
 		MessageSystem::Instance().subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
 	}
 
-	void EditorCamera::update()
+	void EditorCamera::Update()
 	{
 		EditorSceneView* sceneView = EditorSystem::Instance().get_scene_view();
 		if (sceneView->is_window_focused() || sceneView->is_window_hovered())
@@ -48,25 +48,25 @@ namespace Copium
 			mouse_controls();
 		}
 
-		if (enableCamera)
-		{
-			SceneManager* sm = SceneManager::Instance();
-			Scene* scene = sm->get_current_scene();
-			if (scene != nullptr && !scene->get_name().compare("DemoCLONE"))
-			{
-				orthographicSize = 5.f;
-				update_ortho_projection();
-				for (GameObject* pGameObj : scene->gameObjects)
-				{
-					// If the object is the player
-					if (!pGameObj->get_name().compare("PlayerTrain"))
-					{
-						focalPoint = pGameObj->transform.position; // Fix the camera onto the player
-						//PRINT("Focal point: " << focalPoint.x << " " << focalPoint.y);
-					}
-				}
-			}
-		}
+		//if (enableCamera)
+		//{
+		//	SceneManager& sm = SceneManager::Instance();
+		//	Scene* scene = sm.get_current_scene();
+		//	if (scene != nullptr && !scene->get_name().compare("DemoCLONE"))
+		//	{
+		//		orthographicSize = 5.f;
+		//		update_ortho_projection();
+		//		for (GameObject* pGameObj : scene->gameObjects)
+		//		{
+		//			// If the object is the player
+		//			if (!pGameObj->get_name().compare("PlayerTrain"))
+		//			{
+		//				focalPoint = pGameObj->transform.position; // Fix the camera onto the player
+		//				//PRINT("Focal point: " << focalPoint.x << " " << focalPoint.y);
+		//			}
+		//		}
+		//	}
+		//}
 
 		static bool debugMode = false;
 		if (sceneView->is_window_focused() || sceneView->is_window_hovered())
@@ -82,7 +82,7 @@ namespace Copium
 		else if (!debugMode)
 			draw.disable(DRAW::DEBUG);
 
-		BaseCamera::update();
+		BaseCamera::Update();
 	}
 
 	void EditorCamera::handleMessage(MESSAGE_TYPE _mType)
@@ -108,17 +108,17 @@ namespace Copium
 
 	glm::vec2 EditorCamera::get_ndc() const
 	{
-		EditorSceneView* sceneView = EditorSystem::Instance().get_scene_view();
-		glm::vec2 scenePos = sceneView->get_position();
-		glm::vec2 sceneDim = sceneView->get_dimension();
-		Math::Vec2 mousePos = inputSystem.get_mouseposition();
-		//PRINT("Mouse position: " << mousePos.x << " " << mousePos.y);
-		glm::vec2 centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
-		glm::vec2 mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
-		glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
-		mouseToNDC *= orthographicSize;
-		glm::vec2 worldNDC = { mouseToNDC.x + viewer.x, mouseToNDC.y + viewer.y };
-		return worldNDC;
+		//EditorSceneView* sceneView = EditorSystem::Instance().get_scene_view();
+		//glm::vec2 scenePos = sceneView->get_position();
+		//glm::vec2 sceneDim = sceneView->get_dimension();
+		//Math::Vec2 mousePos = inputSystem.get_mouseposition();
+		////PRINT("Mouse position: " << mousePos.x << " " << mousePos.y);
+		//glm::vec2 centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
+		//glm::vec2 mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
+		//glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
+		//mouseToNDC *= orthographicSize;
+		//glm::vec2 worldNDC = { mouseToNDC.x + viewer.x, mouseToNDC.y + viewer.y };
+		return {};
 	}
 
 	void EditorCamera::mouse_controls()
