@@ -69,6 +69,16 @@ namespace Copium
 			/***************************************************************************/
 			/*!
 			\brief
+				Checks if the mouse was double clicked
+			\return
+				true if the mouse is double clicked
+			*/
+			/**************************************************************************/
+			bool is_doubleclicked();
+
+			/***************************************************************************/
+			/*!
+			\brief
 				Returns the position of the mouse cursor based on the top left of the game window
 			\return
 				the mouse position
@@ -163,6 +173,8 @@ namespace Copium
 			static void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods);
 
 			static short keys[COPIUM_MAX_KEYS];
+			static double prevClickTime;
+			static Copium::Math::Vec2 prevClickPos;
 	private:
 		bool printInput = 0;
 	};
