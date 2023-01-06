@@ -22,6 +22,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor/editor-content-browser.h"
 #include "Editor/editor-camera.h"
 #include "Editor/editor-undoredo.h"
+#include "Editor/editor-hierarchy-list.h"
+#include "Editor/inspector.h"
 #include "Messaging/message-system.h"
 
 namespace Copium
@@ -106,6 +108,8 @@ namespace Copium
 		EditorGame* get_game_view() { return &game; }
 		EditorContentBrowser* get_content_browser() { return &contentBrowser; }
 		EditorCamera* get_camera() { return &camera; }
+		EditorHierarchyList* get_hierarchy_list() { return &hierarchyList; }
+		EditorInspector* get_inspector() { return &inspector; }
 
 	private:
 		bool enableEditor = true;
@@ -114,6 +118,8 @@ namespace Copium
 		EditorGame game;
 		EditorContentBrowser contentBrowser;
 		EditorCamera camera;
+		EditorHierarchyList hierarchyList;
+		EditorInspector inspector;
 		UndoRedo::CommandManager commandManager; //for undo and redo
 	};
 }

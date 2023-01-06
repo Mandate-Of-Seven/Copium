@@ -26,34 +26,20 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "SceneManager/scene-manager.h"
 #include "GameObject/game-object.h"
 
-namespace Window
+namespace Copium
 {
-	namespace Inspector
+	class EditorInspector
 	{
-		inline bool isInspectorOpen;
-
-		/***************************************************************************/
-		/*!
-		\brief
-			Initialize function called at the start of program to reset fields
-		*/
-		/**************************************************************************/
+	public:
 		void init();
-		/***************************************************************************/
-		/*!
-		\brief
-			Update function called every frame for ImGui window
-		*/
-		/**************************************************************************/
 		void update();
-		/***************************************************************************/
-		/*!
-		\brief
-			Exit function called at end of program
-		*/
-		/**************************************************************************/
 		void exit();
-	}
+		void AlignforWidth(float width, float alignment = 0.5f);
+		bool& status() { return isInspectorOpen; }
+	private:
+		bool isInspectorOpen;
+
+	};
 }
 
 

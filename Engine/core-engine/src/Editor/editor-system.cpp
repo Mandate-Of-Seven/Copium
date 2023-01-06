@@ -20,7 +20,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "GameObject/game-object.h"
 #include "Editor/inspector.h"
 #include "Editor/editor-consolelog.h"
-#include "Editor/editor-hierarchy-list.h"
+//#include "Editor/editor-hierarchy-list.h"
 #include "Editor/editor-colortheme.h"
 #include "Windows/windows-utils.h"
 #include "Utilities/thread-system.h"
@@ -68,14 +68,16 @@ namespace Copium
 		ImGui_ImplOpenGL3_Init("#version 330");
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		ImGui::GetIO().ConfigDockingWithShift = true;
-		Window::Inspector::init();
+		//Window::Inspector::init();
 		Window::EditorConsole::init();
-		Window::Hierarchy::init();
+		//Window::Hierarchy::init();
 		Window::ColorTheme::init();
 
 		sceneView.init();
 		game.init();
 		contentBrowser.init();
+		hierarchyList.init();
+		inspector.init();
 		
 		// Initialize a new editor camera
 		camera.init((float) sceneView.get_width(), (float) sceneView.get_height());
@@ -284,7 +286,7 @@ namespace Copium
 				{
 					if (ImGui::MenuItem("Hierarchy"))
 					{
-						Window::Hierarchy::isHierarchyOpen = true;
+						hierarchyList.status() = true;
 					}
 					if (ImGui::MenuItem("Console Log"))
 					{
@@ -296,7 +298,7 @@ namespace Copium
 					}
 					if (ImGui::MenuItem("Inspector"))
 					{
-						Window::Inspector::isInspectorOpen = true;
+						inspector.status() = true;
 					}
 
 					ImGui::EndMenu();
@@ -386,12 +388,14 @@ namespace Copium
 
             //Call all the editor layers updates here
 			Window::ColorTheme::update();
-			Window::Inspector::update();
+			//Window::Inspector::update();
 			Window::EditorConsole::update();
-			Window::Hierarchy::update();
+			//Window::Hierarchy::update();
 			sceneView.update();
 			game.update();
 			contentBrowser.update();
+			hierarchyList.update();
+			inspector.update();
 
 			// demo update
 			if (show_demo_window)
@@ -424,10 +428,11 @@ namespace Copium
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
 
-		Window::Inspector::exit();
 		sceneView.exit();
 		game.exit();
 		contentBrowser.exit();
+		hierarchyList.exit();
+		inspector.exit();
 
 
 		std::cout << "Before deleting, Undo stack: " << commandManager.undoStack.size() << ", Redo stack:" << commandManager.redoStack.size()<<"\n";
