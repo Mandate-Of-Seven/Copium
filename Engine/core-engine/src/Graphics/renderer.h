@@ -26,6 +26,19 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium 
 {
+	// Global variables
+	static const GLuint maxQuadCount = 1000;	// Number of sprites per batch
+	static const GLuint maxLineCount = 1000;	// Number of lines per batch
+	static const GLuint maxCircleCount = 200;	// Number of circles per batch
+	static const GLuint maxTextCount = 1000;	// Number of text per batch
+	static const GLuint maxVertexCount = maxQuadCount * 4;
+	static const GLuint maxIndexCount = maxQuadCount * 6;
+	static const GLuint maxLineVertexCount = maxLineCount * 2;
+	static const GLuint circleVertices = 36;
+	static const GLuint maxCircleIndexCount = maxCircleCount * (circleVertices + 1);
+	static const GLuint maxCircleVertexCount = maxCircleCount * circleVertices;
+	static const GLuint maxTextVertexCount = maxTextCount * 4;
+	static const GLuint maxTextures = 256;
 
 	// Forward declare
 	class GraphicsSystem;
@@ -247,7 +260,9 @@ namespace Copium
 		/***************************************************************************/
 		void draw_line(const glm::vec3& _position0, const glm::vec3& _position1, const glm::vec4& _color);
 
-		void draw_circle(const glm::vec3& _position, const glm::vec4& _color, GLfloat _radius);
+		void draw_circle(const glm::vec3& _position, const float& _radius, const float _rotation, const glm::vec4& _color);
+
+		void draw_circle(const glm::mat4& _transform, const glm::vec4& _color);
 
 		/***************************************************************************/
 		/*!
@@ -285,37 +300,13 @@ namespace Copium
 		void set_circle_width(GLfloat _circleWidth) { circleWidth = _circleWidth; }
 		GLfloat get_circle_width() const { return circleWidth; }
 
-		/***************************************************************************/
-		/*!
-		\brief
-			Gets the draw count of the renderer
-		\return
-			The draw count
-		*/
-		/***************************************************************************/
-		//const GLint& get_draw_count() { return drawCount; }
+		const GLint& getDrawCount() { return drawCount; }
+		const GLint& getQuadCount() { return quadCount; }
+		const GLint& getLineCount() { return lineCount; }
+		const GLint& getCircleCount() { return circleCount; }
+		const GLint& getTextCount() { return textCount; }
 
-		/***************************************************************************/
-		/*!
-		\brief
-			Sets the draw count of the renderer
-		\param count
-			The number of draw counts
-		\return
-			The draw count
-		*/
-		/***************************************************************************/
-		//const GLint& set_draw_count(const GLint& _count) { return drawCount = _count; }
-
-		/***************************************************************************/
-		/*!
-		\brief
-			Gets the quad count of the renderer
-		\return
-			The quad count
-		*/
-		/***************************************************************************/
-		//const GLint& get_quad_count() { return quadCount; }
+		const GLint& getVertices() { return quadCount * 4 + lineCount * 2 + circleCount * circleVertices + textCount * 4; }
 
 		/***************************************************************************/
 		/*!
@@ -335,7 +326,7 @@ namespace Copium
 			Resets the number of draw, quad and line count
 		*/
 		/***************************************************************************/
-		//void reset_stats() { drawCount = quadCount = lineCount = 0; };		
+		void reset_stats() { drawCount = quadCount = lineCount = circleCount = textCount = 0; };		
 
 	private:
 
@@ -360,7 +351,8 @@ namespace Copium
 		GLuint lineVertexCount = 0;		// Number of elements in the Line object
 
 		GLuint circleVertexBufferID = 0;// Handle to Circle Vertex Buffer Object
-		GLuint circleVertexCount = 0;	// Number of elements in the Circle object
+		GLuint circleIndexBufferID = 0;	// Handle to Circle Index Buffer
+		GLuint circleIndexCount = 0;	// Number of elements in the Circle object
 
 		GLuint textVertexBufferID = 0;	// Handle to Text Vertex Buffer Object
 		GLuint textVertexCount = 0;		// Number of elements in the Text object
@@ -372,6 +364,8 @@ namespace Copium
 		LineVertex* lineBufferPtr = nullptr;
 		GLfloat lineWidth = 1.f;
 
+		CircleVertex* circleBuffer = nullptr;
+		CircleVertex* circleBufferPtr = nullptr;
 		GLfloat circleWidth = 1.f;
 
 		TextVertex* textBuffer = nullptr;
@@ -379,6 +373,7 @@ namespace Copium
 
 		glm::vec4 quadVertexPosition[4];
 		glm::vec2 quadTextCoord[4];
+		glm::vec4 circleVertexPosition[circleVertices];
 		glm::vec2 textTextCoord[6];
 
 		GraphicsSystem* graphics = nullptr; // A pointer to the instance of graphics system

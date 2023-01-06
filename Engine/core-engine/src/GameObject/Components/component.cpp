@@ -20,6 +20,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "renderer-component.h"
 #include "transform-component.h"
 
+#include "Animation/animation-system.h"
+
 namespace Copium
 {
     Component::Component(GameObject& _gameObj, ComponentType _componentType) 
@@ -46,9 +48,6 @@ namespace Copium
     bool Component::Enabled() const noexcept{ return enabled;}
 
     void Component::Enabled(bool _enabled) noexcept { enabled = _enabled; }
-
-    Animator::Animator(GameObject& _gameObj) 
-        :Component(_gameObj, ComponentType::Animator) { std::cout << "ANIMATOR CONS" << std::endl; }
 
     const std::string& Component::Name() const
     {

@@ -96,6 +96,24 @@ namespace Copium
 		sprintf(buffer, "Viewport Dimensions: %d by %d", sceneWidth, sceneHeight);
 		ImGui::Text(buffer);
 
+		sprintf(buffer, "Draw Count: %d", camera.getDraw()->get_renderer()->getDrawCount());
+		ImGui::Text(buffer);
+
+		sprintf(buffer, "Quad Count: %d", camera.getDraw()->get_renderer()->getQuadCount());
+		ImGui::Text(buffer);
+
+		sprintf(buffer, "Line Count: %d", camera.getDraw()->get_renderer()->getLineCount());
+		ImGui::Text(buffer);
+
+		sprintf(buffer, "Circle Count: %d", camera.getDraw()->get_renderer()->getCircleCount());
+		ImGui::Text(buffer);
+
+		sprintf(buffer, "Text Count: %d", camera.getDraw()->get_renderer()->getTextCount());
+		ImGui::Text(buffer);
+
+		sprintf(buffer, "Vertex Count: %d", camera.getDraw()->get_renderer()->getVertices());
+		ImGui::Text(buffer);
+
 		// End Render Stats
 		ImGui::End();
 

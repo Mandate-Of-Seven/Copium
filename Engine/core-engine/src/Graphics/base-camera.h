@@ -179,6 +179,7 @@ namespace Copium
 		glm::mat4 get_view_proj_matrix() const { return viewProjMatrix; }
 
 		Framebuffer* get_framebuffer() { return &framebuffer; }
+		Draw* getDraw() { return &draw; }
 
 		void set_bg_color(glm::vec4 const& _color) { backgroundColor = _color; }
 		const glm::vec4& get_bg_color() const { return backgroundColor; }

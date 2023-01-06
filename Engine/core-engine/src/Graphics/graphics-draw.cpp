@@ -56,6 +56,8 @@ namespace Copium
 
 	void Draw::update(CameraType _type)
 	{
+		renderer.reset_stats();
+
 		switch (_type)
 		{
 		case NONE:
@@ -449,6 +451,31 @@ namespace Copium
 				}
 			}
 		}*/
+
+		glm::vec2 scale = glm::vec2(1.f, 1.f);
+		glm::vec3 pos = glm::vec3(0.f, 3.f, 0.f);
+		glm::vec4 color = glm::vec4(1.f, 1.f, 1.f, 1.f);
+
+		static int count = 0;
+
+		if (inputSystem->is_key_held(68))
+			count += 10;
+
+		int posX = -100, posY = 100;
+		for (int i = 0; i < count; i++)
+		{
+			posX += 3;
+
+			if (posX > 100)
+			{
+				posX = -100;
+				posY -= 3;
+			}
+			pos = glm::vec3((float)posX, (float)posY, 0.f);
+			renderer.draw_circle(pos, 1.f, 0.f, color);
+		}
+
+		//PRINT("Count: " << count);
 
 		renderer.end_batch();
 
