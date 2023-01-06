@@ -25,7 +25,6 @@ namespace Copium
 	{
 		SceneManager* sm = SceneManager::Instance();
 		InputSystem* is = InputSystem::Instance();
-		//bool isHierarchyOpen;
 	}
 	void EditorHierarchyList::init()
 	{

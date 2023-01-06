@@ -27,11 +27,14 @@ namespace Copium
 	{
 
 		modified = true;
+		//PRINT(uuid);
 	}
 
 	File::File(const std::filesystem::path& pathRef) : std::filesystem::path(pathRef)
 	{
 		modified = true;
+		//PRINT(uuid);
+
 	}
 
 	bool File::is_modified()

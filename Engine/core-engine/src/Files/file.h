@@ -16,6 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define FILE_H
 
 #include <filesystem>
+#include "CopiumCore/uuid.h"
 
 namespace Copium
 {
@@ -114,6 +115,8 @@ namespace Copium
 		time_t lastModifiedTime = 0;
 
 		FileType fileType; // The type of file
+
+		UUID uuid;
 	};
 }
 
