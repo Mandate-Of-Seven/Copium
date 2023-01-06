@@ -342,7 +342,7 @@ namespace Copium
 			int idx{ 0 };
 			for (auto pChild : _go.transform.children)
 			{
-				isSelected = display_gameobject(pChild->gameObj, _selected, _vector, idx);
+				isSelected = display_gameobject(pChild->gameObj, _selected, _go.transform.children, idx);
 				++idx;
 			}
 		}
@@ -351,6 +351,97 @@ namespace Copium
 
 		return isSelected;
 	}
+	bool EditorHierarchyList::display_gameobject(GameObject& _go, GameObjectID& _selected, std::list<Transform*>& _list, int _index)
+	{
+		bool isSelected = false;
+		ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+
+
+		// If root node does not have children, it is simply a leaf node (end of the branch)
+		if (_go.transform.children.empty())
+		{
+			baseFlags |= ImGuiTreeNodeFlags_Leaf;
+		}
+
+		// If there is a node that is already selected, set the selected flag
+		if (_selected == _go.id)
+		{
+			baseFlags |= ImGuiTreeNodeFlags_Selected;
+		}
+
+		if (!ImGui::TreeNodeEx(_go.get_name().c_str(), baseFlags))
+			return false;
+
+		if (ImGui::BeginDragDropSource())
+		{
+			static void* container;
+			container = &_go;
+			ImGui::SetDragDropPayload("GameObject", &container, sizeof(void*));
+			ImGui::EndDragDropSource();
+
+			//std::cout << "ID of selected Game Object: " << _selected << std::endl;
+		}
+
+		// Handle any reordering
+		if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
+		{
+				//std::cout << "ID of selected Game Object: " << _selected << std::endl;
+				int n_next = (ImGui::GetMouseDragDelta(0).y < 0.f ? -1 : 1);
+
+				if (n_next + _index >= 0 && n_next + _index < _list.size())
+				{		
+					Transform* tmp = &_go.transform;
+					std::list<Transform*>::iterator iter1, iter2;
+
+					iter1 = _list.begin();
+					for (int i{ 0 }; i < _index; ++i)
+					{
+						++iter1;
+					}
+					iter2 = iter1;
+
+					if (n_next > 0)
+					{
+						++iter2;
+					}
+					else
+					{
+						--iter2;
+					}
+
+					*iter1 = *iter2;
+					*iter2 = tmp;
+				}
+
+				ImGui::ResetMouseDragDelta();
+		
+		}
+
+		if (ImGui::IsItemClicked())
+		{
+			std::cout << _go.get_name() << " is selected\n";
+			_selected = _go.id;
+			isSelected = true;
+			sm->set_selected_gameobject(&_go);
+
+		}
+
+		// If game object has children, recursively display children
+		if (!_go.transform.children.empty())
+		{
+			int idx{ 0 };
+			for (auto pChild : _go.transform.children)
+			{
+				isSelected = display_gameobject(pChild->gameObj, _selected, _list, idx);
+				++idx;
+			}
+		}
+
+		ImGui::TreePop();
+
+		return isSelected;
+	}
+
 	bool EditorHierarchyList::create_gameobject_btn(const std::string& _btnName)
 	{
 		static int clicked = 0;
