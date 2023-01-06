@@ -70,13 +70,14 @@ namespace Copium
 		ImGui::GetIO().ConfigDockingWithShift = true;
 		//Window::Inspector::init();
 		Window::EditorConsole::init();
-		Window::Hierarchy::init();
 		//Window::ColorTheme::init();
 
 		sceneView.init();
 		game.init();
 		contentBrowser.init();
 		colorTheme.init();
+		hierarchyList.init();
+		inspector.init();
 		// Initialize a new editor camera
 		camera.init((float) sceneView.get_width(), (float) sceneView.get_height());
 	}
@@ -387,7 +388,8 @@ namespace Copium
             //Call all the editor layers updates here
 			
 			colorTheme.update();
-			Window::Inspector::update();
+			hierarchyList.update();
+			inspector.update();
 			Window::EditorConsole::update();
 			//Window::Hierarchy::update();
 			sceneView.update();
