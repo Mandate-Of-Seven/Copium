@@ -35,6 +35,34 @@ namespace Window
     namespace
     {
         using namespace Copium;
+
+
+        template <typename T>
+        void Display(const char* name, T& val);
+
+        template <typename T>
+        void DisplayType(const char* name, T*& container)
+        {
+            if (container == nullptr)
+                ImGui::Button("Empty", ImVec2(-FLT_MIN, 0.f));
+            else
+            {
+                static std::string buttonName{};
+                buttonName = name;
+                ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
+            }
+
+            if (ImGui::BeginDragDropTarget())
+            {
+                const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(typeid(T).name());
+                if (payload)
+                {
+                    container = (T*)(*reinterpret_cast<void**>(payload->Data));
+                }
+                ImGui::EndDragDropTarget();
+            }
+        }
+
         void DisplayType(const char* name,bool& val)
         {
             static std::string idName{};
@@ -72,12 +100,14 @@ namespace Window
             }
         }
 
-        void DisplayType(const char* name,Math::Vec3& val)
+
+
+        void DisplayType(const char* name, Math::Vec3& val)
         {
-            static ImGuiTableFlags windowFlags = 
-                ImGuiTableFlags_Resizable | 
-                ImGuiTableFlags_NoBordersInBody | 
-                ImGuiTableFlags_NoSavedSettings | 
+            static ImGuiTableFlags windowFlags =
+                ImGuiTableFlags_Resizable |
+                ImGuiTableFlags_NoBordersInBody |
+                ImGuiTableFlags_NoSavedSettings |
                 ImGuiTableFlags_SizingStretchProp;
 
 
@@ -96,21 +126,67 @@ namespace Window
                 ImGui::TableNextColumn();
                 idName.back() = 'Y';
                 ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-                DisplayType(idName.c_str(),val.y);
+                DisplayType(idName.c_str(), val.y);
 
                 ImGui::TableNextColumn();
                 idName.back() = 'Z';
                 ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-                DisplayType(idName.c_str(),val.z);
+                DisplayType(idName.c_str(), val.z);
                 ImGui::EndTable();
             }
-
         }
 
         void DisplayType(const char* name,Math::Vec2& val)
         {
+            static ImGuiTableFlags windowFlags =
+                ImGuiTableFlags_Resizable |
+                ImGuiTableFlags_NoBordersInBody |
+                ImGuiTableFlags_NoSavedSettings |
+                ImGuiTableFlags_SizingStretchProp;
 
+
+            static float temp{};
+            static std::string idName{};
+            idName = "##";
+            idName += name;
+            if (ImGui::BeginTable("Vector2", 2, windowFlags))
+            {
+                ImGui::TableNextColumn();
+                ImGui::AlignTextToFramePadding();
+                idName += 'X';
+                ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+                DisplayType(idName.c_str(), val.x);
+
+                ImGui::TableNextColumn();
+                idName.back() = 'Y';
+                ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+                DisplayType(idName.c_str(), val.y);
+
+                ImGui::EndTable();
+            }
         }
+
+        void DisplayType(const char* name, AABB& val)
+        {
+            static ImGuiTableFlags windowFlags =
+                ImGuiTableFlags_Resizable |
+                ImGuiTableFlags_NoBordersInBody |
+                ImGuiTableFlags_NoSavedSettings |
+                ImGuiTableFlags_SizingStretchProp;
+
+            static std::string idName{};
+            idName = "##";
+            idName += name;
+
+            if (ImGui::BeginTable("AABB", 2, windowFlags))
+            {
+                ImGui::AlignTextToFramePadding();
+                Display("Max", val.max);
+                Display("Min", val.min);
+                ImGui::EndTable();
+            }
+        }
+
 
         template <typename T>
         void Display(const char* name, T& val)
@@ -124,28 +200,101 @@ namespace Window
             ImGui::TableNextColumn();
             DisplayType(name,val);
         }
+
+
     }
 
     namespace
     {
         using namespace Copium;
+        
+        bool AddComponent(ImGuiTextFilter& filter, EntityID entityID) { (void)filter; (void)entityID; return false; }
 
+        template <typename Component, typename... Components>
+        bool AddComponent(ImGuiTextFilter& filter, EntityID entityID,Pack<Component, Components...> components)
+        {
+            static ImVec2 buttonSize = ImGui::GetWindowSize();
+            buttonSize.y *= (float)BUTTON_HEIGHT;
+            static const char* name = typeid(Component).name() + strlen("struct Copium::");
+            if (filter.PassFilter(name) && ImGui::Button(name, buttonSize))
+            {
+                Component* component;
+                MyEventSystem.publish(new AddComponentEvent{entityID,component});
+                return true;
+            }
+            if constexpr (sizeof...(Components) == 0)
+            {
+                return false;
+            }
+            else
+            {
+                return AddComponent(filter,entityID,Pack<Components...>());
+            }
+        }
+
+        void AddComponentPanel(EntityID entityID, bool& open)
+        {
+            if (open)
+            {
+                ImGui::Begin("Add Component", &open);
+                //AlignForWidth(ImGui::GetWindowSize().x);
+                static ImGuiTextFilter filter;
+                ImGui::PushItemWidth(-1);
+                filter.Draw("##ComponentName");
+                ImGui::PopItemWidth();
+                open = !AddComponent(filter,entityID,MainComponents::Types());
+
+                /*for (auto& nameToScriptClass : scriptingSystem.getScriptFiles())
+                {
+                    const std::string& name{ nameToScriptClass.filename().stem().string() };
+                    if (filter.PassFilter(name.c_str()) && ImGui::Button(name.c_str(), buttonSize)) {
+                        selectedGameObject->addComponent<Copium::Script>().Name(name);
+                        isAddingComponent = false;
+                    }
+                }*/
+                //static std::string newScriptPrompt;
+                //newScriptPrompt.clear();
+                //newScriptPrompt += "[New Script] ";
+                //newScriptPrompt += filter.InputBuf;
+                //if (ImGui::Button(newScriptPrompt.c_str(), buttonSize))
+                //{
+                //    //Ask scripting system query if file exists
+                //    //scriptingSystem.addEmptyScript(filter.InputBuf);
+                //    //selectedGameObject->addComponent<Copium::Script>().Name(filter.InputBuf);
+                //    isAddingComponent = false;
+                //}
+                ImGui::End();
+            }
+        }
 
         template <typename T>
         void DisplayComponent(T& component)
         {
-            using namespace Copium;
             static_assert(MainComponents::Has<T>());
-            PRINT("Component of type: " << typeid(T).name << "does not exist yet! ");
+            PRINT("Component of type: " << typeid(T).name() << "does not exist yet! ");
         }
 
         template <>
-        void DisplayComponent<Copium::Transform>(Copium::Transform& transform)
+        void DisplayComponent<Transform>(Transform& transform)
         {
-            using namespace Copium;
             Display("Position", transform.position);
             Display("Rotation", transform.rotation);
             Display("Scale", transform.scale);
+        }
+
+        template <>
+        void DisplayComponent<BoxCollider2D>(BoxCollider2D& boxCollider2D)
+        {
+            Display("Bounds", boxCollider2D.bounds);
+        }
+
+        template <>
+        void DisplayComponent<SpriteRenderer>(SpriteRenderer& spriteRenderer)
+        {
+
+            //DisplayDragDrop();
+            //spriteRenderer.sprite.set_name()
+            Display("Sprite", spriteRenderer.refTexture);
         }
 
         void DisplayComponents(EntityID id)
@@ -153,7 +302,7 @@ namespace Window
             (void)id;
         }
 
-        template <typename Component,typename... Components>
+        template <size_t ID = 0, typename Component, typename... Components >
         void DisplayComponents(EntityID id, Pack<Component, Components...> components)
         {
             Component* component{};
@@ -163,9 +312,11 @@ namespace Window
                 ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth;
                 bool enabled{};
                 MyEventSystem.publish(new GetComponentEnabledEvent<Component>{ id,enabled });
+                ImGui::PushID(ID);
                 DisplayType("Enabled", enabled); ImGui::SameLine();
+                ImGui::PopID();
                 MyEventSystem.publish(new SetComponentEnabledEvent<Component>{ id,enabled });
-                const char* componentName = typeid(Component).name() + strlen("class Copium::");
+                const char* componentName = typeid(Component).name() + strlen("struct Copium::");
                 if (ImGui::CollapsingHeader(componentName, nodeFlags))
                 {
                     ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
@@ -212,7 +363,7 @@ namespace Window
             }
             else
             {
-                DisplayComponents(id,Pack<Components...>());
+                DisplayComponents<ID+1>(id,Pack<Components...>());
             }
         }
 
@@ -259,67 +410,9 @@ namespace Window
                 isAddingComponent = true;
             }
 
-            if (isAddingComponent)
-            {
-                ImGui::Begin("Add Component", &isAddingComponent);
-                //AlignForWidth(ImGui::GetWindowSize().x);
-                ImVec2 buttonSize = ImGui::GetWindowSize();
-                buttonSize.y *= (float)BUTTON_HEIGHT;
-                static ImGuiTextFilter filter;
-                ImGui::PushItemWidth(-1);
-                filter.Draw("##ComponentName");
-                ImGui::PopItemWidth();
-                std::map<Copium::ComponentType, std::string>::iterator it;
-                /*for (it = Copium::MAP_COMPONENT_TYPE_NAME.begin();
-                    it != Copium::MAP_COMPONENT_TYPE_NAME.end(); ++it)
-                {
-                    if (it->first == Copium::ComponentType::Script)
-                        continue;
-                    const std::string& componentName{ it->second };
-                    if (filter.PassFilter(componentName.c_str()) && ImGui::Button(componentName.c_str(), buttonSize))
-                    {
-                        selectedGameObject->addComponent(it->first);
-                        isAddingComponent = false;
-                        break;
-                    }
-                }
-                for (auto& nameToScriptClass : scriptingSystem.getScriptFiles())
-                {
-                    const std::string& name{ nameToScriptClass.filename().stem().string() };
-                    if (filter.PassFilter(name.c_str()) && ImGui::Button(name.c_str(), buttonSize)) {
-                        selectedGameObject->addComponent<Copium::Script>().Name(name);
-                        isAddingComponent = false;
-                    }
-                }*/
-                static std::string newScriptPrompt;
-                newScriptPrompt.clear();
-                newScriptPrompt += "[New Script] ";
-                newScriptPrompt += filter.InputBuf;
-                if (ImGui::Button(newScriptPrompt.c_str(), buttonSize))
-                {
-                    //Ask scripting system query if file exists
-                    //scriptingSystem.addEmptyScript(filter.InputBuf);
-                    //selectedGameObject->addComponent<Copium::Script>().Name(filter.InputBuf);
-                    isAddingComponent = false;
-                }
-                ImGui::End();
-            }
+            AddComponentPanel(entityID, isAddingComponent);
         }
 
-        void AddComponentPanel(){}
-
-        template <typename Component, typename... Components>
-        void AddComponentPanel(EntityID entity,Pack<Component, Components...> components)
-        {
-            if constexpr (sizeof...(Components) == 0)
-            {
-                return;
-            }
-            else
-            {
-                AddComponentPanel(Pack<Components...>());
-            }
-        }
     }
 
 	namespace Inspector

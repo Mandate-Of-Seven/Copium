@@ -22,7 +22,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Graphics/glslshader.h"
 
 #include "Graphics/spritesheet.h"
-#include "Graphics/sprite.h"
+
 
 namespace Copium 
 {
@@ -155,7 +155,7 @@ namespace Copium
 			The sprite to use to draw
 		*/
 		/***************************************************************************/
-		void draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Sprite& _sprite);
+		void draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Texture& _sprite);
 
 		/***************************************************************************/
 		/*!
@@ -215,7 +215,7 @@ namespace Copium
 			The sprite to use to draw
 		*/
 		/***************************************************************************/
-		void draw_quad(const glm::mat4& _transform, const Sprite& _sprite);
+		void draw_quad(const glm::mat4& _transform, const Texture& _sprite);
 
 		/***************************************************************************/
 		/*!

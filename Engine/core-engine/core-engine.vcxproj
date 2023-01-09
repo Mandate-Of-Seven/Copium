@@ -125,7 +125,6 @@
     <ClCompile Include="src\Graphics\graphics-draw.cpp" />
     <ClCompile Include="src\Graphics\graphics-system.cpp" />
     <ClCompile Include="src\Graphics\renderer.cpp" />
-    <ClCompile Include="src\Graphics\sprite.cpp" />
     <ClCompile Include="src\Graphics\spritesheet.cpp" />
     <ClCompile Include="src\Graphics\textures.cpp" />
     <ClCompile Include="src\imgui\GraphEditor.cpp">
@@ -216,7 +215,6 @@
     <ClInclude Include="src\Graphics\fonts.h" />
     <ClInclude Include="src\Graphics\graphics-draw.h" />
     <ClInclude Include="src\Graphics\graphics-typedef.h" />
-    <ClInclude Include="src\Graphics\sprite.h" />
     <ClInclude Include="src\Math\Vector4.h" />
     <ClInclude Include="src\Graphics\spritesheet.h" />
     <ClInclude Include="src\Utilities\easing.h" />

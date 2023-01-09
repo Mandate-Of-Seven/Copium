@@ -53,6 +53,8 @@ namespace Copium
         template <typename T>
         void CallbackHasComponent(HasComponentEvent<T>* pEvent);
         template <typename T>
+        void CallbackAddComponent(AddComponentEvent<T>* pEvent);
+        template <typename T>
         void CallbackGetComponentEnabled(GetComponentEnabledEvent<T>* pEvent);
         template <typename T>
         void CallbackSetComponentEnabled(SetComponentEnabledEvent<T>* pEvent);
@@ -67,7 +69,7 @@ namespace Copium
     {
         static_assert(MainComponents::Has<T>());
         COPIUM_ASSERT(!entities.DenseExists(id), "ENTITY DOES NOT EXIST");
-        entities.DenseGet(id).componentsBitset.set(static_cast<size_t>(GetComponentType<T>()));
+        entities.DenseGet(id).componentsBitset.set(GetComponentType<T>::e);
         return &MainComponents::GetArray<T>()[id];
     }
 
@@ -76,9 +78,9 @@ namespace Copium
     {
         static_assert(MainComponents::Has<T>());
         COPIUM_ASSERT(!entities.DenseExists(id), "ENTITY DOES NOT EXIST");
-        //PRINT("Getting Component " << typeid(T).name() << "of ID: " << id);
-        if (entities.DenseGet(id).componentsBitset.test((size_t)GetComponentType<T>()))
+        if (entities.DenseGet(id).componentsBitset.test(GetComponentType<T>::e))
         {
+            //PRINT("Found Component " << typeid(T).name() << "of ID: " << id);
             return &MainComponents::GetArray<T>()[id];
         }
         return nullptr;
@@ -90,7 +92,7 @@ namespace Copium
         static_assert(MainComponents::Has<T>());
         COPIUM_ASSERT(!entities.DenseExists(id), "ENTITY DOES NOT EXIST");
         COPIUM_ASSERT(!HasComponent<T>(id), typeid(T).name());
-        entities.DenseGet(id).componentsBitset.set((size_t)GetComponentType<T>(), 0);
+        entities.DenseGet(id).componentsBitset.set(GetComponentType<T>::e, 0);
     }
     
     template <typename T>
@@ -98,7 +100,7 @@ namespace Copium
     {
         static_assert(MainComponents::Has<T>());
         COPIUM_ASSERT(!entities.DenseExists(id), "ENTITY DOES NOT EXIST");
-        return entities.DenseGet(id).componentsBitset.test((size_t)GetComponentType<T>());
+        return entities.DenseGet(id).componentsBitset.test(GetComponentType<T>::e);
     }
 
     template <typename T>
@@ -106,7 +108,6 @@ namespace Copium
     {
         pEvent->pComponent = GetComponent<T>(pEvent->id);
     }
-
 
     template <typename T>
     void EntityComponentSystem::CallbackRemoveComponent(RemoveComponentEvent<T>* pEvent)
@@ -117,7 +118,13 @@ namespace Copium
     template <typename T>
     void EntityComponentSystem::CallbackHasComponent(HasComponentEvent<T>* pEvent)
     {
-        HasComponent<T>(pEvent->id);
+        pEvent->exists = HasComponent<T>(pEvent->id);
+    }
+
+    template <typename T>
+    void EntityComponentSystem::CallbackAddComponent(AddComponentEvent<T>* pEvent)
+    {
+        pEvent->pComponent = AddComponent<T>(pEvent->id);
     }
 
     template <typename Component, typename... Components>
@@ -125,6 +132,8 @@ namespace Copium
     {
         MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackGetComponent<Component>);
         MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackRemoveComponent<Component>);
+        MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackAddComponent<Component>);
+        MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackHasComponent<Component>);
         MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackGetComponentEnabled<Component>);
         MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackSetComponentEnabled<Component>);
         if constexpr (sizeof...(Components) == 0)
@@ -133,7 +142,7 @@ namespace Copium
         }
         else
         {
-            GetComponentSubscribe(Pack<Components...>());
+            SubscribeComponentCallbacks(Pack<Components...>());
         }
     }
 

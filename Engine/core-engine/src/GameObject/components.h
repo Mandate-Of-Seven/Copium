@@ -7,11 +7,11 @@
 #include <imgui.h>
 #include <Utilities/sparse-set.h>
 #include <config.h>
+#include <Graphics/textures.h>
 
 
 namespace Copium
 {
-
 	using ComponentID = size_t;
 
 	enum class ComponentType : size_t      // Types of Components
@@ -80,16 +80,18 @@ namespace Copium
 			static std::bitset<MAX_ENTITIES> componentsBitset;
 			if (setting)
 			{
+				PRINT("Setting " << typeid(T).name() << " to " << *resultOrVal);
 				componentsBitset.set(entityID, *resultOrVal);
 			}
 			{
 				*resultOrVal = componentsBitset.test(entityID);
+				PRINT("Getting " << typeid(T).name() << " = " << *resultOrVal);
 			}
 		}
 	};
 
 
-	class Transform
+	struct Transform
 	{
 	public:
 		Transform() = default;
@@ -130,81 +132,36 @@ namespace Copium
 			Math::Vec3 _scale = { 1,1,1 });
 	};
 
-	struct AABB;
-
-
 	struct BoxCollider2D
 	{
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Displays the inspector view with its fields
-
-		*/
-		/*******************************************************************************/
-		void inspector_view()
-		{
-			ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
-				| ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp;
-			if (ImGui::BeginTable("Component transform", 2, windowFlags))
-			{
-				ImGui::Indent();
-
-				ImGui::TableSetupColumn("Text", 0, 0.4f);
-				ImGui::TableSetupColumn("Input", 0, 0.6f);
-
-				ImGui::TableNextRow();
-				ImGui::TableNextColumn();
-				ImGui::Text("Bounds");
-				ImGui::TableNextColumn();
-				/*if (ImGui::BeginTable("Component AABB", 4, windowFlags))
-				{
-					ImGui::TableNextRow();
-					ImGui::TableNextColumn();
-					ImGui::PushID(0);
-					ImGui::Text("minX"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-					ImGui::InputFloat("", &boundingBox.min.x);
-					ImGui::PopID();
-
-					ImGui::TableNextColumn();
-					ImGui::PushID(1);
-					ImGui::Text("minY"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-					ImGui::InputFloat("", &boundingBox.min.y);
-					ImGui::PopID();
-
-					ImGui::TableNextColumn();
-					ImGui::PushID(2);
-					ImGui::Text("maxX"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-					ImGui::InputFloat("", &boundingBox.max.x);
-					ImGui::PopID();
-
-					ImGui::TableNextColumn();
-					ImGui::PushID(3);
-					ImGui::Text("maxY"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-					ImGui::InputFloat("", &boundingBox.max.y);
-					ImGui::PopID();
-
-					ImGui::EndTable();
-				}*/
-			}
-			ImGui::Unindent();
-			ImGui::EndTable();
-		}
+		BoxCollider2D() = default;
+		AABB bounds{};
 	};
 
-	using MainComponents = ComponentGroup<0, Transform>;
+	struct SpriteRenderer
+	{
+		SpriteRenderer() = default;
+		glm::bvec2 flip{ 0 };
+		glm::vec3 position{ 0 };	// Temporary variable to access the position
+		glm::vec3 rotation{ 0 };	// Temporary variable for the rotation of the sprite
+		glm::vec2 size{ 0 };		// The size of the sprite in pixels ( Bean: different from the scale of the gameobject )
+		glm::vec4 color{ 1 };		// The blended color of this sprite
+		unsigned int spriteID = 0; // The index of the sprite
+		Texture* refTexture; // Pointer to the texture
+		bool isAddingSprite;
+	};
+
+	using MainComponents = ComponentGroup<0, Transform, BoxCollider2D, SpriteRenderer>;
 	using BackupComponents = ComponentGroup<1, Transform>;
 
-///#define RegisterComponent(Type)template <> ComponentType GetComponentType<Type>(){return ComponentType::Type;}
+	#define RegisterComponent(Type)template <> struct GetComponentType<Type>{static constexpr size_t e{ (size_t)ComponentType::Type }; };
 
 	template <typename T>
-	ComponentType GetComponentType()
-	{
-		return ComponentType::None;
-	}
+	struct GetComponentType{};
 
-	//RegisterComponent(Transform)
+	RegisterComponent(Transform);
+	RegisterComponent(BoxCollider2D);
+	RegisterComponent(SpriteRenderer);
 }
 
 

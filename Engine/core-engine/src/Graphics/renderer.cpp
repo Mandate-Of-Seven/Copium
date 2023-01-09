@@ -429,7 +429,7 @@ namespace Copium
 		draw_quad(transform, _textureID);
 	}
 
-	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Sprite& _sprite)
+	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Texture& _sprite)
 	{
 		glm::mat4 translate = glm::translate(glm::mat4(1.f), _position);
 
@@ -443,11 +443,8 @@ namespace Copium
 		};
 
 		float pixelWidth = 1.f, pixelHeight = 1.f;
-		if (_sprite.get_texture() != nullptr)
-		{
-			pixelWidth = _sprite.get_texture()->get_pixel_width();
-			pixelHeight = _sprite.get_texture()->get_pixel_height();
-		}
+		pixelWidth = _sprite.get_pixel_width();
+		pixelHeight = _sprite.get_pixel_height();
 
 		glm::mat4 scale = {
 			glm::vec4(_scale.x * pixelWidth, 0.f, 0.f, 0.f),
@@ -556,7 +553,7 @@ namespace Copium
 		quadCount++;
 	}
 
-	void Renderer::draw_quad(const glm::mat4& _transform, const Sprite& _sprite)
+	void Renderer::draw_quad(const glm::mat4& _transform, const Texture& _sprite)
 	{
 		if (quadIndexCount >= maxIndexCount)
 		{
@@ -569,10 +566,7 @@ namespace Copium
 
 		for (GLuint i = 1; i < graphics.get_texture_slot_index(); i++)
 		{
-			if (!_sprite.get_texture())
-				break;
-
-			if (graphics.get_texture_slots()[i] == _sprite.get_texture()->get_object_id())
+			if (graphics.get_texture_slots()[i] == _sprite.get_object_id())
 			{
 				textureIndex = (GLfloat) i;
 				break;
@@ -580,11 +574,11 @@ namespace Copium
 		}
 
 		// Change texture index only if ID retrieved is more than 0 (0 is white texture)
-		if (textureIndex == 0.f && _sprite.get_sprite_id() != 0)
+		if (textureIndex == 0.f && _sprite.get_object_id() != 0)
 		{
 			// Add new texture into the texture slot
 			textureIndex = (GLfloat) graphics.get_texture_slot_index();
-			graphics.get_texture_slots()[graphics.get_texture_slot_index()] = _sprite.get_texture()->get_object_id();
+			graphics.get_texture_slots()[graphics.get_texture_slot_index()] = _sprite.get_object_id();
 			graphics.set_texture_slot_index((GLuint)textureIndex + 1);
 		}
 
@@ -592,7 +586,7 @@ namespace Copium
 		{
 			quadBufferPtr->pos = _transform * quadVertexPosition[i];
 			quadBufferPtr->textCoord = quadTextCoord[i];
-			quadBufferPtr->color = _sprite.get_color();
+			//quadBufferPtr->color = _sprite.get_color();
 			quadBufferPtr->texID = textureIndex;
 			quadBufferPtr++;
 		}

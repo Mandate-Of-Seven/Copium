@@ -216,6 +216,7 @@ namespace Copium
 			std::cout << _file->get_name() << " is not a .wav file!\n";
 		}
 	}
+
 	void unload_audio(File* _file)
 	{
 		if (_file->extension() == ".wav")

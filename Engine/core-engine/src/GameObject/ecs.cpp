@@ -32,7 +32,6 @@ namespace Copium
 		}
 	}
 
-
 	void EntityComponentSystem::CallbackGetEntityActive(GetEntityActiveEvent* pEvent)
 	{
 		pEvent->active = GetActive(pEvent->id);
