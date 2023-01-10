@@ -21,7 +21,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Graphics/graphics-system.h"
 #include "Files/assets-system.h"
 #include "Editor/editor-system.h"
-#include "../Debugging/frame-rate-controller.h"
+#include "Debugging/frame-rate-controller.h"
 #include "Windows/windows-input.h"
 
 // Bean: remove this after NewManagerInstance is moved
@@ -30,6 +30,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "GameObject/Components/collider-components.h"
 #include "SceneManager/scene-manager.h"
 #include "Math/math-library.h"
+#include "Graphics/fonts.h"
 
 namespace Copium
 {
@@ -208,10 +209,18 @@ namespace Copium
 			else
 				toggleAnim = false;
 
+			int count = 0;
+
 			for (GameObject* gameObject : scene->gameObjects)
 			{
 				if (!gameObject->isActive())
 					continue;
+
+				// If the object isnt within the frustum
+				if (!camera->withinFrustum(gameObject->transform.position, gameObject->transform.scale))
+					continue;
+
+				count++;
 
 				for (Component* component : gameObject->getComponents<SpriteRenderer>())
 				{
@@ -317,6 +326,8 @@ namespace Copium
 					text->render(camera);
 				}
 			}
+
+			//PRINT("Num of Rendered GO: " << count);
 		}
 
 		// Bean : Testing Text
@@ -354,6 +365,10 @@ namespace Copium
 		{
 			for (GameObject* gameObject : scene->gameObjects)
 			{
+				// If the object isnt within the frustum
+				if (!camera->withinFrustum(gameObject->transform.position, gameObject->transform.scale))
+					continue;
+
 				for (Component* component : gameObject->getComponents<BoxCollider2D>())
 				{
 					if (!component->Enabled())
@@ -453,13 +468,13 @@ namespace Copium
 		}*/
 
 		glm::vec2 scale = glm::vec2(1.f, 1.f);
-		glm::vec3 pos = glm::vec3(0.f, 3.f, 0.f);
+		glm::vec3 pos = glm::vec3(-10.f, 3.f, 0.f);
 		glm::vec4 color = glm::vec4(1.f, 1.f, 1.f, 1.f);
 
 		static int count = 0;
 
 		if (inputSystem->is_key_held(68))
-			count += 10;
+			count++;
 
 		int posX = -100, posY = 100;
 		for (int i = 0; i < count; i++)
@@ -476,10 +491,11 @@ namespace Copium
 		}
 
 		//PRINT("Count: " << count);
-
 		renderer.end_batch();
 
 		renderer.flush();
 
+		/*Font* font = Font::getFont("corbel");
+		font->draw_text("Lorem ipsum dolor sit amet", pos, color, 0.3f, 0, camera);*/
 	}
 }

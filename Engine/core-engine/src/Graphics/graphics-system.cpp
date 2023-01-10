@@ -98,6 +98,28 @@ namespace Copium
 			massSpawn = !massSpawn;
 		}
 
+		if (inputSystem.is_key_held(GLFW_KEY_C) && inputSystem.is_key_pressed(GLFW_KEY_V))
+		{
+			SceneManager* sm = SceneManager::Instance();
+			Scene* scene = sm->get_current_scene();
+			if (scene != nullptr)
+			{
+				for (size_t i = 0; i < 10; i++)
+				{
+					GameObject* go = MyGOF.instantiate();
+					go->addComponent(ComponentType::SpriteRenderer);
+					//go->addComponent(ComponentType::Rigidbody);
+
+					float x = rand() % 2000 * 0.1f - 100.f;
+					float y = rand() % 2000 * 0.1f - 100.f;
+
+					go->transform.position = { x, y, 0.f };
+					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->getComponent(ComponentType::SpriteRenderer));
+					rc->get_sprite_renderer().set_sprite_id(rand() % 7 + 15);
+				}
+			}
+		}
+
 		// Mass spawning
 		if (massSpawn)
 		{
