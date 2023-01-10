@@ -88,6 +88,9 @@ namespace Copium
 		width = _width;
 		height = _height;
 
+		// For frustum culling
+		updateFrustum();
+
 		//pitch = 0.f;
 		//yaw = 0.f;
 
@@ -134,6 +137,8 @@ namespace Copium
 
 	void BaseCamera::draw_camera()
 	{
+		updateFrustum();
+
 		if (cameraType == CameraType::GAME && !editorSystem.is_enabled())
 		{
 			draw.update(cameraType);
@@ -161,7 +166,7 @@ namespace Copium
 
 	glm::vec3 BaseCamera::get_up_direction() const
 	{
-		return glm::rotate(get_orientation(), glm::vec3(0.f, 1.f, 0.f));
+		return glm::rotate(get_orientation(), glm::vec3(0.f, -1.f, 0.f));
 	}
 
 	glm::vec3 BaseCamera::get_forward_direction() const
@@ -211,8 +216,30 @@ namespace Copium
 
 		mouseToNDC *= orthographicSize;
 		glm::vec2 worldNDC = { mouseToNDC.x + viewer.x, mouseToNDC.y + viewer.y };
-		//PRINT("~: " << worldNDC.x << ", " << worldNDC.y);
+		PRINT("~: " << worldNDC.x << ", " << worldNDC.y);
 		return worldNDC;
+	}
+
+	bool BaseCamera::withinFrustum(const glm::vec3& _position, const glm::vec3& _scale, bool _overlap)
+	{
+		float left = _overlap ? frustumBottom.x - _scale.x : frustumBottom.x;
+		float right = _overlap ? frustumTop.x + _scale.x : frustumTop.x;
+		float top = _overlap ? frustumTop.y + _scale.y : frustumTop.x;
+		float bottom = _overlap ? frustumBottom.y - _scale.y : frustumBottom.y;
+
+		//PRINT("Frustum Dimensions: " << left << " " << right << " " << top << " " << bottom);
+
+		// Checks to verify that the object is within the frustum
+		if (_position.x - _scale.x * 0.5f < left) // Left-most
+			return false;
+		if (_position.x + _scale.x * 0.5f > right) // Right-most
+			return false;
+		if (_position.y + _scale.y * 0.5f > top) // Top-most
+			return false;
+		if (_position.y - _scale.y * 0.5f < bottom) // Bottom-most
+			return false;
+
+		return true;
 	}
 
 	void BaseCamera::on_resize(float _width, float _height)
@@ -252,6 +279,20 @@ namespace Copium
 		// Update view projection matrix
 		viewProjMatrix = projMatrix * viewMatrix;
 		//viewProjMatrix = viewMatrix * projMatrix;
+	}
+
+	void BaseCamera::updateFrustum()
+	{
+		// Calculate the view frustum using the camera's dimensions and zoom level
+		glm::vec2 bottomLeft = glm::vec2(- width / height, -1.f ) * orthographicSize;
+		glm::vec2 topRight = glm::vec2(width / height, 1.f) * orthographicSize;
+
+		// Include the margin and the camera's current position
+		glm::vec2 bottomMargin = glm::vec2(focalPoint.x - frustumMargin, focalPoint.y - frustumMargin);
+		glm::vec2 topMargin = glm::vec2(focalPoint.x + frustumMargin, focalPoint.y + frustumMargin);
+
+		frustumBottom = bottomLeft + bottomMargin;
+		frustumTop = topRight + topMargin;
 	}
 
 	glm::vec3 BaseCamera::calculate_position()

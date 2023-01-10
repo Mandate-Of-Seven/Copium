@@ -123,9 +123,12 @@ namespace Copium
 
 	void EditorCamera::mouse_controls()
 	{
-		glm::vec2 worldNDC = get_ndc();
+		Math::Vec2 mousePos = inputSystem.get_mouseposition();
+		//PRINT("Mouse position: " << mousePos.x << " " << mousePos.y);
+		//PRINT("NDC: " << get_ndc().x << " " << get_ndc().y);
+		glm::vec2 worldNDC = get_ndc() - glm::vec2(viewer.x , viewer.y);
 		glm::vec2 delta = (worldNDC - mousePosition) * 4.f;
-		
+
 		mousePosition = worldNDC;
 
 		// Movement using right click and drag
@@ -133,19 +136,22 @@ namespace Copium
 		{
 			ImGui::SetWindowFocus("Scene View");
 			glm::vec2 speed = get_pan_speed();
-			focalPoint += -get_up_direction() * delta.y * speed.y;
-			focalPoint += -get_right_direction() * delta.x * speed.x;
-			
+			glm::vec3 point = focalPoint;
+			point += get_up_direction() * delta.y * speed.y;
+			point += -get_right_direction() * delta.x * speed.x;
+
 			// Bean: shouldnt be necessary here
 			// Clamping camera within boundary
-			focalPoint.x = std::clamp(focalPoint.x, -100.f, 100.f);
-			focalPoint.y = std::clamp(focalPoint.y, -100.f, 100.f);
+			point.x = std::clamp(point.x, -100.f, 100.f);
+			point.y = std::clamp(point.y, -100.f, 100.f);
+
+			focalPoint = point;
 		}
 		else
-		{
 			ImGui::SetWindowFocus();
-		}
 
+		//PRINT("Camera Pos: " << focalPoint.x << " " << focalPoint.y);
+			 
 		//if (inputSystem.is_key_held(GLFW_KEY_LEFT_CONTROL))
 		//{
 		//	glm::vec2 speed = get_pan_speed();
