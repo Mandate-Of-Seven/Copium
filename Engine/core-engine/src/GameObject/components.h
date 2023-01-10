@@ -147,7 +147,7 @@ namespace Copium
 		glm::vec2 size{ 0 };		// The size of the sprite in pixels ( Bean: different from the scale of the gameobject )
 		glm::vec4 color{ 1 };		// The blended color of this sprite
 		unsigned int spriteID = 0; // The index of the sprite
-		Texture* refTexture; // Pointer to the texture
+		const Texture* refTexture; // Pointer to the texture
 		bool isAddingSprite;
 	};
 

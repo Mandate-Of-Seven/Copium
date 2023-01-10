@@ -136,7 +136,7 @@ namespace Copium
 		/**************************************************************************/
 		void load_all_shaders(std::list<std::string>& _path);
 
-		const std::vector<Texture>& get_textures() { return textures; }
+		std::vector<Texture>& get_textures() { return textures; }
 		Texture* get_texture(unsigned int const& _index)
 		{
 			if (_index >= textures.size())

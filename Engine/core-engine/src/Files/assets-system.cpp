@@ -61,7 +61,7 @@ namespace Copium
 
 	void AssetsSystem::load_file(File* _file)
 	{
-		FILE_TYPE type = _file->get_file_type().fileType;
+		FileType type = _file->fileType;
 
 		switch (type)
 		{
@@ -94,7 +94,7 @@ namespace Copium
 
 	void AssetsSystem::unload_file(File* _file)
 	{
-		FILE_TYPE type = _file->get_file_type().fileType;
+		FileType type = _file->fileType;
 
 		switch (type)
 		{

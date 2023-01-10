@@ -29,6 +29,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 namespace Copium
 {
+
 	/**************************************************************************/
 	/*!
 	\brief
@@ -79,14 +80,6 @@ namespace Copium
 		*/
 		/*******************************************************************************/
 		void Exit();
-
-		/*******************************************************************************
-		/*!
-		\brief
-			Initializes all file types that was retrieve from the configuration files
-		*/
-		/*******************************************************************************/
-		void init_file_types();
 
 		/*******************************************************************************
 		/*!
@@ -216,8 +209,7 @@ namespace Copium
 
 		const unsigned int& get_indexes() const { return indexes; }
 
-		const FileType& get_file_type(std::string const& _ext) { return fileTypes[_ext]; }
-		std::unordered_map<FILE_TYPE, std::list<File*>>& get_file_references() { return files; }
+		std::unordered_map<FileType, std::list<File*>>& get_file_references() { return files; }
 
 		File* get_selected_file() { return selectedFile; }
 		void set_selected_file(File* _file) { selectedFile = _file; }
@@ -355,8 +347,7 @@ namespace Copium
 		std::list<std::string> assetsPath;
 		Directory assetsDirectory;
 		unsigned int indexes = 0; // Number of file & directory instances
-		std::unordered_map<std::string, FileType> fileTypes;
-		std::unordered_map<FILE_TYPE, std::list<File*>> files; // A list of files in their categories
+		std::unordered_map<FileType, std::list<File*>> files; // A list of files in their categories
 		File* selectedFile = nullptr;
 		Directory* selectedDirectory = nullptr;
 	};

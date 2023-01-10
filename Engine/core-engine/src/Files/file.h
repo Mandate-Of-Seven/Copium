@@ -19,7 +19,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
-	enum FILE_TYPE
+	enum FileType
 	{
 		FOLDER, // For empty file type
 		AUDIO,
@@ -34,23 +34,24 @@ namespace Copium
 		NUM_TYPES
 	};
 
-	struct FileType
+	static std::unordered_map<std::string, FileType> fileTypes
 	{
-		std::string stringType;
-		FILE_TYPE fileType{};
+		{"", FileType::FOLDER},
+		{".wav", FileType::AUDIO },
+		{".theme", FileType::CONFIG},
+		{".json", FileType::CONFIG},
+		{".ttf", FileType::FONT},
+		{".scene", FileType::SCENE}, // Bean: change to .scene in the future
+		{".cs", FileType::SCRIPT},
+		{".vert", FileType::SHADER}, // Bean: change to .shader in the future
+		{".frag", FileType::SHADER},
+		{".png", FileType::SPRITE},
+		{".txt", FileType::TEXT}
 	};
 
 	class File final : public std::filesystem::path
 	{
 	public:
-		/*******************************************************************************
-		/*!
-		\brief
-			Constructor of a file to use std::filesystem constructor
-		*/
-		/*******************************************************************************/
-		File();
-
 		/*******************************************************************************
 		/*!
 		\brief
@@ -97,14 +98,15 @@ namespace Copium
 		/*******************************************************************************/
 		void inspector_view();
 
+		File& operator=(const File& rhs);
+
 		const unsigned int& get_id() const { return instanceID; }
 		void set_id(unsigned int const& _id) { instanceID = _id; }
 
 		const std::string& get_name() const { return name; }
 		void set_name(std::string const& _name) { name = _name; }
 
-		const FileType& get_file_type() const { return fileType; }
-		void set_file_type(FileType const& _fileType) { fileType = _fileType; }
+		const FileType fileType; // The type of file
 
 	private:
 		unsigned int instanceID = 0; // The id to reference for the asset
@@ -112,8 +114,6 @@ namespace Copium
 
 		bool modified = false;
 		time_t lastModifiedTime = 0;
-
-		FileType fileType; // The type of file
 	};
 }
 

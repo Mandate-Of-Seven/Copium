@@ -36,8 +36,6 @@ namespace Copium
 	void FileSystem::Init()
 	{
 		systemFlags |= FLAG_RUN_ON_EDITOR;
-
-		init_file_types();
 		
 		// Instance ID of assets directory is always preset to a default ID
 		generate_directories(&assetsDirectory, Paths::assetPath);
@@ -47,21 +45,6 @@ namespace Copium
 		/*PRINT("");
 		print_directories(assetsDirectory, 0);
 		PRINT("");*/
-	}
-
-	void FileSystem::init_file_types()
-	{
-		fileTypes.emplace(std::make_pair("", FileType("Folder", FOLDER)));
-		fileTypes.emplace(std::make_pair(".wav", FileType("Audio", AUDIO)));
-		fileTypes.emplace(std::make_pair(".theme", FileType("Config", CONFIG)));
-		fileTypes.emplace(std::make_pair(".json", FileType("Config", CONFIG)));
-		fileTypes.emplace(std::make_pair(".ttf", FileType("Font", FONT)));
-		fileTypes.emplace(std::make_pair(".scene", FileType("Scene", SCENE))); // Bean: change to .scene in the future
-		fileTypes.emplace(std::make_pair(".cs", FileType("Script", SCRIPT)));
-		fileTypes.emplace(std::make_pair(".vert", FileType("Shader", SHADER))); // Bean: change to .shader in the future
-		fileTypes.emplace(std::make_pair(".frag", FileType("Shader", SHADER)));
-		fileTypes.emplace(std::make_pair(".png", FileType("Sprite", SPRITE)));
-		fileTypes.emplace(std::make_pair(".txt", FileType("Text", TEXT)));
 	}
 
 	void FileSystem::accept_dropped_files(int _pathCount, const char* _paths[])
@@ -169,7 +152,6 @@ namespace Copium
 					File file(path);
 					file.set_id(DEFAULT_INSTANCE_ID + indexes++);
 					file.set_name(path.stem().string());
-					file.set_file_type(get_file_type(path.extension().string()));
 					_directory->add_files(file);
 				}
 
@@ -285,7 +267,6 @@ namespace Copium
 							File file(path);
 							file.set_id(DEFAULT_INSTANCE_ID + indexes++);
 							file.set_name(path.stem().string());
-							file.set_file_type(get_file_type(path.extension().string()));
 							_directory->add_files(file);
 							add_file_reference(&_directory->get_files().back());
 
@@ -624,7 +605,7 @@ namespace Copium
 	{
 		for (auto& fileEntry : _directory->get_files())
 		{
-			files[fileEntry.get_file_type().fileType].push_back(&fileEntry);
+			files[fileEntry.fileType].push_back(&fileEntry);
 		}
 
 		for (auto dirEntry : _directory->get_child_directory())
@@ -635,13 +616,13 @@ namespace Copium
 
 	void FileSystem::add_file_reference(File* _file)
 	{
-		files[_file->get_file_type().fileType].push_back(_file);
+		files[_file->fileType].push_back(_file);
 		assets.load_file(_file);
 	}
 
 	void FileSystem::remove_file_reference(File* _file)
 	{
-		files[_file->get_file_type().fileType].remove(_file);
+		files[_file->fileType].remove(_file);
 		assets.unload_file(_file);
 	}
 }

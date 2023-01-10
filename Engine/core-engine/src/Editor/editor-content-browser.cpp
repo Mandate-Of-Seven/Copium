@@ -37,6 +37,62 @@ namespace Copium
 		//std::filesystem::path currentDirectory;
 
 		std::vector<Texture> icons;
+
+		template<typename T>
+		T* GetDragData(File& rFile)
+		{
+			COPIUM_ASSERT(true, "CLASS ASSOCIATED WITH FILE IS NOT REGISTERED");
+			return nullptr;
+		}
+
+		template<>
+		Texture* GetDragData<Texture>(File& rFile)
+		{
+			for (Texture& texture : assetSys.get_textures())
+			{
+				if (rFile == texture.get_file_path())
+				{
+					return &texture;
+				}
+			}
+			return nullptr;
+		}
+
+		template<typename T>
+		void DisplayDragDropFile(File& rFile)
+		{
+			T* data = GetDragData<T>(rFile);
+			if (!data)
+				return;
+			ImGui::SetDragDropPayload(typeid(T).name(),data,sizeof(void*));
+		}
+
+		void DragFile(File& rFile)
+		{
+			switch (rFile.fileType)
+			{
+				case Copium::AUDIO:
+					break;
+				case Copium::FONT:
+					break;
+				case Copium::SCENE:
+					break;
+				case Copium::SCRIPT:
+					break;
+				case Copium::SHADER:
+					break;
+				case Copium::SPRITE:
+				{
+					DisplayDragDropFile<Texture>(rFile);
+					break;
+				}
+				case Copium::TEXT:
+					break;
+				default:
+					PRINT("UNKNOWN FILE TYPE");
+					break;
+			}
+		}
 	}
 
 	void EditorContentBrowser::Init()
@@ -145,49 +201,45 @@ namespace Copium
 
 				// Get the image icon
 				unsigned int objectID = icons[1].get_object_id();
-				for (unsigned int i = 0; i < assetSys.get_textures().size(); i++)
-				{
-					std::string texturePath;
-					switch (file.get_file_type().fileType)
-					{
-					case Copium::AUDIO:
-						break;
-
-					case Copium::FONT:
-						break;
-
-					case Copium::SCENE:
-						objectID = icons[2].get_object_id();
-						imageAR = 1.f;
-						framePadding = 3.f;
-						break;
-
-					case Copium::SCRIPT:
-						break;
-
-					case Copium::SHADER:
-						break;
-
-					case Copium::SPRITE:
-						texturePath = assetSys.get_texture(i)->get_file_path();
-						if (!file.generic_string().compare(texturePath))
-						{
-							Texture* temp = assetSys.get_texture(i);
-							objectID = temp->get_object_id();
-							float asRatio = temp->get_width() / (float)temp->get_height();
-							imageAR = thumbnailSize / ((asRatio > 0.98f && asRatio < 1.f) ? 1.f : asRatio);
-							imageAR /= thumbnailSize;
-							framePadding = (thumbnailSize - thumbnailSize * imageAR) * 0.5f + 3.f;
-						}
-						break;
-
-					case Copium::TEXT:
-						objectID = icons[1].get_object_id();
-						imageAR = 1.f;
-						framePadding = 3.f;
-						break;
-					}
-				}
+				//for (unsigned int i = 0; i < assetSys.get_textures().size(); i++)
+				//{
+				//	PRINT("WOT");
+				//	std::string texturePath;
+				//	switch (file.fileType)
+				//	{
+				//	case Copium::AUDIO:
+				//		break;
+				//	case Copium::FONT:
+				//		break;
+				//	case Copium::SCENE:
+				//		objectID = icons[2].get_object_id();
+				//		imageAR = 1.f;
+				//		framePadding = 3.f;
+				//		break;
+				//	case Copium::SCRIPT:
+				//		break;
+				//	case Copium::SHADER:
+				//		break;
+				//	case Copium::SPRITE:
+				//		texturePath = assetSys.get_texture(i)->get_file_path();
+				//		if (!file.generic_string().compare(texturePath))
+				//		{
+				//			Texture* temp = assetSys.get_texture(i);
+				//			objectID = temp->get_object_id();
+				//			float asRatio = temp->get_width() / (float)temp->get_height();
+				//			imageAR = thumbnailSize / ((asRatio > 0.98f && asRatio < 1.f) ? 1.f : asRatio);
+				//			imageAR /= thumbnailSize;
+				//			framePadding = (thumbnailSize - thumbnailSize * imageAR) * 0.5f + 3.f;
+				//			//DisplayDragDropFile<GetFileType<Copium::SPRITE>::TYPE>(file);
+				//		}
+				//		break;
+				//	case Copium::TEXT:
+				//		objectID = icons[1].get_object_id();
+				//		imageAR = 1.f;
+				//		framePadding = 3.f;
+				//		break;
+				//	}
+				//}
 
 				ImTextureID icon = (ImTextureID)(size_t)objectID;
 				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
@@ -197,11 +249,7 @@ namespace Copium
 
 				if (ImGui::BeginDragDropSource())
 				{
-					
-					std::string str = file.generic_string();
-					const char* filePath = str.c_str();
-					ImGui::SetDragDropPayload("ContentBrowserItem", filePath, str.size() + 1);
-
+					DragFile(file);
 					ImGui::EndDragDropSource();
 				}
 

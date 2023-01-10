@@ -41,15 +41,44 @@ namespace Window
         void Display(const char* name, T& val);
 
         template <typename T>
+        void DisplayPointer(T*& container)
+        {
+            PRINT("NO");
+            static std::string buttonName{};
+            buttonName = '(';
+            buttonName += typeid(T).name() + strlen("class Copium::");
+            buttonName += ')';
+            ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
+        }
+
+        template <>
+        void DisplayPointer<Texture>(Texture*& container)
+        {
+            PRINT("YES");
+            static std::string buttonName{};
+            buttonName = container->get_file_path();
+            ////PRINT(container->get_file_path());
+            //buttonName += '(';
+            //buttonName += typeid(Texture).name() + strlen("class Copium::");
+            //buttonName += ')';
+            //ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
+        }
+
+        template <typename T>
         void DisplayType(const char* name, T*& container)
         {
+            static std::string buttonName{};
             if (container == nullptr)
+            {
+                buttonName = "Empty";
+                buttonName += '(';
+                buttonName += typeid(T).name() + strlen("class Copium::");
+                buttonName += ')';
                 ImGui::Button("Empty", ImVec2(-FLT_MIN, 0.f));
+            }
             else
             {
-                static std::string buttonName{};
-                buttonName = name;
-                ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
+                DisplayPointer<T>(container);
             }
 
             if (ImGui::BeginDragDropTarget())
@@ -99,8 +128,6 @@ namespace Window
                 }
             }
         }
-
-
 
         void DisplayType(const char* name, Math::Vec3& val)
         {

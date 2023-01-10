@@ -21,17 +21,22 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 // Bean: Temporary for executing file
 //#include <shellapi.h>
 
+namespace Utils
+{
+	
+}
+
 namespace Copium
 {
-	File::File() : std::filesystem::path()
+	File::File(const std::filesystem::path& pathRef) :
+		std::filesystem::path(pathRef), fileType(fileTypes[pathRef.extension().string()])
 	{
-
 		modified = true;
 	}
 
-	File::File(const std::filesystem::path& pathRef) : std::filesystem::path(pathRef)
+	File& File::operator=(const File& rhs)
 	{
-		modified = true;
+		return *this;
 	}
 
 	bool File::is_modified()
@@ -57,7 +62,7 @@ namespace Copium
 
 	void File::access_file()
 	{
-		if (fileType.fileType == SCENE)
+		if (fileType == SCENE)
 		{
 			//if (Copium::SceneManager::Instance().get_current_scene() != nullptr)
 			//{
@@ -77,7 +82,7 @@ namespace Copium
 			PRINT("Opening file: " << filename().string() << "...");
 		}
 
-		/*switch (fileType.fileType)
+		/*switch (fileType)
 		{
 		case AUDIO:
 			break;
@@ -117,7 +122,8 @@ namespace Copium
 			ImGui::TableNextRow();
 			ImGui::TableNextColumn();
 
-			str = "File type: " + fileType.stringType;
+			str = "File type: ";
+			str += typeid(fileType).name();
 			ImGui::Text(str.c_str());
 
 			ImGui::EndTable();
