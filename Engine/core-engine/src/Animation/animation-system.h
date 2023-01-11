@@ -20,14 +20,21 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include <vector>
 
 #include "CopiumCore/system-interface.h"
-
 #include "GameObject/Components/component.h"
+#include "Animation/animation-struct.h"
 
 namespace Copium
 {
     class Animator : public Component
     {
     public:
+
+
+        enum class AnimatorStatus : char
+        {
+            idle = 0, 
+            playing
+        };
         /***************************************************************************/
         /*!
         \brief
@@ -73,10 +80,30 @@ namespace Copium
         */
         /**************************************************************************/
         //void deserialize(rapidjson::Value& _value);
+
+        void update(float _dt);
+
+        std::vector<Animation>& get_animation_vector() { return animations; }
+
+        bool IsEmpty() const { return animations.empty(); }
+
+        void AddAnimation();
+        void PlayAnimation();
+
+        Animation* GetCurrentAnimation() 
+        { 
+            if (IsEmpty())
+                return nullptr;
+            return &animations[currentAnimationIndex]; 
+        }
+
     protected:
-        std::vector<int> animations;    // The indices of the animations inside the assets-system
+        std::vector<Animation> animations;    // The indices of the animations inside the assets-system
         int currentAnimationIndex;      // Current playing animation
         int startingAnimationIndex;     // The first animation that is playing
+        unsigned int animationCount;
+        bool loop;
+        AnimatorStatus status;
     };
 
     /*

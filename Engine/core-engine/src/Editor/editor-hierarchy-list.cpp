@@ -211,6 +211,38 @@ namespace Copium
 				}
 			}
 
+
+			//for (Scene* sc : sm->GetSceneVector())
+			//{
+			//	if (sc->get_filename().empty())
+			//	{
+			//		sceneName = sc->get_name();
+			//	}
+			//	else
+			//	{
+			//		size_t offset = sc->get_filename().find_last_of("/\\");
+			//		size_t endOffset = sc->get_filename().find(".scene") - 1;
+			//		sceneName = sc->get_filename().substr(offset + 1, endOffset - offset);
+			//		if (sc->get_state() == Copium::Scene::SceneState::play)
+			//		{
+			//			sceneName += "\t PREVIEWING";
+			//		}
+			//	}
+
+			//	// Display scene name as the rootiest node
+			//	if (ImGui::TreeNodeEx(sceneName.c_str(), rootFlags))
+			//	{
+
+			//		bool isSelected = false;
+			//		for (size_t i{ 0 }; i < roots.size(); ++i)
+			//		{
+			//			display_gameobject(*(roots[i]), selectedID, roots, i);
+
+			//		}
+
+			//		ImGui::TreePop();
+			//	}
+			//}
 			// Display scene name as the rootiest node
 			if (ImGui::TreeNodeEx(sceneName.c_str(), rootFlags))
 			{

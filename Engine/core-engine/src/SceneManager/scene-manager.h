@@ -169,6 +169,20 @@ namespace Copium {
 		*/
 		/*******************************************************************************/
 		Scene* get_current_scene();
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Set the current scene
+
+		\param _src
+			pointer to the scene to be set as current scene
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
 		void set_current_scene(Scene* _src);
 
 		/*******************************************************************************
@@ -267,6 +281,8 @@ namespace Copium {
 		/*******************************************************************************/
 		Scene* get_storage_scene();
 
+		std::vector<Scene*>& GetSceneVector() { return scenes; }
+
 		GameObject* selectedGameObject;
 		Camera* mainCamera{nullptr};
 
@@ -276,6 +292,7 @@ namespace Copium {
 		rapidjson::Document document;
 		std::string sceneFilePath;
 		Scene::SceneState currSceneState;
+		std::vector<Scene*> scenes;
 	};
 
 	/*******************************************************************************

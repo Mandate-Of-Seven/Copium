@@ -17,6 +17,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include <vector>
 #include "Math/math-library.h"
+#include "Graphics/spritesheet.h"
 
 namespace Copium
 {
@@ -29,8 +30,16 @@ namespace Copium
 
 	struct Animation
 	{
-		std::vector<Frame> frames;	// Container which stores all the frames of the animation
-		int currentFrameIndex;		// Current frame that is playing
+
+		Spritesheet spriteSheet;
+		float timer, timeDelay;
+		int frameCount, currentFrameIndex;
+
+		Animation();
+		bool UpdateFrame(float _dt);
+		void IncrementFrame();
+		void ResetFrame();
+
 	};
 }
 

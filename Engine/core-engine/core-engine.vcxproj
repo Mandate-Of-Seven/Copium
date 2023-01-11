@@ -99,6 +99,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Animation\animation-struct.cpp" />
     <ClCompile Include="src\Animation\animation-system.cpp" />
     <ClCompile Include="src\CopiumCore\uuid.cpp" />
     <ClCompile Include="src\Editor\editor-colortheme.cpp" />

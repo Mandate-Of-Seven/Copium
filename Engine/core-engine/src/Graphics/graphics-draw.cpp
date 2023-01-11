@@ -28,6 +28,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "GameObject/Components/renderer-component.h"
 #include "GameObject/Components/ui-components.h"
 #include "GameObject/Components/collider-components.h"
+#include "Animation/animation-system.h"
 #include "SceneManager/scene-manager.h"
 #include "Math/math-library.h"
 #include "Graphics/fonts.h"
@@ -251,7 +252,7 @@ namespace Copium
 					{
 						int animID = 1;
 						static GLuint animIndex = 0;
-						GLuint indexSize = assets->get_spritesheets()[animID].get_size() - 1;
+						GLuint indexSize = assets->get_spritesheets()[animID].size - 1;
 
 						GLfloat dt = (GLfloat) MyFrameRateController.getDt();
 						static float animTimer = 0.f;
@@ -270,11 +271,11 @@ namespace Copium
 						GLuint nid = 0;
 						for (GLuint i = 0; i < assets->get_textures().size(); ++i)
 						{
-							if (assets->get_textures()[i].get_object_id() == assets->get_spritesheets()[animID].get_texture().get_object_id())
+							if (assets->get_textures()[i].get_object_id() == assets->get_spritesheets()[animID].texture->get_object_id())
 								nid = i + 1;
 						}
 
-						renderer.draw_quad(t.position, size, 0.f, assets->get_spritesheets()[animID], animIndex, nid);
+						//renderer.draw_quad(t.position, size, 0.f, assets->get_spritesheets()[animID], animIndex, nid);
 					}
 					else if (gameObject->transform.hasParent())
 					{
@@ -324,6 +325,49 @@ namespace Copium
 
 					Text* text = reinterpret_cast<Text*>(component);
 					text->render(camera);
+				}
+
+				for (Component* component : gameObject->getComponents<Animator>())
+				{
+					Animator* animator = reinterpret_cast<Animator*>(component);
+					Animation* anim = animator->GetCurrentAnimation();
+					
+					//if(anim)
+					//	PRINT("bloopbloppp");
+
+					if (!anim)
+						continue;
+
+
+					unsigned int sid = anim->spriteSheet.spriteID - 1;
+					// The index of the texture must be less than the size of textures
+					if (sid != -1 && sid < assets->get_textures().size())
+					{
+						anim->spriteSheet.texture = assets->get_texture(sid);
+					}
+					else
+					{
+
+						anim->spriteSheet.spriteID = 0;
+						anim->spriteSheet.texture = nullptr;
+					}
+
+					if (!anim || !anim->spriteSheet.GetTexture())
+						continue;
+					PRINT("bloopbloop");
+					Transform& t = gameObject->transform;
+					unsigned int textureID = anim->spriteSheet.GetTexture()->get_id();
+					glm::vec2 size(t.scale.x, t.scale.y);
+
+					GLuint nid = 0;
+					for (GLuint i = 0; i < assets->get_textures().size(); ++i)
+					{
+						if (assets->get_textures()[i].get_object_id() == anim->spriteSheet.texture->get_object_id())
+							nid = i + 1;
+					}
+					//renderer.draw_quad(t.position, size, t.rotation.z, nid);
+					renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, 0, nid, anim->frameCount);
+
 				}
 			}
 
