@@ -104,6 +104,7 @@ namespace Copium
         ImGui::PopStyleVar();
         ImGui::End();
 
+        // Adding new components
         if (isAddingComponent)
         {
             ImGui::Begin("Add Component", &isAddingComponent);

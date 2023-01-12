@@ -45,10 +45,16 @@ namespace Copium
 		bool CheckIfExist(int& _layer, const GameObjectID& _id);
 
 		int GetEmptySlot(const int& _layer);
+
+		void EnableLayer(const int& _layer) { layerStatus[_layer] = true; }
+		void DisableLayer(const int& _layer) { layerStatus[_layer] = false; }
+		bool GetLayerStatus(const int& _layer) const { return layerStatus[_layer]; }
+
 	private:
-		const int defaultLayer = 0;								// The default layer in which objects when created will be added to
-		const int maxLayers = 32;								// Number of layers in the sorting layer system
-		const int maxObjects = 100;								// Number of objects in a layer
+		static const int defaultLayer = 0;						// The default layer in which objects when created will be added to
+		static const int maxLayers = 32;						// Number of layers in the sorting layer system
+		static const int maxObjects = 100;						// Number of objects in a layer
+		bool layerStatus[maxLayers];							// The current status of the layers in the engine, either enabled or disabled
 		std::map<int, std::vector<GameObjectID>> sortingLayer;	// The container which holds the layers which contains the gameobject's ID
 	};
 }

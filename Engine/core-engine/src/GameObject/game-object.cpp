@@ -283,7 +283,7 @@ void GameObject::handleMessage(MESSAGE_TYPE mType)
 
 void GameObject::inspectorView()
 {
-
+    // Gameobject Basic Information
     ImGui::Checkbox("##Active", &active);
     ImGui::SameLine();
     static char buffer[256];
@@ -292,6 +292,31 @@ void GameObject::inspectorView()
     ImGui::InputText("##gameObjName", buffer, 256);
     ImGui::PopItemWidth();
     name = buffer;
+
+    // Layer
+    ImGui::Text("Layer");
+    ImGui::SameLine();
+    
+    // Bean: This is temporary and should be referenced from the sorting layer editor
+    std::string items[] = { "Default", "Player", "UI", "Background" };
+    static int itemCurrentIdx = 0;
+    const char* previewItem = items[itemCurrentIdx].c_str();
+    if (ImGui::BeginCombo(" ", previewItem))
+    {
+        for (int i = 0; i < IM_ARRAYSIZE(items); i++)
+        {
+            const bool isSelected = (itemCurrentIdx == i);
+            if(ImGui::Selectable(items[i].c_str(), isSelected))
+                itemCurrentIdx = i;
+
+            // Bean: Change the gameobjects current layer
+            if(isSelected)
+                ImGui::SetItemDefaultFocus();
+        }
+        ImGui::EndCombo();
+    }
+
+    // Components
     ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
         | ImGuiTableFlags_ScrollY;
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);

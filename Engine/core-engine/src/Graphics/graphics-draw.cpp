@@ -186,15 +186,19 @@ namespace Copium
 
 		/*
 			Bean Theory:
-			For each gameobject, check if it has a renderer component
-				If it does:
-					Check if it is active
-						If not: Continue
-					Check if it has a spriteID of not 0 (default)
+			For each layer, check if it is enabled
+				If it is:
+					For each gameobject in the layer, check if it has a renderer component
 						If it does:
-							Render sprite with color
+							Check if it is active
+								If not: Continue
+							Check if it has a spriteID of not 0 (default)
+								If it does:
+									Render sprite with color
+								Else
+									Render default sprite (white texture) with color
 						Else
-							Render default sprite (white texture) with color
+							Continue
 				Else
 					Continue
 		*/

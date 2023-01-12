@@ -143,7 +143,29 @@ void Transform::inspector_view()
             ImGui::PushID(0);
             ImGui::AlignTextToFramePadding();
             ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-            ImGui::DragFloat("", &position.x, 0.15f);
+
+            //std::string number = std::to_string(position.x);
+            //PRINT("Number : " << number);
+            //int pos = number.find_first_of(".");
+            //int firstZero = number.find_first_of("0");
+            //int length = 0;
+            //// Only check if the zero is after the decimal place
+            //if (firstZero > pos)
+            //{
+            //    int lastZero = number.find_last_of("0");
+            //    if (lastZero != number.size() - 1) // Ensure it is not the last digit
+            //    {
+            //        length = number.size() - pos;
+            //    }
+            //    else
+            //    {
+            //        length = firstZero - pos - 1;
+            //    }
+            //}
+            //std::string formatting = "%." + std::to_string(length) + "f";
+            //PRINT("Format: " << formatting);
+            std::string formatting = "%f";
+            ImGui::DragFloat("", &position.x, 0.15f, 0.f, 0.f, formatting.c_str());
             if (ImGui::IsItemActivated())
             {
                 temp = position.x;

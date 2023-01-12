@@ -25,6 +25,8 @@ namespace Copium
 			sortingLayer.emplace(
 				std::make_pair(i, std::vector<GameObjectID>(maxObjects))
 			);
+
+			layerStatus[i] = true;
 		}
 	}
 
