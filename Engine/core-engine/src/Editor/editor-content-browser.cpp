@@ -52,6 +52,7 @@ namespace Copium
 			{
 				if (rFile == texture.get_file_path())
 				{
+					PRINT("FOUND TEXTURE");
 					return &texture;
 				}
 			}
@@ -61,10 +62,11 @@ namespace Copium
 		template<typename T>
 		void DisplayDragDropFile(File& rFile)
 		{
-			T* data = GetDragData<T>(rFile);
+			static void* data;
+			data = GetDragData<T>(rFile);
 			if (!data)
 				return;
-			ImGui::SetDragDropPayload(typeid(T).name(),data,sizeof(void*));
+			ImGui::SetDragDropPayload(typeid(T).name(),&data,sizeof(void*));
 		}
 
 		void DragFile(File& rFile)

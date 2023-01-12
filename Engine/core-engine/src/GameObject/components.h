@@ -52,41 +52,71 @@ namespace Copium
 	}
 
 	template <typename... Ts>
-	struct Pack{};
+	struct Pack {};
 
-	template<size_t ID, typename... Components>
+	template <typename Component>
+	using ComponentsArray = SparseSet<Component, MAX_ENTITIES>;
+	using ComponentsBitset = std::bitset<MAX_ENTITIES>;
+
+	template<typename Component, typename... Components>
 	struct ComponentGroup
 	{
-		using Types = Pack<Components...>;
+		using Types = Pack<Component,Components...>;
+
+		ComponentsArray<Component> components;
+		ComponentsBitset componentsBitset;
+		ComponentGroup<Components...> others;
 
 		template <typename T>
 		static constexpr bool Has()
 		{
-			return contains<T, Components...>();
+			return contains<T,Component, Components...>();
 		}
 
 		template <typename T>
-		static SparseSet<T, MAX_ENTITIES>& GetArray()
+		constexpr ComponentsArray<T>& GetArray()
 		{
-			static_assert(contains<T, Components...>());
-			static SparseSet<T, MAX_ENTITIES> components;
+			if constexpr (std::is_same<T, Component>())
+			{
+				return components;
+			}
+			else
+			{
+				return others.GetArray<T>();
+			}
+		}
+
+		template <typename T>
+		constexpr ComponentsBitset& GetBitset()
+		{
+			if constexpr (std::is_same<T, Component>())
+			{
+				return componentsBitset;
+			}
+			else
+			{
+				return others.GetBitset<T>();
+			}
+		}
+	};
+
+	template<typename Component>
+	struct ComponentGroup <Component>
+	{
+		ComponentsArray<Component> components;
+		ComponentsBitset componentsBitset;
+
+		template <typename T>
+		constexpr ComponentsArray<T>& GetArray()
+		{
 			return components;
 		}
 
 		template <typename T>
-		static void ComponentEnabled(EntityID entityID, bool* resultOrVal, bool setting = true)
+		constexpr ComponentsBitset& GetBitset()
 		{
-			static_assert(contains<T, Components...>());
-			static std::bitset<MAX_ENTITIES> componentsBitset;
-			if (setting)
-			{
-				PRINT("Setting " << typeid(T).name() << " to " << *resultOrVal);
-				componentsBitset.set(entityID, *resultOrVal);
-			}
-			{
-				*resultOrVal = componentsBitset.test(entityID);
-				PRINT("Getting " << typeid(T).name() << " = " << *resultOrVal);
-			}
+			static_assert(std::is_same<T, Component>());
+			return componentsBitset;
 		}
 	};
 
@@ -151,8 +181,7 @@ namespace Copium
 		bool isAddingSprite;
 	};
 
-	using MainComponents = ComponentGroup<0, Transform, BoxCollider2D, SpriteRenderer>;
-	using BackupComponents = ComponentGroup<1, Transform>;
+	using AllComponents = ComponentGroup<Transform, BoxCollider2D, SpriteRenderer>;
 
 	#define RegisterComponent(Type)template <> struct GetComponentType<Type>{static constexpr size_t e{ (size_t)ComponentType::Type }; };
 

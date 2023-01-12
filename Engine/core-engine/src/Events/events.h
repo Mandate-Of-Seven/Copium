@@ -54,6 +54,14 @@ namespace Copium
 	};
 
 	template <typename T>
+	struct GetComponentsEvent : public IEvent
+	{
+		GetComponentsEvent(EntityID _id, ComponentsArray<T>*& _pComponents) : id{ _id }, pComponents{ _pComponents }{}
+		EntityID id;
+		T*& pComponents;
+	};
+
+	template <typename T>
 	struct GetComponentEvent : public IEvent
 	{
 		GetComponentEvent(EntityID _id, T*& _pComponent) : id{ _id }, pComponent{ _pComponent }{}

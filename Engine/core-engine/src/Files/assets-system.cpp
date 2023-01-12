@@ -197,7 +197,7 @@ namespace Copium
 			std::string temp = path.substr(lastSlash + 1);
 			size_t lastDot = temp.find_last_of(".");
 			//std::cout << "Alias: " << temp.substr(0, lastDot) << "\n";
-			SoundSystem::Instance().CreateSound(path, temp.substr(0, lastDot));
+			//SoundSystem::Instance().CreateSound(path, temp.substr(0, lastDot));
 		}
 	}
 
@@ -208,8 +208,8 @@ namespace Copium
 			//std::cout << _file->get_name() << " "<<_file->filename();
 			std::string temp = _file->filename().string();
 			size_t lastDot = temp.find_last_of(".");
-			SoundSystem::Instance().CreateSound(_file->filename().string(), temp.substr(0,lastDot));
-			SoundSystem::Instance().SetVolume(temp.substr(0, lastDot), 1.0f);
+			//SoundSystem::Instance().CreateSound(_file->filename().string(), temp.substr(0,lastDot));
+			//SoundSystem::Instance().SetVolume(temp.substr(0, lastDot), 1.0f);
 		}
 		else
 		{

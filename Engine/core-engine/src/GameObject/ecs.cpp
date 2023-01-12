@@ -66,7 +66,7 @@ namespace Copium
 		MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackGetEntityByID);
 		MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackSetEntityActive);
 		MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackGetEntityActive);
-		SubscribeComponentCallbacks(MainComponents::Types());
+		SubscribeComponentCallbacks(AllComponents::Types());
 	}
 
 	void EntityComponentSystem::Update()

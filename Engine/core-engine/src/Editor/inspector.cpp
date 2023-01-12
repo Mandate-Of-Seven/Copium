@@ -36,32 +36,35 @@ namespace Window
     {
         using namespace Copium;
 
-
         template <typename T>
         void Display(const char* name, T& val);
 
         template <typename T>
-        void DisplayPointer(T*& container)
+        void DisplayPointer(T& container)
         {
-            PRINT("NO");
-            static std::string buttonName{};
-            buttonName = '(';
-            buttonName += typeid(T).name() + strlen("class Copium::");
-            buttonName += ')';
+            PRINT(typeid(T).name());
+            static std::string buttonName = std::string("(") + (typeid(T).name()+ strlen("class Copium::")) +")";
             ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
         }
 
         template <>
-        void DisplayPointer<Texture>(Texture*& container)
+        void DisplayPointer(const Texture& container)
         {
-            PRINT("YES");
             static std::string buttonName{};
-            buttonName = container->get_file_path();
-            ////PRINT(container->get_file_path());
-            //buttonName += '(';
-            //buttonName += typeid(Texture).name() + strlen("class Copium::");
-            //buttonName += ')';
-            //ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
+            const std::string& filePath{ container.get_file_path() };
+            size_t offset = filePath.find_last_of("/");
+            if (offset == std::string::npos)
+            {
+                buttonName = (filePath.c_str());
+            }
+            else
+            {
+                buttonName = (filePath.c_str() + offset + 1);
+            }
+            buttonName += '(';
+            buttonName += typeid(Texture).name() + strlen("class Copium::");
+            buttonName += ')';
+            ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
         }
 
         template <typename T>
@@ -78,7 +81,7 @@ namespace Window
             }
             else
             {
-                DisplayPointer<T>(container);
+                DisplayPointer(*container);
             }
 
             if (ImGui::BeginDragDropTarget())
@@ -86,6 +89,7 @@ namespace Window
                 const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(typeid(T).name());
                 if (payload)
                 {
+                    PRINT("SETTED");
                     container = (T*)(*reinterpret_cast<void**>(payload->Data));
                 }
                 ImGui::EndDragDropTarget();
@@ -269,7 +273,7 @@ namespace Window
                 ImGui::PushItemWidth(-1);
                 filter.Draw("##ComponentName");
                 ImGui::PopItemWidth();
-                open = !AddComponent(filter,entityID,MainComponents::Types());
+                open = !AddComponent(filter,entityID,AllComponents::Types());
 
                 /*for (auto& nameToScriptClass : scriptingSystem.getScriptFiles())
                 {
@@ -297,7 +301,7 @@ namespace Window
         template <typename T>
         void DisplayComponent(T& component)
         {
-            static_assert(MainComponents::Has<T>());
+            static_assert(AllComponents::Has<T>());
             PRINT("Component of type: " << typeid(T).name() << "does not exist yet! ");
         }
 
@@ -419,7 +423,7 @@ namespace Window
                 ImGui::TableNextColumn();
                 int index = 0;
                 ImGui::PushID(index++);
-                DisplayComponents(entityID,MainComponents::Types());
+                DisplayComponents(entityID,AllComponents::Types());
                 ImGui::PopID();
                 ImGui::EndTable();
             }
