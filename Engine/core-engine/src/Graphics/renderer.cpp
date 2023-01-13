@@ -310,7 +310,7 @@ namespace Copium
 
 			if (graphics->get_texture_slot_index() > 8)
 			{
-				graphics->set_texture_slot_index(1);
+				
 				flush();
 				
 			}
@@ -318,7 +318,7 @@ namespace Copium
 			glDrawElements(GL_TRIANGLES, quadIndexCount, GL_UNSIGNED_SHORT, NULL);
 			drawCount++;
 
-			
+			graphics->set_texture_slot_index(1);
 			glBindVertexArray(0);
 			graphics->get_shader_program()[QUAD_SHADER].UnUse();
 			glDisable(GL_BLEND);
