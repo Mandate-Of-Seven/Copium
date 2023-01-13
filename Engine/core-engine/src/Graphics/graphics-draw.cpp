@@ -366,7 +366,7 @@ namespace Copium
 							nid = i + 1;
 					}
 					//renderer.draw_quad(t.position, size, t.rotation.z, nid);
-					renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, 0, nid, anim->frameCount);
+					renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex, nid, anim->frameCount);
 
 				}
 			}

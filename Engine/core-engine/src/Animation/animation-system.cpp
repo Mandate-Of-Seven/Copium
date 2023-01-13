@@ -17,8 +17,15 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 
 #include "Animation/animation-system.h"
+#include "SceneManager/scene-manager.h"
+#include "Debugging/frame-rate-controller.h"
 #include "Files/assets-system.h"
 #define MAX_ANIMATION_COUNT 5
+
+namespace
+{
+	Copium::SceneManager* sm= Copium::SceneManager::Instance();
+}
 
 namespace Copium
 {
@@ -158,6 +165,7 @@ namespace Copium
 
 	void Animator::update(float _dt)
 	{
+
 		for (Animation& anim : animations)
 		{
 			if (anim.UpdateFrame(_dt))
@@ -166,7 +174,41 @@ namespace Copium
 		}
 	}
 
-	void AnimationSystem::Update()
+
+
+	void AnimationSystem::init()
+	{
+		PRINT("anim sys init");
+		systemFlags |= FLAG_RUN_ON_PLAY | FLAG_RUN_ON_EDITOR;
+	}
+
+	void AnimationSystem::update()
+	{
+
+		if (!sm->get_current_scene())
+			return;
+		
+		if (sm->GetSceneState() != Copium::Scene::SceneState::play)
+		{
+			return;
+		}
+
+		PRINT("Animation system update");
+
+
+		for (Copium::GameObject* go : sm->get_current_scene()->gameObjects)
+		{
+			for (Component* component : go->getComponents<Animator>()) {
+
+				Animator* anim = reinterpret_cast<Animator*>(component);
+				anim->update(MyFrameRateController.getDt());
+
+			}
+
+		}
+	}
+
+	void AnimationSystem::exit()
 	{
 		for (Animator* anim : animators)
 		{

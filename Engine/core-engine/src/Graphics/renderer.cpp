@@ -709,7 +709,7 @@ namespace Copium
 		if (!_frames)
 			return;
 
-		float step = (texture->get_pixel_width() / (float)_frames);
+		float step = (1.0f / (float)_frames);
 		float offset = _offsetID * step;
 		//glm::vec2 offset = _spritesheet.get_offsets()[_offsetID];
 		//glm::vec2 step = _spritesheet.get_steps();

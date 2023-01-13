@@ -283,6 +283,8 @@ namespace Copium {
 
 		std::vector<Scene*>& GetSceneVector() { return scenes; }
 
+		Scene::SceneState GetSceneState() const { return currSceneState; }
+
 		GameObject* selectedGameObject;
 		Camera* mainCamera{nullptr};
 

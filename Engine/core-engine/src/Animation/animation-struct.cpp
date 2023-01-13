@@ -10,7 +10,7 @@ namespace Copium
 	bool Animation::UpdateFrame(float _dt)
 	{
 		timer -= _dt;
-
+		std::cout << "frame updated ";
 		if (timer <= 0.f)
 		{
 			timer = 0.f;
@@ -32,6 +32,7 @@ namespace Copium
 		else
 			++currentFrameIndex;
 
+		std::cout << "frame incremented \n";
 		timer = timeDelay;
 	}
 	void Animation::ResetFrame()
