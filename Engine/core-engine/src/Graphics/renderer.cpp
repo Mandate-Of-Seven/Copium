@@ -272,8 +272,15 @@ namespace Copium
 			}*/
 			// End of matrix assignment
 			
-			for (GLuint i = 0; i < graphics->get_texture_slot_index(); i++)
-				glBindTextureUnit(i, graphics->get_texture_slots()[i]);
+			for (GLuint i = 1; i <= 8; i++)
+			glBindTextureUnit(i, graphics->get_texture_slots()[i]);
+
+			if (graphics->get_texture_slot_index() > 8)
+			{
+				
+				flush();
+				
+			}
 
 			glDrawElements(GL_TRIANGLES, quadIndexCount, GL_UNSIGNED_SHORT, NULL);
 			drawCount++;

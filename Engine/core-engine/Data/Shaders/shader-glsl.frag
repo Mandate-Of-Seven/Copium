@@ -20,19 +20,72 @@ layout (location=2) in float vTextureIndex;
 
 layout (location=0) out vec4 fFragColor;
 
-uniform sampler2D uTextures[32];
+uniform sampler2D uTexture1;
+uniform sampler2D uTexture2;
+uniform sampler2D uTexture3;
+uniform sampler2D uTexture4;
+uniform sampler2D uTexture5;
+uniform sampler2D uTexture6;
+uniform sampler2D uTexture7;
+uniform sampler2D uTexture8;
 
 void main()
 {
 	int index = int(vTextureIndex);
-	if(index >= 0)
+	switch (index)
 	{
-		fFragColor = texture(uTextures[index], vTextureCoordinate) * vInterpColor;
+		case 1:
+		fFragColor = texture(uTexture1, vTextureCoordinate) * vInterpColor;
 		if(fFragColor.a < 0.5)
-			discard;
-	}
-	else
-	{
+		discard;
+		break;
+
+		case 2:
+		fFragColor = texture(uTexture2, vTextureCoordinate) * vInterpColor;
+		if(fFragColor.a < 0.5)
+		discard;
+		break;
+
+		case 3:
+		fFragColor = texture(uTexture3, vTextureCoordinate) * vInterpColor;
+		if(fFragColor.a < 0.5)
+		discard;
+		break;
+
+		case 4:
+		fFragColor = texture(uTexture4, vTextureCoordinate) * vInterpColor;
+		if(fFragColor.a < 0.5)
+		discard;
+		break;
+
+		case 5:
+		fFragColor = texture(uTexture5, vTextureCoordinate) * vInterpColor;
+		if(fFragColor.a < 0.5)
+		discard;
+		break;
+
+		case 6:
+		fFragColor = texture(uTexture6, vTextureCoordinate) * vInterpColor;
+		if(fFragColor.a < 0.5)
+		discard;
+		break;
+
+		case 7:
+		fFragColor = texture(uTexture7, vTextureCoordinate) * vInterpColor;
+		if(fFragColor.a < 0.5)
+		discard;
+		break;
+
+		case 8:
+		fFragColor = texture(uTexture8, vTextureCoordinate) * vInterpColor;
+		if(fFragColor.a < 0.5)
+		discard;
+		break;
+
+		default:
 		fFragColor = vInterpColor;
+		break;
+	
 	}
+
 }

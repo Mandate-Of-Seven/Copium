@@ -60,13 +60,27 @@ namespace Copium
 
 		// Bind textures to quad fragment shader
 		shaderProgram[QUAD_SHADER].Use();
-		GLuint loc = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTextures");
+		GLuint loc1 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture1");
+		GLuint loc2 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture2");
+		GLuint loc3 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture3");
+		GLuint loc4 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture4");
+		GLuint loc5 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture5");
+		GLuint loc6 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture6");
+		GLuint loc7 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture7");
+		GLuint loc8 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture8");
 		GLint samplers[maxTextures]{};
 
-		for (GLuint i = 0; i < maxTextures; i++)
+		for (GLuint i = 1; i < maxTextures; i++)
 			samplers[i] = i;
 
-		glUniform1iv(loc, maxTextures, samplers);
+		glUniform1i(loc1, samplers[1]);
+		glUniform1i(loc2, samplers[2]);
+		glUniform1i(loc3, samplers[3]);
+		glUniform1i(loc4, samplers[4]);
+		glUniform1i(loc5, samplers[5]);
+		glUniform1i(loc6, samplers[6]);
+		glUniform1i(loc7, samplers[7]);
+		glUniform1i(loc8, samplers[8]);
 		shaderProgram[QUAD_SHADER].UnUse();
 
 		// Bind fonts to text fragment shader
