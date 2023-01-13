@@ -38,6 +38,7 @@ namespace Window::Hierarchy
 
 	void Update()
 	{
+		using namespace Copium;
 		if (!Window::Hierarchy::isHierarchyOpen)
 		{
 			//std::cout << "Test\n";
@@ -109,10 +110,16 @@ namespace Window::Hierarchy
 				}				
 				if (ImGui::MenuItem("Create a Child GameObject"))
 				{
-					//if (MySceneManager.get_selected_gameobject())
-					//{
-					//	GOF.create_child(*MySceneManager.get_selected_gameobject());
-					//}
+					if (MyEditorSystem.GetSelectedEntityID() < MAX_ENTITIES)
+					{
+						EntityID createdID{};
+						MyEventSystem.publish(new Copium::InstantiateEntityEvent(&createdID));
+						Copium::Transform* t{};
+						MyEventSystem.publish(new Copium::GetComponentEvent(createdID, t));
+						PRINT("PARENT GAMEOBJECT ID: " << MyEditorSystem.GetSelectedEntityID());
+						PRINT("NEW CHILD GAMEOBJECT ID: " << createdID);
+						MyEventSystem.publish(new SetParentEvent{createdID,MyEditorSystem.GetSelectedEntityID() });
+					}
 				}
 				if (ImGui::BeginMenu("Add Archetype"))
 				{
@@ -208,28 +215,32 @@ namespace Window::Hierarchy
 		//		}
 		//	}
 
-			// Display scene name as the rootiest node
-			if (ImGui::TreeNodeEx("PLACEHOLDER SCENE NAME", rootFlags))
+		// Display scene name as the rootiest node
+		if (ImGui::TreeNodeEx("PLACEHOLDER SCENE NAME", rootFlags))
+		{
+			SparseSet<Copium::Entity, MAX_ENTITIES>* pEntities{};
+			MyEventSystem.publish(new Copium::GetEntitiesEvent(pEntities));
+			if (pEntities)
 			{
-				SparseSet<Copium::Entity, MAX_ENTITIES>* pEntities{};
-				MyEventSystem.publish(new Copium::GetEntitiesEvent(pEntities));
-				if (pEntities)
+				for (size_t i = 0; i < (*pEntities).GetSize(); ++i)
 				{
-					for (size_t i = 0; i < (*pEntities).GetSize(); ++i)
-					{
-						display_gameobject((*pEntities).GetDenseIndex(i));
-					}
+					Transform* pTransform{};
+					EntityID entityID{ (*pEntities).GetDenseIndex(i) };
+					MyEventSystem.publish(new GetComponentEvent{ entityID,pTransform});
+					if (pTransform->HasParent())
+						continue;
+					display_gameobject_advanced(entityID);
 				}
-				//bool isSelected = false;
-				//for (size_t i{ 0 }; i < roots.size(); ++i)
-				//{
-					//display_gameobject_advanced(*(roots[i]), selectedID);
-					
-					//if (isSelected)
-						//sceneSelected = false;
-				//}	
-				ImGui::TreePop();
 			}
+			//bool isSelected = false;
+			//for (size_t i{ 0 }; i < roots.size(); ++i)
+			//{
+				//display_gameobject_advanced(*(roots[i]), selectedID);
+				//if (isSelected)
+					//sceneSelected = false;
+			//}	
+			ImGui::TreePop();
+		}
 
 		//}
 
@@ -238,66 +249,32 @@ namespace Window::Hierarchy
 		ImGui::End();
 	}
 	
-	void display_gameobject(EntityID entityID)
-	{
-		//const Copium::Transform& transform{ _go.transform };
-		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen;
-		// Prevent arrow from showing up which will cause assert if no children
-		//if (!transform.children.empty())
-		flags |= ImGuiTreeNodeFlags_Leaf;
-		//else
-		//{
-		//	flags |= ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
-		//}
 
-		Copium::Entity* selectedEntity{};
-		MyEventSystem.publish(new Copium::GetEntityEvent{entityID,selectedEntity});
-
-
-		if (selectedEntity && ImGui::TreeNodeEx(selectedEntity->name.c_str(), flags))
-		{
-			if (ImGui::IsItemClicked())
-			{
-				std::cout << selectedEntity->name << " is selected\n";
-				MyEditorSystem.SetSelectedEntityID(entityID);
-				//isSelected = true;
-				//Copium::SceneManager::Instance().set_selected_gameobject(&_go);
-			}
-		//	// Remember to pop for every tree node created!!!
-			ImGui::TreePop();
-		}
-
-		// If game object has children, recursively display children
-		//if(!transform.children.empty())
-		//{
-		//	for (auto iter = transform.children.begin(); iter != transform.children.end(); ++iter)
-		//	{
-		//		display_gameobject(*MySceneManager.findGameObjByID((*iter)->entityID));
-		//	}
-		//}
-
-
-	}
-	bool display_gameobject_advanced(Copium::Entity& entity)
+	void display_gameobject_advanced(EntityID entityID)
 	{
 		bool isSelected = false;
 		ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 
+		Copium::Transform* pTransform{};
+		MyEventSystem.publish(new Copium::GetComponentEvent{ entityID,pTransform });
 
 		//// If root node does not have children, it is simply a leaf node (end of the branch)
-		//if (_go.transform.children.empty())
-		//{
-		//	baseFlags |= ImGuiTreeNodeFlags_Leaf;
-		//}
-		//	
-		//// If there is a node that is already selected, set the selected flag
-		//if (_selected == _go.id)
-		//{
-		//	baseFlags |= ImGuiTreeNodeFlags_Selected;				
-		//}
+		if (pTransform->childrenIDs.empty())
+		{
+			baseFlags |= ImGuiTreeNodeFlags_Leaf;
+		}
+			
+		// If there is a node that is already selected, set the selected flag
+		if (MyEditorSystem.GetSelectedEntityID() == entityID)
+		{
+			baseFlags |= ImGuiTreeNodeFlags_Selected;				
+		}
 
-		//if (!ImGui::TreeNodeEx(_go.get_name().c_str(), baseFlags))
-		//	return false;
+		Copium::Entity* entity{};
+		MyEventSystem.publish(new Copium::GetEntityEvent{ entityID,entity });
+		if (!ImGui::TreeNodeEx(entity->name.c_str(), baseFlags))
+			return;
+			//return false;
 
 		//if (ImGui::BeginDragDropSource())
 		//{
@@ -305,9 +282,7 @@ namespace Window::Hierarchy
 		//	container = &_go;
 		//	ImGui::SetDragDropPayload("GameObject", &container, sizeof(void*));
 		//	ImGui::EndDragDropSource();
-
 		//	//std::cout << "ID of selected Game Object: " << _selected << std::endl;
-
 		//}
 
 		if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
@@ -341,28 +316,23 @@ namespace Window::Hierarchy
 
 
 
-		//if (ImGui::IsItemClicked())
-		//{
-		//	std::cout << _go.get_name() << " is selected\n";
-		//	_selected = _go.id;
-		//	isSelected = true;
-		//	Copium::SceneManager::Instance().set_selected_gameobject(&_go);
-
-		//}
+		if (ImGui::IsItemClicked())
+		{
+			MyEditorSystem.SetSelectedEntityID(entityID);
+		}
 
 		// If game object has children, recursively display children
-		//if (!_go.transform.children.empty())
-		//{
-		//	for (auto pChild : _go.transform.children)
-		//	{
-		//		isSelected = display_gameobject_advanced(*MySceneManager.findGameObjByID(pChild->entityID), _selected);
-		//	}
-		//}
+		if (!pTransform->childrenIDs.empty())
+		{
+			for (EntityID childID : pTransform->childrenIDs)
+			{
+				Copium::Transform* pChildTransform{};
+				MyEventSystem.publish(new Copium::GetComponentEvent{ childID,pChildTransform });
+				display_gameobject_advanced(childID);
+			}
+		}
 
 		ImGui::TreePop();
-
-		return isSelected;
-
 	}
 
 	// Create GameObject Button functionality

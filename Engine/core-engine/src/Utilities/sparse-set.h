@@ -11,6 +11,8 @@ public:
 
     size_t Add(const T& val);
 
+    size_t AddFromDenseIndex(size_t);
+
     void Delete(size_t indexToDelete);
 
     void Delete(T* toDelete);
@@ -62,6 +64,31 @@ size_t SparseSet<T, N>::Add()
 {
     ++size;
     return indexes[size - 1];
+}
+
+template <typename T, size_t N>
+size_t SparseSet<T, N>::AddFromDenseIndex(size_t denseIndex)
+{
+    for (size_t i = 0; i < size; ++i)
+    {
+        if (indexes[i] == denseIndex)
+            return i;
+    }
+    ++size;
+    size_t* index{};
+    for (size_t& i : indexes)
+    {
+        if (i == denseIndex)
+        {
+            index = &i;
+            break;
+        }
+    }
+    size_t tmp = indexes[size - 1];
+    indexes[size - 1] = denseIndex;
+    *index = tmp;
+    //Return sparse index, aka position of pooled object
+    return size-1;
 }
 
 template <typename T, size_t N>

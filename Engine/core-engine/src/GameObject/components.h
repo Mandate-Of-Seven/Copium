@@ -126,40 +126,12 @@ namespace Copium
 	public:
 		Transform() = default;
 
-		Transform* parent = nullptr;
-		std::list<Transform*> children;
-		Math::Vec3 position;
-		Math::Vec3 rotation;
-		Math::Vec3 scale;
-
-		bool hasParent() const
-		{
-			return parent;
-		}
-
-		void setParent(Transform* _parent)
-		{
-			//Previously had a parent
-			if (parent)
-				parent->children.remove(this);
-			parent = _parent;
-			//_parent might be nullptr
-			if (_parent)
-				_parent->children.push_back(this);
-		}
-
-		/***************************************************************************/
-		/*!
-		\brief
-			Constructor that takes in position, rotations,scale to 1, and initializes
-			parent to nullptr
-		*/
-		/**************************************************************************/
-		Transform(
-			ComponentID _entityID,
-			Math::Vec3 _position = Math::Vec3(),
-			Math::Vec3 _rotation = Math::Vec3(),
-			Math::Vec3 _scale = { 1,1,1 });
+		EntityID parentID {MAX_ENTITIES};
+		std::vector<EntityID> childrenIDs;
+		Math::Vec3 position{};
+		Math::Vec3 rotation{};
+		Math::Vec3 scale{1,1,1};
+		bool HasParent() const{ return parentID < MAX_ENTITIES;}
 	};
 
 	struct BoxCollider2D

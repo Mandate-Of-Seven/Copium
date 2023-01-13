@@ -51,23 +51,6 @@ namespace Window::Hierarchy
 	/*!
 	*
 	\brief
-		Create an ImGui Tree Node for the game object. 
-		Note: this function will be called recursively for game object's children (if any)
-		Note: game object's with no children will be drawn as leaves
-
-	\param	_go
-		read-only reference to the game object that is to be displayed
-
-	\return
-		void
-	*/
-	/*******************************************************************************/
-	void display_gameobject(EntityID entityID);
-
-	/*******************************************************************************
-	/*!
-	*
-	\brief
 		Create an ImGui Tree Node for the game object. Allow for selection of game objects
 		Note: this function will be called recursively for game object's children (if any)
 		Note: game object's with no children will be drawn as leaves
@@ -84,7 +67,7 @@ namespace Window::Hierarchy
 		if a game object is selected return true
 	*/
 	/*******************************************************************************/
-	bool display_gameobject_advanced(Copium::Entity& entity);
+	void display_gameobject_advanced(EntityID entityID);
 
 	/*******************************************************************************
 	/*!

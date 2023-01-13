@@ -21,15 +21,7 @@ namespace Copium
 
 	void EntityComponentSystem::CallbackGetEntityByID(GetEntityEvent* pEvent)
 	{
-		//If entity was active
-		if (activeEntities.test(pEvent->id))
-		{
-			pEvent->pEntity = &entities.DenseGet(pEvent->id);
-		}
-		else
-		{
-			pEvent->pEntity = nullptr;
-		}
+		pEvent->pEntity = &entities.DenseGet(pEvent->id);
 	}
 
 	void EntityComponentSystem::CallbackGetEntityActive(GetEntityActiveEvent* pEvent)
@@ -45,6 +37,34 @@ namespace Copium
 	void EntityComponentSystem::CallbackGetEntitiesPtr(GetEntitiesEvent* pEvent)
 	{
 		pEvent->pContainer = &entities;
+	}
+
+	void EntityComponentSystem::CallbackSetParent(SetParentEvent* pEvent)
+	{
+		SetParent(pEvent->childID,pEvent->parentID);
+	}
+
+
+	void EntityComponentSystem::SetParent(EntityID childID, EntityID parentID)
+	{
+		Transform* parent = GetComponent<Transform>(parentID);
+		Transform* child = GetComponent<Transform>(childID);
+		Transform* previousParent = GetComponent<Transform>(parentID);
+		for (auto it = previousParent->childrenIDs.begin(); 
+			it != previousParent->childrenIDs.end(); ++it)
+		{
+			if (*it == childID)
+			{
+				std::swap(*it, previousParent->childrenIDs.back());
+				previousParent->childrenIDs.pop_back();
+				break;
+			}
+		}
+		child->parentID = parentID;
+		if (parent)
+		{
+			parent->childrenIDs.push_back(childID);
+		}
 	}
 
 	//Delete
@@ -63,6 +83,7 @@ namespace Copium
 	{
 		MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackInstantiateEntity);
 		MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackGetEntitiesPtr);
+		MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackSetParent);
 		MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackGetEntityByID);
 		MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackSetEntityActive);
 		MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackGetEntityActive);

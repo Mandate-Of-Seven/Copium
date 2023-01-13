@@ -23,6 +23,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Editor/editor-system.h"
 #include "../Debugging/frame-rate-controller.h"
 #include "Windows/windows-input.h"
+#include <Events/events-system.h>
 
 #include "Math/math-library.h"
 
@@ -191,6 +192,48 @@ namespace Copium
 		*/
 
 		// Theory WIP
+
+		ComponentsArray<SpriteRenderer>* pSpriteRenderers{};
+		MyEventSystem.publish(new GetComponentsEvent<SpriteRenderer>{pSpriteRenderers});
+
+		if (!pSpriteRenderers)
+			return;
+		ComponentsArray<SpriteRenderer>& spriteRenderers{ *pSpriteRenderers };
+		for (size_t i = 0; i < spriteRenderers.GetSize(); ++i)
+		{
+			SpriteRenderer& sr{ spriteRenderers[i] };
+			EntityID entityID{};
+			MyEventSystem.publish(new GetEntityFromComponentEvent{ entityID,sr });
+			bool entityActive{};
+			MyEventSystem.publish(new GetEntityActiveEvent{ entityID,entityActive });
+			if (!entityActive)
+				continue;
+			bool componentEnabled{};
+			MyEventSystem.publish(new GetComponentEnabledEvent<SpriteRenderer>{entityID,componentEnabled });
+			if (!componentEnabled)
+				continue;
+			Transform* t{};
+			MyEventSystem.publish(new GetComponentEvent{ entityID,t });
+			glm::vec2 size(t->scale.x, t->scale.y);
+			float rotation = t->rotation.z;
+			if (sr.refTexture)
+			{
+				renderer.draw_quad(t->position, size, rotation, sr);
+			}
+			else if (t->HasParent())
+			{
+				Transform* parent{};
+				MyEventSystem.publish(new GetComponentEvent{ t->parentID,parent });
+				Copium::Math::Matrix3x3 rot;
+				Copium::Math::matrix3x3_rotdeg(rot, parent->rotation.z);
+				Copium::Math::Vec3 intermediate = (rot * t->position);
+				renderer.draw_quad(intermediate + parent->position, size, rotation+ parent->rotation.z, sr);
+			}
+			else
+			{
+				renderer.draw_quad(t->position, size, rotation, sr.color);
+			}
+		}
 		
 		//Scene* scene = sm.get_current_scene();
 		//if (scene != nullptr)

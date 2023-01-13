@@ -16,18 +16,22 @@
 
 namespace Copium
 {
+
     CLASS_SYSTEM(EntityComponentSystem)
     {
         SparseSet<Entity, MAX_ENTITIES> entities;
         //SparseSet<Entity, MAX_ENTITIES> backUpEntities;
         std::bitset<MAX_ENTITIES> activeEntities;
         AllComponents components;
+        //Parent to Child
+        std::unordered_map<EntityID,std::vector<EntityID>> entityRelationships;
         //std::bitset<MAX_ENTITIES> activeBackUpEntities;
     public:
         void Init();
         void Update();
         void Exit();
     private:
+        void SetParent(EntityID childId, EntityID parentID);
         void SetActive(EntityID id, bool active = true) { activeEntities.set(id, active); }
         bool GetActive(EntityID id) { return activeEntities.test(id); }
         void DestroyEntity(EntityID idToDelete);
@@ -47,6 +51,7 @@ namespace Copium
         void CallbackGetEntityByID(GetEntityEvent* pEvent);
         void CallbackGetEntityActive(GetEntityActiveEvent* pEvent);
         void CallbackSetEntityActive(SetEntityActiveEvent* pEvent);
+        void CallbackSetParent(SetParentEvent* pEvent);
         template <typename T>
         void CallbackGetComponent(GetComponentEvent<T>* pEvent);
         template <typename T>
@@ -61,7 +66,8 @@ namespace Copium
         void CallbackGetComponentEnabled(GetComponentEnabledEvent<T>* pEvent);
         template <typename T>
         void CallbackSetComponentEnabled(SetComponentEnabledEvent<T>* pEvent);
-
+        template <typename T>
+        void CallbackGetEntityFromComponent(GetEntityFromComponentEvent<T>* pEvent);
         void SubscribeComponentCallbacks() {}
         template <typename Component, typename... Components>
         void SubscribeComponentCallbacks(Pack<Component, Components...> components);
@@ -73,6 +79,8 @@ namespace Copium
         static_assert(AllComponents::Has<T>());
         COPIUM_ASSERT(!entities.DenseExists(id), "ENTITY DOES NOT EXIST");
         entities.DenseGet(id).componentsBitset.set(GetComponentType<T>::e);
+        components.GetArray<T>().AddFromDenseIndex(id);
+        components.GetBitset<T>().set(id);
         return &components.GetArray<T>()[id];
     }
 
@@ -110,12 +118,21 @@ namespace Copium
     void EntityComponentSystem::CallbackGetComponent(GetComponentEvent<T>* pEvent)
     {
         pEvent->pComponent = GetComponent<T>(pEvent->id);
+    }    
+    
+    template <typename T>
+    void EntityComponentSystem::CallbackGetEntityFromComponent(GetEntityFromComponentEvent<T>* pEvent)
+    {
+        ComponentsArray<T>& componentsArr{components.GetArray<T>()};
+        pEvent->entityId = &pEvent->component - &componentsArr.DenseGet(0);
+        PRINT("GOTTEN ENTITY ID OF: "<< pEvent->entityId);
     }
+
 
     template <typename T>
     void EntityComponentSystem::CallbackGetComponents(GetComponentsEvent<T>* pEvent)
     {
-        pEvent->pComponents = &components;
+        pEvent->pComponents = &components.GetArray<T>();
     }
 
     template <typename T>
@@ -140,6 +157,8 @@ namespace Copium
     void EntityComponentSystem::SubscribeComponentCallbacks(Pack<Component, Components...> components)
     {
         MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackGetComponent<Component>);
+        MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackGetComponents<Component>);
+        MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackGetEntityFromComponent<Component>);
         MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackRemoveComponent<Component>);
         MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackAddComponent<Component>);
         MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackHasComponent<Component>);

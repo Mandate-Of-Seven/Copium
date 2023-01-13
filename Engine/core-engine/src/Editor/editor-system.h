@@ -113,7 +113,7 @@ namespace Copium
 
 	private:
 		bool enableEditor = true;
-		EntityID selectedEntityID{};
+		EntityID selectedEntityID{MAX_ENTITIES};
 		EditorSceneView sceneView;
 		EditorGame game;
 		EditorContentBrowser contentBrowser;

@@ -247,7 +247,9 @@ namespace Window
             static ImVec2 buttonSize = ImGui::GetWindowSize();
             buttonSize.y *= (float)BUTTON_HEIGHT;
             static const char* name = typeid(Component).name() + strlen("struct Copium::");
-            if (filter.PassFilter(name) && ImGui::Button(name, buttonSize))
+            bool hasComponent{ false };
+            MyEventSystem.publish(new HasComponentEvent<Component>{ entityID,hasComponent });
+            if (!hasComponent && filter.PassFilter(name) && ImGui::Button(name, buttonSize))
             {
                 Component* component;
                 MyEventSystem.publish(new AddComponentEvent{entityID,component});
@@ -342,11 +344,14 @@ namespace Window
             {
                 ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth;
                 bool enabled{};
-                MyEventSystem.publish(new GetComponentEnabledEvent<Component>{ id,enabled });
-                ImGui::PushID(ID);
-                DisplayType("Enabled", enabled); ImGui::SameLine();
-                ImGui::PopID();
-                MyEventSystem.publish(new SetComponentEnabledEvent<Component>{ id,enabled });
+                if constexpr(!std::is_same<Component,Transform>())
+                {
+                    MyEventSystem.publish(new GetComponentEnabledEvent<Component>{ id,enabled });
+                    ImGui::PushID(ID);
+                    DisplayType("Enabled", enabled); ImGui::SameLine();
+                    ImGui::PopID();
+                    MyEventSystem.publish(new SetComponentEnabledEvent<Component>{ id,enabled });
+                }
                 const char* componentName = typeid(Component).name() + strlen("struct Copium::");
                 if (ImGui::CollapsingHeader(componentName, nodeFlags))
                 {
@@ -377,12 +382,15 @@ namespace Window
                         ImGui::Unindent();
                         ImGui::EndTable();
                     }
-                    if (ImGui::Button("Delete", ImVec2(ImGui::GetWindowSize().x, 0.f)))
+                    if constexpr (!std::is_same<Component, Transform>())
                     {
-                        MyEventSystem.publish(new RemoveComponentEvent<Component>{ id });
-                        //PRINT("ID: " << component->id);
-                        //componentsToDelete.push_back(component->id);
-                        //SceneManager::Instance()->get_current_scene()->add_unused_cid(component->id);
+                        if (ImGui::Button("Delete", ImVec2(ImGui::GetWindowSize().x, 0.f)))
+                        {
+                            MyEventSystem.publish(new RemoveComponentEvent<Component>{ id });
+                            //PRINT("ID: " << component->id);
+                            //componentsToDelete.push_back(component->id);
+                            //SceneManager::Instance()->get_current_scene()->add_unused_cid(component->id);
+                        }
                     }
                     ImGui::PopStyleVar();
                     ImGui::PopStyleVar();
@@ -400,6 +408,8 @@ namespace Window
 
         void DisplayEntity(EntityID entityID)
         {
+            if (entityID == MAX_ENTITIES)
+                return;
             using namespace Copium;
             Entity* selectedEntity{};
             MyEventSystem.publish(new GetEntityEvent{ MyEditorSystem.GetSelectedEntityID(),selectedEntity });
