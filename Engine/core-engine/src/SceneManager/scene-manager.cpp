@@ -313,6 +313,8 @@ namespace Copium {
 			return false;
 		}
 
+
+
 		GameObjectID prevSelected = 0;
 		if (selectedGameObject)
 			prevSelected = selectedGameObject->id;
@@ -326,19 +328,22 @@ namespace Copium {
 				break;
 		}
 
-		if (mainCamera == nullptr)
-		{
-			delete currentScene;
-			currentScene = storageScene;
-			storageScene = 0;
-			return false;
-		}
+		currSceneState = Scene::SceneState::play;
+		currentScene->set_state(Scene::SceneState::play);
+
+		//if (mainCamera == nullptr)
+		//{
+		//	std::cout << "start preview\n";
+
+		//	delete currentScene;
+		//	currentScene = storageScene;
+		//	storageScene = 0;
+		//	return false;
+		//}
 
 		if (prevSelected)
 			selectedGameObject = findGameObjByID(prevSelected);
 
-		currSceneState = Scene::SceneState::play;
-		currentScene->set_state(Scene::SceneState::play);
 
 		return true;
 	}
@@ -350,6 +355,10 @@ namespace Copium {
 			
 			return false;
 		}
+
+		std::cout << "stop preview\n";
+		currSceneState = Scene::SceneState::edit;
+
 
 		// Delete memory for the preview scene
 		if (!storageScene)
@@ -369,7 +378,6 @@ namespace Copium {
 
 		delete tmp;
 
-		currSceneState = Scene::SceneState::edit;
 		currentScene->set_state(Scene::SceneState::edit);
 
 		return true;

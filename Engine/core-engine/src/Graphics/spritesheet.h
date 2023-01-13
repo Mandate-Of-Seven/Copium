@@ -34,11 +34,10 @@ namespace Copium
 		Spritesheet(const Texture& _texture);
 		
 		Texture* GetTexture() { return texture; }
-		unsigned int GetSize() const { return size; }
 
 
 		Texture* texture;
-		unsigned int size, spriteID;
+		unsigned int spriteID;
 		std::string name;
 	};
 }

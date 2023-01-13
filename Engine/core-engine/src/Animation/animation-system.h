@@ -69,7 +69,18 @@ namespace Copium
         /**************************************************************************/
         virtual Animator* clone(GameObject& _gameObj) const
         {
+            std::cout << "animator clone\n";
             Animator* component = new Animator(_gameObj);
+            component->animationCount = animationCount;
+            component->animations = animations;
+
+            for (Animation& anim : component->animations)
+            {
+            	anim.currentFrameIndex = 0;
+            	anim.timer = 0;
+            	
+            }
+
             return component;
         }
 
@@ -79,9 +90,10 @@ namespace Copium
             Deserialize this component's data from specified rapidjson value
         */
         /**************************************************************************/
-        //void deserialize(rapidjson::Value& _value);
+        void deserialize(rapidjson::Value& _value);
+        void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
-        void update(float _dt);
+        void Update(float _dt);
 
         std::vector<Animation>& get_animation_vector() { return animations; }
 
@@ -96,6 +108,7 @@ namespace Copium
                 return nullptr;
             return &animations[currentAnimationIndex]; 
         }
+
 
     protected:
         std::vector<Animation> animations;    // The indices of the animations inside the assets-system

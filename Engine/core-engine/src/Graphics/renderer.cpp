@@ -542,7 +542,7 @@ namespace Copium
 		float pixelHeight = _spritesheet.texture->get_pixel_height();
 
 
-		PRINT("Pixel width:" << pixelWidth);
+		//PRINT("Pixel width:" << pixelWidth);
 
 
 		glm::mat4 scale = {
@@ -554,7 +554,7 @@ namespace Copium
 
 		glm::mat4 transform = translate * rotation * scale;
 
-		PRINT("Drawing spritesheet");
+		//PRINT("Drawing spritesheet");
 
 		draw_quad(transform, _spritesheet, _offsetID, _textureID, _frames);
 	}

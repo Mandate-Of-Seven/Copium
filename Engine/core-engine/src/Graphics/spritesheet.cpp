@@ -19,7 +19,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
-	Spritesheet::Spritesheet() : texture{nullptr}, size{0}, spriteID{0}, name{std::string()}
+	Spritesheet::Spritesheet() : texture{nullptr}, spriteID{0}, name{std::string()}
 	{
 	
 	}

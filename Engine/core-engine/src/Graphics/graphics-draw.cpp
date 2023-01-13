@@ -250,30 +250,30 @@ namespace Copium
 					// Bean: Temporary animation conditions
 					if (!assets->get_spritesheets().empty() && !gameObject->get_name().compare("Animation - Track"))
 					{
-						int animID = 1;
-						static GLuint animIndex = 0;
-						GLuint indexSize = assets->get_spritesheets()[animID].size - 1;
+						//int animID = 1;
+						//static GLuint animIndex = 0;
+						//GLuint indexSize = assets->get_spritesheets()[animID].size - 1;
 
-						GLfloat dt = (GLfloat) MyFrameRateController.getDt();
-						static float animTimer = 0.f;
-						animTimer += dt;
-						if (animTimer > 0.01f && toggleAnim)
-						{
-							animTimer = 0.f;
-							animIndex++;
-						}
+						//GLfloat dt = (GLfloat) MyFrameRateController.getDt();
+						//static float animTimer = 0.f;
+						//animTimer += dt;
+						//if (animTimer > 0.01f && toggleAnim)
+						//{
+						//	animTimer = 0.f;
+						//	animIndex++;
+						//}
 
-						if (animIndex > indexSize)
-						{
-							animIndex = 0;
-						}
+						//if (animIndex > indexSize)
+						//{
+						//	animIndex = 0;
+						//}
 
-						GLuint nid = 0;
-						for (GLuint i = 0; i < assets->get_textures().size(); ++i)
-						{
-							if (assets->get_textures()[i].get_object_id() == assets->get_spritesheets()[animID].texture->get_object_id())
-								nid = i + 1;
-						}
+						//GLuint nid = 0;
+						//for (GLuint i = 0; i < assets->get_textures().size(); ++i)
+						//{
+						//	if (assets->get_textures()[i].get_object_id() == assets->get_spritesheets()[animID].texture->get_object_id())
+						//		nid = i + 1;
+						//}
 
 						//renderer.draw_quad(t.position, size, 0.f, assets->get_spritesheets()[animID], animIndex, nid);
 					}
@@ -354,7 +354,7 @@ namespace Copium
 
 					if (!anim || !anim->spriteSheet.GetTexture())
 						continue;
-					PRINT("bloopbloop");
+					//PRINT("bloopbloop");
 					Transform& t = gameObject->transform;
 					unsigned int textureID = anim->spriteSheet.GetTexture()->get_id();
 					glm::vec2 size(t.scale.x, t.scale.y);
