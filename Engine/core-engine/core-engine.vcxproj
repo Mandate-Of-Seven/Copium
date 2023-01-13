@@ -102,6 +102,7 @@
     <ClCompile Include="src\Animation\animation-system.cpp" />
     <ClCompile Include="src\Editor\editor-colortheme.cpp" />
     <ClCompile Include="src\Editor\editor-game.cpp" />
+    <ClCompile Include="src\Editor\editor-layers.cpp" />
     <ClCompile Include="src\GameObject\Components\audiosource-component.cpp" />
     <ClCompile Include="src\Audio\sound-system.cpp" />
     <ClCompile Include="src\Debugging\frame-rate-controller.cpp" />
@@ -122,6 +123,7 @@
     <ClCompile Include="src\GameObject\Components\collider-components.cpp" />
     <ClCompile Include="src\GameObject\Components\component.cpp" />
     <ClCompile Include="src\GameObject\Components\physics-components.cpp" />
+    <ClCompile Include="src\GameObject\Components\sorting-group-component.cpp" />
     <ClCompile Include="src\GameObject\game-object-factory.cpp" />
     <ClCompile Include="src\GameObject\game-object.cpp" />
     <ClCompile Include="src\GameObject\Components\renderer-component.cpp" />
@@ -218,6 +220,7 @@
     <ClInclude Include="src\Animation\animation-system.h" />
     <ClInclude Include="src\Editor\editor-colortheme.h" />
     <ClInclude Include="src\Editor\editor-game.h" />
+    <ClInclude Include="src\Editor\editor-layers.h" />
     <ClInclude Include="src\GameObject\Components\audiosource-component.h" />
     <ClInclude Include="src\Debugging\frame-rate-controller.h" />
     <ClInclude Include="src\Editor\editor-camera.h" />
@@ -234,6 +237,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="src\GameObject\Components\renderer-component.h" />
+    <ClInclude Include="src\GameObject\Components\sorting-group-component.h" />
     <ClInclude Include="src\Game\game-nonscript.h" />
     <ClInclude Include="src\Graphics\base-camera.h" />
     <ClInclude Include="src\Graphics\fonts.h" />

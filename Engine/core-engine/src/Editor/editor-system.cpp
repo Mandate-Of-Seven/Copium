@@ -35,7 +35,7 @@ namespace Copium
 	namespace
 	{
 		// Our state
-		bool show_demo_window = false;
+		bool show_demo_window = true;
 		ThreadSystem& threadSystem{ *ThreadSystem::Instance() };
 		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 		InputSystem& inputSystem{ *InputSystem::Instance() };
@@ -78,6 +78,7 @@ namespace Copium
 		colorTheme.init();
 		hierarchyList.init();
 		inspector.init();
+		layers.init();
 		// Initialize a new editor camera
 		camera.init((float) sceneView.get_width(), (float) sceneView.get_height());
 	}
@@ -390,6 +391,7 @@ namespace Copium
 			colorTheme.update();
 			hierarchyList.update();
 			inspector.update();
+			layers.update();
 			Window::EditorConsole::update();
 			//Window::Hierarchy::update();
 			sceneView.update();
@@ -433,7 +435,7 @@ namespace Copium
 		contentBrowser.exit();
 		hierarchyList.exit();
 		inspector.exit();
-
+		layers.exit();
 
 		std::cout << "Before deleting, Undo stack: " << commandManager.undoStack.size() << ", Redo stack:" << commandManager.redoStack.size()<<"\n";
 		while (commandManager.undoStack.size() > 0)

@@ -24,6 +24,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor/editor-colortheme.h"
 #include "Editor/editor-undoredo.h"
 #include "Editor/editor-hierarchy-list.h"
+#include "Editor/editor-layers.h"
 #include "Editor/inspector.h"
 #include "Messaging/message-system.h"
 
@@ -122,6 +123,7 @@ namespace Copium
 		EditorColorTheme colorTheme;
 		EditorHierarchyList hierarchyList;
 		EditorInspector inspector;
+		EditorLayers layers;
 		UndoRedo::CommandManager commandManager; //for undo and redo
 	};
 }

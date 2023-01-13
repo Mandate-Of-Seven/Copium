@@ -31,11 +31,11 @@ namespace Copium
 
 	// Bean: Move to ECS once it is done
 	// A component for gameobjects
-	struct SortingGroup
+	/*struct SortingGroup
 	{
 		int sortingLayer;
 		int orderInLayer;
-	};
+	};*/
 
 	// Sorts objects based on the layer the object is in
 	class SortingLayers
@@ -65,6 +65,9 @@ namespace Copium
 		// Remove gameobject in the sorting layer
 		void RemoveGameObject(const std::string& _name, GameObject& _gameObject);
 		void RemoveGameObject(const int& _layerID, GameObject& _gameObject);
+
+		const int& GetLayerCount() const { return layerCount; }
+		std::vector<Layer>& GetSortingLayers() { return sortingLayers; }
 
 	private:
 		static int layerCount;				// The number of layers in the engine

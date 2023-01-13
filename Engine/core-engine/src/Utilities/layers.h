@@ -18,18 +18,17 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include <map>
 #include <vector>
 
-
 namespace Copium
-{
-	// From game-object.h
-	using GameObjectID = int64_t;
-	
+{	
 	// Each object will have a reference to the layer that it is on in the editor
 
 	// Store layers in a orderer map vector containing pointers to 
 	class Layering
 	{
 	public:
+		// From game-object.h
+		using GameObjectID = int64_t;
+
 		// Initialize 32 empty layers with 100 objects each
 		Layering();
 

@@ -49,6 +49,7 @@ namespace Copium
 				// Remove the layer
 				std::swap(sortingLayers[i], sortingLayers.back());
 				sortingLayers.pop_back();
+				layerCount--;
 				break;
 			}
 		}
@@ -66,6 +67,7 @@ namespace Copium
 				// Remove the layer
 				std::swap(sortingLayers[i], sortingLayers.back());
 				sortingLayers.pop_back();
+				layerCount--;
 				break;
 			}
 		}

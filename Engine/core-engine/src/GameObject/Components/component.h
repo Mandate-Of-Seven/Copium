@@ -45,6 +45,7 @@ enum class ComponentType : int      // Types of Components
     Script,
     Transform,
     Text,
+    SortingGroup,
     None
 };
 
@@ -61,6 +62,7 @@ static std::map<ComponentType, std::string> MAP_COMPONENT_TYPE_NAME
     {ComponentType::Script,"Script"},
     {ComponentType::Button,"Button"},
     {ComponentType::Text,"Text"},
+    {ComponentType::SortingGroup,"SortingGroup"},
 };
 
 
