@@ -121,7 +121,7 @@ namespace Copium
 		quadVertexPosition[2] = { 0.5f, 0.5f, 0.f, 1.f };
 		quadVertexPosition[3] = { -0.5f, 0.5f, 0.f, 1.f };
 
-		// Setup default textutre coordinates
+		// Setup default texture coordinates
 		quadTextCoord[0] = { 0.f, 0.f };
 		quadTextCoord[1] = { 1.f, 0.f };
 		quadTextCoord[2] = { 1.f, 1.f };
@@ -131,14 +131,14 @@ namespace Copium
 	// Setup the line vertex array object
 	void Renderer::setup_line_vao()
 	{
-		lineBuffer = new LineVertex[maxVertexCount];
+		lineBuffer = new LineVertex[maxLineVertexCount];
 
 		// Vertex Array Object
 		glCreateVertexArrays(1, &lineVertexArrayID);
 
 		// Line Buffer Object
 		glCreateBuffers(1, &lineVertexBufferID);
-		glNamedBufferStorage(lineVertexBufferID, maxVertexCount * sizeof(LineVertex), nullptr, GL_DYNAMIC_STORAGE_BIT);
+		glNamedBufferStorage(lineVertexBufferID, maxLineVertexCount * sizeof(LineVertex), nullptr, GL_DYNAMIC_STORAGE_BIT);
 
 		glEnableVertexArrayAttrib(lineVertexArrayID, 0);
 		glVertexArrayAttribFormat(lineVertexArrayID, 0, 3, GL_FLOAT, GL_FALSE, offsetof(LineVertex, pos));
@@ -154,12 +154,14 @@ namespace Copium
 	// Setup the circle vertex array object
 	void Renderer::setup_circle_vao()
 	{
+		circleBuffer = new CircleVertex[maxCircleVertexCount];
+
 		// Vertex Array Object
 		glCreateVertexArrays(1, &circleVertexArrayID);
 
-		// Line Buffer Object
+		// Circle Buffer Object
 		glCreateBuffers(1, &circleVertexBufferID);
-		glNamedBufferStorage(circleVertexBufferID, maxVertexCount * sizeof(CircleVertex), nullptr, GL_DYNAMIC_STORAGE_BIT);
+		glNamedBufferStorage(circleVertexBufferID, maxCircleVertexCount * sizeof(CircleVertex), nullptr, GL_DYNAMIC_STORAGE_BIT);
 
 		glEnableVertexArrayAttrib(circleVertexArrayID, 0);
 		glVertexArrayAttribFormat(circleVertexArrayID, 0, 3, GL_FLOAT, GL_FALSE, offsetof(CircleVertex, pos));
@@ -169,19 +171,43 @@ namespace Copium
 		glVertexArrayAttribFormat(circleVertexArrayID, 1, 4, GL_FLOAT, GL_FALSE, offsetof(CircleVertex, color));
 		glVertexArrayAttribBinding(circleVertexArrayID, 1, 2);
 
+		// Element Buffer Object
+		GLushort indices[maxCircleIndexCount]{ 0 };
+		GLushort counter = 0;
+		for (GLushort i = 0; i < maxCircleIndexCount; i += (circleVertices + 1))
+		{
+			for (GLushort j = 0; j < circleVertices; j++)
+			{
+				indices[i + j] = counter;
+				counter++;
+			}
+
+			indices[i + circleVertices] = maxCircleIndexCount + 1;
+		}
+
+		glCreateBuffers(1, &circleIndexBufferID);
+		glNamedBufferStorage(circleIndexBufferID, sizeof(indices), indices, GL_DYNAMIC_STORAGE_BIT);
+
+		float degree = 360.f / (float)(circleVertices);
+		float rads = glm::radians(degree);
+		for (GLint i = 0; i < circleVertices; i++)
+		{
+			circleVertexPosition[i] = glm::vec4(cos(rads * i), sin(rads * i), 0.f, 1.f);
+		}
+
 		glLineWidth(1.f);
 	}
 
 	void Renderer::setup_text_vao()
 	{
-		textBuffer = new TextVertex[maxVertexCount];
+		textBuffer = new TextVertex[maxTextVertexCount];
 
 		// Vertex Array Object
 		glCreateVertexArrays(1, &textVertexArrayID);
 
 		// Text Buffer Object
 		glCreateBuffers(1, &textVertexBufferID);
-		glNamedBufferStorage(textVertexBufferID, maxVertexCount * sizeof(TextVertex), nullptr, GL_DYNAMIC_STORAGE_BIT);
+		glNamedBufferStorage(textVertexBufferID, maxTextVertexCount * sizeof(TextVertex), nullptr, GL_DYNAMIC_STORAGE_BIT);
 
 		glEnableVertexArrayAttrib(textVertexArrayID, 0);
 		glVertexArrayAttribFormat(textVertexArrayID, 0, 3, GL_FLOAT, GL_FALSE, offsetof(TextVertex, pos));
@@ -212,21 +238,26 @@ namespace Copium
 	{
 		glDeleteVertexArrays(1, &quadVertexArrayID);
 		glDeleteVertexArrays(1, &lineVertexArrayID);
+		glDeleteVertexArrays(1, &circleVertexArrayID);
 		glDeleteVertexArrays(1, &textVertexArrayID);
 		glDeleteBuffers(1, &quadVertexBufferID);
 		glDeleteBuffers(1, &lineVertexBufferID);
+		glDeleteBuffers(1, &circleVertexBufferID);
 		glDeleteBuffers(1, &textVertexBufferID);
 		glDeleteBuffers(1, &quadIndexBufferID);
+		glDeleteBuffers(1, &circleIndexBufferID);
 		glDeleteTextures(1, &graphics->get_white_texture());
 
 		delete[] quadBuffer;
 		delete[] lineBuffer;
+		delete[] circleBuffer;
 		delete[] textBuffer;
 	}
 
 	void Renderer::begin_batch()
 	{
 		lineWidth = 1.f;
+		circleWidth = 1.f;
 
 		quadIndexCount = 0;
 		quadBufferPtr = quadBuffer;
@@ -234,13 +265,15 @@ namespace Copium
 		lineVertexCount = 0;
 		lineBufferPtr = lineBuffer;
 
+		circleIndexCount = 0;
+		circleBufferPtr = circleBuffer;
+
 		textVertexCount = 0;
 		textBufferPtr = textBuffer;
 	}
 
 	void Renderer::flush()
 	{
-		
 		if (quadIndexCount)
 		{
 			// Alpha blending for transparent objects
@@ -313,6 +346,30 @@ namespace Copium
 			graphics->get_shader_program()[LINE_SHADER].UnUse();
 		}
 
+		if (circleIndexCount)
+		{
+			graphics->get_shader_program()[LINE_SHADER].Use();
+			glBindVertexArray(circleVertexArrayID);
+
+			// Bean: Matrix assignment to be placed somewhere else
+			GLuint uProjection = glGetUniformLocation(
+				graphics->get_shader_program()[LINE_SHADER].GetHandle(), "uViewProjection");
+
+			glm::mat4 projection = camera->get_view_proj_matrix();
+			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
+
+			// End of matrix assignment
+
+			glEnable(GL_PRIMITIVE_RESTART);
+			glPrimitiveRestartIndex(maxCircleIndexCount + 1);
+			glLineWidth(circleWidth);
+			glDrawElements(GL_LINE_LOOP, circleIndexCount, GL_UNSIGNED_SHORT, NULL);
+			drawCount++;
+
+			glBindVertexArray(0);
+			graphics->get_shader_program()[LINE_SHADER].UnUse();
+		}
+
 		if (textVertexCount)
 		{
 			// Alpha blending for transparent objects
@@ -348,7 +405,6 @@ namespace Copium
 			graphics->get_shader_program()[TEXT_SHADER].UnUse();
 			glDisable(GL_BLEND);
 		}
-		
 	}
 
 	void Renderer::end_batch()
@@ -373,12 +429,22 @@ namespace Copium
 			glBindVertexArray(0);
 		}
 
+		if (circleIndexCount)
+		{
+			glBindVertexArray(circleVertexArrayID);
+			GLsizeiptr size = (GLuint*)circleBufferPtr - (GLuint*)circleBuffer;
+			glNamedBufferSubData(circleVertexBufferID, 0, sizeof(float) * size, circleBuffer);
+			glVertexArrayVertexBuffer(circleVertexArrayID, 2, circleVertexBufferID, 0, sizeof(CircleVertex));
+			glVertexArrayElementBuffer(circleVertexArrayID, circleIndexBufferID);
+			glBindVertexArray(0);
+		}
+
 		if (textVertexCount)
 		{
 			glBindVertexArray(textVertexArrayID);
 			GLsizeiptr size = (GLuint*)textBufferPtr - (GLuint*)textBuffer;
 			glNamedBufferSubData(textVertexBufferID, 0, sizeof(float) * size, textBuffer);
-			glVertexArrayVertexBuffer(textVertexArrayID, 2, textVertexBufferID, 0, sizeof(TextVertex));
+			glVertexArrayVertexBuffer(textVertexArrayID, 3, textVertexBufferID, 0, sizeof(TextVertex));
 			glBindVertexArray(0);
 		}
 		
@@ -662,7 +728,7 @@ namespace Copium
 
 	void Renderer::draw_line(const glm::vec3& _position0, const glm::vec3& _position1, const glm::vec4& _color)
 	{
-		if (lineVertexCount >= maxLineCount)
+		if (lineVertexCount >= maxLineVertexCount)
 		{
 			end_batch();
 			flush();
@@ -678,34 +744,84 @@ namespace Copium
 		lineBufferPtr++;
 
 		lineVertexCount += 2;
+		lineCount++;
 	}
 
-	void Renderer::draw_circle(const glm::vec3& _position, const glm::vec4& _color, GLfloat _radius)
+	void Renderer::draw_circle(const glm::vec3& _position, const float& _radius, const float _rotation, const glm::vec4& _color)
 	{
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glm::mat4 translate = glm::translate(glm::mat4(1.f), _position);
 
-		graphics->get_shader_program()[LINE_SHADER].Use();
+		float radians = glm::radians(_rotation);
 
-		GLuint uProjection = glGetUniformLocation(
-			graphics->get_shader_program()[LINE_SHADER].GetHandle(), "uViewProjection");
+		glm::mat4 rotation = {
+			glm::vec4(cos(radians), sin(radians), 0.f, 0.f),
+			glm::vec4(-sin(radians), cos(radians), 0.f, 0.f),
+			glm::vec4(0.f, 0.f, 1.f, 0.f),
+			glm::vec4(0.f, 0.f, 0.f, 1.f)
+		};
 
-		glm::mat4 projection = camera->get_view_proj_matrix();
-		glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glm::mat4 scale = {
+			glm::vec4(_radius, 0.f, 0.f, 0.f),
+			glm::vec4(0.f, _radius, 0.f, 0.f),
+			glm::vec4(0.f, 0.f, 1.f, 0.f),
+			glm::vec4(0.f, 0.f, 0.f, 1.f)
+		};
 
-		glBindVertexArray(circleVertexArrayID);
+		glm::mat4 transform = translate * rotation * scale;
+		draw_circle(transform, _color);
+	}
 
-		// Update content of VBO memory
+	void Renderer::draw_circle(const glm::mat4& _transform, const glm::vec4& _color)
+	{
+		if (circleIndexCount >= maxCircleIndexCount)
+		{
+			end_batch();
+			flush();
+			begin_batch();
+		}
+
+		for (GLint i = 0; i < circleVertices; i++)
+		{
+			circleBufferPtr->pos = _transform * circleVertexPosition[i];
+			circleBufferPtr->color = _color;
+			circleBufferPtr++;
+		}
+
+		circleIndexCount += circleVertices + 1;
+		circleCount++;
+
+		//// Update VBO for each circle
+		//CircleVertex vertices[circleVertices];
+
+		//for (GLint i = 0; i < circleVertices; i++)
+		//{
+		//	vertices[i].pos = _transform * glm::vec4(circleVertexPosition[i], 0.f, 1.f);
+		//	vertices[i].color = _color;
+		//}
+
+		//// End batch
+		//glBindVertexArray(circleVertexArrayID);
 		//glNamedBufferSubData(circleVertexBufferID, 0, sizeof(vertices), vertices);
-		//glVertexArrayVertexBuffer(circleVertexArrayID, 2, circleVertexBufferID, 0, sizeof(TextVertex));
+		//glVertexArrayVertexBuffer(circleVertexArrayID, 2, circleVertexBufferID, 0, sizeof(CircleVertex));
 
-		glDrawArrays(GL_LINE_LOOP, 0, 6);
+		//// Flushing
+		//graphics->get_shader_program()[LINE_SHADER].Use();
 
-		glBindVertexArray(0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		graphics->get_shader_program()[TEXT_SHADER].UnUse();
+		//// Bean: Matrix assignment to be placed somewhere else
+		//GLuint uProjection = glGetUniformLocation(
+		//	graphics->get_shader_program()[LINE_SHADER].GetHandle(), "uViewProjection");
 
-		glDisable(GL_BLEND);
+		//glm::mat4 projection = camera->get_view_proj_matrix();
+		//glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
+
+		//// End of matrix assignment
+
+		//glLineWidth(circleWidth);
+		//glDrawArrays(GL_LINE_LOOP, 0, circleVertices);
+		//drawCount++;
+
+		//glBindVertexArray(0);
+		//graphics->get_shader_program()[LINE_SHADER].UnUse();
 	}
 
 	/*void Renderer::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float _scale, GLuint _fontID)

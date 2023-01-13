@@ -281,59 +281,5 @@ class Component
         bool enabled;
 };
 
-    
-
-    class Animator : public Component
-    {
-    public:
-        /***************************************************************************/
-        /*!
-        \brief
-            Constructor for animator Components
-        \param _gameObj
-            Owner of this component
-        */
-        /**************************************************************************/
-        Animator(GameObject& _gameObj);
-
-
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Displays the inspector view with its fields
-
-        */
-        /*******************************************************************************/
-        void inspector_view(){};
-
-
-        /***************************************************************************/
-        /*!
-        \brief
-            Clone function for preview mode and editor mode
-        \param _gameObj
-            GameObject to clone from
-        \return
-            Reference to the cloned component in current scene
-        */
-        /**************************************************************************/
-        virtual Animator* clone(GameObject& _gameObj) const
-        {
-            Animator* component = new Animator(_gameObj);
-            return component;
-        }
-
-        /***************************************************************************/
-        /*!
-        \brief
-            Deserialize this component's data from specified rapidjson value
-        */
-        /**************************************************************************/
-        //void deserialize(rapidjson::Value& _value);
-    protected:
-
-    };
-
 }
 #endif // !COMPONENT_H

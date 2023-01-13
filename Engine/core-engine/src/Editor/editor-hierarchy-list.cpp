@@ -19,49 +19,42 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Windows/windows-input.h"
 #include "Windows/windows-system.h"
 
-
-//M2
-namespace Window::Hierarchy
+namespace Copium
 {
-	Copium::Scene * currentScene = nullptr;
-	bool sceneSelected;
-	Copium::GameObjectID selectedID;
-	Copium::InputSystem* inputSystem = nullptr;
-	bool dragging;
-
-	void init()
+	namespace
 	{
-		Window::Hierarchy::isHierarchyOpen = true;
-		sceneSelected = false;
-		if (Copium::SceneManager::Instance())
-			currentScene = Copium::SceneManager::Instance()->get_current_scene();
-
-		inputSystem = Copium::InputSystem::Instance();
-		dragging = false;
+		SceneManager* sm = SceneManager::Instance();
+		InputSystem* is = InputSystem::Instance();
+		//bool isHierarchyOpen;
 	}
-
-	void update()
+	void EditorHierarchyList::init()
 	{
-		if (!Window::Hierarchy::isHierarchyOpen)
-		{
-			//std::cout << "Test\n";
+		if (sm)
+			currentScene = sm->get_current_scene();
+
+		isHierarchyOpen = true;
+
+	}
+	void EditorHierarchyList::update()
+	{
+		if (!isHierarchyOpen)
 			return;
-		}
+		
 
 		// Handle scene change
-		if (currentScene != Copium::SceneManager::Instance()->get_current_scene())
-			currentScene = Copium::SceneManager::Instance()->get_current_scene();
+		if (currentScene != sm->get_current_scene())
+			currentScene = sm->get_current_scene();
 
 
 		ImGui::SetNextWindowSize(ImVec2(500, 900), ImGuiCond_FirstUseEver);
-		ImGui::Begin("Hierarchy", &Window::Hierarchy::isHierarchyOpen, ImGuiWindowFlags_MenuBar);
+		ImGui::Begin("Hierarchy", &isHierarchyOpen, ImGuiWindowFlags_MenuBar);
 
 		// Menu Bar
 		if (ImGui::BeginMenuBar())
 		{
 			if (ImGui::BeginMenu("Menu"))
 			{
-				 //Add menu items
+				//Add menu items
 				if (ImGui::MenuItem("Create GameObject", nullptr))
 				{
 					if (!currentScene)
@@ -95,7 +88,7 @@ namespace Window::Hierarchy
 					if (Copium::SceneManager::Instance()->get_selected_gameobject())
 					{
 						std::cout << "Delete\n";
-						Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::GameObjectCommand(MySceneManager.get_selected_gameobject_sptr(),false);
+						Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::GameObjectCommand(MySceneManager.get_selected_gameobject_sptr(), false);
 						Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
 						MyGOF.destroy(MySceneManager.get_selected_gameobject());
 						MySceneManager.set_selected_gameobject(nullptr);
@@ -117,7 +110,7 @@ namespace Window::Hierarchy
 					{
 						Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
 					}
-				}				
+				}
 				if (ImGui::MenuItem("Create a Child GameObject"))
 				{
 					if (MySceneManager.get_selected_gameobject())
@@ -141,7 +134,7 @@ namespace Window::Hierarchy
 								MyGOF.instantiate(*(*iter).second);
 							}
 
-						} 
+						}
 					}
 
 					ImGui::EndMenu();
@@ -153,7 +146,7 @@ namespace Window::Hierarchy
 		}
 
 		//KeyBoard Shortcuts//
-		if (inputSystem->is_key_held(GLFW_KEY_LEFT_CONTROL) && inputSystem->is_key_pressed(GLFW_KEY_D))
+		if (is->is_key_held(GLFW_KEY_LEFT_CONTROL) && is->is_key_pressed(GLFW_KEY_D))
 		{
 			if (Copium::SceneManager::Instance()->get_selected_gameobject())
 			{
@@ -166,7 +159,7 @@ namespace Window::Hierarchy
 				Window::EditorConsole::editorLog.add_logEntry("No scene is loaded!");
 			}
 		}
-		if (Copium::SceneManager::Instance()->get_selected_gameobject() && inputSystem->is_key_pressed(GLFW_KEY_BACKSPACE))
+		if (sm->get_selected_gameobject() && is->is_key_pressed(GLFW_KEY_BACKSPACE))
 		{
 			if (Copium::SceneManager::Instance()->get_selected_gameobject())
 			{
@@ -186,7 +179,7 @@ namespace Window::Hierarchy
 
 		ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, 10.f);
 		ImGuiTreeNodeFlags rootFlags = ImGuiTreeNodeFlags_DefaultOpen;
-		
+
 		// Ensure that game objects are displayed only if there is a current scene loaded
 		if (currentScene)
 		{
@@ -211,8 +204,8 @@ namespace Window::Hierarchy
 			else
 			{
 				size_t offset = currentScene->get_filename().find_last_of("/\\");
-				size_t endOffset = currentScene->get_filename().find(".scene")-1;
-				sceneName = currentScene->get_filename().substr(offset + 1, endOffset-offset);
+				size_t endOffset = currentScene->get_filename().find(".scene") - 1;
+				sceneName = currentScene->get_filename().substr(offset + 1, endOffset - offset);
 				if (currentScene->get_state() == Copium::Scene::SceneState::play)
 				{
 					sceneName += "\t PREVIEWING";
@@ -226,12 +219,9 @@ namespace Window::Hierarchy
 				bool isSelected = false;
 				for (size_t i{ 0 }; i < roots.size(); ++i)
 				{
-					display_gameobject_advanced(*(roots[i]), selectedID);
-					
-					if (isSelected)
-						sceneSelected = false;
+					display_gameobject(*(roots[i]), selectedID, roots, i);
 
-				}	
+				}
 
 				ImGui::TreePop();
 			}
@@ -239,40 +229,15 @@ namespace Window::Hierarchy
 		}
 
 
-		ImGui::PopStyleVar();			
+		ImGui::PopStyleVar();
 		ImGui::End();
 	}
-	
-	void display_gameobject(const Copium::GameObject& _go)
+	void EditorHierarchyList::exit()
 	{
-		const Copium::Transform& transform{ _go.transform };
-		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen;
-		// Prevent arrow from showing up which will cause assert if no children
-		if (!transform.children.empty())
-			flags |= ImGuiTreeNodeFlags_Leaf;
-		else
-		{
-			flags |= ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
-		}
-
-		bool result = ImGui::TreeNodeEx(_go.get_name().c_str(), flags);
-		if (!result)
-			return;
-
-		// If game object has children, recursively display children
-		if(!transform.children.empty())
-		{
-			for (auto iter = transform.children.begin(); iter != transform.children.end(); ++iter)
-			{
-				display_gameobject((*iter)->gameObj);
-			}
-		}
-
-		// Remember to pop for every tree node created!!!
-		ImGui::TreePop();
-
+		currentScene = nullptr;
 	}
-	bool display_gameobject_advanced(Copium::GameObject& _go, Copium::GameObjectID& _selected)
+
+	bool EditorHierarchyList::display_gameobject(GameObject& _go, GameObjectID& _selected, std::vector<GameObject*>& _vector, int _index)
 	{
 		bool isSelected = false;
 		ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
@@ -283,11 +248,11 @@ namespace Window::Hierarchy
 		{
 			baseFlags |= ImGuiTreeNodeFlags_Leaf;
 		}
-			
+
 		// If there is a node that is already selected, set the selected flag
 		if (_selected == _go.id)
 		{
-			baseFlags |= ImGuiTreeNodeFlags_Selected;				
+			baseFlags |= ImGuiTreeNodeFlags_Selected;
 		}
 
 		if (!ImGui::TreeNodeEx(_go.get_name().c_str(), baseFlags))
@@ -295,13 +260,12 @@ namespace Window::Hierarchy
 
 		if (ImGui::BeginDragDropSource())
 		{
-			static void* container; 
+			static void* container;
 			container = &_go;
 			ImGui::SetDragDropPayload("GameObject", &container, sizeof(void*));
 			ImGui::EndDragDropSource();
 
 			//std::cout << "ID of selected Game Object: " << _selected << std::endl;
-
 		}
 
 		if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
@@ -310,17 +274,45 @@ namespace Window::Hierarchy
 			{
 				//std::cout << "ID of selected Game Object: " << _selected << std::endl;
 				int n_next = (ImGui::GetMouseDragDelta(0).y < 0.f ? -1 : 1);
-				//std::cout << "move up or down: " << n_next << std::endl;
-				dragging = true;
+				if (n_next > 0)
+					PRINT("Move up\n");
+				else
+					PRINT("Move down\n");
+
+				n_next += _index;
+				if (n_next >= 0 && n_next < _vector.size())
+				{
+					PRINT("there will be movement\n");
+					GameObject* temp = _vector[n_next];
+					size_t idx1{0}, idx2{0};
+					for (size_t i{ 0 }; i < currentScene->get_gameobjcount(); ++i)
+					{
+						if (temp == currentScene->gameObjects[i])
+						{
+							idx1 = i;
+							break;
+						}
+					}
+
+					for (size_t i{ 0 }; i < currentScene->get_gameobjcount(); ++i)
+					{
+						if (&_go == currentScene->gameObjects[i])
+						{
+							idx2 = i;
+							break;
+						}
+					}
+
+					currentScene->gameObjects[idx1] = currentScene->gameObjects[idx2];
+					currentScene->gameObjects[idx2] = temp;
+			
+
+				}
+				ImGui::ResetMouseDragDelta();
+
+
 			}
 
-
-
-		}			
-		if (dragging && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
-		{
-			dragging = false;
-			PRINT("mouse released over: " << _go.id);
 		}
 		//for (const auto& pComponent : _go.components)
 		//{
@@ -340,27 +332,26 @@ namespace Window::Hierarchy
 			std::cout << _go.get_name() << " is selected\n";
 			_selected = _go.id;
 			isSelected = true;
-			Copium::SceneManager::Instance()->set_selected_gameobject(&_go);
+			sm->set_selected_gameobject(&_go);
 
 		}
 
 		// If game object has children, recursively display children
 		if (!_go.transform.children.empty())
 		{
+			int idx{ 0 };
 			for (auto pChild : _go.transform.children)
 			{
-				isSelected = display_gameobject_advanced(pChild->gameObj, _selected);
+				isSelected = display_gameobject(pChild->gameObj, _selected, _vector, idx);
+				++idx;
 			}
 		}
 
 		ImGui::TreePop();
 
 		return isSelected;
-
 	}
-
-	// Create GameObject Button functionality
-	bool create_gameobject_btn(const std::string& _btnName)
+	bool EditorHierarchyList::create_gameobject_btn(const std::string& _btnName)
 	{
 		static int clicked = 0;
 		if (!ImGui::Button(_btnName.c_str()))
@@ -381,8 +372,7 @@ namespace Window::Hierarchy
 		}
 		return true;
 	}
-
-	bool create_delete_btn(const std::string& _btnName)
+	bool EditorHierarchyList::create_delete_btn(const std::string& _btnName)
 	{
 		static int deleteClicked = 0;
 		if (!ImGui::Button(_btnName.c_str()))
@@ -395,6 +385,6 @@ namespace Window::Hierarchy
 			deleteClicked = 0;
 		}
 		return true;
-
 	}
+
 }

@@ -22,6 +22,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "CopiumCore/system-interface.h"
 #include "Graphics/textures.h"
 #include "Graphics/spritesheet.h"
+#include "Animation/animation-struct.h"
 
 namespace Copium
 {
@@ -160,6 +161,7 @@ namespace Copium
 		/* Assets Data ******************************************************************/
 		std::vector<Texture> textures;
 		std::vector<Spritesheet> spritesheets;
+		std::vector<Animation> animations; 
 	};
 }
 

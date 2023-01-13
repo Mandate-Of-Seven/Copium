@@ -161,7 +161,7 @@ namespace Copium
             // Set to maximized
             else
             {
-                glfwSetWindowMonitor(window, NULL, _width * 0.1f, _height * 0.1f, _width, _height, 0);
+                glfwSetWindowMonitor(window, NULL, (int)(_width * 0.1f), (int) (_height * 0.1f), _width, _height, 0);
                 glfwMaximizeWindow(window);
             }
         }

@@ -27,6 +27,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "GameObject/Components/renderer-component.h"
 #include "GameObject/Components/script-component.h"
 #include "GameObject/Components/ui-components.h"
+#include "Animation/animation-system.h"
 #include "SceneManager/scene-manager.h"
 #include <mono/jit/jit.h>
 

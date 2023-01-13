@@ -147,6 +147,8 @@ namespace Copium
 		/**************************************************************************/
 		glm::vec2 get_game_ndc();
 
+		bool withinFrustum(const glm::vec3& _position, const glm::vec3& _scale, bool _overlap = true);
+
 		/***************************************************************************/
 		/*!
 		\brief
@@ -167,7 +169,6 @@ namespace Copium
 		/**************************************************************************/
 		void update_ortho_projection();
 
-
 		float get_pitch() const { return pitch; }
 		float get_yaw() const { return yaw; }
 
@@ -179,6 +180,7 @@ namespace Copium
 		glm::mat4 get_view_proj_matrix() const { return viewProjMatrix; }
 
 		Framebuffer* get_framebuffer() { return &framebuffer; }
+		Draw* getDraw() { return &draw; }
 
 		void set_bg_color(glm::vec4 const& _color) { backgroundColor = _color; }
 		const glm::vec4& get_bg_color() const { return backgroundColor; }
@@ -210,6 +212,8 @@ namespace Copium
 		/**************************************************************************/
 		void update_view_matrix();
 
+		void updateFrustum();
+
 		/***************************************************************************/
 		/*!
 		\brief
@@ -225,11 +229,14 @@ namespace Copium
 		glm::vec3 focalPoint;				// The look-at point / target point where the viewer is looking (Center of screen)
 		glm::vec3 upVector;					// Defines which way is up (Default is Y-direction)
 		glm::vec2 dimension;				// The dimension of the camera in width and height defined in pixels
+		glm::vec2 frustumBottom;			// The bottom left position of the frustum, for frustum culling
+		glm::vec2 frustumTop;				// The top right position of the frustum, for frustum culling
 
 		float width = 0.f;					// Pixel width of the camera
 		float height = 0.f;					// Pixel height of the camera
 		float pitch = 0.f;					// For rotation
 		float yaw = 0.f;					// For rotation
+		float frustumMargin = 5.f;			// The margin in which the camera will still render objects that are outside the camera's dimension
 
 		CameraType cameraType;				// Type of camera
 		

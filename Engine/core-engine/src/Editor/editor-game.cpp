@@ -22,7 +22,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Graphics/graphics-system.h"
 
-#define AspectRatio 16.f/9.f
+#define AspectRatio (16.f/9.f)
 
 namespace Copium
 {
