@@ -44,6 +44,24 @@ public:
         return false;
     }
 
+    size_t GetSparseIndex(size_t denseIndex)
+    {
+        for (size_t i = 0; i < size; ++i)
+        {
+            size_t index = indexes[i];
+            if (index == denseIndex)
+                return i;
+        }
+        return N;
+    }
+
+    void Swap(size_t sparseIndex1, size_t sparseIndex2)
+    {
+        size_t tmp{ indexes[sparseIndex1] };
+        indexes[sparseIndex1] = indexes[sparseIndex2];
+        indexes[sparseIndex2] = indexes[sparseIndex1];
+    }
+
 private:
     T data[N];
     size_t indexes[N];

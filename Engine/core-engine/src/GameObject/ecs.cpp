@@ -45,6 +45,15 @@ namespace Copium
 	}
 
 
+	void EntityComponentSystem::SwapEntities(EntityID lhs, EntityID rhs)
+	{
+		size_t lhsIndex{ entities.GetSparseIndex(lhs) };
+		size_t rhsIndex{ entities.GetSparseIndex(rhs) };
+		for (size_t i = 0; i < entities.GetSize(); ++i)
+		{
+		}
+	}
+
 	void EntityComponentSystem::SetParent(EntityID childID, EntityID parentID)
 	{
 		Transform* parent = GetComponent<Transform>(parentID);

@@ -284,6 +284,52 @@ namespace Window::Hierarchy
 		//	ImGui::EndDragDropSource();
 		//	//std::cout << "ID of selected Game Object: " << _selected << std::endl;
 		//}
+		//if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
+		//{
+		//	if (!pTransform->HasParent())
+		//	{
+		//		//std::cout << "ID of selected Game Object: " << _selected << std::endl;
+		//		int n_next = (ImGui::GetMouseDragDelta(0).y < 0.f ? -1 : 1);
+		//		if (n_next > 0)
+		//			PRINT("Move up\n");
+		//		else
+		//			PRINT("Move down\n");
+
+		//		n_next += _index;
+		//		if (n_next >= 0 && n_next < _vector.size())
+		//		{
+		//			PRINT("there will be movement\n");
+		//			GameObject* temp = _vector[n_next];
+		//			size_t idx1{ 0 }, idx2{ 0 };
+		//			for (size_t i{ 0 }; i < currentScene->get_gameobjcount(); ++i)
+		//			{
+		//				if (temp == currentScene->gameObjects[i])
+		//				{
+		//					idx1 = i;
+		//					break;
+		//				}
+		//			}
+
+		//			for (size_t i{ 0 }; i < currentScene->get_gameobjcount(); ++i)
+		//			{
+		//				if (&_go == currentScene->gameObjects[i])
+		//				{
+		//					idx2 = i;
+		//					break;
+		//				}
+		//			}
+
+		//			currentScene->gameObjects[idx1] = currentScene->gameObjects[idx2];
+		//			currentScene->gameObjects[idx2] = temp;
+
+
+		//		}
+		//		ImGui::ResetMouseDragDelta();
+
+
+		//	}
+
+		//}
 
 		if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
 		{

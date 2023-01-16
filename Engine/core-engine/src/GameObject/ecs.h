@@ -36,6 +36,7 @@ namespace Copium
         bool GetActive(EntityID id) { return activeEntities.test(id); }
         void DestroyEntity(EntityID idToDelete);
         void DestroyEntity(Entity* pEntity);
+        void SwapEntities(EntityID lhs, EntityID rhs);
         template<typename T>
         T* AddComponent(EntityID id);
         template<typename T>

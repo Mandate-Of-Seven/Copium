@@ -200,6 +200,7 @@
     <ClInclude Include="src\Editor\editor-game.h" />
     <ClInclude Include="src\Events\events-system.h" />
     <ClInclude Include="src\Events\events.h" />
+    <ClInclude Include="src\Files\serializer-deserializer.h" />
     <ClInclude Include="src\GameObject\components.h" />
     <ClInclude Include="src\Debugging\frame-rate-controller.h" />
     <ClInclude Include="src\Editor\editor-camera.h" />
