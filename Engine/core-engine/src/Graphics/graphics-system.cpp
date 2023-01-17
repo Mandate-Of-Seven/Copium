@@ -60,13 +60,54 @@ namespace Copium
 
 		// Bind textures to quad fragment shader
 		shaderProgram[QUAD_SHADER].Use();
-		GLuint loc = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTextures");
+		GLuint loc1 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture1");
+		GLuint loc2 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture2");
+		GLuint loc3 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture3");
+		GLuint loc4 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture4");
+		GLuint loc5 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture5");
+		GLuint loc6 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture6");
+		GLuint loc7 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture7");
+		GLuint loc8 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture8");
+
+		GLuint loc9 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture9");
+		GLuint loc10 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture10");
+		GLuint loc11 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture11");
+		GLuint loc12 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture12");
+		GLuint loc13 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture13");
+		GLuint loc14 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture14");
+		GLuint loc15 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture15");
+		GLuint loc16 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture16");
+
+		GLuint loc17 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture17");
+		GLuint loc18 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture18");
+		GLuint loc19 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture19");
+		GLuint loc20 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture20");
+		GLuint loc21 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture21");
+		GLuint loc22 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture22");
+		GLuint loc23 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture23");
+		GLuint loc24 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture24");
+
+		GLuint loc25 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture25");
+		GLuint loc26 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture26");
+		GLuint loc27 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture27");
+		GLuint loc28 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture28");
+		GLuint loc29 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture29");
+		GLuint loc30 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture30");
+		GLuint loc31 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture31");
+		GLuint loc32 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture32");
 		GLint samplers[maxTextures]{};
 
-		for (GLuint i = 0; i < maxTextures; i++)
+		for (GLuint i = 1; i < maxTextures; i++)
 			samplers[i] = i;
 
-		glUniform1iv(loc, maxTextures, samplers);
+		glUniform1i(loc1, samplers[1]);
+		glUniform1i(loc2, samplers[2]);
+		glUniform1i(loc3, samplers[3]);
+		glUniform1i(loc4, samplers[4]);
+		glUniform1i(loc5, samplers[5]);
+		glUniform1i(loc6, samplers[6]);
+		glUniform1i(loc7, samplers[7]);
+		glUniform1i(loc8, samplers[8]);
 		shaderProgram[QUAD_SHADER].UnUse();
 
 		// Bind fonts to text fragment shader
@@ -115,7 +156,7 @@ namespace Copium
 
 					go->transform.position = { x, y, 0.f };
 					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->getComponent(ComponentType::SpriteRenderer));
-					rc->get_sprite_renderer().set_sprite_id(rand() % 7 + 15);
+					rc->get_sprite_renderer().set_sprite_id(rand() % 20 + 1);
 				}
 			}
 		}
