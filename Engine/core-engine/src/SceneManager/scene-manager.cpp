@@ -113,6 +113,16 @@ namespace Copium {
 			storageScene = nullptr;
 		}
 
+		// For multiple scenes
+		//for (Scene* sc : scenes)
+		//{
+		//	if (sc)
+		//	{
+		//		delete sc;
+		//		sc = nullptr;
+		//	}
+		//}
+
 		
 	}
 
@@ -217,6 +227,9 @@ namespace Copium {
 
 		MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_SCENE_DESERIALIZED);
 
+		// For multiple scenes within an instance
+		//scenes.emplace_back(currentScene);
+
 		return true;
 
 	}
@@ -300,6 +313,8 @@ namespace Copium {
 			return false;
 		}
 
+
+
 		GameObjectID prevSelected = 0;
 		if (selectedGameObject)
 			prevSelected = selectedGameObject->id;
@@ -313,19 +328,22 @@ namespace Copium {
 				break;
 		}
 
-		if (mainCamera == nullptr)
-		{
-			delete currentScene;
-			currentScene = storageScene;
-			storageScene = 0;
-			return false;
-		}
+		currSceneState = Scene::SceneState::play;
+		currentScene->set_state(Scene::SceneState::play);
+
+		//if (mainCamera == nullptr)
+		//{
+		//	std::cout << "start preview\n";
+
+		//	delete currentScene;
+		//	currentScene = storageScene;
+		//	storageScene = 0;
+		//	return false;
+		//}
 
 		if (prevSelected)
 			selectedGameObject = findGameObjByID(prevSelected);
 
-		currSceneState = Scene::SceneState::play;
-		currentScene->set_state(Scene::SceneState::play);
 
 		return true;
 	}
@@ -337,6 +355,10 @@ namespace Copium {
 			
 			return false;
 		}
+
+		std::cout << "stop preview\n";
+		currSceneState = Scene::SceneState::edit;
+
 
 		// Delete memory for the preview scene
 		if (!storageScene)
@@ -356,7 +378,6 @@ namespace Copium {
 
 		delete tmp;
 
-		currSceneState = Scene::SceneState::edit;
 		currentScene->set_state(Scene::SceneState::edit);
 
 		return true;
@@ -408,11 +429,61 @@ namespace Copium {
 		rapidjson::Document doc;
 
 		doc.SetObject();
+
+		//rapidjson::Value sceneArray(rapidjson::kArrayType);
+		//for (Scene* sc : scenes)
+		//{
+		//	rapidjson::Value scene(rapidjson::kObjectType);
+		//	rapidjson::Value name;
+		//	create_rapidjson_string(doc, name, sc->get_name());
+		//	scene.AddMember("Name", name, doc.GetAllocator());
+
+		//	// Serialize UGIDs
+		//	rapidjson::Value ugids(rapidjson::kArrayType);
+		//	for (GameObjectID id : sc->get_unusedgids())
+		//	{
+		//		ugids.PushBack(id, doc.GetAllocator());
+		//	}
+		//	scene.AddMember("Unused GIDs", ugids, doc.GetAllocator());
+
+		//	// Serialize UCIDs
+		//	rapidjson::Value ucids(rapidjson::kArrayType);
+		//	for (ComponentID id : sc->get_unusedcids())
+		//	{
+		//		ucids.PushBack(id, doc.GetAllocator());
+		//	}
+		//	scene.AddMember("Unused CIDs", ucids, doc.GetAllocator());
+
+		//	std::vector<GameObject*> roots;
+		//	for (GameObject* pGameObject : sc->gameObjects)
+		//	{
+		//		if (!pGameObject->transform.hasParent())
+		//			roots.emplace_back(pGameObject);
+		//	}
+		//	//Create array of game objects
+		//	rapidjson::Value gameObjects(rapidjson::kArrayType);
+		//	for (GameObject* pGameObject : sc->gameObjects)
+		//	{
+		//		rapidjson::Value go(rapidjson::kObjectType);
+		//		pGameObject->serialize(go, doc);
+
+
+		//		//rapidjson::Value components(rapidjson::kArrayType);
+		//		// Insert transform component into component array
+
+
+		//		gameObjects.PushBack(go, doc.GetAllocator());
+		//	}
+
+		//	scene.AddMember("GameObjects", gameObjects, doc.GetAllocator());
+		//	sceneArray.PushBack(scene, doc.GetAllocator());
+		//}
+		//doc.AddMember("Scenes:", sceneArray, doc.GetAllocator());
 		rapidjson::Value name;
 		create_rapidjson_string(doc, name,  currentScene->get_name());
 		doc.AddMember("Name", name, doc.GetAllocator());
 
-		// Serialize UGIDse
+		// Serialize UGIDs
 		rapidjson::Value ugids(rapidjson::kArrayType);
 		for (GameObjectID id : currentScene->get_unusedgids())
 		{

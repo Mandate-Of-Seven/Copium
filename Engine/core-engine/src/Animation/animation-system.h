@@ -20,14 +20,21 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include <vector>
 
 #include "CopiumCore/system-interface.h"
-
 #include "GameObject/Components/component.h"
+#include "Animation/animation-struct.h"
 
 namespace Copium
 {
     class Animator : public Component
     {
     public:
+
+
+        enum class AnimatorStatus : char
+        {
+            idle = 0, 
+            playing
+        };
         /***************************************************************************/
         /*!
         \brief
@@ -62,7 +69,18 @@ namespace Copium
         /**************************************************************************/
         virtual Animator* clone(GameObject& _gameObj) const
         {
+            std::cout << "animator clone\n";
             Animator* component = new Animator(_gameObj);
+            component->animationCount = animationCount;
+            component->animations = animations;
+
+            for (Animation& anim : component->animations)
+            {
+            	anim.currentFrameIndex = 0;
+            	anim.timer = 0;
+            	
+            }
+
             return component;
         }
 
@@ -72,11 +90,33 @@ namespace Copium
             Deserialize this component's data from specified rapidjson value
         */
         /**************************************************************************/
-        //void deserialize(rapidjson::Value& _value);
+        void deserialize(rapidjson::Value& _value);
+        void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
+
+        void Update(float _dt);
+
+        std::vector<Animation>& get_animation_vector() { return animations; }
+
+        bool IsEmpty() const { return animations.empty(); }
+
+        void AddAnimation();
+        void PlayAnimation();
+
+        Animation* GetCurrentAnimation() 
+        { 
+            if (IsEmpty())
+                return nullptr;
+            return &animations[currentAnimationIndex]; 
+        }
+
+
     protected:
-        std::vector<int> animations;    // The indices of the animations inside the assets-system
+        std::vector<Animation> animations;    // The indices of the animations inside the assets-system
         int currentAnimationIndex;      // Current playing animation
         int startingAnimationIndex;     // The first animation that is playing
+        unsigned int animationCount;
+        bool loop;
+        AnimatorStatus status;
     };
 
     /*
@@ -95,10 +135,27 @@ namespace Copium
         /***************************************************************************/
         /*!
         \brief
+            Inits all the different animation's data and or status
+        */
+        /**************************************************************************/
+        void init();
+
+        /***************************************************************************/
+        /*!
+        \brief
             Manages all the different animation's data and or status
         */
         /**************************************************************************/
-        void Update();
+        void update();
+        
+        /***************************************************************************/
+        /*!
+        \brief
+            Frees up any memory from all animators
+        */
+        /**************************************************************************/
+        void exit();
+
 	private:
         std::vector<Animator*> animators;
 	};

@@ -63,7 +63,8 @@ namespace Copium
 		/*!
 		*
 		\brief
-			Create an ImGui Tree Node for the game object. Allow for selection of game objects
+			Create an ImGui Tree Node for the game object. Allow for selection of game objects.
+			Applies any reordering to the root vector
 			Note: this function will be called recursively for game object's children (if any)
 			Note: game object's with no children will be drawn as leaves
 
@@ -74,12 +75,47 @@ namespace Copium
 			reference to an int value which stores id of the game object that is selected (if any)
 			Note: default value should be -1 if no game objects are selected
 
+		\param _vector
+			reference to a std::vector of GameObject* that contains all the root game objects
+
+		\param _index
+			_go's index in the root vector
+
 		\return
 			if nothing is selected, return false
 			if a game object is selected return true
 		*/
 		/*******************************************************************************/
 		bool display_gameobject(GameObject& _go, GameObjectID& _selected, std::vector<GameObject*>& _vector, int _index);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Create an ImGui Tree Node for the game object. Allow for selection of game objects.
+			Applies any reordering to the container specified.
+			Note: this function will be called recursively for game object's children (if any)
+			Note: game object's with no children will be drawn as leaves
+			Note: this overload is meant for game objects with parents.
+
+		\param	_go
+			reference to the game object that is to be displayed
+
+		\param _selected
+			reference to an int value which stores id of the game object that is selected (if any)
+			Note: default value should be -1 if no game objects are selected
+
+		\param _list
+			reference to a std::list of Transform* which is the list that contains _go and its siblings
+
+		\param _index
+			_go's index in its list that will be used for reordering
+
+		\return
+			if nothing is selected, return false
+			if a game object is selected return true
+		*/
+		/*******************************************************************************/
+		bool display_gameobject(GameObject& _go, GameObjectID& _selected, std::list<Transform*>& _list, int _index);
 		/*******************************************************************************
 		/*!
 		*
