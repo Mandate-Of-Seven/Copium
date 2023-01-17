@@ -305,20 +305,23 @@ namespace Copium
 			}*/
 			// End of matrix assignment
 			
-			for (GLuint i = 1; i <= 8; i++)
-			glBindTextureUnit(i, graphics->get_texture_slots()[i]);
+			
 
-			if (graphics->get_texture_slot_index() > 8)
+			if (graphics->get_texture_slot_index() >= 8)
 			{
-				
+				graphics->set_texture_slot_index(1);
+				end_batch();
 				flush();
-				
+				begin_batch();
 			}
+
+			for (GLuint i = 1; i < 32; i++)
+				glBindTextureUnit(i, graphics->get_texture_slots()[i]);
 
 			glDrawElements(GL_TRIANGLES, quadIndexCount, GL_UNSIGNED_SHORT, NULL);
 			drawCount++;
 
-			graphics->set_texture_slot_index(1);
+			
 			glBindVertexArray(0);
 			graphics->get_shader_program()[QUAD_SHADER].UnUse();
 			glDisable(GL_BLEND);

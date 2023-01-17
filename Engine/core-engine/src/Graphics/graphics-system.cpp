@@ -68,6 +68,33 @@ namespace Copium
 		GLuint loc6 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture6");
 		GLuint loc7 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture7");
 		GLuint loc8 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture8");
+
+		GLuint loc9 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture9");
+		GLuint loc10 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture10");
+		GLuint loc11 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture11");
+		GLuint loc12 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture12");
+		GLuint loc13 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture13");
+		GLuint loc14 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture14");
+		GLuint loc15 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture15");
+		GLuint loc16 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture16");
+
+		GLuint loc17 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture17");
+		GLuint loc18 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture18");
+		GLuint loc19 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture19");
+		GLuint loc20 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture20");
+		GLuint loc21 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture21");
+		GLuint loc22 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture22");
+		GLuint loc23 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture23");
+		GLuint loc24 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture24");
+
+		GLuint loc25 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture25");
+		GLuint loc26 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture26");
+		GLuint loc27 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture27");
+		GLuint loc28 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture28");
+		GLuint loc29 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture29");
+		GLuint loc30 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture30");
+		GLuint loc31 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture31");
+		GLuint loc32 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture32");
 		GLint samplers[maxTextures]{};
 
 		for (GLuint i = 1; i < maxTextures; i++)
@@ -129,7 +156,7 @@ namespace Copium
 
 					go->transform.position = { x, y, 0.f };
 					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->getComponent(ComponentType::SpriteRenderer));
-					rc->get_sprite_renderer().set_sprite_id(rand() % 7 + 15);
+					rc->get_sprite_renderer().set_sprite_id(rand() % 20 + 1);
 				}
 			}
 		}
