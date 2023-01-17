@@ -108,6 +108,30 @@ namespace Copium
 		glUniform1i(loc6, samplers[6]);
 		glUniform1i(loc7, samplers[7]);
 		glUniform1i(loc8, samplers[8]);
+		glUniform1i(loc9, samplers[9]);
+		glUniform1i(loc10, samplers[10]);
+		glUniform1i(loc11, samplers[11]);
+		glUniform1i(loc12, samplers[12]);
+		glUniform1i(loc13, samplers[13]);
+		glUniform1i(loc14, samplers[14]);
+		glUniform1i(loc15, samplers[15]);
+		glUniform1i(loc16, samplers[16]);
+		glUniform1i(loc17, samplers[17]);
+		glUniform1i(loc18, samplers[18]);
+		glUniform1i(loc19, samplers[19]);
+		glUniform1i(loc20, samplers[20]);
+		glUniform1i(loc21, samplers[21]);
+		glUniform1i(loc22, samplers[22]);
+		glUniform1i(loc23, samplers[23]);
+		glUniform1i(loc24, samplers[24]);
+		glUniform1i(loc25, samplers[25]);
+		glUniform1i(loc26, samplers[26]);
+		glUniform1i(loc27, samplers[27]);
+		glUniform1i(loc28, samplers[28]);
+		glUniform1i(loc29, samplers[29]);
+		glUniform1i(loc30, samplers[30]);
+		glUniform1i(loc31, samplers[31]);
+		glUniform1i(loc32, samplers[32]);
 		shaderProgram[QUAD_SHADER].UnUse();
 
 		// Bind fonts to text fragment shader
