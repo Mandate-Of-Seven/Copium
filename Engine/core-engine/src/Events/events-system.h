@@ -69,7 +69,20 @@ namespace Copium
     public:
         void Init(){}
         void Update(){}
-        void Exit(){}
+        void Exit()
+        {
+            PRINT("FREEING EVENTS");
+            for (auto& keyPair : subscribers)
+            {
+                auto it{ keyPair.second->begin() };
+                while (it != keyPair.second->end())
+                {
+                    delete *it;
+                    ++it;
+                }
+                delete keyPair.second;
+            }
+        }
 
 
         template<typename EventType>
@@ -86,6 +99,7 @@ namespace Copium
                     handler->exec(evnt);
                 }
             }
+            delete evnt;
         }
 
         template<class T, class EventType>

@@ -52,6 +52,7 @@ namespace Copium
         void CallbackGetEntityByID(GetEntityEvent* pEvent);
         void CallbackGetEntityActive(GetEntityActiveEvent* pEvent);
         void CallbackSetEntityActive(SetEntityActiveEvent* pEvent);
+        void CallbackSwapEntities(SwapEntitiesEvent* pEvent);
         void CallbackSetParent(SetParentEvent* pEvent);
         template <typename T>
         void CallbackGetComponent(GetComponentEvent<T>* pEvent);
@@ -80,9 +81,9 @@ namespace Copium
         static_assert(AllComponents::Has<T>());
         COPIUM_ASSERT(!entities.DenseExists(id), "ENTITY DOES NOT EXIST");
         entities.DenseGet(id).componentsBitset.set(GetComponentType<T>::e);
-        components.GetArray<T>().AddFromDenseIndex(id);
+        size_t sparseID = components.GetArray<T>().AddFromDenseIndex(id);
         components.GetBitset<T>().set(id);
-        return &components.GetArray<T>()[id];
+        return &components.GetArray<T>().DenseGet(id);
     }
 
     template <typename T>
@@ -93,7 +94,7 @@ namespace Copium
         if (entities.DenseGet(id).componentsBitset.test(GetComponentType<T>::e))
         {
             //PRINT("Found Component " << typeid(T).name() << "of ID: " << id);
-            return &components.GetArray<T>()[id];
+            return &components.GetArray<T>().DenseGet(id);
         }
         return nullptr;
     }
@@ -105,6 +106,8 @@ namespace Copium
         COPIUM_ASSERT(!entities.DenseExists(id), "ENTITY DOES NOT EXIST");
         COPIUM_ASSERT(!HasComponent<T>(id), typeid(T).name());
         entities.DenseGet(id).componentsBitset.set(GetComponentType<T>::e, 0);
+        ComponentsArray<T>& typedComponents { components.GetArray<T>() };
+        typedComponents.Delete(&typedComponents.DenseGet(id));
     }
     
     template <typename T>
@@ -126,7 +129,7 @@ namespace Copium
     {
         ComponentsArray<T>& componentsArr{components.GetArray<T>()};
         pEvent->entityId = &pEvent->component - &componentsArr.DenseGet(0);
-        PRINT("GOTTEN ENTITY ID OF: "<< pEvent->entityId);
+        //PRINT("GOTTEN ENTITY ID OF: "<< pEvent->entityId);
     }
 
 

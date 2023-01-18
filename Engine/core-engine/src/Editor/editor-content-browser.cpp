@@ -52,7 +52,7 @@ namespace Copium
 			{
 				if (rFile == texture.get_file_path())
 				{
-					PRINT("FOUND TEXTURE");
+					//PRINT("FOUND TEXTURE");
 					return &texture;
 				}
 			}

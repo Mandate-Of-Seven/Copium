@@ -432,6 +432,13 @@ namespace Copium
 
 	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const SpriteRenderer& _sprite)
 	{
+		if (_sprite.refTexture == nullptr)
+		{
+			PRINT("TEXTURE NOT FOUND");
+			draw_quad(_position, _scale, _rotation, _sprite.color);
+			return;
+		}
+
 		glm::mat4 translate = glm::translate(glm::mat4(1.f), _position);
 
 		float radians = glm::radians(_rotation);

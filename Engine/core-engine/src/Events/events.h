@@ -79,7 +79,7 @@ namespace Copium
 	struct GetEntityFromComponentEvent : public IEvent
 	{
 		GetEntityFromComponentEvent(EntityID& _entityId, T& _component) : entityId{ _entityId }, component{ _component }{}
-		EntityID entityId;
+		EntityID& entityId;
 		T& component;
 	};
 
@@ -120,6 +120,13 @@ namespace Copium
 		SetComponentEnabledEvent(EntityID _id, bool _enabled) : id{ _id }, enabled{ _enabled }{}
 		EntityID id;
 		bool enabled;
+	};
+
+	struct SwapEntitiesEvent : public IEvent
+	{
+		SwapEntitiesEvent(EntityID _lhs, EntityID  _rhs) : lhs{ _lhs }, rhs{ _rhs }{}
+		EntityID lhs;
+		EntityID rhs;
 	};
 
 }

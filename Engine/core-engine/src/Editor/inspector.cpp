@@ -89,7 +89,6 @@ namespace Window
                 const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(typeid(T).name());
                 if (payload)
                 {
-                    PRINT("SETTED");
                     container = (T*)(*reinterpret_cast<void**>(payload->Data));
                 }
                 ImGui::EndDragDropTarget();
@@ -269,13 +268,15 @@ namespace Window
         {
             if (open)
             {
+                PRINT(entityID);
                 ImGui::Begin("Add Component", &open);
                 //AlignForWidth(ImGui::GetWindowSize().x);
                 static ImGuiTextFilter filter;
                 ImGui::PushItemWidth(-1);
                 filter.Draw("##ComponentName");
                 ImGui::PopItemWidth();
-                open = !AddComponent(filter,entityID,AllComponents::Types());
+                if (AddComponent(filter, entityID, AllComponents::Types()))
+                    open = false;
 
                 /*for (auto& nameToScriptClass : scriptingSystem.getScriptFiles())
                 {
@@ -342,14 +343,13 @@ namespace Window
             MyEventSystem.publish(new GetComponentEvent<Component>{ id,component });
             if (component)
             {
+                ImGui::PushID(ID);
                 ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth;
                 bool enabled{};
                 if constexpr(!std::is_same<Component,Transform>())
                 {
                     MyEventSystem.publish(new GetComponentEnabledEvent<Component>{ id,enabled });
-                    ImGui::PushID(ID);
                     DisplayType("Enabled", enabled); ImGui::SameLine();
-                    ImGui::PopID();
                     MyEventSystem.publish(new SetComponentEnabledEvent<Component>{ id,enabled });
                 }
                 const char* componentName = typeid(Component).name() + strlen("struct Copium::");
@@ -386,15 +386,14 @@ namespace Window
                     {
                         if (ImGui::Button("Delete", ImVec2(ImGui::GetWindowSize().x, 0.f)))
                         {
+                            PRINT("DELETING COMPONENT OF TYPE: " << typeid(Component).name());
                             MyEventSystem.publish(new RemoveComponentEvent<Component>{ id });
-                            //PRINT("ID: " << component->id);
-                            //componentsToDelete.push_back(component->id);
-                            //SceneManager::Instance()->get_current_scene()->add_unused_cid(component->id);
                         }
                     }
                     ImGui::PopStyleVar();
                     ImGui::PopStyleVar();
                 }
+                ImGui::PopID();
             }
             if constexpr (sizeof...(Components) == 0)
             {
@@ -431,8 +430,7 @@ namespace Window
             if (ImGui::BeginTable("Components", 1, tableFlags, ImVec2(0.f, ImGui::GetWindowSize().y * 0.8f)))
             {
                 ImGui::TableNextColumn();
-                int index = 0;
-                ImGui::PushID(index++);
+                ImGui::PushID(entityID + MAX_ENTITIES);
                 DisplayComponents(entityID,AllComponents::Types());
                 ImGui::PopID();
                 ImGui::EndTable();

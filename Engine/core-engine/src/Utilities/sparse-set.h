@@ -17,6 +17,8 @@ public:
 
     void Delete(T* toDelete);
 
+
+
     size_t GetSize()
     {
         return size;
@@ -44,15 +46,9 @@ public:
         return false;
     }
 
-    size_t GetSparseIndex(size_t denseIndex)
+    size_t (&GetIndexes())[N]
     {
-        for (size_t i = 0; i < size; ++i)
-        {
-            size_t index = indexes[i];
-            if (index == denseIndex)
-                return i;
-        }
-        return N;
+        return indexes;
     }
 
     void Swap(size_t sparseIndex1, size_t sparseIndex2)
@@ -62,11 +58,23 @@ public:
         indexes[sparseIndex2] = indexes[sparseIndex1];
     }
 
+    template <typename T, size_t N>
+    friend std::ostream& operator<<(std::ostream& stream, SparseSet<T, N>& sS);
 private:
     T data[N];
     size_t indexes[N];
     size_t size{ 0 };
 };
+
+template<typename T, size_t N>
+std::ostream& operator<<(std::ostream& stream, SparseSet<T, N>& sS)
+{
+    for (size_t i{ 0 }; i < sS.size; ++i)
+    {
+        stream << sS.indexes[i] << ",";
+    }
+    return stream;
+}
 
 template <typename T, size_t N>
 SparseSet<T, N>::SparseSet()
@@ -81,6 +89,7 @@ template <typename T, size_t N>
 size_t SparseSet<T, N>::Add()
 {
     ++size;
+    data[indexes[size - 1]] = T();
     return indexes[size - 1];
 }
 
@@ -105,6 +114,7 @@ size_t SparseSet<T, N>::AddFromDenseIndex(size_t denseIndex)
     size_t tmp = indexes[size - 1];
     indexes[size - 1] = denseIndex;
     *index = tmp;
+    data[indexes[size - 1]] = T();
     //Return sparse index, aka position of pooled object
     return size-1;
 }
@@ -155,6 +165,7 @@ void SparseSet<T, N>::Delete(T* toDelete)
 template <typename T, size_t N>
 T& SparseSet<T, N>::operator[] (size_t i)
 {
+    COPIUM_ASSERT(i >= size, "ARRAY OUT OF BOUNDS");
     return data[indexes[i]];
 }
 

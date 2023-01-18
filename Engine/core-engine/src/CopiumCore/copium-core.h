@@ -52,6 +52,7 @@ namespace Copium
 				//Put in sequence of calls
 				&WindowsSystem::Instance(),
 				&messageSystem,
+				&MyEventSystem,
 				&LoggingSystem::Instance(),
 				&MyECS,
 				//&SoundSystem::Instance(),

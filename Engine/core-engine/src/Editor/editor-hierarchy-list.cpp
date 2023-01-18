@@ -276,60 +276,52 @@ namespace Window::Hierarchy
 			return;
 			//return false;
 
-		//if (ImGui::BeginDragDropSource())
-		//{
-		//	static void* container; 
-		//	container = &_go;
-		//	ImGui::SetDragDropPayload("GameObject", &container, sizeof(void*));
-		//	ImGui::EndDragDropSource();
-		//	//std::cout << "ID of selected Game Object: " << _selected << std::endl;
-		//}
-		//if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
-		//{
-		//	if (!pTransform->HasParent())
-		//	{
-		//		//std::cout << "ID of selected Game Object: " << _selected << std::endl;
-		//		int n_next = (ImGui::GetMouseDragDelta(0).y < 0.f ? -1 : 1);
-		//		if (n_next > 0)
-		//			PRINT("Move up\n");
-		//		else
-		//			PRINT("Move down\n");
-
-		//		n_next += _index;
-		//		if (n_next >= 0 && n_next < _vector.size())
-		//		{
-		//			PRINT("there will be movement\n");
-		//			GameObject* temp = _vector[n_next];
-		//			size_t idx1{ 0 }, idx2{ 0 };
-		//			for (size_t i{ 0 }; i < currentScene->get_gameobjcount(); ++i)
-		//			{
-		//				if (temp == currentScene->gameObjects[i])
-		//				{
-		//					idx1 = i;
-		//					break;
-		//				}
-		//			}
-
-		//			for (size_t i{ 0 }; i < currentScene->get_gameobjcount(); ++i)
-		//			{
-		//				if (&_go == currentScene->gameObjects[i])
-		//				{
-		//					idx2 = i;
-		//					break;
-		//				}
-		//			}
-
-		//			currentScene->gameObjects[idx1] = currentScene->gameObjects[idx2];
-		//			currentScene->gameObjects[idx2] = temp;
+		if (ImGui::BeginDragDropSource())
+		{
+			static void* container; 
+			container = &entity;
+			ImGui::SetDragDropPayload("Entity", &container, sizeof(void*));
+			ImGui::EndDragDropSource();
+			//std::cout << "ID of selected Game Object: " << _selected << std::endl;
+		}
+		if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
+		{
+			if (!pTransform->HasParent())
+			{
+				//std::cout << "ID of selected Game Object: " << _selected << std::endl;
+				int dragOffset = ImGui::GetMouseDragDelta(0).y;
+				EntityID targetID{};
+				//Find next and prev ID;
+				SparseSet<Copium::Entity, MAX_ENTITIES>* pEntitiesArr{};
+				MyEventSystem.publish(new Copium::GetEntitiesEvent{pEntitiesArr});
+				for (size_t i = 0; i < pEntitiesArr->GetSize(); ++i)
+				{
+					Copium::Entity& entity{ (*pEntitiesArr)[i] };
+					EntityID id = &entity - &pEntitiesArr->DenseGet(0);
 
 
-		//		}
-		//		ImGui::ResetMouseDragDelta();
-
-
-		//	}
-
-		//}
+					if (id == entityID)
+					{					
+						float y = ImGui::GetItemRectMax().y - ImGui::GetItemRectMin().y;
+						if (dragOffset < y / -2.f && i != 0)
+						{
+							PRINT("up up and away : " << entityID);
+							targetID = &(*pEntitiesArr)[i - 1] - &pEntitiesArr->DenseGet(0);
+							MyEventSystem.publish(new Copium::SwapEntitiesEvent{ entityID,targetID });
+							ImGui::ResetMouseDragDelta();
+						}
+						else if (dragOffset > y/2.f && i + 1 < pEntitiesArr->GetSize())
+						{
+							PRINT("bloop");
+							targetID = &(*pEntitiesArr)[i + 1] - &pEntitiesArr->DenseGet(0);
+							MyEventSystem.publish(new Copium::SwapEntitiesEvent{ entityID,targetID });
+							ImGui::ResetMouseDragDelta();
+						}
+						break;
+					}
+				}
+			}
+		}
 
 		if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
 		{

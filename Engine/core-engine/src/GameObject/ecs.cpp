@@ -45,12 +45,41 @@ namespace Copium
 	}
 
 
+	void EntityComponentSystem::CallbackSwapEntities(SwapEntitiesEvent* pEvent)
+	{
+		SwapEntities(pEvent->lhs,pEvent->rhs);
+	}
+
 	void EntityComponentSystem::SwapEntities(EntityID lhs, EntityID rhs)
 	{
-		size_t lhsIndex{ entities.GetSparseIndex(lhs) };
-		size_t rhsIndex{ entities.GetSparseIndex(rhs) };
+		size_t lhsIndex{};
+		size_t rhsIndex{};
+		bool lhsFound{ false };
+		bool rhsFound{ false };
+		size_t (&indexes)[MAX_ENTITIES]{entities.GetIndexes()};
+		//Get Sparse index of lhs and rhs
+		//Swap places of the indexes
 		for (size_t i = 0; i < entities.GetSize(); ++i)
 		{
+			EntityID entityID{indexes[i]};
+			if (entityID == lhs)
+			{
+				lhsFound = true;
+				lhsIndex = i;
+			}
+			else if (entityID == rhs)
+			{
+				rhsFound = true;
+				rhsIndex = i;
+			}
+			if (lhsFound && rhsFound)
+			{
+				PRINT("BEFORE: "<< indexes[lhsIndex] <<" AND " << indexes[rhsIndex] << " SWAPPED!");
+				indexes[lhsIndex] = rhs;
+				indexes[rhsIndex] = lhs;
+				PRINT("AFTER: " << indexes[lhsIndex] << " AND " << indexes[rhsIndex] << " SWAPPED!");
+				return;
+			}
 		}
 	}
 
@@ -92,6 +121,7 @@ namespace Copium
 	{
 		MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackInstantiateEntity);
 		MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackGetEntitiesPtr);
+		MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackSwapEntities);
 		MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackSetParent);
 		MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackGetEntityByID);
 		MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackSetEntityActive);

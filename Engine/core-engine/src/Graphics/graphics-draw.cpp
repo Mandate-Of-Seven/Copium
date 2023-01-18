@@ -216,23 +216,25 @@ namespace Copium
 			MyEventSystem.publish(new GetComponentEvent{ entityID,t });
 			glm::vec2 size(t->scale.x, t->scale.y);
 			float rotation = t->rotation.z;
-			if (sr.refTexture)
-			{
-				renderer.draw_quad(t->position, size, rotation, sr);
-			}
-			else if (t->HasParent())
+			Math::Vec3 position{ t->position };
+			if (t->HasParent())
 			{
 				Transform* parent{};
 				MyEventSystem.publish(new GetComponentEvent{ t->parentID,parent });
-				Copium::Math::Matrix3x3 rot;
-				Copium::Math::matrix3x3_rotdeg(rot, parent->rotation.z);
-				Copium::Math::Vec3 intermediate = (rot * t->position);
-				renderer.draw_quad(intermediate + parent->position, size, rotation+ parent->rotation.z, sr);
+				Math::Matrix3x3 rot;
+				Math::matrix3x3_rotdeg(rot, parent->rotation.z);
+				rotation += parent->rotation.z;
+				Math::Vec3 diff = { position.x - parent->position.x,position.y - parent->position.y,0 };
+				Math::Vec3 intermediate = (rot * diff);
+				diff.x *= parent->scale.x;
+				diff.y *= parent->scale.y;
+				PRINT(intermediate.x << "," << intermediate.y);
+				size.x *= parent->scale.x;
+				size.y *= parent->scale.y;
+				position = parent->position;
+				PRINT("Entity ID: " << entityID << "has parent");
 			}
-			else
-			{
-				renderer.draw_quad(t->position, size, rotation, sr.color);
-			}
+			renderer.draw_quad(position, size, rotation, sr);
 		}
 		
 		//Scene* scene = sm.get_current_scene();
