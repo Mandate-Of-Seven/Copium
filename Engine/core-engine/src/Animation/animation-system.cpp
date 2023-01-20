@@ -79,7 +79,7 @@ namespace Copium
 					status = AnimatorStatus::playing;
 				else
 				{
-					status = AnimatorStatus::idle;
+					StopAnimation();
 					anim->ResetFrame();
 				}
 
@@ -160,6 +160,10 @@ namespace Copium
 					}
 				}
 
+				if (ImGui::Button("Stop Animation"))
+				{
+					StopAnimation();
+				}
 			}
 		
 
@@ -185,6 +189,12 @@ namespace Copium
 	{
 
 	}
+	void Animator::StopAnimation()
+	{
+		status = AnimatorStatus::idle;		
+	}
+	
+
 	void Animator::Update(float _dt)
 	{
 		//for (Animation& anim : animations)
