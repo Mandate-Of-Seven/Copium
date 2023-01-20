@@ -22,50 +22,23 @@ namespace Copium
 
 	struct InstantiateEntityEvent : public IEvent
 	{
-		InstantiateEntityEvent(EntityID* pNewEntityID) : pEntityID{pNewEntityID} {}
+		InstantiateEntityEvent(EntityID* pNewEntityID, EntityID _parentID = MAX_ENTITIES) 
+			: pEntityID{ pNewEntityID }, parentID{ _parentID } {}
 		EntityID* pEntityID;
+		EntityID parentID;
 	};
 
-	struct GetEntitiesEvent : public IEvent
+	struct GetEntitiesArrayEvent : public IEvent
 	{
-		GetEntitiesEvent(SparseSet<Entity,MAX_ENTITIES>*& pEntitiesContainer) : pContainer{ pEntitiesContainer } {}
-		SparseSet<Entity, MAX_ENTITIES>*& pContainer;
-	};
-
-	struct GetEntityEvent : public IEvent
-	{
-		GetEntityEvent(EntityID _id, Entity*& _pEntity) : id{_id}, pEntity{_pEntity}{}
-		EntityID id;
-		Entity*& pEntity;
-	};
-
-	struct GetEntityActiveEvent : public IEvent
-	{
-		GetEntityActiveEvent(EntityID _id, bool& _active) : id{_id}, active{_active}{}
-		EntityID id;
-		bool& active;
-	};
-
-	struct SetEntityActiveEvent : public IEvent
-	{
-		SetEntityActiveEvent(EntityID _id, bool _active) : id{ _id }, active{ _active }{}
-		EntityID id;
-		bool active;
+		GetEntitiesArrayEvent(EntitiesArray*& pEntitiesContainer) : pContainer{ pEntitiesContainer } {}
+		EntitiesArray*& pContainer;
 	};
 
 	template <typename T>
-	struct GetComponentsEvent : public IEvent
+	struct GetComponentsArrayEvent : public IEvent
 	{
-		GetComponentsEvent(ComponentsArray<T>*& _pComponents) : pComponents{ _pComponents }{}
+		GetComponentsArrayEvent(ComponentsArray<T>*& _pComponents) : pComponents{ _pComponents }{}
 		ComponentsArray<T>*& pComponents;
-	};
-
-	template <typename T>
-	struct GetComponentEvent : public IEvent
-	{
-		GetComponentEvent(EntityID _id, T*& _pComponent) : id{ _id }, pComponent{ _pComponent }{}
-		EntityID id; 
-		T*& pComponent;
 	};
 
 	struct SetParentEvent : public IEvent
@@ -73,14 +46,6 @@ namespace Copium
 		SetParentEvent(EntityID _childID, EntityID _parentID) : childID{ _childID }, parentID{ _parentID }{}
 		EntityID childID;
 		EntityID parentID;
-	};
-
-	template <typename T>
-	struct GetEntityFromComponentEvent : public IEvent
-	{
-		GetEntityFromComponentEvent(EntityID& _entityId, T& _component) : entityId{ _entityId }, component{ _component }{}
-		EntityID& entityId;
-		T& component;
 	};
 
 	template <typename T>
@@ -106,22 +71,6 @@ namespace Copium
 		bool& exists;
 	};
 
-	template <typename T>
-	struct GetComponentEnabledEvent : public IEvent
-	{
-		GetComponentEnabledEvent(EntityID _id, bool& _enabled) : id{ _id }, enabled{ _enabled }{}
-		EntityID id;
-		bool& enabled;
-	};
-
-	template <typename T>
-	struct SetComponentEnabledEvent : public IEvent
-	{
-		SetComponentEnabledEvent(EntityID _id, bool _enabled) : id{ _id }, enabled{ _enabled }{}
-		EntityID id;
-		bool enabled;
-	};
-
 	struct SwapEntitiesEvent : public IEvent
 	{
 		SwapEntitiesEvent(EntityID _lhs, EntityID  _rhs) : lhs{ _lhs }, rhs{ _rhs }{}
@@ -129,4 +78,15 @@ namespace Copium
 		EntityID rhs;
 	};
 
+	struct GetDeltaTimeEvent : public IEvent
+	{
+		GetDeltaTimeEvent(float& _dt) : dt{_dt} {}
+		float& dt;
+	};
+
+	struct GetFixedDeltaTimeEvent : public IEvent
+	{
+		GetFixedDeltaTimeEvent(float& _fdt) : fdt{ _fdt } {}
+		float& fdt;
+	};
 }

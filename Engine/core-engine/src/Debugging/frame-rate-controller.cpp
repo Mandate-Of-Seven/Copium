@@ -27,6 +27,8 @@ namespace Copium {
 		fixedDeltaTime = 1 / _maxFPS;
 		deltaTime = 0.0;
 		accumulatedTime = 0.0;
+		MyEventSystem.subscribe(this, &FrameRateController::CallbackGetDeltaTime);
+		MyEventSystem.subscribe(this, &FrameRateController::CallbackGetFixedDeltaTime);
 	}
 
 	/*******************************************************************************
@@ -64,6 +66,16 @@ namespace Copium {
 		frameRate = 1/deltaTime;
 	}
 
+
+	void FrameRateController::CallbackGetDeltaTime(GetDeltaTimeEvent* pEvent)
+	{
+		pEvent->dt = deltaTime;
+	}
+
+	void FrameRateController::CallbackGetFixedDeltaTime(GetFixedDeltaTimeEvent* pEvent)
+	{
+		pEvent->fdt = fixedDeltaTime;
+	}
 }
 
 

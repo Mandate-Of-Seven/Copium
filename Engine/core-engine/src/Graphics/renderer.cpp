@@ -434,7 +434,6 @@ namespace Copium
 	{
 		if (_sprite.refTexture == nullptr)
 		{
-			PRINT("TEXTURE NOT FOUND");
 			draw_quad(_position, _scale, _rotation, _sprite.color);
 			return;
 		}

@@ -118,7 +118,8 @@ namespace Copium
 		//	}
 		//}
 
-		/*PRINT("Mouse position: " << mousePos.x << ", " << mousePos.y);
+		/*
+		("Mouse position: " << mousePos.x << ", " << mousePos.y);
 		PRINT("Centre position: " << centreOfScene.x << ", " << centreOfScene.y);
 		PRINT("Mouse NDC position: " << mouseToNDC.x << ", " << mouseToNDC.y);
 		PRINT("World NDC position: " << worldNDC.x << ", " << worldNDC.y);*/

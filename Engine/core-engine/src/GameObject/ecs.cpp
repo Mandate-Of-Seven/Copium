@@ -5,13 +5,13 @@ namespace Copium
 {
 	void EntityComponentSystem::CallbackInstantiateEntity(InstantiateEntityEvent* pEvent)
 	{
-		size_t sparseIndex = entities.Add();
+		size_t sparseIndex = entities.entities.Add();
 		PRINT("SPARSE INDEX: " << sparseIndex);
-		size_t denseIndex = entities.GetDenseIndex(sparseIndex);
+		size_t denseIndex = entities.entities.GetDenseIndex(sparseIndex);
 		std::stringstream name;
 		name << "New GameObject(" << denseIndex << ")";
 		entities[sparseIndex].name = name.str();
-		activeEntities.set(denseIndex, true);
+		entities.SetActive(denseIndex, true);
 		if (pEvent->pEntityID)
 		{
 			*pEvent->pEntityID = denseIndex;
@@ -19,22 +19,7 @@ namespace Copium
 		}
 	}
 
-	void EntityComponentSystem::CallbackGetEntityByID(GetEntityEvent* pEvent)
-	{
-		pEvent->pEntity = &entities.DenseGet(pEvent->id);
-	}
-
-	void EntityComponentSystem::CallbackGetEntityActive(GetEntityActiveEvent* pEvent)
-	{
-		pEvent->active = GetActive(pEvent->id);
-	}
-
-	void EntityComponentSystem::CallbackSetEntityActive(SetEntityActiveEvent* pEvent)
-	{
-		SetActive(pEvent->id, pEvent->active);
-	}
-
-	void EntityComponentSystem::CallbackGetEntitiesPtr(GetEntitiesEvent* pEvent)
+	void EntityComponentSystem::CallbackGetEntitiesArray(GetEntitiesArrayEvent* pEvent)
 	{
 		pEvent->pContainer = &entities;
 	}
@@ -56,7 +41,7 @@ namespace Copium
 		size_t rhsIndex{};
 		bool lhsFound{ false };
 		bool rhsFound{ false };
-		size_t (&indexes)[MAX_ENTITIES]{entities.GetIndexes()};
+		size_t (&indexes)[MAX_ENTITIES]{entities.entities.GetIndexes()};
 		//Get Sparse index of lhs and rhs
 		//Swap places of the indexes
 		for (size_t i = 0; i < entities.GetSize(); ++i)
@@ -108,24 +93,21 @@ namespace Copium
 	//Delete
 	void EntityComponentSystem::DestroyEntity(EntityID idToDelete)
 	{
-		entities.Delete(idToDelete);
+		entities.entities.Delete(idToDelete);
 	}
 
 	void EntityComponentSystem::DestroyEntity(Entity* pEntity)
 	{
-		entities.Delete(pEntity);
+		entities.entities.Delete(pEntity);
 	}
 
 
 	void EntityComponentSystem::Init()
 	{
 		MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackInstantiateEntity);
-		MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackGetEntitiesPtr);
+		MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackGetEntitiesArray);
 		MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackSwapEntities);
 		MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackSetParent);
-		MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackGetEntityByID);
-		MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackSetEntityActive);
-		MyEventSystem.subscribe(this, &EntityComponentSystem::CallbackGetEntityActive);
 		SubscribeComponentCallbacks(AllComponents::Types());
 	}
 

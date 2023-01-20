@@ -54,9 +54,45 @@ namespace Copium
 	template <typename... Ts>
 	struct Pack {};
 
-	template <typename Component>
-	using ComponentsArray = SparseSet<Component, MAX_ENTITIES>;
 	using ComponentsBitset = std::bitset<MAX_ENTITIES>;
+
+	template <typename Component>
+	class ComponentsArray
+	{
+		ComponentsBitset componentsBitset{};
+		SparseSet<Component, MAX_ENTITIES> components;
+		friend class EntityComponentSystem;
+	public:
+		void SetEnabled(EntityID entityID, bool val)
+		{
+			componentsBitset.set(entityID, val);
+		}
+
+		bool GetEnabled(EntityID entityID) const
+		{
+			return componentsBitset.test(entityID);
+		}
+
+		EntityID GetID(const Component& component)
+		{
+			return(&component - &components.DenseGet(0));
+		}
+
+		size_t GetSize() const
+		{
+			return components.GetSize();
+		}
+
+		Component& FindByID(EntityID entityID)
+		{
+			return components.DenseGet(entityID);
+		}
+
+		Component& operator[](size_t index)
+		{
+			return components[index];
+		}
+	};
 
 	template<typename Component, typename... Components>
 	struct ComponentGroup
@@ -64,7 +100,6 @@ namespace Copium
 		using Types = Pack<Component,Components...>;
 
 		ComponentsArray<Component> components;
-		ComponentsBitset componentsBitset;
 		ComponentGroup<Components...> others;
 
 		template <typename T>
@@ -85,19 +120,6 @@ namespace Copium
 				return others.GetArray<T>();
 			}
 		}
-
-		template <typename T>
-		constexpr ComponentsBitset& GetBitset()
-		{
-			if constexpr (std::is_same<T, Component>())
-			{
-				return componentsBitset;
-			}
-			else
-			{
-				return others.GetBitset<T>();
-			}
-		}
 	};
 
 	template<typename Component>
@@ -110,13 +132,6 @@ namespace Copium
 		constexpr ComponentsArray<T>& GetArray()
 		{
 			return components;
-		}
-
-		template <typename T>
-		constexpr ComponentsBitset& GetBitset()
-		{
-			static_assert(std::is_same<T, Component>());
-			return componentsBitset;
 		}
 	};
 
@@ -132,6 +147,17 @@ namespace Copium
 		Math::Vec3 rotation{};
 		Math::Vec3 scale{1,1,1};
 		bool HasParent() const{ return parentID < MAX_ENTITIES;}
+	};
+
+	struct Rigidbody2D
+	{
+		Rigidbody2D() = default;
+		Math::Vec2 velocity;					//velocity of object
+		Math::Vec2 acceleration;				//acceleration of object
+		Math::Vec2 force;						//forces acting on object
+		float mass;								//mass of object
+		bool active;							//is object active?
+		bool useGravity;					//is object affected by gravity?
 	};
 
 	struct BoxCollider2D
@@ -153,7 +179,7 @@ namespace Copium
 		bool isAddingSprite;
 	};
 
-	using AllComponents = ComponentGroup<Transform, BoxCollider2D, SpriteRenderer>;
+	using AllComponents = ComponentGroup<Transform, BoxCollider2D, Rigidbody2D, SpriteRenderer>;
 
 	#define RegisterComponent(Type)template <> struct GetComponentType<Type>{static constexpr size_t e{ (size_t)ComponentType::Type }; };
 
@@ -163,6 +189,7 @@ namespace Copium
 	RegisterComponent(Transform);
 	RegisterComponent(BoxCollider2D);
 	RegisterComponent(SpriteRenderer);
+	RegisterComponent(Rigidbody2D);
 }
 
 

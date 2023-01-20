@@ -19,7 +19,7 @@ public:
 
 
 
-    size_t GetSize()
+    size_t GetSize() const
     {
         return size;
     }

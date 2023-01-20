@@ -194,45 +194,39 @@ namespace Copium
 		// Theory WIP
 
 		ComponentsArray<SpriteRenderer>* pSpriteRenderers{};
-		MyEventSystem.publish(new GetComponentsEvent<SpriteRenderer>{pSpriteRenderers});
-
+		MyEventSystem.publish(new GetComponentsArrayEvent<SpriteRenderer>{ pSpriteRenderers });
+		ComponentsArray<Transform>* pTransforms{};
+		MyEventSystem.publish(new GetComponentsArrayEvent<Transform>{ pTransforms });
+		EntitiesArray* pEntitiesArray{};
+		MyEventSystem.publish(new GetEntitiesArrayEvent{ pEntitiesArray });
 		if (!pSpriteRenderers)
 			return;
-		ComponentsArray<SpriteRenderer>& spriteRenderers{ *pSpriteRenderers };
-		for (size_t i = 0; i < spriteRenderers.GetSize(); ++i)
+		for (size_t i = 0; i < pSpriteRenderers->GetSize(); ++i)
 		{
-			SpriteRenderer& sr{ spriteRenderers[i] };
-			EntityID entityID{};
-			MyEventSystem.publish(new GetEntityFromComponentEvent{ entityID,sr });
-			bool entityActive{};
-			MyEventSystem.publish(new GetEntityActiveEvent{ entityID,entityActive });
-			if (!entityActive)
+			SpriteRenderer& sr{ (*pSpriteRenderers)[i]};
+			EntityID entityID{ pSpriteRenderers->GetID(sr)};
+			if (!pEntitiesArray->GetActive(entityID))
 				continue;
-			bool componentEnabled{};
-			MyEventSystem.publish(new GetComponentEnabledEvent<SpriteRenderer>{entityID,componentEnabled });
-			if (!componentEnabled)
+			if (!pSpriteRenderers->GetEnabled(entityID))
 				continue;
-			Transform* t{};
-			MyEventSystem.publish(new GetComponentEvent{ entityID,t });
-			glm::vec2 size(t->scale.x, t->scale.y);
-			float rotation = t->rotation.z;
-			Math::Vec3 position{ t->position };
-			if (t->HasParent())
+			Transform& t{ pTransforms->FindByID(entityID)};
+			glm::vec2 size(t.scale.x, t.scale.y);
+			float rotation = t.rotation.z;
+			Math::Vec3 position{ t.position };
+			if (t.HasParent())
 			{
-				Transform* parent{};
-				MyEventSystem.publish(new GetComponentEvent{ t->parentID,parent });
+				Transform& parent{ pTransforms->FindByID(t.parentID) };
+				rotation += parent.rotation.z;
 				Math::Matrix3x3 rot;
-				Math::matrix3x3_rotdeg(rot, parent->rotation.z);
-				rotation += parent->rotation.z;
-				Math::Vec3 diff = { position.x - parent->position.x,position.y - parent->position.y,0 };
-				Math::Vec3 intermediate = (rot * diff);
-				diff.x *= parent->scale.x;
-				diff.y *= parent->scale.y;
-				PRINT(intermediate.x << "," << intermediate.y);
-				size.x *= parent->scale.x;
-				size.y *= parent->scale.y;
-				position = parent->position;
-				PRINT("Entity ID: " << entityID << "has parent");
+				Math::matrix3x3_rotdeg(rot, parent.rotation.z);
+				Math::Vec3 intermediate = t.position;
+				intermediate.x *= parent.scale.x;
+				intermediate.y *= parent.scale.y;
+				intermediate = rot * intermediate;
+				size.x *= parent.scale.x;
+				size.y *= parent.scale.y;
+				position = parent.position + intermediate;
+				Math::Vec3 diff = { position.x - parent.position.x,position.y - parent.position.y,0 };
 			}
 			renderer.draw_quad(position, size, rotation, sr);
 		}

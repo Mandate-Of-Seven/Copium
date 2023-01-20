@@ -128,7 +128,9 @@ namespace Copium
 				}
 				else
 				{
-					performanceCounter += (float)MyFrameRateController.getDt();
+					float dt{};
+					MyEventSystem.publish(new GetDeltaTimeEvent(dt));
+					performanceCounter += dt;
 				}
 			}
 		}

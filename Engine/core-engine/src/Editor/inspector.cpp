@@ -268,7 +268,6 @@ namespace Window
         {
             if (open)
             {
-                PRINT(entityID);
                 ImGui::Begin("Add Component", &open);
                 //AlignForWidth(ImGui::GetWindowSize().x);
                 static ImGuiTextFilter filter;
@@ -331,6 +330,15 @@ namespace Window
             Display("Sprite", spriteRenderer.refTexture);
         }
 
+        template <>
+        void DisplayComponent<Rigidbody2D>(Rigidbody2D& rb2D)
+        {
+
+            //DisplayDragDrop();
+            //spriteRenderer.sprite.set_name()
+            Display("Mass", rb2D.mass);
+        }
+
         void DisplayComponents(EntityID id)
         {
             (void)id;
@@ -339,18 +347,20 @@ namespace Window
         template <size_t ID = 0, typename Component, typename... Components >
         void DisplayComponents(EntityID id, Pack<Component, Components...> components)
         {
-            Component* component{};
-            MyEventSystem.publish(new GetComponentEvent<Component>{ id,component });
-            if (component)
+            bool hasComponent{false};
+            MyEventSystem.publish(new HasComponentEvent<Component>(id,hasComponent));
+            if (hasComponent)
             {
+                ComponentsArray<Component>* componentsArray{};
+                MyEventSystem.publish(new GetComponentsArrayEvent{ componentsArray });
+                Component& component{componentsArray->FindByID(id)};
                 ImGui::PushID(ID);
                 ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth;
-                bool enabled{};
                 if constexpr(!std::is_same<Component,Transform>())
                 {
-                    MyEventSystem.publish(new GetComponentEnabledEvent<Component>{ id,enabled });
+                    bool enabled{ componentsArray->GetEnabled(id) };
                     DisplayType("Enabled", enabled); ImGui::SameLine();
-                    MyEventSystem.publish(new SetComponentEnabledEvent<Component>{ id,enabled });
+                    componentsArray->SetEnabled( id,enabled );
                 }
                 const char* componentName = typeid(Component).name() + strlen("struct Copium::");
                 if (ImGui::CollapsingHeader(componentName, nodeFlags))
@@ -371,11 +381,11 @@ namespace Window
                         if (ImGui::BeginDragDropSource())
                         {
                             static void* container;
-                            container = component;
+                            container = &component;
                             ImGui::SetDragDropPayload(componentName, &container, sizeof(void*));
                             ImGui::EndDragDropSource();
                         }
-                        DisplayComponent(*component);
+                        DisplayComponent(component);
                         ImGui::PopStyleVar();
                         ImGui::PopStyleVar();
                         ImGui::PopStyleVar();
@@ -410,20 +420,18 @@ namespace Window
             if (entityID == MAX_ENTITIES)
                 return;
             using namespace Copium;
-            Entity* selectedEntity{};
-            MyEventSystem.publish(new GetEntityEvent{ MyEditorSystem.GetSelectedEntityID(),selectedEntity });
-            if (!selectedEntity)
-                return;
-            bool active{};
-            MyEventSystem.publish(new GetEntityActiveEvent{ entityID, active });
+            EntitiesArray* pEntitiesArray{};
+            MyEventSystem.publish(new GetEntitiesArrayEvent{ pEntitiesArray });
+            Entity& selectedEntity{(*pEntitiesArray).FindByID(entityID)};
+            bool active{(*pEntitiesArray).GetActive(entityID)};
             ImGui::Checkbox("##Active", &active);
             ImGui::SameLine();
             static char buffer[256];
-            strcpy(buffer, selectedEntity->name.c_str());
+            strcpy(buffer, selectedEntity.name.c_str());
             ImGui::PushItemWidth(-1);
             ImGui::InputText("##gameObjName", buffer, 256);
             ImGui::PopItemWidth();
-            selectedEntity->name = buffer;
+            selectedEntity.name = buffer;
             ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
                 | ImGuiTableFlags_ScrollY;
             ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);
@@ -437,7 +445,7 @@ namespace Window
             }
             ImGui::PopStyleVar();
 
-            MyEventSystem.publish(new SetEntityActiveEvent{ entityID, active });
+            (*pEntitiesArray).SetActive(entityID,active);
 
             static const float buttonSizeY = ImGui::CalcTextSize("Add Component").y;
             ImVec2 buttonSize(ImGui::GetWindowSize().x, buttonSizeY * 2);;

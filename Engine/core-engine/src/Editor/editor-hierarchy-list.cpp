@@ -113,12 +113,7 @@ namespace Window::Hierarchy
 					if (MyEditorSystem.GetSelectedEntityID() < MAX_ENTITIES)
 					{
 						EntityID createdID{};
-						MyEventSystem.publish(new Copium::InstantiateEntityEvent(&createdID));
-						Copium::Transform* t{};
-						MyEventSystem.publish(new Copium::GetComponentEvent(createdID, t));
-						PRINT("PARENT GAMEOBJECT ID: " << MyEditorSystem.GetSelectedEntityID());
-						PRINT("NEW CHILD GAMEOBJECT ID: " << createdID);
-						MyEventSystem.publish(new SetParentEvent{createdID,MyEditorSystem.GetSelectedEntityID() });
+						MyEventSystem.publish(new Copium::InstantiateEntityEvent(&createdID, MyEditorSystem.GetSelectedEntityID()));
 					}
 				}
 				if (ImGui::BeginMenu("Add Archetype"))
@@ -218,18 +213,17 @@ namespace Window::Hierarchy
 		// Display scene name as the rootiest node
 		if (ImGui::TreeNodeEx("PLACEHOLDER SCENE NAME", rootFlags))
 		{
-			SparseSet<Copium::Entity, MAX_ENTITIES>* pEntities{};
-			MyEventSystem.publish(new Copium::GetEntitiesEvent(pEntities));
-			if (pEntities)
+			ComponentsArray<Transform>* pTransformsArray{};
+			MyEventSystem.publish(new Copium::GetComponentsArrayEvent(pTransformsArray));
+			if (pTransformsArray)
 			{
-				for (size_t i = 0; i < (*pEntities).GetSize(); ++i)
+				for (size_t i = 0; i < pTransformsArray->GetSize(); ++i)
 				{
-					Transform* pTransform{};
-					EntityID entityID{ (*pEntities).GetDenseIndex(i) };
-					MyEventSystem.publish(new GetComponentEvent{ entityID,pTransform});
-					if (pTransform->HasParent())
+					Transform& transform{ (*pTransformsArray)[i]};
+					EntityID entityID{ pTransformsArray->GetID(transform)};
+					if (transform.HasParent())
 						continue;
-					display_gameobject_advanced(entityID);
+					display_gameobject_advanced(entityID, transform);
 				}
 			}
 			//bool isSelected = false;
@@ -250,16 +244,13 @@ namespace Window::Hierarchy
 	}
 	
 
-	void display_gameobject_advanced(EntityID entityID)
+	void display_gameobject_advanced(EntityID entityID, Copium::Transform& transform)
 	{
 		bool isSelected = false;
 		ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 
-		Copium::Transform* pTransform{};
-		MyEventSystem.publish(new Copium::GetComponentEvent{ entityID,pTransform });
-
 		//// If root node does not have children, it is simply a leaf node (end of the branch)
-		if (pTransform->childrenIDs.empty())
+		if (transform.childrenIDs.empty())
 		{
 			baseFlags |= ImGuiTreeNodeFlags_Leaf;
 		}
@@ -270,9 +261,10 @@ namespace Window::Hierarchy
 			baseFlags |= ImGuiTreeNodeFlags_Selected;				
 		}
 
-		Copium::Entity* entity{};
-		MyEventSystem.publish(new Copium::GetEntityEvent{ entityID,entity });
-		if (!ImGui::TreeNodeEx(entity->name.c_str(), baseFlags))
+		Copium::EntitiesArray* pEntities{};
+		MyEventSystem.publish(new Copium::GetEntitiesArrayEvent{ pEntities });
+		Copium::Entity& entity{(*pEntities)[entityID]};
+		if (!ImGui::TreeNodeEx(entity.name.c_str(), baseFlags))
 			return;
 			//return false;
 
@@ -286,18 +278,16 @@ namespace Window::Hierarchy
 		}
 		if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
 		{
-			if (!pTransform->HasParent())
+			if (!transform.HasParent())
 			{
 				//std::cout << "ID of selected Game Object: " << _selected << std::endl;
 				int dragOffset = ImGui::GetMouseDragDelta(0).y;
 				EntityID targetID{};
 				//Find next and prev ID;
-				SparseSet<Copium::Entity, MAX_ENTITIES>* pEntitiesArr{};
-				MyEventSystem.publish(new Copium::GetEntitiesEvent{pEntitiesArr});
-				for (size_t i = 0; i < pEntitiesArr->GetSize(); ++i)
+				for (size_t i = 0; i < pEntities->GetSize(); ++i)
 				{
-					Copium::Entity& entity{ (*pEntitiesArr)[i] };
-					EntityID id = &entity - &pEntitiesArr->DenseGet(0);
+					Copium::Entity& entity{ (*pEntities)[i] };
+					EntityID id = pEntities->GetID(entity);
 
 
 					if (id == entityID)
@@ -305,15 +295,15 @@ namespace Window::Hierarchy
 						float y = ImGui::GetItemRectMax().y - ImGui::GetItemRectMin().y;
 						if (dragOffset < y / -2.f && i != 0)
 						{
-							PRINT("up up and away : " << entityID);
-							targetID = &(*pEntitiesArr)[i - 1] - &pEntitiesArr->DenseGet(0);
+							Copium::Entity& targetEntity{ (*pEntities)[i-1] };
+							targetID = pEntities->GetID(targetEntity);
 							MyEventSystem.publish(new Copium::SwapEntitiesEvent{ entityID,targetID });
 							ImGui::ResetMouseDragDelta();
 						}
-						else if (dragOffset > y/2.f && i + 1 < pEntitiesArr->GetSize())
+						else if (dragOffset > y/2.f && i + 1 < pEntities->GetSize())
 						{
-							PRINT("bloop");
-							targetID = &(*pEntitiesArr)[i + 1] - &pEntitiesArr->DenseGet(0);
+							Copium::Entity& targetEntity{ (*pEntities)[i+1] };
+							targetID = pEntities->GetID(targetEntity);
 							MyEventSystem.publish(new Copium::SwapEntitiesEvent{ entityID,targetID });
 							ImGui::ResetMouseDragDelta();
 						}
@@ -360,13 +350,14 @@ namespace Window::Hierarchy
 		}
 
 		// If game object has children, recursively display children
-		if (!pTransform->childrenIDs.empty())
+		if (!transform.childrenIDs.empty())
 		{
-			for (EntityID childID : pTransform->childrenIDs)
+			Copium::ComponentsArray<Copium::Transform>* transformsArray;
+			MyEventSystem.publish(new Copium::GetComponentsArrayEvent(transformsArray));
+			for (EntityID childID : transform.childrenIDs)
 			{
-				Copium::Transform* pChildTransform{};
-				MyEventSystem.publish(new Copium::GetComponentEvent{ childID,pChildTransform });
-				display_gameobject_advanced(childID);
+				Copium::Transform& childTransform{ transformsArray->FindByID(childID)};
+				display_gameobject_advanced(childID, childTransform);
 			}
 		}
 

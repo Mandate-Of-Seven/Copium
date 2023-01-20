@@ -136,7 +136,7 @@ namespace Copium
    */
    /**************************************************************************/
 	bool collision_rectrect(const AABB& aabb1, const Math::Vec2& vel1,
-		const AABB& aabb2, const Math::Vec2& vel2);
+		const AABB& aabb2, const Math::Vec2& vel2, float dt);
 	/***************************************************************************/
    /*!
    \brief
@@ -152,7 +152,7 @@ namespace Copium
    */
    /**************************************************************************/
 	bool collision_pointrect(const Math::Vec2& point,
-		const AABB& aabb2, const Math::Vec2& vel2);
+		const AABB& aabb2, const Math::Vec2& vel2, float dt);
 	/***************************************************************************/
 	/*!
 	\brief

@@ -16,7 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef SCENE_HIERARCHY_LIST_H
 #define SCENE_HIERARCHY_LIST_H
 #include <imgui.h>
-#include <GameObject/ecs.h>
+#include <Events/events-system.h>
 
 namespace Window::Hierarchy
 {
@@ -67,7 +67,7 @@ namespace Window::Hierarchy
 		if a game object is selected return true
 	*/
 	/*******************************************************************************/
-	void display_gameobject_advanced(EntityID entityID);
+	void display_gameobject_advanced(EntityID entityID, Copium::Transform& transform);
 
 	/*******************************************************************************
 	/*!

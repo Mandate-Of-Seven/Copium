@@ -14,7 +14,11 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
+#include <Events/events-system.h>
+
 #define MyFrameRateController Copium::FrameRateController::Instance()
+
+
 
 #ifndef FRAMERATECONTROLLER_H
 #define FRAMERATECONTROLLER_H
@@ -62,10 +66,10 @@ namespace Copium {
 		double accumulatedTime {0};
 		size_t steps{0};
 	public:
-		double getDt() const { return deltaTime; }
-		double getFixedDt() const{ return fixedDeltaTime; }
 		double getFPS() const { return frameRate; }
 		size_t getSteps() const{ return steps; }
+		void CallbackGetDeltaTime(GetDeltaTimeEvent* pEvent);
+		void CallbackGetFixedDeltaTime(GetFixedDeltaTimeEvent* pEvent);
 	};
 }
 
