@@ -101,7 +101,7 @@ bool InputSystem::is_doubleclicked()
     if (doubleClicked)
     {
         doubleClicked = false;
-        std::cout << "DOUBLE CLICK \n";
+        //std::cout << "DOUBLE CLICK \n";
         return true;
     }
 

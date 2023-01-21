@@ -30,6 +30,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Audio/sound-system.h"
 #include "Scripting/logic-system.h"
 #include <Debugging/frame-rate-controller.h>
+#include "Animation/animation-system.h"
 //#include "string.h"
 
 namespace Copium
@@ -64,7 +65,8 @@ namespace Copium
 				LogicSystem::Instance(),
 				PhysicsSystem::Instance(),
 				GraphicsSystem::Instance(),
-				ThreadSystem::Instance()
+				ThreadSystem::Instance(),
+				AnimationSystem::Instance()
 			};
 			for (ISystem* pSystem : systems)
 			{

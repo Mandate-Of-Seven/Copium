@@ -148,20 +148,22 @@ namespace Copium
 		}
 
 		// Bean: This should be done in the animation system or animator component
-		for (int i = 0; i < get_textures().size(); i++)
-		{
+		//for (int i = 0; i < get_textures().size(); i++)
+		//{
 
-			if (!get_texture(i)->get_file_path().compare("../PackedTracks/Assets/Textures/TrackSpriteSheet.png"))
-			{
-				Spritesheet ss(get_textures()[i], 1, 8);
-				spritesheets.push_back(ss);
-			}
-			else if (!get_texture(i)->get_file_path().compare("../PackedTracks/Assets/Textures/mock-up.png"))
-			{
-				Spritesheet ss(get_textures()[i], 4, 3);
-				spritesheets.push_back(ss);
-			}
-		}
+		//	//if (!get_texture(i)->get_file_path().compare("../PackedTracks/Assets/Textures/TrackSpriteSheet.png"))
+		//	//{
+		//	//	Spritesheet ss(get_textures()[i], 1, 8);
+		//	//	spritesheets.push_back(ss);
+		//	//}
+		//	//else if (!get_texture(i)->get_file_path().compare("../PackedTracks/Assets/Textures/mock-up.png"))
+		//	//{
+		//	//	Spritesheet ss(get_textures()[i], 4, 3);
+		//	//	spritesheets.push_back(ss);
+		//	//}
+
+
+		//}
 	}
 
 	void AssetsSystem::load_texture(File* _file)
