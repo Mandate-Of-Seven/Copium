@@ -134,11 +134,13 @@ namespace Copium
 
 	void Button::previewLink(Component* rhs) 
 	{
-		ComponentID _ID = reinterpret_cast<Button*>(rhs)->targetGraphic->id;
-
-		Component* foundText = MySceneManager.findComponentByID(_ID);
-		if (foundText)
-			targetGraphic = reinterpret_cast<Text*>(foundText);
+		if (targetGraphic)
+		{
+			ComponentID _ID = reinterpret_cast<Button*>(rhs)->targetGraphic->id;
+			Component* foundText = MySceneManager.findComponentByID(_ID);
+			if (foundText)
+				targetGraphic = reinterpret_cast<Text*>(foundText);
+		}
 	}
 
 	void Button::inspector_view()
