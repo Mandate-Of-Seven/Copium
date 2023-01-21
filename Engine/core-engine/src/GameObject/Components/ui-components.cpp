@@ -84,15 +84,7 @@ namespace Copium
 			PRINT("UI: CRICKING on " << gameObj.get_name());
 			if (targetGraphic)
 				targetGraphic->layeredColor = Linear(previousColor, clickedColor, timer / fadeDuration);
-			Script* script = gameObj.getComponent<Script>();
-			if (script)
-			{
-				script->invoke(callbackName);
-				if (!gameObj.isActive())
-				{
-					hoveredBtn = nullptr;
-				}
-			}
+
 			break;
 		}
 		case ButtonState::OnHover:
@@ -105,6 +97,15 @@ namespace Copium
 		case ButtonState::OnRelease:
 		{
 			PRINT("UI: Released on " << gameObj.get_name());
+			Script* script = gameObj.getComponent<Script>();
+			if (script)
+			{
+				script->invoke(callbackName);
+				if (!gameObj.isActive())
+				{
+					hoveredBtn = nullptr;
+				}
+			}
 			break;
 		}
 		default:
