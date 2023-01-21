@@ -1,16 +1,10 @@
 ------PROJECT GUIDE------
+1. CTRL N - New Scene
 
-----PLAY SCENE----
+----- Hierarchy -----
+1. Select gameobject and press DELETE to delete
+2. Drag the gameobjects around to reorder the objects
 
---AUDIO--
-Pressing "1", "2", and "3" keys will play an audio file.
-
-
---PHYSICS--
-LEFT SHIFT + P will toggle step mode. In step mode, physics will update on user input only
-0 Key: Update physics if step mode is toggled.
-I Key: Apply upwards force on first rigid body.
-K Key: Apply downwards force on first rigid body.
-J Key: Apply force to the left on first rigid body.
-L Key: Apply force to the left on first rigid body.
-O Key: Resets velocity and forces acting on the rigid body.
+----- Undo-Redo -----
+1. CTRL Z to undo previous actions
+2. CTRL X to redo previous actions
