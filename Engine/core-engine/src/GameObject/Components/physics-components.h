@@ -206,6 +206,8 @@ namespace Copium
 			component->affectedGravity = affectedGravity;
 			return component;
 		}
+
+		void set_active(bool _active) { active = _active; }
 		
 	private:
 		Math::Vec2 velocity;					//velocity of object

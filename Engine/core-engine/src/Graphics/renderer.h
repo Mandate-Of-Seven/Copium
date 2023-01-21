@@ -176,7 +176,7 @@ namespace Copium
 			The index of the texture to be used
 		*/
 		/***************************************************************************/
-		void draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Spritesheet& _spritesheet, GLuint _offsetID, GLuint _textureID);
+		void draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Spritesheet& _spritesheet, GLuint _offsetID, GLuint _textureID, int _frames);
 
 		/***************************************************************************/
 		/*!
@@ -232,7 +232,7 @@ namespace Copium
 			The index of the texture to be used
 		*/
 		/***************************************************************************/
-		void draw_quad(const glm::mat4& _transform, const Spritesheet& _spritesheet, GLuint _offsetID, GLuint _textureID);
+		void draw_quad(const glm::mat4& _transform, const Spritesheet& _spritesheet, GLuint _offsetID, GLuint _textureID, int _frames);
 
 		/***************************************************************************/
 		/*!

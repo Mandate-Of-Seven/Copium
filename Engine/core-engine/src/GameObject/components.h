@@ -8,6 +8,7 @@
 #include <Utilities/sparse-set.h>
 #include <config.h>
 #include <Graphics/textures.h>
+#include <Animation/animation-struct.h>
 
 
 namespace Copium
@@ -179,7 +180,30 @@ namespace Copium
 		bool isAddingSprite;
 	};
 
+<<<<<<< Updated upstream
 	using AllComponents = ComponentGroup<Transform, BoxCollider2D, Rigidbody2D, SpriteRenderer>;
+=======
+	struct Animator
+	{
+		enum class AnimatorStatus : char
+		{
+			idle = 0,
+			playing
+		};
+
+		Animator() : loop{true}, status{AnimatorStatus::idle} {}
+
+		std::vector<Animation> animations;		// The indices of the animations inside the assets-system
+		int currentAnimationIndex;				// Current playing animation
+		int startingAnimationIndex;				// The first animation that is playing
+		unsigned int animationCount;
+		bool loop;
+		AnimatorStatus status;
+
+	};
+
+	using AllComponents = ComponentGroup<Transform, BoxCollider2D, SpriteRenderer, Animator>;
+>>>>>>> Stashed changes
 
 	#define RegisterComponent(Type)template <> struct GetComponentType<Type>{static constexpr size_t e{ (size_t)ComponentType::Type }; };
 
@@ -189,7 +213,11 @@ namespace Copium
 	RegisterComponent(Transform);
 	RegisterComponent(BoxCollider2D);
 	RegisterComponent(SpriteRenderer);
+<<<<<<< Updated upstream
 	RegisterComponent(Rigidbody2D);
+=======
+	RegisterComponent(Animator);
+>>>>>>> Stashed changes
 }
 
 
