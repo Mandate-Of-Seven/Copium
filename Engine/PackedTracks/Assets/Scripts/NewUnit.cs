@@ -4,9 +4,11 @@ using CopiumEngine;
 using CopiumEngine.UI;
 using System;
 
-public class GameManager : CopiumScript
+public class NewUnit : CopiumScript
 {
     public string unitName;
+    static int count = 0;
+    public GameObject otherScreen;
 
     public int healthState = 2;
     // Health state ranges from 0 to 2
@@ -25,8 +27,15 @@ public class GameManager : CopiumScript
     // 1 - Fed, will increase health state next day, chance to increase mental state
     // 0 - Famished, will decrease health state next day, might trigger hunger events
 
+    public void Start()
+    {
+        if (count == 0)
+        {
+            unitName = "Bob";
+        }
+    }
     public void TestFunc()
     {
-
+        otherScreen.SetActive(!otherScreen.activeSelf);
     }
 }
