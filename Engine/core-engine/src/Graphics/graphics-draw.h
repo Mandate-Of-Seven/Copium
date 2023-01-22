@@ -21,6 +21,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
+    struct Camera;
+
 	class Draw
 	{
 	public:
@@ -32,7 +34,7 @@ namespace Copium
 			The camera to draw to
 		*/
 		/***************************************************************************/
-		void init(BaseCamera* _camera);
+		void init(Camera* _camera);
 
 		/***************************************************************************/
 		/*!
@@ -98,7 +100,9 @@ namespace Copium
 		bool drawMode[NUM_DRAW]{false};
 
 		Renderer renderer;
-		BaseCamera* camera;
+		Camera* camera;
 	};
+
 }
+
 #endif // !GRAPHICS_DRAW_H

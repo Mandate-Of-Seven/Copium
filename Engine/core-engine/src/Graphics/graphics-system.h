@@ -20,7 +20,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "CopiumCore/system-interface.h"
 
 #include "Graphics/glslshader.h"
-#include "Graphics/base-camera.h"
+#include <Events/events-system.h>
 #include "Messaging/message-system.h"
 
 namespace Copium
@@ -100,8 +100,6 @@ namespace Copium
 		GLSLShader* const get_shader_program() { return shaderProgram; }
 
 		const bool& is_loaded() const { return loaded; }
-		
-		std::list<BaseCamera*>& get_cameras() { return cameras; }
 
 #pragma region MemberFunctions
 		// Public Member Functions
@@ -155,8 +153,8 @@ namespace Copium
 		/* Stored Information ***********************************************************/
 		bool loaded = false;
 
-		std::list<BaseCamera*> cameras; // Stores the reference to the cameras in the engine
-
+		void CallbackGetGameCamera(GetGameCameraEvent* pEvent);
+		void CallbackCreateCamera(AddComponentEvent<Camera>* pEvent);
 #pragma endregion DataMembers
 	};
 

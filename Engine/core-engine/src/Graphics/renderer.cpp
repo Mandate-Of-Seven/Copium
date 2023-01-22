@@ -32,7 +32,7 @@ namespace Copium
 		GraphicsSystem& graphics = GraphicsSystem::Instance();
 	}
 
-	void Renderer::init(BaseCamera* _camera)
+	void Renderer::init(Camera* _camera)
 	{
 		camera = _camera;
 
@@ -260,7 +260,7 @@ namespace Copium
 				graphics.get_shader_program()[QUAD_SHADER].GetHandle(), "uViewProjection");
 			/*GLuint uTransform = glGetUniformLocation(
 				graphics.get_shader_program()[QUAD_SHADER].GetHandle(), "uTransform");*/
-			glm::mat4 projection = camera->get_view_proj_matrix();
+			glm::mat4 projection = camera->viewProjMatrix;
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 			//glm::vec3 pos = camera->get_eye();
 			//glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
@@ -298,7 +298,7 @@ namespace Copium
 			GLuint uProjection = glGetUniformLocation(
 				graphics.get_shader_program()[LINE_SHADER].GetHandle(), "uViewProjection");
 
-			glm::mat4 projection = camera->get_view_proj_matrix();
+			glm::mat4 projection = camera->viewProjMatrix;
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
 			// End of matrix assignment
@@ -332,7 +332,7 @@ namespace Copium
 			GLuint uProjection = glGetUniformLocation(
 				graphics.get_shader_program()[TEXT_SHADER].GetHandle(), "uViewProjection");
 
-			glm::mat4 projection = camera->get_view_proj_matrix();
+			glm::mat4 projection = camera->viewProjMatrix;
 			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
 			// End of matrix assignment
@@ -464,8 +464,12 @@ namespace Copium
 		draw_quad(transform, _sprite);
 	}
 
-	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Spritesheet& _spritesheet, GLuint _offsetID, GLuint _textureID)
+	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, Spritesheet& _spritesheet, GLuint _offsetID)
 	{
+		if (!_spritesheet.refTexture)
+			return;
+
+
 		glm::mat4 translate = glm::translate(glm::mat4(1.f), _position);
 
 		float radians = glm::radians(_rotation);
@@ -477,8 +481,11 @@ namespace Copium
 			glm::vec4(0.f, 0.f, 0.f, 1.f)
 		};
 
-		float pixelWidth = _spritesheet.get_texture().get_pixel_width();
-		float pixelHeight = _spritesheet.get_texture().get_pixel_height();
+		float pixelWidth = _spritesheet.refTexture->get_pixel_width() / _spritesheet.xColumns;
+		float pixelHeight = _spritesheet.refTexture->get_pixel_height() / _spritesheet.yRows;
+
+
+		PRINT("RENDERING SPRITESHEET x,y: " << pixelWidth << "," << pixelHeight);
 
 		glm::mat4 scale = {
 			glm::vec4(_scale.x * pixelWidth, 0.f, 0.f, 0.f),
@@ -488,7 +495,7 @@ namespace Copium
 		};
 
 		glm::mat4 transform = translate * rotation * scale;
-		draw_quad(transform, _spritesheet, _offsetID, _textureID);
+		draw_quad(transform, _spritesheet, _offsetID, _spritesheet.refTexture->get_object_id());
 	}
 
 	void Renderer::draw_quad(const glm::mat4& _transform, const glm::vec4& _color)
@@ -633,16 +640,18 @@ namespace Copium
 			graphics.set_texture_slot_index((GLuint) textureIndex + 1);
 		}
 
-		glm::vec2 offset = _spritesheet.get_offsets()[_offsetID];
-		glm::vec2 step = _spritesheet.get_steps();
-		step.x = (step.x == 0.f) ? 1.f : step.x;
-		step.y = (step.y == 0.f) ? 1.f : step.y;
+		float step = 1.f / _spritesheet.xColumns;
+		float offset = _offsetID * step;
+		PRINT(offset);
+		//glm::vec2 min = {1.f/ _spritesheet.xColumns * (_offsetID), 1.f / _spritesheet.yRows * (_offsetID) };
+		//glm::vec2 max = { 1.f / _spritesheet.xColumns * (_offsetID+1), 1.f / _spritesheet.yRows * (_offsetID+1) };
+
 		glm::vec2 spriteTextCoord[4] =
 		{
-			glm::vec2(offset),
-			glm::vec2(offset.x + step.x, offset.y),
-			glm::vec2(offset + step),
-			glm::vec2(offset.x, offset.y + step.y)
+			glm::vec2(offset , 0),
+			glm::vec2(offset+step, 0),
+			glm::vec2(offset + step, 1),
+			glm::vec2(offset, 1)
 		};
 
 		for (GLint i = 0; i < 4; i++)
@@ -688,7 +697,7 @@ namespace Copium
 		GLuint uProjection = glGetUniformLocation(
 			graphics.get_shader_program()[LINE_SHADER].GetHandle(), "uViewProjection");
 
-		glm::mat4 projection = camera->get_view_proj_matrix();
+		glm::mat4 projection = camera->viewProjMatrix;
 		glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
 		glBindVertexArray(circleVertexArrayID);

@@ -25,6 +25,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include "Editor/editor-system.h"
 #include "Files/assets-system.h"
+#include <GameObject/components.h>
 
 // Bean: remove this after NewManagerInstance is moved
 
@@ -43,6 +44,8 @@ namespace Copium
 	void GraphicsSystem::Init()
 	{
 		messageSystem.subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
+		MyEventSystem.subscribe(this, &GraphicsSystem::CallbackGetGameCamera);
+		MyEventSystem.subscribe(this, &GraphicsSystem::CallbackCreateCamera);
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 
 		// Bean: 3D Depth Testing
@@ -198,9 +201,30 @@ namespace Copium
 
 	void GraphicsSystem::batch_render()
 	{
-		for (auto& camera : cameras)
+		ComponentsArray<Camera>* pCamerasArray{};
+		MyEventSystem.publish(new GetComponentsArrayEvent{ pCamerasArray });
+		for (size_t i = 0; i < pCamerasArray->GetSize(); ++i)
 		{
-			camera->Update();
+			PRINT("RENDERING");
+			Camera& camera{ (*pCamerasArray)[i] };
+			camera.Update();
 		}
+	}
+
+	void GraphicsSystem::CallbackGetGameCamera(GetGameCameraEvent* pEvent)
+	{
+		ComponentsArray<Camera>* pCamerasArray{};
+		MyEventSystem.publish(new GetComponentsArrayEvent{ pCamerasArray });
+		if (pCamerasArray->GetSize())
+			pEvent->pCamera = &(*pCamerasArray)[0];
+		else
+			pEvent->pCamera = nullptr;
+	}
+
+	void GraphicsSystem::CallbackCreateCamera(AddComponentEvent<Camera>* pEvent)
+	{
+		ComponentsArray<Camera>* pCamerasArray{};
+		MyEventSystem.publish(new GetComponentsArrayEvent{ pCamerasArray });
+		pCamerasArray->FindByID(pEvent->id).init(500,500,true);
 	}
 }

@@ -39,11 +39,10 @@ namespace Copium
 		bool toggleAnim = false;
 	}
 
-	void Draw::init(BaseCamera* _camera)
+	void Draw::init(Camera* _camera)
 	{
 		camera = _camera;
-		renderer.init(_camera);
-
+		renderer.init(camera);
 		enable(DRAW::EDITOR);
 		enable(DRAW::WORLD);
 		enable(DRAW::DEVELOPMENT);
@@ -51,13 +50,10 @@ namespace Copium
 
 	void Draw::update(CameraType _type)
 	{
+		for (bool& value : drawMode) value = false;
 		switch (_type)
 		{
-		case NONE:
-			for (bool& value : drawMode) value = false;
-			break;
 		case GAME:
-			for (bool& value : drawMode) value = false;
 			drawMode[DRAW::WORLD] = true;
 			drawMode[DRAW::DEVELOPMENT] = true;
 			break;
@@ -67,13 +63,12 @@ namespace Copium
 			drawMode[DRAW::DEVELOPMENT] = true;
 			break;
 		case PREVIEW:
-			for (bool& value : drawMode) value = false;
 			drawMode[DRAW::WORLD] = true;
 			break;
 		}
 
 		// Clear the screen
-		glm::vec4 clr = camera->get_bg_color();
+		glm::vec4 clr = camera->backgroundColor;
 		glClearColor(clr.r, clr.g, clr.b, clr.a);
 
 		// Clear the screen bits
@@ -94,7 +89,6 @@ namespace Copium
 
 	void Draw::Exit()
 	{
-		camera = nullptr;
 		renderer.shutdown();
 	}
 
@@ -195,6 +189,8 @@ namespace Copium
 
 		ComponentsArray<SpriteRenderer>* pSpriteRenderers{};
 		MyEventSystem.publish(new GetComponentsArrayEvent<SpriteRenderer>{ pSpriteRenderers });
+		ComponentsArray<Animator>* pAnimator{};
+		MyEventSystem.publish(new GetComponentsArrayEvent<Animator>{ pAnimator });
 		ComponentsArray<Transform>* pTransforms{};
 		MyEventSystem.publish(new GetComponentsArrayEvent<Transform>{ pTransforms });
 		EntitiesArray* pEntitiesArray{};
@@ -229,6 +225,38 @@ namespace Copium
 				Math::Vec3 diff = { position.x - parent.position.x,position.y - parent.position.y,0 };
 			}
 			renderer.draw_quad(position, size, rotation, sr);
+		}
+
+		for (size_t i = 0; i < pAnimator->GetSize(); ++i)
+		{
+			Animator& animator{ (*pAnimator)[i] };
+			EntityID entityID{ pAnimator->GetID(animator) };
+			if (!pEntitiesArray->GetActive(entityID))
+				continue;
+			if (!pAnimator->GetEnabled(entityID))
+				continue;
+			Transform& t{ pTransforms->FindByID(entityID) };
+			glm::vec2 size(t.scale.x, t.scale.y);
+			float rotation = t.rotation.z;
+			Math::Vec3 position{ t.position };
+			if (t.HasParent())
+			{
+				Transform& parent{ pTransforms->FindByID(t.parentID) };
+				rotation += parent.rotation.z;
+				Math::Matrix3x3 rot;
+				Math::matrix3x3_rotdeg(rot, parent.rotation.z);
+				Math::Vec3 intermediate = t.position;
+				intermediate.x *= parent.scale.x;
+				intermediate.y *= parent.scale.y;
+				intermediate = rot * intermediate;
+				size.x *= parent.scale.x;
+				size.y *= parent.scale.y;
+				position = parent.position + intermediate;
+				Math::Vec3 diff = { position.x - parent.position.x,position.y - parent.position.y,0 };
+			}
+			Animation* anim = animator.GetCurrentAnimation();
+			if (anim)
+				renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex);
 		}
 		
 		//Scene* scene = sm.get_current_scene();
@@ -367,7 +395,7 @@ namespace Copium
 		glm::vec4 color = { 0.1f, 1.f, 0.1f, 1.f };
 		glm::vec2 worldNDC{ 0 };
 		glm::vec2 scale = { 0.01f, 0.01f };
-		glm::vec2 cameraPos = editorSys.get_camera()->get_eye();
+		glm::vec2 cameraPos = editorSys.get_camera()->viewer;
 		float zoom = editorSys.get_camera()->get_zoom();
 
 		worldNDC = { cameraPos.x, cameraPos.y };

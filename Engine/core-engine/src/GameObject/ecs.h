@@ -37,8 +37,6 @@ namespace Copium
         template<typename T>
         T* AddComponent(EntityID id);
         template<typename T>
-        T* GetComponent(EntityID id);
-        template<typename T>
         void RemoveComponent(EntityID id);
         template<typename T>
         bool HasComponent(EntityID id);

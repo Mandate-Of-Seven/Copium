@@ -15,13 +15,13 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef EDITOR_CAMERA_H
 #define EDITOR_CAMERA_H
 
-#include "Graphics/base-camera.h"
+#include <GameObject/components.h>
 #include "Messaging/message-system.h"
 
 namespace Copium
 {
 	// Editor camera which moves around in the scene view
-	class EditorCamera : public BaseCamera, public IReceiver
+	struct EditorCamera : public Camera, public IReceiver
 	{
 	public:
 		/***************************************************************************/

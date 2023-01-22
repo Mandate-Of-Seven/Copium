@@ -432,28 +432,28 @@ namespace Copium
 		return collisionDirection::NONE;
 	}
 
-	void resolve_AABBcollision(Transform& transform1,AABB& aabb1, AABB& aabb2, collisionDirection direction)
+	void resolve_AABBcollision(Math::Vec3& position,AABB& aabb1, AABB& aabb2, collisionDirection direction)
 	{		
 		float resolvePos = 0.0f;
 		if (direction == collisionDirection::TOP)
 		{
 			resolvePos = aabb1.max.y - aabb2.min.y;
-			transform1.position.y -= resolvePos;
+			position.y -= resolvePos;
 		}
 		if (direction == collisionDirection::BOTTOM)
 		{
 			resolvePos = aabb1.min.y - aabb2.max.y;
-			transform1.position.y -= resolvePos;			
+			position.y -= resolvePos;			
 		}
 		if (direction == collisionDirection::LEFT)
 		{
 			resolvePos = aabb1.min.x - aabb2.max.x;
-			transform1.position.x -= resolvePos;
+			position.x -= resolvePos;
 		}
 		if (direction == collisionDirection::RIGHT)
 		{
 			resolvePos = aabb1.max.x - aabb2.min.x;
-			transform1.position.x -= resolvePos;
+			position.x -= resolvePos;
 		}
 		//std::cout << resolvePos << std::endl;
 	}

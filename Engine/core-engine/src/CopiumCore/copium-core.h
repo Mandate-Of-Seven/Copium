@@ -27,8 +27,10 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include "Debugging/logging-system.h"
 #include "Audio/sound-system.h"
+#include <Physics/physics-system.h>
 #include <Debugging/frame-rate-controller.h>
 #include <GameObject/ecs.h>
+#include <Graphics/animation-system.h>
 //#include "string.h"
 
 namespace Copium
@@ -62,9 +64,10 @@ namespace Copium
 				&InputSystem::Instance(),
 				&EditorSystem::Instance(),
 				//&LogicSystem::Instance(),
-				//&PhysicsSystem::Instance(),
+				&PhysicsSystem::Instance(),
 				&GraphicsSystem::Instance(),
-				&ThreadSystem::Instance()
+				&ThreadSystem::Instance(),
+				&AnimationSystem::Instance()
 			};
 			for (ISystem* pSystem : systems)
 			{
@@ -88,6 +91,9 @@ namespace Copium
 			double totalUpdateTime = 0;
 			for (ISystem* pSystem : systems)
 			{
+
+				pSystem->Update();
+				continue;
 				if (pSystem->systemFlags & FLAG_RUN_ON_PLAY && inPlayMode)
 				{
 					double startTime = glfwGetTime();

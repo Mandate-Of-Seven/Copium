@@ -70,24 +70,21 @@ namespace Copium
 
 	void EntityComponentSystem::SetParent(EntityID childID, EntityID parentID)
 	{
-		Transform* parent = GetComponent<Transform>(parentID);
-		Transform* child = GetComponent<Transform>(childID);
-		Transform* previousParent = GetComponent<Transform>(parentID);
-		for (auto it = previousParent->childrenIDs.begin(); 
-			it != previousParent->childrenIDs.end(); ++it)
+		Transform& parent = components.GetArray<Transform>().FindByID(parentID);
+		Transform& child = components.GetArray<Transform>().FindByID(childID);
+		Transform& previousParent = parent;
+		for (auto it = previousParent.childrenIDs.begin(); 
+			it != previousParent.childrenIDs.end(); ++it)
 		{
 			if (*it == childID)
 			{
-				std::swap(*it, previousParent->childrenIDs.back());
-				previousParent->childrenIDs.pop_back();
+				std::swap(*it, previousParent.childrenIDs.back());
+				previousParent.childrenIDs.pop_back();
 				break;
 			}
 		}
-		child->parentID = parentID;
-		if (parent)
-		{
-			parent->childrenIDs.push_back(childID);
-		}
+		child.parentID = parentID;
+		parent.childrenIDs.push_back(childID);
 	}
 
 	//Delete

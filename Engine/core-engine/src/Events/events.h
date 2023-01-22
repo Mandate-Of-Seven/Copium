@@ -89,4 +89,10 @@ namespace Copium
 		GetFixedDeltaTimeEvent(float& _fdt) : fdt{ _fdt } {}
 		float& fdt;
 	};
+
+	struct GetGameCameraEvent : public IEvent
+	{
+		GetGameCameraEvent(Camera*& _pCamera): pCamera{ _pCamera }{}
+		Camera*& pCamera;
+	};
 }

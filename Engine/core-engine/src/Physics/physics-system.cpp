@@ -17,6 +17,37 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 namespace Copium
 {
+	AABB GetBoxBounds(EntityID entityID, BoxCollider2D& collider)
+	{
+		ComponentsArray<Transform>* pTransformsArray{};
+		MyEventSystem.publish(new GetComponentsArrayEvent{ pTransformsArray });
+		Transform& transform{ pTransformsArray->FindByID(entityID) };
+
+		Math::Vec3 size{ transform.scale };
+		Math::Vec3 pos{ transform.position };
+
+		if (transform.HasParent())
+		{
+			Transform& parent{ pTransformsArray->FindByID(transform.parentID) };
+			size.x *= parent.scale.x;
+			size.y *= parent.scale.y;
+			size.z *= parent.scale.z;
+			pos += parent.position;
+		}
+
+		float x = (collider.bounds.max.x - collider.bounds.min.x) * size.x;
+		float y = (collider.bounds.max.y - collider.bounds.min.y) * size.y;
+		AABB tmp{ collider.bounds };
+		tmp.max.x *= x;
+		tmp.min.x *= x;
+		tmp.max.y *= y;
+		tmp.min.y *= y;
+		tmp.max.x += pos.x;
+		tmp.min.x += pos.x;
+		tmp.max.y += pos.y;
+		tmp.min.y += pos.y;
+		return tmp;
+	}
 
 	void UpdatePositions(ComponentsArray<Rigidbody2D>& rigidBodies, EntitiesArray& entities)
 	{
@@ -31,9 +62,10 @@ namespace Copium
 			Rigidbody2D& rb{ rigidBodies[a] };
 			EntityID entityID{ rigidBodies.GetID(rb) };
 			if (!entities.GetActive(entityID))
-				return;
+				continue;
 			if (!rigidBodies.GetEnabled(entityID))
-				return;
+				continue;
+
 
 			force = rb.force;
 			velocity = rb.velocity;
@@ -65,11 +97,13 @@ namespace Copium
 
 	void CheckCollisions(ComponentsArray<Rigidbody2D>& rigidBodies, EntitiesArray& entities)
 	{
-		ComponentsArray<BoxCollider2D>* pBoxColliders;
+		ComponentsArray<Transform>* pTransformsArray{};
+		MyEventSystem.publish(new GetComponentsArrayEvent{ pTransformsArray });
+		ComponentsArray<BoxCollider2D>* pBoxColliders{};
+		MyEventSystem.publish(new GetComponentsArrayEvent(pBoxColliders));
 		ComponentsArray<BoxCollider2D>& boxColliders{*pBoxColliders};
 		float dt{};
 		MyEventSystem.publish(new GetDeltaTimeEvent{ dt });
-		MyEventSystem.publish(new GetComponentsArrayEvent(pBoxColliders));
 		for (int a = 0; a < rigidBodies.GetSize(); a++)
 		{
 			Rigidbody2D& lhsRb = rigidBodies[a];
@@ -85,6 +119,7 @@ namespace Copium
 			if (!boxColliders.GetEnabled(lhsID))
 				continue;
 			BoxCollider2D& lhsCol = boxColliders.FindByID(lhsID);
+			Transform& lhsTransform{ pTransformsArray->FindByID(lhsID)};
 			//Check with all existing colliders
 			for (int b = 0; b < boxColliders.GetSize(); b++)
 			{
@@ -107,8 +142,8 @@ namespace Copium
 				//if (!pRb1->Active())
 				//	continue;
 
-				AABB boundA = pCol1->getBounds();
-				AABB boundB = pCol2->getBounds();
+				AABB boundA = GetBoxBounds(lhsID, lhsCol);
+				AABB boundB = GetBoxBounds(rhsID, rhsCol);
 				if (collision_rectrect(boundA, lhsRb.velocity, boundB, rhsVelocity, dt))
 				{
 					//MESSAGE_CONTAINER::collisionEnter.collided = object1;
@@ -117,7 +152,7 @@ namespace Copium
 					//PRINT("COLLIDING?");
 					//fix collision resolution
 					collisionDirection direct = check_collision_direction(boundA, lhsRb.velocity, boundB, rhsVelocity);
-					resolve_AABBcollision(object1->transform, boundA, boundB, direct);
+					resolve_AABBcollision(lhsTransform.position, boundA, boundB, direct);
 					if (direct == collisionDirection::BOTTOM || direct == collisionDirection::TOP)
 					{
 						lhsRb.velocity.y = 0.0;
@@ -139,19 +174,27 @@ namespace Copium
 	}
 	void PhysicsSystem::Update()
 	{
-		ComponentsArray<Rigidbody2D>* pRigidBodyArray{};
-		MyEventSystem.publish(new GetComponentsEvent{ pRigidBodyArray });
-		ComponentsArray<Rigidbody2D>& rigidBodies{ *pRigidBodyArray };
-		UpdatePositions(rigidBodies);
-		CheckCollisions(rigidBodies);
-		for (GameObject* pGameObj : sceneManager.get_current_scene()->gameObjects)
+		ComponentsArray<Rigidbody2D>* pRigidBodiesArray{};
+		MyEventSystem.publish(new GetComponentsArrayEvent{ pRigidBodiesArray });
+		ComponentsArray<Rigidbody2D>& rigidBodiesArray{ *pRigidBodiesArray };
+		EntitiesArray* pEntitiesArray{};
+		MyEventSystem.publish(new GetEntitiesArrayEvent{ pEntitiesArray });
+		ComponentsArray<Transform>* pTransformsArray{};
+		MyEventSystem.publish(new GetComponentsArrayEvent{ pTransformsArray });
+
+		UpdatePositions(rigidBodiesArray,*pEntitiesArray);
+		CheckCollisions(rigidBodiesArray, *pEntitiesArray);
+		for (size_t i = 0; i < rigidBodiesArray.GetSize(); ++i)
 		{
-			Rigidbody2D* pRb = pGameObj->getComponent<Rigidbody2D>();
-			if (pRb != nullptr && pRb->Active())
-			{
-				pGameObj->transform.position.x += pRb->get_vel().x;
-				pGameObj->transform.position.y += pRb->get_vel().y;
-			}
+			Rigidbody2D& rb{ rigidBodiesArray[i] };
+			EntityID entityID{ rigidBodiesArray.GetID(rb) };
+			if (!pEntitiesArray->GetActive(entityID))
+				continue;
+			if (!rigidBodiesArray.GetEnabled(entityID))
+				continue;
+			Transform& transform{ pTransformsArray->FindByID(entityID)};
+			transform.position.x += rb.velocity.x;
+			transform.position.y += rb.velocity.y;
 		}
 	}
 

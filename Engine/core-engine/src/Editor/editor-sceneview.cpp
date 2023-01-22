@@ -66,7 +66,7 @@ namespace Copium
 		windowHovered = ImGui::IsWindowHovered();
 		scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
 		
-		unsigned int textureID = camera.get_framebuffer()->get_color_attachment_id();
+		unsigned int textureID = camera.framebuffer.get_color_attachment_id();
 		ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
 		resize_sceneview(*((glm::vec2*) &viewportEditorSize));
 		ImGui::Image((void*) (size_t) textureID, ImVec2{ (float)sceneWidth, (float)sceneHeight }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });

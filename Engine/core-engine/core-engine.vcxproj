@@ -118,7 +118,7 @@
     <ClCompile Include="src\Files\file-system.cpp" />
     <ClCompile Include="src\Files\file.cpp" />
     <ClCompile Include="src\GameObject\ecs.cpp" />
-    <ClCompile Include="src\Graphics\base-camera.cpp" />
+    <ClCompile Include="src\Graphics\animation-system.cpp" />
     <ClCompile Include="src\Graphics\fonts.cpp" />
     <ClCompile Include="src\Graphics\framebuffer.cpp" />
     <ClCompile Include="src\Graphics\glslshader.cpp" />
@@ -213,7 +213,7 @@
     <ClInclude Include="src\Files\file.h" />
     <ClInclude Include="src\GameObject\ecs.h" />
     <ClInclude Include="src\GameObject\entity.h" />
-    <ClInclude Include="src\Graphics\base-camera.h" />
+    <ClInclude Include="src\Graphics\animation-system.h" />
     <ClInclude Include="src\Graphics\fonts.h" />
     <ClInclude Include="src\Graphics\graphics-draw.h" />
     <ClInclude Include="src\Graphics\graphics-typedef.h" />

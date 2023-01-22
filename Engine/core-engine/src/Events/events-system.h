@@ -37,6 +37,7 @@ namespace Copium
         {
             call(evnt);
         }
+        virtual ~IEventHandler() {};
     private:
         // Implemented by MemberFunctionHandler
         virtual void call(IEvent* evnt) = 0;

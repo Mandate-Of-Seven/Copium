@@ -251,7 +251,7 @@ namespace Copium
 	
 	*/
 	/**************************************************************************/
-	//void resolve_AABBcollision(Transform& transform1, AABB& aabb1, AABB& aabb2, collisionDirection direction);
+	void resolve_AABBcollision(Math::Vec3& position, AABB& aabb1, AABB& aabb2, collisionDirection direction);
 }
 
 #endif // !COLLISION_H

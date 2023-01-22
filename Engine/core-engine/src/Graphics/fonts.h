@@ -34,7 +34,7 @@ namespace Copium
 	};
 
 	// Bean: Temporary forward declaration of BaseCamera class to render text
-	class BaseCamera;
+	struct Camera;
 
 	class Font
 	{
@@ -65,7 +65,7 @@ namespace Copium
 			The font to use
 		*/
 		/***************************************************************************/
-		void draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, GLfloat _scale, GLuint _fontID, BaseCamera* _camera);
+		void draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, GLfloat _scale, GLuint _fontID, Camera* _camera);
 
 		glm::vec2 getDimensions(const std::string& _text, GLfloat _scale);
 

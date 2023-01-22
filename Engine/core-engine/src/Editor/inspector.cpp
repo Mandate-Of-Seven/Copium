@@ -103,6 +103,24 @@ namespace Window
             ImGui::Checkbox(idName.c_str(), &val);
         }
 
+        void DisplayType(const char* name, int& val)
+        {
+            static std::string idName{};
+            idName = "##";
+            idName += name;
+            ImGui::DragInt(idName.c_str(), &val);
+        }
+
+        void DisplayType(const char* name, unsigned int& val)
+        {
+            static std::string idName{};
+            idName = "##";
+            idName += name;
+            int container = val;
+            ImGui::DragInt(idName.c_str(), &container, 1, 0);
+            val = container;
+        }
+
         void DisplayType(const char* name,float& val)
         {
             static float temp{};
@@ -337,6 +355,76 @@ namespace Window
             //DisplayDragDrop();
             //spriteRenderer.sprite.set_name()
             Display("Mass", rb2D.mass);
+            Display("Use Gravity", rb2D.useGravity);
+        }
+
+        template <>
+        void DisplayComponent<Animator>(Animator& animator)
+        {
+
+            //DisplayDragDrop();
+            //spriteRenderer.sprite.set_name()
+            Display("Loop", animator.loop);
+            ImGui::TableNextColumn();
+            ImGui::Text("Play Animation");
+            std::string toggleAnimation = "Play";
+            if (animator.status == Animator::AnimatorStatus::playing)
+                toggleAnimation = "Stop";
+            ImGui::TableNextColumn();
+            if (ImGui::Button(toggleAnimation.c_str(), ImVec2(ImGui::GetColumnWidth() * 0.2f, 0.f)))
+            {
+                Animation* anim{ animator.GetCurrentAnimation() };
+
+                if (animator.status == Animator::AnimatorStatus::idle)
+                    animator.status = Animator::AnimatorStatus::playing;
+                else
+                {
+                    animator.status = Animator::AnimatorStatus::idle;
+                    anim->ResetFrame();
+                }
+
+            }
+
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Number of Animations:");
+            ImGui::TableNextColumn();
+            ImGui::Text("%d", animator.animationCount);
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            if (ImGui::Button("Add Animation"))
+            {
+                animator.AddAnimation();
+            }
+
+            // For each animation display appropriate things
+            for (int i{ 0 }; i < animator.animations.size(); ++i)
+            {
+                ImGui::PushID(i);
+                ImGui::TableNextRow();
+                ImGui::TableNextColumn();
+                ImGui::Text("Animation %d", i + 1);
+
+                ImGui::TableNextRow();
+                Display("Number of Frames",animator.animations[i].frameCount);
+                Display("Columns", animator.animations[i].spriteSheet.xColumns);
+                Display("Rows", animator.animations[i].spriteSheet.yRows);
+                ImGui::PopID();
+
+                ImGui::PushID(i + 1);
+                ImGui::TableNextRow();
+                ImGui::TableNextColumn();
+                ImGui::Text("Time Delay:");
+                ImGui::TableNextColumn();
+                if (ImGui::DragFloat("", &animator.animations[i].timeDelay, 0.1f))
+                {
+                    animator.animations[i].timeDelay = animator.animations[i].timeDelay < 0.f ? 0.f : animator.animations[i].timeDelay;
+
+                }
+                ImGui::PopID();
+
+                Display("Sprite", animator.animations[i].spriteSheet.refTexture);
+            }
         }
 
         void DisplayComponents(EntityID id)

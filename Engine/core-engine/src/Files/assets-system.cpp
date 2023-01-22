@@ -153,12 +153,12 @@ namespace Copium
 
 			if (!get_texture(i)->get_file_path().compare("../PackedTracks/Assets/Textures/TrackSpriteSheet.png"))
 			{
-				Spritesheet ss(get_textures()[i], 1, 8);
+				Spritesheet ss(&get_textures()[i], 1, 8);
 				spritesheets.push_back(ss);
 			}
 			else if (!get_texture(i)->get_file_path().compare("../PackedTracks/Assets/Textures/mock-up.png"))
 			{
-				Spritesheet ss(get_textures()[i], 4, 3);
+				Spritesheet ss(&get_textures()[i], 4, 3);
 				spritesheets.push_back(ss);
 			}
 		}

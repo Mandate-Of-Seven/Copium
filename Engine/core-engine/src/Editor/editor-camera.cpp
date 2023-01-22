@@ -35,7 +35,7 @@ namespace Copium
 {
 	void EditorCamera::init(float _width, float _height, bool _orthographic)
 	{
-		BaseCamera::init(_width, _height, CameraType::SCENEVIEW, _orthographic);
+		Camera::init(_width, _height, _orthographic);
 		MessageSystem::Instance().subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
 		MessageSystem::Instance().subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
 	}
@@ -82,7 +82,7 @@ namespace Copium
 		else if (!debugMode)
 			draw.disable(DRAW::DEBUG);
 
-		BaseCamera::Update();
+		Camera::Update();
 	}
 
 	void EditorCamera::handleMessage(MESSAGE_TYPE _mType)

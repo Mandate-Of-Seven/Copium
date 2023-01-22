@@ -22,7 +22,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Graphics/glslshader.h"
 
 #include "Graphics/spritesheet.h"
-#include <GameObject/components.h>
 
 
 namespace Copium 
@@ -30,7 +29,9 @@ namespace Copium
 
 	// Forward declare
 	class GraphicsSystem;
-	class BaseCamera;
+	struct Camera;
+	struct SpriteRenderer;
+	struct Animation;
 
 	// Renders objects in the game / scene
 	// Checks objects that have the Renderer component 
@@ -46,7 +47,7 @@ namespace Copium
 			the elements of the object to be used for rendering
 		*/
 		/***************************************************************************/
-		void init(BaseCamera* _camera); // Initializes the renderer by storing a handle to VAO
+		void init(Camera* _camera); // Initializes the renderer by storing a handle to VAO
 
 		/***************************************************************************/
 		/*!
@@ -176,7 +177,7 @@ namespace Copium
 			The index of the texture to be used
 		*/
 		/***************************************************************************/
-		void draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Spritesheet& _spritesheet, GLuint _offsetID, GLuint _textureID);
+		void draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, Spritesheet& _spritesheet, GLuint _offsetID);
 
 		/***************************************************************************/
 		/*!
@@ -382,7 +383,7 @@ namespace Copium
 		glm::vec2 quadTextCoord[4];
 		glm::vec2 textTextCoord[6];
 
-		BaseCamera* camera = nullptr;		// A pointer to the camera that holds this renderer class
+		Camera* camera = nullptr;		// A pointer to the camera that holds this renderer class
 	};
 }
 

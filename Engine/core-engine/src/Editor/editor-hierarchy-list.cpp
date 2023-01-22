@@ -352,7 +352,7 @@ namespace Window::Hierarchy
 		// If game object has children, recursively display children
 		if (!transform.childrenIDs.empty())
 		{
-			Copium::ComponentsArray<Copium::Transform>* transformsArray;
+			Copium::ComponentsArray<Copium::Transform>* transformsArray{};
 			MyEventSystem.publish(new Copium::GetComponentsArrayEvent(transformsArray));
 			for (EntityID childID : transform.childrenIDs)
 			{
