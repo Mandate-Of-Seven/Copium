@@ -6,8 +6,6 @@
 #include <GameObject/entity.h>
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/prettywriter.h>
-#include <GameObject/Components/physics-components.h>
-#include <Animation/animation-struct.h>
 
 namespace Copium
 {
@@ -21,12 +19,12 @@ namespace Copium
 
 		void SerializeScene(const char* sceneName)
 		{
-			SparseSet<Entity, MAX_ENTITIES>* pEntitiesArray;
-			MyEventSystem.publish(new GetEntitiesEvent{ pEntitiesArray });
+			EntitiesArray* pEntitiesArray;
+			MyEventSystem.publish(new GetEntitiesArrayEvent{ pEntitiesArray });
 			for (size_t i = 0; i < pEntitiesArray->GetSize(); ++i)
 			{
 				Entity& entity{ (*pEntitiesArray)[i] };
-				EntityID entityID{ &entity - &pEntitiesArray->DenseGet(0)};
+				EntityID entityID{ pEntitiesArray->GetID(entity)};
 				SerializeComponents<AllComponents>(entityID);
 			}
 		}
@@ -150,21 +148,20 @@ namespace Copium
 			rapidjson::Value acceleration(rapidjson::kObjectType);
 			rapidjson::Value force(rapidjson::kObjectType);
 
-			Math::Vec2 tmp{ value.get_vel() };
+			Math::Vec2 tmp{ value.velocity };
 			Serialize("", tmp, velocity);
 			_rjValue.AddMember("Velocity", velocity, _doc.GetAllocator());
 
-			tmp = value.get_acc();
+			tmp = value.acceleration;
 			Serialize("", tmp, acceleration);
 			_rjValue.AddMember("Acceleration", acceleration, _doc.GetAllocator());
 
-			tmp = value.get_force();
+			tmp = value.force;
 			Serialize("", tmp, force);
 			_rjValue.AddMember("Force", force, _doc.GetAllocator());
 
-			_rjValue.AddMember("Mass", value.get_mass(), _doc.GetAllocator());
-			_rjValue.AddMember("Active", value.Active(), _doc.GetAllocator());
-			_rjValue.AddMember("Grav", value.get_gravity(), _doc.GetAllocator());
+			_rjValue.AddMember("Mass", value.mass, _doc.GetAllocator());
+			_rjValue.AddMember("Grav", value.useGravity, _doc.GetAllocator());
 
 		}
 		template<>
@@ -181,10 +178,10 @@ namespace Copium
 			{
 				rapidjson::Value a(rapidjson::kObjectType);
 				rapidjson::Value name;
-				name.SetString(anim.spriteSheet.name.c_str(),
-					(rapidjson::SizeType)anim.spriteSheet.name.length(), _doc.GetAllocator());
+				name.SetString(anim.spriteSheet.refTexture->get_file_path().c_str(),
+					(rapidjson::SizeType)anim.spriteSheet.refTexture->get_file_path().length(), _doc.GetAllocator());
 				a.AddMember("Name", name, _doc.GetAllocator());
-				a.AddMember("Sprite ID", anim.spriteSheet.spriteID, _doc.GetAllocator());
+				a.AddMember("Sprite ID", anim.spriteSheet.refTexture->get_id(), _doc.GetAllocator());
 				a.AddMember("Time Delay", anim.timeDelay, _doc.GetAllocator());
 				a.AddMember("Frame Count", anim.frameCount, _doc.GetAllocator());
 
@@ -275,21 +272,21 @@ namespace Copium
 				rapidjson::Value vel(rapidjson::kObjectType);
 				vel = _rjValue["Velocity"].GetObj();
 				Deserialize("", tmp, vel);
-				_rb.set_vel(tmp);
+				_rb.velocity = tmp;
 			}
 			if (_rjValue.HasMember("Acceleration"))
 			{
 				rapidjson::Value acc(rapidjson::kObjectType);
 				acc = _rjValue["Acceleration"].GetObj();
 				Deserialize("", tmp, acc);
-				_rb.set_acc(tmp);
+				_rb.acceleration = tmp;
 			}
 			if (_rjValue.HasMember("Force"))
 			{
 				rapidjson::Value force(rapidjson::kObjectType);
 				force = _rjValue["Force"].GetObj();
 				Deserialize("", tmp, force);
-				_rb.set_force(tmp);
+				_rb.force = tmp;
 			}
 
 
@@ -297,20 +294,13 @@ namespace Copium
 			{
 				float m{ 0.f };
 				m = _rjValue["Mass"].GetFloat();
-
-				_rb.set_mass(m);
-
-			}
-			if (_rjValue.HasMember("Active"))
-			{
-				bool b = _rjValue["Active"].GetBool();
-				_rb.set_active(b);
+				_rb.mass = m;
 
 			}
 			if (_rjValue.HasMember("Grav"))
 			{
 				bool g = _rjValue["Grav"].GetBool();
-				_rb.set_gravity(g);
+				_rb.useGravity = g;
 			}
 		}
 
@@ -373,14 +363,14 @@ namespace Copium
 				for (rapidjson::Value::ValueIterator iter = animations.Begin(); iter != animations.End(); ++iter)
 				{
 					Animation tmp;
-					if (iter->HasMember("Name"))
-					{
-						tmp.spriteSheet.name = (*iter)["Name"].GetString();
-					}
-					if (iter->HasMember("Sprite ID"))
-					{
-						tmp.spriteSheet.spriteID = (*iter)["Sprite ID"].GetUint();
-					}
+					//if (iter->HasMember("Name"))
+					//{
+					//	tmp.spriteSheet.refTexture = (*iter)["Name"].GetString();
+					//}
+					//if (iter->HasMember("Sprite ID"))
+					//{
+					//	tmp.spriteSheet.refTexture->spriteID = (*iter)["Sprite ID"].GetUint();
+					//}
 					if (iter->HasMember("Time Delay"))
 					{
 						tmp.timeDelay = (*iter)["Time Delay"].GetFloat();

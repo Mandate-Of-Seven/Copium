@@ -99,8 +99,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Animation\animation-struct.cpp" />
-    <ClCompile Include="src\Animation\animation-system.cpp" />
     <ClCompile Include="src\Editor\editor-colortheme.cpp" />
     <ClCompile Include="src\Editor\editor-game.cpp" />
     <ClCompile Include="src\Audio\sound-system.cpp" />
@@ -198,8 +196,6 @@
     <ClCompile Include="src\Windows\windows-utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Animation\animation-struct.h" />
-    <ClInclude Include="src\Animation\animation-system.h" />
     <ClInclude Include="src\config.h" />
     <ClInclude Include="src\Editor\editor-colortheme.h" />
     <ClInclude Include="src\Editor\editor-game.h" />
