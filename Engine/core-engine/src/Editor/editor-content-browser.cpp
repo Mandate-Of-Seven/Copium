@@ -16,6 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 
 #include "Editor/editor-content-browser.h"
+#include "Editor/editor-system.h"
 #include "Messaging/message-system.h"
 #include "Files/file-system.h"
 #include "Files/assets-system.h"
@@ -24,6 +25,7 @@ namespace Copium
 {
 	namespace
 	{
+		EditorSystem* editor = EditorSystem::Instance();
 		FileSystem* fs = FileSystem::Instance();
 		AssetsSystem* assetSys = AssetsSystem::Instance();
 
@@ -54,7 +56,7 @@ namespace Copium
 
 	void EditorContentBrowser::update()
 	{
-		ImGui::Begin("Content Browser");
+		ImGui::Begin("Content Browser", 0);
 
 		inputs();
 
@@ -71,6 +73,49 @@ namespace Copium
 			{
 				MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_RELOAD_ASSETS);
 			}
+		}
+
+		ImGui::SameLine();
+		if (ImGui::BeginMenu("Add Assets"))
+		{
+			if (currentDirectory != nullptr)
+			{
+				// Length here would be the number of scriptable objects
+				int length = 1;
+				for (int i = 0; i < length; i++)
+				{
+					std::string assetName = "Scriptable Object";
+					if (ImGui::MenuItem(assetName.c_str(), nullptr))
+					{
+						std::filesystem::path currentDir = currentDirectory->path().string() + "\\";
+						std::filesystem::path pathName = currentDir.string() + assetName + ".asset";
+
+						std::fstream createAsset;
+
+						File* temp = fs->get_file(pathName);
+						int counter = 1;
+						if (temp != nullptr)
+						{
+							std::filesystem::path editedPath;
+							while (temp != nullptr)
+							{
+								editedPath = currentDir.string() + pathName.stem().string();
+								editedPath += " " + std::to_string(counter++) + pathName.extension().string();
+								temp = fs->get_file(editedPath);
+							}
+							createAsset.open(editedPath.string(), std::ios::out);
+						}
+						else
+							createAsset.open(pathName.string(), std::ios::out);
+
+						if (!createAsset)
+							PRINT("Error in creating file");
+
+						createAsset.close();
+					}
+				}
+			}
+			ImGui::EndMenu();
 		}
 
 		float panelWidth = ImGui::GetContentRegionAvail().x;
@@ -231,8 +276,11 @@ namespace Copium
 	{
 		if (!ImGui::IsMouseDragging(ImGuiMouseButton_Left) && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
 		{
-			fs->set_selected_file(nullptr);
-			fs->set_selected_directory(nullptr);
+			if (!editor->get_inspector()->getFocused())
+			{
+				fs->set_selected_file(nullptr);
+				fs->set_selected_directory(nullptr);
+			}
 		}
 
 		if (ImGui::IsWindowFocused())

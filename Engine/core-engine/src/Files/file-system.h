@@ -215,6 +215,7 @@ namespace Copium
 		void set_asset_directory(Directory& _directory) { assetsDirectory = _directory; }
 
 		const unsigned int& get_indexes() const { return indexes; }
+		void setIndexes(const unsigned int& _index) { indexes = _index; }
 
 		const FileType& get_file_type(std::string const& _ext) { return fileTypes[_ext]; }
 		std::unordered_map<FILE_TYPE, std::list<File*>>& get_file_references() { return files; }

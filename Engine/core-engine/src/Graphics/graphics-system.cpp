@@ -189,11 +189,11 @@ namespace Copium
 		PRINT("Mouse NDC position: " << mouseToNDC.x << ", " << mouseToNDC.y);
 		PRINT("World NDC position: " << worldNDC.x << ", " << worldNDC.y);*/
 
-		if (inputSystem.is_key_pressed(GLFW_KEY_Y))
-		{
-			SceneManager* sm = SceneManager::Instance();
-			PRINT("Number of Gameobjects: " << sm->get_current_scene()->get_gameobjcount());
-		}
+		//if (inputSystem.is_key_pressed(GLFW_KEY_Y))
+		//{
+		//	SceneManager* sm = SceneManager::Instance();
+		//	PRINT("Number of Gameobjects: " << sm->get_current_scene()->get_gameobjcount());
+		//}
 	
 		batch_render();
 	}

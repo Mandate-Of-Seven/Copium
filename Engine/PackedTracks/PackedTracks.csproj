@@ -97,6 +97,7 @@
     <Compile Include="Assets\Scripts\Time.cs" />
     <Compile Include="Assets\Scripts\Unit.cs" />
     <Compile Include="Assets\Scripts\UnitBody.cs" />
+    <Compile Include="ScriptableObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">

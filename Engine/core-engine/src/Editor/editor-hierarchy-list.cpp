@@ -158,7 +158,8 @@ namespace Copium
 				Window::EditorConsole::editorLog.add_logEntry("No scene is loaded!");
 			}
 		}
-		if (sm->get_selected_gameobject() && is->is_key_pressed(GLFW_KEY_BACKSPACE))
+		
+		if (sm->get_selected_gameobject() && is->is_key_pressed(GLFW_KEY_DELETE) && ImGui::IsWindowFocused)
 		{
 			if (Copium::SceneManager::Instance()->get_selected_gameobject())
 			{

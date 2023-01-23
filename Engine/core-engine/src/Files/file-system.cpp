@@ -62,6 +62,7 @@ namespace Copium
 		fileTypes.emplace(std::make_pair(".frag", FileType("Shader", SHADER)));
 		fileTypes.emplace(std::make_pair(".png", FileType("Sprite", SPRITE)));
 		fileTypes.emplace(std::make_pair(".txt", FileType("Text", TEXT)));
+		fileTypes.emplace(std::make_pair(".asset", FileType("Asset", ASSET)));
 	}
 
 	void FileSystem::accept_dropped_files(int _pathCount, const char* _paths[])

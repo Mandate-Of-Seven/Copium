@@ -71,6 +71,8 @@ namespace Copium
             return;
         }
 
+        isFocused = ImGui::IsWindowFocused();
+
         Copium::GameObject* selectedGameObject = sceneManager.selectedGameObject;
         Copium::File* selectedFile = fileSystem.get_selected_file();
         Copium::Directory* selectedDirectory = fileSystem.get_selected_directory();

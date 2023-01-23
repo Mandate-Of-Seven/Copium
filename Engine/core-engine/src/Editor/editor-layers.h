@@ -47,6 +47,9 @@ namespace Copium
 		/***************************************************************************/
 		void exit();
 
+		SortingLayers* SortLayers() { return &sortingLayers; }
+		Layering* Layers() { return &layers; }
+
 	private:
 		/* Layer Data *******************************************************************/
 		SortingLayers sortingLayers;

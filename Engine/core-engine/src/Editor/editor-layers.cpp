@@ -35,50 +35,55 @@ namespace Copium
 
 		if (ImGui::CollapsingHeader("Sorting Layers"))
 		{
-            ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
-                | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
-                | ImGuiTableFlags_PadOuterX;
-
             ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 0));
             ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 2));
 
             // Bean: Add a add and remove layer button
 
-			if (ImGui::BeginTable("Table: Sorting Layers", 2, tableFlags))
-			{
-                ImGui::Indent();
+            if (ImGui::Button("Add Layer"))
+            {
+                std::string newLayer = "New Layer " + std::to_string(sortingLayers.GetLayerCount());
+                sortingLayers.CreateNewLayer(newLayer);
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Remove Top Layer"))
+            {
+                sortingLayers.RemoveLayer(sortingLayers.GetSortingLayers().back().layerID);
+            }
 
-                ImGui::TableSetupColumn("Text", 0, 0.7f);
-                ImGui::TableSetupColumn("Input", 0, 0.3f);
+            ImGui::Indent();
 
-                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
-                ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
-                ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
+            for (int i = 0; i < sortingLayers.GetLayerCount(); i++)
+            {
+                ImGuiSelectableFlags flags = ImGuiSelectableFlags_AllowItemOverlap;
+                char* name = sortingLayers.GetSortingLayers()[i].name.data();
+                int id = sortingLayers.GetSortingLayers()[i].layerID + 1;
+                std::string label = "##" + std::to_string(id);
+                ImGui::Selectable(label.c_str(), false, flags);
 
-                for (int i = 0; i < sortingLayers.GetLayerCount(); i++)
+                if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
                 {
-                    ImGui::TableNextColumn();
-                    ImGui::AlignTextToFramePadding();
-                    ImGui::Text("Layer");
-                    ImGui::TableNextColumn();
+                    int next = i + (ImGui::GetMouseDragDelta(0).y < 0.f ? -1 : 1);
+                    if (next >= 0 && next < sortingLayers.GetLayerCount())
+                    {
+                        sortingLayers.SwapLayers(i, next);
 
-                    char* name = sortingLayers.GetSortingLayers()[i].name.data();
-                    size_t size = sortingLayers.GetSortingLayers()[i].name.size();
-                        
-                    ImGuiInputTextFlags textFlag = 0;
-                    if (!sortingLayers.GetSortingLayers()[i].name.compare("Default"))
-                        textFlag |= ImGuiInputTextFlags_ReadOnly;
-                        
-                    ImGui::InputText("", name, size, textFlag);
-                        
+                        ImGui::ResetMouseDragDelta();
+                    }
                 }
+                ImGui::SameLine();
+                std::string layer = "Layer                                  ";
+                ImGui::Text(layer.c_str());
+                ImGui::SameLine();
 
-                ImGui::PopStyleVar();
-                ImGui::PopStyleVar();
-                ImGui::PopStyleVar();
-                ImGui::Unindent();
-				ImGui::EndTable();
-			}
+                ImGuiInputTextFlags textFlags = 0;
+                if (!sortingLayers.GetSortingLayers()[i].name.compare("Default"))
+                    textFlags = ImGuiInputTextFlags_ReadOnly;
+
+                label = "##" + std::to_string(id * 100);
+                ImGui::PushItemWidth(-FLT_MIN);
+                ImGui::InputText(label.c_str(), name, (size_t) sortingLayers.GetCharLength(), textFlags);
+            }
 
             ImGui::PopStyleVar();
             ImGui::PopStyleVar();
