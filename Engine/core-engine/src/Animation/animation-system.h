@@ -101,7 +101,7 @@ namespace Copium
 
         void AddAnimation();
         void PlayAnimation();
-        void StopAnimation();
+        void PauseAnimation();
 
         Animation* GetCurrentAnimation() 
         { 
