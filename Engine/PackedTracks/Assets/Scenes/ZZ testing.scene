@@ -1,0 +1,205 @@
+{
+    "Name": "NewScene",
+    "Unused GIDs": [],
+    "Unused CIDs": [],
+    "GameObjects": [
+        {
+            "ID": 1,
+            "Name": "Camera",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 1,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Camera",
+                    "Color": {
+                        "X": 0.27799999713897705,
+                        "Y": 0.27799999713897705,
+                        "Z": 0.27799999713897705,
+                        "W": 1.0
+                    },
+                    "Projection": true,
+                    "Clipping Planes": {
+                        "Near": 0.029999999329447746,
+                        "Far": 500.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 2,
+            "Name": "Background train interior",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 3,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.4000000953674316,
+                        "Y": 2.4000000953674316,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 4,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 7,
+                    "Sprite Name": "BG-01.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 5,
+            "Name": "Snowstorm effect",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 5,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 2.4986119270324707,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 17.0,
+                        "Y": 17.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 10,
+                    "Type": "Animator",
+                    "Loop": true,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "spritesheet (1).png",
+                            "Sprite ID": 4,
+                            "Time Delay": 0.05000000074505806,
+                            "FrameCount": 19
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 3,
+            "Name": "Background tracks moving",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 7,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 3.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 5.0,
+                        "Y": 5.0,
+                        "Z": 5.0
+                    }
+                },
+                {
+                    "ID": 6,
+                    "Type": "Animator",
+                    "Loop": true,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "spritesheet.png",
+                            "Sprite ID": 5,
+                            "Time Delay": 0.029999999329447746,
+                            "FrameCount": 4
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 4,
+            "Name": "Background road moving",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 9,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 7.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 11.5,
+                        "Y": 11.5,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 8,
+                    "Type": "Animator",
+                    "Loop": true,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "Road spritesheet.png",
+                            "Sprite ID": 2,
+                            "Time Delay": 0.03999999910593033,
+                            "FrameCount": 9
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
