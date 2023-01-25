@@ -103,22 +103,7 @@ namespace Copium
 			}
 			else
 			{
-				File* temp = get_file(pathName, currentDirectory, true);
-				int counter = 1;
-				if (temp != nullptr)
-				{
-					fs::path editedPath;
-					while (temp != nullptr)
-					{
-						editedPath = currentDir.string() + path.stem().string();
-						editedPath += " " + std::to_string(counter++) + path.extension().string();
-						temp = get_file(editedPath, currentDirectory, true);
-					}
-					fs::copy(path, editedPath);
-				}
-				else
-					fs::copy(path, pathName);
-
+				copy_file(path);
 			}
 		}
 	}
@@ -518,6 +503,54 @@ namespace Copium
 		}
 
 		return nullptr;
+	}
+
+	File* FileSystem::copy_file(std::filesystem::path const& _path)
+	{
+		Directory* currentDirectory = editor->get_content_browser()->get_current_directory();
+
+		fs::path currentDir = currentDirectory->path().string() + "\\";
+		fs::path pathName = currentDir.string() + _path.filename().string();
+
+		File* temp = get_file(pathName, currentDirectory, true);
+		int counter = 1;
+		if (temp != nullptr)
+		{
+			fs::path editedPath;
+			while (temp != nullptr)
+			{
+				editedPath = currentDir.string() + _path.stem().string();
+				editedPath += " " + std::to_string(counter++) + _path.extension().string();
+				temp = get_file(editedPath, currentDirectory, true);
+			}
+			fs::copy(_path, editedPath);
+		}
+		else
+			fs::copy(_path, pathName);
+	}
+
+	File* FileSystem::copy_file(std::filesystem::path const& _path, const std::string& _ext)
+	{
+		Directory* currentDirectory = editor->get_content_browser()->get_current_directory();
+
+		fs::path currentDir = currentDirectory->path().string() + "\\";
+		fs::path pathName = currentDir.string() + _path.filename().string();
+
+		File* temp = get_file(pathName, currentDirectory, true);
+		int counter = 1;
+		if (temp != nullptr)
+		{
+			fs::path editedPath;
+			while (temp != nullptr)
+			{
+				editedPath = currentDir.string() + _path.stem().string();
+				editedPath += " " + std::to_string(counter++) + _ext;
+				temp = get_file(editedPath, currentDirectory, true);
+			}
+			fs::copy(_path, editedPath);
+		}
+		else
+			fs::copy(_path, pathName);
 	}
 
 	void FileSystem::delete_directories(Directory* _directory)

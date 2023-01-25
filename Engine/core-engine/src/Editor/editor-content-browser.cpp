@@ -81,37 +81,24 @@ namespace Copium
 			if (currentDirectory != nullptr)
 			{
 				// Length here would be the number of scriptable objects
-				int length = 1;
-				for (int i = 0; i < length; i++)
+				std::vector<std::string> scriptableObjects = assetSys->GetScriptableObjects();
+
+				for (int i = 0; i < scriptableObjects.size(); i++)
 				{
-					std::string assetName = "Scriptable Object";
+					std::string assetName = scriptableObjects[i];
 					if (ImGui::MenuItem(assetName.c_str(), nullptr))
 					{
-						std::filesystem::path currentDir = currentDirectory->path().string() + "\\";
-						std::filesystem::path pathName = currentDir.string() + assetName + ".asset";
-
-						std::fstream createAsset;
-
-						File* temp = fs->get_file(pathName);
-						int counter = 1;
-						if (temp != nullptr)
+						// Find script in relation to the assetname
+						std::list<File> scriptFiles = fs->get_files_with_extension(".cs");
+						for (File file : scriptFiles)
 						{
-							std::filesystem::path editedPath;
-							while (temp != nullptr)
+							if (!file.stem().string().compare(assetName))
 							{
-								editedPath = currentDir.string() + pathName.stem().string();
-								editedPath += " " + std::to_string(counter++) + pathName.extension().string();
-								temp = fs->get_file(editedPath);
+								// Copy the script file but change the extension
+								assetSys->CopyAsset(file, ".asset");
+								break;
 							}
-							createAsset.open(editedPath.string(), std::ios::out);
 						}
-						else
-							createAsset.open(pathName.string(), std::ios::out);
-
-						if (!createAsset)
-							PRINT("Error in creating file");
-
-						createAsset.close();
 					}
 				}
 			}

@@ -192,6 +192,9 @@ namespace Copium
 		/*******************************************************************************/
 		File* get_file(std::filesystem::path const& _path);
 
+		File* copy_file(std::filesystem::path const& _path);
+		File* copy_file(std::filesystem::path const& _path, const std::string& _ext);
+
 		// Bean: This should be in the directory class
 		/*******************************************************************************
 		/*!

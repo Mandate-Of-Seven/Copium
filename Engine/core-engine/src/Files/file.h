@@ -119,11 +119,6 @@ namespace Copium
 
 		UUID uuid;
 	};
-
-	struct Asset
-	{
-
-	};
 }
 
 #endif // !FILE_H
