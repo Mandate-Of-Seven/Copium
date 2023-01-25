@@ -65,29 +65,29 @@ namespace Copium
 
 		switch (type)
 		{
-		case FOLDER:
+		case FileType::FOLDER:
 			break;
 
-		case AUDIO:
+		case FileType::AUDIO:
 			break;
 
-		case FONT:
+		case FileType::FONT:
 			break;
 
-		case SCENE:
+		case FileType::SCENE:
 			break;
 
-		case SCRIPT:
+		case FileType::SCRIPT:
 			break;
 
-		case SHADER:
+		case FileType::SHADER:
 			break;
 
-		case SPRITE:
+		case FileType::SPRITE:
 			load_texture(_file);
 			break;
 
-		case TEXT:
+		case FileType::TEXT:
 			break;
 		}
 	}
@@ -98,29 +98,29 @@ namespace Copium
 
 		switch (type)
 		{
-		case FOLDER:
+		case FileType::FOLDER:
 			break;
 
-		case AUDIO:
+		case FileType::AUDIO:
 			break;
 
-		case FONT:
+		case FileType::FONT:
 			break;
 
-		case SCENE:
+		case FileType::SCENE:
 			break;
 
-		case SCRIPT:
+		case FileType::SCRIPT:
 			break;
 
-		case SHADER:
+		case FileType::SHADER:
 			break;
 
-		case SPRITE:
+		case FileType::SPRITE:
 			unload_texture(_file);
 			break;
 
-		case TEXT:
+		case FileType::TEXT:
 			break;
 		}
 	}
@@ -130,7 +130,7 @@ namespace Copium
 		(void) _directory;
 
 		// Load Textures (.png)
-		load_all_textures(fs.get_file_references()[SPRITE]);
+		load_all_textures(fs.get_file_references()[FileType::SPRITE]);
 
 		// Load Shaders (.vert & .frag)
 		load_all_shaders(fs.get_filepath_in_directory(Paths::dataPath.c_str(), ".vert", ".frag"));

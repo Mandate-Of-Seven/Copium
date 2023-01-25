@@ -3,6 +3,8 @@
 #include <GameObject/entity.h>
 #include <GameObject/components.h>
 #include <Utilities/sparse-set.h>
+#include <Files/file.h>
+#include <functional>
 
 namespace Copium
 {
@@ -94,5 +96,36 @@ namespace Copium
 	{
 		GetGameCameraEvent(Camera*& _pCamera): pCamera{ _pCamera }{}
 		Camera*& pCamera;
+	};
+
+	template <FileType FT>
+	struct FilesChangedEvent : public IEvent
+	{
+	};
+
+	struct CreateThreadEvent : public IEvent
+	{
+		CreateThreadEvent(std::thread&& _rThread) : rThread{ _rThread }{}
+		std::thread& rThread;
+	};
+
+	struct GetThreadStateEvent : public IEvent
+	{
+		GetThreadStateEvent(std::thread::id _threadID, bool& _state) : threadID{ _threadID }, state{ _state } {}
+		std::thread::id threadID;
+		bool& state;
+	};
+
+	struct AcquireMutexEvent : public IEvent
+	{
+		AcquireMutexEvent(const std::string& _mutexType, bool& _result) : mutexType{ _mutexType }, result{ _result } {}
+		const std::string& mutexType;
+		bool& result;
+	};
+
+	struct ReturnMutexEvent : public IEvent
+	{
+		ReturnMutexEvent(const std::string& _mutexType) : mutexType{ _mutexType } {}
+		const std::string& mutexType;
 	};
 }

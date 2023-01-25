@@ -44,8 +44,8 @@ namespace Copium
 		std::vector<File>& get_files() { return files; }
 		void add_files(File& _file) { files.push_back(_file); }
 
-		std::vector<Directory*>& get_child_directory() { return folders; }
-		void add_child_directory(Directory* _directory) { folders.push_back(_directory); }
+		std::vector<Directory>& get_child_directory() { return folders; }
+		void add_child_directory(Directory&& _directory) { folders.push_back(_directory); }
 
 		Directory* get_parent_directory() { return parentFolder; }
 		void set_parent_directory(Directory* _directory) { parentFolder = _directory; }
@@ -79,7 +79,7 @@ namespace Copium
 		int fileCount = 0; // The number of files and folders
 		std::string name = ""; // The name of the asset
 		std::vector<File> files; // Files within the directory
-		std::vector<Directory*> folders; // Folders within the directory
+		std::vector<Directory> folders; // Folders within the directory
 		Directory* parentFolder = nullptr; // A reference to the parent directory
 	};
 }

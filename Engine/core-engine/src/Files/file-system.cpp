@@ -22,6 +22,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "Files/assets-system.h"
 #include "Editor/editor-system.h"
+#include <Events/events-system.h>
 
 namespace Copium
 {
@@ -36,12 +37,13 @@ namespace Copium
 	void FileSystem::Init()
 	{
 		systemFlags |= FLAG_RUN_ON_EDITOR;
-		
+
 		// Instance ID of assets directory is always preset to a default ID
-		generate_directories(&assetsDirectory, Paths::assetPath);
+		generate_directories(assetsDirectory, Paths::assetPath);
 
 		update_file_references();
 
+		MyEventSystem.publish(new CreateThreadEvent(std::thread(&FileSystem::ThreadFileWatcher, this)));
 		/*PRINT("");
 		print_directories(assetsDirectory, 0);
 		PRINT("");*/
@@ -85,7 +87,7 @@ namespace Copium
 			}
 			else
 			{
-				File* temp = get_file(pathName, currentDirectory, true);
+				File* temp = get_file(pathName, *currentDirectory, true);
 				int counter = 1;
 				if (temp != nullptr)
 				{
@@ -94,7 +96,7 @@ namespace Copium
 					{
 						editedPath = currentDir.string() + path.stem().string();
 						editedPath += " " + std::to_string(counter++) + path.extension().string();
-						temp = get_file(editedPath, currentDirectory, true);
+						temp = get_file(editedPath, *currentDirectory, true);
 					}
 					fs::copy(path, editedPath);
 				}
@@ -107,26 +109,133 @@ namespace Copium
 
 	void FileSystem::Update()
 	{
-		check_directory_count(&assetsDirectory);
+		check_directory_count(assetsDirectory);
+	}
+
+	bool FileSystem::FileIsLoaded(const std::filesystem::path& filePath)
+	{
+		FileType fType = fileTypes[filePath.extension().string()];
+		auto& typedFiles{ files[fType] };
+		for (auto it = typedFiles.begin(); it != typedFiles.end(); ++it)
+		{
+			if (**it == filePath) return true;
+		}
+		return false;
+	}
+
+	void FileSystem::ThreadFileWatcher()
+	{
+		//Check through each file
+		//Change in modified time, directory size
+		bool running{ true };
+		while (running)
+		{
+			MyEventSystem.publish(new GetThreadStateEvent{ std::this_thread::get_id(),running });
+			Sleep(1000);
+			AcquireMutex(FILESYSTEM_MUTEX);
+			//Critical section
+			namespace fs = std::filesystem;
+			for (const fs::directory_entry& p : fs::recursive_directory_iterator(Paths::projectPath))
+			{
+				FileType fType{ fileTypes[p.path().extension().string()]};
+				auto& typedFiles{ files[fType]};
+				static std::list<File*> maskFiles;
+				maskFiles = typedFiles;
+				const fs::path& pathRef{ p.path() };
+				//if (pathRef.extension() != ".cs")
+				//	continue;
+
+				////Detect new files
+				if (!FileIsLoaded(pathRef))
+				{
+					typedFiles.emplace_back(new File(pathRef));
+				}
+				//File was already loaded
+				else
+				{
+					//Set scripts to be masked
+					for (File* maskFile : maskFiles)
+					{
+						if (*maskFile == pathRef)
+						{
+							maskFiles.remove(maskFile);
+							break;
+						}
+					}
+					if (filesIt != typedFiles.end())
+						++filesIt;
+				}
+			}
+
+			for (auto& keyVal : files)
+			{
+				//auto filesIt = keyVal.second.begin();
+				//auto& typedFiles{ keyVal.second};
+				//static std::list<File*> maskFiles;
+				//maskFiles.resize(typedFiles.size());
+				//for (File* file : typedFiles)
+				//{
+				//	maskFiles.push_back(file);
+				//}
+				for (const fs::directory_entry& p : fs::recursive_directory_iterator(Paths::projectPath))
+				{
+					//const fs::path& pathRef{ p.path() };
+					//if (pathRef.extension() != ".cs")
+					//	continue;
+
+					////Detect new scripts
+					//if (!FileIsLoaded(pathRef))
+					//{
+					//	typedFiles.emplace(filesIt, new File(pathRef));
+					//}
+					////Script was already loaded
+					//else
+					//{
+					//	//Set scripts to be masked
+					//	for (File* maskFile : maskFiles)
+					//	{
+					//		if (maskFile && *maskFile == pathRef)
+					//		{
+					//			maskFiles.remove(maskFile);
+					//			break;
+					//		}
+					//	}
+					//	if (filesIt != typedFiles.end())
+					//		++filesIt;
+					//}
+				}
+				// Remove deleted scripts using mask
+				//for (File* maskFile : maskFiles)
+				//{
+				//	if (maskFile != nullptr)
+				//	{
+				//		typedFiles.remove(maskFile);
+				//	}
+				//}
+				//maskFiles.clear();
+			}
+			//Critical section End
+			ReturnMutex(FILESYSTEM_MUTEX);
+		}
+		PRINT("ThreadFileWatcher STOPPED");
 	}
 
 	void FileSystem::Exit()
 	{
-		delete_directories(&assetsDirectory);
 	}
 
-	void FileSystem::generate_directories(Directory* _directory, std::filesystem::path const& _path)
+	void FileSystem::generate_directories(Directory& _directory, std::filesystem::path const& _path)
 	{
 		if (fs::exists(_path) && fs::is_directory(_path))
 		{
 			// Assign the path to the directory
-			_directory->assign(_path);
+			_directory.assign(_path);
 
 			// Set instance index
-			_directory->set_id(DEFAULT_INSTANCE_ID + indexes++);
+			_directory.set_id(DEFAULT_INSTANCE_ID + indexes++);
 
 			// Set folder name
-			_directory->set_name(_path.filename().string());
+			_directory.set_name(_path.filename().string());
 
 			// Set files and folders within directory
 			int count = 0;
@@ -136,15 +245,16 @@ namespace Copium
 				// Store in folders and access it
 				if (dirEntry.is_directory())
 				{
+					PRINT(dirEntry);
 					//Directory folder;
-					Directory* folder = new Directory;
-					folder->set_parent_directory(_directory);
+					Directory folder{};
+					folder.set_parent_directory(&_directory);
 
 					// Generate folder
 					generate_directories(folder, path);
 
 					// Add folder into this directory
-					_directory->add_child_directory(folder);
+					_directory.add_child_directory(std::move(folder));
 				}
 				// Store file
 				else 
@@ -152,13 +262,13 @@ namespace Copium
 					File file(path);
 					file.set_id(DEFAULT_INSTANCE_ID + indexes++);
 					file.set_name(path.stem().string());
-					_directory->add_files(file);
+					_directory.add_files(file);
 				}
 
 				count++;
 			}
 
-			_directory->set_file_count(count);
+			_directory.set_file_count(count);
 		}
 	}
 
@@ -175,9 +285,9 @@ namespace Copium
 
 		if (!_directory.get_child_directory().empty())
 		{
-			for (auto dir : _directory.get_child_directory())
+			for (auto& dir : _directory.get_child_directory())
 			{
-				print_directories(*dir, _level);
+				print_directories(dir, _level);
 			}
 		}
 		
@@ -220,9 +330,9 @@ namespace Copium
 
 						// Check if the folder exist 
 						bool hasFolder = false;
-						for (auto assetDir : _directory->get_child_directory())
+						for (auto& assetDir : _directory->get_child_directory())
 						{
-							if (tempFolder == *assetDir)
+							if (tempFolder == assetDir)
 							{
 								hasFolder = true;
 								break;
@@ -232,18 +342,18 @@ namespace Copium
 						// Directory folder;
 						if (!hasFolder)
 						{
-							Directory* folder = new Directory;
-							folder->set_parent_directory(_directory);
+							Directory folder{};
+							folder.set_parent_directory(_directory);
 
 							// Generate folder
 							generate_directories(folder, path);
 
 							// Add folder into this directory
-							_directory->add_child_directory(folder);
+							_directory->add_child_directory(std::move(folder));
 
 							// Bean: This should be moved to a general function
 							// Prevent selection of file / directory
-							if (currentDir->within_directory(folder))
+							if (currentDir->within_directory(&folder))
 								selectedDirectory = nullptr;
 						}
 						
@@ -268,7 +378,7 @@ namespace Copium
 							file.set_id(DEFAULT_INSTANCE_ID + indexes++);
 							file.set_name(path.stem().string());
 							_directory->add_files(file);
-							add_file_reference(&_directory->get_files().back());
+							add_file_reference(_directory->get_files().back());
 
 							// Bean: This should be moved to a general function
 							// Prevent selection of file / directory
@@ -280,13 +390,13 @@ namespace Copium
 
 				// Check for deleted folders
 				std::vector<Directory*> iterators;
-				std::vector<Directory*>* dirs = &_directory->get_child_directory();
-				for (auto it = (*dirs).begin(); it != (*dirs).end();)
+				std::vector<Directory>& dirs = _directory->get_child_directory();
+				for (auto it = dirs.begin(); it != dirs.end();)
 				{
 					bool hasFolder = false;
 					for (auto& dirEntry : fs::directory_iterator(_directory->path()))
 					{
-						if ((*it)->path() == dirEntry.path())
+						if ((*it).path() == dirEntry.path())
 						{
 							hasFolder = true;
 							break;
@@ -301,18 +411,11 @@ namespace Copium
 						if (currentDir == _directory && selectedDirectory != nullptr)
 							selectedDirectory = nullptr;
 
-						iterators.push_back(*it);
-						it = (*dirs).erase(it);
+						iterators.push_back(&(*it));
+						it = (dirs).erase(it);
 					}
 					else
 						it++;
-				}
-				(*dirs).shrink_to_fit();
-
-				for (auto dir : iterators)
-				{
-					delete_directories(dir);
-					delete dir;
 				}
 
 				// Check for deleted files
@@ -338,7 +441,7 @@ namespace Copium
 						if (currentDir == _directory && selectedFile != nullptr)
 							selectedFile = nullptr;
 
-						remove_file_reference(&(*it));
+						remove_file_reference(*it);
 						it = (*filesPtr).erase(it);
 					}
 					else
@@ -351,36 +454,36 @@ namespace Copium
 			{
 				for (auto& dirEntry : _directory->get_child_directory())
 				{
-					update_directories(dirEntry);
+					update_directories(&dirEntry);
 				}
 			}
 		}
 	}
 
-	void FileSystem::check_directory_count(Directory* _directory, bool _recursive)
+	void FileSystem::check_directory_count(Directory& _directory, bool _recursive)
 	{
 		int fileCount = 0;
-		for (auto dirEntry : fs::directory_iterator(_directory->path()))
+		for (auto dirEntry : fs::directory_iterator(_directory.path()))
 		{
 			(void)dirEntry;
 			fileCount++;
 		}
 
 		// Check if there is a change in the number of files
-		if (_directory->get_file_count() != 0 && _directory->get_file_count() != fileCount)
+		if (_directory.get_file_count() != 0 && _directory.get_file_count() != fileCount)
 		{
 			double start = glfwGetTime();
-			update_directories(_directory, false);
+			update_directories(&_directory, false);
 			double end = glfwGetTime();
 
 			PRINT("File time taken to reload: " << end - start);
 		}
 
-		_directory->set_file_count(fileCount);
+		_directory.set_file_count(fileCount);
 
 		if (_recursive)
 		{
-			for (Directory* dirEntry : _directory->get_child_directory())
+			for (Directory& dirEntry : _directory.get_child_directory())
 			{
 				check_directory_count(dirEntry);
 			}
@@ -406,23 +509,23 @@ namespace Copium
 	{
 		if (_withinDirectory)
 		{
-			for (Directory* dir : _currentDir->get_child_directory())
+			for (Directory& dir : _currentDir->get_child_directory())
 			{
-				if (_path == dir->path())
-					return dir;
+				if (_path == dir.path())
+					return &dir;
 			}
 
 			return nullptr;
 		}
 
-		for (Directory* dir : _currentDir->get_child_directory())
+		for (Directory& dir : _currentDir->get_child_directory())
 		{
-			if (_path == dir->path())
-				return dir;
+			if (_path == dir.path())
+				return &dir;
 
-			if (!dir->get_child_directory().empty())
+			if (!dir.get_child_directory().empty())
 			{
-				Directory* temp = get_directory(_path, dir);
+				Directory* temp = get_directory(_path, &dir);
 				if (temp != nullptr)
 					return temp;
 			}
@@ -448,14 +551,14 @@ namespace Copium
 
 	Directory* FileSystem::get_directory(std::string const& _directoryName, Directory* _currentDir)
 	{
-		for (Directory* dir : _currentDir->get_child_directory())
+		for (Directory& dir : _currentDir->get_child_directory())
 		{
-			if (!dir->get_name().compare(_directoryName))
-				return dir;
+			if (!dir.get_name().compare(_directoryName))
+				return &dir;
 
-			if (!dir->get_child_directory().empty())
+			if (!dir.get_child_directory().empty())
 			{
-				Directory* temp = get_directory(_directoryName, dir);
+				Directory* temp = get_directory(_directoryName, &dir);
 				if (temp != nullptr)
 					return temp;
 			}
@@ -468,7 +571,7 @@ namespace Copium
 	{
 		if (!assetsDirectory.get_child_directory().empty())
 		{
-			File* file = get_file(_path, &assetsDirectory);
+			File* file = get_file(_path, assetsDirectory);
 			if (file != nullptr)
 				return file;
 		}
@@ -476,9 +579,9 @@ namespace Copium
 		return nullptr;
 	}
 
-	File* FileSystem::get_file(std::filesystem::path const& _path, Directory* _currentDir, bool _withinDirectory)
+	File* FileSystem::get_file(std::filesystem::path const& _path, Directory& _currentDir, bool _withinDirectory)
 	{
-		for (File& file : _currentDir->get_files())
+		for (File& file : _currentDir.get_files())
 		{
 			if (_path == file)
 				return &file;
@@ -487,9 +590,9 @@ namespace Copium
 		if (_withinDirectory)
 			return nullptr;
 
-		if (!_currentDir->get_child_directory().empty())
+		if (!_currentDir.get_child_directory().empty())
 		{
-			for (Directory* dir : _currentDir->get_child_directory())
+			for (Directory& dir : _currentDir.get_child_directory())
 			{
 				File* file = get_file(_path, dir, false);
 				if (file != nullptr)
@@ -500,26 +603,10 @@ namespace Copium
 		return nullptr;
 	}
 
-	void FileSystem::delete_directories(Directory* _directory)
-	{
-		if (!_directory->get_child_directory().empty())
-		{
-			for (Directory* dir : _directory->get_child_directory())
-			{
-				if (!dir->get_child_directory().empty())
-				{
-					delete_directories(dir);
-				}
-
-				delete dir;
-			}
-		}
-	}
-
 	void FileSystem::update_file_references()
 	{
 		files.clear();
-		store_file_references(&assetsDirectory);
+		store_file_references(assetsDirectory);
 	}
 
 	void FileSystem::delete_from_browser()
@@ -594,35 +681,28 @@ namespace Copium
 		return assetsPath;
 	}
 
-	std::list<File>& FileSystem::get_files_with_extension(const char* _extension)
+	void FileSystem::store_file_references(Directory& _directory)
 	{
-		if (extensionTrackedFiles.count(_extension) == 0)
-			extensionTrackedFiles.emplace(std::make_pair(_extension, std::list<File>()));
-		return extensionTrackedFiles[_extension];
-	}
-
-	void FileSystem::store_file_references(Directory* _directory)
-	{
-		for (auto& fileEntry : _directory->get_files())
+		for (auto& fileEntry : _directory.get_files())
 		{
 			files[fileEntry.fileType].push_back(&fileEntry);
 		}
 
-		for (auto dirEntry : _directory->get_child_directory())
+		for (auto& dirEntry : _directory.get_child_directory())
 		{
 			store_file_references(dirEntry);
 		}
 	}
 
-	void FileSystem::add_file_reference(File* _file)
+	void FileSystem::add_file_reference(File& _file)
 	{
-		files[_file->fileType].push_back(_file);
-		assets.load_file(_file);
+		files[_file.fileType].push_back(&_file);
+		assets.load_file(&_file);
 	}
 
-	void FileSystem::remove_file_reference(File* _file)
+	void FileSystem::remove_file_reference(File& _file)
 	{
-		files[_file->fileType].remove(_file);
-		assets.unload_file(_file);
+		files[_file.fileType].remove(&_file);
+		assets.unload_file(&_file);
 	}
 }

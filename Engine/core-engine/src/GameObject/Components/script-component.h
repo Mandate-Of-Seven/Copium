@@ -265,9 +265,7 @@ namespace Copium
 		static char buffer[128];
 		std::string name;
 		const Script* reference{ nullptr };
-		std::unordered_map<std::string, GameObject*> fieldGameObjReferences;
-		std::unordered_map<std::string, Component*> fieldComponentReferences;
-		std::unordered_map<std::string, FieldData> fieldDataReferences;
+
 		static ScriptingSystem& sS;
 		bool isAddingGameObjectReference;
     };

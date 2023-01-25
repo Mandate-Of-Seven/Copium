@@ -73,22 +73,22 @@ namespace Copium
 		{
 			switch (rFile.fileType)
 			{
-				case Copium::AUDIO:
+				case Copium::FileType::AUDIO:
 					break;
-				case Copium::FONT:
+				case Copium::FileType::FONT:
 					break;
-				case Copium::SCENE:
+				case Copium::FileType::SCENE:
 					break;
-				case Copium::SCRIPT:
+				case Copium::FileType::SCRIPT:
 					break;
-				case Copium::SHADER:
+				case Copium::FileType::SHADER:
 					break;
-				case Copium::SPRITE:
+				case Copium::FileType::SPRITE:
 				{
 					DisplayDragDropFile<Texture>(rFile);
 					break;
 				}
-				case Copium::TEXT:
+				case Copium::FileType::TEXT:
 					break;
 				default:
 					PRINT("UNKNOWN FILE TYPE");
@@ -165,7 +165,7 @@ namespace Copium
 
 				ImGui::TableNextColumn();
 
-				const auto& path = dirEntry->path();
+				const auto& path = dirEntry.path();
 				auto relativePath = std::filesystem::relative(path, assets);
 				std::string fileName = relativePath.filename().string();
 
@@ -175,7 +175,7 @@ namespace Copium
 				ImTextureID icon = (ImTextureID)(size_t)icons[0].get_object_id();
 				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
 				//ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.f, 0.f));
-				ImGui::ImageButtonEx(dirEntry->get_id(), icon, { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 }, transparent, white);
+				ImGui::ImageButtonEx(dirEntry.get_id(), icon, { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 }, transparent, white);
 				
 				//ImGui::PopStyleVar();
 				ImGui::PopStyleColor();
@@ -296,10 +296,10 @@ namespace Copium
 						file.access_file();
 				}
 
-				for (Directory* dir : currentDirectory->get_child_directory())
+				for (Directory& dir : currentDirectory->get_child_directory())
 				{
-					if (dir->get_id() == ImGui::GetHoveredID())
-						currentDirectory = dir;
+					if (dir.get_id() == ImGui::GetHoveredID())
+						currentDirectory = &dir;
 				}
 			}
 
@@ -313,10 +313,10 @@ namespace Copium
 					}
 				}
 
-				for (Directory* dir : currentDirectory->get_child_directory())
+				for (Directory& dir : currentDirectory->get_child_directory())
 				{
-					if (dir->get_id() == ImGui::GetHoveredID())
-						fs.set_selected_directory(dir);
+					if (dir.get_id() == ImGui::GetHoveredID())
+						fs.set_selected_directory(&dir);
 				}
 			}
 			

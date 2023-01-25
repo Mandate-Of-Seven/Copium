@@ -105,7 +105,7 @@ namespace Copium
 			The path to generate the directories
 		*/
 		/*******************************************************************************/
-		void generate_directories(Directory* _directory, std::filesystem::path const& _path);
+		void generate_directories(Directory& _directory, std::filesystem::path const& _path);
 
 		// Bean: This should be in the directory class
 		/*******************************************************************************
@@ -146,7 +146,7 @@ namespace Copium
 			directory
 		*/
 		/*******************************************************************************/
-		void check_directory_count(Directory* _directory, bool _recursive = true);
+		void check_directory_count(Directory& _directory, bool _recursive = true);
 
 		/*******************************************************************************
 		/*!
@@ -185,17 +185,6 @@ namespace Copium
 		/*******************************************************************************/
 		File* get_file(std::filesystem::path const& _path);
 
-		// Bean: This should be in the directory class
-		/*******************************************************************************
-		/*!
-		\brief
-			Delete the directories specified in the parameter
-		\param _directory
-			The directory to delete
-		*/
-		/*******************************************************************************/
-		void delete_directories(Directory* _directory);
-
 		/*******************************************************************************
 		/*!
 		\brief
@@ -203,6 +192,10 @@ namespace Copium
 		*/
 		/*******************************************************************************/
 		void update_file_references();
+
+		void ThreadFileWatcher();
+
+		bool FileIsLoaded(const std::filesystem::path& filePath);
 
 		Directory& get_asset_directory() { return assetsDirectory; }
 		void set_asset_directory(Directory& _directory) { assetsDirectory = _directory; }
@@ -251,19 +244,6 @@ namespace Copium
 		/*******************************************************************************/
 		std::list<std::string>& get_filepath_in_directory(const char* _path, const char* _extension1, const char* _extension2);
 
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Gets a list of files with an extension in its name
-		\param _extension
-			Extension in file to look for
-		\return
-			Reference to list of files with the extension
-		*/
-		/*******************************************************************************/
-		std::list<File>& get_files_with_extension(const char* _extension);
-
 	private:
 		/*******************************************************************************
 		/*!
@@ -310,7 +290,7 @@ namespace Copium
 			The file
 		*/
 		/*******************************************************************************/
-		File* get_file(std::filesystem::path const& _path, Directory* _currentDir, bool _withinDirectory = false);
+		File* get_file(std::filesystem::path const& _path, Directory& _currentDir, bool _withinDirectory = false);
 		
 		/*******************************************************************************
 		/*!
@@ -320,7 +300,7 @@ namespace Copium
 			The directory to search the files to store the references
 		*/
 		/*******************************************************************************/
-		void store_file_references(Directory* _directory);
+		void store_file_references(Directory& _directory);
 		
 		/*******************************************************************************
 		/*!
@@ -330,7 +310,7 @@ namespace Copium
 			The file to add the file reference to
 		*/
 		/*******************************************************************************/
-		void add_file_reference(File* _file);
+		void add_file_reference(File& _file);
 		
 		/*******************************************************************************
 		/*!
@@ -340,7 +320,7 @@ namespace Copium
 			The file to remove the file reference 
 		*/
 		/*******************************************************************************/
-		void remove_file_reference(File* _file);
+		void remove_file_reference(File& _file);
 
 	private:
 		std::map<const char*, std::list<File>> extensionTrackedFiles;

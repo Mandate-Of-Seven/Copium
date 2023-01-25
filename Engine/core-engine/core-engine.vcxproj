@@ -162,6 +162,7 @@
     <ClCompile Include="src\Physics\collision.cpp" />
     <ClCompile Include="src\Physics\physics-system.cpp" />
     <ClCompile Include="src\SceneManager\state-manager.cpp" />
+    <ClCompile Include="src\Scripting\scripting-system.cpp" />
     <ClCompile Include="src\Utilities\thread-system.cpp" />
     <ClCompile Include="src\imgui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -220,6 +221,9 @@
     <ClInclude Include="src\Math\Vector4.h" />
     <ClInclude Include="src\Graphics\spritesheet.h" />
     <ClInclude Include="src\Physics\physics-system.h" />
+    <ClInclude Include="src\SceneManager\state-manager.h" />
+    <ClInclude Include="src\Scripting\compiler.h" />
+    <ClInclude Include="src\Scripting\scripting-system.h" />
     <ClInclude Include="src\Utilities\easing.h" />
     <ClInclude Include="src\Utilities\sparse-set.h" />
     <ClInclude Include="src\Utilities\thread-system.h" />
@@ -241,7 +245,6 @@
     <ClInclude Include="src\Messaging\message-types.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\Graphics\renderer.h" />
-    <ClInclude Include="src\SceneManager\state-manager.h" />
     <ClInclude Include="src\CopiumCore\system-interface.h" />
     <ClInclude Include="src\Graphics\vertex-types.h" />
     <ClInclude Include="src\Windows\windows-input.h" />

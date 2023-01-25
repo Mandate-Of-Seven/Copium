@@ -31,6 +31,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <Debugging/frame-rate-controller.h>
 #include <GameObject/ecs.h>
 #include <Graphics/animation-system.h>
+#include <Scripting/scripting-system.h>
 //#include "string.h"
 
 namespace Copium
@@ -49,6 +50,7 @@ namespace Copium
 		void Init()
 		{
 			MessageSystem& messageSystem = MessageSystem::Instance();
+			ThreadSystem::Instance().Awake();
 			systems =
 			{
 				//Put in sequence of calls
@@ -60,7 +62,7 @@ namespace Copium
 				//&SoundSystem::Instance(),
 				&FileSystem::Instance(),
 				&AssetsSystem::Instance(),
-				//&ScriptingSystem::Instance(),
+				&ScriptingSystem::Instance(),
 				&InputSystem::Instance(),
 				&EditorSystem::Instance(),
 				//&LogicSystem::Instance(),

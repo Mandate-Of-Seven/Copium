@@ -19,8 +19,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
-	enum FileType
+	enum class FileType
 	{
+		NONE,
 		FOLDER, // For empty file type
 		AUDIO,
 		CONFIG,
@@ -30,7 +31,6 @@ namespace Copium
 		SHADER,
 		SPRITE,
 		TEXT,
-
 		NUM_TYPES
 	};
 

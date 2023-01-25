@@ -8,4 +8,6 @@
 
 using EntityID = size_t;
 
+static const char* FILESYSTEM_MUTEX = "FILESYSTEM_MUTEX";
+
 #endif // !CONFIG_H

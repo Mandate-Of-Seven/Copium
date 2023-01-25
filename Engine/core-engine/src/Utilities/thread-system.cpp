@@ -15,17 +15,22 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "pch.h"
 #include "Utilities/thread-system.h"
+#include <Events/events-system.h>
 
 namespace Copium
 {
+	void ThreadSystem::Awake()
+	{
+		MyEventSystem.subscribe(this, &ThreadSystem::CallbackCreateThread);
+		MyEventSystem.subscribe(this, &ThreadSystem::CallbackGetThreadState);
+		MyEventSystem.subscribe(this, &ThreadSystem::CallbackAcquireMutex);
+		MyEventSystem.subscribe(this, &ThreadSystem::CallbackReturnMutex);
+		threads.reserve(10);
+	}
+
 	void ThreadSystem::Init()
 	{
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
-		quit = false;
-		for (int i = 0; i < int(MutexType::None); ++i)
-		{
-			mutexes.emplace(std::make_pair(MutexType(i),0));
-		}
 	}
 
 	void ThreadSystem::Update()
@@ -33,25 +38,47 @@ namespace Copium
 
 	}
 
-	void ThreadSystem::addThread(std::thread* _thread)
+	void ThreadSystem::CallbackCreateThread(CreateThreadEvent* pEvent)
 	{
-		threads.push_back(_thread);
+		threadsStates[pEvent->rThread.get_id()] = true;
+		threads.push_back(std::move(pEvent->rThread));
+	}
+
+	void ThreadSystem::CallbackGetThreadState(GetThreadStateEvent* pEvent)
+	{
+		pEvent->state = threadsStates[pEvent->threadID];
+	}
+
+	void ThreadSystem::CallbackAcquireMutex(AcquireMutexEvent* pEvent)
+	{
+		//Mutex is in use
+		if (mutexes[pEvent->mutexType] == true)
+		{
+			pEvent->result = false;
+		}
+		else
+		{
+			mutexes[pEvent->mutexType] = true;
+			pEvent->result = true;
+		}
+	}
+
+	void ThreadSystem::CallbackReturnMutex(ReturnMutexEvent* pEvent)
+	{
+		mutexes[pEvent->mutexType] = false;
 	}
 
 	void ThreadSystem::Exit()
 	{
-		quit = true;
 		PRINT("Exiting all threads...");
-		for (std::thread* thread : threads)
+		for (auto& threadIdState : threadsStates)
 		{
-			thread->join();
-			delete thread;
+			threadIdState.second = false;
+		}
+		for (std::thread& thread : threads)
+		{
+			thread.join();
 		}
 		PRINT("All threads exited");
-	}
-
-	bool ThreadSystem::Quit() const
-	{
-		return quit;
 	}
 }

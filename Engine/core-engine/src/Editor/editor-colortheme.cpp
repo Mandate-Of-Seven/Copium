@@ -18,6 +18,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <rapidjson/prettywriter.h>
 #include <rapidjson/istreamwrapper.h>
 #include "Utilities/thread-system.h"
+#include <Events/events-system.h>
 
 
 namespace Window
@@ -61,9 +62,9 @@ namespace Window
             {
                 //Serialize
                 setTheme(color_for_text, color_for_head, color_for_area, color_for_body, color_for_pops);
-                while (!threadSystem.acquireMutex(Copium::MutexType::FileSystem));
+                AcquireMutex(FILESYSTEM_MUTEX);
                 std::string fp = Copium::FileDialogs::save_file("Copium Theme (*.theme)\0.theme\0");
-                threadSystem.returnMutex(Copium::MutexType::FileSystem);
+                ReturnMutex(FILESYSTEM_MUTEX);
                 serialize(fp);
 
             }
@@ -71,9 +72,9 @@ namespace Window
             if (ImGui::Button("Load Theme"))
             {
                 //DeSerialize
-                while (!threadSystem.acquireMutex(Copium::MutexType::FileSystem));
+                AcquireMutex(FILESYSTEM_MUTEX);
                 std::string fp = Copium::FileDialogs::open_file("Copium Theme (*.theme)\0*.theme\0");
-                threadSystem.returnMutex(Copium::MutexType::FileSystem);
+                ReturnMutex(FILESYSTEM_MUTEX);
                 deserialize(fp);
                 if (fp.size())
                 {

@@ -62,7 +62,7 @@ namespace Copium
 
 	void File::access_file()
 	{
-		if (fileType == SCENE)
+		if (fileType == FileType::SCENE)
 		{
 			//if (Copium::SceneManager::Instance().get_current_scene() != nullptr)
 			//{

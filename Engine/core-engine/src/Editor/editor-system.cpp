@@ -23,7 +23,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Editor/editor-colortheme.h"
 #include "Windows/windows-utils.h"
 #include "Utilities/thread-system.h"
-#include "SceneManager/state-manager.h"
 #include "Messaging/message-system.h"
 #include "Graphics/graphics-system.h"
 #include <ImGuizmo.h>
@@ -177,9 +176,9 @@ namespace Copium
 					{
 						PRINT("ctrl o\n");
 						//open scene
-						while (!threadSystem.acquireMutex(MutexType::FileSystem));
+						AcquireMutex(FILESYSTEM_MUTEX);
 						std::string filepath = FileDialogs::open_file("Copium Scene (*.scene)\0*.scene\0");
-						threadSystem.returnMutex(MutexType::FileSystem);
+						ReturnMutex(FILESYSTEM_MUTEX);
 						if (!filepath.empty())
 						{
 							std::cout << filepath << std::endl;
@@ -315,9 +314,9 @@ namespace Copium
 				else if (inputSystem.is_key_pressed(GLFW_KEY_O))
 				{
 					//open scene
-					while (!threadSystem.acquireMutex(MutexType::FileSystem));
+					AcquireMutex(FILESYSTEM_MUTEX);
 					std::string filepath = FileDialogs::open_file("Copium Scene (*.scene)\0*.scene\0");
-					threadSystem.returnMutex(MutexType::FileSystem);
+					ReturnMutex(FILESYSTEM_MUTEX);
 					if (!filepath.empty())
 					{
 						std::cout << filepath << std::endl;

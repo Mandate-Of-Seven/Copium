@@ -14,23 +14,17 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************/
 
 #pragma once
-#include "Messaging/message-system.h"
-#include "Messaging/message-types.h"
 #include <thread>
 #include <utility>
 #include <unordered_map>
+#include <Events/events.h>
 
 namespace Copium
 {
-	enum class MutexType
-	{
-		FileSystem,
-		None
-	};
-
-
 	CLASS_SYSTEM(ThreadSystem)	{
 	public:
+		void Awake();
+
 		/*******************************************************************************
 		/*!
 		*
@@ -56,75 +50,13 @@ namespace Copium
 		/*******************************************************************************/
 		void Exit();
 
-		/*******************************************************************************
-		/*!
-		*
-			\brief
-				Runs when engine exits
-			\param _name
-				Thread name
-			\param _thread
-				Thread to keep track of
-		*/
-		/*******************************************************************************/
-		void addThread(std::thread* _thread);
-
-
-		/*******************************************************************************
-		/*!
-		*
-			\brief
-				Gets a mutex for a thread to run its critical section
-			\param mutexType
-				Type of mutex to acquire
-			\return
-				True if acquired
-		*/
-		/*******************************************************************************/
-		bool acquireMutex(MutexType mutexType)
-		{
-			if (mutexes[mutexType] == 1)
-				return 0;
-			mutexes[mutexType] = 1;
-			return 1;
-		}
-
-		/*******************************************************************************
-		/*!
-		*
-			\brief
-				Returns a mutex
-			\param mutexType
-				Type of mutex to return
-		*/
-		/*******************************************************************************/
-		void returnMutex(MutexType mutexType)
-		{
-			mutexes[mutexType] = 0;
-		}
-
-		/*******************************************************************************
-		/*!
-		*
-			\brief
-				Checks whether thread system has been told to exit
-			\return
-				Returns the value of quit member variable
-		*/
-		/*******************************************************************************/
-		bool Quit() const;
-
-		/*******************************************************************************
-		/*!
-		*
-			\brief
-				Tracks when to quit and exit all threads
-		*/
-		/*******************************************************************************/
-		void handleMessage(MESSAGE_TYPE);
+		void CallbackCreateThread(CreateThreadEvent* pEvent);
+		void CallbackGetThreadState(GetThreadStateEvent* pEvent);
+		void CallbackAcquireMutex(AcquireMutexEvent* pEvent);
+		void CallbackReturnMutex(ReturnMutexEvent* pEvent);
 	private:
-		std::vector<std::thread*> threads;
-		std::unordered_map<MutexType, bool> mutexes;
-		bool quit = false;
+		std::vector<std::thread> threads;
+		std::unordered_map<std::thread::id,bool> threadsStates;
+		std::unordered_map<std::string, bool> mutexes;
 	};
 }

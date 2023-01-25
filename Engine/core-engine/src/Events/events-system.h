@@ -25,6 +25,9 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <typeindex>
 #include <CopiumCore/system-interface.h>
 
+#define AcquireMutex(MutexType) bool mutex{false}; while(!mutex)MyEventSystem.publish(new Copium::AcquireMutexEvent{MutexType,mutex});
+#define ReturnMutex(MutexType) MyEventSystem.publish(new Copium::ReturnMutexEvent{MutexType});
+
 #define MyEventSystem Copium::EventSystem::Instance()
 
 namespace Copium
