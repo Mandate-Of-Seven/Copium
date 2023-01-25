@@ -187,23 +187,24 @@ namespace Copium
 	}
 	void Animator::Update(float _dt)
 	{
-		//for (Animation& anim : animations)
-		//{
-		//	if (anim.UpdateFrame(_dt))
-		//		anim.IncrementFrame();
-
-		//}
 
 		if (!animationCount)
 			return;
 
 		if (status != AnimatorStatus::playing)
 			return;
-		//PRINT("Animator update\n");
+
 		if (animations[currentAnimationIndex].UpdateFrame(_dt))
 			animations[currentAnimationIndex].IncrementFrame();
 
 
+	}
+	Animation* Animator::GetCurrentAnimation()
+	{
+		if (IsEmpty())
+			return nullptr;
+
+		return &animations[currentAnimationIndex];
 	}
 	void Animator::deserialize(rapidjson::Value& _value)
 	{
@@ -302,6 +303,7 @@ namespace Copium
 			return;
 
 		//PRINT("Animation system update");
+		if(sm->GetSceneState() == Copium::Scene::SceneState::play)
 
 
 		for (Copium::GameObject* go : sm->get_current_scene()->gameObjects)
@@ -310,6 +312,16 @@ namespace Copium
 
 				Animator* anim = reinterpret_cast<Animator*>(component);
 				anim->Update(MyFrameRateController.getDt());
+				if (sm->GetSceneState() == Scene::SceneState::play)
+				{
+					anim->SetStatus(Animator::AnimatorStatus::playing);
+				}
+				else if (sm->GetSceneState() == Scene::SceneState::paused)
+				{
+					anim->SetStatus(Animator::AnimatorStatus::idle);
+
+				}
+
 
 			}
 
