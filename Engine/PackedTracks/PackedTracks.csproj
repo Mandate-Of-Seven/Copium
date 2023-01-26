@@ -76,27 +76,8 @@
     <Compile Include="..\CopiumScriptCore\Random.cs">
       <Link>Random.cs</Link>
     </Compile>
-    <Compile Include="Assets\Scripts\AIMovement.cs" />
-    <Compile Include="Assets\Scripts\Bullet.cs" />
-    <Compile Include="Assets\Scripts\CombatBulletBody.cs" />
-    <Compile Include="Assets\Scripts\HowToPlay.cs" />
-    <Compile Include="Assets\Scripts\ResumeButton.cs" />
-    <Compile Include="Assets\Scripts\CombatMovement.cs" />
-    <Compile Include="Assets\Scripts\QuitButton.cs" />
-    <Compile Include="Assets\Scripts\GameData.cs" />
-    <Compile Include="Assets\Scripts\GameManager.cs" />
-    <Compile Include="Assets\Scripts\Graphics.cs" />
-    <Compile Include="Assets\Scripts\Gun.cs" />
-    <Compile Include="Assets\Scripts\Item.cs" />
-    <Compile Include="Assets\Scripts\ItemBody.cs" />
-    <Compile Include="Assets\Scripts\Manager.cs" />
-    <Compile Include="Assets\Scripts\MapManager.cs" />
-    <Compile Include="Assets\Scripts\Physics.cs" />
-    <Compile Include="Assets\Scripts\Shield.cs" />
-    <Compile Include="Assets\Scripts\Skill.cs" />
-    <Compile Include="Assets\Scripts\Time.cs" />
+    <Compile Include="Assets\Scripts\ScreensManager.cs" />
     <Compile Include="Assets\Scripts\Unit.cs" />
-    <Compile Include="Assets\Scripts\UnitBody.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
