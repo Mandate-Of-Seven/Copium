@@ -404,19 +404,33 @@ namespace Copium
 		// Handle any reordering
 		if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
 		{
+			PRINT("Selected GameObject's Index:" << _index);
 				//std::cout << "ID of selected Game Object: " << _selected << std::endl;
 				int n_next = (ImGui::GetMouseDragDelta(0).y < 0.f ? -1 : 1);
+				if (n_next < 0)
+					PRINT("neg");
+				else
+					PRINT("pos");
+				n_next += _index;
+				PRINT("n_next:" << n_next);
+				PRINT("Generation size:" << _list.size());
 
-				if (n_next + _index >= 0 && n_next + _index < _list.size())
+				if (n_next >= 0 && (n_next) < _list.size())
 				{		
-
-					
+					PRINT("test");
 					Transform* tmp = &_go.transform;
 					std::list<Transform*>::iterator iter1, iter2;
 
 					iter1 = _list.begin();
-					for (int i{ 0 }; i < _index; ++i)
+					for (int i{ 0 }; i < _list.size(); ++i)
 					{
+						if (*iter1 == tmp)
+						{
+							PRINT("Found it");
+							break;
+
+						}
+
 						++iter1;
 					}
 					iter2 = iter1;
@@ -425,62 +439,21 @@ namespace Copium
 					{
 						++iter2;
 					}
-					else
+					else if(n_next <= 0)
 					{
 						--iter2;
 					}
 
-					*iter1 = *iter2;
-					*iter2 = tmp;
 					
 
-				}
-				else
-				{
-					std::cout << "going out of bounds\n";
-					if (is->is_key_pressed(GLFW_KEY_LEFT_CONTROL))
+					if (iter2 != _list.end())
 					{
-						std::cout << "ctrl\n";
-						GameObject* p = &_go.transform.parent->gameObj;
-						Scene* scene = sm->get_current_scene();
-						int parentIndex{ 0 };
-						int goIndex{ 0 };
-
-						if (p->transform.hasParent())
-						{
-
-						}
-						else
-						{
-							for (std::vector<GameObject*>::iterator it = scene->gameObjects.begin(); it != scene->gameObjects.end(); ++it)
-							{
-								if (p == *it)
-								{
-									//if (n_next + _index >= _list.size())
-									//	++it;
-
-									//scene->gameObjects.insert(it, &_go);
-									parentIndex = it - scene->gameObjects.begin();
-									break;
-								}
-							}
-							for (std::vector<GameObject*>::iterator it = scene->gameObjects.begin(); it != scene->gameObjects.end(); ++it)
-							{
-								if (&_go == *it)
-								{
-									scene->gameObjects.erase(it);
-									break;
-								}
-							}
-							p->transform.children.remove(&_go.transform);
-							scene->gameObjects.insert(scene->gameObjects.begin() + parentIndex, &_go);
-							_go.transform.parent = nullptr;
-
-						}
-						
-
-
+						*iter1 = *iter2;
+						*iter2 = tmp;
 					}
+
+					
+
 				}
 
 				ImGui::ResetMouseDragDelta();
@@ -502,7 +475,7 @@ namespace Copium
 			int idx{ 0 };
 			for (auto pChild : _go.transform.children)
 			{
-				isSelected = display_gameobject(pChild->gameObj, _selected, _list, idx);
+				isSelected = display_gameobject(pChild->gameObj, _selected, _go.transform.children, idx);
 				++idx;
 			}
 		}
