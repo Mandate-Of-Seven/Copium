@@ -31,11 +31,13 @@ namespace Copium
 		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
 		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
 		pScriptClass = sS.getScriptClass(name);
+		PRINT(id << " created");
 		instantiate();
 	}
 
 	Script::~Script()
 	{
+		PRINT(id << " deleted");
 		MessageSystem::Instance()->unsubscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
 		MessageSystem::Instance()->unsubscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
 		

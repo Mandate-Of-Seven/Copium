@@ -150,10 +150,47 @@ namespace Copium
 		bool create_delete_btn(const std::string& _btnName);
 		bool& status() { return isHierarchyOpen; }
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Create a button in the Hierarchy List window's menu bar that upon click will delete the selected game object
+			in the current scene
+
+		\param	_btnName
+			read-only reference to a string that contains the name of the button
+
+		\return
+			if successful, return true
+			if there are errors in creation of the button, return false
+		*/
+		/*******************************************************************************/
+		void ShiftUp();
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Create a button in the Hierarchy List window's menu bar that upon click will delete the selected game object
+			in the current scene
+
+		\param	_btnName
+			read-only reference to a string that contains the name of the button
+
+		\return
+			if successful, return true
+			if there are errors in creation of the button, return false
+		*/
+		/*******************************************************************************/
+		void ShiftDown();
+
+		bool DisplayAdoptionWindow();
+
 	private:
 		GameObjectID selectedID;
 		Scene* currentScene;
 		bool isHierarchyOpen;
+		bool isParenting;
 	};
 }
 
