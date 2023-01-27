@@ -132,7 +132,9 @@ namespace Copium
             for (auto& nameToScriptClass : scriptingSystem.getScriptFiles())
             {
                 const std::string& name{ nameToScriptClass.filename().stem().string() };
-                if (filter.PassFilter(name.c_str()) && ImGui::Button(name.c_str(), buttonSize)) {
+                if (!scriptingSystem.isScript(name))
+                    continue;
+                if (filter.PassFilter(name.c_str()) && ImGui::Button((name+"[Script]").c_str(), buttonSize)) {
                     selectedGameObject->addComponent<Copium::Script>().Name(name);
                     isAddingComponent = false;
                 }

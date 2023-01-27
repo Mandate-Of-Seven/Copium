@@ -20,6 +20,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "CopiumCore\system-interface.h"
 #include "Messaging\message-system.h"
 #include "Files\file-system.h"
+#include <Scripting/scriptable-object.h>
 
 #include <string>
 #include <unordered_map>
@@ -83,7 +84,7 @@ namespace Copium
 
 	struct ScriptClass
 	{
-		ScriptClass() = delete;
+		ScriptClass() = default;
 		/**************************************************************************/
 		/*!
 			\brief
@@ -93,7 +94,6 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		ScriptClass(const std::string& _name, MonoClass* _mClass);
-		const		std::string name;
 		MonoClass* mClass;
 		std::unordered_map<std::string, MonoMethod*> mMethods;
 		std::unordered_map<std::string, Field> mFields;
@@ -245,7 +245,7 @@ namespace Copium
 				Map of names to ScriptClasses
 		*/
 		/**************************************************************************/
-		const std::unordered_map<std::string, ScriptClass*>& getScriptClassMap();
+		const std::unordered_map<std::string, ScriptClass>& getScriptClassMap();
 
 		/*******************************************************************************
 		/*!
@@ -294,6 +294,11 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		void instantiateCollision2D(GameObject& collided, GameObject& collidee);
+
+		bool isScriptableObject(const std::string& name);
+
+
+		bool isScript(const std::string& name);
 	private:
 
 		/**************************************************************************/
@@ -357,9 +362,11 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		bool scriptIsLoaded(const std::filesystem::path& filePath);
-		std::unordered_map<std::string, ScriptClass*> scriptClassMap;
+		std::unordered_map<std::string, ScriptClass> scriptClassMap;
 		std::list<File>& scriptFiles;
 		CompilingState compilingState{ CompilingState::Wait };
+		std::list<ScriptableObject> scriptableObjectsList{};
+		std::list<ScriptableObjectInstance> scriptableObjectInstancesList{};
 	};
 }
 #endif // !SCRIPTING_SYSTEM_H
