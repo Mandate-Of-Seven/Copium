@@ -506,7 +506,7 @@ namespace Copium
 		return nullptr;
 	}
 
-	File* FileSystem::copy_file(std::filesystem::path const& _path)
+	void FileSystem::copy_file(std::filesystem::path const& _path)
 	{
 		Directory* currentDirectory = editor->get_content_browser()->get_current_directory();
 
@@ -530,7 +530,7 @@ namespace Copium
 			fs::copy(_path, pathName);
 	}
 
-	File* FileSystem::copy_file(std::filesystem::path const& _path, const std::string& _ext)
+	void FileSystem::copy_file(std::filesystem::path const& _path, const std::string& _ext)
 	{
 		Directory* currentDirectory = editor->get_content_browser()->get_current_directory();
 
