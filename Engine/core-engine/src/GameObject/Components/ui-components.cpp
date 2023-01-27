@@ -431,7 +431,6 @@ namespace Copium
 		scale *= fSize;
 		glm::vec2 dimensions{ font->getDimensions(content, scale) };
 
-
 		switch (hAlignment)
 		{
 			case HorizontalAlignment::Center:
@@ -469,7 +468,22 @@ namespace Copium
 		/*PRINT("Color: " << color.r << " " << color.g << " " << color.b << " " << color.a);
 		PRINT("Mixed Color: " << mixedColor.r << " " << mixedColor.g << " " << mixedColor.b << " " << mixedColor.a);
 		*/
-		font->draw_text(content, pos, mixedColor, scale, 0, _camera);
+
+		if (gameObj.transform.hasParent())
+		{
+			Transform& t1 = *gameObj.transform.parent;
+			Copium::Math::Matrix3x3 rot;
+			Copium::Math::matrix3x3_rotdeg(rot, t1.rotation.z);
+			Copium::Math::Vec3 intermediate = (rot * pos);
+
+			font->draw_text(content, intermediate + t1.position, mixedColor, scale, 0, _camera);
+		}
+		else
+		{
+			font->draw_text(content, pos, mixedColor, scale, 0, _camera);
+		}
+
+		
 	}
 
 	Component* Text::clone(GameObject& _gameObj) const

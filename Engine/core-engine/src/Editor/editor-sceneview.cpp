@@ -297,21 +297,24 @@ namespace Copium
 				totalTransform = transform;
 			}*/
 
-			if (ImGui::IsKeyReleased(ImGuiKey_W))
+			if (ImGui::IsWindowHovered())
 			{
-				currop = ImGuizmo::OPERATION::TRANSLATE;
+				if (ImGui::IsKeyReleased(ImGuiKey_W))
+				{
+					currop = ImGuizmo::OPERATION::TRANSLATE;
 
-			}
-			if (ImGui::IsKeyReleased(ImGuiKey_R))
-			{
-				currop = ImGuizmo::OPERATION::SCALE;
+				}
+				if (ImGui::IsKeyReleased(ImGuiKey_R))
+				{
+					currop = ImGuizmo::OPERATION::SCALE;
 
+				}
+				if (ImGui::IsKeyReleased(ImGuiKey_E))
+				{
+					currop = ImGuizmo::OPERATION::ROTATE;
+				}
 			}
-			if (ImGui::IsKeyReleased(ImGuiKey_E))
-			{	
-				currop = ImGuizmo::OPERATION::ROTATE;
-
-			}
+			
 			ImGuizmo::Manipulate(glm::value_ptr(camView), glm::value_ptr(camProj),
 				currop, ImGuizmo::LOCAL, glm::value_ptr(transform));
 			if (ImGuizmo::IsUsing())

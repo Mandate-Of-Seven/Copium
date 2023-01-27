@@ -290,7 +290,21 @@ namespace Copium
 						sr.set_texture(nullptr);
 					}
 
-					renderer.draw_quad({ rc->Offset(),t.position.z }, size, rotation, sr);
+					if (gameObject->transform.hasParent())
+					{
+						Transform& t1 = *gameObject->transform.parent;
+						Copium::Math::Matrix3x3 rot;
+						Copium::Math::matrix3x3_rotdeg(rot, t1.rotation.z);
+						Copium::Math::Vec3 intermediate = (rot * t.position);
+
+						renderer.draw_quad(intermediate + t1.position, size, rotation + t1.rotation.z, sr);
+					}
+					else
+					{
+						renderer.draw_quad(t.position, size, rotation, sr);
+					}
+
+					//renderer.draw_quad({ rc->Offset(),t.position.z }, size, rotation, sr);
 				}
 				for (Component* component : gameObject->getComponents<Text>())
 				{
