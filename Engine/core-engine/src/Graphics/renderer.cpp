@@ -538,8 +538,8 @@ namespace Copium
 		if (!_spritesheet.texture)
 			return;
 
-		float pixelWidth = _spritesheet.texture->get_pixel_width() / (float)_frames;
-		float pixelHeight = _spritesheet.texture->get_pixel_height();
+		float pixelWidth = _spritesheet.texture->get_pixel_width() / (float)_spritesheet.columns;
+		float pixelHeight = _spritesheet.texture->get_pixel_height() / (float)_spritesheet.rows;
 
 
 		//PRINT("Pixel width:" << pixelWidth);
@@ -695,6 +695,11 @@ namespace Copium
 			}
 		}
 
+		GLuint rowOffset = (_spritesheet.rows-1)-(_offsetID / _spritesheet.columns);
+		GLuint colOffset = _offsetID % _spritesheet.columns;
+
+
+		//PRINT("Row offset:" << rowOffset);
 		// Change texture index only if ID retrieved is more than 0 (0 is white texture)
 		if (textureIndex == 0.f && _textureID != 0)
 		{
@@ -709,26 +714,17 @@ namespace Copium
 		if (!_frames)
 			return;
 
-		float step = (1.0f / (float)_frames);
-		float offset = _offsetID * step;
-		//glm::vec2 offset = _spritesheet.get_offsets()[_offsetID];
-		//glm::vec2 step = _spritesheet.get_steps();
-		//step.x = (step.x == 0.f) ? 1.f : step.x;
-		//step.y = (step.y == 0.f) ? 1.f : step.y;
-		//glm::vec2 spriteTextCoord[4] =
-		//{
-		//	glm::vec2(offset),
-		//	glm::vec2(offset.x + step.x, offset.y),
-		//	glm::vec2(offset + step),
-		//	glm::vec2(offset.x, offset.y + step.y)
-		//};
-
+		float xStep = (1.0f / (float)_spritesheet.columns);
+		float yStep = (1.0f / (float)_spritesheet.rows);
+		float xOffset = colOffset * xStep;
+		float yOffset = rowOffset * yStep;
+		//PRINT("Y step:" << yStep);
 		glm::vec2 spriteTextCoord[4] =
 		{
-			glm::vec2(offset, 0.f),
-			glm::vec2(offset + step, 0.f),
-			glm::vec2(offset + step, 1.f),
-			glm::vec2(offset, 1.f)
+			glm::vec2(xOffset, yOffset),
+			glm::vec2(xOffset + xStep, yOffset),
+			glm::vec2(xOffset + xStep, yOffset+yStep),
+			glm::vec2(xOffset, yOffset+yStep)
 		};
 
 		for (GLint i = 0; i < 4; i++)
