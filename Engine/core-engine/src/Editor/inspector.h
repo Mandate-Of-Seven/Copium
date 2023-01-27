@@ -35,9 +35,12 @@ namespace Copium
 		void update();
 		void exit();
 		void AlignforWidth(float width, float alignment = 0.5f);
+
+		bool& getFocused() { return isFocused; }
 		bool& status() { return isInspectorOpen; }
 	private:
 		bool isInspectorOpen;
+		bool isFocused;
 
 	};
 }

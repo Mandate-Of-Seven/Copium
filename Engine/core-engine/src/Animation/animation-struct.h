@@ -34,6 +34,8 @@ namespace Copium
 		Spritesheet spriteSheet;
 		float timer, timeDelay;
 		int frameCount, currentFrameIndex;
+		unsigned int rowIndex, columnIndex;
+		int columns, rows;
 
 		Animation();
 		bool UpdateFrame(float _dt);

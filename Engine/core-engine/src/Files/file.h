@@ -31,6 +31,7 @@ namespace Copium
 		SHADER,
 		SPRITE,
 		TEXT,
+		ASSET,
 
 		NUM_TYPES
 	};
@@ -41,7 +42,7 @@ namespace Copium
 		FILE_TYPE fileType{};
 	};
 
-	class File final : public std::filesystem::path
+	class File : public std::filesystem::path
 	{
 	public:
 		/*******************************************************************************

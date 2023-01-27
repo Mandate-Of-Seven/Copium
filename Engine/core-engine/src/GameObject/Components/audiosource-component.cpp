@@ -116,7 +116,7 @@ namespace Copium
 				ImGui::EndDragDropTarget();
 			}
 
-			
+			SoundSystem::Instance()->soundList[alias].first->getVolume(&f1);
 			ImGui::SliderFloat("Volume", &f1, 0.0f, 1.0f, "%.2f");
 			SoundSystem::Instance()->soundList[alias].first->setVolume(f1);
 

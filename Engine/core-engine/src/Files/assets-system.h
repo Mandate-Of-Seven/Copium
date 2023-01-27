@@ -157,6 +157,10 @@ namespace Copium
 			return &spritesheets[_index];
 		}
 
+		void CreateAsset(const std::string& _directory, const std::string& _name);
+
+		void CopyAsset(const File& _file, const std::string& _ext);
+
 	private:
 		/* Assets Data ******************************************************************/
 		std::vector<Texture> textures;

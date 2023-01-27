@@ -183,7 +183,7 @@ void InputSystem::mousebutton_callback(GLFWwindow* window, int button, int actio
         case GLFW_MOUSE_BUTTON_LEFT:
             target = GLFW_MOUSE_BUTTON_LEFT;
         #ifdef _DEBUG               
-            std::cout << "Left mouse button ";
+            //std::cout << "Left mouse button ";
         #endif
         break;
 
@@ -241,14 +241,14 @@ void InputSystem::mousebutton_callback(GLFWwindow* window, int button, int actio
             }
 
         #ifdef _DEBUG
-            std::cout << "pressed!!!"<<"\n";
+            //std::cout << "pressed!!!"<<"\n";
         #endif
         break;
 
         case GLFW_RELEASE:
             mouseButtons[target] = 0;
         #ifdef _DEBUG
-            std::cout << "released!!!" << std::endl;
+            //std::cout << "released!!!" << std::endl;
         #endif
         break;
     }

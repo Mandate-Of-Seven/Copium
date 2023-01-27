@@ -112,6 +112,7 @@ namespace Copium
 		EditorCamera* get_camera() { return &camera; }
 		EditorHierarchyList* get_hierarchy_list() { return &hierarchyList; }
 		EditorInspector* get_inspector() { return &inspector; }
+		EditorLayers* getLayers() { return &layers; }
 
 	private:
 		bool enableEditor = true;

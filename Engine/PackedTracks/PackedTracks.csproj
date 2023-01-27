@@ -79,12 +79,28 @@
     <Compile Include="..\CopiumScriptCore\ScriptableObject.cs">
       <Link>ScriptableObject.cs</Link>
     </Compile>
+    <Compile Include="Assets\Scripts\AIMovement.cs" />
+    <Compile Include="Assets\Scripts\Bullet.cs" />
+    <Compile Include="Assets\Scripts\CombatBulletBody.cs" />
+    <Compile Include="Assets\Scripts\HowToPlay.cs" />
+    <Compile Include="Assets\Scripts\ResumeButton.cs" />
     <Compile Include="Assets\Scripts\CombatMovement.cs" />
+    <Compile Include="Assets\Scripts\QuitButton.cs" />
+    <Compile Include="Assets\Scripts\GameData.cs" />
+    <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\Graphics.cs" />
+    <Compile Include="Assets\Scripts\Gun.cs" />
+    <Compile Include="Assets\Scripts\Item.cs" />
+    <Compile Include="Assets\Scripts\ItemBody.cs" />
+    <Compile Include="Assets\Scripts\Manager.cs" />
+    <Compile Include="Assets\Scripts\MapManager.cs" />
     <Compile Include="Assets\Scripts\Physics.cs" />
-    <Compile Include="Assets\Scripts\StoryObject.cs" />
-    <Compile Include="Assets\Scripts\Test.cs" />
+    <Compile Include="Assets\Scripts\Shield.cs" />
+    <Compile Include="Assets\Scripts\Skill.cs" />
+    <Compile Include="Assets\Scripts\Story.cs" />
     <Compile Include="Assets\Scripts\Time.cs" />
+    <Compile Include="Assets\Scripts\Unit.cs" />
+    <Compile Include="Assets\Scripts\UnitBody.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
@@ -97,6 +113,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

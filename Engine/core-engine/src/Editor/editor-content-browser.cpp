@@ -16,6 +16,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 
 #include "Editor/editor-content-browser.h"
+#include "Editor/editor-system.h"
 #include "Messaging/message-system.h"
 #include "Files/file-system.h"
 #include "Files/assets-system.h"
@@ -24,6 +25,7 @@ namespace Copium
 {
 	namespace
 	{
+		EditorSystem* editor = EditorSystem::Instance();
 		FileSystem* fs = FileSystem::Instance();
 		AssetsSystem* assetSys = AssetsSystem::Instance();
 
@@ -54,7 +56,7 @@ namespace Copium
 
 	void EditorContentBrowser::update()
 	{
-		ImGui::Begin("Content Browser");
+		ImGui::Begin("Content Browser", 0);
 
 		inputs();
 
@@ -71,6 +73,48 @@ namespace Copium
 			{
 				MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_RELOAD_ASSETS);
 			}
+		}
+
+		ImGui::SameLine();
+		if (ImGui::BeginMenu("Add Assets"))
+		{
+			if (currentDirectory != nullptr)
+			{
+				std::list<File*> files = fs->get_file_references()[SCRIPT];
+
+				for (File* soFile : files)
+				{
+					if (!soFile->get_file_type().stringType.compare("ScriptableObject"))
+					{
+						std::string assetName = soFile->get_name();
+						if (ImGui::MenuItem(assetName.c_str(), nullptr))
+						{
+							// Copy the script file but change the extension
+							assetSys->CopyAsset(*soFile, ".asset");
+						}
+					}
+				}
+
+				//for (int i = 0; i < scriptableObjects.size(); i++)
+				//{
+				//	std::string assetName = scriptableObjects[i];
+				//	if (ImGui::MenuItem(assetName.c_str(), nullptr))
+				//	{
+				//		// Find script in relation to the assetname
+				//		std::list<File> scriptFiles = fs->get_files_with_extension(".cs");
+				//		for (File file : scriptFiles)
+				//		{
+				//			if (!file.stem().string().compare(assetName))
+				//			{
+				//				// Copy the script file but change the extension
+				//				assetSys->CopyAsset(file, ".asset");
+				//				break;
+				//			}
+				//		}
+				//	}
+				//}
+			}
+			ImGui::EndMenu();
 		}
 
 		float panelWidth = ImGui::GetContentRegionAvail().x;
@@ -231,8 +275,11 @@ namespace Copium
 	{
 		if (!ImGui::IsMouseDragging(ImGuiMouseButton_Left) && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
 		{
-			fs->set_selected_file(nullptr);
-			fs->set_selected_directory(nullptr);
+			if (!editor->get_inspector()->getFocused())
+			{
+				fs->set_selected_file(nullptr);
+				fs->set_selected_directory(nullptr);
+			}
 		}
 
 		if (ImGui::IsWindowFocused())

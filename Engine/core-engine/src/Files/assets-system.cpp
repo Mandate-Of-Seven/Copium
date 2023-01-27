@@ -89,6 +89,9 @@ namespace Copium
 
 		case TEXT:
 			break;
+
+		case ASSET:
+			break;
 		}
 	}
 
@@ -122,6 +125,9 @@ namespace Copium
 
 		case TEXT:
 			break;
+
+		case ASSET:
+			break;
 		}
 	}
 
@@ -146,24 +152,6 @@ namespace Copium
 			// Store the texture
 			load_texture(file);
 		}
-
-		// Bean: This should be done in the animation system or animator component
-		//for (int i = 0; i < get_textures().size(); i++)
-		//{
-
-		//	//if (!get_texture(i)->get_file_path().compare("../PackedTracks/Assets/Textures/TrackSpriteSheet.png"))
-		//	//{
-		//	//	Spritesheet ss(get_textures()[i], 1, 8);
-		//	//	spritesheets.push_back(ss);
-		//	//}
-		//	//else if (!get_texture(i)->get_file_path().compare("../PackedTracks/Assets/Textures/mock-up.png"))
-		//	//{
-		//	//	Spritesheet ss(get_textures()[i], 4, 3);
-		//	//	spritesheets.push_back(ss);
-		//	//}
-
-
-		//}
 	}
 
 	void AssetsSystem::load_texture(File* _file)
@@ -250,5 +238,39 @@ namespace Copium
 			std::string vtxShader = (++it)->c_str();
 			GraphicsSystem::Instance()->setup_shader_program(vtxShader, fragShader);
 		}
+	}
+
+	void AssetsSystem::CreateAsset(const std::string& _directory, const std::string& _name)
+	{
+		std::filesystem::path currentDir = _directory + "\\";
+		std::filesystem::path pathName = currentDir.string() + _name + ".asset";
+
+		std::fstream createAsset;
+
+		File* temp = fs->get_file(pathName);
+		int counter = 1;
+		if (temp != nullptr)
+		{
+			std::filesystem::path editedPath;
+			while (temp != nullptr)
+			{
+				editedPath = currentDir.string() + pathName.stem().string();
+				editedPath += " " + std::to_string(counter++) + pathName.extension().string();
+				temp = fs->get_file(editedPath);
+			}
+			createAsset.open(editedPath.string(), std::ios::out);
+		}
+		else
+			createAsset.open(pathName.string(), std::ios::out);
+
+		if (!createAsset)
+			PRINT("Error in creating file");
+
+		createAsset.close();
+	}
+
+	void AssetsSystem::CopyAsset(const File& _file, const std::string& _ext)
+	{
+		fs->copy_file(_file, _ext);
 	}
 }

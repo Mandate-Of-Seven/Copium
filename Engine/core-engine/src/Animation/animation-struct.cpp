@@ -3,14 +3,16 @@
 
 namespace Copium
 {
-	Animation::Animation() : currentFrameIndex{ 0 }, timer{ 0 }, frameCount{ 0 }, timeDelay{ 0.0f }
+	Animation::Animation() : currentFrameIndex{ 0 }, timer{ 0 }, frameCount{ 0 }, timeDelay{ 0.0f },
+							columnIndex{0}, rowIndex{0}, columns{1}, rows{1}
 	{
+		spriteSheet.columns = columns;
+		spriteSheet.rows = rows;
 
 	}
 	bool Animation::UpdateFrame(float _dt)
 	{
 		timer -= _dt;
-		std::cout << "frame updated ";
 		if (timer <= 0.f)
 		{
 			timer = 0.f;
@@ -27,16 +29,37 @@ namespace Copium
 			return;
 
 		// Perform wrap-around if incrementing from the last frame
-		if (currentFrameIndex == frameCount - 1)
-			currentFrameIndex = 0;
-		else
-			++currentFrameIndex;
+		if (currentFrameIndex == frameCount-1)
+		{
+			ResetFrame();
 
-		std::cout << "frame incremented \n";
+		}
+		else
+		{
+			++currentFrameIndex;
+			++columnIndex;
+
+			if (columnIndex >= spriteSheet.columns)
+			{
+				++rowIndex;
+				columnIndex = 0;
+			}
+
+			if (rowIndex >= spriteSheet.rows)
+			{
+				rowIndex = 0;
+			}
+			//PRINT("Frame Index:" << currentFrameIndex);
+			//PRINT("Row Index:" << rowIndex);
+			//PRINT("Column Index:" << columnIndex);
+
+		}
+
 		timer = timeDelay;
 	}
 	void Animation::ResetFrame()
 	{
 		currentFrameIndex = 0;
+		rowIndex = columnIndex = 0;
 	}
 }

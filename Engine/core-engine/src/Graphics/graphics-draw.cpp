@@ -251,37 +251,7 @@ namespace Copium
 						sr.set_texture(nullptr);
 					}
 
-					// Bean: Temporary animation conditions
-					if (!assets->get_spritesheets().empty() && !gameObject->get_name().compare("Animation - Track"))
-					{
-						//int animID = 1;
-						//static GLuint animIndex = 0;
-						//GLuint indexSize = assets->get_spritesheets()[animID].size - 1;
-
-						//GLfloat dt = (GLfloat) MyFrameRateController.getDt();
-						//static float animTimer = 0.f;
-						//animTimer += dt;
-						//if (animTimer > 0.01f && toggleAnim)
-						//{
-						//	animTimer = 0.f;
-						//	animIndex++;
-						//}
-
-						//if (animIndex > indexSize)
-						//{
-						//	animIndex = 0;
-						//}
-
-						//GLuint nid = 0;
-						//for (GLuint i = 0; i < assets->get_textures().size(); ++i)
-						//{
-						//	if (assets->get_textures()[i].get_object_id() == assets->get_spritesheets()[animID].texture->get_object_id())
-						//		nid = i + 1;
-						//}
-
-						//renderer.draw_quad(t.position, size, 0.f, assets->get_spritesheets()[animID], animIndex, nid);
-					}
-					else if (gameObject->transform.hasParent())
+					if (gameObject->transform.hasParent())
 					{
 						Transform& t1 = *gameObject->transform.parent;
 						Copium::Math::Matrix3x3 rot;
