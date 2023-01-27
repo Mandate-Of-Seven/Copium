@@ -49,7 +49,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 3,
+                    "ID": 2,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -62,16 +62,16 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 10.0,
-                        "Y": 10.0,
+                        "X": 2.0,
+                        "Y": 2.0,
                         "Z": 1.0
                     }
                 },
                 {
                     "ID": 4,
                     "Type": "SpriteRenderer",
-                    "Sprite ID": 3,
-                    "Sprite Name": "Train_Placeholder_01.png",
+                    "Sprite ID": 22,
+                    "Sprite Name": "player_train_head.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
