@@ -181,6 +181,15 @@ namespace Copium
 					go->transform.position = { x, y, 0.f };
 					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->getComponent(ComponentType::SpriteRenderer));
 					rc->get_sprite_renderer().set_sprite_id(rand() % 20 + 1);
+					unsigned int id = rc->get_sprite_renderer().get_sprite_id();
+					if (id != 0)
+					{
+						rc->get_sprite_renderer().set_texture(AssetsSystem::Instance()->get_texture(id - 1));
+						std::string str = AssetsSystem::Instance()->get_texture(id - 1)->get_file_path();
+						size_t pos = str.find_last_of('/');
+						std::string spriteName = str.substr(pos + 1, str.length() - pos);
+						rc->get_sprite_renderer().set_name(spriteName);
+					}
 				}
 			}
 		}
@@ -203,7 +212,16 @@ namespace Copium
 
 					go->transform.position = { x, y, 0.f };
 					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->getComponent(ComponentType::SpriteRenderer));
-					rc->get_sprite_renderer().set_sprite_id(rand() % 7 + 15);
+					rc->get_sprite_renderer().set_sprite_id(rand() % 20 + 1);
+					unsigned int id = rc->get_sprite_renderer().get_sprite_id();
+					if (id != 0)
+					{
+						rc->get_sprite_renderer().set_texture(AssetsSystem::Instance()->get_texture(id - 1));
+						std::string str = AssetsSystem::Instance()->get_texture(id - 1)->get_file_path();
+						size_t pos = str.find_last_of('/');
+						std::string spriteName = str.substr(pos + 1, str.length() - pos);
+						rc->get_sprite_renderer().set_name(spriteName);
+					}
 				}
 			}
 		}
@@ -213,11 +231,11 @@ namespace Copium
 		PRINT("Mouse NDC position: " << mouseToNDC.x << ", " << mouseToNDC.y);
 		PRINT("World NDC position: " << worldNDC.x << ", " << worldNDC.y);*/
 
-		if (inputSystem.is_key_pressed(GLFW_KEY_Y))
-		{
-			SceneManager* sm = SceneManager::Instance();
-			PRINT("Number of Gameobjects: " << sm->get_current_scene()->get_gameobjcount());
-		}
+		//if (inputSystem.is_key_pressed(GLFW_KEY_Y))
+		//{
+		//	SceneManager* sm = SceneManager::Instance();
+		//	PRINT("Number of Gameobjects: " << sm->get_current_scene()->get_gameobjcount());
+		//}
 	
 		batch_render();
 	}

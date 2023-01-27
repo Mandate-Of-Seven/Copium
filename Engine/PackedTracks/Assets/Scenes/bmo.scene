@@ -37,7 +37,9 @@
                             "Name": "sprite-image-horizontal.png",
                             "Sprite ID": 2,
                             "Time Delay": 0.07500000298023224,
-                            "FrameCount": 14
+                            "FrameCount": 14,
+                            "Rows": 2,
+                            "Columns": 14
                         }
                     ]
                 }

@@ -28,9 +28,10 @@ namespace Copium
 		sortingLayers.push_back(layer);
 	}
 
+	// Bean: Use a hash map to identify layers instead of the name
 	void SortingLayers::CreateNewLayer(const std::string& _name)
 	{
-		COPIUM_ASSERT(layerCount + 1 >= maxLayers, "Maxed layers reached!");
+		COPIUM_ASSERT(layerCount + 1 > maxLayers, "Maxed layers reached!");
 		
 		Layer layer{ _name, layerCount, std::vector<GameObject*>(maxObjects) };
 		sortingLayers.push_back(layer);
@@ -55,7 +56,7 @@ namespace Copium
 		}
 	}
 
-	void SortingLayers::RemoveLayer(const int& _layerID)
+	void SortingLayers::RemoveLayer(const unsigned int& _layerID)
 	{
 		for (int i = 0; i < sortingLayers.size(); i++)
 		{
@@ -88,7 +89,7 @@ namespace Copium
 		int first = 0, second = 0;
 		for (int i = 0; i < sortingLayers.size(); i++)
 		{
-			if (first && second)
+			if (first > -1 && second > -1)
 				break;
 
 			if (!sortingLayers[i].name.compare(_name01))
@@ -98,15 +99,22 @@ namespace Copium
 				second = i;
 		}
 
-		std::swap(sortingLayers[first], sortingLayers[second]);
+		if (first > -1 && second > -1)
+		{
+			sortingLayers[first].layerID = first;
+			sortingLayers[second].layerID = second;
+			std::swap(sortingLayers[first], sortingLayers[second]);
+		}
 	}
 
-	void SortingLayers::SwapLayers(const int& _layer01, const int& _layer02)
+	void SortingLayers::SwapLayers(const unsigned int& _layer01, const unsigned int& _layer02)
 	{
-		int first = 0, second = 0;
+		std::swap(sortingLayers[_layer01], sortingLayers[_layer02]);
+		return;
+		int first = -1, second = -1;
 		for (int i = 0; i < sortingLayers.size(); i++)
 		{
-			if (first && second)
+			if (first > -1 && second > -1)
 				break;
 
 			if (sortingLayers[i].layerID == _layer01)
@@ -116,7 +124,12 @@ namespace Copium
 				second = i;
 		}
 
-		std::swap(sortingLayers[first], sortingLayers[second]);
+		if (first > -1 && second > -1)
+		{
+			sortingLayers[first].layerID = first;
+			sortingLayers[second].layerID = second;
+			std::swap(sortingLayers[first], sortingLayers[second]);
+		}
 	}
 
 	void SortingLayers::AddGameObject(const std::string& _name, GameObject& _gameObject)
@@ -136,7 +149,7 @@ namespace Copium
 		}
 	}
 
-	void SortingLayers::AddGameObject(const int& _layerID, GameObject& _gameObject)
+	void SortingLayers::AddGameObject(const unsigned int& _layerID, GameObject& _gameObject)
 	{
 		for (int i = 0; i < sortingLayers.size(); i++)
 		{
@@ -170,7 +183,7 @@ namespace Copium
 		}
 	}
 
-	void SortingLayers::RemoveGameObject(const int& _layerID, GameObject& _gameObject)
+	void SortingLayers::RemoveGameObject(const unsigned int& _layerID, GameObject& _gameObject)
 	{
 		for (int i = 0; i < sortingLayers.size(); i++)
 		{
