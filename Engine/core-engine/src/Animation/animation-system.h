@@ -44,6 +44,7 @@ namespace Copium
         */
         /**************************************************************************/
         Animator(GameObject& _gameObj);
+        
 
 
         /*******************************************************************************
@@ -102,13 +103,9 @@ namespace Copium
         void AddAnimation();
         void PlayAnimation();
 
-        Animation* GetCurrentAnimation() 
-        { 
-            if (IsEmpty())
-                return nullptr;
-            return &animations[currentAnimationIndex]; 
-        }
+        Animation* GetCurrentAnimation();
 
+        void SetStatus(AnimatorStatus _status) { status = _status; }
 
     protected:
         std::vector<Animation> animations;    // The indices of the animations inside the assets-system

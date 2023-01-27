@@ -178,7 +178,6 @@ namespace Copium
 
 					if (ImGui::MenuItem("Open...", "Ctrl+O"))
 					{
-						PRINT("ctrl o\n");
 						//open scene
 						while (!threadSystem.acquireMutex(MutexType::FileSystem));
 						std::string filepath = FileDialogs::open_file("Copium Scene (*.scene)\0*.scene\0");

@@ -116,7 +116,29 @@ namespace Copium
 				}
 				ImGui::PopID();
 
-				ImGui::PushID(i + 1);
+				ImGui::PushID(i+1);
+				ImGui::TableNextRow();
+				ImGui::TableNextColumn();
+				ImGui::Text("Number of Columns:");
+				ImGui::TableNextColumn();
+				if (ImGui::DragInt("", &animations[i].spriteSheet.columns, 1))
+				{
+					animations[i].spriteSheet.columns = animations[i].spriteSheet.columns < 0 ? 0 : animations[i].spriteSheet.columns;
+				}
+				ImGui::PopID();
+
+				ImGui::PushID(i+2);
+				ImGui::TableNextRow();
+				ImGui::TableNextColumn();
+				ImGui::Text("Number of Rows:");
+				ImGui::TableNextColumn();
+				if (ImGui::DragInt("", &animations[i].spriteSheet.rows, 1))
+				{
+					animations[i].spriteSheet.rows = animations[i].spriteSheet.rows < 0 ? 0 : animations[i].spriteSheet.rows;
+				}
+				ImGui::PopID();
+
+				ImGui::PushID(i + 3);
 				ImGui::TableNextRow();
 				ImGui::TableNextColumn();
 				ImGui::Text("Time Delay:");
@@ -127,6 +149,7 @@ namespace Copium
 
 				}
 				ImGui::PopID();
+				
 
 				ImGui::TableNextRow();
 				ImGui::TableNextColumn();
@@ -187,23 +210,24 @@ namespace Copium
 	}
 	void Animator::Update(float _dt)
 	{
-		//for (Animation& anim : animations)
-		//{
-		//	if (anim.UpdateFrame(_dt))
-		//		anim.IncrementFrame();
-
-		//}
 
 		if (!animationCount)
 			return;
 
 		if (status != AnimatorStatus::playing)
 			return;
-		//PRINT("Animator update\n");
+
 		if (animations[currentAnimationIndex].UpdateFrame(_dt))
 			animations[currentAnimationIndex].IncrementFrame();
 
 
+	}
+	Animation* Animator::GetCurrentAnimation()
+	{
+		if (IsEmpty())
+			return nullptr;
+
+		return &animations[currentAnimationIndex];
 	}
 	void Animator::deserialize(rapidjson::Value& _value)
 	{
@@ -240,11 +264,20 @@ namespace Copium
 				if (val.HasMember("FrameCount"))
 					fc = val["FrameCount"].GetInt();
 
+				int rows{ 0 }, cols{ 0 };
+				if (val.HasMember("Rows"))
+					rows = val["Rows"].GetInt();
+
+				if (val.HasMember("Columns"))
+					cols = val["Columns"].GetInt();
+
 				animations.push_back(Animation());
 				animations[i].timeDelay = td;
 				animations[i].frameCount = fc;
 				animations[i].spriteSheet.spriteID = sid;
 				animations[i].spriteSheet.name = animName;
+				animations[i].spriteSheet.rows = rows;
+				animations[i].spriteSheet.columns = cols;
 
 				++i;
 			}
@@ -280,7 +313,8 @@ namespace Copium
 			anim.AddMember("Sprite ID", a.spriteSheet.spriteID, _doc.GetAllocator());
 			anim.AddMember("Time Delay", a.timeDelay, _doc.GetAllocator());
 			anim.AddMember("FrameCount", a.frameCount, _doc.GetAllocator());
-			
+			anim.AddMember("Rows", a.spriteSheet.rows, _doc.GetAllocator());
+			anim.AddMember("Columns", a.spriteSheet.columns, _doc.GetAllocator());
 
 			anims.PushBack(anim, _doc.GetAllocator());
 		}
@@ -302,6 +336,7 @@ namespace Copium
 			return;
 
 		//PRINT("Animation system update");
+		//if(sm->GetSceneState() == Copium::Scene::SceneState::play)
 
 
 		for (Copium::GameObject* go : sm->get_current_scene()->gameObjects)
@@ -310,6 +345,16 @@ namespace Copium
 
 				Animator* anim = reinterpret_cast<Animator*>(component);
 				anim->Update(MyFrameRateController.getDt());
+				if (sm->GetSceneState() == Scene::SceneState::play)
+				{
+					anim->SetStatus(Animator::AnimatorStatus::playing);
+				}
+				else if (sm->GetSceneState() == Scene::SceneState::paused)
+				{
+					anim->SetStatus(Animator::AnimatorStatus::idle);
+
+				}
+
 
 			}
 
