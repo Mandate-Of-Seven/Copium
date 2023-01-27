@@ -157,10 +157,6 @@ namespace Copium
 			return &spritesheets[_index];
 		}
 
-		const std::vector<std::string>& GetScriptableObjects() { return scriptableObjects; }
-
-		void AddScript(const std::string& _fileName) { scriptableObjects.push_back(_fileName); };
-
 		void CreateAsset(const std::string& _directory, const std::string& _name);
 
 		void CopyAsset(const File& _file, const std::string& _ext);
@@ -170,7 +166,6 @@ namespace Copium
 		std::vector<Texture> textures;
 		std::vector<Spritesheet> spritesheets;
 		std::vector<Animation> animations; 
-		std::vector<std::string> scriptableObjects;
 	};
 }
 

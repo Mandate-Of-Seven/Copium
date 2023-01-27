@@ -58,6 +58,7 @@ namespace Copium
 		fileTypes.emplace(std::make_pair(".ttf", FileType("Font", FONT)));
 		fileTypes.emplace(std::make_pair(".scene", FileType("Scene", SCENE))); // Bean: change to .scene in the future
 		fileTypes.emplace(std::make_pair(".cs", FileType("Script", SCRIPT)));
+		fileTypes.emplace(std::make_pair(".so", FileType("ScriptableObject", SCRIPT)));
 		fileTypes.emplace(std::make_pair(".vert", FileType("Shader", SHADER))); // Bean: change to .shader in the future
 		fileTypes.emplace(std::make_pair(".frag", FileType("Shader", SHADER)));
 		fileTypes.emplace(std::make_pair(".png", FileType("Sprite", SPRITE)));
@@ -550,7 +551,10 @@ namespace Copium
 			fs::copy(_path, editedPath);
 		}
 		else
+		{
+			pathName = currentDir.string() + _path.stem().string() + _ext;
 			fs::copy(_path, pathName);
+		}
 	}
 
 	void FileSystem::delete_directories(Directory* _directory)

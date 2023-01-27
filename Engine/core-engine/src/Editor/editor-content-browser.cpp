@@ -80,27 +80,39 @@ namespace Copium
 		{
 			if (currentDirectory != nullptr)
 			{
-				// Length here would be the number of scriptable objects
-				std::vector<std::string> scriptableObjects = assetSys->GetScriptableObjects();
+				std::list<File*> files = fs->get_file_references()[SCRIPT];
 
-				for (int i = 0; i < scriptableObjects.size(); i++)
+				for (File* soFile : files)
 				{
-					std::string assetName = scriptableObjects[i];
-					if (ImGui::MenuItem(assetName.c_str(), nullptr))
+					if (!soFile->get_file_type().stringType.compare("ScriptableObject"))
 					{
-						// Find script in relation to the assetname
-						std::list<File> scriptFiles = fs->get_files_with_extension(".cs");
-						for (File file : scriptFiles)
+						std::string assetName = soFile->get_name();
+						if (ImGui::MenuItem(assetName.c_str(), nullptr))
 						{
-							if (!file.stem().string().compare(assetName))
-							{
-								// Copy the script file but change the extension
-								assetSys->CopyAsset(file, ".asset");
-								break;
-							}
+							// Copy the script file but change the extension
+							assetSys->CopyAsset(*soFile, ".asset");
 						}
 					}
 				}
+
+				//for (int i = 0; i < scriptableObjects.size(); i++)
+				//{
+				//	std::string assetName = scriptableObjects[i];
+				//	if (ImGui::MenuItem(assetName.c_str(), nullptr))
+				//	{
+				//		// Find script in relation to the assetname
+				//		std::list<File> scriptFiles = fs->get_files_with_extension(".cs");
+				//		for (File file : scriptFiles)
+				//		{
+				//			if (!file.stem().string().compare(assetName))
+				//			{
+				//				// Copy the script file but change the extension
+				//				assetSys->CopyAsset(file, ".asset");
+				//				break;
+				//			}
+				//		}
+				//	}
+				//}
 			}
 			ImGui::EndMenu();
 		}

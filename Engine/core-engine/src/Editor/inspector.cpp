@@ -158,16 +158,14 @@ namespace Copium
             newScriptPrompt += filter.InputBuf;
             if (ImGui::Button(newScriptPrompt.c_str(), buttonSize))
             {
-                std::ofstream file(Paths::assetPath + "\\Scripts\\" + filter.InputBuf + ".cs");
+                std::ofstream file(Paths::assetPath + "\\Scripts\\" + filter.InputBuf + ".so");
                 file << "using System;\n";
                 file << "using CopiumEngine;\n\n";
                 file << "public class " << filter.InputBuf << ": ScriptableObject\n{\n\n";
                 file << "}\n";
                 file.close();
 
-                selectedGameObject->addComponent<Copium::Script>().Name(filter.InputBuf);
-
-                assetsSystem.AddScript(filter.InputBuf);
+                //selectedGameObject->addComponent<Copium::Script>().Name(filter.InputBuf);
 
                 isAddingComponent = false;
             }

@@ -85,6 +85,8 @@ namespace Copium
                 ImGui::InputText(label.c_str(), name, (size_t) sortingLayers.GetCharLength(), textFlags);
             }
 
+            ImGui::Unindent();
+
             ImGui::PopStyleVar();
             ImGui::PopStyleVar();
 		}
