@@ -15,9 +15,15 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 
 #include "GameObject/Components/sorting-group-component.h"
+#include "Editor/editor-system.h"
 
 namespace Copium
 {
+    namespace
+    {
+        EditorSystem* editor = EditorSystem::Instance();
+    }
+
 	SortingGroup::SortingGroup(GameObject& _gameObj) :Component(_gameObj, ComponentType::SortingGroup), sortingLayer{0}, orderInLayer{0}
 	{
 	}
@@ -50,15 +56,26 @@ namespace Copium
             ImGui::TableNextColumn();
 
             // Bean: This is temporary and should be referenced from the sorting layer editor
-            std::string items[] = { "Default", "Player", "UI", "Background" };
-            const char* previewItem = items[sortingLayer].c_str();
-            if (ImGui::BeginCombo(" ", previewItem))
+            SortingLayers& editorSortingLayer = *editor->getLayers()->SortLayers();
+            std::vector<Layer>& sortingLayers = editorSortingLayer.GetSortingLayers();
+
+            const char* previewItem = sortingLayers[sortingLayer].name.c_str();
+            if (ImGui::BeginCombo("##LayerSelection", previewItem))
             {
-                for (int i = 0; i < IM_ARRAYSIZE(items); i++)
+                for (int i = 0; i < editorSortingLayer.GetLayerCount(); i++)
                 {
                     const bool isSelected = (sortingLayer == i);
-                    if (ImGui::Selectable(items[i].c_str(), isSelected))
+
+                    ImGuiSelectableFlags flags = ImGuiSelectableFlags_AllowItemOverlap;
+                    char* name = sortingLayers[i].name.data();
+                    int id = sortingLayers[i].layerID + 1;
+                    std::string label = "##" + std::to_string(id);
+                    if (ImGui::Selectable(label.c_str(), isSelected))
+                    {
                         sortingLayer = i;
+                    }
+                    ImGui::SameLine();
+                    ImGui::Text(sortingLayers[i].name.c_str());
 
                     // Bean: Change the gameobjects current layer
                     if (isSelected)

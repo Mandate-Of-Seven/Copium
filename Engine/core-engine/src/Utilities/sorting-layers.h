@@ -25,7 +25,7 @@ namespace Copium
 	struct Layer
 	{
 		std::string name;						// Name of layer
-		int layerID;							// The index of the layer to sort the layers
+		unsigned int layerID;					// The index of the layer to sort the layers
 		std::vector<GameObject*> gameObjects;	// Reference to the gameobjects in this layer
 	};
 
@@ -49,29 +49,31 @@ namespace Copium
 
 		// Swap the layers
 		void SwapLayers(const std::string& _name01, const std::string& _name02);
-		void SwapLayers(const int& _layer01, const int& _layer02);
+		void SwapLayers(const unsigned int& _layer01, const unsigned int& _layer02);
 
 		// Create new sorting layer
 		void CreateNewLayer(const std::string& _name);
 
 		// Remove sorting layer
 		void RemoveLayer(const std::string& _name);
-		void RemoveLayer(const int& _layerID);
+		void RemoveLayer(const unsigned int& _layerID);
 
 		// Add gameobject into the sorting layer
 		void AddGameObject(const std::string& _name, GameObject& _gameObject);
-		void AddGameObject(const int& _layerID, GameObject& _gameObject);
+		void AddGameObject(const unsigned int& _layerID, GameObject& _gameObject);
 
 		// Remove gameobject in the sorting layer
 		void RemoveGameObject(const std::string& _name, GameObject& _gameObject);
-		void RemoveGameObject(const int& _layerID, GameObject& _gameObject);
+		void RemoveGameObject(const unsigned int& _layerID, GameObject& _gameObject);
 
 		const int& GetLayerCount() const { return layerCount; }
+		const int& GetCharLength() const { return maxCharLength; }
 		std::vector<Layer>& GetSortingLayers() { return sortingLayers; }
 
 	private:
 		static int layerCount;				// The number of layers in the engine
 		static const int defaultLayer = 0;	// The default layer in which objects when created will be added to
+		static const int maxCharLength = 16;// The default character length of the name
 		static const int maxLayers = 32;	// Number of layers in the sorting layer system
 		static const int maxObjects = 100;	// Number of objects in a layer
 		std::vector<Layer> sortingLayers;	// The container which holds the layers which contains the gameobject's ID

@@ -18,6 +18,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Editor/inspector.h"
 #include "GameObject/Components/script-component.h"
 #include "Editor/editor-hierarchy-list.h"
+#include "Files/assets-system.h"
 
 // Bean: Remove once we can auto select gameobjects
 #include "SceneManager/scene-manager.h"
@@ -36,6 +37,7 @@ namespace Copium
         Copium::ScriptingSystem& scriptingSystem{ *Copium::ScriptingSystem::Instance() };
         Copium::SceneManager& sceneManager{ *Copium::SceneManager::Instance() };
         Copium::FileSystem& fileSystem{ *Copium::FileSystem::Instance() };
+        Copium::AssetsSystem& assetsSystem{ *Copium::AssetsSystem::Instance() };
         char nameBuffer[INPUT_BUFFER_SIZE];
     }
     void EditorInspector::AlignforWidth(float width, float alignment)
@@ -70,6 +72,8 @@ namespace Copium
             ImGui::PopStyleVar();
             return;
         }
+
+        isFocused = ImGui::IsWindowFocused();
 
         Copium::GameObject* selectedGameObject = sceneManager.selectedGameObject;
         Copium::File* selectedFile = fileSystem.get_selected_file();
@@ -139,13 +143,30 @@ namespace Copium
             }
             static std::string newScriptPrompt;
             newScriptPrompt.clear();
-            newScriptPrompt += "[New Script] ";
+            newScriptPrompt += "[New Script]";
             newScriptPrompt += filter.InputBuf;
             if (ImGui::Button(newScriptPrompt.c_str(), buttonSize))
             {
                 //Ask scripting system query if file exists
                 scriptingSystem.addEmptyScript(filter.InputBuf);
                 selectedGameObject->addComponent<Copium::Script>().Name(filter.InputBuf);
+                isAddingComponent = false;
+            }
+
+            newScriptPrompt.clear();
+            newScriptPrompt += "[New Scriptable Object]";
+            newScriptPrompt += filter.InputBuf;
+            if (ImGui::Button(newScriptPrompt.c_str(), buttonSize))
+            {
+                std::ofstream file(Paths::assetPath + "\\Scripts\\" + filter.InputBuf + ".so");
+                file << "using System;\n";
+                file << "using CopiumEngine;\n\n";
+                file << "public class " << filter.InputBuf << ": ScriptableObject\n{\n\n";
+                file << "}\n";
+                file.close();
+
+                //selectedGameObject->addComponent<Copium::Script>().Name(filter.InputBuf);
+
                 isAddingComponent = false;
             }
             ImGui::End();
