@@ -40,7 +40,7 @@ namespace Copium
 	{
 		std::string toggleAnimation = "Play";
 		if (status == AnimatorStatus::playing)
-			toggleAnimation = "Stop";
+			toggleAnimation = "Pause";
 
 		ImGuiColorEditFlags miscFlags = ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip
 			| ImGuiColorEditFlags_NoLabel;
@@ -69,20 +69,29 @@ namespace Copium
 			ImGui::TableNextColumn();
 			ImGui::Text("Play Animation");
 			ImGui::TableNextColumn();
-			if (ImGui::Button(toggleAnimation.c_str(), ImVec2(ImGui::GetColumnWidth() * 0.2f, 0.f)))
+			if (ImGui::Button(toggleAnimation.c_str(), ImVec2(ImGui::GetColumnWidth() * 0.3f, 0.f)))
 			{
-				Animation* anim{ nullptr };
-				if (GetCurrentAnimation())
-					anim = GetCurrentAnimation();
 
 				if (status == AnimatorStatus::idle)
 					status = AnimatorStatus::playing;
 				else
 				{
-					status = AnimatorStatus::idle;
-					anim->ResetFrame();
+					PauseAnimation();
 				}
 
+			}
+
+			if (status == AnimatorStatus::playing)
+			{
+				if (ImGui::Button("Stop Animation"))
+				{
+					Animation* anim{ nullptr };
+					if (GetCurrentAnimation())
+						anim = GetCurrentAnimation();
+
+					PauseAnimation();
+					anim->ResetFrame();
+				}
 			}
 
 			ImGui::TableNextRow();
@@ -183,6 +192,7 @@ namespace Copium
 					}
 				}
 
+				
 			}
 		
 
@@ -208,6 +218,12 @@ namespace Copium
 	{
 
 	}
+	void Animator::PauseAnimation()
+	{
+		status = AnimatorStatus::idle;		
+	}
+	
+
 	void Animator::Update(float _dt)
 	{
 
