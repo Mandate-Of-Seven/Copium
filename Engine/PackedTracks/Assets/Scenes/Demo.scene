@@ -1081,7 +1081,11 @@
                     "EventSequence": 0,
                     "TrainCanvas": 4,
                     "CombatCanvas": 21,
-                    "MainScreenCanvas": 3
+                    "MainScreenCanvas": 3,
+                    "Body": 44,
+                    "Header": 31,
+                    "Option_01": 37,
+                    "Option_02": 39
                 }
             ]
         },
