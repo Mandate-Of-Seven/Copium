@@ -448,6 +448,7 @@ namespace Copium
 
 					if (iter2 != _list.end())
 					{
+						PRINT("Swapping " << (*iter1)->gameObj.get_name() << " and " << (*iter2)->gameObj.get_name());
 						*iter1 = *iter2;
 						*iter2 = tmp;
 					}
