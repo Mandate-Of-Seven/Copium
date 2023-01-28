@@ -49,24 +49,19 @@ namespace Copium
 		LoadExistingMetaFile();
 
 		// Generate Meta Files for all assets
-		for (int i = 0; i < (int)FILE_TYPE::NUM_TYPES; i++)
+		/*for (int i = 0; i < (int)FILE_TYPE::NUM_TYPES; i++)
 		{
 			if ((FILE_TYPE) i != FILE_TYPE::SPRITE)
 				continue;
 
-			std::list<File*> files = fs->get_file_references()[(FILE_TYPE) i];
+			std::list<File*> files = fs->get_file_references()[FILE_TYPE::SPRITE];
 			for (File* file : files)
-			{
-				// Check that file has a UUID
-				if (CheckForMetaFile(file))
-				{
-					//PRINT("This file already contains a meta file!");
-					continue;
-				}
-
 				GenerateMetaFile(file);
-			}
-		}
+		}*/
+
+		std::list<File*> files = fs->get_file_references()[FILE_TYPE::SPRITE];
+		for (File* file : files)
+			GenerateMetaFile(file);
 	}
 
 	void AssetsSystem::update()
@@ -331,6 +326,10 @@ namespace Copium
 
 	void AssetsSystem::GenerateMetaFile(File* _file)
 	{
+		// Check that file has a UUID
+		if (CheckForMetaFile(_file))
+			return;
+
 		// Generate UUID
 		MetaID id;
 
@@ -341,7 +340,7 @@ namespace Copium
 
 		GenerateFileStream(writeMetaFile, _file);
 
-		//PRINT("Meta file successfully generated...");
+		PRINT("Meta file successfully generated...");
 
 		writeMetaFile.close();
 	}
@@ -350,7 +349,10 @@ namespace Copium
 	{
 		uint64_t pathID = std::hash<std::string>{}(_file->string());
 		if (metaData.find(pathID) != metaData.end())
+		{
+			PRINT("This file already contains a meta file!");
 			return true;
+		}
 
 		return false;
 	}

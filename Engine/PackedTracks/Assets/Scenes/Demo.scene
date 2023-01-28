@@ -70,8 +70,8 @@
                 {
                     "ID": 4,
                     "Type": "SpriteRenderer",
-                    "Sprite ID": 0,
-                    "Sprite Name": "BG-01.png",
+                    "Sprite ID": 17517956524155479239,
+                    "Sprite Name": "Train_Background_01.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,

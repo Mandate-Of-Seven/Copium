@@ -276,6 +276,10 @@ namespace Copium
 							_directory->add_files(file);
 							add_file_reference(&_directory->get_files().back());
 
+							// Generate Meta File
+							if(file.get_file_type().fileType != FILE_TYPE::META)
+								assets->GenerateMetaFile(&_directory->get_files().back());
+
 							// Bean: This should be moved to a general function
 							// Prevent selection of file / directory
 							if (currentDir->within_directory(&file))
