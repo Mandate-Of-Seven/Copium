@@ -11,10 +11,12 @@ public class CombatMovement : CopiumScript
     void Start()
     {
         Console.WriteLine("HELLO FROM COMBAT MOVEMENT");
+        text.text = "BUTTON";
+        Console.WriteLine(text.text);
     }
 
     void Update()
     {
-        text.text = "TESTING";
+        Console.WriteLine(text.text);
     }
 }

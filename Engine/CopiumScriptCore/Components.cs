@@ -158,12 +158,12 @@ namespace CopiumEngine
         {
             get
             {
-                InternalCalls.GetTextString(gameObject.ID, ID, out string text);
+                InternalCalls.GetTextString(gameObject.ID, ID,out string text);
                 return text;
             }
             set
             {
-                InternalCalls.SetTextString(gameObject.ID, ID, ref value);
+                InternalCalls.SetTextString(gameObject.ID, ID, value);
             }
         }
     }

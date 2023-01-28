@@ -373,7 +373,7 @@ namespace Copium
 		String of text component to store
 	*/
 	/*******************************************************************************/
-	static void GetTextString(GameObjectID gameObjID, ComponentID compID, MonoString* str)
+	static void GetTextString(GameObjectID gameObjID, ComponentID compID, MonoString*& str)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(gameObjID);
 		if (gameObj == nullptr)
@@ -382,6 +382,7 @@ namespace Copium
 		{
 			if (text->id == compID)
 			{
+				PRINT("GETTING " << text->content);
 				str = scriptingSystem.createMonoString(text->content);
 				return;
 			}
@@ -402,18 +403,19 @@ namespace Copium
 	/*******************************************************************************/
 	static void SetTextString(GameObjectID gameObjID, ComponentID compID, MonoString* str)
 	{
-		//PRINT(mono_string_to_utf8(str));
-		//GameObject* gameObj = sceneManager.findGameObjByID(gameObjID);
-		//if (gameObj == nullptr)
-		//	return;
-		//for (Text* text : gameObj->getComponents<Text>())
-		//{
-		//	if (text->id == compID)
-		//	{
-		//		strcpy(text->content, monoStr);
-		//		break;
-		//	}
-		//}
+		GameObject* gameObj = sceneManager.findGameObjByID(gameObjID);
+		if (gameObj == nullptr)
+			return;
+		for (Text* text : gameObj->getComponents<Text>())
+		{
+			if (text->id == compID)
+			{
+				char* monoStr = mono_string_to_utf8(str);
+				strcpy(text->content, monoStr);
+				mono_free(monoStr);
+				break;
+			}
+		}
 	}
 
 	/*******************************************************************************
