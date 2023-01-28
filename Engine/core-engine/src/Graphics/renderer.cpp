@@ -532,7 +532,7 @@ namespace Copium
 		draw_quad(transform, _sprite);
 	}
 
-	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Spritesheet& _spritesheet, GLuint _offsetID, GLuint _textureID, int _frames)
+	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Spritesheet& _spritesheet, GLuint _offsetID, int _frames)
 	{
 		glm::mat4 translate = glm::translate(glm::mat4(1.f), _position);
 
@@ -566,7 +566,7 @@ namespace Copium
 
 		//PRINT("Drawing spritesheet");
 
-		draw_quad(transform, _spritesheet, _offsetID, _textureID, _frames);
+		draw_quad(transform, _spritesheet, _offsetID, _frames);
 	}
 
 	void Renderer::draw_quad(const glm::mat4& _transform, const glm::vec4& _color)
@@ -683,7 +683,7 @@ namespace Copium
 		quadCount++;
 	}
 
-	void Renderer::draw_quad(const glm::mat4& _transform, const Spritesheet& _spritesheet, GLuint _offsetID, GLuint _textureID, int _frames)
+	void Renderer::draw_quad(const glm::mat4& _transform, const Spritesheet& _spritesheet, GLuint _offsetID, int _frames)
 	{
 		if (quadIndexCount >= maxIndexCount)
 		{
@@ -698,7 +698,7 @@ namespace Copium
 
 		for (GLuint i = 1; i < graphics->get_texture_slot_index(); i++)
 		{
-			if (graphics->get_texture_slots()[i] == _textureID)
+			if (graphics->get_texture_slots()[i] == _spritesheet.texture->get_object_id())
 			{
 				textureIndex = (GLfloat) i;
 				break;
@@ -708,18 +708,15 @@ namespace Copium
 		GLuint rowOffset = (_spritesheet.rows-1)-(_offsetID / _spritesheet.columns);
 		GLuint colOffset = _offsetID % _spritesheet.columns;
 
-
 		//PRINT("Row offset:" << rowOffset);
 		// Change texture index only if ID retrieved is more than 0 (0 is white texture)
-		if (textureIndex == 0.f && _textureID != 0)
+		if (textureIndex == 0.f && _spritesheet.spriteID != 0)
 		{
 			// Add new texture into the texture slot
 			textureIndex = (GLfloat) graphics->get_texture_slot_index();
-			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _textureID;
+			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _spritesheet.texture->get_object_id();
 			graphics->set_texture_slot_index((GLuint) textureIndex + 1);
 		}
-
-		Texture* texture = _spritesheet.texture;
 
 		if (!_frames)
 			return;

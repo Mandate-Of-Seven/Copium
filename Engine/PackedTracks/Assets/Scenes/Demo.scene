@@ -44,12 +44,38 @@
             ]
         },
         {
+            "ID": 24,
+            "Name": "Effects",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 3,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": -11.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
             "ID": 2,
             "Name": "Train Background",
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 3,
+                    "ID": 4,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -87,38 +113,12 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 5,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": -10.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 3,
-            "Name": "Main Screen Canvas",
-            "Components": [
-                {
-                    "PID": 0,
                     "ID": 6,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
                         "Y": 0.0,
-                        "Z": -8.0
+                        "Z": -10.0
                     },
                     "Rot": {
                         "X": 0.0,
@@ -947,12 +947,90 @@
             ]
         },
         {
+            "ID": 3,
+            "Name": "Main Screen Canvas",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 56,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": -8.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
             "ID": 21,
             "Name": "Combat Canvas",
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 56,
+                    "ID": 57,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 22,
+            "Name": "Message Tab",
+            "Components": [
+                {
+                    "PID": 3,
+                    "ID": 58,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 23,
+            "Name": "Crew Tab",
+            "Components": [
+                {
+                    "PID": 3,
+                    "ID": 59,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -978,7 +1056,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 57,
+                    "ID": 60,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1008,16 +1086,16 @@
             ]
         },
         {
-            "ID": 22,
-            "Name": "Message Tab",
+            "ID": 25,
+            "Name": "Tracks",
             "Components": [
                 {
-                    "PID": 3,
-                    "ID": 59,
+                    "PID": 24,
+                    "ID": 62,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
-                        "Y": 0.0,
+                        "Y": 2.4512434005737305,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -1026,36 +1104,26 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
+                        "X": 2.9000000953674316,
+                        "Y": 2.9000000953674316,
                         "Z": 1.0
                     }
-                }
-            ]
-        },
-        {
-            "ID": 23,
-            "Name": "Crew Tab",
-            "Components": [
+                },
                 {
-                    "PID": 3,
-                    "ID": 60,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
+                    "ID": 63,
+                    "Type": "Animator",
+                    "Loop": true,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "Tracks.png",
+                            "Sprite ID": 1100315501279954735,
+                            "Time Delay": 0.05000000074505806,
+                            "FrameCount": 4,
+                            "Rows": 1,
+                            "Columns": 4
+                        }
+                    ]
                 }
             ]
         }

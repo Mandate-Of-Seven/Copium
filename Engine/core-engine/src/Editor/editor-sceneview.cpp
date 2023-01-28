@@ -246,10 +246,12 @@ namespace Copium
 			ImGuizmo::SetOrthographic(true);
 			ImGuizmo::SetDrawlist();
 
-
-			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, (float)sceneWidth, (float)sceneHeight);
+			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, (float) sceneWidth, (float)sceneHeight + 50.f);
 			const glm::mat4 camProj = camera.get_projection();
+			//glm::mat4 camProj = glm::identity<glm::mat4>();
+
 			glm::mat4 camView = camera.get_view_matrix();
+			//glm::mat4 camView = glm::identity<glm::mat4>();
 			glm::mat4 translate = glm::translate(glm::mat4(1.f), pos);
 			glm::mat4 rotation = {
 			glm::vec4(cos(rot), sin(rot), 0.f, 0.f),

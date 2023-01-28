@@ -257,6 +257,7 @@ namespace Copium
 		float ar = aspect;
 		float zl = orthographicSize;
 		projMatrix = glm::ortho(-ar * zl, ar * zl, -zl, zl, nearClip, farClip);
+		
 		viewProjMatrix = projMatrix * viewMatrix;
 		//viewProjMatrix = viewMatrix * projMatrix;
 	}
@@ -299,7 +300,8 @@ namespace Copium
 	}
 
 	glm::vec3 BaseCamera::calculate_position()
-	{
+	{ 
+		//glm::vec3 viewVector = get_forward_direction();
 		return viewer - get_forward_direction() * orthographicSize;
 	}
 }

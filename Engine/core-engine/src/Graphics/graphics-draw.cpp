@@ -291,55 +291,37 @@ namespace Copium
 
 				for (Component* component : gameObject->getComponents<Animator>())
 				{
+					if (!component->Enabled())
+						continue;
+
 					Animator* animator = reinterpret_cast<Animator*>(component);
 					Animation* anim = animator->GetCurrentAnimation();
 					
-					//if(anim)
-					//	PRINT("bloopbloppp");
-
-					if (!anim)
+					if (!anim || !anim->spriteSheet.GetTexture())
 						continue;
 
+					Transform& t = gameObject->transform;
+					glm::vec2 size(t.scale.x, t.scale.y);
+					float rotation = t.rotation.z;
 
-					unsigned int sid = anim->spriteSheet.spriteID - 1;
-					// The index of the texture must be less than the size of textures
-					if (sid != -1 && sid < assets->get_textures().size())
+					if (gameObject->transform.hasParent())
 					{
-						anim->spriteSheet.texture = assets->get_texture(sid);
+						Transform& t1 = *gameObject->transform.parent;
+						Copium::Math::Matrix3x3 rot;
+						Copium::Math::matrix3x3_rotdeg(rot, t1.rotation.z);
+						Copium::Math::Vec3 intermediate = (rot * t.position);
+
+						renderer.draw_quad(intermediate + t1.position, size, rotation + t1.rotation.z, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
 					}
 					else
 					{
-
-						anim->spriteSheet.spriteID = 0;
-						anim->spriteSheet.texture = nullptr;
+						renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
 					}
-
-					if (!anim || !anim->spriteSheet.GetTexture())
-						continue;
-					//PRINT("bloopbloop");
-					Transform& t = gameObject->transform;
-					unsigned int textureID = anim->spriteSheet.GetTexture()->get_id();
-					glm::vec2 size(t.scale.x, t.scale.y);
-
-					GLuint nid = 0;
-					for (GLuint i = 0; i < assets->get_textures().size(); ++i)
-					{
-						if (assets->get_textures()[i].get_object_id() == anim->spriteSheet.texture->get_object_id())
-							nid = i + 1;
-					}
-					//renderer.draw_quad(t.position, size, t.rotation.z, nid);
-					renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex, nid, anim->frameCount);
-
 				}
 			}
 
 			//PRINT("Num of Rendered GO: " << count);
 		}
-
-		// Bean : Testing Text
-		/*glm::vec3 position = { 0.f, -1.f, 0.f };
-		color = { 1.f, 1.f, 0.f, 1.f };
-		renderer.draw_text("Testing Arial", position, color, 0.1f, 0);*/
 
 		renderer.end_batch();
 
