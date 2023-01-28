@@ -143,27 +143,21 @@ namespace CopiumEngine
     {
     }
 
-    namespace UI
+    public class Button : Component
     {
-
-        public class Button : Component
+        public bool interactable
         {
-            public bool interactable
-            {
-                get;
-                set;
-            }
-
-
+            get;
+            set;
         }
+    }
 
-        public class Text : Component
+    public class Text : Component
+    {
+        public string text
         {
-            public string text
-            {
-                get;
-                set;
-            }
+            get;
+            set;
         }
     }
 }
