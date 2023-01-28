@@ -32,6 +32,7 @@ namespace Copium
 			currentScene = sm->get_current_scene();
 
 		isHierarchyOpen = true;
+		isParenting = false;
 
 	}
 	void EditorHierarchyList::update()
@@ -117,32 +118,48 @@ namespace Copium
 						MyGOF.create_child(*MySceneManager.get_selected_gameobject());
 					}
 				}
-				if (ImGui::BeginMenu("Add Archetype"))
+				if (ImGui::MenuItem("Shift Up"))
 				{
-					if (!currentScene)
-					{
-						Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
-					}
-					else
-					{
-						for (std::map<std::string, Copium::GameObject*>::iterator iter = MyGOF.get_archetype_map().begin();
-							iter != MyGOF.get_archetype_map().end(); ++iter)
-						{
-							if (ImGui::MenuItem((*iter).first.c_str()) && currentScene)
-							{
-								MyGOF.instantiate(*(*iter).second);
-							}
-
-						}
-					}
-
-					ImGui::EndMenu();
+					ShiftUp();
 				}
-				ImGui::EndMenu();
+				if (ImGui::MenuItem("Shift Down"))
+				{
+					isParenting = true;
+					PRINT("Shift down");
+				}
 
+
+				/*
+				//if (ImGui::BeginMenu("Add Archetype"))
+				//{
+				//	if (!currentScene)
+				//	{
+				//		Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
+				//	}
+				//	else
+				//	{
+				//		for (std::map<std::string, Copium::GameObject*>::iterator iter = MyGOF.get_archetype_map().begin();
+				//			iter != MyGOF.get_archetype_map().end(); ++iter)
+				//		{
+				//			if (ImGui::MenuItem((*iter).first.c_str()) && currentScene)
+				//			{
+				//				MyGOF.instantiate(*(*iter).second);
+				//			}
+
+				//		}
+				//	}
+
+				//	ImGui::EndMenu();
+				//}
+				ImGui::EndMenu();
+				*/
+				ImGui::EndMenu();
 			}
 			ImGui::EndMenuBar();
 		}
+
+		if (isParenting)
+			DisplayAdoptionWindow();
 
 		//KeyBoard Shortcuts//
 		if (is->is_key_held(GLFW_KEY_LEFT_CONTROL) && is->is_key_pressed(GLFW_KEY_D))
@@ -214,37 +231,6 @@ namespace Copium
 			}
 
 
-			//for (Scene* sc : sm->GetSceneVector())
-			//{
-			//	if (sc->get_filename().empty())
-			//	{
-			//		sceneName = sc->get_name();
-			//	}
-			//	else
-			//	{
-			//		size_t offset = sc->get_filename().find_last_of("/\\");
-			//		size_t endOffset = sc->get_filename().find(".scene") - 1;
-			//		sceneName = sc->get_filename().substr(offset + 1, endOffset - offset);
-			//		if (sc->get_state() == Copium::Scene::SceneState::play)
-			//		{
-			//			sceneName += "\t PREVIEWING";
-			//		}
-			//	}
-
-			//	// Display scene name as the rootiest node
-			//	if (ImGui::TreeNodeEx(sceneName.c_str(), rootFlags))
-			//	{
-
-			//		bool isSelected = false;
-			//		for (size_t i{ 0 }; i < roots.size(); ++i)
-			//		{
-			//			display_gameobject(*(roots[i]), selectedID, roots, i);
-
-			//		}
-
-			//		ImGui::TreePop();
-			//	}
-			//}
 			// Display scene name as the rootiest node
 			if (ImGui::TreeNodeEx(sceneName.c_str(), rootFlags))
 			{
@@ -418,17 +404,33 @@ namespace Copium
 		// Handle any reordering
 		if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
 		{
+			PRINT("Selected GameObject's Index:" << _index);
 				//std::cout << "ID of selected Game Object: " << _selected << std::endl;
 				int n_next = (ImGui::GetMouseDragDelta(0).y < 0.f ? -1 : 1);
+				if (n_next < 0)
+					PRINT("neg");
+				else
+					PRINT("pos");
+				n_next += _index;
+				PRINT("n_next:" << n_next);
+				PRINT("Generation size:" << _list.size());
 
-				if (n_next + _index >= 0 && n_next + _index < _list.size())
+				if (n_next >= 0 && (n_next) < _list.size())
 				{		
+					PRINT("test");
 					Transform* tmp = &_go.transform;
 					std::list<Transform*>::iterator iter1, iter2;
 
 					iter1 = _list.begin();
-					for (int i{ 0 }; i < _index; ++i)
+					for (int i{ 0 }; i < _list.size(); ++i)
 					{
+						if (*iter1 == tmp)
+						{
+							PRINT("Found it");
+							break;
+
+						}
+
 						++iter1;
 					}
 					iter2 = iter1;
@@ -437,13 +439,21 @@ namespace Copium
 					{
 						++iter2;
 					}
-					else
+					else if(n_next <= 0)
 					{
 						--iter2;
 					}
 
-					*iter1 = *iter2;
-					*iter2 = tmp;
+					
+
+					if (iter2 != _list.end())
+					{
+						*iter1 = *iter2;
+						*iter2 = tmp;
+					}
+
+					
+
 				}
 
 				ImGui::ResetMouseDragDelta();
@@ -465,7 +475,7 @@ namespace Copium
 			int idx{ 0 };
 			for (auto pChild : _go.transform.children)
 			{
-				isSelected = display_gameobject(pChild->gameObj, _selected, _list, idx);
+				isSelected = display_gameobject(pChild->gameObj, _selected, _go.transform.children, idx);
 				++idx;
 			}
 		}
@@ -509,6 +519,178 @@ namespace Copium
 			deleteClicked = 0;
 		}
 		return true;
+	}
+
+	void EditorHierarchyList::ShiftUp()
+	{
+		if (!sm->selectedGameObject)
+			return;
+
+		GameObject* target = sm->selectedGameObject;
+
+		if (!target->transform.hasParent())
+			return;
+
+		// Erase from parent's children list
+		GameObject* parent = &target->transform.parent->gameObj;
+		for (std::list<Transform*>::iterator it = parent->transform.children.begin(); it != parent->transform.children.end(); ++it)
+		{
+			if (&target->transform == *it)
+			{
+				parent->transform.children.erase(it);
+				break;
+			}
+
+		}
+
+		// If this game object's parent is a root, simply turn this game object into a root
+		if (!parent->transform.hasParent())
+		{
+			target->transform.parent = nullptr;
+		}
+		else
+		{
+			GameObject* grandparent = &parent->transform.parent->gameObj;
+			grandparent->transform.children.push_back(&target->transform);
+			target->transform.parent = &grandparent->transform;
+		}
+
+
+	}
+
+	void EditorHierarchyList::ShiftDown()
+	{
+		if (!sm->get_selected_gameobject())
+			return;
+
+		Scene* scene = sm->get_current_scene();
+		GameObject* target = sm->get_selected_gameobject();
+
+		// Do nothing if gameobject is in youngest generation
+		if (target->transform.children.empty())
+			return;
+
+
+
+
+	}
+
+	bool EditorHierarchyList::DisplayAdoptionWindow()
+	{
+		if (!sm->get_selected_gameobject())
+			return false;
+
+		PRINT("Display Adoption Window");
+		Scene* scene = sm->get_current_scene();
+		GameObject* target = sm->get_selected_gameobject();
+
+		// Do nothing if gameobject is in youngest generation
+		//if (target->transform.parent.empty())
+		//	return false;
+
+		GameObject* parent;
+		if (target->transform.hasParent())
+		{
+			parent = &target->transform.parent->gameObj;
+			if (isParenting)
+			{
+				// Open pop-up window
+				ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+				ImGui::SetNextWindowPos(ImVec2(0.f, 0.f), ImGuiCond_FirstUseEver);
+				ImGui::Begin("Adoption Drive", &isParenting);
+				ImVec2 buttonSize = ImGui::GetWindowSize();
+				buttonSize.y *= (float)0.1;
+				static ImGuiTextFilter filter;
+				ImGui::PushItemWidth(-1);
+				filter.Draw("##Name");
+				ImGui::PopItemWidth();
+				for (std::list<Transform*>::iterator it = parent->transform.children.begin(); it != parent->transform.children.end(); ++it)
+				{
+					GameObject* go = &(*it)->gameObj;
+
+					// Skip itself
+					if (go == target)
+						continue;
+
+					if (ImGui::Button(go->get_name().c_str(), buttonSize))
+					{
+						if (filter.PassFilter(go->get_name().c_str()))
+						{
+							isParenting = false;
+
+							(*it)->gameObj.transform.children.push_back(&target->transform);
+							target->transform.parent = (*it);
+							for (std::list<Transform*>::iterator iter = parent->transform.children.begin(); iter != parent->transform.children.end(); ++iter)
+							{
+								GameObject* go = &(*iter)->gameObj;
+
+								// Skip itself
+								if (go == target)
+								{
+									parent->transform.children.erase(iter);
+									break;
+								}
+
+							}
+						}
+					}
+
+				}
+
+				ImGui::End();
+			}
+
+		}
+		else
+		{
+			// Look through the roots
+			// Open pop-up window
+			if (isParenting)
+			{
+
+				ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+				ImGui::SetNextWindowPos(ImVec2(0.f, 0.f), ImGuiCond_FirstUseEver);
+				ImGui::Begin("Adoption Drive", &isParenting);
+				ImVec2 buttonSize = ImGui::GetWindowSize();
+				buttonSize.y *= (float)0.1;
+				static ImGuiTextFilter filter;
+				ImGui::PushItemWidth(-1);
+				filter.Draw("##Name");
+				ImGui::PopItemWidth();
+				for (size_t i{0}; i < scene->get_gameobjcount(); ++i)
+				{
+					PRINT("bloop");
+
+					GameObject* go = scene->gameObjects[i];
+
+					if (go->transform.hasParent() || go == target)
+						continue;
+
+					if (ImGui::Button(go->get_name().c_str(), buttonSize))
+					{
+						if (filter.PassFilter(go->get_name().c_str()))
+						{
+							isParenting = false;
+							PRINT("bleep");
+
+							go->transform.children.push_back(&target->transform);
+
+							target->transform.parent = &go->transform;
+
+
+						}
+					}
+
+				}
+				ImGui::End();
+			}
+
+
+		}
+
+
+		return true;
+
 	}
 
 }
