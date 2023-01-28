@@ -60,8 +60,8 @@ namespace Copium
 		void const set_name(std::string _name) { sprite_name = _name; }
 
 		// Sprite
-		const unsigned int& get_sprite_id() const { return spriteID; }
-		void set_sprite_id(const unsigned int& _index) { spriteID = _index; }
+		const uint64_t& get_sprite_id() const { return spriteID; }
+		void set_sprite_id(const uint64_t& _index) { spriteID = _index; }
 
 		const Texture* get_texture() const { return refTexture; }
 		void set_texture(Texture* _texture) { refTexture = _texture; }
@@ -92,7 +92,7 @@ namespace Copium
 		std::string sprite_name = "empty"; // Name of sprite
 
 		Texture* refTexture; // Pointer to the texture
-		unsigned int spriteID = 0; // The index of the sprite
+		uint64_t spriteID = 0; // The index of the sprite
 
 		glm::bvec2 flip{ 0 };
 		glm::vec3 position{ 0 }; // Temporary variable to access the position

@@ -237,19 +237,6 @@ namespace Copium
 					Sprite& sr = rc->get_sprite_renderer();
 					glm::vec2 size(t.scale.x, t.scale.y);
 					float rotation = t.rotation.z;
-					// Bean: It should be set in inspector view of the renderer component instead
-					unsigned int id = sr.get_sprite_id() - 1;
-
-					// The index of the texture must be less than the size of textures
-					if (id != -1 && id < assets->get_textures().size())
-					{
-						sr.set_texture(assets->get_texture(id));
-					}
-					else
-					{
-						sr.set_sprite_id(0);
-						sr.set_texture(nullptr);
-					}
 
 					if (gameObject->transform.hasParent())
 					{
@@ -276,19 +263,6 @@ namespace Copium
 					Sprite& sr = rc->get_sprite_renderer();
 					glm::vec2 size(t.scale.x, t.scale.y);
 					float rotation = t.rotation.z;
-					// Bean: It should be set in inspector view of the renderer component instead
-					unsigned int id = sr.get_sprite_id() - 1;
-
-					// The index of the texture must be less than the size of textures
-					if (id != -1 && id < assets->get_textures().size())
-					{
-						sr.set_texture(assets->get_texture(id));
-					}
-					else
-					{
-						sr.set_sprite_id(0);
-						sr.set_texture(nullptr);
-					}
 
 					if (gameObject->transform.hasParent())
 					{

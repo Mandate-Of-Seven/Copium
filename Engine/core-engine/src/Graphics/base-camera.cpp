@@ -83,7 +83,7 @@ namespace Copium
 		focalPoint = { viewer.x, viewer.y, 0.f };
 		/*viewer = { 0.f, 0.f, 0.f };
 		focalPoint = { viewer.x, viewer.y, 0.f };*/
-		upVector = { 0.f, -1.f, 0.f };
+		upVector = { 0.f, 1.f, 0.f };
 
 		width = _width;
 		height = _height;
@@ -166,7 +166,7 @@ namespace Copium
 
 	glm::vec3 BaseCamera::get_up_direction() const
 	{
-		return glm::rotate(get_orientation(), glm::vec3(0.f, -1.f, 0.f));
+		return glm::rotate(get_orientation(), glm::vec3(0.f, 1.f, 0.f));
 	}
 
 	glm::vec3 BaseCamera::get_forward_direction() const
@@ -274,7 +274,7 @@ namespace Copium
 		viewer.z = 10.f;
 
 		focalPoint = { viewer.x, viewer.y, 0.f };
-		upVector = { 0.f, -1.f, 0.f };
+		upVector = { 0.f, 1.f, 0.f };
 
 		// Update view matrix
 		viewMatrix = glm::lookAt(viewer, focalPoint, upVector);

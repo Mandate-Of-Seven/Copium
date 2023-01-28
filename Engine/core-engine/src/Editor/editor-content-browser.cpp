@@ -80,7 +80,7 @@ namespace Copium
 		{
 			if (currentDirectory != nullptr)
 			{
-				std::list<File*> files = fs->get_file_references()[SCRIPT];
+				std::list<File*> files = fs->get_file_references()[FILE_TYPE::SCRIPT];
 
 				for (File* soFile : files)
 				{
@@ -178,6 +178,10 @@ namespace Copium
 			// File iterator
 			for (auto& file : currentDirectory->get_files())
 			{
+				// Ignore meta files
+				if (file.get_file_type().fileType == FILE_TYPE::META)
+					continue;
+
 				if (ImGui::TableGetColumnIndex() >= columnCount - 1)
 				{
 					ImGui::TableNextRow();
@@ -194,25 +198,25 @@ namespace Copium
 					std::string texturePath;
 					switch (file.get_file_type().fileType)
 					{
-					case Copium::AUDIO:
+					case FILE_TYPE::AUDIO:
 						break;
 
-					case Copium::FONT:
+					case FILE_TYPE::FONT:
 						break;
 
-					case Copium::SCENE:
+					case FILE_TYPE::SCENE:
 						objectID = icons[2].get_object_id();
 						imageAR = 1.f;
 						framePadding = 3.f;
 						break;
 
-					case Copium::SCRIPT:
+					case FILE_TYPE::SCRIPT:
 						break;
 
-					case Copium::SHADER:
+					case FILE_TYPE::SHADER:
 						break;
 
-					case Copium::SPRITE:
+					case FILE_TYPE::SPRITE:
 						texturePath = assetSys->get_texture(i)->get_file_path();
 						if (!file.generic_string().compare(texturePath))
 						{
@@ -225,7 +229,7 @@ namespace Copium
 						}
 						break;
 
-					case Copium::TEXT:
+					case FILE_TYPE::TEXT:
 						objectID = icons[1].get_object_id();
 						imageAR = 1.f;
 						framePadding = 3.f;
@@ -241,7 +245,7 @@ namespace Copium
 
 				if (ImGui::BeginDragDropSource())
 				{
-					std::string str = file.generic_string();
+					std::string str = file.string();
 					const char* filePath = str.c_str();
 					ImGui::SetDragDropPayload("ContentBrowserItem", filePath, str.size() + 1);
 

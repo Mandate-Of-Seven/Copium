@@ -137,8 +137,8 @@ namespace Copium
 			ImGui::SetWindowFocus("Scene View");
 			glm::vec2 speed = get_pan_speed();
 			glm::vec3 point = focalPoint;
-			point += -get_up_direction() * delta.y * speed.y;
-			point += get_right_direction() * delta.x * speed.x;
+			point += get_up_direction() * delta.y * speed.y;
+			point += -get_right_direction() * delta.x * speed.x;
 
 			// Bean: shouldnt be necessary here
 			// Clamping camera within boundary
