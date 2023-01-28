@@ -165,6 +165,7 @@
     <ClCompile Include="src\Math\math-library.cpp" />
     <ClCompile Include="src\GameObject\Components\transform-component.cpp" />
     <ClCompile Include="src\Math\Vector4.cpp" />
+    <ClCompile Include="src\Events\events-system.cpp" />
     <ClCompile Include="src\Messaging\message-system.cpp" />
     <ClCompile Include="src\Messaging\message-types.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -249,10 +250,13 @@
     <ClInclude Include="src\Graphics\sprite.h" />
     <ClInclude Include="src\GameObject\Components\ui-components.h" />
     <ClInclude Include="src\Math\Vector4.h" />
+    <ClInclude Include="src\Events\events-system.h" />
+    <ClInclude Include="src\Events\events.h" />
     <ClInclude Include="src\SceneManager\scene-manager.h" />
     <ClInclude Include="src\Scripting\logic-system.h" />
     <ClInclude Include="src\Scripting\script-wrappers.h" />
     <ClInclude Include="src\Graphics\spritesheet.h" />
+    <ClInclude Include="src\Scripting\scriptable-object.h" />
     <ClInclude Include="src\Utilities\easing.h" />
     <ClInclude Include="src\Utilities\layers.h" />
     <ClInclude Include="src\Utilities\sorting-layers.h" />

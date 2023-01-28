@@ -58,12 +58,11 @@ namespace Copium
 		fileTypes.emplace(std::make_pair(".ttf", FileType("Font", FILE_TYPE::FONT)));
 		fileTypes.emplace(std::make_pair(".scene", FileType("Scene", FILE_TYPE::SCENE))); // Bean: change to .scene in the future
 		fileTypes.emplace(std::make_pair(".cs", FileType("Script", FILE_TYPE::SCRIPT)));
-		fileTypes.emplace(std::make_pair(".so", FileType("ScriptableObject", FILE_TYPE::SCRIPT)));
 		fileTypes.emplace(std::make_pair(".vert", FileType("Shader", FILE_TYPE::SHADER))); // Bean: change to .shader in the future
 		fileTypes.emplace(std::make_pair(".frag", FileType("Shader", FILE_TYPE::SHADER)));
 		fileTypes.emplace(std::make_pair(".png", FileType("Sprite", FILE_TYPE::SPRITE)));
 		fileTypes.emplace(std::make_pair(".txt", FileType("Text", FILE_TYPE::TEXT)));
-		fileTypes.emplace(std::make_pair(".asset", FileType("Asset", FILE_TYPE::ASSET)));
+		fileTypes.emplace(std::make_pair(".so", FileType("Asset", FILE_TYPE::ASSET)));
 		fileTypes.emplace(std::make_pair(".meta", FileType("Meta", FILE_TYPE::META)));
 	}
 

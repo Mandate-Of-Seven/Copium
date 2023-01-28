@@ -1,0 +1,7 @@
+using System;
+using CopiumEngine;
+
+public class helo: ScriptableObject
+{
+
+}
