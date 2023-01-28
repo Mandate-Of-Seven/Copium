@@ -114,6 +114,14 @@ namespace Copium
     void GameObject::setActive(bool _active)
     {
         active = _active;
+        if (!transform.children.empty())
+        {
+            for (Transform* t : transform.children)
+            {
+                GameObject* go = &t->gameObj;
+                go->setActive(_active);
+            }
+        }
     }
 
 
@@ -287,7 +295,10 @@ void GameObject::handleMessage(MESSAGE_TYPE mType)
 void GameObject::inspectorView()
 {
     // Gameobject Basic Information
-    ImGui::Checkbox("##Active", &active);
+    if (ImGui::Checkbox("##Active", &active))
+    {
+        setActive(active);
+    }
     ImGui::SameLine();
     static char buffer[256];
     strcpy(buffer, name.c_str());
