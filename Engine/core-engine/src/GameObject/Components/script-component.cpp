@@ -212,7 +212,70 @@ namespace Copium
 						std::string displayName = (*componentRef).second->gameObj.get_name() + "(" + it->second.typeName + ")";
 						ImGui::Button(displayName.c_str(), ImVec2(-FLT_MIN, 0.f));
 					}
-						
+					
+					if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+					{
+						std::cout << "double clicked on game object reference field\n";
+						isAddingGameObjectReference = true;
+						field = &it->second;
+
+					}
+					if (isAddingGameObjectReference && field == &it->second)
+					{
+						// Open pop-up window
+						ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+						ImGui::SetNextWindowPos(ImVec2(0.f, 0.f), ImGuiCond_FirstUseEver);
+						ImGui::PushID(counter++);
+						ImGui::Begin("Add GameObject Reference", &isAddingGameObjectReference);
+						ImVec2 buttonSize = ImGui::GetWindowSize();
+						buttonSize.y *= (float)0.1;
+						static ImGuiTextFilter filter;
+						ImGui::PushItemWidth(-1);
+						filter.Draw("##GameObjectName");
+						ImGui::PopItemWidth();
+						// Iterate through game object list
+						Scene* scene = Copium::SceneManager::Instance()->get_current_scene();
+						for (Copium::GameObject* go : scene->gameObjects)
+						{
+							Component* pComponent = {};
+							for (Component* component : go->components)
+							{
+								if (component->Name() == mono_type_get_name(mono_field_get_type(field->classField)))
+								{
+									pComponent = component;
+									break;
+								}
+							}
+							if (!pComponent)
+								continue;
+							if (ImGui::Button(go->get_name().c_str(), buttonSize))
+							{
+								if (filter.PassFilter(go->get_name().c_str()))
+								{
+									isAddingGameObjectReference = false;
+									ComponentID componentID = pComponent->id;
+									GameObjectID gameObjID = pComponent->gameObj.id;
+									void* params[2] = { &componentID, &gameObjID };
+									MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindComponentByID"], mObject, params, nullptr);
+									fieldDataReferences.insert({ it->first,FieldData(mono_object_get_size(result)) });
+									MonoClass* mComponentClass = mono_object_get_class(result);
+									void* iter = nullptr;
+									while (MonoClassField* _field = mono_class_get_fields(mComponentClass, &iter))
+									{
+										mono_field_get_value(result, _field, fieldDataReferences[it->first].data + mono_field_get_offset(_field));
+									}
+									mono_field_set_value(mObject, it->second.classField, fieldDataReferences[it->first].data);
+									fieldComponentReferences[_name] = pComponent;
+									field = nullptr;
+									break;
+								}
+							}
+						}
+						ImGui::End();
+						ImGui::PopID();
+					}
+
+
 					if (ImGui::BeginDragDropTarget())
 					{
 						//GameObject ID, Component ID
