@@ -170,14 +170,19 @@ namespace Copium
 
 	bool ScriptingSystem::isScriptableObject(const std::string& name)
 	{
-		
-		return scriptClassMap[name].mClass && mono_class_get_parent(scriptClassMap[name].mClass) == mScriptableObject;
+		return scriptableObjectClassMap[name].mClass;
 	}
 
 	bool ScriptingSystem::isScript(const std::string& name)
 	{
 
-		return scriptClassMap[name].mClass && mono_class_get_parent(scriptClassMap[name].mClass) == mCopiumScript;
+		return scriptClassMap[name].mClass;
+	}
+
+
+	const std::unordered_map<std::string, ScriptClass>& ScriptingSystem::getScriptableObjectClassMap()
+	{
+		return scriptableObjectClassMap;
 	}
 
 	void ScriptingSystem::instantiateCollision2D(GameObject& collided, GameObject& collidee)
@@ -313,7 +318,6 @@ namespace Copium
 	void ScriptingSystem::updateScriptClasses()
 	{
 		using nameToClassIt = std::unordered_map<std::string, ScriptClass>::iterator;
-		PRINT("SCRIPT CLASSES UPDATED");
 		nameToClassIt it = scriptClassMap.begin();
 		//static std::vector<nameToClassIt> keyMask;
 		scriptClassMap.clear();
@@ -331,7 +335,14 @@ namespace Copium
 			const char* name = mono_metadata_string_heap(mAssemblyImage, cols[MONO_TYPEDEF_NAME]);
 			const char* name_space = mono_metadata_string_heap(mAssemblyImage, cols[MONO_TYPEDEF_NAMESPACE]);
 			_class = mono_class_from_name(mAssemblyImage, name_space, name);
-			scriptClassMap[name] = ScriptClass{name,_class};
+			if (mono_class_get_parent(_class) == mCopiumScript)
+			{
+				scriptClassMap[name] = ScriptClass{ name,_class };
+			}
+			else if(mono_class_get_parent(_class) == mScriptableObject)
+			{
+				scriptableObjectClassMap[name] = ScriptClass{ name,_class };
+			}
 		}
 
 		//for (auto& scriptClass : scriptClassMap)

@@ -166,7 +166,6 @@ namespace Copium
                 file << "public class " << filter.InputBuf << ": ScriptableObject\n{\n\n";
                 file << "}\n";
                 file.close();
-
                 //selectedGameObject->addComponent<Copium::Script>().Name(filter.InputBuf);
 
                 isAddingComponent = false;

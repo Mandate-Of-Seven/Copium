@@ -73,6 +73,63 @@ namespace Copium
 		{ "CopiumEngine.GameObject",	FieldType::GameObject	},
 	};
 
+	struct FieldData
+	{
+		/***************************************************************************/
+		/*!
+		\brief
+			Stores data of a given buffer to prevent out of scope destruction.
+			Aka assigns memory from the heap
+
+		\param _size
+			Size of buffer
+
+		\param _data
+			Data to store and copy from
+		*/
+		/**************************************************************************/
+		FieldData(size_t _size = 0, void* _data = nullptr)
+		{
+			size = _size;
+			if (size)
+				data = new char[size];
+			else
+				data = nullptr;
+			if (_data)
+				memcpy(data, _data, size);
+		}
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Copy constructor
+
+		\param rhs
+			FieldData to store and copy from
+		*/
+		/**************************************************************************/
+		FieldData(const FieldData& rhs)
+		{
+			size = rhs.size;
+			data = new char[size];
+			memcpy(data, rhs.data, size);
+		}
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Destructor that frees memory
+		*/
+		/**************************************************************************/
+		~FieldData()
+		{
+			if (data)
+				delete[] data;
+		}
+		char* data;
+		size_t size;
+	};
+
 	enum class CompilingState
 	{
 		Compiling,
@@ -94,7 +151,7 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		ScriptClass(const std::string& _name, MonoClass* _mClass);
-		MonoClass* mClass;
+		MonoClass* mClass{};
 		std::unordered_map<std::string, MonoMethod*> mMethods;
 		std::unordered_map<std::string, Field> mFields;
 
@@ -247,6 +304,17 @@ namespace Copium
 		/**************************************************************************/
 		const std::unordered_map<std::string, ScriptClass>& getScriptClassMap();
 
+
+		/**************************************************************************/
+		/*!
+			\brief
+				Gets the map of names to ScriptClasses
+			\return
+				Map of names to ScriptClasses
+		*/
+		/**************************************************************************/
+		const std::unordered_map<std::string, ScriptClass>& getScriptableObjectClassMap();
+
 		/*******************************************************************************
 		/*!
 		\brief
@@ -363,10 +431,10 @@ namespace Copium
 		/**************************************************************************/
 		bool scriptIsLoaded(const std::filesystem::path& filePath);
 		std::unordered_map<std::string, ScriptClass> scriptClassMap;
+		std::unordered_map<std::string, ScriptClass> scriptableObjectClassMap;
 		std::list<File>& scriptFiles;
 		CompilingState compilingState{ CompilingState::Wait };
-		std::list<ScriptableObject> scriptableObjectsList{};
-		std::list<ScriptableObjectInstance> scriptableObjectInstancesList{};
+		std::map<std::string, std::map<std::string,ScriptableObject>> scriptableObjects;
 	};
 }
 #endif // !SCRIPTING_SYSTEM_H
