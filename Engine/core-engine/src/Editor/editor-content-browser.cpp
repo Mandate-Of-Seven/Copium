@@ -217,7 +217,7 @@ namespace Copium
 
 					case FILE_TYPE::SPRITE:
 						texturePath = assetSys->get_texture(i)->get_file_path();
-						if (!file.generic_string().compare(texturePath))
+						if (!file.string().compare(texturePath))
 						{
 							Texture* temp = assetSys->get_texture(i);
 							objectID = temp->get_object_id();
