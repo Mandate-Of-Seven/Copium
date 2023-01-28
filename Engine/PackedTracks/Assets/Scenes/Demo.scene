@@ -104,11 +104,6 @@
                         "Y": 1.0,
                         "Z": 1.0
                     }
-                },
-                {
-                    "ID": 48,
-                    "Type": "Script",
-                    "Name": "TrainButtons"
                 }
             ]
         },
@@ -118,7 +113,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 7,
+                    "ID": 6,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -144,7 +139,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 8,
+                    "ID": 7,
                     "Type": "Transform",
                     "Pos": {
                         "X": -0.7038029432296753,
@@ -177,6 +172,25 @@
                     }
                 },
                 {
+                    "Type": "Text",
+                    "ID": 49,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "",
+                    "Font Size": 0.10000000149011612,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                },
+                {
+                    "ID": 48,
+                    "Type": "Script",
+                    "Name": "ButtonCalls",
+                    "objectToToggle": 3
+                },
+                {
                     "Type": "Button",
                     "ID": 9,
                     "Graphic ID": 49,
@@ -190,20 +204,7 @@
                             "Y": 0.5
                         }
                     },
-                    "Callback": ""
-                },
-                {
-                    "Type": "Text",
-                    "ID": 49,
-                    "FontName": "corbel",
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Content": "",
-                    "Font Size": 0.10000000149011612,
-                    "r": 1.0,
-                    "g": 1.0,
-                    "b": 1.0,
-                    "a": 1.0
+                    "Callback": "OpenGameObject"
                 }
             ]
         },
@@ -213,7 +214,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 11,
+                    "ID": 12,
                     "Type": "Transform",
                     "Pos": {
                         "X": 6.469001770019531,
@@ -246,6 +247,25 @@
                     }
                 },
                 {
+                    "Type": "Text",
+                    "ID": 50,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "",
+                    "Font Size": 0.10000000149011612,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                },
+                {
+                    "ID": 51,
+                    "Type": "Script",
+                    "Name": "ButtonCalls",
+                    "objectToToggle": 21
+                },
+                {
                     "Type": "Button",
                     "ID": 12,
                     "Graphic ID": 50,
@@ -259,20 +279,7 @@
                             "Y": 0.5
                         }
                     },
-                    "Callback": ""
-                },
-                {
-                    "Type": "Text",
-                    "ID": 50,
-                    "FontName": "corbel",
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Content": "",
-                    "Font Size": 0.10000000149011612,
-                    "r": 1.0,
-                    "g": 1.0,
-                    "b": 1.0,
-                    "a": 1.0
+                    "Callback": "OpenGameObject"
                 }
             ]
         },
@@ -282,7 +289,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 14,
+                    "ID": 17,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -320,7 +327,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 16,
+                    "ID": 19,
                     "Type": "Transform",
                     "Pos": {
                         "X": -5.121294021606445,
@@ -355,7 +362,7 @@
                 {
                     "Type": "Button",
                     "ID": 17,
-                    "Graphic ID": 0,
+                    "Graphic ID": 18,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.5,
@@ -366,7 +373,7 @@
                             "Y": 0.5
                         }
                     },
-                    "Callback": ""
+                    "Callback": "OpenReportTab"
                 },
                 {
                     "Type": "Text",
@@ -380,6 +387,14 @@
                     "g": 0.00009998999303206801,
                     "b": 0.00009998999303206801,
                     "a": 1.0
+                },
+                {
+                    "ID": 56,
+                    "Type": "Script",
+                    "Name": "ButtonCalls",
+                    "messageTab": 22,
+                    "reportTab": 11,
+                    "crewTab": 23
                 }
             ]
         },
@@ -389,7 +404,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 20,
+                    "ID": 24,
                     "Type": "Transform",
                     "Pos": {
                         "X": -5.172061920166016,
@@ -424,7 +439,7 @@
                 {
                     "Type": "Button",
                     "ID": 22,
-                    "Graphic ID": 0,
+                    "Graphic ID": 23,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.5,
@@ -435,7 +450,7 @@
                             "Y": 0.5
                         }
                     },
-                    "Callback": ""
+                    "Callback": "OpenMessageTab"
                 },
                 {
                     "Type": "Text",
@@ -449,6 +464,14 @@
                     "g": 0.00009998999303206801,
                     "b": 0.00009998999303206801,
                     "a": 1.0
+                },
+                {
+                    "ID": 57,
+                    "Type": "Script",
+                    "Name": "ButtonCalls",
+                    "messageTab": 22,
+                    "reportTab": 11,
+                    "crewTab": 23
                 }
             ]
         },
@@ -458,7 +481,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 24,
+                    "ID": 29,
                     "Type": "Transform",
                     "Pos": {
                         "X": -5.1607465744018555,
@@ -493,7 +516,7 @@
                 {
                     "Type": "Button",
                     "ID": 27,
-                    "Graphic ID": 0,
+                    "Graphic ID": 28,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.5,
@@ -504,7 +527,7 @@
                             "Y": 0.5
                         }
                     },
-                    "Callback": ""
+                    "Callback": "OpenCrewTab"
                 },
                 {
                     "Type": "Text",
@@ -518,6 +541,14 @@
                     "g": 0.00009998999303206801,
                     "b": 0.00009998999303206801,
                     "a": 1.0
+                },
+                {
+                    "ID": 58,
+                    "Type": "Script",
+                    "Name": "ButtonCalls",
+                    "messageTab": 22,
+                    "reportTab": 11,
+                    "crewTab": 23
                 }
             ]
         },
@@ -527,7 +558,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 28,
+                    "ID": 34,
                     "Type": "Transform",
                     "Pos": {
                         "X": 2.0263869762420654,
@@ -553,7 +584,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 29,
+                    "ID": 35,
                     "Type": "Transform",
                     "Pos": {
                         "X": -0.1144213080406189,
@@ -591,7 +622,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 31,
+                    "ID": 37,
                     "Type": "Transform",
                     "Pos": {
                         "X": -5.309347629547119,
@@ -630,7 +661,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 33,
+                    "ID": 39,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -656,7 +687,7 @@
             "Components": [
                 {
                     "PID": 14,
-                    "ID": 34,
+                    "ID": 40,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.4000000059604645,
@@ -691,7 +722,7 @@
                 {
                     "Type": "Button",
                     "ID": 37,
-                    "Graphic ID": 0,
+                    "Graphic ID": 52,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.5,
@@ -703,6 +734,24 @@
                         }
                     },
                     "Callback": ""
+                },
+                {
+                    "Type": "Text",
+                    "ID": 52,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "",
+                    "Font Size": 1.0,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                },
+                {
+                    "ID": 54,
+                    "Type": "Script",
+                    "Name": "ButtonCalls"
                 }
             ]
         },
@@ -712,7 +761,7 @@
             "Components": [
                 {
                     "PID": 14,
-                    "ID": 37,
+                    "ID": 45,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.4000000059604645,
@@ -747,7 +796,7 @@
                 {
                     "Type": "Button",
                     "ID": 39,
-                    "Graphic ID": 0,
+                    "Graphic ID": 53,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.5,
@@ -759,6 +808,24 @@
                         }
                     },
                     "Callback": ""
+                },
+                {
+                    "Type": "Text",
+                    "ID": 53,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "",
+                    "Font Size": 1.0,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                },
+                {
+                    "ID": 55,
+                    "Type": "Script",
+                    "Name": "ButtonCalls"
                 }
             ]
         },
@@ -768,7 +835,7 @@
             "Components": [
                 {
                     "PID": 15,
-                    "ID": 40,
+                    "ID": 50,
                     "Type": "Transform",
                     "Pos": {
                         "X": -3.299999952316284,
@@ -807,7 +874,7 @@
             "Components": [
                 {
                     "PID": 16,
-                    "ID": 42,
+                    "ID": 52,
                     "Type": "Transform",
                     "Pos": {
                         "X": -3.299999952316284,
@@ -846,7 +913,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 44,
+                    "ID": 54,
                     "Type": "Transform",
                     "Pos": {
                         "X": -5.300000190734863,
@@ -885,7 +952,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 46,
+                    "ID": 56,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -911,7 +978,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 47,
+                    "ID": 57,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -933,9 +1000,62 @@
                     "ID": 46,
                     "Type": "Script",
                     "Name": "GameManager",
+                    "EventSequence": 0,
                     "TrainCanvas": 4,
                     "CombatCanvas": 21,
                     "MainScreenCanvas": 3
+                }
+            ]
+        },
+        {
+            "ID": 22,
+            "Name": "Message Tab",
+            "Components": [
+                {
+                    "PID": 3,
+                    "ID": 59,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 23,
+            "Name": "Crew Tab",
+            "Components": [
+                {
+                    "PID": 3,
+                    "ID": 60,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
                 }
             ]
         }

@@ -23,7 +23,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <unordered_map>
 #include <Graphics/sprite.h>
 
-#define TEXT_BUFFER_SIZE 128
+#define TEXT_BUFFER_SIZE 2048
 
 namespace Copium
 {

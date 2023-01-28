@@ -187,7 +187,7 @@ namespace Copium
 
 	void ScriptingSystem::addEmptyScript(const std::string& _name)
 	{
-		std::ofstream file(Paths::projectPath + _name + ".cs");
+		std::ofstream file(Paths::assetPath + "\\Scripts\\" + _name + ".cs");
 		file << "using CopiumEngine;\n";
 		file << "using System;\n\n";
 		file << "public class " << _name << ": CopiumScript\n{\n";

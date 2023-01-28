@@ -81,9 +81,20 @@ namespace Copium
 		{
 		case ButtonState::OnClick:
 		{
-			PRINT("UI: CRICKING on " << gameObj.get_name());
+			PRINT("UI: CLICKING on " << gameObj.get_name());
 			if (targetGraphic)
 				targetGraphic->layeredColor = Linear(previousColor, clickedColor, timer / fadeDuration);
+			break;
+		}
+		case ButtonState::OnHover:
+		{
+			//PRINT("UI: HOVERING on " << gameObj.get_name());
+			if (targetGraphic)
+				targetGraphic->layeredColor = Linear(previousColor, hoverColor, timer / fadeDuration);
+			break;
+		}
+		case ButtonState::OnRelease:
+		{
 			Script* script = gameObj.getComponent<Script>();
 			if (script)
 			{
@@ -93,18 +104,6 @@ namespace Copium
 					hoveredBtn = nullptr;
 				}
 			}
-			break;
-		}
-		case ButtonState::OnHover:
-		{
-			PRINT("UI: HOVERING on " << gameObj.get_name());
-			if (targetGraphic)
-				targetGraphic->layeredColor = Linear(previousColor, hoverColor, timer / fadeDuration);
-			break;
-		}
-		case ButtonState::OnRelease:
-		{
-			PRINT("UI: Released on " << gameObj.get_name());
 			break;
 		}
 		default:
@@ -134,11 +133,14 @@ namespace Copium
 
 	void Button::previewLink(Component* rhs) 
 	{
-		ComponentID _ID = reinterpret_cast<Button*>(rhs)->targetGraphic->id;
+		if (reinterpret_cast<Button*>(rhs)->targetGraphic)
+		{
+			ComponentID _ID = reinterpret_cast<Button*>(rhs)->targetGraphic->id;
 
-		Component* foundText = MySceneManager.findComponentByID(_ID);
-		if (foundText)
-			targetGraphic = reinterpret_cast<Text*>(foundText);
+			Component* foundText = MySceneManager.findComponentByID(_ID);
+			if (foundText)
+				targetGraphic = reinterpret_cast<Text*>(foundText);
+		}
 	}
 
 	void Button::inspector_view()
@@ -527,7 +529,7 @@ namespace Copium
 			ImGui::Text("Content:");
 			ImGui::TableNextColumn();
 			ImGui::PushItemWidth(-1);
-			ImGui::InputText("##Text", content, TEXT_BUFFER_SIZE);
+			ImGui::InputTextMultiline("##Text", content, TEXT_BUFFER_SIZE, ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 16));
 			ImGui::PopItemWidth();
 
 			ImGui::TableNextRow();

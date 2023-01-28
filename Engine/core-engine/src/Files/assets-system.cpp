@@ -60,7 +60,7 @@ namespace Copium
 				// Check that file has a UUID
 				if (CheckForMetaFile(file))
 				{
-					PRINT("This file already contains a meta file!");
+					//PRINT("This file already contains a meta file!");
 					continue;
 				}
 
@@ -341,7 +341,7 @@ namespace Copium
 
 		GenerateFileStream(writeMetaFile, _file);
 
-		PRINT("Meta file successfully generated...");
+		//PRINT("Meta file successfully generated...");
 
 		writeMetaFile.close();
 	}
