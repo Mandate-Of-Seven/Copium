@@ -190,6 +190,10 @@ namespace Copium
 				Window::EditorConsole::editorLog.add_logEntry("No scene is loaded!");
 			}
 		}
+		if (is->is_key_held(GLFW_KEY_LEFT_SHIFT))
+		{
+			Reorder(sm->get_selected_gameobject());
+		}
 		///////////////////
 
 
@@ -276,6 +280,56 @@ namespace Copium
 
 		if (!ImGui::TreeNodeEx(_go.get_name().c_str(), baseFlags))
 			return false;
+/*
+		if (is->is_key_held(GLFW_KEY_LEFT_SHIFT))
+		{
+			if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
+			{
+				if (!_go.transform.hasParent())
+				{
+					//std::cout << "ID of selected Game Object: " << _selected << std::endl;
+					int n_next = (ImGui::GetMouseDragDelta(0).y < 0.f ? -1 : 1);
+					if (n_next > 0)
+						PRINT("Move up\n");
+					else
+						PRINT("Move down\n");
+
+					n_next += _index;
+					if (n_next >= 0 && n_next < _vector.size())
+					{
+						PRINT("there will be movement\n");
+						GameObject* temp = _vector[n_next];
+						size_t idx1{0}, idx2{0};
+						for (size_t i{ 0 }; i < currentScene->get_gameobjcount(); ++i)
+						{
+							if (temp == currentScene->gameObjects[i])
+							{
+								idx1 = i;
+								break;
+							}
+						}
+
+						for (size_t i{ 0 }; i < currentScene->get_gameobjcount(); ++i)
+						{
+							if (&_go == currentScene->gameObjects[i])
+							{
+								idx2 = i;
+								break;
+							}
+						}
+
+						currentScene->gameObjects[idx1] = currentScene->gameObjects[idx2];
+						currentScene->gameObjects[idx2] = temp;
+			
+						ImGui::ResetMouseDragDelta();
+					}
+
+
+
+				}
+
+			}
+		}*/
 
 		if (ImGui::BeginDragDropSource())
 		{
@@ -285,54 +339,19 @@ namespace Copium
 			ImGui::EndDragDropSource();
 
 			//std::cout << "ID of selected Game Object: " << _selected << std::endl;
-		}
-
-		if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
+		}		
+		if (ImGui::IsItemClicked())
 		{
-			if (!_go.transform.hasParent())
-			{
-				//std::cout << "ID of selected Game Object: " << _selected << std::endl;
-				int n_next = (ImGui::GetMouseDragDelta(0).y < 0.f ? -1 : 1);
-				if (n_next > 0)
-					PRINT("Move up\n");
-				else
-					PRINT("Move down\n");
-
-				n_next += _index;
-				if (n_next >= 0 && n_next < _vector.size())
-				{
-					PRINT("there will be movement\n");
-					GameObject* temp = _vector[n_next];
-					size_t idx1{0}, idx2{0};
-					for (size_t i{ 0 }; i < currentScene->get_gameobjcount(); ++i)
-					{
-						if (temp == currentScene->gameObjects[i])
-						{
-							idx1 = i;
-							break;
-						}
-					}
-
-					for (size_t i{ 0 }; i < currentScene->get_gameobjcount(); ++i)
-					{
-						if (&_go == currentScene->gameObjects[i])
-						{
-							idx2 = i;
-							break;
-						}
-					}
-
-					currentScene->gameObjects[idx1] = currentScene->gameObjects[idx2];
-					currentScene->gameObjects[idx2] = temp;
-			
-
-				}
-				ImGui::ResetMouseDragDelta();
-
-
-			}
+			std::cout << _go.get_name() << " is selected\n";
+			_selected = _go.id;
+			isSelected = true;
+			sm->set_selected_gameobject(&_go);
 
 		}
+		
+
+
+
 		//for (const auto& pComponent : _go.components)
 		//{
 		//	if (ImGui::BeginDragDropSource())
@@ -346,14 +365,7 @@ namespace Copium
 
 
 
-		if (ImGui::IsItemClicked())
-		{
-			std::cout << _go.get_name() << " is selected\n";
-			_selected = _go.id;
-			isSelected = true;
-			sm->set_selected_gameobject(&_go);
 
-		}
 
 		// If game object has children, recursively display children
 		if (!_go.transform.children.empty())
@@ -389,7 +401,85 @@ namespace Copium
 		}
 
 		if (!ImGui::TreeNodeEx(_go.get_name().c_str(), baseFlags))
-			return false;
+			return false;	
+/*
+		//if (is->is_key_held(GLFW_KEY_LEFT_SHIFT))
+		//{
+		//	//PRINT("Holding shift");		
+		//	// Handle any reordering
+		//	if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
+		//	{
+		//		PRINT("Selected GameObject's Index:" << _index);
+		//			//std::cout << "ID of selected Game Object: " << _selected << std::endl;
+		//			int n_next = (ImGui::GetMouseDragDelta(0).y < 0.f ? -1 : 1);
+		//			bool increment;
+		//			if (n_next < 0)
+		//			{
+		//				increment = false;
+		//				PRINT("neg");
+		//			}
+		//			else
+		//			{
+		//				increment = true;
+		//				PRINT("pos");
+		//			}
+
+		//			n_next += _index;
+		//			PRINT("n_next:" << n_next);
+		//			PRINT("Generation size:" << _list.size());
+
+		//			if (n_next >= 0 && n_next < _list.size())
+		//			{		
+		//				PRINT("test");
+		//				Transform* tmp = &_go.transform;
+		//				std::list<Transform*>::iterator iter1, iter2;
+
+		//				iter1 = _list.begin();
+		//				for (int i{ 0 }; i < _list.size(); ++i)
+		//				{
+		//					if (*iter1 == tmp)
+		//					{
+		//						PRINT("Found it");
+		//						break;
+
+		//					}
+
+		//					++iter1;
+		//				}
+		//				iter2 = iter1;
+
+		//				if (increment)
+		//				{
+		//					PRINT("increment");
+		//					++iter2;
+		//				}
+		//				else
+		//				{
+		//					PRINT("decrement");
+		//					--iter2;
+		//				}
+
+		//			
+
+		//				if (iter2 != _list.end())
+		//				{
+		//					PRINT("Swapping " << (*iter1)->gameObj.get_name() << " and " << (*iter2)->gameObj.get_name());
+		//					//*iter1 = *iter2;
+		//					//*iter2 = tmp;
+		//					std::swap(*iter1, *iter2);
+		//				}
+
+		//			
+
+		//				ImGui::ResetMouseDragDelta();
+		//			}
+
+		//
+		//	}
+		//}
+		//else
+		//{
+		*/
 
 		if (ImGui::BeginDragDropSource())
 		{
@@ -400,67 +490,6 @@ namespace Copium
 
 			//std::cout << "ID of selected Game Object: " << _selected << std::endl;
 		}
-
-		// Handle any reordering
-		if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
-		{
-			PRINT("Selected GameObject's Index:" << _index);
-				//std::cout << "ID of selected Game Object: " << _selected << std::endl;
-				int n_next = (ImGui::GetMouseDragDelta(0).y < 0.f ? -1 : 1);
-				if (n_next < 0)
-					PRINT("neg");
-				else
-					PRINT("pos");
-				n_next += _index;
-				PRINT("n_next:" << n_next);
-				PRINT("Generation size:" << _list.size());
-
-				if (n_next >= 0 && (n_next) < _list.size())
-				{		
-					PRINT("test");
-					Transform* tmp = &_go.transform;
-					std::list<Transform*>::iterator iter1, iter2;
-
-					iter1 = _list.begin();
-					for (int i{ 0 }; i < _list.size(); ++i)
-					{
-						if (*iter1 == tmp)
-						{
-							PRINT("Found it");
-							break;
-
-						}
-
-						++iter1;
-					}
-					iter2 = iter1;
-
-					if (n_next > 0)
-					{
-						++iter2;
-					}
-					else if(n_next <= 0)
-					{
-						--iter2;
-					}
-
-					
-
-					if (iter2 != _list.end())
-					{
-						PRINT("Swapping " << (*iter1)->gameObj.get_name() << " and " << (*iter2)->gameObj.get_name());
-						*iter1 = *iter2;
-						*iter2 = tmp;
-					}
-
-					
-
-				}
-
-				ImGui::ResetMouseDragDelta();
-		
-		}
-
 		if (ImGui::IsItemClicked())
 		{
 			std::cout << _go.get_name() << " is selected\n";
@@ -469,6 +498,11 @@ namespace Copium
 			sm->set_selected_gameobject(&_go);
 
 		}
+		
+
+
+
+
 
 		// If game object has children, recursively display children
 		if (!_go.transform.children.empty())
@@ -480,6 +514,7 @@ namespace Copium
 				++idx;
 			}
 		}
+		//ImGui::Unindent();
 
 		ImGui::TreePop();
 
@@ -694,4 +729,124 @@ namespace Copium
 
 	}
 
+	void EditorHierarchyList::Reorder(GameObject* _go)
+	{
+		bool pressed{ false };
+		bool increment{ false };
+		if (is->is_key_pressed(GLFW_KEY_UP))
+		{
+			increment = false;
+			pressed = true;
+		}
+		else if(is->is_key_pressed(GLFW_KEY_DOWN))
+		{
+			increment = true;
+			pressed = true;
+		}
+
+		if (pressed == false)
+			return;
+		if (_go->transform.hasParent())
+		{
+			GameObject* parent = &_go->transform.parent->gameObj;
+			Transform* pt = &parent->transform;
+			std::list<Transform*>::iterator pos, dest;
+			int idx{ 0 };
+			for (std::list<Transform*>::iterator iter = pt->children.begin(); iter != pt->children.end(); ++iter)
+			{
+				GameObject* tmp = &(*iter)->gameObj;
+				if (tmp->id == _go->id)
+				{
+					PRINT("FOUND");
+					pos = iter;
+					break;
+				}
+				++idx;
+			}
+
+			dest = pos;
+
+			if (increment)
+			{				
+				if (idx >= pt->children.size()-1)
+					return;
+
+				PRINT("Incrementing");
+
+				++dest;
+				std::swap(*pos, *dest);
+				for (std::list<Transform*>::iterator iter = pt->children.begin(); iter != pt->children.end(); ++iter)
+				{
+					std::cout << (*iter)->gameObj.get_name() << std::endl;
+				}
+
+			}
+			else
+			{				
+				if (idx == 0)
+					return;
+
+				PRINT("decrementing");
+				--dest;
+				std::swap(*dest, *pos);
+				for (std::list<Transform*>::iterator iter = pt->children.begin(); iter != pt->children.end(); ++iter)
+				{
+					std::cout << (*iter)->gameObj.get_name() << std::endl;
+				}
+			}
+
+		}
+		else
+		{
+			Scene* scene = sm->get_current_scene();
+			if (!scene)
+				return;
+
+			size_t pos{ 0 };
+			size_t dest{ 0 };
+
+			for (size_t i{ 0 }; i < scene->get_gameobjcount(); ++i)
+			{
+				if (_go == scene->gameObjects[i])
+				{
+					pos = i;
+					break;
+				}
+			}
+
+			if (increment)
+			{
+				if (pos >= scene->get_gameobjcount() + 1)
+					return;
+
+				for (size_t i{ pos + 1 }; i < scene->get_gameobjcount(); ++i)
+				{
+					if (!scene->gameObjects[i]->transform.hasParent())
+					{
+						dest = i;
+						break;
+					}
+
+				}
+			}
+			else
+			{
+				if (!pos)
+					return;
+
+				for (size_t i{ pos - 1 }; i >= 0; --i)
+				{
+					if (!scene->gameObjects[i]->transform.hasParent())
+					{
+						dest = i;
+						break;
+					}
+
+				}
+			}
+
+			std::swap(scene->gameObjects[pos], scene->gameObjects[dest]);
+
+		}
+	}
 }

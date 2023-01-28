@@ -186,6 +186,8 @@ namespace Copium
 
 		bool DisplayAdoptionWindow();
 
+		void Reorder(GameObject* _go);
+
 	private:
 		GameObjectID selectedID;
 		Scene* currentScene;
