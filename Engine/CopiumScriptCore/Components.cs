@@ -156,8 +156,15 @@ namespace CopiumEngine
     {
         public string text
         {
-            get;
-            set;
+            get
+            {
+                InternalCalls.GetTextString(gameObject.ID, ID,out string text);
+                return text;
+            }
+            set
+            {
+                InternalCalls.SetTextString(gameObject.ID, ID, value);
+            }
         }
     }
 }
