@@ -70,7 +70,7 @@
                 {
                     "ID": 4,
                     "Type": "SpriteRenderer",
-                    "Sprite ID": 7,
+                    "Sprite ID": 0,
                     "Sprite Name": "BG-01.png",
                     "Color": {
                         "X": 1.0,
@@ -104,6 +104,11 @@
                         "Y": 1.0,
                         "Z": 1.0
                     }
+                },
+                {
+                    "ID": 48,
+                    "Type": "Script",
+                    "Name": "TrainButtons"
                 }
             ]
         },
@@ -113,7 +118,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 6,
+                    "ID": 7,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -139,7 +144,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 7,
+                    "ID": 8,
                     "Type": "Transform",
                     "Pos": {
                         "X": -0.7038029432296753,
@@ -174,7 +179,7 @@
                 {
                     "Type": "Button",
                     "ID": 9,
-                    "Graphic ID": 0,
+                    "Graphic ID": 49,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.5,
@@ -186,6 +191,19 @@
                         }
                     },
                     "Callback": ""
+                },
+                {
+                    "Type": "Text",
+                    "ID": 49,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "",
+                    "Font Size": 0.10000000149011612,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
                 }
             ]
         },
@@ -195,7 +213,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 10,
+                    "ID": 11,
                     "Type": "Transform",
                     "Pos": {
                         "X": 6.469001770019531,
@@ -230,7 +248,7 @@
                 {
                     "Type": "Button",
                     "ID": 12,
-                    "Graphic ID": 0,
+                    "Graphic ID": 50,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.5,
@@ -242,6 +260,19 @@
                         }
                     },
                     "Callback": ""
+                },
+                {
+                    "Type": "Text",
+                    "ID": 50,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "",
+                    "Font Size": 0.10000000149011612,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
                 }
             ]
         },
@@ -251,7 +282,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 13,
+                    "ID": 14,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -289,7 +320,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 15,
+                    "ID": 16,
                     "Type": "Transform",
                     "Pos": {
                         "X": -5.121294021606445,
@@ -358,7 +389,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 19,
+                    "ID": 20,
                     "Type": "Transform",
                     "Pos": {
                         "X": -5.172061920166016,
@@ -427,7 +458,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 23,
+                    "ID": 24,
                     "Type": "Transform",
                     "Pos": {
                         "X": -5.1607465744018555,
@@ -496,7 +527,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 27,
+                    "ID": 28,
                     "Type": "Transform",
                     "Pos": {
                         "X": 2.0263869762420654,
@@ -522,7 +553,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 28,
+                    "ID": 29,
                     "Type": "Transform",
                     "Pos": {
                         "X": -0.1144213080406189,
@@ -560,7 +591,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 30,
+                    "ID": 31,
                     "Type": "Transform",
                     "Pos": {
                         "X": -5.309347629547119,
@@ -599,7 +630,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 32,
+                    "ID": 33,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -625,7 +656,7 @@
             "Components": [
                 {
                     "PID": 14,
-                    "ID": 33,
+                    "ID": 34,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.4000000059604645,
@@ -681,7 +712,7 @@
             "Components": [
                 {
                     "PID": 14,
-                    "ID": 36,
+                    "ID": 37,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.4000000059604645,
@@ -737,7 +768,7 @@
             "Components": [
                 {
                     "PID": 15,
-                    "ID": 39,
+                    "ID": 40,
                     "Type": "Transform",
                     "Pos": {
                         "X": -3.299999952316284,
@@ -776,7 +807,7 @@
             "Components": [
                 {
                     "PID": 16,
-                    "ID": 41,
+                    "ID": 42,
                     "Type": "Transform",
                     "Pos": {
                         "X": -3.299999952316284,
@@ -815,7 +846,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 43,
+                    "ID": 44,
                     "Type": "Transform",
                     "Pos": {
                         "X": -5.300000190734863,
@@ -845,6 +876,66 @@
                     "g": 1.0,
                     "b": 1.0,
                     "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 21,
+            "Name": "Combat Canvas",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 46,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 20,
+            "Name": "Game Manager",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 47,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 46,
+                    "Type": "Script",
+                    "Name": "GameManager",
+                    "TrainCanvas": 4,
+                    "CombatCanvas": 21,
+                    "MainScreenCanvas": 3
                 }
             ]
         }

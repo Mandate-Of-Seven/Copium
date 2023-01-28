@@ -84,6 +84,9 @@ namespace Copium
 
 				for (File* soFile : files)
 				{
+					if (soFile->get_id() == 0)
+						continue;
+
 					if (!soFile->get_file_type().stringType.compare("ScriptableObject"))
 					{
 						std::string assetName = soFile->get_name();
