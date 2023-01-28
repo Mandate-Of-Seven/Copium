@@ -113,7 +113,7 @@ namespace CopiumEngine
         internal extern static void GetTextString(ulong gameObjID, ulong compID,out string str);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetTextString(ulong gameObjID, ulong compID,ref string str);
+        internal extern static void SetTextString(ulong gameObjID, ulong compID,string str);
         #endregion
 
         [MethodImpl(MethodImplOptions.InternalCall)]

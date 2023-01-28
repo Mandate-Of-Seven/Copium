@@ -245,6 +245,11 @@ namespace Copium
 									pComponent = component;
 									break;
 								}
+								else if ("CopiumEngine." + component->Name() == mono_type_get_name(mono_field_get_type(field->classField)))
+								{
+									pComponent = component;
+									break;
+								}
 							}
 							if (!pComponent)
 								continue;

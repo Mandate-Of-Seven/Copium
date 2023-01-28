@@ -402,19 +402,18 @@ namespace Copium
 	/*******************************************************************************/
 	static void SetTextString(GameObjectID gameObjID, ComponentID compID, MonoString* str)
 	{
-		GameObject* gameObj = sceneManager.findGameObjByID(gameObjID);
-		if (gameObj == nullptr)
-			return;
-		for (Text* text : gameObj->getComponents<Text>())
-		{
-			if (text->id == compID)
-			{
-				char* monoStr = mono_string_to_utf8(str);
-				strcpy(text->content, monoStr);
-				mono_free(monoStr);
-				return;
-			}
-		}
+		//PRINT(mono_string_to_utf8(str));
+		//GameObject* gameObj = sceneManager.findGameObjByID(gameObjID);
+		//if (gameObj == nullptr)
+		//	return;
+		//for (Text* text : gameObj->getComponents<Text>())
+		//{
+		//	if (text->id == compID)
+		//	{
+		//		strcpy(text->content, monoStr);
+		//		break;
+		//	}
+		//}
 	}
 
 	/*******************************************************************************
