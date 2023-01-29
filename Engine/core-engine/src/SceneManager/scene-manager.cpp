@@ -214,7 +214,6 @@ namespace Copium {
 					go->transform.deserializeLink(*componentIt);
 					for (Component* component : go->components)
 					{
-						PRINT(component->Name());
 						//Offset TransformComponent
 						++componentIt;
 						component->deserializeLink(*componentIt);

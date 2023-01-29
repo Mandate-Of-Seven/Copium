@@ -8,6 +8,7 @@ public class CombatMovement : CopiumScript
     public Test script;
     public CombatMovement combatMovement;
     public Text text;
+    public string textContent = "";
     void Start()
     {
         Console.WriteLine("HELLO FROM COMBAT MOVEMENT");
@@ -17,6 +18,6 @@ public class CombatMovement : CopiumScript
 
     void Update()
     {
-        Console.WriteLine(text.text);
+        text.text = "GEE";
     }
 }

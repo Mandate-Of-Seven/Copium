@@ -19,9 +19,12 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "SceneManager/scene-manager.h"
 #define DEFAULT_SCRIPT_NAME "NewScript"
 #include <mono/jit/jit.h>
+
+#define BUFFER_SIZE 128
+
 namespace Copium
 {
-	char Script::buffer[128];
+	char Script::buffer[BUFFER_SIZE];
 	ScriptingSystem& Script::sS{ *ScriptingSystem::Instance() };
 	const Copium::Field* field;
 
@@ -148,6 +151,14 @@ namespace Copium
 		if (it == pScriptClass->mFields.end())
 			return false;
 		const Field& _field = it->second;
+		if (_field.type == FieldType::String)
+		{
+			MonoString* mono_string = sS.createMonoString("");
+			mono_field_get_value(mObject, _field.classField, &mono_string);
+			char* str = mono_string_to_utf8(mono_string);
+			strcpy(outBuffer, str);
+			return true;
+		}
 		mono_field_get_value(mObject, _field.classField, outBuffer);
 		return true;
 	}
@@ -158,6 +169,12 @@ namespace Copium
 		if (it == pScriptClass->mFields.end())
 			return false;
 		const Field& _field = it->second;
+		if (_field.type == FieldType::String)
+		{
+			MonoString* mono_string = sS.createMonoString(value);
+			mono_field_set_value(mObject, _field.classField, mono_string);
+			return true;
+		}
 		mono_field_set_value(mObject, _field.classField, (void*)value);
 		return true;
 	}
@@ -293,8 +310,7 @@ namespace Copium
 							ComponentID componentID = pComponent->id;
 							GameObjectID gameObjID = pComponent->gameObj.id;
 							void* params[2] = { &componentID, &gameObjID };
-							MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindComponentByID"], mObject, params, nullptr);
-							fieldDataReferences.insert({ it->first,FieldData(mono_object_get_size(result)) });
+							MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindComponentByID"], mObject, params, nullptr); 
 							MonoClass* mComponentClass = mono_object_get_class(result);
 							void* iter = nullptr;
 							while (MonoClassField* _field = mono_class_get_fields(mComponentClass,&iter))
@@ -435,6 +451,12 @@ namespace Copium
 					break;
 				case FieldType::ULong:
 					break;
+				case FieldType::String:
+				{
+					PRINT(buffer);
+					ImGui::InputTextMultiline(_name.c_str(), buffer, BUFFER_SIZE);
+					break;
+				}
 				case FieldType::Vector2:
 				{
 					if (ImGui::BeginTable(_name.c_str(), 3, windowFlags))
@@ -616,6 +638,12 @@ namespace Copium
 				memcpy(buffer, &buf, sizeof(int64_t));
 				break;
 			}
+			case FieldType::String:
+			{
+				const char* buf = _value[_name.c_str()].GetString();
+				memcpy(buffer, &buf, sizeof(char));
+				break;
+			}
 			case FieldType::Vector2:
 			{
 				rapidjson::Value& _v = _value[_name.c_str()].GetObj();
@@ -737,6 +765,14 @@ namespace Copium
 			case FieldType::ULong:
 			{
 				_value.AddMember(rapidjson::StringRef(fieldName.c_str()), *reinterpret_cast<uint64_t*>(buffer), _doc.GetAllocator());
+				break;
+			}
+			case FieldType::String:
+			{
+				rapidjson::Value type;
+				type.SetString(buffer, rapidjson::SizeType(BUFFER_SIZE), _doc.GetAllocator());
+				_value.AddMember(rapidjson::StringRef(fieldName.c_str()), type, _doc.GetAllocator());
+				//_value.AddMember(rapidjson::StringRef(fieldName.c_str()), std::string(buffer), _doc.GetAllocator());
 				break;
 			}
 			case FieldType::Vector2:
