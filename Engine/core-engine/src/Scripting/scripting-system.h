@@ -20,6 +20,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "CopiumCore\system-interface.h"
 #include "Messaging\message-system.h"
 #include "Files\file-system.h"
+#include <Scripting/scriptable-object.h>
 
 #include <string>
 #include <unordered_map>
@@ -43,7 +44,7 @@ namespace Copium
 	{
 		Float, Double,
 		Bool, Char, Short, Int, Long,
-		UShort, UInt, ULong,
+		UShort, UInt, ULong, String,
 		Vector2, Vector3, GameObject, Component ,None
 	};
 
@@ -67,9 +68,67 @@ namespace Copium
 		{ "System.UInt16",				FieldType::UShort		},
 		{ "System.UInt32",				FieldType::UInt			},
 		{ "System.UInt64",				FieldType::ULong		},
+		{ "System.String",				FieldType::String		},
 		{ "CopiumEngine.Vector2",		FieldType::Vector2		},
 		{ "CopiumEngine.Vector3",		FieldType::Vector3		},
 		{ "CopiumEngine.GameObject",	FieldType::GameObject	},
+	};
+
+	struct FieldData
+	{
+		/***************************************************************************/
+		/*!
+		\brief
+			Stores data of a given buffer to prevent out of scope destruction.
+			Aka assigns memory from the heap
+
+		\param _size
+			Size of buffer
+
+		\param _data
+			Data to store and copy from
+		*/
+		/**************************************************************************/
+		FieldData(size_t _size = 0, void* _data = nullptr)
+		{
+			size = _size;
+			if (size)
+				data = new char[size];
+			else
+				data = nullptr;
+			if (_data)
+				memcpy(data, _data, size);
+		}
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Copy constructor
+
+		\param rhs
+			FieldData to store and copy from
+		*/
+		/**************************************************************************/
+		FieldData(const FieldData& rhs)
+		{
+			size = rhs.size;
+			data = new char[size];
+			memcpy(data, rhs.data, size);
+		}
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Destructor that frees memory
+		*/
+		/**************************************************************************/
+		~FieldData()
+		{
+			if (data)
+				delete[] data;
+		}
+		char* data;
+		size_t size;
 	};
 
 	enum class CompilingState
@@ -83,7 +142,7 @@ namespace Copium
 
 	struct ScriptClass
 	{
-		ScriptClass() = delete;
+		ScriptClass() = default;
 		/**************************************************************************/
 		/*!
 			\brief
@@ -93,8 +152,7 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		ScriptClass(const std::string& _name, MonoClass* _mClass);
-		const		std::string name;
-		MonoClass* mClass;
+		MonoClass* mClass{};
 		std::unordered_map<std::string, MonoMethod*> mMethods;
 		std::unordered_map<std::string, Field> mFields;
 
@@ -245,7 +303,18 @@ namespace Copium
 				Map of names to ScriptClasses
 		*/
 		/**************************************************************************/
-		const std::unordered_map<std::string, ScriptClass*>& getScriptClassMap();
+		const std::unordered_map<std::string, ScriptClass>& getScriptClassMap();
+
+
+		/**************************************************************************/
+		/*!
+			\brief
+				Gets the map of names to ScriptClasses
+			\return
+				Map of names to ScriptClasses
+		*/
+		/**************************************************************************/
+		const std::unordered_map<std::string, ScriptClass>& getScriptableObjectClassMap();
 
 		/*******************************************************************************
 		/*!
@@ -294,6 +363,11 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		void instantiateCollision2D(GameObject& collided, GameObject& collidee);
+
+		bool isScriptableObject(const std::string& name);
+
+
+		bool isScript(const std::string& name);
 	private:
 
 		/**************************************************************************/
@@ -357,9 +431,11 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		bool scriptIsLoaded(const std::filesystem::path& filePath);
-		std::unordered_map<std::string, ScriptClass*> scriptClassMap;
+		std::unordered_map<std::string, ScriptClass> scriptClassMap;
+		std::unordered_map<std::string, ScriptClass> scriptableObjectClassMap;
 		std::list<File>& scriptFiles;
 		CompilingState compilingState{ CompilingState::Wait };
+		std::map<std::string, std::map<std::string,ScriptableObject>> scriptableObjects;
 	};
 }
 #endif // !SCRIPTING_SYSTEM_H

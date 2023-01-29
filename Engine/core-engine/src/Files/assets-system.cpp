@@ -46,6 +46,22 @@ namespace Copium
 		// Load all file paths in the asset folder
 		load_assets(&fs->get_asset_directory());
 
+		LoadExistingMetaFile();
+
+		// Generate Meta Files for all assets
+		/*for (int i = 0; i < (int)FILE_TYPE::NUM_TYPES; i++)
+		{
+			if ((FILE_TYPE) i != FILE_TYPE::SPRITE)
+				continue;
+
+			std::list<File*> files = fs->get_file_references()[FILE_TYPE::SPRITE];
+			for (File* file : files)
+				GenerateMetaFile(file);
+		}*/
+
+		std::list<File*> files = fs->get_file_references()[FILE_TYPE::SPRITE];
+		for (File* file : files)
+			GenerateMetaFile(file);
 	}
 
 	void AssetsSystem::update()
@@ -65,32 +81,32 @@ namespace Copium
 
 		switch (type)
 		{
-		case FOLDER:
+		case FILE_TYPE::FOLDER:
 			break;
 
-		case AUDIO:
+		case FILE_TYPE::AUDIO:
 			break;
 
-		case FONT:
+		case FILE_TYPE::FONT:
 			break;
 
-		case SCENE:
+		case FILE_TYPE::SCENE:
 			break;
 
-		case SCRIPT:
+		case FILE_TYPE::SCRIPT:
 			break;
 
-		case SHADER:
+		case FILE_TYPE::SHADER:
 			break;
 
-		case SPRITE:
+		case FILE_TYPE::SPRITE:
 			load_texture(_file);
 			break;
 
-		case TEXT:
+		case FILE_TYPE::TEXT:
 			break;
 
-		case ASSET:
+		case FILE_TYPE::ASSET:
 			break;
 		}
 	}
@@ -101,32 +117,32 @@ namespace Copium
 
 		switch (type)
 		{
-		case FOLDER:
+		case FILE_TYPE::FOLDER:
 			break;
 
-		case AUDIO:
+		case FILE_TYPE::AUDIO:
 			break;
 
-		case FONT:
+		case FILE_TYPE::FONT:
 			break;
 
-		case SCENE:
+		case FILE_TYPE::SCENE:
 			break;
 
-		case SCRIPT:
+		case FILE_TYPE::SCRIPT:
 			break;
 
-		case SHADER:
+		case FILE_TYPE::SHADER:
 			break;
 
-		case SPRITE:
+		case FILE_TYPE::SPRITE:
 			unload_texture(_file);
 			break;
 
-		case TEXT:
+		case FILE_TYPE::TEXT:
 			break;
 
-		case ASSET:
+		case FILE_TYPE::ASSET:
 			break;
 		}
 	}
@@ -136,7 +152,7 @@ namespace Copium
 		(void) _directory;
 
 		// Load Textures (.png)
-		load_all_textures(fs->get_file_references()[SPRITE]);
+		load_all_textures(fs->get_file_references()[FILE_TYPE::SPRITE]);
 
 		// Load Shaders (.vert & .frag)
 		load_all_shaders(fs->get_filepath_in_directory(Paths::dataPath.c_str(), ".vert", ".frag"));
@@ -156,7 +172,7 @@ namespace Copium
 
 	void AssetsSystem::load_texture(File* _file)
 	{
-		Texture texture(_file->generic_string());
+		Texture texture(_file->string());
 		texture.set_id(_file->get_id());
 		textures.push_back(texture);
 	}
@@ -273,4 +289,135 @@ namespace Copium
 	{
 		fs->copy_file(_file, _ext);
 	}
+
+	void AssetsSystem::LoadExistingMetaFile()
+	{
+		std::list<File*> metaFiles = fs->get_file_references()[FILE_TYPE::META];
+
+		for (File* metaFile : metaFiles)
+		{
+			std::ifstream readMetaFile(metaFile->string());
+			
+			MetaID id;
+			std::string str, filePath, assetImporter;
+			uint64_t uuid;
+
+			// File path
+			readMetaFile >> str >> str >> id.filePath;
+
+			// UUID
+			readMetaFile >> str >> uuid;
+			id.uuid = uuid;
+
+			// Asset Importer
+			readMetaFile >> assetImporter;
+			assetImporter.erase(assetImporter.end() - 1);
+			id.assetImporter = reinterpret_cast<void*>(assetImporter.data());
+
+			/*PRINT("MetaID: ");
+			PRINT("  File Path: " << id.filePath);
+			PRINT("  UUID     : " << id.uuid);
+			PRINT("  Importer : " << reinterpret_cast<const char*>(id.assetImporter));*/
+
+			uint64_t pathID = std::hash<std::string>{}(id.filePath);
+			metaData.emplace(std::make_pair(pathID, id));
+		}
+	}
+
+	void AssetsSystem::GenerateMetaFile(File* _file)
+	{
+		// Check that file has a UUID
+		if (CheckForMetaFile(_file))
+			return;
+
+		// Generate UUID
+		MetaID id;
+
+		uint64_t pathID = std::hash<std::string>{}(_file->string());
+		metaData.emplace(std::make_pair(pathID, id));
+
+		std::ofstream writeMetaFile(_file->string() + ".meta");
+
+		GenerateFileStream(writeMetaFile, _file);
+
+		PRINT("Meta file successfully generated...");
+
+		writeMetaFile.close();
+	}
+
+	bool AssetsSystem::CheckForMetaFile(File* _file)
+	{
+		uint64_t pathID = std::hash<std::string>{}(_file->string());
+		if (metaData.find(pathID) != metaData.end())
+		{
+			PRINT("This file already contains a meta file!");
+			return true;
+		}
+
+		return false;
+	}
+
+	void AssetsSystem::GenerateFileStream(std::ofstream& _outputFile, File* _file)
+	{
+		// Default meta headers
+		uint64_t pathID = std::hash<std::string>{}(_file->string());
+		metaData[pathID].filePath = _file->string();
+		_outputFile << "File Path: " << metaData[pathID].filePath << "\n";
+		_outputFile << "uuid: " << metaData[pathID].uuid << "\n";
+
+		// Hidden meta headers
+		std::string str = _file->get_file_type().stringType; // Check Format Importer
+		metaData[pathID].assetImporter = reinterpret_cast<void*>(str.data());
+
+		// Importer type body
+		switch (GetImporterFile(_file->get_file_type()))
+		{
+		case IMPORTER_TYPE::DEFAULT:
+			_outputFile << "DefaultImporter:\n";
+			break;
+		case IMPORTER_TYPE::AUDIO:
+			_outputFile << "AudioImporter:\n";
+			break;
+		case IMPORTER_TYPE::MONO:
+			_outputFile << "MonoImporter:\n";
+			break;
+		case IMPORTER_TYPE::NATIVE:
+			_outputFile << "NativeImporter:\n";
+			break;
+		case IMPORTER_TYPE::PREFAB:
+			_outputFile << "PrefabImporter:\n";
+			break;
+		case IMPORTER_TYPE::SHADER:
+			_outputFile << "ShaderImporter:\n";
+			break;
+		case IMPORTER_TYPE::TEXTURE:
+			_outputFile << "TextureImporter:\n";
+			break;
+		}
+	}
+
+	IMPORTER_TYPE AssetsSystem::GetImporterFile(const FileType& _type)
+	{
+		switch (_type.fileType)
+		{
+		case FILE_TYPE::FOLDER:
+		case FILE_TYPE::SCENE:
+			return IMPORTER_TYPE::DEFAULT;
+		case FILE_TYPE::AUDIO:
+			return IMPORTER_TYPE::AUDIO;
+		case FILE_TYPE::ASSET:
+			return IMPORTER_TYPE::NATIVE;
+		case FILE_TYPE::PREFAB:
+			return IMPORTER_TYPE::PREFAB;
+		case FILE_TYPE::SHADER:
+			return IMPORTER_TYPE::SHADER;
+		case FILE_TYPE::SPRITE:
+			return IMPORTER_TYPE::TEXTURE;
+		case FILE_TYPE::SCRIPT:
+			return IMPORTER_TYPE::MONO;
+		}
+
+		return IMPORTER_TYPE::DEFAULT;
+	}
+
 }

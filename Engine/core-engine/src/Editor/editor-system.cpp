@@ -389,12 +389,12 @@ namespace Copium
 			
 			colorTheme.update();
 			hierarchyList.update();
-			inspector.update();
 			layers.update();
+			inspector.update();
 			Window::EditorConsole::update();
 			//Window::Hierarchy::update();
-			sceneView.update();
 			game.update();
+			sceneView.update();
 			contentBrowser.update();
 			
 

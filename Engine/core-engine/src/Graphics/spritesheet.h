@@ -37,7 +37,7 @@ namespace Copium
 
 
 		Texture* texture;
-		unsigned int spriteID;
+		uint64_t spriteID;
 		std::string name;
 		int columns, rows;
 	};

@@ -1,0 +1,45 @@
+{
+    "Name": "NewScene",
+    "Unused GIDs": [],
+    "Unused CIDs": [],
+    "GameObjects": [
+        {
+            "ID": 1,
+            "Name": "New GameObject",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 1,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 2,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 11767159736060374370,
+                    "Sprite Name": "..\\PackedTracks\\Assets\\Textures\\Train_Placeholder_01.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -60,7 +60,7 @@ namespace Copium
 
 	void File::access_file()
 	{
-		if (fileType.fileType == SCENE)
+		if (fileType.fileType == FILE_TYPE::SCENE)
 		{
 			if (Copium::SceneManager::Instance()->get_current_scene() != nullptr)
 			{
@@ -127,7 +127,7 @@ namespace Copium
 			ImGui::EndTable();
 		}
 
-		if (fileType.fileType == ASSET)
+		if (fileType.fileType == FILE_TYPE::ASSET)
 		{
 			std::string str = "Placeholder 01";
 			std::string str2 = "Placeholder 02";

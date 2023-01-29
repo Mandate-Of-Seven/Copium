@@ -51,19 +51,19 @@ namespace Copium
 
 	void FileSystem::init_file_types()
 	{
-		fileTypes.emplace(std::make_pair("", FileType("Folder", FOLDER)));
-		fileTypes.emplace(std::make_pair(".wav", FileType("Audio", AUDIO)));
-		fileTypes.emplace(std::make_pair(".theme", FileType("Config", CONFIG)));
-		fileTypes.emplace(std::make_pair(".json", FileType("Config", CONFIG)));
-		fileTypes.emplace(std::make_pair(".ttf", FileType("Font", FONT)));
-		fileTypes.emplace(std::make_pair(".scene", FileType("Scene", SCENE))); // Bean: change to .scene in the future
-		fileTypes.emplace(std::make_pair(".cs", FileType("Script", SCRIPT)));
-		fileTypes.emplace(std::make_pair(".so", FileType("ScriptableObject", SCRIPT)));
-		fileTypes.emplace(std::make_pair(".vert", FileType("Shader", SHADER))); // Bean: change to .shader in the future
-		fileTypes.emplace(std::make_pair(".frag", FileType("Shader", SHADER)));
-		fileTypes.emplace(std::make_pair(".png", FileType("Sprite", SPRITE)));
-		fileTypes.emplace(std::make_pair(".txt", FileType("Text", TEXT)));
-		fileTypes.emplace(std::make_pair(".asset", FileType("Asset", ASSET)));
+		fileTypes.emplace(std::make_pair("", FileType("Folder", FILE_TYPE::FOLDER)));
+		fileTypes.emplace(std::make_pair(".wav", FileType("Audio", FILE_TYPE::AUDIO)));
+		fileTypes.emplace(std::make_pair(".theme", FileType("Config", FILE_TYPE::CONFIG)));
+		fileTypes.emplace(std::make_pair(".json", FileType("Config", FILE_TYPE::CONFIG)));
+		fileTypes.emplace(std::make_pair(".ttf", FileType("Font", FILE_TYPE::FONT)));
+		fileTypes.emplace(std::make_pair(".scene", FileType("Scene", FILE_TYPE::SCENE))); // Bean: change to .scene in the future
+		fileTypes.emplace(std::make_pair(".cs", FileType("Script", FILE_TYPE::SCRIPT)));
+		fileTypes.emplace(std::make_pair(".vert", FileType("Shader", FILE_TYPE::SHADER))); // Bean: change to .shader in the future
+		fileTypes.emplace(std::make_pair(".frag", FileType("Shader", FILE_TYPE::SHADER)));
+		fileTypes.emplace(std::make_pair(".png", FileType("Sprite", FILE_TYPE::SPRITE)));
+		fileTypes.emplace(std::make_pair(".txt", FileType("Text", FILE_TYPE::TEXT)));
+		fileTypes.emplace(std::make_pair(".so", FileType("Asset", FILE_TYPE::ASSET)));
+		fileTypes.emplace(std::make_pair(".meta", FileType("Meta", FILE_TYPE::META)));
 	}
 
 	void FileSystem::accept_dropped_files(int _pathCount, const char* _paths[])
@@ -275,6 +275,10 @@ namespace Copium
 							file.set_file_type(get_file_type(path.extension().string()));
 							_directory->add_files(file);
 							add_file_reference(&_directory->get_files().back());
+
+							// Generate Meta File
+							if(file.get_file_type().fileType != FILE_TYPE::META)
+								assets->GenerateMetaFile(&_directory->get_files().back());
 
 							// Bean: This should be moved to a general function
 							// Prevent selection of file / directory

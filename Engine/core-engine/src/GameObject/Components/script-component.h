@@ -30,63 +30,6 @@ extern "C"
 
 namespace Copium
 {
-	struct FieldData
-	{
-		/***************************************************************************/
-		/*!
-		\brief
-			Stores data of a given buffer to prevent out of scope destruction.
-			Aka assigns memory from the heap
-
-		\param _size
-			Size of buffer
-
-		\param _data
-			Data to store and copy from
-		*/
-		/**************************************************************************/
-		FieldData(size_t _size = 0, void* _data = nullptr)
-		{
-			size = _size;
-			if (size)
-				data = new char[size];
-			else
-				data = nullptr;
-			if (_data)
-				memcpy(data,_data,size);
-		}
-
-		/***************************************************************************/
-		/*!
-		\brief
-			Copy constructor
-
-		\param rhs
-			FieldData to store and copy from
-		*/
-		/**************************************************************************/
-		FieldData(const FieldData& rhs)
-		{
-			size = rhs.size;
-			data = new char[size];
-			memcpy(data, rhs.data, size);
-		}
-
-		/***************************************************************************/
-		/*!
-		\brief
-			Destructor that frees memory
-		*/
-		/**************************************************************************/
-		~FieldData()
-		{
-			if (data)
-				delete[] data;
-		}
-		char* data;
-		size_t size;
-	};
-
     class Script final : public Component, public IReceiver
     {
     public:

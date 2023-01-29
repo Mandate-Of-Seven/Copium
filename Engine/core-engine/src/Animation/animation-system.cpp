@@ -17,6 +17,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 
 #include "Animation/animation-system.h"
+#include "Files/assets-system.h"
 #include "SceneManager/scene-manager.h"
 #include "Debugging/frame-rate-controller.h"
 #include "Files/assets-system.h"
@@ -24,7 +25,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace
 {
-	Copium::SceneManager* sm= Copium::SceneManager::Instance();
+	Copium::SceneManager* sm = Copium::SceneManager::Instance();
+	Copium::AssetsSystem* assets = Copium::AssetsSystem::Instance();
 }
 
 namespace Copium
@@ -167,7 +169,7 @@ namespace Copium
 				ImGui::Button(animations[i].spriteSheet.name.c_str(), ImVec2(-FLT_MIN, 0.f));
 				if (ImGui::BeginDragDropTarget())
 				{
-					unsigned int spriteID{0};
+					uint64_t spriteID{0};
 					std::string spriteName;
 					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ContentBrowserItem"))
 					{
@@ -177,10 +179,15 @@ namespace Copium
 						{
 							if (!assets->get_texture(j)->get_file_path().compare(str))
 							{
-								spriteID = j + 1;
+								uint64_t pathID = std::hash<std::string>{}(assets->get_texture(j)->get_file_path());
+								MetaID metaID = assets->GetMetaID(pathID);
+								spriteID = metaID.uuid;
+
+								// Attach Reference
+								animations[i].spriteSheet.texture = assets->get_texture(j);
 							}
 						}
-						size_t pos = str.find_last_of('/');
+						size_t pos = str.find_last_of('\\');
 						spriteName = str.substr(pos + 1, str.length() - pos);
 					}
 					ImGui::EndDragDropTarget();
@@ -191,10 +198,7 @@ namespace Copium
 						animations[i].spriteSheet.name = spriteName;
 					}
 				}
-
-				
 			}
-		
 
 			ImGui::Unindent();
 			ImGui::EndTable();
@@ -268,9 +272,9 @@ namespace Copium
 				if (val.HasMember("Name"))
 					animName = val["Name"].GetString();
 
-				unsigned int sid{ 0 };
+				uint64_t sid{ 0 };
 				if (val.HasMember("Sprite ID"))
-					sid = val["Sprite ID"].GetUint();
+					sid = val["Sprite ID"].GetUint64();
 
 				float td{ 0.f };
 				if (val.HasMember("Time Delay"))
@@ -288,13 +292,37 @@ namespace Copium
 					cols = val["Columns"].GetInt();
 
 				animations.push_back(Animation());
+
+				if (sid != 0)
+				{
+					std::vector<Texture> textures = assets->get_textures();
+					bool reference = false;
+					for (int j = 0; j < textures.size(); j++)
+					{
+						uint64_t pathID = std::hash<std::string>{}(textures[j].get_file_path());
+						MetaID metaID = assets->GetMetaID(pathID);
+
+						// Check if the uuid of the sprite is the same as the meta file
+						if (metaID.uuid == sid)
+						{
+							// If so set the reference texture to that file
+							reference = true;
+							animations[i].spriteSheet.texture = assets->get_texture(j);
+							break;
+						}
+					}
+
+					// If there is no references, set the spriteID to 0
+					if (!reference)
+						sid = 0;
+				}
+
 				animations[i].timeDelay = td;
 				animations[i].frameCount = fc;
 				animations[i].spriteSheet.spriteID = sid;
 				animations[i].spriteSheet.name = animName;
 				animations[i].spriteSheet.rows = rows;
 				animations[i].spriteSheet.columns = cols;
-
 				++i;
 			}
 

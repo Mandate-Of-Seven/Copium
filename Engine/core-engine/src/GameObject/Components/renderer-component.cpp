@@ -50,7 +50,7 @@ namespace Copium
 		glm::vec4 clrGLM = sprite.get_color();
 		ImVec4 color = { clrGLM.r, clrGLM.g, clrGLM.b, clrGLM.a };
 
-		int spriteID = (int)sprite.get_sprite_id();
+		uint64_t spriteID = sprite.get_sprite_id();
 		
 		std::string spriteName = sprite.get_name();
 		static ImVec4 backupColor;
@@ -95,7 +95,7 @@ namespace Copium
 				AssetsSystem* assets = AssetsSystem::Instance();
 				for (int i = 0; i < assets->get_textures().size(); i++)
 				{
-					size_t startPos = assets->get_texture(i)->get_file_path().find_last_of('/');
+					size_t startPos = assets->get_texture(i)->get_file_path().find_last_of('\\');
 					std::string name = assets->get_texture(i)->get_file_path().substr(startPos + 1, assets->get_texture(i)->get_file_path().length() - startPos);
 					if (ImGui::Button(name.c_str(), buttonSize))
 					{
@@ -103,14 +103,17 @@ namespace Copium
 						{
 							spriteName = name;
 							isAddingSprite = false;
-							spriteID = i + 1;
+							std::string path = assets->get_texture(i)->get_file_path();
+							uint64_t pathID = std::hash<std::string>{}(path);
+							MetaID metaID = assets->GetMetaID(pathID);
+							spriteID = metaID.uuid;
+
+							// Attach Reference
+							sprite.set_texture(assets->get_texture(i));
 						}
 					}
-
 				}
 				ImGui::End();
-
-
 			}
 
 			if (ImGui::BeginDragDropTarget())
@@ -123,10 +126,15 @@ namespace Copium
 					{
 ;						if (!assets->get_texture(i)->get_file_path().compare(str))
 						{
-							spriteID = i + 1;
+							uint64_t pathID = std::hash<std::string>{}(assets->get_texture(i)->get_file_path());
+							MetaID metaID = assets->GetMetaID(pathID);
+							spriteID = metaID.uuid;
+
+							// Attach Reference
+							sprite.set_texture(assets->get_texture(i));
 						}
 					}
-					size_t pos = str.find_last_of('/');
+					size_t pos = str.find_last_of('\\');
 					spriteName = str.substr(pos + 1, str.length() - pos);
 				}
 				ImGui::EndDragDropTarget(); 
