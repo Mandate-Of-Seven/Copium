@@ -185,7 +185,7 @@ namespace Copium
 			}
 
 			xpos = x + ch.bearing.x * (_scale * 0.01f);
-			ypos = y - (ch.size.y - ch.bearing.y) * (_scale * 0.01f) - newLine * (_scale * 2);
+			ypos = y - (ch.size.y - ch.bearing.y) * (_scale * 0.01f) - newLine * (_scale * 2.5f);
 
 			float w = ch.size.x * (_scale * 0.01f);
 			float h = ch.size.y * (_scale * 0.01f);

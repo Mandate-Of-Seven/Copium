@@ -6,7 +6,8 @@ public class GameManager: CopiumScript
 	public GameObject TrainCanvas;
 	public GameObject MainScreenCanvas;
 	public GameObject CombatCanvas;
-	public GameObject gameObj1;
+    public GameObject Option_01_Btn;
+    public GameObject Option_02_Btn;
 
 	public Button Option_01;
 	public Button Option_02;
@@ -27,24 +28,22 @@ public class GameManager: CopiumScript
 		TrainCanvas.SetActive(true);
 		MainScreenCanvas.SetActive(false);
 		CombatCanvas.SetActive(false);
-		gameObj1 = Instantiate(gameObject);
 	}
 	void Update()
 	{
-        if(Next_Event.state == ButtonState.OnRelease)
+        if(Next_Event.state == ButtonState.OnClick)
         {
             EventSequence++;
         }
 
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            TrainCanvas.SetActive(true);
+            MainScreenCanvas.SetActive(false);
+            CombatCanvas.SetActive(false);
+        }
+
 		CheckCurrentEvent();
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Destroy(gameObj1);
-        }
-		if (Option_01.state == ButtonState.OnClick)
-        {
-			Console.WriteLine("OPTION 1 CLICKED!");
-        }
     }
 
 	void CheckCurrentEvent()
@@ -77,6 +76,9 @@ public class GameManager: CopiumScript
             "we are unable to send the military. \n\nYou might have heard about the 'Crops Curse' that has been happening. " +
             "Thus, we are only able to provide 2 days worth of rations. I'm sure you will figure something out whilst traveling there. " +
             "\n\nI wish you all the best and hope to receive good news.\n\nBest regards, \nCaptain Bob Jones\"\n\nEnd of transmission. ";
+
+        Option_01_Btn.SetActive(false);
+        Option_02_Btn.SetActive(false);
     }
 
 	// Luck in a barren wasteland
@@ -87,17 +89,19 @@ public class GameManager: CopiumScript
 		Body.text = "\nReport type: Situation\n\n\nHarris spotted a abandoned town not too far off from the main track. " +
 			"Crew seem to be in agreement to check it out. Otherwise, nothing out of the ordinary. Train conductor to choose course of action. \n";
 
-		Option_01_Text.text = "Explore abandon town";
+
+        Option_01_Btn.SetActive(true);
+        Option_02_Btn.SetActive(true);
+
+        Option_01_Text.text = "Explore abandon town";
 		Option_02_Text.text = "Do not explore abandoned town";
 
         if(Option_01.state == ButtonState.OnClick)
         {
-            Console.WriteLine("Option 1");
             Choice01(true);
         }
         else if(Option_02.state == ButtonState.OnClick)
         {
-            Console.WriteLine("Option 2");
             Choice01(false);
         }
     }
