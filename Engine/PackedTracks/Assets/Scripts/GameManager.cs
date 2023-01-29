@@ -38,8 +38,8 @@ public class GameManager: CopiumScript
         option02_btn = Option_02.GetComponent<Button>();
         next_btn = Next_Event.GetComponent<Button>();
 
-        TrainCanvas.SetActive(false);
-        MainScreenCanvas.SetActive(true);
+        TrainCanvas.SetActive(true);
+        MainScreenCanvas.SetActive(false);
         CombatCanvas.SetActive(false);
     }
 	void Update()
@@ -52,20 +52,20 @@ public class GameManager: CopiumScript
         if (MainScreenCanvas.activeSelf)
             isReportScreenOn = true;
 
-        //if (ReportScreenBtn.state == ButtonState.OnClick)
-        //{
-        //    isReportScreenOn = true;
-        //    UpdateCanvases();
-        //}
+        if (ReportScreenBtn.state == ButtonState.OnClick)
+        {
+            isReportScreenOn = true;
+            UpdateCanvases();
+        }
 
-        //if (Input.GetKeyDown(KeyCode.Escape))
-        //{
-        //    if (isReportScreenOn)
-        //    {
-        //        isReportScreenOn = false;
-        //        UpdateCanvases();
-        //    }
-        //}
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isReportScreenOn)
+            {
+                isReportScreenOn = false;
+                UpdateCanvases();
+            }
+        }
 
         CheckCurrentEvent();
     }
@@ -132,11 +132,11 @@ public class GameManager: CopiumScript
             "Thus, we are \nonly able to provide 2 days worth of rations. I'm sure you will figure something out \nwhilst traveling there. " +
             "\n\nI wish you all the best and hope to receive good news.\n\nBest regards, \nCaptain Bob Jones\"\n\nEnd of transmission. ";
 
-        //if (Option_01.activeSelf && Option_02.activeSelf)
-        //{
-        //    Option_01.SetActive(false);
-        //    Option_02.SetActive(false);
-        //}
+        if (Option_01.activeSelf && Option_02.activeSelf)
+        {
+            Option_01.SetActive(false);
+            Option_02.SetActive(false);
+        }
     }
 
 	// Luck in a barren wasteland
@@ -150,15 +150,15 @@ public class GameManager: CopiumScript
         Body.text = "\nReport type: Situation\n\n\nHarris spotted a abandoned town not too far off from the main track. " +
             "Crew seem \nto be in agreement to check it out. Otherwise, nothing out of the ordinary. \nTrain conductor to choose course of action. \n";
 
-        //if (isReportScreenOn)
-        //{
-        //    if (!Option_01.activeSelf && !Option_02.activeSelf && Next_Event.activeSelf)
-        //    {
-        //        Option_01.SetActive(true);
-        //        Option_02.SetActive(true);
-        //        Next_Event.SetActive(false);
-        //    }
-        //}
+        if (isReportScreenOn)
+        {
+            if (!Option_01.activeSelf && !Option_02.activeSelf && Next_Event.activeSelf)
+            {
+                Option_01.SetActive(true);
+                Option_02.SetActive(true);
+                Next_Event.SetActive(false);
+            }
+        }
 
         Option_01_Text.text = "Explore abandon town";
         Option_02_Text.text = "Do not explore abandoned town";
@@ -223,12 +223,12 @@ public class GameManager: CopiumScript
             }
         }
 
-        //if(isReportScreenOn)
-        //{
-        //    Option_01.SetActive(false);
-        //    Option_02.SetActive(false);
-        //    Next_Event.SetActive(true);
-        //}
+        if(isReportScreenOn)
+        {
+            Option_01.SetActive(false);
+            Option_02.SetActive(false);
+            Next_Event.SetActive(true);
+        }
 
         Event_01 = true;
     }
@@ -255,6 +255,16 @@ public class GameManager: CopiumScript
 
         }
 
+        if (isReportScreenOn)
+        {
+            if (!Option_01.activeSelf && !Option_02.activeSelf && Next_Event.activeSelf)
+            {
+                Option_01.SetActive(true);
+                Option_02.SetActive(true);
+                Next_Event.SetActive(false);
+            }
+        }
+
         Option_01_Text.text = "Fight and capture the hostiles";
         Option_02_Text.text = "Hide and wait for them to pass";
 
@@ -271,6 +281,7 @@ public class GameManager: CopiumScript
 
     void Choice02(bool choice01)
     {
+
         if (choice01)
         {
             Header.text = "Engaging";
@@ -298,12 +309,12 @@ public class GameManager: CopiumScript
         
         }
 
-        //if(isReportScreenOn)
-        //{
-        //    Option_01.SetActive(false);
-        //    Option_02.SetActive(false);
-        //    Next_Event.SetActive(true);
-        //}
+        if (isReportScreenOn)
+        {
+            Option_01.SetActive(false);
+            Option_02.SetActive(false);
+            Next_Event.SetActive(true);
+        }
 
         Event_02 = true;
     }

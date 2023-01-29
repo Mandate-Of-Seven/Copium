@@ -53,7 +53,6 @@ namespace Copium
 			const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };
 			for (Script* pScript : pScripts)
 			{
-				//PRINT("HELLO!");
 				if (!pScript)
 					continue;
 				pScript->invoke("Update");
