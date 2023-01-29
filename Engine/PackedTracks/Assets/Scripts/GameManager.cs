@@ -132,7 +132,7 @@ public class GameManager: CopiumScript
             "Thus, we are \nonly able to provide 2 days worth of rations. I'm sure you will figure something out \nwhilst traveling there. " +
             "\n\nI wish you all the best and hope to receive good news.\n\nBest regards, \nCaptain Bob Jones\"\n\nEnd of transmission. ";
 
-        //if(Option_01.activeSelf && Option_02.activeSelf)
+        //if (Option_01.activeSelf && Option_02.activeSelf)
         //{
         //    Option_01.SetActive(false);
         //    Option_02.SetActive(false);
@@ -152,9 +152,12 @@ public class GameManager: CopiumScript
 
         //if (isReportScreenOn)
         //{
-        //    Option_01.SetActive(true);
-        //    Option_02.SetActive(true);
-        //    Next_Event.SetActive(false);
+        //    if (!Option_01.activeSelf && !Option_02.activeSelf && Next_Event.activeSelf)
+        //    {
+        //        Option_01.SetActive(true);
+        //        Option_02.SetActive(true);
+        //        Next_Event.SetActive(false);
+        //    }
         //}
 
         Option_01_Text.text = "Explore abandon town";
@@ -239,13 +242,13 @@ public class GameManager: CopiumScript
         Header.text = "Leaving the city";
         if(LuckSequence == 1)
         {
-            Body.text = "Report type: Situation\n\nxxx spotted a mysterious vehicle approaching our train, " +
+            Body.text = "Report type: Situation\n\nBronson spotted a mysterious vehicle approaching our train, " +
                 "attempts at communications \nfailed. People on the vehicle boarded the train and began rummaging " +
                 "through the train\n\nTrain commander to decide on course of action.";
         }
         else if(LuckSequence == 0)
         {
-            Body.text = "\nReport type: Situation\n\nxxx spotted a mysterious vehicle approaching our train, " +
+            Body.text = "\nReport type: Situation\n\nBronson spotted a mysterious vehicle approaching our train, " +
                 "attempts at communications \nfailed. People on the vehicle boarded the train and began rummaging " +
                 "through the train\nChuck seemed to be extremely eager to chase of the hostiles.\n\nTrain commander" +
                 " to decide on course of action.";

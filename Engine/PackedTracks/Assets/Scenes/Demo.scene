@@ -1,12 +1,10 @@
 {
     "Name": "Demo",
     "Unused GIDs": [
-        35,
-        34
+        34,
+        31
     ],
-    "Unused CIDs": [
-        78
-    ],
+    "Unused CIDs": [],
     "GameObjects": [
         {
             "ID": 1,
@@ -45,6 +43,11 @@
                         "Near": 0.029999999329447746,
                         "Far": 500.0
                     }
+                },
+                {
+                    "ID": 79,
+                    "Type": "AudioSource",
+                    "Alias": "..\\PackedTracks\\Assets\\Sounds\\Music\\Nightshift _BGM2_Loop_70bpm"
                 }
             ]
         },
@@ -199,7 +202,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 11,
+                    "ID": 10,
                     "Type": "Transform",
                     "Pos": {
                         "X": 6.469001770019531,
@@ -260,7 +263,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 15,
+                    "ID": 14,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -273,16 +276,16 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 18.0,
-                        "Y": 10.0,
+                        "X": 2.1500000953674316,
+                        "Y": 2.1500000953674316,
                         "Z": 1.0
                     }
                 },
                 {
                     "ID": 14,
                     "Type": "SpriteRenderer",
-                    "Sprite ID": 0,
-                    "Sprite Name": "empty",
+                    "Sprite ID": 4874611181005233622,
+                    "Sprite Name": "Panel_02.png",
                     "Color": {
                         "X": 0.35686275362968445,
                         "Y": 0.35686275362968445,
@@ -298,7 +301,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 17,
+                    "ID": 16,
                     "Type": "Transform",
                     "Pos": {
                         "X": -6.0,
@@ -375,7 +378,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 22,
+                    "ID": 21,
                     "Type": "Transform",
                     "Pos": {
                         "X": -6.0,
@@ -452,7 +455,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 27,
+                    "ID": 26,
                     "Type": "Transform",
                     "Pos": {
                         "X": -6.0,
@@ -529,7 +532,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 32,
+                    "ID": 31,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -555,7 +558,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 33,
+                    "ID": 32,
                     "Type": "Transform",
                     "Pos": {
                         "X": 2.0,
@@ -593,7 +596,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 35,
+                    "ID": 34,
                     "Type": "Transform",
                     "Pos": {
                         "X": 2.0,
@@ -632,7 +635,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 37,
+                    "ID": 36,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -658,7 +661,7 @@
             "Components": [
                 {
                     "PID": 14,
-                    "ID": 38,
+                    "ID": 37,
                     "Type": "Transform",
                     "Pos": {
                         "X": 1.100000023841858,
@@ -732,7 +735,7 @@
             "Components": [
                 {
                     "PID": 14,
-                    "ID": 43,
+                    "ID": 42,
                     "Type": "Transform",
                     "Pos": {
                         "X": 1.100000023841858,
@@ -806,7 +809,7 @@
             "Components": [
                 {
                     "PID": 15,
-                    "ID": 48,
+                    "ID": 47,
                     "Type": "Transform",
                     "Pos": {
                         "X": -3.299999952316284,
@@ -845,7 +848,7 @@
             "Components": [
                 {
                     "PID": 16,
-                    "ID": 50,
+                    "ID": 49,
                     "Type": "Transform",
                     "Pos": {
                         "X": -3.299999952316284,
@@ -884,7 +887,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 52,
+                    "ID": 51,
                     "Type": "Transform",
                     "Pos": {
                         "X": -2.5,
@@ -923,7 +926,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 54,
+                    "ID": 53,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -949,7 +952,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 55,
+                    "ID": 54,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -975,7 +978,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 56,
+                    "ID": 55,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1001,7 +1004,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 57,
+                    "ID": 56,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1027,7 +1030,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 58,
+                    "ID": 57,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1049,6 +1052,7 @@
                     "ID": 46,
                     "Type": "Script",
                     "Name": "GameManager",
+                    "LuckSequence": 0,
                     "EventSequence": 0,
                     "TrainCanvas": 4,
                     "CombatCanvas": 21,
@@ -1070,7 +1074,7 @@
             "Components": [
                 {
                     "PID": 24,
-                    "ID": 60,
+                    "ID": 59,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1097,7 +1101,7 @@
                         {
                             "Name": "Tracks.png",
                             "Sprite ID": 1100315501279954735,
-                            "Time Delay": 0.05000000074505806,
+                            "Time Delay": 0.019999999552965164,
                             "FrameCount": 4,
                             "Rows": 1,
                             "Columns": 4
@@ -1112,7 +1116,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 62,
+                    "ID": 61,
                     "Type": "Transform",
                     "Pos": {
                         "X": 5.876922607421875,
@@ -1181,7 +1185,7 @@
             "Components": [
                 {
                     "PID": 24,
-                    "ID": 66,
+                    "ID": 65,
                     "Type": "Transform",
                     "Pos": {
                         "X": 6.304711818695068,
@@ -1223,7 +1227,7 @@
             "Components": [
                 {
                     "PID": 24,
-                    "ID": 68,
+                    "ID": 67,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.20270991325378418,
@@ -1265,7 +1269,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 70,
+                    "ID": 69,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1305,7 +1309,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 72,
+                    "ID": 71,
                     "Type": "Transform",
                     "Pos": {
                         "X": -2.964315891265869,
@@ -1340,50 +1344,12 @@
             ]
         },
         {
-            "ID": 31,
-            "Name": "Background 2",
-            "Components": [
-                {
-                    "PID": 3,
-                    "ID": 74,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 1.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 17.0,
-                        "Y": 9.5,
-                        "Z": 1.0
-                    }
-                },
-                {
-                    "ID": 76,
-                    "Type": "SpriteRenderer",
-                    "Sprite ID": 0,
-                    "Sprite Name": "empty",
-                    "Color": {
-                        "X": 0.24705882370471954,
-                        "Y": 0.24705882370471954,
-                        "Z": 0.24705882370471954,
-                        "W": 1.0
-                    }
-                }
-            ]
-        },
-        {
             "ID": 32,
             "Name": "Report Screen Highlight",
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 76,
+                    "ID": 73,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.05472242832183838,
@@ -1421,7 +1387,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 78,
+                    "ID": 75,
                     "Type": "Transform",
                     "Pos": {
                         "X": 6.444356918334961,
@@ -1444,6 +1410,44 @@
                     "Type": "SpriteRenderer",
                     "Sprite ID": 6847983346719718934,
                     "Sprite Name": "Right_Screen_Highlight.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 35,
+            "Name": "Glass",
+            "Components": [
+                {
+                    "PID": 4,
+                    "ID": 77,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 22.0,
+                        "Y": 22.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 80,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 17236820672172375526,
+                    "Sprite Name": "Glasdirty.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
