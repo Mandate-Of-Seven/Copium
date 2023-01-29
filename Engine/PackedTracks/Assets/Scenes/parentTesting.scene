@@ -1,6 +1,8 @@
 {
     "Name": "NewScene",
-    "Unused GIDs": [],
+    "Unused GIDs": [
+        9
+    ],
     "Unused CIDs": [],
     "GameObjects": [
         {
@@ -192,32 +194,6 @@
                 {
                     "PID": 5,
                     "ID": 8,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 9,
-            "Name": "nova",
-            "Components": [
-                {
-                    "PID": 5,
-                    "ID": 9,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
