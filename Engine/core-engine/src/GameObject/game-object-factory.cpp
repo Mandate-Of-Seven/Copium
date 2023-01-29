@@ -116,14 +116,6 @@ namespace Copium
 		if (!go)
 			return nullptr;
 
-		if (scene)
-		{
-			scene->add_gameobject(go);
-			//for (Transform* transform : go->transform.children)
-			//{
-			//	
-			//}
-		}
 
 		unsigned count{ 0 };
 		if (scene)
@@ -135,6 +127,14 @@ namespace Copium
 		if (count)
 			go->name += '(' + std::to_string(count) + ')';
 
+		if (scene)
+		{
+			scene->add_gameobject(go);
+			//for (Transform* transform : go->transform.children)
+			//{
+			//	
+			//}
+		}
 
 
 		//for (std::list<Transform*>::iterator iter = _src.transform.children.begin(); iter != _src.transform.children.end(); ++iter)
@@ -146,6 +146,51 @@ namespace Copium
 		//		break;
 		//	cgo->transform.setParent(&go->transform);
 		//}
+		return go;
+	}
+
+
+	GameObject* GameObjectFactory::clone(GameObject& _src)
+	{
+		Scene* currScene = sceneManager.get_current_scene();
+		if (!currScene)
+			return nullptr;
+		GameObject* go = new GameObject(currScene->assignGameObjID());
+		if (!go)
+			return nullptr;
+		go->transform.position = _src.transform.position;
+		go->transform.scale = _src.transform.scale;
+		go->transform.rotation = _src.transform.rotation;
+		for (Component* component : _src.components)
+		{
+			Component* newComponent = component->clone(*go);
+			newComponent->id = _src.assign_id();
+			go->components.push_back(newComponent);
+		}
+
+		unsigned count{ 0 };
+		if (currScene)
+			for (GameObject* g : currScene->gameObjects)
+			{
+				if (g->get_name().find(_src.name) != std::string::npos)
+					++count;
+			}
+		if (count)
+			go->name = _src.name + '(' + std::to_string(count) + ')';
+
+		if (currScene)
+		{
+			currScene->add_gameobject(go);
+			for (Transform* transform : _src.transform.children)
+			{
+				GameObject* cgo{clone(transform->gameObj)};
+				cgo->transform.setParent(&go->transform);
+			}
+		}
+		for (size_t compIndex{ 0 }; compIndex < _src.components.size(); ++compIndex)
+		{
+			go->components[compIndex]->previewLink(_src.components[compIndex]);
+		}
 		return go;
 	}
 

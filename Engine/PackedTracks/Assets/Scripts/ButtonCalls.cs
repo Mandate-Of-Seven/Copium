@@ -17,7 +17,7 @@ public class ButtonCalls: CopiumScript
 	void Update()
 	{
         Button button = gameObject.GetComponent<Button>();
-        if (button != null && button.state == ButtonState.OnClick)
+        if (button != null && button.state == ButtonState.OnRelease)
         {
             Console.WriteLine("Button clicked from C#");
         }
