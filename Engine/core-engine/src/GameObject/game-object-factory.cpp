@@ -110,7 +110,7 @@ namespace Copium
 		return go;
 	}
 
-	GameObject* GameObjectFactory::clone(const GameObject& _src, Scene* scene)
+	GameObject* GameObjectFactory::clone(GameObject& _src, Scene* scene)
 	{
 		GameObject* go = new GameObject(_src);
 		if (!go)
@@ -125,30 +125,26 @@ namespace Copium
 			//}
 		}
 
-		//unsigned count{ 0 };
-		//if (scene)
-		//	for (GameObject* g : scene->gameObjects)
-		//	{
-		//		if (g->get_name().find(_src.name) != std::string::npos)
-		//			++count;
-		//	}
-		//if (count)
-		//	go->name += '(' + std::to_string(count) + ')';
+		unsigned count{ 0 };
+		if (scene)
+			for (GameObject* g : scene->gameObjects)
+			{
+				if (g->get_name().find(_src.name) != std::string::npos)
+					++count;
+			}
+		if (count)
+			go->name += '(' + std::to_string(count) + ')';
 
 
 
-		//for (std::list<GameObject*>::iterator iter = _src.mchildList().begin(); iter != _src.mchildList().end(); ++iter)
+		//for (std::list<Transform*>::iterator iter = _src.transform.children.begin(); iter != _src.transform.children.end(); ++iter)
 		//{
 		//	if (!(*iter))
 		//		continue;
-		//	//std::cout << "adding a child\n";
-		//	GameObject* cgo = instantiate(*(*iter));
+		//	GameObject* cgo = clone((*iter)->gameObj,scene);
 		//	if (!cgo)
 		//		break;
-
-		//	cgo->set_parent(go);
-		//	go->attach_child(cgo);
-
+		//	cgo->transform.setParent(&go->transform);
 		//}
 		return go;
 	}
@@ -273,6 +269,49 @@ namespace Copium
 		//		break;
 		//	}
 		//}
+		return true;
+	}
+
+
+	bool GameObjectFactory::destroy(GameObjectID id)
+	{
+		Scene* currScene = sceneManager.get_current_scene();
+		if (!currScene)
+			return false;
+
+		GameObject* _go = sceneManager.findGameObjByID(id);
+		if (!_go)
+		{
+			return false;
+		}
+
+		currScene->add_unused_gid(_go->id);
+
+		// Deattach children from this game object (if any)
+		for (auto pTransform : _go->transform.children)
+		{
+			pTransform->setParent(nullptr);
+			destroy(&pTransform->gameObj);
+		}
+
+		//std::cout << "Deleting " << _go->get_name() << std::endl;
+
+		if (_go->transform.hasParent())
+		{
+			_go->transform.setParent(nullptr);
+		}
+
+		currScene->gameObjects.erase(std::remove_if(currScene->gameObjects.begin(), currScene->gameObjects.end(), [&](GameObject* gameObj) {return gameObj == _go; }));
+		std::cout << "number of game objects left: " << currScene->get_gameobjcount() << std::endl;
+		for (size_t i{ 0 }; i < currScene->gameObjectSPTRS.size(); ++i)
+		{
+			if (currScene->gameObjectSPTRS[i].get()->id == id)
+			{
+				std::cout << "take out of sptr vector\n";
+				currScene->gameObjectSPTRS.erase(currScene->gameObjectSPTRS.begin() + i);
+				break;
+			}
+		}
 		return true;
 	}
 

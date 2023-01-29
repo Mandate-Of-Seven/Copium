@@ -6,6 +6,7 @@ public class GameManager: CopiumScript
 	public GameObject TrainCanvas;
 	public GameObject MainScreenCanvas;
 	public GameObject CombatCanvas;
+	public GameObject gameObj1;
 
 	public Button Option_01;
 	public Button Option_02;
@@ -20,10 +21,15 @@ public class GameManager: CopiumScript
 		TrainCanvas.SetActive(true);
 		MainScreenCanvas.SetActive(false);
 		CombatCanvas.SetActive(false);
+		//gameObj1 = Instantiate(gameObject);
 	}
 	void Update()
 	{
 		CheckCurrentEvent();
+/*		if (Input.GetKeyDown(KeyCode.E))
+        {
+			Destroy(gameObj1);
+        }*/
     }
 
 	void CheckCurrentEvent()

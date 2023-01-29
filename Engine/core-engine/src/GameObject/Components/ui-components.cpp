@@ -81,20 +81,9 @@ namespace Copium
 		{
 		case ButtonState::OnClick:
 		{
-			PRINT("UI: CLICKING on " << gameObj.get_name());
+			//PRINT("UI: Clicked " << gameObj.get_name());
 			if (targetGraphic)
 				targetGraphic->layeredColor = Linear(previousColor, clickedColor, timer / fadeDuration);
-			break;
-		}
-		case ButtonState::OnHover:
-		{
-			//PRINT("UI: HOVERING on " << gameObj.get_name());
-			if (targetGraphic)
-				targetGraphic->layeredColor = Linear(previousColor, hoverColor, timer / fadeDuration);
-			break;
-		}
-		case ButtonState::OnRelease:
-		{
 			Script* script = gameObj.getComponent<Script>();
 			if (script)
 			{
@@ -104,6 +93,23 @@ namespace Copium
 					hoveredBtn = nullptr;
 				}
 			}
+			break;
+		}
+		case ButtonState::OnHover:
+		{
+			//PRINT("UI: Hover " << gameObj.get_name());
+			if (targetGraphic)
+				targetGraphic->layeredColor = Linear(previousColor, hoverColor, timer / fadeDuration);
+			break;
+		}
+		case ButtonState::OnHeld:
+		{
+			//PRINT("UI: Held " << gameObj.get_name());
+			break;
+		}
+		case ButtonState::OnRelease:
+		{
+			//PRINT("UI: Released " << gameObj.get_name());
 			break;
 		}
 		default:
@@ -319,6 +325,8 @@ namespace Copium
 				if (inputSystem.is_mousebutton_pressed(0))
 				{
 					hoveredBtn = this;
+					if (state == ButtonState::OnClick || state == ButtonState::OnHeld)
+						return ButtonState::OnHeld;
 					return ButtonState::OnClick;
 				}
 				return ButtonState::OnHover;
@@ -331,6 +339,8 @@ namespace Copium
 				hoveredBtn = nullptr;
 				return ButtonState::OnRelease;
 			}
+			if (state == ButtonState::OnClick || state == ButtonState::OnHeld)
+				return ButtonState::OnHeld;
 			return ButtonState::OnClick;
 		}
 		return ButtonState::None;

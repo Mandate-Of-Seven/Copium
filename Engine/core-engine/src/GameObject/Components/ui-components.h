@@ -29,10 +29,11 @@ namespace Copium
 {
 	using ButtonCallback = void (*)();
 
-	enum class ButtonState
+	enum class ButtonState : char
 	{
 		OnHover,
 		OnClick,
+		OnHeld,
 		OnRelease,
 		None,
 	};
@@ -179,6 +180,8 @@ namespace Copium
 			const AABB& getRelativeBounds() const;
 
 			static const Button* hoveredBtn;
+
+			ButtonState GetState() { return state; }
 		private:
 			std::string callbackName;
 			AABB bounds;
