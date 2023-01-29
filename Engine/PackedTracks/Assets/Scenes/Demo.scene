@@ -843,7 +843,7 @@
             ]
         },
         {
-            "ID": 17,
+            "ID": 18,
             "Name": "Text 02",
             "Components": [
                 {
@@ -1056,11 +1056,13 @@
                     "TrainCanvas": 4,
                     "CombatCanvas": 21,
                     "MainScreenCanvas": 3,
-                    "Header": 31,
-                    "Next_Event": 66,
+                    "Option_01_Btn": 15,
+                    "Option_02_Btn": 16,
                     "Option_01": 37,
                     "Option_02_Text": 43,
                     "Option_02": 39,
+                    "Next_Event": 66,
+                    "Header": 31,
                     "Body": 44,
                     "Option_01_Text": 42
                 }

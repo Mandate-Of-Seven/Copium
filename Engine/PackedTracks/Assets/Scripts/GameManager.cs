@@ -9,7 +9,6 @@ public class GameManager: CopiumScript
 	public GameObject gameObj1;
 
 	public Button Option_01;
-	public Button Option_02;
 	public Button Next_Event;
 
 	public Text Header;
@@ -18,7 +17,7 @@ public class GameManager: CopiumScript
 	public Text Option_01_Text;
 	public Text Option_02_Text;
 
-	public int EventSequence = 0;
+    public int EventSequence = 0;
 
 	bool Event_01 = false;
 

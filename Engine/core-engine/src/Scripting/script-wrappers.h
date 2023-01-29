@@ -418,11 +418,13 @@ namespace Copium
 		GameObject* gameObj = sceneManager.findGameObjByID(gameObjID);
 		if (gameObj == nullptr)
 			return;
+		PRINT(gameObj->get_name() << ": ");
 		for (Text* text : gameObj->getComponents<Text>())
 		{
 			if (text->id == compID)
 			{
 				char* monoStr = mono_string_to_utf8(str);
+				PRINT(monoStr);
 				strcpy(text->content, monoStr);
 				mono_free(monoStr);
 				break;
