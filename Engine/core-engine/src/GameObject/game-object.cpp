@@ -104,10 +104,10 @@ namespace Copium
 
     bool GameObject::isActive()
     {
-        if (transform.hasParent())
+        /*if (transform.hasParent())
         {
             return transform.parent->gameObj.isActive();
-        }
+        }*/
         return active;
     }
 

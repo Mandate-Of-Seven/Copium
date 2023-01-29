@@ -1,9 +1,10 @@
 {
     "Name": "Demo",
-    "Unused GIDs": [],
-    "Unused CIDs": [
-        11
+    "Unused GIDs": [
+        34,
+        31
     ],
+    "Unused CIDs": [],
     "GameObjects": [
         {
             "ID": 1,
@@ -42,6 +43,11 @@
                         "Near": 0.029999999329447746,
                         "Far": 500.0
                     }
+                },
+                {
+                    "ID": 79,
+                    "Type": "AudioSource",
+                    "Alias": "..\\PackedTracks\\Assets\\Sounds\\Music\\Nightshift _BGM2_Loop_70bpm"
                 }
             ]
         },
@@ -173,12 +179,6 @@
                     "a": 1.0
                 },
                 {
-                    "ID": 48,
-                    "Type": "Script",
-                    "Name": "ButtonCalls",
-                    "objectToToggle": 3
-                },
-                {
                     "Type": "Button",
                     "ID": 9,
                     "Graphic ID": 49,
@@ -202,7 +202,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 11,
+                    "ID": 10,
                     "Type": "Transform",
                     "Pos": {
                         "X": 6.469001770019531,
@@ -263,7 +263,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 16,
+                    "ID": 14,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -276,16 +276,16 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 18.0,
-                        "Y": 10.0,
+                        "X": 2.1500000953674316,
+                        "Y": 2.1500000953674316,
                         "Z": 1.0
                     }
                 },
                 {
                     "ID": 14,
                     "Type": "SpriteRenderer",
-                    "Sprite ID": 0,
-                    "Sprite Name": "empty",
+                    "Sprite ID": 4874611181005233622,
+                    "Sprite Name": "Panel_02.png",
                     "Color": {
                         "X": 0.35686275362968445,
                         "Y": 0.35686275362968445,
@@ -301,7 +301,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 18,
+                    "ID": 16,
                     "Type": "Transform",
                     "Pos": {
                         "X": -6.0,
@@ -378,7 +378,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 23,
+                    "ID": 21,
                     "Type": "Transform",
                     "Pos": {
                         "X": -6.0,
@@ -455,7 +455,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 28,
+                    "ID": 26,
                     "Type": "Transform",
                     "Pos": {
                         "X": -6.0,
@@ -532,7 +532,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 33,
+                    "ID": 31,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -554,11 +554,11 @@
         },
         {
             "ID": 12,
-            "Name": "Background",
+            "Name": "Border",
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 34,
+                    "ID": 32,
                     "Type": "Transform",
                     "Pos": {
                         "X": 2.0,
@@ -582,7 +582,7 @@
                     "Sprite ID": 13292609945703451902,
                     "Sprite Name": "Panel_01.png",
                     "Color": {
-                        "X": 0.11424899101257324,
+                        "X": 0.11424887180328369,
                         "Y": 1.0,
                         "Z": 0.0,
                         "W": 1.0
@@ -596,7 +596,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 36,
+                    "ID": 34,
                     "Type": "Transform",
                     "Pos": {
                         "X": 2.0,
@@ -635,7 +635,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 38,
+                    "ID": 36,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -661,7 +661,7 @@
             "Components": [
                 {
                     "PID": 14,
-                    "ID": 39,
+                    "ID": 37,
                     "Type": "Transform",
                     "Pos": {
                         "X": 1.100000023841858,
@@ -687,9 +687,9 @@
                     "Sprite ID": 0,
                     "Sprite Name": "empty",
                     "Color": {
-                        "X": 0.025411978363990784,
-                        "Y": 0.4685002565383911,
-                        "Z": 2.792479136815018e-8,
+                        "X": 0.0,
+                        "Y": 0.5098039507865906,
+                        "Z": 0.0,
                         "W": 1.0
                     }
                 },
@@ -715,8 +715,8 @@
                     "FontName": "corbel",
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Content": "",
-                    "Font Size": 1.0,
+                    "Content": "Option 1",
+                    "Font Size": 0.15000000596046448,
                     "r": 1.0,
                     "g": 1.0,
                     "b": 1.0,
@@ -735,7 +735,7 @@
             "Components": [
                 {
                     "PID": 14,
-                    "ID": 44,
+                    "ID": 42,
                     "Type": "Transform",
                     "Pos": {
                         "X": 1.100000023841858,
@@ -761,9 +761,9 @@
                     "Sprite ID": 0,
                     "Sprite Name": "empty",
                     "Color": {
-                        "X": 0.04087873920798302,
-                        "Y": 0.5553668737411499,
-                        "Z": 6.620489045872091e-8,
+                        "X": 0.0,
+                        "Y": 0.5098039507865906,
+                        "Z": 0.0,
                         "W": 1.0
                     }
                 },
@@ -789,8 +789,8 @@
                     "FontName": "corbel",
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Content": "",
-                    "Font Size": 1.0,
+                    "Content": "Option 2",
+                    "Font Size": 0.15000000596046448,
                     "r": 1.0,
                     "g": 1.0,
                     "b": 1.0,
@@ -805,11 +805,11 @@
         },
         {
             "ID": 17,
-            "Name": "Text 01",
+            "Name": "Text_01",
             "Components": [
                 {
                     "PID": 15,
-                    "ID": 49,
+                    "ID": 47,
                     "Type": "Transform",
                     "Pos": {
                         "X": -3.299999952316284,
@@ -833,7 +833,7 @@
                     "FontName": "corbel",
                     "H_Align": 0,
                     "V_Align": 1,
-                    "Content": "Option 1",
+                    "Content": "",
                     "Font Size": 0.10000000149011612,
                     "r": 1.0,
                     "g": 1.0,
@@ -848,7 +848,7 @@
             "Components": [
                 {
                     "PID": 16,
-                    "ID": 51,
+                    "ID": 49,
                     "Type": "Transform",
                     "Pos": {
                         "X": -3.299999952316284,
@@ -872,7 +872,7 @@
                     "FontName": "corbel",
                     "H_Align": 0,
                     "V_Align": 1,
-                    "Content": "Option 2",
+                    "Content": "",
                     "Font Size": 0.10000000149011612,
                     "r": 1.0,
                     "g": 1.0,
@@ -887,7 +887,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 53,
+                    "ID": 51,
                     "Type": "Transform",
                     "Pos": {
                         "X": -2.5,
@@ -926,7 +926,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 55,
+                    "ID": 53,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -952,7 +952,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 56,
+                    "ID": 54,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -978,7 +978,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 57,
+                    "ID": 55,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1004,7 +1004,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 58,
+                    "ID": 56,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1030,7 +1030,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 59,
+                    "ID": 57,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1052,19 +1052,19 @@
                     "ID": 46,
                     "Type": "Script",
                     "Name": "GameManager",
+                    "LuckSequence": 0,
                     "EventSequence": 0,
                     "TrainCanvas": 4,
                     "CombatCanvas": 21,
                     "MainScreenCanvas": 3,
-                    "Option_01_Btn": 15,
-                    "Option_02_Btn": 16,
-                    "Option_01": 37,
-                    "Option_02_Text": 43,
-                    "Option_02": 39,
-                    "Next_Event": 66,
-                    "Header": 31,
+                    "Option_01": 15,
+                    "Option_02": 16,
+                    "Next_Event": 26,
                     "Body": 44,
-                    "Option_01_Text": 42
+                    "ReportScreenBtn": 9,
+                    "Header": 31,
+                    "Option_01_Text": 52,
+                    "Option_02_Text": 53
                 }
             ]
         },
@@ -1074,7 +1074,7 @@
             "Components": [
                 {
                     "PID": 24,
-                    "ID": 61,
+                    "ID": 59,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1101,7 +1101,7 @@
                         {
                             "Name": "Tracks.png",
                             "Sprite ID": 1100315501279954735,
-                            "Time Delay": 0.05000000074505806,
+                            "Time Delay": 0.019999999552965164,
                             "FrameCount": 4,
                             "Rows": 1,
                             "Columns": 4
@@ -1116,7 +1116,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 63,
+                    "ID": 61,
                     "Type": "Transform",
                     "Pos": {
                         "X": 5.876922607421875,
@@ -1142,7 +1142,7 @@
                     "Sprite ID": 18094748837859732085,
                     "Sprite Name": "Next_Btn.png",
                     "Color": {
-                        "X": 0.9999071359634399,
+                        "X": 0.9999076128005981,
                         "Y": 1.0,
                         "Z": 0.9998999834060669,
                         "W": 1.0
@@ -1172,9 +1172,9 @@
                     "V_Align": 1,
                     "Content": "Next",
                     "Font Size": 0.029999999329447746,
-                    "r": 1.0,
+                    "r": 0.9999080896377563,
                     "g": 1.0,
-                    "b": 1.0,
+                    "b": 0.9998999834060669,
                     "a": 1.0
                 }
             ]
@@ -1185,7 +1185,7 @@
             "Components": [
                 {
                     "PID": 24,
-                    "ID": 67,
+                    "ID": 65,
                     "Type": "Transform",
                     "Pos": {
                         "X": 6.304711818695068,
@@ -1227,7 +1227,7 @@
             "Components": [
                 {
                     "PID": 24,
-                    "ID": 69,
+                    "ID": 67,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.20270991325378418,
@@ -1269,7 +1269,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 71,
+                    "ID": 69,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1309,7 +1309,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 73,
+                    "ID": 71,
                     "Type": "Transform",
                     "Pos": {
                         "X": -2.964315891265869,
@@ -1344,50 +1344,12 @@
             ]
         },
         {
-            "ID": 31,
-            "Name": "Background 2",
-            "Components": [
-                {
-                    "PID": 3,
-                    "ID": 75,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 1.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 17.0,
-                        "Y": 9.5,
-                        "Z": 1.0
-                    }
-                },
-                {
-                    "ID": 76,
-                    "Type": "SpriteRenderer",
-                    "Sprite ID": 0,
-                    "Sprite Name": "empty",
-                    "Color": {
-                        "X": 0.24705882370471954,
-                        "Y": 0.24705882370471954,
-                        "Z": 0.24705882370471954,
-                        "W": 1.0
-                    }
-                }
-            ]
-        },
-        {
             "ID": 32,
             "Name": "Report Screen Highlight",
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 77,
+                    "ID": 73,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.05472242832183838,
@@ -1425,7 +1387,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 79,
+                    "ID": 75,
                     "Type": "Transform",
                     "Pos": {
                         "X": 6.444356918334961,
@@ -1448,6 +1410,44 @@
                     "Type": "SpriteRenderer",
                     "Sprite ID": 6847983346719718934,
                     "Sprite Name": "Right_Screen_Highlight.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 35,
+            "Name": "Glass",
+            "Components": [
+                {
+                    "PID": 4,
+                    "ID": 77,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 22.0,
+                        "Y": 22.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 80,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 17236820672172375526,
+                    "Sprite Name": "Glasdirty.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,

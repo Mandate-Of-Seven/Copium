@@ -59,7 +59,7 @@ void main()
 	if(index > 0)
 	{
 		fFragColor = texture(uTexture1[index], vTextureCoordinate) * vInterpColor;
-		if(fFragColor.a < 0.3)
+		if(fFragColor.a < 0.1)
 			discard;
 	}
 	else
