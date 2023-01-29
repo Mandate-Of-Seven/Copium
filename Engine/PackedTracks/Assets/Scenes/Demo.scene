@@ -4,7 +4,9 @@
         35,
         34
     ],
-    "Unused CIDs": [],
+    "Unused CIDs": [
+        78
+    ],
     "GameObjects": [
         {
             "ID": 1,
@@ -172,12 +174,6 @@
                     "g": 1.0,
                     "b": 1.0,
                     "a": 1.0
-                },
-                {
-                    "ID": 48,
-                    "Type": "Script",
-                    "Name": "ButtonCalls",
-                    "objectToToggle": 3
                 },
                 {
                     "Type": "Button",
@@ -555,7 +551,7 @@
         },
         {
             "ID": 12,
-            "Name": "Background",
+            "Name": "Border",
             "Components": [
                 {
                     "PID": 11,
@@ -716,8 +712,8 @@
                     "FontName": "corbel",
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Content": "",
-                    "Font Size": 1.0,
+                    "Content": "Option 1",
+                    "Font Size": 0.15000000596046448,
                     "r": 1.0,
                     "g": 1.0,
                     "b": 1.0,
@@ -790,8 +786,8 @@
                     "FontName": "corbel",
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Content": "",
-                    "Font Size": 1.0,
+                    "Content": "Option 2",
+                    "Font Size": 0.15000000596046448,
                     "r": 1.0,
                     "g": 1.0,
                     "b": 1.0,
@@ -806,7 +802,7 @@
         },
         {
             "ID": 17,
-            "Name": "Text 01",
+            "Name": "Text_01",
             "Components": [
                 {
                     "PID": 15,
@@ -834,7 +830,7 @@
                     "FontName": "corbel",
                     "H_Align": 0,
                     "V_Align": 1,
-                    "Content": "Option 1",
+                    "Content": "",
                     "Font Size": 0.10000000149011612,
                     "r": 1.0,
                     "g": 1.0,
@@ -845,7 +841,7 @@
         },
         {
             "ID": 17,
-            "Name": "Text 02",
+            "Name": "Text_02",
             "Components": [
                 {
                     "PID": 16,
@@ -873,7 +869,7 @@
                     "FontName": "corbel",
                     "H_Align": 0,
                     "V_Align": 1,
-                    "Content": "Option 2",
+                    "Content": "",
                     "Font Size": 0.10000000149011612,
                     "r": 1.0,
                     "g": 1.0,
@@ -1057,13 +1053,14 @@
                     "TrainCanvas": 4,
                     "CombatCanvas": 21,
                     "MainScreenCanvas": 3,
-                    "Header": 31,
-                    "Next_Event": 66,
-                    "Option_01": 37,
-                    "Option_02_Text": 43,
-                    "Option_02": 39,
+                    "Option_01": 15,
+                    "Option_02": 16,
+                    "Next_Event": 26,
                     "Body": 44,
-                    "Option_01_Text": 42
+                    "ReportScreenBtn": 9,
+                    "Header": 31,
+                    "Option_01_Text": 52,
+                    "Option_02_Text": 53
                 }
             ]
         },
