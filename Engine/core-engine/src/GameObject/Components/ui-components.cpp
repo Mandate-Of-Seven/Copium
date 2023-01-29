@@ -502,6 +502,8 @@ namespace Copium
 	{
 		Text* component = new Text(_gameObj);
 		memcpy(component->content, content, TEXT_BUFFER_SIZE);
+		component->vAlignment = vAlignment;
+		component->hAlignment = hAlignment;
 		component->color = color;
 		component->fSize = fSize;
 		component->font = font;
@@ -820,6 +822,8 @@ namespace Copium
 	Component* ImageComponent::clone(GameObject& _gameObj) const
 	{
 		ImageComponent* component = new ImageComponent(_gameObj);
+		component->vAlignment = vAlignment;
+		component->hAlignment = hAlignment;
 		component->offset = offset;
 		component->sprite = sprite;
 		return component;
