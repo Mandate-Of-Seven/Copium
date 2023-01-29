@@ -68,6 +68,10 @@ namespace Copium
 
 	void Button::update()
 	{
+		if (hoveredBtn && !hoveredBtn->gameObj.isActive())
+		{
+			hoveredBtn = nullptr;
+		}
 		updateBounds();
 		state = getInternalState();
 		if (previousState != state)
