@@ -53,6 +53,9 @@ namespace CopiumEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void DestroyGameObject(ulong ID);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static ulong AddComponent(ulong gameObjID, Type componentType);
+
         #endregion
 
         #region TRANSFORM

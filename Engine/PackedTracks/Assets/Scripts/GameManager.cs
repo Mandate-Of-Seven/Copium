@@ -27,7 +27,7 @@ public class GameManager: CopiumScript
 		TrainCanvas.SetActive(true);
 		MainScreenCanvas.SetActive(false);
 		CombatCanvas.SetActive(false);
-		//gameObj1 = Instantiate(gameObject);
+		gameObj1 = Instantiate(gameObject);
 	}
 	void Update()
 	{
@@ -37,10 +37,14 @@ public class GameManager: CopiumScript
         }
 
 		CheckCurrentEvent();
-/*		if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E))
         {
-			Destroy(gameObj1);
-        }*/
+            Destroy(gameObj1);
+        }
+		if (Option_01.state == ButtonState.OnClick)
+        {
+			Console.WriteLine("OPTION 1 CLICKED!");
+        }
     }
 
 	void CheckCurrentEvent()

@@ -256,6 +256,19 @@ namespace Copium
 		ComponentType cType = s_EntityHasComponentFuncs[mono_type_get_name(managedType)];
 		return gameObj->hasComponent(cType);
 	}
+
+	static ComponentID AddComponent(GameObjectID _ID, MonoReflectionType* componentType)
+	{
+		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+		if (gameObj == nullptr)
+		{
+			PRINT("CANT FIND GAMEOBJECT");
+			return false;
+		}
+		MonoType* managedType = mono_reflection_type_get_type(componentType);
+		ComponentType cType = s_EntityHasComponentFuncs[mono_type_get_name(managedType)];
+		return gameObj->addComponent(cType)->id;
+	}
 	
 	/*******************************************************************************
 	/*!
@@ -440,7 +453,7 @@ namespace Copium
 		GameObject* toBeCloned = MySceneManager.findGameObjByID(ID);
 		if (toBeCloned)
 		{
-			GameObject* clone = MyGOF.clone(*toBeCloned, sceneManager.get_current_scene());
+			GameObject* clone = MyGOF.clone(*toBeCloned);
 			if (clone)
 				return clone->id;
 		}
@@ -506,6 +519,7 @@ namespace Copium
 		Register(DestroyGameObject);
 		Register(QuitGame);
 		Register(GetButtonState);
+		Register(AddComponent);
 	}
 
 	/*******************************************************************************
@@ -519,6 +533,7 @@ namespace Copium
 		s_EntityHasComponentFuncs.clear();
 		int i{ 0 };
 		int end{ (int)ComponentType::None };
+		PRINT("REGISTERING: ");
 		while (i != end)
 		{
 			std::string name = "CopiumEngine." + MAP_COMPONENT_TYPE_NAME[(ComponentType)i];

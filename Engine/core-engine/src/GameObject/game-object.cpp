@@ -141,6 +141,7 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{rhs.id}
     {
 
         Component* newComponent = pComponent->clone(*this);
+        newComponent->Enabled(pComponent->Enabled());
         newComponent->id = pComponent->id;
         components.push_back(newComponent);
     }
