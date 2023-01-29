@@ -78,7 +78,7 @@ namespace CopiumEngine
 
         public static void Destroy(GameObject gameObj)
         {
-
+            InternalCalls.DestroyGameObject(gameObj.ID);
         }
     }
 }

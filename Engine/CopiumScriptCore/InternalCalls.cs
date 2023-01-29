@@ -50,6 +50,9 @@ namespace CopiumEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static ulong InstantiateGameObject();
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void DestroyGameObject(ulong ID);
+
         #endregion
 
         #region TRANSFORM
@@ -94,6 +97,9 @@ namespace CopiumEngine
         public static extern void SetUIInteractable(bool isInteractable);
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool GetUIInteractable();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern char GetButtonState(ulong gameObjID);
 
         #endregion
 

@@ -254,7 +254,6 @@ namespace Copium
 		}
 		MonoType* managedType = mono_reflection_type_get_type(componentType);
 		ComponentType cType = s_EntityHasComponentFuncs[mono_type_get_name(managedType)];
-		PRINT("Component Type: " << MAP_COMPONENT_TYPE_NAME[cType] << int(cType));
 		return gameObj->hasComponent(cType);
 	}
 	
@@ -418,6 +417,14 @@ namespace Copium
 		}
 	}
 
+	static char GetButtonState(GameObjectID gameObjID)
+	{
+		GameObject* gameObj = sceneManager.findGameObjByID(gameObjID);
+		if (gameObj == nullptr)
+			return 0;
+		return (char)gameObj->getComponent<Button>()->GetState();
+	}
+
 	/*******************************************************************************
 	/*!
 	\brief
@@ -433,7 +440,7 @@ namespace Copium
 		GameObject* toBeCloned = MySceneManager.findGameObjByID(ID);
 		if (toBeCloned)
 		{
-			GameObject* clone = MyGOF.instantiate(*toBeCloned);
+			GameObject* clone = MyGOF.clone(*toBeCloned, sceneManager.get_current_scene());
 			if (clone)
 				return clone->id;
 		}
@@ -454,6 +461,19 @@ namespace Copium
 		if (clone)
 			return clone->id;
 		return 0;
+	}
+
+	/*******************************************************************************
+	/*!
+	\brief
+		Destroys a gameobject by ID
+	\param ID
+		GameObject ID of the gameObject to delete
+	*/
+	/*******************************************************************************/
+	static void DestroyGameObject(GameObjectID ID)
+	{
+		COPIUM_ASSERT(!MyGOF.destroy(ID), "GameObject could not be destroyed");
 	}
 
 	/*******************************************************************************
@@ -483,7 +503,9 @@ namespace Copium
 		Register(SetTextString);
 		Register(CloneGameObject);
 		Register(InstantiateGameObject);
+		Register(DestroyGameObject);
 		Register(QuitGame);
+		Register(GetButtonState);
 	}
 
 	/*******************************************************************************

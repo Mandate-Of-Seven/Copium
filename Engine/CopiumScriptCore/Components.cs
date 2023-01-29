@@ -21,14 +21,14 @@ using System.Threading.Tasks;
 
 namespace CopiumEngine
 {
-    public enum ButtonState
+    public enum ButtonState 
     {
-        None,
-        Hovered,
-        Pressed,
-        Held,
-        Released
-    }
+        OnHover,
+		OnClick,
+		OnHeld,
+		OnRelease,
+		None,
+	};
 
     public class Component
     {
@@ -156,8 +156,7 @@ namespace CopiumEngine
     {
         public ButtonState state
         {
-            get;
-            set;
+            get { return (ButtonState)InternalCalls.GetButtonState(gameObject.ID); }
         }
         public bool interactable
         {

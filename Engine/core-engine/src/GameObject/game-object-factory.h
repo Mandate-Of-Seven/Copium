@@ -86,7 +86,7 @@ namespace Copium {
 			pointer to the new game object (head of the tree)
 		*/
 		/*******************************************************************************/
-		GameObject* clone(const GameObject& _src, Scene* scene);
+		GameObject* clone(GameObject& _src, Scene* scene);
 
 		/*******************************************************************************
 		/*!
@@ -117,6 +117,22 @@ namespace Copium {
 		*/
 		/*******************************************************************************/
 		bool destroy(GameObject* _go);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Destroy a gameobject by ID
+
+		\param id
+			ID of gameobject to be destroyed
+
+		\return
+			on success, return true
+			on failure, return false
+		*/
+		/*******************************************************************************/
+		bool destroy(size_t id);
 
 		/*******************************************************************************
 		/*!

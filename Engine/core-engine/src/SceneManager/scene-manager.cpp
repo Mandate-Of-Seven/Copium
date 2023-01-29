@@ -548,7 +548,7 @@ namespace Copium {
 		currentScene->unusedGIDs = storageScene->unusedGIDs;
 
 		// Copy game object data
-		for (const GameObject* gameObj : storageScene->gameObjects)
+		for (GameObject* gameObj : storageScene->gameObjects)
 		{
 			MyGOF.clone(*gameObj, currentScene);
 		}
