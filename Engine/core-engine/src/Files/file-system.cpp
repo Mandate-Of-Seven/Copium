@@ -277,7 +277,7 @@ namespace Copium
 							add_file_reference(&_directory->get_files().back());
 
 							// Generate Meta File
-							if(file.get_file_type().fileType != FILE_TYPE::META)
+							if(file.get_file_type().fileType == FILE_TYPE::SPRITE)
 								assets->GenerateMetaFile(&_directory->get_files().back());
 
 							// Bean: This should be moved to a general function

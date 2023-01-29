@@ -9,11 +9,17 @@ public class GameManager: CopiumScript
 
 	public Button Option_01;
 	public Button Option_02;
+	public Button Next_Event;
 
 	public Text Header;
 	public Text Body;
 
+	public Text Option_01_Text;
+	public Text Option_02_Text;
+
 	public int EventSequence = 0;
+
+	bool Event_01 = false;
 
 	void Start()
 	{
@@ -23,15 +29,30 @@ public class GameManager: CopiumScript
 	}
 	void Update()
 	{
+        if(Next_Event.state == ButtonState.Released)
+        {
+            EventSequence++;
+        }
+
 		CheckCurrentEvent();
     }
 
 	void CheckCurrentEvent()
 	{
-		// Update eventsequence after every button click
-	}
+        // Update eventsequence after every button click
+        switch (EventSequence)
+        {
+            case 0:
+                Introduction();
+                break;
+            case 1:
+                Event01();
+                break;
+            default:
+                break;
+        }
+    }
 
-	// 
 	void Introduction()
 	{
 		Header.text = "AI assistance Intro";
@@ -48,7 +69,73 @@ public class GameManager: CopiumScript
             "\n\nI wish you all the best and hope to receive good news.\n\nBest regards, \nCaptain Bob Jones\"\n\nEnd of transmission. ";
     }
 
-	void Event02()
+	// Luck in a barren wasteland
+    void Event01()
+    {
+		Header.text = "Luck in a barren wasteland";
+
+		Body.text = "\nReport type: Situation\n\n\nHarris spotted a abandoned town not too far off from the main track. " +
+			"Crew seem to be in agreement to check it out. Otherwise, nothing out of the ordinary. Train conductor to choose course of action. \n";
+
+		Option_01_Text.text = "Explore abandon town";
+		Option_02_Text.text = "Do not explore abandoned town";
+
+        if(Option_01.state == ButtonState.Released)
+        {
+            Choice01(true);
+        }
+        else if(Option_02.state == ButtonState.Released)
+        {
+            Choice01(false);
+        }
+    }
+
+	void Choice01(bool choice01)
+	{
+        float chance;
+        if (choice01)
+        {
+            // 80%
+            chance = RNG.Range(0, 1);
+            if (chance > 0.8)
+            {
+                Header.text = "No Luck";
+
+                Body.text = "\nReport type: Situation\n\nThe crew had no luck in finding any useful resources. Though only the first day, " +
+                    "the crew seem to have let the disappointment get to them. Moral of the crew had decrease significantly since departure.\n";
+            }
+            // 20%
+            else
+            {
+                Header.text = "Found something useful";
+
+                Body.text = "\nReport type: Situation\n\n\nThrough the thick snow and rubble the crew miraculously found some canned soup that " +
+                    "still looks good to eat. This minor victory seem to boost moral of the crew slightly, everyone seem to be in a much cheery mood.";
+            }
+        }
+        else if(!choice01)
+        {
+            // 50%
+            chance = RNG.Range(0, 1);
+            if (chance > 0.5)
+            {
+                Header.text = "What could have been";
+
+                Body.text = "\nReport type: Situation\n\nThe crew seemed to be quite disappointed in your decision, all had hoped that they might " +
+                    "be able to find something of use in the town. Moral of the crew seem to be hit slightly, but all still seemed to have positive outlooks on this mission.";
+            }
+            // 50%
+            else
+            {
+                Header.text = "Dissatisfaction brewing";
+
+                Body.text = "\nReport type: Situation\n\n\nChuck seem to be quite unhappy with your decision, and had a argument with Harris who tried to defend " +
+                    "your course of action. Chuck began throwing punches at Harris but Luckily the confrontation was broken up by Danton before it could escalate further.";
+            }
+        }
+    }
+
+    void Event02()
 	{
 
 	}
