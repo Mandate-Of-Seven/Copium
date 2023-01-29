@@ -14,6 +14,8 @@ public class GameManager: CopiumScript
     public Button CombatScreenBtn;
     public Button OtherScreenBtn;
 
+    public AudioSource audio;
+
 	public Text Header;
 	public Text Body;
 
@@ -41,6 +43,8 @@ public class GameManager: CopiumScript
         TrainCanvas.SetActive(true);
         MainScreenCanvas.SetActive(false);
         CombatCanvas.SetActive(false);
+
+        audio = GetComponent<AudioSource>();
     }
 	void Update()
 	{
@@ -165,6 +169,7 @@ public class GameManager: CopiumScript
 
         if (option01_btn.state == ButtonState.OnClick)
         {
+            audio.Play();
             Choice01(true);
         }
         else if (option02_btn.state == ButtonState.OnClick)
