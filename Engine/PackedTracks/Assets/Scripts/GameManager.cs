@@ -31,7 +31,7 @@ public class GameManager: CopiumScript
 	}
 	void Update()
 	{
-        if(Next_Event.state == ButtonState.Released)
+        if(Next_Event.state == ButtonState.OnRelease)
         {
             EventSequence++;
         }
@@ -90,12 +90,14 @@ public class GameManager: CopiumScript
 		Option_01_Text.text = "Explore abandon town";
 		Option_02_Text.text = "Do not explore abandoned town";
 
-        if(Option_01.state == ButtonState.Released)
+        if(Option_01.state == ButtonState.OnClick)
         {
+            Console.WriteLine("Option 1");
             Choice01(true);
         }
-        else if(Option_02.state == ButtonState.Released)
+        else if(Option_02.state == ButtonState.OnClick)
         {
+            Console.WriteLine("Option 2");
             Choice01(false);
         }
     }
