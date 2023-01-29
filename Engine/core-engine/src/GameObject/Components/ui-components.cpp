@@ -716,7 +716,7 @@ namespace Copium
 		glm::vec4 clrGLM = sprite.get_color();
 		ImVec4 clrIM = { clrGLM.r, clrGLM.g, clrGLM.b, clrGLM.a };
 
-		int spriteID = (int)sprite.get_sprite_id();
+		uint64_t spriteID = sprite.get_sprite_id();
 
 		std::string spriteName = sprite.get_name();
 		static ImVec4 backupColor;
@@ -750,10 +750,15 @@ namespace Copium
 					{
 						if (!assets->get_texture(i)->get_file_path().compare(str))
 						{
-							spriteID = i + 1;
+							uint64_t pathID = std::hash<std::string>{}(assets->get_texture(i)->get_file_path());
+							MetaID metaID = assets->GetMetaID(pathID);
+							spriteID = metaID.uuid;
+
+							// Attach Reference
+							sprite.set_texture(assets->get_texture(i));
 						}
 					}
-					size_t pos = str.find_last_of('/');
+					size_t pos = str.find_last_of('\\');
 					spriteName = str.substr(pos + 1, str.length() - pos);
 				}
 				ImGui::EndDragDropTarget();

@@ -305,9 +305,7 @@ namespace Copium
 			}*/
 			// End of matrix assignment
 			
-			
-
-			if (graphics->get_texture_slot_index() >= 8)
+			if (graphics->get_texture_slot_index() >= 32)
 			{
 				graphics->set_texture_slot_index(1);
 				end_batch();
@@ -704,6 +702,9 @@ namespace Copium
 				break;
 			}
 		}
+
+		if (_spritesheet.columns == 0)
+			return;
 
 		GLuint rowOffset = (_spritesheet.rows-1)-(_offsetID / _spritesheet.columns);
 		GLuint colOffset = _offsetID % _spritesheet.columns;
