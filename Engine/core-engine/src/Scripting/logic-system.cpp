@@ -78,6 +78,8 @@ namespace Copium
 			{
 				if (!pButton)
 					continue;
+				if (!pButton->Enabled())
+					continue;
 				pButton->update();
 				if (pScene != sceneManager.get_current_scene())
 					return;

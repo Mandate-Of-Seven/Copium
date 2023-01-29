@@ -245,7 +245,7 @@ namespace Copium
 						ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
 						ImGui::SetNextWindowPos(ImVec2(0.f, 0.f), ImGuiCond_FirstUseEver);
 						ImGui::PushID(counter++);
-						ImGui::Begin("Add GameObject Reference", &isAddingGameObjectReference);
+						ImGui::Begin("Add Component Reference", &isAddingGameObjectReference);
 						ImVec2 buttonSize = ImGui::GetWindowSize();
 						buttonSize.y *= (float)0.1;
 						static ImGuiTextFilter filter;
@@ -272,27 +272,24 @@ namespace Copium
 							}
 							if (!pComponent)
 								continue;
-							if (ImGui::Button(go->get_name().c_str(), buttonSize))
+							if (filter.PassFilter(go->get_name().c_str()) && ImGui::Button(go->get_name().c_str(), buttonSize))
 							{
-								if (filter.PassFilter(go->get_name().c_str()))
+								isAddingGameObjectReference = false;
+								ComponentID componentID = pComponent->id;
+								GameObjectID gameObjID = pComponent->gameObj.id;
+								void* params[2] = { &componentID, &gameObjID };
+								MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindComponentByID"], mObject, params, nullptr);
+								fieldDataReferences.insert({ it->first,FieldData(mono_object_get_size(result)) });
+								MonoClass* mComponentClass = mono_object_get_class(result);
+								void* iter = nullptr;
+								while (MonoClassField* _field = mono_class_get_fields(mComponentClass, &iter))
 								{
-									isAddingGameObjectReference = false;
-									ComponentID componentID = pComponent->id;
-									GameObjectID gameObjID = pComponent->gameObj.id;
-									void* params[2] = { &componentID, &gameObjID };
-									MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindComponentByID"], mObject, params, nullptr);
-									fieldDataReferences.insert({ it->first,FieldData(mono_object_get_size(result)) });
-									MonoClass* mComponentClass = mono_object_get_class(result);
-									void* iter = nullptr;
-									while (MonoClassField* _field = mono_class_get_fields(mComponentClass, &iter))
-									{
-										mono_field_get_value(result, _field, fieldDataReferences[it->first].data + mono_field_get_offset(_field));
-									}
-									mono_field_set_value(mObject, it->second.classField, fieldDataReferences[it->first].data);
-									fieldComponentReferences[_name] = pComponent;
-									field = nullptr;
-									break;
+									mono_field_get_value(result, _field, fieldDataReferences[it->first].data + mono_field_get_offset(_field));
 								}
+								mono_field_set_value(mObject, it->second.classField, fieldDataReferences[it->first].data);
+								fieldComponentReferences[_name] = pComponent;
+								field = nullptr;
+								break;
 							}
 						}
 						ImGui::End();
@@ -366,26 +363,23 @@ namespace Copium
 						Scene* scene = Copium::SceneManager::Instance()->get_current_scene();
 						for (Copium::GameObject* go : scene->gameObjects)
 						{
-							if (ImGui::Button(go->get_name().c_str(), buttonSize))
+							if (filter.PassFilter(go->get_name().c_str()) && ImGui::Button(go->get_name().c_str(), buttonSize))
 							{
-								if (filter.PassFilter(go->get_name().c_str()))
+								isAddingGameObjectReference = false;
+								GameObjectID gameObjID = go->id;
+								void* param = &gameObjID;
+								MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindGameObjectByID"], mObject, &param, nullptr);
+								MonoClass* mGameObjClass = mono_object_get_class(result);
+								void* iter = nullptr;
+								fieldDataReferences.insert({ it->first,FieldData(mono_object_get_size(result)) });
+								while (MonoClassField* _field = mono_class_get_fields(mGameObjClass, &iter))
 								{
-									isAddingGameObjectReference = false;
-									GameObjectID gameObjID = go->id;
-									void* param = &gameObjID;
-									MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindGameObjectByID"], mObject, &param, nullptr);
-									MonoClass* mGameObjClass = mono_object_get_class(result);
-									void* iter = nullptr;
-									fieldDataReferences.insert({ it->first,FieldData(mono_object_get_size(result)) });
-									while (MonoClassField* _field = mono_class_get_fields(mGameObjClass, &iter))
-									{
-										mono_field_get_value(result, _field, fieldDataReferences[it->first].data + mono_field_get_offset(_field));
-									}
-									mono_field_set_value(mObject, it->second.classField, fieldDataReferences[it->first].data);
-									fieldGameObjReferences[_name] = go;
-									field = nullptr;
-									break;
+									mono_field_get_value(result, _field, fieldDataReferences[it->first].data + mono_field_get_offset(_field));
 								}
+								mono_field_set_value(mObject, it->second.classField, fieldDataReferences[it->first].data);
+								fieldGameObjReferences[_name] = go;
+								field = nullptr;
+								break;
 							}
 						}
 						ImGui::End();
