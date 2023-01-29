@@ -44,7 +44,7 @@ namespace Copium
 	{
 		Float, Double,
 		Bool, Char, Short, Int, Long,
-		UShort, UInt, ULong,
+		UShort, UInt, ULong, String,
 		Vector2, Vector3, GameObject, Component ,None
 	};
 
@@ -68,6 +68,7 @@ namespace Copium
 		{ "System.UInt16",				FieldType::UShort		},
 		{ "System.UInt32",				FieldType::UInt			},
 		{ "System.UInt64",				FieldType::ULong		},
+		{ "System.String",				FieldType::String		},
 		{ "CopiumEngine.Vector2",		FieldType::Vector2		},
 		{ "CopiumEngine.Vector3",		FieldType::Vector3		},
 		{ "CopiumEngine.GameObject",	FieldType::GameObject	},

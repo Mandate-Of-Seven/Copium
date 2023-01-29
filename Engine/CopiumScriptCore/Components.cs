@@ -21,6 +21,15 @@ using System.Threading.Tasks;
 
 namespace CopiumEngine
 {
+    public enum ButtonState
+    {
+        None,
+        Hovered,
+        Pressed,
+        Held,
+        Released
+    }
+
     public class Component
     {
         public ulong ID;
@@ -145,6 +154,11 @@ namespace CopiumEngine
 
     public class Button : Component
     {
+        public ButtonState state
+        {
+            get;
+            set;
+        }
         public bool interactable
         {
             get;

@@ -130,6 +130,7 @@ namespace Copium
 			{
 				MonoType* type = mono_field_get_type(field);
 				FieldType fieldType = Utils::monoTypeToFieldType(type);
+				PRINT(mono_type_get_name(type));
 				if (fieldType != FieldType::None)
 				{
 					mFields[fieldName] = { fieldType, "", field, 0 };
@@ -231,8 +232,8 @@ namespace Copium
 			//Critical section
 			while (!tSys.acquireMutex(MutexType::FileSystem));
 			updateScriptFiles();
-			tSys.returnMutex(MutexType::FileSystem);
 			tryRecompileDll();
+			tSys.returnMutex(MutexType::FileSystem);
 			//Critical section End
 			Sleep(SECONDS_TO_RECOMPILE * 1000);
 		}
@@ -532,6 +533,10 @@ namespace Copium
 
 	MonoString* ScriptingSystem::createMonoString(const char* str)
 	{
+		if (!mAppDomain)
+		{
+			PRINT("APP DOMAIN NOT LOADED");
+		}
 		return mono_string_new(mAppDomain, str);
 	}
 
@@ -559,9 +564,17 @@ namespace Copium
 			}
 			case MESSAGE_TYPE::MT_SCENE_OPENED:
 			{
+				//If swap assembly compiling
 				while (compilingState == CompilingState::Compiling);
-				compilingState = CompilingState::Deserializing;
-				swapDll();
+				if (compilingState == CompilingState::SwapAssembly)
+				{
+					compilingState = CompilingState::Deserializing;
+					swapDll();
+					registerComponents();
+					compilingState = CompilingState::Wait;
+				}
+				//compilingState = CompilingState::Deserializing;
+				//swapDll();
 				break;
 			}
 			case MESSAGE_TYPE::MT_SCENE_DESERIALIZED:
