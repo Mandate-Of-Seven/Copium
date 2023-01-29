@@ -77,7 +77,6 @@ int main()
 {
     init_statemanager(esActive);
     // Enable run-time memory check for debug purposes 
-
     #if defined(DEBUG) | defined(_DEBUG)
         _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     #endif
@@ -86,6 +85,8 @@ int main()
     copiumCore.init();
     MyFrameRateController.init(60);
     glfwSetWindowCloseCallback(windowsSystem->get_window(), quitEngine);
+
+
 
     // Engine Loop
     while (esCurrent != esQuit)

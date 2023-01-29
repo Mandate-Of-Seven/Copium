@@ -33,6 +33,7 @@ namespace Copium
 
 		isHierarchyOpen = true;
 		isParenting = false;
+		isPopUpOpen = false;
 
 	}
 	void EditorHierarchyList::update()
@@ -153,6 +154,7 @@ namespace Copium
 				//}
 				ImGui::EndMenu();
 				*/
+
 				ImGui::EndMenu();
 			}
 			ImGui::EndMenuBar();
@@ -199,6 +201,20 @@ namespace Copium
 
 		ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, 10.f);
 		ImGuiTreeNodeFlags rootFlags = ImGuiTreeNodeFlags_DefaultOpen;
+
+		if (ImGui::IsWindowHovered())
+		{
+			//PRINT("Hovering over hierarchy list");
+			if (is->is_mousebutton_pressed(GLFW_MOUSE_BUTTON_RIGHT) && sm->get_current_scene())
+			{				
+				//PRINT("Right Clicking within window boundaries");
+
+				if(!isPopUpOpen)
+					ImGui::OpenPopup("HOps");
+			}
+		}
+		DisplayHierarchyOptionsPopUpWindow();
+
 
 		// Ensure that game objects are displayed only if there is a current scene loaded
 		if (currentScene)
@@ -340,7 +356,7 @@ namespace Copium
 
 			//std::cout << "ID of selected Game Object: " << _selected << std::endl;
 		}		
-		if (ImGui::IsItemClicked())
+		if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 		{
 			std::cout << _go.get_name() << " is selected\n";
 			_selected = _go.id;
@@ -348,8 +364,18 @@ namespace Copium
 			sm->set_selected_gameobject(&_go);
 
 		}
-		
+		else if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+		{
+			std::cout << _go.get_name() << " is selected\n";
+			_selected = _go.id;
+			isSelected = true;
+			sm->set_selected_gameobject(&_go);
 
+			ImGui::OpenPopup("Options");
+			isPopUpOpen = true;
+		}	
+
+		int res = DisplayOptionsPopUpWindow();
 
 
 		//for (const auto& pComponent : _go.components)
@@ -363,20 +389,32 @@ namespace Copium
 		//	}
 		//}
 
-
-
-
-
-		// If game object has children, recursively display children
-		if (!_go.transform.children.empty())
+		for (std::list<Transform*>::iterator iter = _go.transform.children.begin(); iter != _go.transform.children.end(); ++iter)
 		{
-			int idx{ 0 };
-			for (auto pChild : _go.transform.children)
+			if (!(*iter))
 			{
-				isSelected = display_gameobject(pChild->gameObj, _selected, _go.transform.children, idx);
-				++idx;
+				_go.transform.children.erase(iter);
+				break;
 			}
 		}
+
+		if (res != 1)
+		{
+			// If game object has children, recursively display children
+			if (!_go.transform.children.empty())
+			{
+				int idx{ 0 };
+				for (auto pChild : _go.transform.children)
+				{
+					if (!pChild)
+						continue;
+
+					isSelected = display_gameobject(pChild->gameObj, _selected, _go.transform.children, idx);
+					++idx;
+				}
+			}
+		}
+
 
 		ImGui::TreePop();
 
@@ -498,23 +536,35 @@ namespace Copium
 			sm->set_selected_gameobject(&_go);
 
 		}
+		else if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+		{
+			std::cout << _go.get_name() << " is selected\n";
+			_selected = _go.id;
+			isSelected = true;
+			sm->set_selected_gameobject(&_go);
+
+			ImGui::OpenPopup("Options");
+			isPopUpOpen = true;
+		}
+
+		int res = DisplayOptionsPopUpWindow();
 		
 
 
 
-
-
-		// If game object has children, recursively display children
-		if (!_go.transform.children.empty())
+		if (res != 1)
 		{
-			int idx{ 0 };
-			for (auto pChild : _go.transform.children)
+			// If game object has children, recursively display children
+			if (!_go.transform.children.empty())
 			{
-				isSelected = display_gameobject(pChild->gameObj, _selected, _go.transform.children, idx);
-				++idx;
+				int idx{ 0 };
+				for (auto pChild : _go.transform.children)
+				{
+					isSelected = display_gameobject(pChild->gameObj, _selected, _go.transform.children, idx);
+					++idx;
+				}
 			}
 		}
-		//ImGui::Unindent();
 
 		ImGui::TreePop();
 
@@ -728,7 +778,134 @@ namespace Copium
 		return true;
 
 	}
+	int EditorHierarchyList::DisplayOptionsPopUpWindow()
+	{
+		int result{ 0 };
+		// Pop-up menu
+		ImVec2 pos = ImGui::GetMousePos();
+		ImGui::SetNextWindowPos(pos, ImGuiCond_Appearing, ImVec2(0.f, 0.f));
+		if (ImGui::BeginPopup("Options"))
+		{
+			//isPopUpOpen = true;
 
+			if (ImGui::MenuItem("Clone", "Ctrl+D"))
+			{
+				PRINT("Cloning game object");
+				if (Copium::SceneManager::Instance()->get_selected_gameobject())
+				{
+					std::cout << "Clone\n";
+					MyGOF.instantiate(*Copium::SceneManager::Instance()->get_selected_gameobject());
+					MySceneManager.set_selected_gameobject(nullptr);
+				}
+				else
+				{
+					Window::EditorConsole::editorLog.add_logEntry("No Scene is Loaded!");
+				}
+
+				//isPopUpOpen = false;
+			}
+			if (ImGui::MenuItem("Add a kid"))
+			{
+				PRINT("Plus one mouth to feed");
+				if (MySceneManager.get_selected_gameobject())
+				{
+					MyGOF.create_child(*MySceneManager.get_selected_gameobject());
+				}
+
+				//isPopUpOpen = false;
+			}
+			if (ImGui::MenuItem("Delete"))
+			{
+				PRINT("die bitch");
+				if (Copium::SceneManager::Instance()->get_selected_gameobject())
+				{
+					std::cout << "Delete\n";
+					Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::GameObjectCommand(MySceneManager.get_selected_gameobject_sptr(), false);
+					Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+					MyGOF.destroy(MySceneManager.get_selected_gameobject());
+					MySceneManager.set_selected_gameobject(nullptr);
+					result = 1;
+				}
+				else
+				{
+					Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
+				}
+				//isPopUpOpen = false;
+			}
+			//if (ImGui::MenuItem("Shift Up"))
+			//{
+			//	ShiftUp();
+			//	result = 2;
+			//	isPopUpOpen = false;
+			//}
+			//if (ImGui::MenuItem("Shift Down"))
+			//{
+			//	isParenting = true;
+			//	
+			//	isPopUpOpen = false;
+			//}
+			ImGui::EndPopup();
+		}
+		else
+		{
+			//if (isPopUpOpen)
+			//	isPopUpOpen = false;
+
+			return -1;
+		}
+
+		return result;
+	}
+	int EditorHierarchyList::DisplayHierarchyOptionsPopUpWindow()
+	{
+		int result{ 0 };
+		ImVec2 pos = ImGui::GetMousePos();
+		ImGui::SetNextWindowPos(pos, ImGuiCond_Appearing, ImVec2(0.f, 0.f));
+		if (ImGui::BeginPopup("HOps"))
+		{
+			isPopUpOpen = true;
+			if (ImGui::MenuItem("Create GameObject"))
+			{
+				if (!currentScene)
+				{
+					Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
+				}
+				else
+				{
+					Copium::GameObject* temp = MyGOF.instantiate();
+					if (temp)
+					{
+						std::shared_ptr<Copium::GameObject>* sptr = MySceneManager.find_gameobject_sptr(temp);
+						if (sptr)
+						{
+							Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::GameObjectCommand(*MySceneManager.find_gameobject_sptr(temp), true);
+							Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+							tempUndo->printCommand();
+						}
+
+					}
+					else
+					{
+						std::cout << "Error creating game object\n";
+					}
+				}
+
+				isPopUpOpen = false;
+			}
+
+			ImGui::EndPopup();
+		}
+		else
+		{
+			if (isPopUpOpen)
+				isPopUpOpen = false;
+
+			return -1;
+		}
+
+
+		return result;
+	}
 	void EditorHierarchyList::Reorder(GameObject* _go)
 	{
 		bool pressed{ false };

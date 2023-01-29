@@ -185,6 +185,8 @@ namespace Copium
 		void ShiftDown();
 
 		bool DisplayAdoptionWindow();
+		int DisplayOptionsPopUpWindow();
+		int DisplayHierarchyOptionsPopUpWindow();
 
 		void Reorder(GameObject* _go);
 
@@ -193,6 +195,7 @@ namespace Copium
 		Scene* currentScene;
 		bool isHierarchyOpen;
 		bool isParenting;
+		bool isPopUpOpen;
 	};
 }
 

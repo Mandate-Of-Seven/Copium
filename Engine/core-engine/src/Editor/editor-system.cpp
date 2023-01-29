@@ -81,6 +81,7 @@ namespace Copium
 		layers.init();
 		// Initialize a new editor camera
 		camera.init((float) sceneView.get_width(), (float) sceneView.get_height());
+		show_demo_window = true;
 	}
 
 	void EditorSystem::update()

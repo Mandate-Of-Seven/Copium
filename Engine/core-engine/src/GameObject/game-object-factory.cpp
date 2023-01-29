@@ -238,11 +238,20 @@ namespace Copium
 			destroy(&pTransform->gameObj);
 		}
 
-		//std::cout << "Deleting " << _go->get_name() << std::endl;
+		std::cout << "Deleting " << _go->get_name() << std::endl;
 		
 		if (_go->transform.hasParent())
 		{
-			_go->transform.setParent(nullptr);
+			GameObject* parent = &_go->transform.parent->gameObj;
+			Transform* pt = _go->transform.parent;
+			for (std::list<Transform*>::iterator iter = pt->children.begin(); iter != pt->children.end(); ++iter)
+			{
+				if ((*iter)->gameObj.id == _go->id)
+				{
+					*iter = nullptr;
+					break;
+				}
+			}
 		}
 
 		currScene->gameObjects.erase(std::remove_if(currScene->gameObjects.begin(), currScene->gameObjects.end(), [&](GameObject* gameObj) {return gameObj==_go;}));
@@ -269,6 +278,7 @@ namespace Copium
 		//		break;
 		//	}
 		//}
+
 		return true;
 	}
 

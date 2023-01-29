@@ -87,6 +87,7 @@ namespace Copium
 		/**************************************************************************/
 		void update()
 		{
+
 			double totalUpdateTime = 0;
 			for (ISystem* pSystem : systems)
 			{
