@@ -340,7 +340,7 @@ namespace Copium
 
 		GenerateFileStream(writeMetaFile, _file);
 
-		PRINT("Meta file successfully generated...");
+		//PRINT("Meta file successfully generated...");
 
 		writeMetaFile.close();
 	}
@@ -350,7 +350,7 @@ namespace Copium
 		uint64_t pathID = std::hash<std::string>{}(_file->string());
 		if (metaData.find(pathID) != metaData.end())
 		{
-			PRINT("This file already contains a meta file!");
+			//PRINT("This file already contains a meta file!");
 			return true;
 		}
 
