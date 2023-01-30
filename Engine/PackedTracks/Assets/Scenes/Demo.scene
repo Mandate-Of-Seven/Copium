@@ -1061,7 +1061,8 @@
                     "Type": "Script",
                     "Name": "EventManager",
                     "EventSequence": 0,
-                    "LuckSequence": 0
+                    "LuckSequence": 0,
+                    "GameManager": 46
                 }
             ]
         },
@@ -1071,7 +1072,7 @@
             "Components": [
                 {
                     "PID": 24,
-                    "ID": 58,
+                    "ID": 59,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1113,7 +1114,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 60,
+                    "ID": 61,
                     "Type": "Transform",
                     "Pos": {
                         "X": 5.876922607421875,
@@ -1182,7 +1183,7 @@
             "Components": [
                 {
                     "PID": 24,
-                    "ID": 64,
+                    "ID": 65,
                     "Type": "Transform",
                     "Pos": {
                         "X": 6.304711818695068,
@@ -1224,7 +1225,7 @@
             "Components": [
                 {
                     "PID": 24,
-                    "ID": 66,
+                    "ID": 67,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.20270991325378418,
@@ -1266,7 +1267,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 68,
+                    "ID": 69,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1306,7 +1307,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 70,
+                    "ID": 71,
                     "Type": "Transform",
                     "Pos": {
                         "X": -2.964315891265869,
@@ -1346,7 +1347,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 72,
+                    "ID": 73,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.05472242832183838,
@@ -1384,7 +1385,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 74,
+                    "ID": 75,
                     "Type": "Transform",
                     "Pos": {
                         "X": 6.444356918334961,
@@ -1422,7 +1423,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 76,
+                    "ID": 77,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
