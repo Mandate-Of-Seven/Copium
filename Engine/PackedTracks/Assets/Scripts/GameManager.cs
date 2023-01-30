@@ -3,6 +3,8 @@ using System;
 
 public class GameManager: CopiumScript
 {
+    public EventManager EventManager;
+
 	public GameObject TrainCanvas;
 	public GameObject MainScreenCanvas;
 	public GameObject CombatCanvas;
@@ -13,8 +15,6 @@ public class GameManager: CopiumScript
     public Button ReportScreenBtn;
     public Button CombatScreenBtn;
     public Button OtherScreenBtn;
-
-    public AudioSource audio;
 
 	public Text Header;
 	public Text Body;
@@ -39,8 +39,6 @@ public class GameManager: CopiumScript
         option01_btn = Option_01.GetComponent<Button>();
         option02_btn = Option_02.GetComponent<Button>();
         next_btn = Next_Event.GetComponent<Button>();
-
-        audio = GetComponent<AudioSource>();
 
         UpdateCanvases();
     }

@@ -12,7 +12,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 54,
+                    "ID": 1,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -57,7 +57,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 2,
+                    "ID": 4,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -83,7 +83,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 3,
+                    "ID": 5,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -121,7 +121,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 5,
+                    "ID": 7,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -147,7 +147,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 6,
+                    "ID": 8,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.002354264259338379,
@@ -202,7 +202,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 9,
+                    "ID": 11,
                     "Type": "Transform",
                     "Pos": {
                         "X": 6.469001770019531,
@@ -263,7 +263,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 13,
+                    "ID": 15,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -301,7 +301,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 15,
+                    "ID": 17,
                     "Type": "Transform",
                     "Pos": {
                         "X": -6.0,
@@ -378,7 +378,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 20,
+                    "ID": 22,
                     "Type": "Transform",
                     "Pos": {
                         "X": -6.0,
@@ -455,7 +455,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 25,
+                    "ID": 27,
                     "Type": "Transform",
                     "Pos": {
                         "X": -6.0,
@@ -532,7 +532,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 30,
+                    "ID": 32,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -558,7 +558,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 31,
+                    "ID": 33,
                     "Type": "Transform",
                     "Pos": {
                         "X": 2.0,
@@ -596,7 +596,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 33,
+                    "ID": 35,
                     "Type": "Transform",
                     "Pos": {
                         "X": 2.0,
@@ -635,7 +635,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 35,
+                    "ID": 37,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -661,7 +661,7 @@
             "Components": [
                 {
                     "PID": 14,
-                    "ID": 36,
+                    "ID": 38,
                     "Type": "Transform",
                     "Pos": {
                         "X": 1.100000023841858,
@@ -730,7 +730,7 @@
             "Components": [
                 {
                     "PID": 14,
-                    "ID": 40,
+                    "ID": 42,
                     "Type": "Transform",
                     "Pos": {
                         "X": 1.100000023841858,
@@ -799,7 +799,7 @@
             "Components": [
                 {
                     "PID": 15,
-                    "ID": 44,
+                    "ID": 46,
                     "Type": "Transform",
                     "Pos": {
                         "X": -3.299999952316284,
@@ -838,7 +838,7 @@
             "Components": [
                 {
                     "PID": 16,
-                    "ID": 46,
+                    "ID": 48,
                     "Type": "Transform",
                     "Pos": {
                         "X": -3.299999952316284,
@@ -877,7 +877,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 48,
+                    "ID": 50,
                     "Type": "Transform",
                     "Pos": {
                         "X": -2.5,
@@ -916,7 +916,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 50,
+                    "ID": 52,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -942,7 +942,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 51,
+                    "ID": 53,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -968,7 +968,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 52,
+                    "ID": 54,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -994,7 +994,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 53,
+                    "ID": 55,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1020,7 +1020,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 54,
+                    "ID": 56,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1042,12 +1042,12 @@
                     "ID": 46,
                     "Type": "Script",
                     "Name": "GameManager",
-                    "LuckSequence": 0,
                     "EventSequence": 0,
+                    "LuckSequence": 0,
+                    "Option_01": 15,
                     "TrainCanvas": 4,
                     "CombatCanvas": 21,
                     "MainScreenCanvas": 3,
-                    "Option_01": 15,
                     "Option_02": 16,
                     "Next_Event": 26,
                     "Body": 44,
@@ -1055,6 +1055,13 @@
                     "Header": 31,
                     "Option_01_Text": 42,
                     "Option_02_Text": 43
+                },
+                {
+                    "ID": 78,
+                    "Type": "Script",
+                    "Name": "EventManager",
+                    "EventSequence": 0,
+                    "LuckSequence": 0
                 }
             ]
         },
@@ -1064,7 +1071,7 @@
             "Components": [
                 {
                     "PID": 24,
-                    "ID": 56,
+                    "ID": 58,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1106,7 +1113,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 58,
+                    "ID": 60,
                     "Type": "Transform",
                     "Pos": {
                         "X": 5.876922607421875,
@@ -1175,7 +1182,7 @@
             "Components": [
                 {
                     "PID": 24,
-                    "ID": 62,
+                    "ID": 64,
                     "Type": "Transform",
                     "Pos": {
                         "X": 6.304711818695068,
@@ -1217,7 +1224,7 @@
             "Components": [
                 {
                     "PID": 24,
-                    "ID": 64,
+                    "ID": 66,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.20270991325378418,
@@ -1259,7 +1266,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 66,
+                    "ID": 68,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1299,7 +1306,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 68,
+                    "ID": 70,
                     "Type": "Transform",
                     "Pos": {
                         "X": -2.964315891265869,
@@ -1339,7 +1346,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 70,
+                    "ID": 72,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.05472242832183838,
@@ -1377,7 +1384,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 72,
+                    "ID": 74,
                     "Type": "Transform",
                     "Pos": {
                         "X": 6.444356918334961,
@@ -1415,7 +1422,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 74,
+                    "ID": 76,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
