@@ -20,6 +20,11 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
+	namespace
+	{
+		Copium::SoundSystem& soundSystem{ *Copium::SoundSystem::Instance() };
+	}
+
 	AudioSource::AudioSource(GameObject& _gameObj) :Component(_gameObj, ComponentType::AudioSource)
 	{
 	}
@@ -89,7 +94,7 @@ namespace Copium
 
 						Copium::SoundSystem* soundsystem = Copium::SoundSystem::Instance();
 
-						size_t lastSlash = str.find_last_of("/");
+						size_t lastSlash = str.find_last_of("\\");
 						std::string temp = str.substr(lastSlash + 1);
 						size_t lastDot = temp.find_last_of(".");
 						alias = temp.substr(0, lastDot);
@@ -144,6 +149,15 @@ namespace Copium
 				}
 			}
 
+			if (ImGui::Button("Stop ALL"))
+			{
+				if (alias.size())
+				{
+					std::cout << "Stopping all audio\n";
+					stop_all_sound();
+				}
+			}
+
 			ImGui::Unindent();
 			ImGui::EndTable();
 		}
@@ -152,12 +166,17 @@ namespace Copium
 
 	void AudioSource::play_sound()
 	{
-		SoundSystem::Instance()->Play(this->alias);
+		soundSystem.Play(this->alias);
 	}
 
 	void AudioSource::stop_sound()
 	{
-		SoundSystem::Instance()->Stop(this->alias);
+		soundSystem.Stop(this->alias);
+	}
+
+	void AudioSource::stop_all_sound()
+	{
+		soundSystem.StopAll();
 	}
 
 	Component* AudioSource::clone(GameObject& _gameObj) const

@@ -204,6 +204,7 @@ namespace Copium
 			size_t lastDot = temp.find_last_of(".");
 			//std::cout << "Alias: " << temp.substr(0, lastDot) << "\n";
 			SoundSystem::Instance()->CreateSound(path, temp.substr(0, lastDot));
+			SoundSystem::Instance()->SetVolume(temp.substr(0, lastDot), 1.0f);
 		}
 	}
 
