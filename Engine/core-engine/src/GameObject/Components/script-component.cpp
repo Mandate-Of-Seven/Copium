@@ -310,6 +310,7 @@ namespace Copium
 							MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindComponentByID"], mObject, params, nullptr); 
 							MonoClass* mComponentClass = mono_object_get_class(result);
 							void* iter = nullptr;
+							fieldDataReferences.insert({ it->first,FieldData(mono_object_get_size(result)) });
 							while (MonoClassField* _field = mono_class_get_fields(mComponentClass,&iter))
 							{
 								mono_field_get_value(result, _field, fieldDataReferences[it->first].data + mono_field_get_offset(_field));
