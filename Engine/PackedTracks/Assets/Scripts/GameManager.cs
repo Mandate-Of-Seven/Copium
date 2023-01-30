@@ -19,11 +19,15 @@ public class GameManager: CopiumScript
     public Button MessageTabBtn;
     public Button CrewTabBtn;
 
+    public AudioSource audio;
+
     bool isReportScreenOn = false;
 
 	void Start()
 	{
         isReportScreenOn = false;
+
+        audio.Play();
 
         UpdateCanvases();
     }

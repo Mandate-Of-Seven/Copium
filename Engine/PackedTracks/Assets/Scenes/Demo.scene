@@ -40,6 +40,11 @@
                         "Near": 0.029999999329447746,
                         "Far": 500.0
                     }
+                },
+                {
+                    "ID": 78,
+                    "Type": "AudioSource",
+                    "Alias": "..\\PackedTracks\\Assets\\Sounds\\Music\\Nightshift _BGM2_Loop_70bpm"
                 }
             ]
         },
@@ -49,7 +54,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 3,
+                    "ID": 4,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -75,7 +80,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 4,
+                    "ID": 5,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -113,7 +118,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 6,
+                    "ID": 7,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -139,7 +144,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 7,
+                    "ID": 8,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.002354264259338379,
@@ -194,7 +199,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 10,
+                    "ID": 11,
                     "Type": "Transform",
                     "Pos": {
                         "X": 6.469001770019531,
@@ -255,7 +260,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 14,
+                    "ID": 15,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -293,7 +298,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 16,
+                    "ID": 17,
                     "Type": "Transform",
                     "Pos": {
                         "X": -6.0,
@@ -362,7 +367,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 20,
+                    "ID": 21,
                     "Type": "Transform",
                     "Pos": {
                         "X": -6.0,
@@ -431,7 +436,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 24,
+                    "ID": 25,
                     "Type": "Transform",
                     "Pos": {
                         "X": -6.0,
@@ -500,7 +505,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 28,
+                    "ID": 29,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -526,7 +531,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 29,
+                    "ID": 30,
                     "Type": "Transform",
                     "Pos": {
                         "X": 2.0,
@@ -564,7 +569,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 31,
+                    "ID": 32,
                     "Type": "Transform",
                     "Pos": {
                         "X": 2.0,
@@ -603,7 +608,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 33,
+                    "ID": 34,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -629,7 +634,7 @@
             "Components": [
                 {
                     "PID": 14,
-                    "ID": 34,
+                    "ID": 35,
                     "Type": "Transform",
                     "Pos": {
                         "X": 1.100000023841858,
@@ -698,7 +703,7 @@
             "Components": [
                 {
                     "PID": 14,
-                    "ID": 38,
+                    "ID": 39,
                     "Type": "Transform",
                     "Pos": {
                         "X": 1.100000023841858,
@@ -767,7 +772,7 @@
             "Components": [
                 {
                     "PID": 15,
-                    "ID": 42,
+                    "ID": 43,
                     "Type": "Transform",
                     "Pos": {
                         "X": -3.299999952316284,
@@ -806,7 +811,7 @@
             "Components": [
                 {
                     "PID": 16,
-                    "ID": 44,
+                    "ID": 45,
                     "Type": "Transform",
                     "Pos": {
                         "X": -3.299999952316284,
@@ -845,7 +850,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 46,
+                    "ID": 47,
                     "Type": "Transform",
                     "Pos": {
                         "X": -2.5,
@@ -884,7 +889,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 48,
+                    "ID": 49,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -910,7 +915,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 49,
+                    "ID": 50,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -936,7 +941,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 50,
+                    "ID": 51,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -962,7 +967,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 51,
+                    "ID": 52,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -988,7 +993,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 52,
+                    "ID": 53,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1019,6 +1024,7 @@
                     "CrewTabBtn": 27,
                     "ReportScreenBtn": 9,
                     "ReportTabBtn": 17,
+                    "audio": 78,
                     "MessageTabBtn": 22
                 }
             ]
@@ -1029,7 +1035,7 @@
             "Components": [
                 {
                     "PID": 24,
-                    "ID": 54,
+                    "ID": 55,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1071,7 +1077,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 56,
+                    "ID": 57,
                     "Type": "Transform",
                     "Pos": {
                         "X": 5.876922607421875,
@@ -1140,7 +1146,7 @@
             "Components": [
                 {
                     "PID": 24,
-                    "ID": 60,
+                    "ID": 61,
                     "Type": "Transform",
                     "Pos": {
                         "X": 6.304711818695068,
@@ -1182,7 +1188,7 @@
             "Components": [
                 {
                     "PID": 24,
-                    "ID": 62,
+                    "ID": 63,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.20270991325378418,
@@ -1224,7 +1230,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 64,
+                    "ID": 65,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1264,7 +1270,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 66,
+                    "ID": 67,
                     "Type": "Transform",
                     "Pos": {
                         "X": -2.964315891265869,
@@ -1304,7 +1310,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 68,
+                    "ID": 69,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.05472242832183838,
@@ -1342,7 +1348,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 70,
+                    "ID": 71,
                     "Type": "Transform",
                     "Pos": {
                         "X": 6.444356918334961,
@@ -1380,7 +1386,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 72,
+                    "ID": 73,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1418,7 +1424,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 74,
+                    "ID": 75,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1441,6 +1447,7 @@
                     "Type": "Script",
                     "Name": "EventManager",
                     "EventSequence": 0,
+                    "DaySequence": 1,
                     "LuckSequence": 0,
                     "Option_01": 15,
                     "Option_02": 16,
@@ -1460,7 +1467,7 @@
             "Components": [
                 {
                     "PID": 34,
-                    "ID": 76,
+                    "ID": 77,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,

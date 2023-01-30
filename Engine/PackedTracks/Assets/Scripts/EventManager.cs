@@ -15,13 +15,18 @@ public class EventManager: CopiumScript
     public Text Option_01_Text;
     public Text Option_02_Text;
 
+    public int DaySequence = 1;
     public int EventSequence = 0;
     public int LuckSequence = 0;
+
+    int InternalLuck = 0;
 
     public Event_Intro Event_Intro;
 
     bool Event_01 = false;
     bool Event_02 = false;
+    bool Event_03 = false;
+    bool Event_04 = false;
 
     Button option01_btn;
     Button option02_btn;
@@ -34,15 +39,25 @@ public class EventManager: CopiumScript
     }
 	void Update()
 	{
+        CheckCurrentEvent();
+
         if (next_btn.state == ButtonState.OnClick && Next_Event.activeSelf)
+        {
+            EventSequence++;
+
+            // Day 02
+            if (EventSequence == 5)
+                DaySequence++;
+        }
+
+        // This should check if the combat screen has been activated
+        if(Input.GetKeyUp(KeyCode.Escape) && Event_02 && !Event_03)
         {
             EventSequence++;
         }
 
         Console.WriteLine("Event manager");
         Console.WriteLine(GameManager.ReportTab.activeSelf);
-
-        CheckCurrentEvent();
     }
 
     void CheckCurrentEvent()
@@ -51,8 +66,8 @@ public class EventManager: CopiumScript
         switch (EventSequence)
         {
             case 0:
-                Event_Intro.Event();
-                //Introduction();
+                //Event_Intro.Event();
+                Introduction();
                 break;
             case 1:
                 Event01();
@@ -63,11 +78,16 @@ public class EventManager: CopiumScript
             case 3:
                 Event03();
                 break;
+            case 4:
+                Event04();
+                break;
+            case 5:
+                Event05();
+                break;
             default:
                 break;
         }
     }
-
 
     void Introduction()
     {
@@ -77,7 +97,7 @@ public class EventManager: CopiumScript
             Option_02.SetActive(false);
         }
 
-        Header.text = "AI assistance Intro";
+        Header.text = "AI Assistance Intro";
 
         Body.text = "Welcome conductor, I am AI your digital assistance for this mission. " +
             "I have a message \nfrom Captain Bob.\n\n\"Good day volunteer, \n\nYou are likely " +
@@ -96,7 +116,7 @@ public class EventManager: CopiumScript
     {
         if (Event_01)
         {
-            if (GameManager.ReportTab.activeSelf)
+            if (GameManager.ReportTab.activeSelf || true)
             {
                 Option_01.SetActive(false);
                 Option_02.SetActive(false);
@@ -105,9 +125,8 @@ public class EventManager: CopiumScript
             return;
         }
 
-        if (GameManager.ReportTab.activeSelf)
+        if (GameManager.ReportTab.activeSelf || true)
         {
-            Console.WriteLine("In event 01");
             Option_01.SetActive(true);
             Option_02.SetActive(true);
             Next_Event.SetActive(false);
@@ -131,11 +150,11 @@ public class EventManager: CopiumScript
         }
     }
 
-    void Choice01(bool choice01)
+    void Choice01(bool choice)
     {
         float chance;
         LuckSequence = 1;
-        if (choice01)
+        if (choice)
         {
             // 80%
             chance = RNG.Range(0, 1);
@@ -157,7 +176,7 @@ public class EventManager: CopiumScript
                     "of the crew \nslightly, everyone seem to be in a much cheery mood.";
             }
         }
-        else if (!choice01)
+        else if (!choice)
         {
             // 50%
             chance = RNG.Range(0, 1);
@@ -189,7 +208,7 @@ public class EventManager: CopiumScript
     {
         if (Event_02)
         {
-            if (GameManager.ReportTab.activeSelf)
+            if (GameManager.ReportTab.activeSelf || true)
             {
                 Option_01.SetActive(false);
                 Option_02.SetActive(false);
@@ -198,7 +217,7 @@ public class EventManager: CopiumScript
             return;
         }
 
-        if (GameManager.ReportTab.activeSelf)
+        if (GameManager.ReportTab.activeSelf || true)
         {
             Option_01.SetActive(true);
             Option_02.SetActive(true);
@@ -208,13 +227,13 @@ public class EventManager: CopiumScript
         Header.text = "Leaving the city";
         if (LuckSequence == 1)
         {
-            Body.text = "Report type: Situation\n\nBronson spotted a mysterious vehicle approaching our train, " +
+            Body.text = "Report type: Situation\n\nDanton spotted a mysterious vehicle approaching our train, " +
                 "attempts at communications \nfailed. People on the vehicle boarded the train and began rummaging " +
                 "through the train\n\nTrain commander to decide on course of action.";
         }
         else if (LuckSequence == 0)
         {
-            Body.text = "\nReport type: Situation\n\nBronson spotted a mysterious vehicle approaching our train, " +
+            Body.text = "\nReport type: Situation\n\nHarris spotted a mysterious vehicle approaching our train, " +
                 "attempts at communications \nfailed. People on the vehicle boarded the train and began rummaging " +
                 "through the train\nChuck seemed to be extremely eager to chase of the hostiles.\n\nTrain commander" +
                 " to decide on course of action.";
@@ -225,35 +244,41 @@ public class EventManager: CopiumScript
 
         if (option01_btn.state == ButtonState.OnClick && Option_01.activeSelf)
         {
-            Console.WriteLine("Run");
             Choice02(true);
         }
         else if (option02_btn.state == ButtonState.OnClick && Option_02.activeSelf)
         {
-            Console.WriteLine("Run2");
             Choice02(false);
         }
 
     }
 
-    void Choice02(bool choice01)
+    void Choice02(bool choice)
     {
-
-        if (choice01)
+        if (choice)
         {
             Header.text = "Engaging";
 
             Body.text = "\nReport type: Situation\n\n\nWhen confronted hostiles began firing at crew " +
                 "members.\nCrew members are currently engaging in fight with hostiles.\n\nStatus of " +
                 "the battle can be seen from the scene at the side.";
+
+            if(LuckSequence == 1)
+                InternalLuck = 1;
+            else
+                InternalLuck = 0;
+
+            LuckSequence = 1;
         }
-        else if (!choice01)
+        else if (!choice)
         {
             Header.text = "Hiding from danger";
             if (LuckSequence == 1)
             {
                 Body.text = "\nReport type: Situation\n\nThe crew  followed orders and quickly hid and " +
                     "allowed the hostiles to loot the food \nfrom our supplies. \n\nFood supplies left: 2";
+
+                LuckSequence = 11;
             }
             else if (LuckSequence == 0)
             {
@@ -262,15 +287,20 @@ public class EventManager: CopiumScript
                     "had to tie up and drag Chuck so \nthat he would not try and engage. \n\nAfter the hostiles " +
                     "left Chuck seem to be furious and in a fit of rage punched Danton in \nthe face, breaking" +
                     " his jaw.\n\nFood supplies left: 2";
+
+                LuckSequence = 10;
             }
 
         }
 
-        if (GameManager.ReportTab.activeSelf)
+        if (GameManager.ReportTab.activeSelf || true)
         {
             Option_01.SetActive(false);
             Option_02.SetActive(false);
-            Next_Event.SetActive(true);
+            if (choice)
+                Next_Event.SetActive(false);
+            else
+                Next_Event.SetActive(true);
         }
 
         Event_02 = true;
@@ -278,6 +308,290 @@ public class EventManager: CopiumScript
 
     void Event03()
     {
-
+        if (LuckSequence == 10 || LuckSequence == 11)
+            Event03_01();
+        else if (LuckSequence == 1)
+        {
+            float chance = RNG.Range(0, 1);
+            if (chance > 0.5)
+                LuckSequence = 2;
+            else
+                LuckSequence = 3;
+        }
+        else if (LuckSequence == 2)
+            Event03_02();
+        else if (LuckSequence == 3)
+            Event03_03();
     }
+
+    // First Night
+    void Event03_01()
+    {
+        if (Event_03)
+        {
+            if (GameManager.ReportTab.activeSelf || true)
+            {
+                Option_01.SetActive(false);
+                Option_02.SetActive(false);
+                Next_Event.SetActive(true);
+            }
+            return;
+        }
+
+        if (GameManager.ReportTab.activeSelf || true)
+        {
+            Option_01.SetActive(true);
+            Option_02.SetActive(true);
+            Next_Event.SetActive(false);
+        }
+
+        Header.text = "First Night";
+        if (LuckSequence == 11)
+        {
+            Body.text = "\nReport type: Daily\n\nThe crew seem to be demoralized by the events that " +
+                "transpired the day and all \nseemed to be heading to bed early.\n\n[Insert Food, Health " +
+                "and Mental state]\n\nDo you wish to ration out your supplies?\n*Note each crew requires 0.5 food.";
+        }
+        else if (LuckSequence == 10)
+        {
+            Body.text = "\nReport type: Situation\n\nDaily evening report\n\nThe crew seem to be " +
+                "demoralized by the events that transpired the day and all\n seemed to be heading to bed early." +
+                "\n\n[Insert Food, Health and Mental state]\nSupplies: 2/4\n\n\n\nDo you wish to " +
+                "ration out your supplies?\n*Note each crew requires 0.5 food.";
+        }
+
+        Option_01_Text.text = "Yes";
+        Option_02_Text.text = "No";
+
+        if (option01_btn.state == ButtonState.OnClick && Option_01.activeSelf)
+        {
+            Choice03_01(true);
+        }
+        else if (option02_btn.state == ButtonState.OnClick && Option_02.activeSelf)
+        {
+            Choice03_01(false);
+        }
+    }
+
+    void Choice03_01(bool choice)
+    {
+        if (choice)
+        {
+            Header.text = "Delegate Food";
+
+            Body.text = "\nReport type: End Of Day\n\n\n Food was distributed...";
+        }
+        else if (!choice)
+        {
+            Header.text = "Starving";
+
+            Body.text = "\nReport type: End Of Day\n\n\nEveryone starved...";
+        }
+
+        if (GameManager.ReportTab.activeSelf || true)
+        {
+            Option_01.SetActive(false);
+            Option_02.SetActive(false);
+            Next_Event.SetActive(true);
+        }
+
+        EventSequence++;
+        Event_03 = true;
+    }
+
+    // A Devastating Defeat
+    void Event03_02()
+    {
+        if (GameManager.ReportTab.activeSelf || true)
+        {
+            Option_01.SetActive(false);
+            Option_02.SetActive(false);
+            Next_Event.SetActive(true);
+        }
+
+        Header.text = "A Devastating Defeat";
+        if (InternalLuck == 1)
+        {
+            Body.text = "\nReport type: Situation\n\n\nThe crew was quickly neutralized by the hostiles, " +
+                "luckily they seem to be only\n here because they where desperate for food. No crew was badly " +
+                "hurt/injured, after looting \nthe food from our train, they quickly left and returned our firearms. " +
+                "\n\nFood supplies left: 2";
+        }
+        else if (InternalLuck == 0)
+        {
+            Body.text = "\nReport type: Situation\n\n\nThe crew was quickly neutralized by the hostiles, " +
+                "luckily they seem to be only\n here because they where desperate for food. No crew was badly " +
+                "hurt/injured, after looting \nthe food from our train, they quickly left and returned our arms. " +
+                "\n\nFood supplies left: 2";
+        }
+
+        if (next_btn.state == ButtonState.OnClick && Next_Event.activeSelf)
+        {
+            if (InternalLuck == 1)
+                LuckSequence = 11;
+            else if (InternalLuck == 0)
+                LuckSequence = 10;
+
+            EventSequence--;
+        }
+    }
+
+    // Victory But...
+    void Event03_03()
+    {
+        if (Event_03)
+        {
+            if (GameManager.ReportTab.activeSelf || true)
+            {
+                Option_01.SetActive(false);
+                Option_02.SetActive(false);
+                Next_Event.SetActive(true);
+            }
+            return;
+        }
+
+        if (GameManager.ReportTab.activeSelf || true)
+        {
+            Option_01.SetActive(true);
+            Option_02.SetActive(true);
+            Next_Event.SetActive(false);
+        }
+
+        Header.text = "Victory, But...";
+        Body.text = "\nReport type: Situation\n\nLuckily no crew members was badly injured in the fight. " +
+            "However, there were 2 hostiles\n who survived. When the fight was not going in their favor, they" +
+            " lay down their \narms and offered surrender in exchange for their lives. The crew is split in" +
+            " deciding \nto kill or let them go. \nTrain conductor to choose course of action.";
+
+        Option_01_Text.text = "Kill the survivors";
+        Option_02_Text.text = "Let them go";
+
+        if (option01_btn.state == ButtonState.OnClick && Option_01.activeSelf)
+        {
+            Choice03_03(true);
+        }
+        else if (option02_btn.state == ButtonState.OnClick && Option_02.activeSelf)
+        {
+            Choice03_03(false);
+        }
+    }
+
+    void Choice03_03(bool choice)
+    {
+        if (choice)
+        {
+            Header.text = "No Mercy";
+
+            Body.text = "\nReport type: Situation\n\nHarris and Bronson had opposed to the idea but before " +
+                "they could do anything, Chuck \nhad already put a bullet into each of the survivors.\nThe crew " +
+                "carried 2 remaining survivors threw their bodies out the train.\n\nBronson seem quite disturbed " +
+                "with the killing of the 2 survivors.\n\nBronson Mental: Shaken";
+        }
+        else if (!choice)
+        {
+            Header.text = "Mercy";
+
+            Body.text = "\nReport type: Situation\n\nChuck seemed quick aggravated by your decision.\nChuck had " +
+                "ordered the 2 survivors to strip off all their clothing and hand \nover their weapons before he " +
+                "kicked them off the moving train.\n\nBronson seem to be quite disturbed by what Chuck had done." +
+                "\n\nBronson Mental: Shaken";
+        }
+
+        if (GameManager.ReportTab.activeSelf || true)
+        {
+            Option_01.SetActive(false);
+            Option_02.SetActive(false);
+            Next_Event.SetActive(true);
+        }
+
+        Event_03 = true;
+    }
+
+    // First Night
+    void Event04()
+    {
+        if (Event_04)
+        {
+            if (GameManager.ReportTab.activeSelf || true)
+            {
+                Option_01.SetActive(false);
+                Option_02.SetActive(false);
+                Next_Event.SetActive(true);
+            }
+            return;
+        }
+
+        if (GameManager.ReportTab.activeSelf || true)
+        {
+            Option_01.SetActive(true);
+            Option_02.SetActive(true);
+            Next_Event.SetActive(false);
+        }
+
+        Header.text = "First Night";
+        if (InternalLuck == 1)
+        {
+            Body.text = "\nReport type: Daily\n\nThe crew seem tried and fatigued as the day comes to an end, " +
+                "except Chuck \nwho seem awfully cheerful after what had happened in the day.\n\n[Insert Food, " +
+                "Health and Mental state]\n\nDo you wish to ration out your supplies?\n*Note each crew requires 0.5 food.\n\n\n\n\n";
+        }
+        else if (InternalLuck == 0)
+        {
+            Body.text = "\nReport type: Daily\n\nDaily evening report\n\nThe crew seem tried and fatigued as " +
+                "the day comes to an end.\n\n[Insert Food, Health and Mental state]\n\nDo you wish to ration " +
+                "out your supplies?\n*Note each crew requires 0.5 food.\n\n\n\n\n";
+        }
+
+        Option_01_Text.text = "Yes";
+        Option_02_Text.text = "No";
+
+        if (option01_btn.state == ButtonState.OnClick && Option_01.activeSelf)
+        {
+            Choice04(true);
+        }
+        else if (option02_btn.state == ButtonState.OnClick && Option_02.activeSelf)
+        {
+            Choice04(false);
+        }
+    }
+
+    void Choice04(bool choice)
+    {
+        if (choice)
+        {
+            Header.text = "Delegate Food";
+
+            Body.text = "\nReport type: End Of Day\n\n\n Food was distributed...";
+        }
+        else if (!choice)
+        {
+            Header.text = "Starving";
+
+            Body.text = "\nReport type: End Of Day\n\n\nEveryone starved...";
+        }
+
+        if (GameManager.ReportTab.activeSelf || true)
+        {
+            Option_01.SetActive(false);
+            Option_02.SetActive(false);
+            Next_Event.SetActive(true);
+        }
+
+        Event_04 = true;
+    }
+
+    // New Day
+    void Event05()
+    {
+        if (Option_01.activeSelf && Option_02.activeSelf)
+        {
+            Option_01.SetActive(false);
+            Option_02.SetActive(false);
+        }
+
+        Header.text = "Day 02";
+
+        Body.text = "To Be Continued...";
+    }
+    
 }
