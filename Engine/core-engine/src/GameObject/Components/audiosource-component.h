@@ -15,6 +15,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #pragma once
 #include "pch.h"
 #include "GameObject/Components/component.h"
+#include "SceneManager/scene-manager.h"
 
 namespace Copium
 {
@@ -105,6 +106,8 @@ namespace Copium
             */
             /**************************************************************************/
             void stop_sound();
+
+            void stop_all_sound();
 
             /***************************************************************************/
             /*!

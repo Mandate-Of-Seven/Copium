@@ -18,7 +18,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "sound-system.h"
 #include "Windows/windows-system.h"
 #include "Windows/windows-input.h"
-
+#include "SceneManager/scene-manager.h"
+#include "GameObject/Components/audiosource-component.h"
 
 namespace
 {
@@ -135,6 +136,26 @@ void SoundSystem::Stop(std::string alias)
 			soundList[alias].first->stop();
 	}
 }
+
+void SoundSystem::StopAll()
+{
+	SceneManager* sm = SceneManager::Instance();
+	Scene* scene = sm->get_current_scene();
+	if (scene != nullptr)
+	{
+		//for(auto gameObj = scene->gameObjects.begin(); gameObj != scene->gameObjects.end(); ++gameObj)
+		for (auto gameObj : scene->gameObjects)
+		{
+
+			AudioSource* temp = gameObj->getComponent<AudioSource>();
+			if (temp != NULL)
+			{
+				temp->stop_sound();
+			}
+		}
+	}
+}
+
 
 // Set volume
 void SoundSystem::SetVolume(std::string alias, float volume)
