@@ -55,9 +55,9 @@ public class EventManager: CopiumScript
         {
             EventSequence++;
         }
-
+/*
         Console.WriteLine("Event manager");
-        Console.WriteLine(GameManager.ReportTab.activeSelf);
+        Console.WriteLine(GameManager.ReportTab.activeSelf);*/
     }
 
     void CheckCurrentEvent()
