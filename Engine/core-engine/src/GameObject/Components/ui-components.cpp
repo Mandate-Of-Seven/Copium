@@ -35,7 +35,7 @@ namespace
 namespace Copium
 {
 	//Button------------/
-	const Button* Button::hoveredBtn{nullptr};
+	Button* Button::hoveredBtn{nullptr};
 	Button::Button(GameObject& _gameObj,Math::Vec2 _min, Math::Vec2 _max) 
 		: Component(_gameObj, ComponentType::Button), bounds{_min,_max},
 		normalColor{1.f,1.f,1.f,0.5f}, hoverColor{0.5f,1.f,1.f,0.5f}, clickedColor{0.5f},
@@ -68,10 +68,6 @@ namespace Copium
 
 	void Button::update()
 	{
-		if (hoveredBtn && !hoveredBtn->gameObj.isActive())
-		{
-			hoveredBtn = nullptr;
-		}
 		updateBounds();
 		state = getInternalState();
 		if (previousState != state)
@@ -318,7 +314,7 @@ namespace Copium
 		}
 	}
 
-	ButtonState Button::getInternalState() const
+	ButtonState Button::getInternalState()
 	{
 		glm::vec2 scenePos = MySceneManager.mainCamera->get_game_ndc();
 		//PRINT("x: " << scenePos.x << " , y: " << scenePos.y);
