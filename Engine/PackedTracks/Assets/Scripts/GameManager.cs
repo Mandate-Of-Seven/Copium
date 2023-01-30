@@ -3,6 +3,8 @@ using System;
 
 public class GameManager: CopiumScript
 {
+    public EventManager EventManager;
+
 	public GameObject TrainCanvas;
 	public GameObject MainScreenCanvas;
 	public GameObject CombatCanvas;
@@ -13,8 +15,6 @@ public class GameManager: CopiumScript
     public Button ReportScreenBtn;
     public Button CombatScreenBtn;
     public Button OtherScreenBtn;
-
-    public AudioSource audio;
 
 	public Text Header;
 	public Text Body;
@@ -40,11 +40,7 @@ public class GameManager: CopiumScript
         option02_btn = Option_02.GetComponent<Button>();
         next_btn = Next_Event.GetComponent<Button>();
 
-        TrainCanvas.SetActive(true);
-        MainScreenCanvas.SetActive(false);
-        CombatCanvas.SetActive(false);
-
-        audio = GetComponent<AudioSource>();
+        UpdateCanvases();
     }
 	void Update()
 	{
@@ -52,9 +48,6 @@ public class GameManager: CopiumScript
         {
             EventSequence++;
         }
-
-        if (MainScreenCanvas.activeSelf)
-            isReportScreenOn = true;
 
         if (ReportScreenBtn.state == ButtonState.OnClick)
         {
@@ -78,9 +71,6 @@ public class GameManager: CopiumScript
     {
         if(isReportScreenOn)
         {
-            if(TrainCanvas.activeSelf)
-                TrainCanvas.SetActive(false);
-
             if(!MainScreenCanvas.activeSelf)
                 MainScreenCanvas.SetActive(true);
 
@@ -123,6 +113,12 @@ public class GameManager: CopiumScript
     }
 	void Introduction()
 	{
+        if (Option_01.activeSelf && Option_02.activeSelf)
+        {
+            Option_01.SetActive(false);
+            Option_02.SetActive(false);
+        }
+
         Header.text = "AI assistance Intro";
 
 		Body.text = "Welcome conductor, I am AI your digital assistance for this mission. " +
@@ -135,41 +131,39 @@ public class GameManager: CopiumScript
             "we are \nunable to send the military. \n\nYou might have heard about the 'Crops Curse' that has been happening. " +
             "Thus, we are \nonly able to provide 2 days worth of rations. I'm sure you will figure something out \nwhilst traveling there. " +
             "\n\nI wish you all the best and hope to receive good news.\n\nBest regards, \nCaptain Bob Jones\"\n\nEnd of transmission. ";
-
-        if (Option_01.activeSelf && Option_02.activeSelf)
-        {
-            Option_01.SetActive(false);
-            Option_02.SetActive(false);
-        }
     }
 
 	// Luck in a barren wasteland
     void Event01()
     {
         if(Event_01)
+        {
+            if (isReportScreenOn)
+            {
+                Option_01.SetActive(false);
+                Option_02.SetActive(false);
+                Next_Event.SetActive(true);
+            }
             return;
+        }
 
+        if (isReportScreenOn)
+        {
+            Option_01.SetActive(true);
+            Option_02.SetActive(true);
+            Next_Event.SetActive(false);
+        }
+        
         Header.text = "Luck in a barren wasteland";
 
         Body.text = "\nReport type: Situation\n\n\nHarris spotted a abandoned town not too far off from the main track. " +
             "Crew seem \nto be in agreement to check it out. Otherwise, nothing out of the ordinary. \nTrain conductor to choose course of action. \n";
-
-        if (isReportScreenOn)
-        {
-            if (!Option_01.activeSelf && !Option_02.activeSelf && Next_Event.activeSelf)
-            {
-                Option_01.SetActive(true);
-                Option_02.SetActive(true);
-                Next_Event.SetActive(false);
-            }
-        }
 
         Option_01_Text.text = "Explore abandon town";
         Option_02_Text.text = "Do not explore abandoned town";
 
         if (option01_btn.state == ButtonState.OnClick)
         {
-            audio.Play();
             Choice01(true);
         }
         else if (option02_btn.state == ButtonState.OnClick)
@@ -228,13 +222,6 @@ public class GameManager: CopiumScript
             }
         }
 
-        if(isReportScreenOn)
-        {
-            Option_01.SetActive(false);
-            Option_02.SetActive(false);
-            Next_Event.SetActive(true);
-        }
-
         Event_01 = true;
     }
 
@@ -242,7 +229,22 @@ public class GameManager: CopiumScript
     void Event02()
 	{
         if (Event_02)
+        {
+            if (isReportScreenOn)
+            {
+                Option_01.SetActive(false);
+                Option_02.SetActive(false);
+                Next_Event.SetActive(true);
+            }
             return;
+        }
+
+        if (isReportScreenOn)
+        {
+            Option_01.SetActive(true);
+            Option_02.SetActive(true);
+            Next_Event.SetActive(false);
+        }
 
         Header.text = "Leaving the city";
         if(LuckSequence == 1)
@@ -257,28 +259,19 @@ public class GameManager: CopiumScript
                 "attempts at communications \nfailed. People on the vehicle boarded the train and began rummaging " +
                 "through the train\nChuck seemed to be extremely eager to chase of the hostiles.\n\nTrain commander" +
                 " to decide on course of action.";
-
-        }
-
-        if (isReportScreenOn)
-        {
-            if (!Option_01.activeSelf && !Option_02.activeSelf && Next_Event.activeSelf)
-            {
-                Option_01.SetActive(true);
-                Option_02.SetActive(true);
-                Next_Event.SetActive(false);
-            }
         }
 
         Option_01_Text.text = "Fight and capture the hostiles";
         Option_02_Text.text = "Hide and wait for them to pass";
 
-        if (option01_btn.state == ButtonState.OnClick)
+        if (option01_btn.state == ButtonState.OnClick && Option_01.activeSelf)
         {
+            Console.WriteLine("Run");
             Choice02(true);
         }
-        else if (option02_btn.state == ButtonState.OnClick)
+        else if (option02_btn.state == ButtonState.OnClick && Option_02.activeSelf)
         {
+            Console.WriteLine("Run2");
             Choice02(false);
         }
 

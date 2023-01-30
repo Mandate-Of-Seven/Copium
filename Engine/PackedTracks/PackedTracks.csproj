@@ -89,6 +89,7 @@
       <Link>Time.cs</Link>
     </Compile>
     <Compile Include="Assets\Scripts\ButtonCalls.cs" />
+    <Compile Include="Assets\Scripts\EventManager.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\Introduction.cs" />
     <Compile Include="Assets\Scripts\CombatMovement.cs" />
