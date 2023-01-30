@@ -20,12 +20,15 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
-	enum FILE_TYPE
+	enum class FILE_TYPE
 	{
 		FOLDER, // For empty file type
+		ASSET,
 		AUDIO,
 		CONFIG,
+		PREFAB,
 		FONT,
+		META,
 		SCENE,
 		SCRIPT,
 		SHADER,
@@ -41,7 +44,7 @@ namespace Copium
 		FILE_TYPE fileType{};
 	};
 
-	class File final : public std::filesystem::path
+	class File : public std::filesystem::path
 	{
 	public:
 		/*******************************************************************************

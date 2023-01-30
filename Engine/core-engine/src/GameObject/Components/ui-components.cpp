@@ -35,7 +35,7 @@ namespace
 namespace Copium
 {
 	//Button------------/
-	const Button* Button::hoveredBtn{nullptr};
+	Button* Button::hoveredBtn{nullptr};
 	Button::Button(GameObject& _gameObj,Math::Vec2 _min, Math::Vec2 _max) 
 		: Component(_gameObj, ComponentType::Button), bounds{_min,_max},
 		normalColor{1.f,1.f,1.f,0.5f}, hoverColor{0.5f,1.f,1.f,0.5f}, clickedColor{0.5f},
@@ -81,7 +81,7 @@ namespace Copium
 		{
 		case ButtonState::OnClick:
 		{
-			PRINT("UI: CRICKING on " << gameObj.get_name());
+			//PRINT("UI: Clicked " << gameObj.get_name());
 			if (targetGraphic)
 				targetGraphic->layeredColor = Linear(previousColor, clickedColor, timer / fadeDuration);
 			Script* script = gameObj.getComponent<Script>();
@@ -97,14 +97,19 @@ namespace Copium
 		}
 		case ButtonState::OnHover:
 		{
-			PRINT("UI: HOVERING on " << gameObj.get_name());
+			//PRINT("UI: Hover " << gameObj.get_name());
 			if (targetGraphic)
 				targetGraphic->layeredColor = Linear(previousColor, hoverColor, timer / fadeDuration);
 			break;
 		}
+		case ButtonState::OnHeld:
+		{
+			//PRINT("UI: Held " << gameObj.get_name());
+			break;
+		}
 		case ButtonState::OnRelease:
 		{
-			PRINT("UI: Released on " << gameObj.get_name());
+			//PRINT("UI: Released " << gameObj.get_name());
 			break;
 		}
 		default:
@@ -134,11 +139,14 @@ namespace Copium
 
 	void Button::previewLink(Component* rhs) 
 	{
-		ComponentID _ID = reinterpret_cast<Button*>(rhs)->targetGraphic->id;
+		if (reinterpret_cast<Button*>(rhs)->targetGraphic)
+		{
+			ComponentID _ID = reinterpret_cast<Button*>(rhs)->targetGraphic->id;
 
-		Component* foundText = MySceneManager.findComponentByID(_ID);
-		if (foundText)
-			targetGraphic = reinterpret_cast<Text*>(foundText);
+			Component* foundText = MySceneManager.findComponentByID(_ID);
+			if (foundText)
+				targetGraphic = reinterpret_cast<Text*>(foundText);
+		}
 	}
 
 	void Button::inspector_view()
@@ -306,7 +314,7 @@ namespace Copium
 		}
 	}
 
-	ButtonState Button::getInternalState() const
+	ButtonState Button::getInternalState()
 	{
 		glm::vec2 scenePos = MySceneManager.mainCamera->get_game_ndc();
 		//PRINT("x: " << scenePos.x << " , y: " << scenePos.y);
@@ -317,6 +325,8 @@ namespace Copium
 				if (inputSystem.is_mousebutton_pressed(0))
 				{
 					hoveredBtn = this;
+					if (state == ButtonState::OnClick || state == ButtonState::OnHeld)
+						return ButtonState::OnHeld;
 					return ButtonState::OnClick;
 				}
 				return ButtonState::OnHover;
@@ -329,6 +339,8 @@ namespace Copium
 				hoveredBtn = nullptr;
 				return ButtonState::OnRelease;
 			}
+			if (state == ButtonState::OnClick || state == ButtonState::OnHeld)
+				return ButtonState::OnHeld;
 			return ButtonState::OnClick;
 		}
 		return ButtonState::None;
@@ -431,7 +443,6 @@ namespace Copium
 		scale *= fSize;
 		glm::vec2 dimensions{ font->getDimensions(content, scale) };
 
-
 		switch (hAlignment)
 		{
 			case HorizontalAlignment::Center:
@@ -469,13 +480,30 @@ namespace Copium
 		/*PRINT("Color: " << color.r << " " << color.g << " " << color.b << " " << color.a);
 		PRINT("Mixed Color: " << mixedColor.r << " " << mixedColor.g << " " << mixedColor.b << " " << mixedColor.a);
 		*/
-		font->draw_text(content, pos, mixedColor, scale, 0, _camera);
+
+		if (gameObj.transform.hasParent())
+		{
+			Transform& t1 = *gameObj.transform.parent;
+			Copium::Math::Matrix3x3 rot;
+			Copium::Math::matrix3x3_rotdeg(rot, t1.rotation.z);
+			Copium::Math::Vec3 intermediate = (rot * pos);
+
+			font->draw_text(content, intermediate + t1.position, mixedColor, scale, 0, _camera);
+		}
+		else
+		{
+			font->draw_text(content, pos, mixedColor, scale, 0, _camera);
+		}
+
+		
 	}
 
 	Component* Text::clone(GameObject& _gameObj) const
 	{
 		Text* component = new Text(_gameObj);
 		memcpy(component->content, content, TEXT_BUFFER_SIZE);
+		component->vAlignment = vAlignment;
+		component->hAlignment = hAlignment;
 		component->color = color;
 		component->fSize = fSize;
 		component->font = font;
@@ -513,7 +541,7 @@ namespace Copium
 			ImGui::Text("Content:");
 			ImGui::TableNextColumn();
 			ImGui::PushItemWidth(-1);
-			ImGui::InputText("##Text", content, TEXT_BUFFER_SIZE);
+			ImGui::InputTextMultiline("##Text", content, TEXT_BUFFER_SIZE, ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 16));
 			ImGui::PopItemWidth();
 
 			ImGui::TableNextRow();
@@ -688,7 +716,7 @@ namespace Copium
 		glm::vec4 clrGLM = sprite.get_color();
 		ImVec4 clrIM = { clrGLM.r, clrGLM.g, clrGLM.b, clrGLM.a };
 
-		int spriteID = (int)sprite.get_sprite_id();
+		uint64_t spriteID = sprite.get_sprite_id();
 
 		std::string spriteName = sprite.get_name();
 		static ImVec4 backupColor;
@@ -722,10 +750,15 @@ namespace Copium
 					{
 						if (!assets->get_texture(i)->get_file_path().compare(str))
 						{
-							spriteID = i + 1;
+							uint64_t pathID = std::hash<std::string>{}(assets->get_texture(i)->get_file_path());
+							MetaID metaID = assets->GetMetaID(pathID);
+							spriteID = metaID.uuid;
+
+							// Attach Reference
+							sprite.set_texture(assets->get_texture(i));
 						}
 					}
-					size_t pos = str.find_last_of('/');
+					size_t pos = str.find_last_of('\\');
 					spriteName = str.substr(pos + 1, str.length() - pos);
 				}
 				ImGui::EndDragDropTarget();
@@ -794,6 +827,8 @@ namespace Copium
 	Component* ImageComponent::clone(GameObject& _gameObj) const
 	{
 		ImageComponent* component = new ImageComponent(_gameObj);
+		component->vAlignment = vAlignment;
+		component->hAlignment = hAlignment;
 		component->offset = offset;
 		component->sprite = sprite;
 		return component;

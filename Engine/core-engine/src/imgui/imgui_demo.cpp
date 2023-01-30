@@ -3475,7 +3475,7 @@ static void ShowDemoWindowPopups()
                 {
                     ShowExampleMenuFile();
                     ImGui::EndMenu();
-                }
+                } 
                 if (ImGui::BeginMenu("Edit"))
                 {
                     ImGui::MenuItem("Dummy");

@@ -90,7 +90,7 @@ namespace Copium
     GameObject::~GameObject()
     {
         std::cout << "GameObject destructed\n";
-        messageSystem.unsubscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
+        messageSystem.unsubscribe(MESSAGE_TYPE::MT_CREATE_CS_GAMEOBJECT, this);
 
         for (auto iter = components.begin(); iter != components.end(); ++iter)
         {
@@ -104,16 +104,24 @@ namespace Copium
 
     bool GameObject::isActive()
     {
-        if (transform.hasParent())
+        /*if (transform.hasParent())
         {
             return transform.parent->gameObj.isActive();
-        }
+        }*/
         return active;
     }
 
     void GameObject::setActive(bool _active)
     {
         active = _active;
+        if (!transform.children.empty())
+        {
+            for (Transform* t : transform.children)
+            {
+                GameObject* go = &t->gameObj;
+                go->setActive(_active);
+            }
+        }
     }
 
 
@@ -133,6 +141,7 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{rhs.id}
     {
 
         Component* newComponent = pComponent->clone(*this);
+        newComponent->Enabled(pComponent->Enabled());
         newComponent->id = pComponent->id;
         components.push_back(newComponent);
     }
@@ -287,7 +296,10 @@ void GameObject::handleMessage(MESSAGE_TYPE mType)
 void GameObject::inspectorView()
 {
     // Gameobject Basic Information
-    ImGui::Checkbox("##Active", &active);
+    if (ImGui::Checkbox("##Active", &active))
+    {
+        setActive(active);
+    }
     ImGui::SameLine();
     static char buffer[256];
     strcpy(buffer, name.c_str());

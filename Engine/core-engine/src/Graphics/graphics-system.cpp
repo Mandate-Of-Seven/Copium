@@ -50,8 +50,8 @@ namespace Copium
 
 		// Bean: 3D Depth Testing
 		glEnable(GL_DEPTH_TEST);
-		glAlphaFunc(GL_GREATER, 0.5);
-		glEnable(GL_ALPHA_TEST);
+		//glAlphaFunc(GL_GREATER, 0.3);
+		//glEnable(GL_ALPHA_TEST);
 		//glEnable(GL_STENCIL_TEST);
 
 		glClearColor(1.f, 1.f, 1.f, 1.f);
@@ -61,7 +61,7 @@ namespace Copium
 		// Bind textures to quad fragment shader
 		shaderProgram[QUAD_SHADER].Use();
 		GLuint loc1 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture1");
-		GLuint loc2 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture2");
+		/*GLuint loc2 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture2");
 		GLuint loc3 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture3");
 		GLuint loc4 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture4");
 		GLuint loc5 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture5");
@@ -94,13 +94,13 @@ namespace Copium
 		GLuint loc29 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture29");
 		GLuint loc30 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture30");
 		GLuint loc31 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture31");
-		GLuint loc32 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture32");
+		GLuint loc32 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture32");*/
 		GLint samplers[maxTextures]{};
 
 		for (GLuint i = 1; i < maxTextures; i++)
 			samplers[i] = i;
 
-		glUniform1i(loc1, samplers[1]);
+		/*glUniform1i(loc1, samplers[1]);
 		glUniform1i(loc2, samplers[2]);
 		glUniform1i(loc3, samplers[3]);
 		glUniform1i(loc4, samplers[4]);
@@ -131,7 +131,8 @@ namespace Copium
 		glUniform1i(loc29, samplers[29]);
 		glUniform1i(loc30, samplers[30]);
 		glUniform1i(loc31, samplers[31]);
-		glUniform1i(loc32, samplers[32]);
+		glUniform1i(loc32, samplers[32]);*/
+		glUniform1iv(loc1, maxTextures, samplers);
 		shaderProgram[QUAD_SHADER].UnUse();
 
 		// Bind fonts to text fragment shader
@@ -180,7 +181,19 @@ namespace Copium
 
 					go->transform.position = { x, y, 0.f };
 					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->getComponent(ComponentType::SpriteRenderer));
-					rc->get_sprite_renderer().set_sprite_id(rand() % 20 + 1);
+					
+					int numSprites = AssetsSystem::Instance()->get_textures().size() - 1;
+					rc->get_sprite_renderer().set_sprite_id(rand() % numSprites + 1);
+
+					unsigned int id = rc->get_sprite_renderer().get_sprite_id();
+					if (id != 0)
+					{
+						rc->get_sprite_renderer().set_texture(AssetsSystem::Instance()->get_texture(id - 1));
+						std::string str = AssetsSystem::Instance()->get_texture(id - 1)->get_file_path();
+						size_t pos = str.find_last_of('\\');
+						std::string spriteName = str.substr(pos + 1, str.length() - pos);
+						rc->get_sprite_renderer().set_name(spriteName);
+					}
 				}
 			}
 		}
@@ -203,7 +216,17 @@ namespace Copium
 
 					go->transform.position = { x, y, 0.f };
 					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->getComponent(ComponentType::SpriteRenderer));
-					rc->get_sprite_renderer().set_sprite_id(rand() % 7 + 15);
+					int numSprites = AssetsSystem::Instance()->get_textures().size() - 1;
+					rc->get_sprite_renderer().set_sprite_id(rand() % numSprites + 1);
+					unsigned int id = rc->get_sprite_renderer().get_sprite_id();
+					if (id != 0)
+					{
+						rc->get_sprite_renderer().set_texture(AssetsSystem::Instance()->get_texture(id - 1));
+						std::string str = AssetsSystem::Instance()->get_texture(id - 1)->get_file_path();
+						size_t pos = str.find_last_of('\\');
+						std::string spriteName = str.substr(pos + 1, str.length() - pos);
+						rc->get_sprite_renderer().set_name(spriteName);
+					}
 				}
 			}
 		}
@@ -213,11 +236,11 @@ namespace Copium
 		PRINT("Mouse NDC position: " << mouseToNDC.x << ", " << mouseToNDC.y);
 		PRINT("World NDC position: " << worldNDC.x << ", " << worldNDC.y);*/
 
-		if (inputSystem.is_key_pressed(GLFW_KEY_Y))
-		{
-			SceneManager* sm = SceneManager::Instance();
-			PRINT("Number of Gameobjects: " << sm->get_current_scene()->get_gameobjcount());
-		}
+		//if (inputSystem.is_key_pressed(GLFW_KEY_Y))
+		//{
+		//	SceneManager* sm = SceneManager::Instance();
+		//	PRINT("Number of Gameobjects: " << sm->get_current_scene()->get_gameobjcount());
+		//}
 	
 		batch_render();
 	}

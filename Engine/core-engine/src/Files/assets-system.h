@@ -23,11 +23,31 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Graphics/textures.h"
 #include "Graphics/spritesheet.h"
 #include "Animation/animation-struct.h"
+#include "Files/file.h"
 
 namespace Copium
 {
-	class File;
 	class Directory;
+
+	enum class IMPORTER_TYPE
+	{
+		DEFAULT,// Folder
+		AUDIO,	// Audio
+		MONO,	// Script
+		NATIVE,	// Asset
+		PREFAB,	// Prefab
+		SHADER,	// Shader
+		TEXTURE,// Texture
+
+		NUM_TYPES
+	};
+
+	struct MetaID
+	{
+		UUID uuid;
+		std::string filePath;
+		void* assetImporter;
+	};
 
 	CLASS_SYSTEM(AssetsSystem)
 	{
@@ -157,11 +177,25 @@ namespace Copium
 			return &spritesheets[_index];
 		}
 
+		void CreateAsset(const std::string& _directory, const std::string& _name);
+
+		void CopyAsset(const File& _file, const std::string& _ext);
+
+		const MetaID& GetMetaID(const uint64_t& _id) { return metaData[_id]; }
+
+		// Meta Data Files
+		void LoadExistingMetaFile();
+		void GenerateMetaFile(File* _file);
+		bool CheckForMetaFile(File* _file);
+		void GenerateFileStream(std::ofstream& _outputFile, File* _file);
+		IMPORTER_TYPE GetImporterFile(const FileType& _type);
+
 	private:
 		/* Assets Data ******************************************************************/
 		std::vector<Texture> textures;
 		std::vector<Spritesheet> spritesheets;
-		std::vector<Animation> animations; 
+		std::vector<Animation> animations;
+		std::unordered_map<uint64_t, MetaID> metaData;
 	};
 }
 

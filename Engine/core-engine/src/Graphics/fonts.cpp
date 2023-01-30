@@ -160,6 +160,9 @@ namespace Copium
 			glm::vec2(1.f, 0.f)
 		};
 
+		int newLine = 0;
+		float xpos = 0.f, ypos = 0.f;
+
 		/*float w = 0.f, h = 0.f, xpos = 0.f, ypos = 0.f;
 		glm::vec3 fontVertexPosition[6] = {
 			glm::vec3(xpos, ypos + h, 0.f),
@@ -173,8 +176,16 @@ namespace Copium
 		{
 			Character ch = characters[c];
 
-			float xpos = x + ch.bearing.x * (_scale * 0.01f);
-			float ypos = y - (ch.size.y - ch.bearing.y) * (_scale * 0.01f);
+			// If it is a newline
+			if (c == '\n')
+			{
+				newLine++;
+				x = _position.x;
+				continue;
+			}
+
+			xpos = x + ch.bearing.x * (_scale * 0.01f);
+			ypos = y - (ch.size.y - ch.bearing.y) * (_scale * 0.01f) - newLine * (_scale * 2.5f);
 
 			float w = ch.size.x * (_scale * 0.01f);
 			float h = ch.size.y * (_scale * 0.01f);

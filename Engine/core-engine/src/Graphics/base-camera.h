@@ -178,6 +178,7 @@ namespace Copium
 		glm::mat4 get_projection() const { return projMatrix; }
 		glm::mat4 get_view_matrix() const { return viewMatrix; }
 		glm::mat4 get_view_proj_matrix() const { return viewProjMatrix; }
+		glm::mat4 get_test_proj_matrix() const { return testProjMatrix; }
 
 		Framebuffer* get_framebuffer() { return &framebuffer; }
 		Draw* getDraw() { return &draw; }
@@ -257,6 +258,7 @@ namespace Copium
 		glm::mat4 projMatrix{ 0 };			// The projection matrix to use, either orthographic or perspective
 		glm::mat4 viewMatrix{ 0 };			// The view matrix -> worldToCamera matrix
 		glm::mat4 viewProjMatrix{ 0 };		// The view projection matrix -> viewMatrix * projMatrix
+		glm::mat4 testProjMatrix{ 0 };		// The test projection matrix -> viewMatrix * projMatrix
 
 		glm::mat4 cameraToNDC{ 0 };
 		glm::mat4 ndcToViewport{ 0 };

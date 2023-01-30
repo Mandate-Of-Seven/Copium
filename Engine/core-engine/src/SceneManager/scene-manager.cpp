@@ -165,6 +165,8 @@ namespace Copium {
 		if (document.HasMember("Name"))
 		{
 			currentScene->set_name(document["Name"].GetString());
+			std::cout << "Scene name:" << currentScene->name << std::endl;
+
 		}
 
 		if (document.HasMember("Unused GIDs"))
@@ -212,7 +214,6 @@ namespace Copium {
 					go->transform.deserializeLink(*componentIt);
 					for (Component* component : go->components)
 					{
-						PRINT(component->Name());
 						//Offset TransformComponent
 						++componentIt;
 						component->deserializeLink(*componentIt);
@@ -541,11 +542,13 @@ namespace Copium {
 			return;
 		}
 
+		currentScene->name = storageScene->name;
+
 		currentScene->unusedCIDs = storageScene->unusedCIDs;
 		currentScene->unusedGIDs = storageScene->unusedGIDs;
 
 		// Copy game object data
-		for (const GameObject* gameObj : storageScene->gameObjects)
+		for (GameObject* gameObj : storageScene->gameObjects)
 		{
 			MyGOF.clone(*gameObj, currentScene);
 		}
@@ -578,8 +581,10 @@ namespace Copium {
 	{
 		// If there is a scene loaded, 
 		if (currentScene) {
+			std::cout << "Destroying Current Scene!\n";
 			delete currentScene;
 			currentScene = nullptr;
+			selectedGameObject = nullptr;
 			sceneFilePath.clear();
 		}
 

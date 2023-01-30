@@ -60,7 +60,7 @@ namespace Copium
 
 	void File::access_file()
 	{
-		if (fileType.fileType == SCENE)
+		if (fileType.fileType == FILE_TYPE::SCENE)
 		{
 			if (Copium::SceneManager::Instance()->get_current_scene() != nullptr)
 			{
@@ -103,6 +103,7 @@ namespace Copium
 
 	void File::inspector_view()
 	{
+		// Display file's parameters
 		if (ImGui::BeginTable("Table: File View", 1))
 		{
 			ImGui::TableNextRow();
@@ -113,7 +114,7 @@ namespace Copium
 
 			ImGui::TableNextRow();
 			ImGui::TableNextColumn();
-			
+
 			str = "File name: " + name;
 			ImGui::Text(str.c_str());
 
@@ -124,6 +125,59 @@ namespace Copium
 			ImGui::Text(str.c_str());
 
 			ImGui::EndTable();
+		}
+
+		if (fileType.fileType == FILE_TYPE::ASSET)
+		{
+			std::string str = "Placeholder 01";
+			std::string str2 = "Placeholder 02";
+
+			ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
+				| ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
+				| ImGuiTableFlags_PadOuterX;
+
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 0));
+			ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 2));
+
+			if (ImGui::BeginTable("Table: File Data", 2, windowFlags))
+			{
+				windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
+					| ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp;
+
+				ImGui::Indent();
+
+				ImGui::TableSetupColumn("Text", 0, 0.4f);
+				ImGui::TableSetupColumn("Input", 0, 0.6f);
+
+				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+				ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
+				ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
+
+				ImGui::TableNextColumn();
+				ImGui::PushID(0);
+				ImGui::AlignTextToFramePadding();
+				ImGui::Text("Data 01");
+				ImGui::TableNextColumn();
+				ImGui::InputText("", &str[0], str.length());
+				ImGui::PopID();
+
+				ImGui::TableNextRow();
+				ImGui::TableNextColumn();
+				ImGui::PushID(1);
+				ImGui::AlignTextToFramePadding();
+				ImGui::Text("Data 02");
+				ImGui::TableNextColumn();
+				ImGui::InputText("", &str2[0], str2.length());
+				ImGui::PopID();
+
+				ImGui::PopStyleVar();
+				ImGui::PopStyleVar();
+				ImGui::PopStyleVar();
+				ImGui::Unindent();
+				ImGui::EndTable();
+			}
+			ImGui::PopStyleVar();
+			ImGui::PopStyleVar();
 		}
 	}
 }

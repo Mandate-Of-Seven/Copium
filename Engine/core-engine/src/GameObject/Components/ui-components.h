@@ -23,16 +23,17 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <unordered_map>
 #include <Graphics/sprite.h>
 
-#define TEXT_BUFFER_SIZE 128
+#define TEXT_BUFFER_SIZE 2048
 
 namespace Copium
 {
 	using ButtonCallback = void (*)();
 
-	enum class ButtonState
+	enum class ButtonState : char
 	{
 		OnHover,
 		OnClick,
+		OnHeld,
 		OnRelease,
 		None,
 	};
@@ -178,14 +179,16 @@ namespace Copium
 
 			const AABB& getRelativeBounds() const;
 
-			static const Button* hoveredBtn;
+			static Button* hoveredBtn;
+
+			ButtonState GetState() { return state; }
 		private:
 			std::string callbackName;
 			AABB bounds;
 			void updateBounds();
 			AABB relativeBounds;
 			ButtonState state;
-			ButtonState getInternalState() const;
+			ButtonState getInternalState();
 			glm::fvec4 normalColor;
 			glm::fvec4 hoverColor;
 			glm::fvec4 clickedColor;
@@ -194,6 +197,7 @@ namespace Copium
 			glm::fvec4 previousColor;
 			float timer{0};
 			float fadeDuration{0.1f};
+			friend class LogicSystem;
 	};
 
 	class Text final : public Component, IUIComponent

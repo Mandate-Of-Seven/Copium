@@ -35,7 +35,7 @@ namespace Copium
 	namespace
 	{
 		// Our state
-		bool show_demo_window = true;
+		bool show_demo_window = false;
 		ThreadSystem& threadSystem{ *ThreadSystem::Instance() };
 		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 		InputSystem& inputSystem{ *InputSystem::Instance() };
@@ -178,7 +178,6 @@ namespace Copium
 
 					if (ImGui::MenuItem("Open...", "Ctrl+O"))
 					{
-						PRINT("ctrl o\n");
 						//open scene
 						while (!threadSystem.acquireMutex(MutexType::FileSystem));
 						std::string filepath = FileDialogs::open_file("Copium Scene (*.scene)\0*.scene\0");
@@ -390,12 +389,12 @@ namespace Copium
 			
 			colorTheme.update();
 			hierarchyList.update();
-			inspector.update();
 			layers.update();
+			inspector.update();
 			Window::EditorConsole::update();
 			//Window::Hierarchy::update();
-			sceneView.update();
 			game.update();
+			sceneView.update();
 			contentBrowser.update();
 			
 

@@ -81,7 +81,12 @@ namespace CopiumEngine
             return component;
         }
 
-
+        public T AddComponent<T>() where T : Component, new()
+        {
+            T component = new T() { gameObject = this };
+            component.ID = InternalCalls.AddComponent(ID, typeof(T));
+            return component;
+        }
 
         private void RemoveComponentByID(ulong componentID)
         {

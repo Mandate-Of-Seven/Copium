@@ -24,6 +24,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <SceneManager/state-manager.h>
 #include <GameObject/Components/ui-components.h>
 #include <cstring>
+#include <GameObject/Components/audiosource-component.h>
 
 #include "mono/metadata/object.h"
 #include "mono/metadata/reflection.h"
@@ -254,8 +255,20 @@ namespace Copium
 		}
 		MonoType* managedType = mono_reflection_type_get_type(componentType);
 		ComponentType cType = s_EntityHasComponentFuncs[mono_type_get_name(managedType)];
-		PRINT("Component Type: " << MAP_COMPONENT_TYPE_NAME[cType] << int(cType));
 		return gameObj->hasComponent(cType);
+	}
+
+	static ComponentID AddComponent(GameObjectID _ID, MonoReflectionType* componentType)
+	{
+		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+		if (gameObj == nullptr)
+		{
+			PRINT("CANT FIND GAMEOBJECT");
+			return false;
+		}
+		MonoType* managedType = mono_reflection_type_get_type(componentType);
+		ComponentType cType = s_EntityHasComponentFuncs[mono_type_get_name(managedType)];
+		return gameObj->addComponent(cType)->id;
 	}
 	
 	/*******************************************************************************
@@ -373,7 +386,7 @@ namespace Copium
 		String of text component to store
 	*/
 	/*******************************************************************************/
-	static void GetTextString(GameObjectID gameObjID, ComponentID compID, MonoString* str)
+	static void GetTextString(GameObjectID gameObjID, ComponentID compID, MonoString*& str)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(gameObjID);
 		if (gameObj == nullptr)
@@ -382,6 +395,7 @@ namespace Copium
 		{
 			if (text->id == compID)
 			{
+				PRINT("GETTING " << text->content);
 				str = scriptingSystem.createMonoString(text->content);
 				return;
 			}
@@ -412,9 +426,17 @@ namespace Copium
 				char* monoStr = mono_string_to_utf8(str);
 				strcpy(text->content, monoStr);
 				mono_free(monoStr);
-				return;
+				break;
 			}
 		}
+	}
+
+	static char GetButtonState(GameObjectID gameObjID)
+	{
+		GameObject* gameObj = sceneManager.findGameObjByID(gameObjID);
+		if (gameObj == nullptr)
+			return 0;
+		return (char)gameObj->getComponent<Button>()->GetState();
 	}
 
 	/*******************************************************************************
@@ -432,7 +454,7 @@ namespace Copium
 		GameObject* toBeCloned = MySceneManager.findGameObjByID(ID);
 		if (toBeCloned)
 		{
-			GameObject* clone = MyGOF.instantiate(*toBeCloned);
+			GameObject* clone = MyGOF.clone(*toBeCloned);
 			if (clone)
 				return clone->id;
 		}
@@ -453,6 +475,27 @@ namespace Copium
 		if (clone)
 			return clone->id;
 		return 0;
+	}
+
+	/*******************************************************************************
+	/*!
+	\brief
+		Destroys a gameobject by ID
+	\param ID
+		GameObject ID of the gameObject to delete
+	*/
+	/*******************************************************************************/
+	static void DestroyGameObject(GameObjectID ID)
+	{
+		COPIUM_ASSERT(!MyGOF.destroy(ID), "GameObject could not be destroyed");
+	}
+
+	static void AudioSourcePlay(GameObjectID ID)
+	{
+		GameObject* gameObj = sceneManager.findGameObjByID(ID);
+		if (gameObj == nullptr)
+			return;
+		gameObj->getComponent<AudioSource>()->play_sound();
 	}
 
 	/*******************************************************************************
@@ -482,7 +525,11 @@ namespace Copium
 		Register(SetTextString);
 		Register(CloneGameObject);
 		Register(InstantiateGameObject);
+		Register(DestroyGameObject);
 		Register(QuitGame);
+		Register(GetButtonState);
+		Register(AddComponent);
+		Register(AudioSourcePlay);
 	}
 
 	/*******************************************************************************
@@ -496,6 +543,7 @@ namespace Copium
 		s_EntityHasComponentFuncs.clear();
 		int i{ 0 };
 		int end{ (int)ComponentType::None };
+		PRINT("REGISTERING: ");
 		while (i != end)
 		{
 			std::string name = "CopiumEngine." + MAP_COMPONENT_TYPE_NAME[(ComponentType)i];

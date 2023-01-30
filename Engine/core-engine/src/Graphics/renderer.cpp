@@ -305,9 +305,7 @@ namespace Copium
 			}*/
 			// End of matrix assignment
 			
-			
-
-			if (graphics->get_texture_slot_index() >= 8)
+			if (graphics->get_texture_slot_index() >= 32)
 			{
 				graphics->set_texture_slot_index(1);
 				end_batch();
@@ -532,7 +530,7 @@ namespace Copium
 		draw_quad(transform, _sprite);
 	}
 
-	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Spritesheet& _spritesheet, GLuint _offsetID, GLuint _textureID, int _frames)
+	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Spritesheet& _spritesheet, GLuint _offsetID, int _frames)
 	{
 		glm::mat4 translate = glm::translate(glm::mat4(1.f), _position);
 
@@ -548,8 +546,8 @@ namespace Copium
 		if (!_spritesheet.texture)
 			return;
 
-		float pixelWidth = _spritesheet.texture->get_pixel_width() / (float)_frames;
-		float pixelHeight = _spritesheet.texture->get_pixel_height();
+		float pixelWidth = _spritesheet.texture->get_pixel_width() / (float)_spritesheet.columns;
+		float pixelHeight = _spritesheet.texture->get_pixel_height() / (float)_spritesheet.rows;
 
 
 		//PRINT("Pixel width:" << pixelWidth);
@@ -566,7 +564,7 @@ namespace Copium
 
 		//PRINT("Drawing spritesheet");
 
-		draw_quad(transform, _spritesheet, _offsetID, _textureID, _frames);
+		draw_quad(transform, _spritesheet, _offsetID, _frames);
 	}
 
 	void Renderer::draw_quad(const glm::mat4& _transform, const glm::vec4& _color)
@@ -683,7 +681,7 @@ namespace Copium
 		quadCount++;
 	}
 
-	void Renderer::draw_quad(const glm::mat4& _transform, const Spritesheet& _spritesheet, GLuint _offsetID, GLuint _textureID, int _frames)
+	void Renderer::draw_quad(const glm::mat4& _transform, const Spritesheet& _spritesheet, GLuint _offsetID, int _frames)
 	{
 		if (quadIndexCount >= maxIndexCount)
 		{
@@ -698,47 +696,43 @@ namespace Copium
 
 		for (GLuint i = 1; i < graphics->get_texture_slot_index(); i++)
 		{
-			if (graphics->get_texture_slots()[i] == _textureID)
+			if (graphics->get_texture_slots()[i] == _spritesheet.texture->get_object_id())
 			{
 				textureIndex = (GLfloat) i;
 				break;
 			}
 		}
 
+		if (_spritesheet.columns == 0)
+			return;
+
+		GLuint rowOffset = (_spritesheet.rows-1)-(_offsetID / _spritesheet.columns);
+		GLuint colOffset = _offsetID % _spritesheet.columns;
+
+		//PRINT("Row offset:" << rowOffset);
 		// Change texture index only if ID retrieved is more than 0 (0 is white texture)
-		if (textureIndex == 0.f && _textureID != 0)
+		if (textureIndex == 0.f && _spritesheet.spriteID != 0)
 		{
 			// Add new texture into the texture slot
 			textureIndex = (GLfloat) graphics->get_texture_slot_index();
-			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _textureID;
+			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _spritesheet.texture->get_object_id();
 			graphics->set_texture_slot_index((GLuint) textureIndex + 1);
 		}
-
-		Texture* texture = _spritesheet.texture;
 
 		if (!_frames)
 			return;
 
-		float step = (1.0f / (float)_frames);
-		float offset = _offsetID * step;
-		//glm::vec2 offset = _spritesheet.get_offsets()[_offsetID];
-		//glm::vec2 step = _spritesheet.get_steps();
-		//step.x = (step.x == 0.f) ? 1.f : step.x;
-		//step.y = (step.y == 0.f) ? 1.f : step.y;
-		//glm::vec2 spriteTextCoord[4] =
-		//{
-		//	glm::vec2(offset),
-		//	glm::vec2(offset.x + step.x, offset.y),
-		//	glm::vec2(offset + step),
-		//	glm::vec2(offset.x, offset.y + step.y)
-		//};
-
+		float xStep = (1.0f / (float)_spritesheet.columns);
+		float yStep = (1.0f / (float)_spritesheet.rows);
+		float xOffset = colOffset * xStep;
+		float yOffset = rowOffset * yStep;
+		//PRINT("Y step:" << yStep);
 		glm::vec2 spriteTextCoord[4] =
 		{
-			glm::vec2(offset, 0.f),
-			glm::vec2(offset + step, 0.f),
-			glm::vec2(offset + step, 1.f),
-			glm::vec2(offset, 1.f)
+			glm::vec2(xOffset, yOffset),
+			glm::vec2(xOffset + xStep, yOffset),
+			glm::vec2(xOffset + xStep, yOffset+yStep),
+			glm::vec2(xOffset, yOffset+yStep)
 		};
 
 		for (GLint i = 0; i < 4; i++)

@@ -16,16 +16,20 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 
 #include "Editor/editor-content-browser.h"
+#include "Editor/editor-system.h"
 #include "Messaging/message-system.h"
 #include "Files/file-system.h"
 #include "Files/assets-system.h"
+#include <Scripting/scripting-system.h>
 
 namespace Copium
 {
 	namespace
 	{
+		EditorSystem* editor = EditorSystem::Instance();
 		FileSystem* fs = FileSystem::Instance();
 		AssetsSystem* assetSys = AssetsSystem::Instance();
+		ScriptingSystem* sS = ScriptingSystem::Instance();
 
 		std::filesystem::path assets = "../PackedTracks/Assets";
 
@@ -54,7 +58,7 @@ namespace Copium
 
 	void EditorContentBrowser::update()
 	{
-		ImGui::Begin("Content Browser");
+		ImGui::Begin("Content Browser", 0);
 
 		inputs();
 
@@ -71,6 +75,45 @@ namespace Copium
 			{
 				MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_RELOAD_ASSETS);
 			}
+		}
+
+		ImGui::SameLine();
+		if (ImGui::BeginMenu("Add Assets"))
+		{
+			if (currentDirectory != nullptr)
+			{
+				for (auto& it : sS->getScriptableObjectClassMap())
+				{
+					if (ImGui::MenuItem(it.first.c_str(), nullptr))
+					{
+						std::ofstream oStream(Paths::assetPath + "\\" + it.first + ".so");
+						oStream.close();
+						//If deserializable else, create new file, SO,
+						// Copy the script file but change the extension
+						//assetSys->CopyAsset(*soFile, ".asset");
+					}
+				}
+
+				//for (int i = 0; i < scriptableObjects.size(); i++)
+				//{
+				//	std::string assetName = scriptableObjects[i];
+				//	if (ImGui::MenuItem(assetName.c_str(), nullptr))
+				//	{
+				//		// Find script in relation to the assetname
+				//		std::list<File> scriptFiles = fs->get_files_with_extension(".cs");
+				//		for (File file : scriptFiles)
+				//		{
+				//			if (!file.stem().string().compare(assetName))
+				//			{
+				//				// Copy the script file but change the extension
+				//				assetSys->CopyAsset(file, ".asset");
+				//				break;
+				//			}
+				//		}
+				//	}
+				//}
+			}
+			ImGui::EndMenu();
 		}
 
 		float panelWidth = ImGui::GetContentRegionAvail().x;
@@ -134,6 +177,10 @@ namespace Copium
 			// File iterator
 			for (auto& file : currentDirectory->get_files())
 			{
+				// Ignore meta files
+				if (file.get_file_type().fileType == FILE_TYPE::META)
+					continue;
+
 				if (ImGui::TableGetColumnIndex() >= columnCount - 1)
 				{
 					ImGui::TableNextRow();
@@ -150,27 +197,27 @@ namespace Copium
 					std::string texturePath;
 					switch (file.get_file_type().fileType)
 					{
-					case Copium::AUDIO:
+					case FILE_TYPE::AUDIO:
 						break;
 
-					case Copium::FONT:
+					case FILE_TYPE::FONT:
 						break;
 
-					case Copium::SCENE:
+					case FILE_TYPE::SCENE:
 						objectID = icons[2].get_object_id();
 						imageAR = 1.f;
 						framePadding = 3.f;
 						break;
 
-					case Copium::SCRIPT:
+					case FILE_TYPE::SCRIPT:
 						break;
 
-					case Copium::SHADER:
+					case FILE_TYPE::SHADER:
 						break;
 
-					case Copium::SPRITE:
+					case FILE_TYPE::SPRITE:
 						texturePath = assetSys->get_texture(i)->get_file_path();
-						if (!file.generic_string().compare(texturePath))
+						if (!file.string().compare(texturePath))
 						{
 							Texture* temp = assetSys->get_texture(i);
 							objectID = temp->get_object_id();
@@ -181,7 +228,7 @@ namespace Copium
 						}
 						break;
 
-					case Copium::TEXT:
+					case FILE_TYPE::TEXT:
 						objectID = icons[1].get_object_id();
 						imageAR = 1.f;
 						framePadding = 3.f;
@@ -197,7 +244,7 @@ namespace Copium
 
 				if (ImGui::BeginDragDropSource())
 				{
-					std::string str = file.generic_string();
+					std::string str = file.string();
 					const char* filePath = str.c_str();
 					ImGui::SetDragDropPayload("ContentBrowserItem", filePath, str.size() + 1);
 
@@ -231,8 +278,11 @@ namespace Copium
 	{
 		if (!ImGui::IsMouseDragging(ImGuiMouseButton_Left) && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
 		{
-			fs->set_selected_file(nullptr);
-			fs->set_selected_directory(nullptr);
+			if (!editor->get_inspector()->getFocused())
+			{
+				fs->set_selected_file(nullptr);
+				fs->set_selected_directory(nullptr);
+			}
 		}
 
 		if (ImGui::IsWindowFocused())

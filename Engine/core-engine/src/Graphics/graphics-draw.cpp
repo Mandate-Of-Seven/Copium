@@ -237,51 +237,8 @@ namespace Copium
 					Sprite& sr = rc->get_sprite_renderer();
 					glm::vec2 size(t.scale.x, t.scale.y);
 					float rotation = t.rotation.z;
-					// Bean: It should be set in inspector view of the renderer component instead
-					unsigned int id = sr.get_sprite_id() - 1;
 
-					// The index of the texture must be less than the size of textures
-					if (id != -1 && id < assets->get_textures().size())
-					{
-						sr.set_texture(assets->get_texture(id));
-					}
-					else
-					{
-						sr.set_sprite_id(0);
-						sr.set_texture(nullptr);
-					}
-
-					// Bean: Temporary animation conditions
-					if (!assets->get_spritesheets().empty() && !gameObject->get_name().compare("Animation - Track"))
-					{
-						//int animID = 1;
-						//static GLuint animIndex = 0;
-						//GLuint indexSize = assets->get_spritesheets()[animID].size - 1;
-
-						//GLfloat dt = (GLfloat) MyFrameRateController.getDt();
-						//static float animTimer = 0.f;
-						//animTimer += dt;
-						//if (animTimer > 0.01f && toggleAnim)
-						//{
-						//	animTimer = 0.f;
-						//	animIndex++;
-						//}
-
-						//if (animIndex > indexSize)
-						//{
-						//	animIndex = 0;
-						//}
-
-						//GLuint nid = 0;
-						//for (GLuint i = 0; i < assets->get_textures().size(); ++i)
-						//{
-						//	if (assets->get_textures()[i].get_object_id() == assets->get_spritesheets()[animID].texture->get_object_id())
-						//		nid = i + 1;
-						//}
-
-						//renderer.draw_quad(t.position, size, 0.f, assets->get_spritesheets()[animID], animIndex, nid);
-					}
-					else if (gameObject->transform.hasParent())
+					if (gameObject->transform.hasParent())
 					{
 						Transform& t1 = *gameObject->transform.parent;
 						Copium::Math::Matrix3x3 rot;
@@ -306,21 +263,22 @@ namespace Copium
 					Sprite& sr = rc->get_sprite_renderer();
 					glm::vec2 size(t.scale.x, t.scale.y);
 					float rotation = t.rotation.z;
-					// Bean: It should be set in inspector view of the renderer component instead
-					unsigned int id = sr.get_sprite_id() - 1;
 
-					// The index of the texture must be less than the size of textures
-					if (id != -1 && id < assets->get_textures().size())
+					if (gameObject->transform.hasParent())
 					{
-						sr.set_texture(assets->get_texture(id));
+						Transform& t1 = *gameObject->transform.parent;
+						Copium::Math::Matrix3x3 rot;
+						Copium::Math::matrix3x3_rotdeg(rot, t1.rotation.z);
+						Copium::Math::Vec3 intermediate = (rot * t.position);
+
+						renderer.draw_quad(intermediate + t1.position, size, rotation + t1.rotation.z, sr);
 					}
 					else
 					{
-						sr.set_sprite_id(0);
-						sr.set_texture(nullptr);
+						renderer.draw_quad(t.position, size, rotation, sr);
 					}
 
-					renderer.draw_quad({ rc->Offset(),t.position.z }, size, rotation, sr);
+					//renderer.draw_quad({ rc->Offset(),t.position.z }, size, rotation, sr);
 				}
 				for (Component* component : gameObject->getComponents<Text>())
 				{
@@ -333,55 +291,37 @@ namespace Copium
 
 				for (Component* component : gameObject->getComponents<Animator>())
 				{
+					if (!component->Enabled())
+						continue;
+
 					Animator* animator = reinterpret_cast<Animator*>(component);
 					Animation* anim = animator->GetCurrentAnimation();
 					
-					//if(anim)
-					//	PRINT("bloopbloppp");
-
-					if (!anim)
+					if (!anim || !anim->spriteSheet.GetTexture())
 						continue;
 
+					Transform& t = gameObject->transform;
+					glm::vec2 size(t.scale.x, t.scale.y);
+					float rotation = t.rotation.z;
 
-					unsigned int sid = anim->spriteSheet.spriteID - 1;
-					// The index of the texture must be less than the size of textures
-					if (sid != -1 && sid < assets->get_textures().size())
+					if (gameObject->transform.hasParent())
 					{
-						anim->spriteSheet.texture = assets->get_texture(sid);
+						Transform& t1 = *gameObject->transform.parent;
+						Copium::Math::Matrix3x3 rot;
+						Copium::Math::matrix3x3_rotdeg(rot, t1.rotation.z);
+						Copium::Math::Vec3 intermediate = (rot * t.position);
+
+						renderer.draw_quad(intermediate + t1.position, size, rotation + t1.rotation.z, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
 					}
 					else
 					{
-
-						anim->spriteSheet.spriteID = 0;
-						anim->spriteSheet.texture = nullptr;
+						renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
 					}
-
-					if (!anim || !anim->spriteSheet.GetTexture())
-						continue;
-					//PRINT("bloopbloop");
-					Transform& t = gameObject->transform;
-					unsigned int textureID = anim->spriteSheet.GetTexture()->get_id();
-					glm::vec2 size(t.scale.x, t.scale.y);
-
-					GLuint nid = 0;
-					for (GLuint i = 0; i < assets->get_textures().size(); ++i)
-					{
-						if (assets->get_textures()[i].get_object_id() == anim->spriteSheet.texture->get_object_id())
-							nid = i + 1;
-					}
-					//renderer.draw_quad(t.position, size, t.rotation.z, nid);
-					renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex, nid, anim->frameCount);
-
 				}
 			}
 
 			//PRINT("Num of Rendered GO: " << count);
 		}
-
-		// Bean : Testing Text
-		/*glm::vec3 position = { 0.f, -1.f, 0.f };
-		color = { 1.f, 1.f, 0.f, 1.f };
-		renderer.draw_text("Testing Arial", position, color, 0.1f, 0);*/
 
 		renderer.end_batch();
 

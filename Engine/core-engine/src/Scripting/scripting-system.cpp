@@ -43,6 +43,7 @@ namespace
 	MonoClass* mGameObject{ nullptr };
 	MonoClass* mCopiumScript{ nullptr };
 	MonoClass* mCollision2D{ nullptr };
+	MonoClass* mScriptableObject{};
 	std::unordered_map<uint64_t,MonoObject*> monoGameObjects{};
 }
 
@@ -109,8 +110,7 @@ namespace Copium
 
 #pragma region Struct ScriptMethods
 	ScriptClass::ScriptClass(const std::string& _name, MonoClass* _mClass) :
-		mClass{ _mClass },
-		name{ _name }
+		mClass{ _mClass }
 	{
 		mMethods["OnCreate"] = mono_class_get_method_from_name(mCopiumScript, "OnCreate", 1);
 		mMethods["FindComponentByID"] = mono_class_get_method_from_name(mCopiumScript, "FindComponentByID", 2);
@@ -130,6 +130,7 @@ namespace Copium
 			{
 				MonoType* type = mono_field_get_type(field);
 				FieldType fieldType = Utils::monoTypeToFieldType(type);
+				PRINT(mono_type_get_name(type));
 				if (fieldType != FieldType::None)
 				{
 					mFields[fieldName] = { fieldType, "", field, 0 };
@@ -165,7 +166,26 @@ namespace Copium
 			}
 		}
 	}
+
 #pragma endregion
+
+	bool ScriptingSystem::isScriptableObject(const std::string& name)
+	{
+		return scriptableObjectClassMap[name].mClass;
+	}
+
+	bool ScriptingSystem::isScript(const std::string& name)
+	{
+
+		return scriptClassMap[name].mClass;
+	}
+
+
+	const std::unordered_map<std::string, ScriptClass>& ScriptingSystem::getScriptableObjectClassMap()
+	{
+		return scriptableObjectClassMap;
+	}
+
 	void ScriptingSystem::instantiateCollision2D(GameObject& collided, GameObject& collidee)
 	{
 		MonoObject* collisionData = mono_object_new(mAppDomain, mCollision2D);
@@ -187,7 +207,7 @@ namespace Copium
 
 	void ScriptingSystem::addEmptyScript(const std::string& _name)
 	{
-		std::ofstream file(Paths::projectPath + _name + ".cs");
+		std::ofstream file(Paths::assetPath + "\\Scripts\\" + _name + ".cs");
 		file << "using CopiumEngine;\n";
 		file << "using System;\n\n";
 		file << "public class " << _name << ": CopiumScript\n{\n";
@@ -212,8 +232,8 @@ namespace Copium
 			//Critical section
 			while (!tSys.acquireMutex(MutexType::FileSystem));
 			updateScriptFiles();
-			tSys.returnMutex(MutexType::FileSystem);
 			tryRecompileDll();
+			tSys.returnMutex(MutexType::FileSystem);
 			//Critical section End
 			Sleep(SECONDS_TO_RECOMPILE * 1000);
 		}
@@ -257,11 +277,6 @@ namespace Copium
 
 	void ScriptingSystem::exit()
 	{
-		for (auto& it : scriptClassMap)
-		{
-
-			delete it.second;
-		}
 		shutdownMono();
 	}
 
@@ -285,50 +300,78 @@ namespace Copium
 		ScriptClass* pScriptClass{ nullptr };
 		if (namePScriptClassPair != scriptClassMap.end())
 		{
-			pScriptClass = (*namePScriptClassPair).second;
+			pScriptClass = &namePScriptClassPair->second;
 			return pScriptClass;
 		}
 		MonoClass* mClass = mono_class_from_name(mAssemblyImage, "", _name.c_str());
 		if (mClass)
 		{
-			pScriptClass = new ScriptClass(_name, mClass);
-			scriptClassMap.emplace(_name, pScriptClass);
+			scriptClassMap.emplace(_name, ScriptClass(_name, mClass));
 		}
 		return pScriptClass;
 	}
 
-	const std::unordered_map<std::string, ScriptClass*>& ScriptingSystem::getScriptClassMap()
+	const std::unordered_map<std::string, ScriptClass>& ScriptingSystem::getScriptClassMap()
 	{
 		return scriptClassMap;
 	}
 
 	void ScriptingSystem::updateScriptClasses()
 	{
-		using nameToClassIt = std::unordered_map<std::string, ScriptClass*>::iterator;
+		using nameToClassIt = std::unordered_map<std::string, ScriptClass>::iterator;
 		nameToClassIt it = scriptClassMap.begin();
-		static std::vector<nameToClassIt> keyMask;
-		for (auto& keyVal : scriptClassMap)
-		{
-			MonoClass* mClass = mono_class_from_name(mAssemblyImage, "", keyVal.first.c_str());
-			//If the class was successfully created, meaning it exists in the assembly
-			delete keyVal.second;
-			if (mClass)
-			{
-				keyVal.second = new ScriptClass(keyVal.first, mClass);
-			}
-			//If the class was not found in the assembly, meaning it doesnt exist in the assembly
-			else
-			{
-				keyMask.push_back(it);
-			}
-			++it;
-		}
-		for (nameToClassIt& itMask : keyMask)
-		{
+		//static std::vector<nameToClassIt> keyMask;
+		scriptClassMap.clear();
 
-			scriptClassMap.erase(itMask);
+		const MonoTableInfo* table_info = mono_image_get_table_info(mAssemblyImage, MONO_TABLE_TYPEDEF);
+
+		int rows = mono_table_info_get_rows(table_info);
+
+		/* For each row, get some of its values */
+		for (int i = 0; i < rows; i++)
+		{
+			MonoClass* _class = nullptr;
+			uint32_t cols[MONO_TYPEDEF_SIZE];
+			mono_metadata_decode_row(table_info, i, cols, MONO_TYPEDEF_SIZE);
+			const char* name = mono_metadata_string_heap(mAssemblyImage, cols[MONO_TYPEDEF_NAME]);
+			const char* name_space = mono_metadata_string_heap(mAssemblyImage, cols[MONO_TYPEDEF_NAMESPACE]);
+			_class = mono_class_from_name(mAssemblyImage, name_space, name);
+			if (mono_class_get_parent(_class) == mCopiumScript)
+			{
+				scriptClassMap[name] = ScriptClass{ name,_class };
+			}
+			else if(mono_class_get_parent(_class) == mScriptableObject)
+			{
+				scriptableObjectClassMap[name] = ScriptClass{ name,_class };
+			}
 		}
-		keyMask.clear();
+
+		//for (auto& scriptClass : scriptClassMap)
+		//{
+		//	
+		//}
+
+		//for (auto& keyVal : scriptClassMap)
+		//{
+			//MonoClass* mClass = mono_class_from_name(mAssemblyImage, "", keyVal.first.c_str());
+			
+			//If the class was successfully created, meaning it exists in the assembly
+			//if (mClass)
+			//{
+			//	keyVal.second = ScriptClass(keyVal.first, mClass);
+			//}
+		//	//If the class was not found in the assembly, meaning it doesnt exist in the assembly
+		//	else
+		//	{
+		//		keyMask.push_back(it);
+		//	}
+		//	++it;
+		//}
+		//for (nameToClassIt& itMask : keyMask)
+		//{
+		//	scriptClassMap.erase(itMask);
+		//}
+		//keyMask.clear();
 	}
 
 	void ScriptingSystem::initMono()
@@ -371,9 +414,12 @@ namespace Copium
 		mGameObject = mono_class_from_name(mAssemblyImage, "CopiumEngine", "GameObject");
 		mCopiumScript = mono_class_from_name(mAssemblyImage, "CopiumEngine", "CopiumScript");
 		mCollision2D = mono_class_from_name(mAssemblyImage, "CopiumEngine", "Collision2D");
+		mScriptableObject = mono_class_from_name(mAssemblyImage, "CopiumEngine", "ScriptableObject");
 		updateScriptClasses();
-		if (!mCopiumScript)
-			PRINT("COPIUM SCRIPT CANT BE FOUND");
+		COPIUM_ASSERT(!mGameObject, "GameObject C# script could not be loaded");
+		COPIUM_ASSERT(!mCopiumScript, "CopiumScript C# script could not be loaded");
+		COPIUM_ASSERT(!mCollision2D, "Collision2D C# script could not be loaded");
+		COPIUM_ASSERT(!mScriptableObject, "ScriptableObject C# script could not be loaded");
 		messageSystem.dispatch(MESSAGE_TYPE::MT_CREATE_CS_GAMEOBJECT);
 		messageSystem.dispatch(MESSAGE_TYPE::MT_SCRIPTING_UPDATED);
 		PRINT("END SWAP DLL_____________________________________");
@@ -418,7 +464,7 @@ namespace Copium
 			//Detect new scripts
 			if (!scriptIsLoaded(pathRef))
 			{
-				scriptFiles.emplace(scriptFilesIt, pathRef);
+				scriptFiles.emplace(scriptFilesIt, File(pathRef));
 			}
 			//Script was already loaded
 			else
@@ -487,6 +533,10 @@ namespace Copium
 
 	MonoString* ScriptingSystem::createMonoString(const char* str)
 	{
+		if (!mAppDomain)
+		{
+			PRINT("APP DOMAIN NOT LOADED");
+		}
 		return mono_string_new(mAppDomain, str);
 	}
 
@@ -502,7 +552,6 @@ namespace Copium
 				MonoObject* mInstance = instantiateClass(mGameObject);
 				monoGameObjects[MESSAGE_CONTAINER::reflectCsGameObject.gameObjID] = mInstance;
 				void* param = &MESSAGE_CONTAINER::reflectCsGameObject.gameObjID;
-				mono_runtime_object_init(mInstance);
 				mono_runtime_invoke(mSetID, mInstance, &param, nullptr);
 				//MonoMethod* mAttachComponentByID = mono_class_get_method_from_name(mGameObject, "AttachComponentByID", 1);
 				//for (uint64_t componentID : MESSAGE_CONTAINER::reflectCsGameObject.componentIDs)
@@ -514,9 +563,17 @@ namespace Copium
 			}
 			case MESSAGE_TYPE::MT_SCENE_OPENED:
 			{
+				//If swap assembly compiling
 				while (compilingState == CompilingState::Compiling);
-				compilingState = CompilingState::Deserializing;
-				swapDll();
+				if (compilingState == CompilingState::SwapAssembly)
+				{
+					compilingState = CompilingState::Deserializing;
+					swapDll();
+					registerComponents();
+					compilingState = CompilingState::Wait;
+				}
+				//compilingState = CompilingState::Deserializing;
+				//swapDll();
 				break;
 			}
 			case MESSAGE_TYPE::MT_SCENE_DESERIALIZED:

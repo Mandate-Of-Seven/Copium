@@ -76,6 +76,9 @@ namespace Copium
 			pMessageSystem->subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
 			pMessageSystem->subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
 			pMessageSystem->subscribe(MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW, this);
+
+			MySceneManager.load_scene(Paths::assetPath+"\\Scenes\\Demo.scene");
+			
 		}
 
 		/**************************************************************************/
@@ -87,6 +90,7 @@ namespace Copium
 		/**************************************************************************/
 		void update()
 		{
+
 			double totalUpdateTime = 0;
 			for (ISystem* pSystem : systems)
 			{

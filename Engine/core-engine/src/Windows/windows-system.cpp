@@ -111,7 +111,7 @@ namespace Copium
     void WindowsSystem::update()
     {
         static bool fullscreen = false;
-        if (InputSystem::Instance()->is_key_pressed(GLFW_KEY_F))
+        if (InputSystem::Instance()->is_key_held(GLFW_KEY_LEFT_CONTROL) && InputSystem::Instance()->is_key_pressed(GLFW_KEY_F))
         {
             fullscreen = !fullscreen;
             Fullscreen(fullscreen, 1600, 900);

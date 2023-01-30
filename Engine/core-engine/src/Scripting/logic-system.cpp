@@ -53,7 +53,6 @@ namespace Copium
 			const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };
 			for (Script* pScript : pScripts)
 			{
-				//PRINT("HELLO!");
 				if (!pScript)
 					continue;
 				pScript->invoke("Update");
@@ -69,6 +68,11 @@ namespace Copium
 			}
 		}
 
+		if (Button::hoveredBtn && (!Button::hoveredBtn->gameObj.isActive() || !Button::hoveredBtn->Enabled()))
+		{
+			Button::hoveredBtn->state = ButtonState::None;
+			Button::hoveredBtn = nullptr;
+		}
 		for (GameObject* pGameObj : pScene->gameObjects)
 		{
 			if (!pGameObj->isActive())
@@ -77,6 +81,8 @@ namespace Copium
 			for (Button* pButton : Buttons)
 			{
 				if (!pButton)
+					continue;
+				if (!pButton->Enabled())
 					continue;
 				pButton->update();
 				if (pScene != sceneManager.get_current_scene())

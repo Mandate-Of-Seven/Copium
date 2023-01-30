@@ -40,21 +40,1242 @@
                         "Near": 0.029999999329447746,
                         "Far": 500.0
                     }
+                },
+                {
+                    "ID": 78,
+                    "Type": "AudioSource",
+                    "Alias": "..\\PackedTracks\\Assets\\Sounds\\Music\\Nightshift _BGM2_Loop_70bpm"
                 }
             ]
         },
         {
-            "ID": 2,
-            "Name": "Player",
+            "ID": 24,
+            "Name": "Effects",
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 2,
+                    "ID": 4,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
                         "Y": 0.0,
                         "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 2,
+            "Name": "Train Background",
+            "Components": [
+                {
+                    "PID": 4,
+                    "ID": 5,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.319999933242798,
+                        "Y": 2.319999933242798,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 4,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 15031539786128006511,
+                    "Sprite Name": "Train_Background_02.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 4,
+            "Name": "Train Canvas",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 7,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": -10.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 5,
+            "Name": "Report Screen Btn",
+            "Components": [
+                {
+                    "PID": 4,
+                    "ID": 8,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.002354264259338379,
+                        "Y": -0.740162193775177,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 5.466695785522461,
+                        "Y": 2.4947621822357178,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 49,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "",
+                    "Font Size": 0.10000000149011612,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                },
+                {
+                    "Type": "Button",
+                    "ID": 9,
+                    "Graphic ID": 49,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.5,
+                            "Y": -0.5
+                        },
+                        "Max": {
+                            "X": 0.5,
+                            "Y": 0.5
+                        }
+                    },
+                    "Callback": "OpenGameObject"
+                }
+            ]
+        },
+        {
+            "ID": 6,
+            "Name": "Combat Screen Btn",
+            "Components": [
+                {
+                    "PID": 4,
+                    "ID": 11,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 6.469001770019531,
+                        "Y": -1.2143914699554443,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 5.224280834197998,
+                        "Y": 2.792959213256836,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 50,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "",
+                    "Font Size": 0.10000000149011612,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                },
+                {
+                    "ID": 51,
+                    "Type": "Script",
+                    "Name": "ButtonCalls",
+                    "objectToToggle": 21
+                },
+                {
+                    "Type": "Button",
+                    "ID": 12,
+                    "Graphic ID": 50,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.5,
+                            "Y": -0.5
+                        },
+                        "Max": {
+                            "X": 0.5,
+                            "Y": 0.5
+                        }
+                    },
+                    "Callback": "OpenGameObject"
+                }
+            ]
+        },
+        {
+            "ID": 7,
+            "Name": "Background 1",
+            "Components": [
+                {
+                    "PID": 3,
+                    "ID": 15,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.1500000953674316,
+                        "Y": 2.1500000953674316,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 14,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 4874611181005233622,
+                    "Sprite Name": "Panel_02.png",
+                    "Color": {
+                        "X": 0.35686275362968445,
+                        "Y": 0.35686275362968445,
+                        "Z": 0.35686275362968445,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 8,
+            "Name": "Report Btn",
+            "Components": [
+                {
+                    "PID": 3,
+                    "ID": 17,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -6.0,
+                        "Y": 2.781108856201172,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 8.0,
+                        "Y": 8.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 16,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 2773572572927185668,
+                    "Sprite Name": "Btn_01.png",
+                    "Color": {
+                        "X": 0.0,
+                        "Y": 1.0,
+                        "Z": 0.12941177189350128,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "Button",
+                    "ID": 17,
+                    "Graphic ID": 18,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.3199999928474426,
+                            "Y": -0.18000000715255737
+                        },
+                        "Max": {
+                            "X": 0.3199999928474426,
+                            "Y": 0.2199999988079071
+                        }
+                    },
+                    "Callback": "OpenReportTab"
+                },
+                {
+                    "Type": "Text",
+                    "ID": 18,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Report",
+                    "Font Size": 0.019999999552965164,
+                    "r": 1.0,
+                    "g": 0.9998999834060669,
+                    "b": 0.9998999834060669,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 9,
+            "Name": "Message Btn",
+            "Components": [
+                {
+                    "PID": 3,
+                    "ID": 21,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -6.0,
+                        "Y": 0.0,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 8.0,
+                        "Y": 8.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 21,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 2773572572927185668,
+                    "Sprite Name": "Btn_01.png",
+                    "Color": {
+                        "X": 0.0,
+                        "Y": 1.0,
+                        "Z": 0.12941177189350128,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "Button",
+                    "ID": 22,
+                    "Graphic ID": 23,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.3199999928474426,
+                            "Y": -0.18000000715255737
+                        },
+                        "Max": {
+                            "X": 0.3199999928474426,
+                            "Y": 0.2199999988079071
+                        }
+                    },
+                    "Callback": "OpenMessageTab"
+                },
+                {
+                    "Type": "Text",
+                    "ID": 23,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Messages",
+                    "Font Size": 0.019999999552965164,
+                    "r": 1.0,
+                    "g": 0.9998999834060669,
+                    "b": 0.9998999834060669,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 10,
+            "Name": "Crew Status Btn",
+            "Components": [
+                {
+                    "PID": 3,
+                    "ID": 25,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -6.0,
+                        "Y": -2.547485589981079,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 8.0,
+                        "Y": 8.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 26,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 2773572572927185668,
+                    "Sprite Name": "Btn_01.png",
+                    "Color": {
+                        "X": 0.0,
+                        "Y": 1.0,
+                        "Z": 0.12941177189350128,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "Button",
+                    "ID": 27,
+                    "Graphic ID": 28,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.3199999928474426,
+                            "Y": -0.18000000715255737
+                        },
+                        "Max": {
+                            "X": 0.3199999928474426,
+                            "Y": 0.2199999988079071
+                        }
+                    },
+                    "Callback": "OpenCrewTab"
+                },
+                {
+                    "Type": "Text",
+                    "ID": 28,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Crew Status",
+                    "Font Size": 0.019999999552965164,
+                    "r": 1.0,
+                    "g": 0.9998999834060669,
+                    "b": 0.9998999834060669,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 11,
+            "Name": "Report Tab",
+            "Components": [
+                {
+                    "PID": 3,
+                    "ID": 29,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 12,
+            "Name": "Border",
+            "Components": [
+                {
+                    "PID": 11,
+                    "ID": 30,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 2.0,
+                        "Y": 0.12523186206817627,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 11.0,
+                        "Y": 9.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 32,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 13292609945703451902,
+                    "Sprite Name": "Panel_01.png",
+                    "Color": {
+                        "X": 0.11424887180328369,
+                        "Y": 1.0,
+                        "Z": 0.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 13,
+            "Name": "Header",
+            "Components": [
+                {
+                    "PID": 11,
+                    "ID": 32,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 2.0,
+                        "Y": 3.4720780849456787,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 31,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Header\n",
+                    "Font Size": 0.20000000298023224,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 14,
+            "Name": "Options",
+            "Components": [
+                {
+                    "PID": 11,
+                    "ID": 34,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 15,
+            "Name": "Option 1",
+            "Components": [
+                {
+                    "PID": 14,
+                    "ID": 35,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 1.100000023841858,
+                        "Y": -2.75,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 3.799999952316284,
+                        "Y": 3.799999952316284,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 36,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 8004758063171796349,
+                    "Sprite Name": "Option_01.png",
+                    "Color": {
+                        "X": 0.0,
+                        "Y": 0.5098039507865906,
+                        "Z": 0.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "Button",
+                    "ID": 37,
+                    "Graphic ID": 52,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.699999988079071,
+                            "Y": -0.20000000298023224
+                        },
+                        "Max": {
+                            "X": 0.699999988079071,
+                            "Y": 0.20000000298023224
+                        }
+                    },
+                    "Callback": ""
+                },
+                {
+                    "Type": "Text",
+                    "ID": 52,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "",
+                    "Font Size": 0.029999999329447746,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 16,
+            "Name": "Option 2",
+            "Components": [
+                {
+                    "PID": 14,
+                    "ID": 39,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 1.100000023841858,
+                        "Y": -3.5,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 3.799999952316284,
+                        "Y": 3.799999952316284,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 38,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 8004758063171796349,
+                    "Sprite Name": "Option_01.png",
+                    "Color": {
+                        "X": 0.0,
+                        "Y": 0.5098039507865906,
+                        "Z": 0.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "Button",
+                    "ID": 39,
+                    "Graphic ID": 53,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.699999988079071,
+                            "Y": -0.20000000298023224
+                        },
+                        "Max": {
+                            "X": 0.699999988079071,
+                            "Y": 0.20000000298023224
+                        }
+                    },
+                    "Callback": ""
+                },
+                {
+                    "Type": "Text",
+                    "ID": 53,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "",
+                    "Font Size": 0.029999999329447746,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 17,
+            "Name": "Text 01",
+            "Components": [
+                {
+                    "PID": 15,
+                    "ID": 43,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -3.299999952316284,
+                        "Y": 0.0,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 42,
+                    "FontName": "corbel",
+                    "H_Align": 0,
+                    "V_Align": 1,
+                    "Content": "Option 1",
+                    "Font Size": 0.10000000149011612,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 18,
+            "Name": "Text 02",
+            "Components": [
+                {
+                    "PID": 16,
+                    "ID": 45,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -3.299999952316284,
+                        "Y": 0.0,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 43,
+                    "FontName": "corbel",
+                    "H_Align": 0,
+                    "V_Align": 1,
+                    "Content": "Option 2",
+                    "Font Size": 0.10000000149011612,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 19,
+            "Name": "Body",
+            "Components": [
+                {
+                    "PID": 11,
+                    "ID": 47,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -2.5,
+                        "Y": 2.437000036239624,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 44,
+                    "FontName": "corbel",
+                    "H_Align": 0,
+                    "V_Align": 1,
+                    "Content": "Body",
+                    "Font Size": 0.10000000149011612,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 3,
+            "Name": "Main Screen Canvas",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 49,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": -8.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 21,
+            "Name": "Combat Canvas",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 50,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 22,
+            "Name": "Message Tab",
+            "Components": [
+                {
+                    "PID": 3,
+                    "ID": 51,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 23,
+            "Name": "Crew Tab",
+            "Components": [
+                {
+                    "PID": 3,
+                    "ID": 52,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 20,
+            "Name": "Game Manager",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 53,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 46,
+                    "Type": "Script",
+                    "Name": "GameManager",
+                    "TrainCanvas": 4,
+                    "CombatCanvas": 21,
+                    "MainScreenCanvas": 3,
+                    "ReportTab": 11,
+                    "MessageTab": 22,
+                    "CrewTab": 23,
+                    "CrewTabBtn": 27,
+                    "ReportScreenBtn": 9,
+                    "ReportTabBtn": 17,
+                    "audio": 78,
+                    "MessageTabBtn": 22
+                }
+            ]
+        },
+        {
+            "ID": 25,
+            "Name": "Tracks",
+            "Components": [
+                {
+                    "PID": 24,
+                    "ID": 55,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 2.4512434005737305,
+                        "Z": -11.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.9000000953674316,
+                        "Y": 2.9000000953674316,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 63,
+                    "Type": "Animator",
+                    "Loop": true,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "Tracks.png",
+                            "Sprite ID": 1100315501279954735,
+                            "Time Delay": 0.019999999552965164,
+                            "FrameCount": 4,
+                            "Rows": 1,
+                            "Columns": 4
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 26,
+            "Name": "Next",
+            "Components": [
+                {
+                    "PID": 11,
+                    "ID": 57,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 5.876922607421875,
+                        "Y": -3.184553861618042,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 4.0,
+                        "Y": 4.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 65,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 18094748837859732085,
+                    "Sprite Name": "Next_Btn.png",
+                    "Color": {
+                        "X": 0.9999076128005981,
+                        "Y": 1.0,
+                        "Z": 0.9998999834060669,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "Button",
+                    "ID": 66,
+                    "Graphic ID": 67,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.30000001192092896,
+                            "Y": -0.23000000417232513
+                        },
+                        "Max": {
+                            "X": 0.3199999928474426,
+                            "Y": 0.23000000417232513
+                        }
+                    },
+                    "Callback": ""
+                },
+                {
+                    "Type": "Text",
+                    "ID": 67,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Next",
+                    "Font Size": 0.029999999329447746,
+                    "r": 0.9999080896377563,
+                    "g": 1.0,
+                    "b": 0.9998999834060669,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 27,
+            "Name": "Warning",
+            "Components": [
+                {
+                    "PID": 24,
+                    "ID": 61,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 6.304711818695068,
+                        "Y": -1.3121013641357422,
+                        "Z": -8.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": -8.998575210571289
+                    },
+                    "Scale": {
+                        "X": 7.0,
+                        "Y": 7.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 69,
+                    "Type": "Animator",
+                    "Loop": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "Warning_Spritesheet_01.png",
+                            "Sprite ID": 12404360149057679809,
+                            "Time Delay": 0.05000000074505806,
+                            "FrameCount": 30,
+                            "Rows": 5,
+                            "Columns": 6
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 28,
+            "Name": "Snowing",
+            "Components": [
+                {
+                    "PID": 24,
+                    "ID": 63,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.20270991325378418,
+                        "Y": 2.609424352645874,
+                        "Z": -11.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 45.0,
+                        "Y": 20.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 71,
+                    "Type": "Animator",
+                    "Loop": true,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "Snow_Spritesheet_01.png",
+                            "Sprite ID": 14648573232611291926,
+                            "Time Delay": 0.0,
+                            "FrameCount": 54,
+                            "Rows": 9,
+                            "Columns": 6
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 29,
+            "Name": "Manual",
+            "Components": [
+                {
+                    "PID": 4,
+                    "ID": 65,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": -3.6497156620025635,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 8.0,
+                        "Y": 8.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 8,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 4873872871288986635,
+                    "Sprite Name": "Manual.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 30,
+            "Name": "Lever",
+            "Components": [
+                {
+                    "PID": 4,
+                    "ID": 67,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -2.964315891265869,
+                        "Y": -3.480893850326538,
+                        "Z": 1.0
                     },
                     "Rot": {
                         "X": 0.0,
@@ -68,16 +1289,207 @@
                     }
                 },
                 {
-                    "ID": 4,
-                    "Type": "SpriteRenderer",
-                    "Sprite ID": 22,
-                    "Sprite Name": "player_train_head.png",
+                    "Type": "ImageComponent",
+                    "ID": 75,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 7229591644963984314,
+                    "Sprite Name": "Lever.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
                         "Z": 1.0,
                         "W": 1.0
                     }
+                }
+            ]
+        },
+        {
+            "ID": 32,
+            "Name": "Report Screen Highlight",
+            "Components": [
+                {
+                    "PID": 4,
+                    "ID": 69,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.05472242832183838,
+                        "Y": -0.6735561490058899,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.8237757682800293,
+                        "Y": 2.836432456970215,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 77,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 5464368652596582388,
+                    "Sprite Name": "M_Screen_Hightlight.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 33,
+            "Name": "Combat Screen Highlight",
+            "Components": [
+                {
+                    "PID": 4,
+                    "ID": 71,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 6.444356918334961,
+                        "Y": -1.4124579429626465,
+                        "Z": 2.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.647845983505249,
+                        "Y": 2.6822762489318848,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 80,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 6847983346719718934,
+                    "Sprite Name": "Right_Screen_Highlight.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 35,
+            "Name": "Glass",
+            "Components": [
+                {
+                    "PID": 4,
+                    "ID": 73,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 22.0,
+                        "Y": 22.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 80,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 17236820672172375526,
+                    "Sprite Name": "Glasdirty.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 34,
+            "Name": "Event Manager",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 75,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 76,
+                    "Type": "Script",
+                    "Name": "EventManager",
+                    "EventSequence": 0,
+                    "DaySequence": 1,
+                    "LuckSequence": 0,
+                    "Option_01": 15,
+                    "Option_02": 16,
+                    "Next_Event": 26,
+                    "GameManager": 46,
+                    "Option_02_Text": 43,
+                    "Header": 31,
+                    "Body": 44,
+                    "Option_01_Text": 42,
+                    "Event_Intro": 79
+                }
+            ]
+        },
+        {
+            "ID": 31,
+            "Name": "Introduction",
+            "Components": [
+                {
+                    "PID": 34,
+                    "ID": 77,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 79,
+                    "Type": "Script",
+                    "Name": "Event_Intro",
+                    "EventManager": 76
                 }
             ]
         }

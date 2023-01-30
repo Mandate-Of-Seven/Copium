@@ -50,6 +50,12 @@ namespace CopiumEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static ulong InstantiateGameObject();
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void DestroyGameObject(ulong ID);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static ulong AddComponent(ulong gameObjID, Type componentType);
+
         #endregion
 
         #region TRANSFORM
@@ -89,11 +95,20 @@ namespace CopiumEngine
 
         #endregion
 
+
+        #region AUDIO_SOURCE
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void AudioSourcePlay(ulong ID);
+        #endregion
+
         #region UI
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetUIInteractable(bool isInteractable);
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool GetUIInteractable();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern char GetButtonState(ulong gameObjID);
 
         #endregion
 
@@ -113,7 +128,7 @@ namespace CopiumEngine
         internal extern static void GetTextString(ulong gameObjID, ulong compID,out string str);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetTextString(ulong gameObjID, ulong compID,ref string str);
+        internal extern static void SetTextString(ulong gameObjID, ulong compID,string str);
         #endregion
 
         [MethodImpl(MethodImplOptions.InternalCall)]

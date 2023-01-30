@@ -79,7 +79,7 @@ namespace Copium
 	void BaseCamera::init(float _width, float _height, CameraType _cameraType, bool _orthographic)
 	{
 		// Setting up data
-		viewer = { 0.f, 0.f, -10.f };
+		viewer = { 0.f, 0.f, 10.f };
 		focalPoint = { viewer.x, viewer.y, 0.f };
 		/*viewer = { 0.f, 0.f, 0.f };
 		focalPoint = { viewer.x, viewer.y, 0.f };*/
@@ -166,7 +166,7 @@ namespace Copium
 
 	glm::vec3 BaseCamera::get_up_direction() const
 	{
-		return glm::rotate(get_orientation(), glm::vec3(0.f, -1.f, 0.f));
+		return glm::rotate(get_orientation(), glm::vec3(0.f, 1.f, 0.f));
 	}
 
 	glm::vec3 BaseCamera::get_forward_direction() const
@@ -216,7 +216,7 @@ namespace Copium
 
 		mouseToNDC *= orthographicSize;
 		glm::vec2 worldNDC = { mouseToNDC.x + viewer.x, mouseToNDC.y + viewer.y };
-		PRINT("~: " << worldNDC.x << ", " << worldNDC.y);
+		//PRINT("~: " << worldNDC.x << ", " << worldNDC.y);
 		return worldNDC;
 	}
 
@@ -257,7 +257,9 @@ namespace Copium
 		float ar = aspect;
 		float zl = orthographicSize;
 		projMatrix = glm::ortho(-ar * zl, ar * zl, -zl, zl, nearClip, farClip);
+		
 		viewProjMatrix = projMatrix * viewMatrix;
+		//viewProjMatrix = viewMatrix * projMatrix;
 	}
 
 	void BaseCamera::update_ortho_projection(float _left, float _right, float _bottom, float _top)
@@ -270,6 +272,8 @@ namespace Copium
 	{
 		// Get updated viewer / eye location
 		viewer = calculate_position();
+		viewer.z = 10.f;
+
 		focalPoint = { viewer.x, viewer.y, 0.f };
 		upVector = { 0.f, 1.f, 0.f };
 
@@ -296,7 +300,8 @@ namespace Copium
 	}
 
 	glm::vec3 BaseCamera::calculate_position()
-	{
-		return focalPoint - get_forward_direction() * orthographicSize;
+	{ 
+		//glm::vec3 viewVector = get_forward_direction();
+		return viewer - get_forward_direction() * orthographicSize;
 	}
 }
