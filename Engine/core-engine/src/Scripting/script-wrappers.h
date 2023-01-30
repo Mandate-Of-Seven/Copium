@@ -24,6 +24,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <SceneManager/state-manager.h>
 #include <GameObject/Components/ui-components.h>
 #include <cstring>
+#include <GameObject/Components/audiosource-component.h>
 
 #include "mono/metadata/object.h"
 #include "mono/metadata/reflection.h"
@@ -489,6 +490,14 @@ namespace Copium
 		COPIUM_ASSERT(!MyGOF.destroy(ID), "GameObject could not be destroyed");
 	}
 
+	static void AudioSourcePlay(GameObjectID ID)
+	{
+		GameObject* gameObj = sceneManager.findGameObjByID(ID);
+		if (gameObj == nullptr)
+			return;
+		gameObj->getComponent<AudioSource>()->play_sound();
+	}
+
 	/*******************************************************************************
 	/*!
 	\brief
@@ -520,6 +529,7 @@ namespace Copium
 		Register(QuitGame);
 		Register(GetButtonState);
 		Register(AddComponent);
+		Register(AudioSourcePlay);
 	}
 
 	/*******************************************************************************

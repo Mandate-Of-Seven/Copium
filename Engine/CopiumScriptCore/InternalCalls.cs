@@ -95,6 +95,12 @@ namespace CopiumEngine
 
         #endregion
 
+
+        #region AUDIO_SOURCE
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void AudioSourcePlay(ulong ID);
+        #endregion
+
         #region UI
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetUIInteractable(bool isInteractable);

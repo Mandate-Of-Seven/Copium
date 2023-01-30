@@ -180,4 +180,12 @@ namespace CopiumEngine
             }
         }
     }
+
+    public class AudioSource : Component
+    {
+        public void Play()
+        {
+            InternalCalls.AudioSourcePlay(gameObject.ID);
+        }
+    }
 }
