@@ -205,6 +205,10 @@ namespace Copium
 		*/
 
 		// Theory WIP
+
+		// If it has a sorting layer
+
+		// Insert it into a container
 		
 		Scene* scene = sm->get_current_scene();
 		if (scene != nullptr)
