@@ -93,7 +93,8 @@ namespace Copium
 			}
 		}
 
-		if (tempMode != enableEditor)
+		static bool loadOnce = false;
+		if (tempMode != enableEditor && loadOnce)
 		{
 			enableEditor = tempMode;
 			playMode(enableEditor);
@@ -415,6 +416,9 @@ namespace Copium
 		}
 		
 		ImGui::EndFrame();
+
+		if (!loadOnce)
+			loadOnce = true;
 	}
 
 	void EditorSystem::draw()
