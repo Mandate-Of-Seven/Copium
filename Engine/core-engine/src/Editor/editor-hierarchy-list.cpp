@@ -814,24 +814,24 @@ namespace Copium
 
 				//isPopUpOpen = false;
 			}
-			if (ImGui::MenuItem("Delete"))
-			{
-				PRINT("die bitch");
-				if (Copium::SceneManager::Instance()->get_selected_gameobject())
-				{
-					std::cout << "Delete\n";
-					Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::GameObjectCommand(MySceneManager.get_selected_gameobject_sptr(), false);
-					Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
-					MyGOF.destroy(MySceneManager.get_selected_gameobject());
-					MySceneManager.set_selected_gameobject(nullptr);
-					result = 1;
-				}
-				else
-				{
-					Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
-				}
-				//isPopUpOpen = false;
-			}
+			//if (ImGui::MenuItem("Delete"))
+			//{
+			//	PRINT("die bitch");
+			//	if (Copium::SceneManager::Instance()->get_selected_gameobject())
+			//	{
+			//		std::cout << "Delete\n";
+			//		Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::GameObjectCommand(MySceneManager.get_selected_gameobject_sptr(), false);
+			//		Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+			//		MyGOF.destroy(MySceneManager.get_selected_gameobject());
+			//		MySceneManager.set_selected_gameobject(nullptr);
+			//		result = 1;
+			//	}
+			//	else
+			//	{
+			//		Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
+			//	}
+			//	//isPopUpOpen = false;
+			//}
 			//if (ImGui::MenuItem("Shift Up"))
 			//{
 			//	ShiftUp();
@@ -943,6 +943,18 @@ namespace Copium
 
 			dest = pos;
 
+			// Find source game object in the main vector
+			size_t vecPos{ 0 }, vecDest{ 0 };
+			Scene* scene = sm->get_current_scene();
+			for (size_t i{ 0 }; i < scene->get_gameobjcount(); ++i)
+			{
+				if (_go == scene->gameObjects[i])
+				{
+					vecPos = i;
+					break;
+				}
+			}
+
 			if (increment)
 			{				
 				if (idx >= pt->children.size()-1)
@@ -971,6 +983,23 @@ namespace Copium
 					std::cout << (*iter)->gameObj.get_name() << std::endl;
 				}
 			}
+
+			// Find destination game object in main vector
+			for (size_t i{ 0 }; i < scene->get_gameobjcount(); ++i)
+			{
+				// Note that pos and dest had swapped position earlier so pos now points to the destination
+				if ((*pos)->gameObj.id == scene->gameObjects[i]->id)
+				{
+					vecDest = i;
+					break;
+				}
+			}
+
+			if (vecPos >= scene->get_gameobjcount() || vecDest >= scene->get_gameobjcount())
+				return;
+
+			PRINT("Swapping game objects in main vector!" << vecPos << '|' << vecDest);
+			std::swap(scene->gameObjects[vecPos], scene->gameObjects[vecDest]);
 
 		}
 		else
