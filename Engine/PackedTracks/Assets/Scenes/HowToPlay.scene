@@ -1,0 +1,427 @@
+{
+    "Name": "NewScene",
+    "Unused GIDs": [],
+    "Unused CIDs": [],
+    "GameObjects": [
+        {
+            "ID": 1,
+            "Name": "Camera",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 1,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Camera",
+                    "Color": {
+                        "X": 0.27799999713897705,
+                        "Y": 0.27799999713897705,
+                        "Z": 0.27799999713897705,
+                        "W": 1.0
+                    },
+                    "Projection": true,
+                    "Clipping Planes": {
+                        "Near": 0.029999999329447746,
+                        "Far": 500.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 2,
+            "Name": "File",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 3,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 3.549999952316284,
+                        "Y": 2.950000047683716,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 4,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 17771693188511320305,
+                    "Sprite Name": "FileOpen.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 0.9999255537986755,
+                        "Z": 0.9998999834060669,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 3,
+            "Name": "Text",
+            "Components": [
+                {
+                    "PID": 2,
+                    "ID": 5,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -3.8205201625823975,
+                        "Y": 4.320092678070068,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 6,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Train Conductor Guide",
+                    "Font Size": 0.20000000298023224,
+                    "r": 0.00009999999747378752,
+                    "g": 0.00009998999303206801,
+                    "b": 0.00009998999303206801,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 4,
+            "Name": "Text 2",
+            "Components": [
+                {
+                    "PID": 2,
+                    "ID": 7,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 4.870062828063965,
+                        "Y": 3.5408661365509033,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 8,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Welcome aboard the cockpit, Conductor!\nThis will serve as a guide for what responsibilites\nyou have to lead your train and the crew\nthrough the barren wasteland.",
+                    "Font Size": 0.14499999582767487,
+                    "r": 0.00009999999747378752,
+                    "g": 0.00009999256144510582,
+                    "b": 0.00009998999303206801,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 5,
+            "Name": "Text 3",
+            "Components": [
+                {
+                    "PID": 2,
+                    "ID": 9,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -4.109770774841309,
+                        "Y": -0.25913673639297485,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 11,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Decision Making",
+                    "Font Size": 0.15000000596046448,
+                    "r": 0.00009999999747378752,
+                    "g": 0.00009998999303206801,
+                    "b": 0.00009998999303206801,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 6,
+            "Name": "Text 4",
+            "Components": [
+                {
+                    "PID": 2,
+                    "ID": 11,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 4.463012218475342,
+                        "Y": -0.5969563722610474,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 14,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Throughout the day, you will have to make a decision on \nwhat action to do. The choice you make will have different \noutcomes on your crew status.\n\nBe careful to not put your crew in danger!",
+                    "Font Size": 0.11999999731779099,
+                    "r": 0.00009999999747378752,
+                    "g": 0.00009998999303206801,
+                    "b": 0.00009998999303206801,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 7,
+            "Name": "Text 5",
+            "Components": [
+                {
+                    "PID": 2,
+                    "ID": 13,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 3.842334270477295,
+                        "Y": 4.268291473388672,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 14,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Combat",
+                    "Font Size": 0.15000000596046448,
+                    "r": 0.00009999999747378752,
+                    "g": 0.00009998999303206801,
+                    "b": 0.00009998999303206801,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 8,
+            "Name": "Text 6",
+            "Components": [
+                {
+                    "PID": 2,
+                    "ID": 15,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 13.239455223083496,
+                        "Y": 3.7114603519439697,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 16,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "As you travel through the railway, you and your crew \nwill have to engage in combat with other crews. Do not be \nworried, as the crew is proficient in combat, and you will not \nhave to worry about any casualties!",
+                    "Font Size": 0.11999999731779099,
+                    "r": 0.00009999999747378752,
+                    "g": 0.00009998999303206801,
+                    "b": 0.00009998999303206801,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 9,
+            "Name": "Text 7",
+            "Components": [
+                {
+                    "PID": 2,
+                    "ID": 17,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 5.65846061706543,
+                        "Y": -1.9970825910568237,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 18,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "That is all for now, stay safe and I wish all\nthe best on your journey!",
+                    "Font Size": 0.15000000596046448,
+                    "r": 0.00009999999747378752,
+                    "g": 0.00009998999303206801,
+                    "b": 0.00009998999303206801,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 10,
+            "Name": "OkButton",
+            "Components": [
+                {
+                    "PID": 2,
+                    "ID": 19,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 3.604088068008423,
+                        "Y": -3.4821977615356445,
+                        "Z": 1.0499999523162842
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 4.449999809265137,
+                        "Y": 5.199999809265137,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Button",
+                    "ID": 20,
+                    "Graphic ID": 22,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.5,
+                            "Y": -0.5
+                        },
+                        "Max": {
+                            "X": 0.5,
+                            "Y": 0.5
+                        }
+                    },
+                    "Callback": ""
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 21,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 2773572572927185668,
+                    "Sprite Name": "Btn_01.png",
+                    "Color": {
+                        "X": 0.14766335487365723,
+                        "Y": 0.08482372015714645,
+                        "Z": 0.08482372015714645,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 22,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Ok",
+                    "Font Size": 0.05000000074505806,
+                    "r": 0.16226345300674438,
+                    "g": 0.038638729602098465,
+                    "b": 0.038638729602098465,
+                    "a": 1.0
+                }
+            ]
+        }
+    ]
+}
