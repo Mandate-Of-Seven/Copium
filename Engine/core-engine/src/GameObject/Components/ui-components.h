@@ -179,7 +179,7 @@ namespace Copium
 
 			const AABB& getRelativeBounds() const;
 
-			static const Button* hoveredBtn;
+			static Button* hoveredBtn;
 
 			ButtonState GetState() { return state; }
 		private:
@@ -188,7 +188,7 @@ namespace Copium
 			void updateBounds();
 			AABB relativeBounds;
 			ButtonState state;
-			ButtonState getInternalState() const;
+			ButtonState getInternalState();
 			glm::fvec4 normalColor;
 			glm::fvec4 hoverColor;
 			glm::fvec4 clickedColor;
@@ -197,6 +197,7 @@ namespace Copium
 			glm::fvec4 previousColor;
 			float timer{0};
 			float fadeDuration{0.1f};
+			friend class LogicSystem;
 	};
 
 	class Text final : public Component, IUIComponent

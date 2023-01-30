@@ -68,6 +68,11 @@ namespace Copium
 			}
 		}
 
+		if (Button::hoveredBtn && (!Button::hoveredBtn->gameObj.isActive() || !Button::hoveredBtn->Enabled()))
+		{
+			Button::hoveredBtn->state = ButtonState::None;
+			Button::hoveredBtn = nullptr;
+		}
 		for (GameObject* pGameObj : pScene->gameObjects)
 		{
 			if (!pGameObj->isActive())
