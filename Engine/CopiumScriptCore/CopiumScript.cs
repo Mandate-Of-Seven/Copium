@@ -32,6 +32,20 @@ namespace CopiumEngine
             return original;
         }
 
+        private Component Create(ulong componentID, ulong gameObjectID)
+        {
+            Console.WriteLine("finding component");
+            foreach (Component component in Instances.components)
+            {
+                if (component.ID == componentID)
+                {
+                    return component;
+                }
+            }
+            Instances.components.Add(this);
+            return this;
+        }
+
         private Component FindComponentByID(ulong componentID, ulong gameObjectID)
         {
             Console.WriteLine("finding component");
