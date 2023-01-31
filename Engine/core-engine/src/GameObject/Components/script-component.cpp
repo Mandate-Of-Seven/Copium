@@ -53,7 +53,13 @@ namespace Copium
 			GameObjectID gameObjID = gameObj.id;
 			void* params[2] = { &id, &gameObjID };
 			MonoObject* tmp = sS.createInstance(pScriptClass->mClass);
-			MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindComponentByID"], tmp, params, nullptr);
+			MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["Create"], tmp, params, nullptr);
+			if (tmp == result)
+			{
+				mono_runtime_object_init(tmp);
+			}
+			//REMINDER ADD BACK CREATION OF SEPARATE OBJECT
+
 			mObject = result;
 			GameObjectID _id = gameObj.id;
 			void* param = &_id;

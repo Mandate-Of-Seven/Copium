@@ -38,6 +38,10 @@ public class EventManager: CopiumScript
         option01_btn = Option_01.GetComponent<Button>();
         option02_btn = Option_02.GetComponent<Button>();
         next_btn = Next_Event.GetComponent<Button>();
+ /*       Event_01 = false;
+        Event_02 = false;
+        Event_03 = false;
+        Event_04 = false;*/
     }
 	void Update()
     {
@@ -124,6 +128,7 @@ public class EventManager: CopiumScript
                 Option_02.SetActive(false);
                 Next_Event.SetActive(true);
             }
+            Console.WriteLine("RETURNED");
             return;
         }
 
@@ -135,6 +140,7 @@ public class EventManager: CopiumScript
         }
 
         Header.text = "Luck in a barren wasteland";
+        Console.WriteLine("TEXT");
 
         Body.text = "\nReport type: Situation\n\n\nHarris spotted a abandoned town not too far off from the main track. " +
             "Crew seem \nto be in agreement to check it out. Otherwise, nothing out of the ordinary. \nTrain conductor to choose course of action. \n";
