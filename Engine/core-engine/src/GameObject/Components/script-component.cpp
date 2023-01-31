@@ -19,6 +19,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "SceneManager/scene-manager.h"
 #define DEFAULT_SCRIPT_NAME "NewScript"
 #include <mono/jit/jit.h>
+#include <Events/events-system.h>
 
 #define BUFFER_SIZE 128
 
@@ -50,20 +51,7 @@ namespace Copium
 	{
 		if (pScriptClass != nullptr)
 		{
-			GameObjectID gameObjID = gameObj.id;
-			void* params[2] = { &id, &gameObjID };
-			MonoObject* tmp = sS.createInstance(pScriptClass->mClass);
-			MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["Create"], tmp, params, nullptr);
-			if (tmp == result)
-			{
-				mono_runtime_object_init(tmp);
-			}
-			//REMINDER ADD BACK CREATION OF SEPARATE OBJECT
-
-			mObject = result;
-			GameObjectID _id = gameObj.id;
-			void* param = &_id;
-			sS.invoke(mObject, pScriptClass->mMethods["OnCreate"], &param);
+			MyEventSystem->publish(new ReflectScriptEvent(name.c_str(), id, gameObj.id));
 		}
 	}
 
@@ -270,7 +258,6 @@ namespace Copium
 								GameObjectID gameObjID = pComponent->gameObj.id;
 								void* params[2] = { &componentID, &gameObjID };
 								MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindComponentByID"], mObject, params, nullptr);
-								fieldDataReferences.insert({ it->first,FieldData(mono_object_get_size(result)) });
 								MonoClass* mComponentClass = mono_object_get_class(result);
 								MonoClassField* field = mono_class_get_field_from_name(pScriptClass->mClass, _name.c_str()); // Obtain a reference to the object variable
 								void* param{ result };

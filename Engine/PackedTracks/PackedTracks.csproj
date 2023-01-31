@@ -82,6 +82,9 @@
     <Compile Include="..\CopiumScriptCore\Random.cs">
       <Link>Random.cs</Link>
     </Compile>
+    <Compile Include="..\CopiumScriptCore\Scene.cs">
+      <Link>Scene.cs</Link>
+    </Compile>
     <Compile Include="..\CopiumScriptCore\ScriptableObject.cs">
       <Link>ScriptableObject.cs</Link>
     </Compile>

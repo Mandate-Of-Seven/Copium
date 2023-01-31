@@ -64,6 +64,11 @@ public class GameManager: CopiumScript
         {
             UpdateTabs();
         }
+
+        if (Input.GetKey(KeyCode.P))
+        {
+            Application.Quit();
+        }
     }
 
     void UpdateTabs()

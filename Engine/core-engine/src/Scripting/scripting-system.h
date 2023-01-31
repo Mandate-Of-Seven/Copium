@@ -21,6 +21,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Messaging\message-system.h"
 #include "Files\file-system.h"
 #include <Scripting/scriptable-object.h>
+#include <Events/events.h>
 
 #include <string>
 #include <unordered_map>
@@ -204,7 +205,7 @@ namespace Copium
 				Shared pointer to a ScriptClass
 		*/
 		/**************************************************************************/
-		ScriptClass* getScriptClass(const std::string & _name);
+		ScriptClass& GetScriptClass(const std::string & _name);
 
 		/**************************************************************************/
 		/*!
@@ -368,6 +369,7 @@ namespace Copium
 
 
 		bool isScript(const std::string& name);
+
 	private:
 
 		/**************************************************************************/
@@ -431,6 +433,12 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		bool scriptIsLoaded(const std::filesystem::path& filePath);
+
+		void CallbackSceneOpened(SceneOpenedEvent* pEvent);
+
+		void CallbackReflectScript(ReflectScriptEvent* pEvent);
+
+
 		std::unordered_map<std::string, ScriptClass> scriptClassMap;
 		std::unordered_map<std::string, ScriptClass> scriptableObjectClassMap;
 		std::list<File>& scriptFiles;

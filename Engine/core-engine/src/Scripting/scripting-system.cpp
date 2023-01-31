@@ -26,6 +26,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scripting/script-wrappers.h"
 #include <GameObject/Components/script-component.h>
 #include <SceneManager/scene-manager.h>
+#include <Events/events-system.h>
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
@@ -44,7 +45,9 @@ namespace
 	MonoClass* mCopiumScript{ nullptr };
 	MonoClass* mCollision2D{ nullptr };
 	MonoClass* mScriptableObject{};
-	std::unordered_map<uint64_t,MonoObject*> monoGameObjects{};
+	MonoClass* klassScene{};
+	std::unordered_map<std::string, MonoObject*> scenes;
+	MonoObject* mCurrentScene;
 }
 
 namespace Copium::Utils
@@ -258,7 +261,8 @@ namespace Copium
 		systemFlags |= FLAG_RUN_ON_EDITOR;
 		ThreadSystem::Instance()->addThread(new std::thread(&ScriptingSystem::recompileThreadWork, this));
 		messageSystem.subscribe(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT, this);
-		messageSystem.subscribe(MESSAGE_TYPE::MT_SCENE_OPENED, this);
+		MyEventSystem->subscribe(this,&ScriptingSystem::CallbackSceneOpened);
+		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackReflectScript);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_ENGINE_INITIALIZED, this);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
@@ -290,26 +294,20 @@ namespace Copium
 		return tmp;
 	}
 
-	ScriptClass* ScriptingSystem::getScriptClass(const std::string& _name)
+	ScriptClass& ScriptingSystem::GetScriptClass(const std::string& _name)
 	{
-		if (mAssemblyImage == nullptr)
-		{
-			PRINT("ASSEMBLY IMAGE NOT LOADED!");
-			return nullptr;
-		}
 		auto namePScriptClassPair = scriptClassMap.find(_name);
-		ScriptClass* pScriptClass{ nullptr };
 		if (namePScriptClassPair != scriptClassMap.end())
 		{
-			pScriptClass = &namePScriptClassPair->second;
-			return pScriptClass;
+			return namePScriptClassPair->second;
 		}
 		MonoClass* mClass = mono_class_from_name(mAssemblyImage, "", _name.c_str());
+		//TRY EXCEPT
 		if (mClass)
 		{
-			scriptClassMap.emplace(_name, ScriptClass(_name, mClass));
 		}
-		return pScriptClass;
+		ScriptClass scriptClass{ _name, mClass };
+		scriptClassMap.emplace(_name, std::move(scriptClass));
 	}
 
 	const std::unordered_map<std::string, ScriptClass>& ScriptingSystem::getScriptClassMap()
@@ -551,7 +549,6 @@ namespace Copium
 					return;
 				MonoMethod* mSetID = mono_class_get_method_from_name(mGameObject, "setID", 1);
 				MonoObject* mInstance = instantiateClass(mGameObject);
-				monoGameObjects[MESSAGE_CONTAINER::reflectCsGameObject.gameObjID] = mInstance;
 				void* param = &MESSAGE_CONTAINER::reflectCsGameObject.gameObjID;
 				mono_runtime_invoke(mSetID, mInstance, &param, nullptr);
 				//MonoMethod* mAttachComponentByID = mono_class_get_method_from_name(mGameObject, "AttachComponentByID", 1);
@@ -560,19 +557,6 @@ namespace Copium
 				//	void* param = &componentID;
 				//	mono_runtime_invoke(mAttachComponentByID, mInstance,&param,nullptr);
 				//}
-				break;
-			}
-			case MESSAGE_TYPE::MT_SCENE_OPENED:
-			{
-				//If swap assembly compiling
-
-				while (compilingState == CompilingState::Compiling);
-				compilingState = CompilingState::Deserializing;
-				swapDll();
-				registerComponents();
-				compilingState = CompilingState::Wait;
-				//compilingState = CompilingState::Deserializing;
-				//swapDll();
 				break;
 			}
 			case MESSAGE_TYPE::MT_SCENE_DESERIALIZED:
@@ -612,5 +596,38 @@ namespace Copium
 				break;
 			}
 		}
+	}
+
+
+	void ScriptingSystem::CallbackSceneOpened(SceneOpenedEvent* pEvent)
+	{
+		CompilingState state = compilingState;
+		while (compilingState == CompilingState::Compiling);
+		//If thread was Recompiling and is ready to swap
+		if (state == CompilingState::Compiling && compilingState == CompilingState::SwapAssembly)
+		{
+			swapDll();
+			registerComponents();
+		}
+		compilingState = CompilingState::Deserializing;
+		mCurrentScene = instantiateClass(klassScene);
+		scenes[pEvent->sceneName] = mCurrentScene;
+	}
+
+	void ScriptingSystem::CallbackReflectScript(ReflectScriptEvent* pEvent)
+	{
+		ScriptClass& scriptClass = GetScriptClass(pEvent->scriptName);
+		MonoObject* tmp = sS.createInstance(pScriptClass->mClass);
+		MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["Create"], tmp, params, nullptr);
+		if (tmp == result)
+		{
+			mono_runtime_object_init(tmp);
+		}
+		//REMINDER ADD BACK CREATION OF SEPARATE OBJECT
+
+		mObject = result;
+		GameObjectID _id = gameObj.id;
+		void* param = &_id;
+		sS.invoke(mObject, pScriptClass->mMethods["OnCreate"], &param);
 	}
 }

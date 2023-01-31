@@ -58,7 +58,7 @@
                     "ID": 79,
                     "Type": "Script",
                     "Name": "AudioManager",
-                    "state": 40,
+                    "state": 1,
                     "ambTrain": 80,
                     "bgmTrain": 78
                 },

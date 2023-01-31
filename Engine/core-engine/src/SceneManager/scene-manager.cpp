@@ -30,6 +30,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <GameObject/Components/camera-component.h>
 #include "GameObject/Components/ui-components.h"
 #include <Audio/sound-system.h>
+#include <Events/events-system.h>
 
 namespace Copium {
 
@@ -160,15 +161,13 @@ namespace Copium {
 			return false;
 		}
 
-		// WAIT
-		MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_SCENE_OPENED);
-
 		if (document.HasMember("Name"))
 		{
 			currentScene->set_name(document["Name"].GetString());
 			std::cout << "Scene name:" << currentScene->name << std::endl;
-
 		}
+
+		MyEventSystem->publish(new SceneOpenedEvent(currentScene->get_name().c_str()));
 
 		if (document.HasMember("Unused GIDs"))
 		{
