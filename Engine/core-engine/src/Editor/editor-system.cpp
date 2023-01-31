@@ -98,6 +98,10 @@ namespace Copium
 		{
 			enableEditor = tempMode;
 			playMode(enableEditor);
+			if (SceneManager::Instance()->startPreview())
+			{
+				messageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
+			}
 		}
 
 		// Start the Dear ImGui frame

@@ -22,8 +22,6 @@ namespace CopiumEngine
     {
         private void OnCreate(ulong ID)
         {
-            if (gameObject != null && ID == gameObject.ID)
-                return;
             Console.WriteLine(this.GetType().Name + " Script linked with GameObject of ID: (" + ID + ") in C#");
             gameObject = GameObject.FindByID(ID);
             transform = gameObject.transform;
@@ -36,6 +34,7 @@ namespace CopiumEngine
 
         private Component FindComponentByID(ulong componentID, ulong gameObjectID)
         {
+            Console.WriteLine("finding component");
             foreach (Component component in Instances.components)
             {
                 if (component.ID == componentID)

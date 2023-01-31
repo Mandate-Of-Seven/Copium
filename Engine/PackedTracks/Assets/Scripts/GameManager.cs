@@ -1,5 +1,6 @@
 using CopiumEngine;
 using System;
+using System.Collections.Generic;
 
 public class GameManager: CopiumScript
 {
@@ -23,7 +24,18 @@ public class GameManager: CopiumScript
 
     bool isReportScreenOn = false;
 
-	void Start()
+
+    public ShooterBehaviour ally1;
+    public ShooterBehaviour ally2;
+    public ShooterBehaviour ally3;
+    public ShooterBehaviour ally4;
+
+    public ShooterBehaviour enemy1;
+    public ShooterBehaviour enemy2;
+    public ShooterBehaviour enemy3;
+    public ShooterBehaviour enemy4;
+
+    void Start()
 	{
         isReportScreenOn = false;
 
@@ -32,7 +44,7 @@ public class GameManager: CopiumScript
         UpdateCanvases();
     }
 	void Update()
-	{
+    {
         if (ReportScreenBtn.state == ButtonState.OnClick)
         {
             isReportScreenOn = true;
@@ -47,9 +59,6 @@ public class GameManager: CopiumScript
                 UpdateCanvases();
             }
         }
-
-        Console.WriteLine("Game manager");
-        Console.WriteLine(ReportTab.activeSelf);
 
         if (isReportScreenOn)
         {
