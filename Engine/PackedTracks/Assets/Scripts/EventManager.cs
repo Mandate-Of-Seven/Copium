@@ -40,7 +40,7 @@ public class EventManager: CopiumScript
         next_btn = Next_Event.GetComponent<Button>();
     }
 	void Update()
-	{
+    {
         if (next_btn.state == ButtonState.OnClick && Next_Event.activeSelf)
         {
             EventSequence++;
@@ -59,9 +59,6 @@ public class EventManager: CopiumScript
             EngagingCombat = false;
             EventSequence++;
         }
-        Console.WriteLine("Event manager");
-        //Console.WriteLine(GameManager.ReportTab.activeSelf);
-
         CheckCurrentEvent();
     }
 

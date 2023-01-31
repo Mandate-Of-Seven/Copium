@@ -564,14 +564,12 @@ namespace Copium
 			case MESSAGE_TYPE::MT_SCENE_OPENED:
 			{
 				//If swap assembly compiling
+
 				while (compilingState == CompilingState::Compiling);
-				if (compilingState == CompilingState::SwapAssembly)
-				{
-					compilingState = CompilingState::Deserializing;
-					swapDll();
-					registerComponents();
-					compilingState = CompilingState::Wait;
-				}
+				compilingState = CompilingState::Deserializing;
+				swapDll();
+				registerComponents();
+				compilingState = CompilingState::Wait;
 				//compilingState = CompilingState::Deserializing;
 				//swapDll();
 				break;

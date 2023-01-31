@@ -380,7 +380,6 @@ void Transform::inspector_view()
 
 void Transform::previewLink(Component* rhs)
 {
-    PRINT("LINKING TRANSFORM");
     Transform* transform = reinterpret_cast<Transform*>(rhs);
     if (transform->hasParent())
         setParent(&MySceneManager.findGameObjByID(transform->parent->gameObj.id)->transform);

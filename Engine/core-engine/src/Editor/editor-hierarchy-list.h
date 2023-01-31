@@ -192,10 +192,10 @@ namespace Copium
 
 	private:
 		GameObjectID selectedID;
-		Scene* currentScene;
-		bool isHierarchyOpen;
-		bool isParenting;
-		bool isPopUpOpen;
+		Scene* currentScene{nullptr};
+		bool isHierarchyOpen{true};
+		bool isParenting{false};
+		bool isPopUpOpen{false};
 	};
 }
 
