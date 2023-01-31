@@ -32,6 +32,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "mono/metadata/assembly.h"
 #include "mono/metadata/object.h"
 #include "mono/metadata/tabledefs.h"
+#include <mono/metadata/mono-config.h>
+#include <mono/metadata/debug-helpers.h>
 
 #define SECONDS_TO_RECOMPILE 5
 namespace
@@ -188,25 +190,6 @@ namespace Copium
 	const std::unordered_map<std::string, ScriptClass>& ScriptingSystem::getScriptableObjectClassMap()
 	{
 		return scriptableObjectClassMap;
-	}
-
-	void ScriptingSystem::instantiateCollision2D(GameObject& collided, GameObject& collidee)
-	{
-		MonoObject* collisionData = mono_object_new(mAppDomain, mCollision2D);
-		MonoMethod* constructor = mono_class_get_method_from_name(mCollision2D, ".ctor", 1);
-		GameObjectID gameObjID = collidee.id;
-		void* data = mono_object_unbox(collisionData);
-		void* param = &gameObjID;
-		mono_runtime_invoke(constructor, collisionData, &param, nullptr);
-		for (Script* script : collided.getComponents<Script>())
-		{
-			auto pair = script->pScriptClass->mMethods.find("OnCollisionEnter2D");
-			if (pair != script->pScriptClass->mMethods.end())
-			{
-
-				mono_runtime_invoke((*pair).second, script->mObject, &data, nullptr);
-			}
-		}
 	}
 
 	void ScriptingSystem::addEmptyScript(const std::string& _name)
@@ -424,12 +407,13 @@ namespace Copium
 		PRINT("END SWAP DLL_____________________________________");
 	}
 
-	void ScriptingSystem::invoke(MonoObject* mObj, MonoMethod* mMethod, void** params)
+	MonoObject* ScriptingSystem::invoke(MonoObject* mObj, MonoMethod* mMethod, void** params)
 	{
 		if (mObj && mMethod && mAppDomain)
 		{
-			mono_runtime_invoke(mMethod, mObj, params, nullptr);
+			return mono_runtime_invoke(mMethod, mObj, params, nullptr);
 		}
+		return nullptr;
 	}
 
 	MonoObject* ScriptingSystem::getFieldMonoObject(MonoClassField* mField, MonoObject* mObject)
@@ -590,9 +574,6 @@ namespace Copium
 			}
 			case MESSAGE_TYPE::MT_COLLISION_ENTER:
 			{
-				GameObject* collidee = MESSAGE_CONTAINER::collisionEnter.collidee;
-				GameObject* collided = MESSAGE_CONTAINER::collisionEnter.collided;
-				instantiateCollision2D(*collided, *collidee);
 				break;
 			}
 		}
@@ -617,7 +598,21 @@ namespace Copium
 	void ScriptingSystem::CallbackReflectScript(ReflectScriptEvent* pEvent)
 	{
 		ScriptClass& scriptClass = GetScriptClass(pEvent->scriptName);
-		MonoObject* tmp = sS.createInstance(pScriptClass->mClass);
+		if (mGameObjects.find(pEvent->gameObjectID) == mGameObjects.end())
+		{
+			void* param = &pEvent->gameObjectID;
+			MonoMethod* reflectGameObject = mono_class_get_method_from_name(klassScene, "ReflectGameObject", 1);
+			mGameObjects.emplace(pEvent->gameObjectID,invoke(mCurrentScene, reflectGameObject, &param));
+		}
+		if (mComponents.find(pEvent->scriptID) == mComponents.end())
+		{
+			void* param = &pEvent->scriptID;
+			MonoMethod* reflectComponent = mono_class_get_method_from_name(klassScene, "ReflectComponent", 1);
+			MonoType* type_arg = mono_class_get_type(scriptClass.mClass);
+			MonoArray* type_args = mono_array_new(mAppDomain, mono_get_object_class(), 1);
+			MonoMethod* genericFunction = mono_method_make_generic(reflectComponent, 1, type_args);
+			mComponents.emplace(pEvent->gameObjectID, invoke(mCurrentScene, reflectComponent, &param));
+		}
 		MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["Create"], tmp, params, nullptr);
 		if (tmp == result)
 		{

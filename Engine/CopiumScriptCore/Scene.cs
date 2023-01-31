@@ -22,19 +22,12 @@ namespace CopiumEngine
             gameObject.ID = id;
             return gameObject;
         }
-        /*
-                Component ReflectComponent(ulong componentID, ulong gameObjectID)
-                {
-                    Console.WriteLine("finding component");
-                    foreach (Component component in Instances.components)
-                    {
-                        if (component.ID == componentID)
-                        {
-                            return component;
-                        }
-                    }
-                    Instances.components.Add(this);
-                    return this;
-                }*/
+
+        public void ReflectComponent(Component component,ulong ComponentID, ulong GameObjectID)
+        {
+            component.ID = ComponentID;
+            component.Initialize(ReflectGameObject(GameObjectID), ComponentID);
+            components.Add(component);
+        }
     }
 }

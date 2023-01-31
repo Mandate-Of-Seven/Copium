@@ -248,7 +248,7 @@ namespace Copium
 				Parameters to pass into mono function
 		*/
 		/**************************************************************************/
-		void invoke(MonoObject * mObj, MonoMethod * mMethod, void** params = nullptr);
+		MonoObject* invoke(MonoObject * mObj, MonoMethod * mMethod, void** params = nullptr);
 
 		/**************************************************************************/
 		/*!
@@ -353,18 +353,6 @@ namespace Copium
 		/**************************************************************************/
 		MonoObject* getFieldMonoObject(MonoClassField* mField, MonoObject* mObject);
 
-		/**************************************************************************/
-		/*!
-			\brief
-				Creates a collision data for scripts
-			\param collided
-				Rhs gameobject
-			\param collidee
-				Lhs gameObject
-		*/
-		/**************************************************************************/
-		void instantiateCollision2D(GameObject& collided, GameObject& collidee);
-
 		bool isScriptableObject(const std::string& name);
 
 
@@ -441,6 +429,8 @@ namespace Copium
 
 		std::unordered_map<std::string, ScriptClass> scriptClassMap;
 		std::unordered_map<std::string, ScriptClass> scriptableObjectClassMap;
+		std::unordered_map<GameObjectID, MonoObject*> mGameObjects;
+		std::unordered_map<ComponentID, MonoObject*> mComponents;
 		std::list<File>& scriptFiles;
 		CompilingState compilingState{ CompilingState::Wait };
 		std::map<std::string, std::map<std::string,ScriptableObject>> scriptableObjects;

@@ -26,15 +26,13 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 namespace Copium
 {
 	char Script::buffer[BUFFER_SIZE];
-	ScriptingSystem& Script::sS{ *ScriptingSystem::Instance() };
 	const Copium::Field* field;
 
 	Script::Script(GameObject& _gameObj) :
-		mObject{ nullptr }, pScriptClass{ nullptr }, Component(_gameObj, ComponentType::Script), name{ DEFAULT_SCRIPT_NAME }, reference{nullptr}, isAddingGameObjectReference{false}
+		mObject{ nullptr }, Component(_gameObj, ComponentType::Script), name{ DEFAULT_SCRIPT_NAME }, reference{nullptr}, isAddingGameObjectReference{false}
 	{
 		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
 		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
-		pScriptClass = sS.getScriptClass(name);
 		PRINT(id << " created");
 		instantiate();
 	}
@@ -49,10 +47,7 @@ namespace Copium
 
 	void Script::instantiate()
 	{
-		if (pScriptClass != nullptr)
-		{
-			MyEventSystem->publish(new ReflectScriptEvent(name.c_str(), id, gameObj.id));
-		}
+		MyEventSystem->publish(new ReflectScriptEvent(name.c_str(), id, gameObj.id));
 	}
 
 	void Script::handleMessage(MESSAGE_TYPE mType)
@@ -60,7 +55,6 @@ namespace Copium
 		switch (mType)
 		{
 		case MESSAGE_TYPE::MT_SCRIPTING_UPDATED:
-			pScriptClass = sS.getScriptClass(name.c_str());
 			instantiate();
 		case MESSAGE_TYPE::MT_SCENE_DESERIALIZED:
 			for (auto pair : fieldComponentReferences)
@@ -108,19 +102,7 @@ namespace Copium
 	void Script::Name(const std::string& _name)
 	{
 		name = _name;
-		pScriptClass = sS.getScriptClass(name);
 		instantiate();
-	}
-
-	void Script::invoke(const std::string& methodName)
-	{
-		if (!pScriptClass)
-			return;
-		std::unordered_map<std::string,MonoMethod*>::iterator method = pScriptClass->mMethods.find(methodName);
-		if (method != pScriptClass->mMethods.end())
-		{
-			sS.invoke(mObject, (*method).second);
-		}
 	}
 
 	//Use for serialization
@@ -171,9 +153,6 @@ namespace Copium
 
 	void Script::inspector_view()
 	{
-		if (!pScriptClass)
-			return;
-
 		static ImVec4 backupColor;
 
 		ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
@@ -475,7 +454,6 @@ namespace Copium
 	{
 		//mono_field_get_value(mObject, pScriptClass->mFields["gameObj"].classField, buffer);
 		Script* component = new Script(_gameObj);
-		component->pScriptClass = pScriptClass;
 		component->name = name;
 		component->mObject = mObject;
 		return component;
@@ -509,10 +487,6 @@ namespace Copium
 		{
 			Name(_value["Name"].GetString());
 		}
-
-		if (pScriptClass == nullptr)
-			return;
-
 		const auto& fieldMap = pScriptClass->mFields;
 		auto it = fieldMap.begin();
 		while (it != fieldMap.end())
@@ -655,8 +629,6 @@ namespace Copium
 
 	void Script::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
-		if (pScriptClass == nullptr)
-			return;
 		Component::serialize(_value, _doc);
 		rapidjson::Value type;
 		std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];

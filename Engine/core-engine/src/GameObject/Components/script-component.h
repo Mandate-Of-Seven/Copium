@@ -17,7 +17,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "GameObject/Components/component.h"
 #include "Messaging/message-system.h"
-#include "Scripting/scripting-system.h"
 #include <limits>
 #include <Math/math-library.h>
 
@@ -79,13 +78,6 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		void Name(const std::string& _name);
-		/**************************************************************************/
-		/*!
-			\brief
-				Function called at the very start of game object.
-		*/
-		/**************************************************************************/
-		void invoke(const std::string& methodName);
 
 		/*******************************************************************************
 		/*!
@@ -198,8 +190,6 @@ namespace Copium
 		/**************************************************************************/
 		const std::vector<std::string>& getFunctionNames();
 
-		ScriptClass* pScriptClass;
-
 		MonoObject* mObject;
 
 		friend class ScriptingSystem;
@@ -211,7 +201,6 @@ namespace Copium
 		std::unordered_map<std::string, GameObject*> fieldGameObjReferences;
 		std::unordered_map<std::string, Component*> fieldComponentReferences;
 		std::unordered_map<std::string, FieldData> fieldDataReferences;
-		static ScriptingSystem& sS;
 		bool isAddingGameObjectReference;
     };
 }
