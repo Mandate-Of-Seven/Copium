@@ -32,6 +32,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "SceneManager/scene-manager.h"
 #include "Math/math-library.h"
 #include "Graphics/fonts.h"
+#include "glm/gtc/matrix_transform.hpp"
 
 namespace Copium
 {
@@ -244,12 +245,26 @@ namespace Copium
 
 					if (gameObject->transform.hasParent())
 					{
+						Transform* tempObj = gameObject->transform.parent;
+						/*glm::vec3 updatedPos = t.position;
+						glm::vec3 updatedScale = t.scale;
+						float updatedRot = t.rotation.z;
+
+						while (tempObj)
+						{
+							updatedPos += tempObj->position.glmVec3;
+							updatedScale *= tempObj->scale.glmVec3;
+							updatedRot += tempObj->rotation.z;
+
+							tempObj = tempObj->parent;
+						}*/
 						Transform& t1 = *gameObject->transform.parent;
 						Copium::Math::Matrix3x3 rot;
 						Copium::Math::matrix3x3_rotdeg(rot, t1.rotation.z);
 						Copium::Math::Vec3 intermediate = (rot * t.position);
 
-						renderer.draw_quad(intermediate + t1.position, size, rotation+t1.rotation.z, sr);
+						//renderer.draw_quad(updatedPos, glm::vec2(updatedScale.x, updatedScale.y), updatedRot, sr);
+						renderer.draw_quad(t1.position + intermediate, size, rotation, sr);
 					}
 					else
 					{
