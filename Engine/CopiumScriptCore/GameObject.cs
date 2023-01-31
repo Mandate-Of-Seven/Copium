@@ -49,9 +49,7 @@ namespace CopiumEngine
                     return gameObj;
                 }
             }
-            GameObject gameObject = new GameObject();
-            gameObject.setID(_ID);
-            return gameObject;
+            return null;
         }
         public static GameObject FindByName(string name)
         {
