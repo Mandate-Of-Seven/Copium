@@ -29,6 +29,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <rapidjson/prettywriter.h>
 #include <GameObject/Components/camera-component.h>
 #include "GameObject/Components/ui-components.h"
+#include <Audio/sound-system.h>
 
 namespace Copium {
 
@@ -345,6 +346,7 @@ namespace Copium {
 		if (prevSelected)
 			selectedGameObject = findGameObjByID(prevSelected);
 
+		SoundSystem::Instance()->StopAll();
 
 		return true;
 	}
@@ -380,6 +382,8 @@ namespace Copium {
 		delete tmp;
 
 		currentScene->set_state(Scene::SceneState::edit);
+
+		SoundSystem::Instance()->StopAll();
 
 		return true;
 

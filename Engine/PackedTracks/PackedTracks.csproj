@@ -88,11 +88,15 @@
     <Compile Include="..\CopiumScriptCore\Time.cs">
       <Link>Time.cs</Link>
     </Compile>
+    <Compile Include="Assets\Scripts\AudioManager.cs" />
     <Compile Include="Assets\Scripts\ButtonCalls.cs" />
     <Compile Include="Assets\Scripts\EventManager.cs" />
+    <Compile Include="Assets\Scripts\Event_01.cs" />
+    <Compile Include="Assets\Scripts\Event_Intro.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\Introduction.cs" />
     <Compile Include="Assets\Scripts\CombatMovement.cs" />
+    <Compile Include="Assets\Scripts\ShooterBehaviour.cs" />
     <Compile Include="Assets\Scripts\Story.cs" />
     <Compile Include="Assets\Scripts\StoryObject.cs" />
     <Compile Include="Assets\Scripts\Test.cs" />

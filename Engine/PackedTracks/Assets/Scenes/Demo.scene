@@ -1,8 +1,13 @@
 {
     "Name": "Demo",
     "Unused GIDs": [
-        34,
-        31
+        40,
+        41,
+        39,
+        42,
+        43,
+        44,
+        45
     ],
     "Unused CIDs": [],
     "GameObjects": [
@@ -45,9 +50,22 @@
                     }
                 },
                 {
-                    "ID": 79,
+                    "ID": 78,
                     "Type": "AudioSource",
-                    "Alias": "..\\PackedTracks\\Assets\\Sounds\\Music\\Nightshift _BGM2_Loop_70bpm"
+                    "Alias": "BGM_Train"
+                },
+                {
+                    "ID": 79,
+                    "Type": "Script",
+                    "Name": "AudioManager",
+                    "state": 40,
+                    "ambTrain": 80,
+                    "bgmTrain": 78
+                },
+                {
+                    "ID": 80,
+                    "Type": "AudioSource",
+                    "Alias": "Amb_TrainInterior"
                 }
             ]
         },
@@ -57,7 +75,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 4,
+                    "ID": 6,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -83,7 +101,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 5,
+                    "ID": 7,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -121,7 +139,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 7,
+                    "ID": 9,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -147,7 +165,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 8,
+                    "ID": 10,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.002354264259338379,
@@ -202,7 +220,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 11,
+                    "ID": 13,
                     "Type": "Transform",
                     "Pos": {
                         "X": 6.469001770019531,
@@ -263,7 +281,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 15,
+                    "ID": 17,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -301,7 +319,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 17,
+                    "ID": 19,
                     "Type": "Transform",
                     "Pos": {
                         "X": -6.0,
@@ -361,14 +379,6 @@
                     "g": 0.9998999834060669,
                     "b": 0.9998999834060669,
                     "a": 1.0
-                },
-                {
-                    "ID": 56,
-                    "Type": "Script",
-                    "Name": "ButtonCalls",
-                    "messageTab": 22,
-                    "reportTab": 11,
-                    "crewTab": 23
                 }
             ]
         },
@@ -378,7 +388,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 22,
+                    "ID": 23,
                     "Type": "Transform",
                     "Pos": {
                         "X": -6.0,
@@ -438,14 +448,6 @@
                     "g": 0.9998999834060669,
                     "b": 0.9998999834060669,
                     "a": 1.0
-                },
-                {
-                    "ID": 57,
-                    "Type": "Script",
-                    "Name": "ButtonCalls",
-                    "messageTab": 22,
-                    "reportTab": 11,
-                    "crewTab": 23
                 }
             ]
         },
@@ -515,14 +517,6 @@
                     "g": 0.9998999834060669,
                     "b": 0.9998999834060669,
                     "a": 1.0
-                },
-                {
-                    "ID": 58,
-                    "Type": "Script",
-                    "Name": "ButtonCalls",
-                    "messageTab": 22,
-                    "reportTab": 11,
-                    "crewTab": 23
                 }
             ]
         },
@@ -532,7 +526,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 32,
+                    "ID": 31,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -558,7 +552,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 33,
+                    "ID": 32,
                     "Type": "Transform",
                     "Pos": {
                         "X": 2.0,
@@ -596,7 +590,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 35,
+                    "ID": 34,
                     "Type": "Transform",
                     "Pos": {
                         "X": 2.0,
@@ -635,7 +629,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 37,
+                    "ID": 36,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -661,7 +655,7 @@
             "Components": [
                 {
                     "PID": 14,
-                    "ID": 38,
+                    "ID": 37,
                     "Type": "Transform",
                     "Pos": {
                         "X": 1.100000023841858,
@@ -730,7 +724,7 @@
             "Components": [
                 {
                     "PID": 14,
-                    "ID": 42,
+                    "ID": 41,
                     "Type": "Transform",
                     "Pos": {
                         "X": 1.100000023841858,
@@ -799,7 +793,7 @@
             "Components": [
                 {
                     "PID": 15,
-                    "ID": 46,
+                    "ID": 45,
                     "Type": "Transform",
                     "Pos": {
                         "X": -3.299999952316284,
@@ -838,7 +832,7 @@
             "Components": [
                 {
                     "PID": 16,
-                    "ID": 48,
+                    "ID": 47,
                     "Type": "Transform",
                     "Pos": {
                         "X": -3.299999952316284,
@@ -877,7 +871,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 50,
+                    "ID": 49,
                     "Type": "Transform",
                     "Pos": {
                         "X": -2.5,
@@ -916,7 +910,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 52,
+                    "ID": 51,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -942,7 +936,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 53,
+                    "ID": 52,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -968,7 +962,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 54,
+                    "ID": 53,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -994,7 +988,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 55,
+                    "ID": 54,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1020,7 +1014,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 56,
+                    "ID": 55,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1042,27 +1036,17 @@
                     "ID": 46,
                     "Type": "Script",
                     "Name": "GameManager",
-                    "EventSequence": 0,
-                    "LuckSequence": 0,
-                    "Option_01": 15,
                     "TrainCanvas": 4,
                     "CombatCanvas": 21,
                     "MainScreenCanvas": 3,
-                    "Option_02": 16,
-                    "Next_Event": 26,
-                    "Body": 44,
+                    "ReportTab": 11,
+                    "MessageTab": 22,
+                    "CrewTab": 23,
+                    "CrewTabBtn": 27,
                     "ReportScreenBtn": 9,
-                    "Header": 31,
-                    "Option_01_Text": 42,
-                    "Option_02_Text": 43
-                },
-                {
-                    "ID": 78,
-                    "Type": "Script",
-                    "Name": "EventManager",
-                    "EventSequence": 0,
-                    "LuckSequence": 0,
-                    "GameManager": 46
+                    "ReportTabBtn": 17,
+                    "audio": 78,
+                    "MessageTabBtn": 22
                 }
             ]
         },
@@ -1072,11 +1056,11 @@
             "Components": [
                 {
                     "PID": 24,
-                    "ID": 59,
+                    "ID": 57,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
-                        "Y": 2.4512434005737305,
+                        "Y": 2.274596929550171,
                         "Z": -11.0
                     },
                     "Rot": {
@@ -1085,8 +1069,8 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 2.9000000953674316,
-                        "Y": 2.9000000953674316,
+                        "X": 4.280946731567383,
+                        "Y": 2.4860777854919434,
                         "Z": 1.0
                     }
                 },
@@ -1114,7 +1098,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 61,
+                    "ID": 59,
                     "Type": "Transform",
                     "Pos": {
                         "X": 5.876922607421875,
@@ -1183,7 +1167,7 @@
             "Components": [
                 {
                     "PID": 24,
-                    "ID": 65,
+                    "ID": 63,
                     "Type": "Transform",
                     "Pos": {
                         "X": 6.304711818695068,
@@ -1225,7 +1209,7 @@
             "Components": [
                 {
                     "PID": 24,
-                    "ID": 67,
+                    "ID": 65,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.20270991325378418,
@@ -1267,7 +1251,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 69,
+                    "ID": 67,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1307,7 +1291,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 71,
+                    "ID": 69,
                     "Type": "Transform",
                     "Pos": {
                         "X": -2.964315891265869,
@@ -1347,7 +1331,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 73,
+                    "ID": 71,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.05472242832183838,
@@ -1385,7 +1369,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 75,
+                    "ID": 73,
                     "Type": "Transform",
                     "Pos": {
                         "X": 6.444356918334961,
@@ -1423,7 +1407,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 77,
+                    "ID": 75,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1446,6 +1430,215 @@
                     "Type": "SpriteRenderer",
                     "Sprite ID": 17236820672172375526,
                     "Sprite Name": "Glasdirty.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 34,
+            "Name": "Event Manager",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 77,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 76,
+                    "Type": "Script",
+                    "Name": "EventManager",
+                    "EventSequence": 0,
+                    "DaySequence": 1,
+                    "LuckSequence": 0,
+                    "Option_01": 15,
+                    "Option_02": 16,
+                    "Next_Event": 26,
+                    "GameManager": 46,
+                    "Option_02_Text": 43,
+                    "Header": 31,
+                    "Body": 44,
+                    "Option_01_Text": 42,
+                    "Event_Intro": 79
+                }
+            ]
+        },
+        {
+            "ID": 31,
+            "Name": "Introduction",
+            "Components": [
+                {
+                    "PID": 34,
+                    "ID": 79,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 79,
+                    "Type": "Script",
+                    "Name": "Event_Intro",
+                    "EventManager": 76
+                }
+            ]
+        },
+        {
+            "ID": 36,
+            "Name": "Border",
+            "Components": [
+                {
+                    "PID": 21,
+                    "ID": 81,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 3.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 6.297298908233643,
+                        "Y": 7.346395492553711,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 83,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 5464368652596582388,
+                    "Sprite Name": "M_Screen_Hightlight.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 37,
+            "Name": "Field",
+            "Components": [
+                {
+                    "PID": 36,
+                    "ID": 83,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 12.397147178649902,
+                        "Y": 6.811512470245361,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 84,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
+                    "Color": {
+                        "X": 0.42682838439941406,
+                        "Y": 0.4267857074737549,
+                        "Z": 0.4267857074737549,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 38,
+            "Name": "Ally1",
+            "Components": [
+                {
+                    "PID": 21,
+                    "ID": 85,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -4.044619083404541,
+                        "Y": -2.3220953941345215,
+                        "Z": 3.0999999046325684
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 93,
+                    "Type": "Script",
+                    "Name": "ShooterBehaviour",
+                    "enemy": false,
+                    "gameManager": 46
+                },
+                {
+                    "Type": "BoxCollider2D",
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.5,
+                            "Y": -0.5
+                        },
+                        "Max": {
+                            "X": 0.5,
+                            "Y": 0.5
+                        }
+                    }
+                },
+                {
+                    "ID": 95,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 13074272764253053419,
+                    "Sprite Name": "Shooter.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
