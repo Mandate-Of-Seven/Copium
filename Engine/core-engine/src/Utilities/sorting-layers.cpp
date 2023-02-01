@@ -24,18 +24,20 @@ namespace Copium
 	SortingLayers::SortingLayers()
 	{
 		layerCount = 1;
-		Layer layer{ "Default", 0, std::vector<GameObject*>(maxObjects) };
+		Layer layer{ "Default", 0, std::vector<GameObject*>(maxObjects, nullptr)};
 		sortingLayers.push_back(layer);
 	}
 
 	// Bean: Use a hash map to identify layers instead of the name
-	void SortingLayers::CreateNewLayer(const std::string& _name)
+	Layer* SortingLayers::CreateNewLayer(const std::string& _name)
 	{
 		COPIUM_ASSERT(layerCount + 1 > maxLayers, "Maxed layers reached!");
 		
 		Layer layer{ _name, layerCount, std::vector<GameObject*>(maxObjects) };
 		sortingLayers.push_back(layer);
 		layerCount++;
+
+		return &sortingLayers.back();
 	}
 
 	void SortingLayers::RemoveLayer(const std::string& _name)
@@ -143,6 +145,7 @@ namespace Copium
 					if (sortingLayers[i].gameObjects[j] == nullptr)
 					{
 						sortingLayers[i].gameObjects[j] = &_gameObject;
+						break;
 					}
 				}
 			}
@@ -159,7 +162,9 @@ namespace Copium
 				{
 					if (sortingLayers[i].gameObjects[j] == nullptr)
 					{
+						PRINT("added");
 						sortingLayers[i].gameObjects[j] = &_gameObject;
+						break;
 					}
 				}
 			}
@@ -177,6 +182,7 @@ namespace Copium
 					if (sortingLayers[i].gameObjects[j]->id == _gameObject.id)
 					{
 						sortingLayers[i].gameObjects[j] = nullptr;
+						break;
 					}
 				}
 			}
@@ -191,9 +197,12 @@ namespace Copium
 			{
 				for (int j = 0; j < sortingLayers[i].gameObjects.size(); j++)
 				{
+					if (!sortingLayers[i].gameObjects[j])
+						continue;
 					if (sortingLayers[i].gameObjects[j]->id == _gameObject.id)
 					{
 						sortingLayers[i].gameObjects[j] = nullptr;
+						break;
 					}
 				}
 			}

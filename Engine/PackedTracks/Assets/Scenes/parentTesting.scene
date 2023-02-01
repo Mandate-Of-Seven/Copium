@@ -6,12 +6,12 @@
     "Unused CIDs": [],
     "GameObjects": [
         {
-            "ID": 1,
-            "Name": "rex",
+            "ID": 5,
+            "Name": "cody",
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 1,
+                    "ID": 5,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -110,12 +110,12 @@
             ]
         },
         {
-            "ID": 5,
-            "Name": "cody",
+            "ID": 1,
+            "Name": "rex",
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 5,
+                    "ID": 1,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -162,8 +162,8 @@
             ]
         },
         {
-            "ID": 7,
-            "Name": "boil",
+            "ID": 8,
+            "Name": "kix",
             "Components": [
                 {
                     "PID": 5,
@@ -188,8 +188,8 @@
             ]
         },
         {
-            "ID": 8,
-            "Name": "kix",
+            "ID": 7,
+            "Name": "boil",
             "Components": [
                 {
                     "PID": 5,
@@ -219,7 +219,7 @@
             "Components": [
                 {
                     "PID": 1,
-                    "ID": 10,
+                    "ID": 9,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,

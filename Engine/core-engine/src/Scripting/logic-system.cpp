@@ -50,10 +50,14 @@ namespace Copium
 		for (size_t i = 0; i < pScene->gameObjects.size(); ++i)
 		{
 			GameObject* pGameObj = pScene->gameObjects[i];
+			if (!pGameObj->isActive())
+				continue;
 			const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };
 			for (Script* pScript : pScripts)
 			{
 				if (!pScript)
+					continue;
+				if (!pScript->Enabled())
 					continue;
 				pScript->invoke("Update");
 				if (pScene != sceneManager.get_current_scene())
@@ -101,6 +105,7 @@ namespace Copium
 
 	void LogicSystem::handleMessage(MESSAGE_TYPE mType)
 	{
+		PRINT("LOGIC STARTING");
 		//MT_START_PREVIEW
 		Scene* pScene = sceneManager.get_current_scene();
 		if (pScene == nullptr)
@@ -117,6 +122,7 @@ namespace Copium
 		}
 		timeElasped = MyFrameRateController.getDt();
 
+		PRINT("LOGIC END");
 		// Bean: Temporary for hardcoded scripts
 		game.init();
 	}

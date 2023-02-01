@@ -162,6 +162,7 @@ namespace Copium
 
 		int newLine = 0;
 		float xpos = 0.f, ypos = 0.f;
+		const float scaler = 0.01f;
 
 		/*float w = 0.f, h = 0.f, xpos = 0.f, ypos = 0.f;
 		glm::vec3 fontVertexPosition[6] = {
@@ -184,11 +185,11 @@ namespace Copium
 				continue;
 			}
 
-			xpos = x + ch.bearing.x * (_scale * 0.01f);
-			ypos = y - (ch.size.y - ch.bearing.y) * (_scale * 0.01f) - newLine * (_scale * 2.5f);
+			xpos = x + ch.bearing.x * (_scale * scaler);
+			ypos = y - (ch.size.y - ch.bearing.y) * (_scale * scaler) - newLine * (_scale * 2.5f);
 
-			float w = ch.size.x * (_scale * 0.01f);
-			float h = ch.size.y * (_scale * 0.01f);
+			float w = ch.size.x * (_scale * scaler);
+			float h = ch.size.y * (_scale * scaler);
 
 			// Update VBO for each character
 			TextVertex vertices[6];
@@ -214,7 +215,7 @@ namespace Copium
 
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 
-			x += (ch.advance >> 6) * (_scale * 0.01f); // Bitshift by 6 to get value in pixels
+			x += (ch.advance >> 6) * (_scale * scaler); // Bitshift by 6 to get value in pixels
 		}
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);

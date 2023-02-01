@@ -49,8 +49,8 @@ namespace Copium
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 
 		// Bean: 3D Depth Testing
-		glEnable(GL_DEPTH_TEST);
-		//glAlphaFunc(GL_GREATER, 0.3);
+		//glEnable(GL_DEPTH_TEST);
+		//glAlphaFunc(GL_GREATER, 0.5);
 		//glEnable(GL_ALPHA_TEST);
 		//glEnable(GL_STENCIL_TEST);
 

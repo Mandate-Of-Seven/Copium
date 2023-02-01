@@ -162,11 +162,6 @@ static void update()
         }
     }
 
-    if (inputSystem.is_doubleclicked())
-    {
-        std::cout << "DOUBLE CLICK \n\n\n\n";
-    }
-
 }
 
 /***************************************************************************/

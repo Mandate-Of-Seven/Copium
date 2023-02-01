@@ -95,6 +95,9 @@ namespace Copium
 			_value.AddMember("SortingLayer", sortingLayer, _doc.GetAllocator());
 			_value.AddMember("OrderInLayer", orderInLayer, _doc.GetAllocator());
 		}
+
+		int GetLayerID() const { return sortingLayer; }
+		int GetOrderInLayer() const { return orderInLayer; }
 	private:
 		int sortingLayer;
 		int orderInLayer;

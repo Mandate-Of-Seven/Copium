@@ -93,10 +93,15 @@ namespace Copium
 			}
 		}
 
-		if (tempMode != enableEditor)
+		static bool loadOnce = false;
+		if (tempMode != enableEditor && loadOnce)
 		{
 			enableEditor = tempMode;
 			playMode(enableEditor);
+			if (SceneManager::Instance()->startPreview())
+			{
+				messageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
+			}
 		}
 
 		// Start the Dear ImGui frame
@@ -415,6 +420,9 @@ namespace Copium
 		}
 		
 		ImGui::EndFrame();
+
+		if (!loadOnce)
+			loadOnce = true;
 	}
 
 	void EditorSystem::draw()

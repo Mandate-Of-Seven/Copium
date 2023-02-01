@@ -129,17 +129,51 @@ namespace Copium
 				{
 					Transform& t = gameObject->transform;
 					glm::vec2 mousePosition = glm::vec3(camera.get_ndc(), 0.f);
-					glm::vec2 objPosition = glm::vec2(t.position.x, t.position.y);
+					glm::vec3 tempPos = t.position;
+					glm::vec3 tempScale = t.scale;
 
-					objPosition = update_position(&t, objPosition);
+					if (t.hasParent())
+					{
+						Transform* tempObj = t.parent;
+
+						glm::mat4 pTranslate, pRotate, pScale, pTransform;
+
+						while (tempObj)
+						{
+							pTranslate = glm::translate(glm::mat4(1.f), tempObj->position.glmVec3);
+
+							float pRot = glm::radians(tempObj->rotation.z);
+							pRotate = {
+								glm::vec4(cos(pRot), sin(pRot), 0.f, 0.f),
+								glm::vec4(-sin(pRot), cos(pRot), 0.f, 0.f),
+								glm::vec4(0.f, 0.f, 1.f, 0.f),
+								glm::vec4(0.f, 0.f, 0.f, 1.f)
+							};
+
+							glm::vec3 scale = tempObj->scale.glmVec3;
+							pScale = {
+								glm::vec4(scale.x, 0.f, 0.f, 0.f),
+								glm::vec4(0.f, scale.y, 0.f, 0.f),
+								glm::vec4(0.f, 0.f, 1.f, 0.f),
+								glm::vec4(0.f, 0.f, 0.f, 1.f)
+							};
+
+							pTransform = pTranslate * pRotate * pScale;
+							tempPos = glm::vec3(pTransform * glm::vec4(tempPos, 1.f));
+							tempScale *= tempObj->scale.glmVec3;
+							tempObj = tempObj->parent;
+						}
+					}
+
+					glm::vec2 objPosition = { tempPos.x, tempPos.y };
 
 					// Not Within bounds
 					if (glm::distance(objPosition, mousePosition)
 						> glm::length(camera.get_dimension()))
 						continue;
 
-					glm::vec2 min = glm::vec2(objPosition.x - t.scale.x * 0.5f, objPosition.y - t.scale.y * 0.5f);
-					glm::vec2 max = glm::vec2(objPosition.x + t.scale.x * 0.5f, objPosition.y + t.scale.y * 0.5f);
+					glm::vec2 min = glm::vec2(objPosition.x - tempScale.x * 0.5f, objPosition.y - tempScale.y * 0.5f);
+					glm::vec2 max = glm::vec2(objPosition.x + tempScale.x * 0.5f, objPosition.y + tempScale.y * 0.5f);
 
 					// Check AABB
 					if (mousePosition.x > min.x && mousePosition.x < max.x)
@@ -239,8 +273,7 @@ namespace Copium
 		{
 			Transform& trf = currObj->transform;
 			glm::vec2 size(trf.scale.x, trf.scale.y);
-			float rot = trf.rotation.z;
-			rot = float(rot * (3.1416/180));
+			float rot = glm::radians(trf.rotation.z);
 			const glm::vec3& pos = trf.position;
 
 			ImGuizmo::SetOrthographic(true);
@@ -248,10 +281,8 @@ namespace Copium
 
 			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, (float) sceneWidth, (float)sceneHeight + 50.f);
 			const glm::mat4 camProj = camera.get_projection();
-			//glm::mat4 camProj = glm::identity<glm::mat4>();
-
 			glm::mat4 camView = camera.get_view_matrix();
-			//glm::mat4 camView = glm::identity<glm::mat4>();
+
 			glm::mat4 translate = glm::translate(glm::mat4(1.f), pos);
 			glm::mat4 rotation = {
 			glm::vec4(cos(rot), sin(rot), 0.f, 0.f),
@@ -268,36 +299,45 @@ namespace Copium
 			};
 			glm::mat4 transform = translate * rotation * scale;
 
-			/*glm::mat4 pTranslate, pRotate, pScale, pTransform, totalTransform;
+			glm::mat4 pTranslate, pRotate, pScale, pTransform, totalTransform, tempTransform;
 			if (currObj->transform.hasParent())
 			{
-				pTranslate = glm::translate(glm::mat4(1.f), (*currObj->transform.parent).position.glmVec3);
+				totalTransform = transform;
+				Transform* tempObj = currObj->transform.parent;
 
-				float pRot = (*currObj->transform.parent).rotation.z;
-				pRot = float(pRot * (3.1416 / 180));
-				pRotate = {
-					glm::vec4(cos(pRot), sin(pRot), 0.f, 0.f),
-					glm::vec4(-sin(pRot), cos(pRot), 0.f, 0.f),
-					glm::vec4(0.f, 0.f, 1.f, 0.f),
-					glm::vec4(0.f, 0.f, 0.f, 1.f)
-				};
+				while (tempObj)
+				{
+					pTranslate = glm::translate(glm::mat4(1.f), tempObj->position.glmVec3);
 
-				glm::vec3 scale = (*currObj->transform.parent).scale.glmVec3;
-				pScale = {
-					glm::vec4(scale.x, 0.f, 0.f, 0.f),
-					glm::vec4(0.f, scale.y, 0.f, 0.f),
-					glm::vec4(0.f, 0.f, 1.f, 0.f),
-					glm::vec4(0.f, 0.f, 0.f, 1.f)
-				};
+					float pRot = glm::radians(tempObj->rotation.z);
+					pRotate = {
+						glm::vec4(cos(pRot), sin(pRot), 0.f, 0.f),
+						glm::vec4(-sin(pRot), cos(pRot), 0.f, 0.f),
+						glm::vec4(0.f, 0.f, 1.f, 0.f),
+						glm::vec4(0.f, 0.f, 0.f, 1.f)
+					};
 
-				pTransform = pTranslate * pRotate * pScale;
+					glm::vec3 scale = tempObj->scale.glmVec3;
+					pScale = {
+						glm::vec4(scale.x, 0.f, 0.f, 0.f),
+						glm::vec4(0.f, scale.y, 0.f, 0.f),
+						glm::vec4(0.f, 0.f, 1.f, 0.f),
+						glm::vec4(0.f, 0.f, 0.f, 1.f)
+					};
 
-				totalTransform = pTransform;
+					pTransform = pTranslate * pRotate * pScale;
+					totalTransform = pTransform * totalTransform;
+
+					tempObj = tempObj->parent;
+				}
+
 			}
 			else
 			{
 				totalTransform = transform;
-			}*/
+			}
+
+			tempTransform = totalTransform;
 
 			if (ImGui::IsWindowHovered())
 			{
@@ -318,19 +358,23 @@ namespace Copium
 			}
 			
 			ImGuizmo::Manipulate(glm::value_ptr(camView), glm::value_ptr(camProj),
-				currop, ImGuizmo::LOCAL, glm::value_ptr(transform));
+				currop, ImGuizmo::LOCAL, glm::value_ptr(totalTransform));
 			if (ImGuizmo::IsUsing())
 			{
 				float newTranslate[3]; 
 				float newRotate[3];
+				float pNewRotate[3];
 				float newScale[3];
-				ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), newTranslate, newRotate, newScale);
-				glm::vec3 nTranslation{ newTranslate[0], newTranslate[1], newTranslate[2] };
-				glm::vec3 nRotation{ newRotate[0], newRotate[1], newRotate[2] };
-				glm::vec3 nScale{ newScale[0], newScale[1], newScale[2] };
-				trf.position = nTranslation;
-				trf.scale = nScale;
-				trf.rotation.z = nRotation.z;
+				float pNewScale[3];
+				glm::mat4 temp = totalTransform - tempTransform;
+				ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(tempTransform), newTranslate, pNewRotate, pNewScale);
+				ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(totalTransform), newTranslate, newRotate, newScale);
+				glm::vec3 nTranslation = { temp[3].x, temp[3].y, temp[3].z };
+				glm::vec3 nScale = { newScale[0] - pNewScale[0], newScale[1] - pNewScale[1], 0.f};
+				// Bean: If parent object is rotated, child guizmos objects will have issues
+				trf.position += nTranslation;
+				trf.scale += nScale;
+				trf.rotation.z += newRotate[2] - pNewRotate[2];
 			}
 		}
 	}

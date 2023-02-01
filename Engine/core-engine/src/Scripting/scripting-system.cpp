@@ -114,6 +114,7 @@ namespace Copium
 	{
 		mMethods["OnCreate"] = mono_class_get_method_from_name(mCopiumScript, "OnCreate", 1);
 		mMethods["FindComponentByID"] = mono_class_get_method_from_name(mCopiumScript, "FindComponentByID", 2);
+		mMethods["Create"] = mono_class_get_method_from_name(mCopiumScript, "Create", 2);
 		mMethods["FindGameObjectByID"] = mono_class_get_method_from_name(mCopiumScript, "FindGameObjectByID", 1);
 		void* methodIterator = nullptr;
 		while (MonoMethod* method = mono_class_get_methods(_mClass, &methodIterator))
@@ -564,14 +565,12 @@ namespace Copium
 			case MESSAGE_TYPE::MT_SCENE_OPENED:
 			{
 				//If swap assembly compiling
+
 				while (compilingState == CompilingState::Compiling);
-				if (compilingState == CompilingState::SwapAssembly)
-				{
-					compilingState = CompilingState::Deserializing;
-					swapDll();
-					registerComponents();
-					compilingState = CompilingState::Wait;
-				}
+				compilingState = CompilingState::Deserializing;
+				swapDll();
+				registerComponents();
+				compilingState = CompilingState::Wait;
 				//compilingState = CompilingState::Deserializing;
 				//swapDll();
 				break;
