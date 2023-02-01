@@ -279,7 +279,7 @@ namespace Copium
 	bool EditorHierarchyList::display_gameobject(GameObject& _go, GameObjectID& _selected, std::vector<GameObject*>& _vector, int _index)
 	{
 		bool isSelected = false;
-		ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+		ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
 
 		// If root node does not have children, it is simply a leaf node (end of the branch)
@@ -398,7 +398,7 @@ namespace Copium
 			}
 		}
 
-		if (res != 1)
+		if (res != 1 && _selected == _go.id)
 		{
 			// If game object has children, recursively display children
 			if (!_go.transform.children.empty())
@@ -528,7 +528,17 @@ namespace Copium
 
 			//std::cout << "ID of selected Game Object: " << _selected << std::endl;
 		}
-		if (ImGui::IsItemClicked())
+
+		if (_go.transform.children.empty())
+		{
+			if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+			{
+				std::cout << _go.get_name() << " is selected\n";
+				_selected = _go.id;
+				isSelected = true;
+				sm->set_selected_gameobject(&_go);
+			}
+		}else if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
 		{
 			std::cout << _go.get_name() << " is selected\n";
 			_selected = _go.id;
@@ -552,7 +562,7 @@ namespace Copium
 
 
 
-		if (res != 1)
+		if (res != 1 && _selected == _go.id)
 		{
 			// If game object has children, recursively display children
 			if (!_go.transform.children.empty())
