@@ -27,6 +27,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <SceneManager/scene-manager.h>
 #include <GameObject/Components/script-component.h>
 #include <GameObject/Components/camera-component.h>
+#include "glm/gtc/matrix_transform.hpp"
+
 namespace
 {
 	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
@@ -437,7 +439,7 @@ namespace Copium
 			return;
 		Transform& trans{ gameObj.transform };
 		Math::Vec3 pos{ trans.position };
-		float scale = trans.scale.x;
+		float scale = trans.scale.x * 0.1f;
 		if (scale > trans.scale.y)
 			scale = trans.scale.y;
 		scale *= fSize;
@@ -483,12 +485,37 @@ namespace Copium
 
 		if (gameObj.transform.hasParent())
 		{
-			Transform& t1 = *gameObj.transform.parent;
-			Copium::Math::Matrix3x3 rot;
-			Copium::Math::matrix3x3_rotdeg(rot, t1.rotation.z);
-			Copium::Math::Vec3 intermediate = (rot * pos);
+			glm::vec3 updatedPos = pos;
 
-			font->draw_text(content, intermediate + t1.position, mixedColor, scale, 0, _camera);
+			Transform* tempObj = trans.parent;
+			while (tempObj)
+			{
+				glm::vec3 tempPos = tempObj->position.glmVec3;
+				glm::mat4 translate = glm::translate(glm::mat4(1.f), tempPos);
+
+				float rot = glm::radians(tempObj->rotation.z);
+				glm::mat4 rotate = {
+				glm::vec4(cos(rot), sin(rot), 0.f, 0.f),
+				glm::vec4(-sin(rot), cos(rot), 0.f, 0.f),
+				glm::vec4(0.f, 0.f, 1.f, 0.f),
+				glm::vec4(0.f, 0.f, 0.f, 1.f)
+				};
+
+				glm::vec3 size = tempObj->scale.glmVec3;
+				glm::mat4 scale = {
+					glm::vec4(size.x, 0.f, 0.f, 0.f),
+					glm::vec4(0.f, size.y, 0.f, 0.f),
+					glm::vec4(0.f, 0.f, 1.f, 0.f),
+					glm::vec4(0.f, 0.f, 0.f, 1.f)
+				};
+
+				glm::mat4 transform = translate * rotate * scale;
+
+				updatedPos = glm::vec3(transform * glm::vec4(updatedPos, 1.f));
+				tempObj = tempObj->parent;
+			}
+
+			font->draw_text(content, updatedPos, mixedColor, scale, 0, _camera);
 		}
 		else
 		{

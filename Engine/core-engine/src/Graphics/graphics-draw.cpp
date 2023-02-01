@@ -222,14 +222,11 @@ namespace Copium
 			// Draw non layered game objects first, followed by game objects in layers in the order of the layer
 			for (GameObject* gameObject : scene->gameObjects)
 			{
-				if (!gameObject)
-					continue;
-
-				if (!gameObject->isActive())
+				if (gameObject == nullptr || !gameObject->isActive())
 					continue;
 
 				bool layered{ false };
-				for (Component * component : gameObject->getComponents<SortingGroup>())
+				for (Component* component : gameObject->getComponents<SortingGroup>())
 				{
 					if (component->Enabled())
 					{
@@ -254,47 +251,12 @@ namespace Copium
 
 					if (gameObject->transform.hasParent())
 					{
-						Transform* tempObj = gameObject->transform.parent;
 						glm::vec3 updatedPos = t.position.glmVec3;
 						glm::vec3 updatedScale = t.scale.glmVec3;
 						float updatedRot = t.rotation.z;
+						UpdateTransform(gameObject->transform, updatedPos, updatedRot, updatedScale);
 
-						renderer.draw_quad(intermediate + t1.position, size, rotation + t1.rotation.z, sr);
-					}
-						while (tempObj)
-						{
-							glm::vec3 tempPos = tempObj->position.glmVec3;
-							glm::mat4 translate = glm::translate(glm::mat4(1.f), tempPos);
-						
-							float rot = glm::radians(tempObj->rotation.z);
-							size.x = tempObj->scale.x;
-							size.y = tempObj->scale.y;
-							glm::mat4 rotate = {
-							glm::vec4(cos(rot), sin(rot), 0.f, 0.f),
-							glm::vec4(-sin(rot), cos(rot), 0.f, 0.f),
-							glm::vec4(0.f, 0.f, 1.f, 0.f),
-							glm::vec4(0.f, 0.f, 0.f, 1.f)
-							};
-
-							glm::vec3 size = tempObj->scale.glmVec3;
-							glm::mat4 scale = {
-								glm::vec4(size.x, 0.f, 0.f, 0.f),
-								glm::vec4(0.f, size.y, 0.f, 0.f),
-								glm::vec4(0.f, 0.f, 1.f, 0.f),
-								glm::vec4(0.f, 0.f, 0.f, 1.f)
-							};
-
-							glm::mat4 transform = translate * rotate * scale;
-
-							updatedPos = glm::vec3(transform * glm::vec4(updatedPos,1.f));
-
-							updatedScale *= tempObj->scale.glmVec3;
-							updatedRot += tempObj->rotation.z;
-
-							tempObj = tempObj->parent;
-						}
-
-						renderer.draw_quad(updatedPos, glm::vec2(updatedScale.x, updatedScale.y), updatedRot, sr);
+						renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr);
 					}
 					else
 					{
@@ -315,27 +277,17 @@ namespace Copium
 
 					if (gameObject->transform.hasParent())
 					{
-						Transform& t1 = *gameObject->transform.parent;
-						Copium::Math::Matrix3x3 rot;
-						Copium::Math::matrix3x3_rotdeg(rot, t1.rotation.z);
-						Copium::Math::Vec3 intermediate = (rot * t.position);
+						glm::vec3 updatedPos = t.position.glmVec3;
+						glm::vec3 updatedScale = t.scale.glmVec3;
+						float updatedRot = t.rotation.z;
+						UpdateTransform(gameObject->transform, updatedPos, updatedRot, updatedScale);
 
-						renderer.draw_quad(intermediate + t1.position, size, rotation + t1.rotation.z, sr);
+						renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr);
 					}
 					else
 					{
 						renderer.draw_quad(t.position, size, rotation, sr);
 					}
-
-					//renderer.draw_quad({ rc->Offset(),t.position.z }, size, rotation, sr);
-				}
-				for (Component* component : gameObject->getComponents<Text>())
-				{
-					if (!component->Enabled())
-						continue;
-
-					Text* text = reinterpret_cast<Text*>(component);
-					text->render(camera);
 				}
 				for (Component* component : gameObject->getComponents<Animator>())
 				{
@@ -344,7 +296,7 @@ namespace Copium
 
 					Animator* animator = reinterpret_cast<Animator*>(component);
 					Animation* anim = animator->GetCurrentAnimation();
-					
+
 					if (!anim || !anim->spriteSheet.GetTexture())
 						continue;
 
@@ -354,12 +306,12 @@ namespace Copium
 
 					if (gameObject->transform.hasParent())
 					{
-						Transform& t1 = *gameObject->transform.parent;
-						Copium::Math::Matrix3x3 rot;
-						Copium::Math::matrix3x3_rotdeg(rot, t1.rotation.z);
-						Copium::Math::Vec3 intermediate = (rot * t.position);
+						glm::vec3 updatedPos = t.position.glmVec3;
+						glm::vec3 updatedScale = t.scale.glmVec3;
+						float updatedRot = t.rotation.z;
+						UpdateTransform(gameObject->transform, updatedPos, updatedRot, updatedScale);
 
-						renderer.draw_quad(intermediate + t1.position, size, rotation + t1.rotation.z, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
+						renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
 					}
 					else
 					{
@@ -369,19 +321,12 @@ namespace Copium
 
 				++count;
 			}
-
 			//PRINT("Num of Rendered GO: " << count);
 		}
 		renderer.end_batch();
 		renderer.flush();
 
-		// Bean : Testing Text
-		/*glm::vec3 position = { 0.f, -1.f, 0.f };
-		color = { 1.f, 1.f, 0.f, 1.f };
-		renderer.draw_text("Testing Arial", position, color, 0.1f, 0);*/
-
-
-
+		// Gameobjects with Sorting Layers
 		renderer.begin_batch();
 		if (scene != nullptr)
 		{
@@ -398,19 +343,8 @@ namespace Copium
 				int gameObjectCount{ 0 };
 				for (GameObject* gameObject : layer.gameObjects)
 				{
-					if (gameObject == nullptr)
-					{
-						//PRINT("null");
+					if (gameObject == nullptr || !gameObject->isActive())
 						continue;
-
-					}
-
-					if (!gameObject->isActive())
-					{
-						//PRINT("game object is not active");
-						continue;
-
-					}
 
 					// If the object isnt within the frustum
 					if (!camera->withinFrustum(gameObject->transform.position, gameObject->transform.scale))
@@ -429,12 +363,12 @@ namespace Copium
 
 						if (gameObject->transform.hasParent())
 						{
-							Transform& t1 = *gameObject->transform.parent;
-							Copium::Math::Matrix3x3 rot;
-							Copium::Math::matrix3x3_rotdeg(rot, t1.rotation.z);
-							Copium::Math::Vec3 intermediate = (rot * t.position);
+							glm::vec3 updatedPos = t.position.glmVec3;
+							glm::vec3 updatedScale = t.scale.glmVec3;
+							float updatedRot = t.rotation.z;
+							UpdateTransform(gameObject->transform, updatedPos, updatedRot, updatedScale);
 
-							renderer.draw_quad(intermediate + t1.position, size, rotation + t1.rotation.z, sr);
+							renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr);
 						}
 						else
 						{
@@ -455,20 +389,109 @@ namespace Copium
 
 						if (gameObject->transform.hasParent())
 						{
-							Transform& t1 = *gameObject->transform.parent;
-							Copium::Math::Matrix3x3 rot;
-							Copium::Math::matrix3x3_rotdeg(rot, t1.rotation.z);
-							Copium::Math::Vec3 intermediate = (rot * t.position);
+							glm::vec3 updatedPos = t.position.glmVec3;
+							glm::vec3 updatedScale = t.scale.glmVec3;
+							float updatedRot = t.rotation.z;
+							UpdateTransform(gameObject->transform, updatedPos, updatedRot, updatedScale);
 
-							renderer.draw_quad(intermediate + t1.position, size, rotation + t1.rotation.z, sr);
+							renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr);
 						}
 						else
 						{
 							renderer.draw_quad(t.position, size, rotation, sr);
 						}
-
-						//renderer.draw_quad({ rc->Offset(),t.position.z }, size, rotation, sr);
 					}
+					for (Component* component : gameObject->getComponents<Animator>())
+					{
+						if (!component->Enabled())
+							continue;
+
+						Animator* animator = reinterpret_cast<Animator*>(component);
+						Animation* anim = animator->GetCurrentAnimation();
+
+						if (!anim || !anim->spriteSheet.GetTexture())
+							continue;
+
+						Transform& t = gameObject->transform;
+						glm::vec2 size(t.scale.x, t.scale.y);
+						float rotation = t.rotation.z;
+
+						if (gameObject->transform.hasParent())
+						{
+							glm::vec3 updatedPos = t.position.glmVec3;
+							glm::vec3 updatedScale = t.scale.glmVec3;
+							float updatedRot = t.rotation.z;
+							UpdateTransform(gameObject->transform, updatedPos, updatedRot, updatedScale);
+
+							renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
+						}
+						else
+						{
+							renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
+						}
+					}
+
+					count++;
+					gameObjectCount++;
+
+				}
+
+				
+				//PRINT("Layer ID:" << layerID << " | No. of GameObjects:" << gameObjectCount);
+				++layerID;
+			}
+		}
+		renderer.end_batch();
+		renderer.flush();
+
+		// Only For Text
+		renderer.begin_batch();
+		if (scene != nullptr)
+		{	
+			for (GameObject* gameObject : scene->gameObjects)
+			{
+				if (gameObject == nullptr || !gameObject->isActive())
+					continue;
+
+				bool layered{ false };
+				for (Component* component : gameObject->getComponents<SortingGroup>())
+				{
+					if (component->Enabled())
+					{
+						layered = true;
+						break;
+					}
+				}
+
+				if (layered)
+					continue;
+
+				// If the object isnt within the frustum
+				if (!camera->withinFrustum(gameObject->transform.position, gameObject->transform.scale))
+					continue;
+
+				for (Component* component : gameObject->getComponents<Text>())
+				{
+					if (!component->Enabled())
+						continue;
+
+					Text* text = reinterpret_cast<Text*>(component);
+					text->render(camera);
+				}
+			}
+
+			for (Layer& layer : editorSys->getLayers()->SortLayers()->GetSortingLayers())
+			{
+				// Only For Text
+				for (GameObject* gameObject : layer.gameObjects)
+				{
+					if (gameObject == nullptr || !gameObject->isActive())
+						continue;
+
+					// If the object isnt within the frustum
+					if (!camera->withinFrustum(gameObject->transform.position, gameObject->transform.scale))
+						continue;
+
 					for (Component* component : gameObject->getComponents<Text>())
 					{
 						if (!component->Enabled())
@@ -477,57 +500,10 @@ namespace Copium
 						Text* text = reinterpret_cast<Text*>(component);
 						text->render(camera);
 					}
-					for (Component* component : gameObject->getComponents<Animator>())
-					{
-						Animator* animator = reinterpret_cast<Animator*>(component);
-						Animation* anim = animator->GetCurrentAnimation();
-
-						//if(anim)
-						//	PRINT("bloopbloppp");
-
-						if (!anim)
-							continue;
-
-
-						unsigned int sid = anim->spriteSheet.spriteID - 1;
-						// The index of the texture must be less than the size of textures
-						if (sid != -1 && sid < assets->get_textures().size())
-						{
-							anim->spriteSheet.texture = assets->get_texture(sid);
-						}
-						else
-						{
-
-							anim->spriteSheet.spriteID = 0;
-							anim->spriteSheet.texture = nullptr;
-						}
-
-						if (!anim || !anim->spriteSheet.GetTexture())
-							continue;
-						//PRINT("bloopbloop");
-						Transform& t = gameObject->transform;
-						unsigned int textureID = anim->spriteSheet.GetTexture()->get_id();
-						glm::vec2 size(t.scale.x, t.scale.y);
-
-						GLuint nid = 0;
-						for (GLuint i = 0; i < assets->get_textures().size(); ++i)
-						{
-							if (assets->get_textures()[i].get_object_id() == anim->spriteSheet.texture->get_object_id())
-								nid = i + 1;
-						}
-						//renderer.draw_quad(t.position, size, t.rotation.z, nid);
-						renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex, nid, anim->frameCount);
-
-					}
-
-					count++;
-					gameObjectCount++;
-
 				}
-				//PRINT("Layer ID:" << layerID << " | No. of GameObjects:" << gameObjectCount);
-				++layerID;
 			}
 		}
+
 		renderer.end_batch();
 		renderer.flush();
 	}
@@ -689,5 +665,40 @@ namespace Copium
 
 		/*Font* font = Font::getFont("corbel");
 		font->draw_text("Lorem ipsum dolor sit amet", pos, color, 0.3f, 0, camera);*/
+	}
+
+	void Draw::UpdateTransform(const Transform& _transform, glm::vec3& _position, float& _rotation, glm::vec3& _scale)
+	{
+		Transform* tempObj = _transform.parent;
+		while (tempObj)
+		{
+			glm::vec3 tempPos = tempObj->position.glmVec3;
+			glm::mat4 translate = glm::translate(glm::mat4(1.f), tempPos);
+
+			float rot = glm::radians(tempObj->rotation.z);
+			glm::mat4 rotate = {
+			glm::vec4(cos(rot), sin(rot), 0.f, 0.f),
+			glm::vec4(-sin(rot), cos(rot), 0.f, 0.f),
+			glm::vec4(0.f, 0.f, 1.f, 0.f),
+			glm::vec4(0.f, 0.f, 0.f, 1.f)
+			};
+
+			glm::vec3 size = tempObj->scale.glmVec3;
+			glm::mat4 scale = {
+				glm::vec4(size.x, 0.f, 0.f, 0.f),
+				glm::vec4(0.f, size.y, 0.f, 0.f),
+				glm::vec4(0.f, 0.f, 1.f, 0.f),
+				glm::vec4(0.f, 0.f, 0.f, 1.f)
+			};
+
+			glm::mat4 transform = translate * rotate * scale;
+
+			_position = glm::vec3(transform * glm::vec4(_position, 1.f));
+
+			_scale *= tempObj->scale.glmVec3;
+			_rotation += tempObj->rotation.z;
+
+			tempObj = tempObj->parent;
+		}
 	}
 }
