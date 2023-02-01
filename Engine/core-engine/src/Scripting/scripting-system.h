@@ -362,7 +362,18 @@ namespace Copium
 			False if operation failed, true if it was successful
 		*/
 		/*******************************************************************************/
-		void GetFieldValue(MonoObject* instance, MonoClassField* mClassFiend, Field& field, void* container);
+		void GetFieldValue(MonoObject* instance, MonoClassField* mClassFiend,  Field& field, void* container);
+
+		template<typename T>
+		MonoObject* CreateReference(T* object) { static_assert(true) };
+
+
+		template<>
+		MonoObject* CreateReference<GameObject>(GameObject* object) {};
+
+
+		template<>
+		MonoObject* CreateReference<Component>(Component* object) {};
 
 		/*******************************************************************************
 		/*!
@@ -380,10 +391,15 @@ namespace Copium
 		void SetFieldValue(MonoObject* instance, MonoClassField* mClassFiend, Field& field, const void* value);
 
 		void CallbackSceneOpened(SceneOpenedEvent* pEvent);
-		void CallbackReflectScript(ReflectScriptEvent* pEvent);
-		void CallbackInvokeScriptMethod(InvokeScriptMethodEvent* pEvent);
+		void CallbackReflectComponent(ReflectComponentEvent* pEvent);
+		void CallbackScriptInvokeMethod(ScriptInvokeMethodEvent* pEvent);
 		void CallbackScriptSetField(ScriptSetFieldEvent* pEvent);
 		void CallbackScriptGetField(ScriptGetFieldEvent* pEvent);
+		template<typename T>
+		void CallbackScriptSetFieldReference(ScriptSetFieldReferenceEvent<T>* pEvent);
+
+		MonoObject* ReflectGameObject(GameObjectID id);
+		MonoObject* ReflectComponent(const Component& component);
 
 
 		std::unordered_map<std::string, ScriptClass> scriptClassMap;
@@ -393,6 +409,39 @@ namespace Copium
 		std::list<File>& scriptFiles;
 		CompilingState compilingState{ CompilingState::Wait };
 		std::map<std::string, std::map<std::string,ScriptableObject>> scriptableObjects;
+
+		MonoClass* klassScene{};
+		std::unordered_map<std::string, MonoObject*> scenes;
+		MonoObject* mCurrentScene;
 	};
+
+	template<typename T>
+	void ScriptingSystem::CallbackScriptSetFieldReference(ScriptSetFieldReferenceEvent<T>* pEvent)
+	{
+		MonoObject* mScript = mComponents[pEvent->script.id];
+		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
+		ScriptClass& scriptClass{ GetScriptClass(pEvent->script.name) };
+		MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };
+		COPIUM_ASSERT(!mClassField, std::string("FIELD ") + pEvent->fieldName + "COULD NOT BE FOUND IN SCRIPT " + pEvent->script.name);
+		SetFieldValue(mScript, mClassField, pEvent->script.fieldDataReferences[pEvent->fieldName], CreateReference(pEvent->reference));
+	}
+
+	template<>
+	MonoObject* ScriptingSystem::CreateReference<GameObject>(GameObject* object)
+	{
+		if (!object)
+			return nullptr;
+		return ReflectGameObject(object->id);
+	}
+
+	template<>
+	MonoObject* ScriptingSystem::CreateReference<Component>(Component* object)
+	{
+		if (!object)
+			return nullptr;
+		ScriptClass& scriptClass = GetScriptClass(object->Name());
+		ReflectGameObject(object->gameObj.id);
+		return ReflectComponent(*object);
+	}
 }
 #endif // !SCRIPTING_SYSTEM_H

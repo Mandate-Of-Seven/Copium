@@ -88,7 +88,7 @@ namespace Copium
 			Script* script = gameObj.getComponent<Script>();
 			if (script)
 			{
-				MyEventSystem->publish(new InvokeScriptMethodEvent(*script,callbackName,nullptr,0));
+				MyEventSystem->publish(new ScriptInvokeMethodEvent(*script,callbackName,nullptr,0));
 				if (!gameObj.isActive())
 				{
 					hoveredBtn = nullptr;

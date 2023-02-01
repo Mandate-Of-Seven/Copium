@@ -20,6 +20,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <limits>
 #include <Math/math-library.h>
 
+
+
 extern "C"
 {
 	typedef struct _MonoClass MonoClass;
@@ -35,68 +37,71 @@ enum class FieldType
 	Vector2, Vector3, GameObject, Component, None
 };
 
-struct Field
-{
-	char* data;
-	size_t size;
-	FieldType fType{};
-	/***************************************************************************/
-	/*!
-	\brief
-		Stores data of a given buffer to prevent out of scope destruction.
-		Aka assigns memory from the heap
-
-	\param _size
-		Size of buffer
-
-	\param _data
-		Data to store and copy from
-	*/
-	/**************************************************************************/
-	Field(FieldType _fType,size_t _size = 0, void* _data = nullptr) :
-		fType{_fType}
-	{
-		size = _size;
-		if (size)
-			data = new char[size];
-		else
-			data = nullptr;
-		if (_data)
-			memcpy(data, _data, size);
-	}
-
-	/***************************************************************************/
-	/*!
-	\brief
-		Copy constructor
-
-	\param rhs
-		Field to store and copy from
-	*/
-	/**************************************************************************/
-	Field(const Field& rhs)
-	{
-		size = rhs.size;
-		data = new char[size];
-		fType = rhs.fType;
-		memcpy(data, rhs.data, size);
-	}
-
-	/***************************************************************************/
-	/*!
-	\brief
-		Destructor that frees memory
-	*/
-	/**************************************************************************/
-	~Field()
-	{
-		if (data)
-			delete[] data;
-	}
-};
-
 namespace Copium
 {
+	struct Field
+	{
+		char* data;
+		size_t size;
+		FieldType fType{};
+		/***************************************************************************/
+		/*!
+		\brief
+			Stores data of a given buffer to prevent out of scope destruction.
+			Aka assigns memory from the heap
+
+		\param _size
+			Size of buffer
+
+		\param _data
+			Data to store and copy from
+		*/
+		/**************************************************************************/
+		Field(FieldType _fType, size_t _size = 0, void* _data = nullptr) :
+			fType{ _fType }
+		{
+			size = _size;
+			if (size)
+				data = new char[size];
+			else
+				data = nullptr;
+			if (_data)
+				memcpy(data, _data, size);
+		}
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Copy constructor
+
+		\param rhs
+			Field to store and copy from
+		*/
+		/**************************************************************************/
+		Field(const Field& rhs)
+		{
+			size = rhs.size;
+			data = new char[size];
+			fType = rhs.fType;
+			memcpy(data, rhs.data, size);
+		}
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Destructor that frees memory
+		*/
+		/**************************************************************************/
+		~Field()
+		{
+			if (data)
+				delete[] data;
+		}
+	};
+
+	using ScriptReferenceables = TemplatePack<GameObject, Component>;
+
+
     class Script final : public Component, public IReceiver
     {
     public:
@@ -171,7 +176,7 @@ namespace Copium
 			False if operation failed, true if it was successful
 		*/
 		/*******************************************************************************/
-		bool getFieldValue(const std::string& name, char* buffer) const;
+		void GetFieldValue(const std::string& name, char* buffer);
 
 		/*******************************************************************************
 		/*!
@@ -186,7 +191,7 @@ namespace Copium
 			False if operation failed, true if it was successful
 		*/
 		/*******************************************************************************/
-		bool setFieldValue(const std::string& name, const char* value);
+		void SetFieldValue(const std::string& name, const char* value);
 
 		/***************************************************************************/
 		/*!
@@ -247,16 +252,6 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
-
-		/***************************************************************************/
-		/*!
-		\brief
-			Gets the function names in this script
-		\return
-			Vector of strings of functions in this script
-		*/
-		/**************************************************************************/
-		const std::vector<std::string>& getFunctionNames();
 
 		MonoObject* mObject;
 

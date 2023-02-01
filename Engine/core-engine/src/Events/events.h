@@ -18,40 +18,51 @@ namespace Copium
 		const char* sceneName;
 	};
 	
-	struct ReflectScriptEvent : IEvent
+	struct ReflectComponentEvent : IEvent
 	{
-		ReflectScriptEvent(const char* _scriptName, ComponentID _scriptID, GameObjectID _gameObjectID) :
-			scriptName{ _scriptName }, scriptID{ _scriptID }, gameObjectID{ _gameObjectID } {};
-		const char* scriptName;
-		ComponentID scriptID;
-		GameObjectID gameObjectID;
+		ReflectComponentEvent(const Component& _component): component{_component}{}
+		const Component& component;
 	};
 
-	struct InvokeScriptMethodEvent : IEvent
+	struct ScriptInvokeMethodEvent : IEvent
 	{
-		InvokeScriptMethodEvent(Script& _script,const std::string& _methodName, void** _params = 0, size_t _paramCount = 0) :
-			script{ _script }, methodName{ _methodName }, params{ _params }, paramCount{ paramCount }{}
+		ScriptInvokeMethodEvent(Script& _script, const std::string& _methodName, void** _returnVal = nullptr, void** _params = 0, size_t _paramCount = 0) :
+			script{ _script }, methodName{ _methodName }, params{ _params }, paramCount{ paramCount }, returnVal{ _returnVal } {}
 		Script& script;
 		const std::string& methodName;
 		void** params;
 		size_t paramCount;
+		void** returnVal;
 	};
 
 	struct ScriptSetFieldEvent : IEvent
 	{
-		ScriptSetFieldEvent(Script& _script, const std::string& _fieldName, void* _data) :
+		ScriptSetFieldEvent(Script& _script, const char* _fieldName, void* _data) :
 			script{ _script }, fieldName{ _fieldName }, data{ _data }{}
 		Script& script;
-		const std::string& fieldName;
+		const char* fieldName;
 		void* data;
 	};
 
 	struct ScriptGetFieldEvent : IEvent
 	{
-		ScriptGetFieldEvent(const Script& _script, const std::string& _fieldName, void* _container) :
+		ScriptGetFieldEvent(Script& _script, const char* _fieldName, void* _container) :
 			script{ _script }, fieldName{ _fieldName }, container{ _container }{}
-		const Script& script;
-		const std::string& fieldName;
+		Script& script;
+		const char* fieldName;
 		void* container;
+	};
+
+
+	template <typename T>
+	struct ScriptSetFieldReferenceEvent : public IEvent
+	{
+		static_assert(ScriptReferenceables::contains<T>());
+
+		ScriptSetFieldReferenceEvent(Script& _script, const char* _fieldName, T* _reference) :
+			script{ _script }, fieldName{ _fieldName }, reference{ _reference }{}
+		Script& script;
+		const char* fieldName;
+		T* reference;
 	};
 }

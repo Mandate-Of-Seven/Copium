@@ -58,13 +58,13 @@ namespace Copium
 					continue;
 				if (!pScript->Enabled())
 					continue;
-				MyEventSystem->publish(new InvokeScriptMethodEvent(*pScript, "Update"));
+				MyEventSystem->publish(new ScriptInvokeMethodEvent(*pScript, "Update"));
 				if (pScene != sceneManager.get_current_scene())
 					return;
 
 				for (size_t j = 0; j < MyFrameRateController.getSteps(); ++j)
 				{
-					MyEventSystem->publish(new InvokeScriptMethodEvent(*pScript,"FixedUpdate"));
+					MyEventSystem->publish(new ScriptInvokeMethodEvent(*pScript,"FixedUpdate"));
 				}
 				if (pScene != sceneManager.get_current_scene())
 					return;
@@ -110,7 +110,7 @@ namespace Copium
 			const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };
 			for (Script* pScript : pScripts)
 			{
-				MyEventSystem->publish(new InvokeScriptMethodEvent(*pScript, "Awake"));
+				MyEventSystem->publish(new ScriptInvokeMethodEvent(*pScript, "Awake"));
 			}
 		}
 
@@ -119,7 +119,7 @@ namespace Copium
 			const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };
 			for (Script* pScript : pScripts)
 			{
-				MyEventSystem->publish(new InvokeScriptMethodEvent(*pScript, "Start"));
+				MyEventSystem->publish(new ScriptInvokeMethodEvent(*pScript, "Start"));
 			}
 		}
 		timeElasped = MyFrameRateController.getDt();

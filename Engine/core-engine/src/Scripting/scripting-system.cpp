@@ -47,9 +47,6 @@ namespace
 	MonoClass* mCopiumScript{ nullptr };
 	MonoClass* mCollision2D{ nullptr };
 	MonoClass* mScriptableObject{};
-	MonoClass* klassScene{};
-	std::unordered_map<std::string, MonoObject*> scenes;
-	MonoObject* mCurrentScene;
 }
 
 namespace Copium::Utils
@@ -117,10 +114,6 @@ namespace Copium
 	ScriptClass::ScriptClass(const std::string& _name, MonoClass* _mClass) :
 		mClass{ _mClass }
 	{
-		mMethods["OnCreate"] = mono_class_get_method_from_name(mCopiumScript, "OnCreate", 1);
-		mMethods["FindComponentByID"] = mono_class_get_method_from_name(mCopiumScript, "FindComponentByID", 2);
-		mMethods["Create"] = mono_class_get_method_from_name(mCopiumScript, "Create", 2);
-		mMethods["FindGameObjectByID"] = mono_class_get_method_from_name(mCopiumScript, "FindGameObjectByID", 1);
 		void* methodIterator = nullptr;
 		while (MonoMethod* method = mono_class_get_methods(_mClass, &methodIterator))
 		{
@@ -243,8 +236,8 @@ namespace Copium
 		ThreadSystem::Instance()->addThread(new std::thread(&ScriptingSystem::recompileThreadWork, this));
 		messageSystem.subscribe(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT, this);
 		MyEventSystem->subscribe(this,&ScriptingSystem::CallbackSceneOpened);
-		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackReflectScript);
-		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackInvokeScriptMethod);
+		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackReflectComponent);
+		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptInvokeMethod);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_ENGINE_INITIALIZED, this);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
@@ -619,6 +612,38 @@ namespace Copium
 	}
 
 
+	MonoObject* ScriptingSystem::ReflectGameObject(GameObjectID id)
+	{
+		auto pairIt = mGameObjects.find(id);
+		if (mGameObjects.find(id) == mGameObjects.end())
+		{
+			void* param = &id;
+			MonoMethod* reflectGameObject = mono_class_get_method_from_name(klassScene, "ReflectGameObject", 1);
+			MonoObject* mGameObj= invoke(mCurrentScene, reflectGameObject, &param);
+			mGameObjects.emplace(id, mGameObj);
+			return mGameObj;
+		}
+		return (*pairIt).second;
+	}
+
+	MonoObject* ScriptingSystem::ReflectComponent(const Component& component)
+	{
+		auto pairIt = mComponents.find(component.id);
+		if (pairIt == mComponents.end())
+		{
+			ScriptClass& scriptClass = GetScriptClass(component.Name());
+			ComponentID cid{ component.id };
+			GameObjectID gid{ component.gameObj.id };
+			void* params[3] = { instantiateClass(scriptClass.mClass) ,&cid,&gid };
+			MonoMethod* reflectComponent = mono_class_get_method_from_name(klassScene, "ReflectComponent", 3);
+			MonoObject* mComponent = invoke(mCurrentScene, reflectComponent, params);
+			mComponents.emplace(gid, mComponent);
+			return mComponent;
+		}
+		return (*pairIt).second;
+	}
+
+
 	void ScriptingSystem::CallbackSceneOpened(SceneOpenedEvent* pEvent)
 	{
 		CompilingState state = compilingState;
@@ -634,24 +659,13 @@ namespace Copium
 		scenes[pEvent->sceneName] = mCurrentScene;
 	}
 
-	void ScriptingSystem::CallbackReflectScript(ReflectScriptEvent* pEvent)
+	void ScriptingSystem::CallbackReflectComponent(ReflectComponentEvent* pEvent)
 	{
-		ScriptClass& scriptClass = GetScriptClass(pEvent->scriptName);
-		if (mGameObjects.find(pEvent->gameObjectID) == mGameObjects.end())
-		{
-			void* param = &pEvent->gameObjectID;
-			MonoMethod* reflectGameObject = mono_class_get_method_from_name(klassScene, "ReflectGameObject", 1);
-			mGameObjects.emplace(pEvent->gameObjectID,invoke(mCurrentScene, reflectGameObject, &param));
-		}
-		if (mComponents.find(pEvent->scriptID) == mComponents.end())
-		{
-			void* params[3] = { instantiateClass(scriptClass.mClass) ,&pEvent->scriptID, &pEvent->gameObjectID };
-			MonoMethod* reflectComponent = mono_class_get_method_from_name(klassScene, "ReflectComponent", 3);
-			mComponents.emplace(pEvent->gameObjectID, invoke(mCurrentScene, reflectComponent, params));
-		}
+		ReflectGameObject(pEvent->component.gameObj.id);
+		ReflectComponent(pEvent->component);
 	}
 
-	void ScriptingSystem::CallbackInvokeScriptMethod(InvokeScriptMethodEvent* pEvent)
+	void ScriptingSystem::CallbackScriptInvokeMethod(ScriptInvokeMethodEvent* pEvent)
 	{
 		MonoObject* mScript = mComponents[pEvent->script.id];
 		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
@@ -677,8 +691,8 @@ namespace Copium
 		MonoObject* mScript = mComponents[pEvent->script.id];
 		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
 		ScriptClass& scriptClass{ GetScriptClass(pEvent->script.name) };
-		MonoMethod* mMethod{ mono_class_get_method_from_name(scriptClass.mClass,pEvent->methodName.c_str(),pEvent->paramCount) };
-		COPIUM_ASSERT(!mMethod, std::string("MONO METHOD ") + pEvent->methodName + std::string(" IN SCRIPT ") + pEvent->script.name + std::string(" NOT FOUND"));
-		invoke(mScript, mMethod, pEvent->params);
+		MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };
+		COPIUM_ASSERT(!mClassField, std::string("FIELD ") + pEvent->fieldName + "COULD NOT BE FOUND IN SCRIPT " + pEvent->script.name);
+		SetFieldValue(mScript, mClassField, pEvent->script.fieldDataReferences[pEvent->fieldName], pEvent->data);
 	}
 }

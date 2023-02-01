@@ -18,7 +18,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/game-object.h"
 #include "SceneManager/scene-manager.h"
 #define DEFAULT_SCRIPT_NAME "NewScript"
-#include <mono/jit/jit.h>
 #include <Events/events-system.h>
 
 #define BUFFER_SIZE 128
@@ -46,7 +45,7 @@ namespace Copium
 
 	void Script::instantiate()
 	{
-		MyEventSystem->publish(new ReflectScriptEvent(name.c_str(), id, gameObj.id));
+		MyEventSystem->publish(new ReflectComponentEvent(*this));
 	}
 
 	void Script::handleMessage(MESSAGE_TYPE mType)
@@ -58,34 +57,12 @@ namespace Copium
 		case MESSAGE_TYPE::MT_SCENE_DESERIALIZED:
 			for (auto pair : fieldComponentReferences)
 			{
-				Component* pComponent{ pair.second };
-				if (!pComponent)
-					continue;
-				GameObjectID gameObjID = pComponent->gameObj.id;
-				void* params[2] = { &pComponent->id, &gameObjID };
-				PRINT("FIELD: " << pair.first.c_str() << fieldComponentReferences.size());
-				MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindComponentByID"], mObject, params, nullptr);
-				MonoClass* mComponentClass = mono_object_get_class(result);
-				MonoClassField* field = mono_class_get_field_from_name(pScriptClass->mClass, pair.first.c_str()); // Obtain a reference to the object variable
-				void* param{ result };
-				mono_field_set_value(mObject,field, result);
+				MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*this, pair.first.c_str(), pair.second));
 			}
 
 			for (auto pair : fieldGameObjReferences)
 			{
-				GameObject* _gameObj{ pair.second };
-				GameObjectID gameObjID = _gameObj->id;
-				void* params = &gameObjID;
-				MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindGameObjectByID"], mObject, &params, nullptr);
-				if (!result)
-				{
-					PRINT(name << " " << pair.first << " was null");
-					continue;
-				}
-				MonoClass* mGameObjectClass = mono_object_get_class(result);
-				MonoClassField* field = mono_class_get_field_from_name(pScriptClass->mClass, pair.first.c_str()); // Obtain a reference to the object variable
-				void* param{ result };
-				mono_field_set_value(mObject, field, result);
+				MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*this, pair.first.c_str(), pair.second));
 			}
 			break;
 
@@ -105,49 +82,14 @@ namespace Copium
 	}
 
 	//Use for serialization
-	bool Script::getFieldValue(const std::string& _name, char* outBuffer) const
+	void Script::GetFieldValue(const std::string& _name, char* outBuffer)
 	{
-		auto it = pScriptClass->mFields.find(_name);
-		if (it == pScriptClass->mFields.end())
-			return false;
-		const Field& _field = it->second;
-		if (_field.type == FieldType::String)
-		{
-			MonoString* mono_string = sS.createMonoString("");
-			mono_field_get_value(mObject, _field.classField, &mono_string);
-			char* str = mono_string_to_utf8(mono_string);
-			strcpy(outBuffer, str);
-			return true;
-		}
-		mono_field_get_value(mObject, _field.classField, outBuffer);
-		return true;											  
+		MyEventSystem->publish(new ScriptGetFieldEvent(*this, _name.c_str(), (void*)outBuffer));
 	}
 
-	bool Script::setFieldValue(const std::string& _name, const char* value)
+	void Script::SetFieldValue(const std::string& _name, const char* value)
 	{
-		const auto& it = pScriptClass->mFields.find(_name);
-		if (it == pScriptClass->mFields.end())
-			return false;
-		const Field& _field = it->second;
-		if (_field.type == FieldType::String)
-		{
-			MonoString* mono_string = sS.createMonoString(value);
-			mono_field_set_value(mObject, _field.classField, mono_string);
-			return true;
-		}
-		mono_field_set_value(mObject, _field.classField, (void*)value);
-		return true;
-	}
-
-	const std::vector<std::string>& Script::getFunctionNames()
-	{
-		static std::vector<std::string> functionNames;
-		functionNames.clear();
-		for (auto pair : pScriptClass->mMethods)
-		{
-			functionNames.push_back(pair.first);
-		}
-		return functionNames;
+		MyEventSystem->publish(new ScriptSetFieldEvent(*this, _name.c_str(), (void*)value));
 	}
 
 	void Script::inspector_view()
@@ -232,14 +174,7 @@ namespace Copium
 							if (filter.PassFilter(go->get_name().c_str()) && ImGui::Button(go->get_name().c_str(), buttonSize))
 							{
 								isAddingGameObjectReference = false;
-								ComponentID componentID = pComponent->id;
-								GameObjectID gameObjID = pComponent->gameObj.id;
-								void* params[2] = { &componentID, &gameObjID };
-								MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindComponentByID"], mObject, params, nullptr);
-								MonoClass* mComponentClass = mono_object_get_class(result);
-								MonoClassField* field = mono_class_get_field_from_name(pScriptClass->mClass, _name.c_str()); // Obtain a reference to the object variable
-								void* param{ result };
-								mono_field_set_value(mObject, field, result);
+								MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*this, _name.c_str(), pComponent));
 								fieldComponentReferences[_name] = pComponent;
 								field = nullptr;
 								break;
@@ -257,14 +192,7 @@ namespace Copium
 						if (payload)
 						{
 							Component* pComponent = (Component*)(*reinterpret_cast<void**>(payload->Data));
-							ComponentID componentID = pComponent->id;
-							GameObjectID gameObjID = pComponent->gameObj.id;
-							void* params[2] = { &componentID, &gameObjID };
-							MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindComponentByID"], mObject, params, nullptr); 
-							MonoClass* mComponentClass = mono_object_get_class(result);
-							MonoClassField* field = mono_class_get_field_from_name(pScriptClass->mClass, _name.c_str()); // Obtain a reference to the object variable
-							void* param{ result };
-							mono_field_set_value(mObject, field, result);
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*this, _name.c_str(), pComponent));
 							fieldComponentReferences[_name] = pComponent;
 						}
 						ImGui::EndDragDropTarget();
@@ -316,14 +244,7 @@ namespace Copium
 							if (filter.PassFilter(go->get_name().c_str()) && ImGui::Button(go->get_name().c_str(), buttonSize))
 							{
 								isAddingGameObjectReference = false;
-								GameObjectID gameObjID = go->id;
-								void* params = &gameObjID;
-								MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindGameObjectByID"], mObject, &params, nullptr);
-								MonoClass* mGameObjClass = mono_object_get_class(result);
-
-								MonoClassField* mField = mono_class_get_field_from_name(pScriptClass->mClass, _name.c_str()); // Obtain a reference to the object variable
-								void* param{ result };
-								mono_field_set_value(mObject, mField, result);
+								MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*this, _name.c_str(), go));
 								fieldGameObjReferences[_name] = go;
 								break;
 							}
@@ -341,14 +262,7 @@ namespace Copium
 						if (payload)
 						{
 							GameObject* pGameObj = (GameObject*)(*reinterpret_cast<void**>(payload->Data));
-							fieldGameObjReferences[_name] = pGameObj;
-							GameObjectID gameObjID = pGameObj->id;
-							void* params = &gameObjID;
-							MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["FindGameObjectByID"], mObject, &params, nullptr);
-							MonoClass* mComponentClass = mono_object_get_class(result);
-							MonoClassField* mField = mono_class_get_field_from_name(pScriptClass->mClass, _name.c_str()); // Obtain a reference to the object variable
-							void* param{ result };
-							mono_field_set_value(mObject, mField, result);
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*this, _name.c_str(), pGameObj));
 							fieldGameObjReferences[_name] = pGameObj;
 						}
 						ImGui::EndDragDropTarget();
@@ -357,7 +271,7 @@ namespace Copium
 					continue;
 				}
 
-				getFieldValue(_name, buffer);
+				GetFieldValue(_name, buffer);
 				switch (it->second.type)
 				{
 				case FieldType::Float:
@@ -440,7 +354,7 @@ namespace Copium
 					break;
 				}
 			}
-				setFieldValue(_name, buffer);
+				SetFieldValue(_name, buffer);
 				++it;
 			}
 
@@ -486,7 +400,7 @@ namespace Copium
 		{
 			Name(_value["Name"].GetString());
 		}
-		const auto& fieldMap = pScriptClass->mFields;
+		const auto& fieldMap = fieldDataReferences;
 		auto it = fieldMap.begin();
 		while (it != fieldMap.end())
 		{
@@ -496,7 +410,7 @@ namespace Copium
 				++it;
 				continue;
 			}
-			switch (it->second.type)
+			switch (it->second.fType)
 			{
 			case FieldType::Float:
 			{
@@ -591,38 +505,29 @@ namespace Copium
 				break;
 			}
 			}
-			setFieldValue(_name, buffer);
+			SetFieldValue(_name, buffer);
 			++it;
 		}
 	}
 
 	void Script::deserializeLink(rapidjson::Value& _value)
 	{
-		const auto& fieldMap = pScriptClass->mFields;
-		auto it = fieldMap.begin();
-
-		while (it != fieldMap.end())
+		auto gameObjsIt = fieldGameObjReferences.begin();
+		while (gameObjsIt != fieldGameObjReferences.end())
 		{
-			const std::string& _name{ it->first };
-			if (!_value.HasMember(_name.c_str()))
-			{
-				++it;
-				continue;
-			}
-			switch (it->second.type)
-			{
-				case FieldType::Component:
-				{
-					fieldComponentReferences[_name] = MySceneManager.findComponentByID(_value[_name.c_str()].GetUint64());
-					break;
-				}
-				case FieldType::GameObject:
-				{
-					fieldGameObjReferences[_name] = MySceneManager.findGameObjByID(_value[_name.c_str()].GetUint64());
-					break;
-				}
-			}
-			++it;
+			const std::string& fieldName{ gameObjsIt->first };
+			GameObject* referencedGameObj = (*gameObjsIt).second;
+			(*gameObjsIt).second = MySceneManager.findGameObjByID(referencedGameObj->id);
+			++gameObjsIt;
+		}
+
+		auto componentsIt = fieldComponentReferences.begin();
+		while (componentsIt != fieldComponentReferences.end())
+		{
+			const std::string& fieldName{ componentsIt->first };
+			Component* referencedComponent = (*componentsIt).second;
+			(*gameObjsIt).second = MySceneManager.findGameObjByID(referencedComponent->id);
+			++componentsIt;
 		}
 	}
 
@@ -637,13 +542,13 @@ namespace Copium
 		rjName.SetString(name.c_str(), rapidjson::SizeType(name.length()), _doc.GetAllocator());
 		_value.AddMember("Name", rjName, _doc.GetAllocator());
 
-		const auto& fieldMap = pScriptClass->mFields;
+		const auto& fieldMap = fieldDataReferences;
 		auto it = fieldMap.begin();
 		while (it != fieldMap.end())
 		{
 			const std::string& fieldName{ it->first };
-			getFieldValue(fieldName, buffer);
-			switch (it->second.type)
+			GetFieldValue(fieldName, buffer);
+			switch (it->second.fType)
 			{
 			case FieldType::Float:
 			{
