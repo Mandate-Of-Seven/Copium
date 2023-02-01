@@ -54,6 +54,7 @@ namespace Copium
 		/* Layer Data *******************************************************************/
 		SortingLayers sortingLayers;
 		Layering layers;
+
 		
 	};
 }

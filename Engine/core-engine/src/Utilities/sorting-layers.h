@@ -52,7 +52,7 @@ namespace Copium
 		void SwapLayers(const unsigned int& _layer01, const unsigned int& _layer02);
 
 		// Create new sorting layer
-		void CreateNewLayer(const std::string& _name);
+		Layer* CreateNewLayer(const std::string& _name);
 
 		// Remove sorting layer
 		void RemoveLayer(const std::string& _name);
