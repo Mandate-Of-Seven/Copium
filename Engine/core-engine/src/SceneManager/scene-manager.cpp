@@ -25,12 +25,21 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "SceneManager/scene-manager.h"
 #include "Graphics/graphics-system.h"
 #include "Windows/windows-system.h"
+#include "Editor/editor-system.h"
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/prettywriter.h>
 #include <GameObject/Components/camera-component.h>
 #include "GameObject/Components/ui-components.h"
+#include "GameObject/Components/sorting-group-component.h"
+
+
 
 namespace Copium {
+
+	namespace
+	{
+		EditorSystem& es{ *EditorSystem::Instance() };
+	}
 
 	std::string prefix("../PackedTracks/Assets/Scenes/");
 
@@ -194,6 +203,44 @@ namespace Copium {
 
 		}
 
+		if (document.HasMember("Layers"))
+		{
+			rapidjson::Value& arr = document["Layers"].GetArray();
+			if (es.getLayers()->SortLayers()->GetLayerCount())
+			{
+				es.getLayers()->SortLayers()->GetSortingLayers().clear();
+				es.getLayers()->SortLayers()->GetSortingLayers().shrink_to_fit();
+				PRINT(es.getLayers()->SortLayers()->GetSortingLayers().size());
+			}
+
+			unsigned int idx{ 0 };
+			// Set-up all the layers
+			for (rapidjson::Value::ValueIterator iter = arr.Begin(); iter != arr.End(); ++iter)
+			{
+				std::string name;
+				rapidjson::Value& layer = *iter;
+				if (layer.HasMember("Name"))
+				{
+					name = layer["Name"].GetString();
+				}
+				Layer* lay = es.getLayers()->SortLayers()->CreateNewLayer(name);
+				PRINT("making new layer");
+				if (layer.HasMember("ID"))
+				{
+					lay->layerID = layer["ID"].GetUint();
+					PRINT("Layer's id: " << lay->layerID);
+				}
+				else
+				{
+					lay->layerID = idx;
+				}
+
+				++idx;
+				
+			}
+
+		}
+
 		if (document.HasMember("GameObjects"))
 		{
 			rapidjson::Value& _gameObjArr = document["GameObjects"].GetArray();
@@ -224,6 +271,73 @@ namespace Copium {
 			}
 		}
 		
+		// Place Game Objects that are in layers into respective layers
+		for (GameObject* go : currentScene->gameObjects)
+		{
+			bool layered{ false };
+			SortingGroup* sg{ nullptr };
+			for (Component* component : go->getComponents<SortingGroup>())
+			{
+				if (component->Enabled())
+				{
+					sg = reinterpret_cast<SortingGroup*>(component);
+					layered = true;
+					break;
+				}
+			}
+
+			if (layered)
+			{
+				PRINT("Layer ID: " << sg->GetLayerID());
+				es.getLayers()->SortLayers()->AddGameObject(sg->GetLayerID(), *go);
+			}
+		}
+		// Sort based on order in layer
+		for (Layer& la : es.getLayers()->SortLayers()->GetSortingLayers())
+		{
+			bool swapped{ false };
+			if (la.gameObjects.size() <= 1)
+				continue;
+
+			for (size_t i{ 0 }; i < la.gameObjects.size() - 1; ++i)
+			{
+				for (size_t j{ 0 }; j < la.gameObjects.size() - 1 - i; ++j)
+				{
+					SortingGroup* sg1{ nullptr }, * sg2{ nullptr };
+
+					if (!la.gameObjects[j] && la.gameObjects[j+1])
+					{
+						std::swap(la.gameObjects[j], la.gameObjects[j + 1]);
+						swapped = true;
+						continue;
+					}
+
+					if (la.gameObjects[j] && la.gameObjects[j + 1])
+					{
+						Component* co1 = la.gameObjects[j]->getComponent<SortingGroup>();
+						Component* co2 = la.gameObjects[j + 1]->getComponent<SortingGroup>();
+
+						if (co1 && co2)
+						{
+							sg1 = reinterpret_cast<SortingGroup*>(co1);
+							sg2 = reinterpret_cast<SortingGroup*>(co2);
+
+							if (sg1->GetOrderInLayer() > sg2->GetOrderInLayer())
+							{
+								std::swap(la.gameObjects[j], la.gameObjects[j + 1]);
+								swapped = true;
+							}
+						}
+					}
+
+
+				}
+
+				if (!swapped)
+					break;
+			}
+		}
+
 		ifs.close();
 
 
@@ -500,6 +614,22 @@ namespace Copium {
 			ucids.PushBack(id, doc.GetAllocator());
 		}
 		doc.AddMember("Unused CIDs", ucids, doc.GetAllocator());
+
+		// Serialize Layer Data
+		rapidjson::Value layers(rapidjson::kArrayType);
+		for (Layer& layer : es.getLayers()->SortLayers()->GetSortingLayers())
+		{
+			rapidjson::Value obj(rapidjson::kObjectType);
+			rapidjson::Value layerName;
+			create_rapidjson_string(doc, layerName, layer.name);
+			obj.AddMember("Name", layerName, doc.GetAllocator());
+
+			obj.AddMember("ID", layer.layerID, doc.GetAllocator());
+
+			layers.PushBack(obj, doc.GetAllocator());
+
+		}
+		doc.AddMember("Layers", layers, doc.GetAllocator());
 
 		std::vector<GameObject*> roots;
 		for (GameObject* pGameObject : currentScene->gameObjects)

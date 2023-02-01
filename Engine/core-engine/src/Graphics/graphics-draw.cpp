@@ -28,6 +28,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "GameObject/Components/renderer-component.h"
 #include "GameObject/Components/ui-components.h"
 #include "GameObject/Components/collider-components.h"
+#include "GameObject/Components/sorting-group-component.h"
 #include "Animation/animation-system.h"
 #include "SceneManager/scene-manager.h"
 #include "Math/math-library.h"
@@ -86,7 +87,9 @@ namespace Copium
 		glClearColor(clr.r, clr.g, clr.b, clr.a);
 
 		// Clear the screen bits
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT);
+
 
 		if(drawMode[DRAW::EDITOR])
 			editor();
@@ -183,7 +186,6 @@ namespace Copium
 
 	void Draw::world()
 	{
-		renderer.begin_batch();
 
 		/*
 			Bean Theory:
@@ -205,7 +207,7 @@ namespace Copium
 		*/
 
 		// Theory WIP
-		
+		renderer.begin_batch();
 		Scene* scene = sm->get_current_scene();
 		if (scene != nullptr)
 		{
@@ -216,16 +218,27 @@ namespace Copium
 
 			int count = 0;
 
+			// Draw non layered game objects first, followed by game objects in layers in the order of the layer
 			for (GameObject* gameObject : scene->gameObjects)
 			{
+				if (!gameObject)
+					continue;
+
 				if (!gameObject->isActive())
 					continue;
 
-				// If the object isnt within the frustum
-				if (!camera->withinFrustum(gameObject->transform.position, gameObject->transform.scale))
-					continue;
+				bool layered{ false };
+				for (Component * component : gameObject->getComponents<SortingGroup>())
+				{
+					if (component->Enabled())
+					{
+						layered = true;
+						break;
+					}
+				}
 
-				count++;
+				if (layered)
+					continue;
 
 				for (Component* component : gameObject->getComponents<SpriteRenderer>())
 				{
@@ -245,7 +258,7 @@ namespace Copium
 						Copium::Math::matrix3x3_rotdeg(rot, t1.rotation.z);
 						Copium::Math::Vec3 intermediate = (rot * t.position);
 
-						renderer.draw_quad(intermediate + t1.position, size, rotation+t1.rotation.z, sr);
+						renderer.draw_quad(intermediate + t1.position, size, rotation + t1.rotation.z, sr);
 					}
 					else
 					{
@@ -288,12 +301,11 @@ namespace Copium
 					Text* text = reinterpret_cast<Text*>(component);
 					text->render(camera);
 				}
-
 				for (Component* component : gameObject->getComponents<Animator>())
 				{
 					Animator* animator = reinterpret_cast<Animator*>(component);
 					Animation* anim = animator->GetCurrentAnimation();
-					
+
 					//if(anim)
 					//	PRINT("bloopbloppp");
 
@@ -331,18 +343,169 @@ namespace Copium
 					renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex, nid, anim->frameCount);
 
 				}
+
+				++count;
 			}
 
 			//PRINT("Num of Rendered GO: " << count);
 		}
+		renderer.end_batch();
+		renderer.flush();
 
 		// Bean : Testing Text
 		/*glm::vec3 position = { 0.f, -1.f, 0.f };
 		color = { 1.f, 1.f, 0.f, 1.f };
 		renderer.draw_text("Testing Arial", position, color, 0.1f, 0);*/
 
-		renderer.end_batch();
 
+
+		renderer.begin_batch();
+		if (scene != nullptr)
+		{
+			if (scene->get_state() == Scene::SceneState::play)
+				toggleAnim = true;
+			else
+				toggleAnim = false;
+
+			int count = 0;
+
+			for (Layer& layer : editorSys->getLayers()->SortLayers()->GetSortingLayers())
+			{
+				int layerID{ 0 };
+				int gameObjectCount{ 0 };
+				for (GameObject* gameObject : layer.gameObjects)
+				{
+					if (gameObject == nullptr)
+					{
+						//PRINT("null");
+						continue;
+
+					}
+
+					if (!gameObject->isActive())
+					{
+						//PRINT("game object is not active");
+						continue;
+
+					}
+
+					// If the object isnt within the frustum
+					if (!camera->withinFrustum(gameObject->transform.position, gameObject->transform.scale))
+						continue;
+
+					for (Component* component : gameObject->getComponents<SpriteRenderer>())
+					{
+						if (!component->Enabled())
+							continue;
+
+						Transform& t = gameObject->transform;
+						SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(component);
+						Sprite& sr = rc->get_sprite_renderer();
+						glm::vec2 size(t.scale.x, t.scale.y);
+						float rotation = t.rotation.z;
+
+						if (gameObject->transform.hasParent())
+						{
+							Transform& t1 = *gameObject->transform.parent;
+							Copium::Math::Matrix3x3 rot;
+							Copium::Math::matrix3x3_rotdeg(rot, t1.rotation.z);
+							Copium::Math::Vec3 intermediate = (rot * t.position);
+
+							renderer.draw_quad(intermediate + t1.position, size, rotation + t1.rotation.z, sr);
+						}
+						else
+						{
+							renderer.draw_quad(t.position, size, rotation, sr);
+						}
+
+					}
+					for (Component* component : gameObject->getComponents<ImageComponent>())
+					{
+						if (!component->Enabled())
+							continue;
+
+						Transform& t = gameObject->transform;
+						ImageComponent* rc = reinterpret_cast<ImageComponent*>(component);
+						Sprite& sr = rc->get_sprite_renderer();
+						glm::vec2 size(t.scale.x, t.scale.y);
+						float rotation = t.rotation.z;
+
+						if (gameObject->transform.hasParent())
+						{
+							Transform& t1 = *gameObject->transform.parent;
+							Copium::Math::Matrix3x3 rot;
+							Copium::Math::matrix3x3_rotdeg(rot, t1.rotation.z);
+							Copium::Math::Vec3 intermediate = (rot * t.position);
+
+							renderer.draw_quad(intermediate + t1.position, size, rotation + t1.rotation.z, sr);
+						}
+						else
+						{
+							renderer.draw_quad(t.position, size, rotation, sr);
+						}
+
+						//renderer.draw_quad({ rc->Offset(),t.position.z }, size, rotation, sr);
+					}
+					for (Component* component : gameObject->getComponents<Text>())
+					{
+						if (!component->Enabled())
+							continue;
+
+						Text* text = reinterpret_cast<Text*>(component);
+						text->render(camera);
+					}
+					for (Component* component : gameObject->getComponents<Animator>())
+					{
+						Animator* animator = reinterpret_cast<Animator*>(component);
+						Animation* anim = animator->GetCurrentAnimation();
+
+						//if(anim)
+						//	PRINT("bloopbloppp");
+
+						if (!anim)
+							continue;
+
+
+						unsigned int sid = anim->spriteSheet.spriteID - 1;
+						// The index of the texture must be less than the size of textures
+						if (sid != -1 && sid < assets->get_textures().size())
+						{
+							anim->spriteSheet.texture = assets->get_texture(sid);
+						}
+						else
+						{
+
+							anim->spriteSheet.spriteID = 0;
+							anim->spriteSheet.texture = nullptr;
+						}
+
+						if (!anim || !anim->spriteSheet.GetTexture())
+							continue;
+						//PRINT("bloopbloop");
+						Transform& t = gameObject->transform;
+						unsigned int textureID = anim->spriteSheet.GetTexture()->get_id();
+						glm::vec2 size(t.scale.x, t.scale.y);
+
+						GLuint nid = 0;
+						for (GLuint i = 0; i < assets->get_textures().size(); ++i)
+						{
+							if (assets->get_textures()[i].get_object_id() == anim->spriteSheet.texture->get_object_id())
+								nid = i + 1;
+						}
+						//renderer.draw_quad(t.position, size, t.rotation.z, nid);
+						renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex, nid, anim->frameCount);
+
+					}
+
+					count++;
+					gameObjectCount++;
+
+				}
+				//PRINT("Layer ID:" << layerID << " | No. of GameObjects:" << gameObjectCount);
+				++layerID;
+			}
+		}
+		renderer.end_batch();
 		renderer.flush();
 	}
 
