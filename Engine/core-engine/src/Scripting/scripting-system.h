@@ -36,27 +36,10 @@ extern "C"
 	typedef struct _MonoString MonoString;
 }
 
+#define MyScriptingSystem (*Copium::ScriptingSystem::Instance())
+
 namespace Copium
 {
-	using FieldFlag = uint8_t;
-	#define FieldFlagList	0b00000001
-
-	enum class FieldType
-	{
-		Float, Double,
-		Bool, Char, Short, Int, Long,
-		UShort, UInt, ULong, String,
-		Vector2, Vector3, GameObject, Component ,None
-	};
-
-	struct Field
-	{
-		FieldType type{};
-		std::string typeName;
-		MonoClassField* classField{nullptr};
-		FieldFlag flags{0};
-	};
-
 	static std::unordered_map<std::string, FieldType> fieldTypeMap =
 	{
 		{ "System.Single",				FieldType::Float		},
@@ -75,62 +58,6 @@ namespace Copium
 		{ "CopiumEngine.GameObject",	FieldType::GameObject	},
 	};
 
-	struct FieldData
-	{
-		/***************************************************************************/
-		/*!
-		\brief
-			Stores data of a given buffer to prevent out of scope destruction.
-			Aka assigns memory from the heap
-
-		\param _size
-			Size of buffer
-
-		\param _data
-			Data to store and copy from
-		*/
-		/**************************************************************************/
-		FieldData(size_t _size = 0, void* _data = nullptr)
-		{
-			size = _size;
-			if (size)
-				data = new char[size];
-			else
-				data = nullptr;
-			if (_data)
-				memcpy(data, _data, size);
-		}
-
-		/***************************************************************************/
-		/*!
-		\brief
-			Copy constructor
-
-		\param rhs
-			FieldData to store and copy from
-		*/
-		/**************************************************************************/
-		FieldData(const FieldData& rhs)
-		{
-			size = rhs.size;
-			data = new char[size];
-			memcpy(data, rhs.data, size);
-		}
-
-		/***************************************************************************/
-		/*!
-		\brief
-			Destructor that frees memory
-		*/
-		/**************************************************************************/
-		~FieldData()
-		{
-			if (data)
-				delete[] data;
-		}
-		char* data;
-		size_t size;
-	};
 
 	enum class CompilingState
 	{
@@ -155,7 +82,7 @@ namespace Copium
 		ScriptClass(const std::string& _name, MonoClass* _mClass);
 		MonoClass* mClass{};
 		std::unordered_map<std::string, MonoMethod*> mMethods;
-		std::unordered_map<std::string, Field> mFields;
+		std::unordered_map<std::string, MonoClassField*> mFields;
 
 	};
 
@@ -422,9 +349,41 @@ namespace Copium
 		/**************************************************************************/
 		bool scriptIsLoaded(const std::filesystem::path& filePath);
 
-		void CallbackSceneOpened(SceneOpenedEvent* pEvent);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Gets a field from a C# field using its name
+		\param name
+			Name of the field
+		\param buffer
+			Buffer to store the values, needs to be type casted
+		\return
+			False if operation failed, true if it was successful
+		*/
+		/*******************************************************************************/
+		void GetFieldValue(MonoObject* instance, MonoClassField* mClassFiend, Field& field, void* container);
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Sets a field from a C# field using its name
+		\param name
+			Name of the field
+		\param value
+			Value to write into C# memory space
+		\return
+			False if operation failed, true if it was successful
+		*/
+		/*******************************************************************************/
+		void SetFieldValue(MonoObject* instance, MonoClassField* mClassFiend, Field& field, const void* value);
+
+		void CallbackSceneOpened(SceneOpenedEvent* pEvent);
 		void CallbackReflectScript(ReflectScriptEvent* pEvent);
+		void CallbackInvokeScriptMethod(InvokeScriptMethodEvent* pEvent);
+		void CallbackScriptSetField(ScriptSetFieldEvent* pEvent);
+		void CallbackScriptGetField(ScriptGetFieldEvent* pEvent);
 
 
 		std::unordered_map<std::string, ScriptClass> scriptClassMap;

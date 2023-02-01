@@ -27,6 +27,74 @@ extern "C"
 	typedef struct _MonoObject MonoObject;
 }
 
+enum class FieldType
+{
+	Float, Double,
+	Bool, Char, Short, Int, Long,
+	UShort, UInt, ULong, String,
+	Vector2, Vector3, GameObject, Component, None
+};
+
+struct Field
+{
+	char* data;
+	size_t size;
+	FieldType fType{};
+	/***************************************************************************/
+	/*!
+	\brief
+		Stores data of a given buffer to prevent out of scope destruction.
+		Aka assigns memory from the heap
+
+	\param _size
+		Size of buffer
+
+	\param _data
+		Data to store and copy from
+	*/
+	/**************************************************************************/
+	Field(FieldType _fType,size_t _size = 0, void* _data = nullptr) :
+		fType{_fType}
+	{
+		size = _size;
+		if (size)
+			data = new char[size];
+		else
+			data = nullptr;
+		if (_data)
+			memcpy(data, _data, size);
+	}
+
+	/***************************************************************************/
+	/*!
+	\brief
+		Copy constructor
+
+	\param rhs
+		Field to store and copy from
+	*/
+	/**************************************************************************/
+	Field(const Field& rhs)
+	{
+		size = rhs.size;
+		data = new char[size];
+		fType = rhs.fType;
+		memcpy(data, rhs.data, size);
+	}
+
+	/***************************************************************************/
+	/*!
+	\brief
+		Destructor that frees memory
+	*/
+	/**************************************************************************/
+	~Field()
+	{
+		if (data)
+			delete[] data;
+	}
+};
+
 namespace Copium
 {
     class Script final : public Component, public IReceiver
@@ -200,7 +268,7 @@ namespace Copium
 		const Script* reference{ nullptr };
 		std::unordered_map<std::string, GameObject*> fieldGameObjReferences;
 		std::unordered_map<std::string, Component*> fieldComponentReferences;
-		std::unordered_map<std::string, FieldData> fieldDataReferences;
+		std::unordered_map<std::string, Field> fieldDataReferences;
 		bool isAddingGameObjectReference;
     };
 }

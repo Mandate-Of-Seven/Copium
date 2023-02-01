@@ -26,7 +26,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 namespace Copium
 {
 	char Script::buffer[BUFFER_SIZE];
-	const Copium::Field* field;
 
 	Script::Script(GameObject& _gameObj) :
 		mObject{ nullptr }, Component(_gameObj, ComponentType::Script), name{ DEFAULT_SCRIPT_NAME }, reference{nullptr}, isAddingGameObjectReference{false}
@@ -121,7 +120,7 @@ namespace Copium
 			return true;
 		}
 		mono_field_get_value(mObject, _field.classField, outBuffer);
-		return true;
+		return true;											  
 	}
 
 	bool Script::setFieldValue(const std::string& _name, const char* value)
@@ -475,7 +474,7 @@ namespace Copium
 
 		for (auto pair : scriptRhs->fieldDataReferences)
 		{
-			fieldDataReferences.insert({pair.first,FieldData(scriptRhs->fieldDataReferences[pair.first]) });
+			fieldDataReferences.insert({pair.first,Field(scriptRhs->fieldDataReferences[pair.first]) });
 		}
 		
 	}

@@ -139,20 +139,18 @@ namespace Copium
 				PRINT(mono_type_get_name(type));
 				if (fieldType != FieldType::None)
 				{
-					mFields[fieldName] = { fieldType, "", field, 0 };
+					mFields[fieldName] = field;
 				}
 				else
 				{
 					static std::string typeName;
 					typeName = mono_type_get_name(type);
-					FieldFlag flag = 0;
 					fieldType = FieldType::Component;
 					//C# List
 					if (typeName.starts_with("System.Collections.Generic.List<"))
 					{
 						typeName = typeName.substr(32);
 						typeName.pop_back();
-						flag |= FieldFlagList;
 					}
 
 					auto it = fieldTypeMap.find(typeName);
@@ -167,7 +165,7 @@ namespace Copium
 						offset = 0;
 					else
 						++offset;
-					mFields[fieldName] = { fieldType ,typeName.substr(offset),field, flag };
+					mFields[fieldName] = field;
 				}
 			}
 		}
@@ -246,6 +244,7 @@ namespace Copium
 		messageSystem.subscribe(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT, this);
 		MyEventSystem->subscribe(this,&ScriptingSystem::CallbackSceneOpened);
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackReflectScript);
+		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackInvokeScriptMethod);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_ENGINE_INITIALIZED, this);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
@@ -285,6 +284,7 @@ namespace Copium
 			return namePScriptClassPair->second;
 		}
 		MonoClass* mClass = mono_class_from_name(mAssemblyImage, "", _name.c_str());
+		COPIUM_ASSERT(!mClass, std::string("SCRIPT ") + _name + std::string(" COULD NOT BE LOADED"));
 		//TRY EXCEPT
 		if (mClass)
 		{
@@ -579,6 +579,45 @@ namespace Copium
 		}
 	}
 
+	void ScriptingSystem::GetFieldValue(MonoObject* instance, MonoClassField* mClassFiend ,Field& field, void* container)
+	{
+		if (field.fType == FieldType::String)
+		{
+			MonoString* mono_string = sS.createMonoString("");
+			mono_field_get_value(instance, mClassFiend, &mono_string);
+			char* str = mono_string_to_utf8(mono_string);
+			strcpy((char*)container, str);
+			return;
+		}
+		mono_field_get_value(instance, mClassFiend, container);
+		return;
+	}
+
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Sets a field from a C# field using its name
+	\param name
+		Name of the field
+	\param value
+		Value to write into C# memory space
+	\return
+		False if operation failed, true if it was successful
+	*/
+	/*******************************************************************************/
+	void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClassFiend, Field& field, const void* value)
+	{
+		if (field.fType == FieldType::String)
+		{
+			MonoString* mono_string = sS.createMonoString(reinterpret_cast<const char*>(value));
+			mono_field_set_value(instance, mClassFiend, mono_string);
+			return;
+		}
+		mono_field_set_value(instance, mClassFiend, (void*)value);
+		return;
+	}
+
 
 	void ScriptingSystem::CallbackSceneOpened(SceneOpenedEvent* pEvent)
 	{
@@ -606,23 +645,40 @@ namespace Copium
 		}
 		if (mComponents.find(pEvent->scriptID) == mComponents.end())
 		{
-			void* param = &pEvent->scriptID;
-			MonoMethod* reflectComponent = mono_class_get_method_from_name(klassScene, "ReflectComponent", 1);
-			MonoType* type_arg = mono_class_get_type(scriptClass.mClass);
-			MonoArray* type_args = mono_array_new(mAppDomain, mono_get_object_class(), 1);
-			MonoMethod* genericFunction = mono_method_make_generic(reflectComponent, 1, type_args);
-			mComponents.emplace(pEvent->gameObjectID, invoke(mCurrentScene, reflectComponent, &param));
+			void* params[3] = { instantiateClass(scriptClass.mClass) ,&pEvent->scriptID, &pEvent->gameObjectID };
+			MonoMethod* reflectComponent = mono_class_get_method_from_name(klassScene, "ReflectComponent", 3);
+			mComponents.emplace(pEvent->gameObjectID, invoke(mCurrentScene, reflectComponent, params));
 		}
-		MonoObject* result = mono_runtime_invoke(pScriptClass->mMethods["Create"], tmp, params, nullptr);
-		if (tmp == result)
-		{
-			mono_runtime_object_init(tmp);
-		}
-		//REMINDER ADD BACK CREATION OF SEPARATE OBJECT
+	}
 
-		mObject = result;
-		GameObjectID _id = gameObj.id;
-		void* param = &_id;
-		sS.invoke(mObject, pScriptClass->mMethods["OnCreate"], &param);
+	void ScriptingSystem::CallbackInvokeScriptMethod(InvokeScriptMethodEvent* pEvent)
+	{
+		MonoObject* mScript = mComponents[pEvent->script.id];
+		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
+		ScriptClass& scriptClass{ GetScriptClass(pEvent->script.name) };
+		MonoMethod* mMethod{ mono_class_get_method_from_name (scriptClass.mClass,pEvent->methodName.c_str(),pEvent->paramCount)};
+		COPIUM_ASSERT(!mMethod, std::string("MONO METHOD ") + pEvent->methodName + std::string(" IN SCRIPT ") + pEvent->script.name + std::string(" NOT FOUND"));
+		invoke(mScript,mMethod,pEvent->params);
+	}
+
+	void ScriptingSystem::CallbackScriptGetField(ScriptGetFieldEvent* pEvent)
+	{
+		MonoObject* mScript = mComponents[pEvent->script.id];
+		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
+		ScriptClass& scriptClass{ GetScriptClass(pEvent->script.name) };
+		//Reset fieldtype and buffer if the type was different
+		MonoClassField* mClassField{scriptClass.mFields[pEvent->fieldName]};
+		COPIUM_ASSERT(!mClassField, std::string("FIELD ") + pEvent->fieldName + "COULD NOT BE FOUND IN SCRIPT " + pEvent->script.name);
+		GetFieldValue(mScript,mClassField,pEvent->script.fieldDataReferences[pEvent->fieldName],pEvent->container);
+	}
+
+	void ScriptingSystem::CallbackScriptSetField(ScriptSetFieldEvent* pEvent)
+	{
+		MonoObject* mScript = mComponents[pEvent->script.id];
+		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
+		ScriptClass& scriptClass{ GetScriptClass(pEvent->script.name) };
+		MonoMethod* mMethod{ mono_class_get_method_from_name(scriptClass.mClass,pEvent->methodName.c_str(),pEvent->paramCount) };
+		COPIUM_ASSERT(!mMethod, std::string("MONO METHOD ") + pEvent->methodName + std::string(" IN SCRIPT ") + pEvent->script.name + std::string(" NOT FOUND"));
+		invoke(mScript, mMethod, pEvent->params);
 	}
 }

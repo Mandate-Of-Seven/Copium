@@ -27,6 +27,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <SceneManager/scene-manager.h>
 #include <GameObject/Components/script-component.h>
 #include <GameObject/Components/camera-component.h>
+#include <Events/events-system.h>
 namespace
 {
 	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
@@ -87,7 +88,7 @@ namespace Copium
 			Script* script = gameObj.getComponent<Script>();
 			if (script)
 			{
-				script->invoke(callbackName);
+				MyEventSystem->publish(new InvokeScriptMethodEvent(*script,callbackName,nullptr,0));
 				if (!gameObj.isActive())
 				{
 					hoveredBtn = nullptr;
