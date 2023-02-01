@@ -246,25 +246,44 @@ namespace Copium
 					if (gameObject->transform.hasParent())
 					{
 						Transform* tempObj = gameObject->transform.parent;
-						/*glm::vec3 updatedPos = t.position;
-						glm::vec3 updatedScale = t.scale;
+						glm::vec3 updatedPos = t.position.glmVec3;
+						glm::vec3 updatedScale = t.scale.glmVec3;
 						float updatedRot = t.rotation.z;
 
 						while (tempObj)
 						{
-							updatedPos += tempObj->position.glmVec3;
+							glm::vec3 tempPos = tempObj->position.glmVec3;
+							glm::mat4 translate = glm::translate(glm::mat4(1.f), tempPos);
+						
+							float rot = glm::radians(tempObj->rotation.z);
+							size.x = tempObj->scale.x;
+							size.y = tempObj->scale.y;
+							glm::mat4 rotate = {
+							glm::vec4(cos(rot), sin(rot), 0.f, 0.f),
+							glm::vec4(-sin(rot), cos(rot), 0.f, 0.f),
+							glm::vec4(0.f, 0.f, 1.f, 0.f),
+							glm::vec4(0.f, 0.f, 0.f, 1.f)
+							};
+
+							glm::vec3 size = tempObj->scale.glmVec3;
+							glm::mat4 scale = {
+								glm::vec4(size.x, 0.f, 0.f, 0.f),
+								glm::vec4(0.f, size.y, 0.f, 0.f),
+								glm::vec4(0.f, 0.f, 1.f, 0.f),
+								glm::vec4(0.f, 0.f, 0.f, 1.f)
+							};
+
+							glm::mat4 transform = translate * rotate * scale;
+
+							updatedPos = glm::vec3(transform * glm::vec4(updatedPos,1.f));
+
 							updatedScale *= tempObj->scale.glmVec3;
 							updatedRot += tempObj->rotation.z;
 
 							tempObj = tempObj->parent;
-						}*/
-						Transform& t1 = *gameObject->transform.parent;
-						Copium::Math::Matrix3x3 rot;
-						Copium::Math::matrix3x3_rotdeg(rot, t1.rotation.z);
-						Copium::Math::Vec3 intermediate = (rot * t.position);
+						}
 
-						//renderer.draw_quad(updatedPos, glm::vec2(updatedScale.x, updatedScale.y), updatedRot, sr);
-						renderer.draw_quad(t1.position + intermediate, size, rotation, sr);
+						renderer.draw_quad(updatedPos, glm::vec2(updatedScale.x, updatedScale.y), updatedRot, sr);
 					}
 					else
 					{

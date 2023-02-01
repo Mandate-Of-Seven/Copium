@@ -77,7 +77,7 @@ namespace Copium
 			pMessageSystem->subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
 			pMessageSystem->subscribe(MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW, this);
 
-			MySceneManager.load_scene(Paths::assetPath+"\\Scenes\\Demo.scene");
+			//MySceneManager.load_scene(Paths::assetPath+"\\Scenes\\Demo.scene");
 			
 		}
 
