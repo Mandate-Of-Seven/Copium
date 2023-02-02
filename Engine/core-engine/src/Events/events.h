@@ -20,8 +20,8 @@ namespace Copium
 	
 	struct ReflectComponentEvent : IEvent
 	{
-		ReflectComponentEvent(const Component& _component): component{_component}{}
-		const Component& component;
+		ReflectComponentEvent(Component& _component): component{_component}{}
+		Component& component;
 	};
 
 	struct ScriptInvokeMethodEvent : IEvent
@@ -64,5 +64,14 @@ namespace Copium
 		Script& script;
 		const char* fieldName;
 		T* reference;
+	};
+
+	struct ScriptGetMethodNamesEvent : public IEvent
+	{
+		ScriptGetMethodNamesEvent(Script& _script, const char**& _namesArray, size_t& _arraySize) :
+			script{ _script }, namesArray{ _namesArray }, arraySize{ _arraySize }{}
+		Script& script;
+		const char**& namesArray;
+		size_t& arraySize;
 	};
 }

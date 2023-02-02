@@ -19,15 +19,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Messaging/message-system.h"
 #include <limits>
 #include <Math/math-library.h>
-
-
-
-extern "C"
-{
-	typedef struct _MonoClass MonoClass;
-	typedef struct _MonoMethod MonoMethod;
-	typedef struct _MonoObject MonoObject;
-}
+#include <config.h>
 
 enum class FieldType
 {
@@ -41,9 +33,11 @@ namespace Copium
 {
 	struct Field
 	{
-		char* data;
-		size_t size;
+		Field() = default;
+		char* data{nullptr};
+		size_t size{0};
 		FieldType fType{};
+		std::string typeName;
 		/***************************************************************************/
 		/*!
 		\brief
@@ -253,8 +247,6 @@ namespace Copium
 		/**************************************************************************/
 		void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
-		MonoObject* mObject;
-
 		friend class ScriptingSystem;
 	private:
 		void instantiate();
@@ -264,7 +256,8 @@ namespace Copium
 		std::unordered_map<std::string, GameObject*> fieldGameObjReferences;
 		std::unordered_map<std::string, Component*> fieldComponentReferences;
 		std::unordered_map<std::string, Field> fieldDataReferences;
-		bool isAddingGameObjectReference;
+		static std::pair<const std::string,Field>* editedField;
+		static bool isAddingReference;
     };
 }
 

@@ -25,22 +25,20 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 namespace Copium
 {
 	char Script::buffer[BUFFER_SIZE];
+	std::pair<const std::string, Field>* Script::editedField;
+	bool Script::isAddingReference{nullptr};
 
 	Script::Script(GameObject& _gameObj) :
-		mObject{ nullptr }, Component(_gameObj, ComponentType::Script), name{ DEFAULT_SCRIPT_NAME }, reference{nullptr}, isAddingGameObjectReference{false}
+		Component(_gameObj, ComponentType::Script), name{ "" }, reference{nullptr}
 	{
 		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
 		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
-		PRINT(id << " created");
-		instantiate();
 	}
 
 	Script::~Script()
 	{
-		PRINT(id << " deleted");
 		MessageSystem::Instance()->unsubscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
 		MessageSystem::Instance()->unsubscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
-		
 	}
 
 	void Script::instantiate()
@@ -53,7 +51,11 @@ namespace Copium
 		switch (mType)
 		{
 		case MESSAGE_TYPE::MT_SCRIPTING_UPDATED:
-			instantiate();
+		{
+
+
+			//CreateFields
+		}
 		case MESSAGE_TYPE::MT_SCENE_DESERIALIZED:
 			for (auto pair : fieldComponentReferences)
 			{
@@ -66,6 +68,7 @@ namespace Copium
 			}
 			break;
 
+			//CreateFields
 		}
 
 	}
@@ -96,6 +99,8 @@ namespace Copium
 	{
 		static ImVec4 backupColor;
 
+		int counter{ 0 };
+
 		ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
 			| ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp;
 		if (ImGui::BeginTable(name.c_str(), 2, windowFlags))
@@ -104,19 +109,19 @@ namespace Copium
 			// Extern source file
 			ImGui::TableSetupColumn("Text", 0, 0.4f);
 			ImGui::TableSetupColumn("Input", 0, 0.6f);
-			const auto& fieldMap = pScriptClass->mFields;
-			auto it = fieldMap.begin();
-			int counter{ 0 };
-			while (it != fieldMap.end())
+			auto it = fieldDataReferences.begin();
+			while (it != fieldDataReferences.end())
 			{
+				const std::string& fieldName{ it->first };
+				Field& field{ it->second };
+
 				ImGui::TableNextRow();
 				ImGui::TableNextColumn();
-				const std::string& _name{ it->first };
-				ImGui::Text(_name.c_str());
+				ImGui::Text(fieldName.c_str());
 				ImGui::TableNextColumn();
 				ImGui::PushItemWidth(-FLT_MIN);
 
-				if (it->second.type == FieldType::Component)
+				if (field.fType == FieldType::Component)
 				{
 					auto componentRef = fieldComponentReferences.find(it->first);
 					if (componentRef == fieldComponentReferences.end())
@@ -134,56 +139,10 @@ namespace Copium
 					if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 					{
 						std::cout << "double clicked on game object reference field\n";
-						isAddingGameObjectReference = true;
-						field = &it->second;
+						isAddingReference = true;
+						editedField = &(*it);
 
 					}
-					if (isAddingGameObjectReference && field == &it->second)
-					{
-						// Open pop-up window
-						ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
-						ImGui::SetNextWindowPos(ImVec2(0.f, 0.f), ImGuiCond_FirstUseEver);
-						ImGui::PushID(counter++);
-						ImGui::Begin("Add Component Reference", &isAddingGameObjectReference);
-						ImVec2 buttonSize = ImGui::GetWindowSize();
-						buttonSize.y *= (float)0.1;
-						static ImGuiTextFilter filter;
-						ImGui::PushItemWidth(-1);
-						filter.Draw("##GameObjectName");
-						ImGui::PopItemWidth();
-						// Iterate through game object list
-						Scene* scene = Copium::SceneManager::Instance()->get_current_scene();
-						for (Copium::GameObject* go : scene->gameObjects)
-						{
-							Component* pComponent = {};
-							for (Component* component : go->components)
-							{
-								if (component->Name() == mono_type_get_name(mono_field_get_type(field->classField)))
-								{
-									pComponent = component;
-									break;
-								}
-								else if ("CopiumEngine." + component->Name() == mono_type_get_name(mono_field_get_type(field->classField)))
-								{
-									pComponent = component;
-									break;
-								}
-							}
-							if (!pComponent)
-								continue;
-							if (filter.PassFilter(go->get_name().c_str()) && ImGui::Button(go->get_name().c_str(), buttonSize))
-							{
-								isAddingGameObjectReference = false;
-								MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*this, _name.c_str(), pComponent));
-								fieldComponentReferences[_name] = pComponent;
-								field = nullptr;
-								break;
-							}
-						}
-						ImGui::End();
-						ImGui::PopID();
-					}
-
 
 					if (ImGui::BeginDragDropTarget())
 					{
@@ -192,15 +151,15 @@ namespace Copium
 						if (payload)
 						{
 							Component* pComponent = (Component*)(*reinterpret_cast<void**>(payload->Data));
-							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*this, _name.c_str(), pComponent));
-							fieldComponentReferences[_name] = pComponent;
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*this, fieldName.c_str(), pComponent));
+							fieldComponentReferences[fieldName] = pComponent;
 						}
 						ImGui::EndDragDropTarget();
 					}
 					++it;
 					continue;
 				}
-				else if (it->second.type == FieldType::GameObject)
+				else if (field.fType == FieldType::GameObject)
 				{
 					ImGui::PushID(counter++);
 					auto gameObjRef = fieldGameObjReferences.find(it->first);
@@ -220,38 +179,10 @@ namespace Copium
 					if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 					{
 						std::cout << "double clicked on game object reference field\n";
-						isAddingGameObjectReference = true;
-						field = &it->second;
+						isAddingReference = true;
+						editedField = &(*it);
+					}
 
-					}
-					if (isAddingGameObjectReference && field == &it->second)
-					{
-						// Open pop-up window
-						ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
-						ImGui::SetNextWindowPos(ImVec2(0.f, 0.f), ImGuiCond_FirstUseEver);
-						ImGui::PushID(counter++);
-						ImGui::Begin("Add GameObject Reference", &isAddingGameObjectReference);
-						ImVec2 buttonSize = ImGui::GetWindowSize();
-						buttonSize.y *= (float)0.1;
-						static ImGuiTextFilter filter;
-						ImGui::PushItemWidth(-1);
-						filter.Draw("##GameObjectName");
-						ImGui::PopItemWidth();
-						// Iterate through game object list
-						Scene* scene = Copium::SceneManager::Instance()->get_current_scene();
-						for (Copium::GameObject* go : scene->gameObjects)
-						{
-							if (filter.PassFilter(go->get_name().c_str()) && ImGui::Button(go->get_name().c_str(), buttonSize))
-							{
-								isAddingGameObjectReference = false;
-								MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*this, _name.c_str(), go));
-								fieldGameObjReferences[_name] = go;
-								break;
-							}
-						}
-						ImGui::End();
-						ImGui::PopID();
-					}
 					ImGui::PopID();
 
 
@@ -262,8 +193,8 @@ namespace Copium
 						if (payload)
 						{
 							GameObject* pGameObj = (GameObject*)(*reinterpret_cast<void**>(payload->Data));
-							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*this, _name.c_str(), pGameObj));
-							fieldGameObjReferences[_name] = pGameObj;
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*this, fieldName.c_str(), pGameObj));
+							fieldGameObjReferences[fieldName] = pGameObj;
 						}
 						ImGui::EndDragDropTarget();
 					}
@@ -271,29 +202,29 @@ namespace Copium
 					continue;
 				}
 
-				GetFieldValue(_name, buffer);
-				switch (it->second.type)
+				GetFieldValue(fieldName, buffer);
+				switch (field.fType)
 				{
 				case FieldType::Float:
-					ImGui::InputFloat(_name.c_str(), reinterpret_cast<float*>(buffer));
+					ImGui::InputFloat(fieldName.c_str(), reinterpret_cast<float*>(buffer));
 					break;
 				case FieldType::Double:
-					ImGui::InputDouble(_name.c_str(), reinterpret_cast<double*>(buffer));
+					ImGui::InputDouble(fieldName.c_str(), reinterpret_cast<double*>(buffer));
 					break;
 				case FieldType::Bool:
-					ImGui::Checkbox(_name.c_str(), reinterpret_cast<bool*>(buffer));
+					ImGui::Checkbox(fieldName.c_str(), reinterpret_cast<bool*>(buffer));
 					break;
 				case FieldType::Char:
-					ImGui::InputInt(_name.c_str(), reinterpret_cast<int*>(buffer));
+					ImGui::InputInt(fieldName.c_str(), reinterpret_cast<int*>(buffer));
 					break;
 				case FieldType::Short:
-					ImGui::InputInt(_name.c_str(), reinterpret_cast<int*>(buffer));
+					ImGui::InputInt(fieldName.c_str(), reinterpret_cast<int*>(buffer));
 					break;
 				case FieldType::Int:
-					ImGui::InputInt(_name.c_str(), reinterpret_cast<int*>(buffer));
+					ImGui::InputInt(fieldName.c_str(), reinterpret_cast<int*>(buffer));
 					break;
 				case FieldType::Long:
-					ImGui::InputInt2(_name.c_str(), reinterpret_cast<int*>(buffer));
+					ImGui::InputInt2(fieldName.c_str(), reinterpret_cast<int*>(buffer));
 					break;
 				case FieldType::UShort:
 					break;
@@ -304,12 +235,12 @@ namespace Copium
 				case FieldType::String:
 				{
 					PRINT(buffer);
-					ImGui::InputTextMultiline(_name.c_str(), buffer, BUFFER_SIZE);
+					ImGui::InputTextMultiline(fieldName.c_str(), buffer, BUFFER_SIZE);
 					break;
 				}
 				case FieldType::Vector2:
 				{
-					if (ImGui::BeginTable(_name.c_str(), 3, windowFlags))
+					if (ImGui::BeginTable(fieldName.c_str(), 3, windowFlags))
 					{
 						float* fBuffer = reinterpret_cast<float*>(buffer);
 						ImGui::TableNextColumn();
@@ -329,7 +260,7 @@ namespace Copium
 				}
 				case FieldType::Vector3:
 				{
-					if (ImGui::BeginTable(_name.c_str(), 3, windowFlags))
+					if (ImGui::BeginTable(fieldName.c_str(), 3, windowFlags))
 					{
 						float* fBuffer = reinterpret_cast<float*>(buffer);
 						ImGui::TableNextColumn();
@@ -354,12 +285,92 @@ namespace Copium
 					break;
 				}
 			}
-				SetFieldValue(_name, buffer);
+				SetFieldValue(fieldName, buffer);
 				++it;
 			}
 
 			ImGui::Unindent();
 			ImGui::EndTable();
+
+		}
+
+
+		if (editedField && isAddingReference)
+		{
+			// Open pop-up window
+			ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+			ImGui::SetNextWindowPos(ImVec2(0.f, 0.f), ImGuiCond_FirstUseEver);
+			ImGui::PushID(counter++);
+			ImGui::Begin("Add Reference", &isAddingReference);
+			ImVec2 buttonSize = ImGui::GetWindowSize();
+			buttonSize.y *= (float)0.1;
+			static ImGuiTextFilter filter;
+			ImGui::PushItemWidth(-1);
+			filter.Draw("##References");
+			ImGui::PopItemWidth();
+			Scene* scene = Copium::SceneManager::Instance()->get_current_scene();
+
+			const std::string& fieldName{ editedField->first };
+			Field& field{ editedField->second };
+
+			switch (field.fType)
+			{
+			case FieldType::Component:
+			{
+				// Iterate through game object list
+				for (Copium::GameObject* go : scene->gameObjects)
+				{
+					Component* pComponent = {};
+					for (Component* component : go->components)
+					{
+						//
+						if (component->Name() == fieldName)
+						{
+							pComponent = component;
+							break;
+						}
+						else if ("CopiumEngine." + component->Name() == fieldName)
+						{
+							pComponent = component;
+							break;
+						}
+					}
+					if (!pComponent)
+						continue;
+					if (filter.PassFilter(go->get_name().c_str()) && ImGui::Button(go->get_name().c_str(), buttonSize))
+					{
+						isAddingReference = false;
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*this, fieldName.c_str(), pComponent));
+
+						//Reset Panel
+						fieldComponentReferences[fieldName] = pComponent;
+						editedField = nullptr;
+						break;
+					}
+				}
+				break;
+			}
+			case FieldType::GameObject:
+			{
+				// Iterate through game object list
+				for (Copium::GameObject* go : scene->gameObjects)
+				{
+					if (filter.PassFilter(go->get_name().c_str()) && ImGui::Button(go->get_name().c_str(), buttonSize))
+					{
+						isAddingReference = false;
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*this, fieldName.c_str(), go));
+
+						//Reset Panel
+						fieldGameObjReferences[fieldName] = go;
+						editedField = nullptr;
+						break;
+					}
+				}
+				break;
+			}
+			}
+			ImGui::End();
+			ImGui::PopID();
 		}
 	}
 
@@ -367,8 +378,7 @@ namespace Copium
 	{
 		//mono_field_get_value(mObject, pScriptClass->mFields["gameObj"].classField, buffer);
 		Script* component = new Script(_gameObj);
-		component->name = name;
-		component->mObject = mObject;
+		component->Name(name);
 		return component;
 	}
 
@@ -542,9 +552,8 @@ namespace Copium
 		rjName.SetString(name.c_str(), rapidjson::SizeType(name.length()), _doc.GetAllocator());
 		_value.AddMember("Name", rjName, _doc.GetAllocator());
 
-		const auto& fieldMap = fieldDataReferences;
-		auto it = fieldMap.begin();
-		while (it != fieldMap.end())
+		auto it = fieldDataReferences.begin();
+		while (it != fieldDataReferences.end())
 		{
 			const std::string& fieldName{ it->first };
 			GetFieldValue(fieldName, buffer);

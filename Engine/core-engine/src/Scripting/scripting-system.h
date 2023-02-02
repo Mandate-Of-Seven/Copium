@@ -15,13 +15,13 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #ifndef SCRIPTING_SYSTEM_H
 #define SCRIPTING_SYSTEM_H
-#pragma once
 
 #include "CopiumCore\system-interface.h"
 #include "Messaging\message-system.h"
 #include "Files\file-system.h"
 #include <Scripting/scriptable-object.h>
 #include <Events/events.h>
+#include <GameObject/game-object.h>
 
 #include <string>
 #include <unordered_map>
@@ -365,15 +365,13 @@ namespace Copium
 		void GetFieldValue(MonoObject* instance, MonoClassField* mClassFiend,  Field& field, void* container);
 
 		template<typename T>
-		MonoObject* CreateReference(T* object) { static_assert(true) };
+		MonoObject* CreateReference(T* object) { static_assert(true); };
 
 
 		template<>
-		MonoObject* CreateReference<GameObject>(GameObject* object) {};
-
-
+		MonoObject* CreateReference<GameObject>(GameObject* object);
 		template<>
-		MonoObject* CreateReference<Component>(Component* object) {};
+		MonoObject* CreateReference<Component>(Component* object);
 
 		/*******************************************************************************
 		/*!
@@ -397,9 +395,10 @@ namespace Copium
 		void CallbackScriptGetField(ScriptGetFieldEvent* pEvent);
 		template<typename T>
 		void CallbackScriptSetFieldReference(ScriptSetFieldReferenceEvent<T>* pEvent);
+		void CallbackScriptGetMethodNames(ScriptGetMethodNamesEvent* pEvent);
 
 		MonoObject* ReflectGameObject(GameObjectID id);
-		MonoObject* ReflectComponent(const Component& component);
+		MonoObject* ReflectComponent(Component& component);
 
 
 		std::unordered_map<std::string, ScriptClass> scriptClassMap;
@@ -424,24 +423,6 @@ namespace Copium
 		MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };
 		COPIUM_ASSERT(!mClassField, std::string("FIELD ") + pEvent->fieldName + "COULD NOT BE FOUND IN SCRIPT " + pEvent->script.name);
 		SetFieldValue(mScript, mClassField, pEvent->script.fieldDataReferences[pEvent->fieldName], CreateReference(pEvent->reference));
-	}
-
-	template<>
-	MonoObject* ScriptingSystem::CreateReference<GameObject>(GameObject* object)
-	{
-		if (!object)
-			return nullptr;
-		return ReflectGameObject(object->id);
-	}
-
-	template<>
-	MonoObject* ScriptingSystem::CreateReference<Component>(Component* object)
-	{
-		if (!object)
-			return nullptr;
-		ScriptClass& scriptClass = GetScriptClass(object->Name());
-		ReflectGameObject(object->gameObj.id);
-		return ReflectComponent(*object);
 	}
 }
 #endif // !SCRIPTING_SYSTEM_H

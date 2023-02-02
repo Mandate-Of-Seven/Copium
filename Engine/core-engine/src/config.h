@@ -10,7 +10,7 @@ template <typename... Ts>
 struct TemplatePack 
 {
 	template<typename T>
-	constexpr bool contains()
+	static constexpr bool contains()
 	{return std::disjunction_v<std::is_same<T, Ts>...>;}
 };
 

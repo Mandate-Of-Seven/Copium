@@ -243,15 +243,17 @@ namespace Copium
 				ImGui::TableNextColumn();
 				ImGui::Text("On Click Callback: ");
 				ImGui::TableNextColumn();
-				const std::vector<std::string>& functionNames = script->getFunctionNames();
+				const char** namesArr{};
+				size_t arrSize;
+				MyEventSystem->publish(new ScriptGetMethodNamesEvent(*script, namesArr, arrSize));
 				ImGui::PushItemWidth(-1);
 				if (ImGui::BeginCombo("##functions", callbackName.c_str())) // The second parameter is the label previewed before opening the combo.
 				{
-					for (const std::string& str : functionNames)
+					for (size_t i = 0; i < arrSize; ++i)
 					{
-						bool is_selected = (callbackName.c_str() == str.c_str()); // You can store your selection however you want, outside or inside your objects
-						if (ImGui::Selectable(str.c_str(), is_selected))
-							callbackName = str;
+						bool is_selected = (callbackName.c_str() == namesArr[i]); // You can store your selection however you want, outside or inside your objects
+						if (ImGui::Selectable(namesArr[i], is_selected))
+							callbackName = namesArr[i];
 							if (is_selected)
 								ImGui::SetItemDefaultFocus();   // You may set the initial focus when opening the combo (scrolling + for keyboard navigation support)
 					}
