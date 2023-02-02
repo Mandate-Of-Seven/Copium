@@ -26,6 +26,8 @@ namespace Copium
 
 	SortingGroup::SortingGroup(GameObject& _gameObj) :Component(_gameObj, ComponentType::SortingGroup), sortingLayer{0}, orderInLayer{0}
 	{
+        PRINT("Added to default layer");
+        editor->getLayers()->SortLayers()->AddGameObject(0, _gameObj);
 	}
 
 	void SortingGroup::inspector_view()
@@ -59,12 +61,27 @@ namespace Copium
             SortingLayers& editorSortingLayer = *editor->getLayers()->SortLayers();
             std::vector<Layer>& sortingLayers = editorSortingLayer.GetSortingLayers();
 
-            const char* previewItem = sortingLayers[sortingLayer].name.c_str();
+
+            const char* previewItem{nullptr};
+            for (Layer& lay : sortingLayers)
+            {
+                if (lay.layerID == sortingLayer)
+                {
+                    //PRINT("Layer Name: " << lay.name);
+                    previewItem = lay.name.c_str();
+                    break;
+                }
+            }
+
+
+            if (!previewItem)
+                previewItem = "NULL";
+
             if (ImGui::BeginCombo("##LayerSelection", previewItem))
             {
-                for (int i = 0; i < editorSortingLayer.GetLayerCount(); i++)
+                for (int i = 0; i < editorSortingLayer.GetSortingLayers().size(); i++)
                 {
-                    const bool isSelected = (sortingLayer == i);
+                    const bool isSelected = (sortingLayer == editorSortingLayer.GetSortingLayers()[i].layerID);
 
                     ImGuiSelectableFlags flags = ImGuiSelectableFlags_AllowItemOverlap;
                     char* name = sortingLayers[i].name.data();
@@ -72,7 +89,58 @@ namespace Copium
                     std::string label = "##" + std::to_string(id);
                     if (ImGui::Selectable(label.c_str(), isSelected))
                     {
-                        sortingLayer = i;
+                        int id = editorSortingLayer.GetSortingLayers()[i].layerID;
+                        if (id != sortingLayer)
+                        {
+                            sortingLayer = id;
+                            editor->getLayers()->SortLayers()->RemoveGameObject(sortingLayer, gameObj);
+                            editor->getLayers()->SortLayers()->AddGameObject(editorSortingLayer.GetSortingLayers()[i].layerID, gameObj);
+
+                            // Michael Buble sort here
+                            Layer* layer = &editorSortingLayer.GetSortingLayers()[i];
+                            bool swapped{ false };
+                            for (size_t i{ 0 }; i < layer->gameObjects.size() - 1; ++i)
+                            {
+                                for (size_t j{ 0 }; j < layer->gameObjects.size() - 1 - i; ++j)
+                                {
+                                    SortingGroup* sg1{ nullptr }, * sg2{ nullptr };
+
+                                    if (!layer->gameObjects[j] && layer->gameObjects[j + 1])
+                                    {
+                                        std::swap(layer->gameObjects[j], layer->gameObjects[j + 1]);
+                                        swapped = true;
+                                        continue;
+                                    }
+
+                                    if (layer->gameObjects[j] && layer->gameObjects[j + 1])
+                                    {
+                                        Component* co1 = layer->gameObjects[j]->getComponent<SortingGroup>();
+                                        Component* co2 = layer->gameObjects[j + 1]->getComponent<SortingGroup>();
+
+                                        if (co1 && co2)
+                                        {
+                                            sg1 = reinterpret_cast<SortingGroup*>(co1);
+                                            sg2 = reinterpret_cast<SortingGroup*>(co2);
+
+                                            if (sg1->GetOrderInLayer() > sg2->GetOrderInLayer())
+                                            {
+                                                std::swap(layer->gameObjects[j], layer->gameObjects[j + 1]);
+                                                swapped = true;
+                                            }
+                                        }
+                                    }
+
+                                }
+
+                                if (!swapped)
+                                    break;
+
+
+                            }
+                        }
+
+
+
                     }
                     ImGui::SameLine();
                     ImGui::Text(sortingLayers[i].name.c_str());
@@ -89,7 +157,66 @@ namespace Copium
             ImGui::AlignTextToFramePadding();
             ImGui::Text("Order In Layer");
             ImGui::TableNextColumn();
-            ImGui::DragInt("", &orderInLayer, 1.f, 0, 100);
+            if (ImGui::DragInt("", &orderInLayer, 1.f, 0, 100))
+            {
+                PRINT("changing order in layer");
+                // Sort the layer based on all order ids
+                // Michael Buble sort here
+                Layer* layer{nullptr};
+                for (Layer& lay : sortingLayers)
+                {
+                    if (lay.layerID == sortingLayer)
+                    {
+                        //PRINT("Layer Name: " << lay.name);
+                        layer = &lay;
+                        break;
+                    }
+                }
+                if (layer)
+                {
+                    bool swapped{ false };
+                    for (size_t i{ 0 }; i < layer->gameObjects.size() - 1; ++i)
+                    {
+                        for (size_t j{ 0 }; j < layer->gameObjects.size() - 1 - i; ++j)
+                        {
+                            SortingGroup* sg1{ nullptr }, * sg2{ nullptr };
+
+                            if (!layer->gameObjects[j] && layer->gameObjects[j + 1])
+                            {
+                                std::swap(layer->gameObjects[j], layer->gameObjects[j + 1]);
+                                swapped = true;
+                                continue;
+                            }
+
+                            if (layer->gameObjects[j] && layer->gameObjects[j + 1])
+                            {
+                                Component* co1 = layer->gameObjects[j]->getComponent<SortingGroup>();
+                                Component* co2 = layer->gameObjects[j + 1]->getComponent<SortingGroup>();
+
+                                if (co1 && co2)
+                                {
+                                    sg1 = reinterpret_cast<SortingGroup*>(co1);
+                                    sg2 = reinterpret_cast<SortingGroup*>(co2);
+
+                                    if (sg1->GetOrderInLayer() > sg2->GetOrderInLayer())
+                                    {
+                                        std::swap(layer->gameObjects[j], layer->gameObjects[j + 1]);
+                                        swapped = true;
+                                    }
+                                }
+                            }
+
+                        }
+
+                        if (!swapped)
+                        {
+                            PRINT("No swapping detected, breaking out of loop!");
+                            break;
+
+                        }
+                    }
+                }
+            }
 
             ImGui::PopStyleVar();
             ImGui::PopStyleVar();

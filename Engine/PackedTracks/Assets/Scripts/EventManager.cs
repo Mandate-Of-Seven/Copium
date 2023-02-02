@@ -38,13 +38,12 @@ public class EventManager: CopiumScript
         option01_btn = Option_01.GetComponent<Button>();
         option02_btn = Option_02.GetComponent<Button>();
         next_btn = Next_Event.GetComponent<Button>();
- /*       Event_01 = false;
-        Event_02 = false;
-        Event_03 = false;
-        Event_04 = false;*/
     }
 	void Update()
     {
+        //option01_btn = Option_01.GetComponent<Button>();
+        //option02_btn = Option_02.GetComponent<Button>();
+        //next_btn = Next_Event.GetComponent<Button>();
         if (next_btn.state == ButtonState.OnClick && Next_Event.activeSelf)
         {
             EventSequence++;

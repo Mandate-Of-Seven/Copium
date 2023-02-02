@@ -20,7 +20,7 @@ namespace Copium
 {
 	void EditorLayers::init()
 	{
-
+        
 	}
 
 	void EditorLayers::update()
@@ -53,14 +53,14 @@ namespace Copium
 
             ImGui::Indent();
 
-            for (int i = 0; i < sortingLayers.GetLayerCount(); i++)
+            for (int i = 0; i < sortingLayers.GetSortingLayers().size(); i++)
             {
+
                 ImGuiSelectableFlags flags = ImGuiSelectableFlags_AllowItemOverlap;
                 char* name = sortingLayers.GetSortingLayers()[i].name.data();
                 int id = sortingLayers.GetSortingLayers()[i].layerID + 1;
                 std::string label = "##" + std::to_string(id);
                 ImGui::Selectable(label.c_str(), false, flags);
-
                 if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
                 {
                     int next = i + (ImGui::GetMouseDragDelta(0).y < 0.f ? -1 : 1);

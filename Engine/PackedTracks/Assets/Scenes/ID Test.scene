@@ -2,6 +2,12 @@
     "Name": "NewScene",
     "Unused GIDs": [],
     "Unused CIDs": [],
+    "Layers": [
+        {
+            "Name": "Default",
+            "ID": 0
+        }
+    ],
     "GameObjects": [
         {
             "ID": 1,
@@ -12,8 +18,8 @@
                     "ID": 1,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
+                        "X": -2.7642924785614014,
+                        "Y": 0.33868128061294556,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -30,12 +36,101 @@
                 {
                     "ID": 2,
                     "Type": "SpriteRenderer",
-                    "Sprite ID": 11767159736060374370,
-                    "Sprite Name": "..\\PackedTracks\\Assets\\Textures\\Train_Placeholder_01.png",
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
                         "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 7,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "New Text",
+                    "Font Size": 1.0,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 2,
+            "Name": "New GameObject",
+            "Components": [
+                {
+                    "PID": 1,
+                    "ID": 3,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -3.3180220127105713,
+                        "Y": 1.7300184965133667,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 4,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 0.0,
+                        "Z": 0.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 3,
+            "Name": "New GameObject",
+            "Components": [
+                {
+                    "PID": 2,
+                    "ID": 5,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 2.3468031883239746,
+                        "Y": 0.94474196434021,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 6,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
+                    "Color": {
+                        "X": 0.8199117183685303,
+                        "Y": 1.0,
+                        "Z": 0.0,
                         "W": 1.0
                     }
                 }

@@ -55,6 +55,7 @@ namespace Copium
 			if (go->get_name().find("New GameObject") != std::string::npos)
 				++count;
 		}
+		PRINT("Number of GameObjects with same name:" << count);
 
 		GameObject* tmp = new GameObject(currScene->assignGameObjID());
 
@@ -71,7 +72,6 @@ namespace Copium
 
 		return tmp;
 	}
-
 	GameObject* GameObjectFactory::instantiate(GameObject& _src)
 	{
 		Scene* currScene = sceneManager.get_current_scene();
@@ -86,9 +86,11 @@ namespace Copium
 		unsigned count{ 0 };
 		for (GameObject* g : currScene->gameObjects)
 		{
-			if (g->get_name().find("New GameObject") != std::string::npos)
+			if (g->get_name().find(_src.get_name()) != std::string::npos)
 				++count;
 		}
+		PRINT("Number of GameObjects with same name:" << count);
+
 		if(count)
 			go->set_name(go->get_name() + '(' + std::to_string(count) + ')');
 
