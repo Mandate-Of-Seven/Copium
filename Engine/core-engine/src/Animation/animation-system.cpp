@@ -2,6 +2,8 @@
 \file			animation-system.cpp
 \project
 \author			Sean Ngo
+\co-authors		Matthew Lau
+				Shawn Tanary
 
 \par			Course: GAM200
 \par			Section:
@@ -12,10 +14,11 @@
 	the spritesheets in the engine, where the user has to create the animation in the
 	animator in the editor.
 
+	The definitions of functions from the Animator Component are here as well.
+
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
-
 #include "Animation/animation-system.h"
 #include "Files/assets-system.h"
 #include "SceneManager/scene-manager.h"
@@ -37,7 +40,6 @@ namespace Copium
 	{
 
 	}
-
 	void Animator::inspector_view()
 	{
 		std::string toggleAnimation = "Play";
@@ -335,7 +337,6 @@ namespace Copium
 	}
 	void Animator::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
-		PRINT("Animator Serialization Start\n");
 		Component::serialize(_value, _doc);
 		rapidjson::Value type;
 		std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
@@ -363,14 +364,10 @@ namespace Copium
 			anims.PushBack(anim, _doc.GetAllocator());
 		}
 		_value.AddMember("Animations", anims, _doc.GetAllocator());
-
-		PRINT("Animator Serialization End\n");
-
 	}
 
 	void AnimationSystem::init()
 	{
-		PRINT("anim sys init");
 		systemFlags |= FLAG_RUN_ON_PLAY | FLAG_RUN_ON_EDITOR;
 	}
 	void AnimationSystem::update()
@@ -378,10 +375,6 @@ namespace Copium
 
 		if (!sm->get_current_scene())
 			return;
-
-		//PRINT("Animation system update");
-		//if(sm->GetSceneState() == Copium::Scene::SceneState::play)
-
 
 		for (Copium::GameObject* go : sm->get_current_scene()->gameObjects)
 		{
@@ -406,13 +399,6 @@ namespace Copium
 	}
 	void AnimationSystem::exit()
 	{
-		for (Animator* anim : animators)
-		{
-			if (anim->get_animation_vector().empty())
-				continue;
-
-
-
-		}
+	
 	}
 }

@@ -88,7 +88,7 @@ namespace Copium
 				{
 					if (Copium::SceneManager::Instance()->get_selected_gameobject())
 					{
-						std::cout << "Delete\n";
+						//std::cout << "Delete\n";
 						Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::GameObjectCommand(MySceneManager.get_selected_gameobject_sptr(), false);
 						Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
 						MyGOF.destroy(MySceneManager.get_selected_gameobject());
@@ -363,8 +363,7 @@ namespace Copium
 			ImGui::EndDragDropSource();
 
 			//std::cout << "ID of selected Game Object: " << _selected << std::endl;
-		}
-		if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
+		}else if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 		{
 			PRINT("selected");
 			std::cout << _go.get_name() << " is selected\n";
