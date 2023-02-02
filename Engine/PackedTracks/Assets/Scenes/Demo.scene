@@ -55,7 +55,7 @@
                     "Alias": "BGM_Train"
                 },
                 {
-                    "ID": 79,
+                    "ID": 82,
                     "Type": "Script",
                     "Name": "AudioManager",
                     "state": 1,
@@ -1469,7 +1469,7 @@
                     "Name": "EventManager",
                     "EventSequence": 0,
                     "DaySequence": 1,
-                    "LuckSequence": 0,
+                    "LuckSequence": 1,
                     "Option_01": 15,
                     "Option_02": 16,
                     "Next_Event": 26,

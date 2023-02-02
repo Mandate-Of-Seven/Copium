@@ -3,8 +3,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-using GameObjectID = size_t;
-using ComponentID = size_t;
+using GameObjectID = uint64_t;
+using ComponentID = uint64_t;
 
 template <typename... Ts>
 struct TemplatePack 

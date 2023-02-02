@@ -64,6 +64,8 @@ namespace Copium {
 		{
 			for (Component* pComponent : pGameObj->components)
 			{	
+				if (!pComponent)
+					continue;
 				if (pComponent->id == _ID)
 				{
 					return pComponent;
@@ -314,6 +316,7 @@ namespace Copium {
 			return false;
 		}
 
+		MyEventSystem->publish(new StartPreviewEvent());
 
 
 		GameObjectID prevSelected = 0;

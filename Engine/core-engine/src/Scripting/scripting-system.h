@@ -365,13 +365,13 @@ namespace Copium
 		void GetFieldValue(MonoObject* instance, MonoClassField* mClassFiend,  Field& field, void* container);
 
 		template<typename T>
-		MonoObject* CreateReference(T* object) { static_assert(true); };
+		size_t CreateReference(T& object) { static_assert(true); };
 
 
 		template<>
-		MonoObject* CreateReference<GameObject>(GameObject* object);
+		size_t CreateReference<GameObject>(GameObject& object);
 		template<>
-		MonoObject* CreateReference<Component>(Component* object);
+		size_t CreateReference<Component>(Component& object);
 
 		/*******************************************************************************
 		/*!
@@ -396,6 +396,7 @@ namespace Copium
 		template<typename T>
 		void CallbackScriptSetFieldReference(ScriptSetFieldReferenceEvent<T>* pEvent);
 		void CallbackScriptGetMethodNames(ScriptGetMethodNamesEvent* pEvent);
+		void CallbackStartPreview(StartPreviewEvent* pEvent);
 
 		MonoObject* ReflectGameObject(GameObjectID id);
 		MonoObject* ReflectComponent(Component& component);
@@ -412,6 +413,7 @@ namespace Copium
 		MonoClass* klassScene{};
 		std::unordered_map<std::string, MonoObject*> scenes;
 		MonoObject* mCurrentScene;
+		MonoObject* mPreviousScene;
 	};
 
 	template<typename T>
@@ -422,7 +424,15 @@ namespace Copium
 		ScriptClass& scriptClass{ GetScriptClass(pEvent->script.name) };
 		MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };
 		COPIUM_ASSERT(!mClassField, std::string("FIELD ") + pEvent->fieldName + "COULD NOT BE FOUND IN SCRIPT " + pEvent->script.name);
-		SetFieldValue(mScript, mClassField, pEvent->script.fieldDataReferences[pEvent->fieldName], CreateReference(pEvent->reference));
+		PRINT("SETTING FIELD REFERENCE!");
+		size_t result = -1;
+		if (pEvent->reference == nullptr)
+		{
+			SetFieldValue(mScript, mClassField, pEvent->script.fieldDataReferences[pEvent->fieldName], &result);
+			return;
+		}
+		result = CreateReference(*pEvent->reference);
+		SetFieldValue(mScript, mClassField, pEvent->script.fieldDataReferences[pEvent->fieldName], &result);
 	}
 }
 #endif // !SCRIPTING_SYSTEM_H

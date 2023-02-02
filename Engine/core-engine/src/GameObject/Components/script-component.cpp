@@ -234,7 +234,6 @@ namespace Copium
 					break;
 				case FieldType::String:
 				{
-					PRINT(buffer);
 					ImGui::InputTextMultiline(fieldName.c_str(), buffer, BUFFER_SIZE);
 					break;
 				}
@@ -324,12 +323,7 @@ namespace Copium
 					for (Component* component : go->components)
 					{
 						//
-						if (component->Name() == fieldName)
-						{
-							pComponent = component;
-							break;
-						}
-						else if ("CopiumEngine." + component->Name() == fieldName)
+						if (component->Name() == field.typeName)
 						{
 							pComponent = component;
 							break;
@@ -398,7 +392,8 @@ namespace Copium
 
 		for (auto pair : scriptRhs->fieldDataReferences)
 		{
-			fieldDataReferences.insert({pair.first,Field(scriptRhs->fieldDataReferences[pair.first]) });
+			Field field{ scriptRhs->fieldDataReferences[pair.first] };
+			fieldDataReferences.emplace(pair.first,std::move(field));
 		}
 		
 	}
@@ -410,17 +405,15 @@ namespace Copium
 		{
 			Name(_value["Name"].GetString());
 		}
-		const auto& fieldMap = fieldDataReferences;
-		auto it = fieldMap.begin();
-		while (it != fieldMap.end())
+		for (auto it = fieldDataReferences.begin(); it != fieldDataReferences.end(); ++it)
 		{
 			const std::string& _name{ it->first };
 			if (!_value.HasMember(_name.c_str()))
-			{
-				++it;
 				continue;
-			}
-			switch (it->second.fType)
+			FieldType fType = it->second.fType;
+			Field& field{ fieldDataReferences[_name]};
+
+			switch (fType)
 			{
 			case FieldType::Float:
 			{
@@ -486,6 +479,13 @@ namespace Copium
 				memcpy(buffer, &buf, sizeof(int));
 				break;
 			}
+			case FieldType::Component:
+			case FieldType::GameObject:
+			{
+				uint64_t buf = _value[_name.c_str()].GetUint64();
+				memcpy(buffer, &buf, sizeof(uint64_t));
+				break;
+			}
 			case FieldType::ULong:
 			{
 				int64_t buf = _value[_name.c_str()].GetUint();
@@ -516,28 +516,39 @@ namespace Copium
 			}
 			}
 			SetFieldValue(_name, buffer);
-			++it;
 		}
 	}
 
 	void Script::deserializeLink(rapidjson::Value& _value)
 	{
-		auto gameObjsIt = fieldGameObjReferences.begin();
-		while (gameObjsIt != fieldGameObjReferences.end())
+		for (auto it = fieldDataReferences.begin(); it != fieldDataReferences.end(); ++it)
 		{
-			const std::string& fieldName{ gameObjsIt->first };
-			GameObject* referencedGameObj = (*gameObjsIt).second;
-			(*gameObjsIt).second = MySceneManager.findGameObjByID(referencedGameObj->id);
-			++gameObjsIt;
-		}
+			const std::string& _name{ it->first };
+			Field& field = it->second;
+			FieldType fType = field.fType;
 
-		auto componentsIt = fieldComponentReferences.begin();
-		while (componentsIt != fieldComponentReferences.end())
-		{
-			const std::string& fieldName{ componentsIt->first };
-			Component* referencedComponent = (*componentsIt).second;
-			(*gameObjsIt).second = MySceneManager.findGameObjByID(referencedComponent->id);
-			++componentsIt;
+			switch (fType)
+			{
+				case FieldType::Component:
+				{
+					uint64_t id{ field.Get<uint64_t>()};
+					PRINT(_name << " COMPONENT: " << id);
+					Component* pComponent = MySceneManager.findComponentByID(id);
+					if (pComponent)
+						fieldComponentReferences[_name] = pComponent;
+					PRINT("");
+					break;
+				}
+				case FieldType::GameObject:
+				{
+					uint64_t id{ field.Get<uint64_t>() };
+					PRINT(_name << " GAMEOBJECT: " << id);
+					GameObject* pGameObject = MySceneManager.findGameObjByID(id);
+					if (pGameObject)
+						fieldGameObjReferences[_name] = pGameObject;
+					break;
+				}
+			}
 		}
 	}
 

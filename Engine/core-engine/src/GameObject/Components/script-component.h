@@ -35,7 +35,6 @@ namespace Copium
 	{
 		Field() = default;
 		char* data{nullptr};
-		size_t size{0};
 		FieldType fType{};
 		std::string typeName;
 		/***************************************************************************/
@@ -60,7 +59,35 @@ namespace Copium
 			else
 				data = nullptr;
 			if (_data)
-				memcpy(data, _data, size);
+				memcpy(&data, _data, size);
+		}
+
+		template<typename T>
+		void operator=(const T& val)
+		{
+			COPIUM_ASSERT(sizeof(T) > size, "FIELD DOES NOT HAVE ENOUGH SPACE TO STORE TYPE");
+			memcpy(&data, &val, size);
+		}
+
+		template<typename T>
+		void operator=(const T* val)
+		{
+			memcpy(&data, val, size);
+		}
+
+		template<typename T>
+		T& Get()
+		{
+			COPIUM_ASSERT(sizeof(T) > size, "FIELD DOES NOT HAVE ENOUGH SPACE TO STORE TYPE");
+			return *reinterpret_cast<T*>(&data);
+		}
+
+		void Resize(size_t _size)
+		{
+			if (data)
+				delete data;
+			size = _size;
+			data = new char[size];
 		}
 
 		/***************************************************************************/
@@ -74,10 +101,22 @@ namespace Copium
 		/**************************************************************************/
 		Field(const Field& rhs)
 		{
+			PRINT("FIELD COPY CONSTRUCTOR");
 			size = rhs.size;
 			data = new char[size];
 			fType = rhs.fType;
-			memcpy(data, rhs.data, size);
+			typeName = rhs.typeName;
+			memcpy(&data, &rhs.data, size);
+		}
+
+		Field& operator=(Field&& rhs)
+		{
+			size = rhs.size;
+			data = rhs.data;
+			fType = rhs.fType;
+			typeName = std::move(rhs.typeName);
+			rhs.data = nullptr;
+			return *this;
 		}
 
 		/***************************************************************************/
@@ -91,6 +130,14 @@ namespace Copium
 			if (data)
 				delete[] data;
 		}
+
+		size_t GetSize() const
+		{
+			return size;
+		}
+
+	private:
+		size_t size{ 0 };
 	};
 
 	using ScriptReferenceables = TemplatePack<GameObject, Component>;

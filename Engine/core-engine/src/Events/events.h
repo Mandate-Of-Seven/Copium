@@ -12,6 +12,16 @@ namespace Copium
 		virtual ~IEvent() {};
 	};
 
+	struct StartPreviewEvent : IEvent
+	{
+		StartPreviewEvent(){}
+	};
+
+	struct StopPreviewEvent : IEvent
+	{
+		StopPreviewEvent(){}
+	};
+
 	struct SceneOpenedEvent : IEvent
 	{
 		SceneOpenedEvent(const char* _sceneName) :sceneName{ _sceneName } {};
