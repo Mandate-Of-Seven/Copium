@@ -48,8 +48,8 @@
                     "Count": 1,
                     "Animations": [
                         {
-                            "Name": "..\\PackedTracks\\Assets\\Textures\\sprite-image-horizontal.png",
-                            "Sprite ID": 1,
+                            "Name": "sprite-image-horizontal.png",
+                            "Sprite ID": 2923496999574479984,
                             "Time Delay": 0.07500000298023224,
                             "FrameCount": 14,
                             "Rows": 1,

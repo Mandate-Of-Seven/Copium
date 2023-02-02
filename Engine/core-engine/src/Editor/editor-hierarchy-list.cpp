@@ -202,23 +202,13 @@ namespace Copium
 		ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, 10.f);
 		ImGuiTreeNodeFlags rootFlags = ImGuiTreeNodeFlags_DefaultOpen;
 
-		if (ImGui::IsWindowHovered())
-		{
-			//PRINT("Hovering over hierarchy list");
-			if (is->is_mousebutton_pressed(GLFW_MOUSE_BUTTON_RIGHT) && sm->get_current_scene())
-			{				
-				//PRINT("Right Clicking within window boundaries");
 
-				if(!isPopUpOpen)
-					ImGui::OpenPopup("HOps");
-			}
-		}
-		DisplayHierarchyOptionsPopUpWindow();
 
 
 		// Ensure that game objects are displayed only if there is a current scene loaded
 		if (currentScene)
-		{
+		{		
+			//PRINT("Start Editor Update");
 			// Find all the root nodes
 			std::vector<Copium::GameObject*>roots;
 			for (size_t i{ 0 }; i < currentScene->get_gameobjcount(); ++i)
@@ -250,23 +240,43 @@ namespace Copium
 				sceneName += "\t PREVIEWING";
 			}
 
-
+			int test{ 0 };
 			// Display scene name as the rootiest node
-			if (ImGui::TreeNodeEx(sceneName.c_str(), rootFlags))
-			{
+			bool nodeOpen = ImGui::TreeNodeEx((void*)(intptr_t)test, rootFlags, sceneName.c_str());
 
+
+			if (nodeOpen)
+			{			
 				bool isSelected = false;
 				for (size_t i{ 0 }; i < roots.size(); ++i)
 				{
 					display_gameobject(*(roots[i]), selectedID, roots, i);
 
 				}
-
 				ImGui::TreePop();
+
 			}
+			
+			//PRINT("End Editor Update");
+		} 
 
+		if (ImGui::IsWindowHovered())
+		{
+			//PRINT("Hovering over hierarchy list");
+			if (is->is_mousebutton_pressed(GLFW_MOUSE_BUTTON_RIGHT) && sm->get_current_scene())
+			{				
+				//PRINT("Right Clicking within window boundaries");
+
+				if (!isPopUpOpen)
+				{
+					ImGui::OpenPopup("HOps");
+					isHierarchyPopUpOpen = true;
+				}
+
+			}
 		}
-
+		if(isHierarchyPopUpOpen)
+			DisplayHierarchyOptionsPopUpWindow();
 
 		ImGui::PopStyleVar();
 		ImGui::End();
@@ -278,8 +288,8 @@ namespace Copium
 
 	bool EditorHierarchyList::display_gameobject(GameObject& _go, GameObjectID& _selected, std::vector<GameObject*>& _vector, int _index)
 	{
-		bool isSelected = false;
-		ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+		bool isSelected = false, nodeOpen = false;
+		ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
 
 		// If root node does not have children, it is simply a leaf node (end of the branch)
@@ -294,8 +304,7 @@ namespace Copium
 			baseFlags |= ImGuiTreeNodeFlags_Selected;
 		}
 
-		if (!ImGui::TreeNodeEx(_go.get_name().c_str(), baseFlags))
-			return false;
+		nodeOpen = ImGui::TreeNodeEx(_go.get_name().c_str(), baseFlags);
 /*
 		if (is->is_key_held(GLFW_KEY_LEFT_SHIFT))
 		{
@@ -345,8 +354,7 @@ namespace Copium
 				}
 
 			}
-		}*/
-
+		}*/			
 		if (ImGui::BeginDragDropSource())
 		{
 			static void* container;
@@ -355,9 +363,10 @@ namespace Copium
 			ImGui::EndDragDropSource();
 
 			//std::cout << "ID of selected Game Object: " << _selected << std::endl;
-		}		
+		}
 		if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 		{
+			PRINT("selected");
 			std::cout << _go.get_name() << " is selected\n";
 			_selected = _go.id;
 			isSelected = true;
@@ -366,63 +375,70 @@ namespace Copium
 		}
 		else if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
 		{
-			std::cout << _go.get_name() << " is selected\n";
+			std::cout << _go.get_name() << " is right clicked\n";
 			_selected = _go.id;
 			isSelected = true;
 			sm->set_selected_gameobject(&_go);
 
-			ImGui::OpenPopup("Options");
-			isPopUpOpen = true;
-		}	
-
-		int res = DisplayOptionsPopUpWindow();
-
-
-		//for (const auto& pComponent : _go.components)
-		//{
-		//	if (ImGui::BeginDragDropSource())
-		//	{
-		//		static void* container;
-		//		container = pComponent;
-		//		ImGui::SetDragDropPayload(pComponent->Name().c_str(), &container, sizeof(void*));
-		//		ImGui::EndDragDropSource();
-		//	}
-		//}
-
-		for (std::list<Transform*>::iterator iter = _go.transform.children.begin(); iter != _go.transform.children.end(); ++iter)
-		{
-			if (!(*iter))
+			if (!isHierarchyPopUpOpen)
 			{
-				_go.transform.children.erase(iter);
-				break;
+				ImGui::OpenPopup("Options");
+				isPopUpOpen = true;
 			}
-		}
 
-		if (res != 1)
+		}	
+		int res = 0;
+		if (isPopUpOpen && _selected == _go.id)
 		{
-			// If game object has children, recursively display children
-			if (!_go.transform.children.empty())
+			res = DisplayOptionsPopUpWindow();
+		}
+		for (std::list<Transform*>::iterator iter = _go.transform.children.begin(); iter != _go.transform.children.end(); ++iter)
 			{
-				int idx{ 0 };
-				for (auto pChild : _go.transform.children)
+				if (!(*iter))
 				{
-					if (!pChild)
-						continue;
+					_go.transform.children.erase(iter);
+					break;
+				}
+		}		
+		if (nodeOpen)
+		{
+			//for (const auto& pComponent : _go.components)
+			//{
+			//	if (ImGui::BeginDragDropSource())
+			//	{
+			//		static void* container;
+			//		container = pComponent;
+			//		ImGui::SetDragDropPayload(pComponent->Name().c_str(), &container, sizeof(void*));
+			//		ImGui::EndDragDropSource();
+			//	}
+			//}
 
-					isSelected = display_gameobject(pChild->gameObj, _selected, _go.transform.children, idx);
-					++idx;
+			if (res != 1 && !ImGui::IsItemToggledOpen())
+			{
+				// If game object has children, recursively display children
+				if (!_go.transform.children.empty())
+				{
+					int idx{ 0 };
+					for (auto pChild : _go.transform.children)
+					{
+						if (!pChild)
+							continue;
+
+						isSelected = display_gameobject(pChild->gameObj, _selected, _go.transform.children, idx);
+						++idx;
+					}
 				}
 			}
+
+			ImGui::TreePop();
 		}
 
-
-		ImGui::TreePop();
 
 		return isSelected;
 	}
 	bool EditorHierarchyList::display_gameobject(GameObject& _go, GameObjectID& _selected, std::list<Transform*>& _list, int _index)
 	{
-		bool isSelected = false;
+		bool isSelected = false, nodeOpen = false;
 		ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 
 
@@ -438,8 +454,7 @@ namespace Copium
 			baseFlags |= ImGuiTreeNodeFlags_Selected;
 		}
 
-		if (!ImGui::TreeNodeEx(_go.get_name().c_str(), baseFlags))
-			return false;	
+		nodeOpen = ImGui::TreeNodeEx(_go.get_name().c_str(), baseFlags);
 /*
 		//if (is->is_key_held(GLFW_KEY_LEFT_SHIFT))
 		//{
@@ -528,7 +543,9 @@ namespace Copium
 
 			//std::cout << "ID of selected Game Object: " << _selected << std::endl;
 		}
-		if (ImGui::IsItemClicked())
+
+		// Handle mouse clicks on item
+		if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 		{
 			std::cout << _go.get_name() << " is selected\n";
 			_selected = _go.id;
@@ -538,35 +555,45 @@ namespace Copium
 		}
 		else if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
 		{
-			std::cout << _go.get_name() << " is selected\n";
+			std::cout << _go.get_name() << " is right clicked\n";
 			_selected = _go.id;
 			isSelected = true;
 			sm->set_selected_gameobject(&_go);
 
-			ImGui::OpenPopup("Options");
-			isPopUpOpen = true;
+			if (!isHierarchyPopUpOpen)
+			{
+				ImGui::OpenPopup("Options");
+				isPopUpOpen = true;
+			}
+
+		}
+		int res = 0;
+		if (isPopUpOpen && _selected == _go.id)
+		{
+			 res = DisplayOptionsPopUpWindow();
 		}
 
-		int res = DisplayOptionsPopUpWindow();
-		
 
-
-
-		if (res != 1)
+		if (nodeOpen)
 		{
-			// If game object has children, recursively display children
-			if (!_go.transform.children.empty())
+			if (res != 1 && !ImGui::IsItemToggledOpen())
 			{
-				int idx{ 0 };
-				for (auto pChild : _go.transform.children)
+				// If game object has children, recursively display children
+				if (!_go.transform.children.empty())
 				{
-					isSelected = display_gameobject(pChild->gameObj, _selected, _go.transform.children, idx);
-					++idx;
+					int idx{ 0 };
+					for (auto pChild : _go.transform.children)
+					{
+						isSelected = display_gameobject(pChild->gameObj, _selected, _go.transform.children, idx);
+						++idx;
+					}
 				}
 			}
+
+			ImGui::TreePop();
 		}
 
-		ImGui::TreePop();
+
 
 		return isSelected;
 	}
@@ -787,6 +814,7 @@ namespace Copium
 		if (ImGui::BeginPopup("Options"))
 		{
 			//isPopUpOpen = true;
+			//PRINT("test");
 
 			if (ImGui::MenuItem("Clone", "Ctrl+D"))
 			{
@@ -802,7 +830,7 @@ namespace Copium
 					Window::EditorConsole::editorLog.add_logEntry("No Scene is Loaded!");
 				}
 
-				//isPopUpOpen = false;
+				isPopUpOpen = false;
 			}
 			if (ImGui::MenuItem("Add a kid"))
 			{
@@ -812,8 +840,9 @@ namespace Copium
 					MyGOF.create_child(*MySceneManager.get_selected_gameobject());
 				}
 
-				//isPopUpOpen = false;
+				isPopUpOpen = false;
 			}
+			/*
 			//if (ImGui::MenuItem("Delete"))
 			//{
 			//	PRINT("die bitch");
@@ -843,17 +872,17 @@ namespace Copium
 			//	isParenting = true;
 			//	
 			//	isPopUpOpen = false;
-			//}
+			//}*/
 			ImGui::EndPopup();
 		}
 		else
 		{
-			//if (isPopUpOpen)
-			//	isPopUpOpen = false;
+			if (isPopUpOpen)
+				isPopUpOpen = false;
 
 			return -1;
 		}
-
+		//PRINT("End Display Options PopUp");
 		return result;
 	}
 	int EditorHierarchyList::DisplayHierarchyOptionsPopUpWindow()
@@ -863,7 +892,7 @@ namespace Copium
 		ImGui::SetNextWindowPos(pos, ImGuiCond_Appearing, ImVec2(0.f, 0.f));
 		if (ImGui::BeginPopup("HOps"))
 		{
-			isPopUpOpen = true;
+			//isPopUpOpen = true;
 			if (ImGui::MenuItem("Create GameObject"))
 			{
 				if (!currentScene)
@@ -890,15 +919,16 @@ namespace Copium
 					}
 				}
 
-				isPopUpOpen = false;
 			}
 
 			ImGui::EndPopup();
 		}
 		else
 		{
-			if (isPopUpOpen)
-				isPopUpOpen = false;
+			if (isHierarchyPopUpOpen)
+			{
+				isHierarchyPopUpOpen = false;
+			}
 
 			return -1;
 		}

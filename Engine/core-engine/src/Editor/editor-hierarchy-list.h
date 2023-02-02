@@ -196,6 +196,7 @@ namespace Copium
 		bool isHierarchyOpen{true};
 		bool isParenting{false};
 		bool isPopUpOpen{false};
+		bool isHierarchyPopUpOpen{ false };
 	};
 }
 
