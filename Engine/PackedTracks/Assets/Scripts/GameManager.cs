@@ -7,6 +7,7 @@ public class GameManager: CopiumScript
 	public GameObject TrainCanvas;
 	public GameObject MainScreenCanvas;
 	public GameObject CombatCanvas;
+    public GameObject PauseCanvas;
 
     public GameObject ReportTab;
     public GameObject MessageTab;
@@ -23,7 +24,7 @@ public class GameManager: CopiumScript
     public AudioSource audio;
 
     bool isReportScreenOn = false;
-
+    public bool isPaused = false;
 
     public ShooterBehaviour ally1;
     public ShooterBehaviour ally2;
@@ -38,31 +39,48 @@ public class GameManager: CopiumScript
     void Start()
 	{
         isReportScreenOn = false;
-
+        PauseCanvas.SetActive(false);
         audio.Play();
 
         UpdateCanvases();
     }
 	void Update()
     {
-        if (ReportScreenBtn.state == ButtonState.OnClick)
+        if (Input.GetKeyDown(KeyCode.P))
         {
-            isReportScreenOn = true;
-            UpdateCanvases();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (isReportScreenOn)
+            isPaused = !isPaused;
+            PauseCanvas.SetActive(isPaused);
+            if (isPaused)
             {
-                isReportScreenOn = false;
-                UpdateCanvases();
+                InternalCalls.PauseAllAnimation();
+            }
+            else
+            {
+                InternalCalls.PlayAllAnimation();
             }
         }
 
-        if (isReportScreenOn)
+        if (!isPaused)
         {
-            UpdateTabs();
+            if (ReportScreenBtn.state == ButtonState.OnClick)
+            {
+                isReportScreenOn = true;
+                UpdateCanvases();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (isReportScreenOn)
+                {
+                    isReportScreenOn = false;
+                    UpdateCanvases();
+                }
+            }
+
+            if (isReportScreenOn)
+            {
+                UpdateTabs();
+            }
         }
     }
 

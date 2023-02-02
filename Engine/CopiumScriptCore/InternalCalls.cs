@@ -23,6 +23,13 @@ namespace CopiumEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static float GetDeltaTime();
 
+        #region ANIMATION
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void PauseAllAnimation();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void PlayAllAnimation();
+        #endregion
+
         #region COMPONENT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static bool GetComponentEnabled(ulong gameObjID,ulong compId);

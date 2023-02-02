@@ -220,14 +220,12 @@ namespace Copium
 	}
 	void Animator::PlayAnimation()
 	{
-
+		status = AnimatorStatus::playing;
 	}
 	void Animator::PauseAnimation()
 	{
-		status = AnimatorStatus::idle;		
+		status = AnimatorStatus::paused;		
 	}
-	
-
 	void Animator::Update(float _dt)
 	{
 
@@ -389,7 +387,7 @@ namespace Copium
 
 				Animator* anim = reinterpret_cast<Animator*>(component);
 				anim->Update(MyFrameRateController.getDt());
-				if (sm->GetSceneState() == Scene::SceneState::play)
+				if (sm->GetSceneState() == Scene::SceneState::play && anim->GetStatus() != Animator::AnimatorStatus::paused)
 				{
 					anim->SetStatus(Animator::AnimatorStatus::playing);
 				}
@@ -413,6 +411,30 @@ namespace Copium
 
 
 
+		}
+	}
+
+	void AnimationSystem::PauseAllAnimation()
+	{
+		for (Copium::GameObject* go : sm->get_current_scene()->gameObjects)
+		{
+			Animator* temp = go->getComponent<Animator>();
+			if (temp != NULL)
+			{
+				temp->PauseAnimation();
+			}
+		}
+	}
+
+	void AnimationSystem::PlayAllAnimation()
+	{
+		for (Copium::GameObject* go : sm->get_current_scene()->gameObjects)
+		{
+			Animator* temp = go->getComponent<Animator>();
+			if (temp != NULL)
+			{
+				temp->PlayAnimation();
+			}
 		}
 	}
 }

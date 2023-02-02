@@ -1,15 +1,17 @@
 {
     "Name": "Demo",
     "Unused GIDs": [
-        40,
-        41,
-        39,
-        42,
         43,
         44,
         45
     ],
     "Unused CIDs": [],
+    "Layers": [
+        {
+            "Name": "Default",
+            "ID": 0
+        }
+    ],
     "GameObjects": [
         {
             "ID": 1,
@@ -59,8 +61,8 @@
                     "Type": "Script",
                     "Name": "AudioManager",
                     "state": 0,
-                    "bgmMainMenu": 78,
                     "ambTrain": 80,
+                    "bgmMainMenu": 78,
                     "bgmTrain": 78
                 },
                 {
@@ -1037,9 +1039,11 @@
                     "ID": 46,
                     "Type": "Script",
                     "Name": "GameManager",
+                    "isPaused": false,
                     "TrainCanvas": 4,
                     "CombatCanvas": 21,
                     "MainScreenCanvas": 3,
+                    "PauseCanvas": 40,
                     "ReportTab": 11,
                     "MessageTab": 22,
                     "CrewTab": 23,
@@ -1646,6 +1650,178 @@
                         "Z": 1.0,
                         "W": 1.0
                     }
+                }
+            ]
+        },
+        {
+            "ID": 40,
+            "Name": "Pause Canvas",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 89,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 41,
+            "Name": "Background",
+            "Components": [
+                {
+                    "PID": 40,
+                    "ID": 90,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.4000000953674316,
+                        "Y": 2.4000000953674316,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 91,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 4874611181005233622,
+                    "Sprite Name": "Panel_02.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 39,
+            "Name": "Paused",
+            "Components": [
+                {
+                    "PID": 40,
+                    "ID": 92,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 3.619037628173828,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 93,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Paused",
+                    "Font Size": 12.0,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 42,
+            "Name": "Resume",
+            "Components": [
+                {
+                    "PID": 40,
+                    "ID": 94,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 3.0,
+                        "Y": 10.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 95,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 8004758063171796349,
+                    "Sprite Name": "Option_01.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 96,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Resume",
+                    "Font Size": 1.5,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                },
+                {
+                    "Type": "Button",
+                    "ID": 97,
+                    "Graphic ID": 96,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.5,
+                            "Y": -0.5
+                        },
+                        "Max": {
+                            "X": 0.5,
+                            "Y": 0.5
+                        }
+                    },
+                    "Callback": ""
                 }
             ]
         }
