@@ -60,6 +60,11 @@ namespace Copium
 	//Runs after InputSystem
 	class IUIComponent
 	{
+		public:
+			const glm::fvec4& get_color() { return color; }
+			const HorizontalAlignment& get_hAlign() { return hAlignment; }
+			const VerticalAlignment& get_vAlign() { return vAlignment; }
+
 		protected:
 			Math::Vec2 offset;
 			HorizontalAlignment hAlignment{HorizontalAlignment::Center};
@@ -200,7 +205,7 @@ namespace Copium
 			friend class LogicSystem;
 	};
 
-	class Text final : public Component, IUIComponent
+	class Text final : public Component, public IUIComponent
 	{
 		public:
 
@@ -232,6 +237,8 @@ namespace Copium
 			*/
 			/*******************************************************************************/
 			void render(BaseCamera* _camera);
+
+			Font* GetFont() { return font; }
 
 			Component* clone(GameObject& _gameObj) const;
 
