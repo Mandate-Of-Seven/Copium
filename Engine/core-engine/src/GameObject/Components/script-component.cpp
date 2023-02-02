@@ -370,9 +370,7 @@ namespace Copium
 
 	Component* Script::clone(GameObject& _gameObj) const
 	{
-		//mono_field_get_value(mObject, pScriptClass->mFields["gameObj"].classField, buffer);
 		Script* component = new Script(_gameObj);
-		component->Name(name);
 		return component;
 	}
 
@@ -390,11 +388,13 @@ namespace Copium
 			fieldComponentReferences[pair.first] = MySceneManager.findComponentByID(pair.second->id);
 		}
 
+		PRINT("FIELDS AMOUNT: " << fieldDataReferences.size());
 		for (auto pair : scriptRhs->fieldDataReferences)
 		{
 			Field field{ scriptRhs->fieldDataReferences[pair.first] };
 			fieldDataReferences.emplace(pair.first,std::move(field));
 		}
+		Name(scriptRhs->name);
 		
 	}
 
