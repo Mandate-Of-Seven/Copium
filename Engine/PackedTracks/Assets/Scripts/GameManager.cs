@@ -16,6 +16,7 @@ public class GameManager: CopiumScript
     public Button ReportScreenBtn;
     public Button CombatScreenBtn;
     public Button OtherScreenBtn;
+    public Button ResumeBtn;
 
     public Button ReportTabBtn;
     public Button MessageTabBtn;
@@ -80,6 +81,15 @@ public class GameManager: CopiumScript
             if (isReportScreenOn)
             {
                 UpdateTabs();
+            }
+        }
+        else
+        {
+            if (ResumeBtn.state == ButtonState.OnClick)
+            {
+                isPaused = false;
+                PauseCanvas.SetActive(false);
+                InternalCalls.PlayAllAnimation();
             }
         }
     }

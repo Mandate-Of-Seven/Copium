@@ -74,7 +74,7 @@ namespace Copium
 			if (ImGui::Button(toggleAnimation.c_str(), ImVec2(ImGui::GetColumnWidth() * 0.3f, 0.f)))
 			{
 
-				if (status == AnimatorStatus::idle)
+				if (status == AnimatorStatus::idle || status == AnimatorStatus::paused)
 					status = AnimatorStatus::playing;
 				else
 				{
