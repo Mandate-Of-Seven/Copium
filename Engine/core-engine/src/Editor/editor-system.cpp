@@ -42,7 +42,7 @@ namespace Copium
 		InputSystem& inputSystem{ *InputSystem::Instance() };
 		WindowsSystem& windowsSystem{ *WindowsSystem::Instance() };
 		GraphicsSystem& graphicsSystem{ *GraphicsSystem::Instance() };
-		bool tempMode = false;
+		bool tempMode = true;
 	}
 
 	void EditorSystem::init()

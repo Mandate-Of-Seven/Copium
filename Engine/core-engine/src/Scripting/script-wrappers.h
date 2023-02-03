@@ -10,7 +10,7 @@
 \brief
 	This file helps register static functions be used as internal calls in C#
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 #include "Windows\windows-input.h"
@@ -433,19 +433,13 @@ namespace Copium
 	/*******************************************************************************/
 	static void SetTextString(GameObjectID gameObjID, ComponentID compID, MonoString* str)
 	{
-		GameObject* gameObj = sceneManager.findGameObjByID(gameObjID);
-		if (gameObj == nullptr)
+		Component* component = sceneManager.findComponentByID(compID);
+		if (component == nullptr)
 			return;
-		for (Text* text : gameObj->getComponents<Text>())
-		{
-			if (text->id == compID)
-			{
-				char* monoStr = mono_string_to_utf8(str);
-				strcpy(text->content, monoStr);
-				mono_free(monoStr);
-				break;
-			}
-		}
+		char* monoStr = mono_string_to_utf8(str);
+		PRINT("COMPONENT FOUND! : " << monoStr);
+		strcpy(reinterpret_cast<Text*>(component)->content, monoStr);
+		mono_free(monoStr);
 	}
 
 	static char GetButtonState(GameObjectID gameObjID)
@@ -508,6 +502,12 @@ namespace Copium
 		COPIUM_ASSERT(!MyGOF.destroy(ID), "GameObject could not be destroyed");
 	}
 
+
+	static float GetFPS()
+	{
+		return MyFrameRateController.getFPS();
+	}
+
 	static void AudioSourcePlay(GameObjectID ID)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(ID);
@@ -562,6 +562,7 @@ namespace Copium
 		Register(PlayAllAnimation);
 		Register(GetComponentEnabled);
 		Register(SetComponentEnabled);
+		Register(GetFPS);
 	}
 
 	/*******************************************************************************

@@ -92,6 +92,7 @@
       <Link>Time.cs</Link>
     </Compile>
     <Compile Include="Assets\Scripts\AudioManager.cs" />
+    <Compile Include="Assets\Scripts\FPS.cs" />
     <Compile Include="Assets\Scripts\ButtonCalls.cs" />
     <Compile Include="Assets\Scripts\CombatManager.cs" />
     <Compile Include="Assets\Scripts\EventManager.cs" />

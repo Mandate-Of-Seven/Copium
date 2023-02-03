@@ -1215,6 +1215,7 @@
                     "ID": 71,
                     "Type": "Animator",
                     "Loop": true,
+                    "Rev": false,
                     "Count": 1,
                     "Animations": [
                         {
@@ -1350,6 +1351,7 @@
                     "ID": 63,
                     "Type": "Animator",
                     "Loop": true,
+                    "Rev": false,
                     "Count": 1,
                     "Animations": [
                         {
@@ -1402,6 +1404,7 @@
                     "ID": 69,
                     "Type": "Animator",
                     "Loop": false,
+                    "Rev": false,
                     "Count": 1,
                     "Animations": [
                         {
@@ -2385,6 +2388,7 @@
                     "ID": 131,
                     "Type": "Animator",
                     "Loop": true,
+                    "Rev": false,
                     "Count": 1,
                     "Animations": [
                         {
@@ -2868,6 +2872,52 @@
                     "Type": "Script",
                     "Name": "Bullet",
                     "speed": -0.5
+                }
+            ]
+        },
+        {
+            "ID": 61,
+            "Name": "FPS",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 159,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -8.830698013305664,
+                        "Y": 4.614243984222412,
+                        "Z": 9.5
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 162,
+                    "FontName": "corbel",
+                    "H_Align": 0,
+                    "V_Align": 1,
+                    "Content": "FPS: ",
+                    "Font Size": 1.5,
+                    "Wrapper": 0.0,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 0.9882352948188782
+                },
+                {
+                    "ID": 161,
+                    "Type": "Script",
+                    "Name": "FPS",
+                    "textBox": 162
                 }
             ]
         }

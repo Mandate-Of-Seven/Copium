@@ -143,5 +143,8 @@ namespace CopiumEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void QuitGame();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern float GetFPS();
     }
 }
