@@ -194,8 +194,6 @@ namespace Copium
 						min = glm::vec2(objPosition.x + bound.min.x - objPosition.x, objPosition.y + bound.min.y - objPosition.y);
 						max = glm::vec2(objPosition.x + bound.max.x - objPosition.x, objPosition.y + bound.max.y - objPosition.y);
 					}
-
-					
 					for (Component* component : gameObject->getComponents<SpriteRenderer>())
 					{
 						if (!component->Enabled())
@@ -278,9 +276,6 @@ namespace Copium
 					{
 						if (mousePosition.y > min.y && mousePosition.y < max.y)
 						{
-							PRINT("Object: " << gameObject->get_name());
-							PRINT("Min: " << min.x << " " << min.y);
-							PRINT("Max: " << max.x << " " << max.y);
 							pGameObjs.push_back(gameObject);
 						}
 					}

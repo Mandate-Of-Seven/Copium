@@ -28,8 +28,8 @@ public class GameManager: CopiumScript
     public Button CrewTabBtn;
 
     bool isReportScreenOn = false;
-    int state = 0;
     public bool isPaused = false;
+    int state = 0;
 
     public ShooterBehaviour ally1;
     public ShooterBehaviour ally2;
@@ -45,7 +45,6 @@ public class GameManager: CopiumScript
 	{
         isReportScreenOn = false;
         PauseCanvas.SetActive(false);
-        audio.Play();
 
         UpdateCanvases();
 
@@ -76,6 +75,9 @@ public class GameManager: CopiumScript
 
         if (!isPaused)
         {
+            if (!ReportScreenGameObject.activeSelf)
+                ReportScreenGameObject.SetActive(true);
+
             if (ReportScreenBtn.state == ButtonState.OnClick)
             {
                 isReportScreenOn = true;
@@ -98,6 +100,9 @@ public class GameManager: CopiumScript
         }
         else
         {
+            if(ReportScreenGameObject.activeSelf)
+                ReportScreenGameObject.SetActive(false);
+
             if (ResumeBtn.state == ButtonState.OnClick)
             {
                 isPaused = false;

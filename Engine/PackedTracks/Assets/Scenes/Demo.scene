@@ -1,8 +1,6 @@
 {
     "Name": "Demo",
-    "Unused GIDs": [
-        40
-    ],
+    "Unused GIDs": [],
     "Unused CIDs": [],
     "Layers": [
         {
@@ -70,7 +68,7 @@
                     "ID": 79,
                     "Type": "Script",
                     "Name": "AudioManager",
-                    "state": 0,
+                    "state": 1,
                     "MainMenuStartGameObject": 43,
                     "ambTrain": 119,
                     "bgmMainMenu": 118,
@@ -204,7 +202,7 @@
                     "H_Align": 1,
                     "V_Align": 1,
                     "Content": "",
-                    "Font Size": 0.10000000149011612,
+                    "Font Size": 1.0,
                     "r": 1.0,
                     "g": 1.0,
                     "b": 1.0,
@@ -990,7 +988,7 @@
                     "Pos": {
                         "X": 0.0,
                         "Y": 0.0,
-                        "Z": 0.0
+                        "Z": -3.0
                     },
                     "Rot": {
                         "X": 0.0,
@@ -1085,19 +1083,22 @@
                     "ID": 46,
                     "Type": "Script",
                     "Name": "GameManager",
+                    "isPaused": false,
                     "MainMenuCanvas": 41,
                     "MessageTab": 22,
                     "TrainCanvas": 4,
                     "CombatCanvas": 21,
                     "MainScreenCanvas": 3,
+                    "PauseCanvas": 40,
                     "MainMenuStartGameObject": 43,
-                    "ReportScreenGameObject": 5,
                     "ReportTab": 11,
+                    "ReportScreenGameObject": 5,
                     "CrewTab": 23,
                     "CombatScreenBtn": 12,
                     "CrewTabBtn": 27,
                     "ReportScreenBtn": 9,
                     "ReportTabBtn": 17,
+                    "ResumeBtn": 124,
                     "MessageTabBtn": 22
                 }
             ]
@@ -1987,6 +1988,164 @@
                     "V_Align": 1,
                     "Content": "Quit Game",
                     "Font Size": 4.0,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 40,
+            "Name": "Pause Canvas",
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 119,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 46,
+            "Name": "Background",
+            "Components": [
+                {
+                    "PID": 40,
+                    "ID": 120,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.4000000953674316,
+                        "Y": 2.4000000953674316,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 121,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 4874611181005233622,
+                    "Sprite Name": "Panel_02.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 47,
+            "Name": "Pause",
+            "Components": [
+                {
+                    "PID": 40,
+                    "ID": 122,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 3.61899995803833,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 125,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Paused",
+                    "Font Size": 12.0,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 48,
+            "Name": "Resume",
+            "Components": [
+                {
+                    "PID": 40,
+                    "ID": 124,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Button",
+                    "ID": 124,
+                    "Graphic ID": 126,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -1.0,
+                            "Y": -0.5
+                        },
+                        "Max": {
+                            "X": 1.0,
+                            "Y": 0.5
+                        }
+                    },
+                    "Callback": ""
+                },
+                {
+                    "Type": "Text",
+                    "ID": 126,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Resume",
+                    "Font Size": 3.0,
                     "r": 1.0,
                     "g": 1.0,
                     "b": 1.0,
