@@ -487,7 +487,7 @@ namespace Copium
 
 	//Text------------/
 	Text::Text(GameObject& _gameObj)
-		: Component(_gameObj, ComponentType::Text), font{ Font::getFont("corbel") },fontName{"corbel"}, fSize{1.f}, content{"New Text"}
+		: Component(_gameObj, ComponentType::Text), font{ Font::getFont("corbel") }, fontName{ "corbel" }, fSize{ 1.f }, wrapper{ 0.f }, content{ "New Text" }
 	{
 	}
 
@@ -550,7 +550,7 @@ namespace Copium
 
 			float updatedSize = updatedScale.x * fSize * 0.1f;
 
-			glm::vec2 dimensions{ font->getDimensions(content, updatedSize) };
+			glm::vec2 dimensions{ font->getDimensions(content, updatedSize, wrapper) };
 
 			switch (hAlignment)
 			{
@@ -571,11 +571,11 @@ namespace Copium
 				break;
 			}
 
-			font->draw_text(content, updatedPos, mixedColor, updatedSize, 0, _camera);
+			font->draw_text(content, updatedPos, mixedColor, updatedSize, wrapper, _camera);
 		}
 		else
 		{
-			glm::vec2 dimensions{ font->getDimensions(content, scale) };
+			glm::vec2 dimensions{ font->getDimensions(content, scale, wrapper) };
 
 			switch (hAlignment)
 			{
@@ -596,7 +596,7 @@ namespace Copium
 				break;
 			}
 
-			font->draw_text(content, pos, mixedColor, scale, 0, _camera);
+			font->draw_text(content, pos, mixedColor, scale, wrapper, _camera);
 		}
 
 		
@@ -610,6 +610,7 @@ namespace Copium
 		component->hAlignment = hAlignment;
 		component->color = color;
 		component->fSize = fSize;
+		component->wrapper = wrapper;
 		component->font = font;
 		return component;
 	}
@@ -672,6 +673,14 @@ namespace Copium
 			ImGui::TableNextColumn();
 			openPopup = ImGui::ColorButton("Color", *reinterpret_cast<ImVec4*>(&color), miscFlags, ImVec2(FLT_MAX, 0));
 
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("Text Wrap");
+			ImGui::TableNextColumn();
+			ImGui::PushItemWidth(-1);
+			ImGui::InputFloat("##Text Wrap", &wrapper);
+			ImGui::PopItemWidth();
+
 			ImGui::Unindent();
 			ImGui::EndTable();
 		}
@@ -721,6 +730,10 @@ namespace Copium
 		{
 			fSize = _value["Font Size"].GetFloat();
 		}
+		if (_value.HasMember("Wrapper"))
+		{
+			wrapper = _value["Wrapper"].GetFloat();
+		}
 		if (_value.HasMember("r"))
 		{
 			color.r = _value["r"].GetFloat();
@@ -757,6 +770,7 @@ namespace Copium
 		_value.AddMember("Content", type, _doc.GetAllocator());
 
 		_value.AddMember("Font Size", fSize, _doc.GetAllocator());
+		_value.AddMember("Wrapper", wrapper, _doc.GetAllocator());
 		_value.AddMember("r", color.r, _doc.GetAllocator());
 		_value.AddMember("g", color.g, _doc.GetAllocator());
 		_value.AddMember("b", color.b, _doc.GetAllocator());
