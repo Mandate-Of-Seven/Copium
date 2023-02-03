@@ -248,6 +248,7 @@ namespace Copium
 			std::string fontName;
 			Font* font;
 			float fSize;
+			float wrapper;
 			friend class Button;
 	};
 
