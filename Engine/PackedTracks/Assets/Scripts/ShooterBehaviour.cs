@@ -13,6 +13,7 @@ public class ShooterBehaviour: CopiumScript
 	float timer = 0f;
 
 	float shootingInterval = 1f;
+	GameObject newBullet;
 	void Start()
 	{
 	}
@@ -22,7 +23,8 @@ public class ShooterBehaviour: CopiumScript
 		timer += Time.deltaTime;
 		if (timer > shootingInterval)
         {
-			GameObject newBullet = Instantiate(bullet.gameObject);
+			if (newBullet == null)
+				newBullet = Instantiate(bullet.gameObject);
 			newBullet.transform.position = transform.position;
 			timer = 0f;
         }

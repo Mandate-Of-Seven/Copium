@@ -224,6 +224,7 @@
                         }
                     },
                     "Callback": "OpenGameObject",
+                    "fadeDur": 0.10000000149011612,
                     "clickedR": 0.5,
                     "clickedG": 0.5,
                     "clickedB": 0.5,
@@ -302,6 +303,7 @@
                         }
                     },
                     "Callback": "OpenGameObject",
+                    "fadeDur": 0.10000000149011612,
                     "clickedR": 0.5,
                     "clickedG": 0.5,
                     "clickedB": 0.5,
@@ -413,6 +415,7 @@
                         }
                     },
                     "Callback": "OpenReportTab",
+                    "fadeDur": 0.10000000149011612,
                     "clickedR": 0.5,
                     "clickedG": 0.5,
                     "clickedB": 0.5,
@@ -500,6 +503,7 @@
                         }
                     },
                     "Callback": "OpenMessageTab",
+                    "fadeDur": 0.10000000149011612,
                     "clickedR": 0.5,
                     "clickedG": 0.5,
                     "clickedB": 0.5,
@@ -587,6 +591,7 @@
                         }
                     },
                     "Callback": "OpenCrewTab",
+                    "fadeDur": 0.10000000149011612,
                     "clickedR": 0.5,
                     "clickedG": 0.5,
                     "clickedB": 0.5,
@@ -797,7 +802,7 @@
                 {
                     "Type": "Button",
                     "ID": 37,
-                    "Graphic ID": 52,
+                    "Graphic ID": 36,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.699999988079071,
@@ -809,17 +814,18 @@
                         }
                     },
                     "Callback": "",
+                    "fadeDur": 0.30399999022483826,
                     "clickedR": 0.5,
                     "clickedG": 0.5,
                     "clickedB": 0.5,
                     "clickedA": 0.5,
-                    "hoveredR": 0.5,
+                    "hoveredR": 0.9998999834060669,
                     "hoveredG": 1.0,
                     "hoveredB": 1.0,
                     "hoveredA": 0.5,
-                    "normalR": 1.0,
-                    "normalG": 1.0,
-                    "normalB": 1.0,
+                    "normalR": 0.6584506034851074,
+                    "normalG": 0.6583847403526306,
+                    "normalB": 0.6583847403526306,
                     "normalA": 0.5
                 },
                 {
@@ -884,7 +890,7 @@
                 {
                     "Type": "Button",
                     "ID": 39,
-                    "Graphic ID": 53,
+                    "Graphic ID": 38,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.699999988079071,
@@ -896,17 +902,18 @@
                         }
                     },
                     "Callback": "",
+                    "fadeDur": 0.29899999499320984,
                     "clickedR": 0.5,
                     "clickedG": 0.5,
                     "clickedB": 0.5,
                     "clickedA": 0.5,
-                    "hoveredR": 0.5,
+                    "hoveredR": 0.9998999834060669,
                     "hoveredG": 1.0,
                     "hoveredB": 1.0,
                     "hoveredA": 0.5,
-                    "normalR": 1.0,
-                    "normalG": 1.0,
-                    "normalB": 1.0,
+                    "normalR": 0.7047049403190613,
+                    "normalG": 0.7047754526138306,
+                    "normalB": 0.7047754526138306,
                     "normalA": 0.5
                 },
                 {
@@ -922,11 +929,6 @@
                     "g": 1.0,
                     "b": 1.0,
                     "a": 1.0
-                },
-                {
-                    "Type": "SortingGroup",
-                    "SortingLayer": 2,
-                    "OrderInLayer": 3
                 }
             ]
         },
@@ -936,7 +938,7 @@
             "Components": [
                 {
                     "PID": 15,
-                    "ID": 52,
+                    "ID": 51,
                     "Type": "Transform",
                     "Pos": {
                         "X": -0.8999999761581421,
@@ -976,7 +978,7 @@
             "Components": [
                 {
                     "PID": 16,
-                    "ID": 54,
+                    "ID": 53,
                     "Type": "Transform",
                     "Pos": {
                         "X": -0.8999999761581421,
@@ -1016,7 +1018,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 56,
+                    "ID": 55,
                     "Type": "Transform",
                     "Pos": {
                         "X": -2.5,
@@ -1056,7 +1058,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 58,
+                    "ID": 57,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1082,7 +1084,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 59,
+                    "ID": 58,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1108,7 +1110,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 60,
+                    "ID": 59,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1134,7 +1136,7 @@
             "Components": [
                 {
                     "PID": 3,
-                    "ID": 61,
+                    "ID": 60,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1160,7 +1162,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 62,
+                    "ID": 61,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1191,7 +1193,7 @@
             "Components": [
                 {
                     "PID": 24,
-                    "ID": 64,
+                    "ID": 63,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.20270991325378418,
@@ -1238,7 +1240,7 @@
             "Components": [
                 {
                     "PID": 11,
-                    "ID": 67,
+                    "ID": 66,
                     "Type": "Transform",
                     "Pos": {
                         "X": 5.876922607421875,
@@ -1285,6 +1287,7 @@
                         }
                     },
                     "Callback": "",
+                    "fadeDur": 0.10000000149011612,
                     "clickedR": 0.5,
                     "clickedG": 0.5,
                     "clickedB": 0.5,
@@ -1325,7 +1328,7 @@
             "Components": [
                 {
                     "PID": 24,
-                    "ID": 72,
+                    "ID": 71,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1377,7 +1380,7 @@
             "Components": [
                 {
                     "PID": 24,
-                    "ID": 76,
+                    "ID": 75,
                     "Type": "Transform",
                     "Pos": {
                         "X": 6.304711818695068,
@@ -1424,7 +1427,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 79,
+                    "ID": 78,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1462,6 +1465,7 @@
                         }
                     },
                     "Callback": "",
+                    "fadeDur": 0.10000000149011612,
                     "clickedR": 0.5,
                     "clickedG": 0.5,
                     "clickedB": 0.5,
@@ -1483,7 +1487,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 82,
+                    "ID": 81,
                     "Type": "Transform",
                     "Pos": {
                         "X": -2.964315891265869,
@@ -1528,7 +1532,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 85,
+                    "ID": 84,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.05472242832183838,
@@ -1571,7 +1575,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 88,
+                    "ID": 87,
                     "Type": "Transform",
                     "Pos": {
                         "X": 6.444356918334961,
@@ -1614,7 +1618,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 91,
+                    "ID": 90,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1657,7 +1661,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 94,
+                    "ID": 93,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1683,7 +1687,7 @@
             "Components": [
                 {
                     "PID": 34,
-                    "ID": 95,
+                    "ID": 94,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1714,7 +1718,7 @@
             "Components": [
                 {
                     "PID": 21,
-                    "ID": 97,
+                    "ID": 96,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1752,7 +1756,7 @@
             "Components": [
                 {
                     "PID": 36,
-                    "ID": 99,
+                    "ID": 98,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1790,7 +1794,7 @@
             "Components": [
                 {
                     "PID": 21,
-                    "ID": 101,
+                    "ID": 100,
                     "Type": "Transform",
                     "Pos": {
                         "X": -4.044619083404541,
@@ -1817,19 +1821,6 @@
                     "bullet": 136
                 },
                 {
-                    "Type": "BoxCollider2D",
-                    "BoundingBox": {
-                        "Min": {
-                            "X": -0.5,
-                            "Y": -0.5
-                        },
-                        "Max": {
-                            "X": 0.5,
-                            "Y": 0.5
-                        }
-                    }
-                },
-                {
                     "ID": 95,
                     "Type": "SpriteRenderer",
                     "Sprite ID": 13074272764253053419,
@@ -1849,7 +1840,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 105,
+                    "ID": 103,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1901,7 +1892,7 @@
             "Components": [
                 {
                     "PID": 41,
-                    "ID": 107,
+                    "ID": 105,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1939,7 +1930,7 @@
             "Components": [
                 {
                     "PID": 41,
-                    "ID": 109,
+                    "ID": 107,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1979,7 +1970,7 @@
             "Components": [
                 {
                     "PID": 44,
-                    "ID": 111,
+                    "ID": 109,
                     "Type": "Transform",
                     "Pos": {
                         "X": -8.5,
@@ -2012,6 +2003,7 @@
                         }
                     },
                     "Callback": "",
+                    "fadeDur": 0.10000000149011612,
                     "clickedR": 0.5,
                     "clickedG": 0.5,
                     "clickedB": 0.5,
@@ -2047,7 +2039,7 @@
             "Components": [
                 {
                     "PID": 41,
-                    "ID": 114,
+                    "ID": 112,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -2073,7 +2065,7 @@
             "Components": [
                 {
                     "PID": 44,
-                    "ID": 115,
+                    "ID": 113,
                     "Type": "Transform",
                     "Pos": {
                         "X": -8.5,
@@ -2106,6 +2098,7 @@
                         }
                     },
                     "Callback": "",
+                    "fadeDur": 0.10000000149011612,
                     "clickedR": 0.5,
                     "clickedG": 0.5,
                     "clickedB": 0.5,
@@ -2141,7 +2134,7 @@
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 118,
+                    "ID": 116,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -2169,6 +2162,7 @@
                     "Option_01": 15,
                     "Option_02": 16,
                     "Next_Event": 26,
+                    "CombatScreen": 21,
                     "GameManager": 134,
                     "Option_02_Text": 43,
                     "Header": 31,
@@ -2184,7 +2178,7 @@
             "Components": [
                 {
                     "PID": 40,
-                    "ID": 120,
+                    "ID": 118,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -2222,7 +2216,7 @@
             "Components": [
                 {
                     "PID": 40,
-                    "ID": 122,
+                    "ID": 120,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -2262,7 +2256,7 @@
             "Components": [
                 {
                     "PID": 40,
-                    "ID": 124,
+                    "ID": 122,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -2295,6 +2289,7 @@
                         }
                     },
                     "Callback": "",
+                    "fadeDur": 0.10000000149011612,
                     "clickedR": 0.5,
                     "clickedG": 0.5,
                     "clickedB": 0.5,
@@ -2330,7 +2325,7 @@
             "Components": [
                 {
                     "PID": 4,
-                    "ID": 127,
+                    "ID": 125,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -2368,7 +2363,7 @@
             "Components": [
                 {
                     "PID": 24,
-                    "ID": 129,
+                    "ID": 127,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -2410,7 +2405,7 @@
             "Components": [
                 {
                     "PID": 40,
-                    "ID": 131,
+                    "ID": 129,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -2443,6 +2438,7 @@
                         }
                     },
                     "Callback": "",
+                    "fadeDur": 0.10000000149011612,
                     "clickedR": 0.5,
                     "clickedG": 0.5,
                     "clickedB": 0.5,
@@ -2478,12 +2474,12 @@
             "Components": [
                 {
                     "PID": 21,
-                    "ID": 134,
+                    "ID": 132,
                     "Type": "Transform",
                     "Pos": {
                         "X": -0.38715338706970215,
                         "Y": -6.651930332183838,
-                        "Z": 11.300000190734863
+                        "Z": 10.0
                     },
                     "Rot": {
                         "X": 0.0,
@@ -2500,7 +2496,7 @@
                     "ID": 136,
                     "Type": "Script",
                     "Name": "Bullet",
-                    "enemy": false
+                    "speed": 0.5
                 },
                 {
                     "ID": 137,
@@ -2508,9 +2504,9 @@
                     "Sprite ID": 0,
                     "Sprite Name": "empty",
                     "Color": {
-                        "X": 1.0,
-                        "Y": 0.5835156440734863,
-                        "Z": 0.0,
+                        "X": 0.043946266174316406,
+                        "Y": 0.0,
+                        "Z": 1.0,
                         "W": 1.0
                     }
                 }
@@ -2522,7 +2518,7 @@
             "Components": [
                 {
                     "PID": 21,
-                    "ID": 137,
+                    "ID": 135,
                     "Type": "Transform",
                     "Pos": {
                         "X": -3.9750938415527344,
@@ -2567,7 +2563,7 @@
             "Components": [
                 {
                     "PID": 21,
-                    "ID": 140,
+                    "ID": 138,
                     "Type": "Transform",
                     "Pos": {
                         "X": -3.4883475303649902,
@@ -2612,7 +2608,7 @@
             "Components": [
                 {
                     "PID": 21,
-                    "ID": 143,
+                    "ID": 141,
                     "Type": "Transform",
                     "Pos": {
                         "X": -3.326098680496216,
@@ -2657,7 +2653,7 @@
             "Components": [
                 {
                     "PID": 21,
-                    "ID": 146,
+                    "ID": 144,
                     "Type": "Transform",
                     "Pos": {
                         "X": 3.488347291946411,
@@ -2692,7 +2688,7 @@
                     "Type": "Script",
                     "Name": "ShooterBehaviour",
                     "enemy": true,
-                    "bullet": 136
+                    "bullet": 160
                 }
             ]
         },
@@ -2702,7 +2698,7 @@
             "Components": [
                 {
                     "PID": 21,
-                    "ID": 149,
+                    "ID": 147,
                     "Type": "Transform",
                     "Pos": {
                         "X": 3.569471836090088,
@@ -2725,7 +2721,7 @@
                     "Type": "Script",
                     "Name": "ShooterBehaviour",
                     "enemy": true,
-                    "bullet": 136
+                    "bullet": 160
                 },
                 {
                     "ID": 155,
@@ -2747,7 +2743,7 @@
             "Components": [
                 {
                     "PID": 21,
-                    "ID": 152,
+                    "ID": 150,
                     "Type": "Transform",
                     "Pos": {
                         "X": 3.6505959033966064,
@@ -2770,7 +2766,7 @@
                     "Type": "Script",
                     "Name": "ShooterBehaviour",
                     "enemy": true,
-                    "bullet": 136
+                    "bullet": 160
                 },
                 {
                     "ID": 156,
@@ -2792,7 +2788,7 @@
             "Components": [
                 {
                     "PID": 21,
-                    "ID": 155,
+                    "ID": 153,
                     "Type": "Transform",
                     "Pos": {
                         "X": 3.3260979652404785,
@@ -2815,7 +2811,7 @@
                     "Type": "Script",
                     "Name": "ShooterBehaviour",
                     "enemy": true,
-                    "bullet": 136
+                    "bullet": 160
                 },
                 {
                     "ID": 157,
@@ -2828,6 +2824,50 @@
                         "Z": 0.0,
                         "W": 1.0
                     }
+                }
+            ]
+        },
+        {
+            "ID": 60,
+            "Name": "Bullet Enemy",
+            "Components": [
+                {
+                    "PID": 21,
+                    "ID": 156,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 1.230949878692627,
+                        "Y": -6.096256732940674,
+                        "Z": 10.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 0.5,
+                        "Y": 0.10000000149011612,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 159,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 0.0,
+                        "Z": 0.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "ID": 160,
+                    "Type": "Script",
+                    "Name": "Bullet",
+                    "speed": -0.5
                 }
             ]
         }
