@@ -78,15 +78,20 @@ namespace Copium
 			timer = 0;
 			previousState = state;
 			if (targetGraphic)
-				previousColor = targetGraphic->layeredColor;
+				previousColor = reinterpret_cast<IUIComponent*>(targetGraphic)->layeredColor;
 		}
 		switch (state)
 		{
 		case ButtonState::OnClick:
 		{
-			//PRINT("UI: Clicked " << gameObj.get_name());
+			PRINT("UI: Clicked " << gameObj.get_name());
 			if (targetGraphic)
-				targetGraphic->layeredColor = Linear(previousColor, clickedColor, timer / fadeDuration);
+			{
+				if (targetGraphic->componentType == ComponentType::Text)
+					reinterpret_cast<Text*>(targetGraphic)->layeredColor = Linear(previousColor, clickedColor, timer / fadeDuration);
+				else if (targetGraphic->componentType == ComponentType::Image)
+					reinterpret_cast<Text*>(targetGraphic)->layeredColor = Linear(previousColor, clickedColor, timer / fadeDuration);
+			}
 			Script* script = gameObj.getComponent<Script>();
 			if (script)
 			{
@@ -100,25 +105,35 @@ namespace Copium
 		}
 		case ButtonState::OnHover:
 		{
-			//PRINT("UI: Hover " << gameObj.get_name());
+			PRINT("UI: Hover " << gameObj.get_name());
 			if (targetGraphic)
-				targetGraphic->layeredColor = Linear(previousColor, hoverColor, timer / fadeDuration);
+			{
+				if (targetGraphic->componentType == ComponentType::Text)
+					reinterpret_cast<Text*>(targetGraphic)->layeredColor = Linear(previousColor, hoverColor, timer / fadeDuration);
+				else if (targetGraphic->componentType == ComponentType::Image)
+					reinterpret_cast<Text*>(targetGraphic)->layeredColor = Linear(previousColor, hoverColor, timer / fadeDuration);
+			}
 			break;
 		}
 		case ButtonState::OnHeld:
 		{
-			//PRINT("UI: Held " << gameObj.get_name());
+			PRINT("UI: Held " << gameObj.get_name());
 			break;
 		}
 		case ButtonState::OnRelease:
 		{
-			//PRINT("UI: Released " << gameObj.get_name());
+			PRINT("UI: Released " << gameObj.get_name());
 			break;
 		}
 		default:
 		{
 			if (targetGraphic)
-				targetGraphic->layeredColor = Linear(previousColor, normalColor, timer / fadeDuration);
+			{
+				if (targetGraphic->componentType == ComponentType::Text)
+					reinterpret_cast<Text*>(targetGraphic)->layeredColor = Linear(previousColor, normalColor, timer / fadeDuration);
+				else if (targetGraphic->componentType == ComponentType::Image)
+					reinterpret_cast<Text*>(targetGraphic)->layeredColor = Linear(previousColor, normalColor, timer / fadeDuration);
+			}
 			break;
 		}
 		}
@@ -136,7 +151,7 @@ namespace Copium
 		if (_value.HasMember("Graphic ID"))
 		{
 			ComponentID targetGraphicID = _value["Graphic ID"].GetUint64();
-			targetGraphic = reinterpret_cast<Text*>(MySceneManager.findComponentByID(targetGraphicID));
+			targetGraphic = MySceneManager.findComponentByID(targetGraphicID);
 		}
 	}
 
@@ -146,9 +161,9 @@ namespace Copium
 		{
 			ComponentID _ID = reinterpret_cast<Button*>(rhs)->targetGraphic->id;
 
-			Component* foundText = MySceneManager.findComponentByID(_ID);
-			if (foundText)
-				targetGraphic = reinterpret_cast<Text*>(foundText);
+			Component* foundGraphic = MySceneManager.findComponentByID(_ID);
+			if (foundGraphic)
+				targetGraphic = foundGraphic;
 		}
 	}
 
@@ -188,14 +203,18 @@ namespace Copium
 			if (ImGui::BeginDragDropTarget())
 			{
 				const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Text");
+				if (!payload)
+					payload = ImGui::AcceptDragDropPayload("ImageComponent");
 				if (payload)
 				{
-					Text* pText = (Text*)(*reinterpret_cast<void**>(payload->Data));
-					if (pText != targetGraphic)
+					Component* pTargetGraphic = (Component*)(*reinterpret_cast<void**>(payload->Data));
+					if (pTargetGraphic != targetGraphic)
 					{
-						if (targetGraphic)
-							targetGraphic->layeredColor = {0,0,0,0};
-						targetGraphic = pText;
+						if (targetGraphic->componentType == ComponentType::Text)
+							reinterpret_cast<Text*>(targetGraphic)->layeredColor = {0,0,0,0};
+						else if (targetGraphic->componentType == ComponentType::Image)
+							reinterpret_cast<Text*>(targetGraphic)->layeredColor = { 0,0,0,0 };
+						targetGraphic = pTargetGraphic;
 					}
 				}
 				ImGui::EndDragDropTarget();
@@ -357,6 +376,9 @@ namespace Copium
 		component->bounds = bounds;
 		component->state = state;
 		component->callbackName = callbackName;
+		component->clickedColor = clickedColor;
+		component->hoverColor = hoverColor;
+		component->normalColor = normalColor;
 		return component;
 	}
 
@@ -381,6 +403,22 @@ namespace Copium
 		rapidjson::Value rjName;
 		rjName.SetString(callbackName.c_str(), _doc.GetAllocator());
 		_value.AddMember("Callback", rjName, _doc.GetAllocator());
+
+
+		_value.AddMember("clickedR", clickedColor.r, _doc.GetAllocator());
+		_value.AddMember("clickedG", clickedColor.g, _doc.GetAllocator());
+		_value.AddMember("clickedB", clickedColor.b, _doc.GetAllocator());
+		_value.AddMember("clickedA", clickedColor.a, _doc.GetAllocator());
+
+		_value.AddMember("hoveredR", hoverColor.r, _doc.GetAllocator());
+		_value.AddMember("hoveredG", hoverColor.g, _doc.GetAllocator());
+		_value.AddMember("hoveredB", hoverColor.b, _doc.GetAllocator());
+		_value.AddMember("hoveredA", hoverColor.a, _doc.GetAllocator());
+
+		_value.AddMember("normalR", normalColor.r, _doc.GetAllocator());
+		_value.AddMember("normalG", normalColor.g, _doc.GetAllocator());
+		_value.AddMember("normalB", normalColor.b, _doc.GetAllocator());
+		_value.AddMember("normalA", normalColor.a, _doc.GetAllocator());
 	}
 	void Button::deserialize(rapidjson::Value& _value)
 	{
@@ -399,6 +437,24 @@ namespace Copium
 		{
 			rapidjson::Value& _v = _value["BoundingBox"].GetObj();
 			bounds.deserialize(_v);
+		}
+
+		if (_value.HasMember("clickedR"))
+		{
+			clickedColor.r = _value["clickedR"].GetFloat();
+			clickedColor.b = _value["clickedB"].GetFloat();
+			clickedColor.g = _value["clickedG"].GetFloat();
+			clickedColor.a = _value["clickedA"].GetFloat();
+
+			hoverColor.r = _value["hoveredR"].GetFloat();
+			hoverColor.b = _value["hoveredB"].GetFloat();
+			hoverColor.g = _value["hoveredG"].GetFloat();
+			hoverColor.a = _value["hoveredA"].GetFloat();
+
+			normalColor.r = _value["normalR"].GetFloat();
+			normalColor.b = _value["normalB"].GetFloat();
+			normalColor.g = _value["normalG"].GetFloat();
+			normalColor.a = _value["normalA"].GetFloat();
 		}
 	}
 
@@ -426,7 +482,6 @@ namespace Copium
 	{
 		targetGraphic = _txt;
 	}
-	Text* Button::get_targetgraphic() { return targetGraphic; }
 	
 	//----------------/
 

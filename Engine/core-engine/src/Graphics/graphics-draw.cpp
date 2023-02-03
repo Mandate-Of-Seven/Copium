@@ -283,11 +283,11 @@ namespace Copium
 						float updatedRot = t.rotation.z;
 						UpdateTransform(gameObject->transform, updatedPos, updatedRot, updatedScale);
 
-						renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr);
+						renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr, &rc->layeredColor);
 					}
 					else
 					{
-						renderer.draw_quad(t.position, size, rotation, sr);
+						renderer.draw_quad(t.position, size, rotation, sr, &rc->layeredColor);
 					}
 				}
 				for (Component* component : gameObject->getComponents<Animator>())

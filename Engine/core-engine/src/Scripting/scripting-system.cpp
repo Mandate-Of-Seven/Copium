@@ -726,7 +726,7 @@ namespace Copium
 		CompilingState state = compilingState;
 		while (compilingState == CompilingState::Compiling);
 		//If thread was Recompiling and is ready to swap
-		if (state == CompilingState::Compiling && compilingState == CompilingState::SwapAssembly)
+		if (compilingState == CompilingState::SwapAssembly)
 		{
 			swapDll();
 			registerComponents();

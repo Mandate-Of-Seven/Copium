@@ -357,6 +357,21 @@ namespace Copium
 		return gameObj->isActive();
 	}
 
+
+	static bool GetComponentEnabled(GameObjectID gid, ComponentID cid)
+	{
+		Component* component = sceneManager.findComponentByID(cid);
+		return component->Enabled();
+	}
+
+	static void SetComponentEnabled(GameObjectID gid, ComponentID cid, bool val)
+	{
+		Component* component = sceneManager.findComponentByID(cid);
+		if (component)
+			component->Enabled(val);
+	}
+
+
 	/*******************************************************************************
 	/*!
 	\brief
@@ -544,6 +559,8 @@ namespace Copium
 		Register(AudioSourcePlay);
 		Register(PauseAllAnimation);
 		Register(PlayAllAnimation);
+		Register(GetComponentEnabled);
+		Register(SetComponentEnabled);
 	}
 
 	/*******************************************************************************

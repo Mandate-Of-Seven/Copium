@@ -193,4 +193,9 @@ namespace CopiumEngine
     {
 
     }
+
+    public class SortingGroup : Component
+    {
+
+    }
 }

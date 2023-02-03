@@ -284,6 +284,7 @@ namespace Copium
 
 
 		bool isScript(const std::string& name);
+		CompilingState compilingState{ CompilingState::Wait };
 
 	private:
 
@@ -409,7 +410,6 @@ namespace Copium
 		std::unordered_map<MonoObject*, MonoGameObjects> mGameObjects;
 		std::unordered_map<MonoObject*, MonoComponents> mComponents;
 		std::list<File>& scriptFiles;
-		CompilingState compilingState{ CompilingState::Wait };
 		std::map<std::string, std::map<std::string,ScriptableObject>> scriptableObjects;
 
 		MonoClass* klassScene{};

@@ -30,22 +30,10 @@ public class GameManager: CopiumScript
     bool isReportScreenOn = false;
     int state = 0;
     public bool isPaused = false;
-
-    public ShooterBehaviour ally1;
-    public ShooterBehaviour ally2;
-    public ShooterBehaviour ally3;
-    public ShooterBehaviour ally4;
-
-    public ShooterBehaviour enemy1;
-    public ShooterBehaviour enemy2;
-    public ShooterBehaviour enemy3;
-    public ShooterBehaviour enemy4;
-
     void Start()
 	{
         isReportScreenOn = false;
         PauseCanvas.SetActive(false);
-        audio.Play();
 
         UpdateCanvases();
 
@@ -66,10 +54,14 @@ public class GameManager: CopiumScript
             PauseCanvas.SetActive(isPaused);
             if (isPaused)
             {
+                ReportScreenBtn.enabled = false;
+                CombatScreenBtn.enabled = false;
                 InternalCalls.PauseAllAnimation();
             }
             else
             {
+                ReportScreenBtn.enabled = true;
+                CombatScreenBtn.enabled = true;
                 InternalCalls.PlayAllAnimation();
             }
         }

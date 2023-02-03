@@ -65,11 +65,10 @@ namespace Copium
 			const HorizontalAlignment& get_hAlign() { return hAlignment; }
 			const VerticalAlignment& get_vAlign() { return vAlignment; }
 
-		protected:
 			Math::Vec2 offset;
-			HorizontalAlignment hAlignment{HorizontalAlignment::Center};
-			VerticalAlignment vAlignment{VerticalAlignment::Center};
-			glm::fvec4 color{1.f};
+			HorizontalAlignment hAlignment{ HorizontalAlignment::Center };
+			VerticalAlignment vAlignment{ VerticalAlignment::Center };
+			glm::fvec4 color{ 1.f };
 			glm::fvec4 layeredColor{ 0.f };
 	};
 
@@ -197,7 +196,7 @@ namespace Copium
 			glm::fvec4 normalColor;
 			glm::fvec4 hoverColor;
 			glm::fvec4 clickedColor;
-			Text* targetGraphic;
+			Component* targetGraphic;
 			ButtonState previousState{ButtonState::None};
 			glm::fvec4 previousColor;
 			float timer{0};
@@ -251,7 +250,7 @@ namespace Copium
 			friend class Button;
 	};
 
-	class ImageComponent final : public Component, IUIComponent
+	class ImageComponent final : public Component, public IUIComponent
 	{
 		public:
 			/**************************************************************************/
