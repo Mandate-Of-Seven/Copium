@@ -56,11 +56,31 @@ namespace Copium
 	//	return inputSystem.is_key_pressed(keyCode);
 	//}
 
+	/*******************************************************************************
+	/*!
+	\brief
+		To be implemented
+
+	\param keyCode
+
+	\return
+	*/
+	/*******************************************************************************/
 	static bool GetKeyUp(int keyCode)
 	{
 		return  inputSystem.is_key_pressed(keyCode);
 	}
+	/*******************************************************************************
+	/*!
+	\brief
+		To be implemented
 
+	\param keyCode
+
+	\return
+
+	*/
+	/*******************************************************************************/
 	static bool GetKeyDown(int keyCode)
 	{
 		return  inputSystem.is_key_pressed(keyCode);
@@ -358,12 +378,45 @@ namespace Copium
 	}
 
 
+	/*******************************************************************************
+	/*!
+	\brief
+		Get if component is enabled
+
+	\param gid
+		id of the game object to check
+
+	\param cid
+		id of the component to check
+
+	\return
+		whether the component is enabled
+	*/
+	/*******************************************************************************/
 	static bool GetComponentEnabled(GameObjectID gid, ComponentID cid)
 	{
 		Component* component = sceneManager.findComponentByID(cid);
 		return component->Enabled();
 	}
 
+	/*******************************************************************************
+	/*!
+	\brief
+		Set the component's enabled value
+
+	\param gid
+		id of the game object to set
+
+	\param cid
+		id of the component to set
+
+	\param val
+		the value to set
+
+	\return
+		void
+	*/
+	/*******************************************************************************/
 	static void SetComponentEnabled(GameObjectID gid, ComponentID cid, bool val)
 	{
 		Component* component = sceneManager.findComponentByID(cid);
@@ -448,6 +501,19 @@ namespace Copium
 		}
 	}
 
+	/*******************************************************************************
+	/*!
+	\brief
+		Get the button state
+
+	\param gameObjID
+		ID of gameObject that has this component
+
+	\return
+		the state of the button
+
+	*/
+	/*******************************************************************************/
 	static char GetButtonState(GameObjectID gameObjID)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(gameObjID);
@@ -508,6 +574,18 @@ namespace Copium
 		COPIUM_ASSERT(!MyGOF.destroy(ID), "GameObject could not be destroyed");
 	}
 
+	/*******************************************************************************
+	/*!
+	\brief
+		Play sound
+
+	\param ID
+		id of the game object that contains an audio source component
+
+	\return
+		void 
+	*/
+	/*******************************************************************************/
 	static void AudioSourcePlay(GameObjectID ID)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(ID);
@@ -516,11 +594,29 @@ namespace Copium
 		gameObj->getComponent<AudioSource>()->play_sound();
 	}
 
+	/*******************************************************************************
+	/*!
+	\brief
+		Pause all animations
+
+	\return
+		void
+	*/
+	/*******************************************************************************/
 	static void PauseAllAnimation()
 	{
 		animationSystem.PauseAllAnimation();
 	}
 
+	/*******************************************************************************
+	/*!
+	\brief
+		Play all animations
+
+	\return
+		void
+	*/
+	/*******************************************************************************/
 	static void PlayAllAnimation()
 	{
 		animationSystem.PlayAllAnimation();

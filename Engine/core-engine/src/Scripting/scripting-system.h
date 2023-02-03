@@ -40,6 +40,7 @@ extern "C"
 
 namespace Copium
 {
+	// Map of all the field types
 	static std::unordered_map<std::string, FieldType> fieldTypeMap =
 	{
 		{ "System.Single",				FieldType::Float		},
@@ -75,6 +76,7 @@ namespace Copium
 		/*!
 			\brief
 				Stores a monoClass and retrieves all the default functions
+
 			\param _mClass
 				Class to load functions from
 		*/
@@ -146,6 +148,15 @@ namespace Copium
 		/**************************************************************************/
 		MonoObject* instantiateClass(MonoClass * mClass);
 
+		/**************************************************************************/
+		/*!
+			\brief
+				Get the list that contains the ScriptFiles
+
+			\return
+				read-only reference to the list containing all the script files
+		*/
+		/**************************************************************************/
 		const std::list<Copium::File>& getScriptFiles();
 		/**************************************************************************/
 		/*!
@@ -280,10 +291,37 @@ namespace Copium
 		/**************************************************************************/
 		MonoObject* getFieldMonoObject(MonoClassField* mField, MonoObject* mObject);
 
+		/**************************************************************************/
+		/*!
+			\brief
+				Checks if this script is a scriptable object
+
+			\param name
+				name of the object to be checked
+
+			\return 
+				true if script is a scriptable object
+				false if its not
+		*/
+		/**************************************************************************/
 		bool isScriptableObject(const std::string& name);
 
+		/**************************************************************************/
+		/*!
+			\brief
+				Checks if the script is indeed a script
 
+			\param name
+				name of the script to check
+
+			\return
+				true if script is indeed a script
+				false if not
+
+		*/
+		/**************************************************************************/
 		bool isScript(const std::string& name);
+
 		CompilingState compilingState{ CompilingState::Wait };
 
 	private:
@@ -365,12 +403,52 @@ namespace Copium
 		/*******************************************************************************/
 		void GetFieldValue(MonoObject* instance, MonoClassField* mClassFiend,  Field& field, void* container);
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Create a reference to the specified object in c#
+
+		\param object
+			reference to the object
+
+		\return
+			id of the component/gameobject]
+			if reference fails, returns -1
+		*/
+		/*******************************************************************************/
 		template<typename T>
 		size_t CreateReference(T& object) { static_assert(true); };
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Create a reference to the specified game object in c#
 
+		\param object
+			reference to the game object
 
+		\return
+			id of the gameobject
+			if reference fails, returns -1
+		*/
+		/*******************************************************************************/
 		template<>
 		size_t CreateReference<GameObject>(GameObject& object);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Create a reference to the specified component in c#
+
+		\param object
+			reference to the component
+
+		\return
+			id of the component
+			if reference fails, returns -1
+		*/
+		/*******************************************************************************/
 		template<>
 		size_t CreateReference<Component>(Component& object);
 
@@ -389,18 +467,149 @@ namespace Copium
 		/*******************************************************************************/
 		void SetFieldValue(MonoObject* instance, MonoClassField* mClassFiend, Field& field, const void* value);
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Callback function when a scene is opened
+
+		\param pEvent
+			pointer to the relevant event 
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
 		void CallbackSceneOpened(SceneOpenedEvent* pEvent);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Callback function when a component is reflected
+
+		\param pEvent
+			pointer to the relevant event
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
 		void CallbackReflectComponent(ReflectComponentEvent* pEvent);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Callback function when a script is invoked
+
+		\param pEvent
+			pointer to the relevant event
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
 		void CallbackScriptInvokeMethod(ScriptInvokeMethodEvent* pEvent);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Callback function when a field is set
+
+		\param pEvent
+			pointer to the relevant event
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
 		void CallbackScriptSetField(ScriptSetFieldEvent* pEvent);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Callback function when a field is accessed
+
+		\param pEvent
+			pointer to the relevant event
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
 		void CallbackScriptGetField(ScriptGetFieldEvent* pEvent);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Callback function when a field reference is set
+
+		\param pEvent
+			pointer to the relevant event
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
 		template<typename T>
 		void CallbackScriptSetFieldReference(ScriptSetFieldReferenceEvent<T>* pEvent);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Callback function when method name is accessed
+
+		\param pEvent
+			pointer to the relevant event
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
 		void CallbackScriptGetMethodNames(ScriptGetMethodNamesEvent* pEvent);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Callback function when preview is started
+
+		\param pEvent
+			pointer to the relevant event
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
 		void CallbackStartPreview(StartPreviewEvent* pEvent);
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Get the corresponding instance of the game object with the specified id in c#
+
+		\param id
+			the id of the game object whose instance is to be obtained
+
+		\return
+			ptr to the c# instance
+		*/
+		/*******************************************************************************/
 		MonoObject* ReflectGameObject(GameObjectID id);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Get the corresponding instance of the component with the specified id in c#
+
+		\param id
+			the id of the component whose instance is to be obtained
+
+		\return
+			ptr to the c# instance
+		*/
+		/*******************************************************************************/
 		MonoObject* ReflectComponent(Component& component);
+
 
 		using MonoGameObjects = std::unordered_map<GameObjectID, MonoObject*>;
 		using MonoComponents = std::unordered_map<ComponentID, MonoObject*>;
@@ -418,6 +627,19 @@ namespace Copium
 		MonoObject* mPreviousScene;
 	};
 
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Callback function for when a field reference is set
+
+	\param pEvent
+		ptr to the relevant event
+
+	\return
+		void
+	*/
+	/*******************************************************************************/
 	template<typename T>
 	void ScriptingSystem::CallbackScriptSetFieldReference(ScriptSetFieldReferenceEvent<T>* pEvent)
 	{
