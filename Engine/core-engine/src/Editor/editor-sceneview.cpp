@@ -23,7 +23,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include <ImGuizmo.h>
 
-
+#include "GameObject/Components/ui-components.h"
+#include "GameObject/Components/renderer-component.h"
+#include "Animation/animation-system.h"
 
 namespace Copium
 {
@@ -127,6 +129,9 @@ namespace Copium
 				std::vector<GameObject*> pGameObjs; // Possible selectable gameobjects
 				for (GameObject* gameObject : scene->gameObjects)
 				{
+					if (!gameObject->isActive() || !gameObject)
+						continue;
+
 					Transform& t = gameObject->transform;
 					glm::vec2 mousePosition = glm::vec3(camera.get_ndc(), 0.f);
 					glm::vec3 tempPos = t.position;
@@ -172,14 +177,110 @@ namespace Copium
 						> glm::length(camera.get_dimension()))
 						continue;
 
-					glm::vec2 min = glm::vec2(objPosition.x - tempScale.x * 0.5f, objPosition.y - tempScale.y * 0.5f);
-					glm::vec2 max = glm::vec2(objPosition.x + tempScale.x * 0.5f, objPosition.y + tempScale.y * 0.5f);
+					glm::vec2 min, max;
+					AABB bound;
+					
+					min = glm::vec2(objPosition.x - tempScale.x * 0.5f, objPosition.y - tempScale.y * 0.5f);
+					max = glm::vec2(objPosition.x + tempScale.x * 0.5f, objPosition.y + tempScale.y * 0.5f);
+
+					for (Component* component : gameObject->getComponents<Button>())
+					{
+						if (!component->Enabled())
+							continue;
+
+						Button* button = reinterpret_cast<Button*>(component);
+						bound = button->getBounds();
+
+						min = glm::vec2(objPosition.x + bound.min.x - objPosition.x, objPosition.y + bound.min.y - objPosition.y);
+						max = glm::vec2(objPosition.x + bound.max.x - objPosition.x, objPosition.y + bound.max.y - objPosition.y);
+					}
+
+					
+					for (Component* component : gameObject->getComponents<SpriteRenderer>())
+					{
+						if (!component->Enabled())
+							continue;
+
+						SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(component);
+						Sprite sr = rc->get_sprite_renderer();
+						float tempX = 0.f, tempY = 0.f;
+						if (sr.get_texture() != nullptr)
+						{
+							int width = (int)sr.get_texture()->get_width();
+							int height = (int)sr.get_texture()->get_height();
+							float multiplier = width / (float)WindowsSystem::Instance()->get_window_width();
+							tempX = tempScale.x * (width / (float)height) * multiplier * 0.5f;
+							if(width == height)
+								tempY = tempScale.y * (width / (float)height) * multiplier * 0.5f;
+							else
+								tempY = tempScale.y * multiplier * 0.5f;
+						}
+						else
+							break;
+
+						min = glm::vec2(objPosition.x - tempX, objPosition.y - tempY);
+						max = glm::vec2(objPosition.x + tempX, objPosition.y + tempY);
+					}
+					for (Component* component : gameObject->getComponents<ImageComponent>())
+					{
+						if (!component->Enabled())
+							continue;
+
+						ImageComponent* ic = reinterpret_cast<ImageComponent*>(component);
+						Sprite sr = ic->get_sprite_renderer();
+						float tempX = 0.f, tempY = 0.f;
+						if (sr.get_texture() != nullptr)
+						{
+							int width = (int)sr.get_texture()->get_width();
+							int height = (int)sr.get_texture()->get_height();
+							float multiplier = width / (float)WindowsSystem::Instance()->get_window_width();
+							tempX = tempScale.x * (width / (float)height) * multiplier * 0.5f;
+							if (width == height)
+								tempY = tempScale.y * (width / (float)height) * multiplier * 0.5f;
+							else
+								tempY = tempScale.y * multiplier * 0.5f;
+						}
+						else
+							break;
+
+						min = glm::vec2(objPosition.x - tempX, objPosition.y - tempY);
+						max = glm::vec2(objPosition.x + tempX, objPosition.y + tempY);
+					}
+					for (Component* component : gameObject->getComponents<Animator>())
+					{
+						if (!component->Enabled())
+							continue;
+
+						Animator* anim = reinterpret_cast<Animator*>(component);
+						int columns = anim->GetCurrentAnimation()->spriteSheet.columns;
+						int rows = anim->GetCurrentAnimation()->spriteSheet.rows;
+						float tempX = 0.f, tempY = 0.f;
+						if (anim->GetCurrentAnimation()->spriteSheet.GetTexture() != nullptr)
+						{
+							float width = (float)anim->GetCurrentAnimation()->spriteSheet.GetTexture()->get_width() / (float) columns;
+							float height = (float)anim->GetCurrentAnimation()->spriteSheet.GetTexture()->get_height() / (float) rows;
+							float multiplier = width / (float)WindowsSystem::Instance()->get_window_width();
+							tempX = tempScale.x * (width / (float)height) * multiplier * 0.5f;
+							if (width == height)
+								tempY = tempScale.y * (width / (float)height) * multiplier * 0.5f;
+							else
+								tempY = tempScale.y * multiplier * 0.5f;
+						}
+						else
+							break;
+
+						min = glm::vec2(objPosition.x - tempX, objPosition.y - tempY);
+						max = glm::vec2(objPosition.x + tempX, objPosition.y + tempY);
+					}
 
 					// Check AABB
 					if (mousePosition.x > min.x && mousePosition.x < max.x)
 					{
 						if (mousePosition.y > min.y && mousePosition.y < max.y)
 						{
+							PRINT("Object: " << gameObject->get_name());
+							PRINT("Min: " << min.x << " " << min.y);
+							PRINT("Max: " << max.x << " " << max.y);
 							pGameObjs.push_back(gameObject);
 						}
 					}
