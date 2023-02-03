@@ -528,7 +528,24 @@ namespace Copium
 			}
 			case MESSAGE_TYPE::MT_STOP_PREVIEW:
 			{
+				MonoGameObjects& gameObjects{mGameObjects[mCurrentScene]};
+				MonoComponents& components{ mComponents[mCurrentScene] };
+
+				for (auto& pair : gameObjects)
+				{
+					pair.second = nullptr;
+				}
+
+				for (auto& pair : components)
+				{
+					pair.second = nullptr;
+				}
+
+				mGameObjects.erase(mCurrentScene);
+				mComponents.erase(mCurrentScene);
+
 				mCurrentScene = mPreviousScene;
+				mPreviousScene = nullptr;
 				compilingState = CompilingState::Wait;
 				break;
 			}
@@ -715,7 +732,13 @@ namespace Copium
 			registerComponents();
 		}
 		compilingState = CompilingState::Deserializing;
-		scenes[pEvent->sceneName] = mCurrentScene;
+		if (scenes.find(pEvent->sceneName) == scenes.end())
+			scenes[pEvent->sceneName] = mCurrentScene;
+		else
+		{
+			mGameObjects.clear();
+			mComponents.clear();
+		}
 	}
 
 	void ScriptingSystem::CallbackReflectComponent(ReflectComponentEvent* pEvent)
