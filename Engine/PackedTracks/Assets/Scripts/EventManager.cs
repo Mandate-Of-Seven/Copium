@@ -122,7 +122,7 @@ public class EventManager: CopiumScript
     {
         if (Event_01)
         {
-            if (GameManager.ReportTab.activeSelf || true)
+            if (GameManager.ReportTab.activeSelf)
             {
                 Option_01.SetActive(false);
                 Option_02.SetActive(false);
@@ -132,7 +132,7 @@ public class EventManager: CopiumScript
             return;
         }
 
-        if (GameManager.ReportTab.activeSelf || true)
+        if (GameManager.ReportTab.activeSelf)
         {
             Option_01.SetActive(true);
             Option_02.SetActive(true);
@@ -216,7 +216,7 @@ public class EventManager: CopiumScript
     {
         if (Event_02)
         {
-            if (GameManager.ReportTab.activeSelf || true)
+            if (GameManager.ReportTab.activeSelf)
             {
                 Option_01.SetActive(false);
                 Option_02.SetActive(false);
@@ -228,7 +228,7 @@ public class EventManager: CopiumScript
             return;
         }
 
-        if (GameManager.ReportTab.activeSelf || true)
+        if (GameManager.ReportTab.activeSelf)
         {
             Option_01.SetActive(true);
             Option_02.SetActive(true);
@@ -342,7 +342,7 @@ public class EventManager: CopiumScript
     {
         if (Event_03)
         {
-            if (GameManager.ReportTab.activeSelf || true)
+            if (GameManager.ReportTab.activeSelf)
             {
                 Option_01.SetActive(false);
                 Option_02.SetActive(false);
@@ -351,7 +351,7 @@ public class EventManager: CopiumScript
             return;
         }
 
-        if (GameManager.ReportTab.activeSelf || true)
+        if (GameManager.ReportTab.activeSelf)
         {
             Option_01.SetActive(false);
             Option_02.SetActive(false);
@@ -387,7 +387,7 @@ public class EventManager: CopiumScript
     {
         if (Event_03)
         {
-            if (GameManager.ReportTab.activeSelf || true)
+            if (GameManager.ReportTab.activeSelf)
             {
                 Option_01.SetActive(false);
                 Option_02.SetActive(false);
@@ -396,7 +396,7 @@ public class EventManager: CopiumScript
             return;
         }
 
-        if (GameManager.ReportTab.activeSelf || true)
+        if (GameManager.ReportTab.activeSelf)
         {
             Option_01.SetActive(true);
             Option_02.SetActive(true);
@@ -444,7 +444,7 @@ public class EventManager: CopiumScript
                 "\n\nBronson Mental: Shaken";
         }
 
-        if (GameManager.ReportTab.activeSelf || true)
+        if (GameManager.ReportTab.activeSelf)
         {
             Option_01.SetActive(false);
             Option_02.SetActive(false);
@@ -467,7 +467,7 @@ public class EventManager: CopiumScript
     {
         if (Event_04)
         {
-            if (GameManager.ReportTab.activeSelf || true)
+            if (GameManager.ReportTab.activeSelf)
             {
                 Option_01.SetActive(false);
                 Option_02.SetActive(false);
@@ -476,7 +476,7 @@ public class EventManager: CopiumScript
             return;
         }
 
-        if (GameManager.ReportTab.activeSelf || true)
+        if (GameManager.ReportTab.activeSelf)
         {
             Option_01.SetActive(true);
             Option_02.SetActive(true);
@@ -525,7 +525,7 @@ public class EventManager: CopiumScript
             Body.text = "\nReport type: End Of Day\n\n\nEveryone starved...";
         }
 
-        if (GameManager.ReportTab.activeSelf || true)
+        if (GameManager.ReportTab.activeSelf)
         {
             Option_01.SetActive(false);
             Option_02.SetActive(false);
@@ -539,7 +539,7 @@ public class EventManager: CopiumScript
     {
         if (Event_04)
         {
-            if (GameManager.ReportTab.activeSelf || true)
+            if (GameManager.ReportTab.activeSelf)
             {
                 Option_01.SetActive(false);
                 Option_02.SetActive(false);
@@ -548,7 +548,7 @@ public class EventManager: CopiumScript
             return;
         }
 
-        if (GameManager.ReportTab.activeSelf || true)
+        if (GameManager.ReportTab.activeSelf)
         {
             Option_01.SetActive(true);
             Option_02.SetActive(true);
@@ -598,7 +598,7 @@ public class EventManager: CopiumScript
             Body.text = "\nReport type: End Of Day\n\n\nEveryone starved...";
         }
 
-        if (GameManager.ReportTab.activeSelf || true)
+        if (GameManager.ReportTab.activeSelf)
         {
             Option_01.SetActive(false);
             Option_02.SetActive(false);
