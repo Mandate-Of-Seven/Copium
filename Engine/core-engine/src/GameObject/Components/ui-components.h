@@ -117,7 +117,7 @@ namespace Copium
 
 			Button& operator=(const Button& rhs);
 
-			Component* clone(GameObject& _gameObj) const;
+			Component* clone(GameObject& _gameObj, ComponentID* newID = nullptr) const;
 
 			/*******************************************************************************
 			/*!
@@ -239,7 +239,7 @@ namespace Copium
 
 			Font* GetFont() { return font; }
 
-			Component* clone(GameObject& _gameObj) const;
+			Component* clone(GameObject& _gameObj, ComponentID* newID = nullptr) const;
 
 			void deserialize(rapidjson::Value& _value);
 			void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
@@ -284,7 +284,7 @@ namespace Copium
 			Sprite& get_sprite_renderer() { return sprite; }
 			void set_sprite_renderer(Sprite& _sprite) { sprite = _sprite; }
 
-			Component* clone(GameObject& _gameObj) const;
+			Component* clone(GameObject& _gameObj, ComponentID* newID = nullptr) const;
 
 			void deserialize(rapidjson::Value& _value)
 			{

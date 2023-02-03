@@ -252,7 +252,7 @@ namespace Copium
 			Reference to the cloned component in current scene
 		*/
 		/**************************************************************************/
-		Component* clone(GameObject& _gameObj) const;
+		Component* clone(GameObject& _gameObj, ComponentID* newID = nullptr) const;
 
 		/***************************************************************************/
 		/*!

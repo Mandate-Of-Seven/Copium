@@ -84,4 +84,16 @@ namespace Copium
 		const char**& namesArray;
 		size_t& arraySize;
 	};
+
+	struct ScriptCreatedEvent : public IEvent
+	{
+		ScriptCreatedEvent(Script& _script) :script{ _script } {}
+		Script& script;
+	};
+
+	struct ScriptDestroyedEvent : public IEvent
+	{
+		ScriptDestroyedEvent(Script& _script) :script{ _script } {}
+		Script& script;
+	};
 }

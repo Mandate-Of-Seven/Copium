@@ -33,12 +33,14 @@ namespace Copium
 	{
 		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
 		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
+		MyEventSystem->publish(new ScriptCreatedEvent(*this));
 	}
 
 	Script::~Script()
 	{
 		MessageSystem::Instance()->unsubscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
 		MessageSystem::Instance()->unsubscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
+		MyEventSystem->publish(new ScriptDestroyedEvent(*this));
 	}
 
 	void Script::instantiate()
@@ -366,10 +368,18 @@ namespace Copium
 		}
 	}
 
-	Component* Script::clone(GameObject& _gameObj) const
+	Component* Script::clone(GameObject& _gameObj, ComponentID* newID) const
 	{
 		Script* component = new Script(_gameObj);
-		component->id = id;
+		if (newID)
+		{
+			PRINT("ComponentID: " << *newID);
+			component->id = *newID;
+		}
+		else
+		{
+			component->id = id;
+		}
 		component->Name(Name());
 		for (auto& pair : fieldDataReferences)
 		{

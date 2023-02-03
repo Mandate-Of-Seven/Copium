@@ -22,7 +22,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 //INCLUDES
 #include "CopiumCore/system-interface.h"
 #include "Messaging/message-system.h"
-
+#include <Events/events-system.h>
 //USING
 
 namespace Copium
@@ -62,6 +62,10 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		void handleMessage(MESSAGE_TYPE mType);
+
+		void CallbackScriptCreated(ScriptCreatedEvent* pEvent);
+
+		void CallbackScriptDestroyed(ScriptDestroyedEvent* pEvent);
 	};
 }
 

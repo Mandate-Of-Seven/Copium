@@ -61,7 +61,7 @@ namespace Copium
 			*/
 			/*******************************************************************************/
 
-			Component* clone(GameObject& _gameObj) const
+			Component* clone(GameObject& _gameObj, ComponentID* newID = nullptr) const
 			{ 
 				BoxCollider2D* component = new BoxCollider2D(_gameObj);
 				component->boundingBox = boundingBox;

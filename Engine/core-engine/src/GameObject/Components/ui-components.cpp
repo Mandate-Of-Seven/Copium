@@ -370,7 +370,7 @@ namespace Copium
 		return ButtonState::None;
 	}
 
-	Component* Button::clone(GameObject& _gameObj) const
+	Component* Button::clone(GameObject& _gameObj, ComponentID* newID) const
 	{
 		auto* component = new Button(_gameObj);
 		component->bounds = bounds;
@@ -602,7 +602,7 @@ namespace Copium
 		
 	}
 
-	Component* Text::clone(GameObject& _gameObj) const
+	Component* Text::clone(GameObject& _gameObj, ComponentID* newID ) const
 	{
 		Text* component = new Text(_gameObj);
 		memcpy(component->content, content, TEXT_BUFFER_SIZE);
@@ -942,7 +942,7 @@ namespace Copium
 		sprite.set_name(spriteName);
 	}
 
-	Component* ImageComponent::clone(GameObject& _gameObj) const
+	Component* ImageComponent::clone(GameObject& _gameObj, ComponentID* newID) const
 	{
 		ImageComponent* component = new ImageComponent(_gameObj);
 		component->vAlignment = vAlignment;

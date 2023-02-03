@@ -472,6 +472,7 @@ namespace Copium
 		if (toBeCloned)
 		{
 			GameObject* clone = MyGOF.clone(*toBeCloned);
+			PRINT("CLONED OBJECT: " << clone->id);
 			if (clone)
 				return clone->id;
 		}

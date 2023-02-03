@@ -656,6 +656,7 @@ namespace Copium
 
 			if (component.componentType == ComponentType::Script)
 			{
+				PRINT("Creating: " << component.Name() << " of id: " << component.id);
 				Script& script{ *reinterpret_cast<Script*>(&component) };
 				for (auto& pair : scriptClass.mFields)
 				{
@@ -749,7 +750,9 @@ namespace Copium
 
 	void ScriptingSystem::CallbackScriptInvokeMethod(ScriptInvokeMethodEvent* pEvent)
 	{
+		auto it = mComponents[mCurrentScene].find(pEvent->script.id);
 		MonoObject* mScript = mComponents[mCurrentScene][pEvent->script.id];
+		PRINT("Script Invoking " << pEvent->script.Name() << " " << pEvent->methodName << " ,ID: " << pEvent->script.id);
 		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
 		ScriptClass& scriptClass{ GetScriptClass(pEvent->script.name) };
 		MonoMethod* mMethod{ mono_class_get_method_from_name (scriptClass.mClass,pEvent->methodName.c_str(),pEvent->paramCount)};

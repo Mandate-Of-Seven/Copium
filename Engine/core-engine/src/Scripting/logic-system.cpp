@@ -32,12 +32,17 @@ namespace Copium
 		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 		std::vector<GameObject*>* gameObjects;
 		double timeElasped;
+		std::list<Script*> scriptComponents;
+		bool inPlayMode{ false };
 	}
 
 	void LogicSystem::init()
 	{
 		messageSystem.subscribe(MESSAGE_TYPE::MT_START_PREVIEW,this);
+		messageSystem.subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
 		systemFlags |= FLAG_RUN_ON_PLAY;
+		MyEventSystem->subscribe(this, &LogicSystem::CallbackScriptCreated);
+		MyEventSystem->subscribe(this, &LogicSystem::CallbackScriptDestroyed);
 	}
 
 	void LogicSystem::update()
@@ -46,29 +51,22 @@ namespace Copium
 		if (pScene == nullptr)
 			return;
 
-		for (size_t i = 0; i < pScene->gameObjects.size(); ++i)
+		for (Script* script : scriptComponents)
 		{
-			GameObject* pGameObj = pScene->gameObjects[i];
-			if (!pGameObj->isActive())
+			if (!script->gameObj.isActive())
 				continue;
-			const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };
-			for (Script* pScript : pScripts)
-			{
-				if (!pScript)
-					continue;
-				if (!pScript->Enabled())
-					continue;
-				MyEventSystem->publish(new ScriptInvokeMethodEvent(*pScript, "Update"));
-				if (pScene != sceneManager.get_current_scene())
-					return;
+			if (!script->Enabled())
+				continue;
+			MyEventSystem->publish(new ScriptInvokeMethodEvent(*script, "Update"));
+			if (pScene != sceneManager.get_current_scene())
+				return;
 
-				for (size_t j = 0; j < MyFrameRateController.getSteps(); ++j)
-				{
-					MyEventSystem->publish(new ScriptInvokeMethodEvent(*pScript,"FixedUpdate"));
-				}
-				if (pScene != sceneManager.get_current_scene())
-					return;
-			}
+				//for (size_t j = 0; j < MyFrameRateController.getSteps(); ++j)
+				//{
+				//	MyEventSystem->publish(new ScriptInvokeMethodEvent(*pScript,"FixedUpdate"));
+				//}
+				//if (pScene != sceneManager.get_current_scene())
+				//	return;
 		}
 
 		if (Button::hoveredBtn && (!Button::hoveredBtn->gameObj.isActive() || !Button::hoveredBtn->Enabled()))
@@ -101,27 +99,46 @@ namespace Copium
 	void LogicSystem::handleMessage(MESSAGE_TYPE mType)
 	{
 		//MT_START_PREVIEW
-		Scene* pScene = sceneManager.get_current_scene();
-		if (pScene == nullptr)
-			return;
-		gameObjects = &pScene->gameObjects;
-		for (GameObject* pGameObj : *gameObjects)
+		if (mType == MESSAGE_TYPE::MT_START_PREVIEW)
 		{
-			const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };
-			for (Script* pScript : pScripts)
+			inPlayMode = true;
+			Scene* pScene = sceneManager.get_current_scene();
+			if (pScene == nullptr)
+				return;
+			gameObjects = &pScene->gameObjects;
+			for (GameObject* pGameObj : *gameObjects)
 			{
-				MyEventSystem->publish(new ScriptInvokeMethodEvent(*pScript, "Awake"));
+				const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };
+				for (Script* pScript : pScripts)
+				{
+					scriptComponents.push_back(pScript);
+					MyEventSystem->publish(new ScriptInvokeMethodEvent(*pScript, "Awake"));
+				}
 			}
-		}
 
-		for (GameObject* pGameObj : *gameObjects)
-		{
-			const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };
-			for (Script* pScript : pScripts)
+
+			for (Script* script : scriptComponents)
 			{
-				MyEventSystem->publish(new ScriptInvokeMethodEvent(*pScript, "Start"));
+				MyEventSystem->publish(new ScriptInvokeMethodEvent(*script, "Start"));
 			}
+			timeElasped = MyFrameRateController.getDt();
 		}
-		timeElasped = MyFrameRateController.getDt();
+		else
+		{
+			inPlayMode = false;
+		}
+	}
+
+
+	void LogicSystem::CallbackScriptCreated(ScriptCreatedEvent* pEvent)
+	{
+		if (inPlayMode)
+			scriptComponents.push_back(&pEvent->script);
+	}
+
+	void LogicSystem::CallbackScriptDestroyed(ScriptDestroyedEvent* pEvent)
+	{
+		if (inPlayMode)
+			scriptComponents.remove(&pEvent->script);
 	}
 }

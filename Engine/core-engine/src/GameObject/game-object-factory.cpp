@@ -165,8 +165,9 @@ namespace Copium
 		go->transform.rotation = _src.transform.rotation;
 		for (Component* component : _src.components)
 		{
-			Component* newComponent = component->clone(*go);
-			newComponent->id = _src.assign_id();
+			ComponentID newID = _src.assign_id();
+			Component* newComponent = component->clone(*go,&newID);
+			newComponent->id = newID;
 			go->components.push_back(newComponent);
 		}
 
