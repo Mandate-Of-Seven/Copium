@@ -4,6 +4,7 @@ using System;
 public class ShooterBehaviour: CopiumScript
 {
 	public GameManager gameManager;
+	public Bullet bullet;
 	public bool enemy = false;
 	ShooterBehaviour target;
 	float baseHealth = 100f;
