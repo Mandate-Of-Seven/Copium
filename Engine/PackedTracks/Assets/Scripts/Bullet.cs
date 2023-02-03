@@ -8,7 +8,7 @@ public class Bullet: CopiumScript
 
 	void Update()
 	{
-		Vector3 pos = transform.position;
+/*		Vector3 pos = transform.position;
 		if (enemy)
 		{
 			pos.x -= speed * Time.deltaTime;
@@ -17,6 +17,6 @@ public class Bullet: CopiumScript
 		{
 			pos.x += speed * Time.deltaTime;
 		}
-		transform.position = pos;
+		transform.position = pos;*/
 	}
 }
