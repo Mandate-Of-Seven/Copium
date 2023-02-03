@@ -25,15 +25,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Editor/editor-system.h"
 #include "SceneManager/scene-manager.h"
 
-//RTTR_REGISTRATION{
-//	using namespace rttr;
-//registration::class_<Transform>("Transform")
-//.property("Pos", &Transform::get_position, &Transform::set_position)
-//.property("Rot", &Transform::get_rotation, &Transform::set_rotation)
-//.property("Scale", &Transform::get_scale, &Transform::set_scale);
-//
-//}
-
 namespace Copium
 {
 

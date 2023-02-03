@@ -2,6 +2,7 @@
 \file			sorting-group-component.h
 \project
 \author			Sean Ngo
+\co-author		Matthew Lau
 
 \par			Course: GAM200
 \par			Section:
@@ -96,7 +97,27 @@ namespace Copium
 			_value.AddMember("OrderInLayer", orderInLayer, _doc.GetAllocator());
 		}
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Get the id of the layer this sorting group is in
+
+		\return
+			id of the layer this sorting group is in
+		*/
+		/*******************************************************************************/
 		int GetLayerID() const { return sortingLayer; }
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Get the gameobject's order in layer
+
+		\return
+			this gameobject's order in layer
+		*/
+		/*******************************************************************************/
 		int GetOrderInLayer() const { return orderInLayer; }
 	private:
 		int sortingLayer;

@@ -148,21 +148,28 @@ namespace Copium
 		*/
 		/*******************************************************************************/
 		bool create_delete_btn(const std::string& _btnName);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Gets a reference to the bool which determines if the HierarchyList is open or not
+
+		\return
+			reference to the bool which determines if Hierarchylist is open or not
+		*/
+		/*******************************************************************************/
 		bool& status() { return isHierarchyOpen; }
 
 		/*******************************************************************************
 		/*!
 		*
 		\brief
-			Create a button in the Hierarchy List window's menu bar that upon click will delete the selected game object
-			in the current scene
-
-		\param	_btnName
-			read-only reference to a string that contains the name of the button
+			Shift the currently selected game object up by one 'generation'
+			Note: the game object brings its children and so on with it
 
 		\return
-			if successful, return true
-			if there are errors in creation of the button, return false
+			void
 		*/
 		/*******************************************************************************/
 		void ShiftUp();
@@ -171,23 +178,67 @@ namespace Copium
 		/*!
 		*
 		\brief
-			Create a button in the Hierarchy List window's menu bar that upon click will delete the selected game object
-			in the current scene
-
-		\param	_btnName
-			read-only reference to a string that contains the name of the button
+			Shift the currently selected game object down by one 'generation'. Opens up a window allowing user to select
+			an available game object which will become the new parent
 
 		\return
-			if successful, return true
-			if there are errors in creation of the button, return false
+			void
 		*/
 		/*******************************************************************************/
 		void ShiftDown();
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Display the window which shows all available parent for the 'Shift Down' operation
+			Note: should be used in tandem with the ShiftDown function
+
+		\return
+			true if window displayed successfully
+			false if there were issues displaying the window
+		*/
+		/*******************************************************************************/
 		bool DisplayAdoptionWindow();
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Display a popup window which displays some options regarding game objects
+
+		\return
+			-1 if window is not displayed properly
+			0 if no option is selected
+			1 if an option was selected
+		*/
+		/*******************************************************************************/
 		int DisplayOptionsPopUpWindow();
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Display a popup window which displays some options regarding the hierarchy list
+
+		\return
+			-1 if window is not displayed properly
+			0 if no option is selected
+			1 if an option was selected
+		*/
+		/*******************************************************************************/
 		int DisplayHierarchyOptionsPopUpWindow();
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Reorder the specified game object up or down within its generation by 1 order
+			Note: keyboard shortcuts are implemented here for user's convenience
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
 		void Reorder(GameObject* _go);
 
 	private:
