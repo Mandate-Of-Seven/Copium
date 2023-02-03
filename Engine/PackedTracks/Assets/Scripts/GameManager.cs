@@ -42,11 +42,14 @@ public class GameManager: CopiumScript
 	{
         isReportScreenOn = false;
         PauseCanvas.SetActive(false);
-
+        Console.WriteLine("CRASH1");
         UpdateCanvases();
 
+        Console.WriteLine("CRASH2");
         ReportScreenBtn = ReportScreenGameObject.GetComponent<Button>();
+        Console.WriteLine("CRASH3");
         MainMenuStartBtn = MainMenuStartGameObject.GetComponent<Button>();
+        Console.WriteLine("CRASH4");
         MainMenuQuitBtn = MainMenuQuitGameObject.GetComponent<Button>();
     }
 	void Update()
@@ -76,14 +79,10 @@ public class GameManager: CopiumScript
             PauseCanvas.SetActive(isPaused);
             if (isPaused)
             {
-                ReportScreenBtn.enabled = false;
-                CombatScreenBtn.enabled = false;
                 InternalCalls.PauseAllAnimation();
             }
             else
             {
-                ReportScreenBtn.enabled = true;
-                CombatScreenBtn.enabled = true;
                 InternalCalls.PlayAllAnimation();
             }
         }
