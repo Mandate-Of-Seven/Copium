@@ -247,7 +247,7 @@ namespace Copium
 
 			if (nodeOpen)
 			{			
-				bool isSelected = false;
+				//bool isSelected = false;
 				for (size_t i{ 0 }; i < roots.size(); ++i)
 				{
 					display_gameobject(*(roots[i]), selectedID, roots, i);
@@ -286,7 +286,7 @@ namespace Copium
 		currentScene = nullptr;
 	}
 
-	bool EditorHierarchyList::display_gameobject(GameObject& _go, GameObjectID& _selected, std::vector<GameObject*>& _vector, int _index)
+	bool EditorHierarchyList::display_gameobject(GameObject& _go, GameObjectID& _selected, std::vector<GameObject*>& _vector, size_t _index)
 	{
 		bool isSelected = false, nodeOpen = false;
 		ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_OpenOnDoubleClick;
@@ -435,7 +435,7 @@ namespace Copium
 
 		return isSelected;
 	}
-	bool EditorHierarchyList::display_gameobject(GameObject& _go, GameObjectID& _selected, std::list<Transform*>& _list, int _index)
+	bool EditorHierarchyList::display_gameobject(GameObject& _go, GameObjectID& _selected, std::list<Transform*>& _list, size_t _index)
 	{
 		bool isSelected = false, nodeOpen = false;
 		ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
@@ -675,14 +675,12 @@ namespace Copium
 		if (!sm->get_selected_gameobject())
 			return;
 
-		Scene* scene = sm->get_current_scene();
+		//Scene* scene = sm->get_current_scene();
 		GameObject* target = sm->get_selected_gameobject();
 
 		// Do nothing if gameobject is in youngest generation
 		if (target->transform.children.empty())
 			return;
-
-
 
 
 	}
@@ -734,10 +732,10 @@ namespace Copium
 							target->transform.parent = (*it);
 							for (std::list<Transform*>::iterator iter = parent->transform.children.begin(); iter != parent->transform.children.end(); ++iter)
 							{
-								GameObject* go = &(*iter)->gameObj;
+								GameObject* go1 = &(*iter)->gameObj;
 
 								// Skip itself
-								if (go == target)
+								if (go1 == target)
 								{
 									parent->transform.children.erase(iter);
 									break;
