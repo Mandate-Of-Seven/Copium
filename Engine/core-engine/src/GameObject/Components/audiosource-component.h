@@ -23,6 +23,9 @@ namespace Copium
 	{
 		protected:
             std::string alias;
+            bool overLap = false;
+            bool loop = false;
+            int loopCount;
 		public:
 
             /***************************************************************************/

@@ -90,6 +90,8 @@ namespace Copium
 		*/
 		/***************************************************************************/
 		static Font* getFont(const std::string& _name);
+		const GLuint& get_VAO() { return fontVertexArrayID; }
+		const GLuint& get_VBO() { return fontVertexBufferID; }
 
 		/***************************************************************************/
 		/*!
