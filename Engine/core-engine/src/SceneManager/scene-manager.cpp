@@ -559,9 +559,6 @@ namespace Copium {
 			MyGOF.clone(*gameObj, currentScene);
 		}
 
-		//std::cout << "Storage scene game object count: " << storageScene->gameObjects.size() << std::endl;
-		//std::cout << "Preview scene game object count: " << currentScene->gameObjects.size() << std::endl;
-
 		for (size_t goIndex{ 0 }; goIndex < storageScene->get_gameobjcount(); ++goIndex)
 		{
 			GameObject* currGameObj = currentScene->gameObjects[goIndex];

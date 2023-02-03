@@ -1036,8 +1036,8 @@
                     "ID": 46,
                     "Type": "Script",
                     "Name": "GameManager",
-                    "TrainCanvas": 4,
                     "CombatCanvas": 21,
+                    "TrainCanvas": 4,
                     "MainScreenCanvas": 3,
                     "ReportTab": 11,
                     "MessageTab": 22,
@@ -1046,7 +1046,8 @@
                     "ReportScreenBtn": 9,
                     "ReportTabBtn": 17,
                     "audio": 78,
-                    "MessageTabBtn": 22
+                    "MessageTabBtn": 22,
+                    "ally1": 93
                 }
             ]
         },
@@ -1468,7 +1469,7 @@
                     "Type": "Script",
                     "Name": "EventManager",
                     "EventSequence": 0,
-                    "DaySequence": 1,
+                    "DaySequence": 2,
                     "LuckSequence": 1,
                     "Option_01": 15,
                     "Option_02": 16,

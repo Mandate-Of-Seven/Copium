@@ -401,11 +401,13 @@ namespace Copium
 		MonoObject* ReflectGameObject(GameObjectID id);
 		MonoObject* ReflectComponent(Component& component);
 
+		using MonoGameObjects = std::unordered_map<GameObjectID, MonoObject*>;
+		using MonoComponents = std::unordered_map<ComponentID, MonoObject*>;
 
 		std::unordered_map<std::string, ScriptClass> scriptClassMap;
 		std::unordered_map<std::string, ScriptClass> scriptableObjectClassMap;
-		std::unordered_map<GameObjectID, MonoObject*> mGameObjects;
-		std::unordered_map<ComponentID, MonoObject*> mComponents;
+		std::unordered_map<MonoObject*, MonoGameObjects> mGameObjects;
+		std::unordered_map<MonoObject*, MonoComponents> mComponents;
 		std::list<File>& scriptFiles;
 		CompilingState compilingState{ CompilingState::Wait };
 		std::map<std::string, std::map<std::string,ScriptableObject>> scriptableObjects;
@@ -419,19 +421,20 @@ namespace Copium
 	template<typename T>
 	void ScriptingSystem::CallbackScriptSetFieldReference(ScriptSetFieldReferenceEvent<T>* pEvent)
 	{
-		MonoObject* mScript = mComponents[pEvent->script.id];
+		MonoObject* mScript = mComponents[mCurrentScene][pEvent->script.id];
 		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
 		ScriptClass& scriptClass{ GetScriptClass(pEvent->script.name) };
 		MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };
 		COPIUM_ASSERT(!mClassField, std::string("FIELD ") + pEvent->fieldName + "COULD NOT BE FOUND IN SCRIPT " + pEvent->script.name);
-		PRINT("SETTING FIELD REFERENCE!");
 		size_t result = -1;
 		if (pEvent->reference == nullptr)
 		{
+			//REMOVE REFERENCE
 			SetFieldValue(mScript, mClassField, pEvent->script.fieldDataReferences[pEvent->fieldName], &result);
 			return;
 		}
 		result = CreateReference(*pEvent->reference);
+		//SET REFERENCE
 		SetFieldValue(mScript, mClassField, pEvent->script.fieldDataReferences[pEvent->fieldName], &result);
 	}
 }

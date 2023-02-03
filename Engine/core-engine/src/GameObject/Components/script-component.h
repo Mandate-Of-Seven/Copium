@@ -59,27 +59,27 @@ namespace Copium
 			else
 				data = nullptr;
 			if (_data)
-				memcpy(&data, _data, size);
+				memcpy(data, _data, size);
 		}
 
 		template<typename T>
 		void operator=(const T& val)
 		{
 			COPIUM_ASSERT(sizeof(T) > size, "FIELD DOES NOT HAVE ENOUGH SPACE TO STORE TYPE");
-			memcpy(&data, &val, size);
+			memcpy(data, &val, sizeof(T));
 		}
 
 		template<typename T>
 		void operator=(const T* val)
 		{
-			memcpy(&data, val, size);
+			memcpy(data, val, size);
 		}
 
 		template<typename T>
 		T& Get()
 		{
 			COPIUM_ASSERT(sizeof(T) > size, "FIELD DOES NOT HAVE ENOUGH SPACE TO STORE TYPE");
-			return *reinterpret_cast<T*>(&data);
+			return *reinterpret_cast<T*>(data);
 		}
 
 		void Resize(size_t _size)
@@ -101,12 +101,20 @@ namespace Copium
 		/**************************************************************************/
 		Field(const Field& rhs)
 		{
-			PRINT("FIELD COPY CONSTRUCTOR");
 			size = rhs.size;
 			data = new char[size];
 			fType = rhs.fType;
 			typeName = rhs.typeName;
-			memcpy(&data, &rhs.data, size);
+			memcpy(data, rhs.data, size);
+		}
+
+		Field(Field&& rhs)
+		{
+			size = rhs.size;
+			data = rhs.data;
+			fType = rhs.fType;
+			typeName = std::move(rhs.typeName);
+			rhs.data = nullptr;
 		}
 
 		Field& operator=(Field&& rhs)
@@ -299,7 +307,6 @@ namespace Copium
 		void instantiate();
 		static char buffer[128];
 		std::string name;
-		const Script* reference{ nullptr };
 		std::unordered_map<std::string, GameObject*> fieldGameObjReferences;
 		std::unordered_map<std::string, Component*> fieldComponentReferences;
 		std::unordered_map<std::string, Field> fieldDataReferences;

@@ -29,7 +29,7 @@ namespace Copium
 	bool Script::isAddingReference{nullptr};
 
 	Script::Script(GameObject& _gameObj) :
-		Component(_gameObj, ComponentType::Script), name{ "" }, reference{nullptr}
+		Component(_gameObj, ComponentType::Script), name{ "" }
 	{
 		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
 		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
@@ -52,8 +52,6 @@ namespace Copium
 		{
 		case MESSAGE_TYPE::MT_SCRIPTING_UPDATED:
 		{
-
-
 			//CreateFields
 		}
 		case MESSAGE_TYPE::MT_SCENE_DESERIALIZED:
@@ -371,6 +369,12 @@ namespace Copium
 	Component* Script::clone(GameObject& _gameObj) const
 	{
 		Script* component = new Script(_gameObj);
+		component->id = id;
+		component->Name(Name());
+		for (auto& pair : fieldDataReferences)
+		{
+			MyEventSystem->publish(new ScriptSetFieldEvent(*component, pair.first.c_str(), pair.second.data));
+		}
 		return component;
 	}
 
@@ -378,24 +382,18 @@ namespace Copium
 	void Script::previewLink(Component* rhs)
 	{
 		Script* scriptRhs = reinterpret_cast<Script*>(rhs);
-		for (auto pair : scriptRhs->fieldGameObjReferences)
+		for (auto& pair : scriptRhs->fieldGameObjReferences)
 		{
 			fieldGameObjReferences[pair.first] = MySceneManager.findGameObjByID(pair.second->id);
+			MyEventSystem->publish(new ScriptSetFieldReferenceEvent<GameObject>(*this, pair.first.c_str(), fieldGameObjReferences[pair.first]));
 		}
 
-		for (auto pair : scriptRhs->fieldComponentReferences)
+		for (auto& pair : scriptRhs->fieldComponentReferences)
 		{
 			fieldComponentReferences[pair.first] = MySceneManager.findComponentByID(pair.second->id);
+			PRINT("LINKED " << Name() << "," << pair.first << " with " << pair.second->Name());
+			MyEventSystem->publish(new ScriptSetFieldReferenceEvent<Component>(*this, pair.first.c_str(), fieldComponentReferences[pair.first]));
 		}
-
-		PRINT("FIELDS AMOUNT: " << fieldDataReferences.size());
-		for (auto pair : scriptRhs->fieldDataReferences)
-		{
-			Field field{ scriptRhs->fieldDataReferences[pair.first] };
-			fieldDataReferences.emplace(pair.first,std::move(field));
-		}
-		Name(scriptRhs->name);
-		
 	}
 
 	void Script::deserialize(rapidjson::Value& _value)
@@ -532,17 +530,14 @@ namespace Copium
 				case FieldType::Component:
 				{
 					uint64_t id{ field.Get<uint64_t>()};
-					PRINT(_name << " COMPONENT: " << id);
 					Component* pComponent = MySceneManager.findComponentByID(id);
 					if (pComponent)
 						fieldComponentReferences[_name] = pComponent;
-					PRINT("");
 					break;
 				}
 				case FieldType::GameObject:
 				{
 					uint64_t id{ field.Get<uint64_t>() };
-					PRINT(_name << " GAMEOBJECT: " << id);
 					GameObject* pGameObject = MySceneManager.findGameObjByID(id);
 					if (pGameObject)
 						fieldGameObjReferences[_name] = pGameObject;

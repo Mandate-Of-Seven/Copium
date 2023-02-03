@@ -36,8 +36,8 @@ namespace Copium
 
 	struct ScriptInvokeMethodEvent : IEvent
 	{
-		ScriptInvokeMethodEvent(Script& _script, const std::string& _methodName, void** _returnVal = nullptr, void** _params = 0, size_t _paramCount = 0) :
-			script{ _script }, methodName{ _methodName }, params{ _params }, paramCount{ paramCount }, returnVal{ _returnVal } {}
+		ScriptInvokeMethodEvent(Script& _script, const std::string& _methodName, void** _returnVal = nullptr, void** _params = nullptr, size_t _paramCount = 0) :
+			script{ _script }, methodName{ _methodName }, params{ _params }, paramCount{ _paramCount }, returnVal{ _returnVal } {}
 		Script& script;
 		const std::string& methodName;
 		void** params;
