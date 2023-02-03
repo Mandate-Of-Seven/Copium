@@ -111,7 +111,7 @@ public:
     /*******************************************************************************/
     void inspector_view();
 
-    Component* clone(GameObject& _gameObj) const
+    Component* clone(GameObject& _gameObj, ComponentID* newID = nullptr) const
     {
         Transform* component = new Transform(_gameObj);
         component->position = position;

@@ -65,11 +65,10 @@ namespace Copium
 			const HorizontalAlignment& get_hAlign() { return hAlignment; }
 			const VerticalAlignment& get_vAlign() { return vAlignment; }
 
-		protected:
 			Math::Vec2 offset;
-			HorizontalAlignment hAlignment{HorizontalAlignment::Center};
-			VerticalAlignment vAlignment{VerticalAlignment::Center};
-			glm::fvec4 color{1.f};
+			HorizontalAlignment hAlignment{ HorizontalAlignment::Center };
+			VerticalAlignment vAlignment{ VerticalAlignment::Center };
+			glm::fvec4 color{ 1.f };
 			glm::fvec4 layeredColor{ 0.f };
 	};
 
@@ -118,7 +117,7 @@ namespace Copium
 
 			Button& operator=(const Button& rhs);
 
-			Component* clone(GameObject& _gameObj) const;
+			Component* clone(GameObject& _gameObj, ComponentID* newID = nullptr) const;
 
 			/*******************************************************************************
 			/*!
@@ -197,7 +196,7 @@ namespace Copium
 			glm::fvec4 normalColor;
 			glm::fvec4 hoverColor;
 			glm::fvec4 clickedColor;
-			Text* targetGraphic;
+			Component* targetGraphic;
 			ButtonState previousState{ButtonState::None};
 			glm::fvec4 previousColor;
 			float timer{0};
@@ -240,7 +239,7 @@ namespace Copium
 
 			Font* GetFont() { return font; }
 
-			Component* clone(GameObject& _gameObj) const;
+			Component* clone(GameObject& _gameObj, ComponentID* newID = nullptr) const;
 
 			void deserialize(rapidjson::Value& _value);
 			void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
@@ -248,10 +247,11 @@ namespace Copium
 			std::string fontName;
 			Font* font;
 			float fSize;
+			float wrapper;
 			friend class Button;
 	};
 
-	class ImageComponent final : public Component, IUIComponent
+	class ImageComponent final : public Component, public IUIComponent
 	{
 		public:
 			/**************************************************************************/
@@ -284,7 +284,7 @@ namespace Copium
 			Sprite& get_sprite_renderer() { return sprite; }
 			void set_sprite_renderer(Sprite& _sprite) { sprite = _sprite; }
 
-			Component* clone(GameObject& _gameObj) const;
+			Component* clone(GameObject& _gameObj, ComponentID* newID = nullptr) const;
 
 			void deserialize(rapidjson::Value& _value)
 			{

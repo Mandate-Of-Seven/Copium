@@ -106,14 +106,14 @@ public class EventManager: CopiumScript
         Header.text = "AI Assistance Intro";
 
         Body.text = "Welcome conductor, I am AI your digital assistance for this mission. " +
-            "I have a message \nfrom Captain Bob.\n\n\"Good day volunteer, \n\nYou are likely " +
-            "here due to the large reward offered by the Council should you complete\n this mission. " +
-            "Although tempting, I can't say I'd like to be in your position. The \nrisk is just not " +
+            "I have a message from Captain Bob.\n\n\"Good day volunteer, \n\nYou are likely " +
+            "here due to the large reward offered by the Council should you complete this mission. " +
+            "Although tempting, I can't say I'd like to be in your position. The risk is just not " +
             "worth it in my opinion.\n\nYour task is to reach the settlement at the end of this railway. " +
-            "Recently we have lost \ncontact with them, and with no way to reestablish communications remotely, " +
-            "we are \ngoing to send a team there to investigate. As defending the city is a priority, " +
-            "we are \nunable to send the military. \n\nYou might have heard about the 'Crops Curse' that has been happening. " +
-            "Thus, we are \nonly able to provide 2 days worth of rations. I'm sure you will figure something out \nwhilst traveling there. " +
+            "Recently we have lost contact with them, and with no way to reestablish communications remotely, " +
+            "we are going to send a team there to investigate. As defending the city is a priority, " +
+            "we are unable to send the military. \n\nYou might have heard about the 'Crops Curse' that has been happening. " +
+            "Thus, we are only able to provide 2 days worth of rations. I'm sure you will figure something out whilst traveling there. " +
             "\n\nI wish you all the best and hope to receive good news.\n\nBest regards, \nCaptain Bob Jones\"\n\nEnd of transmission. ";
     }
 
@@ -122,7 +122,7 @@ public class EventManager: CopiumScript
     {
         if (Event_01)
         {
-            if (GameManager.ReportTab.activeSelf || true)
+            if (GameManager.ReportTab.activeSelf)
             {
                 Option_01.SetActive(false);
                 Option_02.SetActive(false);
@@ -132,7 +132,7 @@ public class EventManager: CopiumScript
             return;
         }
 
-        if (GameManager.ReportTab.activeSelf || true)
+        if (GameManager.ReportTab.activeSelf)
         {
             Option_01.SetActive(true);
             Option_02.SetActive(true);
@@ -143,7 +143,7 @@ public class EventManager: CopiumScript
         Console.WriteLine("TEXT");
 
         Body.text = "\nReport type: Situation\n\n\nHarris spotted a abandoned town not too far off from the main track. " +
-            "Crew seem \nto be in agreement to check it out. Otherwise, nothing out of the ordinary. \nTrain conductor to choose course of action. \n";
+            "Crew seem to be in agreement to check it out. Otherwise, nothing out of the ordinary. \nTrain conductor to choose course of action.";
 
         Option_01_Text.text = "Explore abandon town";
         Option_02_Text.text = "Do not explore abandoned town";
@@ -171,8 +171,8 @@ public class EventManager: CopiumScript
                 Header.text = "No Luck";
 
                 Body.text = "\nReport type: Situation\n\nThe crew had no luck in finding any useful resources. " +
-                    "Though only the first day, the crew \nseem to have let the disappointment get to them. Moral " +
-                    "of the crew \nhad decrease significantly since departure.\n";
+                    "Though only the first day, the crew seem to have let the disappointment get to them. Moral " +
+                    "of the crew had decrease significantly since departure.\n";
             }
             // 20%
             else
@@ -180,8 +180,8 @@ public class EventManager: CopiumScript
                 Header.text = "Found something useful";
 
                 Body.text = "\nReport type: Situation\n\n\nThrough the thick snow and rubble the crew miraculously " +
-                    "found some canned soup \nthat still looks good to eat. This minor victory seem to boost moral " +
-                    "of the crew \nslightly, everyone seem to be in a much cheery mood.";
+                    "found some canned soup that still looks good to eat. This minor victory seem to boost moral " +
+                    "of the crew slightly, everyone seem to be in a much cheery mood.";
             }
         }
         else if (!choice)
@@ -193,8 +193,8 @@ public class EventManager: CopiumScript
                 Header.text = "What could have been";
 
                 Body.text = "\nReport type: Situation\n\nThe crew seemed to be quite disappointed in your decision, " +
-                    "all had hoped that they might be \nable to find something of use in the town. Moral of the crew " +
-                    "seem to be hit\n slightly, but all still seemed to have positive outlooks on this mission.";
+                    "all had hoped that they might be able to find something of use in the town. Moral of the crew " +
+                    "seem to be hit slightly, but all still seemed to have positive outlooks on this mission.";
             }
             // 50%
             else
@@ -202,8 +202,8 @@ public class EventManager: CopiumScript
                 Header.text = "Dissatisfaction brewing";
 
                 Body.text = "\nReport type: Situation\n\n\nChuck seem to be quite unhappy with your decision, " +
-                    "and had a argument with Harris\n who tried to defend your course of action. Chuck began throwing " +
-                    "punches at Harris\n but Luckily the confrontation was broken up by Danton before it could escalate further.";
+                    "and had a argument with Harris who tried to defend your course of action. Chuck began throwing " +
+                    "punches at Harris but Luckily the confrontation was broken up by Danton before it could escalate further.";
                 LuckSequence = 0;
             }
         }
@@ -216,7 +216,7 @@ public class EventManager: CopiumScript
     {
         if (Event_02)
         {
-            if (GameManager.ReportTab.activeSelf || true)
+            if (GameManager.ReportTab.activeSelf)
             {
                 Option_01.SetActive(false);
                 Option_02.SetActive(false);
@@ -228,7 +228,7 @@ public class EventManager: CopiumScript
             return;
         }
 
-        if (GameManager.ReportTab.activeSelf || true)
+        if (GameManager.ReportTab.activeSelf)
         {
             Option_01.SetActive(true);
             Option_02.SetActive(true);
@@ -238,14 +238,14 @@ public class EventManager: CopiumScript
         Header.text = "Leaving the city";
         if (LuckSequence == 1)
         {
-            Body.text = "Report type: Situation\n\nDanton spotted a mysterious vehicle approaching our train, " +
-                "attempts at communications \nfailed. People on the vehicle boarded the train and began rummaging " +
+            Body.text = "\nReport type: Situation\n\nDanton spotted a mysterious vehicle approaching our train, " +
+                "attempts at communications failed. People on the vehicle boarded the train and began rummaging " +
                 "through the train\n\nTrain commander to decide on course of action.";
         }
         else if (LuckSequence == 0)
         {
             Body.text = "\nReport type: Situation\n\nHarris spotted a mysterious vehicle approaching our train, " +
-                "attempts at communications \nfailed. People on the vehicle boarded the train and began rummaging " +
+                "attempts at communications failed. People on the vehicle boarded the train and began rummaging " +
                 "through the train\nChuck seemed to be extremely eager to chase of the hostiles.\n\nTrain commander" +
                 " to decide on course of action.";
         }
@@ -271,7 +271,7 @@ public class EventManager: CopiumScript
             Header.text = "Engaging";
 
             Body.text = "\nReport type: Situation\n\n\nWhen confronted hostiles began firing at crew " +
-                "members.\nCrew members are currently engaging in fight with hostiles.\n\nStatus of " +
+                "members.Crew members are currently engaging in fight with hostiles.\n\nStatus of " +
                 "the battle can be seen from the scene at the side.";
 
             if(LuckSequence == 1)
@@ -289,16 +289,16 @@ public class EventManager: CopiumScript
             if (LuckSequence == 1)
             {
                 Body.text = "\nReport type: Situation\n\nThe crew  followed orders and quickly hid and " +
-                    "allowed the hostiles to loot the food \nfrom our supplies. \n\nFood supplies left: 2";
+                    "allowed the hostiles to loot the food from our supplies. \n\nFood supplies left: 2";
 
                 LuckSequence = 11;
             }
             else if (LuckSequence == 0)
             {
                 Body.text = "\nReport type: Situation\n\n\nThe crew except Chuck followed orders and quickly " +
-                    "hid and allowed the hostiles to \nloot the food from our supplies. Bronson and Harris " +
-                    "had to tie up and drag Chuck so \nthat he would not try and engage. \n\nAfter the hostiles " +
-                    "left Chuck seem to be furious and in a fit of rage punched Danton in \nthe face, breaking" +
+                    "hid and allowed the hostiles to loot the food from our supplies. Bronson and Harris " +
+                    "had to tie up and drag Chuck so that he would not try and engage. \n\nAfter the hostiles " +
+                    "left Chuck seem to be furious and in a fit of rage punched Danton in the face, breaking" +
                     " his jaw.\n\nFood supplies left: 2";
 
                 LuckSequence = 10;
@@ -342,7 +342,7 @@ public class EventManager: CopiumScript
     {
         if (Event_03)
         {
-            if (GameManager.ReportTab.activeSelf || true)
+            if (GameManager.ReportTab.activeSelf)
             {
                 Option_01.SetActive(false);
                 Option_02.SetActive(false);
@@ -351,7 +351,7 @@ public class EventManager: CopiumScript
             return;
         }
 
-        if (GameManager.ReportTab.activeSelf || true)
+        if (GameManager.ReportTab.activeSelf)
         {
             Option_01.SetActive(false);
             Option_02.SetActive(false);
@@ -362,15 +362,15 @@ public class EventManager: CopiumScript
         if (InternalLuck == 1)
         {
             Body.text = "\nReport type: Situation\n\n\nThe crew was quickly neutralized by the hostiles, " +
-                "luckily they seem to be only\n here because they where desperate for food. No crew was badly " +
-                "hurt/injured, after looting \nthe food from our train, they quickly left and returned our firearms. " +
+                "luckily they seem to be only here because they where desperate for food. No crew was badly " +
+                "hurt/injured, after looting the food from our train, they quickly left and returned our firearms. " +
                 "\n\nFood supplies left: 2";
         }
         else if (InternalLuck == 0)
         {
             Body.text = "\nReport type: Situation\n\n\nThe crew was quickly neutralized by the hostiles, " +
-                "luckily they seem to be only\n here because they where desperate for food. No crew was badly " +
-                "hurt/injured, after looting \nthe food from our train, they quickly left and returned our arms. " +
+                "luckily they seem to be only here because they where desperate for food. No crew was badly " +
+                "hurt/injured, after looting the food from our train, they quickly left and returned our arms. " +
                 "\n\nFood supplies left: 2";
         }
 
@@ -387,7 +387,7 @@ public class EventManager: CopiumScript
     {
         if (Event_03)
         {
-            if (GameManager.ReportTab.activeSelf || true)
+            if (GameManager.ReportTab.activeSelf)
             {
                 Option_01.SetActive(false);
                 Option_02.SetActive(false);
@@ -396,7 +396,7 @@ public class EventManager: CopiumScript
             return;
         }
 
-        if (GameManager.ReportTab.activeSelf || true)
+        if (GameManager.ReportTab.activeSelf)
         {
             Option_01.SetActive(true);
             Option_02.SetActive(true);
@@ -405,9 +405,9 @@ public class EventManager: CopiumScript
 
         Header.text = "Victory, But...";
         Body.text = "\nReport type: Situation\n\nLuckily no crew members was badly injured in the fight. " +
-            "However, there were 2 hostiles\n who survived. When the fight was not going in their favor, they" +
-            " lay down their \narms and offered surrender in exchange for their lives. The crew is split in" +
-            " deciding \nto kill or let them go. \nTrain conductor to choose course of action.";
+            "However, there were 2 hostiles who survived. When the fight was not going in their favor, they" +
+            " lay down their arms and offered surrender in exchange for their lives. The crew is split in" +
+            " deciding to kill or let them go. \nTrain conductor to choose course of action.";
 
         Option_01_Text.text = "Kill the survivors";
         Option_02_Text.text = "Let them go";
@@ -430,7 +430,7 @@ public class EventManager: CopiumScript
             Header.text = "No Mercy";
 
             Body.text = "\nReport type: Situation\n\nHarris and Bronson had opposed to the idea but before " +
-                "they could do anything, Chuck \nhad already put a bullet into each of the survivors.\nThe crew " +
+                "they could do anything, Chuck had already put a bullet into each of the survivors.The crew " +
                 "carried 2 remaining survivors threw their bodies out the train.\n\nBronson seem quite disturbed " +
                 "with the killing of the 2 survivors.\n\nBronson Mental: Shaken";
         }
@@ -438,13 +438,13 @@ public class EventManager: CopiumScript
         {
             Header.text = "Mercy";
 
-            Body.text = "\nReport type: Situation\n\nChuck seemed quick aggravated by your decision.\nChuck had " +
-                "ordered the 2 survivors to strip off all their clothing and hand \nover their weapons before he " +
+            Body.text = "\nReport type: Situation\n\nChuck seemed quick aggravated by your decision.Chuck had " +
+                "ordered the 2 survivors to strip off all their clothing and hand over their weapons before he " +
                 "kicked them off the moving train.\n\nBronson seem to be quite disturbed by what Chuck had done." +
                 "\n\nBronson Mental: Shaken";
         }
 
-        if (GameManager.ReportTab.activeSelf || true)
+        if (GameManager.ReportTab.activeSelf)
         {
             Option_01.SetActive(false);
             Option_02.SetActive(false);
@@ -467,7 +467,7 @@ public class EventManager: CopiumScript
     {
         if (Event_04)
         {
-            if (GameManager.ReportTab.activeSelf || true)
+            if (GameManager.ReportTab.activeSelf)
             {
                 Option_01.SetActive(false);
                 Option_02.SetActive(false);
@@ -476,7 +476,7 @@ public class EventManager: CopiumScript
             return;
         }
 
-        if (GameManager.ReportTab.activeSelf || true)
+        if (GameManager.ReportTab.activeSelf)
         {
             Option_01.SetActive(true);
             Option_02.SetActive(true);
@@ -487,7 +487,7 @@ public class EventManager: CopiumScript
         if (InternalLuck == 1)
         {
             Body.text = "\nReport type: Daily\n\nThe crew seem tried and fatigued as the day comes to an end, " +
-                "except Chuck \nwho seem awfully cheerful after what had happened in the day.\n\n[Insert Food, " +
+                "except Chuck who seem awfully cheerful after what had happened in the day.\n\n[Insert Food, " +
                 "Health and Mental state]\n\nDo you wish to ration out your supplies?\n*Note each crew requires 0.5 food.";
         }
         else if (InternalLuck == 0)
@@ -525,7 +525,7 @@ public class EventManager: CopiumScript
             Body.text = "\nReport type: End Of Day\n\n\nEveryone starved...";
         }
 
-        if (GameManager.ReportTab.activeSelf || true)
+        if (GameManager.ReportTab.activeSelf)
         {
             Option_01.SetActive(false);
             Option_02.SetActive(false);
@@ -539,7 +539,7 @@ public class EventManager: CopiumScript
     {
         if (Event_04)
         {
-            if (GameManager.ReportTab.activeSelf || true)
+            if (GameManager.ReportTab.activeSelf)
             {
                 Option_01.SetActive(false);
                 Option_02.SetActive(false);
@@ -548,7 +548,7 @@ public class EventManager: CopiumScript
             return;
         }
 
-        if (GameManager.ReportTab.activeSelf || true)
+        if (GameManager.ReportTab.activeSelf)
         {
             Option_01.SetActive(true);
             Option_02.SetActive(true);
@@ -559,13 +559,13 @@ public class EventManager: CopiumScript
         if (LuckSequence == 11)
         {
             Body.text = "\nReport type: Daily\n\nThe crew seem to be demoralized by the events that " +
-                "transpired the day and all \nseemed to be heading to bed early.\n\n[Insert Food, Health " +
+                "transpired the day and all seemed to be heading to bed early.\n\n[Insert Food, Health " +
                 "and Mental state]\n\nDo you wish to ration out your supplies?\n*Note each crew requires 0.5 food.";
         }
         else if (LuckSequence == 10)
         {
             Body.text = "\nReport type: Situation\n\nDaily evening report\n\nThe crew seem to be " +
-                "demoralized by the events that transpired the day and all\n seemed to be heading to bed early." +
+                "demoralized by the events that transpired the day and all seemed to be heading to bed early." +
                 "\n\n[Insert Food, Health and Mental state]\nSupplies: 2/4\n\n\n\nDo you wish to " +
                 "ration out your supplies?\n*Note each crew requires 0.5 food.";
         }
@@ -598,7 +598,7 @@ public class EventManager: CopiumScript
             Body.text = "\nReport type: End Of Day\n\n\nEveryone starved...";
         }
 
-        if (GameManager.ReportTab.activeSelf || true)
+        if (GameManager.ReportTab.activeSelf)
         {
             Option_01.SetActive(false);
             Option_02.SetActive(false);

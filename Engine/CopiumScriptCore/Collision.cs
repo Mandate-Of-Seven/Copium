@@ -29,14 +29,14 @@ namespace CopiumEngine
         Collision2D(ulong _gameObjectID)
         {
             gameObject = null;
-            foreach (GameObject gameObj in Instances.gameObjects)
+/*            foreach (GameObject gameObj in Instances.gameObjects)
             {
                 if (gameObj.ID == _gameObjectID)
                 {
                     gameObject = gameObj;
                     break;
                 }
-            }
+            }*/
             if (gameObject == null)
             {
                 gameObject = new GameObject();

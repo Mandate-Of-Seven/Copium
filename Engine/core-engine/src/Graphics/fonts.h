@@ -65,9 +65,9 @@ namespace Copium
 			The font to use
 		*/
 		/***************************************************************************/
-		void draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, GLfloat _scale, GLuint _fontID, BaseCamera* _camera);
+		void draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, GLfloat _scale, const float& _wrapper, BaseCamera* _camera);
 
-		glm::vec2 getDimensions(const std::string& _text, GLfloat _scale);
+		glm::vec2 getDimensions(const std::string& _text, GLfloat _scale, const float& _wrapper);
 
 		/***************************************************************************/
 		/*!

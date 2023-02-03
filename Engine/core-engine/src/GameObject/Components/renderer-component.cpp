@@ -183,7 +183,7 @@ namespace Copium
 	}
 
 
-	Component* SpriteRenderer::clone(GameObject& _gameObj) const
+	Component* SpriteRenderer::clone(GameObject& _gameObj, ComponentID* newID) const
 	{
 		SpriteRenderer* component = new SpriteRenderer(_gameObj);
 		component->sprite = sprite;

@@ -158,7 +158,7 @@ class Component
             Reference to the cloned component in current scene
         */
         /**************************************************************************/
-        virtual Component* clone(GameObject& _gameObj) const = 0;
+        virtual Component* clone(GameObject& _gameObj, ComponentID* newID = nullptr) const = 0;
 
         /***************************************************************************/
         /*!

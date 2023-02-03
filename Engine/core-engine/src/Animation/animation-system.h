@@ -93,7 +93,7 @@ namespace Copium
             Reference to the cloned component in current scene
         */
         /**************************************************************************/
-        virtual Animator* clone(GameObject& _gameObj) const
+        virtual Animator* clone(GameObject& _gameObj, ComponentID* newID = nullptr) const
         {
             std::cout << "animator clone\n";
             Animator* component = new Animator(_gameObj);

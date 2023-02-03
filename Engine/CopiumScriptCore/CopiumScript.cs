@@ -20,59 +20,9 @@ namespace CopiumEngine
 {
     public class CopiumScript : Component
     {
-        private void OnCreate(ulong ID)
-        {
-            Console.WriteLine(this.GetType().Name + " Script linked with GameObject of ID: (" + ID + ") in C#");
-            gameObject = GameObject.FindByID(ID);
-            transform = gameObject.transform;
-        }
-
         public static T Instantiate<T>(T original, Vector3 pos, Vector3 rotation)
         {
             return original;
-        }
-
-        private Component Create(ulong componentID, ulong gameObjectID)
-        {
-            Console.WriteLine("finding component");
-            foreach (Component component in Instances.components)
-            {
-                if (component.ID == componentID)
-                {
-                    return component;
-                }
-            }
-            Instances.components.Add(this);
-            return this;
-        }
-
-        private Component FindComponentByID(ulong componentID, ulong gameObjectID)
-        {
-            Console.WriteLine("finding component");
-            foreach (Component component in Instances.components)
-            {
-                if (component.ID == componentID)
-                {
-                    return component;
-                }
-            }
-            Component component1 = new Component();
-            component1.Initialize(GameObject.FindByID(gameObjectID), componentID);
-            Instances.components.Add(component1);
-            return component1;
-        }
-
-        private GameObject FindGameObjectByID(ulong gameObjectID)
-        {
-            foreach (GameObject gameObject in Instances.gameObjects)
-            {
-                if (gameObject.ID == gameObjectID)
-                {
-                    return gameObject;
-                }
-            }
-            Console.WriteLine("Couldnt find gameObject in C#");
-            return null;
         }
 
         public GameObject Instantiate(GameObject original)

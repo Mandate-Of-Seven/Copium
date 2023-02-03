@@ -135,7 +135,7 @@ namespace Copium
                 return a pointer to the clone
             */
             /**************************************************************************/
-            Component* clone(GameObject& _gameObj) const;
+            Component* clone(GameObject& _gameObj, ComponentID* newID = nullptr) const;
 	};
 
 }

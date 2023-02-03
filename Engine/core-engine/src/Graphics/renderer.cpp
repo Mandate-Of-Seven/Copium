@@ -500,7 +500,7 @@ namespace Copium
 		draw_quad(transform, _textureID);
 	}
 
-	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Sprite& _sprite)
+	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Sprite& _sprite, glm::fvec4* tintColor)
 	{
 		glm::mat4 translate = glm::translate(glm::mat4(1.f), _position);
 
@@ -528,7 +528,7 @@ namespace Copium
 		};
 
 		glm::mat4 transform = translate * rotation * scale;
-		draw_quad(transform, _sprite);
+		draw_quad(transform, _sprite, tintColor);
 	}
 
 	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Spritesheet& _spritesheet, GLuint _offsetID, int _frames)
@@ -637,7 +637,7 @@ namespace Copium
 		quadCount++;
 	}
 
-	void Renderer::draw_quad(const glm::mat4& _transform, const Sprite& _sprite)
+	void Renderer::draw_quad(const glm::mat4& _transform, const Sprite& _sprite, glm::vec4* tint)
 	{
 		if (quadIndexCount >= maxIndexCount)
 		{
@@ -673,7 +673,22 @@ namespace Copium
 		{
 			quadBufferPtr->pos = _transform * quadVertexPosition[i];
 			quadBufferPtr->textCoord = quadTextCoord[i];
-			quadBufferPtr->color = _sprite.get_color();
+
+			if (!tint)
+				quadBufferPtr->color = _sprite.get_color();
+			else
+			{
+				glm::fvec4 mixedColor{ 0 };
+				glm::fvec4 color{ _sprite.get_color() };
+				glm::fvec4 layeredColor{ *tint };
+				mixedColor.a = 1 - (1 - layeredColor.a) * (1 - color.a); // 0.75
+				if (mixedColor.a < 0.01f)
+					return;
+				mixedColor.r = layeredColor.r * layeredColor.a / mixedColor.a + color.r * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.67
+				mixedColor.g = layeredColor.g * layeredColor.a / mixedColor.a + color.g * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.33
+				mixedColor.b = layeredColor.b * layeredColor.a / mixedColor.a + color.b * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.00
+				quadBufferPtr->color = mixedColor;
+			}
 			quadBufferPtr->texID = textureIndex;
 			quadBufferPtr++;
 		}

@@ -183,7 +183,7 @@ namespace Copium
 		soundSystem.StopAll();
 	}
 
-	Component* AudioSource::clone(GameObject& _gameObj) const
+	Component* AudioSource::clone(GameObject& _gameObj, ComponentID* newID) const
 	{
 		auto component = new AudioSource(_gameObj);
 		component->alias = alias;

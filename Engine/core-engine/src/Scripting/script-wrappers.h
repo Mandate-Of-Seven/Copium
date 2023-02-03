@@ -357,6 +357,21 @@ namespace Copium
 		return gameObj->isActive();
 	}
 
+
+	static bool GetComponentEnabled(GameObjectID gid, ComponentID cid)
+	{
+		Component* component = sceneManager.findComponentByID(cid);
+		return component->Enabled();
+	}
+
+	static void SetComponentEnabled(GameObjectID gid, ComponentID cid, bool val)
+	{
+		Component* component = sceneManager.findComponentByID(cid);
+		if (component)
+			component->Enabled(val);
+	}
+
+
 	/*******************************************************************************
 	/*!
 	\brief
@@ -367,7 +382,7 @@ namespace Copium
 	{
 		if (sceneManager.endPreview())
 			messageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
-		//quit_engine();
+		quit_engine();
 		#ifdef GAMEMODE
 		quit_engine();
 		#else
@@ -457,6 +472,7 @@ namespace Copium
 		if (toBeCloned)
 		{
 			GameObject* clone = MyGOF.clone(*toBeCloned);
+			PRINT("CLONED OBJECT: " << clone->id);
 			if (clone)
 				return clone->id;
 		}
@@ -544,6 +560,8 @@ namespace Copium
 		Register(AudioSourcePlay);
 		Register(PauseAllAnimation);
 		Register(PlayAllAnimation);
+		Register(GetComponentEnabled);
+		Register(SetComponentEnabled);
 	}
 
 	/*******************************************************************************

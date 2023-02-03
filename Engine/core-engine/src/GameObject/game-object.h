@@ -157,6 +157,8 @@ public:
         ComponentType componentType = Component::nameToType(tName);
         for (Component* pComponent : components)
         {
+            if (!pComponent)
+                continue;
             if (pComponent->componentType == componentType)
             {
                 typedComponents.push_back(reinterpret_cast<T*>(pComponent));

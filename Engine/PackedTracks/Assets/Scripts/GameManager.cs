@@ -42,11 +42,14 @@ public class GameManager: CopiumScript
 	{
         isReportScreenOn = false;
         PauseCanvas.SetActive(false);
-
+        Console.WriteLine("CRASH1");
         UpdateCanvases();
 
+        Console.WriteLine("CRASH2");
         ReportScreenBtn = ReportScreenGameObject.GetComponent<Button>();
+        Console.WriteLine("CRASH3");
         MainMenuStartBtn = MainMenuStartGameObject.GetComponent<Button>();
+        Console.WriteLine("CRASH4");
         MainMenuQuitBtn = MainMenuQuitGameObject.GetComponent<Button>();
     }
 	void Update()
@@ -127,6 +130,11 @@ public class GameManager: CopiumScript
             {
                 Application.Quit();
             }
+        }
+
+        if (Input.GetKey(KeyCode.P))
+        {
+            Application.Quit();
         }
     }
 
