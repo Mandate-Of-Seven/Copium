@@ -275,56 +275,31 @@ namespace Copium
 		if (!_go)
 			return false;
 
+		currScene->gameObjects.erase(std::remove_if(currScene->gameObjects.begin(), currScene->gameObjects.end(), [&](GameObject* gameObj) {return gameObj == _go; }));
+
+
 		// Add the game object's ID to unused pile
 		currScene->add_unused_gid(_go->id);
+
 
 		// Deattach children from this game object (if any)
 		for (auto pTransform : _go->transform.children)
 		{
-			pTransform->setParent(nullptr);
 			destroy(&pTransform->gameObj);
 		}
+		//std::cout << "Deleting " << _go->get_name() << std::endl;
 
-		std::cout << "Deleting " << _go->get_name() << std::endl;
-		
-		if (_go->transform.hasParent())
-		{
-			GameObject* parent = &_go->transform.parent->gameObj;
-			Transform* pt = _go->transform.parent;
-			for (std::list<Transform*>::iterator iter = pt->children.begin(); iter != pt->children.end(); ++iter)
-			{
-				if ((*iter)->gameObj.id == _go->id)
-				{
-					*iter = nullptr;
-					break;
-				}
-			}
-		}
-
-		currScene->gameObjects.erase(std::remove_if(currScene->gameObjects.begin(), currScene->gameObjects.end(), [&](GameObject* gameObj) {return gameObj==_go;}));
-		std::cout << "number of game objects left: " << currScene->get_gameobjcount() << std::endl;
+		//std::cout << "number of game objects left: " << currScene->get_gameobjcount() << std::endl;
 		for (size_t i{ 0 }; i < currScene->gameObjectSPTRS.size(); ++i)
 		{
 			if (currScene->gameObjectSPTRS[i].get() == _go)
 			{
-				std::cout << "take out of sptr vector\n";
+				//std::cout << "take out of sptr vector\n";
+				
 				currScene->gameObjectSPTRS.erase(currScene->gameObjectSPTRS.begin() + i);
 				break;
 			}
 		}
-		//Iterate through currentScene vector and destroy
-		//for (size_t i{ 0 }; i < currScene->gameObjects.size(); ++i)
-		//{
-		//	if (currScene->gameObjects[i] == _go)
-		//	{
-		//		delete _go;
-		//		currScene->gameObjects[i] = nullptr;
-		//		//std::cout << "trimming go vector\n";
-		//		currScene->gameObjects.erase(currScene->gameObjects.begin() + i);
-		//		//std::cout << "Number of GameObjects left: " << currScene->get_gameobjcount() << std::endl;
-		//		break;
-		//	}
-		//}
 
 		return true;
 	}

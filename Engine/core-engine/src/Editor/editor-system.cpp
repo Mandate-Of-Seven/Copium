@@ -3,6 +3,7 @@
 \project
 \author			Sean Ngo
 \co-author		Shawn Tanary
+				Matthew Lau
 
 \par			Course: GAM200
 \par			Section:

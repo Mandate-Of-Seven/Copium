@@ -281,8 +281,27 @@ namespace Copium {
 		/*******************************************************************************/
 		Scene* get_storage_scene();
 
-		std::vector<Scene*>& GetSceneVector() { return scenes; }
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Get a reference to the vector of scenes
 
+		\return
+			reference to the vector of scenes
+		*/
+		/*******************************************************************************/
+		std::vector<Scene*>& GetSceneVector() { return scenes; }
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Get the current scene state
+
+		\return
+			the current scene state
+		*/
+		/*******************************************************************************/
 		Scene::SceneState GetSceneState() const { return currSceneState; }
 
 		GameObject* selectedGameObject;

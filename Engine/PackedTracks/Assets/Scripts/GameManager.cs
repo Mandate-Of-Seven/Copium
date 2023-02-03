@@ -10,8 +10,13 @@ public class GameManager: CopiumScript
 	public GameObject CombatCanvas;
     public GameObject PauseCanvas;
 
+    public GameObject ManualPopUp;
+    
+
     public GameObject MainMenuStartGameObject;
+    public GameObject MainMenuQuitGameObject;
     Button MainMenuStartBtn;
+    Button MainMenuQuitBtn;
 
     public GameObject ReportTab;
     public GameObject MessageTab;
@@ -21,15 +26,18 @@ public class GameManager: CopiumScript
     public Button ReportScreenBtn;
     public Button CombatScreenBtn;
     public Button OtherScreenBtn;
-    public Button ResumeBtn;
+    public Button ManualBtn;
+    public Button PauseResumeBtn;
+    public Button PauseQuitBtn;
 
     public Button ReportTabBtn;
     public Button MessageTabBtn;
     public Button CrewTabBtn;
 
     bool isReportScreenOn = false;
-    int state = 0;
     public bool isPaused = false;
+    int state = 0;
+
     void Start()
 	{
         isReportScreenOn = false;
@@ -39,6 +47,7 @@ public class GameManager: CopiumScript
 
         ReportScreenBtn = ReportScreenGameObject.GetComponent<Button>();
         MainMenuStartBtn = MainMenuStartGameObject.GetComponent<Button>();
+        MainMenuQuitBtn = MainMenuQuitGameObject.GetComponent<Button>();
     }
 	void Update()
     {
@@ -47,6 +56,19 @@ public class GameManager: CopiumScript
             state = 1;
             UpdateCanvases();
         }
+
+        if (MainMenuQuitBtn.state == ButtonState.OnClick)
+        {
+            Application.Quit();
+        }
+
+        if(ManualBtn.state == ButtonState.OnClick)
+        {
+            ManualPopUp.SetActive(true);
+            ReportScreenGameObject.SetActive(false);
+        }
+
+
 
         if (Input.GetKeyDown(KeyCode.P))
         {
@@ -68,6 +90,9 @@ public class GameManager: CopiumScript
 
         if (!isPaused)
         {
+            if (!ReportScreenGameObject.activeSelf && !ManualPopUp.activeSelf)
+                ReportScreenGameObject.SetActive(true);
+
             if (ReportScreenBtn.state == ButtonState.OnClick)
             {
                 isReportScreenOn = true;
@@ -76,7 +101,9 @@ public class GameManager: CopiumScript
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                if (isReportScreenOn)
+                if (ManualPopUp.activeSelf)
+                    ManualPopUp.SetActive(false);
+                else if (isReportScreenOn)
                 {
                     isReportScreenOn = false;
                     UpdateCanvases();
@@ -90,11 +117,19 @@ public class GameManager: CopiumScript
         }
         else
         {
-            if (ResumeBtn.state == ButtonState.OnClick)
+            if(ReportScreenGameObject.activeSelf)
+                ReportScreenGameObject.SetActive(false);
+
+            if (PauseResumeBtn.state == ButtonState.OnClick)
             {
                 isPaused = false;
                 PauseCanvas.SetActive(false);
                 InternalCalls.PlayAllAnimation();
+            }
+
+            if (PauseQuitBtn.state == ButtonState.OnClick)
+            {
+                Application.Quit();
             }
         }
 
@@ -147,7 +182,7 @@ public class GameManager: CopiumScript
             if(!MainScreenCanvas.activeSelf)
                 MainScreenCanvas.SetActive(true);
 
-            if(CombatCanvas.activeSelf)
+            if (CombatCanvas.activeSelf)
                 CombatCanvas.SetActive(false);
         }
         else if (state == 1)
@@ -157,6 +192,9 @@ public class GameManager: CopiumScript
 
             if (!TrainCanvas.activeSelf)
                 TrainCanvas.SetActive(true);
+
+            if (ManualPopUp.activeSelf)
+                ManualPopUp.SetActive(false);
 
             if (MainScreenCanvas.activeSelf)
                 MainScreenCanvas.SetActive(false);
