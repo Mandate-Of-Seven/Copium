@@ -30,6 +30,7 @@ public class AudioManager: CopiumScript
         }
 		else if (state == 1)
 		{
+			Console.WriteLine("PLAYING STATE 1 AUDIO MANAGER");
 			bgmTrain.Play();
             ambTrain.Play();
         }

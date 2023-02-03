@@ -22,7 +22,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <Windows/windows-system.h>
 #include <Debugging/frame-rate-controller.h>
 #include "GameObject/Components/ui-components.h"
-#include "../Game/game-nonscript.h"
+#include <Events/events-system.h>
 
 namespace Copium
 {
@@ -32,7 +32,6 @@ namespace Copium
 		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 		std::vector<GameObject*>* gameObjects;
 		double timeElasped;
-		Game game;
 	}
 
 	void LogicSystem::init()
@@ -59,13 +58,13 @@ namespace Copium
 					continue;
 				if (!pScript->Enabled())
 					continue;
-				pScript->invoke("Update");
+				MyEventSystem->publish(new ScriptInvokeMethodEvent(*pScript, "Update"));
 				if (pScene != sceneManager.get_current_scene())
 					return;
 
 				for (size_t j = 0; j < MyFrameRateController.getSteps(); ++j)
 				{
-					pScript->invoke("FixedUpdate");
+					MyEventSystem->publish(new ScriptInvokeMethodEvent(*pScript,"FixedUpdate"));
 				}
 				if (pScene != sceneManager.get_current_scene())
 					return;
@@ -93,19 +92,14 @@ namespace Copium
 					return;
 			}
 		}
-
-		// Bean: Temporary for hardcoded scripts
-		game.update();
 	}
 
 	void LogicSystem::exit()
 	{
-		game.exit();
 	}
 
 	void LogicSystem::handleMessage(MESSAGE_TYPE mType)
 	{
-		PRINT("LOGIC STARTING");
 		//MT_START_PREVIEW
 		Scene* pScene = sceneManager.get_current_scene();
 		if (pScene == nullptr)
@@ -116,14 +110,18 @@ namespace Copium
 			const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };
 			for (Script* pScript : pScripts)
 			{
-				pScript->invoke("Awake");
-				pScript->invoke("Start");
+				MyEventSystem->publish(new ScriptInvokeMethodEvent(*pScript, "Awake"));
+			}
+		}
+
+		for (GameObject* pGameObj : *gameObjects)
+		{
+			const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };
+			for (Script* pScript : pScripts)
+			{
+				MyEventSystem->publish(new ScriptInvokeMethodEvent(*pScript, "Start"));
 			}
 		}
 		timeElasped = MyFrameRateController.getDt();
-
-		PRINT("LOGIC END");
-		// Bean: Temporary for hardcoded scripts
-		game.init();
 	}
 }

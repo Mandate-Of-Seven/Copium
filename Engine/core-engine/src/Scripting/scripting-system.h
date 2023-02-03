@@ -15,12 +15,13 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #ifndef SCRIPTING_SYSTEM_H
 #define SCRIPTING_SYSTEM_H
-#pragma once
 
 #include "CopiumCore\system-interface.h"
 #include "Messaging\message-system.h"
 #include "Files\file-system.h"
 #include <Scripting/scriptable-object.h>
+#include <Events/events.h>
+#include <GameObject/game-object.h>
 
 #include <string>
 #include <unordered_map>
@@ -35,27 +36,10 @@ extern "C"
 	typedef struct _MonoString MonoString;
 }
 
+#define MyScriptingSystem (*Copium::ScriptingSystem::Instance())
+
 namespace Copium
 {
-	using FieldFlag = uint8_t;
-	#define FieldFlagList	0b00000001
-
-	enum class FieldType
-	{
-		Float, Double,
-		Bool, Char, Short, Int, Long,
-		UShort, UInt, ULong, String,
-		Vector2, Vector3, GameObject, Component ,None
-	};
-
-	struct Field
-	{
-		FieldType type{};
-		std::string typeName;
-		MonoClassField* classField{nullptr};
-		FieldFlag flags{0};
-	};
-
 	static std::unordered_map<std::string, FieldType> fieldTypeMap =
 	{
 		{ "System.Single",				FieldType::Float		},
@@ -74,62 +58,6 @@ namespace Copium
 		{ "CopiumEngine.GameObject",	FieldType::GameObject	},
 	};
 
-	struct FieldData
-	{
-		/***************************************************************************/
-		/*!
-		\brief
-			Stores data of a given buffer to prevent out of scope destruction.
-			Aka assigns memory from the heap
-
-		\param _size
-			Size of buffer
-
-		\param _data
-			Data to store and copy from
-		*/
-		/**************************************************************************/
-		FieldData(size_t _size = 0, void* _data = nullptr)
-		{
-			size = _size;
-			if (size)
-				data = new char[size];
-			else
-				data = nullptr;
-			if (_data)
-				memcpy(data, _data, size);
-		}
-
-		/***************************************************************************/
-		/*!
-		\brief
-			Copy constructor
-
-		\param rhs
-			FieldData to store and copy from
-		*/
-		/**************************************************************************/
-		FieldData(const FieldData& rhs)
-		{
-			size = rhs.size;
-			data = new char[size];
-			memcpy(data, rhs.data, size);
-		}
-
-		/***************************************************************************/
-		/*!
-		\brief
-			Destructor that frees memory
-		*/
-		/**************************************************************************/
-		~FieldData()
-		{
-			if (data)
-				delete[] data;
-		}
-		char* data;
-		size_t size;
-	};
 
 	enum class CompilingState
 	{
@@ -154,7 +82,7 @@ namespace Copium
 		ScriptClass(const std::string& _name, MonoClass* _mClass);
 		MonoClass* mClass{};
 		std::unordered_map<std::string, MonoMethod*> mMethods;
-		std::unordered_map<std::string, Field> mFields;
+		std::unordered_map<std::string, MonoClassField*> mFields;
 
 	};
 
@@ -204,7 +132,7 @@ namespace Copium
 				Shared pointer to a ScriptClass
 		*/
 		/**************************************************************************/
-		ScriptClass* getScriptClass(const std::string & _name);
+		ScriptClass& GetScriptClass(const std::string & _name);
 
 		/**************************************************************************/
 		/*!
@@ -247,7 +175,7 @@ namespace Copium
 				Parameters to pass into mono function
 		*/
 		/**************************************************************************/
-		void invoke(MonoObject * mObj, MonoMethod * mMethod, void** params = nullptr);
+		MonoObject* invoke(MonoObject * mObj, MonoMethod * mMethod, void** params = nullptr);
 
 		/**************************************************************************/
 		/*!
@@ -352,22 +280,11 @@ namespace Copium
 		/**************************************************************************/
 		MonoObject* getFieldMonoObject(MonoClassField* mField, MonoObject* mObject);
 
-		/**************************************************************************/
-		/*!
-			\brief
-				Creates a collision data for scripts
-			\param collided
-				Rhs gameobject
-			\param collidee
-				Lhs gameObject
-		*/
-		/**************************************************************************/
-		void instantiateCollision2D(GameObject& collided, GameObject& collidee);
-
 		bool isScriptableObject(const std::string& name);
 
 
 		bool isScript(const std::string& name);
+
 	private:
 
 		/**************************************************************************/
@@ -431,11 +348,94 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		bool scriptIsLoaded(const std::filesystem::path& filePath);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Gets a field from a C# field using its name
+		\param name
+			Name of the field
+		\param buffer
+			Buffer to store the values, needs to be type casted
+		\return
+			False if operation failed, true if it was successful
+		*/
+		/*******************************************************************************/
+		void GetFieldValue(MonoObject* instance, MonoClassField* mClassFiend,  Field& field, void* container);
+
+		template<typename T>
+		size_t CreateReference(T& object) { static_assert(true); };
+
+
+		template<>
+		size_t CreateReference<GameObject>(GameObject& object);
+		template<>
+		size_t CreateReference<Component>(Component& object);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Sets a field from a C# field using its name
+		\param name
+			Name of the field
+		\param value
+			Value to write into C# memory space
+		\return
+			False if operation failed, true if it was successful
+		*/
+		/*******************************************************************************/
+		void SetFieldValue(MonoObject* instance, MonoClassField* mClassFiend, Field& field, const void* value);
+
+		void CallbackSceneOpened(SceneOpenedEvent* pEvent);
+		void CallbackReflectComponent(ReflectComponentEvent* pEvent);
+		void CallbackScriptInvokeMethod(ScriptInvokeMethodEvent* pEvent);
+		void CallbackScriptSetField(ScriptSetFieldEvent* pEvent);
+		void CallbackScriptGetField(ScriptGetFieldEvent* pEvent);
+		template<typename T>
+		void CallbackScriptSetFieldReference(ScriptSetFieldReferenceEvent<T>* pEvent);
+		void CallbackScriptGetMethodNames(ScriptGetMethodNamesEvent* pEvent);
+		void CallbackStartPreview(StartPreviewEvent* pEvent);
+
+		MonoObject* ReflectGameObject(GameObjectID id);
+		MonoObject* ReflectComponent(Component& component);
+
+		using MonoGameObjects = std::unordered_map<GameObjectID, MonoObject*>;
+		using MonoComponents = std::unordered_map<ComponentID, MonoObject*>;
+
 		std::unordered_map<std::string, ScriptClass> scriptClassMap;
 		std::unordered_map<std::string, ScriptClass> scriptableObjectClassMap;
+		std::unordered_map<MonoObject*, MonoGameObjects> mGameObjects;
+		std::unordered_map<MonoObject*, MonoComponents> mComponents;
 		std::list<File>& scriptFiles;
 		CompilingState compilingState{ CompilingState::Wait };
 		std::map<std::string, std::map<std::string,ScriptableObject>> scriptableObjects;
+
+		MonoClass* klassScene{};
+		std::unordered_map<std::string, MonoObject*> scenes;
+		MonoObject* mCurrentScene;
+		MonoObject* mPreviousScene;
 	};
+
+	template<typename T>
+	void ScriptingSystem::CallbackScriptSetFieldReference(ScriptSetFieldReferenceEvent<T>* pEvent)
+	{
+		MonoObject* mScript = mComponents[mCurrentScene][pEvent->script.id];
+		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
+		ScriptClass& scriptClass{ GetScriptClass(pEvent->script.name) };
+		MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };
+		COPIUM_ASSERT(!mClassField, std::string("FIELD ") + pEvent->fieldName + "COULD NOT BE FOUND IN SCRIPT " + pEvent->script.name);
+		size_t result = -1;
+		if (pEvent->reference == nullptr)
+		{
+			//REMOVE REFERENCE
+			SetFieldValue(mScript, mClassField, pEvent->script.fieldDataReferences[pEvent->fieldName], &result);
+			return;
+		}
+		result = CreateReference(*pEvent->reference);
+		//SET REFERENCE
+		SetFieldValue(mScript, mClassField, pEvent->script.fieldDataReferences[pEvent->fieldName], &result);
+	}
 }
 #endif // !SCRIPTING_SYSTEM_H

@@ -20,7 +20,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Messaging/message-system.h"
 #include "Files/file-system.h"
 #include "Files/assets-system.h"
-#include <Scripting/scripting-system.h>
 
 namespace Copium
 {
@@ -29,7 +28,6 @@ namespace Copium
 		EditorSystem* editor = EditorSystem::Instance();
 		FileSystem* fs = FileSystem::Instance();
 		AssetsSystem* assetSys = AssetsSystem::Instance();
-		ScriptingSystem* sS = ScriptingSystem::Instance();
 
 		std::filesystem::path assets = "../PackedTracks/Assets";
 
@@ -82,17 +80,17 @@ namespace Copium
 		{
 			if (currentDirectory != nullptr)
 			{
-				for (auto& it : sS->getScriptableObjectClassMap())
-				{
-					if (ImGui::MenuItem(it.first.c_str(), nullptr))
-					{
-						std::ofstream oStream(Paths::assetPath + "\\" + it.first + ".so");
-						oStream.close();
-						//If deserializable else, create new file, SO,
-						// Copy the script file but change the extension
-						//assetSys->CopyAsset(*soFile, ".asset");
-					}
-				}
+				//for (auto& it : sS->getScriptableObjectClassMap())
+				//{
+				//	if (ImGui::MenuItem(it.first.c_str(), nullptr))
+				//	{
+				//		std::ofstream oStream(Paths::assetPath + "\\" + it.first + ".so");
+				//		oStream.close();
+				//		//If deserializable else, create new file, SO,
+				//		// Copy the script file but change the extension
+				//		//assetSys->CopyAsset(*soFile, ".asset");
+				//	}
+				//}
 
 				//for (int i = 0; i < scriptableObjects.size(); i++)
 				//{

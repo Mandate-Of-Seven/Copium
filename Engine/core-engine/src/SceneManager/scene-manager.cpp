@@ -32,6 +32,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "GameObject/Components/ui-components.h"
 #include "GameObject/Components/sorting-group-component.h"
 #include <Audio/sound-system.h>
+#include <Events/events-system.h>
 
 
 
@@ -72,6 +73,8 @@ namespace Copium {
 		{
 			for (Component* pComponent : pGameObj->components)
 			{	
+				if (!pComponent)
+					continue;
 				if (pComponent->id == _ID)
 				{
 					return pComponent;
@@ -169,15 +172,13 @@ namespace Copium {
 			return false;
 		}
 
-		// WAIT
-		MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_SCENE_OPENED);
-
 		if (document.HasMember("Name"))
 		{
 			currentScene->set_name(document["Name"].GetString());
 			std::cout << "Scene name:" << currentScene->name << std::endl;
-
 		}
+
+		MyEventSystem->publish(new SceneOpenedEvent(currentScene->get_name().c_str()));
 
 		if (document.HasMember("Unused GIDs"))
 		{
@@ -429,6 +430,7 @@ namespace Copium {
 			return false;
 		}
 
+		MyEventSystem->publish(new StartPreviewEvent());
 
 
 		GameObjectID prevSelected = 0;
@@ -686,9 +688,6 @@ namespace Copium {
 		{
 			MyGOF.clone(*gameObj, currentScene);
 		}
-
-		//std::cout << "Storage scene game object count: " << storageScene->gameObjects.size() << std::endl;
-		//std::cout << "Preview scene game object count: " << currentScene->gameObjects.size() << std::endl;
 
 		for (size_t goIndex{ 0 }; goIndex < storageScene->get_gameobjcount(); ++goIndex)
 		{

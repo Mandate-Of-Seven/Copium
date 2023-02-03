@@ -105,6 +105,11 @@ public class GameManager: CopiumScript
                 InternalCalls.PlayAllAnimation();
             }
         }
+
+        if (Input.GetKey(KeyCode.P))
+        {
+            Application.Quit();
+        }
     }
 
     void UpdateTabs()

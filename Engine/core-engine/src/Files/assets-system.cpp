@@ -45,8 +45,10 @@ namespace Copium
 		//
 		// Load all file paths in the asset folder
 		load_assets(&fs->get_asset_directory());
+		PRINT("ASSETS LOADED");
 
 		LoadExistingMetaFile();
+		PRINT("META LOADED");
 
 		// Generate Meta Files for all assets
 		/*for (int i = 0; i < (int)FILE_TYPE::NUM_TYPES; i++)
@@ -150,13 +152,15 @@ namespace Copium
 	void AssetsSystem::load_assets(Directory* _directory)
 	{
 		(void) _directory;
-
+		PRINT("LOADING TEXTURES");
 		// Load Textures (.png)
 		load_all_textures(fs->get_file_references()[FILE_TYPE::SPRITE]);
 
+		PRINT("LOADING SHADERS");
 		// Load Shaders (.vert & .frag)
 		load_all_shaders(fs->get_filepath_in_directory(Paths::dataPath.c_str(), ".vert", ".frag"));
 
+		PRINT("LOADING AUDIO");
 		// Load Audio (.wav)
 		load_all_audio(fs->get_filepath_in_directory(Paths::assetPath.c_str(), ".wav"));
 	}

@@ -188,4 +188,9 @@ namespace CopiumEngine
             InternalCalls.AudioSourcePlay(gameObject.ID);
         }
     }
+
+    public class ImageComponent : Component
+    {
+
+    }
 }

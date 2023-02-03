@@ -71,13 +71,15 @@ namespace Copium
 			for (ISystem* pSystem : systems)
 			{
 				pSystem->init();
+				//std::cout << typeid(*pSystem).name() << ": init!\n";
 			}
 
 			pMessageSystem->subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
 			pMessageSystem->subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
 			pMessageSystem->subscribe(MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW, this);
 
-			//MySceneManager.load_scene(Paths::assetPath+"\\Scenes\\Demo.scene");
+			MySceneManager.load_scene(Paths::assetPath+"\\Scenes\\Demo.scene");
+			//MySceneManager.load_scene("C:\\Users\\FLESH\\Desktop\\Copium\\Engine\\x64\\PackedTracks\\Assets\\Scenes\\Demo.scene");
 			
 		}
 
@@ -98,6 +100,7 @@ namespace Copium
 				{
 					double startTime = glfwGetTime();
 					pSystem->update();
+					//std::cout << typeid(*pSystem).name() << ": update!\n";
 					pSystem->updateTime = glfwGetTime() - startTime;
 					totalUpdateTime += pSystem->updateTime;
 				}
@@ -105,6 +108,7 @@ namespace Copium
 				{
 					double startTime = glfwGetTime();
 					pSystem->update();
+					//std::cout << typeid(*pSystem).name() << ": update!\n";
 					pSystem->updateTime = glfwGetTime() - startTime;
 					totalUpdateTime += pSystem->updateTime;
 					continue;

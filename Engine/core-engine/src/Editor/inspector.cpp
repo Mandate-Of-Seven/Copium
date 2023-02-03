@@ -19,6 +19,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/Components/script-component.h"
 #include "Editor/editor-hierarchy-list.h"
 #include "Files/assets-system.h"
+#include <Scripting/scripting-system.h>
 
 // Bean: Remove once we can auto select gameobjects
 #include "SceneManager/scene-manager.h"
@@ -34,7 +35,6 @@ namespace Copium
     {
         //bool isInspectorOpen;
         bool isAddingComponent;
-        Copium::ScriptingSystem& scriptingSystem{ *Copium::ScriptingSystem::Instance() };
         Copium::SceneManager& sceneManager{ *Copium::SceneManager::Instance() };
         Copium::FileSystem& fileSystem{ *Copium::FileSystem::Instance() };
         Copium::AssetsSystem& assetsSystem{ *Copium::AssetsSystem::Instance() };
@@ -136,10 +136,10 @@ namespace Copium
                         break;
                     }
                 }
-                for (auto& nameToScriptClass : scriptingSystem.getScriptFiles())
+                for (auto& nameToScriptClass : MyScriptingSystem.getScriptFiles())
                 {
                     const std::string& name{ nameToScriptClass.filename().stem().string() };
-                    if (!scriptingSystem.isScript(name))
+                    if (!MyScriptingSystem.isScript(name))
                         continue;
                     if (filter.PassFilter(name.c_str()) && ImGui::Button((name + "[Script]").c_str(), buttonSize)) {
                         selectedGameObject->addComponent<Copium::Script>().Name(name);
@@ -153,7 +153,7 @@ namespace Copium
                 if (ImGui::Button(newScriptPrompt.c_str(), buttonSize))
                 {
                     //Ask scripting system query if file exists
-                    scriptingSystem.addEmptyScript(filter.InputBuf);
+                    MyScriptingSystem.addEmptyScript(filter.InputBuf);
                     selectedGameObject->addComponent<Copium::Script>().Name(filter.InputBuf);
                     isAddingComponent = false;
                 }

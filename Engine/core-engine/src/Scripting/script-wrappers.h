@@ -367,7 +367,7 @@ namespace Copium
 	{
 		if (sceneManager.endPreview())
 			messageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
-		//quit_engine();
+		quit_engine();
 		#ifdef GAMEMODE
 		quit_engine();
 		#else
