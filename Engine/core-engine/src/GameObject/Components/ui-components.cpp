@@ -379,6 +379,7 @@ namespace Copium
 		component->clickedColor = clickedColor;
 		component->hoverColor = hoverColor;
 		component->normalColor = normalColor;
+		component->fadeDuration = fadeDuration;
 		return component;
 	}
 
@@ -404,6 +405,7 @@ namespace Copium
 		rjName.SetString(callbackName.c_str(), _doc.GetAllocator());
 		_value.AddMember("Callback", rjName, _doc.GetAllocator());
 
+		_value.AddMember("fadeDur", fadeDuration, _doc.GetAllocator());
 
 		_value.AddMember("clickedR", clickedColor.r, _doc.GetAllocator());
 		_value.AddMember("clickedG", clickedColor.g, _doc.GetAllocator());
@@ -455,6 +457,11 @@ namespace Copium
 			normalColor.b = _value["normalB"].GetFloat();
 			normalColor.g = _value["normalG"].GetFloat();
 			normalColor.a = _value["normalA"].GetFloat();
+		}
+
+		if (_value.HasMember("fadeDur"))
+		{
+			fadeDuration = _value["fadeDur"].GetFloat();
 		}
 	}
 

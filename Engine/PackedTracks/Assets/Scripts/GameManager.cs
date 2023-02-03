@@ -96,6 +96,7 @@ public class GameManager: CopiumScript
             {
                 isReportScreenOn = true;
                 UpdateCanvases();
+                ManualBtn.gameObject.SetActive(false);
             }
 
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -106,6 +107,7 @@ public class GameManager: CopiumScript
                 {
                     isReportScreenOn = false;
                     UpdateCanvases();
+                    ManualBtn.gameObject.SetActive(true);
                 }
             }
 
