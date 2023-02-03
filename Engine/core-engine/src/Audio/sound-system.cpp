@@ -133,7 +133,7 @@ void SoundSystem::Stop(std::string alias)
 {
 	if (soundList[alias].first)
 	{
-		soundList[alias].first->stop();
+			soundList[alias].first->stop();
 	}
 }
 

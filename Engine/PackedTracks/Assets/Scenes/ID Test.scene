@@ -6,10 +6,6 @@
         {
             "Name": "Default",
             "ID": 0
-        },
-        {
-            "Name": "UI",
-            "ID": 2
         }
     ],
     "GameObjects": [
@@ -22,8 +18,8 @@
                     "ID": 1,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 0.2735462188720703,
-                        "Y": 2.682708978652954,
+                        "X": -2.7642924785614014,
+                        "Y": 0.33868128061294556,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -50,9 +46,17 @@
                     }
                 },
                 {
-                    "Type": "SortingGroup",
-                    "SortingLayer": 0,
-                    "OrderInLayer": 0
+                    "Type": "Text",
+                    "ID": 7,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "New Text",
+                    "Font Size": 1.0,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
                 }
             ]
         },
@@ -62,17 +66,17 @@
             "Components": [
                 {
                     "PID": 1,
-                    "ID": 4,
+                    "ID": 3,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 6.154067039489746,
-                        "Y": 1.479435682296753,
+                        "X": -3.3180220127105713,
+                        "Y": 1.7300184965133667,
                         "Z": 1.0
                     },
                     "Rot": {
                         "X": 0.0,
                         "Y": 0.0,
-                        "Z": 34.42680358886719
+                        "Z": 0.0
                     },
                     "Scale": {
                         "X": 1.0,
@@ -91,11 +95,6 @@
                         "Z": 0.0,
                         "W": 1.0
                     }
-                },
-                {
-                    "Type": "SortingGroup",
-                    "SortingLayer": 2,
-                    "OrderInLayer": 0
                 }
             ]
         },
@@ -105,68 +104,12 @@
             "Components": [
                 {
                     "PID": 2,
-                    "ID": 7,
+                    "ID": 5,
                     "Type": "Transform",
                     "Pos": {
-                        "X": -1.5859503746032715,
-                        "Y": 2.245164394378662,
+                        "X": 2.3468031883239746,
+                        "Y": 0.94474196434021,
                         "Z": 1.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": -87.15461730957031
-                    },
-                    "Scale": {
-                        "X": 0.9999998807907104,
-                        "Y": 0.9999998807907104,
-                        "Z": 1.0
-                    }
-                },
-                {
-                    "Type": "Text",
-                    "ID": 6,
-                    "FontName": "corbel",
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Content": "New Text",
-                    "Font Size": 2.0,
-                    "r": 0.00009999999747378752,
-                    "g": 0.00009998999303206801,
-                    "b": 0.00009998999303206801,
-                    "a": 1.0
-                },
-                {
-                    "Type": "SortingGroup",
-                    "SortingLayer": 2,
-                    "OrderInLayer": 30
-                },
-                {
-                    "ID": 10,
-                    "Type": "SpriteRenderer",
-                    "Sprite ID": 0,
-                    "Sprite Name": "empty",
-                    "Color": {
-                        "X": 0.9740331172943115,
-                        "Y": 0.6376605033874512,
-                        "Z": 0.6376605033874512,
-                        "W": 1.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 4,
-            "Name": "New GameObject(3)",
-            "Components": [
-                {
-                    "PID": 0,
-                    "ID": 11,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 6.0,
-                        "Y": 4.0,
-                        "Z": 0.0
                     },
                     "Rot": {
                         "X": 0.0,
@@ -180,58 +123,14 @@
                     }
                 },
                 {
-                    "Type": "Text",
-                    "ID": 12,
-                    "FontName": "corbel",
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Content": "New Text",
-                    "Font Size": 1.0,
-                    "r": 1.0,
-                    "g": 1.0,
-                    "b": 1.0,
-                    "a": 1.0
-                },
-                {
-                    "Type": "SortingGroup",
-                    "SortingLayer": 2,
-                    "OrderInLayer": 94
-                }
-            ]
-        },
-        {
-            "ID": 5,
-            "Name": "New GameObject",
-            "Components": [
-                {
-                    "PID": 3,
-                    "ID": 14,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": -5.532242298126221,
-                        "Y": 0.9572181701660156,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": -61.228050231933594
-                    },
-                    "Scale": {
-                        "X": 1.0999997854232788,
-                        "Y": 1.1000003814697266,
-                        "Z": 1.0
-                    }
-                },
-                {
-                    "ID": 15,
+                    "ID": 6,
                     "Type": "SpriteRenderer",
                     "Sprite ID": 0,
                     "Sprite Name": "empty",
                     "Color": {
-                        "X": 1.0,
-                        "Y": 0.45163923501968384,
-                        "Z": 0.9438660144805908,
+                        "X": 0.8199117183685303,
+                        "Y": 1.0,
+                        "Z": 0.0,
                         "W": 1.0
                     }
                 }

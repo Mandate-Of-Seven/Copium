@@ -33,8 +33,7 @@ namespace Copium
         enum class AnimatorStatus : char
         {
             idle = 0, 
-            playing,
-            paused
+            playing
         };
         /***************************************************************************/
         /*!
@@ -107,7 +106,6 @@ namespace Copium
 
         Animation* GetCurrentAnimation();
 
-        AnimatorStatus GetStatus() { return status; }
         void SetStatus(AnimatorStatus _status) { status = _status; }
 
     protected:
@@ -155,22 +153,6 @@ namespace Copium
         */
         /**************************************************************************/
         void exit();
-
-        /***************************************************************************/
-        /*!
-        \brief
-            Pauses all the animators
-        */
-        /**************************************************************************/
-        void PauseAllAnimation();
-
-        /***************************************************************************/
-        /*!
-        \brief
-            Starts all the animators
-        */
-        /**************************************************************************/
-        void PlayAllAnimation();
 
 	private:
         std::vector<Animator*> animators;

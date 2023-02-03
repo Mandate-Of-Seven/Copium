@@ -443,7 +443,34 @@ namespace Copium
 		if (scale > trans.scale.y)
 			scale = trans.scale.y;
 		scale *= fSize;
-		
+		glm::vec2 dimensions{ font->getDimensions(content, scale) };
+
+		switch (hAlignment)
+		{
+			case HorizontalAlignment::Center:
+			{
+				pos.x -= dimensions.x / 2.f;
+				break;
+			}
+			case HorizontalAlignment::Right:
+			{
+				pos.x -= dimensions.x;
+				break;
+			}
+		}
+		switch (vAlignment)
+		{
+			case VerticalAlignment::Top:
+			{
+				pos.y -= dimensions.y;
+				break;
+			}
+			case VerticalAlignment::Center:
+			{
+				pos.y -= dimensions.y / 2.f;
+				break;
+			}
+		}
 		glm::fvec4 mixedColor{0};
 		mixedColor.a = 1 - (1 - layeredColor.a) * (1 - color.a); // 0.75
 		if (mixedColor.a < 0.01f)
@@ -458,8 +485,7 @@ namespace Copium
 
 		if (gameObj.transform.hasParent())
 		{
-			glm::vec3 updatedPos = gameObj.transform.position;
-			glm::vec3 updatedScale = gameObj.transform.scale;
+			glm::vec3 updatedPos = pos;
 
 			Transform* tempObj = trans.parent;
 			while (tempObj)
@@ -486,58 +512,13 @@ namespace Copium
 				glm::mat4 transform = translate * rotate * scale;
 
 				updatedPos = glm::vec3(transform * glm::vec4(updatedPos, 1.f));
-				updatedScale *= tempObj->scale.glmVec3;
 				tempObj = tempObj->parent;
 			}
 
-			float updatedSize = updatedScale.x * fSize * 0.1f;
-
-			glm::vec2 dimensions{ font->getDimensions(content, updatedSize) };
-
-			switch (hAlignment)
-			{
-			case HorizontalAlignment::Center:
-				updatedPos.x -= dimensions.x / 2.f;
-				break;
-			case HorizontalAlignment::Right:
-				updatedPos.x -= dimensions.x;
-				break;
-			}
-			switch (vAlignment)
-			{
-			case VerticalAlignment::Top:
-				updatedPos.y -= dimensions.y;
-				break;
-			case VerticalAlignment::Center:
-				updatedPos.y -= dimensions.y / 2.f;
-				break;
-			}
-
-			font->draw_text(content, updatedPos, mixedColor, updatedSize, 0, _camera);
+			font->draw_text(content, updatedPos, mixedColor, scale, 0, _camera);
 		}
 		else
 		{
-			glm::vec2 dimensions{ font->getDimensions(content, scale) };
-
-			switch (hAlignment)
-			{
-			case HorizontalAlignment::Center:
-				pos.x -= dimensions.x / 2.f;
-				break;
-			case HorizontalAlignment::Right:
-				pos.x -= dimensions.x;
-				break;
-			}
-			switch (vAlignment)
-			{
-			case VerticalAlignment::Top:
-				pos.y -= dimensions.y;
-				break;
-			case VerticalAlignment::Center:
-				pos.y -= dimensions.y / 2.f;
-				break;
-			}
-
 			font->draw_text(content, pos, mixedColor, scale, 0, _camera);
 		}
 

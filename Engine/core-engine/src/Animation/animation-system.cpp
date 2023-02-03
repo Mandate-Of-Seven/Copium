@@ -74,7 +74,7 @@ namespace Copium
 			if (ImGui::Button(toggleAnimation.c_str(), ImVec2(ImGui::GetColumnWidth() * 0.3f, 0.f)))
 			{
 
-				if (status == AnimatorStatus::idle || status == AnimatorStatus::paused)
+				if (status == AnimatorStatus::idle)
 					status = AnimatorStatus::playing;
 				else
 				{
@@ -220,12 +220,14 @@ namespace Copium
 	}
 	void Animator::PlayAnimation()
 	{
-		status = AnimatorStatus::playing;
+
 	}
 	void Animator::PauseAnimation()
 	{
-		status = AnimatorStatus::paused;		
+		status = AnimatorStatus::idle;		
 	}
+	
+
 	void Animator::Update(float _dt)
 	{
 
@@ -387,7 +389,7 @@ namespace Copium
 
 				Animator* anim = reinterpret_cast<Animator*>(component);
 				anim->Update(MyFrameRateController.getDt());
-				if (sm->GetSceneState() == Scene::SceneState::play && anim->GetStatus() != Animator::AnimatorStatus::paused)
+				if (sm->GetSceneState() == Scene::SceneState::play)
 				{
 					anim->SetStatus(Animator::AnimatorStatus::playing);
 				}
@@ -411,30 +413,6 @@ namespace Copium
 
 
 
-		}
-	}
-
-	void AnimationSystem::PauseAllAnimation()
-	{
-		for (Copium::GameObject* go : sm->get_current_scene()->gameObjects)
-		{
-			Animator* temp = go->getComponent<Animator>();
-			if (temp != NULL)
-			{
-				temp->PauseAnimation();
-			}
-		}
-	}
-
-	void AnimationSystem::PlayAllAnimation()
-	{
-		for (Copium::GameObject* go : sm->get_current_scene()->gameObjects)
-		{
-			Animator* temp = go->getComponent<Animator>();
-			if (temp != NULL)
-			{
-				temp->PlayAnimation();
-			}
 		}
 	}
 }

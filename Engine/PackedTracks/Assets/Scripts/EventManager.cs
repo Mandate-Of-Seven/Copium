@@ -35,7 +35,6 @@ public class EventManager: CopiumScript
     Button next_btn;
     void Start()
 	{
-        EventSequence = 0;
         option01_btn = Option_01.GetComponent<Button>();
         option02_btn = Option_02.GetComponent<Button>();
         next_btn = Next_Event.GetComponent<Button>();

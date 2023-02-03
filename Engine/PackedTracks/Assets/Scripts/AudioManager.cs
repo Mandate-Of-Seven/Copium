@@ -17,22 +17,16 @@ public class AudioManager: CopiumScript
 	public AudioSource sfxButtonClick;
 	public int state = 0;
 
-    public GameObject MainMenuStartGameObject;
-    Button MainMenuStartBtn;
-
-    void Start()
+	void Start()
 	{
-        MainMenuStartBtn = MainMenuStartGameObject.GetComponent<Button>();
-
-        if (state == 0)
+		if (state == 0)
 		{
 			bgmMainMenu.Play();
-        }
+		}
 		else if (state == 1)
 		{
 			bgmTrain.Play();
-            ambTrain.Play();
-        }
+		}
 		else if (state == 2)
 		{
 			bgmCombat.Play();
@@ -40,12 +34,6 @@ public class AudioManager: CopiumScript
 	}
 	void Update()
 	{
-        if (MainMenuStartBtn.state == ButtonState.OnClick)
-		{
-            state = 1;
 
-            bgmTrain.Play();
-            ambTrain.Play();
-        }
-    }
+	}
 }

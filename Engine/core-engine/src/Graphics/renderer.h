@@ -23,7 +23,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Graphics/spritesheet.h"
 #include "Graphics/sprite.h"
-#include "Graphics/fonts.h"
 
 namespace Copium 
 {
@@ -268,18 +267,30 @@ namespace Copium
 		/***************************************************************************/
 		/*!
 		\brief
+			Draws the text onto the game window
+		\param position
+			The position of the text
+		\param size
+			The size of the text
+		\param textureID
+			The index of the font to be used
+		*/
+		/***************************************************************************/
+		void draw_text(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const glm::vec4& _color, GLuint _fontID);
+
+		/***************************************************************************/
+		/*!
+		\brief
 			Draws a text onto the game window
 		\param position
 			The position of the text
 		\param color
 			The color of the text
-		\param _scale
-			The size of the text
-		\param _font
+		\param fontID
 			The font to draw
 		*/
 		/***************************************************************************/
-		void draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float _scale, Font* _font);
+		void draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float _scale, GLuint _fontID);
 
 		// Accessing Properties
 
