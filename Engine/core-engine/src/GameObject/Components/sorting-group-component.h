@@ -23,16 +23,24 @@ namespace Copium
 	class SortingGroup : public Component
 	{
 	public:
-
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Constructs the component of the sorting group for this gameobject
+		\param _gameObj
+			The gameoject to add into the sorting group
+		*/
+		/*******************************************************************************/
 		SortingGroup(GameObject& _gameObj);
 
 		/*******************************************************************************
-			/*!
-			*
-			\brief
-				Displays the inspector view with its fields
-			*/
-			/*******************************************************************************/
+		/*!
+		*
+		\brief
+			Displays the inspector view with its fields
+		*/
+		/*******************************************************************************/
 		void inspector_view();
 
 		/*******************************************************************************
@@ -45,7 +53,6 @@ namespace Copium
 			Reference to this BoxCollider2DComponent
 		*/
 		/*******************************************************************************/
-
 		Component* clone(GameObject& _gameObj, ComponentID* newID = nullptr) const
 		{
 			SortingGroup* component = new SortingGroup(_gameObj);

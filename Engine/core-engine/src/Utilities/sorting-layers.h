@@ -41,29 +41,126 @@ namespace Copium
 	class SortingLayers
 	{
 	public:
-		// Initialize a default sort layer with 100 objects each
+		
+		/***************************************************************************/
+		/*!
+		\brief
+			Initialize a default sort layer with 100 objects each
+		*/
+		/***************************************************************************/
 		SortingLayers();
 
-		// Reorder the layers based on the layerID
+		/***************************************************************************/
+		/*!
+		\brief
+			Reorder the layers based on the layerID
+		*/
+		/***************************************************************************/
 		void SortLayers();
 
-		// Swap the layers
+		/***************************************************************************/
+		/*!
+		\brief
+			Swap two layers based on their names
+		\param _name01
+			First layer to swap
+		\param _name02
+			Second layer to swap
+		*/
+		/***************************************************************************/
 		void SwapLayers(const std::string& _name01, const std::string& _name02);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Swap two layers based on their layer index
+		\param _layer01
+			First layer to swap
+		\param _layer01
+			Second layer to swap
+		*/
+		/***************************************************************************/
 		void SwapLayers(const unsigned int& _layer01, const unsigned int& _layer02);
 
 		// Create new sorting layer
+		/***************************************************************************/
+		/*!
+		\brief
+			Creates a new sorting layer
+		\param _name
+			The name of the layer to create
+		\return
+			A pointer to the layer that was created
+		*/
+		/***************************************************************************/
 		Layer* CreateNewLayer(const std::string& _name);
 
-		// Remove sorting layer
+		/***************************************************************************/
+		/*!
+		\brief
+			Remove a sorting layer based on its name
+		\param _name
+			The fisrt layer found with the name to remove
+		*/
+		/***************************************************************************/
 		void RemoveLayer(const std::string& _name);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Remove a sorting layer based on its layer index
+		\param _layerID
+			The layer with the index to remove
+		*/
+		/***************************************************************************/
 		void RemoveLayer(const unsigned int& _layerID);
 
-		// Add gameobject into the sorting layer
+		/***************************************************************************/
+		/*!
+		\brief
+			Add a gameobject into the sorting layer
+		\param _name
+			The fisrt layer found with the name to add the gameobject to
+		\param _gameObject
+			The gameobject to add into the layer
+		*/
+		/***************************************************************************/
 		void AddGameObject(const std::string& _name, GameObject& _gameObject);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Add a gameobject into the sorting layer
+		\param _layerID
+			The layer with the specific index to add the gameobject to
+		\param _gameObject
+			The gameobject to add into the layer
+		*/
+		/***************************************************************************/
 		void AddGameObject(const unsigned int& _layerID, GameObject& _gameObject);
 
-		// Remove gameobject in the sorting layer
+		/***************************************************************************/
+		/*!
+		\brief
+			Remove a gameobject from the sorting layer
+		\param _name
+			The fisrt layer found with the name to remove the gameobject from
+		\param _gameObject
+			The gameobject to remove from the layer
+		*/
+		/***************************************************************************/
 		void RemoveGameObject(const std::string& _name, GameObject& _gameObject);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Remove a gameobject from the sorting layer
+		\param _layerID
+			The layer with the specific index to remove the gameobject from
+		\param _gameObject
+			The gameobject to remove from the layer
+		*/
+		/***************************************************************************/
 		void RemoveGameObject(const unsigned int& _layerID, GameObject& _gameObject);
 
 		const int& GetLayerCount() const { return layerCount; }

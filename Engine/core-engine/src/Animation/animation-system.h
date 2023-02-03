@@ -152,7 +152,7 @@ namespace Copium
             void
         */
         /**************************************************************************/
-        void Update(float _dt);
+        void Update(double _dt);
 
         /***************************************************************************/
         /*!
@@ -247,7 +247,7 @@ namespace Copium
         int currentAnimationIndex;      // Current playing animation
         int startingAnimationIndex;     // The first animation that is playing
         unsigned int animationCount;
-        bool loop;
+        bool loop, reverse;
         AnimatorStatus status;
     };
 

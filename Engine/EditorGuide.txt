@@ -1,0 +1,129 @@
+﻿Mandate of Seven
+Copium Editor Guide
+
+
+[Start-up]
+* When the Copium engine starts up, the Demo scene is loaded.
+* You can try loading another scene, double click Scene -> ID Test.scene in the content browser.
+
+
+[Scene Saving/Loading]
+Loading
+* To load a scene into Copium Engine, go to the main menu bar, select File -> Open. This also has a shortcut “Ctrl + O” 
+* A file dialog will appear to prompt you for a scene file to open
+* Navigate to the Data folder within the project directory and select a scene file.
+* Try selecting Demo.scene
+* To load a scene, find a scene file in the content browser and double click it to load
+Saving
+* To save a scene, go to the main menu bar, select File -> Save.
+* The scene file associated with the scene will be updated with any new data
+* Alternatively, selecting File -> Save as will open a file dialog. Typing in a file name in the file dialog and clicking save will produce a file with the file name specified by the user. The file will contain the scene data of the current scene
+* Note that using save as does not save the scene data to the scene file associated with the current scene. 
+
+
+[Editing Hierarchy GameObjects]
+Adding
+* To add a game object to the scene, go to the Hierarchy Window
+* Select Menu -> Add a GameObject
+* A default game object will be created
+Deletion
+* To delete a game object from the scene, click on a game object
+* Select Menu -> Delete selected GameObject
+* The selected game object will be deleted from the scene
+Clone
+* To clone a game object, right click on a game object and click clone
+Or
+* To clone a game object, click on a game object
+* Select Menu -> Clone Selected GameObject
+* The object will be cloned and added into the bottom of the hierarchy list
+Child
+* Right click and click “Add a kid”
+Or
+* To add a child game object,click on a game object
+* Select Menu -> Create a Child GameObject
+* The object will be added into the gameobject
+Shifting Gameobjects Up or Down
+* To shift a game object up or down in the hierarchy, click on the game object
+* Select Menu -> Shift Up
+Or
+* Select Menu -> Shift Down
+[Inspector]
+* To view a game object in the inspector, select it from the Hierarchy Window
+* To view a file or folder properties, select it from the Content Browser Window
+* The Inspector is on the right side of the screen by default.
+* Using the Inspector, you can:
+   * Edit the components associated with the game object.
+   * Add components to the game object
+Add Component
+* To add a component, click the add component button while a game object is selected.
+* A list of components will pop out, select the desired one.
+* Scripts can also be added from the Add Component menu
+Editing Component Data
+* To edit component data, select the respective fields of the data you wish to edit and edit accordingly.
+* E.g select the X coordinate of a game object’s transform component and change it. The change should be reflected in the scene view
+* To add a sprite to the renderer component, drag and drop the texture from the content browser into the sprite field, the sprite field only takes in a .png file
+Undo / Redo
+* Currently you can undo and redo changes made in a transform component
+* The Undo and Redo keybinds are Z and X (Press only no holding)
+* You cannot be clicked in and focused on the IMGUI input field that you wish to undo/redo
+
+
+[Preview]
+Play scene
+* To play the scene, make sure a scene is loaded in. Go to the main menu bar, select Preview -> Play scene. The preview should start. 
+* Try doing this with combatMovement and aiMovement scripts added to the blue train and red train respectively in Demo.scene. Upon preview, the trains should move according to the script behaviour
+* Note that while in preview mode, you can switch to the game window and press Left Shift + E to toggle between maximised and un-maximised
+Stop scene
+* To stop the preview, Go to the main menu bar, select Preview -> Stop scene.
+* The preview will stop and the scene data will be reset to the state it was in before the preview.
+
+
+[Debugging]
+Console Log
+* The console log can be found on the bottom window of the editor
+* There is a button ”Add 5 logs” to test the debug log to the imgui console
+* There is a button ”Testing win32 console” to test the debugging to the win32 console
+* Under options, you can toggle “continuous scrolling” if you want the log to scroll along with new messages.
+* There is a button “Clear” which clears all messages in the log
+* There is a button “Copy” which copies all messages to the clipboard
+* There is a search bar that allows you to search for specific words
+Performance Viewer
+* Performance viewer is only visible when the console log is active. It is found on the left window.
+* There is a button “Start Performance Viewer“ which shows the time taken for each update for all the systems, represented in percentage form.
+Renderer Stats
+* It is found on the bottom window of the editor. It is used to display the amount of game objects active as well as the dimensions of the viewport
+Theme Generator
+* Sets the theme of the editor
+* You can load a theme from the Themes folder
+* Saving a theme after setting the colour in the theme generator window
+* Apply the theme on the theme generator after changing the color
+
+
+[Content Browser]
+* The content browser is found on the bottom window. It currently starts loaded in the Assets Folder of our engine.
+* You can double click to enter a sub folder
+* You can drag a png file into the Sprite input box which is found in RendererComponent.
+* You can drag a wav file into the Audio File input box which is found in AudioSourceComponent.
+* If you are in a subfolder, there will be a back button found at the top of the content browser
+* Double click on a scene file to load a scene
+* You can drag and drop files/folders from external folders into the content browser to load new files and folders
+* You can delete files and folders by selecting the item in the content browser
+
+
+[Scene / Game viewer]
+Scene View
+* The scene viewer is usually found in the centre of the screen. It is used to display gameobjects in the scene
+* You can zoom in and out with the mouse scroll
+* You can move around the scene by dragging with right click or middle mouse
+* Select gameobject by either clicking it in the scene view or hierarchy
+Game View
+* The game view is also found beside the scene view. It is used to display the game view where the players can see into the game via a camera
+* The game view only displays when there is a camera object in the scene, to make a camera object, just assign a camera component to any gameobject
+Gizmos
+* Upon selecting a game object, a gizmo will appear which will allow you to move it around (note that the user has to hover over the scene view to change the current tool)
+   * W key to show translate tool
+   * E key to show scale tool
+   * R key to show rotate tool
+[Exit]
+* To exit the engine, go to the main menu bar and select File -> Exit.
+* Or click on the cross button at the top right of the window
