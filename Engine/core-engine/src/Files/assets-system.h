@@ -177,17 +177,86 @@ namespace Copium
 			return &spritesheets[_index];
 		}
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Creates an asset in the assets's folder
+		\param _directory
+			The directory in the asset folder to create in
+		\param _name
+			The name of the asset
+		*/
+		/***************************************************************************/
 		void CreateAsset(const std::string& _directory, const std::string& _name);
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Copies an asset from another and place it in the same directory
+		\param _file
+			The file to copy from
+		\param _ext
+			The extension to change to
+		*/
+		/***************************************************************************/
 		void CopyAsset(const File& _file, const std::string& _ext);
 
 		const MetaID& GetMetaID(const uint64_t& _id) { return metaData[_id]; }
 
 		// Meta Data Files
+		/***************************************************************************/
+		/*!
+		\brief
+			Loads exisiting meta files from the engine and stores it in the metaData
+			data member
+		*/
+		/***************************************************************************/
 		void LoadExistingMetaFile();
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Generates a meta ID and passes the values to GenerateFileStream
+		\param _file
+			The file to generate a meta file for
+		*/
+		/***************************************************************************/
 		void GenerateMetaFile(File* _file);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Checks if a meta file for this specific file already exists
+		\param _file
+			The file to check
+		\return
+			True if it exists, else false
+		*/
+		/***************************************************************************/
 		bool CheckForMetaFile(File* _file);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Generates a meta file for the specific file
+		\param _outputFile
+			The output file to write data into
+		\param _file
+			The file to generate a meta file for
+		*/
+		/***************************************************************************/
 		void GenerateFileStream(std::ofstream& _outputFile, File* _file);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Gets the importer file type depending on the type of the file
+		\param _type
+			The file type
+		\return
+			The specific importer type for the meta file
+		*/
+		/***************************************************************************/
 		IMPORTER_TYPE GetImporterFile(const FileType& _type);
 
 	private:

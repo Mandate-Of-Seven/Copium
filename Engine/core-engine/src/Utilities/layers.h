@@ -29,20 +29,73 @@ namespace Copium
 		// From game-object.h
 		using GameObjectID = int64_t;
 
-		// Initialize 32 empty layers with 100 objects each
+		/***************************************************************************/
+		/*!
+		\brief
+			Constructs the class with 32 empty layers with 100 objects each
+		*/
+		/***************************************************************************/
 		Layering();
 
-		// Adding gameobject into the layer in the map
+		/***************************************************************************/
+		/*!
+		\brief
+			Adds a gameobject into the default layer in the map
+		\param _id
+			The id of the gameobject to add
+		*/
+		/***************************************************************************/
 		void AddGameObject(const GameObjectID& _id);
 
-		// Adding gameobject into the layer in the map
+		/***************************************************************************/
+		/*!
+		\brief
+			Adds a gameobject into a specific layer in the map
+		\param _layer
+			The layer to add the gameobject to
+		\param _id
+			The id of the gameobject to add
+		*/
+		/***************************************************************************/
 		void AddGameObject(const int& _layer, const GameObjectID& _id);
 
 		// Remove gameobject from the layer in the map
+		/***************************************************************************/
+		/*!
+		\brief
+			Removes a gameobject from a specific layer in the map
+		\param _layer
+			The layer to remove from
+		\param _id
+			The id of the gameobject to remove
+		*/
+		/***************************************************************************/
 		void RemoveGameObject(const int& _layer, const GameObjectID& _id);
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Checks if the gameobject in the layer exists
+		\param _layer
+			The layer to check
+		\param _id
+			The id of the gameobject to check
+		\return
+			True if it exists in the layer, else false
+		*/
+		/***************************************************************************/
 		bool CheckIfExist(int& _layer, const GameObjectID& _id);
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Gets the index to the empty slot in the layer
+		\param _layer
+			The layer to get an empty slot from
+		\return
+			The index of the layer
+		*/
+		/***************************************************************************/
 		int GetEmptySlot(const int& _layer);
 
 		void EnableLayer(const int& _layer) { layerStatus[_layer] = true; }
