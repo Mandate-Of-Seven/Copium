@@ -426,7 +426,7 @@ namespace Copium
 		ScriptClass& scriptClass{ GetScriptClass(pEvent->script.name) };
 		MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };
 		COPIUM_ASSERT(!mClassField, std::string("FIELD ") + pEvent->fieldName + "COULD NOT BE FOUND IN SCRIPT " + pEvent->script.name);
-		size_t result = -1;
+		size_t result = (size_t)(-1);
 		if (pEvent->reference == nullptr)
 		{
 			//REMOVE REFERENCE

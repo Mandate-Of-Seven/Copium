@@ -132,7 +132,7 @@ namespace Copium
 					PauseAnimation();
 					if (reverse)
 					{
-						Animation* anim = GetCurrentAnimation();
+						anim = GetCurrentAnimation();
 						if (anim)
 						{
 							anim->currentFrameIndex = anim->frameCount - 1;

@@ -55,6 +55,7 @@ namespace Copium
 		/*******************************************************************************/
 		Component* clone(GameObject& _gameObj, ComponentID* newID = nullptr) const
 		{
+			(void)newID;
 			SortingGroup* component = new SortingGroup(_gameObj);
 			return component;
 		}

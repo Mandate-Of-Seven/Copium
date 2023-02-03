@@ -289,13 +289,13 @@ namespace Copium
 		void set_circle_width(GLfloat _circleWidth) { circleWidth = _circleWidth; }
 		GLfloat get_circle_width() const { return circleWidth; }
 
-		const GLint& getDrawCount() { return drawCount; }
-		const GLint& getQuadCount() { return quadCount; }
-		const GLint& getLineCount() { return lineCount; }
-		const GLint& getCircleCount() { return circleCount; }
-		const GLint& getTextCount() { return textCount; }
+		const GLuint& getDrawCount() { return drawCount; }
+		const GLuint& getQuadCount() { return quadCount; }
+		const GLuint& getLineCount() { return lineCount; }
+		const GLuint& getCircleCount() { return circleCount; }
+		const GLuint& getTextCount() { return textCount; }
 
-		const GLint& getVertices() { return quadCount * 4 + lineCount * 2 + circleCount * circleVertices + textCount * 4; }
+		//const GLuint& getVertices() { return (unsigned int)(quadCount * 4 + lineCount * 2 + circleCount * circleVertices + textCount * 4); }
 
 		/***************************************************************************/
 		/*!

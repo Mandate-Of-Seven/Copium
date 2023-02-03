@@ -33,7 +33,7 @@ namespace Copium
 	{
 		COPIUM_ASSERT(layerCount + 1 > maxLayers, "Maxed layers reached!");
 		
-		Layer layer{ _name, layerCount, std::vector<GameObject*>(maxObjects) };
+		Layer layer{ _name, (unsigned int)layerCount, std::vector<GameObject*>(maxObjects) };
 		sortingLayers.push_back(layer);
 		layerCount++;
 
@@ -113,25 +113,25 @@ namespace Copium
 	{
 		std::swap(sortingLayers[_layer01], sortingLayers[_layer02]);
 		return;
-		int first = -1, second = -1;
-		for (int i = 0; i < sortingLayers.size(); i++)
-		{
-			if (first > -1 && second > -1)
-				break;
+		//int first = -1, second = -1;
+		//for (int i = 0; i < sortingLayers.size(); i++)
+		//{
+		//	if (first > -1 && second > -1)
+		//		break;
 
-			if (sortingLayers[i].layerID == _layer01)
-				first = i;
+		//	if (sortingLayers[i].layerID == _layer01)
+		//		first = i;
 
-			if (sortingLayers[i].layerID == _layer02)
-				second = i;
-		}
+		//	if (sortingLayers[i].layerID == _layer02)
+		//		second = i;
+		//}
 
-		if (first > -1 && second > -1)
-		{
-			sortingLayers[first].layerID = first;
-			sortingLayers[second].layerID = second;
-			std::swap(sortingLayers[first], sortingLayers[second]);
-		}
+		//if (first > -1 && second > -1)
+		//{
+		//	sortingLayers[first].layerID = first;
+		//	sortingLayers[second].layerID = second;
+		//	std::swap(sortingLayers[first], sortingLayers[second]);
+		//}
 	}
 
 	void SortingLayers::AddGameObject(const std::string& _name, GameObject& _gameObject)

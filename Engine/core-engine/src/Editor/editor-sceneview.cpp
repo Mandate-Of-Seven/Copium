@@ -113,8 +113,8 @@ namespace Copium
 		sprintf(buffer, "Text Count: %d", camera.getDraw()->get_renderer()->getTextCount());
 		ImGui::Text(buffer);
 
-		sprintf(buffer, "Vertex Count: %d", camera.getDraw()->get_renderer()->getVertices());
-		ImGui::Text(buffer);
+		/*sprintf(buffer, "Vertex Count: %d", (int)camera.getDraw()->get_renderer()->getVertices());
+		ImGui::Text(buffer);*/
 
 		// End Render Stats
 		ImGui::End();
@@ -380,20 +380,20 @@ namespace Copium
 			glm::mat4 camView = camera.get_view_matrix();
 
 			glm::mat4 translate = glm::translate(glm::mat4(1.f), pos);
-			glm::mat4 rotation = {
+			glm::mat4 lRotation = {
 			glm::vec4(cos(rot), sin(rot), 0.f, 0.f),
 			glm::vec4(-sin(rot), cos(rot), 0.f, 0.f),
 			glm::vec4(0.f, 0.f, 1.f, 0.f),
 			glm::vec4(0.f, 0.f, 0.f, 1.f)
 			};
 
-			glm::mat4 scale = {
+			glm::mat4 lScale = {
 				glm::vec4(size.x, 0.f, 0.f, 0.f),
 				glm::vec4(0.f, size.y, 0.f, 0.f),
 				glm::vec4(0.f, 0.f, 1.f, 0.f),
 				glm::vec4(0.f, 0.f, 0.f, 1.f)
 			};
-			glm::mat4 transform = translate * rotation * scale;
+			glm::mat4 transform = translate * lRotation * lScale;
 
 			glm::mat4 pTranslate, pRotate, pScale, pTransform, totalTransform, postTransform;
 			glm::vec3 postScale = { 1.f, 1.f, 1.f };

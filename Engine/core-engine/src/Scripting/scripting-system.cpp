@@ -105,6 +105,7 @@ namespace Copium::Utils
 			if (typeName == "CopiumScript")
 				return FieldType::Component;
 			MonoClass* rootClass;
+			(void)rootClass;
 			return FieldType::None;
 		}
 		return it->second;
@@ -718,13 +719,14 @@ namespace Copium
 	size_t ScriptingSystem::CreateReference<Component>(Component& object)
 	{
 		ScriptClass& scriptClass = GetScriptClass(object.Name());
+		(void)scriptClass;
 		ReflectGameObject(object.gameObj.id);
 		return object.id;
 	}
 
 	void ScriptingSystem::CallbackSceneOpened(SceneOpenedEvent* pEvent)
 	{
-		CompilingState state = compilingState;
+		//CompilingState state = compilingState;
 		while (compilingState == CompilingState::Compiling);
 		//If thread was Recompiling and is ready to swap
 		if (compilingState == CompilingState::SwapAssembly)
@@ -755,10 +757,10 @@ namespace Copium
 		PRINT("Script Invoking " << pEvent->script.Name() << " " << pEvent->methodName << " ,ID: " << pEvent->script.id);
 		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
 		ScriptClass& scriptClass{ GetScriptClass(pEvent->script.name) };
-		MonoMethod* mMethod{ mono_class_get_method_from_name (scriptClass.mClass,pEvent->methodName.c_str(),pEvent->paramCount)};
+		MonoMethod* mMethod{ mono_class_get_method_from_name (scriptClass.mClass,pEvent->methodName.c_str(),(int)pEvent->paramCount)};
 		if (!mMethod && mono_class_get_parent(scriptClass.mClass) == mCopiumScript)
 		{
-			mMethod = mono_class_get_method_from_name(mCopiumScript, pEvent->methodName.c_str(), pEvent->paramCount);
+			mMethod = mono_class_get_method_from_name(mCopiumScript, pEvent->methodName.c_str(), (int)pEvent->paramCount);
 			if (!mMethod)
 				return;
 		}

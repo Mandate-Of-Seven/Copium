@@ -402,6 +402,8 @@ namespace Copium {
 				return currentScene->gameObjectSPTRS[i];
 			}
 		}
+		
+		return currentScene->gameObjectSPTRS[0];
 	}
 	std::shared_ptr<GameObject>* SceneManager::find_gameobject_sptr(GameObject* _go)
 	{

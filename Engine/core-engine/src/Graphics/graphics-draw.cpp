@@ -303,7 +303,6 @@ namespace Copium
 
 					Transform& t = gameObject->transform;
 					glm::vec2 size(t.scale.x, t.scale.y);
-					float rotation = t.rotation.z;
 
 					if (gameObject->transform.hasParent())
 					{
@@ -324,7 +323,7 @@ namespace Copium
 					if (!component->Enabled())
 						continue;
 
-					Transform& t = gameObject->transform;
+					//Transform& t = gameObject->transform;
 					Text* text = reinterpret_cast<Text*>(component);
 
 					/*Math::Vec3 pos{ t.position };
@@ -463,7 +462,6 @@ namespace Copium
 
 						Transform& t = gameObject->transform;
 						glm::vec2 size(t.scale.x, t.scale.y);
-						float rotation = t.rotation.z;
 
 						if (gameObject->transform.hasParent())
 						{
@@ -484,7 +482,7 @@ namespace Copium
 						if (!component->Enabled() || false)
 							continue;
 
-						Transform& t = gameObject->transform;
+						//Transform& t = gameObject->transform;
 						Text* text = reinterpret_cast<Text*>(component);
 
 						/*Math::Vec3 pos{ t.position };

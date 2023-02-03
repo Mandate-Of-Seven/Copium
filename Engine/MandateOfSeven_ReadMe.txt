@@ -19,7 +19,7 @@ How to play:
 - Left screen does not do anything.
 
 Existing Bugs In Game:
-- User cannot quit the application using the Quit button. To replay they game, you will need to close and relaunch the game. 
+- To replay they game, you will need to close and relaunch the game. 
 - Combat screen is not clickable before any combat begins.
 - Some text disappears after combat due to linkage issue
 

@@ -78,6 +78,7 @@ namespace Copium
 
         virtual Camera* clone(GameObject& _gameObj, ComponentID* newID = nullptr) const
         {
+            (void)newID;
             Camera* component = new Camera(_gameObj);
             return component;
         }

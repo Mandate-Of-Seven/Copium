@@ -420,7 +420,7 @@ namespace Copium
 				continue;
 			FieldType fType = it->second.fType;
 			Field& field{ fieldDataReferences[_name]};
-
+			(void)field;
 			switch (fType)
 			{
 			case FieldType::Float:
@@ -539,16 +539,16 @@ namespace Copium
 			{
 				case FieldType::Component:
 				{
-					uint64_t id{ field.Get<uint64_t>()};
-					Component* pComponent = MySceneManager.findComponentByID(id);
+					uint64_t index{ field.Get<uint64_t>()};
+					Component* pComponent = MySceneManager.findComponentByID(index);
 					if (pComponent)
 						fieldComponentReferences[_name] = pComponent;
 					break;
 				}
 				case FieldType::GameObject:
 				{
-					uint64_t id{ field.Get<uint64_t>() };
-					GameObject* pGameObject = MySceneManager.findGameObjByID(id);
+					uint64_t index{ field.Get<uint64_t>() };
+					GameObject* pGameObject = MySceneManager.findGameObjByID(index);
 					if (pGameObject)
 						fieldGameObjReferences[_name] = pGameObject;
 					break;
@@ -627,7 +627,6 @@ namespace Copium
 			}
 			case FieldType::String:
 			{
-				rapidjson::Value type;
 				type.SetString(buffer, rapidjson::SizeType(BUFFER_SIZE), _doc.GetAllocator());
 				_value.AddMember(rapidjson::StringRef(fieldName.c_str()), type, _doc.GetAllocator());
 				//_value.AddMember(rapidjson::StringRef(fieldName.c_str()), std::string(buffer), _doc.GetAllocator());

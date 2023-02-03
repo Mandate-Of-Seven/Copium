@@ -265,7 +265,7 @@ namespace Copium
 				ImGui::Text("On Click Callback: ");
 				ImGui::TableNextColumn();
 				const char** namesArr{};
-				size_t arrSize;
+				size_t arrSize = 0;
 				MyEventSystem->publish(new ScriptGetMethodNamesEvent(*script, namesArr, arrSize));
 				ImGui::PushItemWidth(-1);
 				if (ImGui::BeginCombo("##functions", callbackName.c_str())) // The second parameter is the label previewed before opening the combo.
@@ -526,7 +526,7 @@ namespace Copium
 				glm::mat4 translate = glm::translate(glm::mat4(1.f), tempPos);
 
 				float rot = glm::radians(tempObj->rotation.z);
-				glm::mat4 rotate = {
+				glm::mat4 lRotate = {
 				glm::vec4(cos(rot), sin(rot), 0.f, 0.f),
 				glm::vec4(-sin(rot), cos(rot), 0.f, 0.f),
 				glm::vec4(0.f, 0.f, 1.f, 0.f),
@@ -534,14 +534,14 @@ namespace Copium
 				};
 
 				glm::vec3 size = tempObj->scale.glmVec3;
-				glm::mat4 scale = {
+				glm::mat4 lScale = {
 					glm::vec4(size.x, 0.f, 0.f, 0.f),
 					glm::vec4(0.f, size.y, 0.f, 0.f),
 					glm::vec4(0.f, 0.f, 1.f, 0.f),
 					glm::vec4(0.f, 0.f, 0.f, 1.f)
 				};
 
-				glm::mat4 transform = translate * rotate * scale;
+				glm::mat4 transform = translate * lRotate * lScale;
 
 				updatedPos = glm::vec3(transform * glm::vec4(updatedPos, 1.f));
 				updatedScale *= tempObj->scale.glmVec3;
