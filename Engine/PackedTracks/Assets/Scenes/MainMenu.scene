@@ -215,7 +215,7 @@
                 {
                     "Type": "Button",
                     "ID": 15,
-                    "Graphic ID": 0,
+                    "Graphic ID": 9,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.5,
@@ -234,7 +234,7 @@
                     "FontName": "corbel",
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Content": "New Text",
+                    "Content": "Quit Game",
                     "Font Size": 1.0,
                     "r": 1.0,
                     "g": 1.0,
