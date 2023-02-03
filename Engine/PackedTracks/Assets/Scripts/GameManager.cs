@@ -8,6 +8,7 @@ public class GameManager: CopiumScript
 	public GameObject TrainCanvas;
 	public GameObject MainScreenCanvas;
 	public GameObject CombatCanvas;
+    public GameObject PauseCanvas;
 
     public GameObject MainMenuStartGameObject;
     Button MainMenuStartBtn;
@@ -20,6 +21,7 @@ public class GameManager: CopiumScript
     public Button ReportScreenBtn;
     public Button CombatScreenBtn;
     public Button OtherScreenBtn;
+    public Button ResumeBtn;
 
     public Button ReportTabBtn;
     public Button MessageTabBtn;
@@ -27,6 +29,7 @@ public class GameManager: CopiumScript
 
     bool isReportScreenOn = false;
     int state = 0;
+    public bool isPaused = false;
 
     public ShooterBehaviour ally1;
     public ShooterBehaviour ally2;
@@ -41,6 +44,8 @@ public class GameManager: CopiumScript
     void Start()
 	{
         isReportScreenOn = false;
+        PauseCanvas.SetActive(false);
+        audio.Play();
 
         UpdateCanvases();
 
@@ -55,24 +60,50 @@ public class GameManager: CopiumScript
             UpdateCanvases();
         }
 
-        if (ReportScreenBtn.state == ButtonState.OnClick)
+        if (Input.GetKeyDown(KeyCode.P))
         {
-            isReportScreenOn = true;
-            UpdateCanvases();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (isReportScreenOn)
+            isPaused = !isPaused;
+            PauseCanvas.SetActive(isPaused);
+            if (isPaused)
             {
-                isReportScreenOn = false;
-                UpdateCanvases();
+                InternalCalls.PauseAllAnimation();
+            }
+            else
+            {
+                InternalCalls.PlayAllAnimation();
             }
         }
 
-        if (isReportScreenOn)
+        if (!isPaused)
         {
-            UpdateTabs();
+            if (ReportScreenBtn.state == ButtonState.OnClick)
+            {
+                isReportScreenOn = true;
+                UpdateCanvases();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (isReportScreenOn)
+                {
+                    isReportScreenOn = false;
+                    UpdateCanvases();
+                }
+            }
+
+            if (isReportScreenOn)
+            {
+                UpdateTabs();
+            }
+        }
+        else
+        {
+            if (ResumeBtn.state == ButtonState.OnClick)
+            {
+                isPaused = false;
+                PauseCanvas.SetActive(false);
+                InternalCalls.PlayAllAnimation();
+            }
         }
     }
 

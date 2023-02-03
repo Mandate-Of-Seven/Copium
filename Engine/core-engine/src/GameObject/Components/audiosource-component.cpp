@@ -125,6 +125,9 @@ namespace Copium
 			ImGui::SliderFloat("Volume", &f1, 0.0f, 1.0f, "%.2f");
 			SoundSystem::Instance()->soundList[alias].first->setVolume(f1);
 
+			ImGui::Checkbox("Overlap", &overLap);
+			ImGui::Checkbox("Loop", &loop);
+
 			if (ImGui::Button("Preview"))
 			{
 				if (alias.size())
@@ -148,6 +151,7 @@ namespace Copium
 					Window::EditorConsole::editorLog.add_logEntry("Error: No audio file to stop");
 				}
 			}
+			
 
 			if (ImGui::Button("Stop ALL"))
 			{
@@ -166,7 +170,7 @@ namespace Copium
 
 	void AudioSource::play_sound()
 	{
-		soundSystem.Play(this->alias);
+		soundSystem.Play(this->alias, overLap, loop, loopCount);
 	}
 
 	void AudioSource::stop_sound()
