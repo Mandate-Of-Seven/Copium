@@ -68,7 +68,7 @@
                     "ID": 79,
                     "Type": "Script",
                     "Name": "AudioManager",
-                    "state": 1,
+                    "state": 0,
                     "MainMenuStartGameObject": 43,
                     "ambTrain": 119,
                     "bgmMainMenu": 118,
@@ -1056,8 +1056,8 @@
             ]
         },
         {
-            "ID": 20,
-            "Name": "Game Manager",
+            "ID": 41,
+            "Name": "Main Menu Canvas",
             "Components": [
                 {
                     "PID": 0,
@@ -1080,26 +1080,9 @@
                     }
                 },
                 {
-                    "ID": 46,
-                    "Type": "Script",
-                    "Name": "GameManager",
-                    "isPaused": false,
-                    "MainMenuCanvas": 41,
-                    "MessageTab": 22,
-                    "TrainCanvas": 4,
-                    "CombatCanvas": 21,
-                    "MainScreenCanvas": 3,
-                    "PauseCanvas": 40,
-                    "MainMenuStartGameObject": 43,
-                    "ReportTab": 11,
-                    "ReportScreenGameObject": 5,
-                    "CrewTab": 23,
-                    "CombatScreenBtn": 12,
-                    "CrewTabBtn": 27,
-                    "ReportScreenBtn": 9,
-                    "ReportTabBtn": 17,
-                    "ResumeBtn": 124,
-                    "MessageTabBtn": 22
+                    "ID": 118,
+                    "Type": "AudioSource",
+                    "Alias": "BGM _Menu"
                 }
             ]
         },
@@ -1287,7 +1270,7 @@
                     "Pos": {
                         "X": 6.304711818695068,
                         "Y": -1.3121013641357422,
-                        "Z": -8.0
+                        "Z": -9.0
                     },
                     "Rot": {
                         "X": 0.0,
@@ -1348,23 +1331,25 @@
                     }
                 },
                 {
-                    "Type": "ImageComponent",
-                    "ID": 8,
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Sprite ID": 4873872871288986635,
-                    "Sprite Name": "Manual.png",
-                    "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
-                        "W": 1.0
-                    }
-                },
-                {
                     "Type": "SortingGroup",
                     "SortingLayer": 4,
                     "OrderInLayer": 2
+                },
+                {
+                    "Type": "Button",
+                    "ID": 129,
+                    "Graphic ID": 0,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.33000001311302185,
+                            "Y": -0.25999999046325684
+                        },
+                        "Max": {
+                            "X": 0.33000001311302185,
+                            "Y": 0.25999999046325684
+                        }
+                    },
+                    "Callback": ""
                 }
             ]
         },
@@ -1467,7 +1452,7 @@
                     "Pos": {
                         "X": 6.444356918334961,
                         "Y": -1.4124579429626465,
-                        "Z": 2.0
+                        "Z": 1.0
                     },
                     "Rot": {
                         "X": 0.0,
@@ -1543,8 +1528,8 @@
             ]
         },
         {
-            "ID": 34,
-            "Name": "Event Manager",
+            "ID": 40,
+            "Name": "Pause Canvas",
             "Components": [
                 {
                     "PID": 0,
@@ -1553,7 +1538,7 @@
                     "Pos": {
                         "X": 0.0,
                         "Y": 0.0,
-                        "Z": 0.0
+                        "Z": 1.0
                     },
                     "Rot": {
                         "X": 0.0,
@@ -1565,23 +1550,6 @@
                         "Y": 1.0,
                         "Z": 1.0
                     }
-                },
-                {
-                    "ID": 76,
-                    "Type": "Script",
-                    "Name": "EventManager",
-                    "EventSequence": 0,
-                    "DaySequence": 1,
-                    "LuckSequence": 0,
-                    "Option_01": 15,
-                    "Option_02": 16,
-                    "Next_Event": 26,
-                    "GameManager": 46,
-                    "Option_02_Text": 43,
-                    "Header": 31,
-                    "Body": 44,
-                    "Option_01_Text": 42,
-                    "Event_Intro": 79
                 }
             ]
         },
@@ -1591,7 +1559,7 @@
             "Components": [
                 {
                     "PID": 34,
-                    "ID": 96,
+                    "ID": 95,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1623,7 +1591,7 @@
             "Components": [
                 {
                     "PID": 21,
-                    "ID": 98,
+                    "ID": 97,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1661,7 +1629,7 @@
             "Components": [
                 {
                     "PID": 36,
-                    "ID": 100,
+                    "ID": 99,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1699,7 +1667,7 @@
             "Components": [
                 {
                     "PID": 21,
-                    "ID": 102,
+                    "ID": 101,
                     "Type": "Transform",
                     "Pos": {
                         "X": -4.044619083404541,
@@ -1752,12 +1720,12 @@
             ]
         },
         {
-            "ID": 41,
-            "Name": "Main Menu Canvas",
+            "ID": 20,
+            "Name": "Game Manager",
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 106,
+                    "ID": 105,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1776,9 +1744,30 @@
                     }
                 },
                 {
-                    "ID": 118,
-                    "Type": "AudioSource",
-                    "Alias": "BGM _Menu"
+                    "ID": 46,
+                    "Type": "Script",
+                    "Name": "GameManager",
+                    "isPaused": false,
+                    "MainMenuCanvas": 41,
+                    "ManualPopUp": 49,
+                    "TrainCanvas": 4,
+                    "CombatCanvas": 21,
+                    "MainScreenCanvas": 3,
+                    "PauseCanvas": 40,
+                    "MainMenuQuitGameObject": 45,
+                    "MainMenuStartGameObject": 43,
+                    "ReportTab": 11,
+                    "ReportScreenGameObject": 5,
+                    "MessageTab": 22,
+                    "CrewTab": 23,
+                    "CombatScreenBtn": 12,
+                    "CrewTabBtn": 27,
+                    "ReportScreenBtn": 9,
+                    "MessageTabBtn": 22,
+                    "ManualBtn": 129,
+                    "PauseResumeBtn": 124,
+                    "ReportTabBtn": 17,
+                    "PauseQuitBtn": 132
                 }
             ]
         },
@@ -1788,7 +1777,7 @@
             "Components": [
                 {
                     "PID": 41,
-                    "ID": 108,
+                    "ID": 107,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1826,7 +1815,7 @@
             "Components": [
                 {
                     "PID": 41,
-                    "ID": 110,
+                    "ID": 109,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1865,7 +1854,7 @@
             "Components": [
                 {
                     "PID": 44,
-                    "ID": 112,
+                    "ID": 111,
                     "Type": "Transform",
                     "Pos": {
                         "X": -8.5,
@@ -1920,7 +1909,7 @@
             "Components": [
                 {
                     "PID": 41,
-                    "ID": 115,
+                    "ID": 114,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -1946,7 +1935,7 @@
             "Components": [
                 {
                     "PID": 44,
-                    "ID": 116,
+                    "ID": 115,
                     "Type": "Transform",
                     "Pos": {
                         "X": -8.5,
@@ -1996,17 +1985,17 @@
             ]
         },
         {
-            "ID": 40,
-            "Name": "Pause Canvas",
+            "ID": 34,
+            "Name": "Event Manager",
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 119,
+                    "ID": 118,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
                         "Y": 0.0,
-                        "Z": 1.0
+                        "Z": 0.0
                     },
                     "Rot": {
                         "X": 0.0,
@@ -2018,6 +2007,23 @@
                         "Y": 1.0,
                         "Z": 1.0
                     }
+                },
+                {
+                    "ID": 76,
+                    "Type": "Script",
+                    "Name": "EventManager",
+                    "EventSequence": 1835091744,
+                    "DaySequence": 1752459639,
+                    "LuckSequence": 1784827749,
+                    "Option_01": 15,
+                    "Option_02": 16,
+                    "Next_Event": 26,
+                    "GameManager": 46,
+                    "Option_02_Text": 43,
+                    "Header": 31,
+                    "Body": 44,
+                    "Option_01_Text": 42,
+                    "Event_Intro": 79
                 }
             ]
         },
@@ -2100,7 +2106,7 @@
         },
         {
             "ID": 48,
-            "Name": "Resume",
+            "Name": "P Resume",
             "Components": [
                 {
                     "PID": 40,
@@ -2145,6 +2151,141 @@
                     "H_Align": 1,
                     "V_Align": 1,
                     "Content": "Resume",
+                    "Font Size": 3.0,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 49,
+            "Name": "Manual PopUp",
+            "Components": [
+                {
+                    "PID": 4,
+                    "ID": 127,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": -0.47999998927116394,
+                        "Z": 2.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 8.0,
+                        "Y": 8.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 128,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 8689095936251823203,
+                    "Sprite Name": "TempTut-40.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 50,
+            "Name": "Manual Flip",
+            "Components": [
+                {
+                    "PID": 24,
+                    "ID": 129,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": -0.49000000953674316,
+                        "Z": -8.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 8.0,
+                        "Y": 8.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 131,
+                    "Type": "Animator",
+                    "Loop": true,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "manual_spritesheet_01.png",
+                            "Sprite ID": 5095687623820804906,
+                            "Time Delay": 0.10000000149011612,
+                            "FrameCount": 1,
+                            "Rows": 1,
+                            "Columns": 16
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 51,
+            "Name": "P Quit Game",
+            "Components": [
+                {
+                    "PID": 40,
+                    "ID": 131,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": -1.5,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Button",
+                    "ID": 132,
+                    "Graphic ID": 133,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.5,
+                            "Y": -0.5
+                        },
+                        "Max": {
+                            "X": 0.5,
+                            "Y": 0.5
+                        }
+                    },
+                    "Callback": ""
+                },
+                {
+                    "Type": "Text",
+                    "ID": 133,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Quit Game",
                     "Font Size": 3.0,
                     "r": 1.0,
                     "g": 1.0,

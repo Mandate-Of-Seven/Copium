@@ -18,8 +18,6 @@ public class MainMenu: CopiumScript
         {
             Application.Quit();
         }
-
-        if ()
     }
 }
 
