@@ -26,6 +26,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <cstring>
 #include <GameObject/Components/audiosource-component.h>
 #include <Animation/animation-system.h>
+#include <Audio/sound-system.h>
 
 #include "mono/metadata/object.h"
 #include "mono/metadata/reflection.h"
@@ -49,6 +50,7 @@ namespace Copium
 		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 		ScriptingSystem& scriptingSystem{ *ScriptingSystem::Instance() };
 		AnimationSystem& animationSystem{ *AnimationSystem::Instance()};
+		SoundSystem& soundSystem{ *SoundSystem::Instance()};
 	}
 
 	//static bool GetKeyDown(int keyCode)
@@ -510,6 +512,11 @@ namespace Copium
 		animationSystem.PlayAllAnimation();
 	}
 
+	static void PauseAudio(bool status)
+	{
+		soundSystem.Pause(status);
+	}
+
 	/*******************************************************************************
 	/*!
 	\brief
@@ -544,6 +551,7 @@ namespace Copium
 		Register(AudioSourcePlay);
 		Register(PauseAllAnimation);
 		Register(PlayAllAnimation);
+		Register(PauseAudio);
 	}
 
 	/*******************************************************************************

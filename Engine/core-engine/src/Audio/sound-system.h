@@ -112,11 +112,22 @@ namespace Copium
 			/**************************************************************************/
 		void Mute(bool status);
 
+		/***************************************************************************/
+			/*!
+			\brief
+				Pauses all audio
+			\param status
+				should audio be paused or unpaused
+			*/
+			/**************************************************************************/
+		void Pause(bool status);
+
 		//a map of all sounds created using CreateSound()
 		std::map<std::string, std::pair<FMOD::SoundGroup*, FMOD::Sound*>> soundList;
 
 		//the sound system playing all the audio
 		FMOD::System* soundSystem;
+		FMOD::Channel* myChannel;
 	private:
 
 		

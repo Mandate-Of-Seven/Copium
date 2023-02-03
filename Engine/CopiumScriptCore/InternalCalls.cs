@@ -103,9 +103,12 @@ namespace CopiumEngine
         #endregion
 
 
-        #region AUDIO_SOURCE
+        #region AUDIO
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void AudioSourcePlay(ulong ID);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void PauseAudio(bool status);
         #endregion
 
         #region UI

@@ -35,6 +35,7 @@ void SoundSystem::init()
 	systemFlags |= FLAG_RUN_ON_PLAY;
 	FMOD::System_Create(&soundSystem);
 	soundSystem->init(50, FMOD_INIT_NORMAL, NULL);
+
 	CheckVersion();
 	CheckDrivers();
 	std::cout << "Sound init was called" << std::endl;
@@ -58,6 +59,7 @@ void SoundSystem::update()
 	//	Copium::SoundSystem::Instance()->Play("testbgm", false, true);
 	//	std::cout << "BGM is being played\n";
 	//}
+
 }
 
 void SoundSystem::exit()
@@ -125,7 +127,7 @@ void SoundSystem::Play(std::string alias, bool overLap, bool loop, int loopCount
 	{
 		rSound->setMode(FMOD_LOOP_OFF);
 	}
-	soundSystem->playSound(rSound, nullptr, false, nullptr);
+	soundSystem->playSound(rSound, nullptr, false, &myChannel);
 }
 
 // Stop sound
@@ -176,6 +178,12 @@ void SoundSystem::Mute(bool status)
 	{
 		soundSystem->setOutput(FMOD_OUTPUTTYPE_AUTODETECT);
 	}
+}
+
+void SoundSystem::Pause(bool status)
+{
+	std::cout << "1";
+	myChannel->setPaused(status);
 }
 
 // Private Members

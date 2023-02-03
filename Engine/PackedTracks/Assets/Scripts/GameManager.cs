@@ -51,6 +51,7 @@ public class GameManager: CopiumScript
         {
             isPaused = !isPaused;
             PauseCanvas.SetActive(isPaused);
+            InternalCalls.PauseAudio(isPaused);
             if (isPaused)
             {
                 InternalCalls.PauseAllAnimation();
@@ -90,6 +91,7 @@ public class GameManager: CopiumScript
                 isPaused = false;
                 PauseCanvas.SetActive(false);
                 InternalCalls.PlayAllAnimation();
+                InternalCalls.PauseAudio(false);
             }
         }
     }

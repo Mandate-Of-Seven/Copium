@@ -102,7 +102,20 @@ namespace Copium
         bool IsEmpty() const { return animations.empty(); }
 
         void AddAnimation();
+
+        /***************************************************************************/
+       /*!
+       \brief
+           Plays all animations
+       */
+       /**************************************************************************/
         void PlayAnimation();
+
+        /***************************************************************************/
+       /*!
+       \brief
+           Pauses all animations
+       /**************************************************************************/
         void PauseAnimation();
 
         Animation* GetCurrentAnimation();
