@@ -2,6 +2,7 @@
 \file			sorting-group-component.cpp
 \project
 \author			Sean Ngo
+\co-author      Matthew Lau
 
 \par			Course: GAM200
 \par			Section:
@@ -26,7 +27,7 @@ namespace Copium
 
 	SortingGroup::SortingGroup(GameObject& _gameObj) :Component(_gameObj, ComponentType::SortingGroup), sortingLayer{0}, orderInLayer{0}
 	{
-        PRINT("Added to default layer");
+        //PRINT("Added to default layer");
         editor->getLayers()->SortLayers()->AddGameObject(0, _gameObj);
 	}
 
@@ -159,7 +160,7 @@ namespace Copium
             ImGui::TableNextColumn();
             if (ImGui::DragInt("", &orderInLayer, 1.f, 0, 100))
             {
-                PRINT("changing order in layer");
+                //PRINT("changing order in layer");
                 // Sort the layer based on all order ids
                 // Michael Buble sort here
                 Layer* layer{nullptr};
@@ -200,6 +201,8 @@ namespace Copium
 
                                     if (sg1->GetOrderInLayer() > sg2->GetOrderInLayer())
                                     {
+
+                                        PRINT(sg1->GetOrderInLayer() << '|' << sg2->GetOrderInLayer());
                                         std::swap(layer->gameObjects[j], layer->gameObjects[j + 1]);
                                         swapped = true;
                                     }

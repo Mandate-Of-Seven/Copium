@@ -23,7 +23,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include <ImGuizmo.h>
 
-
+#include "GameObject/Components/ui-components.h"
+#include "GameObject/Components/renderer-component.h"
+#include "Animation/animation-system.h"
 
 namespace Copium
 {
@@ -127,6 +129,9 @@ namespace Copium
 				std::vector<GameObject*> pGameObjs; // Possible selectable gameobjects
 				for (GameObject* gameObject : scene->gameObjects)
 				{
+					if (!gameObject->isActive() || !gameObject)
+						continue;
+
 					Transform& t = gameObject->transform;
 					glm::vec2 mousePosition = glm::vec3(camera.get_ndc(), 0.f);
 					glm::vec3 tempPos = t.position;
@@ -172,8 +177,99 @@ namespace Copium
 						> glm::length(camera.get_dimension()))
 						continue;
 
-					glm::vec2 min = glm::vec2(objPosition.x - tempScale.x * 0.5f, objPosition.y - tempScale.y * 0.5f);
-					glm::vec2 max = glm::vec2(objPosition.x + tempScale.x * 0.5f, objPosition.y + tempScale.y * 0.5f);
+					glm::vec2 min, max;
+					AABB bound;
+					
+					min = glm::vec2(objPosition.x - tempScale.x * 0.5f, objPosition.y - tempScale.y * 0.5f);
+					max = glm::vec2(objPosition.x + tempScale.x * 0.5f, objPosition.y + tempScale.y * 0.5f);
+
+					for (Component* component : gameObject->getComponents<Button>())
+					{
+						if (!component->Enabled())
+							continue;
+
+						Button* button = reinterpret_cast<Button*>(component);
+						bound = button->getBounds();
+
+						min = glm::vec2(objPosition.x + bound.min.x - objPosition.x, objPosition.y + bound.min.y - objPosition.y);
+						max = glm::vec2(objPosition.x + bound.max.x - objPosition.x, objPosition.y + bound.max.y - objPosition.y);
+					}
+					for (Component* component : gameObject->getComponents<SpriteRenderer>())
+					{
+						if (!component->Enabled())
+							continue;
+
+						SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(component);
+						Sprite sr = rc->get_sprite_renderer();
+						float tempX = 0.f, tempY = 0.f;
+						if (sr.get_texture() != nullptr)
+						{
+							int width = (int)sr.get_texture()->get_width();
+							int height = (int)sr.get_texture()->get_height();
+							float multiplier = width / (float)WindowsSystem::Instance()->get_window_width();
+							tempX = tempScale.x * (width / (float)height) * multiplier * 0.5f;
+							if(width == height)
+								tempY = tempScale.y * (width / (float)height) * multiplier * 0.5f;
+							else
+								tempY = tempScale.y * multiplier * 0.5f;
+						}
+						else
+							break;
+
+						min = glm::vec2(objPosition.x - tempX, objPosition.y - tempY);
+						max = glm::vec2(objPosition.x + tempX, objPosition.y + tempY);
+					}
+					for (Component* component : gameObject->getComponents<ImageComponent>())
+					{
+						if (!component->Enabled())
+							continue;
+
+						ImageComponent* ic = reinterpret_cast<ImageComponent*>(component);
+						Sprite sr = ic->get_sprite_renderer();
+						float tempX = 0.f, tempY = 0.f;
+						if (sr.get_texture() != nullptr)
+						{
+							int width = (int)sr.get_texture()->get_width();
+							int height = (int)sr.get_texture()->get_height();
+							float multiplier = width / (float)WindowsSystem::Instance()->get_window_width();
+							tempX = tempScale.x * (width / (float)height) * multiplier * 0.5f;
+							if (width == height)
+								tempY = tempScale.y * (width / (float)height) * multiplier * 0.5f;
+							else
+								tempY = tempScale.y * multiplier * 0.5f;
+						}
+						else
+							break;
+
+						min = glm::vec2(objPosition.x - tempX, objPosition.y - tempY);
+						max = glm::vec2(objPosition.x + tempX, objPosition.y + tempY);
+					}
+					for (Component* component : gameObject->getComponents<Animator>())
+					{
+						if (!component->Enabled())
+							continue;
+
+						Animator* anim = reinterpret_cast<Animator*>(component);
+						int columns = anim->GetCurrentAnimation()->spriteSheet.columns;
+						int rows = anim->GetCurrentAnimation()->spriteSheet.rows;
+						float tempX = 0.f, tempY = 0.f;
+						if (anim->GetCurrentAnimation()->spriteSheet.GetTexture() != nullptr)
+						{
+							float width = (float)anim->GetCurrentAnimation()->spriteSheet.GetTexture()->get_width() / (float) columns;
+							float height = (float)anim->GetCurrentAnimation()->spriteSheet.GetTexture()->get_height() / (float) rows;
+							float multiplier = width / (float)WindowsSystem::Instance()->get_window_width();
+							tempX = tempScale.x * (width / (float)height) * multiplier * 0.5f;
+							if (width == height)
+								tempY = tempScale.y * (width / (float)height) * multiplier * 0.5f;
+							else
+								tempY = tempScale.y * multiplier * 0.5f;
+						}
+						else
+							break;
+
+						min = glm::vec2(objPosition.x - tempX, objPosition.y - tempY);
+						max = glm::vec2(objPosition.x + tempX, objPosition.y + tempY);
+					}
 
 					// Check AABB
 					if (mousePosition.x > min.x && mousePosition.x < max.x)
@@ -299,10 +395,15 @@ namespace Copium
 			};
 			glm::mat4 transform = translate * rotation * scale;
 
-			glm::mat4 pTranslate, pRotate, pScale, pTransform, totalTransform, tempTransform;
+			glm::mat4 pTranslate, pRotate, pScale, pTransform, totalTransform, postTransform;
+			glm::vec3 postScale = { 1.f, 1.f, 1.f };
+			float postRotation = 0.f;
 			if (currObj->transform.hasParent())
 			{
-				totalTransform = transform;
+				glm::vec3 position = currObj->transform.position;
+				glm::vec3 scale = currObj->transform.scale;
+				float rotation = currObj->transform.rotation.z;
+				totalTransform = postTransform = glm::identity<glm::mat4>();
 				Transform* tempObj = currObj->transform.parent;
 
 				while (tempObj)
@@ -317,27 +418,48 @@ namespace Copium
 						glm::vec4(0.f, 0.f, 0.f, 1.f)
 					};
 
-					glm::vec3 scale = tempObj->scale.glmVec3;
 					pScale = {
-						glm::vec4(scale.x, 0.f, 0.f, 0.f),
-						glm::vec4(0.f, scale.y, 0.f, 0.f),
+						glm::vec4(tempObj->scale.x, 0.f, 0.f, 0.f),
+						glm::vec4(0.f, tempObj->scale.y, 0.f, 0.f),
 						glm::vec4(0.f, 0.f, 1.f, 0.f),
 						glm::vec4(0.f, 0.f, 0.f, 1.f)
 					};
 
 					pTransform = pTranslate * pRotate * pScale;
-					totalTransform = pTransform * totalTransform;
+					postTransform = postTransform * glm::inverse(pTransform);
+					postScale /= tempObj->scale.glmVec3;
+					postRotation += tempObj->rotation.z;
+
+					position = glm::vec3(pTransform * glm::vec4(position, 1.f));
+					scale *= tempObj->scale.glmVec3;
+					rotation += tempObj->rotation.z;
 
 					tempObj = tempObj->parent;
 				}
+				
+				pTranslate = glm::translate(glm::mat4(1.f), position);
 
+				float pRot = glm::radians(rotation);
+				pRotate = {
+					glm::vec4(cos(pRot), sin(pRot), 0.f, 0.f),
+					glm::vec4(-sin(pRot), cos(pRot), 0.f, 0.f),
+					glm::vec4(0.f, 0.f, 1.f, 0.f),
+					glm::vec4(0.f, 0.f, 0.f, 1.f)
+				};
+
+				pScale = {
+					glm::vec4(scale.x, 0.f, 0.f, 0.f),
+					glm::vec4(0.f, scale.y, 0.f, 0.f),
+					glm::vec4(0.f, 0.f, 1.f, 0.f),
+					glm::vec4(0.f, 0.f, 0.f, 1.f)
+				};
+
+				totalTransform = pTranslate * pRotate * pScale;
 			}
 			else
 			{
 				totalTransform = transform;
 			}
-
-			tempTransform = totalTransform;
 
 			if (ImGui::IsWindowHovered())
 			{
@@ -363,18 +485,21 @@ namespace Copium
 			{
 				float newTranslate[3]; 
 				float newRotate[3];
-				float pNewRotate[3];
 				float newScale[3];
-				float pNewScale[3];
-				glm::mat4 temp = totalTransform - tempTransform;
-				ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(tempTransform), newTranslate, pNewRotate, pNewScale);
 				ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(totalTransform), newTranslate, newRotate, newScale);
-				glm::vec3 nTranslation = { temp[3].x, temp[3].y, temp[3].z };
-				glm::vec3 nScale = { newScale[0] - pNewScale[0], newScale[1] - pNewScale[1], 0.f};
-				// Bean: If parent object is rotated, child guizmos objects will have issues
-				trf.position += nTranslation;
-				trf.scale += nScale;
-				trf.rotation.z += newRotate[2] - pNewRotate[2];
+				glm::vec3 nTranslation = { newTranslate[0], newTranslate[1], newTranslate[2] };
+				glm::vec3 nScale = { newScale[0], newScale[1], 1.f};
+
+				if (currObj->transform.hasParent())
+				{
+					nTranslation = glm::vec3(postTransform * glm::vec4(nTranslation, 1.f));
+					nScale *= postScale;
+					newRotate[2] -= postRotation;
+				}
+
+				trf.position = nTranslation;
+				trf.scale = nScale;
+				trf.rotation.z = newRotate[2];
 			}
 		}
 	}
