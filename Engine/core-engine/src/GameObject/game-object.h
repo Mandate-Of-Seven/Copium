@@ -25,6 +25,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <rapidjson/document.h>
 #include "Math/math-library.h"
 #include "GameObject/Components/transform-component.h"
+#include <GameObject/components.h>
 
 //USING
 
@@ -39,6 +40,7 @@ private:
     friend class GameObjectFactory;
     std::string name;                   //Name of gameObject
     bool active;
+    ComponentsPtrArrays componentPtrArrays;
 
     /***************************************************************************/
     /*!
@@ -87,7 +89,6 @@ public:
     //Global ID for gameObjects
     const GameObjectID id;
     Transform transform;
-    std::vector<Component*> components;   //Components for gameObject
     ComponentID assign_id();
 
     /*******************************************************************************
@@ -124,15 +125,12 @@ public:
     */
     /*******************************************************************************/
     template <typename T>
-    T& addComponent()
+    T& AddComponent()
     {
-        static_assert(std::is_base_of<Component, T>::value);
+        ComponentsPtrArray<T>& components{ componentPtrArrays.GetArray<T>() };
         T* component = new T(*this);
         components.push_back(component);
-
         component->id = assign_id();
-
-
         return *component;
     }
 
@@ -147,61 +145,10 @@ public:
     */
     /*******************************************************************************/
     template <typename T>
-    const std::vector<T*>& getComponents()
+    const ComponentsPtrArray<T>& GetComponents()
     {
-        static_assert(std::is_base_of<Component, T>::value);
-        static std::vector<T*> typedComponents;
-        typedComponents.clear();
-
-        std::string tName = typeid(T).name() + std::string("class Copium::").length();
-        ComponentType componentType = Component::nameToType(tName);
-        for (Component* pComponent : components)
-        {
-            if (!pComponent)
-                continue;
-            if (pComponent->componentType == componentType)
-            {
-                typedComponents.push_back(reinterpret_cast<T*>(pComponent));
-            }
-        }
-        return typedComponents;
+        return componentPtrArrays.GetArray<T>();
     }
-
-    /*******************************************************************************
-    /*!
-        \brief
-            Gets a component of type from components list
-        \param componentType
-            ComponentType of component to get
-        \return
-            Pointer to component gotten
-    */
-    /*******************************************************************************/
-    Component* getComponent(ComponentType componentType);
-
-    /***************************************************************************/
-    /*!
-    \brief
-        Appends a new component by taking in component type to components list
-    \param componentType
-        Type of component to append to components list
-    */
-    /**************************************************************************/
-    Component* addComponent(ComponentType componentType);
-
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Checks if components list has a component of given type
-    \param componentType
-        Type of component to find
-    \return
-        True if component of type exists in components list
-    */
-    /*******************************************************************************/
-    bool hasComponent(ComponentType componentType) const;
-
 
     /*******************************************************************************
     /*!
@@ -215,9 +162,9 @@ public:
     */
     /*******************************************************************************/
     template <typename T>
-    T& addComponent(const T& component)
+    T& AddComponent(const T& component)
     {
-        static_assert(std::is_base_of<Component, T>::value);
+        ComponentsPtrArray<T>& components{ componentPtrArrays.GetArray<T>() };
         T* tmp = new T(this);
         components.push_back(tmp);
 
@@ -239,32 +186,14 @@ public:
     */
     /*******************************************************************************/
     template <typename T>
-    T* getComponent()
+    T* GetComponent()
     {
-        //std::is_same<>
-        static_assert(std::is_base_of<Component, T>::value);
-        std::string tName = typeid(T).name() + std::string("class Copium::").length();
-        ComponentType componentType = Component::nameToType(tName);
-        for (Component* pComponent : components)
-        {
-            if (pComponent->componentType == componentType)
-            {
-                return reinterpret_cast<T*>(pComponent);
-            }
-        }
+        ComponentsPtrArray<T>& components{componentPtrArrays.GetArray<T>()};
+        if (!components.isEmpty())
+            return components[0];
        /* std::cout << tName << "returns a nullptr" << std::endl;*/
         return nullptr;
     }
-
-    /***************************************************************************/
-    /*!
-    \brief
-        Deletes a component from components list
-    \param component
-        Pointer to component to delete from components list
-    */
-    /**************************************************************************/
-    void removeComponent(ComponentType componentType);
 
     /*******************************************************************************
     /*!

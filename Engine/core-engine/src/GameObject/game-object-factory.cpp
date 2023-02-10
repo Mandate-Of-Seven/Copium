@@ -22,6 +22,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <filesystem>
 #include <Editor/editor-undoredo.h>
 #include <Editor/editor-system.h>
+#include <GameObject/components.h>
 
 namespace 
 {
@@ -31,6 +32,42 @@ namespace
 
 namespace Copium 
 {
+	Component& AddComponent(GameObject& gameObj ,ComponentType componentType)
+	{
+		switch (componentType)
+		{
+			switch (componentType)
+			{
+			case ComponentType::Animator:
+				return gameObj.AddComponent<Animator>();
+			case ComponentType::BoxCollider2D:
+				return &addComponent<BoxCollider2D>();
+			case ComponentType::Camera:
+				return &addComponent<Camera>();
+			case ComponentType::Rigidbody2D:
+				return &addComponent<Rigidbody2D>();
+			case ComponentType::SpriteRenderer:
+				return &addComponent<SpriteRenderer>();
+			case ComponentType::Script:
+				return &addComponent<Script>();
+			case ComponentType::Button:
+				return &addComponent<Button>();
+			case ComponentType::Image:
+				return &addComponent<ImageComponent>();
+			case ComponentType::Text:
+				return &addComponent<Text>();
+			case ComponentType::AudioSource:
+				return &addComponent<AudioSource>();
+			case ComponentType::SortingGroup:
+				return &addComponent<SortingGroup>();
+			default:
+				PRINT("ADDED NOTHING, MAYBE ADDED THE COMPONENT TO THE GAMEOBJECT.CPP");
+				break;
+			}
+		}
+		return nullptr;
+	}
+
 	GameObjectFactory::GameObjectFactory()
 	{
 
@@ -243,7 +280,7 @@ namespace Copium
 						go->transform.deserialize(component);
 					else
 					{
-						Component* tmp = go->addComponent(Component::nameToType(key));
+						Component* tmp = go->Add(Component::nameToType(key));
 						//PRINT();
 						if (tmp)
 							tmp->deserialize(component);

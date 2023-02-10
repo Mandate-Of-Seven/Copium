@@ -97,8 +97,8 @@ namespace Copium
 		void serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 		{
 			rapidjson::Value type;
-			std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
-			type.SetString(tc.c_str(), rapidjson::SizeType(tc.length()), _doc.GetAllocator());
+			const char* componentName = GetComponentType<SELF_TYPE>::name;
+			type.SetString(componentName, strlen(componentName), _doc.GetAllocator());
 			_value.AddMember("Type", type, _doc.GetAllocator());
 
 			_value.AddMember("SortingLayer", sortingLayer, _doc.GetAllocator());

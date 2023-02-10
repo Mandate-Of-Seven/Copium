@@ -180,7 +180,7 @@ namespace Copium
 					float y = rand() % 2000 * 0.1f - 100.f;
 
 					go->transform.position = { x, y, 0.f };
-					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->getComponent(ComponentType::SpriteRenderer));
+					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->GetComponent(ComponentType::SpriteRenderer));
 					
 					int numSprites = (int)(AssetsSystem::Instance()->get_textures().size() - 1);
 					rc->get_sprite_renderer().set_sprite_id(rand() % numSprites + 1);
@@ -215,7 +215,7 @@ namespace Copium
 					float y = rand() % 2000 * 0.1f - 100.f;
 
 					go->transform.position = { x, y, 0.f };
-					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->getComponent(ComponentType::SpriteRenderer));
+					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->GetComponent(ComponentType::SpriteRenderer));
 					int numSprites = (int)(AssetsSystem::Instance()->get_textures().size() - 1);
 					rc->get_sprite_renderer().set_sprite_id(rand() % numSprites + 1);
 					unsigned int id = (unsigned int)rc->get_sprite_renderer().get_sprite_id();
@@ -261,7 +261,7 @@ namespace Copium
 			{
 				if (gameObject->hasComponent(ComponentType::Camera))
 				{
-					Camera* camera = reinterpret_cast<Camera*>(gameObject->getComponent(ComponentType::Camera));
+					Camera* camera = reinterpret_cast<Camera*>(gameObject->GetComponent(ComponentType::Camera));
 					cameras.push_back(camera);
 				}
 			}

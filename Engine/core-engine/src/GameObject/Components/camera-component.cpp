@@ -26,7 +26,7 @@ namespace Copium
 		GraphicsSystem* graphics = GraphicsSystem::Instance();
 	}
 
-	Camera::Camera(GameObject& _gameObj) : Component(_gameObj, ComponentType::Camera)
+	Camera::Camera(GameObject& _gameObj) : Component(_gameObj)
 	{
 		PRINT("  Camera Component constructed");
 
@@ -52,8 +52,8 @@ namespace Copium
 	void Camera::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
 		rapidjson::Value type;
-		std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
-		type.SetString(tc.c_str(), (rapidjson::SizeType) tc.length(), _doc.GetAllocator());
+		const char* componentName = GetComponentType<SELF_TYPE>::name;
+		type.SetString(componentName, strlen(componentName), _doc.GetAllocator());
 		_value.AddMember("Type", type, _doc.GetAllocator());
 
 		BaseCamera::serialize(_value, _doc);

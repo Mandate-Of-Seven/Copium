@@ -131,7 +131,7 @@ namespace Copium
                     const std::string& componentName{ it->second };
                     if (filter.PassFilter(componentName.c_str()) && ImGui::Button(componentName.c_str(), buttonSize))
                     {
-                        selectedGameObject->addComponent(it->first);
+                        selectedGameObject->AddComponent(it->first);
                         isAddingComponent = false;
                         break;
                     }
@@ -142,7 +142,7 @@ namespace Copium
                     if (!MyScriptingSystem.isScript(name))
                         continue;
                     if (filter.PassFilter(name.c_str()) && ImGui::Button((name + "[Script]").c_str(), buttonSize)) {
-                        selectedGameObject->addComponent<Copium::Script>().Name(name);
+                        selectedGameObject->AddComponent<Copium::Script>().Name(name);
                         isAddingComponent = false;
                     }
                 }
@@ -154,7 +154,7 @@ namespace Copium
                 {
                     //Ask scripting system query if file exists
                     MyScriptingSystem.addEmptyScript(filter.InputBuf);
-                    selectedGameObject->addComponent<Copium::Script>().Name(filter.InputBuf);
+                    selectedGameObject->AddComponent<Copium::Script>().Name(filter.InputBuf);
                     isAddingComponent = false;
                 }
 

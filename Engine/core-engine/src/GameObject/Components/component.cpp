@@ -24,8 +24,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 namespace Copium
 {
-    Component::Component(GameObject& _gameObj, ComponentType _componentType) 
-        : gameObj{ _gameObj }, componentType{ _componentType }, enabled{ true }, id{0} {}
+    Component::Component(GameObject& _gameObj): gameObj{ _gameObj }, enabled{ true }, id{0} {}
 
     void Component::destroy() {}
 
@@ -48,11 +47,6 @@ namespace Copium
     bool Component::Enabled() const noexcept{ return enabled;}
 
     void Component::Enabled(bool _enabled) noexcept { enabled = _enabled; }
-
-    const std::string& Component::Name() const
-    {
-        return MAP_COMPONENT_TYPE_NAME[componentType];
-    }
 
     void Component::inspector_view()
     {

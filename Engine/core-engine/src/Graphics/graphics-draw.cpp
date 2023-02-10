@@ -146,7 +146,7 @@ namespace Copium
 			GameObject* gameObject = sm->get_selected_gameobject();
 			if (gameObject != nullptr)
 			{
-				for (Component* component : gameObject->getComponents<BoxCollider2D>())
+				for (Component* component : gameObject->GetComponents<BoxCollider2D>())
 				{
 					if (!component->Enabled())
 						continue;
@@ -164,7 +164,7 @@ namespace Copium
 					renderer.draw_line(pos3_1, pos0_1, color);
 				}
 
-				for (Component* component : gameObject->getComponents<Button>())
+				for (Component* component : gameObject->GetComponents<Button>())
 				{
 					Button* collider = reinterpret_cast<Button*>(component);
 					AABB bounds = collider->getBounds();
@@ -227,7 +227,7 @@ namespace Copium
 					continue;
 
 				/*bool layered{ false };
-				for (Component* component : gameObject->getComponents<SortingGroup>())
+				for (Component* component : gameObject->GetComponents<SortingGroup>())
 				{
 					if (component->Enabled())
 					{
@@ -239,7 +239,7 @@ namespace Copium
 				if (layered)
 					continue;*/
 
-				for (Component* component : gameObject->getComponents<SpriteRenderer>())
+				for (Component* component : gameObject->GetComponents<SpriteRenderer>())
 				{
 					if (!component->Enabled())
 						continue;
@@ -265,13 +265,13 @@ namespace Copium
 					}
 
 				}
-				for (Component* component : gameObject->getComponents<ImageComponent>())
+				for (Component* component : gameObject->GetComponents<Image>())
 				{
 					if (!component->Enabled())
 						continue;
 
 					Transform& t = gameObject->transform;
-					ImageComponent* rc = reinterpret_cast<ImageComponent*>(component);
+					Image* rc = reinterpret_cast<Image*>(component);
 					Sprite& sr = rc->get_sprite_renderer();
 					glm::vec2 size(t.scale.x, t.scale.y);
 					float rotation = t.rotation.z;
@@ -290,7 +290,7 @@ namespace Copium
 						renderer.draw_quad(t.position, size, rotation, sr, &rc->layeredColor);
 					}
 				}
-				for (Component* component : gameObject->getComponents<Animator>())
+				for (Component* component : gameObject->GetComponents<Animator>())
 				{
 					if (!component->Enabled())
 						continue;
@@ -318,7 +318,7 @@ namespace Copium
 						renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
 					}
 				}
-				for (Component* component : gameObject->getComponents<Text>())
+				for (Component* component : gameObject->GetComponents<Text>())
 				{
 					if (!component->Enabled())
 						continue;
@@ -398,7 +398,7 @@ namespace Copium
 					if (!camera->withinFrustum(gameObject->transform.position, gameObject->transform.scale))
 						continue;
 
-					for (Component* component : gameObject->getComponents<SpriteRenderer>())
+					for (Component* component : gameObject->GetComponents<SpriteRenderer>())
 					{
 						if (!component->Enabled())
 							continue;
@@ -424,13 +424,13 @@ namespace Copium
 						}
 
 					}
-					for (Component* component : gameObject->getComponents<ImageComponent>())
+					for (Component* component : gameObject->GetComponents<Image>())
 					{
 						if (!component->Enabled())
 							continue;
 
 						Transform& t = gameObject->transform;
-						ImageComponent* rc = reinterpret_cast<ImageComponent*>(component);
+						Image* rc = reinterpret_cast<Image*>(component);
 						Sprite& sr = rc->get_sprite_renderer();
 						glm::vec2 size(t.scale.x, t.scale.y);
 						float rotation = t.rotation.z;
@@ -449,7 +449,7 @@ namespace Copium
 							renderer.draw_quad(t.position, size, rotation, sr);
 						}
 					}
-					for (Component* component : gameObject->getComponents<Animator>())
+					for (Component* component : gameObject->GetComponents<Animator>())
 					{
 						if (!component->Enabled())
 							continue;
@@ -477,7 +477,7 @@ namespace Copium
 							renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
 						}
 					}
-					for (Component* component : gameObject->getComponents<Text>())
+					for (Component* component : gameObject->GetComponents<Text>())
 					{
 						if (!component->Enabled() || false)
 							continue;
@@ -547,7 +547,7 @@ namespace Copium
 		//			continue;
 
 		//		bool layered{ false };
-		//		for (Component* component : gameObject->getComponents<SortingGroup>())
+		//		for (Component* component : gameObject->GetComponents<SortingGroup>())
 		//		{
 		//			if (component->Enabled())
 		//			{
@@ -563,7 +563,7 @@ namespace Copium
 		//		if (!camera->withinFrustum(gameObject->transform.position, gameObject->transform.scale))
 		//			continue;
 
-		//		for (Component* component : gameObject->getComponents<Text>())
+		//		for (Component* component : gameObject->GetComponents<Text>())
 		//		{
 		//			if (!component->Enabled())
 		//				continue;
@@ -585,7 +585,7 @@ namespace Copium
 		//			if (!camera->withinFrustum(gameObject->transform.position, gameObject->transform.scale))
 		//				continue;
 
-		//			for (Component* component : gameObject->getComponents<Text>())
+		//			for (Component* component : gameObject->GetComponents<Text>())
 		//			{
 		//				if (!component->Enabled())
 		//					continue;
@@ -627,7 +627,7 @@ namespace Copium
 				if (!camera->withinFrustum(gameObject->transform.position, gameObject->transform.scale))
 					continue;
 
-				for (Component* component : gameObject->getComponents<BoxCollider2D>())
+				for (Component* component : gameObject->GetComponents<BoxCollider2D>())
 				{
 					if (!component->Enabled())
 						continue;
@@ -645,7 +645,7 @@ namespace Copium
 					renderer.draw_line(pos3_1, pos0_1, color);
 				}
 
-				for (Component* component : gameObject->getComponents<Button>())
+				for (Component* component : gameObject->GetComponents<Button>())
 				{
 					(void) component;
 					Transform& t = gameObject->transform;
@@ -714,7 +714,7 @@ namespace Copium
 		{
 			for (GameObject* gameObject : scene->gameObjects)
 			{
-				for (Component* component : gameObject->getComponents<Text>())
+				for (Component* component : gameObject->GetComponents<Text>())
 				{
 					if (!component->Enabled())
 						continue;

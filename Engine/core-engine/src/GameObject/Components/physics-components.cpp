@@ -4,7 +4,7 @@
 namespace Copium
 {
 	Rigidbody2D::Rigidbody2D(GameObject& _gameObj)
-		:Component(_gameObj, ComponentType::Rigidbody2D) {
+		:Component(_gameObj) {
 		velocity = Math::Vec2(0.0, 0.0);
 		acceleration = Math::Vec2(0.0, 0.0);
 		force = Math::Vec2(0.0, 0.0);
@@ -38,8 +38,8 @@ namespace Copium
 		std::cout << "serializing Rigidbody component\n";
 		Component::serialize(_value, _doc);
 		rapidjson::Value type;
-		std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
-		type.SetString(tc.c_str(), rapidjson::SizeType(tc.length()), _doc.GetAllocator());
+		const char* componentName = GetComponentType<SELF_TYPE>::name;
+		type.SetString(componentName, strlen(componentName), _doc.GetAllocator());
 		_value.AddMember("Type", type, _doc.GetAllocator());
 
 

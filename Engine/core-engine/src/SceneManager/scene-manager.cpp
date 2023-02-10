@@ -277,7 +277,7 @@ namespace Copium {
 		{
 			bool layered{ false };
 			SortingGroup* sg{ nullptr };
-			for (Component* component : go->getComponents<SortingGroup>())
+			for (Component* component : go->GetComponents<SortingGroup>())
 			{
 				if (component->Enabled())
 				{
@@ -315,8 +315,8 @@ namespace Copium {
 
 					if (la.gameObjects[j] && la.gameObjects[j + 1])
 					{
-						Component* co1 = la.gameObjects[j]->getComponent<SortingGroup>();
-						Component* co2 = la.gameObjects[j + 1]->getComponent<SortingGroup>();
+						Component* co1 = la.gameObjects[j]->GetComponent<SortingGroup>();
+						Component* co2 = la.gameObjects[j + 1]->GetComponent<SortingGroup>();
 
 						if (co1 && co2)
 						{
@@ -443,7 +443,7 @@ namespace Copium {
 
 		for (GameObject* gameObj : currentScene->gameObjects)
 		{
-			mainCamera = gameObj->getComponent<Camera>();
+			mainCamera = gameObj->GetComponent<Camera>();
 			if (mainCamera)
 				break;
 		}

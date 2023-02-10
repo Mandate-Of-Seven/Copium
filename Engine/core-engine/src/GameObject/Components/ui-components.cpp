@@ -15,6 +15,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 
 #include "pch.h"
+#include <GameObject/components.h>
 #include "Windows/windows-input.h"
 #include "GameObject/Components/ui-components.h"
 #include "GameObject/game-object.h"
@@ -37,10 +38,13 @@ namespace
 
 namespace Copium
 {
+	IUIComponent::IUIComponent(GameObject& _gameObj) : Component(_gameObj){}
+
+
 	//Button------------/
 	Button* Button::hoveredBtn{nullptr};
 	Button::Button(GameObject& _gameObj,Math::Vec2 _min, Math::Vec2 _max) 
-		: Component(_gameObj, ComponentType::Button), bounds{_min,_max},
+		: Component(_gameObj), bounds{_min,_max},
 		normalColor{1.f,1.f,1.f,0.5f}, hoverColor{0.5f,1.f,1.f,0.5f}, clickedColor{0.5f},
 		targetGraphic{nullptr}
 	{
@@ -78,7 +82,7 @@ namespace Copium
 			timer = 0;
 			previousState = state;
 			if (targetGraphic)
-				previousColor = reinterpret_cast<IUIComponent*>(targetGraphic)->layeredColor;
+				previousColor = targetGraphic->layeredColor;
 		}
 		switch (state)
 		{
@@ -87,12 +91,9 @@ namespace Copium
 			PRINT("UI: Clicked " << gameObj.get_name());
 			if (targetGraphic)
 			{
-				if (targetGraphic->componentType == ComponentType::Text)
-					reinterpret_cast<Text*>(targetGraphic)->layeredColor = Linear(previousColor, clickedColor, timer / fadeDuration);
-				else if (targetGraphic->componentType == ComponentType::Image)
-					reinterpret_cast<Text*>(targetGraphic)->layeredColor = Linear(previousColor, clickedColor, timer / fadeDuration);
+				targetGraphic->layeredColor = Linear(previousColor, clickedColor, timer / fadeDuration);
 			}
-			Script* script = gameObj.getComponent<Script>();
+			Script* script = gameObj.GetComponent<Script>();
 			if (script)
 			{
 				MyEventSystem->publish(new ScriptInvokeMethodEvent(*script,callbackName,nullptr,0));
@@ -108,10 +109,7 @@ namespace Copium
 			PRINT("UI: Hover " << gameObj.get_name());
 			if (targetGraphic)
 			{
-				if (targetGraphic->componentType == ComponentType::Text)
-					reinterpret_cast<Text*>(targetGraphic)->layeredColor = Linear(previousColor, hoverColor, timer / fadeDuration);
-				else if (targetGraphic->componentType == ComponentType::Image)
-					reinterpret_cast<Text*>(targetGraphic)->layeredColor = Linear(previousColor, hoverColor, timer / fadeDuration);
+				targetGraphic->layeredColor = Linear(previousColor, hoverColor, timer / fadeDuration);
 			}
 			break;
 		}
@@ -129,10 +127,7 @@ namespace Copium
 		{
 			if (targetGraphic)
 			{
-				if (targetGraphic->componentType == ComponentType::Text)
-					reinterpret_cast<Text*>(targetGraphic)->layeredColor = Linear(previousColor, normalColor, timer / fadeDuration);
-				else if (targetGraphic->componentType == ComponentType::Image)
-					reinterpret_cast<Text*>(targetGraphic)->layeredColor = Linear(previousColor, normalColor, timer / fadeDuration);
+				targetGraphic->layeredColor = Linear(previousColor, normalColor, timer / fadeDuration);
 			}
 			break;
 		}
@@ -151,7 +146,7 @@ namespace Copium
 		if (_value.HasMember("Graphic ID"))
 		{
 			ComponentID targetGraphicID = _value["Graphic ID"].GetUint64();
-			targetGraphic = MySceneManager.findComponentByID(targetGraphicID);
+			targetGraphic = reinterpret_cast<IUIComponent*>(MySceneManager.findComponentByID(targetGraphicID));
 		}
 	}
 
@@ -163,7 +158,7 @@ namespace Copium
 
 			Component* foundGraphic = MySceneManager.findComponentByID(_ID);
 			if (foundGraphic)
-				targetGraphic = foundGraphic;
+				targetGraphic = reinterpret_cast<IUIComponent*>(foundGraphic);
 		}
 	}
 
@@ -204,16 +199,13 @@ namespace Copium
 			{
 				const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Text");
 				if (!payload)
-					payload = ImGui::AcceptDragDropPayload("ImageComponent");
+					payload = ImGui::AcceptDragDropPayload("Image");
 				if (payload)
 				{
-					Component* pTargetGraphic = (Component*)(*reinterpret_cast<void**>(payload->Data));
+					IUIComponent* pTargetGraphic = (IUIComponent*)(*reinterpret_cast<void**>(payload->Data));
 					if (pTargetGraphic != targetGraphic)
 					{
-						if (targetGraphic->componentType == ComponentType::Text)
-							reinterpret_cast<Text*>(targetGraphic)->layeredColor = {0,0,0,0};
-						else if (targetGraphic->componentType == ComponentType::Image)
-							reinterpret_cast<Text*>(targetGraphic)->layeredColor = { 0,0,0,0 };
+						reinterpret_cast<Text*>(targetGraphic)->layeredColor = {0,0,0,0};
 						targetGraphic = pTargetGraphic;
 					}
 				}
@@ -257,7 +249,7 @@ namespace Copium
 			ImGui::PushItemWidth(-1);
 			ImGui::SliderFloat("##Fade Duration", &fadeDuration, 0.01f, 1.f);
 			ImGui::PopItemWidth();
-			Script* script = gameObj.getComponent<Script>();
+			Script* script = gameObj.GetComponent<Script>();
 			if (script)
 			{
 				ImGui::TableNextRow();
@@ -386,8 +378,8 @@ namespace Copium
 	void Button::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
 		rapidjson::Value type;
-		std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
-		type.SetString(tc.c_str(), rapidjson::SizeType(tc.length()), _doc.GetAllocator());
+		const char* componentName = GetComponentType<SELF_TYPE>::name;
+		type.SetString(componentName, strlen(componentName), _doc.GetAllocator());
 		_value.AddMember("Type", type, _doc.GetAllocator());
 
 		_value.AddMember("ID", id, _doc.GetAllocator());
@@ -484,17 +476,11 @@ namespace Copium
 		//PRINT("Y: " << tmp.min.y << ", " << tmp.max.y);
 		return tmp;
 	}
-
-	void Button::set_targetgraphic(Text* _txt)
-	{
-		targetGraphic = _txt;
-	}
 	
 	//----------------/
 
 	//Text------------/
-	Text::Text(GameObject& _gameObj)
-		: Component(_gameObj, ComponentType::Text), font{ Font::getFont("corbel") }, fontName{ "corbel" }, fSize{ 1.f }, wrapper{ 0.f }, content{ "New Text" }
+	Text::Text(GameObject& _gameObj): IUIComponent(_gameObj), font{ Font::getFont("corbel") }, fontName{ "corbel" }, fSize{ 1.f }, wrapper{ 0.f }, content{ "New Text" }
 	{
 	}
 
@@ -605,8 +591,6 @@ namespace Copium
 
 			font->draw_text(content, pos, mixedColor, scale, wrapper, _camera);
 		}
-
-		
 	}
 
 	Component* Text::clone(GameObject& _gameObj, ComponentID* newID ) const
@@ -762,8 +746,8 @@ namespace Copium
 	void Text::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
 		rapidjson::Value type;
-		std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
-		type.SetString(tc.c_str(), rapidjson::SizeType(tc.length()), _doc.GetAllocator());
+		const char* componentName = GetComponentType<SELF_TYPE>::name;
+		type.SetString(componentName, strlen(componentName), _doc.GetAllocator());
 		_value.AddMember("Type", type, _doc.GetAllocator());
 
 		_value.AddMember("ID", id, _doc.GetAllocator());
@@ -786,13 +770,12 @@ namespace Copium
 	//-----------------/
 
 	//Image------------/
-	ImageComponent::ImageComponent(GameObject& _gameObj)
-		: Component(_gameObj, ComponentType::Image)
+	Image::Image(GameObject& _gameObj): IUIComponent(_gameObj)
 	{
 
 	}
 
-	glm::fvec2 ImageComponent::Offset()
+	glm::fvec2 Image::Offset()
 	{
 		Transform& trans{ gameObj.transform };
 		Math::Vec2 pos{ trans.position };
@@ -833,7 +816,7 @@ namespace Copium
 		return pos;
 	}
 
-	void ImageComponent::inspector_view()
+	void Image::inspector_view()
 	{
 		float sameLinePadding = 16.f;
 		bool openPopup = false;
@@ -949,9 +932,9 @@ namespace Copium
 		sprite.set_name(spriteName);
 	}
 
-	Component* ImageComponent::clone(GameObject& _gameObj, ComponentID* newID) const
+	Component* Image::clone(GameObject& _gameObj, ComponentID* newID) const
 	{
-		ImageComponent* component = new ImageComponent(_gameObj);
+		Image* component = new Image(_gameObj);
 		component->vAlignment = vAlignment;
 		component->hAlignment = hAlignment;
 		component->offset = offset;

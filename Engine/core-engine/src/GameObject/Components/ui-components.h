@@ -58,7 +58,7 @@ namespace Copium
 	class Image;
 
 	//Runs after InputSystem
-	class IUIComponent
+	class IUIComponent : public Component
 	{
 		public:
 			const glm::fvec4& get_color() { return color; }
@@ -70,6 +70,8 @@ namespace Copium
 			VerticalAlignment vAlignment{ VerticalAlignment::Center };
 			glm::fvec4 color{ 1.f };
 			glm::fvec4 layeredColor{ 0.f };
+		protected:
+			IUIComponent(GameObject& _gameObj);
 	};
 
 	class Button final: public Component
@@ -155,32 +157,6 @@ namespace Copium
 			/*******************************************************************************/
 			void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
-			/*******************************************************************************
-			/*!
-			*
-			\brief
-				Set the target graphic for this button
-
-			\param _txt
-				ptr to the Text component which will serve as the target graphic for this Button component
-
-			\return
-				void
-			*/
-			/*******************************************************************************/
-			void set_targetgraphic(Text* _txt);
-			/*******************************************************************************
-			/*!
-			*
-			\brief
-				Get the target graphic for this button
-
-			\return
-				the target graphic attached to this button component
-			*/
-			/*******************************************************************************/
-			Text* get_targetgraphic();
-
 			const AABB& getRelativeBounds() const;
 
 			static Button* hoveredBtn;
@@ -196,7 +172,7 @@ namespace Copium
 			glm::fvec4 normalColor;
 			glm::fvec4 hoverColor;
 			glm::fvec4 clickedColor;
-			Component* targetGraphic;
+			IUIComponent* targetGraphic;
 			ButtonState previousState{ButtonState::None};
 			glm::fvec4 previousColor;
 			float timer{0};
@@ -204,7 +180,7 @@ namespace Copium
 			friend class LogicSystem;
 	};
 
-	class Text final : public Component, public IUIComponent
+	class Text final : public IUIComponent
 	{
 		public:
 
@@ -251,18 +227,18 @@ namespace Copium
 			friend class Button;
 	};
 
-	class ImageComponent final : public Component, public IUIComponent
+	class Image final : public IUIComponent
 	{
 		public:
 			/**************************************************************************/
 			/*!
 				\brief
-					Constructs a ImageComponent
+					Constructs a Image
 				\param gameObj
 					Owner of this
 			*/
 			/**************************************************************************/
-			ImageComponent(GameObject& _gameObj);
+			Image(GameObject& _gameObj);
 			/*******************************************************************************
 			/*!
 			*
@@ -307,8 +283,8 @@ namespace Copium
 			void serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 			{
 				rapidjson::Value type;
-				std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
-				type.SetString(tc.c_str(), rapidjson::SizeType(tc.length()), _doc.GetAllocator());
+				const char* componentName = GetComponentType<SELF_TYPE>::name;
+				type.SetString(componentName, strlen(componentName), _doc.GetAllocator());
 				_value.AddMember("Type", type, _doc.GetAllocator());
 
 				_value.AddMember("ID", id, _doc.GetAllocator());

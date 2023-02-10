@@ -25,7 +25,7 @@ namespace Copium
         EditorSystem* editor = EditorSystem::Instance();
     }
 
-	SortingGroup::SortingGroup(GameObject& _gameObj) :Component(_gameObj, ComponentType::SortingGroup), sortingLayer{0}, orderInLayer{0}
+	SortingGroup::SortingGroup(GameObject& _gameObj) :Component(_gameObj), sortingLayer{0}, orderInLayer{0}
 	{
         //PRINT("Added to default layer");
         editor->getLayers()->SortLayers()->AddGameObject(0, _gameObj);
@@ -115,8 +115,8 @@ namespace Copium
 
                                     if (layer->gameObjects[k] && layer->gameObjects[k + 1])
                                     {
-                                        Component* co1 = layer->gameObjects[k]->getComponent<SortingGroup>();
-                                        Component* co2 = layer->gameObjects[k + 1]->getComponent<SortingGroup>();
+                                        Component* co1 = layer->gameObjects[k]->GetComponent<SortingGroup>();
+                                        Component* co2 = layer->gameObjects[k + 1]->GetComponent<SortingGroup>();
 
                                         if (co1 && co2)
                                         {
@@ -191,14 +191,11 @@ namespace Copium
 
                             if (layer->gameObjects[j] && layer->gameObjects[j + 1])
                             {
-                                Component* co1 = layer->gameObjects[j]->getComponent<SortingGroup>();
-                                Component* co2 = layer->gameObjects[j + 1]->getComponent<SortingGroup>();
+                                SortingGroup* sg1 = layer->gameObjects[j]->GetComponent<SortingGroup>();
+                                SortingGroup* sg2 = layer->gameObjects[j + 1]->GetComponent<SortingGroup>();
 
-                                if (co1 && co2)
+                                if (sg1 && sg2)
                                 {
-                                    sg1 = reinterpret_cast<SortingGroup*>(co1);
-                                    sg2 = reinterpret_cast<SortingGroup*>(co2);
-
                                     if (sg1->GetOrderInLayer() > sg2->GetOrderInLayer())
                                     {
 

@@ -183,7 +183,7 @@ namespace Copium
 					min = glm::vec2(objPosition.x - tempScale.x * 0.5f, objPosition.y - tempScale.y * 0.5f);
 					max = glm::vec2(objPosition.x + tempScale.x * 0.5f, objPosition.y + tempScale.y * 0.5f);
 
-					for (Component* component : gameObject->getComponents<Button>())
+					for (Component* component : gameObject->GetComponents<Button>())
 					{
 						if (!component->Enabled())
 							continue;
@@ -194,7 +194,7 @@ namespace Copium
 						min = glm::vec2(objPosition.x + bound.min.x - objPosition.x, objPosition.y + bound.min.y - objPosition.y);
 						max = glm::vec2(objPosition.x + bound.max.x - objPosition.x, objPosition.y + bound.max.y - objPosition.y);
 					}
-					for (Component* component : gameObject->getComponents<SpriteRenderer>())
+					for (Component* component : gameObject->GetComponents<SpriteRenderer>())
 					{
 						if (!component->Enabled())
 							continue;
@@ -219,12 +219,12 @@ namespace Copium
 						min = glm::vec2(objPosition.x - tempX, objPosition.y - tempY);
 						max = glm::vec2(objPosition.x + tempX, objPosition.y + tempY);
 					}
-					for (Component* component : gameObject->getComponents<ImageComponent>())
+					for (Component* component : gameObject->GetComponents<Image>())
 					{
 						if (!component->Enabled())
 							continue;
 
-						ImageComponent* ic = reinterpret_cast<ImageComponent*>(component);
+						Image* ic = reinterpret_cast<Image*>(component);
 						Sprite sr = ic->get_sprite_renderer();
 						float tempX = 0.f, tempY = 0.f;
 						if (sr.get_texture() != nullptr)
@@ -244,7 +244,7 @@ namespace Copium
 						min = glm::vec2(objPosition.x - tempX, objPosition.y - tempY);
 						max = glm::vec2(objPosition.x + tempX, objPosition.y + tempY);
 					}
-					for (Component* component : gameObject->getComponents<Animator>())
+					for (Component* component : gameObject->GetComponents<Animator>())
 					{
 						if (!component->Enabled())
 							continue;

@@ -29,7 +29,7 @@ namespace Copium
 	bool Script::isAddingReference{nullptr};
 
 	Script::Script(GameObject& _gameObj) :
-		Component(_gameObj, ComponentType::Script), name{ "" }
+		Component(_gameObj), name{ "" }
 	{
 		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
 		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
@@ -561,8 +561,8 @@ namespace Copium
 	{
 		Component::serialize(_value, _doc);
 		rapidjson::Value type;
-		std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
-		type.SetString(tc.c_str(), rapidjson::SizeType(tc.length()), _doc.GetAllocator());
+		const char* componentName = GetComponentType<SELF_TYPE>::name;
+		type.SetString(componentName, strlen(componentName), _doc.GetAllocator());
 		_value.AddMember("Type", type, _doc.GetAllocator());
 		rapidjson::Value rjName;
 		rjName.SetString(name.c_str(), rapidjson::SizeType(name.length()), _doc.GetAllocator());

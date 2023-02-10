@@ -147,7 +147,7 @@ void SoundSystem::StopAll()
 		for (auto gameObj : scene->gameObjects)
 		{
 
-			AudioSource* temp = gameObj->getComponent<AudioSource>();
+			AudioSource* temp = gameObj->GetComponent<AudioSource>();
 			if (temp != NULL)
 			{
 				temp->stop_sound();

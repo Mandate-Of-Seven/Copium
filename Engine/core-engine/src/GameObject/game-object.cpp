@@ -53,40 +53,6 @@ namespace Copium
         return sceneManager.get_current_scene()->assignComponentID();
     }
 
-    Component* GameObject::addComponent(ComponentType componentType)
-    {
-        switch (componentType)
-        {
-        case ComponentType::Animator:
-            return &addComponent<Animator>();
-        case ComponentType::BoxCollider2D:
-            return &addComponent<BoxCollider2D>();
-        case ComponentType::Camera:
-            return &addComponent<Camera>();
-        case ComponentType::Rigidbody2D:
-            return &addComponent<Rigidbody2D>();
-        case ComponentType::SpriteRenderer:
-            return &addComponent<SpriteRenderer>();
-        case ComponentType::Script:
-            return &addComponent<Script>();
-        case ComponentType::Button:
-            return &addComponent<Button>();
-        case ComponentType::Image:
-            return &addComponent<ImageComponent>();
-        case ComponentType::Text:
-            return &addComponent<Text>();
-        case ComponentType::AudioSource:
-            return &addComponent<AudioSource>();
-        case ComponentType::SortingGroup:
-            return &addComponent<SortingGroup>();
-        default:
-            PRINT("ADDED NOTHING, MAYBE ADDED THE COMPONENT TO THE GAMEOBJECT.CPP");
-            break;
-        }
-        return nullptr;
-    }
-
-
     GameObject::~GameObject()
     {
         std::cout << "GameObject destructed\n";
@@ -203,40 +169,6 @@ GameObject& GameObject::operator=(const GameObject& _src)
     return *this;
 }
 
-
-Component* GameObject::getComponent(ComponentType componentType)
-{
-    for (Component* pComponent : components)
-    {
-        if (pComponent->componentType == componentType)
-            return pComponent;
-    }
-    return nullptr;
-}
-
-
-
-void GameObject::removeComponent(ComponentType componentType)
-{
-    if (componentType == ComponentType::Transform)
-    {
-        PRINT("CANNOT REMOVE TRANSFORM");
-        return;
-    }
-    auto it{ components.begin() };
-    while (it != components.end())
-    {
-        if ((*it)->componentType == componentType)
-        {
-            delete* it;
-            components.erase(it);
-            return;
-        }
-        ++it;
-    }
-    PRINT("Component of Type " << MAP_COMPONENT_TYPE_NAME[componentType] << " does not exist on " << name);
-}
-
 void GameObject::removeComponent(ComponentID componentID)
 {
     auto it{ components.begin() };
@@ -250,21 +182,6 @@ void GameObject::removeComponent(ComponentID componentID)
         }
         ++it;
     }
-}
-
-
-bool GameObject::hasComponent(ComponentType componentType) const
-{
-    auto it{ components.begin() };
-    while (it != components.end())
-    {
-        if ((*it)->componentType == componentType)
-        {
-            return true;
-        }
-        ++it;
-    }
-    return false;
 }
 
 void GameObject::set_name(const std::string& _name){ name = _name; }

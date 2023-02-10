@@ -5,7 +5,7 @@
 
 namespace Copium
 {
-    BoxCollider2D::BoxCollider2D(GameObject& _gameObj):Component(_gameObj, ComponentType::BoxCollider2D) 
+    BoxCollider2D::BoxCollider2D(GameObject& _gameObj):Component(_gameObj) 
     {
         
     }

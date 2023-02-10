@@ -36,7 +36,7 @@ namespace Copium
 {
 
 	Animator::Animator(GameObject& _gameObj) 
-		: Component(_gameObj, ComponentType::Animator), currentAnimationIndex{ 0 }, startingAnimationIndex{ 0 }, animationCount{ 0 }, loop{ true }, reverse{ false }, status{ AnimatorStatus::idle }
+		: Component(_gameObj), currentAnimationIndex{ 0 }, startingAnimationIndex{ 0 }, animationCount{ 0 }, loop{ true }, reverse{ false }, status{ AnimatorStatus::idle }
 	{
 
 	}
@@ -424,8 +424,8 @@ namespace Copium
 	{
 		Component::serialize(_value, _doc);
 		rapidjson::Value type;
-		std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
-		type.SetString(tc.c_str(), (rapidjson::SizeType)tc.length(), _doc.GetAllocator());
+		const char* componentName = GetComponentType<SELF_TYPE>::name;
+		type.SetString(componentName, strlen(componentName), _doc.GetAllocator());
 		_value.AddMember("Type", type, _doc.GetAllocator());
 
 		_value.AddMember("Loop", loop, _doc.GetAllocator());
@@ -464,9 +464,7 @@ namespace Copium
 
 		for (Copium::GameObject* go : sm->get_current_scene()->gameObjects)
 		{
-			for (Component* component : go->getComponents<Animator>()) {
-
-				Animator* anim = reinterpret_cast<Animator*>(component);
+			for (Animator* anim : go->GetComponents<Animator>()) {
 				anim->Update(MyFrameRateController.getDt());
 				if (sm->GetSceneState() == Scene::SceneState::play && anim->GetStatus() != Animator::AnimatorStatus::paused)
 				{
@@ -492,7 +490,7 @@ namespace Copium
 	{
 		for (Copium::GameObject* go : sm->get_current_scene()->gameObjects)
 		{
-			Animator* temp = go->getComponent<Animator>();
+			Animator* temp = go->GetComponent<Animator>();
 			if (temp != NULL)
 			{
 				temp->PauseAnimation();
@@ -504,7 +502,7 @@ namespace Copium
 	{
 		for (Copium::GameObject* go : sm->get_current_scene()->gameObjects)
 		{
-			Animator* temp = go->getComponent<Animator>();
+			Animator* temp = go->GetComponent<Animator>();
 			if (temp != NULL)
 			{
 				temp->PlayAnimation();

@@ -25,7 +25,7 @@ namespace Copium
 		Copium::SoundSystem& soundSystem{ *Copium::SoundSystem::Instance() };
 	}
 
-	AudioSource::AudioSource(GameObject& _gameObj) :Component(_gameObj, ComponentType::AudioSource)
+	AudioSource::AudioSource(GameObject& _gameObj) :Component(_gameObj)
 	{
 	}
 
@@ -49,8 +49,8 @@ namespace Copium
 		std::cout << "serializing audio component\n";
 		Component::serialize(_value, _doc);
 		rapidjson::Value type;
-		std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
-		type.SetString(tc.c_str(), (rapidjson::SizeType)tc.length(), _doc.GetAllocator());
+		const char* componentName = GetComponentType<SELF_TYPE>::name;
+		type.SetString(componentName, strlen(componentName), _doc.GetAllocator());
 		_value.AddMember("Type", type, _doc.GetAllocator());
 
 

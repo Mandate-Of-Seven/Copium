@@ -20,6 +20,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <string>
 #include <map>
 #include <rapidjson/document.h>
+#include <config.h>
 
 
 namespace Copium
@@ -27,77 +28,14 @@ namespace Copium
 
 class GameObject;
 
-    //USING
-
-using ComponentID = uint64_t;
-
-
-enum class ComponentType : int      // Types of Components
-{
-    Animator,
-    AudioSource,
-    BoxCollider2D,
-    Button,
-    Camera,
-    Image,
-    Rigidbody2D,
-    SpriteRenderer,
-    Script,
-    Transform,
-    Text,
-    SortingGroup,
-    None
-};
-
-static std::map<ComponentType, std::string> MAP_COMPONENT_TYPE_NAME
-{
-    {ComponentType::Animator,"Animator"},
-    {ComponentType::AudioSource,"AudioSource"},
-    {ComponentType::BoxCollider2D,"BoxCollider2D"},
-    {ComponentType::Button,"Button"},
-    {ComponentType::Camera,"Camera"},
-    {ComponentType::Image,"ImageComponent"},
-    {ComponentType::Rigidbody2D,"Rigidbody2D"},
-    {ComponentType::SpriteRenderer,"SpriteRenderer"},
-    {ComponentType::Script,"Script"},
-    {ComponentType::Button,"Button"},
-    {ComponentType::Text,"Text"},
-    {ComponentType::SortingGroup,"SortingGroup"},
-};
-
-
 class Component
 {
     public:
         Component(const Component&) = delete;
 
-        const ComponentType componentType;      //Type of component
         ComponentID id;                   //Id of component
 
 
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Converts a name to ComponentType
-        \param _name
-            Name to look for in the map
-        \return
-            ComponentType
-        */
-        /*******************************************************************************/
-        static ComponentType nameToType(const std::string& _name)
-        {
-            int i {0};
-            int end{ (int)ComponentType::None };
-            while (i != end)
-            {
-                if (MAP_COMPONENT_TYPE_NAME[(ComponentType)i] == _name)
-                    return (ComponentType)i;
-                i+=1;
-            }
-            return ComponentType::None;
-        }
 
         /***************************************************************************/
         /*!
@@ -203,32 +141,6 @@ class Component
             //std::cout << "default component dtor\n";
         }
 
-
-
-        /*******************************************************************************
-        /*!
-        *
-        \brief
-            Deep copies a Component into another by making it type safe in the sense
-            that they must be the same component types
-        \param rhs
-            Reference to another Component
-        \return
-            Reference to this Component
-        */
-        /*******************************************************************************/
-        template<typename T>
-        T& operator=(const T& rhs)
-        {
-            static_assert(std::is_base_of<Component, T>::value); 
-            COPIUM_ASSERT(componentType != rhs.componentType, "TRYING TO COPY ASSIGN TWO DIFFERENT COMPONENT TYPES!");
-            enabled = rhs.enabled;
-            T* self = reinterpret_cast<T*>(this);
-            *self = rhs;
-            return *self;
-        }
-
-
         /***************************************************************************/
         /*!
         \brief
@@ -277,7 +189,7 @@ class Component
             Type of component to be defined by derived classes
         */
         /**************************************************************************/
-        Component(GameObject& _gameObj, ComponentType _componentType);
+        Component(GameObject& _gameObj);
     private:
         const bool allowMultiple = false;   //Can gameObjects only have one of this Component?
         bool enabled;

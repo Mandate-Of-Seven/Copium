@@ -160,7 +160,7 @@ namespace Copium
 		{
 			return;
 		}
-		auto rb = gameObj->getComponent<Rigidbody2D>();
+		auto rb = gameObj->GetComponent<Rigidbody2D>();
 		if (rb == nullptr)
 		{
 			//LOG SOMETHING TO CONSOLE LIKE THIS OBJ HAS NOT RB
@@ -199,7 +199,7 @@ namespace Copium
 		{
 			return;
 		}
-		auto rb = gameObj->getComponent<Rigidbody2D>();
+		auto rb = gameObj->GetComponent<Rigidbody2D>();
 		if (rb == nullptr)
 		{
 			//LOG SOMETHING TO CONSOLE LIKE THIS OBJ HAS NOT RB
@@ -226,7 +226,7 @@ namespace Copium
 		{
 			return;
 		}
-		auto rb = gameObj->getComponent<Rigidbody2D>();
+		auto rb = gameObj->GetComponent<Rigidbody2D>();
 		if (rb == nullptr)
 		{
 			//LOG SOMETHING TO CONSOLE LIKE THIS OBJ HAS NOT RB
@@ -408,7 +408,7 @@ namespace Copium
 		GameObject* gameObj = sceneManager.findGameObjByID(gameObjID);
 		if (gameObj == nullptr)
 			return;
-		for (Text* text : gameObj->getComponents<Text>())
+		for (Text* text : gameObj->GetComponents<Text>())
 		{
 			if (text->id == compID)
 			{
@@ -447,7 +447,7 @@ namespace Copium
 		GameObject* gameObj = sceneManager.findGameObjByID(gameObjID);
 		if (gameObj == nullptr)
 			return 0;
-		return (char)gameObj->getComponent<Button>()->GetState();
+		return (char)gameObj->GetComponent<Button>()->GetState();
 	}
 
 	/*******************************************************************************
@@ -513,7 +513,7 @@ namespace Copium
 		GameObject* gameObj = sceneManager.findGameObjByID(ID);
 		if (gameObj == nullptr)
 			return;
-		gameObj->getComponent<AudioSource>()->play_sound();
+		gameObj->GetComponent<AudioSource>()->play_sound();
 	}
 
 	static void PauseAllAnimation()

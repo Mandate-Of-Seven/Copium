@@ -19,7 +19,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 namespace Copium
 {
 
-	SpriteRenderer::SpriteRenderer(GameObject& _gameObj) :Component(_gameObj, ComponentType::SpriteRenderer), isAddingSprite{false}
+	SpriteRenderer::SpriteRenderer(GameObject& _gameObj) :Component(_gameObj), isAddingSprite{false}
 	{
 	}
 
@@ -33,8 +33,8 @@ namespace Copium
 	{
 		Component::serialize(_value, _doc);
 		rapidjson::Value type;
-		std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
-		type.SetString(tc.c_str(), (rapidjson::SizeType)tc.length(), _doc.GetAllocator());
+		const char* componentName = GetComponentType<SELF_TYPE>::name;
+		type.SetString(componentName, strlen(componentName), _doc.GetAllocator());
 		_value.AddMember("Type", type, _doc.GetAllocator());
 
 		// Serialize Sprite

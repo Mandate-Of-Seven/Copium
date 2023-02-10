@@ -14,6 +14,8 @@ struct TemplatePack
 	{return std::disjunction_v<std::is_same<T, Ts>...>;}
 };
 
+#define SELF_TYPE std::remove_reference<decltype(*this)>::type
+
 static const char* FILESYSTEM_MUTEX = "FILESYSTEM_MUTEX";
 
 #endif // !CONFIG_H

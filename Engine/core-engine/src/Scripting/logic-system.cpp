@@ -78,7 +78,7 @@ namespace Copium
 		{
 			if (!pGameObj->isActive())
 				continue;
-			const std::vector<Button*>& Buttons{ pGameObj->getComponents<Button>() };
+			const std::vector<Button*>& Buttons{ pGameObj->GetComponents<Button>() };
 			for (Button* pButton : Buttons)
 			{
 				if (!pButton)
@@ -108,7 +108,7 @@ namespace Copium
 			gameObjects = &pScene->gameObjects;
 			for (GameObject* pGameObj : *gameObjects)
 			{
-				const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };
+				const std::vector<Script*>& pScripts{ pGameObj->GetComponents<Script>() };
 				for (Script* pScript : pScripts)
 				{
 					scriptComponents.push_back(pScript);

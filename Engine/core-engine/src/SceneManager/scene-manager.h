@@ -30,6 +30,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "CopiumCore/system-interface.h"
 #include "SceneManager/scene.h"
 #include <filesystem>
+#include <config.h>
 
 #define MySceneManager (*Copium::SceneManager::Instance())
 

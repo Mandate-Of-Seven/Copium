@@ -189,7 +189,7 @@ namespace CopiumEngine
         }
     }
 
-    public class ImageComponent : Component
+    public class Image : Component
     {
 
     }
