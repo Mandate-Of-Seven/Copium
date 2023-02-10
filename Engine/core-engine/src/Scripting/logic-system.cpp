@@ -22,7 +22,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <Windows/windows-system.h>
 #include <Debugging/frame-rate-controller.h>
 #include "GameObject/Components/ui-components.h"
-#include "../Game/game-nonscript.h"
+#include <Events/events-system.h>
 
 namespace Copium
 {
@@ -32,13 +32,17 @@ namespace Copium
 		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 		std::vector<GameObject*>* gameObjects;
 		double timeElasped;
-		Game game;
+		std::list<Script*> scriptComponents;
+		bool inPlayMode{ false };
 	}
 
 	void LogicSystem::init()
 	{
 		messageSystem.subscribe(MESSAGE_TYPE::MT_START_PREVIEW,this);
+		messageSystem.subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
 		systemFlags |= FLAG_RUN_ON_PLAY;
+		MyEventSystem->subscribe(this, &LogicSystem::CallbackScriptCreated);
+		MyEventSystem->subscribe(this, &LogicSystem::CallbackScriptDestroyed);
 	}
 
 	void LogicSystem::update()
@@ -47,29 +51,22 @@ namespace Copium
 		if (pScene == nullptr)
 			return;
 
-		for (size_t i = 0; i < pScene->gameObjects.size(); ++i)
+		for (Script* script : scriptComponents)
 		{
-			GameObject* pGameObj = pScene->gameObjects[i];
-			if (!pGameObj->isActive())
+			if (!script->gameObj.isActive())
 				continue;
-			const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };
-			for (Script* pScript : pScripts)
-			{
-				if (!pScript)
-					continue;
-				if (!pScript->Enabled())
-					continue;
-				pScript->invoke("Update");
-				if (pScene != sceneManager.get_current_scene())
-					return;
+			if (!script->Enabled())
+				continue;
+			MyEventSystem->publish(new ScriptInvokeMethodEvent(*script, "Update"));
+			if (pScene != sceneManager.get_current_scene())
+				return;
 
-				for (size_t j = 0; j < MyFrameRateController.getSteps(); ++j)
-				{
-					pScript->invoke("FixedUpdate");
-				}
-				if (pScene != sceneManager.get_current_scene())
-					return;
-			}
+				//for (size_t j = 0; j < MyFrameRateController.getSteps(); ++j)
+				//{
+				//	MyEventSystem->publish(new ScriptInvokeMethodEvent(*pScript,"FixedUpdate"));
+				//}
+				//if (pScene != sceneManager.get_current_scene())
+				//	return;
 		}
 
 		if (Button::hoveredBtn && (!Button::hoveredBtn->gameObj.isActive() || !Button::hoveredBtn->Enabled()))
@@ -93,37 +90,55 @@ namespace Copium
 					return;
 			}
 		}
-
-		// Bean: Temporary for hardcoded scripts
-		game.update();
 	}
 
 	void LogicSystem::exit()
 	{
-		game.exit();
 	}
 
 	void LogicSystem::handleMessage(MESSAGE_TYPE mType)
 	{
-		PRINT("LOGIC STARTING");
 		//MT_START_PREVIEW
-		Scene* pScene = sceneManager.get_current_scene();
-		if (pScene == nullptr)
-			return;
-		gameObjects = &pScene->gameObjects;
-		for (GameObject* pGameObj : *gameObjects)
+		if (mType == MESSAGE_TYPE::MT_START_PREVIEW)
 		{
-			const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };
-			for (Script* pScript : pScripts)
+			inPlayMode = true;
+			Scene* pScene = sceneManager.get_current_scene();
+			if (pScene == nullptr)
+				return;
+			gameObjects = &pScene->gameObjects;
+			for (GameObject* pGameObj : *gameObjects)
 			{
-				pScript->invoke("Awake");
-				pScript->invoke("Start");
+				const std::vector<Script*>& pScripts{ pGameObj->getComponents<Script>() };
+				for (Script* pScript : pScripts)
+				{
+					scriptComponents.push_back(pScript);
+					MyEventSystem->publish(new ScriptInvokeMethodEvent(*pScript, "Awake"));
+				}
 			}
-		}
-		timeElasped = MyFrameRateController.getDt();
 
-		PRINT("LOGIC END");
-		// Bean: Temporary for hardcoded scripts
-		game.init();
+
+			for (Script* script : scriptComponents)
+			{
+				MyEventSystem->publish(new ScriptInvokeMethodEvent(*script, "Start"));
+			}
+			timeElasped = MyFrameRateController.getDt();
+		}
+		else
+		{
+			inPlayMode = false;
+		}
+	}
+
+
+	void LogicSystem::CallbackScriptCreated(ScriptCreatedEvent* pEvent)
+	{
+		if (inPlayMode)
+			scriptComponents.push_back(&pEvent->script);
+	}
+
+	void LogicSystem::CallbackScriptDestroyed(ScriptDestroyedEvent* pEvent)
+	{
+		if (inPlayMode)
+			scriptComponents.remove(&pEvent->script);
 	}
 }

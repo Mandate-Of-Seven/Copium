@@ -2,6 +2,8 @@
 \file			animation-system.cpp
 \project
 \author			Sean Ngo
+\co-authors		Matthew Lau
+				Shawn Tanary
 
 \par			Course: GAM200
 \par			Section:
@@ -12,10 +14,11 @@
 	the spritesheets in the engine, where the user has to create the animation in the
 	animator in the editor.
 
+	The definitions of functions from the Animator Component are here as well.
+
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
-
 #include "Animation/animation-system.h"
 #include "Files/assets-system.h"
 #include "SceneManager/scene-manager.h"
@@ -33,19 +36,20 @@ namespace Copium
 {
 
 	Animator::Animator(GameObject& _gameObj) 
-		: Component(_gameObj, ComponentType::Animator), currentAnimationIndex{0},startingAnimationIndex{0}, animationCount{0}, loop{true}, status{AnimatorStatus::idle}
+		: Component(_gameObj, ComponentType::Animator), currentAnimationIndex{ 0 }, startingAnimationIndex{ 0 }, animationCount{ 0 }, loop{ true }, reverse{ false }, status{ AnimatorStatus::idle }
 	{
 
 	}
-
 	void Animator::inspector_view()
 	{
 		std::string toggleAnimation = "Play";
 		if (status == AnimatorStatus::playing)
 			toggleAnimation = "Pause";
+		else if (status == AnimatorStatus::paused)
+			toggleAnimation = "Resume";
 
-		ImGuiColorEditFlags miscFlags = ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip
-			| ImGuiColorEditFlags_NoLabel;
+		//ImGuiColorEditFlags miscFlags = ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip
+		//	| ImGuiColorEditFlags_NoLabel;
 
 		ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
 			| ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp;
@@ -57,25 +61,59 @@ namespace Copium
 			ImGui::TableSetupColumn("Input", 0, 0.6f);
 
 			// Animation Looping
+			ImGui::PushID(0);
 			ImGui::TableNextRow();
 			ImGui::TableNextColumn();
 			ImGui::Text("Loop");
-
 			ImGui::TableNextColumn();
 			//ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
-			ImGui::Checkbox("", &loop);
+			if (ImGui::Checkbox("", &loop))
+			{
+				for (Animation& anim : animations)
+				{
+					anim.loop = loop;
+				}
+			}
+			ImGui::PopID();
 			//ImGui::PopItemFlag();
+
+			ImGui::PushID(1);
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("Reverse");
+			ImGui::TableNextColumn();
+			//ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+			if (ImGui::Checkbox("", &reverse))
+				PRINT("clicking reverse");
+			ImGui::PopID();
+			//ImGui::PopItemFlag();
+
 
 			// Play / Pause the animation
 			ImGui::TableNextRow();
 			ImGui::TableNextColumn();
 			ImGui::Text("Play Animation");
+
 			ImGui::TableNextColumn();
 			if (ImGui::Button(toggleAnimation.c_str(), ImVec2(ImGui::GetColumnWidth() * 0.3f, 0.f)))
 			{
 
-				if (status == AnimatorStatus::idle || status == AnimatorStatus::paused)
+				if (status == AnimatorStatus::idle)
+				{
 					status = AnimatorStatus::playing;
+					Animation* currAnim = GetCurrentAnimation();
+					if (currAnim)
+						currAnim->status = Animation::AnimationStatus::playing;
+
+					PRINT("playing");
+				}
+				else if (status == AnimatorStatus::paused)
+				{
+					status = AnimatorStatus::playing;
+					Animation* currAnim = GetCurrentAnimation();
+					if (currAnim)
+						currAnim->status = Animation::AnimationStatus::playing;
+				}
 				else
 				{
 					PauseAnimation();
@@ -83,7 +121,7 @@ namespace Copium
 
 			}
 
-			if (status == AnimatorStatus::playing)
+			if (status == AnimatorStatus::playing || status == AnimatorStatus::paused)
 			{
 				if (ImGui::Button("Stop Animation"))
 				{
@@ -92,7 +130,26 @@ namespace Copium
 						anim = GetCurrentAnimation();
 
 					PauseAnimation();
-					anim->ResetFrame();
+					if (reverse)
+					{
+						anim = GetCurrentAnimation();
+						if (anim)
+						{
+							anim->currentFrameIndex = anim->frameCount - 1;
+							anim->columnIndex = anim->columns - 1;
+							anim->rowIndex = anim->rows - 1;
+							if (!anim->loop)
+							{
+								anim->status = Animation::AnimationStatus::completed;
+							}
+						}
+
+					}
+					else
+					{
+						anim->ResetFrame();
+					}
+					status = AnimatorStatus::idle;
 				}
 			}
 
@@ -154,10 +211,12 @@ namespace Copium
 				ImGui::TableNextColumn();
 				ImGui::Text("Time Delay:");
 				ImGui::TableNextColumn();
-				if (ImGui::DragFloat("", &animations[i].timeDelay, 0.1f))
+				if(ImGui::InputDouble("", &animations[i].timeDelay, 0.001f, 0.01f, "%.3f"))
 				{
-					animations[i].timeDelay = animations[i].timeDelay < 0.f ? 0.f : animations[i].timeDelay;
-
+					if (animations[i].timeDelay <= 0.0)
+					{
+						animations[i].timeDelay = 0.0;
+					}
 				}
 				ImGui::PopID();
 				
@@ -174,7 +233,6 @@ namespace Copium
 					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ContentBrowserItem"))
 					{
 						std::string str = (const char*)(payload->Data);
-						AssetsSystem* assets = AssetsSystem::Instance();
 						for (int j = 0; j < assets->get_textures().size(); j++)
 						{
 							if (!assets->get_texture(j)->get_file_path().compare(str))
@@ -215,7 +273,7 @@ namespace Copium
 		animations.push_back(Animation());
 		++animationCount;
 
-		currentAnimationIndex = animations.size() - 1;
+		currentAnimationIndex = (int)(animations.size() - 1);
 
 	}
 	void Animator::PlayAnimation()
@@ -226,7 +284,9 @@ namespace Copium
 	{
 		status = AnimatorStatus::paused;		
 	}
-	void Animator::Update(float _dt)
+	
+
+	void Animator::Update(double _dt)
 	{
 
 		if (!animationCount)
@@ -235,8 +295,23 @@ namespace Copium
 		if (status != AnimatorStatus::playing)
 			return;
 
+		if (!loop && animations[currentAnimationIndex].status == Animation::AnimationStatus::completed)
+		{
+			PRINT("anim completed");
+			status = AnimatorStatus::idle;
+			return;
+		}
+
+
 		if (animations[currentAnimationIndex].UpdateFrame(_dt))
-			animations[currentAnimationIndex].IncrementFrame();
+		{
+			if(reverse)
+				animations[currentAnimationIndex].DecrementFrame();
+			else
+				animations[currentAnimationIndex].IncrementFrame();				
+		}
+
+
 
 
 	}
@@ -254,6 +329,11 @@ namespace Copium
 			loop = _value["Loop"].GetBool();
 		else
 			loop = true;
+
+		if (_value.HasMember("Rev"))
+			reverse = _value["Rev"].GetBool();
+		else
+			reverse = false;
 
 		if (_value.HasMember("Count"))
 			animationCount = _value["Count"].GetUint();
@@ -274,9 +354,12 @@ namespace Copium
 				if (val.HasMember("Sprite ID"))
 					sid = val["Sprite ID"].GetUint64();
 
-				float td{ 0.f };
+				double td{ 0.f };
 				if (val.HasMember("Time Delay"))
-					td = val["Time Delay"].GetFloat();
+				{
+					td = val["Time Delay"].GetDouble();
+					PRINT("Time delay:" << td);
+				}
 
 				int fc{ 0 };
 				if (val.HasMember("FrameCount"))
@@ -316,12 +399,18 @@ namespace Copium
 				}
 
 				animations[i].timeDelay = td;
+				PRINT("Time delay:" << animations[i].timeDelay);
 				animations[i].frameCount = fc;
 				animations[i].spriteSheet.spriteID = sid;
 				animations[i].spriteSheet.name = animName;
 				animations[i].spriteSheet.rows = rows;
 				animations[i].spriteSheet.columns = cols;
+				animations[i].loop = loop;
 				++i;
+
+			
+
+
 			}
 
 		}
@@ -333,7 +422,6 @@ namespace Copium
 	}
 	void Animator::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
-		PRINT("Animator Serialization Start\n");
 		Component::serialize(_value, _doc);
 		rapidjson::Value type;
 		std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
@@ -341,6 +429,7 @@ namespace Copium
 		_value.AddMember("Type", type, _doc.GetAllocator());
 
 		_value.AddMember("Loop", loop, _doc.GetAllocator());
+		_value.AddMember("Rev", reverse, _doc.GetAllocator());
 		_value.AddMember("Count", animationCount, _doc.GetAllocator());
 
 
@@ -361,14 +450,10 @@ namespace Copium
 			anims.PushBack(anim, _doc.GetAllocator());
 		}
 		_value.AddMember("Animations", anims, _doc.GetAllocator());
-
-		PRINT("Animator Serialization End\n");
-
 	}
 
 	void AnimationSystem::init()
 	{
-		PRINT("anim sys init");
 		systemFlags |= FLAG_RUN_ON_PLAY | FLAG_RUN_ON_EDITOR;
 	}
 	void AnimationSystem::update()
@@ -376,10 +461,6 @@ namespace Copium
 
 		if (!sm->get_current_scene())
 			return;
-
-		//PRINT("Animation system update");
-		//if(sm->GetSceneState() == Copium::Scene::SceneState::play)
-
 
 		for (Copium::GameObject* go : sm->get_current_scene()->gameObjects)
 		{
@@ -404,14 +485,7 @@ namespace Copium
 	}
 	void AnimationSystem::exit()
 	{
-		for (Animator* anim : animators)
-		{
-			if (anim->get_animation_vector().empty())
-				continue;
-
-
-
-		}
+	
 	}
 
 	void AnimationSystem::PauseAllAnimation()

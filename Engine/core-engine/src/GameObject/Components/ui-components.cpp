@@ -29,6 +29,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <GameObject/Components/camera-component.h>
 #include "glm/gtc/matrix_transform.hpp"
 
+#include <Events/events-system.h>
 namespace
 {
 	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
@@ -77,19 +78,24 @@ namespace Copium
 			timer = 0;
 			previousState = state;
 			if (targetGraphic)
-				previousColor = targetGraphic->layeredColor;
+				previousColor = reinterpret_cast<IUIComponent*>(targetGraphic)->layeredColor;
 		}
 		switch (state)
 		{
 		case ButtonState::OnClick:
 		{
-			//PRINT("UI: Clicked " << gameObj.get_name());
+			PRINT("UI: Clicked " << gameObj.get_name());
 			if (targetGraphic)
-				targetGraphic->layeredColor = Linear(previousColor, clickedColor, timer / fadeDuration);
+			{
+				if (targetGraphic->componentType == ComponentType::Text)
+					reinterpret_cast<Text*>(targetGraphic)->layeredColor = Linear(previousColor, clickedColor, timer / fadeDuration);
+				else if (targetGraphic->componentType == ComponentType::Image)
+					reinterpret_cast<Text*>(targetGraphic)->layeredColor = Linear(previousColor, clickedColor, timer / fadeDuration);
+			}
 			Script* script = gameObj.getComponent<Script>();
 			if (script)
 			{
-				script->invoke(callbackName);
+				MyEventSystem->publish(new ScriptInvokeMethodEvent(*script,callbackName,nullptr,0));
 				if (!gameObj.isActive())
 				{
 					hoveredBtn = nullptr;
@@ -99,25 +105,35 @@ namespace Copium
 		}
 		case ButtonState::OnHover:
 		{
-			//PRINT("UI: Hover " << gameObj.get_name());
+			PRINT("UI: Hover " << gameObj.get_name());
 			if (targetGraphic)
-				targetGraphic->layeredColor = Linear(previousColor, hoverColor, timer / fadeDuration);
+			{
+				if (targetGraphic->componentType == ComponentType::Text)
+					reinterpret_cast<Text*>(targetGraphic)->layeredColor = Linear(previousColor, hoverColor, timer / fadeDuration);
+				else if (targetGraphic->componentType == ComponentType::Image)
+					reinterpret_cast<Text*>(targetGraphic)->layeredColor = Linear(previousColor, hoverColor, timer / fadeDuration);
+			}
 			break;
 		}
 		case ButtonState::OnHeld:
 		{
-			//PRINT("UI: Held " << gameObj.get_name());
+			PRINT("UI: Held " << gameObj.get_name());
 			break;
 		}
 		case ButtonState::OnRelease:
 		{
-			//PRINT("UI: Released " << gameObj.get_name());
+			PRINT("UI: Released " << gameObj.get_name());
 			break;
 		}
 		default:
 		{
 			if (targetGraphic)
-				targetGraphic->layeredColor = Linear(previousColor, normalColor, timer / fadeDuration);
+			{
+				if (targetGraphic->componentType == ComponentType::Text)
+					reinterpret_cast<Text*>(targetGraphic)->layeredColor = Linear(previousColor, normalColor, timer / fadeDuration);
+				else if (targetGraphic->componentType == ComponentType::Image)
+					reinterpret_cast<Text*>(targetGraphic)->layeredColor = Linear(previousColor, normalColor, timer / fadeDuration);
+			}
 			break;
 		}
 		}
@@ -135,7 +151,7 @@ namespace Copium
 		if (_value.HasMember("Graphic ID"))
 		{
 			ComponentID targetGraphicID = _value["Graphic ID"].GetUint64();
-			targetGraphic = reinterpret_cast<Text*>(MySceneManager.findComponentByID(targetGraphicID));
+			targetGraphic = MySceneManager.findComponentByID(targetGraphicID);
 		}
 	}
 
@@ -145,9 +161,9 @@ namespace Copium
 		{
 			ComponentID _ID = reinterpret_cast<Button*>(rhs)->targetGraphic->id;
 
-			Component* foundText = MySceneManager.findComponentByID(_ID);
-			if (foundText)
-				targetGraphic = reinterpret_cast<Text*>(foundText);
+			Component* foundGraphic = MySceneManager.findComponentByID(_ID);
+			if (foundGraphic)
+				targetGraphic = foundGraphic;
 		}
 	}
 
@@ -187,14 +203,18 @@ namespace Copium
 			if (ImGui::BeginDragDropTarget())
 			{
 				const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Text");
+				if (!payload)
+					payload = ImGui::AcceptDragDropPayload("ImageComponent");
 				if (payload)
 				{
-					Text* pText = (Text*)(*reinterpret_cast<void**>(payload->Data));
-					if (pText != targetGraphic)
+					Component* pTargetGraphic = (Component*)(*reinterpret_cast<void**>(payload->Data));
+					if (pTargetGraphic != targetGraphic)
 					{
-						if (targetGraphic)
-							targetGraphic->layeredColor = {0,0,0,0};
-						targetGraphic = pText;
+						if (targetGraphic->componentType == ComponentType::Text)
+							reinterpret_cast<Text*>(targetGraphic)->layeredColor = {0,0,0,0};
+						else if (targetGraphic->componentType == ComponentType::Image)
+							reinterpret_cast<Text*>(targetGraphic)->layeredColor = { 0,0,0,0 };
+						targetGraphic = pTargetGraphic;
 					}
 				}
 				ImGui::EndDragDropTarget();
@@ -244,15 +264,17 @@ namespace Copium
 				ImGui::TableNextColumn();
 				ImGui::Text("On Click Callback: ");
 				ImGui::TableNextColumn();
-				const std::vector<std::string>& functionNames = script->getFunctionNames();
+				const char** namesArr{};
+				size_t arrSize = 0;
+				MyEventSystem->publish(new ScriptGetMethodNamesEvent(*script, namesArr, arrSize));
 				ImGui::PushItemWidth(-1);
 				if (ImGui::BeginCombo("##functions", callbackName.c_str())) // The second parameter is the label previewed before opening the combo.
 				{
-					for (const std::string& str : functionNames)
+					for (size_t i = 0; i < arrSize; ++i)
 					{
-						bool is_selected = (callbackName.c_str() == str.c_str()); // You can store your selection however you want, outside or inside your objects
-						if (ImGui::Selectable(str.c_str(), is_selected))
-							callbackName = str;
+						bool is_selected = (callbackName.c_str() == namesArr[i]); // You can store your selection however you want, outside or inside your objects
+						if (ImGui::Selectable(namesArr[i], is_selected))
+							callbackName = namesArr[i];
 							if (is_selected)
 								ImGui::SetItemDefaultFocus();   // You may set the initial focus when opening the combo (scrolling + for keyboard navigation support)
 					}
@@ -348,12 +370,16 @@ namespace Copium
 		return ButtonState::None;
 	}
 
-	Component* Button::clone(GameObject& _gameObj) const
+	Component* Button::clone(GameObject& _gameObj, ComponentID* newID) const
 	{
 		auto* component = new Button(_gameObj);
 		component->bounds = bounds;
 		component->state = state;
 		component->callbackName = callbackName;
+		component->clickedColor = clickedColor;
+		component->hoverColor = hoverColor;
+		component->normalColor = normalColor;
+		component->fadeDuration = fadeDuration;
 		return component;
 	}
 
@@ -378,6 +404,23 @@ namespace Copium
 		rapidjson::Value rjName;
 		rjName.SetString(callbackName.c_str(), _doc.GetAllocator());
 		_value.AddMember("Callback", rjName, _doc.GetAllocator());
+
+		_value.AddMember("fadeDur", fadeDuration, _doc.GetAllocator());
+
+		_value.AddMember("clickedR", clickedColor.r, _doc.GetAllocator());
+		_value.AddMember("clickedG", clickedColor.g, _doc.GetAllocator());
+		_value.AddMember("clickedB", clickedColor.b, _doc.GetAllocator());
+		_value.AddMember("clickedA", clickedColor.a, _doc.GetAllocator());
+
+		_value.AddMember("hoveredR", hoverColor.r, _doc.GetAllocator());
+		_value.AddMember("hoveredG", hoverColor.g, _doc.GetAllocator());
+		_value.AddMember("hoveredB", hoverColor.b, _doc.GetAllocator());
+		_value.AddMember("hoveredA", hoverColor.a, _doc.GetAllocator());
+
+		_value.AddMember("normalR", normalColor.r, _doc.GetAllocator());
+		_value.AddMember("normalG", normalColor.g, _doc.GetAllocator());
+		_value.AddMember("normalB", normalColor.b, _doc.GetAllocator());
+		_value.AddMember("normalA", normalColor.a, _doc.GetAllocator());
 	}
 	void Button::deserialize(rapidjson::Value& _value)
 	{
@@ -396,6 +439,29 @@ namespace Copium
 		{
 			rapidjson::Value& _v = _value["BoundingBox"].GetObj();
 			bounds.deserialize(_v);
+		}
+
+		if (_value.HasMember("clickedR"))
+		{
+			clickedColor.r = _value["clickedR"].GetFloat();
+			clickedColor.b = _value["clickedB"].GetFloat();
+			clickedColor.g = _value["clickedG"].GetFloat();
+			clickedColor.a = _value["clickedA"].GetFloat();
+
+			hoverColor.r = _value["hoveredR"].GetFloat();
+			hoverColor.b = _value["hoveredB"].GetFloat();
+			hoverColor.g = _value["hoveredG"].GetFloat();
+			hoverColor.a = _value["hoveredA"].GetFloat();
+
+			normalColor.r = _value["normalR"].GetFloat();
+			normalColor.b = _value["normalB"].GetFloat();
+			normalColor.g = _value["normalG"].GetFloat();
+			normalColor.a = _value["normalA"].GetFloat();
+		}
+
+		if (_value.HasMember("fadeDur"))
+		{
+			fadeDuration = _value["fadeDur"].GetFloat();
 		}
 	}
 
@@ -423,13 +489,12 @@ namespace Copium
 	{
 		targetGraphic = _txt;
 	}
-	Text* Button::get_targetgraphic() { return targetGraphic; }
 	
 	//----------------/
 
 	//Text------------/
 	Text::Text(GameObject& _gameObj)
-		: Component(_gameObj, ComponentType::Text), font{ Font::getFont("corbel") },fontName{"corbel"}, fSize{1.f}, content{"New Text"}
+		: Component(_gameObj, ComponentType::Text), font{ Font::getFont("corbel") }, fontName{ "corbel" }, fSize{ 1.f }, wrapper{ 0.f }, content{ "New Text" }
 	{
 	}
 
@@ -443,34 +508,7 @@ namespace Copium
 		if (scale > trans.scale.y)
 			scale = trans.scale.y;
 		scale *= fSize;
-		glm::vec2 dimensions{ font->getDimensions(content, scale) };
-
-		switch (hAlignment)
-		{
-			case HorizontalAlignment::Center:
-			{
-				pos.x -= dimensions.x / 2.f;
-				break;
-			}
-			case HorizontalAlignment::Right:
-			{
-				pos.x -= dimensions.x;
-				break;
-			}
-		}
-		switch (vAlignment)
-		{
-			case VerticalAlignment::Top:
-			{
-				pos.y -= dimensions.y;
-				break;
-			}
-			case VerticalAlignment::Center:
-			{
-				pos.y -= dimensions.y / 2.f;
-				break;
-			}
-		}
+		
 		glm::fvec4 mixedColor{0};
 		mixedColor.a = 1 - (1 - layeredColor.a) * (1 - color.a); // 0.75
 		if (mixedColor.a < 0.01f)
@@ -485,7 +523,8 @@ namespace Copium
 
 		if (gameObj.transform.hasParent())
 		{
-			glm::vec3 updatedPos = pos;
+			glm::vec3 updatedPos = gameObj.transform.position;
+			glm::vec3 updatedScale = gameObj.transform.scale;
 
 			Transform* tempObj = trans.parent;
 			while (tempObj)
@@ -494,7 +533,7 @@ namespace Copium
 				glm::mat4 translate = glm::translate(glm::mat4(1.f), tempPos);
 
 				float rot = glm::radians(tempObj->rotation.z);
-				glm::mat4 rotate = {
+				glm::mat4 lRotate = {
 				glm::vec4(cos(rot), sin(rot), 0.f, 0.f),
 				glm::vec4(-sin(rot), cos(rot), 0.f, 0.f),
 				glm::vec4(0.f, 0.f, 1.f, 0.f),
@@ -502,30 +541,75 @@ namespace Copium
 				};
 
 				glm::vec3 size = tempObj->scale.glmVec3;
-				glm::mat4 scale = {
+				glm::mat4 lScale = {
 					glm::vec4(size.x, 0.f, 0.f, 0.f),
 					glm::vec4(0.f, size.y, 0.f, 0.f),
 					glm::vec4(0.f, 0.f, 1.f, 0.f),
 					glm::vec4(0.f, 0.f, 0.f, 1.f)
 				};
 
-				glm::mat4 transform = translate * rotate * scale;
+				glm::mat4 transform = translate * lRotate * lScale;
 
 				updatedPos = glm::vec3(transform * glm::vec4(updatedPos, 1.f));
+				updatedScale *= tempObj->scale.glmVec3;
 				tempObj = tempObj->parent;
 			}
 
-			font->draw_text(content, updatedPos, mixedColor, scale, 0, _camera);
+			float updatedSize = updatedScale.x * fSize * 0.1f;
+
+			glm::vec2 dimensions{ font->getDimensions(content, updatedSize, wrapper) };
+
+			switch (hAlignment)
+			{
+			case HorizontalAlignment::Center:
+				updatedPos.x -= dimensions.x / 2.f;
+				break;
+			case HorizontalAlignment::Right:
+				updatedPos.x -= dimensions.x;
+				break;
+			}
+			switch (vAlignment)
+			{
+			case VerticalAlignment::Top:
+				updatedPos.y -= dimensions.y;
+				break;
+			case VerticalAlignment::Center:
+				updatedPos.y -= dimensions.y / 2.f;
+				break;
+			}
+
+			font->draw_text(content, updatedPos, mixedColor, updatedSize, wrapper, _camera);
 		}
 		else
 		{
-			font->draw_text(content, pos, mixedColor, scale, 0, _camera);
+			glm::vec2 dimensions{ font->getDimensions(content, scale, wrapper) };
+
+			switch (hAlignment)
+			{
+			case HorizontalAlignment::Center:
+				pos.x -= dimensions.x / 2.f;
+				break;
+			case HorizontalAlignment::Right:
+				pos.x -= dimensions.x;
+				break;
+			}
+			switch (vAlignment)
+			{
+			case VerticalAlignment::Top:
+				pos.y -= dimensions.y;
+				break;
+			case VerticalAlignment::Center:
+				pos.y -= dimensions.y / 2.f;
+				break;
+			}
+
+			font->draw_text(content, pos, mixedColor, scale, wrapper, _camera);
 		}
 
 		
 	}
 
-	Component* Text::clone(GameObject& _gameObj) const
+	Component* Text::clone(GameObject& _gameObj, ComponentID* newID ) const
 	{
 		Text* component = new Text(_gameObj);
 		memcpy(component->content, content, TEXT_BUFFER_SIZE);
@@ -533,6 +617,7 @@ namespace Copium
 		component->hAlignment = hAlignment;
 		component->color = color;
 		component->fSize = fSize;
+		component->wrapper = wrapper;
 		component->font = font;
 		return component;
 	}
@@ -595,6 +680,14 @@ namespace Copium
 			ImGui::TableNextColumn();
 			openPopup = ImGui::ColorButton("Color", *reinterpret_cast<ImVec4*>(&color), miscFlags, ImVec2(FLT_MAX, 0));
 
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("Text Wrap");
+			ImGui::TableNextColumn();
+			ImGui::PushItemWidth(-1);
+			ImGui::InputFloat("##Text Wrap", &wrapper);
+			ImGui::PopItemWidth();
+
 			ImGui::Unindent();
 			ImGui::EndTable();
 		}
@@ -644,6 +737,10 @@ namespace Copium
 		{
 			fSize = _value["Font Size"].GetFloat();
 		}
+		if (_value.HasMember("Wrapper"))
+		{
+			wrapper = _value["Wrapper"].GetFloat();
+		}
 		if (_value.HasMember("r"))
 		{
 			color.r = _value["r"].GetFloat();
@@ -680,6 +777,7 @@ namespace Copium
 		_value.AddMember("Content", type, _doc.GetAllocator());
 
 		_value.AddMember("Font Size", fSize, _doc.GetAllocator());
+		_value.AddMember("Wrapper", wrapper, _doc.GetAllocator());
 		_value.AddMember("r", color.r, _doc.GetAllocator());
 		_value.AddMember("g", color.g, _doc.GetAllocator());
 		_value.AddMember("b", color.b, _doc.GetAllocator());
@@ -851,7 +949,7 @@ namespace Copium
 		sprite.set_name(spriteName);
 	}
 
-	Component* ImageComponent::clone(GameObject& _gameObj) const
+	Component* ImageComponent::clone(GameObject& _gameObj, ComponentID* newID) const
 	{
 		ImageComponent* component = new ImageComponent(_gameObj);
 		component->vAlignment = vAlignment;

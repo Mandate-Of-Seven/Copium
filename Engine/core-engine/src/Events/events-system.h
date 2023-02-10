@@ -17,6 +17,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 ****/
 
 
+
 #ifndef EVENTS_SYSTEM_H
 
 #define EVENTS_SYSTEM_H
@@ -24,6 +25,9 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <Events/events.h>
 #include <typeindex>
 #include <CopiumCore/system-interface.h>
+
+#define AcquireMutex(MutexType) bool mutex{false}; while(!mutex)MyEventSystem.publish(new Copium::AcquireMutexEvent{MutexType,mutex});
+#define ReturnMutex(MutexType) MyEventSystem.publish(new Copium::ReturnMutexEvent{MutexType});
 
 #define MyEventSystem Copium::EventSystem::Instance()
 
@@ -33,10 +37,11 @@ namespace Copium
     class IEventHandler
     {
     public:
-        void exec(IEvent* evnt) 
+        void exec(IEvent* evnt)
         {
             call(evnt);
         }
+        virtual ~IEventHandler() {};
     private:
         // Implemented by MemberFunctionHandler
         virtual void call(IEvent* evnt) = 0;
@@ -67,13 +72,26 @@ namespace Copium
     private:
         std::map<std::type_index, HandlerList*> subscribers;
     public:
-        void Init(){}
-        void Update(){}
-        void Exit(){}
+        void init() {}
+        void update() {}
+        void exit()
+        {
+            PRINT("FREEING EVENTS");
+            for (auto& keyPair : subscribers)
+            {
+                auto it{ keyPair.second->begin() };
+                while (it != keyPair.second->end())
+                {
+                    delete* it;
+                    ++it;
+                }
+                delete keyPair.second;
+            }
+        }
 
 
         template<typename EventType>
-        void publish(EventType* evnt)
+        void publish(EventType * evnt)
         {
             HandlerList* handlers = subscribers[typeid(EventType)];
 
@@ -86,10 +104,11 @@ namespace Copium
                     handler->exec(evnt);
                 }
             }
+            delete evnt;
         }
 
         template<class T, class EventType>
-        void subscribe(T* instance, void (T::* memberFunction)(EventType*)) {
+        void subscribe(T * instance, void (T:: * memberFunction)(EventType*)) {
             HandlerList* handlers = subscribers[typeid(EventType)];
 
             //First time initialization
@@ -105,6 +124,5 @@ namespace Copium
 
 
 }
-
 
 #endif // !EVENTS_SYSTEM_H

@@ -17,19 +17,140 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "GameObject/Components/component.h"
 #include "Messaging/message-system.h"
-#include "Scripting/scripting-system.h"
 #include <limits>
 #include <Math/math-library.h>
+#include <config.h>
 
-extern "C"
+enum class FieldType
 {
-	typedef struct _MonoClass MonoClass;
-	typedef struct _MonoMethod MonoMethod;
-	typedef struct _MonoObject MonoObject;
-}
+	Float, Double,
+	Bool, Char, Short, Int, Long,
+	UShort, UInt, ULong, String,
+	Vector2, Vector3, GameObject, Component, None
+};
 
 namespace Copium
 {
+	struct Field
+	{
+		Field() = default;
+		char* data{nullptr};
+		FieldType fType{};
+		std::string typeName;
+		/***************************************************************************/
+		/*!
+		\brief
+			Stores data of a given buffer to prevent out of scope destruction.
+			Aka assigns memory from the heap
+
+		\param _size
+			Size of buffer
+
+		\param _data
+			Data to store and copy from
+		*/
+		/**************************************************************************/
+		Field(FieldType _fType, size_t _size = 0, void* _data = nullptr) :
+			fType{ _fType }
+		{
+			size = _size;
+			if (size)
+				data = new char[size];
+			else
+				data = nullptr;
+			if (_data)
+				memcpy(data, _data, size);
+		}
+
+		template<typename T>
+		void operator=(const T& val)
+		{
+			COPIUM_ASSERT(sizeof(T) > size, "FIELD DOES NOT HAVE ENOUGH SPACE TO STORE TYPE");
+			memcpy(data, &val, sizeof(T));
+		}
+
+		template<typename T>
+		void operator=(const T* val)
+		{
+			memcpy(data, val, size);
+		}
+
+		template<typename T>
+		T& Get()
+		{
+			COPIUM_ASSERT(sizeof(T) > size, "FIELD DOES NOT HAVE ENOUGH SPACE TO STORE TYPE");
+			return *reinterpret_cast<T*>(data);
+		}
+
+		void Resize(size_t _size)
+		{
+			if (data)
+				delete data;
+			size = _size;
+			data = new char[size];
+		}
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Copy constructor
+
+		\param rhs
+			Field to store and copy from
+		*/
+		/**************************************************************************/
+		Field(const Field& rhs)
+		{
+			size = rhs.size;
+			data = new char[size];
+			fType = rhs.fType;
+			typeName = rhs.typeName;
+			memcpy(data, rhs.data, size);
+		}
+
+		Field(Field&& rhs)
+		{
+			size = rhs.size;
+			data = rhs.data;
+			fType = rhs.fType;
+			typeName = std::move(rhs.typeName);
+			rhs.data = nullptr;
+		}
+
+		Field& operator=(Field&& rhs)
+		{
+			size = rhs.size;
+			data = rhs.data;
+			fType = rhs.fType;
+			typeName = std::move(rhs.typeName);
+			rhs.data = nullptr;
+			return *this;
+		}
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Destructor that frees memory
+		*/
+		/**************************************************************************/
+		~Field()
+		{
+			if (data)
+				delete[] data;
+		}
+
+		size_t GetSize() const
+		{
+			return size;
+		}
+
+	private:
+		size_t size{ 0 };
+	};
+
+	using ScriptReferenceables = TemplatePack<GameObject, Component>;
+
+
     class Script final : public Component, public IReceiver
     {
     public:
@@ -79,13 +200,6 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		void Name(const std::string& _name);
-		/**************************************************************************/
-		/*!
-			\brief
-				Function called at the very start of game object.
-		*/
-		/**************************************************************************/
-		void invoke(const std::string& methodName);
 
 		/*******************************************************************************
 		/*!
@@ -111,7 +225,7 @@ namespace Copium
 			False if operation failed, true if it was successful
 		*/
 		/*******************************************************************************/
-		bool getFieldValue(const std::string& name, char* buffer) const;
+		void GetFieldValue(const std::string& name, char* buffer);
 
 		/*******************************************************************************
 		/*!
@@ -126,7 +240,7 @@ namespace Copium
 			False if operation failed, true if it was successful
 		*/
 		/*******************************************************************************/
-		bool setFieldValue(const std::string& name, const char* value);
+		void SetFieldValue(const std::string& name, const char* value);
 
 		/***************************************************************************/
 		/*!
@@ -138,7 +252,7 @@ namespace Copium
 			Reference to the cloned component in current scene
 		*/
 		/**************************************************************************/
-		Component* clone(GameObject& _gameObj) const;
+		Component* clone(GameObject& _gameObj, ComponentID* newID = nullptr) const;
 
 		/***************************************************************************/
 		/*!
@@ -188,31 +302,16 @@ namespace Copium
 		/**************************************************************************/
 		void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
-		/***************************************************************************/
-		/*!
-		\brief
-			Gets the function names in this script
-		\return
-			Vector of strings of functions in this script
-		*/
-		/**************************************************************************/
-		const std::vector<std::string>& getFunctionNames();
-
-		ScriptClass* pScriptClass;
-
-		MonoObject* mObject;
-
 		friend class ScriptingSystem;
 	private:
 		void instantiate();
 		static char buffer[128];
 		std::string name;
-		const Script* reference{ nullptr };
 		std::unordered_map<std::string, GameObject*> fieldGameObjReferences;
 		std::unordered_map<std::string, Component*> fieldComponentReferences;
-		std::unordered_map<std::string, FieldData> fieldDataReferences;
-		static ScriptingSystem& sS;
-		bool isAddingGameObjectReference;
+		std::unordered_map<std::string, Field> fieldDataReferences;
+		static std::pair<const std::string,Field>* editedField;
+		static bool isAddingReference;
     };
 }
 

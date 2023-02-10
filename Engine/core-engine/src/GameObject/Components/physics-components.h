@@ -198,7 +198,7 @@ namespace Copium
 		Reference to this Rigidbody2DComponent
 		*/
 		/*******************************************************************************/
-		Component* clone(GameObject& _gameObj) const
+		Component* clone(GameObject& _gameObj, ComponentID* newID = nullptr) const
 		{
 			Rigidbody2D* component = new Rigidbody2D(_gameObj);
 			component->mass = mass;

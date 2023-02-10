@@ -130,7 +130,7 @@ namespace Copium
 		glVertexArrayAttribBinding(fontVertexArrayID, 3, 2);*/
 	}
 
-	void Font::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, GLfloat _scale, GLuint _fontID, BaseCamera* _camera)
+	void Font::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, GLfloat _scale, const float& _wrapper, BaseCamera* _camera)
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -184,6 +184,11 @@ namespace Copium
 				x = _position.x;
 				continue;
 			}
+			else if (c == ' ' && x > _position.x + _wrapper && _wrapper != 0.f)
+			{
+				newLine++;
+				x = _position.x;
+			}
 
 			xpos = x + ch.bearing.x * (_scale * scaler);
 			ypos = y - (ch.size.y - ch.bearing.y) * (_scale * scaler) - newLine * (_scale * 2.5f);
@@ -224,15 +229,27 @@ namespace Copium
 		glDisable(GL_BLEND);
 	}
 
-	glm::vec2 Font::getDimensions(const std::string& _text, GLfloat _scale)
+	glm::vec2 Font::getDimensions(const std::string& _text, GLfloat _scale, const float& _wrapper)
 	{
 		float x = 0;
 		float y = 0;
-
+		int newLine = 0;
 		for (char c : _text)
 		{
+			if (c == '\n')
+			{
+				newLine++;
+				x = 0.f;
+				continue;
+			}
+			else if (c == ' ' && x > _wrapper && _wrapper != 0.f)
+			{
+				newLine++;
+				x = 0;
+			}
+
 			Character& ch = characters[c];
-			float scaledY = ch.size.y * (_scale * 0.01f);
+			float scaledY = ch.size.y * (_scale * 0.01f) - newLine * (_scale * 2.5f);
 			if (scaledY > y)
 				y = scaledY;
 			x += (ch.advance >> 6) * (_scale * 0.01f); // Bitshift by 6 to get value in pixels

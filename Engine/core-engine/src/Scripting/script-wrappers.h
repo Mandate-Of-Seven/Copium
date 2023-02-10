@@ -10,7 +10,7 @@
 \brief
 	This file helps register static functions be used as internal calls in C#
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 #include "Windows\windows-input.h"
@@ -359,6 +359,21 @@ namespace Copium
 		return gameObj->isActive();
 	}
 
+
+	static bool GetComponentEnabled(GameObjectID gid, ComponentID cid)
+	{
+		Component* component = sceneManager.findComponentByID(cid);
+		return component->Enabled();
+	}
+
+	static void SetComponentEnabled(GameObjectID gid, ComponentID cid, bool val)
+	{
+		Component* component = sceneManager.findComponentByID(cid);
+		if (component)
+			component->Enabled(val);
+	}
+
+
 	/*******************************************************************************
 	/*!
 	\brief
@@ -369,7 +384,7 @@ namespace Copium
 	{
 		if (sceneManager.endPreview())
 			messageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
-		//quit_engine();
+		quit_engine();
 		#ifdef GAMEMODE
 		quit_engine();
 		#else
@@ -420,19 +435,13 @@ namespace Copium
 	/*******************************************************************************/
 	static void SetTextString(GameObjectID gameObjID, ComponentID compID, MonoString* str)
 	{
-		GameObject* gameObj = sceneManager.findGameObjByID(gameObjID);
-		if (gameObj == nullptr)
+		Component* component = sceneManager.findComponentByID(compID);
+		if (component == nullptr)
 			return;
-		for (Text* text : gameObj->getComponents<Text>())
-		{
-			if (text->id == compID)
-			{
-				char* monoStr = mono_string_to_utf8(str);
-				strcpy(text->content, monoStr);
-				mono_free(monoStr);
-				break;
-			}
-		}
+		char* monoStr = mono_string_to_utf8(str);
+		PRINT("COMPONENT FOUND! : " << monoStr);
+		strcpy(reinterpret_cast<Text*>(component)->content, monoStr);
+		mono_free(monoStr);
 	}
 
 	static char GetButtonState(GameObjectID gameObjID)
@@ -459,6 +468,7 @@ namespace Copium
 		if (toBeCloned)
 		{
 			GameObject* clone = MyGOF.clone(*toBeCloned);
+			PRINT("CLONED OBJECT: " << clone->id);
 			if (clone)
 				return clone->id;
 		}
@@ -492,6 +502,12 @@ namespace Copium
 	static void DestroyGameObject(GameObjectID ID)
 	{
 		COPIUM_ASSERT(!MyGOF.destroy(ID), "GameObject could not be destroyed");
+	}
+
+
+	static float GetFPS()
+	{
+		return MyFrameRateController.getFPS();
 	}
 
 	static void AudioSourcePlay(GameObjectID ID)
@@ -552,6 +568,9 @@ namespace Copium
 		Register(PauseAllAnimation);
 		Register(PlayAllAnimation);
 		Register(PauseAudio);
+		Register(GetComponentEnabled);
+		Register(SetComponentEnabled);
+		Register(GetFPS);
 	}
 
 	/*******************************************************************************

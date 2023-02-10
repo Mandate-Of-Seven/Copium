@@ -1,10 +1,26 @@
-------PROJECT GUIDE------
+------ PROJECT GUIDE ------
+
+----- Editor Mode -----
+Our engine does not have different project settings that requires different configuration setup
+	- LEFTSHIFT + C keys: Toggle massspawning,to spawn 2500+ gameobjects in the scene
+
+There is a Boolean variable, tempMode in editor-system.cpp. It will toggle between editor and game mode. It will only toggle if there is a preloaded scene.
+	- LEFT SHIFT + E keys: Toggle between editor and game mode. Only works if user is focused(right click on the game window)in the game window and current selected scene has a camera component.
+
+------ Scene ------
 1. CTRL N - New Scene
+2. CTRL O - Open A Scene
+3. CTRL S - Save A Scene
 
 ----- Hierarchy -----
 1. Select gameobject and press DELETE to delete
-2. Drag the gameobjects around to reorder the objects
+2. Select gameobject and hold LEFT SHIFT + UP/DOWN arrow keys to move it up or down within the same child list
+3. Select gameobject and in the menu of the hierarchy select shift up or shift down to become a parent or a child of a gameobject respectively
 
 ----- Undo-Redo -----
 1. CTRL Z to undo previous actions
 2. CTRL X to redo previous actions
+
+----- Known Bugs -----
+The user cannot delete assigned variables in the scripting system while the engine is loaded.
+The preview mode is "buggy" when scripts are involved

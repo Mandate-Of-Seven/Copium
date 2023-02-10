@@ -49,7 +49,7 @@ namespace Copium
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 
 		// Bean: 3D Depth Testing
-		//glEnable(GL_DEPTH_TEST);
+		glEnable(GL_DEPTH_TEST);
 		//glAlphaFunc(GL_GREATER, 0.5);
 		//glEnable(GL_ALPHA_TEST);
 		//glEnable(GL_STENCIL_TEST);
@@ -182,10 +182,10 @@ namespace Copium
 					go->transform.position = { x, y, 0.f };
 					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->getComponent(ComponentType::SpriteRenderer));
 					
-					int numSprites = AssetsSystem::Instance()->get_textures().size() - 1;
+					int numSprites = (int)(AssetsSystem::Instance()->get_textures().size() - 1);
 					rc->get_sprite_renderer().set_sprite_id(rand() % numSprites + 1);
 
-					unsigned int id = rc->get_sprite_renderer().get_sprite_id();
+					unsigned int id = (unsigned int)rc->get_sprite_renderer().get_sprite_id();
 					if (id != 0)
 					{
 						rc->get_sprite_renderer().set_texture(AssetsSystem::Instance()->get_texture(id - 1));
@@ -216,9 +216,9 @@ namespace Copium
 
 					go->transform.position = { x, y, 0.f };
 					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->getComponent(ComponentType::SpriteRenderer));
-					int numSprites = AssetsSystem::Instance()->get_textures().size() - 1;
+					int numSprites = (int)(AssetsSystem::Instance()->get_textures().size() - 1);
 					rc->get_sprite_renderer().set_sprite_id(rand() % numSprites + 1);
-					unsigned int id = rc->get_sprite_renderer().get_sprite_id();
+					unsigned int id = (unsigned int)rc->get_sprite_renderer().get_sprite_id();
 					if (id != 0)
 					{
 						rc->get_sprite_renderer().set_texture(AssetsSystem::Instance()->get_texture(id - 1));

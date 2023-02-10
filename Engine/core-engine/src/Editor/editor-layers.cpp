@@ -2,6 +2,7 @@
 \file			editor-layers.cpp
 \project
 \author			Sean Ngo
+\co-author      Matthew Lau
 
 \par			Course: GAM200
 \par			Section:
