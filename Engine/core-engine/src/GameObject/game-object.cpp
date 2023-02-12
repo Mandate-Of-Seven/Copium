@@ -57,14 +57,6 @@ namespace Copium
     {
         std::cout << "GameObject destructed\n";
         messageSystem.unsubscribe(MESSAGE_TYPE::MT_CREATE_CS_GAMEOBJECT, this);
-
-        for (auto iter = components.begin(); iter != components.end(); ++iter)
-        {
-            if (*iter)
-            {
-                delete (*iter);
-            }
-        }
     }
 
 

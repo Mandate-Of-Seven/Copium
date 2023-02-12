@@ -173,26 +173,25 @@ namespace Copium
 				for (size_t i = 0; i < 10; i++)
 				{
 					GameObject* go = MyGOF.instantiate();
-					go->addComponent(ComponentType::SpriteRenderer);
+					SpriteRenderer& rc = go->AddComponent<SpriteRenderer>();
 					//go->addComponent(ComponentType::Rigidbody);
 
 					float x = rand() % 2000 * 0.1f - 100.f;
 					float y = rand() % 2000 * 0.1f - 100.f;
 
 					go->transform.position = { x, y, 0.f };
-					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->GetComponent(ComponentType::SpriteRenderer));
 					
 					int numSprites = (int)(AssetsSystem::Instance()->get_textures().size() - 1);
-					rc->get_sprite_renderer().set_sprite_id(rand() % numSprites + 1);
+					rc.get_sprite_renderer().set_sprite_id(rand() % numSprites + 1);
 
-					unsigned int id = (unsigned int)rc->get_sprite_renderer().get_sprite_id();
+					unsigned int id = (unsigned int)rc.get_sprite_renderer().get_sprite_id();
 					if (id != 0)
 					{
-						rc->get_sprite_renderer().set_texture(AssetsSystem::Instance()->get_texture(id - 1));
+						rc.get_sprite_renderer().set_texture(AssetsSystem::Instance()->get_texture(id - 1));
 						std::string str = AssetsSystem::Instance()->get_texture(id - 1)->get_file_path();
 						size_t pos = str.find_last_of('\\');
 						std::string spriteName = str.substr(pos + 1, str.length() - pos);
-						rc->get_sprite_renderer().set_name(spriteName);
+						rc.get_sprite_renderer().set_name(spriteName);
 					}
 				}
 			}
@@ -208,24 +207,23 @@ namespace Copium
 				for (size_t i = 0; i < 10; i++)
 				{
 					GameObject* go = MyGOF.instantiate();
-					go->addComponent(ComponentType::SpriteRenderer);
+					SpriteRenderer& rc = go->AddComponent<SpriteRenderer>();
 					//go->addComponent(ComponentType::Rigidbody);
 
 					float x = rand() % 2000 * 0.1f - 100.f;
 					float y = rand() % 2000 * 0.1f - 100.f;
 
 					go->transform.position = { x, y, 0.f };
-					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->GetComponent(ComponentType::SpriteRenderer));
 					int numSprites = (int)(AssetsSystem::Instance()->get_textures().size() - 1);
-					rc->get_sprite_renderer().set_sprite_id(rand() % numSprites + 1);
-					unsigned int id = (unsigned int)rc->get_sprite_renderer().get_sprite_id();
+					rc.get_sprite_renderer().set_sprite_id(rand() % numSprites + 1);
+					unsigned int id = (unsigned int)rc.get_sprite_renderer().get_sprite_id();
 					if (id != 0)
 					{
-						rc->get_sprite_renderer().set_texture(AssetsSystem::Instance()->get_texture(id - 1));
+						rc.get_sprite_renderer().set_texture(AssetsSystem::Instance()->get_texture(id - 1));
 						std::string str = AssetsSystem::Instance()->get_texture(id - 1)->get_file_path();
 						size_t pos = str.find_last_of('\\');
 						std::string spriteName = str.substr(pos + 1, str.length() - pos);
-						rc->get_sprite_renderer().set_name(spriteName);
+						rc.get_sprite_renderer().set_name(spriteName);
 					}
 				}
 			}
@@ -259,11 +257,8 @@ namespace Copium
 			Scene* scene = sm->get_current_scene();
 			for (GameObject* gameObject : scene->gameObjects)
 			{
-				if (gameObject->hasComponent(ComponentType::Camera))
-				{
-					Camera* camera = reinterpret_cast<Camera*>(gameObject->GetComponent(ComponentType::Camera));
-					cameras.push_back(camera);
-				}
+				Camera* camera = reinterpret_cast<Camera*>(gameObject->GetComponent<Camera>());
+				cameras.push_back(camera);
 			}
 		}
 	}
