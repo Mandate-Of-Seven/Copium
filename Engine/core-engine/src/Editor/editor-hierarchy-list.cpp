@@ -299,7 +299,7 @@ namespace Copium
 		}
 
 		// If there is a node that is already selected, set the selected flag
-		if (_selected == _go.id)
+		if (_selected == _go.uuid)
 		{
 			baseFlags |= ImGuiTreeNodeFlags_Selected;
 		}
@@ -367,7 +367,7 @@ namespace Copium
 		{
 			PRINT("selected");
 			std::cout << _go.get_name() << " is selected\n";
-			_selected = _go.id;
+			_selected = _go.uuid;
 			isSelected = true;
 			sm->set_selected_gameobject(&_go);
 
@@ -375,7 +375,7 @@ namespace Copium
 		else if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
 		{
 			std::cout << _go.get_name() << " is right clicked\n";
-			_selected = _go.id;
+			_selected = _go.uuid;
 			isSelected = true;
 			sm->set_selected_gameobject(&_go);
 
@@ -387,7 +387,7 @@ namespace Copium
 
 		}	
 		int res = 0;
-		if (isPopUpOpen && _selected == _go.id)
+		if (isPopUpOpen && _selected == _go.uuid)
 		{
 			res = DisplayOptionsPopUpWindow();
 		}
@@ -448,7 +448,7 @@ namespace Copium
 		}
 
 		// If there is a node that is already selected, set the selected flag
-		if (_selected == _go.id)
+		if (_selected == _go.uuid)
 		{
 			baseFlags |= ImGuiTreeNodeFlags_Selected;
 		}
@@ -547,7 +547,7 @@ namespace Copium
 		if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 		{
 			std::cout << _go.get_name() << " is selected\n";
-			_selected = _go.id;
+			_selected = _go.uuid;
 			isSelected = true;
 			sm->set_selected_gameobject(&_go);
 
@@ -555,7 +555,7 @@ namespace Copium
 		else if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
 		{
 			std::cout << _go.get_name() << " is right clicked\n";
-			_selected = _go.id;
+			_selected = _go.uuid;
 			isSelected = true;
 			sm->set_selected_gameobject(&_go);
 
@@ -567,7 +567,7 @@ namespace Copium
 
 		}
 		int res = 0;
-		if (isPopUpOpen && _selected == _go.id)
+		if (isPopUpOpen && _selected == _go.uuid)
 		{
 			 res = DisplayOptionsPopUpWindow();
 		}

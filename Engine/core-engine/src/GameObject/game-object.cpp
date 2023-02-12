@@ -60,14 +60,7 @@ namespace Copium
     }
 
 
-    bool GameObject::isActive()
-    {
-        /*if (transform.hasParent())
-        {
-            return transform.parent->gameObj.isActive();
-        }*/
-        return active;
-    }
+    bool GameObject::isActive() { return active; }
 
     void GameObject::setActive(bool _active)
     {
@@ -83,24 +76,26 @@ namespace Copium
     }
 
 
-GameObject::GameObject(const GameObject& rhs) : transform(*this), id{rhs.id}
+GameObject::GameObject(const GameObject& rhs) : transform(*this), id{0}
 {
+    
     transform.position = rhs.transform.position;
     transform.rotation = rhs.transform.rotation;
     transform.scale = rhs.transform.scale;
     active = rhs.active;
     name = rhs.name;
-    PRINT("GAMEOBJECT COPY CONSTRUCTOR!");
+
+    PRINT("GameObject Copy Constructor Called---");
+    uuid = rhs.uuid;
     messageSystem.subscribe(MESSAGE_TYPE::MT_CREATE_CS_GAMEOBJECT, this);
-    MESSAGE_CONTAINER::reflectCsGameObject.gameObjID = id;
+    MESSAGE_CONTAINER::reflectCsGameObject.gameObjID = uuid;
     MESSAGE_CONTAINER::reflectCsGameObject.componentIDs.clear();
-    transform.id = rhs.transform.id;
+    transform.uuid = rhs.transform.uuid;
     for (Component* pComponent : rhs.components)
     {
-
         Component* newComponent = pComponent->clone(*this);
         newComponent->Enabled(pComponent->Enabled());
-        newComponent->id = pComponent->id;
+        newComponent->uuid = pComponent->uuid;
         components.push_back(newComponent);
     }
 
@@ -114,7 +109,8 @@ GameObject::GameObject(const GameObject& rhs) : transform(*this), id{rhs.id}
     //    child->transform.setParent(&transform);
     //}
 
-
+    //PRINT("GameObject Created:\nName: " << name << '\n' << "UID: " << uuid);
+    PRINT("GameObject Copy Constructor End---");
 }
 
 GameObject::GameObject
@@ -126,7 +122,7 @@ GameObject::GameObject
     id{ _id }
 {
     messageSystem.subscribe(MESSAGE_TYPE::MT_CREATE_CS_GAMEOBJECT, this);
-    MESSAGE_CONTAINER::reflectCsGameObject.gameObjID = id;
+    MESSAGE_CONTAINER::reflectCsGameObject.gameObjID = uuid;
     MESSAGE_CONTAINER::reflectCsGameObject.componentIDs.clear();
     for (Component* pComponent : components)
     {
@@ -135,6 +131,10 @@ GameObject::GameObject
     messageSystem.dispatch(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT);
     //PRINT("GAMEOBJECT ID CONSTRUCTED: " << id);
     transform.id = assign_id();
+
+    //PRINT("GameObject Created:\nName: " << name << '\n' << "UID: " << uuid << std::endl);
+
+
 }
 
 GameObject& GameObject::operator=(const GameObject& _src)
@@ -185,6 +185,12 @@ bool GameObject::deserialize(rapidjson::Value& _value) {
         return false;
    
     name = _value["Name"].GetString();
+    
+    if (_value.HasMember("UID"))
+    {
+        uuid.Deserialize(_value["UID"]);
+    }
+
 
     return true;
 }
@@ -305,6 +311,8 @@ bool GameObject::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
     _name.SetString(name.c_str(), rapidjson::SizeType(name.length()), _doc.GetAllocator());
     _value.AddMember("Name", _name, _doc.GetAllocator());
 
+    uuid.Serialize(_value, _doc);
+
     rapidjson::Value _components(rapidjson::kArrayType);
     rapidjson::Value transformComponent(rapidjson::kObjectType);
     transform.serialize(transformComponent, _doc);
@@ -329,6 +337,26 @@ bool GameObject::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 
     return true;
 
+}
+
+std::ostream& operator<<(std::ostream& _os, const GameObject& _go) 
+{
+    _os << "-----\n";
+    _os << "Name:" << _go.get_name() << '\n'
+        << "UID:" << _go.uuid << '\n';
+    if (_go.transform.hasParent())
+        _os << "Parent's UID:" << _go.transform.parent->gameObj.uuid << '\n';
+
+    int i{ 0 };
+    for (Component* co : _go.components)
+    {
+        _os << "Component " << i << " UID: " << co->GetUID() << '\n';
+        ++i;
+    }
+
+    _os << "-----";
+
+    return _os;
 }
 
 

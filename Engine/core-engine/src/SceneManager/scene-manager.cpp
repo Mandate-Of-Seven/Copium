@@ -47,13 +47,32 @@ namespace Copium {
 
 	GameObject* SceneManager::findGameObjByID(GameObjectID _ID)
 	{
-		for (GameObject* pGameObj : currentScene->gameObjects)
+		if (!currentScene)
+			return nullptr;
+
+		for (GameObject* go : currentScene->gameObjects)
 		{
-			if (pGameObj->id == _ID)
+			if (go->uuid == _ID)
 			{
-				return pGameObj;
+				PRINT("Found game object!");
+				return go;
 			}
+
 		}
+
+		return nullptr;
+	}
+	GameObject* SceneManager::FindGameObjectByID(const uint64_t& _id)
+	{
+		if (!currentScene)
+			return nullptr;
+
+		for (GameObject* go : currentScene->gameObjects)
+		{
+			if (go->uuid == _id)
+				return go;
+		}
+
 		return nullptr;
 	}
 	GameObject* SceneManager::findGameObjByName(const std::string& name)
@@ -69,43 +88,57 @@ namespace Copium {
 	}
 	Component* SceneManager::findComponentByID(ComponentID _ID)
 	{
-		for (GameObject* pGameObj : currentScene->gameObjects)
+
+		if (!currentScene)
+			return nullptr;
+
+		for (GameObject* go : currentScene->gameObjects)
 		{
-			for (Component* pComponent : pGameObj->components)
-			{	
-				if (!pComponent)
+			for (Component* co : go->components)
+			{
+				if (!co)
 					continue;
-				if (pComponent->id == _ID)
-				{
-					return pComponent;
-				}
+
+				if (co->GetUID() == _ID)
+					return co;
 			}
 		}
+
 		return nullptr;
 	}
+	Component* SceneManager::FindComponentByID(const uint64_t& _id)
+	{
+		if (!currentScene)
+			return nullptr;
+
+		for (GameObject* go : currentScene->gameObjects)
+		{
+			for (Component* co : go->components)
+			{
+				if (!co)
+					continue;
+
+				if (co->GetUID() == _id)
+					return co;
+			}
+		}
+
+		return nullptr;
+	}
+
 
 	SceneManager::SceneManager() : currentScene{nullptr}, selectedGameObject{nullptr}, storageScene{nullptr}, currSceneState{Scene::SceneState::edit}
 	{
 	}
 
-	SceneManager::~SceneManager()
-	{
-
-
-		//std::cout << "new scene manager destruction called\n";
-
-	}
+	SceneManager::~SceneManager() {}
 
 	void SceneManager::init()
 	{
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		storageScene = nullptr;
-		//MyGOF.register_archetypes("Data/Archetypes");
 	}
-	void SceneManager::update()
-	{
-
-	}
+	void SceneManager::update() {}
 	void SceneManager::exit()
 	{
 		selectedGameObject = nullptr;
@@ -126,6 +159,7 @@ namespace Copium {
 			storageScene = nullptr;
 		}
 
+		/*
 		// For multiple scenes
 		//for (Scene* sc : scenes)
 		//{
@@ -135,8 +169,7 @@ namespace Copium {
 		//		sc = nullptr;
 		//	}
 		//}
-
-		
+		*/	
 	}
 
 	bool SceneManager::load_scene(const std::string& _filepath)
@@ -180,6 +213,7 @@ namespace Copium {
 
 		MyEventSystem->publish(new SceneOpenedEvent(currentScene->get_name().c_str()));
 
+		/*
 		if (document.HasMember("Unused GIDs"))
 		{
 			std::cout << "Adding unused gids: ";
@@ -204,7 +238,7 @@ namespace Copium {
 			std::cout << std::endl;
 
 		}
-
+		*/
 		if (document.HasMember("Layers"))
 		{
 			rapidjson::Value& arr = document["Layers"].GetArray();
@@ -250,6 +284,7 @@ namespace Copium {
 			{
 				GameObject* tmpGO = nullptr;
 				tmpGO = MyGOF.instantiate(*iter);
+				PRINT(*tmpGO);
 			}
 
 			// Linkage of components to each other
@@ -261,6 +296,7 @@ namespace Copium {
 					rapidjson::Value& compArr = (*gameObjectIt)["Components"].GetArray();
 					auto componentIt = compArr.Begin();
 					go->transform.deserializeLink(*componentIt);
+					PRINT(*go);
 					for (Component* component : go->components)
 					{
 						//Offset TransformComponent
@@ -606,22 +642,6 @@ namespace Copium {
 		create_rapidjson_string(doc, name,  currentScene->get_name());
 		doc.AddMember("Name", name, doc.GetAllocator());
 
-		// Serialize UGIDs
-		rapidjson::Value ugids(rapidjson::kArrayType);
-		for (GameObjectID id : currentScene->get_unusedgids())
-		{
-			ugids.PushBack(id, doc.GetAllocator());
-		}
-		doc.AddMember("Unused GIDs", ugids, doc.GetAllocator());
-
-		// Serialize UCIDs
-		rapidjson::Value ucids(rapidjson::kArrayType);
-		for (ComponentID id : currentScene->get_unusedcids())
-		{
-			ucids.PushBack(id, doc.GetAllocator());
-		}
-		doc.AddMember("Unused CIDs", ucids, doc.GetAllocator());
-
 		// Serialize Layer Data
 		rapidjson::Value layers(rapidjson::kArrayType);
 		for (Layer& layer : es.getLayers()->SortLayers()->GetSortingLayers())
@@ -682,8 +702,8 @@ namespace Copium {
 
 		currentScene->name = storageScene->name;
 
-		currentScene->unusedCIDs = storageScene->unusedCIDs;
-		currentScene->unusedGIDs = storageScene->unusedGIDs;
+		//currentScene->unusedCIDs = storageScene->unusedCIDs;
+		//currentScene->unusedGIDs = storageScene->unusedGIDs;
 
 		// Copy game object data
 		for (GameObject* gameObj : storageScene->gameObjects)

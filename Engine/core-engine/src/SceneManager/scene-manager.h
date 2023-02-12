@@ -41,9 +41,54 @@ namespace Copium {
 	CLASS_SYSTEM(SceneManager)
 	{
 	public:
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Find a game object using its ID
+
+		\param _ID
+			the game object id of the game object to find
+
+		\return
+			pointer to the game object
+			if there is no game object with that id, return nullptr
+		*/
+		/*******************************************************************************/
 		GameObject* findGameObjByID(GameObjectID _ID);
+		GameObject* FindGameObjectByID(const uint64_t & _id);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Find a game object using its name
+
+		\param name
+			name of the game object to be found
+
+		\return
+			pointer to the game object
+			if there is no game object with that name, return nullptr
+		*/
+		/*******************************************************************************/
 		GameObject* findGameObjByName(const std::string& name);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Find a component using its ID
+
+		\param _ID
+			the component id of the component to find
+
+		\return
+			pointer to the component
+			if there is no component with that id, return nullptr
+		*/
+		/*******************************************************************************/
 		Component* findComponentByID(ComponentID _ID);
+		Component* FindComponentByID(const uint64_t & _id);
 
 		SceneManager();
 		~SceneManager();

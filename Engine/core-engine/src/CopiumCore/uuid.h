@@ -62,7 +62,7 @@ namespace Copium
 			void
 		*/
 		/*******************************************************************************/
-		void Serialize(rapidjson::Value& _val, rapidjson::Document& _doc);
+		void Serialize(rapidjson::Value& _val, rapidjson::Document& _doc, const std::string& _name = "UID");
 
 	private:
 		uint64_t uuid;

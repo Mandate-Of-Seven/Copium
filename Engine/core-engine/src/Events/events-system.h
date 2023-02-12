@@ -1,16 +1,18 @@
 ﻿/*!***************************************************************************************
 ****
-\file			
-\project		
-\author			
-\co-authors		// DELETE IF NOT APPLICABLE
+\file			events-system.h
+\project		GAM200
+\author			Zacharie Hong
 
 \par			Course: GAM200
-\par			Section: 
-\date			//DATE LAST MODIFIED
+\par			Section: A
+\date
 
 \brief
-	// BRIEF DESCRIPTION OF FILE PURPOSE
+    This file contains the declarations of the following:
+    1. IEventHandler
+    2. MemberFunctionHandler
+    3. Event System
 
 All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************
@@ -72,8 +74,39 @@ namespace Copium
     private:
         std::map<std::type_index, HandlerList*> subscribers;
     public:
+
+        /*******************************************************************************
+        /*!
+        *
+        \brief
+            Init the IEventHandler
+
+        \return
+            void
+        */
+        /*******************************************************************************/
         void init() {}
+        /*******************************************************************************
+        /*!
+        *
+        \brief
+            Update the IEventHandler
+
+        \return
+            void
+        */
+        /*******************************************************************************/
         void update() {}
+        /*******************************************************************************
+        /*!
+        *
+        \brief
+            Cleanup the IEventHandler
+
+        \return
+            void
+        */
+        /*******************************************************************************/
         void exit()
         {
             PRINT("FREEING EVENTS");
@@ -89,7 +122,20 @@ namespace Copium
             }
         }
 
+        /*******************************************************************************
+        /*!
+        *
+        \brief
+            Sends a signal that an event has occurred and also sends the container with the
+            variables
 
+        \param evnt
+            where the parameters that are to be passed on are stored
+
+        \return
+            void
+        */
+        /*******************************************************************************/
         template<typename EventType>
         void publish(EventType * evnt)
         {
@@ -107,6 +153,22 @@ namespace Copium
             delete evnt;
         }
 
+        /*******************************************************************************
+        /*!
+        *
+        \brief
+            Become a listener to the event specified
+
+        \param instance
+            the object that owns the specified member function
+            
+        \param memberFunction
+            the member function of the instance
+
+        \return
+            void
+        */
+        /*******************************************************************************/
         template<class T, class EventType>
         void subscribe(T * instance, void (T:: * memberFunction)(EventType*)) {
             HandlerList* handlers = subscribers[typeid(EventType)];

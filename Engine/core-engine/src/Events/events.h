@@ -1,3 +1,19 @@
+/*!***************************************************************************************
+****
+\file			events.h
+\project		GAM200
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section: A
+\date			
+
+\brief
+	This file contains the declarations of all the various events in the event system
+
+All content ? 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************
+****/
 #pragma once
 #include <Scripting/scriptable-object.h>
 #include <config.h>

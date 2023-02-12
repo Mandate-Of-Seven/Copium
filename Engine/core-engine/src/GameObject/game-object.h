@@ -26,6 +26,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Math/math-library.h"
 #include "GameObject/Components/transform-component.h"
 #include <GameObject/components.h>
+#include "CopiumCore/uuid.h"
 
 //USING
 
@@ -88,6 +89,7 @@ private:
 public:           
     //Global ID for gameObjects
     const GameObjectID id;
+    UUID uuid;
     Transform transform;
     ComponentID assign_id();
 
@@ -316,7 +318,12 @@ public:
     */
     /*******************************************************************************/
     void handleMessage(MESSAGE_TYPE mType);
+
+
+    
 };
+
+std::ostream& operator<<(std::ostream& _os, const GameObject& _go);
 
 }
 

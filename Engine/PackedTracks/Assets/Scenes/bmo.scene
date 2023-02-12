@@ -20,10 +20,12 @@
         {
             "ID": 1,
             "Name": "Bmo",
+            "UID": 7395644662538943541,
             "Components": [
                 {
                     "PID": 0,
                     "ID": 1,
+                    "UID": 12343632327205560619,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -43,8 +45,10 @@
                 },
                 {
                     "ID": 2,
+                    "UID": 4990891425598881049,
                     "Type": "Animator",
                     "Loop": true,
+                    "Rev": false,
                     "Count": 1,
                     "Animations": [
                         {
@@ -67,10 +71,12 @@
         {
             "ID": 2,
             "Name": "New GameObject",
+            "UID": 17243888634486357963,
             "Components": [
                 {
                     "PID": 0,
                     "ID": 4,
+                    "UID": 6943499924978573882,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -90,6 +96,7 @@
                 },
                 {
                     "ID": 5,
+                    "UID": 16081425944935512886,
                     "Type": "SpriteRenderer",
                     "Sprite ID": 0,
                     "Sprite Name": "empty",

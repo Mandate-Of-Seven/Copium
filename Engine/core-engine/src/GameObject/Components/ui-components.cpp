@@ -382,7 +382,7 @@ namespace Copium
 		type.SetString(componentName, strlen(componentName), _doc.GetAllocator());
 		_value.AddMember("Type", type, _doc.GetAllocator());
 
-		_value.AddMember("ID", id, _doc.GetAllocator());
+		Component::serialize(_value, _doc);
 
 		if (targetGraphic)
 			_value.AddMember("Graphic ID", targetGraphic->id, _doc.GetAllocator());
@@ -417,10 +417,7 @@ namespace Copium
 	void Button::deserialize(rapidjson::Value& _value)
 	{
 
-		if (_value.HasMember("ID"))
-		{
-			id = _value["ID"].GetUint64();
-		}
+		Component::deserialize(_value);
 
 		if (_value.HasMember("Callback"))
 		{
