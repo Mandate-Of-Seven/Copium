@@ -31,6 +31,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Scripting/logic-system.h"
 #include <Debugging/frame-rate-controller.h>
 #include "Animation/animation-system.h"
+#include  "Events/events-system.h"
 //#include "string.h"
 
 namespace Copium
@@ -52,6 +53,7 @@ namespace Copium
 			systems =
 			{
 				//Put in sequence of calls
+				MyEventSystem,
 				WindowsSystem::Instance(),
 				pMessageSystem,
 				LoggingSystem::Instance(),
