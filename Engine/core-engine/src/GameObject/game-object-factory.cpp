@@ -132,10 +132,6 @@ namespace Copium
 		if (scene)
 		{
 			scene->add_gameobject(go);
-			//for (Transform* transform : go->transform.children)
-			//{
-			//	
-			//}
 		}
 
 

@@ -56,6 +56,7 @@ namespace Copium {
 		*/
 		/*******************************************************************************/
 		GameObject* findGameObjByID(GameObjectID _ID);
+		GameObject* FindGameObjectByID(const uint64_t & _id);
 		/*******************************************************************************
 		/*!
 		*
@@ -86,6 +87,7 @@ namespace Copium {
 		*/
 		/*******************************************************************************/
 		Component* findComponentByID(ComponentID _ID);
+		Component* FindComponentByID(const uint64_t & _id);
 
 		SceneManager();
 		~SceneManager();

@@ -25,6 +25,8 @@ namespace Copium
 	static std::mt19937_64 randomiser(randomDevice());
 	static std::uniform_int_distribution<uint64_t> uniformDistribution;
 
+	#define PID_KEY "PID"
+
 	UUID::UUID() : uuid{uniformDistribution(randomiser)}
 	{
 		
@@ -38,9 +40,12 @@ namespace Copium
 	{
 		uuid = _val.GetUint64();
 	}
-	void UUID::Serialize(rapidjson::Value& _val, rapidjson::Document& _doc)
+	void UUID::Serialize(rapidjson::Value& _val, rapidjson::Document& _doc, const std::string& _name)
 	{
-		_val.AddMember("ID", uuid, _doc.GetAllocator());
+		rapidjson::Value key;
+		rapidjson::SizeType sz = static_cast<rapidjson::SizeType>(_name.size());
+		key.SetString(_name.c_str(), sz, _doc.GetAllocator());
+		_val.AddMember(key, uuid, _doc.GetAllocator());
 	}
 
 }

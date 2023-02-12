@@ -25,22 +25,31 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 namespace Copium
 {
     Component::Component(GameObject& _gameObj, ComponentType _componentType) 
-        : gameObj{ _gameObj }, componentType{ _componentType }, enabled{ true }, id{0} {}
+        : gameObj{ _gameObj }, componentType{ _componentType }, enabled{ true }, id{0} 
+    {
+        //PRINT("Component Created--\n" << "UID: " << uuid << std::endl);
+    }
 
     void Component::destroy() {}
 
 
     void Component::deserialize(rapidjson::Value& _value)
     {
-        std::cout <<  "deserializing CID\n";
+        //PRINT("Deserializing Component ID");
         if (_value.HasMember("ID"))
         {
             id = _value["ID"].GetUint64();
         }
+
+        if (_value.HasMember("UID"))
+            uuid.Deserialize(_value["UID"]);
+        
     }
     void Component::serialize(rapidjson::Value& _value, rapidjson::Document& _doc) 
     {
         _value.AddMember("ID", id, _doc.GetAllocator());
+
+        uuid.Serialize(_value, _doc);
 
     }
 

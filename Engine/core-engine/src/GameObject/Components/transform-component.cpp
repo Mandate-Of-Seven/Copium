@@ -51,9 +51,19 @@ void Transform::deserializeLink(rapidjson::Value& _value)
 {
     if (_value.HasMember("PID"))
     {
-        GameObjectID gameObjID = _value["PID"].GetUint64();
+        uint64_t gameObjID = _value["PID"].GetUint64();
         if (gameObjID)
             setParent(&MySceneManager.findGameObjByID(gameObjID)->transform);
+        //GameObject* go{ nullptr };
+        //if(gameObjID)
+        //    go = MySceneManager.FindGameObjectByID(gameObjID);
+    
+        //if (go)
+        //    setParent(&go->transform);
+        //else
+        //    return;
+
+        //PRINT("Parent of " << gameObj.get_name() << ": " << go->get_name());
     }
 }
 
@@ -62,7 +72,7 @@ void Transform::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 {
     if (parent)
     {
-        _value.AddMember("PID", parent->gameObj.id, _doc.GetAllocator());
+        _value.AddMember("PID", parent->gameObj.uuid, _doc.GetAllocator());
     }
     else
     {
@@ -98,6 +108,7 @@ void Transform::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
     _value.AddMember("Pos", _pos, _doc.GetAllocator());
     _value.AddMember("Rot", _rot, _doc.GetAllocator());
     _value.AddMember("Scale", _scale, _doc.GetAllocator());
+
 }
 
 
@@ -368,11 +379,10 @@ void Transform::inspector_view()
     ImGui::PopStyleVar();
    
 }
-
 void Transform::previewLink(Component* rhs)
 {
     Transform* transform = reinterpret_cast<Transform*>(rhs);
     if (transform->hasParent())
-        setParent(&MySceneManager.findGameObjByID(transform->parent->gameObj.id)->transform);
+        setParent(&MySceneManager.findGameObjByID(transform->parent->gameObj.uuid)->transform);
 }
 }

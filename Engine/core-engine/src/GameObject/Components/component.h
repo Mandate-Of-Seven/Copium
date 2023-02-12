@@ -20,6 +20,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <string>
 #include <map>
 #include <rapidjson/document.h>
+#include "CopiumCore/uuid.h"
 
 
 namespace Copium
@@ -73,8 +74,10 @@ class Component
 
         const ComponentType componentType;      //Type of component
         ComponentID id;                   //Id of component
+        UUID uuid;
 
 
+        uint64_t GetUID() const { return uuid; }
         /*******************************************************************************
         /*!
         *
