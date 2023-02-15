@@ -1,7 +1,26 @@
-#pragma once
+/*!***************************************************************************************
+\file			events.h
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			15/02/2023
+
+\brief
+	This file contains the declarations of all event structures in the engine.
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+#ifndef EVENTS_H
+#define EVENTS_H
+
 #include <Scripting/scriptable-object.h>
 #include <config.h>
 #include <GameObject/Components/script-component.h>
+
+#include "Files/file.h"
+#include "Files/file-directory.h"
 
 namespace Copium
 {
@@ -26,6 +45,30 @@ namespace Copium
 	{
 		SceneOpenedEvent(const char* _sceneName) :sceneName{ _sceneName } {};
 		const char* sceneName;
+	};
+
+	struct FileAssetEvent : IEvent
+	{
+		FileAssetEvent(File* _file, int _type) : file{ _file }, type{ _type } {};
+		File* file;
+		int type;
+	};
+
+	struct SetSelectedFileEvent : IEvent
+	{
+		SetSelectedFileEvent(File* _file) : file{ _file } {};
+		File* file;
+	};
+
+	struct SetSelectedDirectoryEvent : IEvent
+	{
+		SetSelectedDirectoryEvent(Directory* _dir) : directory{ _dir } {};
+		Directory* directory;
+	};
+
+	struct DeleteFromBrowserEvent : IEvent
+	{
+		DeleteFromBrowserEvent() {};
 	};
 	
 	struct ReflectComponentEvent : IEvent
@@ -97,3 +140,5 @@ namespace Copium
 		Script& script;
 	};
 }
+
+#endif // !EVENTS_H

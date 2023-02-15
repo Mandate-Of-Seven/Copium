@@ -20,11 +20,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
-	namespace
-	{
-		AssetsSystem* assets = AssetsSystem::Instance();
-	}
-
 	bool Sprite::deserialize(rapidjson::Value& _value)
 	{
 		if (!_value.HasMember("Sprite ID"))
@@ -34,19 +29,19 @@ namespace Copium
 
 		if (spriteID != 0)
 		{
-			std::vector<Texture> textures = assets->get_textures();
+			std::vector<Texture> textures = MyAssetSystem.get_textures();
 			bool reference = false;
 			for (int i = 0; i < textures.size(); i++)
 			{
 				uint64_t pathID = std::hash<std::string>{}(textures[i].get_file_path());
-				MetaID metaID = assets->GetMetaID(pathID);
+				MetaID metaID = MyAssetSystem.GetMetaID(pathID);
 
 				// Check if the uuid of the sprite is the same as the meta file
 				if (metaID.uuid == spriteID)
 				{
 					// If so set the reference texture to that file
 					reference = true;
-					refTexture = assets->get_texture(i);
+					refTexture = MyAssetSystem.get_texture(i);
 					break;
 				}
 			}

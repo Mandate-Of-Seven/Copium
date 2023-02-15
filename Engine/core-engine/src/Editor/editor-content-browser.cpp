@@ -11,7 +11,7 @@
 	Contains function definitions for the editor content browser, where the user can view
 	and interact with the items in the assets folder.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "pch.h"
 
@@ -20,15 +20,12 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Messaging/message-system.h"
 #include "Files/file-system.h"
 #include "Files/assets-system.h"
+#include "Events/events-system.h"
 
 namespace Copium
 {
 	namespace
 	{
-		EditorSystem* editor = EditorSystem::Instance();
-		FileSystem* fs = FileSystem::Instance();
-		AssetsSystem* assetSys = AssetsSystem::Instance();
-
 		std::filesystem::path assets = "../PackedTracks/Assets";
 
 		const float padding = 16.f;
@@ -43,7 +40,7 @@ namespace Copium
 
 	void EditorContentBrowser::init()
 	{
-		currentDirectory = &fs->get_asset_directory();
+		currentDirectory = &MyFileSystem.get_asset_directory();
 
 		Texture directoryIcon("Data/Resource/DirectoryIcon.png");
 		Texture fileIcon("Data/Resource/FileIcon.png");
@@ -88,7 +85,7 @@ namespace Copium
 				//		oStream.close();
 				//		//If deserializable else, create new file, SO,
 				//		// Copy the script file but change the extension
-				//		//assetSys->CopyAsset(*soFile, ".asset");
+				//		//MyAssetSystem.CopyAsset(*soFile, ".asset");
 				//	}
 				//}
 
@@ -98,13 +95,13 @@ namespace Copium
 				//	if (ImGui::MenuItem(assetName.c_str(), nullptr))
 				//	{
 				//		// Find script in relation to the assetname
-				//		std::list<File> scriptFiles = fs->get_files_with_extension(".cs");
+				//		std::list<File> scriptFiles = MyFileSystem.get_files_with_extension(".cs");
 				//		for (File file : scriptFiles)
 				//		{
 				//			if (!file.stem().string().compare(assetName))
 				//			{
 				//				// Copy the script file but change the extension
-				//				assetSys->CopyAsset(file, ".asset");
+				//				MyAssetSystem.CopyAsset(file, ".asset");
 				//				break;
 				//			}
 				//		}
@@ -190,7 +187,7 @@ namespace Copium
 
 				// Get the image icon
 				unsigned int objectID = icons[1].get_object_id();
-				for (unsigned int i = 0; i < assetSys->get_textures().size(); i++)
+				for (unsigned int i = 0; i < MyAssetSystem.get_textures().size(); i++)
 				{
 					std::string texturePath;
 					switch (file.get_file_type().fileType)
@@ -214,10 +211,10 @@ namespace Copium
 						break;
 
 					case FILE_TYPE::SPRITE:
-						texturePath = assetSys->get_texture(i)->get_file_path();
+						texturePath = MyAssetSystem.get_texture(i)->get_file_path();
 						if (!file.string().compare(texturePath))
 						{
-							Texture* temp = assetSys->get_texture(i);
+							Texture* temp = MyAssetSystem.get_texture(i);
 							objectID = temp->get_object_id();
 							float asRatio = temp->get_width() / (float)temp->get_height();
 							imageAR = thumbnailSize / ((asRatio > 0.98f && asRatio < 1.f) ? 1.f : asRatio);
@@ -276,10 +273,10 @@ namespace Copium
 	{
 		if (!ImGui::IsMouseDragging(ImGuiMouseButton_Left) && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
 		{
-			if (!editor->get_inspector()->getFocused())
+			if (!MyEditorSystem.get_inspector()->getFocused())
 			{
-				fs->set_selected_file(nullptr);
-				fs->set_selected_directory(nullptr);
+				MyEventSystem->publish(new SetSelectedFileEvent(nullptr));
+				MyEventSystem->publish(new SetSelectedDirectoryEvent(nullptr));
 			}
 		}
 
@@ -305,22 +302,19 @@ namespace Copium
 				for (File& file : currentDirectory->get_files())
 				{
 					if (file.get_id() == ImGui::GetHoveredID())
-					{
-						fs->set_selected_file(&file);
-					}
+						MyEventSystem->publish(new SetSelectedFileEvent(&file));
 				}
 
 				for (Directory* dir : currentDirectory->get_child_directory())
 				{
+					
 					if (dir->get_id() == ImGui::GetHoveredID())
-						fs->set_selected_directory(dir);
+						MyEventSystem->publish(new SetSelectedDirectoryEvent(dir));
 				}
 			}
 			
 			if (ImGui::IsKeyPressed(ImGuiKey_Delete))
-			{
-				fs->delete_from_browser();
-			}
+				MyEventSystem->publish(new DeleteFromBrowserEvent);
 		}
 	}
 }

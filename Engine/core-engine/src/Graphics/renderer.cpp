@@ -22,14 +22,13 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Graphics/renderer.h"
 #include "Graphics/fonts.h"
 
-#include "Editor/editor-system.h"
 #include <glm/gtc/type_ptr.hpp>
 
 namespace Copium
 {
 	void Renderer::init(BaseCamera* _camera)
 	{
-		graphics = GraphicsSystem::Instance();
+		graphics = &MyGraphicsSystem;
 		camera = _camera;
 
 		// Setup Quad Vertex Array Object

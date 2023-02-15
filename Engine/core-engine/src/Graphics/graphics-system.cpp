@@ -15,15 +15,13 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
-#include "Windows/windows-system.h"
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 #include <Debugging/frame-rate-controller.h>
 
 #include "Graphics/graphics-system.h"
-#include "Graphics/spritesheet.h"
-#include "Graphics/fonts.h"
 #include "Windows/windows-input.h"
 
-#include "Editor/editor-system.h"
 #include "Files/assets-system.h"
 
 // Bean: remove this after NewManagerInstance is moved
@@ -37,6 +35,8 @@ namespace Copium
 	{
 		InputSystem& inputSystem{ *InputSystem::Instance() };
 		MessageSystem& messageSystem{ *MessageSystem::Instance() };
+		AssetsSystem& assetSystem{ *AssetsSystem::Instance() };
+		SceneManager& sm{ *SceneManager::Instance() };
 
 		// Temporary global variables
 		GLfloat rotate = 0.f;
@@ -46,6 +46,7 @@ namespace Copium
 	void GraphicsSystem::init()
 	{
 		messageSystem.subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
+
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 
 		// Bean: 3D Depth Testing
@@ -166,8 +167,7 @@ namespace Copium
 
 		if (inputSystem.is_key_held(GLFW_KEY_C) && inputSystem.is_key_pressed(GLFW_KEY_V))
 		{
-			SceneManager* sm = SceneManager::Instance();
-			Scene* scene = sm->get_current_scene();
+			Scene* scene = sm.get_current_scene();
 			if (scene != nullptr)
 			{
 				for (size_t i = 0; i < 10; i++)
@@ -182,14 +182,14 @@ namespace Copium
 					go->transform.position = { x, y, 0.f };
 					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->getComponent(ComponentType::SpriteRenderer));
 					
-					int numSprites = (int)(AssetsSystem::Instance()->get_textures().size() - 1);
+					int numSprites = (int)(assetSystem.get_textures().size() - 1);
 					rc->get_sprite_renderer().set_sprite_id(rand() % numSprites + 1);
 
 					unsigned int id = (unsigned int)rc->get_sprite_renderer().get_sprite_id();
 					if (id != 0)
 					{
-						rc->get_sprite_renderer().set_texture(AssetsSystem::Instance()->get_texture(id - 1));
-						std::string str = AssetsSystem::Instance()->get_texture(id - 1)->get_file_path();
+						rc->get_sprite_renderer().set_texture(assetSystem.get_texture(id - 1));
+						std::string str = assetSystem.get_texture(id - 1)->get_file_path();
 						size_t pos = str.find_last_of('\\');
 						std::string spriteName = str.substr(pos + 1, str.length() - pos);
 						rc->get_sprite_renderer().set_name(spriteName);
@@ -201,8 +201,7 @@ namespace Copium
 		// Mass spawning
 		if (massSpawn)
 		{
-			SceneManager* sm = SceneManager::Instance();
-			Scene* scene = sm->get_current_scene();
+			Scene* scene = sm.get_current_scene();
 			if (scene != nullptr)
 			{
 				for (size_t i = 0; i < 10; i++)
@@ -216,13 +215,13 @@ namespace Copium
 
 					go->transform.position = { x, y, 0.f };
 					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->getComponent(ComponentType::SpriteRenderer));
-					int numSprites = (int)(AssetsSystem::Instance()->get_textures().size() - 1);
+					int numSprites = (int)(assetSystem.get_textures().size() - 1);
 					rc->get_sprite_renderer().set_sprite_id(rand() % numSprites + 1);
 					unsigned int id = (unsigned int)rc->get_sprite_renderer().get_sprite_id();
 					if (id != 0)
 					{
-						rc->get_sprite_renderer().set_texture(AssetsSystem::Instance()->get_texture(id - 1));
-						std::string str = AssetsSystem::Instance()->get_texture(id - 1)->get_file_path();
+						rc->get_sprite_renderer().set_texture(assetSystem.get_texture(id - 1));
+						std::string str = assetSystem.get_texture(id - 1)->get_file_path();
 						size_t pos = str.find_last_of('\\');
 						std::string spriteName = str.substr(pos + 1, str.length() - pos);
 						rc->get_sprite_renderer().set_name(spriteName);
@@ -239,7 +238,7 @@ namespace Copium
 		//if (inputSystem.is_key_pressed(GLFW_KEY_Y))
 		//{
 		//	SceneManager* sm = SceneManager::Instance();
-		//	PRINT("Number of Gameobjects: " << sm->get_current_scene()->get_gameobjcount());
+		//	PRINT("Number of Gameobjects: " << sm.get_current_scene()->get_gameobjcount());
 		//}
 	
 		batch_render();
@@ -255,8 +254,8 @@ namespace Copium
 		if (mType == MESSAGE_TYPE::MT_SCENE_DESERIALIZED)
 		{
 			cameras.clear();
-			SceneManager* sm = SceneManager::Instance();
-			Scene* scene = sm->get_current_scene();
+
+			Scene* scene = sm.get_current_scene();
 			for (GameObject* gameObject : scene->gameObjects)
 			{
 				if (gameObject->hasComponent(ComponentType::Camera))

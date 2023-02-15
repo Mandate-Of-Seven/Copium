@@ -19,15 +19,12 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Windows/windows-input.h"
 #include "Editor/editor-system.h"
 #include "GameObject/game-object.h"
-#include "Editor/inspector.h"
 #include "Editor/editor-consolelog.h"
-#include "Editor/editor-hierarchy-list.h"
-#include "Editor/editor-colortheme.h"
 #include "Windows/windows-utils.h"
 #include "Utilities/thread-system.h"
 #include "SceneManager/state-manager.h"
-#include "Messaging/message-system.h"
 #include "Graphics/graphics-system.h"
+
 #include <ImGuizmo.h>
 
 
@@ -39,9 +36,6 @@ namespace Copium
 		bool show_demo_window = false;
 		ThreadSystem& threadSystem{ *ThreadSystem::Instance() };
 		MessageSystem& messageSystem{ *MessageSystem::Instance() };
-		InputSystem& inputSystem{ *InputSystem::Instance() };
-		WindowsSystem& windowsSystem{ *WindowsSystem::Instance() };
-		GraphicsSystem& graphicsSystem{ *GraphicsSystem::Instance() };
 		bool tempMode = true;
 	}
 
@@ -50,6 +44,7 @@ namespace Copium
 		messageSystem.subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
+
 		//PRINT("FLAGS: " << systemFlags);
 
 		//imgui
@@ -65,7 +60,7 @@ namespace Copium
 		
 		ImGui::StyleColorsDark();
 
-		ImGui_ImplGlfw_InitForOpenGL(windowsSystem.get_window(), true);
+		ImGui_ImplGlfw_InitForOpenGL(MyWindowSystem.get_window(), true);
 		ImGui_ImplOpenGL3_Init("#version 330");
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		ImGui::GetIO().ConfigDockingWithShift = true;
@@ -88,7 +83,7 @@ namespace Copium
 	{
 		if (game.is_window_focused())
 		{
-			if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_E))
+			if (MyInputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && MyInputSystem.is_key_pressed(GLFW_KEY_E))
 			{
 				tempMode = !tempMode;
 			}
@@ -313,14 +308,14 @@ namespace Copium
 			}
 
 			//top menu shortcuts
-			if (inputSystem.is_key_held(GLFW_KEY_LEFT_CONTROL))
+			if (MyInputSystem.is_key_held(GLFW_KEY_LEFT_CONTROL))
 			{
-				if (inputSystem.is_key_pressed(GLFW_KEY_N))
+				if (MyInputSystem.is_key_pressed(GLFW_KEY_N))
 				{
 					//create new scene
 					Copium::SceneManager::Instance()->create_scene();
 				}
-				else if (inputSystem.is_key_pressed(GLFW_KEY_O))
+				else if (MyInputSystem.is_key_pressed(GLFW_KEY_O))
 				{
 					//open scene
 					while (!threadSystem.acquireMutex(MutexType::FileSystem));
@@ -349,10 +344,10 @@ namespace Copium
 						std::cout << "file failed to open\n";
 					}
 				}
-				else if (inputSystem.is_key_pressed(GLFW_KEY_S))
+				else if (MyInputSystem.is_key_pressed(GLFW_KEY_S))
 				{
 
-					if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT))
+					if (MyInputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT))
 					{
 						if (Copium::SceneManager::Instance()->get_current_scene())
 						{
@@ -409,9 +404,9 @@ namespace Copium
 				ImGui::ShowDemoWindow(&show_demo_window);
 
 			// Game Camera
-			if (!graphicsSystem.get_cameras().empty())
+			if (!MyGraphicsSystem.get_cameras().empty())
 			{
-				(*graphicsSystem.get_cameras().begin())->update();
+				(*MyGraphicsSystem.get_cameras().begin())->update();
 			}
 
 			// Editor Camera
@@ -491,11 +486,11 @@ namespace Copium
 		{
 			// Swap camera
 			//camera.get_framebuffer()->exit();
-			glm::vec2 dimension = { windowsSystem.get_window_width(), windowsSystem.get_window_height() };
+			glm::vec2 dimension = { MyWindowSystem.get_window_width(), MyWindowSystem.get_window_height() };
 			// Game Camera
-			if (!graphicsSystem.get_cameras().empty())
+			if (!MyGraphicsSystem.get_cameras().empty())
 			{
-				(*graphicsSystem.get_cameras().begin())->on_resize(dimension.x, dimension.y);
+				(*MyGraphicsSystem.get_cameras().begin())->on_resize(dimension.x, dimension.y);
 				glViewport(0, 0, (GLsizei)dimension.x, (GLsizei)dimension.y);
 			}
 		}

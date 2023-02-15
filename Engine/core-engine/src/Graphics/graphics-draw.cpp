@@ -18,13 +18,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <GL/glew.h> // for access to OpenGL API declarations
 
 #include "Graphics/graphics-draw.h"
-#include "Graphics/graphics-system.h"
-#include "Files/assets-system.h"
 #include "Editor/editor-system.h"
 #include "Debugging/frame-rate-controller.h"
-#include "Windows/windows-input.h"
 
-// Bean: remove this after NewManagerInstance is moved
 #include "GameObject/Components/renderer-component.h"
 #include "GameObject/Components/ui-components.h"
 #include "GameObject/Components/collider-components.h"
@@ -32,19 +28,12 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Animation/animation-system.h"
 #include "SceneManager/scene-manager.h"
 #include "Math/math-library.h"
-#include "Graphics/fonts.h"
 #include "glm/gtc/matrix_transform.hpp"
 
 namespace Copium
 {
 	namespace
 	{
-		AssetsSystem* assets = AssetsSystem::Instance();
-		EditorSystem* editorSys = EditorSystem::Instance();
-		GraphicsSystem* graphics = GraphicsSystem::Instance();
-		SceneManager* sm = SceneManager::Instance();
-		InputSystem* inputSystem = InputSystem::Instance();
-
 		bool toggleAnim = false;
 	}
 
@@ -139,11 +128,11 @@ namespace Copium
 		}
 
 		// Colliders
-		Scene* scene = sm->get_current_scene();
+		Scene* scene = MySceneManager.get_current_scene();
 		if (scene != nullptr)
 		{
 			color = { 0.3f, 1.f, 0.3f, 1.f };
-			GameObject* gameObject = sm->get_selected_gameobject();
+			GameObject* gameObject = MySceneManager.get_selected_gameobject();
 			if (gameObject != nullptr)
 			{
 				for (Component* component : gameObject->getComponents<BoxCollider2D>())
@@ -210,7 +199,7 @@ namespace Copium
 
 		// Theory WIP
 		renderer.begin_batch();
-		Scene* scene = sm->get_current_scene();
+		Scene* scene = MySceneManager.get_current_scene();
 		if (scene != nullptr)
 		{
 			if (scene->get_state() == Scene::SceneState::play)
@@ -385,7 +374,7 @@ namespace Copium
 
 			int count = 0;
 
-			for (Layer& layer : editorSys->getLayers()->SortLayers()->GetSortingLayers())
+			for (Layer& layer : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
 			{
 				int layerID{ 0 };
 				int gameObjectCount{ 0 };
@@ -573,7 +562,7 @@ namespace Copium
 		//		}
 		//	}
 
-		//	for (Layer& layer : editorSys->getLayers()->SortLayers()->GetSortingLayers())
+		//	for (Layer& layer : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
 		//	{
 		//		// Only For Text
 		//		for (GameObject* gameObject : layer.gameObjects)
@@ -605,8 +594,8 @@ namespace Copium
 		glm::vec4 color = { 0.1f, 1.f, 0.1f, 1.f };
 		glm::vec2 worldNDC{ 0 };
 		glm::vec2 scale = { 0.01f, 0.01f };
-		glm::vec2 cameraPos = editorSys->get_camera()->get_eye();
-		float zoom = editorSys->get_camera()->get_zoom();
+		glm::vec2 cameraPos = MyEditorSystem.get_camera()->get_eye();
+		float zoom = MyEditorSystem.get_camera()->get_zoom();
 
 		worldNDC = { cameraPos.x, cameraPos.y };
 		scale *= zoom;
@@ -617,7 +606,7 @@ namespace Copium
 		renderer.begin_batch();
 
 		// Button Colliders
-		Scene* scene = sm->get_current_scene();
+		Scene* scene = MySceneManager.get_current_scene();
 		renderer.set_line_width(1.5f);
 		if (scene != nullptr)
 		{
@@ -709,7 +698,7 @@ namespace Copium
 		renderer.begin_batch();
 
 		// Bean: Enable if depth testing is disabled
-		/*Scene* scene = sm->get_current_scene();
+		/*Scene* scene = MySceneManager.get_current_scene();
 		if (scene != nullptr)
 		{
 			for (GameObject* gameObject : scene->gameObjects)
@@ -725,14 +714,12 @@ namespace Copium
 			}
 		}*/
 
+		// Bean : Testing Circles
 		glm::vec2 scale = glm::vec2(1.f, 1.f);
 		glm::vec3 pos = glm::vec3(-10.f, 3.f, 0.f);
 		glm::vec4 color = glm::vec4(1.f, 1.f, 1.f, 1.f);
 
 		static int count = 0;
-
-		if (inputSystem->is_key_held(68))
-			count++;
 
 		int posX = -100, posY = 100;
 		for (int i = 0; i < count; i++)

@@ -23,6 +23,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Graphics/base-camera.h"
 #include "Messaging/message-system.h"
 
+#define MyGraphicsSystem (*Copium::GraphicsSystem::Instance())
+
 namespace Copium
 {
 	enum

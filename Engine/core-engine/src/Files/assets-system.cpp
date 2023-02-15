@@ -19,21 +19,19 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 //#include <GLFW/glfw3.h>
 
 #include "Files/assets-system.h"
+#include "Events/events-system.h"
 #include "Files/file-system.h"
 #include "Graphics/graphics-system.h"
 #include "Audio/sound-system.h"
 
 namespace Copium
 {
-	namespace
-	{
-		FileSystem* fs = FileSystem::Instance();
-	}
-
 	void AssetsSystem::init()
 	{
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		
+		MyEventSystem->subscribe(this, &AssetsSystem::CallbackFileAsset);
+
 		// Bean: In the future, we shall store all extension files in their own extension vectors std::map<std::string, std::vector<std::string>>
 		// And update when the user adds more files into the system during runtime
 		// Assets should have their own file types for easy access and setting up of image icons etc
@@ -44,7 +42,7 @@ namespace Copium
 		// 3. The extension
 		//
 		// Load all file paths in the asset folder
-		load_assets(&fs->get_asset_directory());
+		load_assets(&MyFileSystem.get_asset_directory());
 		PRINT("ASSETS LOADED");
 
 		LoadExistingMetaFile();
@@ -56,12 +54,12 @@ namespace Copium
 			if ((FILE_TYPE) i != FILE_TYPE::SPRITE)
 				continue;
 
-			std::list<File*> files = fs->get_file_references()[FILE_TYPE::SPRITE];
+			std::list<File*> files = MyFileSystem.get_file_references()[FILE_TYPE::SPRITE];
 			for (File* file : files)
 				GenerateMetaFile(file);
 		}*/
 
-		std::list<File*> files = fs->get_file_references()[FILE_TYPE::SPRITE];
+		std::list<File*> files = MyFileSystem.get_file_references()[FILE_TYPE::SPRITE];
 		for (File* file : files)
 			GenerateMetaFile(file);
 	}
@@ -77,7 +75,7 @@ namespace Copium
 			texture.exit();
 	}
 
-	void AssetsSystem::load_file(File* _file)
+	void AssetsSystem::LoadFile(File* _file)
 	{
 		FILE_TYPE type = _file->get_file_type().fileType;
 
@@ -113,7 +111,7 @@ namespace Copium
 		}
 	}
 
-	void AssetsSystem::unload_file(File* _file)
+	void AssetsSystem::UnloadFile(File* _file)
 	{
 		FILE_TYPE type = _file->get_file_type().fileType;
 
@@ -154,15 +152,15 @@ namespace Copium
 		(void) _directory;
 		PRINT("LOADING TEXTURES");
 		// Load Textures (.png)
-		load_all_textures(fs->get_file_references()[FILE_TYPE::SPRITE]);
+		load_all_textures(MyFileSystem.get_file_references()[FILE_TYPE::SPRITE]);
 
 		PRINT("LOADING SHADERS");
 		// Load Shaders (.vert & .frag)
-		load_all_shaders(fs->get_filepath_in_directory(Paths::dataPath.c_str(), ".vert", ".frag"));
+		load_all_shaders(MyFileSystem.get_filepath_in_directory(Paths::dataPath.c_str(), ".vert", ".frag"));
 
 		PRINT("LOADING AUDIO");
 		// Load Audio (.wav)
-		load_all_audio(fs->get_filepath_in_directory(Paths::assetPath.c_str(), ".wav"));
+		load_all_audio(MyFileSystem.get_filepath_in_directory(Paths::assetPath.c_str(), ".wav"));
 	}
 
 	void AssetsSystem::load_all_textures(std::list<File*>& _files)
@@ -268,7 +266,7 @@ namespace Copium
 
 		std::fstream createAsset;
 
-		File* temp = fs->get_file(pathName);
+		File* temp = MyFileSystem.get_file(pathName);
 		int counter = 1;
 		if (temp != nullptr)
 		{
@@ -277,7 +275,7 @@ namespace Copium
 			{
 				editedPath = currentDir.string() + pathName.stem().string();
 				editedPath += " " + std::to_string(counter++) + pathName.extension().string();
-				temp = fs->get_file(editedPath);
+				temp = MyFileSystem.get_file(editedPath);
 			}
 			createAsset.open(editedPath.string(), std::ios::out);
 		}
@@ -292,12 +290,12 @@ namespace Copium
 
 	void AssetsSystem::CopyAsset(const File& _file, const std::string& _ext)
 	{
-		fs->copy_file(_file, _ext);
+		MyFileSystem.copy_file(_file, _ext);
 	}
 
 	void AssetsSystem::LoadExistingMetaFile()
 	{
-		std::list<File*> metaFiles = fs->get_file_references()[FILE_TYPE::META];
+		std::list<File*> metaFiles = MyFileSystem.get_file_references()[FILE_TYPE::META];
 
 		for (File* metaFile : metaFiles)
 		{
@@ -423,6 +421,23 @@ namespace Copium
 		}
 
 		return IMPORTER_TYPE::DEFAULT;
+	}
+
+	void AssetsSystem::CallbackFileAsset(FileAssetEvent* pEvent)
+	{
+		switch (pEvent->type)
+		{
+		case 0: // Generate Meta File
+			GenerateMetaFile(pEvent->file);
+			break;
+		case 1: // Load Asset File
+			LoadFile(pEvent->file);
+			break;
+		case 2: // Unload Asset File
+			UnloadFile(pEvent->file);
+			break;
+		}
+
 	}
 
 }

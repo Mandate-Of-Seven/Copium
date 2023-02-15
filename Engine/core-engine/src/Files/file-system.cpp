@@ -17,10 +17,10 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "pch.h"
 
 #include <GLFW/glfw3.h>
-#include "Files/file-system.h"
-#include <utility> 
 
-#include "Files/assets-system.h"
+
+#include "Files/file-system.h"
+#include "Events/events-system.h"
 #include "Editor/editor-system.h"
 
 namespace Copium
@@ -28,14 +28,15 @@ namespace Copium
 	namespace
 	{
 		namespace fs = std::filesystem;
-
-		AssetsSystem* assets = AssetsSystem::Instance();
-		EditorSystem* editor = EditorSystem::Instance();
 	}
 
 	void FileSystem::init()
 	{
 		systemFlags |= FLAG_RUN_ON_EDITOR;
+
+		MyEventSystem->subscribe(this, &FileSystem::CallbackSetSelectedFile);
+		MyEventSystem->subscribe(this, &FileSystem::CallbackSetSelectedDirectory);
+		MyEventSystem->subscribe(this, &FileSystem::CallbackDeleteFromBrowser);
 
 		init_file_types();
 		
@@ -74,7 +75,7 @@ namespace Copium
 			paths.push_back(_paths[i]);
 
 		// Check which directory it is currently in
-		Directory* currentDirectory = editor->get_content_browser()->get_current_directory();
+		Directory* currentDirectory = MyEditorSystem.get_content_browser()->get_current_directory();
 
 		// Create directories / folders / files in the directory
 		for (auto path : paths)
@@ -211,7 +212,7 @@ namespace Copium
 			if (_directory->get_child_directory().size() + _directory->get_files().size() != (size_t)numFiles)
 			{
 				// For checking current directory selection
-				Directory* currentDir = editor->get_content_browser()->get_current_directory();
+				Directory* currentDirectory = MyEditorSystem.get_content_browser()->get_current_directory();
 
 				// Check for new files and folders
 				for (auto& dirEntry : fs::directory_iterator(_directory->path()))
@@ -248,7 +249,7 @@ namespace Copium
 
 							// Bean: This should be moved to a general function
 							// Prevent selection of file / directory
-							if (currentDir->within_directory(folder))
+							if (currentDirectory->within_directory(folder))
 								selectedDirectory = nullptr;
 						}
 						
@@ -277,12 +278,12 @@ namespace Copium
 							add_file_reference(&_directory->get_files().back());
 
 							// Generate Meta File
-							if(file.get_file_type().fileType == FILE_TYPE::SPRITE)
-								assets->GenerateMetaFile(&_directory->get_files().back());
+							if (file.get_file_type().fileType == FILE_TYPE::SPRITE)
+								MyEventSystem->publish(new FileAssetEvent(&_directory->get_files().back(), 0));
 
 							// Bean: This should be moved to a general function
 							// Prevent selection of file / directory
-							if (currentDir->within_directory(&file))
+							if (currentDirectory->within_directory(&file))
 								selectedFile = nullptr;
 						}
 					}
@@ -308,7 +309,7 @@ namespace Copium
 					{
 						// Bean: This should be moved to a general function
 						// Prevent selection of file / directory
-						if (currentDir == _directory && selectedDirectory != nullptr)
+						if (currentDirectory == _directory && selectedDirectory != nullptr)
 							selectedDirectory = nullptr;
 
 						iterators.push_back(*it);
@@ -345,7 +346,7 @@ namespace Copium
 					{
 						// Bean: This should be moved to a general function
 						// Prevent selection of file / directory
-						if (currentDir == _directory && selectedFile != nullptr)
+						if (currentDirectory == _directory && selectedFile != nullptr)
 							selectedFile = nullptr;
 
 						remove_file_reference(&(*it));
@@ -512,7 +513,7 @@ namespace Copium
 
 	void FileSystem::copy_file(std::filesystem::path const& _path)
 	{
-		Directory* currentDirectory = editor->get_content_browser()->get_current_directory();
+		Directory* currentDirectory = MyEditorSystem.get_content_browser()->get_current_directory();
 
 		fs::path currentDir = currentDirectory->path().string() + "\\";
 		fs::path pathName = currentDir.string() + _path.filename().string();
@@ -536,7 +537,7 @@ namespace Copium
 
 	void FileSystem::copy_file(std::filesystem::path const& _path, const std::string& _ext)
 	{
-		Directory* currentDirectory = editor->get_content_browser()->get_current_directory();
+		Directory* currentDirectory = MyEditorSystem.get_content_browser()->get_current_directory();
 
 		fs::path currentDir = currentDirectory->path().string() + "\\";
 		fs::path pathName = currentDir.string() + _path.filename().string();
@@ -587,7 +588,7 @@ namespace Copium
 	{
 		if (selectedFile != nullptr)
 		{
-			assets->unload_file(selectedFile);
+			MyEventSystem->publish(new FileAssetEvent(selectedFile, 2));
 			std::cout << "Deleting: " << selectedFile->filename() << " With result: " << DeleteFile(selectedFile->c_str()) << std::endl;
 
 		}
@@ -678,12 +679,27 @@ namespace Copium
 	void FileSystem::add_file_reference(File* _file)
 	{
 		files[_file->get_file_type().fileType].push_back(_file);
-		assets->load_file(_file);
+		MyEventSystem->publish(new FileAssetEvent(_file, 1));
 	}
 
 	void FileSystem::remove_file_reference(File* _file)
 	{
 		files[_file->get_file_type().fileType].remove(_file);
-		assets->unload_file(_file);
+		MyEventSystem->publish(new FileAssetEvent(_file, 2));
+	}
+
+	void FileSystem::CallbackSetSelectedFile(SetSelectedFileEvent* pEvent)
+	{
+		set_selected_file(pEvent->file);
+	}
+
+	void FileSystem::CallbackSetSelectedDirectory(SetSelectedDirectoryEvent* pEvent)
+	{
+		set_selected_directory(pEvent->directory);
+	}
+
+	void FileSystem::CallbackDeleteFromBrowser(DeleteFromBrowserEvent* pEvent)
+	{
+		delete_from_browser();
 	}
 }

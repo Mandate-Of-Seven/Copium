@@ -23,7 +23,10 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Graphics/textures.h"
 #include "Graphics/spritesheet.h"
 #include "Animation/animation-struct.h"
+#include "Events/events.h"
 #include "Files/file.h"
+
+#define MyAssetSystem (*Copium::AssetsSystem::Instance())
 
 namespace Copium
 {
@@ -84,7 +87,7 @@ namespace Copium
 			The file to load
 		*/
 		/**************************************************************************/
-		void load_file(File* _file);
+		void LoadFile(File* _file);
 
 		/***************************************************************************/
 		/*!
@@ -94,7 +97,7 @@ namespace Copium
 			The file to unload
 		*/
 		/**************************************************************************/
-		void unload_file(File* _file);
+		void UnloadFile(File* _file);
 
 		/***************************************************************************/
 		/*!
@@ -258,6 +261,10 @@ namespace Copium
 		*/
 		/***************************************************************************/
 		IMPORTER_TYPE GetImporterFile(const FileType& _type);
+
+	private:
+
+		void CallbackFileAsset(FileAssetEvent* pEvent);
 
 	private:
 		/* Assets Data ******************************************************************/

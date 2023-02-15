@@ -29,6 +29,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor/inspector.h"
 #include "Messaging/message-system.h"
 
+#define MyEditorSystem (*Copium::EditorSystem::Instance())
+
 namespace Copium
 {
 	CLASS_SYSTEM(EditorSystem), IReceiver
@@ -114,6 +116,9 @@ namespace Copium
 		EditorHierarchyList* get_hierarchy_list() { return &hierarchyList; }
 		EditorInspector* get_inspector() { return &inspector; }
 		EditorLayers* getLayers() { return &layers; }
+
+	private:
+		
 
 	private:
 		bool enableEditor = true;
