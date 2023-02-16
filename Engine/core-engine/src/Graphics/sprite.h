@@ -63,7 +63,7 @@ namespace Copium
 		const uint64_t& get_sprite_id() const { return spriteID; }
 		void set_sprite_id(const uint64_t& _index) { spriteID = _index; }
 
-		const Texture* get_texture() const { return refTexture; }
+		const Texture* GetTexture() const { return refTexture; }
 		void set_texture(Texture* _texture) { refTexture = _texture; }
 
 		// Flip

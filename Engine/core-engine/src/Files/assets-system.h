@@ -105,7 +105,7 @@ namespace Copium
 			Loads all assets path in the assets folder
 		*/
 		/**************************************************************************/
-		void load_assets(Directory* _directory);
+		void LoadAssets(Directory* _directory);
 
 		/***************************************************************************/
 		/*!
@@ -115,7 +115,7 @@ namespace Copium
 			The file path to load from
 		*/
 		/**************************************************************************/
-		void load_all_textures(std::list<File*>& _files);
+		void LoadAllTextures(std::list<File*>& _files);
 
 		/***************************************************************************/
 		/*!
@@ -125,7 +125,7 @@ namespace Copium
 			The file path to load from
 		*/
 		/**************************************************************************/
-		void load_texture(File* _file);
+		void LoadTexture(File* _file);
 
 		/***************************************************************************/
 		/*!
@@ -135,7 +135,7 @@ namespace Copium
 			The file path to unload from
 		*/
 		/**************************************************************************/
-		void unload_texture(File* _file);
+		void UnloadTexture(File* _file);
 
 		/***************************************************************************/
 		/*!
@@ -145,10 +145,10 @@ namespace Copium
 			The file path to load from
 		*/
 		/**************************************************************************/
-		void load_all_audio(std::list<std::string>& _path);
+		void LoadAllAudio(std::list<std::string>& _path);
 
-		void load_audio(File * _file);
-		void unload_audio(File * _file);
+		void LoadAudio(File * _file);
+		void UnloadAudio(File * _file);
 
 		/***************************************************************************/
 		/*!
@@ -158,10 +158,10 @@ namespace Copium
 			The file path to load from
 		*/
 		/**************************************************************************/
-		void load_all_shaders(std::list<std::string>& _path);
+		void LoadAllShaders(std::list<std::string>& _path);
 
-		const std::vector<Texture>& get_textures() { return textures; }
-		Texture* get_texture(unsigned int const& _index)
+		const std::vector<Texture>& GetTextures() { return textures; }
+		Texture* GetTexture(unsigned int const& _index)
 		{
 			if (_index >= textures.size())
 				return nullptr;
@@ -170,8 +170,8 @@ namespace Copium
 			return &textures[_index];
 		}
 
-		const std::vector<Spritesheet>& get_spritesheets() { return spritesheets; }
-		Spritesheet* get_spritesheet(unsigned int const& _index)
+		const std::vector<Spritesheet>& GetSpritesheets() { return spritesheets; }
+		Spritesheet* GetSpritesheet(unsigned int const& _index)
 		{
 			if (_index >= spritesheets.size())
 				return nullptr;

@@ -31,8 +31,7 @@ namespace Copium
 {
 	namespace
 	{
-		EditorCamera& camera{ *EditorSystem::Instance()->get_camera() };
-		SceneManager& sm{ *SceneManager::Instance() };
+		EditorCamera& camera = *(MyEditorSystem.get_camera());
 		bool inOp = false;
 	}
 
@@ -72,7 +71,7 @@ namespace Copium
 		ImGui::Image((void*) (size_t) textureID, ImVec2{ (float)sceneWidth, (float)sceneHeight }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
 		
 		// Gizmos
-		Scene* scene = sm.get_current_scene();
+		Scene* scene = MySceneManager.get_current_scene();
 		update_gizmos();
 
 		ImGui::End();
@@ -123,7 +122,7 @@ namespace Copium
 		bool mouseReleased = ImGui::IsMouseReleased(ImGuiMouseButton_Left);
 		if (!inOp && mouseReleased && windowHovered)
 		{
-			scene = sm.get_current_scene();
+			scene = MySceneManager.get_current_scene();
 			if (scene != nullptr)
 			{
 				std::vector<GameObject*> pGameObjs; // Possible selectable gameobjects
@@ -202,10 +201,10 @@ namespace Copium
 						SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(component);
 						Sprite sr = rc->get_sprite_renderer();
 						float tempX = 0.f, tempY = 0.f;
-						if (sr.get_texture() != nullptr)
+						if (sr.GetTexture() != nullptr)
 						{
-							int width = (int)sr.get_texture()->get_width();
-							int height = (int)sr.get_texture()->get_height();
+							int width = (int)sr.GetTexture()->get_width();
+							int height = (int)sr.GetTexture()->get_height();
 							float multiplier = width / (float)WindowsSystem::Instance()->get_window_width();
 							tempX = tempScale.x * (width / (float)height) * multiplier * 0.5f;
 							if(width == height)
@@ -227,10 +226,10 @@ namespace Copium
 						ImageComponent* ic = reinterpret_cast<ImageComponent*>(component);
 						Sprite sr = ic->get_sprite_renderer();
 						float tempX = 0.f, tempY = 0.f;
-						if (sr.get_texture() != nullptr)
+						if (sr.GetTexture() != nullptr)
 						{
-							int width = (int)sr.get_texture()->get_width();
-							int height = (int)sr.get_texture()->get_height();
+							int width = (int)sr.GetTexture()->get_width();
+							int height = (int)sr.GetTexture()->get_height();
 							float multiplier = width / (float)WindowsSystem::Instance()->get_window_width();
 							tempX = tempScale.x * (width / (float)height) * multiplier * 0.5f;
 							if (width == height)
@@ -293,17 +292,17 @@ namespace Copium
 					for (int i = 0; i < pGameObjs.size(); i++)
 					{
 						// Get the next gameobject after
-						if (sm.get_selected_gameobject() == pGameObjs[i])
+						if (MySceneManager.get_selected_gameobject() == pGameObjs[i])
 						{
 							if (i + 1 < pGameObjs.size())
 							{
-								sm.set_selected_gameobject(pGameObjs[i + 1]);
+								MySceneManager.set_selected_gameobject(pGameObjs[i + 1]);
 								selected = true;
 								break;
 							}
 							else if (i + 1 >= pGameObjs.size())
 							{
-								sm.set_selected_gameobject(pGameObjs[0]);
+								MySceneManager.set_selected_gameobject(pGameObjs[0]);
 								selected = true;
 								break;
 							}
@@ -311,10 +310,10 @@ namespace Copium
 					}
 
 					// If there is no selected gameobject
-					if (sm.get_selected_gameobject() == nullptr || !selected)
+					if (MySceneManager.get_selected_gameobject() == nullptr || !selected)
 					{
 						GameObject* selectObject = pGameObjs.front();
-						if (sm.selectedGameObject != selectObject)
+						if (MySceneManager.selectedGameObject != selectObject)
 						{
 							for (GameObject* gameObject : pGameObjs)
 							{
@@ -326,14 +325,14 @@ namespace Copium
 									selectObject = gameObject;
 								}
 							}
-							sm.set_selected_gameobject(selectObject);
+							MySceneManager.set_selected_gameobject(selectObject);
 						}
 					}
 
-					//PRINT("Set object to: " << sm.selectedGameObject->get_name());
+					//PRINT("Set object to: " << MySceneManager.selectedGameObject->get_name());
 				}
 				else
-					sm.set_selected_gameobject(nullptr);
+					MySceneManager.set_selected_gameobject(nullptr);
 			}
 		}
 
@@ -364,7 +363,7 @@ namespace Copium
 	void EditorSceneView::update_gizmos()
 	{
 		static ImGuizmo::OPERATION currop = ImGuizmo::OPERATION::TRANSLATE;
-		GameObject* currObj = sm.get_selected_gameobject();
+		GameObject* currObj = MySceneManager.get_selected_gameobject();
 		if (currObj)
 		{
 			Transform& trf = currObj->transform;

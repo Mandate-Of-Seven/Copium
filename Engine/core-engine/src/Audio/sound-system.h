@@ -11,13 +11,15 @@
 	This file implements basic FMOD functionalites. It contains functions to create new
 	sound files and group them as well as play and stop them.
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
-
-#pragma once
+#ifndef SOUND_SYSTEM_H
+#define SOUND_SYSTEM_H
 
 #include "fmod.hpp"
 #include "CopiumCore\system-interface.h"
+
+#define MySoundSystem (*Copium::SoundSystem::Instance())
 
 namespace Copium
 {
@@ -139,3 +141,5 @@ namespace Copium
 		void CheckDrivers();
 	};
 }
+
+#endif // !SOUND_SYSTEM_H

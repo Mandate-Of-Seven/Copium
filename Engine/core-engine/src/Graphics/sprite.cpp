@@ -29,7 +29,7 @@ namespace Copium
 
 		if (spriteID != 0)
 		{
-			std::vector<Texture> textures = MyAssetSystem.get_textures();
+			std::vector<Texture> textures = MyAssetSystem.GetTextures();
 			bool reference = false;
 			for (int i = 0; i < textures.size(); i++)
 			{
@@ -41,7 +41,7 @@ namespace Copium
 				{
 					// If so set the reference texture to that file
 					reference = true;
-					refTexture = MyAssetSystem.get_texture(i);
+					refTexture = MyAssetSystem.GetTexture(i);
 					break;
 				}
 			}

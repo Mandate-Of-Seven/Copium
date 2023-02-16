@@ -20,17 +20,12 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 #include "pch.h"
 #include "Animation/animation-system.h"
-#include "Files/assets-system.h"
 #include "SceneManager/scene-manager.h"
+#include "Files/assets-system.h"
 #include "Debugging/frame-rate-controller.h"
 #include "Files/assets-system.h"
-#define MAX_ANIMATION_COUNT 5
 
-namespace
-{
-	Copium::SceneManager* sm = Copium::SceneManager::Instance();
-	Copium::AssetsSystem* assets = Copium::AssetsSystem::Instance();
-}
+#define MAX_ANIMATION_COUNT 5
 
 namespace Copium
 {
@@ -233,16 +228,16 @@ namespace Copium
 					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ContentBrowserItem"))
 					{
 						std::string str = (const char*)(payload->Data);
-						for (int j = 0; j < assets->get_textures().size(); j++)
+						for (int j = 0; j < MyAssetSystem.GetTextures().size(); j++)
 						{
-							if (!assets->get_texture(j)->get_file_path().compare(str))
+							if (!MyAssetSystem.GetTexture(j)->get_file_path().compare(str))
 							{
-								uint64_t pathID = std::hash<std::string>{}(assets->get_texture(j)->get_file_path());
-								MetaID metaID = assets->GetMetaID(pathID);
+								uint64_t pathID = std::hash<std::string>{}(MyAssetSystem.GetTexture(j)->get_file_path());
+								MetaID metaID = MyAssetSystem.GetMetaID(pathID);
 								spriteID = metaID.uuid;
 
 								// Attach Reference
-								animations[i].spriteSheet.texture = assets->get_texture(j);
+								animations[i].spriteSheet.texture = MyAssetSystem.GetTexture(j);
 							}
 						}
 						size_t pos = str.find_last_of('\\');
@@ -376,19 +371,19 @@ namespace Copium
 
 				if (sid != 0)
 				{
-					std::vector<Texture> textures = assets->get_textures();
+					std::vector<Texture> textures = MyAssetSystem.GetTextures();
 					bool reference = false;
 					for (int j = 0; j < textures.size(); j++)
 					{
 						uint64_t pathID = std::hash<std::string>{}(textures[j].get_file_path());
-						MetaID metaID = assets->GetMetaID(pathID);
+						MetaID metaID = MyAssetSystem.GetMetaID(pathID);
 
 						// Check if the uuid of the sprite is the same as the meta file
 						if (metaID.uuid == sid)
 						{
 							// If so set the reference texture to that file
 							reference = true;
-							animations[i].spriteSheet.texture = assets->get_texture(j);
+							animations[i].spriteSheet.texture = MyAssetSystem.GetTexture(j);
 							break;
 						}
 					}
@@ -459,20 +454,20 @@ namespace Copium
 	void AnimationSystem::update()
 	{
 
-		if (!sm->get_current_scene())
+		if (!MySceneManager.get_current_scene())
 			return;
 
-		for (Copium::GameObject* go : sm->get_current_scene()->gameObjects)
+		for (Copium::GameObject* go : MySceneManager.get_current_scene()->gameObjects)
 		{
 			for (Component* component : go->getComponents<Animator>()) {
 
 				Animator* anim = reinterpret_cast<Animator*>(component);
 				anim->Update(MyFrameRateController.getDt());
-				if (sm->GetSceneState() == Scene::SceneState::play && anim->GetStatus() != Animator::AnimatorStatus::paused)
+				if (MySceneManager.GetSceneState() == Scene::SceneState::play && anim->GetStatus() != Animator::AnimatorStatus::paused)
 				{
 					anim->SetStatus(Animator::AnimatorStatus::playing);
 				}
-				else if (sm->GetSceneState() == Scene::SceneState::paused)
+				else if (MySceneManager.GetSceneState() == Scene::SceneState::paused)
 				{
 					anim->SetStatus(Animator::AnimatorStatus::idle);
 
@@ -490,7 +485,7 @@ namespace Copium
 
 	void AnimationSystem::PauseAllAnimation()
 	{
-		for (Copium::GameObject* go : sm->get_current_scene()->gameObjects)
+		for (Copium::GameObject* go : MySceneManager.get_current_scene()->gameObjects)
 		{
 			Animator* temp = go->getComponent<Animator>();
 			if (temp != NULL)
@@ -502,7 +497,7 @@ namespace Copium
 
 	void AnimationSystem::PlayAllAnimation()
 	{
-		for (Copium::GameObject* go : sm->get_current_scene()->gameObjects)
+		for (Copium::GameObject* go : MySceneManager.get_current_scene()->gameObjects)
 		{
 			Animator* temp = go->getComponent<Animator>();
 			if (temp != NULL)

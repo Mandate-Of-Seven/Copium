@@ -18,31 +18,25 @@
 	3. de-allocation of resources used by current scene (cleanup before engine close)
 	4. Calling scene's update functions
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************
 ****/
 #include <pch.h>
-#include "SceneManager/scene-manager.h"
-#include "Graphics/graphics-system.h"
-#include "Windows/windows-system.h"
-#include "Editor/editor-system.h"
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/prettywriter.h>
-#include <GameObject/Components/camera-component.h>
+
+#include "SceneManager/scene-manager.h"
+#include "SceneManager/state-manager.h"
+#include "Windows/windows-system.h"
+#include "Editor/editor-system.h"
 #include "GameObject/Components/ui-components.h"
 #include "GameObject/Components/sorting-group-component.h"
-#include <Audio/sound-system.h>
-#include <Events/events-system.h>
+#include "GameObject/Components/camera-component.h"
+#include "Audio/sound-system.h"
+#include "Events/events-system.h"
 
-
-
-namespace Copium {
-
-	namespace
-	{
-		EditorSystem& es{ *EditorSystem::Instance() };
-	}
-
+namespace Copium 
+{
 	std::string prefix("../PackedTracks/Assets/Scenes/");
 
 	GameObject* SceneManager::findGameObjByID(GameObjectID _ID)
@@ -101,6 +95,7 @@ namespace Copium {
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		storageScene = nullptr;
 		//MyGOF.register_archetypes("Data/Archetypes");
+		MyEventSystem->subscribe(this, &SceneManager::CallbackQuitEngine);
 	}
 	void SceneManager::update()
 	{
@@ -208,11 +203,11 @@ namespace Copium {
 		if (document.HasMember("Layers"))
 		{
 			rapidjson::Value& arr = document["Layers"].GetArray();
-			if (es.getLayers()->SortLayers()->GetLayerCount())
+			if (MyEditorSystem.getLayers()->SortLayers()->GetLayerCount())
 			{
-				es.getLayers()->SortLayers()->GetSortingLayers().clear();
-				es.getLayers()->SortLayers()->GetSortingLayers().shrink_to_fit();
-				PRINT(es.getLayers()->SortLayers()->GetSortingLayers().size());
+				MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers().clear();
+				MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers().shrink_to_fit();
+				PRINT(MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers().size());
 			}
 
 			unsigned int idx{ 0 };
@@ -225,7 +220,7 @@ namespace Copium {
 				{
 					name = layer["Name"].GetString();
 				}
-				Layer* lay = es.getLayers()->SortLayers()->CreateNewLayer(name);
+				Layer* lay = MyEditorSystem.getLayers()->SortLayers()->CreateNewLayer(name);
 				PRINT("making new layer");
 				if (layer.HasMember("ID"))
 				{
@@ -290,11 +285,11 @@ namespace Copium {
 			if (layered)
 			{
 				PRINT("Layer ID: " << sg->GetLayerID());
-				es.getLayers()->SortLayers()->AddGameObject(sg->GetLayerID(), *go);
+				MyEditorSystem.getLayers()->SortLayers()->AddGameObject(sg->GetLayerID(), *go);
 			}
 		}
 		// Sort based on order in layer
-		for (Layer& la : es.getLayers()->SortLayers()->GetSortingLayers())
+		for (Layer& la : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
 		{
 			bool swapped{ false };
 			if (la.gameObjects.size() <= 1)
@@ -464,7 +459,7 @@ namespace Copium {
 		if (prevSelected)
 			selectedGameObject = findGameObjByID(prevSelected);
 
-		SoundSystem::Instance()->StopAll();
+		MySoundSystem.StopAll();
 
 		return true;
 	}
@@ -501,7 +496,7 @@ namespace Copium {
 
 		currentScene->set_state(Scene::SceneState::edit);
 
-		SoundSystem::Instance()->StopAll();
+		MySoundSystem.StopAll();
 
 		return true;
 
@@ -624,7 +619,7 @@ namespace Copium {
 
 		// Serialize Layer Data
 		rapidjson::Value layers(rapidjson::kArrayType);
-		for (Layer& layer : es.getLayers()->SortLayers()->GetSortingLayers())
+		for (Layer& layer : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
 		{
 			rapidjson::Value obj(rapidjson::kObjectType);
 			rapidjson::Value layerName;
@@ -731,4 +726,9 @@ namespace Copium {
 		return true;
 	}
 	Scene* SceneManager::get_storage_scene() { return storageScene; }
+
+	void SceneManager::CallbackQuitEngine(QuitEngineEvent* pEvent)
+	{
+		quit_engine();
+	}
 }

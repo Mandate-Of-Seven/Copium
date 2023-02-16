@@ -12,17 +12,17 @@
 	This file contains functions for the Assets system where the user can load and unload
 	assets that are retrieved from the File system into the engine.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "pch.h"
 
 //#include <GLFW/glfw3.h>
 
 #include "Files/assets-system.h"
-#include "Events/events-system.h"
 #include "Files/file-system.h"
-#include "Graphics/graphics-system.h"
 #include "Audio/sound-system.h"
+#include "Graphics/graphics-system.h"
+#include "Events/events-system.h"
 
 namespace Copium
 {
@@ -42,7 +42,7 @@ namespace Copium
 		// 3. The extension
 		//
 		// Load all file paths in the asset folder
-		load_assets(&MyFileSystem.get_asset_directory());
+		LoadAssets(&MyFileSystem.get_asset_directory());
 		PRINT("ASSETS LOADED");
 
 		LoadExistingMetaFile();
@@ -100,7 +100,7 @@ namespace Copium
 			break;
 
 		case FILE_TYPE::SPRITE:
-			load_texture(_file);
+			LoadTexture(_file);
 			break;
 
 		case FILE_TYPE::TEXT:
@@ -136,7 +136,7 @@ namespace Copium
 			break;
 
 		case FILE_TYPE::SPRITE:
-			unload_texture(_file);
+			UnloadTexture(_file);
 			break;
 
 		case FILE_TYPE::TEXT:
@@ -147,39 +147,39 @@ namespace Copium
 		}
 	}
 
-	void AssetsSystem::load_assets(Directory* _directory)
+	void AssetsSystem::LoadAssets(Directory* _directory)
 	{
 		(void) _directory;
 		PRINT("LOADING TEXTURES");
 		// Load Textures (.png)
-		load_all_textures(MyFileSystem.get_file_references()[FILE_TYPE::SPRITE]);
+		LoadAllTextures(MyFileSystem.get_file_references()[FILE_TYPE::SPRITE]);
 
 		PRINT("LOADING SHADERS");
 		// Load Shaders (.vert & .frag)
-		load_all_shaders(MyFileSystem.get_filepath_in_directory(Paths::dataPath.c_str(), ".vert", ".frag"));
+		LoadAllShaders(MyFileSystem.get_filepath_in_directory(Paths::dataPath.c_str(), ".vert", ".frag"));
 
 		PRINT("LOADING AUDIO");
 		// Load Audio (.wav)
-		load_all_audio(MyFileSystem.get_filepath_in_directory(Paths::assetPath.c_str(), ".wav"));
+		LoadAllAudio(MyFileSystem.get_filepath_in_directory(Paths::assetPath.c_str(), ".wav"));
 	}
 
-	void AssetsSystem::load_all_textures(std::list<File*>& _files)
+	void AssetsSystem::LoadAllTextures(std::list<File*>& _files)
 	{
 		for (File* file : _files)
 		{
 			// Store the texture
-			load_texture(file);
+			LoadTexture(file);
 		}
 	}
 
-	void AssetsSystem::load_texture(File* _file)
+	void AssetsSystem::LoadTexture(File* _file)
 	{
 		Texture texture(_file->string());
 		texture.set_id(_file->get_id());
 		textures.push_back(texture);
 	}
 
-	void AssetsSystem::unload_texture(File* _file)
+	void AssetsSystem::UnloadTexture(File* _file)
 	{
 		for (auto it = textures.begin(); it != textures.end();)
 		{
@@ -196,7 +196,7 @@ namespace Copium
 		textures.shrink_to_fit();
 	}
 
-	void AssetsSystem::load_all_audio(std::list<std::string>& _path)
+	void AssetsSystem::LoadAllAudio(std::list<std::string>& _path)
 	{
 		for (std::string path : _path)
 		{
@@ -205,8 +205,8 @@ namespace Copium
 			std::string temp = path.substr(lastSlash + 1);
 			size_t lastDot = temp.find_last_of(".");
 			//std::cout << "Alias: " << temp.substr(0, lastDot) << "\n";
-			SoundSystem::Instance()->CreateSound(path, temp.substr(0, lastDot));
-			SoundSystem::Instance()->SetVolume(temp.substr(0, lastDot), 1.0f);
+			MySoundSystem.CreateSound(path, temp.substr(0, lastDot));
+			MySoundSystem.SetVolume(temp.substr(0, lastDot), 1.0f);
 		}
 	}
 
@@ -217,8 +217,8 @@ namespace Copium
 			//std::cout << _file->get_name() << " "<<_file->filename();
 			std::string temp = _file->filename().string();
 			size_t lastDot = temp.find_last_of(".");
-			SoundSystem::Instance()->CreateSound(_file->filename().string(), temp.substr(0,lastDot));
-			SoundSystem::Instance()->SetVolume(temp.substr(0, lastDot), 1.0f);
+			MySoundSystem.CreateSound(_file->filename().string(), temp.substr(0,lastDot));
+			MySoundSystem.SetVolume(temp.substr(0, lastDot), 1.0f);
 		}
 		else
 		{
@@ -232,11 +232,11 @@ namespace Copium
 			std::string temp = _file->filename().string();
 			size_t lastDot = temp.find_last_of(".");
 			std::string targetAlias = temp.substr(0, lastDot);
-			for (auto iter = SoundSystem::Instance()->soundList.begin(); iter != SoundSystem::Instance()->soundList.end();iter++)
+			for (auto iter = MySoundSystem.soundList.begin(); iter != MySoundSystem.soundList.end();iter++)
 			{
 				if ((*iter).first == targetAlias)
 				{
-					SoundSystem::Instance()->soundList.erase(iter);
+					MySoundSystem.soundList.erase(iter);
 					std::cout << "Unloading audio file: " << targetAlias << " from sound list\n";
 					break;
 				}
@@ -248,14 +248,14 @@ namespace Copium
 		}
 	}
 
-	void AssetsSystem::load_all_shaders(std::list<std::string>& _path)
+	void AssetsSystem::LoadAllShaders(std::list<std::string>& _path)
 	{
 		for (auto it = _path.begin(); it != _path.end(); it++)
 		{
 			// Bean: This is slightly hardcored because it depends on the file arrangement
 			std::string fragShader = it->c_str();
 			std::string vtxShader = (++it)->c_str();
-			GraphicsSystem::Instance()->setup_shader_program(vtxShader, fragShader);
+			MyGraphicsSystem.SetupShaderProgram(vtxShader, fragShader);
 		}
 	}
 

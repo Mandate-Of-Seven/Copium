@@ -92,24 +92,24 @@ namespace Copium
 				ImGui::PushItemWidth(-1);
 				filter.Draw("##SpriteName");
 				ImGui::PopItemWidth();
-				AssetsSystem* assets = AssetsSystem::Instance();
-				for (int i = 0; i < assets->get_textures().size(); i++)
+
+				for (int i = 0; i < MyAssetSystem.GetTextures().size(); i++)
 				{
-					size_t startPos = assets->get_texture(i)->get_file_path().find_last_of('\\');
-					std::string name = assets->get_texture(i)->get_file_path().substr(startPos + 1, assets->get_texture(i)->get_file_path().length() - startPos);
+					size_t startPos = MyAssetSystem.GetTexture(i)->get_file_path().find_last_of('\\');
+					std::string name = MyAssetSystem.GetTexture(i)->get_file_path().substr(startPos + 1, MyAssetSystem.GetTexture(i)->get_file_path().length() - startPos);
 					if (ImGui::Button(name.c_str(), buttonSize))
 					{
 						if (filter.PassFilter(name.c_str()))
 						{
 							spriteName = name;
 							isAddingSprite = false;
-							std::string path = assets->get_texture(i)->get_file_path();
+							std::string path = MyAssetSystem.GetTexture(i)->get_file_path();
 							uint64_t pathID = std::hash<std::string>{}(path);
-							MetaID metaID = assets->GetMetaID(pathID);
+							MetaID metaID = MyAssetSystem.GetMetaID(pathID);
 							spriteID = metaID.uuid;
 
 							// Attach Reference
-							sprite.set_texture(assets->get_texture(i));
+							sprite.set_texture(MyAssetSystem.GetTexture(i));
 						}
 					}
 				}
@@ -122,16 +122,16 @@ namespace Copium
 				{
 					std::string str = (const char*)(payload->Data);
 					AssetsSystem* assets = AssetsSystem::Instance();
-					for (int i = 0; i < assets->get_textures().size(); i++)
+					for (int i = 0; i < MyAssetSystem.GetTextures().size(); i++)
 					{
-;						if (!assets->get_texture(i)->get_file_path().compare(str))
+;						if (!MyAssetSystem.GetTexture(i)->get_file_path().compare(str))
 						{
-							uint64_t pathID = std::hash<std::string>{}(assets->get_texture(i)->get_file_path());
-							MetaID metaID = assets->GetMetaID(pathID);
+							uint64_t pathID = std::hash<std::string>{}(MyAssetSystem.GetTexture(i)->get_file_path());
+							MetaID metaID = MyAssetSystem.GetMetaID(pathID);
 							spriteID = metaID.uuid;
 
 							// Attach Reference
-							sprite.set_texture(assets->get_texture(i));
+							sprite.set_texture(MyAssetSystem.GetTexture(i));
 						}
 					}
 					size_t pos = str.find_last_of('\\');

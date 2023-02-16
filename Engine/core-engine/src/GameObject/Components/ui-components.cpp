@@ -24,16 +24,11 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <stdlib.h>  
 #include <Utilities/easing.h>
 #include <Debugging/frame-rate-controller.h>
-#include <SceneManager/scene-manager.h>
 #include <GameObject/Components/script-component.h>
 #include <GameObject/Components/camera-component.h>
 #include "glm/gtc/matrix_transform.hpp"
 
 #include <Events/events-system.h>
-namespace
-{
-	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
-}
 
 namespace Copium
 {
@@ -346,7 +341,7 @@ namespace Copium
 		{
 			if (static_collision_pointrect(scenePos, getBounds()))
 			{
-				if (inputSystem.is_mousebutton_pressed(0))
+				if (MyInputSystem.is_mousebutton_pressed(0))
 				{
 					hoveredBtn = this;
 					if (state == ButtonState::OnClick || state == ButtonState::OnHeld)
@@ -358,7 +353,7 @@ namespace Copium
 		}
 		else if (hoveredBtn == this)
 		{
-			if (!inputSystem.is_mousebutton_pressed(0))
+			if (!MyInputSystem.is_mousebutton_pressed(0))
 			{
 				hoveredBtn = nullptr;
 				return ButtonState::OnRelease;
@@ -870,17 +865,16 @@ namespace Copium
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ContentBrowserItem"))
 				{
 					std::string str = (const char*)(payload->Data);
-					Copium::AssetsSystem* assets = Copium::AssetsSystem::Instance();
-					for (int i = 0; i < assets->get_textures().size(); i++)
+					for (int i = 0; i < MyAssetSystem.GetTextures().size(); i++)
 					{
-						if (!assets->get_texture(i)->get_file_path().compare(str))
+						if (!MyAssetSystem.GetTexture(i)->get_file_path().compare(str))
 						{
-							uint64_t pathID = std::hash<std::string>{}(assets->get_texture(i)->get_file_path());
-							MetaID metaID = assets->GetMetaID(pathID);
+							uint64_t pathID = std::hash<std::string>{}(MyAssetSystem.GetTexture(i)->get_file_path());
+							MetaID metaID = MyAssetSystem.GetMetaID(pathID);
 							spriteID = metaID.uuid;
 
 							// Attach Reference
-							sprite.set_texture(assets->get_texture(i));
+							sprite.set_texture(MyAssetSystem.GetTexture(i));
 						}
 					}
 					size_t pos = str.find_last_of('\\');

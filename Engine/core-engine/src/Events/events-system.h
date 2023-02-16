@@ -12,7 +12,7 @@
 \brief
 	// BRIEF DESCRIPTION OF FILE PURPOSE
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************
 ****/
 

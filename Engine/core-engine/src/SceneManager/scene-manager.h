@@ -29,6 +29,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/game-object-factory.h"
 #include "CopiumCore/system-interface.h"
 #include "SceneManager/scene.h"
+#include "Events/events.h"
 #include <filesystem>
 
 #define MySceneManager (*Copium::SceneManager::Instance())
@@ -306,6 +307,9 @@ namespace Copium {
 
 		GameObject* selectedGameObject;
 		Camera* mainCamera{nullptr};
+
+	private:
+		void CallbackQuitEngine(QuitEngineEvent* pEvent);
 
 	private:
 		Scene* currentScene;	// Pointer to the current scene

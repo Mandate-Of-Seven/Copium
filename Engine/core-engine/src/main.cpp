@@ -10,42 +10,25 @@
 \brief
     This file contains beginning of the core-engine.
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 #include "pch.h"
 
 //Systems
-#include "Windows/windows-system.h"
+#include "CopiumCore/copium-core.h"
 #include "Windows/windows-input.h"
 #include "Editor/editor-system.h"
-#include "Scripting/scripting-system.h"
-#include "Scripting/logic-system.h"
-#include "Editor/editor-consolelog.h"
-#include "GameObject/Components/script-component.h"
-#include "Debugging/logging-system.h"
-#include "Audio/sound-system.h"
-#include "SceneManager/scene-manager.h"
-#include "GameObject/Components/component.h"
-#include "GameObject/Components/renderer-component.h"
-#include "Editor/editor-undoredo.h"
-#include "GameObject/Components/ui-components.h"
 
 //State Manager
 #include "SceneManager/state-manager.h"
 
-#include "Editor/inspector.h"
-#include "CopiumCore/copium-core.h"
-#include "Debugging/frame-rate-controller.h"
+
 namespace
 {
     // Our state
     float recompileTimer = 0;
     Copium::CopiumCore& copiumCore{ *Copium::CopiumCore::Instance()};
-    Copium::SoundSystem& soundSystem{ *Copium::SoundSystem::Instance()};
-    Copium::InputSystem& inputSystem { *Copium::InputSystem::Instance()};
-    Copium::WindowsSystem* windowsSystem = Copium::WindowsSystem::Instance();
-    Copium::SceneManager* sceneManager = Copium::SceneManager::Instance();
 }
 
 ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -84,7 +67,7 @@ int main()
     init();
     copiumCore.init();
     MyFrameRateController.init(60);
-    glfwSetWindowCloseCallback(windowsSystem->get_window(), quitEngine);
+    glfwSetWindowCloseCallback(MyWindowSystem.get_window(), quitEngine);
 
 
 
@@ -121,21 +104,19 @@ static void init()
 /***************************************************************************/
 /*!
 \brief
-    Uses GLHelper::GLFWWindow* to get handle to OpenGL context.
-    For now, there are no objects to animate nor keyboard, mouse button 
-    click, mouse movement, and mouse scroller events to be processed.
+    Engines update loop
 */
 /**************************************************************************/
 static void update()
 {   
-    if (inputSystem.is_key_pressed(GLFW_KEY_Z))//undo
+    if (MyInputSystem.is_key_pressed(GLFW_KEY_Z))//undo
     {
-        if (!Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.empty())
+        if (!MyEditorSystem.get_commandmanager()->undoStack.empty())
         {
-            Copium::UndoRedo::Command* temp = Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.top();
+            Copium::UndoRedo::Command* temp = MyEditorSystem.get_commandmanager()->undoStack.top();
             //temp->printCommand();
-            Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.top()->Undo(&Copium::EditorSystem::Instance()->get_commandmanager()->redoStack);
-            Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.pop();
+            MyEditorSystem.get_commandmanager()->undoStack.top()->Undo(&MyEditorSystem.get_commandmanager()->redoStack);
+            MyEditorSystem.get_commandmanager()->undoStack.pop();
             delete temp;
         }
         else
@@ -145,14 +126,14 @@ static void update()
         }
     }
 
-    if (inputSystem.is_key_pressed(GLFW_KEY_X) )//redo
+    if (MyInputSystem.is_key_pressed(GLFW_KEY_X) )//redo
     {
         
-        if (!Copium::EditorSystem::Instance()->get_commandmanager()->redoStack.empty())
+        if (!MyEditorSystem.get_commandmanager()->redoStack.empty())
         {
-            Copium::UndoRedo::Command* temp = Copium::EditorSystem::Instance()->get_commandmanager()->redoStack.top();
-            Copium::EditorSystem::Instance()->get_commandmanager()->redoStack.top()->Redo(&Copium::EditorSystem::Instance()->get_commandmanager()->undoStack);
-            Copium::EditorSystem::Instance()->get_commandmanager()->redoStack.pop();
+            Copium::UndoRedo::Command* temp = MyEditorSystem.get_commandmanager()->redoStack.top();
+            MyEditorSystem.get_commandmanager()->redoStack.top()->Redo(&MyEditorSystem.get_commandmanager()->undoStack);
+            MyEditorSystem.get_commandmanager()->redoStack.pop();
             delete temp;
         }
         else
@@ -173,8 +154,8 @@ static void update()
 /**************************************************************************/
 static void draw() 
 {
-    Copium::EditorSystem::Instance()->draw();
-    Copium::WindowsSystem::Instance()->draw();
+    MyEditorSystem.draw();
+    MyWindowSystem.draw();
 }
 
 /***************************************************************************/

@@ -41,6 +41,11 @@ namespace Copium
 		StopPreviewEvent(){}
 	};
 
+	struct QuitEngineEvent : IEvent
+	{
+		QuitEngineEvent() {};
+	};
+
 	struct SceneOpenedEvent : IEvent
 	{
 		SceneOpenedEvent(const char* _sceneName) :sceneName{ _sceneName } {};

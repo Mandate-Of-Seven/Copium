@@ -13,7 +13,7 @@
 	sprite or particle system (if any). Renderers can be disabled to make objects
 	invisble (see enabled).
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 #include <GL/glew.h> // for access to OpenGL API declarations 
@@ -513,10 +513,10 @@ namespace Copium
 		};
 
 		float pixelWidth = 1.f, pixelHeight = 1.f;
-		if (_sprite.get_texture() != nullptr)
+		if (_sprite.GetTexture() != nullptr)
 		{
-			pixelWidth = _sprite.get_texture()->get_pixel_width();
-			pixelHeight = _sprite.get_texture()->get_pixel_height();
+			pixelWidth = _sprite.GetTexture()->get_pixel_width();
+			pixelHeight = _sprite.GetTexture()->get_pixel_height();
 		}
 
 		glm::mat4 scale = {
@@ -649,10 +649,10 @@ namespace Copium
 
 		for (GLuint i = 1; i < graphics->get_texture_slot_index(); i++)
 		{
-			if (!_sprite.get_texture())
+			if (!_sprite.GetTexture())
 				break;
 
-			if (graphics->get_texture_slots()[i] == _sprite.get_texture()->get_object_id())
+			if (graphics->get_texture_slots()[i] == _sprite.GetTexture()->get_object_id())
 			{
 				textureIndex = (GLfloat) i;
 				break;
@@ -664,7 +664,7 @@ namespace Copium
 		{
 			// Add new texture into the texture slot
 			textureIndex = (GLfloat) graphics->get_texture_slot_index();
-			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _sprite.get_texture()->get_object_id();
+			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _sprite.GetTexture()->get_object_id();
 			graphics->set_texture_slot_index((GLuint)textureIndex + 1);
 		}
 

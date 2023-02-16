@@ -187,7 +187,7 @@ namespace Copium
 
 				// Get the image icon
 				unsigned int objectID = icons[1].get_object_id();
-				for (unsigned int i = 0; i < MyAssetSystem.get_textures().size(); i++)
+				for (unsigned int i = 0; i < MyAssetSystem.GetTextures().size(); i++)
 				{
 					std::string texturePath;
 					switch (file.get_file_type().fileType)
@@ -211,10 +211,10 @@ namespace Copium
 						break;
 
 					case FILE_TYPE::SPRITE:
-						texturePath = MyAssetSystem.get_texture(i)->get_file_path();
+						texturePath = MyAssetSystem.GetTexture(i)->get_file_path();
 						if (!file.string().compare(texturePath))
 						{
-							Texture* temp = MyAssetSystem.get_texture(i);
+							Texture* temp = MyAssetSystem.GetTexture(i);
 							objectID = temp->get_object_id();
 							float asRatio = temp->get_width() / (float)temp->get_height();
 							imageAR = thumbnailSize / ((asRatio > 0.98f && asRatio < 1.f) ? 1.f : asRatio);
