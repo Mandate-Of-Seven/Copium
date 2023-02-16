@@ -23,6 +23,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <Editor/editor-undoredo.h>
 #include <Editor/editor-system.h>
 
+#include "Utilities/serializer.h"
+
 namespace 
 {
 	Copium::SceneManager& sceneManager{ *Copium::SceneManager::Instance() };
@@ -214,52 +216,10 @@ namespace Copium
 			PRINT("FAILED TO DESERIALIZE");
 			return nullptr;
 		}
-		//go->id = currScene->assignGameObjID();
 
-
-		if (!go->deserialize(_value))
-		{
-			PRINT("FAILED TO DESERIALIZE");
-			delete go;
-			return nullptr;
-		}
-
-		if (_value.HasMember("Components")) 
-		{
-			rapidjson::Value& compArr = _value["Components"].GetArray();
-			for (rapidjson::Value::ValueIterator iter = compArr.Begin(); iter != compArr.End(); ++iter)
-			{
-				rapidjson::Value& component = *iter;
-				if (component.HasMember("Type")) 
-				{
-					std::string key = component["Type"].GetString();
-					//PRINT("Component: " << name);
-					if (key == "Transform")
-						// deserialize transform component
-						go->transform.deserialize(component);
-					else
-					{
-						Component* tmp = go->addComponent(Component::nameToType(key));
-						//PRINT();
-						if (tmp)
-							tmp->deserialize(component);
-					}						
-
-				}
-			}
-		}
+		Serializer::Deserialize(*go, "", _value);
 
 		currScene->add_gameobject(go);
-
-		// Deserialize children (if any)
-		//if (_value.HasMember("Children")) {
-		//	rapidjson::Value& childArr = _value["Children"].GetArray();
-		//	for (rapidjson::Value::ValueIterator iter = childArr.Begin(); iter != childArr.End(); ++iter)
-		//	{
-		//		GameObject* cgo = instantiate(*iter);
-		//		cgo->transform.setParent(&go->transform);
-		//	}
-		//}
 
 		return go;
 	}

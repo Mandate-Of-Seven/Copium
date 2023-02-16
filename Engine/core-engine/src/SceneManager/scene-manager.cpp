@@ -22,7 +22,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 ******************************************************************************************
 ****/
 #include <pch.h>
-#include "SceneManager/scene-manager.h"
 #include "Graphics/graphics-system.h"
 #include "Windows/windows-system.h"
 #include "Editor/editor-system.h"
@@ -34,13 +33,18 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <Audio/sound-system.h>
 #include <Events/events-system.h>
 
+#include "Utilities/json-utilities.h"
+#include "SceneManager/scene-manager.h"
+#include "Utilities/serializer.h"
 
+#include "Files/assets-system.h"
 
 namespace Copium {
 
 	namespace
 	{
 		EditorSystem& es{ *EditorSystem::Instance() };
+		AssetsSystem& assets{ *AssetsSystem::Instance() };
 	}
 
 	std::string prefix("../PackedTracks/Assets/Scenes/");
@@ -64,13 +68,15 @@ namespace Copium {
 	}
 	GameObject* SceneManager::FindGameObjectByID(const uint64_t& _id)
 	{
+
+
 		if (!currentScene)
 			return nullptr;
-
-		for (GameObject* go : currentScene->gameObjects)
+		for (GameObject* gameobj : currentScene->gameObjects)
 		{
-			if (go->uuid == _id)
-				return go;
+			uint64_t tmp = (uint64_t)gameobj->uuid;
+			if (tmp == _id)
+				return gameobj;
 		}
 
 		return nullptr;
@@ -287,25 +293,92 @@ namespace Copium {
 				PRINT(*tmpGO);
 			}
 
-			// Linkage of components to each other
-			auto gameObjectIt = _gameObjArr.Begin();
+			// Linkages
 			for (GameObject* go : currentScene->gameObjects)
 			{
-				if ((*gameObjectIt).HasMember("Components"))
+				// Transform and Parent
+				if (go->transform.pid)
 				{
-					rapidjson::Value& compArr = (*gameObjectIt)["Components"].GetArray();
-					auto componentIt = compArr.Begin();
-					go->transform.deserializeLink(*componentIt);
-					PRINT(*go);
-					for (Component* component : go->components)
+					GameObject* p = MySceneManager.FindGameObjectByID(go->transform.pid);
+					if(p)
+						go->transform.setParent(&p->transform);
+
+				}
+				
+				// SpriteSheet
+				if (go->hasComponent(ComponentType::Animator))
+				{
+					Animator* animator = go->getComponent<Animator>();
+					for (Animation& anim : animator->get_animation_vector())
 					{
-						//Offset TransformComponent
-						++componentIt;
-						component->deserializeLink(*componentIt);
+						uint64_t sid = anim.spriteSheet.spriteID;
+						if (sid != 0)
+						{
+							std::vector<Texture> textures = assets.get_textures();
+							bool reference = false;
+							for (int j = 0; j < textures.size(); j++)
+							{
+								uint64_t pathID = std::hash<std::string>{}(textures[j].get_file_path());
+								MetaID metaID = assets.GetMetaID(pathID);
+
+								// Check if the uuid of the sprite is the same as the meta file
+								if (metaID.uuid == sid)
+								{
+									// If so set the reference texture to that file
+									reference = true;
+									anim.spriteSheet.texture = assets.get_texture(j);
+									break;
+								}
+							}
+
+							// If there is no references, set the spriteID to 0
+							if (!reference)
+								sid = 0;
+						}
 					}
 				}
-				++gameObjectIt;
+			
+				// Target Graphic
+				if (go->hasComponent(ComponentType::Button))
+				{
+					Button* button = go->getComponent<Button>();
+					if (button->graphicID)
+						button->set_targetgraphic(findComponentByID(button->graphicID));
+				}
+				
+				if (go->hasComponent(ComponentType::Script))
+				{
+					Script* script = go->getComponent<Script>();
+					for (auto it = script->GetFieldData().begin(); it != script->GetFieldData().end(); ++it)
+					{
+						const std::string& _name{ it->first };
+						Field& field = it->second;
+						FieldType fType = field.fType;
+
+						switch (fType)
+						{
+						case FieldType::Component:
+						{
+							uint64_t id{ field.Get<uint64_t>() };
+							Component* pComponent = MySceneManager.findComponentByID(id);
+							if (pComponent)
+								script->GetFieldComponentReferences()[_name] = pComponent;
+							break;
+						}
+						case FieldType::GameObject:
+						{
+							uint64_t id{ field.Get<uint64_t>() };
+							GameObject* pGameObject = MySceneManager.findGameObjByID(id);
+							if (pGameObject)
+								script->GetFieldGameObjReferences()[_name] = pGameObject;
+							break;
+						}
+						}
+					}
+				}
+			
 			}
+
 		}
 		
 		// Place Game Objects that are in layers into respective layers
@@ -587,102 +660,33 @@ namespace Copium {
 
 		doc.SetObject();
 
-		//rapidjson::Value sceneArray(rapidjson::kArrayType);
-		//for (Scene* sc : scenes)
-		//{
-		//	rapidjson::Value scene(rapidjson::kObjectType);
-		//	rapidjson::Value name;
-		//	create_rapidjson_string(doc, name, sc->get_name());
-		//	scene.AddMember("Name", name, doc.GetAllocator());
-
-		//	// Serialize UGIDs
-		//	rapidjson::Value ugids(rapidjson::kArrayType);
-		//	for (GameObjectID id : sc->get_unusedgids())
-		//	{
-		//		ugids.PushBack(id, doc.GetAllocator());
-		//	}
-		//	scene.AddMember("Unused GIDs", ugids, doc.GetAllocator());
-
-		//	// Serialize UCIDs
-		//	rapidjson::Value ucids(rapidjson::kArrayType);
-		//	for (ComponentID id : sc->get_unusedcids())
-		//	{
-		//		ucids.PushBack(id, doc.GetAllocator());
-		//	}
-		//	scene.AddMember("Unused CIDs", ucids, doc.GetAllocator());
-
-		//	std::vector<GameObject*> roots;
-		//	for (GameObject* pGameObject : sc->gameObjects)
-		//	{
-		//		if (!pGameObject->transform.hasParent())
-		//			roots.emplace_back(pGameObject);
-		//	}
-		//	//Create array of game objects
-		//	rapidjson::Value gameObjects(rapidjson::kArrayType);
-		//	for (GameObject* pGameObject : sc->gameObjects)
-		//	{
-		//		rapidjson::Value go(rapidjson::kObjectType);
-		//		pGameObject->serialize(go, doc);
-
-
-		//		//rapidjson::Value components(rapidjson::kArrayType);
-		//		// Insert transform component into component array
-
-
-		//		gameObjects.PushBack(go, doc.GetAllocator());
-		//	}
-
-		//	scene.AddMember("GameObjects", gameObjects, doc.GetAllocator());
-		//	sceneArray.PushBack(scene, doc.GetAllocator());
-		//}
-		//doc.AddMember("Scenes:", sceneArray, doc.GetAllocator());
-		rapidjson::Value name;
-		create_rapidjson_string(doc, name,  currentScene->get_name());
-		doc.AddMember("Name", name, doc.GetAllocator());
+		Copium::Serialize(currentScene->get_name(), doc, doc, "Name");
 
 		// Serialize Layer Data
 		rapidjson::Value layers(rapidjson::kArrayType);
 		for (Layer& layer : es.getLayers()->SortLayers()->GetSortingLayers())
 		{
 			rapidjson::Value obj(rapidjson::kObjectType);
-			rapidjson::Value layerName;
-			create_rapidjson_string(doc, layerName, layer.name);
-			obj.AddMember("Name", layerName, doc.GetAllocator());
-
-			obj.AddMember("ID", layer.layerID, doc.GetAllocator());
+			Serialize(layer.name, obj, doc, "Name");
+			Serialize(layer.layerID, obj, doc, "ID");
 
 			layers.PushBack(obj, doc.GetAllocator());
-
 		}
 		doc.AddMember("Layers", layers, doc.GetAllocator());
 
-		std::vector<GameObject*> roots;
-		for (GameObject* pGameObject : currentScene->gameObjects)
-		{
-			if (!pGameObject->transform.hasParent())
-				roots.emplace_back(pGameObject);
-		}
+		
 		//Create array of game objects
 		rapidjson::Value gameObjects(rapidjson::kArrayType);
 		for (GameObject* pGameObject : currentScene->gameObjects)
 		{
 			rapidjson::Value go(rapidjson::kObjectType);
-			pGameObject->serialize(go, doc);
-
-
-			//rapidjson::Value components(rapidjson::kArrayType);
-			// Insert transform component into component array
-
-
+			Serializer::Serialize(*pGameObject, "", go, doc);
 			gameObjects.PushBack(go, doc.GetAllocator());
 		}
-
 		doc.AddMember("GameObjects", gameObjects, doc.GetAllocator());
 
 		rapidjson::StringBuffer sb;
-		rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(sb);
-		doc.Accept(writer);
-		ofs << sb.GetString();
+		Serializer::WriteToFile(sb, doc, ofs);
 		return true;
 	}
 

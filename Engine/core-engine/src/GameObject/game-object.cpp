@@ -30,7 +30,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "GameObject/Components/sorting-group-component.h"
 #include "Animation/animation-system.h"
 #include "SceneManager/scene-manager.h"
-#include <mono/jit/jit.h>
+
+#include "Utilities/json-utilities.h"
 
 //USING
 
@@ -396,13 +397,9 @@ void GameObject::inspectorView()
 
 bool GameObject::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 {
-    _value.AddMember("ID", id, _doc.GetAllocator());
+    Serialize(uuid, _value, _doc, "UID");
 
-    rapidjson::Value _name;
-    _name.SetString(name.c_str(), rapidjson::SizeType(name.length()), _doc.GetAllocator());
-    _value.AddMember("Name", _name, _doc.GetAllocator());
-
-    uuid.Serialize(_value, _doc);
+    Serialize(name, _value, _doc, "Name");
 
     rapidjson::Value _components(rapidjson::kArrayType);
     rapidjson::Value transformComponent(rapidjson::kObjectType);
@@ -416,16 +413,6 @@ bool GameObject::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
         _components.PushBack(comp, _doc.GetAllocator());
     }
     _value.AddMember("Components", _components, _doc.GetAllocator());
-
-    //rapidjson::Value kids(rapidjson::kArrayType);
-    //for (auto iter = transform.children.begin(); iter != transform.children.end(); ++iter)
-    //{
-    //    rapidjson::Value cgo(rapidjson::kObjectType);
-    //    (*iter)->gameObj.serialize(cgo, _doc);
-    //    kids.PushBack(cgo, _doc.GetAllocator());
-    //}
-    //_value.AddMember("Children", kids, _doc.GetAllocator());
-
     return true;
 
 }

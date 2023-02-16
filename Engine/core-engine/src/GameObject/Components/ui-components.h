@@ -168,7 +168,7 @@ namespace Copium
 				void
 			*/
 			/*******************************************************************************/
-			void set_targetgraphic(Text* _txt);
+			void set_targetgraphic(Component* _txt);
 			/*******************************************************************************
 			/*!
 			*
@@ -179,13 +179,24 @@ namespace Copium
 				the target graphic attached to this button component
 			*/
 			/*******************************************************************************/
-			Text* get_targetgraphic();
+			Text* get_targetgraphic() { return reinterpret_cast<Text*>(targetGraphic); }
 
 			const AABB& getRelativeBounds() const;
 
 			static Button* hoveredBtn;
 
 			ButtonState GetState() { return state; }
+
+			std::string GetCallbackName() const { return callbackName; }
+
+			glm::fvec4& GetNormalColor() { return normalColor; }
+			glm::fvec4& GetHoverColor() { return hoverColor; }
+			glm::fvec4& GetClickedColor() { return clickedColor; }
+			uint64_t graphicID;
+
+			void SetBounds(const AABB& _value) { bounds = _value; }
+			void SetCallback(const std::string& _value) { callbackName = _value; }
+
 		private:
 			std::string callbackName;
 			AABB bounds;
@@ -202,6 +213,7 @@ namespace Copium
 			float timer{0};
 			float fadeDuration{0.1f};
 			friend class LogicSystem;
+
 	};
 
 	class Text final : public Component, public IUIComponent
@@ -243,6 +255,13 @@ namespace Copium
 
 			void deserialize(rapidjson::Value& _value);
 			void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
+
+			std::string& GetFontName() { return fontName; }
+			float& GetFontSize() { return fSize; }
+			float& GetWrapper() { return wrapper; }
+
+
+
 		private:
 			std::string fontName;
 			Font* font;

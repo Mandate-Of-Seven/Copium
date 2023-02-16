@@ -123,6 +123,10 @@ namespace Copium
 			*/
 			/*******************************************************************************/
 			AABB getBounds();
+
+
+			void SetBounds(const AABB& _value) { boundingBox = _value; }
+
 		private:
 			AABB boundingBox;			//bounding box of object
 

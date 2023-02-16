@@ -302,6 +302,12 @@ namespace Copium
 		/**************************************************************************/
 		void serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
+		std::unordered_map<std::string, Component*>& GetFieldComponentReferences() { return fieldComponentReferences; }
+		std::unordered_map<std::string, GameObject*>& GetFieldGameObjReferences() { return fieldGameObjReferences; }
+		std::unordered_map<std::string, Field>& GetFieldData() { return fieldDataReferences; }
+		static char* GetBuffer() { return buffer; }
+
+
 		friend class ScriptingSystem;
 	private:
 		void instantiate();

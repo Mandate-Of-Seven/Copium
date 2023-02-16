@@ -21,14 +21,14 @@
 All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************
 ****/
-#pragma once
 #ifndef SM_H
 #define SM_H
-
 
 #include "GameObject/game-object-factory.h"
 #include "CopiumCore/system-interface.h"
 #include "SceneManager/scene.h"
+
+
 #include <filesystem>
 
 #define MySceneManager (*Copium::SceneManager::Instance())
@@ -359,6 +359,7 @@ namespace Copium {
 		std::string sceneFilePath;
 		Scene::SceneState currSceneState;
 		std::vector<Scene*> scenes;
+
 	};
 
 	/*******************************************************************************

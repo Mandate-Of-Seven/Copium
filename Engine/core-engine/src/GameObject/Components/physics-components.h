@@ -13,6 +13,8 @@
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
+#ifndef PHYSICS_COMPONENTS_H
+#define PHYSICS_COMPONENTS_H
 #include "Physics/collision.h"
 #include "Math/math-library.h"
 #include "GameObject/Components/component.h"
@@ -206,6 +208,8 @@ namespace Copium
 			component->affectedGravity = affectedGravity;
 			return component;
 		}
+
+		void SetActive(bool _value) { active = _value; }
 		
 	private:
 		Math::Vec2 velocity;					//velocity of object
@@ -216,3 +220,5 @@ namespace Copium
 		bool affectedGravity;					//is object affected by gravity?
     };
 }
+
+#endif

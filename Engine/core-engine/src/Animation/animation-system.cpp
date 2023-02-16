@@ -24,6 +24,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "SceneManager/scene-manager.h"
 #include "Debugging/frame-rate-controller.h"
 #include "Files/assets-system.h"
+
+#include "Utilities/json-utilities.h"
+
 #define MAX_ANIMATION_COUNT 5
 
 namespace
@@ -169,7 +172,8 @@ namespace Copium
 			// For each animation display appropriate things
 			for (int i{ 0 }; i < animations.size(); ++i)
 			{
-				ImGui::PushID(i);
+				int id{ i + 2 };
+				ImGui::PushID(id);
 				ImGui::TableNextRow();
 				ImGui::TableNextColumn();
 				ImGui::Text("Animation %d", i + 1);
@@ -184,7 +188,7 @@ namespace Copium
 				}
 				ImGui::PopID();
 
-				ImGui::PushID(i+1);
+				ImGui::PushID(id+1);
 				ImGui::TableNextRow();
 				ImGui::TableNextColumn();
 				ImGui::Text("Number of Columns:");
@@ -195,7 +199,7 @@ namespace Copium
 				}
 				ImGui::PopID();
 
-				ImGui::PushID(i+2);
+				ImGui::PushID(id+2);
 				ImGui::TableNextRow();
 				ImGui::TableNextColumn();
 				ImGui::Text("Number of Rows:");
@@ -206,7 +210,7 @@ namespace Copium
 				}
 				ImGui::PopID();
 
-				ImGui::PushID(i + 3);
+				ImGui::PushID(id + 3);
 				ImGui::TableNextRow();
 				ImGui::TableNextColumn();
 				ImGui::Text("Time Delay:");
@@ -273,7 +277,11 @@ namespace Copium
 		animations.push_back(Animation());
 		++animationCount;
 
+
+
 		currentAnimationIndex = (int)(animations.size() - 1);
+
+		animations[currentAnimationIndex].loop = loop;
 
 	}
 	void Animator::PlayAnimation()
@@ -297,7 +305,7 @@ namespace Copium
 
 		if (!loop && animations[currentAnimationIndex].status == Animation::AnimationStatus::completed)
 		{
-			PRINT("anim completed");
+			//PRINT("anim completed");
 			status = AnimatorStatus::idle;
 			return;
 		}
@@ -399,7 +407,6 @@ namespace Copium
 				}
 
 				animations[i].timeDelay = td;
-				PRINT("Time delay:" << animations[i].timeDelay);
 				animations[i].frameCount = fc;
 				animations[i].spriteSheet.spriteID = sid;
 				animations[i].spriteSheet.name = animName;
@@ -424,11 +431,11 @@ namespace Copium
 	{
 		Component::serialize(_value, _doc);
 		rapidjson::Value type;
-		std::string tc = MAP_COMPONENT_TYPE_NAME[componentType];
-		type.SetString(tc.c_str(), (rapidjson::SizeType)tc.length(), _doc.GetAllocator());
+		CreateJsonString(MAP_COMPONENT_TYPE_NAME[componentType], type, _doc);
 		_value.AddMember("Type", type, _doc.GetAllocator());
 
 		_value.AddMember("Loop", loop, _doc.GetAllocator());
+		Serialize(loop, _value, _doc, "TestTemplateSerialize");
 		_value.AddMember("Rev", reverse, _doc.GetAllocator());
 		_value.AddMember("Count", animationCount, _doc.GetAllocator());
 
@@ -438,8 +445,8 @@ namespace Copium
 		{
 			rapidjson::Value anim(rapidjson::kObjectType);
 			rapidjson::Value name;
-			name.SetString(a.spriteSheet.name.c_str(), 
-							(rapidjson::SizeType)a.spriteSheet.name.length(), _doc.GetAllocator());
+			CreateJsonString(a.spriteSheet.name, name, _doc);
+
 			anim.AddMember("Name", name, _doc.GetAllocator());
 			anim.AddMember("Sprite ID", a.spriteSheet.spriteID, _doc.GetAllocator());
 			anim.AddMember("Time Delay", a.timeDelay, _doc.GetAllocator());

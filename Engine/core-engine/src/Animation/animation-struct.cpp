@@ -39,6 +39,9 @@ namespace Copium
 	}
 	void Animation::IncrementFrame()
 	{
+
+		//PRINT("Index:" << rowIndex << '|' << columnIndex);
+
 		if (frameCount <= 0)
 			return;
 
@@ -53,6 +56,8 @@ namespace Copium
 		}
 		else
 		{
+			//PRINT("IncrementFrame");
+
 			++currentFrameIndex;
 			++columnIndex;
 
@@ -113,8 +118,10 @@ namespace Copium
 	}
 	void Animation::ResetFrame()
 	{
+		//PRINT("Reset Frame");
 		if (!loop)
 		{
+			//PRINT("Animation Completed");
 			status = AnimationStatus::completed;
 		}
 

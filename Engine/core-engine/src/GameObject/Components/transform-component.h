@@ -33,7 +33,7 @@ public:
     Math::Vec3 position;
     Math::Vec3 rotation;
     Math::Vec3 scale;
-
+    uint64_t pid;
     bool hasParent() const
     {
         return parent;
@@ -41,6 +41,7 @@ public:
 
     void setParent(Transform* _parent)
     {
+        PRINT("set parent");
         //Previously had a parent
         if (parent)
             parent->children.remove(this);

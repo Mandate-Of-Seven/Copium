@@ -159,7 +159,7 @@ namespace Copium
 	{
 		if (reinterpret_cast<Button*>(rhs)->targetGraphic)
 		{
-			ComponentID _ID = reinterpret_cast<Button*>(rhs)->targetGraphic->id;
+			ComponentID _ID = reinterpret_cast<Button*>(rhs)->targetGraphic->uuid;
 
 			Component* foundGraphic = MySceneManager.findComponentByID(_ID);
 			if (foundGraphic)
@@ -210,10 +210,14 @@ namespace Copium
 					Component* pTargetGraphic = (Component*)(*reinterpret_cast<void**>(payload->Data));
 					if (pTargetGraphic != targetGraphic)
 					{
-						if (targetGraphic->componentType == ComponentType::Text)
-							reinterpret_cast<Text*>(targetGraphic)->layeredColor = {0,0,0,0};
-						else if (targetGraphic->componentType == ComponentType::Image)
-							reinterpret_cast<Text*>(targetGraphic)->layeredColor = { 0,0,0,0 };
+						if (targetGraphic)
+						{
+							if (targetGraphic->componentType == ComponentType::Text)
+								reinterpret_cast<Text*>(targetGraphic)->layeredColor = {0,0,0,0};
+							else if (targetGraphic->componentType == ComponentType::Image)
+								reinterpret_cast<Text*>(targetGraphic)->layeredColor = { 0,0,0,0 };
+							
+						}
 						targetGraphic = pTargetGraphic;
 					}
 				}
@@ -392,7 +396,7 @@ namespace Copium
 		Component::serialize(_value, _doc);
 
 		if (targetGraphic)
-			_value.AddMember("Graphic ID", targetGraphic->id, _doc.GetAllocator());
+			_value.AddMember("Graphic ID", targetGraphic->uuid, _doc.GetAllocator());
 		else
 			_value.AddMember("Graphic ID", 0, _doc.GetAllocator());
 
@@ -475,7 +479,7 @@ namespace Copium
 		return tmp;
 	}
 
-	void Button::set_targetgraphic(Text* _txt)
+	void Button::set_targetgraphic(Component* _txt)
 	{
 		targetGraphic = _txt;
 	}
@@ -706,6 +710,11 @@ namespace Copium
 		{
 			id = _value["ID"].GetUint64();
 		}
+		if (_value.HasMember("UID"))
+		{
+			uuid.Deserialize(_value["UID"]);
+			PRINT("Text uuid:" << uuid);
+		}
 		if (_value.HasMember("FontName"))
 		{
 			fontName = _value["FontName"].GetString();
@@ -757,6 +766,7 @@ namespace Copium
 		_value.AddMember("Type", type, _doc.GetAllocator());
 
 		_value.AddMember("ID", id, _doc.GetAllocator());
+		uuid.Serialize(_value, _doc);
 
 		type.SetString(fontName.c_str(), rapidjson::SizeType(fontName.length()), _doc.GetAllocator());
 		_value.AddMember("FontName", type, _doc.GetAllocator());

@@ -136,6 +136,8 @@ namespace Copium
             */
             /**************************************************************************/
             Component* clone(GameObject& _gameObj, ComponentID* newID = nullptr) const;
+
+            std::string GetAlias() const { return alias; }
 	};
 
 }

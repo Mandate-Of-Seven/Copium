@@ -32,7 +32,7 @@ namespace Copium
 Transform::Transform
 	(GameObject& _gameObj,Math::Vec3 _position, Math::Vec3 _rotation, Math::Vec3 _scale)
 	:Component(_gameObj, ComponentType::Transform),
-	position {_position}, rotation{ _rotation }, scale{ _scale }, parent{ nullptr }{}
+    position{ _position }, rotation{ _rotation }, scale{ _scale }, parent{ nullptr }, pid{0}{}
 
 float temp;
 
@@ -65,6 +65,7 @@ void Transform::deserializeLink(rapidjson::Value& _value)
 
         //PRINT("Parent of " << gameObj.get_name() << ": " << go->get_name());
     }
+
 }
 
 // M2

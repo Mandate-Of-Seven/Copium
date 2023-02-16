@@ -27,21 +27,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #ifndef ANIMATION_SYSTEM_H
 #define ANIMATION_SYSTEM_H
 
-/*!***************************************************************************************
-\file			animation-struct.h
-\project
-\author			Sean Ngo
-\co-author      Matthew Lau
-
-\par			Course: GAM200
-\par			Section:
-\date			05/01/2023
-
-\brief
-    This file holds the declaration of the Animator and the Animation System
-
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
-*****************************************************************************************/
 #include <vector>
 #include "CopiumCore/system-interface.h"
 #include "GameObject/Components/component.h"
@@ -242,12 +227,19 @@ namespace Copium
         /**************************************************************************/
         void SetStatus(AnimatorStatus _status) { status = _status; }
 
+        bool IsLooping() const { return loop; }
+        bool IsReversed() const { return reverse; }
+        unsigned int GetAnimationCount() const { return animationCount; }
+        bool loop, reverse;
+
+        void SetAnimationCount(unsigned int _value) { animationCount = _value; }
+        void SetCurrentAnimationIndex(int _value) { currentAnimationIndex = _value; }
     protected:
         std::vector<Animation> animations;    // The indices of the animations inside the assets-system
         int currentAnimationIndex;      // Current playing animation
         int startingAnimationIndex;     // The first animation that is playing
         unsigned int animationCount;
-        bool loop, reverse;
+
         AnimatorStatus status;
     };
 

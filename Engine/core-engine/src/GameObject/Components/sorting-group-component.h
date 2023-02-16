@@ -119,6 +119,10 @@ namespace Copium
 		*/
 		/*******************************************************************************/
 		int GetOrderInLayer() const { return orderInLayer; }
+
+		void SetLayerID(int _value) { sortingLayer = _value; }
+		void SetOrder(int _value) { orderInLayer = _value; }
+
 	private:
 		int sortingLayer;
 		int orderInLayer;

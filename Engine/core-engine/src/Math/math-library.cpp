@@ -21,6 +21,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************/
 #include "pch.h"
 #include "Math/math-library.h"
+#include "Utilities/json-utilities.h"
 #include <rttr/registration>
 
 
@@ -170,8 +171,11 @@ namespace Copium::Math
 	}
 	bool Vec2::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
-		_value.AddMember("X", x, _doc.GetAllocator());
-		_value.AddMember("Y", y, _doc.GetAllocator());
+		//_value.AddMember("X", x, _doc.GetAllocator());
+		//_value.AddMember("Y", y, _doc.GetAllocator());
+		Copium::Serialize(x, _value, _doc, "X");
+		Copium::Serialize(y, _value, _doc, "Y");
+
 
 		return true;
 
@@ -321,9 +325,14 @@ namespace Copium::Math
 	}
 	bool Vec3::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
-		_value.AddMember("X", x, _doc.GetAllocator());
-		_value.AddMember("Y", y, _doc.GetAllocator());
-		_value.AddMember("Z", z, _doc.GetAllocator());
+		//_value.AddMember("X", x, _doc.GetAllocator());
+		//_value.AddMember("Y", y, _doc.GetAllocator());
+		//_value.AddMember("Z", z, _doc.GetAllocator());
+
+		Copium::Serialize(x, _value, _doc, "X");
+		Copium::Serialize(y, _value, _doc, "Y");
+		Copium::Serialize(z, _value, _doc, "Z");
+
 		return true;
 	}
 	////////////////////////////

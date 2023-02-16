@@ -12,8 +12,10 @@
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
-#include "GameObject/Components/component.h"
+#ifndef CAMERA_H
+#define CAMERA_H
 
+#include "GameObject/Components/component.h"
 #include "Graphics/base-camera.h"
 
 namespace Copium
@@ -86,3 +88,5 @@ namespace Copium
         GameObject* gameObject; // Reference to the gameobject
 	};
 }
+
+#endif // !CAMERA_H
