@@ -266,73 +266,9 @@ namespace Copium
 				++gameObjectIt;
 			}
 		}
-		
-		// Place Game Objects that are in layers into respective layers
-		for (GameObject* go : currentScene->gameObjects)
-		{
-			bool layered{ false };
-			SortingGroup* sg{ nullptr };
-			for (Component* component : go->getComponents<SortingGroup>())
-			{
-				if (component->Enabled())
-				{
-					sg = reinterpret_cast<SortingGroup*>(component);
-					layered = true;
-					break;
-				}
-			}
 
-			if (layered)
-			{
-				PRINT("Layer ID: " << sg->GetLayerID());
-				MyEditorSystem.getLayers()->SortLayers()->AddGameObject(sg->GetLayerID(), *go);
-			}
-		}
 		// Sort based on order in layer
-		for (Layer& la : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
-		{
-			bool swapped{ false };
-			if (la.gameObjects.size() <= 1)
-				continue;
-
-			for (size_t i{ 0 }; i < la.gameObjects.size() - 1; ++i)
-			{
-				for (size_t j{ 0 }; j < la.gameObjects.size() - 1 - i; ++j)
-				{
-					SortingGroup* sg1{ nullptr }, * sg2{ nullptr };
-
-					if (!la.gameObjects[j] && la.gameObjects[j+1])
-					{
-						std::swap(la.gameObjects[j], la.gameObjects[j + 1]);
-						swapped = true;
-						continue;
-					}
-
-					if (la.gameObjects[j] && la.gameObjects[j + 1])
-					{
-						Component* co1 = la.gameObjects[j]->getComponent<SortingGroup>();
-						Component* co2 = la.gameObjects[j + 1]->getComponent<SortingGroup>();
-
-						if (co1 && co2)
-						{
-							sg1 = reinterpret_cast<SortingGroup*>(co1);
-							sg2 = reinterpret_cast<SortingGroup*>(co2);
-
-							if (sg1->GetOrderInLayer() > sg2->GetOrderInLayer())
-							{
-								std::swap(la.gameObjects[j], la.gameObjects[j + 1]);
-								swapped = true;
-							}
-						}
-					}
-
-
-				}
-
-				if (!swapped)
-					break;
-			}
-		}
+		MyEditorSystem.getLayers()->SortLayers()->BubbleSortGameObjects();
 
 		ifs.close();
 
@@ -463,6 +399,7 @@ namespace Copium
 
 		return true;
 	}
+
 	bool SceneManager::endPreview()
 	{
 		if (!currentScene)
@@ -479,6 +416,21 @@ namespace Copium
 		// Delete memory for the preview scene
 		if (!storageScene)
 			return false;
+
+		// Replace gameobjects in sorting layer
+		MyEditorSystem.getLayers()->SortLayers()->ClearAllLayer();
+
+		for (GameObject* go : storageScene->gameObjects)
+		{
+			if (go->hasComponent(ComponentType::SortingGroup))
+			{
+				SortingGroup* sg = go->getComponent<SortingGroup>();
+				MyEditorSystem.getLayers()->SortLayers()->AddGameObject(sg->GetLayerID(), *go);
+			}
+		}
+
+		// Sort based on order in layer
+		MyEditorSystem.getLayers()->SortLayers()->BubbleSortGameObjects();
 
 		Scene* tmp = currentScene;
 		currentScene = storageScene;
@@ -519,6 +471,7 @@ namespace Copium
 		std::cout << "Time taken: " << glfwGetTime() - startTime << std::endl;
 		return true;
 	}
+
 	bool SceneManager::save_scene(const std::string& _filepath)
 	{
 		if(!currentScene)

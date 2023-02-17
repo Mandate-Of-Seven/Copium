@@ -31,6 +31,15 @@ namespace Copium
         editor->getLayers()->SortLayers()->AddGameObject(0, _gameObj);
 	}
 
+    SortingGroup::SortingGroup(GameObject& _gameObj, int _order, int _sort, bool _replace) :Component(_gameObj, ComponentType::SortingGroup), sortingLayer{ _sort }, orderInLayer{ _order }
+    {
+        PRINT("Added to specific layer");
+        if(_replace)
+            editor->getLayers()->SortLayers()->ReplaceGameObject(sortingLayer, _gameObj);
+        else
+            editor->getLayers()->SortLayers()->AddGameObject(sortingLayer, _gameObj);
+    }
+
 	void SortingGroup::inspector_view()
 	{
         ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody

@@ -38,6 +38,21 @@ namespace Copium
 		/*!
 		*
 		\brief
+			Constructs the component of the sorting group for this gameobject
+		\param _gameObj
+			The gameoject to add into the sorting group
+		\param _order
+			The order in the specific layer
+		\param _sort
+			The sorting group to add the gameobject into
+		*/
+		/*******************************************************************************/
+		SortingGroup(GameObject& _gameObj, int _order, int _sort, bool _replace = false);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
 			Displays the inspector view with its fields
 		*/
 		/*******************************************************************************/
@@ -56,7 +71,7 @@ namespace Copium
 		Component* clone(GameObject& _gameObj, ComponentID* newID = nullptr) const
 		{
 			(void)newID;
-			SortingGroup* component = new SortingGroup(_gameObj);
+			SortingGroup* component = new SortingGroup(_gameObj, orderInLayer, sortingLayer, true);
 			return component;
 		}
 		/*******************************************************************************

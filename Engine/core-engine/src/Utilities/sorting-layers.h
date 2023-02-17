@@ -61,6 +61,14 @@ namespace Copium
 		/***************************************************************************/
 		/*!
 		\brief
+			Reorder the gameobjects based on the order in layer
+		*/
+		/***************************************************************************/
+		void BubbleSortGameObjects();
+
+		/***************************************************************************/
+		/*!
+		\brief
 			Swap two layers based on their names
 		\param _name01
 			First layer to swap
@@ -142,6 +150,18 @@ namespace Copium
 		/***************************************************************************/
 		/*!
 		\brief
+			Replace a gameobject in the sorting layer
+		\param _layerID
+			The layer with the specific index to add the gameobject to
+		\param _gameObject
+			The gameobject to replace into the layer
+		*/
+		/***************************************************************************/
+		void ReplaceGameObject(const unsigned int& _layerID, GameObject& _gameObject);
+
+		/***************************************************************************/
+		/*!
+		\brief
 			Remove a gameobject from the sorting layer
 		\param _name
 			The fisrt layer found with the name to remove the gameobject from
@@ -162,6 +182,14 @@ namespace Copium
 		*/
 		/***************************************************************************/
 		void RemoveGameObject(const unsigned int& _layerID, GameObject& _gameObject);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Remove all gameobjects in all layers
+		*/
+		/***************************************************************************/
+		void ClearAllLayer();
 
 		const int& GetLayerCount() const { return layerCount; }
 		const int& GetCharLength() const { return maxCharLength; }

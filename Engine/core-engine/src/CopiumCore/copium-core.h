@@ -80,7 +80,7 @@ namespace Copium
 			pMessageSystem->subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
 			pMessageSystem->subscribe(MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW, this);
 			while (MyScriptingSystem.compilingState == CompilingState::Compiling);
-			MySceneManager.load_scene(Paths::assetPath+"\\Scenes\\Demo.scene");
+			//MySceneManager.load_scene(Paths::assetPath+"\\Scenes\\Demo.scene");
 			//MySceneManager.load_scene("C:\\Users\\FLESH\\Desktop\\Copium\\Engine\\x64\\PackedTracks\\Assets\\Scenes\\Demo.scene");
 			
 		}

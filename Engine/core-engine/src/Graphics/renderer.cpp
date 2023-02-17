@@ -307,6 +307,7 @@ namespace Copium
 			
 			if (graphics->get_texture_slot_index() >= 32)
 			{
+				glClear(GL_COLOR_BUFFER_BIT);
 				graphics->set_texture_slot_index(1);
 				end_batch();
 				flush();

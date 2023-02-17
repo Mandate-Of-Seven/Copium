@@ -18,6 +18,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "GameObject/game-object-factory.h"
 #include "SceneManager/scene-manager.h"
 #include "GameObject/Components/renderer-component.h"
+#include "GameObject/Components/sorting-group-component.h"
 #include <rttr/registration>
 #include <filesystem>
 #include <Editor/editor-undoredo.h>
@@ -241,6 +242,19 @@ namespace Copium
 					if (key == "Transform")
 						// deserialize transform component
 						go->transform.deserialize(component);
+					else if (key == "SortingGroup")
+					{
+						int sort = 0, order = 0;
+						if (component.HasMember("SortingLayer"))
+							sort = component["SortingLayer"].GetInt();
+
+						if (component.HasMember("OrderInLayer"))
+							order = component["OrderInLayer"].GetInt();
+
+						SortingGroup* sg = new SortingGroup(*go, order, sort);
+						sg->id = go->assign_id();
+						go->components.push_back(reinterpret_cast<Component*>(sg));
+					}
 					else
 					{
 						Component* tmp = go->addComponent(Component::nameToType(key));

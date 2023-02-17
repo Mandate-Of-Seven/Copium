@@ -77,8 +77,8 @@ namespace Copium
 		glClearColor(clr.r, clr.g, clr.b, clr.a);
 
 		// Clear the screen bits
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//glClear(GL_COLOR_BUFFER_BIT);
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT);
 
 
 		if(drawMode[DRAW::EDITOR])
@@ -92,7 +92,6 @@ namespace Copium
 
 		if (drawMode[DRAW::DEVELOPMENT])
 			development();
-
 	}
 
 	void Draw::exit()
@@ -215,7 +214,7 @@ namespace Copium
 				if (gameObject == nullptr || !gameObject->isActive())
 					continue;
 
-				/*bool layered{ false };
+				bool layered{ false };
 				for (Component* component : gameObject->getComponents<SortingGroup>())
 				{
 					if (component->Enabled())
@@ -226,7 +225,7 @@ namespace Copium
 				}
 
 				if (layered)
-					continue;*/
+					continue;
 
 				for (Component* component : gameObject->getComponents<SpriteRenderer>())
 				{
@@ -365,7 +364,7 @@ namespace Copium
 
 		// Gameobjects with Sorting Layers
 		renderer.begin_batch();
-		if (scene != nullptr && false)
+		if (scene != nullptr)
 		{
 			if (scene->get_state() == Scene::SceneState::play)
 				toggleAnim = true;
