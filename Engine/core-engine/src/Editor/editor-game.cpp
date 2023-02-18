@@ -51,7 +51,7 @@ namespace Copium
 		scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
 		
 		unsigned int textureID = 0;
-		if (!MyGraphicsSystem.get_cameras().empty())
+		if (!MyGraphicsSystem.getCamera().empty())
 		{
 			gameCamera = *MyGraphicsSystem.get_cameras().begin();
 			textureID = gameCamera->get_framebuffer()->get_color_attachment_id();

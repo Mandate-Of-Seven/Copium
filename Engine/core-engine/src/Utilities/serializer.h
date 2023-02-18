@@ -15,15 +15,8 @@
 
 // Components
 #include "Animation/animation-system.h"
-#include "GameObject/Components/renderer-component.h"
-#include "GameObject/Components/physics-components.h"
-#include "GameObject/Components/audiosource-component.h"
-#include "GameObject/Components/collider-components.h"
-#include "GameObject/Components/camera-component.h"
-#include "GameObject/Components/sorting-group-component.h"
-#include "GameObject/Components/ui-components.h"
-#include "GameObject/Components/script-component.h"
 #include "GameObject/game-object.h"
+#include "GameObject/components.h"
 
 namespace Copium::Serializer {
 
@@ -81,7 +74,7 @@ namespace Copium::Serializer {
 
 	// UI
 	template<>
-	void Serialize<ImageComponent>(ImageComponent& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc);
+	void Serialize<Image>(Image& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc);
 	template<>
 	void Serialize<Button>(Button& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc);
 	template<>
@@ -219,7 +212,7 @@ namespace Copium::Serializer {
 	template<>
 	void Deserialize<Text>(Text& _data, const std::string& _key, rapidjson::Value& _value);
 	template<>
-	void Deserialize<ImageComponent>(ImageComponent& _data, const std::string& _key, rapidjson::Value& _value);
+	void Deserialize<Image>(Image& _data, const std::string& _key, rapidjson::Value& _value);
 
 	template<>
 	void Deserialize<Script>(Script& _data, const std::string& _key, rapidjson::Value& _value);

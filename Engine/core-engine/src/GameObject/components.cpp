@@ -1,6 +1,7 @@
 #include <pch.h>
 #include <Events/events-system.h>
 #include <GameObject/components.h>
+#include <Editor/editor-system.h>
 
 namespace Copium
 {
@@ -156,6 +157,15 @@ namespace Copium
 		float timer{ 0 };
 		float fadeDuration{ 0.1f };
 		return *this;
+	}
+	
+	SortingGroup::SortingGroup(GameObject& _gameObj, int _order, int _sort, bool _replace) :Component(_gameObj), sortingLayer{ _sort }, orderInLayer{ _order }
+	{
+		PRINT("Added to specific layer");
+		if (_replace)
+			MyEditorSystem.getLayers()->SortLayers()->ReplaceGameObject(sortingLayer, _gameObj);
+		else
+			MyEditorSystem.getLayers()->SortLayers()->AddGameObject(sortingLayer, _gameObj);
 	}
 
 }

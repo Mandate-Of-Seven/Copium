@@ -25,9 +25,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "SceneManager/scene-manager.h"
 //#include "Graphics/graphics-system.h"
 //#include "Windows/windows-system.h"
-//#include "Editor/editor-system.h"
+#include "Editor/editor-system.h"
+#include <rapidjson/istreamwrapper.h>
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/prettywriter.h>
+#include <GameObject/game-object-factory.h>
 //#include <Audio/sound-system.h>
 #include <Events/events-system.h>
 
@@ -114,12 +116,12 @@ namespace Copium
 		}
 		std::cout << "loading " << _filepath << std::endl;
 
-		//if (_filepath.find(".scene") == std::string::npos)
-		//{
-		//	Window::EditorConsole::editorLog.add_logEntry("file selected is not a Copium Scene!");
-		//	return false;
-		//}
-		
+		if (_filepath.find(".scene") == std::string::npos)
+		{
+			MyEventSystem->publish(new EditorConsoleLogEvent("File selected is not a Copium Scene!"));
+			return false;
+		}
+
 		if (!currentScene)
 		{
 			currentScene = new NormalScene(_filepath);
@@ -131,257 +133,231 @@ namespace Copium
 		if (!ifs)
 			return false;
 
-		//rapidjson::IStreamWrapper isw(ifs);
-		//if (document.ParseStream(isw).HasParseError())
-		//{
-		//	ifs.close();
-		//	return false;
-		//}
-
-		//if (document.HasMember("Name"))
-		//{
-		//	currentScene->set_name(document["Name"].GetString());
-		//	std::cout << "Scene name:" << currentScene->name << std::endl;
-		//}
-
-		//MyEventSystem->publish(new SceneOpenedEvent(currentScene->name.c_str()));
-
-		/*
-		if (document.HasMember("Unused GIDs"))
+		rapidjson::IStreamWrapper isw(ifs);
+		if (document.ParseStream(isw).HasParseError())
 		{
-			std::cout << "Adding unused gids: ";
-			rapidjson::Value& _arr = document["Unused GIDs"].GetArray();
-			for (rapidjson::Value::ValueIterator iter = _arr.Begin(); iter != _arr.End(); ++iter)
-			{
-				UUID id = (*iter).GetUint64();
-				currentScene->add_unused_gid(id);
-				std::cout << id << ' ';
-			}
-			std::cout << std::endl;
+			ifs.close();
+			return false;
 		}
-		if (document.HasMember("Unused CIDs"))
+
+		if (document.HasMember("Name"))
 		{
-			rapidjson::Value& arr = document["Unused CIDs"].GetArray();
+			currentScene->set_name(document["Name"].GetString());
+			std::cout << "Scene name:" << currentScene->name << std::endl;
+		}
+
+		MyEventSystem->publish(
+			new SceneOpenedEvent(
+				currentScene->get_name().c_str(),
+				currentScene->gameObjects,
+				currentScene->componentArrays
+			)
+		);
+
+		if (document.HasMember("Layers"))
+		{
+			rapidjson::Value& arr = document["Layers"].GetArray();
+			if (MyEditorSystem.getLayers()->SortLayers()->GetLayerCount())
+			{
+				MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers().clear();
+				MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers().shrink_to_fit();
+				PRINT(MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers().size());
+			}
+
+			unsigned int idx{ 0 };
+			// Set-up all the layers
 			for (rapidjson::Value::ValueIterator iter = arr.Begin(); iter != arr.End(); ++iter)
 			{
-				UUID id = (*iter).GetUint64();
-				currentScene->add_unused_cid(id);
-				std::cout << id << ' ';
+				std::string name;
+				rapidjson::Value& layer = *iter;
+				if (layer.HasMember("Name"))
+				{
+					name = layer["Name"].GetString();
+				}
+				Layer* lay = MyEditorSystem.getLayers()->SortLayers()->CreateNewLayer(name);
+				PRINT("making new layer");
+				if (layer.HasMember("ID"))
+				{
+					lay->layerID = layer["ID"].GetUint();
+					PRINT("Layer's id: " << lay->layerID);
+				}
+				else
+				{
+					lay->layerID = idx;
+				}
+
+				++idx;
+
 			}
-			std::cout << std::endl;
 
 		}
-		*/
-		//if (document.HasMember("Layers"))
-		//{
-		//	rapidjson::Value& arr = document["Layers"].GetArray();
-		//	if (es.getLayers()->SortLayers()->GetLayerCount())
-		//	{
-		//		es.getLayers()->SortLayers()->GetSortingLayers().clear();
-		//		es.getLayers()->SortLayers()->GetSortingLayers().shrink_to_fit();
-		//		PRINT(es.getLayers()->SortLayers()->GetSortingLayers().size());
-		//	}
 
-		//	unsigned int idx{ 0 };
-		//	// Set-up all the layers
-		//	for (rapidjson::Value::ValueIterator iter = arr.Begin(); iter != arr.End(); ++iter)
-		//	{
-		//		std::string name;
-		//		rapidjson::Value& layer = *iter;
-		//		if (layer.HasMember("Name"))
-		//		{
-		//			name = layer["Name"].GetString();
-		//		}
-		//		Layer* lay = es.getLayers()->SortLayers()->CreateNewLayer(name);
-		//		PRINT("making new layer");
-		//		if (layer.HasMember("ID"))
-		//		{
-		//			lay->layerID = layer["ID"].GetUint();
-		//			PRINT("Layer's id: " << lay->layerID);
-		//		}
-		//		else
-		//		{
-		//			lay->layerID = idx;
-		//		}
-
-		//		++idx;
-		//		
-		//	}
-
-		//}
-
-		//if (document.HasMember("GameObjects"))
-		//{
-		//	rapidjson::Value& _gameObjArr = document["GameObjects"].GetArray();
-		//	for (rapidjson::Value::ValueIterator iter = _gameObjArr.Begin(); iter != _gameObjArr.End(); ++iter)
-		//	{
-		//		GameObject* tmpGO = nullptr;
-		//		tmpGO = MyGOF.instantiate(*iter);
-		//		PRINT(*tmpGO);
-		//	}
+		if (document.HasMember("GameObjects"))
+		{
+			rapidjson::Value& _gameObjArr = document["GameObjects"].GetArray();
+			for (rapidjson::Value::ValueIterator iter = _gameObjArr.Begin(); iter != _gameObjArr.End(); ++iter)
+			{
+				GameObject* tmpGO = nullptr;
+				tmpGO = MyGOF.Instantiate(*iter);
+				PRINT(*tmpGO);
+			}
 
 			// Linkages
-			// for (GameObject* go : currentScene->gameObjects)
-			// {
-			// 	// Transform and Parent
-			// 	if (go->transform.pid)
-			// 	{
-			// 		GameObject* p = MySceneManager.FindGameObjectByID(go->transform.pid);
-			// 		if(p)
-			// 			go->transform.setParent(&p->transform);
+			for (GameObject& go : currentScene->gameObjects)
+			{
+				// Transform and Parent
+				if (go.transform.pid)
+				{
+					GameObject* p = MySceneManager.FindGameObjectByID(go->transform.pid);
+					if (p)
+						go.transform.SetParent(&p->transform);
 
-			// 	}
-				
-			// 	// SpriteSheet
-			// 	if (go->hasComponent(ComponentType::Animator))
-			// 	{
-			// 		Animator* animator = go->getComponent<Animator>();
-			// 		for (Animation& anim : animator->get_animation_vector())
-			// 		{
-			// 			uint64_t sid = anim.spriteSheet.spriteID;
-			// 			if (sid != 0)
-			// 			{
-			// 				std::vector<Texture> textures = assets.get_textures();
-			// 				bool reference = false;
-			// 				for (int j = 0; j < textures.size(); j++)
-			// 				{
-			// 					uint64_t pathID = std::hash<std::string>{}(textures[j].get_file_path());
-			// 					MetaID metaID = assets.GetMetaID(pathID);
+				}
 
-			// 					// Check if the uuid of the sprite is the same as the meta file
-			// 					if (metaID.uuid == sid)
-			// 					{
-			// 						// If so set the reference texture to that file
-			// 						reference = true;
-			// 						anim.spriteSheet.texture = assets.get_texture(j);
-			// 						break;
-			// 					}
-			// 				}
+				// SpriteSheet
+				if (go.HasComponent<Animator>())
+				{
+					Animator* animator = go.GetComponent<Animator>();
+					for (Animation& anim : animator->get_animation_vector())
+					{
+						uint64_t sid = anim.spriteSheet.spriteID;
+						if (sid != 0)
+						{
+							const std::vector<Texture>& textures = MyAssetSystem.GetTextures();
+							bool reference = false;
+							for (int j = 0; j < textures.size(); j++)
+							{
+								uint64_t pathID = std::hash<std::string>{}(textures[j].get_file_path());
+								MetaID metaID = MyAssetSystem.GetMetaID(pathID);
 
-			// 				// If there is no references, set the spriteID to 0
-			// 				if (!reference)
-			// 					sid = 0;
-			// 			}
-			// 		}
-			// 	}
-			
-			// 	// Target Graphic
-			// 	if (go->hasComponent(ComponentType::Button))
-			// 	{
-			// 		Button* button = go->getComponent<Button>();
-			// 		if (button->graphicID)
-			// 			button->set_targetgraphic(findComponentByID(button->graphicID));
-			// 	}
-				
-			// 	if (go->hasComponent(ComponentType::Script))
-			// 	{
-			// 		Script* script = go->getComponent<Script>();
-			// 		for (auto it = script->GetFieldData().begin(); it != script->GetFieldData().end(); ++it)
-			// 		{
-			// 			const std::string& _name{ it->first };
-			// 			Field& field = it->second;
-			// 			FieldType fType = field.fType;
+								// Check if the uuid of the sprite is the same as the meta file
+								if (metaID.uuid == sid)
+								{
+									// If so set the reference texture to that file
+									reference = true;
+									anim.spriteSheet.texture = MyAssetSystem.GetTexture(j);
+									break;
+								}
+							}
 
-			// 			switch (fType)
-			// 			{
-			// 			case FieldType::Component:
-			// 			{
-			// 				uint64_t id{ field.Get<uint64_t>() };
-			// 				Component* pComponent = MySceneManager.findComponentByID(id);
-			// 				if (pComponent)
-			// 					script->GetFieldComponentReferences()[_name] = pComponent;
-			// 				break;
-			// 			}
-			// 			case FieldType::GameObject:
-			// 			{
-			// 				uint64_t id{ field.Get<uint64_t>() };
-			// 				GameObject* pGameObject = MySceneManager.findGameObjByID(id);
-			// 				if (pGameObject)
-			// 					script->GetFieldGameObjReferences()[_name] = pGameObject;
-			// 				break;
-			// 			}
-			// 			}
-			// 		}
-			// 	}
-			
-			//}
+							// If there is no references, set the spriteID to 0
+							if (!reference)
+								sid = 0;
+						}
+					}
+				}
+
+				// Target Graphic
+				if (go.HasComponent<Button>())
+				{
+					Button* button = go.GetComponent<Button>();
+					if (button->graphicID)
+						button->targetGraphic = reinterpret_cast<IUIComponent*>(FindComponentByID(button->graphicID));
+				}
+
+				if (go.HasComponent<Script>())
+				{
+					Script* script = go.GetComponent<Script>();
+					for (auto it = script->fieldDataReferences.begin(); it != script->fieldDataReferences.end(); ++it)
+					{
+						const std::string& _name{ it->first };
+						Field& field = it->second;
+						FieldType fType = field.fType;
+
+						switch (fType)
+						{
+						case FieldType::Component:
+						{
+							uint64_t id{ field.Get<uint64_t>() };
+							Component* pComponent = FindComponentByID(id);
+							if (pComponent)
+								script->fieldComponentReferences[_name] = pComponent;
+							break;
+						}
+						case FieldType::GameObject:
+						{
+							uint64_t id{ field.Get<uint64_t>() };
+							GameObject* pGameObject = FindGameObjectByID(id);
+							if (pGameObject)
+								script->fieldGameObjReferences[_name] = pGameObject;
+							break;
+						}
+						}
+					}
+				}
+
+			}
 
 		}
-		
+
 		// Place Game Objects that are in layers into respective layers
-		for (GameObject* go : currentScene->gameObjects)
-		{
-			bool layered{ false };
-			SortingGroup* sg{ nullptr };
-			for (Component* component : go->getComponents<SortingGroup>())
-			{
-				if (component->Enabled())
-				{
-					sg = reinterpret_cast<SortingGroup*>(component);
-					layered = true;
-					break;
-				}
-			}
+		//for (GameObject* go : currentScene->gameObjects)
+		//{
+		//	bool layered{ false };
+		//	SortingGroup* sg{ nullptr };
+		//	for (Component* component : go->getComponents<SortingGroup>())
+		//	{
+		//		if (component->Enabled())
+		//		{
+		//			sg = reinterpret_cast<SortingGroup*>(component);
+		//			layered = true;
+		//			break;
+		//		}
+		//	}
 
 		//	if (layered)
 		//	{
 		//		PRINT("Layer ID: " << sg->GetLayerID());
-		//		es.getLayers()->SortLayers()->AddGameObject(sg->GetLayerID(), *go);
+		//		MyEditorSystem.getLayers()->SortLayers()->AddGameObject(sg->GetLayerID(), *go);
 		//	}
 		//}
-		//// Sort based on order in layer
-		//for (Layer& la : es.getLayers()->SortLayers()->GetSortingLayers())
-		//{
-		//	bool swapped{ false };
-		//	if (la.gameObjects.size() <= 1)
-		//		continue;
+		// Sort based on order in layer
+		for (Layer& la : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
+		{
+			bool swapped{ false };
+			if (la.gameObjects.size() <= 1)
+				continue;
 
-		//	for (size_t i{ 0 }; i < la.gameObjects.size() - 1; ++i)
-		//	{
-		//		for (size_t j{ 0 }; j < la.gameObjects.size() - 1 - i; ++j)
-		//		{
-		//			SortingGroup* sg1{ nullptr }, * sg2{ nullptr };
+			for (size_t i{ 0 }; i < la.gameObjects.size() - 1; ++i)
+			{
+				for (size_t j{ 0 }; j < la.gameObjects.size() - 1 - i; ++j)
+				{
+					SortingGroup* sg1{ nullptr }, * sg2{ nullptr };
 
-		//			if (!la.gameObjects[j] && la.gameObjects[j+1])
-		//			{
-		//				std::swap(la.gameObjects[j], la.gameObjects[j + 1]);
-		//				swapped = true;
-		//				continue;
-		//			}
+					if (!la.gameObjects[j] && la.gameObjects[j + 1])
+					{
+						std::swap(la.gameObjects[j], la.gameObjects[j + 1]);
+						swapped = true;
+						continue;
+					}
 
-		//			if (la.gameObjects[j] && la.gameObjects[j + 1])
-		//			{
-		//				Component* co1 = la.gameObjects[j]->GetComponent<SortingGroup>();
-		//				Component* co2 = la.gameObjects[j + 1]->GetComponent<SortingGroup>();
+					if (la.gameObjects[j] && la.gameObjects[j + 1])
+					{
+						sg1 = la.gameObjects[j]->GetComponent<SortingGroup>();
+						sg2 = la.gameObjects[j + 1]->GetComponent<SortingGroup>();
 
-		//				if (co1 && co2)
-		//				{
-		//					sg1 = reinterpret_cast<SortingGroup*>(co1);
-		//					sg2 = reinterpret_cast<SortingGroup*>(co2);
-
-		//					if (sg1->GetOrderInLayer() > sg2->GetOrderInLayer())
-		//					{
-		//						std::swap(la.gameObjects[j], la.gameObjects[j + 1]);
-		//						swapped = true;
-		//					}
-		//				}
-		//			}
+						if (sg1 && sg2)
+						{
+							if (sg1->GetOrderInLayer() > sg2->GetOrderInLayer())
+							{
+								std::swap(la.gameObjects[j], la.gameObjects[j + 1]);
+								swapped = true;
+							}
+						}
+					}
 
 
-		//		}
+				}
 
-		//		if (!swapped)
-		//			break;
-		//	}
-		//}
+				if (!swapped)
+					break;
+			}
+		}
 
-		//ifs.close();
+		ifs.close();
 
 
-		//MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_SCENE_DESERIALIZED);
-
-		// For multiple scenes within an instance
-		//scenes.emplace_back(currentScene);
+		MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_SCENE_DESERIALIZED);
 
 		return true;
 
@@ -608,7 +584,7 @@ namespace Copium
 
 		//// Serialize Layer Data
 		//rapidjson::Value layers(rapidjson::kArrayType);
-		//for (Layer& layer : es.getLayers()->SortLayers()->GetSortingLayers())
+		//for (Layer& layer : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
 		//{
 		//	rapidjson::Value obj(rapidjson::kObjectType);
 		//	rapidjson::Value layerName;
@@ -620,7 +596,7 @@ namespace Copium
 		//	layers.PushBack(obj, doc.GetAllocator());
 		// Serialize Layer Data
 		rapidjson::Value layers(rapidjson::kArrayType);
-		for (Layer& layer : es.getLayers()->SortLayers()->GetSortingLayers())
+		for (Layer& layer : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
 		{
 			rapidjson::Value obj(rapidjson::kObjectType);
 			Serialize(layer.name, obj, doc, "Name");
@@ -633,10 +609,10 @@ namespace Copium
 		
 		//Create array of game objects
 		rapidjson::Value gameObjects(rapidjson::kArrayType);
-		for (GameObject* pGameObject : currentScene->gameObjects)
+		for (GameObject& gameObject : currentScene->gameObjects)
 		{
 			rapidjson::Value go(rapidjson::kObjectType);
-			Serializer::Serialize(*pGameObject, "", go, doc);
+			Serializer::Serialize(gameObject, "", go, doc);
 			gameObjects.PushBack(go, doc.GetAllocator());
 		}
 		doc.AddMember("GameObjects", gameObjects, doc.GetAllocator());

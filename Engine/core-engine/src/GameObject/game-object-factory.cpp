@@ -116,71 +116,19 @@ namespace Copium
 		return tmp;
 	}
 
-	//GameObject* GameObjectFactory::Instantiate(rapidjson::Value& _value) 
-	//{
-	//	if (!pGameObjectsArray)
-	//		return nullptr;
-
-	//	GameObject* go = nullptr;
-	//	//if (_value.HasMember("ID"))
-	//	//{
-	//	//	go = new GameObject(_value["ID"].GetUint64());
-	//	//}
-	//	//else
-	//	//{
-	//	//	go = new GameObject();
-	//	//}
-
-	//	//if (!go)
-	//	//{
-	//	//	PRINT("FAILED TO DESERIALIZE");
-	//	//	return nullptr;
-	//	//}
-	//	////go->id = currScene->assignGameObjID();
-
-
-	//	//if (!go->deserialize(_value))
-	//	//{
-	//	//	PRINT("FAILED TO DESERIALIZE");
-	//	//	delete go;
-	//	//	return nullptr;
-	//	//}
-
-	//	//if (_value.HasMember("Components"))
-	//	//{
-	//	//	rapidjson::Value& compArr = _value["Components"].GetArray();
-	//	//	for (rapidjson::Value::ValueIterator iter = compArr.Begin(); iter != compArr.End(); ++iter)
-	//	//	{
-
-	//	//		rapidjson::Value& component = *iter;
-	//	//		if (component.HasMember("ComponentType"))
-	//	//		{
-	//	//			ComponentType componentType = (ComponentType)component["ComponentType"].GetInt();
-	//	//			if (componentType == ComponentType::Transform)
-	//	//				go->transform.deserialize(component);
-	//	//			else
-	//	//			{
-	//	//				Component* tmp = AddComponent(*go, componentType);
-	//	//				if (tmp)
-	//	//					tmp->deserialize(component);
-	//	//			}
-	//	//		}
-	//	//	}
-	//	//}
-	//	//currScene->add_gameobject(go);
-
-	//	//// Deserialize children (if any)
-	//	////if (_value.HasMember("Children")) {
-	//	////	rapidjson::Value& childArr = _value["Children"].GetArray();
-	//	////	for (rapidjson::Value::ValueIterator iter = childArr.Begin(); iter != childArr.End(); ++iter)
-	//	////	{
-	//	////		GameObject* cgo = instantiate(*iter);
-	//	////		cgo->transform.SetParent(&go->transform);
-	//	////	}
-	//	////}
-
-	//	return go;
-	//}
+	GameObject& GameObjectFactory::Instantiate(rapidjson::Value& _value)
+	{
+		COPIUM_ASSERT(!pGameObjectsArray, "No scene was loaded when trying to instantiate a gameObject");
+		if (_value.HasMember("ID"))
+		{
+			GameObject& go = pGameObjectsArray->push_back(GameObject(_value["ID"].GetUint64()));
+			Serializer::Deserialize(go, "", _value);
+			return go;
+		}
+		GameObject& go = pGameObjectsArray->push_back();
+		Serializer::Deserialize(go, "", _value);
+		return go;
+	}
 
 	void GameObjectFactory::Destroy(GameObject& _go)
 	{
@@ -208,32 +156,7 @@ namespace Copium
 				for (Transform* pTransform : gameObject.transform.children)
 				{
 					pTransform->SetParent(nullptr);
-					Destroy(pTransform->gameObject);
-					std::string key = component["Type"].GetString();
-					//PRINT("Component: " << name);
-					// if (key == "Transform")
-					// 	// deserialize transform component
-					// 	go->transform.deserialize(component);
-					// else if (key == "SortingGroup")
-					// {
-					// 	int sort = 0, order = 0;
-					// 	if (component.HasMember("SortingLayer"))
-					// 		sort = component["SortingLayer"].GetInt();
-
-					// 	if (component.HasMember("OrderInLayer"))
-					// 		order = component["OrderInLayer"].GetInt();
-
-					// 	SortingGroup* sg = new SortingGroup(*go, order, sort);
-					// 	sg->id = go->assign_id();
-					// 	go->components.push_back(reinterpret_cast<Component*>(sg));
-					// }
-					// else
-					// {
-					// 	Component* tmp = go->addComponent(Component::nameToType(key));
-					// 	//PRINT();
-					// 	if (tmp)
-					// 		tmp->deserialize(component);
-					// }						
+					Destroy(pTransform->gameObject);			
 
 				}
 				return;

@@ -5,17 +5,8 @@
 #include <config.h>
 #include <Utilities/sparse-set.h>
 #include <CopiumCore/uuid.h>
-//#include <SceneManager/scene-manager.h>
-//#include <Animation/animation-struct.h>
-//#include <Files/assets-system.h>
-//#include <Events/events-system.h>
-//#include <Graphics/base-camera.h>
+#include <Graphics/base-camera.h>
 #include <Physics/collision.h>
-//#include <Debugging/frame-rate-controller.h>
-//#include <Utilities/easing.h>
-//#include <Editor/editor-system.h>
-//#include <Windows/windows-input.h>
-//#include <GameObject/game-object.h>
 #include <Messaging/message-system.h>
 #include <Animation/animation-struct.h>
 #include <Math/math-library.h>
@@ -28,7 +19,6 @@ namespace Copium
 {
 	class GameObject;
 	class UUID;
-
 
 	enum class ComponentType : int      // Types of Components
 	{
@@ -47,6 +37,22 @@ namespace Copium
 		None
 	};
 
+	//REMOVE WHEN SERIALIZATION HAS SWITCHED TO USE ENUMS INSTEAD OF NAMES
+	static std::map<std::string,ComponentType> NAME_TO_CTYPE
+	{
+		{"Animator",ComponentType::Animator},
+		{"AudioSource",ComponentType::AudioSource},
+		{"BoxCollider2D",ComponentType::BoxCollider2D},
+		{"Button",ComponentType::Button},
+		{"Camera",ComponentType::Camera},
+		{"Image",ComponentType::Image},
+		{"Rigidbody2D",ComponentType::Rigidbody2D},
+		{"SpriteRenderer",ComponentType::SpriteRenderer},
+		{"Script",ComponentType::Script},
+		{"Button",ComponentType::Button},
+		{"Text",ComponentType::Text},
+		{"SortingGroup",ComponentType::SortingGroup}
+	};
 
 	template <typename T>
 	using ComponentsArray = SparseSet<T, MAX_COMPONENTS>;
@@ -60,7 +66,7 @@ namespace Copium
 	public:
 		Component() = delete;
 		bool enabled{ true };
-		const UUID uuid;
+		UUID uuid;
 		GameObject& gameObj;
 	protected:
 		/***************************************************************************/
@@ -212,6 +218,7 @@ namespace Copium
 		Math::Vec3 position{};
 		Math::Vec3 rotation{};
 		Math::Vec3 scale{1,1,1};
+		UUID pid;
 		GameObject& gameObject;
 		/***************************************************************************/
 		/*!
@@ -354,12 +361,11 @@ namespace Copium
 
 	class AudioSource : public Component
 	{
-	protected:
+	public:
 		std::string alias;
 		bool overLap = false;
 		bool loop = false;
-		int loopCount{0};
-	public:
+		int loopCount{ 0 };
 		/***************************************************************************/
 		/*!
 		\brief
@@ -434,7 +440,7 @@ namespace Copium
 	};
 
 
-	class Camera : public Component//, public BaseCamera
+	class Camera : public Component, public BaseCamera
 	{
 	public:
 		/***************************************************************************/
@@ -594,8 +600,6 @@ namespace Copium
 		{
 			//MyEventSystem->publish(new ScriptSetFieldEvent(*this, _name.c_str(), (void*)value));
 		}
-		friend class ScriptingSystem;
-	private:
 		void instantiate()
 		{
 			//MyEventSystem->publish(new ReflectComponentEvent(*this));
@@ -831,6 +835,7 @@ namespace Copium
 		glm::fvec4 clickedColor;
 		IUIComponent* targetGraphic;
 		ButtonState previousState{ ButtonState::None };
+		UUID graphicID;
 		glm::fvec4 previousColor;
 		float timer{ 0 };
 		float fadeDuration{ 0.1f };
@@ -954,7 +959,6 @@ namespace Copium
 		//		font->draw_text(content, pos, mixedColor, scale, wrapper, _camera);
 		//	}
 		//}
-	private:
 		std::string fontName;
 		float fSize;
 		float wrapper;
@@ -999,6 +1003,22 @@ namespace Copium
 			//PRINT("Added to default layer");
 			//MyEditorSystem.getLayers()->SortLayers()->AddGameObject(0, _gameObj);
 		}
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Constructs the component of the sorting group for this gameobject
+		\param _gameObj
+			The gameoject to add into the sorting group
+		\param _order
+			The order in the specific layer
+		\param _sort
+			The sorting group to add the gameobject into
+		*/
+		/*******************************************************************************/
+		SortingGroup(GameObject& _gameObj, int _order, int _sort, bool _replace = false);
+
 		/*******************************************************************************
 		/*!
 		*
@@ -1022,8 +1042,7 @@ namespace Copium
 		SortingGroup& operator=(const SortingGroup& rhs)
 		{
 			return *this;
-		}
-	private:
+		}		
 		int sortingLayer;
 		int orderInLayer;
 	};

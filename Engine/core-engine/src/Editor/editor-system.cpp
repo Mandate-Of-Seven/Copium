@@ -34,6 +34,7 @@ namespace Copium
 		ThreadSystem& threadSystem{ *ThreadSystem::Instance() };
 		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 		bool tempMode = true;
+		ComponentsArray<Camera>* pCameraArray{};
 	}
 
 	void EditorSystem::init()
@@ -401,7 +402,7 @@ namespace Copium
 				ImGui::ShowDemoWindow(&show_demo_window);
 
 			// Game Camera
-			if (!MyGraphicsSystem.get_cameras().empty())
+			if (pCameraArray )
 			{
 				(*MyGraphicsSystem.get_cameras().begin())->update();
 			}

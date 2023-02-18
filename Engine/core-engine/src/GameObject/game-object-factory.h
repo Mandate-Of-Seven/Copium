@@ -82,7 +82,7 @@ namespace Copium {
 			pointer to the new game object
 		*/
 		/*******************************************************************************/
-		//GameObject* Instantiate(rapidjson::Value& _value);
+		GameObject& Instantiate(rapidjson::Value& _value);
 
 		/*******************************************************************************
 		/*!

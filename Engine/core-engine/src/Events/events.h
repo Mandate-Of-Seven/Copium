@@ -66,6 +66,21 @@ namespace Copium
 		GameObject* pOriginal;
 	};
 
+	template <typename T>
+	struct ComponentAdd
+	{
+		ComponentAdd(GameObject& _gameObject, T*& _componentContainer) : 
+			gameObject{ _gameObject }, componentContainer{ _componentContainer }{}
+		T*& componentContainer
+		GameObject& gameObject;
+	};
+
+	struct EditorConsoleLogEvent : IEvent
+	{
+		EditorConsoleLogEvent(const std::string& _message) : message{_message}{}
+		const std::string& message;
+	};
+
 	struct GameObjectDestroyEvent : IEvent
 	{
 		GameObjectDestroyEvent(GameObject& _gameObject) : gameObject{ _gameObject } {}

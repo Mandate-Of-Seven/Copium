@@ -36,12 +36,12 @@ namespace Copium
         //friend class GameObjectFactory;
         ComponentsPtrArrays componentPtrArrays{};
 
-        bool active;
     public:           
         //Global ID for gameObjects
-        const UUID uuid;
+        UUID uuid;
         Transform transform;
         std::string name;                   //Name of gameObject
+        bool active;
 
         /***************************************************************************/
         /*!
@@ -114,7 +114,6 @@ namespace Copium
         void AddComponent(T* component)
         {
             componentPtrArrays.GetArray<T>().push_back(component);
-            //SEND MESSAGE TO SCENE
         }
 
         /*******************************************************************************

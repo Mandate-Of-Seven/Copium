@@ -57,7 +57,7 @@ namespace Copium
 
 		inputs();
 
-		if (currentDirectory->path() != assetsPath)
+		if (currentDirectory->path() != assets)
 		{
 			if (ImGui::Button("Back"))
 			{
@@ -146,7 +146,7 @@ namespace Copium
 				ImGui::TableNextColumn();
 
 				const auto& path = dirEntry->path();
-				auto relativePath = std::filesystem::relative(path, assetsPath);
+				auto relativePath = std::filesystem::relative(path, assets);
 				std::string fileName = relativePath.filename().string();
 
 				ImGui::PushID(fileName.c_str());
