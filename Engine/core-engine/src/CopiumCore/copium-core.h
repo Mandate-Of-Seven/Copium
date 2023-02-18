@@ -54,6 +54,7 @@ namespace Copium
 			systems =
 			{
 				//Put in sequence of calls
+				MyEventSystem,
 				WindowsSystem::Instance(),
 				MyEventSystem,
 				pMessageSystem,

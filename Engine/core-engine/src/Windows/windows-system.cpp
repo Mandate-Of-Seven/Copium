@@ -117,7 +117,7 @@ namespace Copium
 
     void WindowsSystem::update()
     {
-        if (InputSystem::Instance()->is_key_held(GLFW_KEY_LEFT_CONTROL) && InputSystem::Instance()->is_key_pressed(GLFW_KEY_F))
+        if (MyInputSystem.is_key_held(GLFW_KEY_LEFT_CONTROL) && MyInputSystem.is_key_pressed(GLFW_KEY_F))
         {
             fullscreen = !fullscreen;
             Fullscreen(fullscreen, 1600, 900);
@@ -211,7 +211,7 @@ namespace Copium
 #ifdef _DEBUG
         PRINT("Window drop getting called!!!");
 #endif        
-        //FileSystem::Instance()->accept_dropped_files(_pathCount, _paths);
+        MyFileSystem.accept_dropped_files(_pathCount, _paths);
 
         (void) _window;
     }

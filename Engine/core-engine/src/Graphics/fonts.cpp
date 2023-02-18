@@ -21,7 +21,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include FT_FREETYPE_H
 
 #include "Graphics/graphics-system.h"
-#include "Editor/editor-system.h"
 #include "Files/file-system.h"
 #include <glm/gtc/type_ptr.hpp>
 

@@ -16,12 +16,12 @@
 
 	The definitions of functions from the Animator Component are here as well.
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 #include "Animation/animation-system.h"
-#include "Files/assets-system.h"
 #include "SceneManager/scene-manager.h"
+#include "Files/assets-system.h"
 #include "Debugging/frame-rate-controller.h"
 #define MAX_ANIMATION_COUNT 5
 

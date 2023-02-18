@@ -18,15 +18,12 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <GL/glew.h> // for access to OpenGL API declarations
 
 #include "Graphics/graphics-draw.h"
-#include "Graphics/graphics-system.h"
-#include "Files/assets-system.h"
+#include "Editor/editor-system.h"
 #include "Debugging/frame-rate-controller.h"
-#include "Windows/windows-input.h"
 
 // Bean: remove this after NewManagerInstance is moved
 #include "Animation/animation-system.h"
 #include "Math/math-library.h"
-#include "Graphics/fonts.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include <GameObject/components.h>
 #include <GameObject/game-object.h>
@@ -37,10 +34,6 @@ namespace Copium
 	ComponentsArrays* pComponentsArrays{};
 	namespace
 	{
-		AssetsSystem* assets = AssetsSystem::Instance();
-		GraphicsSystem* graphics = GraphicsSystem::Instance();
-		InputSystem* inputSystem = InputSystem::Instance();
-
 		bool toggleAnim = false;
 	}
 
@@ -84,8 +77,8 @@ namespace Copium
 		glClearColor(clr.r, clr.g, clr.b, clr.a);
 
 		// Clear the screen bits
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//glClear(GL_COLOR_BUFFER_BIT);
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT);
 
 
 		if(drawMode[DRAW::EDITOR])
@@ -99,7 +92,6 @@ namespace Copium
 
 		if (drawMode[DRAW::DEVELOPMENT])
 			development();
-
 	}
 
 	void Draw::exit()
@@ -507,7 +499,7 @@ namespace Copium
 		//		}
 		//	}
 
-		//	for (Layer& layer : editorSys->getLayers()->SortLayers()->GetSortingLayers())
+		//	for (Layer& layer : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
 		//	{
 		//		// Only For Text
 		//		for (GameObject* gameObject : layer.gameObjects)
@@ -537,12 +529,10 @@ namespace Copium
 		//renderer.begin_batch();
 		// Bean: Temporary green dot in the centre of the scene
 		glm::vec4 color = { 0.1f, 1.f, 0.1f, 1.f };
-		//glm::vec2 worldNDC{ 0 };
-		//glm::vec2 scale = { 0.01f, 0.01f };
-		//glm::vec2 cameraPos = graphics.->get_eye();
-		//float zoom = editorSys->get_camera()->get_zoom();
-		//worldNDC = { cameraPos.x, cameraPos.y };
-		//scale *= zoom;
+		glm::vec2 worldNDC{ 0 };
+		glm::vec2 scale = { 0.01f, 0.01f };
+		glm::vec2 cameraPos = MyEditorSystem.get_camera()->get_eye();
+		float zoom = MyEditorSystem.get_camera()->get_zoom();
 
 		//renderer.end_batch();
 		//renderer.flush();
@@ -638,7 +628,7 @@ namespace Copium
 		renderer.begin_batch();
 
 		// Bean: Enable if depth testing is disabled
-		/*Scene* scene = sm->get_current_scene();
+		/*Scene* scene = MySceneManager.get_current_scene();
 		if (scene != nullptr)
 		{
 			for (GameObject* gameObject : scene->gameObjects)
@@ -654,14 +644,12 @@ namespace Copium
 			}
 		}*/
 
+		// Bean : Testing Circles
 		glm::vec2 scale = glm::vec2(1.f, 1.f);
 		glm::vec3 pos = glm::vec3(-10.f, 3.f, 0.f);
 		glm::vec4 color = glm::vec4(1.f, 1.f, 1.f, 1.f);
 
 		static int count = 0;
-
-		if (inputSystem->is_key_held(68))
-			count++;
 
 		int posX = -100, posY = 100;
 		for (int i = 0; i < count; i++)

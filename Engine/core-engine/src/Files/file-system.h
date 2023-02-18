@@ -20,13 +20,15 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "CopiumCore/system-interface.h"
 #include "Files/file-directory.h"
-#include <Files/file.h>
+#include "Events/events.h"
 #include <string>
 #include <list>
 #include <map>
 #include <memory>
 
 #define DEFAULT_INSTANCE_ID 1000
+
+#define MyFileSystem (*Copium::FileSystem::Instance())
 
 namespace Copium
 {
@@ -371,6 +373,10 @@ namespace Copium
 		*/
 		/*******************************************************************************/
 		void remove_file_reference(File* _file);
+
+		void CallbackSetSelectedFile(SetSelectedFileEvent* pEvent);
+		void CallbackSetSelectedDirectory(SetSelectedDirectoryEvent* pEvent);
+		void CallbackDeleteFromBrowser(DeleteFromBrowserEvent* pEvent);
 
 	private:
 		std::map<const char*, std::list<File>> extensionTrackedFiles;

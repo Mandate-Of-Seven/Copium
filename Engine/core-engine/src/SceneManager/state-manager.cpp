@@ -14,7 +14,7 @@
 		1. Declarations of functions and extern variables that allow for the management of Engine States
 		2. Enums for all the Engine States
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "pch.h"
 #include "SceneManager/state-manager.h"

@@ -119,6 +119,9 @@ namespace Copium
 
 		GameObject* pSelectedGameObject{};
 	private:
+		
+
+	private:
 		bool enableEditor = true;
 
 		EditorSceneView sceneView;

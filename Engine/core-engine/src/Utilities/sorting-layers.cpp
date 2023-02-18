@@ -15,6 +15,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 
 #include "Utilities/sorting-layers.h"
+#include "GameObject/Components/sorting-group-component.h"
 #include "GameObject/game-object.h"
 
 namespace Copium
@@ -84,6 +85,52 @@ namespace Copium
 				return x.layerID < y.layerID;
 			}
 		);
+	}
+
+	void SortingLayers::BubbleSortGameObjects()
+	{
+		for (Layer& layer : sortingLayers)
+		{
+			bool swapped{ false };
+			if (layer.gameObjects.size() <= 1)
+				continue;
+
+			for (size_t i{ 0 }; i < layer.gameObjects.size() - 1; ++i)
+			{
+				for (size_t j{ 0 }; j < layer.gameObjects.size() - 1 - i; ++j)
+				{
+					SortingGroup* sg1{ nullptr }, * sg2{ nullptr };
+
+					if (!layer.gameObjects[j] && layer.gameObjects[j + 1])
+					{
+						std::swap(layer.gameObjects[j], layer.gameObjects[j + 1]);
+						swapped = true;
+						continue;
+					}
+
+					if (layer.gameObjects[j] && layer.gameObjects[j + 1])
+					{
+						Component* co1 = layer.gameObjects[j]->getComponent<SortingGroup>();
+						Component* co2 = layer.gameObjects[j + 1]->getComponent<SortingGroup>();
+
+						if (co1 && co2)
+						{
+							sg1 = reinterpret_cast<SortingGroup*>(co1);
+							sg2 = reinterpret_cast<SortingGroup*>(co2);
+
+							if (sg1->GetOrderInLayer() > sg2->GetOrderInLayer())
+							{
+								std::swap(layer.gameObjects[j], layer.gameObjects[j + 1]);
+								swapped = true;
+							}
+						}
+					}
+				}
+
+				if (!swapped)
+					break;
+			}
+		}
 	}
 
 	void SortingLayers::SwapLayers(const std::string& _name01, const std::string& _name02)
@@ -171,6 +218,32 @@ namespace Copium
 		}
 	}
 
+	void SortingLayers::ReplaceGameObject(const unsigned int& _layerID, GameObject& _gameObject)
+	{
+		for (int i = 0; i < sortingLayers.size(); i++)
+		{
+			if (sortingLayers[i].layerID == _layerID)
+			{
+				for (int j = 0; j < sortingLayers[i].gameObjects.size(); j++)
+				{
+					if (!sortingLayers[i].gameObjects[j])
+						continue;
+
+					if (sortingLayers[i].gameObjects[j]->id == _gameObject.id)
+					{
+						for (int k = 0; k < sortingLayers[i].gameObjects.size(); k++)
+						{
+							if(sortingLayers[i].gameObjects[k])
+								PRINT("Name: " << sortingLayers[i].gameObjects[k]->get_name());
+						}
+						sortingLayers[i].gameObjects[j] = &_gameObject;
+						break;
+					}
+				}
+			}
+		}
+	}
+
 	void SortingLayers::RemoveGameObject(const std::string& _name, GameObject& _gameObject)
 	{
 		for (int i = 0; i < sortingLayers.size(); i++)
@@ -205,6 +278,17 @@ namespace Copium
 						break;
 					}
 				}
+			}
+		}
+	}
+
+	void SortingLayers::ClearAllLayer()
+	{
+		for (int i = 0; i < sortingLayers.size(); i++)
+		{
+			for (int j = 0; j < sortingLayers[i].gameObjects.size(); j++)
+			{
+				sortingLayers[i].gameObjects[j] = nullptr;
 			}
 		}
 	}

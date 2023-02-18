@@ -15,15 +15,15 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
-#include "Windows/windows-system.h"
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 #include <Debugging/frame-rate-controller.h>
 
 #include "Graphics/graphics-system.h"
-#include "Graphics/spritesheet.h"
-#include "Graphics/fonts.h"
 #include "Windows/windows-input.h"
 
 #include "Files/assets-system.h"
+#include "Events/events-system.h"
 
 // Bean: remove this after NewManagerInstance is moved
 #include "SceneManager/scene-manager.h"
@@ -47,7 +47,7 @@ namespace Copium
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 
 		// Bean: 3D Depth Testing
-		glEnable(GL_DEPTH_TEST);
+		//glEnable(GL_DEPTH_TEST);
 		//glAlphaFunc(GL_GREATER, 0.5);
 		//glEnable(GL_ALPHA_TEST);
 		//glEnable(GL_STENCIL_TEST);
@@ -231,10 +231,10 @@ namespace Copium
 		PRINT("Mouse NDC position: " << mouseToNDC.x << ", " << mouseToNDC.y);
 		PRINT("World NDC position: " << worldNDC.x << ", " << worldNDC.y);*/
 
-		//if (inputSystem.is_key_pressed(GLFW_KEY_Y))
+		//if (MyInputSystem.is_key_pressed(GLFW_KEY_Y))
 		//{
-		//	SceneManager* sm = SceneManager::Instance();
-		//	PRINT("Number of Gameobjects: " << sm->get_current_scene()->get_gameobjcount());
+		//	SceneManager* MySceneManager = SceneManager::Instance();
+		//	PRINT("Number of Gameobjects: " << MySceneManager.get_current_scene()->get_gameobjcount());
 		//}
 	
 		batch_render();
@@ -246,7 +246,7 @@ namespace Copium
 	}
 
 	// Setup default shaders for the graphics system
-	void GraphicsSystem::setup_shader_program(std::string _vtx_shdr, std::string _frg_shdr)
+	void GraphicsSystem::SetupShaderProgram(const std::string& _vtx_shdr, const std::string& _frg_shdr)
 	{
 		std::vector<std::pair<GLenum, std::string>> shdr_files;
 		shdr_files.emplace_back(std::make_pair(GL_VERTEX_SHADER, _vtx_shdr));
@@ -279,9 +279,9 @@ namespace Copium
 
 		// Assign the slot to the texture
 		textureSlotIndex = 1;
-		for (GLuint i = 0; i < assets->get_textures().size(); i++)
+		for (GLuint i = 0; i < assets->GetTextures().size(); i++)
 		{
-			textureSlots[textureSlotIndex++] = assets->get_textures()[i].get_object_id();
+			textureSlots[textureSlotIndex++] = assets->GetTextures()[i].get_object_id();
 		}
 	}
 

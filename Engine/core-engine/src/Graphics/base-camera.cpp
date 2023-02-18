@@ -11,7 +11,7 @@
 	This file contains the definitions of the functions of the base camera class which
 	draws the objects within the camera using orthographic or perspective projection
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 
@@ -92,7 +92,7 @@ namespace Copium
 	{
 		updateFrustum();
 
-		if (cameraType == CameraType::GAME)
+		if (cameraType == CameraType::GAME && !MyEditorSystem.is_enabled())
 		{
 			draw.update(cameraType);
 		}
@@ -144,29 +144,28 @@ namespace Copium
 
 	glm::vec2 BaseCamera::get_game_ndc()
 	{
-		return {};
-		//EditorGame* gameView = editorSystem.get_game_view();
+		EditorGame* gameView = MyEditorSystem.get_game_view();
 
-		//glm::vec2 scenePos = gameView->get_position();
-		//scenePos.x += gameView->get_indent();
-		//glm::vec2 sceneDim = gameView->get_dimension();
-		//if (!editorSystem.is_enabled())
-		//{
-		//	scenePos = { 0.f, 0.f };
-		//	sceneDim = glm::vec2(windowSystem.get_window_width(), windowSystem.get_window_height());
-		//}
+		glm::vec2 scenePos = gameView->get_position();
+		scenePos.x += gameView->get_indent();
+		glm::vec2 sceneDim = gameView->get_dimension();
+		if (!MyEditorSystem.is_enabled())
+		{
+			scenePos = { 0.f, 0.f };
+			sceneDim = glm::vec2(MyWindowSystem.get_window_width(), MyWindowSystem.get_window_height());
+		}
 
-		////PRINT("Scene Dimension: " << scenePos.x << " " << scenePos.y);
-		//Math::Vec2 mousePos = inputSystem.get_mouseposition();
-		////PRINT("Mouse position : " << mousePos.x << " " << mousePos.y);
-		//glm::vec2 centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
-		//glm::vec2 mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
-		//glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
+		//PRINT("Scene Dimension: " << scenePos.x << " " << scenePos.y);
+		Math::Vec2 mousePos = MyInputSystem.get_mouseposition();
+		//PRINT("Mouse position : " << mousePos.x << " " << mousePos.y);
+		glm::vec2 centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
+		glm::vec2 mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
+		glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
 
-		//if (!editorSystem.is_enabled())
-		//{
-		//	mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 };
-		//}
+		if (!MyEditorSystem.is_enabled())
+		{
+			mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 };
+		}
 
 		//mouseToNDC *= orthographicSize;
 		//glm::vec2 worldNDC = { mouseToNDC.x + viewer.x, mouseToNDC.y + viewer.y };

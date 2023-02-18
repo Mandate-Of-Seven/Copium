@@ -18,7 +18,7 @@
 	3. de-allocation of resources used by current scene (cleanup before engine close)
 	4. Calling scene's update functions
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************
 ****/
 #include <pch.h>
@@ -62,6 +62,8 @@ namespace Copium
 	{
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		storageScene = nullptr;
+		//MyGOF.register_archetypes("Data/Archetypes");
+		MyEventSystem->subscribe(this, &SceneManager::CallbackQuitEngine);
 	}
 
 	void SceneManager::update() {}
@@ -424,9 +426,11 @@ namespace Copium
 		//	selectedGameObject = findGameObjByID(prevSelected);
 
 		//SoundSystem::Instance()->StopAll();
+		MySoundSystem.StopAll();
 
 		return true;
 	}
+
 	bool SceneManager::endPreview()
 	{
 		if (!currentScene)
@@ -443,6 +447,21 @@ namespace Copium
 		// Delete memory for the preview scene
 		if (!storageScene)
 			return false;
+
+		// Replace gameobjects in sorting layer
+		MyEditorSystem.getLayers()->SortLayers()->ClearAllLayer();
+
+		for (GameObject* go : storageScene->gameObjects)
+		{
+			if (go->hasComponent(ComponentType::SortingGroup))
+			{
+				SortingGroup* sg = go->getComponent<SortingGroup>();
+				MyEditorSystem.getLayers()->SortLayers()->AddGameObject(sg->GetLayerID(), *go);
+			}
+		}
+
+		// Sort based on order in layer
+		MyEditorSystem.getLayers()->SortLayers()->BubbleSortGameObjects();
 
 		Scene* tmp = currentScene;
 		currentScene = storageScene;
@@ -483,6 +502,7 @@ namespace Copium
 		//std::cout << "Time taken: " << glfwGetTime() - startTime << std::endl;
 		return true;
 	}
+
 	bool SceneManager::save_scene(const std::string& _filepath)
 	{
 		//if(!currentScene)
@@ -577,6 +597,14 @@ namespace Copium
 		//	obj.AddMember("ID", layer.layerID, doc.GetAllocator());
 
 		//	layers.PushBack(obj, doc.GetAllocator());
+		// Serialize Layer Data
+		rapidjson::Value layers(rapidjson::kArrayType);
+		for (Layer& layer : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
+		{
+			rapidjson::Value obj(rapidjson::kObjectType);
+			rapidjson::Value layerName;
+			create_rapidjson_string(doc, layerName, layer.name);
+			obj.AddMember("Name", layerName, doc.GetAllocator());
 
 		//}
 		//doc.AddMember("Layers", layers, doc.GetAllocator());
@@ -673,4 +701,9 @@ namespace Copium
 		return true;
 	}
 	Scene* SceneManager::get_storage_scene() { return storageScene; }
+
+	void SceneManager::CallbackQuitEngine(QuitEngineEvent* pEvent)
+	{
+		quit_engine();
+	}
 }

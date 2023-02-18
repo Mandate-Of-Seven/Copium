@@ -1,20 +1,17 @@
 /*!***************************************************************************************
-****
 \file			events.h
-\project		GAM200
+\project
 \author			Zacharie Hong
 
 \par			Course: GAM200
-\par			Section: A
-\date			
+\par			Section:
+\date			15/02/2023
 
 \brief
-	This file contains the declarations of all the various events in the event system
+	This file contains the declarations of all event structures in the engine.
 
-All content ? 2022 DigiPen Institute of Technology Singapore. All rights reserved.
-*****************************************************************************************/
-
-
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #ifndef EVENTS_H
 #define EVENTS_H
 
@@ -22,6 +19,9 @@ All content ? 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <config.h>
 #include <GameObject/components.h>
 #include <GameObject/game-object.h>
+
+#include "Files/file.h"
+#include "Files/file-directory.h"
 
 namespace Copium
 {
@@ -42,6 +42,11 @@ namespace Copium
 	struct StopPreviewEvent : IEvent
 	{
 		StopPreviewEvent(){}
+	};
+
+	struct QuitEngineEvent : IEvent
+	{
+		QuitEngineEvent() {};
 	};
 
 	struct SceneOpenedEvent : IEvent
@@ -65,6 +70,30 @@ namespace Copium
 	{
 		GameObjectDestroyEvent(GameObject& _gameObject) : gameObject{ _gameObject } {}
 		GameObject& gameObject;
+	};
+
+	struct FileAssetEvent : IEvent
+	{
+		FileAssetEvent(File* _file, int _type) : file{ _file }, type{ _type } {};
+		File* file;
+		int type;
+	};
+
+	struct SetSelectedFileEvent : IEvent
+	{
+		SetSelectedFileEvent(File* _file) : file{ _file } {};
+		File* file;
+	};
+
+	struct SetSelectedDirectoryEvent : IEvent
+	{
+		SetSelectedDirectoryEvent(Directory* _dir) : directory{ _dir } {};
+		Directory* directory;
+	};
+
+	struct DeleteFromBrowserEvent : IEvent
+	{
+		DeleteFromBrowserEvent() {};
 	};
 	
 	struct ReflectComponentEvent : IEvent

@@ -12,7 +12,7 @@
 	Contains function declarations for Assets system which allows for laoding and unloading
 	of assets from the File system.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #ifndef ASSETS_SYSTEM_H
@@ -23,9 +23,10 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Graphics/textures.h"
 #include "Graphics/spritesheet.h"
 #include "Animation/animation-struct.h"
+#include "Events/events.h"
 #include "Files/file.h"
 
-#define MyAssetsSystem (*Copium::AssetsSystem::Instance())
+#define MyAssetSystem (*Copium::AssetsSystem::Instance())
 
 namespace Copium
 {
@@ -86,7 +87,7 @@ namespace Copium
 			The file to load
 		*/
 		/**************************************************************************/
-		void load_file(File* _file);
+		void LoadFile(File* _file);
 
 		/***************************************************************************/
 		/*!
@@ -96,7 +97,7 @@ namespace Copium
 			The file to unload
 		*/
 		/**************************************************************************/
-		void unload_file(File* _file);
+		void UnloadFile(File* _file);
 
 		/***************************************************************************/
 		/*!
@@ -104,7 +105,7 @@ namespace Copium
 			Loads all assets path in the assets folder
 		*/
 		/**************************************************************************/
-		void load_assets(Directory* _directory);
+		void LoadAssets(Directory* _directory);
 
 		/***************************************************************************/
 		/*!
@@ -114,7 +115,7 @@ namespace Copium
 			The file path to load from
 		*/
 		/**************************************************************************/
-		void load_all_textures(std::list<File*>& _files);
+		void LoadAllTextures(std::list<File*>& _files);
 
 		/***************************************************************************/
 		/*!
@@ -124,7 +125,7 @@ namespace Copium
 			The file path to load from
 		*/
 		/**************************************************************************/
-		void load_texture(File* _file);
+		void LoadTexture(File* _file);
 
 		/***************************************************************************/
 		/*!
@@ -134,7 +135,7 @@ namespace Copium
 			The file path to unload from
 		*/
 		/**************************************************************************/
-		void unload_texture(File* _file);
+		void UnloadTexture(File* _file);
 
 		/***************************************************************************/
 		/*!
@@ -144,10 +145,10 @@ namespace Copium
 			The file path to load from
 		*/
 		/**************************************************************************/
-		void load_all_audio(std::list<std::string>& _path);
+		void LoadAllAudio(std::list<std::string>& _path);
 
-		void load_audio(File * _file);
-		void unload_audio(File * _file);
+		void LoadAudio(File * _file);
+		void UnloadAudio(File * _file);
 
 		/***************************************************************************/
 		/*!
@@ -157,10 +158,10 @@ namespace Copium
 			The file path to load from
 		*/
 		/**************************************************************************/
-		void load_all_shaders(std::list<std::string>& _path);
+		void LoadAllShaders(std::list<std::string>& _path);
 
-		std::vector<Texture>& get_textures() { return textures; }
-		Texture* get_texture(unsigned int const& _index)
+		const std::vector<Texture>& GetTextures() { return textures; }
+		Texture* GetTexture(unsigned int const& _index)
 		{
 			if (_index >= textures.size())
 				return nullptr;
@@ -169,8 +170,8 @@ namespace Copium
 			return &textures[_index];
 		}
 
-		const std::vector<Spritesheet>& get_spritesheets() { return spritesheets; }
-		Spritesheet* get_spritesheet(unsigned int const& _index)
+		const std::vector<Spritesheet>& GetSpritesheets() { return spritesheets; }
+		Spritesheet* GetSpritesheet(unsigned int const& _index)
 		{
 			if (_index >= spritesheets.size())
 				return nullptr;
@@ -260,6 +261,10 @@ namespace Copium
 		*/
 		/***************************************************************************/
 		IMPORTER_TYPE GetImporterFile(const FileType& _type);
+
+	private:
+
+		void CallbackFileAsset(FileAssetEvent* pEvent);
 
 	private:
 		/* Assets Data ******************************************************************/

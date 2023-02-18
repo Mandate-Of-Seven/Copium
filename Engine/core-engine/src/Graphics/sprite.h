@@ -9,7 +9,7 @@
 \brief
 	This file holds the sprite's data which is used to render using the Graphics system
 	on to the scene.
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #ifndef SPRITE_RENDERER_H
 #define SPRITE_RENDERER_H

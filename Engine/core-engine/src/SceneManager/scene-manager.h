@@ -27,6 +27,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "CopiumCore/system-interface.h"
 #include "SceneManager/scene.h"
+#include "Events/events.h"
 #include <filesystem>
 #include <config.h>
 
@@ -275,8 +276,11 @@ namespace Copium {
 		Camera* mainCamera{nullptr};
 
 	private:
-		Scene* currentScene{nullptr};	// Pointer to the current scene
-		Scene* storageScene{ nullptr };	// Scene Pointer that acts as buffer for preview scene
+		void CallbackQuitEngine(QuitEngineEvent* pEvent);
+
+	private:
+		Scene* currentScene;	// Pointer to the current scene
+		Scene* storageScene;	// Scene Pointer that acts as buffer for preview scene
 		rapidjson::Document document;
 		std::string sceneFilePath;
 		Scene::SceneState currSceneState{ Scene::SceneState::edit };

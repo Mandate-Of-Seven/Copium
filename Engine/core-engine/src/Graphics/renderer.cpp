@@ -13,7 +13,7 @@
 	sprite or particle system (if any). Renderers can be disabled to make objects
 	invisble (see enabled).
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 #include <GL/glew.h> // for access to OpenGL API declarations 
@@ -22,14 +22,13 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Graphics/renderer.h"
 #include "Graphics/fonts.h"
 
-//#include "Editor/editor-system.h"
 #include <glm/gtc/type_ptr.hpp>
 
 namespace Copium
 {
 	void Renderer::init(BaseCamera* _camera)
 	{
-		graphics = GraphicsSystem::Instance();
+		graphics = &MyGraphicsSystem;
 		camera = _camera;
 
 		// Setup Quad Vertex Array Object
@@ -308,6 +307,7 @@ namespace Copium
 
 			if (graphics->get_texture_slot_index() >= 32)
 			{
+				glClear(GL_COLOR_BUFFER_BIT);
 				graphics->set_texture_slot_index(1);
 				end_batch();
 				flush();

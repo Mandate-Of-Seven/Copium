@@ -207,6 +207,32 @@ namespace Copium
 				{
 					pTransform->SetParent(nullptr);
 					Destroy(pTransform->gameObject);
+					std::string key = component["Type"].GetString();
+					//PRINT("Component: " << name);
+					// if (key == "Transform")
+					// 	// deserialize transform component
+					// 	go->transform.deserialize(component);
+					// else if (key == "SortingGroup")
+					// {
+					// 	int sort = 0, order = 0;
+					// 	if (component.HasMember("SortingLayer"))
+					// 		sort = component["SortingLayer"].GetInt();
+
+					// 	if (component.HasMember("OrderInLayer"))
+					// 		order = component["OrderInLayer"].GetInt();
+
+					// 	SortingGroup* sg = new SortingGroup(*go, order, sort);
+					// 	sg->id = go->assign_id();
+					// 	go->components.push_back(reinterpret_cast<Component*>(sg));
+					// }
+					// else
+					// {
+					// 	Component* tmp = go->addComponent(Component::nameToType(key));
+					// 	//PRINT();
+					// 	if (tmp)
+					// 		tmp->deserialize(component);
+					// }						
+
 				}
 				return;
 			}

@@ -29,8 +29,7 @@ namespace Copium
 {
 	namespace
 	{
-		EditorCamera& camera{ *EditorSystem::Instance()->get_camera() };
-		SceneManager& sm{ *SceneManager::Instance() };
+		EditorCamera& camera = *(MyEditorSystem.get_camera());
 		bool inOp = false;
 		GameObjectsArray* pGameObjectsArray{};
 	}
@@ -71,7 +70,7 @@ namespace Copium
 		ImGui::Image((void*) (size_t) textureID, ImVec2{ (float)sceneWidth, (float)sceneHeight }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
 		
 		// Gizmos
-		Scene* scene = sm.get_current_scene();
+		Scene* scene = MySceneManager.get_current_scene();
 		update_gizmos();
 
 		ImGui::End();
@@ -316,7 +315,7 @@ namespace Copium
 						MyEditorSystem.pSelectedGameObject = (selectObject);
 					}
 
-					//PRINT("Set object to: " << sm.selectedGameObject->get_name());
+					//PRINT("Set object to: " << MySceneManager.selectedGameObject->get_name());
 				}
 				else
 					MyEditorSystem.pSelectedGameObject = nullptr;
