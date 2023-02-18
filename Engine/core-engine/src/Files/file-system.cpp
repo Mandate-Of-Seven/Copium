@@ -235,7 +235,7 @@ namespace Copium
 
 							// Bean: This should be moved to a general function
 							// Prevent selection of file / directory
-							if (currentDir->within_directory(folder))
+							if (currentDirectory->within_directory(folder))
 								selectedDirectory = nullptr;
 						}
 						
@@ -264,12 +264,12 @@ namespace Copium
 							add_file_reference(&_directory->get_files().back());
 
 							// Generate Meta File
-							if(file.get_file_type().fileType == FILE_TYPE::SPRITE)
-								MyAssetsSystem.GenerateMetaFile(&_directory->get_files().back());
+							//if(file.get_file_type().fileType == FILE_TYPE::SPRITE)
+							//	MyAssetsSystem.GenerateMetaFile(&_directory->get_files().back());
 
 							// Bean: This should be moved to a general function
 							// Prevent selection of file / directory
-							if (currentDir->within_directory(&file))
+							if (currentDirectory->within_directory(&file))
 								selectedFile = nullptr;
 						}
 					}
@@ -295,7 +295,7 @@ namespace Copium
 					{
 						// Bean: This should be moved to a general function
 						// Prevent selection of file / directory
-						if (currentDir == _directory && selectedDirectory != nullptr)
+						if (currentDirectory == _directory && selectedDirectory != nullptr)
 							selectedDirectory = nullptr;
 
 						iterators.push_back(*it);
@@ -332,7 +332,7 @@ namespace Copium
 					{
 						// Bean: This should be moved to a general function
 						// Prevent selection of file / directory
-						if (currentDir == _directory && selectedFile != nullptr)
+						if (currentDirectory == _directory && selectedFile != nullptr)
 							selectedFile = nullptr;
 
 						remove_file_reference(&(*it));
@@ -569,7 +569,7 @@ namespace Copium
 		if (selectedFile != nullptr)
 		{
 			MyEventSystem->publish(new FileAssetEvent(selectedFile, 2));
-			std::cout << "Deleting: " << selectedFile->filePath.filename() << " With result: " << DeleteFile(selectedFile->c_str()) << std::endl;
+			//std::cout << "Deleting: " << selectedFile->filePath.filename() << " With result: " << DeleteFile(selectedFile->c_str()) << std::endl;
 
 		}
 		else if (selectedDirectory != nullptr)

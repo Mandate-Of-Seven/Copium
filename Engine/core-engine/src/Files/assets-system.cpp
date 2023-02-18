@@ -218,7 +218,7 @@ namespace Copium
 			//std::cout << _file->name << " "<<_file->filename();
 			std::string temp = _file->filePath.filename().string();
 			size_t lastDot = temp.find_last_of(".");
-			MySoundSystem.CreateSound(_file->filename().string(), temp.substr(0,lastDot));
+			MySoundSystem.CreateSound(_file->filePath.filename().string(), temp.substr(0,lastDot));
 			MySoundSystem.SetVolume(temp.substr(0, lastDot), 1.0f);
 		}
 		else
@@ -291,7 +291,7 @@ namespace Copium
 
 	void AssetsSystem::CopyAsset(const File& _file, const std::string& _ext)
 	{
-		MyFileSystem.copy_file(_file, _ext);
+		//MyFileSystem.copy_file(_file, _ext);
 	}
 
 	void AssetsSystem::LoadExistingMetaFile()
@@ -366,7 +366,7 @@ namespace Copium
 		uint64_t pathID = std::hash<std::string>{}(_file->filePath.string());
 		metaData[pathID].filePath = _file->filePath.string();
 		_outputFile << "File Path: " << metaData[pathID].filePath << "\n";
-		_outputFile << "uuid: " << metaData[pathID].uuid << "\n";
+		//_outputFile << "uuid: " << metaData[pathID].uuid << "\n";
 
 		// Hidden meta headers
 		std::string str = _file->get_file_type().stringType; // Check Format Importer

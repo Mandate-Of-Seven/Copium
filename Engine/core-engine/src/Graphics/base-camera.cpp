@@ -20,6 +20,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Graphics/base-camera.h"
 #include "Windows/windows-system.h"
 #include "Windows/windows-input.h"
+#include <Math/math-library.h>
+#include <Editor/editor-system.h>
 
 namespace Copium
 {

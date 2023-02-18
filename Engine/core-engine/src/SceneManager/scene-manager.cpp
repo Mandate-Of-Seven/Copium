@@ -29,7 +29,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/prettywriter.h>
 //#include <Audio/sound-system.h>
-//#include <Events/events-system.h>
+#include <Events/events-system.h>
 
 
 
@@ -426,7 +426,6 @@ namespace Copium
 		//	selectedGameObject = findGameObjByID(prevSelected);
 
 		//SoundSystem::Instance()->StopAll();
-		MySoundSystem.StopAll();
 
 		return true;
 	}
@@ -449,19 +448,19 @@ namespace Copium
 			return false;
 
 		// Replace gameobjects in sorting layer
-		MyEditorSystem.getLayers()->SortLayers()->ClearAllLayer();
+		//MyEditorSystem.getLayers()->SortLayers()->ClearAllLayer();
 
-		for (GameObject* go : storageScene->gameObjects)
-		{
-			if (go->hasComponent(ComponentType::SortingGroup))
-			{
-				SortingGroup* sg = go->getComponent<SortingGroup>();
-				MyEditorSystem.getLayers()->SortLayers()->AddGameObject(sg->GetLayerID(), *go);
-			}
-		}
+		//for (GameObject* go : storageScene->gameObjects)
+		//{
+		//	if (go->hasComponent(ComponentType::SortingGroup))
+		//	{
+		//		SortingGroup* sg = go->getComponent<SortingGroup>();
+		//		MyEditorSystem.getLayers()->SortLayers()->AddGameObject(sg->GetLayerID(), *go);
+		//	}
+		//}
 
 		// Sort based on order in layer
-		MyEditorSystem.getLayers()->SortLayers()->BubbleSortGameObjects();
+		//MyEditorSystem.getLayers()->SortLayers()->BubbleSortGameObjects();
 
 		Scene* tmp = currentScene;
 		currentScene = storageScene;
@@ -598,13 +597,13 @@ namespace Copium
 
 		//	layers.PushBack(obj, doc.GetAllocator());
 		// Serialize Layer Data
-		rapidjson::Value layers(rapidjson::kArrayType);
-		for (Layer& layer : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
-		{
-			rapidjson::Value obj(rapidjson::kObjectType);
-			rapidjson::Value layerName;
-			create_rapidjson_string(doc, layerName, layer.name);
-			obj.AddMember("Name", layerName, doc.GetAllocator());
+		//rapidjson::Value layers(rapidjson::kArrayType);
+		//for (Layer& layer : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
+		//{
+		//	rapidjson::Value obj(rapidjson::kObjectType);
+		//	rapidjson::Value layerName;
+		//	create_rapidjson_string(doc, layerName, layer.name);
+		//	obj.AddMember("Name", layerName, doc.GetAllocator());
 
 		//}
 		//doc.AddMember("Layers", layers, doc.GetAllocator());

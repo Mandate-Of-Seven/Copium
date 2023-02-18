@@ -15,7 +15,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "pch.h"
 
 #include "Utilities/sorting-layers.h"
-#include "GameObject/Components/sorting-group-component.h"
 #include "GameObject/game-object.h"
 
 namespace Copium
