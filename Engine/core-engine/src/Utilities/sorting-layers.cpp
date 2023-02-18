@@ -88,48 +88,48 @@ namespace Copium
 
 	void SortingLayers::BubbleSortGameObjects()
 	{
-		//for (Layer& layer : sortingLayers)
-		//{
-		//	bool swapped{ false };
-		//	if (layer.gameObjects.size() <= 1)
-		//		continue;
+		for (Layer& layer : sortingLayers)
+		{
+			bool swapped{ false };
+			if (layer.gameObjects.size() <= 1)
+				continue;
 
-		//	for (size_t i{ 0 }; i < layer.gameObjects.size() - 1; ++i)
-		//	{
-		//		for (size_t j{ 0 }; j < layer.gameObjects.size() - 1 - i; ++j)
-		//		{
-		//			SortingGroup* sg1{ nullptr }, * sg2{ nullptr };
+			for (size_t i{ 0 }; i < layer.gameObjects.size() - 1; ++i)
+			{
+				for (size_t j{ 0 }; j < layer.gameObjects.size() - 1 - i; ++j)
+				{
+					SortingGroup* sg1{ nullptr }, * sg2{ nullptr };
 
-		//			if (!layer.gameObjects[j] && layer.gameObjects[j + 1])
-		//			{
-		//				std::swap(layer.gameObjects[j], layer.gameObjects[j + 1]);
-		//				swapped = true;
-		//				continue;
-		//			}
+					if (!layer.gameObjects[j] && layer.gameObjects[j + 1])
+					{
+						std::swap(layer.gameObjects[j], layer.gameObjects[j + 1]);
+						swapped = true;
+						continue;
+					}
 
-		//			if (layer.gameObjects[j] && layer.gameObjects[j + 1])
-		//			{
-		//				Component* co1 = layer.gameObjects[j]->getComponent<SortingGroup>();
-		//				Component* co2 = layer.gameObjects[j + 1]->getComponent<SortingGroup>();
+					if (layer.gameObjects[j] && layer.gameObjects[j + 1])
+					{
+						Component* co1 = layer.gameObjects[j]->GetComponent<SortingGroup>();
+						Component* co2 = layer.gameObjects[j + 1]->GetComponent<SortingGroup>();
 
-		//				if (co1 && co2)
-		//				{
-		//					sg1 = reinterpret_cast<SortingGroup*>(co1);
-		//					sg2 = reinterpret_cast<SortingGroup*>(co2);
+						if (co1 && co2)
+						{
+							sg1 = reinterpret_cast<SortingGroup*>(co1);
+							sg2 = reinterpret_cast<SortingGroup*>(co2);
 
-		//					if (sg1->GetOrderInLayer() > sg2->GetOrderInLayer())
-		//					{
-		//						std::swap(layer.gameObjects[j], layer.gameObjects[j + 1]);
-		//						swapped = true;
-		//					}
-		//				}
-		//			}
-		//		}
+							if (sg1->GetOrderInLayer() > sg2->GetOrderInLayer())
+							{
+								std::swap(layer.gameObjects[j], layer.gameObjects[j + 1]);
+								swapped = true;
+							}
+						}
+					}
+				}
 
-		//		if (!swapped)
-		//			break;
-		//	}
-		//}
+				if (!swapped)
+					break;
+			}
+		}
 	}
 
 	void SortingLayers::SwapLayers(const std::string& _name01, const std::string& _name02)

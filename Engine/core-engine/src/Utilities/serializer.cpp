@@ -664,46 +664,108 @@ namespace Copium
 					{
 						Deserialize(_data.transform, "", component);
 					}
+					else if (key == "SortingGroup")
+					{
+						int sort = 0, order = 0;
+						if (component.HasMember("SortingLayer"))
+							sort = component["SortingLayer"].GetInt();
+
+						if (component.HasMember("OrderInLayer"))
+							order = component["OrderInLayer"].GetInt();
+
+						SortingGroup* tmp = nullptr;
+
+
+					}
 					else
 					{
 						PRINT("Deserializing " << key);
-						Component* component{};
+						//MyEventSystem.publish(new Game)
 						ComponentType cType;
 						switch (NAME_TO_CTYPE[key])
 						{
 							case ComponentType::Animator:
-								return &addComponent<Animator>();
+							{
+								Animator* tmp = nullptr;
+								//MyEventSystem.publish(new ComponentAddEvent<Animator>(tmp, _data));
+								Deserialize(tmp, "", component);
+								break;
+							}
 							case ComponentType::BoxCollider2D:
-								return &addComponent<BoxCollider2D>();
+							{
+								BoxCollider2D* tmp = nullptr;
+								//MyEventSystem.publish(new ComponentAddEvent<BoxCollider2D>(tmp, _data));
+								Deserialize(tmp, "", component);
+								break;
+							}
 							case ComponentType::Camera:
-								return &addComponent<Camera>();
+							{
+								Camera* tmp = nullptr;
+								//MyEventSystem.publish(new ComponentAddEvent<Camera>(tmp, _data));
+								Deserialize(tmp, "", component);
+								break;
+							}
 							case ComponentType::Rigidbody2D:
-								return &addComponent<Rigidbody2D>();
+							{
+								Rigidbody2D* tmp = nullptr;
+								//MyEventSystem.publish(new ComponentAddEvent<RigidBody2D>(tmp, _data));
+								Deserialize(tmp, "", component);
+								break;
+							}
 							case ComponentType::SpriteRenderer:
-								return &addComponent<SpriteRenderer>();
+							{
+								SpriteRenderer* tmp = nullptr;
+								//MyEventSystem.publish(new ComponentAddEvent<SpriteRenderer>(tmp, _data));
+								Deserialize(tmp, "", component);
+								break;
+							}
 							case ComponentType::Script:
-								return &addComponent<Script>();
+							{
+								Script* tmp = nullptr;
+								//MyEventSystem.publish(new ComponentAddEvent<Script>(tmp, _data));
+								Deserialize(tmp, "", component);
+								break;
+							}
 							case ComponentType::Button:
-								return &addComponent<Button>();
+							{
+								Button* tmp = nullptr;
+								//MyEventSystem.publish(new ComponentAddEvent<Button>(tmp, _data));
+								Deserialize(tmp, "", component);
+								break;
+							}
 							case ComponentType::Image:
-								return &addComponent<Image>();
+							{
+								Image* tmp = nullptr;
+								//MyEventSystem.publish(new ComponentAddEvent<Image>(tmp, _data));
+								Deserialize(tmp, "", component);
+								break;
+							}
 							case ComponentType::Text:
-								return _data.ddComponent<Text>();
+							{
+								Text* tmp = nullptr;
+								//MyEventSystem.publish(new ComponentAddEvent<Text>(tmp, _data));
+								Deserialize(tmp, "", component);
+								break;
+							}
 							case ComponentType::AudioSource:
-								return &addComponent<AudioSource>();
-							case ComponentType::SortingGroup:
-								return &addComponent<SortingGroup>();
+							{
+								AudioSource* tmp = nullptr;
+								//MyEventSystem.publish(new ComponentAddEvent<AudioSource>(tmp, _data));
+								Deserialize(tmp, "", component);
+								break;
+							}
 						default:
 							PRINT("ADDED NOTHING, MAYBE ADDED THE COMPONENT TO THE GAMEOBJECT.CPP");
 							break;
 						}
+						/*
 						Component* tmp = _data.addComponent(NAME_TO_CTYPE[key]);
 						if (tmp)
 						{
-							// Deserialize stuff
+							 //Deserialize stuff
 							DeserializeComponent(NAME_TO_CTYPE[key], tmp, component);
 
-						}
+						}*/
 					}
 
 
