@@ -19,6 +19,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <config.h>
 #include <GameObject/components.h>
 #include <GameObject/game-object.h>
+#include <SceneManager/scene.h>
 
 #include "Files/file.h"
 #include "Files/file-directory.h"
@@ -51,11 +52,8 @@ namespace Copium
 
 	struct SceneOpenedEvent : IEvent
 	{
-		SceneOpenedEvent(const char* _sceneName, GameObjectsArray& _gameObjectsArray, ComponentsArrays& _componentsArrays) :
-			sceneName{ _sceneName }, gameObjectsArray{ _gameObjectsArray }, componentsArrays{_componentsArrays}{}
-		const char* sceneName;
-		GameObjectsArray& gameObjectsArray;
-		ComponentsArrays& componentsArrays;
+		SceneOpenedEvent(Scene& _scene) : scene{_scene}{}
+		Scene& scene;
 	};
 
 	struct GameObjectInstantiateEvent : IEvent

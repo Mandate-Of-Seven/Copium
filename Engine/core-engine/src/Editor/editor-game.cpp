@@ -51,11 +51,11 @@ namespace Copium
 		scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
 		
 		unsigned int textureID = 0;
-		if (!MyGraphicsSystem.getCamera().empty())
-		{
-			gameCamera = *MyGraphicsSystem.get_cameras().begin();
-			textureID = gameCamera->get_framebuffer()->get_color_attachment_id();
-		}
+		//if (!MyGraphicsSystem.getCamera().empty())
+		//{
+		//	gameCamera = *MyGraphicsSystem.get_cameras().begin();
+		//	textureID = gameCamera->get_framebuffer()->get_color_attachment_id();
+		//}
 
 		ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
 		resize_game(*((glm::vec2*) &viewportEditorSize));

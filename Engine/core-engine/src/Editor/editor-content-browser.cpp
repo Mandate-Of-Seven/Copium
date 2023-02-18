@@ -28,6 +28,7 @@ namespace Copium
 	{
 		std::filesystem::path assets = "../PackedTracks/Assets";
 
+
 		const float padding = 16.f;
 		const float thumbnailSize = 128.f;
 		float imageAR = 1.f, framePadding = 3.f;
@@ -211,7 +212,7 @@ namespace Copium
 						break;
 
 					case FILE_TYPE::SPRITE:
-						texturePath = assetSys->get_texture(i)->get_file_path();
+						texturePath = MyAssetSystem.GetTexture(i)->get_file_path();
 						if (!file.filePath.string().compare(texturePath))
 						{
 							Texture* temp = MyAssetSystem.GetTexture(i);

@@ -402,10 +402,10 @@ namespace Copium
 				ImGui::ShowDemoWindow(&show_demo_window);
 
 			// Game Camera
-			if (pCameraArray )
-			{
-				(*MyGraphicsSystem.get_cameras().begin())->update();
-			}
+			//if (pCameraArray )
+			//{
+			//	(*MyGraphicsSystem.get().begin())->update();
+			//}
 
 			// Editor Camera
 			camera.update();
@@ -484,13 +484,13 @@ namespace Copium
 		{
 			// Swap camera
 			//camera.get_framebuffer()->exit();
-			glm::vec2 dimension = { MyWindowSystem.get_window_width(), MyWindowSystem.get_window_height() };
-			// Game Camera
-			if (!MyGraphicsSystem.get_cameras().empty())
-			{
-				(*MyGraphicsSystem.get_cameras().begin())->on_resize(dimension.x, dimension.y);
-				glViewport(0, 0, (GLsizei)dimension.x, (GLsizei)dimension.y);
-			}
+			//glm::vec2 dimension = { MyWindowSystem.get_window_width(), MyWindowSystem.get_window_height() };
+			//// Game Camera
+			//if (!MyGraphicsSystem.get_cameras().empty())
+			//{
+			//	(*MyGraphicsSystem.get_cameras().begin())->on_resize(dimension.x, dimension.y);
+			//	glViewport(0, 0, (GLsizei)dimension.x, (GLsizei)dimension.y);
+			//}
 		}
 		else if(_enabled)
 			camera.get_framebuffer()->init();

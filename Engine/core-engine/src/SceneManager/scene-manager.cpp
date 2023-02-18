@@ -143,13 +143,15 @@ namespace Copium
 			std::cout << "Scene name:" << currentScene->name << std::endl;
 		}
 
-		MyEventSystem->publish(
-			new SceneOpenedEvent(
-				currentScene->get_name().c_str(),
-				currentScene->gameObjects,
-				currentScene->componentArrays
-			)
-		);
+		//MyEventSystem->publish(
+		//	new SceneOpenedEvent(
+		//		currentScene->get_name().c_str(),
+		//		currentScene->gameObjects,
+		//		currentScene->componentArrays
+		//	)
+		//);
+
+		MyEventSystem->publish(new SceneOpenedEvent(*currentScene));
 
 		if (document.HasMember("Layers"))
 		{

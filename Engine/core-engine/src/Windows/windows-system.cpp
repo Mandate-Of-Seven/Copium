@@ -19,7 +19,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "pch.h"
 
 #include "Windows/windows-system.h"
-//#include "Files/file-system.h"
+#include "Files/file-system.h"
 #include <Debugging/frame-rate-controller.h>
 #include "Windows/windows-input.h"
 

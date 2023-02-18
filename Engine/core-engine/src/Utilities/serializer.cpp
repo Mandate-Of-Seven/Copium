@@ -189,7 +189,7 @@ namespace Copium
 			}
 			else
 			{
-				return SerializeComponent<T1s...>SerializeComponent(_data, _components, _doc);
+				return SerializeComponent<T1s...>(_data, _components, _doc);
 			}
 		}
 	};

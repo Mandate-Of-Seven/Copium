@@ -29,6 +29,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 #include <vector>
 #include "CopiumCore/system-interface.h"
+#include "Events/events-system.h"
+
 
 namespace Copium
 {
@@ -77,6 +79,13 @@ namespace Copium
         */
         /**************************************************************************/
         void PlayAllAnimation();
+
+
+        void CallbackSceneOpened(SceneOpenedEvent * _src);
+
+
+    private:
+        Scene* currScene;
 	};
 }
 
