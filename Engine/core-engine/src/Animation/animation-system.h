@@ -27,21 +27,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #ifndef ANIMATION_SYSTEM_H
 #define ANIMATION_SYSTEM_H
 
-/*!***************************************************************************************
-\file			animation-struct.h
-\project
-\author			Sean Ngo
-\co-author      Matthew Lau
-
-\par			Course: GAM200
-\par			Section:
-\date			05/01/2023
-
-\brief
-    This file holds the declaration of the Animator and the Animation System
-
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
-*****************************************************************************************/
 #include <vector>
 #include "CopiumCore/system-interface.h"
 

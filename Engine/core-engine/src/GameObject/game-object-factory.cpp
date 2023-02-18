@@ -22,6 +22,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <GameObject/game-object.h>
 #include <GameObject/components.h>
 
+#include "Utilities/serializer.h"
+
 namespace 
 {
 	Copium::MessageSystem& messageSystem{ *Copium::MessageSystem::Instance() };

@@ -173,6 +173,7 @@
     <ClCompile Include="src\SceneManager\scene-manager.cpp" />
     <ClCompile Include="src\SceneManager\state-manager.cpp" />
     <ClCompile Include="src\Utilities\layers.cpp" />
+    <ClCompile Include="src\Utilities\serializer.cpp" />
     <ClCompile Include="src\Utilities\sorting-layers.cpp" />
     <ClCompile Include="src\Utilities\thread-system.cpp" />
     <ClCompile Include="src\imgui\imgui.cpp">
@@ -249,7 +250,9 @@
     <ClInclude Include="src\Graphics\spritesheet.h" />
     <ClInclude Include="src\Scripting\script-fields.h" />
     <ClInclude Include="src\Utilities\easing.h" />
+    <ClInclude Include="src\Utilities\json-utilities.h" />
     <ClInclude Include="src\Utilities\layers.h" />
+    <ClInclude Include="src\Utilities\serializer.h" />
     <ClInclude Include="src\Utilities\sorting-layers.h" />
     <ClInclude Include="src\Utilities\sparse-set.h" />
     <ClInclude Include="src\Utilities\thread-system.h" />

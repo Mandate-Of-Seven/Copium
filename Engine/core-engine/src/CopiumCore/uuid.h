@@ -11,7 +11,7 @@
 	The declaration of UUID struct is contained in this file.
 	The UUID struct's purpose is to generate unique universal ids for general use across Copium Engine.
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #ifndef UUID_H
 #define UUID_H
@@ -30,7 +30,43 @@ namespace Copium
 		UUID(const UUID& _rhs) = default;
 		UUID(uint64_t _rhs) : uuid{ _rhs } {}
 		operator uint64_t() const { return uuid; }
-		const uint64_t uuid;
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Deserialize UUID from a rapidjson Value
+
+		\param	_val
+			reference to a rapidjson::Value which should contain the UUID
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		void Deserialize(rapidjson::Value& _val);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Serialize this UUID to a rapidjson Value
+
+		\param	_val
+			reference to the rapidjson::Value which this UUID's data will be written to
+
+		\param _doc
+			reference to the rapidjson::Document which this UUID's data is being written to
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		void Serialize(rapidjson::Value& _val, rapidjson::Document& _doc, const std::string& _name = "UID");
+
+		uint64_t& GetUUID() { return uuid; }
+
+	private:
+		uint64_t uuid;
 	};
 }
 

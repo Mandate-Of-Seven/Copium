@@ -1,6 +1,7 @@
 
 #include "pch.h"
 #include "Math/Vector4.h"
+#include "Utilities/json-utilities.h"
 
 namespace Copium::Math {
 
@@ -101,15 +102,22 @@ namespace Copium::Math {
 		z = _value["Z"].GetFloat();
 		a = _value["A"].GetFloat();
 
+
 		return true;
 
 	}
 	bool Vec4::Serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
-		_value.AddMember("X", x, _doc.GetAllocator());
-		_value.AddMember("Y", y, _doc.GetAllocator());
-		_value.AddMember("Z", z, _doc.GetAllocator());
-		_value.AddMember("A", a, _doc.GetAllocator());
+		//_value.AddMember("X", x, _doc.GetAllocator());
+		//_value.AddMember("Y", y, _doc.GetAllocator());
+		//_value.AddMember("Z", z, _doc.GetAllocator());
+		//_value.AddMember("A", a, _doc.GetAllocator());
+
+		Copium::Serialize(x, _value, _doc, "X");
+		Copium::Serialize(y, _value, _doc, "Y");
+		Copium::Serialize(z, _value, _doc, "Z");
+		Copium::Serialize(a, _value, _doc, "A");
+
 
 		return true;
 	}

@@ -23,6 +23,9 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "SceneManager/scene-manager.h"
 #include "Files/assets-system.h"
 #include "Debugging/frame-rate-controller.h"
+
+#include "Utilities/json-utilities.h"
+
 #define MAX_ANIMATION_COUNT 5
 
 namespace Copium
