@@ -103,6 +103,7 @@ namespace Copium
         double updateTime = 0.0;
         double updateTimePercent =0.0;
         ISystemFlags systemFlags = 0;
+        Scene* currentScene;
     };
 
 

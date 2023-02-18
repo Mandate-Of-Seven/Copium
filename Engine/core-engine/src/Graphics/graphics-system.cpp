@@ -34,7 +34,7 @@ namespace Copium
 	
 	namespace
 	{
-		ComponentsArray<Camera*> pCamerasArray{};
+		ComponentsArray<Camera>* pCamerasArray{};
 		InputSystem& inputSystem{ *InputSystem::Instance() };
 
 		// Temporary global variables
@@ -290,7 +290,7 @@ namespace Copium
 		for (Camera& camera : *pCamerasArray)
 		{
 			PRINT("UPDATING CAMERA");
-			camera->update();
+			camera.update();
 		}
 	}
 }

@@ -30,6 +30,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/prettywriter.h>
 #include <GameObject/game-object-factory.h>
+#include <SceneManager/state-manager.h>
 //#include <Audio/sound-system.h>
 #include <Events/events-system.h>
 
@@ -71,6 +72,7 @@ namespace Copium
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		storageScene = nullptr;
 		//MyGOF.register_archetypes("Data/Archetypes");
+		SubscribeComponentsAdd();
 		MyEventSystem->subscribe(this, &SceneManager::CallbackQuitEngine);
 	}
 
@@ -197,9 +199,7 @@ namespace Copium
 			rapidjson::Value& _gameObjArr = document["GameObjects"].GetArray();
 			for (rapidjson::Value::ValueIterator iter = _gameObjArr.Begin(); iter != _gameObjArr.End(); ++iter)
 			{
-				GameObject* tmpGO = nullptr;
-				tmpGO = MyGOF.Instantiate(*iter);
-				PRINT(*tmpGO);
+				MyGOF.Instantiate(*iter);
 			}
 
 			// Linkages
@@ -208,7 +208,7 @@ namespace Copium
 				// Transform and Parent
 				if (go.transform.pid)
 				{
-					GameObject* p = MySceneManager.FindGameObjectByID(go->transform.pid);
+					GameObject* p = MySceneManager.FindGameObjectByID(go.transform.pid);
 					if (p)
 						go.transform.SetParent(&p->transform);
 
@@ -636,9 +636,6 @@ namespace Copium
 
 		currentScene->name = storageScene->name;
 
-		//currentScene->unusedCIDs = storageScene->unusedCIDs;
-		//currentScene->unusedGIDs = storageScene->unusedGIDs;
-
 		// Copy game object data
 		//for (GameObject* gameObj : storageScene->gameObjects)
 		//{
@@ -657,6 +654,7 @@ namespace Copium
 		//	}
 		//}
 	}
+
 
 	void create_rapidjson_string(rapidjson::Document& _doc, rapidjson::Value& _value, const std::string& _str)
 	{

@@ -27,7 +27,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "CopiumCore/system-interface.h"
 #include "SceneManager/scene.h"
-#include "Events/events.h"
+#include "Events/events-system.h"
 #include <filesystem>
 #include <config.h>
 
@@ -272,6 +272,25 @@ namespace Copium {
 		*/
 		/*******************************************************************************/
 		Scene::SceneState GetSceneState() const { return currSceneState; }
+
+
+		template <typename T>
+		void CallbackComponentAdd(ComponentAddEvent<T>* pEvent)
+		{
+			T& component = currentScene->componentArrays.GetArray<T>().push_back();
+			pEvent->gameObject.AddComponent(&component);
+			pEvent->componentContainer = &component;
+		}
+
+		template<typename T, typename... Ts>
+		void SubscribeComponentsAdd(TemplatePack<T,Ts...>())
+		{
+			MyEventSystem->subscribe(this, &CallbackComponentAdd<T>);
+			if constexpr (sizeof...(Ts) != 0)
+			{
+				Subscribe(TemplatePack<Ts...>());
+			}
+		}
 
 		Camera* mainCamera{nullptr};
 

@@ -667,7 +667,7 @@ namespace Copium
 					else
 					{
 						PRINT("Deserializing " << key);
-						MyEventSystem.publish(new Game)
+						Component* component{};
 						ComponentType cType;
 						switch (NAME_TO_CTYPE[key])
 						{

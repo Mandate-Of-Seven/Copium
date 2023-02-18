@@ -16,9 +16,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 ******************************************************************************************/
 #include <pch.h>
 #include "GameObject/game-object-factory.h"
-#include <filesystem>
-//#include <Editor/editor-undoredo.h>
-//#include <Editor/editor-system.h>
 #include <GameObject/game-object.h>
 #include <GameObject/components.h>
 
@@ -40,6 +37,7 @@ namespace Copium
 	template <typename T>
 	Component* Add(GameObject& gameObj)
 	{
+		MySceneManager.getCurrentScene
 		T component(gameObj);
 		T& newComponent = pComponentsArrays->GetArray<T>().push_back(component);
 		gameObj.AddComponent<T>(&newComponent);

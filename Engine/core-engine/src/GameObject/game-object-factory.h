@@ -18,6 +18,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #ifndef GAME_OBJECT_FACTORY_H
 #define GAME_OBJECT_FACTORY_H
 #include <CopiumCore/system-interface.h>
+#include <Events/events-system.h>
 
 #define MyGOF (*Copium::GameObjectFactory::Instance())
 
