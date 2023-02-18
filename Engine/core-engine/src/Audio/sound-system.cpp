@@ -19,7 +19,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Windows/windows-system.h"
 #include "Windows/windows-input.h"
 #include "SceneManager/scene-manager.h"
-#include "GameObject/Components/audiosource-component.h"
 
 namespace
 {
@@ -28,6 +27,7 @@ namespace
 
 namespace Copium
 {
+	ComponentsArray<AudioSource>* pAudioSourcesArray{nullptr};
 
 // Initialize sound system
 void SoundSystem::init()
@@ -139,20 +139,11 @@ void SoundSystem::Stop(std::string alias)
 
 void SoundSystem::StopAll()
 {
-	SceneManager* sm = SceneManager::Instance();
-	Scene* scene = sm->get_current_scene();
-	if (scene != nullptr)
+	if (!pAudioSourcesArray)
+		COPIUM_ASSERT(1, "TRYING TO STOP AUDIO WITH NO SCENE LOADED!");
+	for (AudioSource& audioSource : *pAudioSourcesArray)
 	{
-		//for(auto gameObj = scene->gameObjects.begin(); gameObj != scene->gameObjects.end(); ++gameObj)
-		for (auto gameObj : scene->gameObjects)
-		{
-
-			AudioSource* temp = gameObj->GetComponent<AudioSource>();
-			if (temp != NULL)
-			{
-				temp->stop_sound();
-			}
-		}
+		audioSource.stop_sound();
 	}
 }
 

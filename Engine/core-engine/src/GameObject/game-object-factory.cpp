@@ -16,52 +16,64 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 ******************************************************************************************/
 #include <pch.h>
 #include "GameObject/game-object-factory.h"
-#include "SceneManager/scene-manager.h"
-#include "GameObject/Components/renderer-component.h"
-#include <rttr/registration>
 #include <filesystem>
-#include <Editor/editor-undoredo.h>
-#include <Editor/editor-system.h>
+//#include <Editor/editor-undoredo.h>
+//#include <Editor/editor-system.h>
+#include <GameObject/game-object.h>
 #include <GameObject/components.h>
 
 namespace 
 {
-	Copium::SceneManager& sceneManager{ *Copium::SceneManager::Instance() };
 	Copium::MessageSystem& messageSystem{ *Copium::MessageSystem::Instance() };
 }
 
 namespace Copium 
 {
-	Component& AddComponent(GameObject& gameObj ,ComponentType componentType)
+	namespace
+	{
+		GameObjectsArray* pGameObjectsArray{};
+		ComponentsArrays* pComponentsArrays{};
+	}
+
+	template <typename T>
+	Component* Add(GameObject& gameObj)
+	{
+		T component(gameObj);
+		T& newComponent = pComponentsArrays->GetArray<T>().push_back(component);
+		gameObj.AddComponent<T>(&newComponent);
+		return (Component*)&newComponent;
+	}
+
+	Component* AddComponent(GameObject& gameObj ,ComponentType componentType)
 	{
 		switch (componentType)
 		{
 			switch (componentType)
 			{
 			case ComponentType::Animator:
-				return gameObj.AddComponent<Animator>();
+				return Add<Animator>(gameObj);
 			case ComponentType::BoxCollider2D:
-				return &addComponent<BoxCollider2D>();
+				return Add<BoxCollider2D>(gameObj);
 			case ComponentType::Camera:
-				return &addComponent<Camera>();
+				return Add<Camera>(gameObj);
 			case ComponentType::Rigidbody2D:
-				return &addComponent<Rigidbody2D>();
+				return Add<Rigidbody2D>(gameObj);
 			case ComponentType::SpriteRenderer:
-				return &addComponent<SpriteRenderer>();
+				return Add<SpriteRenderer>(gameObj);
 			case ComponentType::Script:
-				return &addComponent<Script>();
+				return Add<Script>(gameObj);
 			case ComponentType::Button:
-				return &addComponent<Button>();
+				return Add<Button>(gameObj);
 			case ComponentType::Image:
-				return &addComponent<ImageComponent>();
+				return Add<Image>(gameObj);
 			case ComponentType::Text:
-				return &addComponent<Text>();
+				return Add<Text>(gameObj);
 			case ComponentType::AudioSource:
-				return &addComponent<AudioSource>();
+				return Add<AudioSource>(gameObj);
 			case ComponentType::SortingGroup:
-				return &addComponent<SortingGroup>();
+				return Add<SortingGroup>(gameObj);
 			default:
-				PRINT("ADDED NOTHING, MAYBE ADDED THE COMPONENT TO THE GAMEOBJECT.CPP");
+				COPIUM_ASSERT(true, "TRYING TO ADD INVALID COMPONENT TYPE");
 				break;
 			}
 		}
@@ -76,425 +88,226 @@ namespace Copium
 	{
 	}
 
-	GameObject* GameObjectFactory::instantiate()
+	GameObject& GameObjectFactory::Instantiate()
 	{
-		Scene* currScene = sceneManager.get_current_scene();
-		if (!currScene)
-		{
-			std::cout << "There is no scene loaded\n";
-			return nullptr;
-		}
-
-
-		unsigned count{ 0 };
-		for (GameObject* go : currScene->gameObjects)
-		{
-			if (go->get_name().find("New GameObject") != std::string::npos)
-				++count;
-		}
-		PRINT("Number of GameObjects with same name:" << count);
-
-		GameObject* tmp = new GameObject(currScene->assignGameObjID());
-
-		if (!tmp)
-			return nullptr;
+		GameObject& tmp = pGameObjectsArray->push_back();
+		size_t count = pGameObjectsArray->size() - 1;
 		if (count)
-		{
-			std::string postfix('(' + std::to_string(count) + ')');
-			tmp->set_name(tmp->get_name() + postfix);
-		}
-
-
-		currScene->add_gameobject(tmp);
-
+			tmp.name += '(' + std::to_string(count) + ')';
 		return tmp;
 	}
-	GameObject* GameObjectFactory::instantiate(GameObject& _src)
+
+	GameObject& GameObjectFactory::Instantiate(GameObject& _src, bool copyID)
 	{
-		Scene* currScene = sceneManager.get_current_scene();
-		if (!currScene)
-			return nullptr;
-		GameObject* go = new GameObject(currScene->assignGameObjID());
-		if (!go)
-			return nullptr;
-
-		*go = _src;
-
-		unsigned count{ 0 };
-		for (GameObject* g : currScene->gameObjects)
+		if (copyID)
 		{
-			if (g->get_name().find(_src.get_name()) != std::string::npos)
-				++count;
+			GameObject& tmp = pGameObjectsArray->push_back(GameObject(_src,_src.uuid));
+			size_t count = pGameObjectsArray->size() - 1;
+			if (count)
+				tmp.name += '(' + std::to_string(count) + ')';
+			return tmp;
 		}
-		PRINT("Number of GameObjects with same name:" << count);
-
-		if(count)
-			go->set_name(go->get_name() + '(' + std::to_string(count) + ')');
-
-		currScene->add_gameobject(go);
-
-		//for (std::list<GameObject*>::iterator iter = _src.mchildList().begin(); iter != _src.mchildList().end(); ++iter)
-		//{
-		//	if (!(*iter))
-		//		continue;
-		//	//std::cout << "adding a child\n";
-		//	GameObject* cgo = instantiate(*(*iter));
-		//	if (!cgo)
-		//		break;
-
-		//	cgo->set_parent(go);
-		//	go->attach_child(cgo);
-
-		//}
-		return go;
-	}
-
-	GameObject* GameObjectFactory::clone(GameObject& _src, Scene* scene)
-	{
-		GameObject* go = new GameObject(_src);
-		if (!go)
-			return nullptr;
-
-
-		unsigned count{ 0 };
-		if (scene)
-			for (GameObject* g : scene->gameObjects)
-			{
-				if (g->get_name().find(_src.name) != std::string::npos)
-					++count;
-			}
+		GameObject& tmp = pGameObjectsArray->push_back(_src);
+		size_t count = pGameObjectsArray->size() - 1;
 		if (count)
-			go->name += '(' + std::to_string(count) + ')';
+			tmp.name += '(' + std::to_string(count) + ')';
+		return tmp;
+	}
 
-		if (scene)
+	//GameObject* GameObjectFactory::Instantiate(rapidjson::Value& _value) 
+	//{
+	//	if (!pGameObjectsArray)
+	//		return nullptr;
+
+	//	GameObject* go = nullptr;
+	//	//if (_value.HasMember("ID"))
+	//	//{
+	//	//	go = new GameObject(_value["ID"].GetUint64());
+	//	//}
+	//	//else
+	//	//{
+	//	//	go = new GameObject();
+	//	//}
+
+	//	//if (!go)
+	//	//{
+	//	//	PRINT("FAILED TO DESERIALIZE");
+	//	//	return nullptr;
+	//	//}
+	//	////go->id = currScene->assignGameObjID();
+
+
+	//	//if (!go->deserialize(_value))
+	//	//{
+	//	//	PRINT("FAILED TO DESERIALIZE");
+	//	//	delete go;
+	//	//	return nullptr;
+	//	//}
+
+	//	//if (_value.HasMember("Components"))
+	//	//{
+	//	//	rapidjson::Value& compArr = _value["Components"].GetArray();
+	//	//	for (rapidjson::Value::ValueIterator iter = compArr.Begin(); iter != compArr.End(); ++iter)
+	//	//	{
+
+	//	//		rapidjson::Value& component = *iter;
+	//	//		if (component.HasMember("ComponentType"))
+	//	//		{
+	//	//			ComponentType componentType = (ComponentType)component["ComponentType"].GetInt();
+	//	//			if (componentType == ComponentType::Transform)
+	//	//				go->transform.deserialize(component);
+	//	//			else
+	//	//			{
+	//	//				Component* tmp = AddComponent(*go, componentType);
+	//	//				if (tmp)
+	//	//					tmp->deserialize(component);
+	//	//			}
+	//	//		}
+	//	//	}
+	//	//}
+	//	//currScene->add_gameobject(go);
+
+	//	//// Deserialize children (if any)
+	//	////if (_value.HasMember("Children")) {
+	//	////	rapidjson::Value& childArr = _value["Children"].GetArray();
+	//	////	for (rapidjson::Value::ValueIterator iter = childArr.Begin(); iter != childArr.End(); ++iter)
+	//	////	{
+	//	////		GameObject* cgo = instantiate(*iter);
+	//	////		cgo->transform.SetParent(&go->transform);
+	//	////	}
+	//	////}
+
+	//	return go;
+	//}
+
+	void GameObjectFactory::Destroy(GameObject& _go)
+	{
+		_go.transform.SetParent(nullptr);
+		for (Transform* pTransform : _go.transform.children)
 		{
-			scene->add_gameobject(go);
+			pTransform->SetParent(nullptr);
+			Destroy(pTransform->gameObject);
 		}
-
-
-		//for (std::list<Transform*>::iterator iter = _src.transform.children.begin(); iter != _src.transform.children.end(); ++iter)
-		//{
-		//	if (!(*iter))
-		//		continue;
-		//	GameObject* cgo = clone((*iter)->gameObj,scene);
-		//	if (!cgo)
-		//		break;
-		//	cgo->transform.setParent(&go->transform);
-		//}
-		return go;
+		pGameObjectsArray->erase(_go);
 	}
 
 
-	GameObject* GameObjectFactory::clone(GameObject& _src)
+	void GameObjectFactory::Destroy(UUID id)
 	{
-		Scene* currScene = sceneManager.get_current_scene();
-		if (!currScene)
-			return nullptr;
-		GameObject* go = new GameObject(currScene->assignGameObjID());
-		if (!go)
-			return nullptr;
-		go->transform.position = _src.transform.position;
-		go->transform.scale = _src.transform.scale;
-		go->transform.rotation = _src.transform.rotation;
-		for (Component* component : _src.components)
+		GameObjectsArray::Iterator it = pGameObjectsArray->begin();
+		while (it != pGameObjectsArray->end())
 		{
-			ComponentID newID = _src.assign_id();
-			Component* newComponent = component->clone(*go,&newID);
-			newComponent->id = newID;
-			go->components.push_back(newComponent);
-		}
-
-		unsigned count{ 0 };
-		if (currScene)
-			for (GameObject* g : currScene->gameObjects)
+			GameObject& gameObject = (*it);
+			if (gameObject.uuid == id)
 			{
-				if (g->get_name().find(_src.name) != std::string::npos)
-					++count;
-			}
-		if (count)
-			go->name = _src.name + '(' + std::to_string(count) + ')';
-
-		if (currScene)
-		{
-			currScene->add_gameobject(go);
-			for (Transform* transform : _src.transform.children)
-			{
-				GameObject* cgo{clone(transform->gameObj)};
-				cgo->transform.setParent(&go->transform);
-			}
-		}
-		for (size_t compIndex{ 0 }; compIndex < _src.components.size(); ++compIndex)
-		{
-			go->components[compIndex]->previewLink(_src.components[compIndex]);
-		}
-		return go;
-	}
-
-	GameObject* GameObjectFactory::instantiate(rapidjson::Value& _value) 
-	{
-		Scene* currScene = sceneManager.get_current_scene();
-		if (!currScene)
-			return nullptr;
-
-		GameObject* go = nullptr;
-		if (_value.HasMember("ID"))
-		{
-			go = new GameObject(_value["ID"].GetUint64());
-		}
-		else
-		{
-			go = new GameObject(currScene->assignGameObjID());
-		}
-
-		if (!go)
-		{
-			PRINT("FAILED TO DESERIALIZE");
-			return nullptr;
-		}
-		//go->id = currScene->assignGameObjID();
-
-
-		if (!go->deserialize(_value))
-		{
-			PRINT("FAILED TO DESERIALIZE");
-			delete go;
-			return nullptr;
-		}
-
-		if (_value.HasMember("Components")) 
-		{
-			rapidjson::Value& compArr = _value["Components"].GetArray();
-			for (rapidjson::Value::ValueIterator iter = compArr.Begin(); iter != compArr.End(); ++iter)
-			{
-				rapidjson::Value& component = *iter;
-				if (component.HasMember("Type")) 
+				gameObject.transform.SetParent(nullptr);
+				pGameObjectsArray->erase(it);
+				//It is safe because the object is not destroyed
+				for (Transform* pTransform : gameObject.transform.children)
 				{
-					std::string key = component["Type"].GetString();
-					//PRINT("Component: " << name);
-					if (key == "Transform")
-						// deserialize transform component
-						go->transform.deserialize(component);
-					else
-					{
-						Component* tmp = go->Add(Component::nameToType(key));
-						//PRINT();
-						if (tmp)
-							tmp->deserialize(component);
-					}						
-
+					pTransform->SetParent(nullptr);
+					Destroy(pTransform->gameObject);
 				}
+				return;
 			}
-		}
-
-		currScene->add_gameobject(go);
-
-		// Deserialize children (if any)
-		//if (_value.HasMember("Children")) {
-		//	rapidjson::Value& childArr = _value["Children"].GetArray();
-		//	for (rapidjson::Value::ValueIterator iter = childArr.Begin(); iter != childArr.End(); ++iter)
-		//	{
-		//		GameObject* cgo = instantiate(*iter);
-		//		cgo->transform.setParent(&go->transform);
-		//	}
-		//}
-
-		return go;
-	}
-
-	bool GameObjectFactory::destroy(GameObject* _go)
-	{
-		Scene* currScene = sceneManager.get_current_scene();
-		if (!currScene)
-			return false;
-		if (!_go)
-			return false;
-
-		currScene->gameObjects.erase(std::remove_if(currScene->gameObjects.begin(), currScene->gameObjects.end(), [&](GameObject* gameObj) {return gameObj == _go; }));
-
-
-		// Add the game object's ID to unused pile
-		currScene->add_unused_gid(_go->id);
-
-
-		// Deattach children from this game object (if any)
-		for (auto pTransform : _go->transform.children)
-		{
-			destroy(&pTransform->gameObj);
-		}
-		//std::cout << "Deleting " << _go->get_name() << std::endl;
-
-		//std::cout << "number of game objects left: " << currScene->get_gameobjcount() << std::endl;
-		for (size_t i{ 0 }; i < currScene->gameObjectSPTRS.size(); ++i)
-		{
-			if (currScene->gameObjectSPTRS[i].get() == _go)
-			{
-				//std::cout << "take out of sptr vector\n";
-				
-				currScene->gameObjectSPTRS.erase(currScene->gameObjectSPTRS.begin() + i);
-				break;
-			}
-		}
-
-		return true;
-	}
-
-
-	bool GameObjectFactory::destroy(GameObjectID id)
-	{
-		Scene* currScene = sceneManager.get_current_scene();
-		if (!currScene)
-			return false;
-
-		GameObject* _go = sceneManager.findGameObjByID(id);
-		if (!_go)
-		{
-			return false;
-		}
-
-		currScene->add_unused_gid(_go->id);
-
-		// Deattach children from this game object (if any)
-		for (auto pTransform : _go->transform.children)
-		{
-			pTransform->setParent(nullptr);
-			destroy(&pTransform->gameObj);
-		}
-
-		//std::cout << "Deleting " << _go->get_name() << std::endl;
-
-		if (_go->transform.hasParent())
-		{
-			_go->transform.setParent(nullptr);
-		}
-
-		currScene->gameObjects.erase(std::remove_if(currScene->gameObjects.begin(), currScene->gameObjects.end(), [&](GameObject* gameObj) {return gameObj == _go; }));
-		std::cout << "number of game objects left: " << currScene->get_gameobjcount() << std::endl;
-		for (size_t i{ 0 }; i < currScene->gameObjectSPTRS.size(); ++i)
-		{
-			if (currScene->gameObjectSPTRS[i].get()->id == id)
-			{
-				std::cout << "take out of sptr vector\n";
-				currScene->gameObjectSPTRS.erase(currScene->gameObjectSPTRS.begin() + i);
-				break;
-			}
-		}
-		return true;
-	}
-
-	GameObject* GameObjectFactory::build_archetype(rapidjson::Value& _value)
-	{
-		Scene* currScene = sceneManager.get_current_scene();
-		if (!currScene)
-			return nullptr;
-
-		GameObject* go = new GameObject(0);
-
-		if (!go)
-			return nullptr;
-
-		if (!go->deserialize(_value))
-		{
-			delete go;
-			return nullptr;
-		}
-
-		if (_value.HasMember("Components"))
-		{
-			rapidjson::Value& compArr = _value["Components"].GetArray();
-			for (rapidjson::Value::ValueIterator iter = compArr.Begin(); iter != compArr.End(); ++iter)
-			{
-
-				rapidjson::Value& component = *iter;
-				if (component.HasMember("Type"))
-				{
-					std::string key = component["Type"].GetString();
-					//PRINT("Component: " << key);
-					if (key == "Transform")
-						// deserialize transform component
-						go->transform.deserialize(component);
-					else
-					{
-						Component* tmp = go->addComponent(Component::nameToType(key));
-						if (tmp)
-							tmp->deserialize(component);
-					}
-
-				}
-			}
-		}
-		// Deserialize children (if any)
-		if (_value.HasMember("Children")) {
-			rapidjson::Value& childArr = _value["Children"].GetArray();
-			for (rapidjson::Value::ValueIterator iter = childArr.Begin(); iter != childArr.End(); ++iter)
-			{
-				GameObject* cgo = instantiate(*iter);
-				go->transform.setParent(&cgo->transform);
-			}
-		}
-
-		//std::cout << "No. of children:" << childCount << std::endl;
-		return go;
-	}
-	bool GameObjectFactory::register_archetypes(const std::filesystem::path& _directoryPath)
-	{
-		std::cout << "Registration of Archetypes Begin----\n";
-		std::filesystem::directory_entry dir(_directoryPath);
-
-		// Iterate through the Archetypes folder and create a game object for each archetype file
-		for (const auto& dir_entry : std::filesystem::directory_iterator{ dir })
-		{
-			std::ifstream ifs(dir_entry.path());
-			if (!ifs)
-				continue;
-			rapidjson::IStreamWrapper isw(ifs);
-			rapidjson::Document doc;
-			doc.ParseStream(isw);
-			GameObject* tmp = build_archetype(doc);
-			if (tmp)
-			{
-				std::cout << "Registering " << doc["Archetype"].GetString() << std::endl;
-				archetypes.emplace(doc["Archetype"].GetString(), tmp);
-			}
-
-			ifs.close();
-		}
-		std::cout << "Registration of Archetypes End----\n";
-		return true;
-	}
-	void GameObjectFactory::clear_archetypes()
-	{
-		for (std::map<std::string, GameObject*>::iterator iter = archetypes.begin(); iter != archetypes.end(); ++iter)
-		{
-			if ((*iter).second != nullptr) {
-				delete (*iter).second;
-				(*iter).second = nullptr;
-			}
+			++it;
 		}
 	}
 
-	GameObject* GameObjectFactory::instantiate(const std::string& _archetype)
+	//GameObject* GameObjectFactory::build_archetype(rapidjson::Value& _value)
+	//{
+	//	Scene* currScene = sceneManager.get_current_scene();
+	//	if (!currScene)
+	//		return nullptr;
+
+	//	GameObject* go = new GameObject(0);
+
+	//	if (!go)
+	//		return nullptr;
+
+	//	if (!go->deserialize(_value))
+	//	{
+	//		delete go;
+	//		return nullptr;
+	//	}
+
+	//	if (_value.HasMember("Components"))
+	//	{
+	//		rapidjson::Value& compArr = _value["Components"].GetArray();
+	//		for (rapidjson::Value::ValueIterator iter = compArr.Begin(); iter != compArr.End(); ++iter)
+	//		{
+
+	//			rapidjson::Value& component = *iter;
+	//			if (component.HasMember("ComponentType"))
+	//			{
+	//				ComponentType componentType = (ComponentType)component["ComponentType"].GetInt();
+	//				if (componentType == ComponentType::Transform)
+	//					go->transform.deserialize(component);
+	//				else
+	//				{
+	//					Component* tmp = AddComponent(*go, componentType);
+	//					if (tmp)
+	//						tmp->deserialize(component);
+	//				}
+	//			}
+	//		}
+	//	}
+	//	// Deserialize children (if any)
+	//	if (_value.HasMember("Children")) {
+	//		rapidjson::Value& childArr = _value["Children"].GetArray();
+	//		for (rapidjson::Value::ValueIterator iter = childArr.Begin(); iter != childArr.End(); ++iter)
+	//		{
+	//			GameObject* cgo = instantiate(*iter);
+	//			go->transform.SetParent(&cgo->transform);
+	//		}
+	//	}
+
+	//	//std::cout << "No. of children:" << childCount << std::endl;
+	//	return go;
+	//}
+	//bool GameObjectFactory::register_archetypes(const std::filesystem::path& _directoryPath)
+	//{
+	//	std::cout << "Registration of Archetypes Begin----\n";
+	//	std::filesystem::directory_entry dir(_directoryPath);
+
+	//	// Iterate through the Archetypes folder and create a game object for each archetype file
+	//	for (const auto& dir_entry : std::filesystem::directory_iterator{ dir })
+	//	{
+	//		std::ifstream ifs(dir_entry.path());
+	//		if (!ifs)
+	//			continue;
+	//		rapidjson::IStreamWrapper isw(ifs);
+	//		rapidjson::Document doc;
+	//		doc.ParseStream(isw);
+	//		GameObject* tmp = build_archetype(doc);
+	//		if (tmp)
+	//		{
+	//			std::cout << "Registering " << doc["Archetype"].GetString() << std::endl;
+	//			archetypes.emplace(doc["Archetype"].GetString(), tmp);
+	//		}
+
+	//		ifs.close();
+	//	}
+	//	std::cout << "Registration of Archetypes End----\n";
+	//	return true;
+	//}
+	//void GameObjectFactory::clear_archetypes()
+	//{
+	//	for (std::map<std::string, GameObject*>::iterator iter = archetypes.begin(); iter != archetypes.end(); ++iter)
+	//	{
+	//		if ((*iter).second != nullptr) {
+	//			delete (*iter).second;
+	//			(*iter).second = nullptr;
+	//		}
+	//	}
+	//}
+
+	GameObject& GameObjectFactory::Instantiate(const std::string& _archetype)
 	{
-		if (archetypes.find(_archetype) == archetypes.end())
-			return nullptr;
 		std::cout << "Making an archetype: " << _archetype << std::endl;
-		GameObject* tmp = instantiate(*archetypes[_archetype]);
+		GameObject& tmp = Instantiate(*archetypes[_archetype]);
 		return tmp;
 	}
-	bool GameObjectFactory::add_component(const std::string& _key, GameObject* _go)
-	{
-		
-		std::cout << "adding component\n";
-		Component* tmp = _go->addComponent(Component::nameToType(_key));
-		Scene* currScene = sceneManager.get_current_scene();
-		if (currScene)
-		{
-			currScene->assignComponentID();
-			currScene->incr_component_count();
-		}
-		return tmp != nullptr;
-	}
-	
-
 
 	std::map<std::string, GameObject*>& GameObjectFactory::get_archetype_map()
 	{
@@ -503,17 +316,17 @@ namespace Copium
 
 	GameObject* GameObjectFactory::create_child(GameObject& _parent)
 	{
-		Scene* currScene = sceneManager.get_current_scene();
-		GameObject* newChild = new GameObject(currScene->assignGameObjID());
-		newChild->transform.setParent(&_parent.transform);
-		currScene->add_gameobject(newChild);
+		//Scene* currScene = sceneManager.get_current_scene();
+		//GameObject* newChild = new GameObject();
+		//newChild->transform.SetParent(&_parent.transform);
+		//currScene->add_gameobject(newChild);
 		//auto it = currScene->gameObjects.begin();
 		//for (auto pGameObject : currScene->gameObjects)
 		//{
 		//	if (pGameObject->id == _parent.id)
 		//	{
 		//		currScene->gameObjects.insert(it + 1, newChild);
-		//		_parent.transform.setParent(&newChild->transform);
+		//		_parent.transform.SetParent(&newChild->transform);
 		//		return newChild;
 		//	}
 		//	++it;
@@ -525,12 +338,12 @@ namespace Copium
 		//	{
 		//		//currScene->gameObjects.insert(iter + 1, newChild);
 		//		currScene->add_gameobject(newChild);
-		//		newChild->transform.setParent(&_parent.transform);
+		//		newChild->transform.SetParent(&_parent.transform);
 		//		return newChild;
 		//	}
 		//}
 
-		return newChild;
+		return nullptr;
 
 	}
 

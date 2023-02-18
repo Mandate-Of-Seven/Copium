@@ -179,7 +179,7 @@ namespace Copium
 			{
 				for (int j = 0; j < sortingLayers[i].gameObjects.size(); j++)
 				{
-					if (sortingLayers[i].gameObjects[j]->id == _gameObject.id)
+					if (sortingLayers[i].gameObjects[j]->uuid == _gameObject.uuid)
 					{
 						sortingLayers[i].gameObjects[j] = nullptr;
 						break;
@@ -199,7 +199,7 @@ namespace Copium
 				{
 					if (!sortingLayers[i].gameObjects[j])
 						continue;
-					if (sortingLayers[i].gameObjects[j]->id == _gameObject.id)
+					if (sortingLayers[i].gameObjects[j]->uuid == _gameObject.uuid)
 					{
 						sortingLayers[i].gameObjects[j] = nullptr;
 						break;

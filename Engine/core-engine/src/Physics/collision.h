@@ -14,11 +14,11 @@
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
-#include "Math/math-library.h"
-#include "SceneManager/scene-manager.h"
 
 #ifndef COLLISION_H
 #define COLLISION_H
+
+#include "Math/math-library.h"
 
 enum class Shape : int
 {	DOT,
@@ -94,6 +94,23 @@ namespace Copium
 			_value.AddMember("Max", maximum, _doc.GetAllocator());
 
 		}
+
+		AABB GetRelativeBounds(const Math::Vec3& pos,const Math::Vec3& size)
+		{
+			float x = (max.x - min.x) * size.x;
+			float y = (max.y - min.y) * size.y;
+			AABB tmp{ *this };
+			tmp.max.x *= x;
+			tmp.min.x *= x;
+			tmp.max.y *= y;
+			tmp.min.y *= y;
+			tmp.max.x += pos.x;
+			tmp.min.x += pos.x;
+			tmp.max.y += pos.y;
+			tmp.min.y += pos.y;
+			return tmp;
+		}
+
 		Math::Vec2 min;
 		Math::Vec2 max;
 	};
@@ -135,7 +152,7 @@ namespace Copium
    */
    /**************************************************************************/
 	bool collision_rectrect(const AABB& aabb1, const Math::Vec2& vel1,
-		const AABB& aabb2, const Math::Vec2& vel2);
+		const AABB& aabb2, const Math::Vec2& vel2, double dt);
 	/***************************************************************************/
    /*!
    \brief
@@ -151,7 +168,7 @@ namespace Copium
    */
    /**************************************************************************/
 	bool collision_pointrect(const Math::Vec2& point,
-		const AABB& aabb2, const Math::Vec2& vel2);
+		const AABB& aabb2, const Math::Vec2& vel2, double dt);
 	/***************************************************************************/
 	/*!
 	\brief
@@ -250,7 +267,8 @@ namespace Copium
 	
 	*/
 	/**************************************************************************/
-	void resolve_AABBcollision(Transform& transform1, AABB& aabb1, AABB& aabb2, collisionDirection direction);
+	void resolve_AABBcollision(Math::Vec3& position, AABB& aabb1, AABB& aabb2, collisionDirection direction);
+
 }
 
 #endif // !COLLISION_H

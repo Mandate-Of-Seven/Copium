@@ -1,4 +1,4 @@
-/*!***************************************************************************************
+ï»¿/*!***************************************************************************************
 \file			renderer.h
 \project
 \author			Sean Ngo
@@ -8,12 +8,12 @@
 \date			21/09/2022
 
 \brief
-	This file holds the declaration of the Renderer class. The Renderer renders all 
+	This file holds the declaration of the Renderer class. The Renderer renders all
 	objects in the game/scene. Use this class to access the renderer of any object,
 	sprite or particle system (if any). Renderers can be disabled to make objects
 	invisble (see enabled).
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #ifndef RENDERER_H
 #define RENDERER_H
@@ -25,7 +25,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Graphics/sprite.h"
 #include "Graphics/fonts.h"
 
-namespace Copium 
+namespace Copium
 {
 	// Global variables
 	static const GLuint maxQuadCount = 1000;	// Number of sprites per batch
@@ -315,7 +315,7 @@ namespace Copium
 			Resets the number of draw, quad and line count
 		*/
 		/***************************************************************************/
-		void reset_stats() { drawCount = quadCount = lineCount = circleCount = textCount = 0; };		
+		void reset_stats() { drawCount = quadCount = lineCount = circleCount = textCount = 0; };
 
 	private:
 
@@ -371,4 +371,3 @@ namespace Copium
 }
 
 #endif // !RENDERER_H
-

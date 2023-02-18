@@ -16,23 +16,20 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 *****************************************************************************************/
 #include "pch.h"
 #include <limits>
-#include "Windows/windows-system.h"
 #include <Physics/collision.h>
-#include <Debugging/frame-rate-controller.h>
-#include <GameObject/Components/transform-component.h>
 
 namespace Copium
 {
 
 	bool collision_rectrect(const AABB& aabb1, const Math::Vec2& vel1,
-		const AABB& aabb2, const Math::Vec2& vel2)
+		const AABB& aabb2, const Math::Vec2& vel2, double dt)
 	{
 		if ((aabb1.max.x < aabb2.min.x) || (aabb1.min.x > aabb2.max.x) ||
 			(aabb1.max.y < aabb2.min.y) || (aabb1.min.y > aabb2.max.y))
 			return 0;
 		//Initialize values to check for collision between moving rectangles
 		Math::Vec2 vB;
-		double tFirst = 0, tLast = MyFrameRateController.getDt();
+		double tFirst = 0, tLast = dt;
 		vB.x = vel2.x - vel1.x;
 		vB.y = vel2.y - vel1.y;
 		//Object b is moving away from object a on the x axis
@@ -150,14 +147,14 @@ namespace Copium
 
 	}
 	bool collision_pointrect(const Math::Vec2& point,
-		const AABB& aabb2, const Math::Vec2& vel2)
+		const AABB& aabb2, const Math::Vec2& vel2, double dt)
 	{
 		//Check for static collision
 		if ((point.x < aabb2.min.x) || (point.x > aabb2.max.x) ||
 			(point.y < aabb2.min.y) || (point.y > aabb2.max.y))
 		{
 			float tFirst = 0;
-			float tLast = (float)MyFrameRateController.getDt();
+			float tLast = dt;
 
 			//Object b is moving away from object a on the x axis
 			if (vel2.x < 0)
@@ -432,28 +429,28 @@ namespace Copium
 		return collisionDirection::NONE;
 	}
 
-	void resolve_AABBcollision(Transform& transform1,AABB& aabb1, AABB& aabb2, collisionDirection direction)
+	void resolve_AABBcollision(Math::Vec3& position,AABB& aabb1, AABB& aabb2, collisionDirection direction)
 	{		
 		float resolvePos = 0.0f;
 		if (direction == collisionDirection::TOP)
 		{
 			resolvePos = aabb1.max.y - aabb2.min.y;
-			transform1.position.y -= resolvePos;
+			position.y -= resolvePos;
 		}
 		if (direction == collisionDirection::BOTTOM)
 		{
 			resolvePos = aabb1.min.y - aabb2.max.y;
-			transform1.position.y -= resolvePos;			
+			position.y -= resolvePos;
 		}
 		if (direction == collisionDirection::LEFT)
 		{
 			resolvePos = aabb1.min.x - aabb2.max.x;
-			transform1.position.x -= resolvePos;
+			position.x -= resolvePos;
 		}
 		if (direction == collisionDirection::RIGHT)
 		{
 			resolvePos = aabb1.max.x - aabb2.min.x;
-			transform1.position.x -= resolvePos;
+			position.x -= resolvePos;
 		}
 		//std::cout << resolvePos << std::endl;
 	}

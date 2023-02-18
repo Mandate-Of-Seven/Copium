@@ -594,7 +594,7 @@ namespace Copium
 			ptr to the c# instance
 		*/
 		/*******************************************************************************/
-		MonoObject* ReflectGameObject(GameObjectID id);
+		MonoObject* ReflectGameObject(UUID id);
 		/*******************************************************************************
 		/*!
 		*
@@ -608,11 +608,14 @@ namespace Copium
 			ptr to the c# instance
 		*/
 		/*******************************************************************************/
-		MonoObject* ReflectComponent(Component& component);
+		template <typename T>
+		MonoObject* ReflectComponent(T& component);
+		template <>
+		MonoObject* ReflectComponent(Script& component);
 
 
-		using MonoGameObjects = std::unordered_map<GameObjectID, MonoObject*>;
-		using MonoComponents = std::unordered_map<ComponentID, MonoObject*>;
+		using MonoGameObjects = std::unordered_map<UUID, MonoObject*>;
+		using MonoComponents = std::unordered_map<UUID, MonoObject*>;
 
 		std::unordered_map<std::string, ScriptClass> scriptClassMap;
 		std::unordered_map<std::string, ScriptClass> scriptableObjectClassMap;

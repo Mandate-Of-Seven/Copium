@@ -27,45 +27,10 @@ namespace Copium
 	public:
 		// Constructors generate the UUID
 		UUID();
-		UUID(uint64_t _uuid);
 		UUID(const UUID& _rhs) = default;
-
+		UUID(uint64_t _rhs) : uuid{ _rhs } {}
 		operator uint64_t() const { return uuid; }
-
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Deserialize UUID from a rapidjson Value
-
-		\param	_val
-			reference to a rapidjson::Value which should contain the UUID
-
-		\return
-			void
-		*/
-		/*******************************************************************************/
-		void Deserialize(rapidjson::Value& _val);
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Serialize this UUID to a rapidjson Value
-
-		\param	_val
-			reference to the rapidjson::Value which this UUID's data will be written to
-
-		\param _doc
-			reference to the rapidjson::Document which this UUID's data is being written to
-
-		\return
-			void
-		*/
-		/*******************************************************************************/
-		void Serialize(rapidjson::Value& _val, rapidjson::Document& _doc, const std::string& _name = "UID");
-
-	private:
-		uint64_t uuid;
+		const uint64_t uuid;
 	};
 }
 

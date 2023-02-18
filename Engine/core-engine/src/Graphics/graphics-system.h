@@ -34,7 +34,7 @@ namespace Copium
 	};
 
 	// Inherits from System
-	CLASS_SYSTEM(GraphicsSystem), public IReceiver
+	CLASS_SYSTEM(GraphicsSystem)
 	{
 	public:
 		// Constructors
@@ -63,15 +63,6 @@ namespace Copium
 		/***************************************************************************/
 		void exit();
 
-		/**************************************************************************/
-		/*!
-			\brief
-			Interface function for MessageSystem to call for IReceivers to handle
-			a messageType
-		*/
-		/**************************************************************************/
-		void handleMessage(MESSAGE_TYPE mType);
-
 		// Accessing Properties
 
 		// Texture Properties
@@ -89,8 +80,6 @@ namespace Copium
 
 		const bool& is_loaded() const { return loaded; }
 		
-		std::list<BaseCamera*>& get_cameras() { return cameras; }
-
 #pragma region MemberFunctions
 		// Public Member Functions
 
@@ -143,8 +132,7 @@ namespace Copium
 		/* Stored Information ***********************************************************/
 		bool loaded = false;
 
-		std::list<BaseCamera*> cameras; // Stores the reference to the cameras in the engine
-
+		BaseCamera* editorCamera{};
 #pragma endregion DataMembers
 	};
 

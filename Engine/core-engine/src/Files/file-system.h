@@ -20,6 +20,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "CopiumCore/system-interface.h"
 #include "Files/file-directory.h"
+#include <Files/file.h>
 #include <string>
 #include <list>
 #include <map>
@@ -29,6 +30,23 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 namespace Copium
 {
+
+	static std::unordered_map<std::string, FileType> fileTypes
+	{
+		{std::string(""), FileType{"Folder", FILE_TYPE::FOLDER}},
+		{std::string(".wav"), FileType{"Audio", FILE_TYPE::AUDIO}},
+		{std::string(".theme"), FileType{"Config", FILE_TYPE::CONFIG}},
+		{std::string(".json"), FileType{"Config", FILE_TYPE::CONFIG}},
+		{std::string(".ttf"), FileType{"Font", FILE_TYPE::FONT}},
+		{std::string(".scene"), FileType{"Scene", FILE_TYPE::SCENE}}, // Bean: change to .scene in the future
+		{std::string(".cs"), FileType{"Script", FILE_TYPE::SCRIPT}},
+		{std::string(".vert"), FileType{"Shader", FILE_TYPE::SHADER}}, // Bean: change to .shader in the future
+		{std::string(".frag"), FileType{"Shader", FILE_TYPE::SHADER}},
+		{std::string(".png"), FileType{"Sprite", FILE_TYPE::SPRITE}},
+		{std::string(".txt"), FileType{"Text", FILE_TYPE::TEXT}},
+		{std::string(".so"), FileType{"Asset", FILE_TYPE::ASSET}},
+		{std::string(".meta"), FileType{"Meta", FILE_TYPE::META}}
+	};
 	/**************************************************************************/
 	/*!
 	\brief
@@ -359,10 +377,10 @@ namespace Copium
 		std::list<std::string> assetsPath;
 		Directory assetsDirectory;
 		unsigned int indexes = 0; // Number of file & directory instances
-		std::unordered_map<std::string, FileType> fileTypes;
 		std::unordered_map<FILE_TYPE, std::list<File*>> files; // A list of files in their categories
 		File* selectedFile = nullptr;
 		Directory* selectedDirectory = nullptr;
+		Directory* currentDirectory{ &assetsDirectory };
 	};
 }
 

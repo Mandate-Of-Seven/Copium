@@ -21,21 +21,23 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Messaging/message-system.h"
 #include "Files/assets-system.h"
 #include "Editor/editor-system.h"
-#include "Scripting/scripting-system.h"
+//#include "Scripting/scripting-system.h"
 #include "Physics/physics-system.h"
 #include "Graphics/graphics-system.h"
-#include "Utilities/thread-system.h"
-#include "SceneManager/scene-manager.h"
-#include "Debugging/logging-system.h"
+//#include "Utilities/thread-system.h"
+//#include "SceneManager/scene-manager.h"
+//#include "Debugging/logging-system.h"
 #include "Audio/sound-system.h"
-#include "Scripting/logic-system.h"
-#include <Debugging/frame-rate-controller.h>
-#include "Animation/animation-system.h"
+#include <Files/file-system.h>
+//#include "Scripting/logic-system.h"
+//#include <Debugging/frame-rate-controller.h>
+//#include "Animation/animation-system.h"
 //#include "string.h"
+#include <Events/events-system.h>
 
 namespace Copium
 {
-	CLASS_SYSTEM(CopiumCore) , public IReceiver
+	CLASS_SYSTEM(CopiumCore) //, public IReceiver
 	{
 	public:
 		CopiumCore() {}
@@ -53,20 +55,21 @@ namespace Copium
 			{
 				//Put in sequence of calls
 				WindowsSystem::Instance(),
+				MyEventSystem,
 				pMessageSystem,
 				LoggingSystem::Instance(),
 				SoundSystem::Instance(),
 				FileSystem::Instance(),
 				AssetsSystem::Instance(),
 				SceneManager::Instance(),
-				ScriptingSystem::Instance(),
+				//ScriptingSystem::Instance(),
 				InputSystem::Instance(),
 				EditorSystem::Instance(),
-				LogicSystem::Instance(),
+				//LogicSystem::Instance(),
 				PhysicsSystem::Instance(),
 				GraphicsSystem::Instance(),
-				ThreadSystem::Instance(),
-				AnimationSystem::Instance()
+				//ThreadSystem::Instance(),
+				//AnimationSystem::Instance()
 			};
 			for (ISystem* pSystem : systems)
 			{
@@ -74,10 +77,10 @@ namespace Copium
 				//std::cout << typeid(*pSystem).name() << ": init!\n";
 			}
 
-			pMessageSystem->subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
-			pMessageSystem->subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
-			pMessageSystem->subscribe(MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW, this);
-			while (MyScriptingSystem.compilingState == CompilingState::Compiling);
+			//pMessageSystem->subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
+			//pMessageSystem->subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
+			//pMessageSystem->subscribe(MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW, this);
+			//while (MyScriptingSystem.compilingState == CompilingState::Compiling);
 			//MySceneManager.load_scene(Paths::assetPath+"\\Scenes\\Demo.scene");
 			//MySceneManager.load_scene("C:\\Users\\FLESH\\Desktop\\Copium\\Engine\\x64\\PackedTracks\\Assets\\Scenes\\Demo.scene");
 			
@@ -132,13 +135,13 @@ namespace Copium
 						//std::cout << typeid(*pSystem).name() << ": " << pSystem->updateTimePercent << "%\n";
 					}
 					//std::cout << temp;
-					Window::EditorConsole::editorLog.set_performancetext(temp);
+					//Window::EditorConsole::editorLog.set_performancetext(temp);
 					//std::cout << "End\n\n";
 					performanceCounter = 0;
 				}
 				else
 				{
-					performanceCounter += (float)MyFrameRateController.getDt();
+					//performanceCounter += (float)MyFrameRateController.getDt();
 				}
 			}
 		}
@@ -158,28 +161,28 @@ namespace Copium
 			}
 		}
 
-		void handleMessage(MESSAGE_TYPE mType)
-		{
-			switch (mType)
-			{
-				case MESSAGE_TYPE::MT_START_PREVIEW:
-				{
-					inPlayMode = true;
-					break;
-				}
-				case MESSAGE_TYPE::MT_STOP_PREVIEW:
-				{
-					inPlayMode = false;
-					break;
-				}
-				case MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW:
-				{
-					displayPerformance = !displayPerformance;
-					performanceCounter = 0.05f;
-					break;
-				}
-			}
-		}
+		//void handleMessage(MESSAGE_TYPE mType)
+		//{
+		//	switch (mType)
+		//	{
+		//		case MESSAGE_TYPE::MT_START_PREVIEW:
+		//		{
+		//			inPlayMode = true;
+		//			break;
+		//		}
+		//		case MESSAGE_TYPE::MT_STOP_PREVIEW:
+		//		{
+		//			inPlayMode = false;
+		//			break;
+		//		}
+		//		case MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW:
+		//		{
+		//			displayPerformance = !displayPerformance;
+		//			performanceCounter = 0.05f;
+		//			break;
+		//		}
+		//	}
+		//}
 
 		bool get_inplaymode() { return inPlayMode; }
 	private:

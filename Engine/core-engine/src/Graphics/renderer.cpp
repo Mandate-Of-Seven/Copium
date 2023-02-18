@@ -1,4 +1,4 @@
-/*!***************************************************************************************
+ï»¿/*!***************************************************************************************
 \file			renderer.cpp
 \project
 \author			Sean Ngo
@@ -13,7 +13,7 @@
 	sprite or particle system (if any). Renderers can be disabled to make objects
 	invisble (see enabled).
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 #include <GL/glew.h> // for access to OpenGL API declarations 
@@ -22,7 +22,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Graphics/renderer.h"
 #include "Graphics/fonts.h"
 
-#include "Editor/editor-system.h"
+//#include "Editor/editor-system.h"
 #include <glm/gtc/type_ptr.hpp>
 
 namespace Copium
@@ -67,8 +67,8 @@ namespace Copium
 	}
 
 	// Setup the quads vertex array object
-	void Renderer::setup_quad_vao() 
-	{	
+	void Renderer::setup_quad_vao()
+	{
 		quadBuffer = new QuadVertex[maxVertexCount];
 
 		// Vertex Array Object
@@ -99,7 +99,7 @@ namespace Copium
 		glVertexArrayAttribBinding(quadVertexArrayID, 4, 0);
 
 		// Element Buffer Object
-		GLushort indices[maxIndexCount]{0};
+		GLushort indices[maxIndexCount]{ 0 };
 		GLushort offset = 0;
 		for (GLuint i = 0; i < maxIndexCount; i += 6)
 		{
@@ -294,7 +294,7 @@ namespace Copium
 			//glm::vec3 pos = camera->get_eye();
 			//glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
 			//glUniformMatrix4fv(uTransform, 1, GL_FALSE, glm::value_ptr(transform));
-			
+
 			/*PRINT("Transform Matrix:");
 			for (int i = 0; i < 4; i++)
 			{
@@ -305,7 +305,7 @@ namespace Copium
 				std::cout << "\n";
 			}*/
 			// End of matrix assignment
-			
+
 			if (graphics->get_texture_slot_index() >= 32)
 			{
 				graphics->set_texture_slot_index(1);
@@ -320,7 +320,7 @@ namespace Copium
 			glDrawElements(GL_TRIANGLES, quadIndexCount, GL_UNSIGNED_SHORT, NULL);
 			drawCount++;
 
-			
+
 			glBindVertexArray(0);
 			graphics->get_shader_program()[QUAD_SHADER].UnUse();
 			glDisable(GL_BLEND);
@@ -384,7 +384,7 @@ namespace Copium
 
 			// Bind texture unit
 			// 
-			
+
 			// Cannot just bind texture because there is multiple textures in this one draw
 			// Requires an array of textures and reference from there
 			//glBindTexture(GL_TEXTURE_2D, ch.textureID);
@@ -449,13 +449,13 @@ namespace Copium
 			glVertexArrayVertexBuffer(textVertexArrayID, 3, textVertexBufferID, 0, sizeof(TextVertex));
 			glBindVertexArray(0);
 		}
-		
+
 	}
 
 	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const glm::vec4& _color)
 	{
 		glm::mat4 translate = glm::translate(glm::mat4(1.f), _position);
-		
+
 		float radians = glm::radians(_rotation);
 
 		glm::mat4 rotation = {
@@ -514,10 +514,10 @@ namespace Copium
 		};
 
 		float pixelWidth = 1.f, pixelHeight = 1.f;
-		if (_sprite.get_texture() != nullptr)
+		if (_sprite.refTexture != nullptr)
 		{
-			pixelWidth = _sprite.get_texture()->get_pixel_width();
-			pixelHeight = _sprite.get_texture()->get_pixel_height();
+			pixelWidth = _sprite.refTexture->get_pixel_width();
+			pixelHeight = _sprite.refTexture->get_pixel_height();
 		}
 
 		glm::mat4 scale = {
@@ -610,7 +610,7 @@ namespace Copium
 		{
 			if (graphics->get_texture_slots()[i] == _textureID)
 			{
-				textureIndex = (GLfloat) i;
+				textureIndex = (GLfloat)i;
 				break;
 			}
 		}
@@ -619,9 +619,9 @@ namespace Copium
 		if (textureIndex == 0.f && _textureID != 0)
 		{
 			// Add new texture into the texture slot
-			textureIndex = (GLfloat) graphics->get_texture_slot_index();
+			textureIndex = (GLfloat)graphics->get_texture_slot_index();
 			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _textureID;
-			graphics->set_texture_slot_index((GLuint) textureIndex + 1);
+			graphics->set_texture_slot_index((GLuint)textureIndex + 1);
 		}
 
 		for (GLint i = 0; i < 4; i++)
@@ -650,22 +650,22 @@ namespace Copium
 
 		for (GLuint i = 1; i < graphics->get_texture_slot_index(); i++)
 		{
-			if (!_sprite.get_texture())
+			if (!_sprite.refTexture)
 				break;
 
-			if (graphics->get_texture_slots()[i] == _sprite.get_texture()->get_object_id())
+			if (graphics->get_texture_slots()[i] == _sprite.refTexture->get_object_id())
 			{
-				textureIndex = (GLfloat) i;
+				textureIndex = (GLfloat)i;
 				break;
 			}
 		}
 
 		// Change texture index only if ID retrieved is more than 0 (0 is white texture)
-		if (textureIndex == 0.f && _sprite.get_sprite_id() != 0)
+		if (textureIndex == 0.f && _sprite.spriteID != 0)
 		{
 			// Add new texture into the texture slot
-			textureIndex = (GLfloat) graphics->get_texture_slot_index();
-			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _sprite.get_texture()->get_object_id();
+			textureIndex = (GLfloat)graphics->get_texture_slot_index();
+			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _sprite.refTexture->get_object_id();
 			graphics->set_texture_slot_index((GLuint)textureIndex + 1);
 		}
 
@@ -675,11 +675,11 @@ namespace Copium
 			quadBufferPtr->textCoord = quadTextCoord[i];
 
 			if (!tint)
-				quadBufferPtr->color = _sprite.get_color();
+				quadBufferPtr->color = _sprite.color;
 			else
 			{
 				glm::fvec4 mixedColor{ 0 };
-				glm::fvec4 color{ _sprite.get_color() };
+				glm::fvec4 color{ _sprite.color };
 				glm::fvec4 layeredColor{ *tint };
 				mixedColor.a = 1 - (1 - layeredColor.a) * (1 - color.a); // 0.75
 				if (mixedColor.a < 0.01f)
@@ -714,7 +714,7 @@ namespace Copium
 		{
 			if (graphics->get_texture_slots()[i] == _spritesheet.texture->get_object_id())
 			{
-				textureIndex = (GLfloat) i;
+				textureIndex = (GLfloat)i;
 				break;
 			}
 		}
@@ -722,7 +722,7 @@ namespace Copium
 		if (_spritesheet.columns == 0)
 			return;
 
-		GLuint rowOffset = (_spritesheet.rows-1)-(_offsetID / _spritesheet.columns);
+		GLuint rowOffset = (_spritesheet.rows - 1) - (_offsetID / _spritesheet.columns);
 		GLuint colOffset = _offsetID % _spritesheet.columns;
 
 		//PRINT("Row offset:" << rowOffset);
@@ -730,9 +730,9 @@ namespace Copium
 		if (textureIndex == 0.f && _spritesheet.spriteID != 0)
 		{
 			// Add new texture into the texture slot
-			textureIndex = (GLfloat) graphics->get_texture_slot_index();
+			textureIndex = (GLfloat)graphics->get_texture_slot_index();
 			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _spritesheet.texture->get_object_id();
-			graphics->set_texture_slot_index((GLuint) textureIndex + 1);
+			graphics->set_texture_slot_index((GLuint)textureIndex + 1);
 		}
 
 		if (!_frames)
@@ -747,8 +747,8 @@ namespace Copium
 		{
 			glm::vec2(xOffset, yOffset),
 			glm::vec2(xOffset + xStep, yOffset),
-			glm::vec2(xOffset + xStep, yOffset+yStep),
-			glm::vec2(xOffset, yOffset+yStep)
+			glm::vec2(xOffset + xStep, yOffset + yStep),
+			glm::vec2(xOffset, yOffset + yStep)
 		};
 
 		for (GLint i = 0; i < 4; i++)
@@ -951,10 +951,10 @@ namespace Copium
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		graphics->get_shader_program()[TEXT_SHADER].UnUse();
-		
+
 		glDisable(GL_BLEND);
 
 		//textCount++;
 	}
-	
+
 }

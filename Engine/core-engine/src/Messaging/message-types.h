@@ -79,7 +79,7 @@ namespace Copium
         struct REFLECT_CS_GAMEOBJECT
         {
             uint64_t gameObjID;
-            std::vector<uint64_t> componentIDs;
+            std::vector<uint64_t> UUIDs;
         };
 
         struct ADD_OR_DELETE_GAMEOBJECT
@@ -96,7 +96,7 @@ namespace Copium
         struct ADD_OR_DELETE_COMPONENT
         {
             uint64_t gameObjID;
-            uint64_t componentID;
+            uint64_t UUID;
         };
 
         extern REFLECT_CS_GAMEOBJECT reflectCsGameObject;

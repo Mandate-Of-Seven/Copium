@@ -48,26 +48,6 @@ namespace Copium
 			mouse_controls();
 		}
 
-		if (enableCamera)
-		{
-			SceneManager* sm = SceneManager::Instance();
-			Scene* scene = sm->get_current_scene();
-			if (scene != nullptr && !scene->get_name().compare("DemoCLONE"))
-			{
-				orthographicSize = 5.f;
-				update_ortho_projection();
-				for (GameObject* pGameObj : scene->gameObjects)
-				{
-					// If the object is the player
-					if (!pGameObj->get_name().compare("PlayerTrain"))
-					{
-						focalPoint = pGameObj->transform.position; // Fix the camera onto the player
-						//PRINT("Focal point: " << focalPoint.x << " " << focalPoint.y);
-					}
-				}
-			}
-		}
-
 		static bool debugMode = false;
 		if (sceneView->is_window_focused() || sceneView->is_window_hovered())
 		{

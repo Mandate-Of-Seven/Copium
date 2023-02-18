@@ -18,7 +18,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <glm/gtx/quaternion.hpp>
 
 #include "Graphics/base-camera.h"
-#include "Editor/editor-system.h"
 #include "Windows/windows-system.h"
 #include "Windows/windows-input.h"
 
@@ -26,54 +25,8 @@ namespace Copium
 {
 	namespace
 	{
-		EditorSystem& editorSystem{ *EditorSystem::Instance() };
 		InputSystem& inputSystem{ *InputSystem::Instance() };
 		WindowsSystem& windowSystem{ *WindowsSystem::Instance() };
-	}
-
-	bool BaseCamera::deserialize(rapidjson::Value& _value)
-	{
-		if (!_value.HasMember("Color"))
-			return false;
-
-		rapidjson::Value& _v = _value["Color"].GetObj();
-		backgroundColor.x = _v["X"].GetFloat();
-		backgroundColor.y = _v["Y"].GetFloat();
-		backgroundColor.z = _v["Z"].GetFloat();
-		backgroundColor.w = _v["W"].GetFloat();
-
-		if (!_value.HasMember("Projection"))
-			return false;
-
-		orthographic = _value["Projection"].GetBool();
-
-		if (!_value.HasMember("Clipping Planes"))
-			return false;
-
-		_v = _value["Clipping Planes"].GetObj();
-		nearClip = _v["Near"].GetFloat();
-		farClip = _v["Far"].GetFloat();
-
-		return true;
-	}
-
-	bool BaseCamera::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
-	{
-		rapidjson::Value color(rapidjson::kObjectType);
-		color.AddMember("X", backgroundColor.x, _doc.GetAllocator());
-		color.AddMember("Y", backgroundColor.y, _doc.GetAllocator());
-		color.AddMember("Z", backgroundColor.z, _doc.GetAllocator());
-		color.AddMember("W", backgroundColor.w, _doc.GetAllocator());
-		_value.AddMember("Color", color, _doc.GetAllocator());
-
-		_value.AddMember("Projection", orthographic, _doc.GetAllocator());
-
-		rapidjson::Value clippingPlanes(rapidjson::kObjectType);
-		clippingPlanes.AddMember("Near", nearClip, _doc.GetAllocator());
-		clippingPlanes.AddMember("Far", farClip, _doc.GetAllocator());
-		_value.AddMember("Clipping Planes", clippingPlanes, _doc.GetAllocator());
-
-		return true;
 	}
 
 	void BaseCamera::init(float _width, float _height, CameraType _cameraType, bool _orthographic)
@@ -139,7 +92,7 @@ namespace Copium
 	{
 		updateFrustum();
 
-		if (cameraType == CameraType::GAME && !editorSystem.is_enabled())
+		if (cameraType == CameraType::GAME)
 		{
 			draw.update(cameraType);
 		}
@@ -191,33 +144,34 @@ namespace Copium
 
 	glm::vec2 BaseCamera::get_game_ndc()
 	{
-		EditorGame* gameView = editorSystem.get_game_view();
+		return {};
+		//EditorGame* gameView = editorSystem.get_game_view();
 
-		glm::vec2 scenePos = gameView->get_position();
-		scenePos.x += gameView->get_indent();
-		glm::vec2 sceneDim = gameView->get_dimension();
-		if (!editorSystem.is_enabled())
-		{
-			scenePos = { 0.f, 0.f };
-			sceneDim = glm::vec2(windowSystem.get_window_width(), windowSystem.get_window_height());
-		}
+		//glm::vec2 scenePos = gameView->get_position();
+		//scenePos.x += gameView->get_indent();
+		//glm::vec2 sceneDim = gameView->get_dimension();
+		//if (!editorSystem.is_enabled())
+		//{
+		//	scenePos = { 0.f, 0.f };
+		//	sceneDim = glm::vec2(windowSystem.get_window_width(), windowSystem.get_window_height());
+		//}
 
-		//PRINT("Scene Dimension: " << scenePos.x << " " << scenePos.y);
-		Math::Vec2 mousePos = inputSystem.get_mouseposition();
-		//PRINT("Mouse position : " << mousePos.x << " " << mousePos.y);
-		glm::vec2 centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
-		glm::vec2 mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
-		glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
+		////PRINT("Scene Dimension: " << scenePos.x << " " << scenePos.y);
+		//Math::Vec2 mousePos = inputSystem.get_mouseposition();
+		////PRINT("Mouse position : " << mousePos.x << " " << mousePos.y);
+		//glm::vec2 centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
+		//glm::vec2 mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
+		//glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
 
-		if (!editorSystem.is_enabled())
-		{
-			mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 };
-		}
+		//if (!editorSystem.is_enabled())
+		//{
+		//	mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 };
+		//}
 
-		mouseToNDC *= orthographicSize;
-		glm::vec2 worldNDC = { mouseToNDC.x + viewer.x, mouseToNDC.y + viewer.y };
-		//PRINT("~: " << worldNDC.x << ", " << worldNDC.y);
-		return worldNDC;
+		//mouseToNDC *= orthographicSize;
+		//glm::vec2 worldNDC = { mouseToNDC.x + viewer.x, mouseToNDC.y + viewer.y };
+		////PRINT("~: " << worldNDC.x << ", " << worldNDC.y);
+		//return worldNDC;
 	}
 
 	bool BaseCamera::withinFrustum(const glm::vec3& _position, const glm::vec3& _scale, bool _overlap)

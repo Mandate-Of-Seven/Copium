@@ -176,7 +176,8 @@ namespace Copium
 
 	void AssetsSystem::load_texture(File* _file)
 	{
-		Texture texture(_file->string());
+		PRINT("LOADING TEXTURE: " << _file->filePath.string());
+		Texture texture(_file->filePath.string());
 		texture.set_id(_file->get_id());
 		textures.push_back(texture);
 	}
@@ -214,12 +215,12 @@ namespace Copium
 
 	void load_audio(File* _file)
 	{
-		if (_file->extension() ==".wav")
+		if (_file->filePath.extension() ==".wav")
 		{
-			//std::cout << _file->get_name() << " "<<_file->filename();
-			std::string temp = _file->filename().string();
+			//std::cout << _file->name << " "<<_file->filename();
+			std::string temp = _file->filePath.filename().string();
 			size_t lastDot = temp.find_last_of(".");
-			SoundSystem::Instance()->CreateSound(_file->filename().string(), temp.substr(0,lastDot));
+			SoundSystem::Instance()->CreateSound(_file->filePath.filename().string(), temp.substr(0,lastDot));
 			SoundSystem::Instance()->SetVolume(temp.substr(0, lastDot), 1.0f);
 		}
 		else
@@ -229,9 +230,9 @@ namespace Copium
 	}
 	void unload_audio(File* _file)
 	{
-		if (_file->extension() == ".wav")
+		if (_file->filePath.extension() == ".wav")
 		{
-			std::string temp = _file->filename().string();
+			std::string temp = _file->filePath.filename().string();
 			size_t lastDot = temp.find_last_of(".");
 			std::string targetAlias = temp.substr(0, lastDot);
 			for (auto iter = SoundSystem::Instance()->soundList.begin(); iter != SoundSystem::Instance()->soundList.end();iter++)
@@ -292,7 +293,7 @@ namespace Copium
 
 	void AssetsSystem::CopyAsset(const File& _file, const std::string& _ext)
 	{
-		fs->copy_file(_file, _ext);
+		fs->copy_file(_file.filePath, _ext);
 	}
 
 	void AssetsSystem::LoadExistingMetaFile()
@@ -301,23 +302,22 @@ namespace Copium
 
 		for (File* metaFile : metaFiles)
 		{
-			std::ifstream readMetaFile(metaFile->string());
+			std::ifstream readMetaFile(metaFile->filePath.string());
 			
-			MetaID id;
 			std::string str, filePath, assetImporter;
 			uint64_t uuid;
 
 			// File path
-			readMetaFile >> str >> str >> id.filePath;
+			readMetaFile >> str >> str >> filePath;
 
 			// UUID
 			readMetaFile >> str >> uuid;
-			id.uuid = uuid;
 
 			// Asset Importer
 			readMetaFile >> assetImporter;
 			assetImporter.erase(assetImporter.end() - 1);
-			id.assetImporter = reinterpret_cast<void*>(assetImporter.data());
+
+			MetaID id{ uuid,filePath,reinterpret_cast<void*>(assetImporter.data()) };
 
 			/*PRINT("MetaID: ");
 			PRINT("  File Path: " << id.filePath);
@@ -338,10 +338,10 @@ namespace Copium
 		// Generate UUID
 		MetaID id;
 
-		uint64_t pathID = std::hash<std::string>{}(_file->string());
+		uint64_t pathID = std::hash<std::string>{}(_file->filePath.string());
 		metaData.emplace(std::make_pair(pathID, id));
 
-		std::ofstream writeMetaFile(_file->string() + ".meta");
+		std::ofstream writeMetaFile(_file->filePath.string() + ".meta");
 
 		GenerateFileStream(writeMetaFile, _file);
 
@@ -352,7 +352,7 @@ namespace Copium
 
 	bool AssetsSystem::CheckForMetaFile(File* _file)
 	{
-		uint64_t pathID = std::hash<std::string>{}(_file->string());
+		uint64_t pathID = std::hash<std::string>{}(_file->filePath.string());
 		if (metaData.find(pathID) != metaData.end())
 		{
 			//PRINT("This file already contains a meta file!");
@@ -365,8 +365,8 @@ namespace Copium
 	void AssetsSystem::GenerateFileStream(std::ofstream& _outputFile, File* _file)
 	{
 		// Default meta headers
-		uint64_t pathID = std::hash<std::string>{}(_file->string());
-		metaData[pathID].filePath = _file->string();
+		uint64_t pathID = std::hash<std::string>{}(_file->filePath.string());
+		metaData[pathID].filePath = _file->filePath.string();
 		_outputFile << "File Path: " << metaData[pathID].filePath << "\n";
 		_outputFile << "uuid: " << metaData[pathID].uuid << "\n";
 

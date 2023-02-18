@@ -25,6 +25,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Animation/animation-struct.h"
 #include "Files/file.h"
 
+#define MyAssetsSystem (*Copium::AssetsSystem::Instance())
+
 namespace Copium
 {
 	class Directory;
@@ -157,7 +159,7 @@ namespace Copium
 		/**************************************************************************/
 		void load_all_shaders(std::list<std::string>& _path);
 
-		const std::vector<Texture>& get_textures() { return textures; }
+		std::vector<Texture>& get_textures() { return textures; }
 		Texture* get_texture(unsigned int const& _index)
 		{
 			if (_index >= textures.size())

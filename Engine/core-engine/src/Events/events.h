@@ -12,15 +12,21 @@
 	This file contains the declarations of all the various events in the event system
 
 All content ? 2022 DigiPen Institute of Technology Singapore. All rights reserved.
-******************************************************************************************
-****/
-#pragma once
+*****************************************************************************************/
+
+
+#ifndef EVENTS_H
+#define EVENTS_H
+
 #include <Scripting/scriptable-object.h>
 #include <config.h>
-#include <GameObject/Components/script-component.h>
+#include <GameObject/components.h>
+#include <GameObject/game-object.h>
 
 namespace Copium
 {
+	class Component;
+	class Script;
 
 	struct IEvent
 	{
@@ -40,8 +46,25 @@ namespace Copium
 
 	struct SceneOpenedEvent : IEvent
 	{
-		SceneOpenedEvent(const char* _sceneName) :sceneName{ _sceneName } {};
+		SceneOpenedEvent(const char* _sceneName, GameObjectsArray& _gameObjectsArray, ComponentsArrays& _componentsArrays) :
+			sceneName{ _sceneName }, gameObjectsArray{ _gameObjectsArray }, componentsArrays{_componentsArrays}{}
 		const char* sceneName;
+		GameObjectsArray& gameObjectsArray;
+		ComponentsArrays& componentsArrays;
+	};
+
+	struct GameObjectInstantiateEvent : IEvent
+	{
+		GameObjectInstantiateEvent(GameObject*& _instanceContainer, GameObject* _pOriginal = nullptr) : 
+			instanceContainer{ _instanceContainer }, pOriginal{_pOriginal}{}
+		GameObject*& instanceContainer;
+		GameObject* pOriginal;
+	};
+
+	struct GameObjectDestroyEvent : IEvent
+	{
+		GameObjectDestroyEvent(GameObject& _gameObject) : gameObject{ _gameObject } {}
+		GameObject& gameObject;
 	};
 	
 	struct ReflectComponentEvent : IEvent
@@ -83,8 +106,6 @@ namespace Copium
 	template <typename T>
 	struct ScriptSetFieldReferenceEvent : public IEvent
 	{
-		static_assert(ScriptReferenceables::contains<T>());
-
 		ScriptSetFieldReferenceEvent(Script& _script, const char* _fieldName, T* _reference) :
 			script{ _script }, fieldName{ _fieldName }, reference{ _reference }{}
 		Script& script;
@@ -112,4 +133,6 @@ namespace Copium
 		ScriptDestroyedEvent(Script& _script) :script{ _script } {}
 		Script& script;
 	};
+
 }
+#endif // !EVENTS_H

@@ -40,11 +40,11 @@ namespace Copium
 
 	struct FileType
 	{
-		std::string stringType;
+		const char* stringType;
 		FILE_TYPE fileType{};
 	};
 
-	class File : public std::filesystem::path
+	class File
 	{
 	public:
 		/*******************************************************************************
@@ -64,6 +64,18 @@ namespace Copium
 		*/
 		/*******************************************************************************/
 		File(const std::filesystem::path& pathRef);
+
+		/*******************************************************************************
+		/*!
+		\brief
+			Copy assignment operator of a file
+		\param rhs
+			Other file to copy from
+		\return
+
+		*/
+		/*******************************************************************************/
+		File& operator=(const File& rhs) { modified = true; filePath = rhs.filePath; return *this; }
 
 		/*******************************************************************************
 		/*!
@@ -109,6 +121,7 @@ namespace Copium
 
 		const FileType& get_file_type() const { return fileType; }
 		void set_file_type(FileType const& _fileType) { fileType = _fileType; }
+		std::filesystem::path filePath;
 
 	private:
 		unsigned int instanceID = 0; // The id to reference for the asset

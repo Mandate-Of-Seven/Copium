@@ -41,7 +41,7 @@ namespace Copium
 	private:
 		bool isInspectorOpen;
 		bool isFocused;
-		GameObjectID targetGameobjectName;
+		UUID targetGameobjectName;
 	};
 }
 

@@ -20,29 +20,25 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Graphics/graphics-draw.h"
 #include "Graphics/graphics-system.h"
 #include "Files/assets-system.h"
-#include "Editor/editor-system.h"
 #include "Debugging/frame-rate-controller.h"
 #include "Windows/windows-input.h"
 
 // Bean: remove this after NewManagerInstance is moved
-#include "GameObject/Components/renderer-component.h"
-#include "GameObject/Components/ui-components.h"
-#include "GameObject/Components/collider-components.h"
-#include "GameObject/Components/sorting-group-component.h"
 #include "Animation/animation-system.h"
-#include "SceneManager/scene-manager.h"
 #include "Math/math-library.h"
 #include "Graphics/fonts.h"
 #include "glm/gtc/matrix_transform.hpp"
+#include <GameObject/components.h>
+#include <GameObject/game-object.h>
 
 namespace Copium
 {
+	GameObjectsArray* pGameObjectsArray{};
+	ComponentsArrays* pComponentsArrays{};
 	namespace
 	{
 		AssetsSystem* assets = AssetsSystem::Instance();
-		EditorSystem* editorSys = EditorSystem::Instance();
 		GraphicsSystem* graphics = GraphicsSystem::Instance();
-		SceneManager* sm = SceneManager::Instance();
 		InputSystem* inputSystem = InputSystem::Instance();
 
 		bool toggleAnim = false;
@@ -139,45 +135,39 @@ namespace Copium
 		}
 
 		// Colliders
-		Scene* scene = sm->get_current_scene();
-		if (scene != nullptr)
+		if (pComponentsArrays)
 		{
 			color = { 0.3f, 1.f, 0.3f, 1.f };
-			GameObject* gameObject = sm->get_selected_gameobject();
-			if (gameObject != nullptr)
+			for (BoxCollider2D& collider : pComponentsArrays->GetArray<BoxCollider2D>())
 			{
-				for (Component* component : gameObject->GetComponents<BoxCollider2D>())
-				{
-					if (!component->Enabled())
-						continue;
+				if (!collider.enabled || !collider.gameObj.IsActive())
+					continue;
+				Transform& transform = collider.gameObj.transform;
+				AABB bounds = collider.bounds.GetRelativeBounds(transform.GetWorldPosition(), transform.GetWorldScale());
+				glm::vec3 pos0_1 = { bounds.min.to_glm(), 0.f };
+				glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y, 0.f };
+				glm::vec3 pos2_1 = { bounds.max.to_glm(), 0.f };
+				glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y, 0.f };
 
-					BoxCollider2D* collider = reinterpret_cast<BoxCollider2D*>(component);
-					AABB bounds = collider->getBounds();
-					glm::vec3 pos0_1 = { bounds.min.to_glm(), 0.f };
-					glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y, 0.f };
-					glm::vec3 pos2_1 = { bounds.max.to_glm(), 0.f };
-					glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y, 0.f };
+				renderer.draw_line(pos0_1, pos1_1, color);
+				renderer.draw_line(pos1_1, pos2_1, color);
+				renderer.draw_line(pos2_1, pos3_1, color);
+				renderer.draw_line(pos3_1, pos0_1, color);
+			}
 
-					renderer.draw_line(pos0_1, pos1_1, color);
-					renderer.draw_line(pos1_1, pos2_1, color);
-					renderer.draw_line(pos2_1, pos3_1, color);
-					renderer.draw_line(pos3_1, pos0_1, color);
-				}
+			for (Button& button: pComponentsArrays->GetArray<Button>())
+			{
+				Transform& transform = button.gameObj.transform;
+				AABB bounds = button.bounds.GetRelativeBounds(transform.GetWorldPosition(), transform.GetWorldScale());
+				glm::vec3 pos0_1 = { bounds.min.to_glm(),0.f };
+				glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y,0.f };
+				glm::vec3 pos2_1 = { bounds.max.to_glm(),0.f };
+				glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y,0.f };
 
-				for (Component* component : gameObject->GetComponents<Button>())
-				{
-					Button* collider = reinterpret_cast<Button*>(component);
-					AABB bounds = collider->getBounds();
-					glm::vec3 pos0_1 = { bounds.min.to_glm(),0.f };
-					glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y,0.f };
-					glm::vec3 pos2_1 = { bounds.max.to_glm(),0.f };
-					glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y,0.f };
-
-					renderer.draw_line(pos0_1, pos1_1, color);
-					renderer.draw_line(pos1_1, pos2_1, color);
-					renderer.draw_line(pos2_1, pos3_1, color);
-					renderer.draw_line(pos3_1, pos0_1, color);
-				}
+				renderer.draw_line(pos0_1, pos1_1, color);
+				renderer.draw_line(pos1_1, pos2_1, color);
+				renderer.draw_line(pos2_1, pos3_1, color);
+				renderer.draw_line(pos3_1, pos0_1, color);
 			}
 		}
 
@@ -210,165 +200,109 @@ namespace Copium
 
 		// Theory WIP
 		renderer.begin_batch();
-		Scene* scene = sm->get_current_scene();
-		if (scene != nullptr)
+		//Scene loaded
+		if (pComponentsArrays)
 		{
-			if (scene->get_state() == Scene::SceneState::play)
-				toggleAnim = true;
-			else
-				toggleAnim = false;
+			//if (scene->get_state() == Scene::SceneState::play)
+			//	toggleAnim = true;
+			//else
+			//	toggleAnim = false;
 
 			int count = 0;
-
 			// Draw non layered game objects first, followed by game objects in layers in the order of the layer
-			for (GameObject* gameObject : scene->gameObjects)
+
+			/*bool layered{ false };
+			for (Component* component : gameObject->GetComponents<SortingGroup>())
 			{
-				if (gameObject == nullptr || !gameObject->isActive())
+				if (component.enabled)
+				{
+					layered = true;
+					break;
+				}
+			}
+
+			if (layered)
+				continue;*/
+
+			for (SpriteRenderer& spriteRenderer : pComponentsArrays->GetArray<SpriteRenderer>())
+			{
+				if (!spriteRenderer.enabled || !spriteRenderer.gameObj.IsActive())
 					continue;
 
-				/*bool layered{ false };
-				for (Component* component : gameObject->GetComponents<SortingGroup>())
-				{
-					if (component->Enabled())
-					{
-						layered = true;
-						break;
-					}
-				}
-
-				if (layered)
-					continue;*/
-
-				for (Component* component : gameObject->GetComponents<SpriteRenderer>())
-				{
-					if (!component->Enabled())
-						continue;
-
-					Transform& t = gameObject->transform;
-					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(component);
-					Sprite& sr = rc->get_sprite_renderer();
-					glm::vec2 size(t.scale.x, t.scale.y);
-					float rotation = t.rotation.z;
-
-					if (gameObject->transform.hasParent())
-					{
-						glm::vec3 updatedPos = t.position.glmVec3;
-						glm::vec3 updatedScale = t.scale.glmVec3;
-						float updatedRot = t.rotation.z;
-						UpdateTransform(gameObject->transform, updatedPos, updatedRot, updatedScale);
-
-						renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr);
-					}
-					else
-					{
-						renderer.draw_quad(t.position, size, rotation, sr);
-					}
-
-				}
-				for (Component* component : gameObject->GetComponents<Image>())
-				{
-					if (!component->Enabled())
-						continue;
-
-					Transform& t = gameObject->transform;
-					Image* rc = reinterpret_cast<Image*>(component);
-					Sprite& sr = rc->get_sprite_renderer();
-					glm::vec2 size(t.scale.x, t.scale.y);
-					float rotation = t.rotation.z;
-
-					if (gameObject->transform.hasParent())
-					{
-						glm::vec3 updatedPos = t.position.glmVec3;
-						glm::vec3 updatedScale = t.scale.glmVec3;
-						float updatedRot = t.rotation.z;
-						UpdateTransform(gameObject->transform, updatedPos, updatedRot, updatedScale);
-
-						renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr, &rc->layeredColor);
-					}
-					else
-					{
-						renderer.draw_quad(t.position, size, rotation, sr, &rc->layeredColor);
-					}
-				}
-				for (Component* component : gameObject->GetComponents<Animator>())
-				{
-					if (!component->Enabled())
-						continue;
-
-					Animator* animator = reinterpret_cast<Animator*>(component);
-					Animation* anim = animator->GetCurrentAnimation();
-
-					if (!anim || !anim->spriteSheet.GetTexture())
-						continue;
-
-					Transform& t = gameObject->transform;
-					glm::vec2 size(t.scale.x, t.scale.y);
-
-					if (gameObject->transform.hasParent())
-					{
-						glm::vec3 updatedPos = t.position.glmVec3;
-						glm::vec3 updatedScale = t.scale.glmVec3;
-						float updatedRot = t.rotation.z;
-						UpdateTransform(gameObject->transform, updatedPos, updatedRot, updatedScale);
-
-						renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
-					}
-					else
-					{
-						renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
-					}
-				}
-				for (Component* component : gameObject->GetComponents<Text>())
-				{
-					if (!component->Enabled())
-						continue;
-
-					//Transform& t = gameObject->transform;
-					Text* text = reinterpret_cast<Text*>(component);
-
-					/*Math::Vec3 pos{ t.position };
-					float scale = t.scale.x * 0.1f;
-					if (scale > t.scale.y)
-						scale = t.scale.y;
-					glm::vec2 dimensions{ text->GetFont()->getDimensions(text->content, scale)};
-
-					switch (text->get_hAlign())
-					{
-					case HorizontalAlignment::Center:
-						pos.x -= dimensions.x / 2.f;
-						break;
-					case HorizontalAlignment::Right:
-						pos.x -= dimensions.x;
-						break;
-					}
-					switch (text->get_vAlign())
-					{
-					case VerticalAlignment::Top:
-						pos.y -= dimensions.y;
-						break;
-					case VerticalAlignment::Center:
-						pos.y -= dimensions.y / 2.f;
-						break;
-					}
-
-					if (gameObject->transform.hasParent())
-					{
-						glm::vec3 updatedPos = pos;
-						glm::vec3 updatedScale = t.scale.glmVec3;
-						float updatedRot = t.rotation.z;
-						UpdateTransform(gameObject->transform, updatedPos, updatedRot, updatedScale);
-
-						renderer.draw_text(text->content, updatedPos, text->get_color(), scale, text->GetFont());
-					}
-					else
-					{
-						renderer.draw_text(text->content, pos, text->get_color(), scale, text->GetFont());
-					}*/
-					text->render(camera);
-				}
-
-				++count;
+				Transform& t = spriteRenderer.gameObj.transform;
+				Sprite& sprite = spriteRenderer.sprite;
+				renderer.draw_quad(t.GetWorldPosition(), Math::Vec2(t.GetWorldScale()), t.GetWorldRotation().z, sprite);
 			}
+			for (Image& image: pComponentsArrays->GetArray<Image>())
+			{
+				if (!image.enabled || !image.gameObj.IsActive())
+					continue;
+
+				Transform& t = image.gameObj.transform;
+				Sprite& sprite = image.sprite;
+				renderer.draw_quad(t.GetWorldPosition(), Math::Vec2(t.GetWorldScale()), t.GetWorldRotation().z,sprite,&image.layeredColor);
+			}
+			for (Animator& animator: pComponentsArrays->GetArray<Animator>())
+			{
+				if (!animator.enabled || !animator.gameObj.IsActive())
+					continue;
+
+				Animation* anim = animator.GetCurrentAnimation();
+
+				if (!anim || !anim->spriteSheet.GetTexture())
+					continue;
+
+				Transform& t = animator.gameObj.transform;
+				renderer.draw_quad(t.GetWorldPosition(), Math::Vec2(t.GetWorldScale()), t.GetWorldRotation().z, anim->spriteSheet, anim->currentFrameIndex,anim->frameCount);
+			}
+			for (Text& text : pComponentsArrays->GetArray<Text>())
+			{
+				if (!text.enabled || !text.gameObj.IsActive())
+					continue;
+
+				Transform& t = text.gameObj.transform;
+
+				/*Math::Vec3 pos{ t.position };
+				float scale = t.scale.x * 0.1f;
+				if (scale > t.scale.y)
+					scale = t.scale.y;
+				glm::vec2 dimensions{ text->GetFont()->getDimensions(text->content, scale)};
+
+				switch (text->get_hAlign())
+				{
+				case HorizontalAlignment::Center:
+					pos.x -= dimensions.x / 2.f;
+					break;
+				case HorizontalAlignment::Right:
+					pos.x -= dimensions.x;
+					break;
+				}
+				switch (text->get_vAlign())
+				{
+				case VerticalAlignment::Top:
+					pos.y -= dimensions.y;
+					break;
+				case VerticalAlignment::Center:
+					pos.y -= dimensions.y / 2.f;
+					break;
+				}
+
+				if (gameObject->transform.HasParent())
+				{
+					glm::vec3 updatedPos = pos;
+					glm::vec3 updatedScale = t.scale.glmVec3;
+					float updatedRot = t.rotation.z;
+					UpdateTransform(gameObject->transform, updatedPos, updatedRot, updatedScale);
+
+					renderer.draw_text(text->content, updatedPos, text->get_color(), scale, text->GetFont());
+				}
+				else
+				{
+					renderer.draw_text(text->content, pos, text->get_color(), scale, text->GetFont());
+				}*/
+				//text.render(camera);
+			}
+			++count;
 			//PRINT("Num of Rendered GO: " << count);
 		}
 		renderer.end_batch();
@@ -376,165 +310,165 @@ namespace Copium
 
 		// Gameobjects with Sorting Layers
 		renderer.begin_batch();
-		if (scene != nullptr && false)
-		{
-			if (scene->get_state() == Scene::SceneState::play)
-				toggleAnim = true;
-			else
-				toggleAnim = false;
+		//if (scene != nullptr && false)
+		//{
+		//	if (scene->get_state() == Scene::SceneState::play)
+		//		toggleAnim = true;
+		//	else
+		//		toggleAnim = false;
 
-			int count = 0;
+		//	int count = 0;
 
-			for (Layer& layer : editorSys->getLayers()->SortLayers()->GetSortingLayers())
-			{
-				int layerID{ 0 };
-				int gameObjectCount{ 0 };
-				for (GameObject* gameObject : layer.gameObjects)
-				{
-					if (gameObject == nullptr || !gameObject->isActive())
-						continue;
+		//	for (Layer& layer : editorSys->getLayers()->SortLayers()->GetSortingLayers())
+		//	{
+		//		int layerID{ 0 };
+		//		int gameObjectCount{ 0 };
+		//		for (GameObject* gameObject : layer.gameObjects)
+		//		{
+		//			if (gameObject == nullptr || !gameObject->isActive())
+		//				continue;
 
-					// If the object isnt within the frustum
-					if (!camera->withinFrustum(gameObject->transform.position, gameObject->transform.scale))
-						continue;
+		//			// If the object isnt within the frustum
+		//			if (!camera->withinFrustum(gameObject->transform.position, gameObject->transform.scale))
+		//				continue;
 
-					for (Component* component : gameObject->GetComponents<SpriteRenderer>())
-					{
-						if (!component->Enabled())
-							continue;
+		//			for (Component* component : gameObject->GetComponents<SpriteRenderer>())
+		//			{
+		//				if (!component.enabled)
+		//					continue;
 
-						Transform& t = gameObject->transform;
-						SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(component);
-						Sprite& sr = rc->get_sprite_renderer();
-						glm::vec2 size(t.scale.x, t.scale.y);
-						float rotation = t.rotation.z;
+		//				Transform& t = gameObject->transform;
+		//				SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(component);
+		//				Sprite& sr = rc->get_sprite_renderer();
+		//				glm::vec2 size(t.scale.x, t.scale.y);
+		//				float rotation = t.rotation.z;
 
-						if (gameObject->transform.hasParent())
-						{
-							glm::vec3 updatedPos = t.position.glmVec3;
-							glm::vec3 updatedScale = t.scale.glmVec3;
-							float updatedRot = t.rotation.z;
-							UpdateTransform(gameObject->transform, updatedPos, updatedRot, updatedScale);
+		//				if (gameObject->transform.HasParent())
+		//				{
+		//					glm::vec3 updatedPos = t.position.glmVec3;
+		//					glm::vec3 updatedScale = t.scale.glmVec3;
+		//					float updatedRot = t.rotation.z;
+		//					UpdateTransform(gameObject->transform, updatedPos, updatedRot, updatedScale);
 
-							renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr);
-						}
-						else
-						{
-							renderer.draw_quad(t.position, size, rotation, sr);
-						}
+		//					renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr);
+		//				}
+		//				else
+		//				{
+		//					renderer.draw_quad(t.position, size, rotation, sr);
+		//				}
 
-					}
-					for (Component* component : gameObject->GetComponents<Image>())
-					{
-						if (!component->Enabled())
-							continue;
+		//			}
+		//			for (Component* component : gameObject->GetComponents<Image>())
+		//			{
+		//				if (!component.enabled)
+		//					continue;
 
-						Transform& t = gameObject->transform;
-						Image* rc = reinterpret_cast<Image*>(component);
-						Sprite& sr = rc->get_sprite_renderer();
-						glm::vec2 size(t.scale.x, t.scale.y);
-						float rotation = t.rotation.z;
+		//				Transform& t = gameObject->transform;
+		//				Image* rc = reinterpret_cast<Image*>(component);
+		//				Sprite& sr = rc->get_sprite_renderer();
+		//				glm::vec2 size(t.scale.x, t.scale.y);
+		//				float rotation = t.rotation.z;
 
-						if (gameObject->transform.hasParent())
-						{
-							glm::vec3 updatedPos = t.position.glmVec3;
-							glm::vec3 updatedScale = t.scale.glmVec3;
-							float updatedRot = t.rotation.z;
-							UpdateTransform(gameObject->transform, updatedPos, updatedRot, updatedScale);
+		//				if (gameObject->transform.HasParent())
+		//				{
+		//					glm::vec3 updatedPos = t.position.glmVec3;
+		//					glm::vec3 updatedScale = t.scale.glmVec3;
+		//					float updatedRot = t.rotation.z;
+		//					UpdateTransform(gameObject->transform, updatedPos, updatedRot, updatedScale);
 
-							renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr);
-						}
-						else
-						{
-							renderer.draw_quad(t.position, size, rotation, sr);
-						}
-					}
-					for (Component* component : gameObject->GetComponents<Animator>())
-					{
-						if (!component->Enabled())
-							continue;
+		//					renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr);
+		//				}
+		//				else
+		//				{
+		//					renderer.draw_quad(t.position, size, rotation, sr);
+		//				}
+		//			}
+		//			for (Component* component : gameObject->GetComponents<Animator>())
+		//			{
+		//				if (!component.enabled)
+		//					continue;
 
-						Animator* animator = reinterpret_cast<Animator*>(component);
-						Animation* anim = animator->GetCurrentAnimation();
+		//				Animator* animator = reinterpret_cast<Animator*>(component);
+		//				Animation* anim = animator->GetCurrentAnimation();
 
-						if (!anim || !anim->spriteSheet.GetTexture())
-							continue;
+		//				if (!anim || !anim->spriteSheet.GetTexture())
+		//					continue;
 
-						Transform& t = gameObject->transform;
-						glm::vec2 size(t.scale.x, t.scale.y);
+		//				Transform& t = gameObject->transform;
+		//				glm::vec2 size(t.scale.x, t.scale.y);
 
-						if (gameObject->transform.hasParent())
-						{
-							glm::vec3 updatedPos = t.position.glmVec3;
-							glm::vec3 updatedScale = t.scale.glmVec3;
-							float updatedRot = t.rotation.z;
-							UpdateTransform(gameObject->transform, updatedPos, updatedRot, updatedScale);
+		//				if (gameObject->transform.HasParent())
+		//				{
+		//					glm::vec3 updatedPos = t.position.glmVec3;
+		//					glm::vec3 updatedScale = t.scale.glmVec3;
+		//					float updatedRot = t.rotation.z;
+		//					UpdateTransform(gameObject->transform, updatedPos, updatedRot, updatedScale);
 
-							renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
-						}
-						else
-						{
-							renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
-						}
-					}
-					for (Component* component : gameObject->GetComponents<Text>())
-					{
-						if (!component->Enabled() || false)
-							continue;
+		//					renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
+		//				}
+		//				else
+		//				{
+		//					renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
+		//				}
+		//			}
+		//			for (Component* component : gameObject->GetComponents<Text>())
+		//			{
+		//				if (!component.enabled || false)
+		//					continue;
 
-						//Transform& t = gameObject->transform;
-						Text* text = reinterpret_cast<Text*>(component);
+		//				//Transform& t = gameObject->transform;
+		//				Text* text = reinterpret_cast<Text*>(component);
 
-						/*Math::Vec3 pos{ t.position };
-						float scale = t.scale.x * 0.1f;
-						if (scale > t.scale.y)
-							scale = t.scale.y;
-						glm::vec2 dimensions{ text->GetFont()->getDimensions(text->content, scale) };
+		//				/*Math::Vec3 pos{ t.position };
+		//				float scale = t.scale.x * 0.1f;
+		//				if (scale > t.scale.y)
+		//					scale = t.scale.y;
+		//				glm::vec2 dimensions{ text->GetFont()->getDimensions(text->content, scale) };
 
-						switch (text->get_hAlign())
-						{
-						case HorizontalAlignment::Center:
-							pos.x -= dimensions.x / 2.f;
-							break;
-						case HorizontalAlignment::Right:
-							pos.x -= dimensions.x;
-							break;
-						}
-						switch (text->get_vAlign())
-						{
-						case VerticalAlignment::Top:
-							pos.y -= dimensions.y;
-							break;
-						case VerticalAlignment::Center:
-							pos.y -= dimensions.y / 2.f;
-							break;
-						}
+		//				switch (text->get_hAlign())
+		//				{
+		//				case HorizontalAlignment::Center:
+		//					pos.x -= dimensions.x / 2.f;
+		//					break;
+		//				case HorizontalAlignment::Right:
+		//					pos.x -= dimensions.x;
+		//					break;
+		//				}
+		//				switch (text->get_vAlign())
+		//				{
+		//				case VerticalAlignment::Top:
+		//					pos.y -= dimensions.y;
+		//					break;
+		//				case VerticalAlignment::Center:
+		//					pos.y -= dimensions.y / 2.f;
+		//					break;
+		//				}
 
-						if (gameObject->transform.hasParent())
-						{
-							glm::vec3 updatedPos = pos;
-							glm::vec3 updatedScale = t.scale.glmVec3;
-							float updatedRot = t.rotation.z;
-							UpdateTransform(gameObject->transform, updatedPos, updatedRot, updatedScale);
+		//				if (gameObject->transform.HasParent())
+		//				{
+		//					glm::vec3 updatedPos = pos;
+		//					glm::vec3 updatedScale = t.scale.glmVec3;
+		//					float updatedRot = t.rotation.z;
+		//					UpdateTransform(gameObject->transform, updatedPos, updatedRot, updatedScale);
 
-							renderer.draw_text(text->content, updatedPos, text->get_color(), scale, text->GetFont());
-						}
-						else
-						{
-							renderer.draw_text(text->content, pos, text->get_color(), scale, text->GetFont());
-						}*/
-						text->render(camera);
-					}
-					count++;
-					gameObjectCount++;
+		//					renderer.draw_text(text->content, updatedPos, text->get_color(), scale, text->GetFont());
+		//				}
+		//				else
+		//				{
+		//					renderer.draw_text(text->content, pos, text->get_color(), scale, text->GetFont());
+		//				}*/
+		//				text->render(camera);
+		//			}
+		//			count++;
+		//			gameObjectCount++;
 
-				}
+		//		}
 
-				
-				//PRINT("Layer ID:" << layerID << " | No. of GameObjects:" << gameObjectCount);
-				++layerID;
-			}
-		}
+		//		
+		//		//PRINT("Layer ID:" << layerID << " | No. of GameObjects:" << gameObjectCount);
+		//		++layerID;
+		//	}
+		//}
 		renderer.end_batch();
 		renderer.flush();
 
@@ -549,7 +483,7 @@ namespace Copium
 		//		bool layered{ false };
 		//		for (Component* component : gameObject->GetComponents<SortingGroup>())
 		//		{
-		//			if (component->Enabled())
+		//			if (component.enabled)
 		//			{
 		//				layered = true;
 		//				break;
@@ -565,7 +499,7 @@ namespace Copium
 
 		//		for (Component* component : gameObject->GetComponents<Text>())
 		//		{
-		//			if (!component->Enabled())
+		//			if (!component.enabled)
 		//				continue;
 
 		//			Text* text = reinterpret_cast<Text*>(component);
@@ -587,7 +521,7 @@ namespace Copium
 
 		//			for (Component* component : gameObject->GetComponents<Text>())
 		//			{
-		//				if (!component->Enabled())
+		//				if (!component.enabled)
 		//					continue;
 
 		//				Text* text = reinterpret_cast<Text*>(component);
@@ -600,104 +534,99 @@ namespace Copium
 
 	void Draw::debug()
 	{
-		renderer.begin_batch();
+		//renderer.begin_batch();
 		// Bean: Temporary green dot in the centre of the scene
 		glm::vec4 color = { 0.1f, 1.f, 0.1f, 1.f };
-		glm::vec2 worldNDC{ 0 };
-		glm::vec2 scale = { 0.01f, 0.01f };
-		glm::vec2 cameraPos = editorSys->get_camera()->get_eye();
-		float zoom = editorSys->get_camera()->get_zoom();
+		//glm::vec2 worldNDC{ 0 };
+		//glm::vec2 scale = { 0.01f, 0.01f };
+		//glm::vec2 cameraPos = graphics.->get_eye();
+		//float zoom = editorSys->get_camera()->get_zoom();
+		//worldNDC = { cameraPos.x, cameraPos.y };
+		//scale *= zoom;
 
-		worldNDC = { cameraPos.x, cameraPos.y };
-		scale *= zoom;
-
-		renderer.end_batch();
-		renderer.flush();
+		//renderer.end_batch();
+		//renderer.flush();
 
 		renderer.begin_batch();
 
 		// Button Colliders
-		Scene* scene = sm->get_current_scene();
 		renderer.set_line_width(1.5f);
-		if (scene != nullptr)
+		if (pComponentsArrays)
 		{
-			for (GameObject* gameObject : scene->gameObjects)
+
+			for (BoxCollider2D& boxCol: pComponentsArrays->GetArray<BoxCollider2D>())
 			{
-				// If the object isnt within the frustum
-				if (!camera->withinFrustum(gameObject->transform.position, gameObject->transform.scale))
+				GameObject& gameObject{ boxCol.gameObj};
+				Transform& transform{gameObject.transform};
+				if (!boxCol.enabled || !gameObject.IsActive() ||
+					// If the object isnt within the frustum
+					!camera->withinFrustum(transform.GetWorldPosition(), transform.GetWorldScale()))
 					continue;
+				AABB bounds = boxCol.bounds.GetRelativeBounds(transform.GetWorldPosition(),transform.GetWorldScale());
+				glm::vec3 pos0_1 = { bounds.min.to_glm(), 0.f };
+				glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y, 0.f };
+				glm::vec3 pos2_1 = { bounds.max.to_glm() , 0.f };
+				glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y, 0.f };
 
-				for (Component* component : gameObject->GetComponents<BoxCollider2D>())
-				{
-					if (!component->Enabled())
-						continue;
+				renderer.draw_line(pos0_1, pos1_1, color);
+				renderer.draw_line(pos1_1, pos2_1, color);
+				renderer.draw_line(pos2_1, pos3_1, color);
+				renderer.draw_line(pos3_1, pos0_1, color);
+			}
 
-					BoxCollider2D* collider = reinterpret_cast<BoxCollider2D*>(component);
-					AABB bounds = collider->getBounds();
-					glm::vec3 pos0_1 = { bounds.min.to_glm(), 0.f };
-					glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y, 0.f };
-					glm::vec3 pos2_1 = { bounds.max.to_glm() , 0.f };
-					glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y, 0.f };
+			for (Button& button : pComponentsArrays->GetArray<Button>())
+			{
+				Transform& t = button.gameObj.transform;
+				if (!button.enabled || !button.gameObj.IsActive() ||
+					// If the object isnt within the frustum
+					!camera->withinFrustum(t.GetWorldPosition(), t.GetWorldScale()))
+					continue;
+				glm::vec3 position = t.position;
+				glm::vec2 size(t.scale.x, t.scale.y);
+				float rotation = t.rotation.z;
 
-					renderer.draw_line(pos0_1, pos1_1, color);
-					renderer.draw_line(pos1_1, pos2_1, color);
-					renderer.draw_line(pos2_1, pos3_1, color);
-					renderer.draw_line(pos3_1, pos0_1, color);
-				}
+				glm::mat4 translate = {
+					glm::vec4(1.f, 0.f, 0.f, 0.f),
+					glm::vec4(0.f, 1.f, 0.f, 0.f),
+					glm::vec4(position.x, position.y, 1.f, 0.f),
+					glm::vec4(0.f, 0.f, 0.f, 1.f)
+				};
 
-				for (Component* component : gameObject->GetComponents<Button>())
-				{
-					(void) component;
-					Transform& t = gameObject->transform;
+				float rad = glm::radians(rotation);
 
-					glm::vec3 position = t.position;
-					glm::vec2 size(t.scale.x, t.scale.y);
-					float rotation = t.rotation.z;
+				glm::mat4 rotate = {
+					glm::vec4(cos(rad), sin(rad), 0.f, 0.f),
+					glm::vec4(-sin(rad), cos(rad), 0.f, 0.f),
+					glm::vec4(0.f, 0.f, 1.f, 0.f),
+					glm::vec4(0.f, 0.f, 0.f, 1.f)
+				};
 
-					glm::mat4 translate = {
-						glm::vec4(1.f, 0.f, 0.f, 0.f),
-						glm::vec4(0.f, 1.f, 0.f, 0.f),
-						glm::vec4(position.x, position.y, 1.f, 0.f),
-						glm::vec4(0.f, 0.f, 0.f, 1.f)
-					};
+				glm::mat4 transform = translate * rotate;
 
-					float rad = glm::radians(rotation);
+				color = { 0.3f, 1.f, 0.3f, 1.f };
 
-					glm::mat4 rotate = {
-						glm::vec4(cos(rad), sin(rad), 0.f, 0.f),
-						glm::vec4(-sin(rad), cos(rad), 0.f, 0.f),
-						glm::vec4(0.f, 0.f, 1.f, 0.f),
-						glm::vec4(0.f, 0.f, 0.f, 1.f)
-					};
+				glm::vec4 pos0 = transform * glm::vec4(-size.x / 2, -size.y / 2, 1.f, 1.f);
+				glm::vec4 pos1 = transform * glm::vec4(size.x / 2, -size.y / 2, 1.f, 1.f);
+				glm::vec4 pos2 = transform * glm::vec4(size.x / 2, size.y / 2, 1.f, 1.f);
+				glm::vec4 pos3 = transform * glm::vec4(-size.x / 2, size.y / 2, 1.f, 1.f);
 
-					glm::mat4 transform = translate * rotate;
+				float minX = fminf(pos0.x, fminf(pos1.x, fminf(pos2.x, pos3.x)));
+				float minY = fminf(pos0.y, fminf(pos1.y, fminf(pos2.y, pos3.y)));
+				float maxX = fmaxf(pos0.x, fmaxf(pos1.x, fmaxf(pos2.x, pos3.x)));
+				float maxY = fmaxf(pos0.y, fmaxf(pos1.y, fmaxf(pos2.y, pos3.y)));
 
-					color = { 0.3f, 1.f, 0.3f, 1.f };
-
-					glm::vec4 pos0 = transform * glm::vec4(-size.x / 2, -size.y / 2, 1.f, 1.f);
-					glm::vec4 pos1 = transform * glm::vec4(size.x / 2, -size.y / 2, 1.f, 1.f);
-					glm::vec4 pos2 = transform * glm::vec4(size.x / 2, size.y / 2, 1.f, 1.f);
-					glm::vec4 pos3 = transform * glm::vec4(-size.x / 2, size.y / 2, 1.f, 1.f);
-
-					float minX = fminf(pos0.x, fminf(pos1.x, fminf(pos2.x, pos3.x)));
-					float minY = fminf(pos0.y, fminf(pos1.y, fminf(pos2.y, pos3.y)));
-					float maxX = fmaxf(pos0.x, fmaxf(pos1.x, fmaxf(pos2.x, pos3.x)));
-					float maxY = fmaxf(pos0.y, fmaxf(pos1.y, fmaxf(pos2.y, pos3.y)));
-
-					glm::vec3 pos0_1 = { minX, minY, 0.f };
-					glm::vec3 pos1_1 = { maxX, minY, 0.f };
-					glm::vec3 pos2_1 = { maxX, maxY, 0.f };
-					glm::vec3 pos3_1 = { minX, maxY, 0.f };
-
-					renderer.draw_line(pos0_1, pos1_1, color);
-					renderer.draw_line(pos1_1, pos2_1, color);
-					renderer.draw_line(pos2_1, pos3_1, color);
-					renderer.draw_line(pos3_1, pos0_1, color);
-				}
+				glm::vec3 pos0_1 = { minX, minY, 0.f };
+				glm::vec3 pos1_1 = { maxX, minY, 0.f };
+				glm::vec3 pos2_1 = { maxX, maxY, 0.f };
+				glm::vec3 pos3_1 = { minX, maxY, 0.f };
+				renderer.draw_line(pos0_1, pos1_1, color);
+				renderer.draw_line(pos1_1, pos2_1, color);
+				renderer.draw_line(pos2_1, pos3_1, color);
+				renderer.draw_line(pos3_1, pos0_1, color);
 			}
 		}
 
-		renderer.draw_quad({ worldNDC.x, worldNDC.y , 1.f }, scale, 0.f, color);
+		//renderer.draw_quad({ worldNDC.x, worldNDC.y , 1.f }, scale, 0.f, color);
 
 		renderer.end_batch();
 		renderer.flush();
@@ -716,7 +645,7 @@ namespace Copium
 			{
 				for (Component* component : gameObject->GetComponents<Text>())
 				{
-					if (!component->Enabled())
+					if (!component.enabled)
 						continue;
 
 					Text* text = reinterpret_cast<Text*>(component);

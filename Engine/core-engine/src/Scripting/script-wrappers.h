@@ -15,17 +15,15 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "Windows\windows-input.h"
 #include "SceneManager\scene-manager.h"
-#include "GameObject/Components/physics-components.h"
 #include <glm/vec3.hpp>
 #include <Scripting/scripting-system.h>
 #include <Messaging/message-system.h>
 #include <Windows/windows-system.h>
 #include <Debugging/frame-rate-controller.h>
 #include <SceneManager/state-manager.h>
-#include <GameObject/Components/ui-components.h>
 #include <cstring>
-#include <GameObject/Components/audiosource-component.h>
 #include <Animation/animation-system.h>
+#include <GameObject/components.h>
 
 #include "mono/metadata/object.h"
 #include "mono/metadata/reflection.h"
@@ -111,7 +109,7 @@ namespace Copium
 		Stores the value of translation of the queried gameObj
 	*/
 	/*******************************************************************************/
-	static void GetTranslation(GameObjectID _ID, Math::Vec3* translation)
+	static void GetTranslation(UUID _ID, Math::Vec3* translation)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
 		if (gameObj == nullptr)
@@ -131,7 +129,7 @@ namespace Copium
 		Value of Vec3 to set
 	*/
 	/*******************************************************************************/
-	static void SetTranslation(GameObjectID _ID, Math::Vec3* val)
+	static void SetTranslation(UUID _ID, Math::Vec3* val)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
 		if (gameObj == nullptr)
@@ -151,16 +149,16 @@ namespace Copium
 		ID of gameObject found by name
 	*/
 	/*******************************************************************************/
-	static GameObjectID FindGameObjByName(MonoString* name)
+	static UUID FindGameObjByName(MonoString* name)
 	{
 		char* nameCStr = mono_string_to_utf8(name);
 		GameObject* gameObj = sceneManager.findGameObjByName(nameCStr);
 		mono_free(nameCStr);
 		if (gameObj == nullptr)
 		{
-			return GameObjectID(- 1);
+			return UUID(- 1);
 		}
-		return gameObj->id;
+		return gameObj->uuid;
 	}
 
 	/*******************************************************************************
@@ -173,7 +171,7 @@ namespace Copium
 		Force to add
 	*/
 	/*******************************************************************************/
-	static void RigidbodyAddForce(GameObjectID _ID, Math::Vec2* force)
+	static void RigidbodyAddForce(UUID _ID, Math::Vec2* force)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
 		if (gameObj == nullptr)
@@ -212,7 +210,7 @@ namespace Copium
 		Velocity to set rigidbody to
 	*/
 	/*******************************************************************************/
-	static void RigidbodySetVelocity(GameObjectID _ID, Math::Vec2* velocity)
+	static void RigidbodySetVelocity(UUID _ID, Math::Vec2* velocity)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
 		if (gameObj == nullptr)
@@ -226,7 +224,7 @@ namespace Copium
 			return;
 		}
 		
-		rb->set_vel(*velocity);
+		rb->velocity=*velocity;
 	}
 
 	/*******************************************************************************
@@ -239,7 +237,7 @@ namespace Copium
 		Velocity to store rigidbody's velocity
 	*/
 	/*******************************************************************************/
-	static void RigidbodyGetVelocity(GameObjectID _ID, Math::Vec2* velocity)
+	static void RigidbodyGetVelocity(UUID _ID, Math::Vec2* velocity)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
 		if (gameObj == nullptr)
@@ -267,9 +265,9 @@ namespace Copium
 		True if gameobject of ID has component of type
 	*/
 	/*******************************************************************************/
-	static bool HasComponent(GameObjectID _ID, MonoReflectionType* componentType)
+	static bool HasComponent(UUID UUID, MonoReflectionType* componentType)
 	{
-		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+		GameObject* gameObj = sceneManager.findGameObjByID(UUID);
 		if (gameObj == nullptr)
 		{
 			PRINT("CANT FIND GAMEOBJECT");
@@ -280,9 +278,9 @@ namespace Copium
 		return gameObj->hasComponent(cType);
 	}
 
-	static ComponentID AddComponent(GameObjectID _ID, MonoReflectionType* componentType)
+	static UUID AddComponent(UUID UUID, MonoReflectionType* componentType)
 	{
-		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+		GameObject* gameObj = sceneManager.findGameObjByID(UUID);
 		if (gameObj == nullptr)
 		{
 			PRINT("CANT FIND GAMEOBJECT");
@@ -290,7 +288,7 @@ namespace Copium
 		}
 		MonoType* managedType = mono_reflection_type_get_type(componentType);
 		ComponentType cType = s_EntityHasComponentFuncs[mono_type_get_name(managedType)];
-		return gameObj->addComponent(cType)->id;
+		return gameObj->AddComponent(cType)->id;
 	}
 	
 	/*******************************************************************************
@@ -305,7 +303,7 @@ namespace Copium
 		True if gameobject of ID has component of type
 	*/
 	/*******************************************************************************/
-	static void GetLocalScale(GameObjectID _ID, Math::Vec3* scale)
+	static void GetLocalScale(UUID _ID, Math::Vec3* scale)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
 		if (gameObj == nullptr)
@@ -327,7 +325,7 @@ namespace Copium
 		True if gameobject of ID has component of type
 	*/
 	/*******************************************************************************/
-	static void SetLocalScale(GameObjectID _ID, Math::Vec3* scale)
+	static void SetLocalScale(UUID _ID, Math::Vec3* scale)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
 		if (gameObj == nullptr)
@@ -347,7 +345,7 @@ namespace Copium
 		Bool to set active to
 	*/
 	/*******************************************************************************/
-	static void SetActive(GameObjectID _ID, bool _active)
+	static void SetActive(UUID _ID, bool _active)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
 		if (gameObj == nullptr)
@@ -367,7 +365,7 @@ namespace Copium
 		Bool to whether gameobject was active
 	*/
 	/*******************************************************************************/
-	static bool GetActive(GameObjectID _ID)
+	static bool GetActive(UUID _ID)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
 		if (gameObj == nullptr)
@@ -393,10 +391,10 @@ namespace Copium
 		whether the component is enabled
 	*/
 	/*******************************************************************************/
-	static bool GetComponentEnabled(GameObjectID gid, ComponentID cid)
+	static bool GetComponentEnabled(UUID gid, UUID cid)
 	{
 		Component* component = sceneManager.findComponentByID(cid);
-		return component->Enabled();
+		return component.enabled;
 	}
 
 	/*******************************************************************************
@@ -417,7 +415,7 @@ namespace Copium
 		void
 	*/
 	/*******************************************************************************/
-	static void SetComponentEnabled(GameObjectID gid, ComponentID cid, bool val)
+	static void SetComponentEnabled(UUID gid, UUID cid, bool val)
 	{
 		Component* component = sceneManager.findComponentByID(cid);
 		if (component)
@@ -456,14 +454,14 @@ namespace Copium
 		String of text component to store
 	*/
 	/*******************************************************************************/
-	static void GetTextString(GameObjectID gameObjID, ComponentID compID, MonoString*& str)
+	static void GetTextString(UUID gameObjID, UUID compID, MonoString*& str)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(gameObjID);
 		if (gameObj == nullptr)
 			return;
 		for (Text* text : gameObj->GetComponents<Text>())
 		{
-			if (text->id == compID)
+			if (text->uuid == compID)
 			{
 				PRINT("GETTING " << text->content);
 				str = scriptingSystem.createMonoString(text->content);
@@ -484,7 +482,7 @@ namespace Copium
 		String to set text component
 	*/
 	/*******************************************************************************/
-	static void SetTextString(GameObjectID gameObjID, ComponentID compID, MonoString* str)
+	static void SetTextString(UUID gameObjID, UUID compID, MonoString* str)
 	{
 		Component* component = sceneManager.findComponentByID(compID);
 		if (component == nullptr)
@@ -508,7 +506,7 @@ namespace Copium
 
 	*/
 	/*******************************************************************************/
-	static char GetButtonState(GameObjectID gameObjID)
+	static char GetButtonState(UUID gameObjID)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(gameObjID);
 		if (gameObj == nullptr)
@@ -526,15 +524,15 @@ namespace Copium
 		GameObject ID of the cloned gameObject
 	*/
 	/*******************************************************************************/
-	static GameObjectID CloneGameObject(GameObjectID ID)
+	static UUID CloneGameObject(UUID ID)
 	{
 		GameObject* toBeCloned = MySceneManager.findGameObjByID(ID);
 		if (toBeCloned)
 		{
 			GameObject* clone = MyGOF.clone(*toBeCloned);
-			PRINT("CLONED OBJECT: " << clone->id);
+			PRINT("CLONED OBJECT: " << clone->uuid);
 			if (clone)
-				return clone->id;
+				return clone->uuid;
 		}
 		return 0;
 	}
@@ -547,11 +545,11 @@ namespace Copium
 		GameObject ID of the new gameObject
 	*/
 	/*******************************************************************************/
-	static GameObjectID InstantiateGameObject()
+	static UUID InstantiateGameObject()
 	{
 		GameObject* clone = MyGOF.instantiate();
 		if (clone)
-			return clone->id;
+			return clone->uuid;
 		return 0;
 	}
 
@@ -563,7 +561,7 @@ namespace Copium
 		GameObject ID of the gameObject to delete
 	*/
 	/*******************************************************************************/
-	static void DestroyGameObject(GameObjectID ID)
+	static void DestroyGameObject(UUID ID)
 	{
 		COPIUM_ASSERT(!MyGOF.destroy(ID), "GameObject could not be destroyed");
 	}
@@ -586,7 +584,7 @@ namespace Copium
 		void 
 	*/
 	/*******************************************************************************/
-	static void AudioSourcePlay(GameObjectID ID)
+	static void AudioSourcePlay(UUID ID)
 	{
 		GameObject* gameObj = sceneManager.findGameObjByID(ID);
 		if (gameObj == nullptr)

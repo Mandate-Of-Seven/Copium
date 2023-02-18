@@ -22,10 +22,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <glm/gtc/type_ptr.hpp>
 
 #include <ImGuizmo.h>
-
-#include "GameObject/Components/ui-components.h"
-#include "GameObject/Components/renderer-component.h"
 #include "Animation/animation-system.h"
+#include <GameObject/game-object.h>
 
 namespace Copium
 {
@@ -34,6 +32,7 @@ namespace Copium
 		EditorCamera& camera{ *EditorSystem::Instance()->get_camera() };
 		SceneManager& sm{ *SceneManager::Instance() };
 		bool inOp = false;
+		GameObjectsArray* pGameObjectsArray{};
 	}
 
 	void EditorSceneView::init()
@@ -44,7 +43,7 @@ namespace Copium
 	glm::vec2 update_position(Transform* _t, glm::vec2 const& _pos)
 	{
 		glm::vec2 tempPos = _pos;
-		if (_t->hasParent())
+		if (_t->HasParent())
 		{
 			tempPos += glm::vec2(_t->parent->position.x, _t->parent->position.y);
 			tempPos = update_position(_t->parent, tempPos);
@@ -88,7 +87,7 @@ namespace Copium
 		
 		size_t gameobjectCount = 0;
 		if (scene != nullptr)
-			gameobjectCount = scene->get_gameobjcount();
+			gameobjectCount = pGameObjectsArray->size();
 
 		ImGui::Text("Render Stats");
 		char buffer[64];
@@ -123,21 +122,20 @@ namespace Copium
 		bool mouseReleased = ImGui::IsMouseReleased(ImGuiMouseButton_Left);
 		if (!inOp && mouseReleased && windowHovered)
 		{
-			scene = sm.get_current_scene();
-			if (scene != nullptr)
+			if (pGameObjectsArray)
 			{
-				std::vector<GameObject*> pGameObjs; // Possible selectable gameobjects
-				for (GameObject* gameObject : scene->gameObjects)
+				GameObjectsPtrArray pGameObjs; // Possible selectable gameobjects
+				for (GameObject& gameObject : *pGameObjectsArray)
 				{
-					if (!gameObject->isActive() || !gameObject)
+					if (!gameObject.IsActive())
 						continue;
 
-					Transform& t = gameObject->transform;
+					Transform& t = gameObject.transform;
 					glm::vec2 mousePosition = glm::vec3(camera.get_ndc(), 0.f);
 					glm::vec3 tempPos = t.position;
 					glm::vec3 tempScale = t.scale;
 
-					if (t.hasParent())
+					if (t.HasParent())
 					{
 						Transform* tempObj = t.parent;
 
@@ -183,29 +181,25 @@ namespace Copium
 					min = glm::vec2(objPosition.x - tempScale.x * 0.5f, objPosition.y - tempScale.y * 0.5f);
 					max = glm::vec2(objPosition.x + tempScale.x * 0.5f, objPosition.y + tempScale.y * 0.5f);
 
-					for (Component* component : gameObject->GetComponents<Button>())
+					for (Button* button : gameObject.GetComponents<Button>())
 					{
-						if (!component->Enabled())
+						if (!button->enabled)
 							continue;
-
-						Button* button = reinterpret_cast<Button*>(component);
-						bound = button->getBounds();
-
-						min = glm::vec2(objPosition.x + bound.min.x - objPosition.x, objPosition.y + bound.min.y - objPosition.y);
-						max = glm::vec2(objPosition.x + bound.max.x - objPosition.x, objPosition.y + bound.max.y - objPosition.y);
+						bound = button->bounds.GetRelativeBounds(gameObject.transform.GetWorldPosition(), gameObject.transform.GetWorldScale());
+						min = bound.min;
+						max = bound.max;
 					}
-					for (Component* component : gameObject->GetComponents<SpriteRenderer>())
+					for (SpriteRenderer* spriteRenderer : gameObject.GetComponents<SpriteRenderer>())
 					{
-						if (!component->Enabled())
+						if (!spriteRenderer->enabled)
 							continue;
 
-						SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(component);
-						Sprite sr = rc->get_sprite_renderer();
+						Texture* texture = spriteRenderer->sprite.refTexture;
 						float tempX = 0.f, tempY = 0.f;
-						if (sr.get_texture() != nullptr)
+						if (texture != nullptr)
 						{
-							int width = (int)sr.get_texture()->get_width();
-							int height = (int)sr.get_texture()->get_height();
+							int width = (int)texture->get_width();
+							int height = (int)texture->get_height();
 							float multiplier = width / (float)WindowsSystem::Instance()->get_window_width();
 							tempX = tempScale.x * (width / (float)height) * multiplier * 0.5f;
 							if(width == height)
@@ -215,22 +209,19 @@ namespace Copium
 						}
 						else
 							break;
-
 						min = glm::vec2(objPosition.x - tempX, objPosition.y - tempY);
 						max = glm::vec2(objPosition.x + tempX, objPosition.y + tempY);
 					}
-					for (Component* component : gameObject->GetComponents<Image>())
+					for (Image* image : gameObject.GetComponents<Image>())
 					{
-						if (!component->Enabled())
+						if (!image->enabled)
 							continue;
-
-						Image* ic = reinterpret_cast<Image*>(component);
-						Sprite sr = ic->get_sprite_renderer();
+						Texture* texture = image->sprite.refTexture;
 						float tempX = 0.f, tempY = 0.f;
-						if (sr.get_texture() != nullptr)
+						if (texture != nullptr)
 						{
-							int width = (int)sr.get_texture()->get_width();
-							int height = (int)sr.get_texture()->get_height();
+							int width = (int)texture->get_width();
+							int height = (int)texture->get_height();
 							float multiplier = width / (float)WindowsSystem::Instance()->get_window_width();
 							tempX = tempScale.x * (width / (float)height) * multiplier * 0.5f;
 							if (width == height)
@@ -244,19 +235,17 @@ namespace Copium
 						min = glm::vec2(objPosition.x - tempX, objPosition.y - tempY);
 						max = glm::vec2(objPosition.x + tempX, objPosition.y + tempY);
 					}
-					for (Component* component : gameObject->GetComponents<Animator>())
+					for (Animator* animator : gameObject.GetComponents<Animator>())
 					{
-						if (!component->Enabled())
+						if (!animator->enabled)
 							continue;
-
-						Animator* anim = reinterpret_cast<Animator*>(component);
-						int columns = anim->GetCurrentAnimation()->spriteSheet.columns;
-						int rows = anim->GetCurrentAnimation()->spriteSheet.rows;
+						int columns = animator->GetCurrentAnimation()->spriteSheet.columns;
+						int rows = animator->GetCurrentAnimation()->spriteSheet.rows;
 						float tempX = 0.f, tempY = 0.f;
-						if (anim->GetCurrentAnimation()->spriteSheet.GetTexture() != nullptr)
+						if (animator->GetCurrentAnimation()->spriteSheet.GetTexture() != nullptr)
 						{
-							float width = (float)anim->GetCurrentAnimation()->spriteSheet.GetTexture()->get_width() / (float) columns;
-							float height = (float)anim->GetCurrentAnimation()->spriteSheet.GetTexture()->get_height() / (float) rows;
+							float width = (float)animator->GetCurrentAnimation()->spriteSheet.GetTexture()->get_width() / (float) columns;
+							float height = (float)animator->GetCurrentAnimation()->spriteSheet.GetTexture()->get_height() / (float) rows;
 							float multiplier = width / (float)WindowsSystem::Instance()->get_window_width();
 							tempX = tempScale.x * (width / (float)height) * multiplier * 0.5f;
 							if (width == height)
@@ -276,7 +265,7 @@ namespace Copium
 					{
 						if (mousePosition.y > min.y && mousePosition.y < max.y)
 						{
-							pGameObjs.push_back(gameObject);
+							pGameObjs.push_back(&gameObject);
 						}
 					}
 				}
@@ -293,17 +282,17 @@ namespace Copium
 					for (int i = 0; i < pGameObjs.size(); i++)
 					{
 						// Get the next gameobject after
-						if (sm.get_selected_gameobject() == pGameObjs[i])
+						if (MyEditorSystem.pSelectedGameObject == pGameObjs[i])
 						{
 							if (i + 1 < pGameObjs.size())
 							{
-								sm.set_selected_gameobject(pGameObjs[i + 1]);
+								MyEditorSystem.pSelectedGameObject = pGameObjs[i + 1];
 								selected = true;
 								break;
 							}
 							else if (i + 1 >= pGameObjs.size())
 							{
-								sm.set_selected_gameobject(pGameObjs[0]);
+								MyEditorSystem.pSelectedGameObject = pGameObjs[0];
 								selected = true;
 								break;
 							}
@@ -311,29 +300,26 @@ namespace Copium
 					}
 
 					// If there is no selected gameobject
-					if (sm.get_selected_gameobject() == nullptr || !selected)
+					if (MyEditorSystem.pSelectedGameObject == nullptr || !selected)
 					{
 						GameObject* selectObject = pGameObjs.front();
-						if (sm.selectedGameObject != selectObject)
+						for (GameObject* gameObject : pGameObjs)
 						{
-							for (GameObject* gameObject : pGameObjs)
-							{
-								// Select closest gameobject
-								float depth = gameObject->transform.position.z;
+							// Select closest gameobject
+							float depth = gameObject->transform.position.z;
 
-								if (depth > selectObject->transform.position.z)
-								{
-									selectObject = gameObject;
-								}
+							if (depth > selectObject->transform.position.z)
+							{
+								selectObject = gameObject;
 							}
-							sm.set_selected_gameobject(selectObject);
 						}
+						MyEditorSystem.pSelectedGameObject = (selectObject);
 					}
 
 					//PRINT("Set object to: " << sm.selectedGameObject->get_name());
 				}
 				else
-					sm.set_selected_gameobject(nullptr);
+					MyEditorSystem.pSelectedGameObject = nullptr;
 			}
 		}
 
@@ -364,7 +350,7 @@ namespace Copium
 	void EditorSceneView::update_gizmos()
 	{
 		static ImGuizmo::OPERATION currop = ImGuizmo::OPERATION::TRANSLATE;
-		GameObject* currObj = sm.get_selected_gameobject();
+		GameObject* currObj = MyEditorSystem.pSelectedGameObject;
 		if (currObj)
 		{
 			Transform& trf = currObj->transform;
@@ -398,7 +384,7 @@ namespace Copium
 			glm::mat4 pTranslate, pRotate, pScale, pTransform, totalTransform, postTransform;
 			glm::vec3 postScale = { 1.f, 1.f, 1.f };
 			float postRotation = 0.f;
-			if (currObj->transform.hasParent())
+			if (currObj->transform.HasParent())
 			{
 				glm::vec3 position = currObj->transform.position;
 				glm::vec3 scale = currObj->transform.scale;
@@ -490,7 +476,7 @@ namespace Copium
 				glm::vec3 nTranslation = { newTranslate[0], newTranslate[1], newTranslate[2] };
 				glm::vec3 nScale = { newScale[0], newScale[1], 1.f};
 
-				if (currObj->transform.hasParent())
+				if (currObj->transform.HasParent())
 				{
 					nTranslation = glm::vec3(postTransform * glm::vec4(nTranslation, 1.f));
 					nScale *= postScale;

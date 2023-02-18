@@ -29,7 +29,7 @@ namespace Copium
 		FileSystem* fs = FileSystem::Instance();
 		AssetsSystem* assetSys = AssetsSystem::Instance();
 
-		std::filesystem::path assets = "../PackedTracks/Assets";
+		std::filesystem::path assetsPath = "../PackedTracks/Assets";
 
 		const float padding = 16.f;
 		const float thumbnailSize = 128.f;
@@ -60,7 +60,7 @@ namespace Copium
 
 		inputs();
 
-		if (currentDirectory->path() != std::filesystem::path(assets))
+		if (currentDirectory->path() != assetsPath)
 		{
 			if (ImGui::Button("Back"))
 			{
@@ -149,7 +149,7 @@ namespace Copium
 				ImGui::TableNextColumn();
 
 				const auto& path = dirEntry->path();
-				auto relativePath = std::filesystem::relative(path, assets);
+				auto relativePath = std::filesystem::relative(path, assetsPath);
 				std::string fileName = relativePath.filename().string();
 
 				ImGui::PushID(fileName.c_str());
@@ -215,7 +215,7 @@ namespace Copium
 
 					case FILE_TYPE::SPRITE:
 						texturePath = assetSys->get_texture(i)->get_file_path();
-						if (!file.string().compare(texturePath))
+						if (!file.filePath.string().compare(texturePath))
 						{
 							Texture* temp = assetSys->get_texture(i);
 							objectID = temp->get_object_id();
@@ -242,7 +242,7 @@ namespace Copium
 
 				if (ImGui::BeginDragDropSource())
 				{
-					std::string str = file.string();
+					std::string str = file.filePath.string();
 					const char* filePath = str.c_str();
 					ImGui::SetDragDropPayload("ContentBrowserItem", filePath, str.size() + 1);
 
@@ -276,11 +276,11 @@ namespace Copium
 	{
 		if (!ImGui::IsMouseDragging(ImGuiMouseButton_Left) && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
 		{
-			if (!editor->get_inspector()->getFocused())
-			{
-				fs->set_selected_file(nullptr);
-				fs->set_selected_directory(nullptr);
-			}
+			//if (!editor->get_inspector()->getFocused())
+			//{
+			//	fs->set_selected_file(nullptr);
+			//	fs->set_selected_directory(nullptr);
+			//}
 		}
 
 		if (ImGui::IsWindowFocused())

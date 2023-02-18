@@ -15,7 +15,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 #include "CopiumCore/system-interface.h"
 #include "Math/math-library.h"
-#include "GameObject/Components/physics-components.h"
 #include "SceneManager/scene-manager.h"
 
 
@@ -55,7 +54,6 @@ namespace Copium
 		void toggle_step();
 		
 	public:
-		std::vector<Rigidbody2D*> boxes;  //store box component to be able to perform physics
 		bool stepModeActive = false;
 	};
 

@@ -55,7 +55,7 @@ namespace Copium
 		{
 			if (!script->gameObj.isActive())
 				continue;
-			if (!script->Enabled())
+			if (!script->enabled)
 				continue;
 			MyEventSystem->publish(new ScriptInvokeMethodEvent(*script, "Update"));
 			if (pScene != sceneManager.get_current_scene())
@@ -69,21 +69,21 @@ namespace Copium
 				//	return;
 		}
 
-		if (Button::hoveredBtn && (!Button::hoveredBtn->gameObj.isActive() || !Button::hoveredBtn->Enabled()))
+		if (Button::hoveredBtn && (!Button::hoveredBtn->gameObj.isActive() || !Button::hoveredBtn.enabled))
 		{
 			Button::hoveredBtn->state = ButtonState::None;
 			Button::hoveredBtn = nullptr;
 		}
 		for (GameObject* pGameObj : pScene->gameObjects)
 		{
-			if (!pGameObj->isActive())
+			if (!pGameObj->active)
 				continue;
 			const std::vector<Button*>& Buttons{ pGameObj->GetComponents<Button>() };
 			for (Button* pButton : Buttons)
 			{
 				if (!pButton)
 					continue;
-				if (!pButton->Enabled())
+				if (!pButton->enabled)
 					continue;
 				pButton->update();
 				if (pScene != sceneManager.get_current_scene())

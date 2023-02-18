@@ -24,9 +24,9 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Messaging/message-system.h"
 #include "Messaging/message-types.h"
 #include "Scripting/script-wrappers.h"
-#include <GameObject/Components/script-component.h>
 #include <SceneManager/scene-manager.h>
 #include <Events/events-system.h>
+#include <GameObject/components.h>
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
@@ -519,7 +519,7 @@ namespace Copium
 					return;
 				//MonoObject* mGameObj = monoGameObjects[MESSAGE_CONTAINER::addOrDeleteComponent.gameObjID];
 				//MonoMethod* mAttachComponentByID = mono_class_get_method_from_name(mGameObject, "AttachComponentByID", 1);
-				//void* param = &MESSAGE_CONTAINER::addOrDeleteComponent.componentID;
+				//void* param = &MESSAGE_CONTAINER::addOrDeleteComponent.UUID;
 				//mono_runtime_invoke(mAttachComponentByID, mGameObj, &param, nullptr);
 				break;
 			}
@@ -625,7 +625,7 @@ namespace Copium
 	}
 
 
-	MonoObject* ScriptingSystem::ReflectGameObject(GameObjectID id)
+	MonoObject* ScriptingSystem::ReflectGameObject(UUID id)
 	{
 		auto pairIt = mGameObjects[mCurrentScene].find(id);
 		if (mGameObjects[mCurrentScene].find(id) == mGameObjects[mCurrentScene].end())
@@ -639,14 +639,37 @@ namespace Copium
 		return (*pairIt).second;
 	}
 
-	MonoObject* ScriptingSystem::ReflectComponent(Component& component)
+	template <typename T>
+	MonoObject* ScriptingSystem::ReflectComponent(T& component)
 	{
-		auto pairIt = mComponents[mCurrentScene].find(component.id);
+		static_assert(ComponentTypes::contains<T>());
+		auto pairIt = mComponents[mCurrentScene].find(component.uuid);
+		if (pairIt == mComponents[mCurrentScene].end())
+		{
+			ScriptClass& scriptClass = GetScriptClass(GetComponentType<T>::name);
+			UUID cid{ component.uuid };
+			UUID gid{ component.gameObj.uuid };
+			MonoObject* mComponent = instantiateClass(scriptClass.mClass);
+			void* params[3] = { mComponent ,&cid,&gid };
+			MonoMethod* reflectComponent = mono_class_get_method_from_name(klassScene, "ReflectComponent", 3);
+			COPIUM_ASSERT(!mComponent, "MonoObject was null");
+			invoke(mCurrentScene, reflectComponent, params);
+			mComponents[mCurrentScene].emplace(cid, mComponent);
+			//Check fields, dont remove fields, but change them if their type is different
+			return mComponent;
+		}
+		return (*pairIt).second;
+	}
+
+	template <>
+	MonoObject* ScriptingSystem::ReflectComponent(Script& component)
+	{
+		auto pairIt = mComponents[mCurrentScene].find(component.uuid);
 		if (pairIt == mComponents[mCurrentScene].end())
 		{
 			ScriptClass& scriptClass = GetScriptClass(component.Name());
-			ComponentID cid{ component.id };
-			GameObjectID gid{ component.gameObj.id };
+			UUID cid{ component.uuid };
+			UUID gid{ component.gameObj.uuid };
 			MonoObject* mComponent = instantiateClass(scriptClass.mClass);
 			void* params[3] = { mComponent ,&cid,&gid };
 			MonoMethod* reflectComponent = mono_class_get_method_from_name(klassScene, "ReflectComponent", 3);
@@ -655,53 +678,50 @@ namespace Copium
 			mComponents[mCurrentScene].emplace(cid, mComponent);
 			//Check fields, dont remove fields, but change them if their type is different
 
-			if (component.componentType == ComponentType::Script)
+			//PRINT("Creating: " << component.Name() << " of id: " << component.uuid);
+			Script& script{ *reinterpret_cast<Script*>(&component) };
+			for (auto& pair : scriptClass.mFields)
 			{
-				PRINT("Creating: " << component.Name() << " of id: " << component.id);
-				Script& script{ *reinterpret_cast<Script*>(&component) };
-				for (auto& pair : scriptClass.mFields)
+				MonoClassField* mField = pair.second;
+				MonoType* type = mono_field_get_type(mField);
+				FieldType fieldType = Utils::monoTypeToFieldType(type);
+				const char* fieldName = pair.first.c_str();
+				std::string typeName = mono_type_get_name(type);
+				auto nameField{ script.fieldDataReferences.find(fieldName) };
+				int alignment{};
+				int fieldSize = mono_type_size(type, &alignment);
+				if (fieldType == FieldType::Component || fieldType == FieldType::GameObject)
 				{
-					MonoClassField* mField = pair.second;
-					MonoType* type = mono_field_get_type(mField);
-					FieldType fieldType = Utils::monoTypeToFieldType(type);
-					const char* fieldName = pair.first.c_str();
-					std::string typeName = mono_type_get_name(type);
-					auto nameField{ script.fieldDataReferences.find(fieldName) };
-					int alignment{};
-					int fieldSize = mono_type_size(type, &alignment);
+					fieldSize = sizeof(uint64_t);
+				}
+				if (nameField == script.fieldDataReferences.end())
+				{
+					Field newField = Field(fieldType, fieldSize, nullptr);
+					size_t offset = typeName.find_last_of(".");
+					if (offset != std::string::npos)
+						newField.typeName = typeName.substr(offset + 1);
+					else
+						newField.typeName = typeName;
 					if (fieldType == FieldType::Component || fieldType == FieldType::GameObject)
 					{
-						fieldSize = sizeof(uint64_t);
-					}
-					if (nameField == script.fieldDataReferences.end())
-					{
-						Field newField = Field(fieldType, fieldSize, nullptr);
-						size_t offset = typeName.find_last_of(".");
-						if (offset != std::string::npos)
-							newField.typeName = typeName.substr(offset+1);
-						else
-							newField.typeName = typeName;
-						if (fieldType == FieldType::Component || fieldType == FieldType::GameObject)
-						{
-							newField = std::numeric_limits<uint64_t>::max();
-						}
-						else
-						{
-							mono_field_get_value(mComponent, mField, newField.data);
-						}
-						script.fieldDataReferences[fieldName] = std::move(newField);
+						newField = std::numeric_limits<uint64_t>::max();
 					}
 					else
 					{
-						Field& field = nameField->second;
-						if (field.fType != fieldType)
-						{
-							field.Resize(fieldSize);
-							mono_field_get_value(mComponent, mField, field.data);
-						}
-						//CHECK TYPENAME
-						//else if (field.typeName)
+						mono_field_get_value(mComponent, mField, newField.data);
 					}
+					script.fieldDataReferences[fieldName] = std::move(newField);
+				}
+				else
+				{
+					Field& field = nameField->second;
+					if (field.fType != fieldType)
+					{
+						field.Resize(fieldSize);
+						mono_field_get_value(mComponent, mField, field.data);
+					}
+					//CHECK TYPENAME
+					//else if (field.typeName)
 				}
 			}
 			return mComponent;
@@ -712,16 +732,25 @@ namespace Copium
 	template<>
 	size_t ScriptingSystem::CreateReference<GameObject>(GameObject& object)
 	{
-		return object.id;
+		return object.uuid;
+	}
+
+	template<typename T>
+	size_t ScriptingSystem::CreateReference(T& object)
+	{
+		//ScriptClass& scriptClass = GetScriptClass());
+		//(void)scriptClass;
+		//ReflectGameObject(object.gameObj.uuid);
+		return object.uuid;
 	}
 
 	template<>
-	size_t ScriptingSystem::CreateReference<Component>(Component& object)
+	size_t ScriptingSystem::CreateReference(Script& object)
 	{
-		ScriptClass& scriptClass = GetScriptClass(object.Name());
-		(void)scriptClass;
-		ReflectGameObject(object.gameObj.id);
-		return object.id;
+		//ScriptClass& scriptClass = GetScriptClass(object.Name());
+		//(void)scriptClass;
+		//ReflectGameObject(object.gameObj.uuid);
+		return object.uuid;
 	}
 
 	void ScriptingSystem::CallbackSceneOpened(SceneOpenedEvent* pEvent)
@@ -746,15 +775,15 @@ namespace Copium
 
 	void ScriptingSystem::CallbackReflectComponent(ReflectComponentEvent* pEvent)
 	{
-		ReflectGameObject(pEvent->component.gameObj.id);
+		ReflectGameObject(pEvent->component.gameObj.uuid);
 		ReflectComponent(pEvent->component);
 	}
 
 	void ScriptingSystem::CallbackScriptInvokeMethod(ScriptInvokeMethodEvent* pEvent)
 	{
-		auto it = mComponents[mCurrentScene].find(pEvent->script.id);
-		MonoObject* mScript = mComponents[mCurrentScene][pEvent->script.id];
-		PRINT("Script Invoking " << pEvent->script.Name() << " " << pEvent->methodName << " ,ID: " << pEvent->script.id);
+		auto it = mComponents[mCurrentScene].find(pEvent->script.uuid);
+		MonoObject* mScript = mComponents[mCurrentScene][pEvent->script.uuid];
+		PRINT("Script Invoking " << pEvent->script.Name() << " " << pEvent->methodName << " ,ID: " << pEvent->script.uuid);
 		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
 		ScriptClass& scriptClass{ GetScriptClass(pEvent->script.name) };
 		MonoMethod* mMethod{ mono_class_get_method_from_name (scriptClass.mClass,pEvent->methodName.c_str(),(int)pEvent->paramCount)};
@@ -770,7 +799,7 @@ namespace Copium
 
 	void ScriptingSystem::CallbackScriptGetField(ScriptGetFieldEvent* pEvent)
 	{
-		MonoObject* mScript = mComponents[mCurrentScene][pEvent->script.id];
+		MonoObject* mScript = mComponents[mCurrentScene][pEvent->script.uuid];
 		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
 		ScriptClass& scriptClass{ GetScriptClass(pEvent->script.name) };
 		//Reset fieldtype and buffer if the type was different
@@ -781,7 +810,7 @@ namespace Copium
 
 	void ScriptingSystem::CallbackScriptSetField(ScriptSetFieldEvent* pEvent)
 	{
-		MonoObject* mScript = mComponents[mCurrentScene][pEvent->script.id];
+		MonoObject* mScript = mComponents[mCurrentScene][pEvent->script.uuid];
 		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
 		ScriptClass& scriptClass{ GetScriptClass(pEvent->script.name) };
 		MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };

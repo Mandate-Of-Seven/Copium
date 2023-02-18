@@ -26,8 +26,10 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor/editor-undoredo.h"
 #include "Editor/editor-hierarchy-list.h"
 #include "Editor/editor-layers.h"
-#include "Editor/inspector.h"
+//#include "Editor/inspector.h"
 #include "Messaging/message-system.h"
+
+#define MyEditorSystem (*Copium::EditorSystem::Instance())
 
 namespace Copium
 {
@@ -112,9 +114,10 @@ namespace Copium
 		EditorContentBrowser* get_content_browser() { return &contentBrowser; }
 		EditorCamera* get_camera() { return &camera; }
 		EditorHierarchyList* get_hierarchy_list() { return &hierarchyList; }
-		EditorInspector* get_inspector() { return &inspector; }
+		//EditorInspector* get_inspector() { return &inspector; }
 		EditorLayers* getLayers() { return &layers; }
 
+		GameObject* pSelectedGameObject{};
 	private:
 		bool enableEditor = true;
 
@@ -124,7 +127,7 @@ namespace Copium
 		EditorCamera camera;
 		EditorColorTheme colorTheme;
 		EditorHierarchyList hierarchyList;
-		EditorInspector inspector;
+		//EditorInspector inspector;
 		EditorLayers layers;
 		UndoRedo::CommandManager commandManager; //for undo and redo
 	};

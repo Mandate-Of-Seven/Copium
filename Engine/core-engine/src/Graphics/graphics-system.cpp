@@ -23,20 +23,19 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Graphics/fonts.h"
 #include "Windows/windows-input.h"
 
-#include "Editor/editor-system.h"
 #include "Files/assets-system.h"
 
 // Bean: remove this after NewManagerInstance is moved
 #include "SceneManager/scene-manager.h"
-#include "GameObject/Components/renderer-component.h"
-#include "GameObject/Components/camera-component.h"
+#include <GameObject/components.h>
 
 namespace Copium
 {
+	
 	namespace
 	{
+		ComponentsArray<Camera*> pCamerasArray{};
 		InputSystem& inputSystem{ *InputSystem::Instance() };
-		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 
 		// Temporary global variables
 		GLfloat rotate = 0.f;
@@ -45,7 +44,6 @@ namespace Copium
 
 	void GraphicsSystem::init()
 	{
-		messageSystem.subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 
 		// Bean: 3D Depth Testing
@@ -159,75 +157,74 @@ namespace Copium
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_C) && inputSystem.is_key_pressed(GLFW_KEY_S))
-		{
-			massSpawn = !massSpawn;
-		}
+		//if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_C) && inputSystem.is_key_pressed(GLFW_KEY_S))
+		//{
+		//	massSpawn = !massSpawn;
+		//}
 
-		if (inputSystem.is_key_held(GLFW_KEY_C) && inputSystem.is_key_pressed(GLFW_KEY_V))
-		{
-			SceneManager* sm = SceneManager::Instance();
-			Scene* scene = sm->get_current_scene();
-			if (scene != nullptr)
-			{
-				for (size_t i = 0; i < 10; i++)
-				{
-					GameObject* go = MyGOF.instantiate();
-					SpriteRenderer& rc = go->AddComponent<SpriteRenderer>();
-					//go->addComponent(ComponentType::Rigidbody);
+		//if (inputSystem.is_key_held(GLFW_KEY_C) && inputSystem.is_key_pressed(GLFW_KEY_V))
+		//{
+		//	SceneManager* sm = SceneManager::Instance();
+		//	Scene* scene = sm->get_current_scene();
+		//	if (scene != nullptr)
+		//	{
+		//		for (size_t i = 0; i < 10; i++)
+		//		{
+		//			GameObject* go = MyGOF.instantiate();
+		//			SpriteRenderer& rc = go->AddComponent<SpriteRenderer>();
+		//			//go->addComponent(ComponentType::Rigidbody);
 
-					float x = rand() % 2000 * 0.1f - 100.f;
-					float y = rand() % 2000 * 0.1f - 100.f;
+		//			float x = rand() % 2000 * 0.1f - 100.f;
+		//			float y = rand() % 2000 * 0.1f - 100.f;
 
-					go->transform.position = { x, y, 0.f };
-					
-					int numSprites = (int)(AssetsSystem::Instance()->get_textures().size() - 1);
-					rc.get_sprite_renderer().set_sprite_id(rand() % numSprites + 1);
+		//			go->transform.position = { x, y, 0.f };
+		//			
+		//			int numSprites = (int)(AssetsSystem::Instance()->get_textures().size() - 1);
+		//			rc.spriteID=(rand() % numSprites + 1);
 
-					unsigned int id = (unsigned int)rc.get_sprite_renderer().get_sprite_id();
-					if (id != 0)
-					{
-						rc.get_sprite_renderer().set_texture(AssetsSystem::Instance()->get_texture(id - 1));
-						std::string str = AssetsSystem::Instance()->get_texture(id - 1)->get_file_path();
-						size_t pos = str.find_last_of('\\');
-						std::string spriteName = str.substr(pos + 1, str.length() - pos);
-						rc.get_sprite_renderer().set_name(spriteName);
-					}
-				}
-			}
-		}
+		//			unsigned int id = (unsigned int)rc.spriteID;
+		//			if (id != 0)
+		//			{
+		//				rc.refTexture = AssetsSystem::Instance()->get_texture(id - 1);
+		//				std::string str = AssetsSystem::Instance()->get_texture(id - 1)->get_file_path();
+		//				//size_t pos = str.find_last_of('\\');
+		//				//std::string spriteName = str.substr(pos + 1, str.length() - pos);
+		//			}
+		//		}
+		//	}
+		//}
 
 		// Mass spawning
-		if (massSpawn)
-		{
-			SceneManager* sm = SceneManager::Instance();
-			Scene* scene = sm->get_current_scene();
-			if (scene != nullptr)
-			{
-				for (size_t i = 0; i < 10; i++)
-				{
-					GameObject* go = MyGOF.instantiate();
-					SpriteRenderer& rc = go->AddComponent<SpriteRenderer>();
-					//go->addComponent(ComponentType::Rigidbody);
+		//if (massSpawn)
+		//{
+		//	SceneManager* sm = SceneManager::Instance();
+		//	Scene* scene = sm->get_current_scene();
+		//	if (scene != nullptr)
+		//	{
+		//		for (size_t i = 0; i < 10; i++)
+		//		{
+		//			GameObject* go = MyGOF.instantiate();
+		//			SpriteRenderer& rc = go->AddComponent<SpriteRenderer>();
+		//			//go->addComponent(ComponentType::Rigidbody);
 
-					float x = rand() % 2000 * 0.1f - 100.f;
-					float y = rand() % 2000 * 0.1f - 100.f;
+		//			float x = rand() % 2000 * 0.1f - 100.f;
+		//			float y = rand() % 2000 * 0.1f - 100.f;
 
-					go->transform.position = { x, y, 0.f };
-					int numSprites = (int)(AssetsSystem::Instance()->get_textures().size() - 1);
-					rc.get_sprite_renderer().set_sprite_id(rand() % numSprites + 1);
-					unsigned int id = (unsigned int)rc.get_sprite_renderer().get_sprite_id();
-					if (id != 0)
-					{
-						rc.get_sprite_renderer().set_texture(AssetsSystem::Instance()->get_texture(id - 1));
-						std::string str = AssetsSystem::Instance()->get_texture(id - 1)->get_file_path();
-						size_t pos = str.find_last_of('\\');
-						std::string spriteName = str.substr(pos + 1, str.length() - pos);
-						rc.get_sprite_renderer().set_name(spriteName);
-					}
-				}
-			}
-		}
+		//			go->transform.position = { x, y, 0.f };
+		//			int numSprites = (int)(AssetsSystem::Instance()->get_textures().size() - 1);
+		//			rc.spriteID = rand() % numSprites + 1;
+		//			unsigned int id = (unsigned int)rc.spriteID;
+		//			if (id != 0)
+		//			{
+		//				rc.refTexture = AssetsSystem::Instance()->get_texture(id - 1);
+		//				//std::string str = AssetsSystem::Instance()->get_texture(id - 1)->get_file_path();
+		//				//size_t pos = str.find_last_of('\\');
+		//				//std::string spriteName = str.substr(pos + 1, str.length() - pos);
+		//				//rc.get_sprite_renderer().set_name(spriteName);
+		//			}
+		//		}
+		//	}
+		//}
 
 		/*PRINT("Mouse position: " << mousePos.x << ", " << mousePos.y);
 		PRINT("Centre position: " << centreOfScene.x << ", " << centreOfScene.y);
@@ -246,21 +243,6 @@ namespace Copium
 	void GraphicsSystem::exit()
 	{
 		Font::cleanUp();
-	}
-
-	void GraphicsSystem::handleMessage(MESSAGE_TYPE mType)
-	{
-		if (mType == MESSAGE_TYPE::MT_SCENE_DESERIALIZED)
-		{
-			cameras.clear();
-			SceneManager* sm = SceneManager::Instance();
-			Scene* scene = sm->get_current_scene();
-			for (GameObject* gameObject : scene->gameObjects)
-			{
-				Camera* camera = reinterpret_cast<Camera*>(gameObject->GetComponent<Camera>());
-				cameras.push_back(camera);
-			}
-		}
 	}
 
 	// Setup default shaders for the graphics system
@@ -305,8 +287,9 @@ namespace Copium
 
 	void GraphicsSystem::batch_render()
 	{
-		for (auto& camera : cameras)
+		for (Camera& camera : *pCamerasArray)
 		{
+			PRINT("UPDATING CAMERA");
 			camera->update();
 		}
 	}

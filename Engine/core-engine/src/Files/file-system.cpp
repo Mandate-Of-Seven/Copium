@@ -21,16 +21,14 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <utility> 
 
 #include "Files/assets-system.h"
-#include "Editor/editor-system.h"
+//#include "Editor/editor-system.h"
 
 namespace Copium
 {
 	namespace
 	{
 		namespace fs = std::filesystem;
-
-		AssetsSystem* assets = AssetsSystem::Instance();
-		EditorSystem* editor = EditorSystem::Instance();
+		//EditorSystem* editor = EditorSystem::Instance();
 	}
 
 	void FileSystem::init()
@@ -51,19 +49,7 @@ namespace Copium
 
 	void FileSystem::init_file_types()
 	{
-		fileTypes.emplace(std::make_pair("", FileType("Folder", FILE_TYPE::FOLDER)));
-		fileTypes.emplace(std::make_pair(".wav", FileType("Audio", FILE_TYPE::AUDIO)));
-		fileTypes.emplace(std::make_pair(".theme", FileType("Config", FILE_TYPE::CONFIG)));
-		fileTypes.emplace(std::make_pair(".json", FileType("Config", FILE_TYPE::CONFIG)));
-		fileTypes.emplace(std::make_pair(".ttf", FileType("Font", FILE_TYPE::FONT)));
-		fileTypes.emplace(std::make_pair(".scene", FileType("Scene", FILE_TYPE::SCENE))); // Bean: change to .scene in the future
-		fileTypes.emplace(std::make_pair(".cs", FileType("Script", FILE_TYPE::SCRIPT)));
-		fileTypes.emplace(std::make_pair(".vert", FileType("Shader", FILE_TYPE::SHADER))); // Bean: change to .shader in the future
-		fileTypes.emplace(std::make_pair(".frag", FileType("Shader", FILE_TYPE::SHADER)));
-		fileTypes.emplace(std::make_pair(".png", FileType("Sprite", FILE_TYPE::SPRITE)));
-		fileTypes.emplace(std::make_pair(".txt", FileType("Text", FILE_TYPE::TEXT)));
-		fileTypes.emplace(std::make_pair(".so", FileType("Asset", FILE_TYPE::ASSET)));
-		fileTypes.emplace(std::make_pair(".meta", FileType("Meta", FILE_TYPE::META)));
+
 	}
 
 	void FileSystem::accept_dropped_files(int _pathCount, const char* _paths[])
@@ -74,8 +60,6 @@ namespace Copium
 			paths.push_back(_paths[i]);
 
 		// Check which directory it is currently in
-		Directory* currentDirectory = editor->get_content_browser()->get_current_directory();
-
 		// Create directories / folders / files in the directory
 		for (auto path : paths)
 		{
@@ -211,7 +195,7 @@ namespace Copium
 			if (_directory->get_child_directory().size() + _directory->get_files().size() != (size_t)numFiles)
 			{
 				// For checking current directory selection
-				Directory* currentDir = editor->get_content_browser()->get_current_directory();
+				//Directory* currentDir = editor->get_content_browser()->get_current_directory();
 
 				// Check for new files and folders
 				for (auto& dirEntry : fs::directory_iterator(_directory->path()))
@@ -248,8 +232,8 @@ namespace Copium
 
 							// Bean: This should be moved to a general function
 							// Prevent selection of file / directory
-							if (currentDir->within_directory(folder))
-								selectedDirectory = nullptr;
+							//if (currentDir->within_directory(folder))
+							//	selectedDirectory = nullptr;
 						}
 						
 					}
@@ -260,7 +244,7 @@ namespace Copium
 						bool hasFile = false;
 						for (auto assetDir : _directory->get_files())
 						{
-							if (path == assetDir)
+							if (path == assetDir.filePath)
 							{
 								hasFile = true;
 								break;
@@ -278,12 +262,12 @@ namespace Copium
 
 							// Generate Meta File
 							if(file.get_file_type().fileType == FILE_TYPE::SPRITE)
-								assets->GenerateMetaFile(&_directory->get_files().back());
+								MyAssetsSystem.GenerateMetaFile(&_directory->get_files().back());
 
 							// Bean: This should be moved to a general function
 							// Prevent selection of file / directory
-							if (currentDir->within_directory(&file))
-								selectedFile = nullptr;
+							//if (currentDir->within_directory(&file))
+							//	selectedFile = nullptr;
 						}
 					}
 				}
@@ -308,8 +292,8 @@ namespace Copium
 					{
 						// Bean: This should be moved to a general function
 						// Prevent selection of file / directory
-						if (currentDir == _directory && selectedDirectory != nullptr)
-							selectedDirectory = nullptr;
+						//if (currentDir == _directory && selectedDirectory != nullptr)
+						//	selectedDirectory = nullptr;
 
 						iterators.push_back(*it);
 						it = (*dirs).erase(it);
@@ -333,7 +317,7 @@ namespace Copium
 					bool hasFile = false;
 					for (auto& dirEntry : fs::directory_iterator(_directory->path()))
 					{
-						if (!(*it).compare(dirEntry.path()))
+						if (!(*it).filePath.compare(dirEntry.path()))
 						{
 							hasFile = true;
 							break;
@@ -345,8 +329,8 @@ namespace Copium
 					{
 						// Bean: This should be moved to a general function
 						// Prevent selection of file / directory
-						if (currentDir == _directory && selectedFile != nullptr)
-							selectedFile = nullptr;
+						//if (currentDir == _directory && selectedFile != nullptr)
+						//	selectedFile = nullptr;
 
 						remove_file_reference(&(*it));
 						it = (*filesPtr).erase(it);
@@ -490,7 +474,7 @@ namespace Copium
 	{
 		for (File& file : _currentDir->get_files())
 		{
-			if (_path == file)
+			if (_path == file.filePath)
 				return &file;
 		}
 
@@ -512,11 +496,8 @@ namespace Copium
 
 	void FileSystem::copy_file(std::filesystem::path const& _path)
 	{
-		Directory* currentDirectory = editor->get_content_browser()->get_current_directory();
-
 		fs::path currentDir = currentDirectory->path().string() + "\\";
 		fs::path pathName = currentDir.string() + _path.filename().string();
-
 		File* temp = get_file(pathName, currentDirectory, true);
 		int counter = 1;
 		if (temp != nullptr)
@@ -536,11 +517,8 @@ namespace Copium
 
 	void FileSystem::copy_file(std::filesystem::path const& _path, const std::string& _ext)
 	{
-		Directory* currentDirectory = editor->get_content_browser()->get_current_directory();
-
 		fs::path currentDir = currentDirectory->path().string() + "\\";
 		fs::path pathName = currentDir.string() + _path.filename().string();
-
 		File* temp = get_file(pathName, currentDirectory, true);
 		int counter = 1;
 		if (temp != nullptr)
@@ -587,8 +565,8 @@ namespace Copium
 	{
 		if (selectedFile != nullptr)
 		{
-			assets->unload_file(selectedFile);
-			std::cout << "Deleting: " << selectedFile->filename() << " With result: " << DeleteFile(selectedFile->c_str()) << std::endl;
+			MyAssetsSystem.unload_file(selectedFile);
+			std::cout << "Deleting: " << selectedFile->filePath.filename() << " With result: " << DeleteFile(selectedFile->filePath.c_str()) << std::endl;
 
 		}
 		else if (selectedDirectory != nullptr)
@@ -657,8 +635,8 @@ namespace Copium
 
 	std::list<File>& FileSystem::get_files_with_extension(const char* _extension)
 	{
-		if (extensionTrackedFiles.count(_extension) == 0)
-			extensionTrackedFiles.emplace(std::make_pair(_extension, std::list<File>()));
+		//if (extensionTrackedFiles.count(_extension) == 0)
+		//	extensionTrackedFiles.emplace(std::make_pair(_extension, std::list<File>()));
 		return extensionTrackedFiles[_extension];
 	}
 
@@ -678,12 +656,12 @@ namespace Copium
 	void FileSystem::add_file_reference(File* _file)
 	{
 		files[_file->get_file_type().fileType].push_back(_file);
-		assets->load_file(_file);
+		MyAssetsSystem.load_file(_file);
 	}
 
 	void FileSystem::remove_file_reference(File* _file)
 	{
 		files[_file->get_file_type().fileType].remove(_file);
-		assets->unload_file(_file);
+		MyAssetsSystem.unload_file(_file);
 	}
 }

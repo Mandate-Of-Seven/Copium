@@ -21,12 +21,10 @@
 All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************
 ****/
-#pragma once
 #ifndef SM_H
 #define SM_H
 
 
-#include "GameObject/game-object-factory.h"
 #include "CopiumCore/system-interface.h"
 #include "SceneManager/scene.h"
 #include <filesystem>
@@ -42,57 +40,8 @@ namespace Copium {
 	{
 	public:
 
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Find a game object using its ID
-
-		\param _ID
-			the game object id of the game object to find
-
-		\return
-			pointer to the game object
-			if there is no game object with that id, return nullptr
-		*/
-		/*******************************************************************************/
-		GameObject* findGameObjByID(GameObjectID _ID);
-		GameObject* FindGameObjectByID(const uint64_t & _id);
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Find a game object using its name
-
-		\param name
-			name of the game object to be found
-
-		\return
-			pointer to the game object
-			if there is no game object with that name, return nullptr
-		*/
-		/*******************************************************************************/
-		GameObject* findGameObjByName(const std::string& name);
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Find a component using its ID
-
-		\param _ID
-			the component id of the component to find
-
-		\return
-			pointer to the component
-			if there is no component with that id, return nullptr
-		*/
-		/*******************************************************************************/
-		Component* findComponentByID(ComponentID _ID);
-		Component* FindComponentByID(const uint64_t & _id);
-
-		SceneManager();
-		~SceneManager();
-
+		GameObject* FindGameObjectByID(UUID _id);
+		Component* FindComponentByID(UUID _id);
 		/*******************************************************************************
 		/*!
 		*
@@ -231,33 +180,6 @@ namespace Copium {
 		/*******************************************************************************/
 		void set_current_scene(Scene* _src);
 
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Set the selected game object
-
-		\param _go
-			ptr to the game object that is selected
-
-		\return
-			void
-		*/
-		/*******************************************************************************/
-		void set_selected_gameobject(GameObject* _go);
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Get pointer to the selected game object (if any)
-
-		\return
-			pointer to the selected game object
-			if there is no game object selected, return nullptr
-		*/
-		/*******************************************************************************/
-		GameObject* get_selected_gameobject();
-
 		std::shared_ptr<GameObject>& get_selected_gameobject_sptr();
 		std::shared_ptr<GameObject>* find_gameobject_sptr(GameObject* _go);
 
@@ -350,15 +272,14 @@ namespace Copium {
 		/*******************************************************************************/
 		Scene::SceneState GetSceneState() const { return currSceneState; }
 
-		GameObject* selectedGameObject;
 		Camera* mainCamera{nullptr};
 
 	private:
-		Scene* currentScene;	// Pointer to the current scene
-		Scene* storageScene;	// Scene Pointer that acts as buffer for preview scene
+		Scene* currentScene{nullptr};	// Pointer to the current scene
+		Scene* storageScene{ nullptr };	// Scene Pointer that acts as buffer for preview scene
 		rapidjson::Document document;
 		std::string sceneFilePath;
-		Scene::SceneState currSceneState;
+		Scene::SceneState currSceneState{ Scene::SceneState::edit };
 		std::vector<Scene*> scenes;
 	};
 

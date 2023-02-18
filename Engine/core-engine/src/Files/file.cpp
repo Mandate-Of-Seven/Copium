@@ -23,14 +23,14 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
-	File::File() : std::filesystem::path()
+	File::File() : filePath{}
 	{
 
 		modified = true;
 		//PRINT(uuid);
 	}
 
-	File::File(const std::filesystem::path& pathRef) : std::filesystem::path(pathRef)
+	File::File(const std::filesystem::path& pathRef) : filePath(pathRef)
 	{
 		modified = true;
 		//PRINT(uuid);
@@ -50,7 +50,7 @@ namespace Copium
 	void File::update_modification_timing()
 	{
 		struct _stat64i32 statsBuffer;
-		_stat(string().c_str(), &statsBuffer);
+		_stat(filePath.string().c_str(), &statsBuffer);
 		if (lastModifiedTime != statsBuffer.st_mtime)
 		{
 			modified = true;
@@ -65,11 +65,11 @@ namespace Copium
 			if (Copium::SceneManager::Instance()->get_current_scene() != nullptr)
 			{
 				std::cout << "change scene\n";
-				Copium::SceneManager::Instance()->change_scene(string().c_str());
+				Copium::SceneManager::Instance()->change_scene(filePath.string().c_str());
 			}
 			else
 			{
-				if (Copium::SceneManager::Instance()->load_scene(string().c_str()))
+				if (Copium::SceneManager::Instance()->load_scene(filePath.string().c_str()))
 					std::cout << "loading success\n";
 				else
 					std::cout << "loading fail\n";
@@ -77,7 +77,7 @@ namespace Copium
 		}
 		else
 		{
-			PRINT("Opening file: " << filename().string() << "...");
+			PRINT("Opening file: " << filePath.filename().string() << "...");
 		}
 
 		/*switch (fileType.fileType)
@@ -121,7 +121,8 @@ namespace Copium
 			ImGui::TableNextRow();
 			ImGui::TableNextColumn();
 
-			str = "File type: " + fileType.stringType;
+			str = "File type: ";
+			str	+= fileType.stringType;
 			ImGui::Text(str.c_str());
 
 			ImGui::EndTable();

@@ -493,6 +493,10 @@ namespace Copium::Math
 		*/
 		/*******************************************************************************/
 		Vec3& operator*= (float _rhs);
+
+		Vec3& operator*= (const Vec3& _rhs);
+
+
 		/*******************************************************************************
 		/*!
 		*
@@ -520,6 +524,8 @@ namespace Copium::Math
 		*/
 		/*******************************************************************************/
 		Vec3 operator- () const;
+
+		Vec3 operator* (const Vec3& _rhs);
 
 		// Comparison operators
 		bool operator==(const Vec3& _rhs);

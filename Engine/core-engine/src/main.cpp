@@ -18,34 +18,30 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 //Systems
 #include "Windows/windows-system.h"
 #include "Windows/windows-input.h"
-#include "Editor/editor-system.h"
-#include "Scripting/scripting-system.h"
-#include "Scripting/logic-system.h"
-#include "Editor/editor-consolelog.h"
-#include "GameObject/Components/script-component.h"
-#include "Debugging/logging-system.h"
-#include "Audio/sound-system.h"
-#include "SceneManager/scene-manager.h"
-#include "GameObject/Components/component.h"
-#include "GameObject/Components/renderer-component.h"
-#include "Editor/editor-undoredo.h"
-#include "GameObject/Components/ui-components.h"
+//#include "Editor/editor-system.h"
+//#include "Scripting/scripting-system.h"
+//#include "Scripting/logic-system.h"
+//#include "Editor/editor-consolelog.h"
+//#include "Debugging/logging-system.h"
+//#include "Audio/sound-system.h"
+//#include "SceneManager/scene-manager.h"
+//#include "Editor/editor-undoredo.h"
 
 //State Manager
 #include "SceneManager/state-manager.h"
 
-#include "Editor/inspector.h"
+//#include "Editor/inspector.h"
 #include "CopiumCore/copium-core.h"
 #include "Debugging/frame-rate-controller.h"
 namespace
 {
     // Our state
-    float recompileTimer = 0;
+    //float recompileTimer = 0;
     Copium::CopiumCore& copiumCore{ *Copium::CopiumCore::Instance()};
-    Copium::SoundSystem& soundSystem{ *Copium::SoundSystem::Instance()};
-    Copium::InputSystem& inputSystem { *Copium::InputSystem::Instance()};
+    ////Copium::SoundSystem& soundSystem{ *Copium::SoundSystem::Instance()};
+    //Copium::InputSystem& inputSystem { *Copium::InputSystem::Instance()};
     Copium::WindowsSystem* windowsSystem = Copium::WindowsSystem::Instance();
-    Copium::SceneManager* sceneManager = Copium::SceneManager::Instance();
+    //Copium::SceneManager* sceneManager = Copium::SceneManager::Instance();
 }
 
 ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -128,39 +124,39 @@ static void init()
 /**************************************************************************/
 static void update()
 {   
-    if (inputSystem.is_key_pressed(GLFW_KEY_Z))//undo
-    {
-        if (!Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.empty())
-        {
-            Copium::UndoRedo::Command* temp = Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.top();
-            //temp->printCommand();
-            Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.top()->Undo(&Copium::EditorSystem::Instance()->get_commandmanager()->redoStack);
-            Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.pop();
-            delete temp;
-        }
-        else
-        {
-            PRINT("No undo commands left");
-            return;
-        }
-    }
+    //if (inputSystem.is_key_pressed(GLFW_KEY_Z))//undo
+    //{
+    //    if (!Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.empty())
+    //    {
+    //        Copium::UndoRedo::Command* temp = Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.top();
+    //        //temp->printCommand();
+    //        Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.top()->Undo(&Copium::EditorSystem::Instance()->get_commandmanager()->redoStack);
+    //        Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.pop();
+    //        delete temp;
+    //    }
+    //    else
+    //    {
+    //        PRINT("No undo commands left");
+    //        return;
+    //    }
+    //}
 
-    if (inputSystem.is_key_pressed(GLFW_KEY_X) )//redo
-    {
-        
-        if (!Copium::EditorSystem::Instance()->get_commandmanager()->redoStack.empty())
-        {
-            Copium::UndoRedo::Command* temp = Copium::EditorSystem::Instance()->get_commandmanager()->redoStack.top();
-            Copium::EditorSystem::Instance()->get_commandmanager()->redoStack.top()->Redo(&Copium::EditorSystem::Instance()->get_commandmanager()->undoStack);
-            Copium::EditorSystem::Instance()->get_commandmanager()->redoStack.pop();
-            delete temp;
-        }
-        else
-        {
-            PRINT("No redo commands left");
-            return;
-        }
-    }
+    //if (inputSystem.is_key_pressed(GLFW_KEY_X) )//redo
+    //{
+    //    
+    //    if (!Copium::EditorSystem::Instance()->get_commandmanager()->redoStack.empty())
+    //    {
+    //        Copium::UndoRedo::Command* temp = Copium::EditorSystem::Instance()->get_commandmanager()->redoStack.top();
+    //        Copium::EditorSystem::Instance()->get_commandmanager()->redoStack.top()->Redo(&Copium::EditorSystem::Instance()->get_commandmanager()->undoStack);
+    //        Copium::EditorSystem::Instance()->get_commandmanager()->redoStack.pop();
+    //        delete temp;
+    //    }
+    //    else
+    //    {
+    //        PRINT("No redo commands left");
+    //        return;
+    //    }
+    //}
 
 }
 
@@ -173,7 +169,7 @@ static void update()
 /**************************************************************************/
 static void draw() 
 {
-    Copium::EditorSystem::Instance()->draw();
+    //Copium::EditorSystem::Instance()->draw();
     Copium::WindowsSystem::Instance()->draw();
 }
 

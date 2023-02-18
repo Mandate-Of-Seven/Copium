@@ -16,8 +16,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef BASE_CAMERA_H
 #define BASE_CAMERA_H
 
-#include <rapidjson/document.h>
-
 #include "Graphics/graphics-typedef.h"
 #include "Graphics/framebuffer.h"
 #include "Graphics/graphics-draw.h"
@@ -28,30 +26,6 @@ namespace Copium
 	class BaseCamera
 	{
 	public:
-		/*******************************************************************************
-		/*!
-		\brief
-			Deserialize this renderer component's data from the specified rapidjson Value
-		\param _value
-			reference to the rapidjson Value which the renderer component's data
-			deserializes its data
-		*/
-		/*******************************************************************************/
-		bool deserialize(rapidjson::Value& _value);
-
-		/*******************************************************************************
-		/*!
-		\brief
-			Serialize this renderer component's data to the specified rapidjson Value
-		\param _value
-			reference to the rapidjson Value which the renderer component's data is to
-			serialize its data to
-		\param _doc
-			reference to the rapidjson Document which is associated to the save file
-			which the data is being saved to
-		*/
-		/*******************************************************************************/
-		bool serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
 		/***************************************************************************/
 		/*!

@@ -20,14 +20,13 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {	
+	class UUID;
 	// Each object will have a reference to the layer that it is on in the editor
 
 	// Store layers in a orderer map vector containing pointers to 
 	class Layering
 	{
 	public:
-		// From game-object.h
-		using GameObjectID = int64_t;
 
 		/***************************************************************************/
 		/*!
@@ -45,7 +44,7 @@ namespace Copium
 			The id of the gameobject to add
 		*/
 		/***************************************************************************/
-		void AddGameObject(const GameObjectID& _id);
+		void AddGameObject(const UUID& _id);
 
 		/***************************************************************************/
 		/*!
@@ -57,7 +56,7 @@ namespace Copium
 			The id of the gameobject to add
 		*/
 		/***************************************************************************/
-		void AddGameObject(const int& _layer, const GameObjectID& _id);
+		void AddGameObject(const int& _layer, const UUID& _id);
 
 		// Remove gameobject from the layer in the map
 		/***************************************************************************/
@@ -70,7 +69,7 @@ namespace Copium
 			The id of the gameobject to remove
 		*/
 		/***************************************************************************/
-		void RemoveGameObject(const int& _layer, const GameObjectID& _id);
+		void RemoveGameObject(const int& _layer, const UUID& _id);
 
 		/***************************************************************************/
 		/*!
@@ -84,7 +83,7 @@ namespace Copium
 			True if it exists in the layer, else false
 		*/
 		/***************************************************************************/
-		bool CheckIfExist(int& _layer, const GameObjectID& _id);
+		bool CheckIfExist(int& _layer, const UUID& _id);
 
 		/***************************************************************************/
 		/*!
@@ -107,7 +106,7 @@ namespace Copium
 		static const int maxLayers = 32;						// Number of layers in the sorting layer system
 		static const int maxObjects = 100;						// Number of objects in a layer
 		bool layerStatus[maxLayers];							// The current status of the layers in the engine, either enabled or disabled
-		std::map<int, std::vector<GameObjectID>> layers;		// The container which holds the layers which contains the gameobject's ID
+		std::map<int, std::vector<UUID>> layers;		// The container which holds the layers which contains the gameobject's ID
 	};
 }
 

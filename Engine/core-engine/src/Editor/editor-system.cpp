@@ -78,7 +78,7 @@ namespace Copium
 		contentBrowser.init();
 		colorTheme.init();
 		hierarchyList.init();
-		inspector.init();
+		//inspector.init();
 		layers.init();
 		// Initialize a new editor camera
 		camera.init((float) sceneView.get_width(), (float) sceneView.get_height());
@@ -303,7 +303,7 @@ namespace Copium
 					}
 					if (ImGui::MenuItem("Inspector"))
 					{
-						inspector.status() = true;
+						//inspector.status() = true;
 					}
 
 					ImGui::EndMenu();
@@ -396,7 +396,7 @@ namespace Copium
 			colorTheme.update();
 			hierarchyList.update();
 			layers.update();
-			inspector.update();
+			//inspector.update();
 			Window::EditorConsole::update();
 			//Window::Hierarchy::update();
 			game.update();
@@ -442,7 +442,7 @@ namespace Copium
 		game.exit();
 		contentBrowser.exit();
 		hierarchyList.exit();
-		inspector.exit();
+		//inspector.exit();
 		layers.exit();
 
 		std::cout << "Before deleting, Undo stack: " << commandManager.undoStack.size() << ", Redo stack:" << commandManager.redoStack.size()<<"\n";

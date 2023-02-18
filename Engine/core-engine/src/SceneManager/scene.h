@@ -28,7 +28,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #include <iostream>
 #include <string>
-#include <vector>
 #include <GameObject/game-object.h>
 #include <memory>
 #include <GameObject/components.h>
@@ -41,8 +40,9 @@ class SceneManager;
 class Scene 
 {
 public:
-	std::vector<GameObject*> gameObjects;	//Vector should be in order
+	GameObjectsArray gameObjects;	//Vector should be in order
 	ComponentsArrays componentArrays;
+
 	std::vector<std::shared_ptr<GameObject>> gameObjectSPTRS;
 
 	enum class SceneState : char {
@@ -57,6 +57,7 @@ public:
 
 	Scene(Scene&) = delete;
 	Scene& operator=(Scene&) = delete;
+	std::string name;
 	virtual ~Scene();
 
 	/*******************************************************************************
@@ -141,18 +142,6 @@ public:
 	/*!
 	*
 	\brief
-		Gets the number of game objects attached to the scene
-
-	\return
-		number of game objects attached to the scene
-	*/
-	/*******************************************************************************/
-	size_t get_gameobjcount() const;
-
-	/*******************************************************************************
-	/*!
-	*
-	\brief
 		Adds a GameObject to the scene
 
 	\param	_gameObj
@@ -191,103 +180,6 @@ public:
 	std::string get_name() const;
 
 	void inspector_view();
-
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Assign a game object ID. If there are unused GIDs, the first one in the list is popped and assigned, otherwise
-		assign new id based on number of game objects are present in the scene.
-
-	\return
-		the assigned GameObjectID
-	*/
-	/*******************************************************************************/
-	GameObjectID assignGameObjID();
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Add a GID to the unused list so that it can be reused at a later stage
-
-	\param _id
-		the GameObjectID to put in the unused list
-
-	\return
-		void
-	*/
-	/*******************************************************************************/
-	void add_unused_gid(GameObjectID _id);
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Gets reference to the unused GID list
-
-	\return
-		reference to the unused GID list
-	*/
-	/*******************************************************************************/
-	std::vector<GameObjectID>& get_unusedgids();
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Increment the component counter by 1
-
-	\return
-		void
-	*/
-	/*******************************************************************************/
-	void incr_component_count();
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Get the component count in the scene
-
-	\return
-		number of components in the scene
-	*/
-	/*******************************************************************************/
-	unsigned int get_component_count() const;
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Assign a unique component id. If there is an unused component id, reuse it, otherwise
-		assign a new id based on number of components in the scene
-
-	\return
-		the assigned component id
-	*/
-	/*******************************************************************************/
-	ComponentID assignComponentID();
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Add a CID to the unused CID list
-
-	\param _id
-		the component id to add to the unused list
-
-	\return
-		void
-	*/
-	/*******************************************************************************/
-	void add_unused_cid(ComponentID _id);
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Gets reference to the unused CID list
-
-	\return
-		reference to the unused CID list
-	*/
-	/*******************************************************************************/
-	std::vector<ComponentID>& get_unusedcids();
 	/*******************************************************************************
 	/*!
 	*
@@ -316,10 +208,6 @@ public:
 
 private:
 	const std::string filename;
-	std::string name;
-	std::vector<GameObjectID> unusedGIDs;
-	std::vector<uint64_t> unusedCIDs;
-	unsigned int numberOfComponents;
 	SceneState currSceneState;
 	friend class SceneManager;
 

@@ -86,7 +86,7 @@ namespace Copium
 			if a game object is selected return true
 		*/
 		/*******************************************************************************/
-		bool display_gameobject(GameObject& _go, GameObjectID& _selected, std::vector<GameObject*>& _vector, size_t _index);
+		bool display_gameobject(GameObject& _go, std::vector<GameObject*>& _vector, size_t _index);
 		/*******************************************************************************
 		/*!
 		*
@@ -115,7 +115,7 @@ namespace Copium
 			if a game object is selected return true
 		*/
 		/*******************************************************************************/
-		bool display_gameobject(GameObject& _go, GameObjectID& _selected, std::list<Transform*>& _list, size_t _index);
+		bool display_gameobject(GameObject& _go, std::list<Transform*>& _list, size_t _index);
 		/*******************************************************************************
 		/*!
 		*
@@ -242,8 +242,6 @@ namespace Copium
 		void Reorder(GameObject* _go);
 
 	private:
-		GameObjectID selectedID;
-		Scene* currentScene{nullptr};
 		bool isHierarchyOpen{true};
 		bool isParenting{false};
 		bool isPopUpOpen{false};

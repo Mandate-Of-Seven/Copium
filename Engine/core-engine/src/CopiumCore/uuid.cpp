@@ -31,21 +31,5 @@ namespace Copium
 	{
 		
 	}
-	UUID::UUID(uint64_t _uuid) : uuid{_uuid}
-	{
-
-	}
-
-	void UUID::Deserialize(rapidjson::Value& _val)
-	{
-		uuid = _val.GetUint64();
-	}
-	void UUID::Serialize(rapidjson::Value& _val, rapidjson::Document& _doc, const std::string& _name)
-	{
-		rapidjson::Value key;
-		rapidjson::SizeType sz = static_cast<rapidjson::SizeType>(_name.size());
-		key.SetString(_name.c_str(), sz, _doc.GetAllocator());
-		_val.AddMember(key, uuid, _doc.GetAllocator());
-	}
 
 }

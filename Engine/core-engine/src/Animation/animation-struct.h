@@ -20,6 +20,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Math/math-library.h"
 #include "Graphics/spritesheet.h"
 
+#define MAX_ANIMATION_COUNT 5
+
 namespace Copium
 {
 	struct Frame
