@@ -159,7 +159,7 @@ namespace Copium
 		return *this;
 	}
 	
-	SortingGroup::SortingGroup(GameObject& _gameObj, int _order, int _sort, bool _replace) :Component(_gameObj), sortingLayer{ _sort }, orderInLayer{ _order }
+	SortingGroup::SortingGroup(GameObject& _gameObj, UUID _uuid, int _order, int _sort, bool _replace) :Component(_gameObj, _uuid), sortingLayer{ _sort }, orderInLayer{ _order }
 	{
 		PRINT("Added to specific layer");
 		if (_replace)

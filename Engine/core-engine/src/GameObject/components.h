@@ -997,12 +997,12 @@ namespace Copium
 			The gameoject to add into the sorting group
 		*/
 		/*******************************************************************************/
-		SortingGroup(GameObject& _gameObj, UUID _uuid = UUID()) :
-			Component(_gameObj, _uuid), sortingLayer{ 0 }, orderInLayer{ 0 }
-		{
-			//PRINT("Added to default layer");
-			//MyEditorSystem.getLayers()->SortLayers()->AddGameObject(0, _gameObj);
-		}
+		//SortingGroup(GameObject& _gameObj, UUID _uuid = UUID()) :
+		//	Component(_gameObj, _uuid), sortingLayer{ 0 }, orderInLayer{ 0 }
+		//{
+		//	//PRINT("Added to default layer");
+		//	//MyEditorSystem.getLayers()->SortLayers()->AddGameObject(0, _gameObj);
+		//}
 
 		/*******************************************************************************
 		/*!
@@ -1017,7 +1017,7 @@ namespace Copium
 			The sorting group to add the gameobject into
 		*/
 		/*******************************************************************************/
-		SortingGroup(GameObject& _gameObj, int _order, int _sort, bool _replace = false);
+		SortingGroup(GameObject& _gameObj, UUID _uuid, int _order = 0, int _sort = 0, bool _replace = false);
 
 		/*******************************************************************************
 		/*!

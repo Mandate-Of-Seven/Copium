@@ -55,7 +55,6 @@ namespace Copium
 		}
 		return nullptr;
 	}
-
 	Component* SceneManager::FindComponentByID(UUID _id)
 	{
 
@@ -73,9 +72,7 @@ namespace Copium
 		//MyGOF.register_archetypes("Data/Archetypes");
 		MyEventSystem->subscribe(this, &SceneManager::CallbackQuitEngine);
 	}
-
 	void SceneManager::update() {}
-
 	void SceneManager::exit()
 	{
 		if (currSceneState == Scene::SceneState::play)
@@ -197,9 +194,7 @@ namespace Copium
 			rapidjson::Value& _gameObjArr = document["GameObjects"].GetArray();
 			for (rapidjson::Value::ValueIterator iter = _gameObjArr.Begin(); iter != _gameObjArr.End(); ++iter)
 			{
-				GameObject* tmpGO = nullptr;
-				tmpGO = MyGOF.Instantiate(*iter);
-				PRINT(*tmpGO);
+				MyGOF.Instantiate(*iter);
 			}
 
 			// Linkages
@@ -208,10 +203,37 @@ namespace Copium
 				// Transform and Parent
 				if (go.transform.pid)
 				{
-					GameObject* p = MySceneManager.FindGameObjectByID(go->transform.pid);
+					GameObject* p = MySceneManager.FindGameObjectByID(go.transform.pid);
 					if (p)
 						go.transform.SetParent(&p->transform);
 
+				}
+
+				// Sprite Renderer
+				if (go.HasComponent<SpriteRenderer>())
+				{
+					SpriteRenderer* sr = go.GetComponent<SpriteRenderer>();
+					if (sr->sprite.spriteID != 0)
+					{
+						const std::vector<Texture>& textures = MyAssetSystem.GetTextures();
+						bool reference = false;
+						for (int i = 0; i < textures.size(); i++)
+						{
+							uint64_t pathID = std::hash<std::string>{}(textures[i].get_file_path());
+							MetaID metaID = MyAssetSystem.GetMetaID(pathID);
+							// Check if the uuid of the sprite is the same as the meta file
+							if (metaID.uuid == sr->sprite.spriteID)
+							{
+								// If so set the reference texture to that file
+								reference = true;
+								sr->sprite.refTexture = MyAssetSystem.GetTexture(i);
+								break;
+							}
+						}
+						// If there is no references, set the spriteID to 0
+						if (!reference)
+							sr->sprite.spriteID = 0;
+					}
 				}
 
 				// SpriteSheet
@@ -289,73 +311,9 @@ namespace Copium
 			}
 
 		}
-
-		// Place Game Objects that are in layers into respective layers
-		//for (GameObject* go : currentScene->gameObjects)
-		//{
-		//	bool layered{ false };
-		//	SortingGroup* sg{ nullptr };
-		//	for (Component* component : go->getComponents<SortingGroup>())
-		//	{
-		//		if (component->Enabled())
-		//		{
-		//			sg = reinterpret_cast<SortingGroup*>(component);
-		//			layered = true;
-		//			break;
-		//		}
-		//	}
-
-		//	if (layered)
-		//	{
-		//		PRINT("Layer ID: " << sg->GetLayerID());
-		//		MyEditorSystem.getLayers()->SortLayers()->AddGameObject(sg->GetLayerID(), *go);
-		//	}
-		//}
-		// Sort based on order in layer
-		for (Layer& la : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
-		{
-			bool swapped{ false };
-			if (la.gameObjects.size() <= 1)
-				continue;
-
-			for (size_t i{ 0 }; i < la.gameObjects.size() - 1; ++i)
-			{
-				for (size_t j{ 0 }; j < la.gameObjects.size() - 1 - i; ++j)
-				{
-					SortingGroup* sg1{ nullptr }, * sg2{ nullptr };
-
-					if (!la.gameObjects[j] && la.gameObjects[j + 1])
-					{
-						std::swap(la.gameObjects[j], la.gameObjects[j + 1]);
-						swapped = true;
-						continue;
-					}
-
-					if (la.gameObjects[j] && la.gameObjects[j + 1])
-					{
-						sg1 = la.gameObjects[j]->GetComponent<SortingGroup>();
-						sg2 = la.gameObjects[j + 1]->GetComponent<SortingGroup>();
-
-						if (sg1 && sg2)
-						{
-							if (sg1->GetOrderInLayer() > sg2->GetOrderInLayer())
-							{
-								std::swap(la.gameObjects[j], la.gameObjects[j + 1]);
-								swapped = true;
-							}
-						}
-					}
-
-
-				}
-
-				if (!swapped)
-					break;
-			}
-		}
+		MyEditorSystem.getLayers()->SortLayers()->BubbleSortGameObjects();
 
 		ifs.close();
-
 
 		MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_SCENE_DESERIALIZED);
 
@@ -497,19 +455,18 @@ namespace Copium
 			return false;
 
 		// Replace gameobjects in sorting layer
-		//MyEditorSystem.getLayers()->SortLayers()->ClearAllLayer();
-
-		//for (GameObject* go : storageScene->gameObjects)
-		//{
-		//	if (go->hasComponent(ComponentType::SortingGroup))
-		//	{
-		//		SortingGroup* sg = go->getComponent<SortingGroup>();
-		//		MyEditorSystem.getLayers()->SortLayers()->AddGameObject(sg->GetLayerID(), *go);
-		//	}
-		//}
+		MyEditorSystem.getLayers()->SortLayers()->ClearAllLayer();
+		for (GameObject& go : storageScene->gameObjects)
+		{
+			if (go.HasComponent<SortingGroup>())
+			{
+				SortingGroup* sg = go.GetComponent<SortingGroup>();
+				MyEditorSystem.getLayers()->SortLayers()->AddGameObject(sg->GetLayerID(), go);
+			}
+		}
 
 		// Sort based on order in layer
-		//MyEditorSystem.getLayers()->SortLayers()->BubbleSortGameObjects();
+		MyEditorSystem.getLayers()->SortLayers()->BubbleSortGameObjects();
 
 		Scene* tmp = currentScene;
 		currentScene = storageScene;
@@ -636,14 +593,11 @@ namespace Copium
 
 		currentScene->name = storageScene->name;
 
-		//currentScene->unusedCIDs = storageScene->unusedCIDs;
-		//currentScene->unusedGIDs = storageScene->unusedGIDs;
-
 		// Copy game object data
-		//for (GameObject* gameObj : storageScene->gameObjects)
-		//{
-		//	MyGOF.clone(*gameObj, currentScene);
-		//}
+		for (GameObject& gameObj : storageScene->gameObjects)
+		{
+			MyGOF.Instantiate(gameObj, true);
+		}
 
 		//for (size_t goIndex{ 0 }; goIndex < storageScene->get_gameobjcount(); ++goIndex)
 		//{
@@ -687,6 +641,6 @@ namespace Copium
 
 	void SceneManager::CallbackQuitEngine(QuitEngineEvent* pEvent)
 	{
-		quit_engine();
+		//quit_engine();
 	}
 }
