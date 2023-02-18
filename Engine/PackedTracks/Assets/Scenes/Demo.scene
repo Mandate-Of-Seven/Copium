@@ -62,7 +62,8 @@
                 {
                     "ID": 78,
                     "Type": "AudioSource",
-                    "Alias": "BGM_Train"
+                    "Alias": "BGM_Train",
+                    "Volume": -431602080.0
                 },
                 {
                     "ID": 79,
@@ -1183,7 +1184,8 @@
                 {
                     "ID": 118,
                     "Type": "AudioSource",
-                    "Alias": "BGM _Menu"
+                    "Alias": "BGM _Menu",
+                    "Volume": 1.0
                 }
             ]
         },
@@ -1372,7 +1374,8 @@
                 {
                     "ID": 119,
                     "Type": "AudioSource",
-                    "Alias": "Amb_TrainInterior"
+                    "Alias": "Amb_TrainInterior",
+                    "Volume": -431602080.0
                 }
             ]
         },

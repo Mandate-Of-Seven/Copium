@@ -26,6 +26,8 @@ namespace Copium
             bool overLap = false;
             bool loop = false;
             int loopCount;
+            std::string channel;
+            float volume;
 		public:
 
             /***************************************************************************/

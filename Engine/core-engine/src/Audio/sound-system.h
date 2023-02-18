@@ -21,6 +21,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 namespace Copium
 {
+	#define groupLimit 30
+
 	CLASS_SYSTEM(SoundSystem)
 	{
 	public:
@@ -75,7 +77,7 @@ namespace Copium
 				to set for FMOD loop count
 			*/
 			/**************************************************************************/
-		void Play(std::string alias, bool overLap = false, bool loop = false, int loopCount = -1);
+		void Play(std::string alias, FMOD::Channel * channel,  bool overLap = false, bool loop = false, int loopCount = -1);
 
 		/***************************************************************************/
 			/*!
@@ -122,12 +124,13 @@ namespace Copium
 			/**************************************************************************/
 		void Pause(bool status);
 
+
 		//a map of all sounds created using CreateSound()
 		std::map<std::string, std::pair<FMOD::SoundGroup*, FMOD::Sound*>> soundList;
 
 		//the sound system playing all the audio
 		FMOD::System* soundSystem;
-		FMOD::Channel* myChannel;
+		FMOD::Channel* channelDefault, *channelBGM, *channelSFX, *channelVoice;
 	private:
 
 		

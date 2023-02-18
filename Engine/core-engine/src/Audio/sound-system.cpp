@@ -103,7 +103,7 @@ void DeleteSound()
 
 }
 // Play sound
-void SoundSystem::Play(std::string alias, bool overLap, bool loop, int loopCount)
+void SoundSystem::Play(std::string alias, FMOD::Channel* channel,bool overLap, bool loop, int loopCount)
 {
 	FMOD::Sound *rSound(soundList[alias].second);
 	int numPlaying(0);
@@ -127,7 +127,7 @@ void SoundSystem::Play(std::string alias, bool overLap, bool loop, int loopCount
 	{
 		rSound->setMode(FMOD_LOOP_OFF);
 	}
-	soundSystem->playSound(rSound, nullptr, false, &myChannel);
+	soundSystem->playSound(rSound, nullptr, false, &channel);
 }
 
 // Stop sound
@@ -182,8 +182,10 @@ void SoundSystem::Mute(bool status)
 
 void SoundSystem::Pause(bool status)
 {
-	std::cout << "1";
-	myChannel->setPaused(status);
+	channelDefault->setPaused(status);
+	channelBGM->setPaused(status);
+	channelSFX->setPaused(status);
+	channelVoice->setPaused(status);
 }
 
 // Private Members

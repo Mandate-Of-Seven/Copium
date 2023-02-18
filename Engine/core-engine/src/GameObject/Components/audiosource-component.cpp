@@ -42,6 +42,10 @@ namespace Copium
 		{
 			alias = _value["Alias"].GetString();
 		}
+		if (_value.HasMember("Volume"))
+		{
+			volume = _value["Volume"].GetFloat();
+		}
 	}
 
 	void AudioSource::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
@@ -57,6 +61,8 @@ namespace Copium
 		rapidjson::Value _alias;
 		_alias.SetString(alias.c_str(), (rapidjson::SizeType)alias.length(), _doc.GetAllocator());
 		_value.AddMember("Alias", _alias, _doc.GetAllocator());
+
+		_value.AddMember("Volume", volume, _doc.GetAllocator());
 
 	}
 
@@ -121,9 +127,30 @@ namespace Copium
 				ImGui::EndDragDropTarget();
 			}
 
-			SoundSystem::Instance()->soundList[alias].first->getVolume(&f1);
-			ImGui::SliderFloat("Volume", &f1, 0.0f, 1.0f, "%.2f");
-			SoundSystem::Instance()->soundList[alias].first->setVolume(f1);
+			const char* channelName[] = { "Default", "BGM", "SFX", "Voice" };
+			static const char* current_item = channelName[0];
+
+			if (ImGui::BeginCombo("##combo", current_item)) // The second parameter is the label previewed before opening the combo.
+			{
+				for (int n = 0; n < IM_ARRAYSIZE(channelName); n++)
+				{
+					bool is_selected = (current_item == channelName[n]); // You can store your selection however you want, outside or inside your objects
+					if (ImGui::Selectable(channelName[n], is_selected))
+					{
+						current_item = channelName[n];
+						channel = channelName[n];
+					}
+					if (is_selected)
+						ImGui::SetItemDefaultFocus();   // You may set the initial focus when opening the combo (scrolling + for keyboard navigation support)
+				}
+				ImGui::EndCombo();
+			}
+			ImGui::SameLine();
+			ImGui::Text("Channel");
+
+			//SoundSystem::Instance()->soundList[alias].first->getVolume(&f1);
+			ImGui::SliderFloat("Volume", &volume, 0.0f, 1.0f, "%.2f");
+			SoundSystem::Instance()->soundList[alias].first->setVolume(volume);
 
 			ImGui::Checkbox("Overlap", &overLap);
 			ImGui::Checkbox("Loop", &loop);
@@ -167,10 +194,30 @@ namespace Copium
 		}
 
 	}
-
+	
 	void AudioSource::play_sound()
 	{
-		soundSystem.Play(this->alias, overLap, loop, loopCount);
+		if (channel == "Default")
+		{
+			soundSystem.Play(this->alias, soundSystem.channelDefault, overLap, loop, loopCount);
+		}
+		else if (channel == "BGM")
+		{
+			soundSystem.Play(this->alias, soundSystem.channelBGM, overLap, loop, loopCount);
+		}
+		else if (channel == "SFX")
+		{
+			soundSystem.Play(this->alias, soundSystem.channelSFX, overLap, loop, loopCount);
+		}
+		else if (channel == "Voice")
+		{
+			soundSystem.Play(this->alias, soundSystem.channelVoice, overLap, loop, loopCount);
+		}
+		else if (true)
+		{
+			PRINT("No channel detected, Playing on default");
+			soundSystem.Play(this->alias, soundSystem.channelDefault, overLap, loop, loopCount);
+		}
 	}
 
 	void AudioSource::stop_sound()
