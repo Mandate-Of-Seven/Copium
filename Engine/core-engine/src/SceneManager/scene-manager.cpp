@@ -203,7 +203,7 @@ namespace Copium
 			for (GameObject& go : currentScene->gameObjects)
 			{
 				// Transform and Parent
-				if (go.transform.pid)
+				if (go.transform.pid.GetUUID())
 				{
 					PRINT("LINKING");
 					GameObject* p = MySceneManager.FindGameObjectByID(go.transform.pid);

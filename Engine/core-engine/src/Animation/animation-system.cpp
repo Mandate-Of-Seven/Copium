@@ -34,7 +34,7 @@ namespace Copium
 	void AnimationSystem::init()
 	{
 		systemFlags |= FLAG_RUN_ON_PLAY | FLAG_RUN_ON_EDITOR;
-		MyEventSystem->subscribe(this, &CallbackSceneOpened);
+		//MyEventSystem->subscribe(this, &CallbackSceneOpened);
 		currScene = nullptr;
 		
 	}
