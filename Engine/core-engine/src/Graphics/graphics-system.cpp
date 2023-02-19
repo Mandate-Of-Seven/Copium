@@ -34,7 +34,6 @@ namespace Copium
 	
 	namespace
 	{
-		ComponentsArray<Camera*> pCamerasArray{};
 		InputSystem& inputSystem{ *InputSystem::Instance() };
 
 		// Temporary global variables
@@ -287,10 +286,11 @@ namespace Copium
 
 	void GraphicsSystem::batch_render()
 	{
-		for (Camera& camera : *pCamerasArray)
-		{
-			PRINT("UPDATING CAMERA");
-			camera->update();
-		}
+		//if (pCamerasArray)
+		//	for (Camera& camera : *pCamerasArray)
+		//	{
+		//		PRINT("UPDATING CAMERA");
+		//		camera.update();
+		//	}
 	}
 }

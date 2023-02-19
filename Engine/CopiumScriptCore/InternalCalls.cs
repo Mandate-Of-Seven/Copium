@@ -49,9 +49,6 @@ namespace CopiumEngine
         internal extern static bool GetActive(ulong ID);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static ulong FindGameObjByName(string name);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static ulong CloneGameObject(ulong ID);
 
         [MethodImpl(MethodImplOptions.InternalCall)]

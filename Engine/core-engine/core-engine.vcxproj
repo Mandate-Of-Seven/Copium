@@ -172,6 +172,9 @@
     <ClCompile Include="src\SceneManager\scene.cpp" />
     <ClCompile Include="src\SceneManager\scene-manager.cpp" />
     <ClCompile Include="src\SceneManager\state-manager.cpp" />
+    <ClCompile Include="src\Scripting\logic-system.cpp" />
+    <ClCompile Include="src\Scripting\scripting-system.cpp" />
+    <ClCompile Include="src\Utilities\json-utilities.cpp" />
     <ClCompile Include="src\Utilities\layers.cpp" />
     <ClCompile Include="src\Utilities\serializer.cpp" />
     <ClCompile Include="src\Utilities\sorting-layers.cpp" />
@@ -248,7 +251,12 @@
     <ClInclude Include="src\Events\events.h" />
     <ClInclude Include="src\SceneManager\scene-manager.h" />
     <ClInclude Include="src\Graphics\spritesheet.h" />
+    <ClInclude Include="src\Scripting\compiler.h" />
+    <ClInclude Include="src\Scripting\logic-system.h" />
     <ClInclude Include="src\Scripting\script-fields.h" />
+    <ClInclude Include="src\Scripting\script-wrappers.h" />
+    <ClInclude Include="src\Scripting\scriptable-object.h" />
+    <ClInclude Include="src\Scripting\scripting-system.h" />
     <ClInclude Include="src\Utilities\easing.h" />
     <ClInclude Include="src\Utilities\json-utilities.h" />
     <ClInclude Include="src\Utilities\layers.h" />

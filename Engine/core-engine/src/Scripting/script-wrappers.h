@@ -24,6 +24,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <cstring>
 #include <Animation/animation-system.h>
 #include <GameObject/components.h>
+#include <GameObject/game-object-factory.h>
 
 #include "mono/metadata/object.h"
 #include "mono/metadata/reflection.h"
@@ -36,9 +37,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 namespace Copium
 {
 	#define Register(METHOD) mono_add_internal_call("CopiumEngine.InternalCalls::"#METHOD,METHOD)
-
-	static std::unordered_map<std::string, ComponentType> s_EntityHasComponentFuncs;
-
 
 	namespace
 	{
@@ -111,7 +109,7 @@ namespace Copium
 	/*******************************************************************************/
 	static void GetTranslation(UUID _ID, Math::Vec3* translation)
 	{
-		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
 		if (gameObj == nullptr)
 		{
 			return;
@@ -131,34 +129,12 @@ namespace Copium
 	/*******************************************************************************/
 	static void SetTranslation(UUID _ID, Math::Vec3* val)
 	{
-		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
 		if (gameObj == nullptr)
 		{
 			return;
 		}
 		gameObj->transform.position = *val;
-	}
-
-	/*******************************************************************************
-	/*!
-	\brief
-		Finds GameObject via its name
-	\param name
-		Name of gameObject to look for
-	\return
-		ID of gameObject found by name
-	*/
-	/*******************************************************************************/
-	static UUID FindGameObjByName(MonoString* name)
-	{
-		char* nameCStr = mono_string_to_utf8(name);
-		GameObject* gameObj = sceneManager.findGameObjByName(nameCStr);
-		mono_free(nameCStr);
-		if (gameObj == nullptr)
-		{
-			return UUID(- 1);
-		}
-		return gameObj->uuid;
 	}
 
 	/*******************************************************************************
@@ -173,7 +149,7 @@ namespace Copium
 	/*******************************************************************************/
 	static void RigidbodyAddForce(UUID _ID, Math::Vec2* force)
 	{
-		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
 		if (gameObj == nullptr)
 		{
 			return;
@@ -184,7 +160,7 @@ namespace Copium
 			//LOG SOMETHING TO CONSOLE LIKE THIS OBJ HAS NOT RB
 			return;
 		}
-		rb->add_force(*force);
+		rb->force += *force;
 	}
 
 	/*******************************************************************************
@@ -212,7 +188,7 @@ namespace Copium
 	/*******************************************************************************/
 	static void RigidbodySetVelocity(UUID _ID, Math::Vec2* velocity)
 	{
-		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
 		if (gameObj == nullptr)
 		{
 			return;
@@ -239,7 +215,7 @@ namespace Copium
 	/*******************************************************************************/
 	static void RigidbodyGetVelocity(UUID _ID, Math::Vec2* velocity)
 	{
-		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
 		if (gameObj == nullptr)
 		{
 			return;
@@ -250,7 +226,7 @@ namespace Copium
 			//LOG SOMETHING TO CONSOLE LIKE THIS OBJ HAS NOT RB
 			return;
 		}
-		*velocity = rb->get_vel();
+		*velocity = rb->velocity;
 	}
 
 	/*******************************************************************************
@@ -267,28 +243,30 @@ namespace Copium
 	/*******************************************************************************/
 	static bool HasComponent(UUID UUID, MonoReflectionType* componentType)
 	{
-		GameObject* gameObj = sceneManager.findGameObjByID(UUID);
-		if (gameObj == nullptr)
-		{
-			PRINT("CANT FIND GAMEOBJECT");
-			return false;
-		}
-		MonoType* managedType = mono_reflection_type_get_type(componentType);
-		ComponentType cType = s_EntityHasComponentFuncs[mono_type_get_name(managedType)];
-		return gameObj->hasComponent(cType);
+		return false;
+		//GameObject* gameObj = sceneManager.FindGameObjectByID(UUID);
+		//if (gameObj == nullptr)
+		//{
+		//	PRINT("CANT FIND GAMEOBJECT");
+		//	return false;
+		//}
+		//MonoType* managedType = mono_reflection_type_get_type(componentType);
+		//ComponentType cType = s_EntityHasComponentFuncs[mono_type_get_name(managedType)];
+		//return gameObj->HasComponent(cType);
 	}
 
 	static UUID AddComponent(UUID UUID, MonoReflectionType* componentType)
 	{
-		GameObject* gameObj = sceneManager.findGameObjByID(UUID);
-		if (gameObj == nullptr)
-		{
-			PRINT("CANT FIND GAMEOBJECT");
-			return false;
-		}
-		MonoType* managedType = mono_reflection_type_get_type(componentType);
-		ComponentType cType = s_EntityHasComponentFuncs[mono_type_get_name(managedType)];
-		return gameObj->AddComponent(cType)->id;
+		//GameObject* gameObj = sceneManager.FindGameObjectByID(UUID);
+		//if (gameObj == nullptr)
+		//{
+		//	PRINT("CANT FIND GAMEOBJECT");
+		//	return false;
+		//}
+		//MonoType* managedType = mono_reflection_type_get_type(componentType);
+		//ComponentType cType = s_EntityHasComponentFuncs[mono_type_get_name(managedType)];
+		//return gameObj->AddComponent(cType)->id;
+		return 0;
 	}
 	
 	/*******************************************************************************
@@ -305,7 +283,7 @@ namespace Copium
 	/*******************************************************************************/
 	static void GetLocalScale(UUID _ID, Math::Vec3* scale)
 	{
-		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
 		if (gameObj == nullptr)
 		{
 			return;
@@ -327,7 +305,7 @@ namespace Copium
 	/*******************************************************************************/
 	static void SetLocalScale(UUID _ID, Math::Vec3* scale)
 	{
-		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
 		if (gameObj == nullptr)
 		{
 			return;
@@ -347,12 +325,12 @@ namespace Copium
 	/*******************************************************************************/
 	static void SetActive(UUID _ID, bool _active)
 	{
-		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
 		if (gameObj == nullptr)
 		{
 			return;
 		}
-		gameObj->setActive(_active);
+		gameObj->SetActive(_active);
 	}
 
 	/*******************************************************************************
@@ -367,12 +345,12 @@ namespace Copium
 	/*******************************************************************************/
 	static bool GetActive(UUID _ID)
 	{
-		GameObject* gameObj = sceneManager.findGameObjByID(_ID);
+		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
 		if (gameObj == nullptr)
 		{
 			return false;
 		}
-		return gameObj->isActive();
+		return gameObj->active;
 	}
 
 
@@ -393,8 +371,8 @@ namespace Copium
 	/*******************************************************************************/
 	static bool GetComponentEnabled(UUID gid, UUID cid)
 	{
-		Component* component = sceneManager.findComponentByID(cid);
-		return component.enabled;
+		Component* component = sceneManager.FindComponentByID(cid);
+		return component->enabled;
 	}
 
 	/*******************************************************************************
@@ -417,9 +395,9 @@ namespace Copium
 	/*******************************************************************************/
 	static void SetComponentEnabled(UUID gid, UUID cid, bool val)
 	{
-		Component* component = sceneManager.findComponentByID(cid);
+		Component* component = sceneManager.FindComponentByID(cid);
 		if (component)
-			component->Enabled(val);
+			component->enabled = val;
 	}
 
 
@@ -456,7 +434,7 @@ namespace Copium
 	/*******************************************************************************/
 	static void GetTextString(UUID gameObjID, UUID compID, MonoString*& str)
 	{
-		GameObject* gameObj = sceneManager.findGameObjByID(gameObjID);
+		GameObject* gameObj = sceneManager.FindGameObjectByID(gameObjID);
 		if (gameObj == nullptr)
 			return;
 		for (Text* text : gameObj->GetComponents<Text>())
@@ -484,7 +462,7 @@ namespace Copium
 	/*******************************************************************************/
 	static void SetTextString(UUID gameObjID, UUID compID, MonoString* str)
 	{
-		Component* component = sceneManager.findComponentByID(compID);
+		Component* component = sceneManager.FindComponentByID(compID);
 		if (component == nullptr)
 			return;
 		char* monoStr = mono_string_to_utf8(str);
@@ -508,10 +486,10 @@ namespace Copium
 	/*******************************************************************************/
 	static char GetButtonState(UUID gameObjID)
 	{
-		GameObject* gameObj = sceneManager.findGameObjByID(gameObjID);
+		GameObject* gameObj = sceneManager.FindGameObjectByID(gameObjID);
 		if (gameObj == nullptr)
 			return 0;
-		return (char)gameObj->GetComponent<Button>()->GetState();
+		return (char)gameObj->GetComponent<Button>()->state;
 	}
 
 	/*******************************************************************************
@@ -526,13 +504,13 @@ namespace Copium
 	/*******************************************************************************/
 	static UUID CloneGameObject(UUID ID)
 	{
-		GameObject* toBeCloned = MySceneManager.findGameObjByID(ID);
+		GameObject* toBeCloned = MySceneManager.FindGameObjectByID(ID);
 		if (toBeCloned)
 		{
-			GameObject* clone = MyGOF.clone(*toBeCloned);
-			PRINT("CLONED OBJECT: " << clone->uuid);
-			if (clone)
-				return clone->uuid;
+			//GameObject* clone = MyGOF.(*toBeCloned);
+			//PRINT("CLONED OBJECT: " << clone->uuid);
+			//if (clone)
+			//	return clone->uuid;
 		}
 		return 0;
 	}
@@ -547,10 +525,10 @@ namespace Copium
 	/*******************************************************************************/
 	static UUID InstantiateGameObject()
 	{
-		GameObject* clone = MyGOF.instantiate();
-		if (clone)
-			return clone->uuid;
-		return 0;
+		Scene* scene = MySceneManager.get_current_scene();
+		COPIUM_ASSERT(!scene, "SCENE NOT LOADED");
+		GameObject& clone = MyGOF.Instantiate(scene->gameObjects);
+		return clone.uuid;
 	}
 
 	/*******************************************************************************
@@ -563,7 +541,7 @@ namespace Copium
 	/*******************************************************************************/
 	static void DestroyGameObject(UUID ID)
 	{
-		COPIUM_ASSERT(!MyGOF.destroy(ID), "GameObject could not be destroyed");
+		MyGOF.Destroy(ID,MySceneManager.get_current_scene()->gameObjects);
 	}
 
 
@@ -586,7 +564,7 @@ namespace Copium
 	/*******************************************************************************/
 	static void AudioSourcePlay(UUID ID)
 	{
-		GameObject* gameObj = sceneManager.findGameObjByID(ID);
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
 		if (gameObj == nullptr)
 			return;
 		gameObj->GetComponent<AudioSource>()->play_sound();
@@ -633,7 +611,6 @@ namespace Copium
 		Register(GetKeyDown);
 		Register(GetTranslation);
 		Register(SetTranslation);
-		Register(FindGameObjByName);
 		Register(HasComponent);
 		Register(RigidbodyAddForce);
 		Register(RigidbodyGetVelocity);
@@ -658,33 +635,5 @@ namespace Copium
 		Register(SetComponentEnabled);
 		Register(GetFPS);
 	}
-
-	/*******************************************************************************
-	/*!
-	\brief
-		Registers component type names in mono to C++ defined component types
-	*/
-	/*******************************************************************************/
-	static void registerComponents()
-	{
-		s_EntityHasComponentFuncs.clear();
-		int i{ 0 };
-		int end{ (int)ComponentType::None };
-		PRINT("REGISTERING: ");
-		while (i != end)
-		{
-			std::string name = "CopiumEngine." + MAP_COMPONENT_TYPE_NAME[(ComponentType)i];
-			MonoType* mType = ScriptingSystem::Instance()->getMonoTypeFromName(name);
-			if (mType != nullptr)
-			{
-				PRINT(name);
-				s_EntityHasComponentFuncs.insert(std::make_pair(name, (ComponentType)i));
-			}
-			++i;
-		}
-	}
 }
-
-
-
 #endif // !SCRIPT_WRAPPERS_H

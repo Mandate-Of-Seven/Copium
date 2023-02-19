@@ -158,6 +158,7 @@ namespace Copium
 		float fadeDuration{ 0.1f };
 		return *this;
 	}
+
 	
 	SortingGroup::SortingGroup(GameObject& _gameObj, UUID _uuid, int _order, int _sort, bool _replace) :Component(_gameObj, _uuid), sortingLayer{ _sort }, orderInLayer{ _order }
 	{

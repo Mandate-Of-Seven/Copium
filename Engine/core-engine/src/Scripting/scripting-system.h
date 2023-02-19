@@ -646,7 +646,7 @@ namespace Copium
 	template<typename T>
 	void ScriptingSystem::CallbackScriptSetFieldReference(ScriptSetFieldReferenceEvent<T>* pEvent)
 	{
-		MonoObject* mScript = mComponents[mCurrentScene][pEvent->script.id];
+		MonoObject* mScript = mComponents[mCurrentScene][pEvent->script.uuid];
 		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
 		ScriptClass& scriptClass{ GetScriptClass(pEvent->script.name) };
 		MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };

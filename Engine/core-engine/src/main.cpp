@@ -21,6 +21,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Editor/editor-system.h"
 #include <Windows/windows-system.h>
 #include <Debugging/frame-rate-controller.h>
+#include <Events/events-system.h>
 
 //State Manager
 #include "SceneManager/state-manager.h"
@@ -67,7 +68,7 @@ int main()
 
     init();
     copiumCore.init();
-    MyFrameRateController.init(60);
+    MyFrameRateController.init(144);
     glfwSetWindowCloseCallback(MyWindowSystem.get_window(), quitEngine);
 
 

@@ -11,7 +11,7 @@
 	This file holds the definitions of the functions in the editor game gui where the
 	user can play the game in this GUI
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 
@@ -28,7 +28,7 @@ namespace Copium
 {
 	namespace
 	{
-		BaseCamera* gameCamera = nullptr;
+		Camera* gameCamera = nullptr;
 
 		float padding = 16.f;
 	}
@@ -51,11 +51,12 @@ namespace Copium
 		scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
 		
 		unsigned int textureID = 0;
-		//if (!MyGraphicsSystem.getCamera().empty())
-		//{
-		//	gameCamera = *MyGraphicsSystem.get_cameras().begin();
-		//	textureID = gameCamera->get_framebuffer()->get_color_attachment_id();
-		//}
+		Scene* currScene{ MySceneManager.get_current_scene()};
+		if (currScene && !currScene->componentArrays.GetArray<Camera>().empty())
+		{
+			gameCamera = &*currScene->componentArrays.GetArray<Camera>().begin();
+			textureID = gameCamera->get_framebuffer()->get_color_attachment_id();
+		}
 
 		ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
 		resize_game(*((glm::vec2*) &viewportEditorSize));

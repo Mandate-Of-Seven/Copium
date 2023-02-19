@@ -16,9 +16,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 ******************************************************************************************/
 #include <pch.h>
 #include "GameObject/game-object-factory.h"
-#include <filesystem>
-//#include <Editor/editor-undoredo.h>
-//#include <Editor/editor-system.h>
 #include <GameObject/game-object.h>
 #include <GameObject/components.h>
 
@@ -31,56 +28,50 @@ namespace
 
 namespace Copium 
 {
-	namespace
-	{
-		GameObjectsArray* pGameObjectsArray{};
-		ComponentsArrays* pComponentsArrays{};
-	}
+	//template <typename T>
+	//Component* Add(GameObject& gameObj)
+	//{
+	//	T component(gameObj);
+	//	T& newComponent = pComponentsArrays->GetArray<T>().push_back(component);
+	//	gameObj.AddComponent<T>(&newComponent);
+	//	return (Component*)&newComponent;
+	//}
 
-	template <typename T>
-	Component* Add(GameObject& gameObj)
-	{
-		T component(gameObj);
-		T& newComponent = pComponentsArrays->GetArray<T>().push_back(component);
-		gameObj.AddComponent<T>(&newComponent);
-		return (Component*)&newComponent;
-	}
-
-	Component* AddComponent(GameObject& gameObj ,ComponentType componentType)
-	{
-		switch (componentType)
-		{
-			switch (componentType)
-			{
-			case ComponentType::Animator:
-				return Add<Animator>(gameObj);
-			case ComponentType::BoxCollider2D:
-				return Add<BoxCollider2D>(gameObj);
-			case ComponentType::Camera:
-				return Add<Camera>(gameObj);
-			case ComponentType::Rigidbody2D:
-				return Add<Rigidbody2D>(gameObj);
-			case ComponentType::SpriteRenderer:
-				return Add<SpriteRenderer>(gameObj);
-			case ComponentType::Script:
-				return Add<Script>(gameObj);
-			case ComponentType::Button:
-				return Add<Button>(gameObj);
-			case ComponentType::Image:
-				return Add<Image>(gameObj);
-			case ComponentType::Text:
-				return Add<Text>(gameObj);
-			case ComponentType::AudioSource:
-				return Add<AudioSource>(gameObj);
-			case ComponentType::SortingGroup:
-				return Add<SortingGroup>(gameObj);
-			default:
-				COPIUM_ASSERT(true, "TRYING TO ADD INVALID COMPONENT TYPE");
-				break;
-			}
-		}
-		return nullptr;
-	}
+	//Component* AddComponent(GameObject& gameObj ,ComponentType componentType)
+	//{
+	//	switch (componentType)
+	//	{
+	//		switch (componentType)
+	//		{
+	//		case ComponentType::Animator:
+	//			return Add<Animator>(gameObj);
+	//		case ComponentType::BoxCollider2D:
+	//			return Add<BoxCollider2D>(gameObj);
+	//		case ComponentType::Camera:
+	//			return Add<Camera>(gameObj);
+	//		case ComponentType::Rigidbody2D:
+	//			return Add<Rigidbody2D>(gameObj);
+	//		case ComponentType::SpriteRenderer:
+	//			return Add<SpriteRenderer>(gameObj);
+	//		case ComponentType::Script:
+	//			return Add<Script>(gameObj);
+	//		case ComponentType::Button:
+	//			return Add<Button>(gameObj);
+	//		case ComponentType::Image:
+	//			return Add<Image>(gameObj);
+	//		case ComponentType::Text:
+	//			return Add<Text>(gameObj);
+	//		case ComponentType::AudioSource:
+	//			return Add<AudioSource>(gameObj);
+	//		case ComponentType::SortingGroup:
+	//			return Add<SortingGroup>(gameObj);
+	//		default:
+	//			COPIUM_ASSERT(true, "TRYING TO ADD INVALID COMPONENT TYPE");
+	//			break;
+	//		}
+	//	}
+	//	return nullptr;
+	//}
 
 	GameObjectFactory::GameObjectFactory()
 	{
@@ -90,73 +81,72 @@ namespace Copium
 	{
 	}
 
-	GameObject& GameObjectFactory::Instantiate()
+	GameObject& GameObjectFactory::Instantiate(GameObjectsArray& gameObjectArray)
 	{
-		GameObject& tmp = pGameObjectsArray->push_back();
-		size_t count = pGameObjectsArray->size() - 1;
+		GameObject& tmp = gameObjectArray.push_back();
+		size_t count = gameObjectArray.size() - 1;
 		if (count)
 			tmp.name += '(' + std::to_string(count) + ')';
 		return tmp;
 	}
 
-	GameObject& GameObjectFactory::Instantiate(GameObject& _src, bool copyID)
+	GameObject& GameObjectFactory::Instantiate(GameObject& _src, GameObjectsArray& gameObjectArray, bool copyID)
 	{
 		if (copyID)
 		{
-			GameObject& tmp = pGameObjectsArray->push_back(GameObject(_src,_src.uuid));
-			size_t count = pGameObjectsArray->size() - 1;
+			GameObject& tmp = gameObjectArray.push_back(GameObject(_src,_src.uuid));
+			size_t count = gameObjectArray.size() - 1;
 			if (count)
 				tmp.name += '(' + std::to_string(count) + ')';
 			return tmp;
 		}
-		GameObject& tmp = pGameObjectsArray->push_back(_src);
-		size_t count = pGameObjectsArray->size() - 1;
+		GameObject& tmp = gameObjectArray.push_back(_src);
+		size_t count = gameObjectArray.size() - 1;
 		if (count)
 			tmp.name += '(' + std::to_string(count) + ')';
 		return tmp;
 	}
 
-	GameObject& GameObjectFactory::Instantiate(rapidjson::Value& _value)
+	GameObject& GameObjectFactory::Instantiate(rapidjson::Value& _value, GameObjectsArray& gameObjectArray)
 	{
-		COPIUM_ASSERT(!pGameObjectsArray, "No scene was loaded when trying to instantiate a gameObject");
 		if (_value.HasMember("ID"))
 		{
-			GameObject& go = pGameObjectsArray->push_back(GameObject(_value["ID"].GetUint64()));
+			GameObject& go = gameObjectArray.emplace_back(_value["ID"].GetUint64());
 			Serializer::Deserialize(go, "", _value);
 			return go;
 		}
-		GameObject& go = pGameObjectsArray->push_back();
+		GameObject& go = gameObjectArray.emplace_back();
 		Serializer::Deserialize(go, "", _value);
 		return go;
 	}
 
-	void GameObjectFactory::Destroy(GameObject& _go)
+	void GameObjectFactory::Destroy(GameObject& _go, GameObjectsArray& gameObjectArray)
 	{
 		_go.transform.SetParent(nullptr);
 		for (Transform* pTransform : _go.transform.children)
 		{
 			pTransform->SetParent(nullptr);
-			Destroy(pTransform->gameObject);
+			Destroy(pTransform->gameObject, gameObjectArray);
 		}
-		pGameObjectsArray->erase(_go);
+		gameObjectArray.erase(_go);
 	}
 
 
-	void GameObjectFactory::Destroy(UUID id)
+	void GameObjectFactory::Destroy(UUID id, GameObjectsArray& gameObjectArray)
 	{
-		GameObjectsArray::Iterator it = pGameObjectsArray->begin();
-		while (it != pGameObjectsArray->end())
+		GameObjectsArray::Iterator it = gameObjectArray.begin();
+		while (it != gameObjectArray.end())
 		{
 			GameObject& gameObject = (*it);
 			if (gameObject.uuid == id)
 			{
 				gameObject.transform.SetParent(nullptr);
-				pGameObjectsArray->erase(it);
+				gameObjectArray.erase(it);
 				//It is safe because the object is not destroyed
 				for (Transform* pTransform : gameObject.transform.children)
 				{
 					pTransform->SetParent(nullptr);
-					Destroy(pTransform->gameObject);			
+					Destroy(pTransform->gameObject, gameObjectArray);
 
 				}
 				return;
@@ -253,12 +243,12 @@ namespace Copium
 	//	}
 	//}
 
-	GameObject& GameObjectFactory::Instantiate(const std::string& _archetype)
-	{
-		std::cout << "Making an archetype: " << _archetype << std::endl;
-		GameObject& tmp = Instantiate(*archetypes[_archetype]);
-		return tmp;
-	}
+	//GameObject& GameObjectFactory::Instantiate(const std::string& _archetype, )
+	//{
+	//	std::cout << "Making an archetype: " << _archetype << std::endl;
+	//	GameObject& tmp = Instantiate(*archetypes[_archetype], gameObjectArray);
+	//	return tmp;
+	//}
 
 	std::map<std::string, GameObject*>& GameObjectFactory::get_archetype_map()
 	{

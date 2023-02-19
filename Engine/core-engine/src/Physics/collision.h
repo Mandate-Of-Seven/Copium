@@ -42,58 +42,6 @@ namespace Copium
 		{
 
 		}
-		/***************************************************************************/
-		/*!
-		\brief
-			Deserialize this AABB's data from the specified rapidjson Value
-
-		\param _value
-			reference to the rapidjson Value from which this AABB's data is deserialized from
-
-		\return
-			void
-		*/
-		/**************************************************************************/
-		void deserialize(rapidjson::Value& _value)
-		{
-			if (_value.HasMember("Min"))
-			{
-				rapidjson::Value& _v = _value["Min"].GetObj();
-				min.deserialize(_v);
-			}
-			if (_value.HasMember("Max"))
-			{
-				rapidjson::Value& _v = _value["Max"].GetObj();
-				max.deserialize(_v);
-			}
-		}
-		/***************************************************************************/
-		/*!
-		\brief
-			Serialize this AABB's data to the specified rapidjson Value
-
-		\param _value
-			reference to the rapidjson Value to which this AABB's data is to be serialized to
-
-		\param _doc
-			reference to the rapidjson Document that is associated with the save file
-
-		\return
-			void
-		*/
-		/**************************************************************************/
-		void serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
-		{
-			rapidjson::Value minimum(rapidjson::kObjectType);
-			rapidjson::Value maximum(rapidjson::kObjectType);
-
-			min.serialize(minimum, _doc);
-			max.serialize(maximum, _doc);
-
-			_value.AddMember("Min", minimum, _doc.GetAllocator());
-			_value.AddMember("Max", maximum, _doc.GetAllocator());
-
-		}
 
 		AABB GetRelativeBounds(const Math::Vec3& pos,const Math::Vec3& size)
 		{

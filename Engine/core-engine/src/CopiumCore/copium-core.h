@@ -21,17 +21,17 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Messaging/message-system.h"
 #include "Files/assets-system.h"
 #include "Editor/editor-system.h"
-//#include "Scripting/scripting-system.h"
+#include "Scripting/scripting-system.h"
 #include "Physics/physics-system.h"
 #include "Graphics/graphics-system.h"
-//#include "Utilities/thread-system.h"
+#include "Utilities/thread-system.h"
 //#include "SceneManager/scene-manager.h"
 //#include "Debugging/logging-system.h"
 #include "Audio/sound-system.h"
 #include <Files/file-system.h>
-//#include "Scripting/logic-system.h"
-//#include <Debugging/frame-rate-controller.h>
-//#include "Animation/animation-system.h"
+#include "Scripting/logic-system.h"
+#include <Debugging/frame-rate-controller.h>
+#include "Animation/animation-system.h"
 //#include "string.h"
 #include <Events/events-system.h>
 
@@ -56,7 +56,6 @@ namespace Copium
 				//Put in sequence of calls
 				MyEventSystem,
 				WindowsSystem::Instance(),
-				MyEventSystem,
 				pMessageSystem,
 				LoggingSystem::Instance(),
 				SoundSystem::Instance(),
@@ -69,8 +68,8 @@ namespace Copium
 				//LogicSystem::Instance(),
 				PhysicsSystem::Instance(),
 				GraphicsSystem::Instance(),
-				//ThreadSystem::Instance(),
-				//AnimationSystem::Instance()
+				ThreadSystem::Instance(),
+				AnimationSystem::Instance()
 			};
 			for (ISystem* pSystem : systems)
 			{
@@ -118,32 +117,31 @@ namespace Copium
 					continue;
 				}
 			}
-
+			if (performanceCounter >= 0.05f)
+			{
+				//std::cout<<"Start\n";
+				std::string temp = "\n";
+				for (ISystem* pSystem : systems)
+				{
+					pSystem->updateTimePercent = (pSystem->updateTime <= 0) ? 0 : ((pSystem->updateTime / totalUpdateTime) * 100);
+					//std::cout<< pSystem->updateTime << "\n";
+					temp += typeid(*pSystem).name();
+					temp += ": ";
+					temp += std::to_string(pSystem->updateTimePercent);
+					temp += "%%\n\n";
+					std::cout << typeid(*pSystem).name() << ": " << pSystem->updateTimePercent << "%\n";
+				}
+				//std::cout << temp;
+				//Window::EditorConsole::editorLog.set_performancetext(temp);
+				//std::cout << "End\n\n";
+				performanceCounter = 0;
+			}
+			else
+			{
+				performanceCounter += (float)MyFrameRateController.getDt();
+			}
 			if (displayPerformance)
 			{
-				if (performanceCounter >= 0.05f)
-				{
-					//std::cout<<"Start\n";
-					std::string temp = "\n";
-					for (ISystem* pSystem : systems)
-					{
-						pSystem->updateTimePercent = (pSystem->updateTime<=0) ? 0:((pSystem->updateTime / totalUpdateTime) * 100);
-						//std::cout<< pSystem->updateTime << "\n";
-						temp += typeid(*pSystem).name();
-						temp += ": ";
-						temp += std::to_string(pSystem->updateTimePercent);
-						temp += "%%\n\n";
-						//std::cout << typeid(*pSystem).name() << ": " << pSystem->updateTimePercent << "%\n";
-					}
-					//std::cout << temp;
-					//Window::EditorConsole::editorLog.set_performancetext(temp);
-					//std::cout << "End\n\n";
-					performanceCounter = 0;
-				}
-				else
-				{
-					//performanceCounter += (float)MyFrameRateController.getDt();
-				}
 			}
 		}
 

@@ -37,17 +37,16 @@ namespace Copium
 
     bool GameObject::IsActive()
     {
-        //if (transform.parent)
-        //{
-        //    if (transform.parent->gameObj.active)
-        //    {
-        //        bool _active = transform.parent->gameObj.IsActive();
-        //        return _active && active;
-        //    }
-        //    else
-        //        return false;
-        //}
-        return active;
+        if (!active)
+            return false;
+        Transform* parent = transform.parent;
+        while (parent)
+        {
+            if (!parent->gameObject.active)
+                return false;
+            parent = parent->parent;
+        }
+        return true;
     }
 
     void GameObject::SetActive(bool _active)
@@ -67,6 +66,12 @@ namespace Copium
         transform.position = _position;
         transform.rotation = _rotation;
         transform.scale = _scale;
+    }
+
+    bool GameObject::HasComponent(ComponentType componentType)
+    {
+        HasComponentType hasComponent{ *this };
+        return hasComponent.HasComponent(componentType);
     }
 
     //void GameObject::removeComponent(UUID UUID)

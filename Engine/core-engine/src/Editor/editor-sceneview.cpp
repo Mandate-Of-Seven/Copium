@@ -31,7 +31,6 @@ namespace Copium
 	{
 		EditorCamera& camera = *(MyEditorSystem.get_camera());
 		bool inOp = false;
-		GameObjectsArray* pGameObjectsArray{};
 	}
 
 	void EditorSceneView::init()
@@ -86,7 +85,7 @@ namespace Copium
 		
 		size_t gameobjectCount = 0;
 		if (scene != nullptr)
-			gameobjectCount = pGameObjectsArray->size();
+			gameobjectCount = scene->gameObjects.size();
 
 		ImGui::Text("Render Stats");
 		char buffer[64];
@@ -119,207 +118,204 @@ namespace Copium
 
 		// Mouse picking
 		bool mouseReleased = ImGui::IsMouseReleased(ImGuiMouseButton_Left);
-		if (!inOp && mouseReleased && windowHovered)
+		if (scene && !inOp && mouseReleased && windowHovered)
 		{
-			if (pGameObjectsArray)
+			GameObjectsPtrArray pGameObjs; // Possible selectable gameobjects
+			for (GameObject& gameObject : scene->gameObjects)
 			{
-				GameObjectsPtrArray pGameObjs; // Possible selectable gameobjects
-				for (GameObject& gameObject : *pGameObjectsArray)
+				if (!gameObject.IsActive())
+					continue;
+
+				Transform& t = gameObject.transform;
+				glm::vec2 mousePosition = glm::vec3(camera.get_ndc(), 0.f);
+				glm::vec3 tempPos = t.position;
+				glm::vec3 tempScale = t.scale;
+
+				if (t.HasParent())
 				{
-					if (!gameObject.IsActive())
-						continue;
+					Transform* tempObj = t.parent;
 
-					Transform& t = gameObject.transform;
-					glm::vec2 mousePosition = glm::vec3(camera.get_ndc(), 0.f);
-					glm::vec3 tempPos = t.position;
-					glm::vec3 tempScale = t.scale;
+					glm::mat4 pTranslate, pRotate, pScale, pTransform;
 
-					if (t.HasParent())
+					while (tempObj)
 					{
-						Transform* tempObj = t.parent;
+						pTranslate = glm::translate(glm::mat4(1.f), tempObj->position.glmVec3);
 
-						glm::mat4 pTranslate, pRotate, pScale, pTransform;
+						float pRot = glm::radians(tempObj->rotation.z);
+						pRotate = {
+							glm::vec4(cos(pRot), sin(pRot), 0.f, 0.f),
+							glm::vec4(-sin(pRot), cos(pRot), 0.f, 0.f),
+							glm::vec4(0.f, 0.f, 1.f, 0.f),
+							glm::vec4(0.f, 0.f, 0.f, 1.f)
+						};
 
-						while (tempObj)
-						{
-							pTranslate = glm::translate(glm::mat4(1.f), tempObj->position.glmVec3);
+						glm::vec3 scale = tempObj->scale.glmVec3;
+						pScale = {
+							glm::vec4(scale.x, 0.f, 0.f, 0.f),
+							glm::vec4(0.f, scale.y, 0.f, 0.f),
+							glm::vec4(0.f, 0.f, 1.f, 0.f),
+							glm::vec4(0.f, 0.f, 0.f, 1.f)
+						};
 
-							float pRot = glm::radians(tempObj->rotation.z);
-							pRotate = {
-								glm::vec4(cos(pRot), sin(pRot), 0.f, 0.f),
-								glm::vec4(-sin(pRot), cos(pRot), 0.f, 0.f),
-								glm::vec4(0.f, 0.f, 1.f, 0.f),
-								glm::vec4(0.f, 0.f, 0.f, 1.f)
-							};
-
-							glm::vec3 scale = tempObj->scale.glmVec3;
-							pScale = {
-								glm::vec4(scale.x, 0.f, 0.f, 0.f),
-								glm::vec4(0.f, scale.y, 0.f, 0.f),
-								glm::vec4(0.f, 0.f, 1.f, 0.f),
-								glm::vec4(0.f, 0.f, 0.f, 1.f)
-							};
-
-							pTransform = pTranslate * pRotate * pScale;
-							tempPos = glm::vec3(pTransform * glm::vec4(tempPos, 1.f));
-							tempScale *= tempObj->scale.glmVec3;
-							tempObj = tempObj->parent;
-						}
+						pTransform = pTranslate * pRotate * pScale;
+						tempPos = glm::vec3(pTransform * glm::vec4(tempPos, 1.f));
+						tempScale *= tempObj->scale.glmVec3;
+						tempObj = tempObj->parent;
 					}
+				}
 
-					glm::vec2 objPosition = { tempPos.x, tempPos.y };
+				glm::vec2 objPosition = { tempPos.x, tempPos.y };
 
-					// Not Within bounds
-					if (glm::distance(objPosition, mousePosition)
-						> glm::length(camera.get_dimension()))
-						continue;
+				// Not Within bounds
+				if (glm::distance(objPosition, mousePosition)
+					> glm::length(camera.get_dimension()))
+					continue;
 
-					glm::vec2 min, max;
-					AABB bound;
+				glm::vec2 min, max;
+				AABB bound;
 					
-					min = glm::vec2(objPosition.x - tempScale.x * 0.5f, objPosition.y - tempScale.y * 0.5f);
-					max = glm::vec2(objPosition.x + tempScale.x * 0.5f, objPosition.y + tempScale.y * 0.5f);
+				min = glm::vec2(objPosition.x - tempScale.x * 0.5f, objPosition.y - tempScale.y * 0.5f);
+				max = glm::vec2(objPosition.x + tempScale.x * 0.5f, objPosition.y + tempScale.y * 0.5f);
 
-					for (Button* button : gameObject.GetComponents<Button>())
-					{
-						if (!button->enabled)
-							continue;
-						bound = button->bounds.GetRelativeBounds(gameObject.transform.GetWorldPosition(), gameObject.transform.GetWorldScale());
-						min = bound.min;
-						max = bound.max;
-					}
-					for (SpriteRenderer* spriteRenderer : gameObject.GetComponents<SpriteRenderer>())
-					{
-						if (!spriteRenderer->enabled)
-							continue;
-
-						Texture* texture = spriteRenderer->sprite.refTexture;
-						float tempX = 0.f, tempY = 0.f;
-						if (texture != nullptr)
-						{
-							int width = (int)texture->get_width();
-							int height = (int)texture->get_height();
-							float multiplier = width / (float)WindowsSystem::Instance()->get_window_width();
-							tempX = tempScale.x * (width / (float)height) * multiplier * 0.5f;
-							if(width == height)
-								tempY = tempScale.y * (width / (float)height) * multiplier * 0.5f;
-							else
-								tempY = tempScale.y * multiplier * 0.5f;
-						}
-						else
-							break;
-						min = glm::vec2(objPosition.x - tempX, objPosition.y - tempY);
-						max = glm::vec2(objPosition.x + tempX, objPosition.y + tempY);
-					}
-					for (Image* image : gameObject.GetComponents<Image>())
-					{
-						if (!image->enabled)
-							continue;
-						Texture* texture = image->sprite.refTexture;
-						float tempX = 0.f, tempY = 0.f;
-						if (texture != nullptr)
-						{
-							int width = (int)texture->get_width();
-							int height = (int)texture->get_height();
-							float multiplier = width / (float)WindowsSystem::Instance()->get_window_width();
-							tempX = tempScale.x * (width / (float)height) * multiplier * 0.5f;
-							if (width == height)
-								tempY = tempScale.y * (width / (float)height) * multiplier * 0.5f;
-							else
-								tempY = tempScale.y * multiplier * 0.5f;
-						}
-						else
-							break;
-
-						min = glm::vec2(objPosition.x - tempX, objPosition.y - tempY);
-						max = glm::vec2(objPosition.x + tempX, objPosition.y + tempY);
-					}
-					for (Animator* animator : gameObject.GetComponents<Animator>())
-					{
-						if (!animator->enabled)
-							continue;
-						int columns = animator->GetCurrentAnimation()->spriteSheet.columns;
-						int rows = animator->GetCurrentAnimation()->spriteSheet.rows;
-						float tempX = 0.f, tempY = 0.f;
-						if (animator->GetCurrentAnimation()->spriteSheet.GetTexture() != nullptr)
-						{
-							float width = (float)animator->GetCurrentAnimation()->spriteSheet.GetTexture()->get_width() / (float) columns;
-							float height = (float)animator->GetCurrentAnimation()->spriteSheet.GetTexture()->get_height() / (float) rows;
-							float multiplier = width / (float)WindowsSystem::Instance()->get_window_width();
-							tempX = tempScale.x * (width / (float)height) * multiplier * 0.5f;
-							if (width == height)
-								tempY = tempScale.y * (width / (float)height) * multiplier * 0.5f;
-							else
-								tempY = tempScale.y * multiplier * 0.5f;
-						}
-						else
-							break;
-
-						min = glm::vec2(objPosition.x - tempX, objPosition.y - tempY);
-						max = glm::vec2(objPosition.x + tempX, objPosition.y + tempY);
-					}
-
-					// Check AABB
-					if (mousePosition.x > min.x && mousePosition.x < max.x)
-					{
-						if (mousePosition.y > min.y && mousePosition.y < max.y)
-						{
-							pGameObjs.push_back(&gameObject);
-						}
-					}
-				}
-
-				// Ensure that the container is not empty
-				if (!pGameObjs.empty())
+				for (Button* button : gameObject.GetComponents<Button>())
 				{
-					// Sort base on depth value
-					std::sort(pGameObjs.begin(), pGameObjs.end(),
-						[](GameObject* lhs, GameObject* rhs) -> bool
-						{return (lhs->transform.position.z > rhs->transform.position.z); });
-
-					bool selected = false;
-					for (int i = 0; i < pGameObjs.size(); i++)
-					{
-						// Get the next gameobject after
-						if (MyEditorSystem.pSelectedGameObject == pGameObjs[i])
-						{
-							if (i + 1 < pGameObjs.size())
-							{
-								MyEditorSystem.pSelectedGameObject = pGameObjs[i + 1];
-								selected = true;
-								break;
-							}
-							else if (i + 1 >= pGameObjs.size())
-							{
-								MyEditorSystem.pSelectedGameObject = pGameObjs[0];
-								selected = true;
-								break;
-							}
-						}
-					}
-
-					// If there is no selected gameobject
-					if (MyEditorSystem.pSelectedGameObject == nullptr || !selected)
-					{
-						GameObject* selectObject = pGameObjs.front();
-						for (GameObject* gameObject : pGameObjs)
-						{
-							// Select closest gameobject
-							float depth = gameObject->transform.position.z;
-
-							if (depth > selectObject->transform.position.z)
-							{
-								selectObject = gameObject;
-							}
-						}
-						MyEditorSystem.pSelectedGameObject = (selectObject);
-					}
-
-					//PRINT("Set object to: " << MySceneManager.selectedGameObject->get_name());
+					if (!button->enabled)
+						continue;
+					bound = button->bounds.GetRelativeBounds(gameObject.transform.GetWorldPosition(), gameObject.transform.GetWorldScale());
+					min = bound.min;
+					max = bound.max;
 				}
-				else
-					MyEditorSystem.pSelectedGameObject = nullptr;
+				for (SpriteRenderer* spriteRenderer : gameObject.GetComponents<SpriteRenderer>())
+				{
+					if (!spriteRenderer->enabled)
+						continue;
+
+					Texture* texture = spriteRenderer->sprite.refTexture;
+					float tempX = 0.f, tempY = 0.f;
+					if (texture != nullptr)
+					{
+						int width = (int)texture->get_width();
+						int height = (int)texture->get_height();
+						float multiplier = width / (float)WindowsSystem::Instance()->get_window_width();
+						tempX = tempScale.x * (width / (float)height) * multiplier * 0.5f;
+						if(width == height)
+							tempY = tempScale.y * (width / (float)height) * multiplier * 0.5f;
+						else
+							tempY = tempScale.y * multiplier * 0.5f;
+					}
+					else
+						break;
+					min = glm::vec2(objPosition.x - tempX, objPosition.y - tempY);
+					max = glm::vec2(objPosition.x + tempX, objPosition.y + tempY);
+				}
+				for (Image* image : gameObject.GetComponents<Image>())
+				{
+					if (!image->enabled)
+						continue;
+					Texture* texture = image->sprite.refTexture;
+					float tempX = 0.f, tempY = 0.f;
+					if (texture != nullptr)
+					{
+						int width = (int)texture->get_width();
+						int height = (int)texture->get_height();
+						float multiplier = width / (float)WindowsSystem::Instance()->get_window_width();
+						tempX = tempScale.x * (width / (float)height) * multiplier * 0.5f;
+						if (width == height)
+							tempY = tempScale.y * (width / (float)height) * multiplier * 0.5f;
+						else
+							tempY = tempScale.y * multiplier * 0.5f;
+					}
+					else
+						break;
+
+					min = glm::vec2(objPosition.x - tempX, objPosition.y - tempY);
+					max = glm::vec2(objPosition.x + tempX, objPosition.y + tempY);
+				}
+				//for (Animator* animator : gameObject.GetComponents<Animator>())
+				//{
+				//	if (!animator->enabled)
+				//		continue;
+				//	int columns = animator->GetCurrentAnimation()->spriteSheet.columns;
+				//	int rows = animator->GetCurrentAnimation()->spriteSheet.rows;
+				//	float tempX = 0.f, tempY = 0.f;
+				//	if (animator->GetCurrentAnimation()->spriteSheet.GetTexture() != nullptr)
+				//	{
+				//		float width = (float)animator->GetCurrentAnimation()->spriteSheet.GetTexture()->get_width() / (float) columns;
+				//		float height = (float)animator->GetCurrentAnimation()->spriteSheet.GetTexture()->get_height() / (float) rows;
+				//		float multiplier = width / (float)WindowsSystem::Instance()->get_window_width();
+				//		tempX = tempScale.x * (width / (float)height) * multiplier * 0.5f;
+				//		if (width == height)
+				//			tempY = tempScale.y * (width / (float)height) * multiplier * 0.5f;
+				//		else
+				//			tempY = tempScale.y * multiplier * 0.5f;
+				//	}
+				//	else
+				//		break;
+
+				//	min = glm::vec2(objPosition.x - tempX, objPosition.y - tempY);
+				//	max = glm::vec2(objPosition.x + tempX, objPosition.y + tempY);
+				//}
+
+				// Check AABB
+				if (mousePosition.x > min.x && mousePosition.x < max.x)
+				{
+					if (mousePosition.y > min.y && mousePosition.y < max.y)
+					{
+						pGameObjs.push_back(&gameObject);
+					}
+				}
 			}
+
+			// Ensure that the container is not empty
+			if (!pGameObjs.empty())
+			{
+				// Sort base on depth value
+				std::sort(pGameObjs.begin(), pGameObjs.end(),
+					[](GameObject* lhs, GameObject* rhs) -> bool
+					{return (lhs->transform.position.z > rhs->transform.position.z); });
+
+				bool selected = false;
+				for (int i = 0; i < pGameObjs.size(); i++)
+				{
+					// Get the next gameobject after
+					if (MyEditorSystem.pSelectedGameObject == pGameObjs[i])
+					{
+						if (i + 1 < pGameObjs.size())
+						{
+							MyEditorSystem.pSelectedGameObject = pGameObjs[i + 1];
+							selected = true;
+							break;
+						}
+						else if (i + 1 >= pGameObjs.size())
+						{
+							MyEditorSystem.pSelectedGameObject = pGameObjs[0];
+							selected = true;
+							break;
+						}
+					}
+				}
+
+				// If there is no selected gameobject
+				if (MyEditorSystem.pSelectedGameObject == nullptr || !selected)
+				{
+					GameObject* selectObject = pGameObjs.front();
+					for (GameObject* gameObject : pGameObjs)
+					{
+						// Select closest gameobject
+						float depth = gameObject->transform.position.z;
+
+						if (depth > selectObject->transform.position.z)
+						{
+							selectObject = gameObject;
+						}
+					}
+					MyEditorSystem.pSelectedGameObject = (selectObject);
+				}
+
+				//PRINT("Set object to: " << MySceneManager.selectedGameObject->get_name());
+			}
+			else
+				MyEditorSystem.pSelectedGameObject = nullptr;
 		}
 
 		inOp = ImGuizmo::IsUsing();

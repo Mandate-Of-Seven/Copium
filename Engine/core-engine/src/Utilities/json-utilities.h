@@ -10,6 +10,7 @@
 
 namespace Copium
 {
+	using C_String = const char*;
 	/***************************************************************************/
 	/*!
 	\brief
@@ -50,7 +51,7 @@ namespace Copium
 	void CreateJsonString(const char* _key, rapidjson::Value& _value, rapidjson::Document& _doc);
 
 	template <typename T>
-	void Serialize(const T& _data, rapidjson::Value& _value, rapidjson::Document& _doc, const std::string& _key)
+	void SerializeBasic(const T& _data, rapidjson::Value& _value, rapidjson::Document& _doc, const std::string& _key)
 	{
 		rapidjson::Value key;
 		CreateJsonString(_key, key, _doc);
@@ -59,10 +60,13 @@ namespace Copium
 	}
 
 	template <>
-	void Serialize<bool>(const bool& _data, rapidjson::Value& _value, rapidjson::Document& _doc, const std::string& _key);
+	void SerializeBasic<bool>(const bool& _data, rapidjson::Value& _value, rapidjson::Document& _doc, const std::string& _key);
 
 	template <>
-	void Serialize<std::string>(const std::string& _data, rapidjson::Value& _value, rapidjson::Document& _doc, const std::string& _key);
+	void SerializeBasic<std::string>(const std::string& _data, rapidjson::Value& _value, rapidjson::Document& _doc, const std::string& _key);
+	
+	template <>
+	void SerializeBasic<C_String>(const C_String& _data, rapidjson::Value& _value, rapidjson::Document& _doc, const std::string& _key);
 
 	template <typename T>
 	bool Deserialize(T& _data, rapidjson::Value& _value, const std::string& _key)
