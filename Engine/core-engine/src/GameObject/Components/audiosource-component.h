@@ -27,7 +27,8 @@ namespace Copium
             bool loop = false;
             int loopCount;
             std::string channel;
-            float volume;
+            float volume =1.0f;
+            const char* channelName[4] = { "Default", "BGM", "SFX", "Voice" };
 		public:
 
             /***************************************************************************/

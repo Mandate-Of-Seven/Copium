@@ -42,6 +42,18 @@ namespace Copium
 		{
 			alias = _value["Alias"].GetString();
 		}
+		if (_value.HasMember("Channel"))
+		{
+			channel = _value["Channel"].GetString();
+		}
+		if (_value.HasMember("Overlap"))
+		{
+			overLap = _value["Overlap"].GetBool();
+		}
+		if (_value.HasMember("Loop"))
+		{
+			loop = _value["Loop"].GetBool();
+		}
 		if (_value.HasMember("Volume"))
 		{
 			volume = _value["Volume"].GetFloat();
@@ -62,14 +74,21 @@ namespace Copium
 		_alias.SetString(alias.c_str(), (rapidjson::SizeType)alias.length(), _doc.GetAllocator());
 		_value.AddMember("Alias", _alias, _doc.GetAllocator());
 
+		rapidjson::Value _channel;
+		_channel.SetString(channel.c_str(), (rapidjson::SizeType)channel.length(), _doc.GetAllocator());
+		_value.AddMember("Channel", _channel, _doc.GetAllocator());
+
+		_value.AddMember("OverLap", overLap, _doc.GetAllocator());
+		_value.AddMember("Loop", loop, _doc.GetAllocator());
+
 		_value.AddMember("Volume", volume, _doc.GetAllocator());
+
+		
 
 	}
 
 	void AudioSource::inspector_view()
 	{
-		static float f1 = 0.5f;
-
         ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
             | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp;
         if (ImGui::BeginTable("Component Transform", 2, windowFlags))
@@ -113,7 +132,7 @@ namespace Copium
 						}
 						else
 						{
-							soundsystem->soundList[alias].first->getVolume(&f1);
+							soundsystem->soundList[alias].first->getVolume(&volume);
 						}
 					}
 					else
@@ -127,28 +146,26 @@ namespace Copium
 				ImGui::EndDragDropTarget();
 			}
 
-			const char* channelName[] = { "Default", "BGM", "SFX", "Voice" };
-			static const char* current_item = channelName[0];
-
-			if (ImGui::BeginCombo("##combo", current_item)) // The second parameter is the label previewed before opening the combo.
+			
+			//drop down for channel sellection
+			if (ImGui::BeginCombo("##combo", channel.c_str())) 
 			{
 				for (int n = 0; n < IM_ARRAYSIZE(channelName); n++)
 				{
-					bool is_selected = (current_item == channelName[n]); // You can store your selection however you want, outside or inside your objects
+					bool is_selected = (channel == channelName[n]);
 					if (ImGui::Selectable(channelName[n], is_selected))
 					{
-						current_item = channelName[n];
 						channel = channelName[n];
 					}
 					if (is_selected)
-						ImGui::SetItemDefaultFocus();   // You may set the initial focus when opening the combo (scrolling + for keyboard navigation support)
+						ImGui::SetItemDefaultFocus();
 				}
 				ImGui::EndCombo();
 			}
 			ImGui::SameLine();
 			ImGui::Text("Channel");
 
-			//SoundSystem::Instance()->soundList[alias].first->getVolume(&f1);
+			//volume slider
 			ImGui::SliderFloat("Volume", &volume, 0.0f, 1.0f, "%.2f");
 			SoundSystem::Instance()->soundList[alias].first->setVolume(volume);
 
