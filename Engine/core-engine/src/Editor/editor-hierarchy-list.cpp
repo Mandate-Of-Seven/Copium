@@ -27,7 +27,6 @@ namespace Copium
 
 	namespace
 	{
-		GameObjectsArray* pGameObjectsArray{};
 		InputSystem* is = InputSystem::Instance();
 		std::string sceneName{};
 	}
@@ -40,6 +39,7 @@ namespace Copium
 	}
 	void EditorHierarchyList::update()
 	{
+		Scene* pScene{ MySceneManager.get_current_scene() };
 		if (!isHierarchyOpen)
 			return;
 
@@ -50,7 +50,7 @@ namespace Copium
 
 		if (ImGui::BeginMenuBar())
 		{
-			if (!pGameObjectsArray && ImGui::BeginMenu("Menu"))
+			if (!pScene && ImGui::BeginMenu("Menu"))
 			{
 				if (ImGui::MenuItem("No scene loaded", nullptr))
 				{
@@ -190,18 +190,18 @@ namespace Copium
 
 
 		// Ensure that game objects are displayed only if there is a current scene loaded
-		if (pGameObjectsArray)
+		if (pScene)
 		{		
 			//PRINT("Start Editor Update");
 			// Find all the root nodes
 			GameObjectsPtrArray roots{};
-			for (GameObject& gameObject : *pGameObjectsArray)
+			for (GameObject& gameObject : pScene->gameObjects)
 			{
 				if (!gameObject.transform.HasParent())
 					roots.push_back(&gameObject);
 			}
 
-			if (!(*pGameObjectsArray).empty())
+			if (!pScene->gameObjects.empty())
 				rootFlags |= ImGuiTreeNodeFlags_Leaf;
 
 			//if (sm->GetSceneState() == Copium::Scene::SceneState::play)
@@ -332,7 +332,8 @@ namespace Copium
 			ImGui::EndDragDropSource();
 
 			//std::cout << "ID of selected Game Object: " << _selected << std::endl;
-		}else if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
+		}
+		else if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 		{
 			PRINT("selected");
 			std::cout << _go.name << " is selected\n";
@@ -441,17 +442,14 @@ namespace Copium
 		//				increment = true;
 		//				PRINT("pos");
 		//			}
-
 		//			n_next += _index;
 		//			PRINT("n_next:" << n_next);
 		//			PRINT("Generation size:" << _list.size());
-
 		//			if (n_next >= 0 && n_next < _list.size())
 		//			{		
 		//				PRINT("test");
 		//				Transform* tmp = &_go.transform;
 		//				std::list<Transform*>::iterator iter1, iter2;
-
 		//				iter1 = _list.begin();
 		//				for (int i{ 0 }; i < _list.size(); ++i)
 		//				{
@@ -459,13 +457,10 @@ namespace Copium
 		//					{
 		//						PRINT("Found it");
 		//						break;
-
 		//					}
-
 		//					++iter1;
 		//				}
 		//				iter2 = iter1;
-
 		//				if (increment)
 		//				{
 		//					PRINT("increment");
@@ -476,9 +471,7 @@ namespace Copium
 		//					PRINT("decrement");
 		//					--iter2;
 		//				}
-
 		//			
-
 		//				if (iter2 != _list.end())
 		//				{
 		//					PRINT("Swapping " << (*iter1)->gameObject.name << " and " << (*iter2)->gameObject.name);
@@ -486,12 +479,9 @@ namespace Copium
 		//					//*iter2 = tmp;
 		//					std::swap(*iter1, *iter2);
 		//				}
-
 		//			
-
 		//				ImGui::ResetMouseDragDelta();
 		//			}
-
 		//
 		//	}
 		//}
@@ -660,6 +650,7 @@ namespace Copium
 		// Do nothing if gameobject is in youngest generation
 		//if (target->transform.parent.empty())
 		//	return false;
+		Scene* pScene{ MySceneManager.get_current_scene() };
 
 		GameObject* parent;
 		if (target->transform.HasParent())
@@ -730,7 +721,7 @@ namespace Copium
 				ImGui::PushItemWidth(-1);
 				filter.Draw("##Name");
 				ImGui::PopItemWidth();
-				for (GameObject& gameObject : *pGameObjectsArray)
+				for (GameObject& gameObject : pScene->gameObjects)
 				{
 					if (gameObject.transform.HasParent() || &gameObject == target)
 						continue;
@@ -837,12 +828,13 @@ namespace Copium
 		int result{ 0 };
 		ImVec2 pos = ImGui::GetMousePos();
 		ImGui::SetNextWindowPos(pos, ImGuiCond_Appearing, ImVec2(0.f, 0.f));
+		Scene* pScene{ MySceneManager.get_current_scene() };
 		if (ImGui::BeginPopup("HOps"))
 		{
 			//isPopUpOpen = true;
 			if (ImGui::MenuItem("Create GameObject"))
 			{
-				if (!pGameObjectsArray)
+				if (!pScene)
 				{
 					Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
 				}
@@ -966,60 +958,51 @@ namespace Copium
 			//if (vecPos >= scene->get_gameobjcount() || vecDest >= scene->get_gameobjcount())
 			//	return;
 
-			pGameObjectsArray->swap(*_go, (*pos)->gameObject);
+			Scene* pScene{ MySceneManager.get_current_scene() };
+			pScene->gameObjects.swap(*_go, (*pos)->gameObject);
 		}
 		else
 		{
-			//Scene* scene = sm->get_current_scene();
-			//if (!scene)
-			//	return;
-
-			//size_t pos{ 0 };
-			//size_t dest{ 0 };
-
-			//for (size_t i{ 0 }; i < scene->get_gameobjcount(); ++i)
-			//{
-			//	if (_go == &scene->gameObjectects[i])
-			//	{
-			//		pos = i;
-			//		break;
-			//	}
-			//}
-
-			//if (increment)
-			//{
-			//	if (pos >= scene->get_gameobjcount() + 1)
-			//		return;
-
-			//	for (size_t i{ pos + 1 }; i < scene->get_gameobjcount(); ++i)
-			//	{
-			//		if (!scene->gameObjectects[i]->transform.HasParent())
-			//		{
-			//			dest = i;
-			//			break;
-			//		}
-
-			//	}
-			//}
-			//else
-			//{
-			//	if (!pos)
-			//		return;
-
-			//	for (size_t i{ pos - 1 }; i >= 0; --i)
-			//	{
-			//		if (!scene->gameObjectects[i]->transform.HasParent())
-			//		{
-			//			dest = i;
-			//			break;
-			//		}
-
-			//	}
-			//}
-
-			//GameObject tmp{*rhs};
-			//lhs = *rhs;
-			//std::swap(&scene->gameObjectects[pos], &scene->gameObjectects[dest]);
+			Scene* pScene = MySceneManager.get_current_scene();
+			if (!pScene)
+				return;
+			size_t pos{ 0 };
+			size_t dest{ 0 };
+			for (size_t i{ 0 }; i < pScene->gameObjects.size(); ++i)
+			{
+				if (_go == &pScene->gameObjects[i])
+				{
+					pos = i;
+					break;
+				}
+			}
+			if (increment)
+			{
+				if (pos >= pScene->gameObjects.size() + 1)
+					return;
+				for (size_t i{ pos + 1 }; i < pScene->gameObjects.size(); ++i)
+				{
+					if (!pScene->gameObjects[i].transform.HasParent())
+					{
+						dest = i;
+						break;
+					}
+				}
+			}
+			else
+			{
+				if (!pos)
+					return;
+				for (size_t i{ pos - 1 }; i >= 0; --i)
+				{
+					if (!pScene->gameObjects[i].transform.HasParent())
+					{
+						dest = i;
+						break;
+					}
+				}
+			}
+			std::swap(pScene->gameObjects[pos], pScene->gameObjects[dest]);
 
 		}
 	}

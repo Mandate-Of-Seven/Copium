@@ -68,7 +68,7 @@ int main()
 
     init();
     copiumCore.init();
-    MyFrameRateController.init(60);
+    MyFrameRateController.init(144);
     glfwSetWindowCloseCallback(MyWindowSystem.get_window(), quitEngine);
 
 

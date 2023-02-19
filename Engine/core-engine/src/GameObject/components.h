@@ -217,7 +217,7 @@ namespace Copium
 		Math::Vec3 position{};
 		Math::Vec3 rotation{};
 		Math::Vec3 scale{1,1,1};
-		UUID pid;
+		UUID pid{0};
 		GameObject& gameObject;
 		/***************************************************************************/
 		/*!

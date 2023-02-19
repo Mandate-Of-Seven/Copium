@@ -231,30 +231,30 @@ namespace Copium
 					min = glm::vec2(objPosition.x - tempX, objPosition.y - tempY);
 					max = glm::vec2(objPosition.x + tempX, objPosition.y + tempY);
 				}
-				for (Animator* animator : gameObject.GetComponents<Animator>())
-				{
-					if (!animator->enabled)
-						continue;
-					int columns = animator->GetCurrentAnimation()->spriteSheet.columns;
-					int rows = animator->GetCurrentAnimation()->spriteSheet.rows;
-					float tempX = 0.f, tempY = 0.f;
-					if (animator->GetCurrentAnimation()->spriteSheet.GetTexture() != nullptr)
-					{
-						float width = (float)animator->GetCurrentAnimation()->spriteSheet.GetTexture()->get_width() / (float) columns;
-						float height = (float)animator->GetCurrentAnimation()->spriteSheet.GetTexture()->get_height() / (float) rows;
-						float multiplier = width / (float)WindowsSystem::Instance()->get_window_width();
-						tempX = tempScale.x * (width / (float)height) * multiplier * 0.5f;
-						if (width == height)
-							tempY = tempScale.y * (width / (float)height) * multiplier * 0.5f;
-						else
-							tempY = tempScale.y * multiplier * 0.5f;
-					}
-					else
-						break;
+				//for (Animator* animator : gameObject.GetComponents<Animator>())
+				//{
+				//	if (!animator->enabled)
+				//		continue;
+				//	int columns = animator->GetCurrentAnimation()->spriteSheet.columns;
+				//	int rows = animator->GetCurrentAnimation()->spriteSheet.rows;
+				//	float tempX = 0.f, tempY = 0.f;
+				//	if (animator->GetCurrentAnimation()->spriteSheet.GetTexture() != nullptr)
+				//	{
+				//		float width = (float)animator->GetCurrentAnimation()->spriteSheet.GetTexture()->get_width() / (float) columns;
+				//		float height = (float)animator->GetCurrentAnimation()->spriteSheet.GetTexture()->get_height() / (float) rows;
+				//		float multiplier = width / (float)WindowsSystem::Instance()->get_window_width();
+				//		tempX = tempScale.x * (width / (float)height) * multiplier * 0.5f;
+				//		if (width == height)
+				//			tempY = tempScale.y * (width / (float)height) * multiplier * 0.5f;
+				//		else
+				//			tempY = tempScale.y * multiplier * 0.5f;
+				//	}
+				//	else
+				//		break;
 
-					min = glm::vec2(objPosition.x - tempX, objPosition.y - tempY);
-					max = glm::vec2(objPosition.x + tempX, objPosition.y + tempY);
-				}
+				//	min = glm::vec2(objPosition.x - tempX, objPosition.y - tempY);
+				//	max = glm::vec2(objPosition.x + tempX, objPosition.y + tempY);
+				//}
 
 				// Check AABB
 				if (mousePosition.x > min.x && mousePosition.x < max.x)

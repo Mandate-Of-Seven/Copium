@@ -30,7 +30,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Audio/sound-system.h"
 #include <Files/file-system.h>
 #include "Scripting/logic-system.h"
-//#include <Debugging/frame-rate-controller.h>
+#include <Debugging/frame-rate-controller.h>
 #include "Animation/animation-system.h"
 //#include "string.h"
 #include <Events/events-system.h>
@@ -56,7 +56,6 @@ namespace Copium
 				//Put in sequence of calls
 				MyEventSystem,
 				WindowsSystem::Instance(),
-				MyEventSystem,
 				pMessageSystem,
 				LoggingSystem::Instance(),
 				SoundSystem::Instance(),
@@ -127,13 +126,13 @@ namespace Copium
 					std::string temp = "\n";
 					for (ISystem* pSystem : systems)
 					{
-						pSystem->updateTimePercent = (pSystem->updateTime<=0) ? 0:((pSystem->updateTime / totalUpdateTime) * 100);
+						pSystem->updateTimePercent = (pSystem->updateTime <= 0) ? 0 : ((pSystem->updateTime / totalUpdateTime) * 100);
 						//std::cout<< pSystem->updateTime << "\n";
 						temp += typeid(*pSystem).name();
 						temp += ": ";
 						temp += std::to_string(pSystem->updateTimePercent);
 						temp += "%%\n\n";
-						//std::cout << typeid(*pSystem).name() << ": " << pSystem->updateTimePercent << "%\n";
+						std::cout << typeid(*pSystem).name() << ": " << pSystem->updateTimePercent << "%\n";
 					}
 					//std::cout << temp;
 					//Window::EditorConsole::editorLog.set_performancetext(temp);
@@ -142,7 +141,7 @@ namespace Copium
 				}
 				else
 				{
-					//performanceCounter += (float)MyFrameRateController.getDt();
+					performanceCounter += (float)MyFrameRateController.getDt();
 				}
 			}
 		}

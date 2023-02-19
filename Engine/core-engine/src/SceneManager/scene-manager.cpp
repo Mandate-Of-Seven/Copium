@@ -205,6 +205,7 @@ namespace Copium
 				// Transform and Parent
 				if (go.transform.pid)
 				{
+					PRINT("LINKING");
 					GameObject* p = MySceneManager.FindGameObjectByID(go.transform.pid);
 					if (p)
 						go.transform.SetParent(&p->transform);

@@ -111,11 +111,11 @@ namespace Copium
 	{
 		if (_value.HasMember("ID"))
 		{
-			GameObject& go = gameObjectArray.push_back(GameObject(_value["ID"].GetUint64()));
+			GameObject& go = gameObjectArray.emplace_back(_value["ID"].GetUint64());
 			Serializer::Deserialize(go, "", _value);
 			return go;
 		}
-		GameObject& go = gameObjectArray.push_back();
+		GameObject& go = gameObjectArray.emplace_back();
 		Serializer::Deserialize(go, "", _value);
 		return go;
 	}
