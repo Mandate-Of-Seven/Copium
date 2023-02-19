@@ -59,7 +59,7 @@ public:
     T& push_back()
     {
         COPIUM_ASSERT(size_ == N, "SPARSE SET IS ALREADY FULL");
-        T& back = data[indexes[size_]];
+        T& back = *reinterpret_cast<T*>(data + indexes[size_]);
         ++size_;
         back = T();
         return back;
@@ -68,7 +68,7 @@ public:
     T& push_back(const T& val)
     {
         COPIUM_ASSERT(size_ == N, "SPARSE SET IS ALREADY FULL");
-        T& back = data[indexes[size_]];
+        T& back = *reinterpret_cast<T*>(data+indexes[size_]);
         ++size_;
         back = val;
         return back;
@@ -77,7 +77,7 @@ public:
     T& push_back(std::initializer_list<T>&& rhsList)
     {
         COPIUM_ASSERT(size_ == N, "SPARSE SET IS ALREADY FULL");
-        T& back = data[indexes[size_]];
+        T& back = *reinterpret_cast<T*>(data + indexes[size_]);
         ++size_;
         back = T(rhsList);
         return back;
@@ -87,7 +87,7 @@ public:
     {
         COPIUM_ASSERT(size_ == N, "SPARSE SET IS ALREADY FULL");
         PRINT("MOVE CONSTRUCTOR");
-        T* pBack = data + indexes[size_];
+        T* pBack = reinterpret_cast<T*>(data + indexes[size_]) ;
         memcpy(pBack, &val, sizeof(T));
         ++size_;
         return *pBack;
@@ -107,12 +107,12 @@ public:
 
     void erase(T& val)
     {
-        size_t denseIndex = &val - data >= size_;
+        size_t denseIndex = &val - reinterpret_cast<T*>(data) >= size_;
         COPIUM_ASSERT(denseIndex, "Value is not an element of this array");
         //Find index first
         for (size_t i = 0; i < size_; ++i)
         {
-            if (data+indexes[i] == &val)
+            if (reinterpret_cast<T*>(data + indexes[i])  == &val)
             {
                 std::remove(indexes.begin(), indexes.begin()+size_, i);
                 --size_;
@@ -169,8 +169,8 @@ public:
 
     void swap(T& lhs, T& rhs)
     {
-        size_t rhsDenseIndex = &rhs - data >= size_;
-        size_t lhsDenseIndex = &lhs - data >= size_;
+        size_t rhsDenseIndex = &rhs - reinterpret_cast<T*>(data) >= size_;
+        size_t lhsDenseIndex = &lhs - reinterpret_cast<T*>(data) >= size_;
         COPIUM_ASSERT(rhsDenseIndex, "RHS is not an element of this array");
         COPIUM_ASSERT(lhsDenseIndex, "LHS is not an element of this array");
         if (lhsDenseIndex > rhsDenseIndex)
@@ -277,7 +277,7 @@ template <typename T, size_t N>
 T& SparseSet<T, N>::operator[] (size_t i)
 {
     COPIUM_ASSERT(i >= size_, "ARRAY OUT OF BOUNDS");
-    return *reinterpret_cast<T*>(data[indexes[i]]);
+    return *reinterpret_cast<T*>(data + indexes[i]);
 }
 
 #endif // !SPARSE_SET_H
