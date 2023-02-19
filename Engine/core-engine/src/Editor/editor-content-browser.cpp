@@ -28,6 +28,7 @@ namespace Copium
 	{
 		std::filesystem::path assets = "../PackedTracks/Assets";
 
+
 		const float padding = 16.f;
 		const float thumbnailSize = 128.f;
 		float imageAR = 1.f, framePadding = 3.f;

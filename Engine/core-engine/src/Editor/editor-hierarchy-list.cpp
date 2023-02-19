@@ -117,32 +117,6 @@ namespace Copium
 					PRINT("Shift down");
 				}
 
-
-				/*
-				//if (ImGui::BeginMenu("Add Archetype"))
-				//{
-				//	if (!currentScene)
-				//	{
-				//		Window::EditorConsole::editorLog.add_logEntry("Siao eh, no scene la");
-				//	}
-				//	else
-				//	{
-				//		for (std::map<std::string, Copium::GameObject*>::iterator iter = MyGOF.get_archetype_map().begin();
-				//			iter != MyGOF.get_archetype_map().end(); ++iter)
-				//		{
-				//			if (ImGui::MenuItem((*iter).first.c_str()) && currentScene)
-				//			{
-				//				MyGOF.instantiate(*(*iter).second);
-				//			}
-
-				//		}
-				//	}
-
-				//	ImGui::EndMenu();
-				//}
-				ImGui::EndMenu();
-				*/
-
 				ImGui::EndMenu();
 			}
 			ImGui::EndMenuBar();
@@ -198,7 +172,10 @@ namespace Copium
 			for (GameObject& gameObject : pScene->gameObjects)
 			{
 				if (!gameObject.transform.HasParent())
+				{
 					roots.push_back(&gameObject);
+				}
+
 			}
 
 			if (!pScene->gameObjects.empty())
@@ -211,7 +188,7 @@ namespace Copium
 
 			int test{ 0 };
 			// Display scene name as the rootiest node
-			bool nodeOpen = ImGui::TreeNodeEx((void*)(intptr_t)test, rootFlags, sceneName.c_str());
+			bool nodeOpen = ImGui::TreeNodeEx((void*)(intptr_t)test, rootFlags, pScene->name.c_str());
 
 
 			if (nodeOpen)

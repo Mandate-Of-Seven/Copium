@@ -26,6 +26,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor/editor-undoredo.h"
 #include "Editor/editor-hierarchy-list.h"
 #include "Editor/editor-layers.h"
+#include "Editor/editor-consolelog.h"
 //#include "Editor/inspector.h"
 #include "Messaging/message-system.h"
 

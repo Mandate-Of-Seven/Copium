@@ -11,7 +11,7 @@
 	This file holds the definitions of the functions in the editor game gui where the
 	user can play the game in this GUI
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 

@@ -552,7 +552,7 @@ namespace Copium
 	void Serializer::Deserialize<Transform>(Transform& _data, const std::string& _key, rapidjson::Value& _value)
 	{
 		PRINT("Deserializing a transform...");
-		Copium::Deserialize(_data.pid, _value, "PID");
+		Copium::Deserialize(_data.pid.GetUUID(), _value, "PID");
 		Deserialize(_data.position, "Pos", _value);
 		Deserialize(_data.rotation, "Rot", _value);
 		Deserialize(_data.scale, "Scale", _value);
