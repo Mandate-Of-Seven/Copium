@@ -98,6 +98,7 @@ namespace Copium
 
 	void FileSystem::update()
 	{
+		//BEAN: CHANGE TO CHECK EVERY FEW SECONDS
 		check_directory_count(&assetsDirectory);
 	}
 
