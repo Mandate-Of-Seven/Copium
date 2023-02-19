@@ -117,32 +117,31 @@ namespace Copium
 					continue;
 				}
 			}
-
+			if (performanceCounter >= 0.05f)
+			{
+				//std::cout<<"Start\n";
+				std::string temp = "\n";
+				for (ISystem* pSystem : systems)
+				{
+					pSystem->updateTimePercent = (pSystem->updateTime <= 0) ? 0 : ((pSystem->updateTime / totalUpdateTime) * 100);
+					//std::cout<< pSystem->updateTime << "\n";
+					temp += typeid(*pSystem).name();
+					temp += ": ";
+					temp += std::to_string(pSystem->updateTimePercent);
+					temp += "%%\n\n";
+					std::cout << typeid(*pSystem).name() << ": " << pSystem->updateTimePercent << "%\n";
+				}
+				//std::cout << temp;
+				//Window::EditorConsole::editorLog.set_performancetext(temp);
+				//std::cout << "End\n\n";
+				performanceCounter = 0;
+			}
+			else
+			{
+				performanceCounter += (float)MyFrameRateController.getDt();
+			}
 			if (displayPerformance)
 			{
-				if (performanceCounter >= 0.05f)
-				{
-					//std::cout<<"Start\n";
-					std::string temp = "\n";
-					for (ISystem* pSystem : systems)
-					{
-						pSystem->updateTimePercent = (pSystem->updateTime <= 0) ? 0 : ((pSystem->updateTime / totalUpdateTime) * 100);
-						//std::cout<< pSystem->updateTime << "\n";
-						temp += typeid(*pSystem).name();
-						temp += ": ";
-						temp += std::to_string(pSystem->updateTimePercent);
-						temp += "%%\n\n";
-						std::cout << typeid(*pSystem).name() << ": " << pSystem->updateTimePercent << "%\n";
-					}
-					//std::cout << temp;
-					//Window::EditorConsole::editorLog.set_performancetext(temp);
-					//std::cout << "End\n\n";
-					performanceCounter = 0;
-				}
-				else
-				{
-					performanceCounter += (float)MyFrameRateController.getDt();
-				}
 			}
 		}
 
