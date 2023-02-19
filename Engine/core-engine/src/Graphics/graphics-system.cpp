@@ -287,10 +287,11 @@ namespace Copium
 
 	void GraphicsSystem::batch_render()
 	{
-		for (Camera& camera : *pCamerasArray)
-		{
-			PRINT("UPDATING CAMERA");
-			camera.update();
-		}
+		if (pCamerasArray)
+			for (Camera& camera : *pCamerasArray)
+			{
+				PRINT("UPDATING CAMERA");
+				camera.update();
+			}
 	}
 }

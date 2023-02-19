@@ -211,7 +211,7 @@ namespace Copium
 						break;
 
 					case FILE_TYPE::SPRITE:
-						texturePath = assetSys->get_texture(i)->get_file_path();
+						texturePath = MyAssetSystem.GetTexture(i)->get_file_path();
 						if (!file.filePath.string().compare(texturePath))
 						{
 							Texture* temp = MyAssetSystem.GetTexture(i);

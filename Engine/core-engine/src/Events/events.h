@@ -65,12 +65,12 @@ namespace Copium
 	};
 
 	template <typename T>
-	struct ComponentAddEvent
+	struct ComponentAddEvent : IEvent
 	{
 		ComponentAddEvent(GameObject& _gameObject, T*& _componentContainer) :
 			gameObject{ _gameObject }, componentContainer{ _componentContainer }{}
-		T*& componentContainer;
 		GameObject& gameObject;
+		T*& componentContainer;
 	};
 
 	struct EditorConsoleLogEvent : IEvent

@@ -21,17 +21,17 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Messaging/message-system.h"
 #include "Files/assets-system.h"
 #include "Editor/editor-system.h"
-//#include "Scripting/scripting-system.h"
+#include "Scripting/scripting-system.h"
 #include "Physics/physics-system.h"
 #include "Graphics/graphics-system.h"
-//#include "Utilities/thread-system.h"
+#include "Utilities/thread-system.h"
 //#include "SceneManager/scene-manager.h"
 //#include "Debugging/logging-system.h"
 #include "Audio/sound-system.h"
 #include <Files/file-system.h>
-//#include "Scripting/logic-system.h"
+#include "Scripting/logic-system.h"
 //#include <Debugging/frame-rate-controller.h>
-//#include "Animation/animation-system.h"
+#include "Animation/animation-system.h"
 //#include "string.h"
 #include <Events/events-system.h>
 
@@ -69,8 +69,8 @@ namespace Copium
 				//LogicSystem::Instance(),
 				PhysicsSystem::Instance(),
 				GraphicsSystem::Instance(),
-				//ThreadSystem::Instance(),
-				//AnimationSystem::Instance()
+				ThreadSystem::Instance(),
+				AnimationSystem::Instance()
 			};
 			for (ISystem* pSystem : systems)
 			{

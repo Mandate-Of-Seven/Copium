@@ -19,8 +19,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Windows/windows-input.h"
 #include "Editor/editor-system.h"
 #include "Utilities/thread-system.h"
-#include "Graphics/graphics-system.h"
 #include "Events/events-system.h"
+#include <SceneManager/scene-manager.h>
 
 #include <ImGuizmo.h>
 
@@ -34,7 +34,6 @@ namespace Copium
 		ThreadSystem& threadSystem{ *ThreadSystem::Instance() };
 		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 		bool tempMode = true;
-		ComponentsArray<Camera>* pCameraArray{};
 	}
 
 	void EditorSystem::init()
@@ -63,7 +62,7 @@ namespace Copium
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		ImGui::GetIO().ConfigDockingWithShift = true;
 		//Window::Inspector::init();
-		Window::EditorConsole::init();
+		//Window::EditorConsole::init();
 		//Window::ColorTheme::init();
 
 		sceneView.init();
@@ -288,7 +287,7 @@ namespace Copium
 					}
 					if (ImGui::MenuItem("Console Log"))
 					{
-						Window::EditorConsole::isConsoleLogOpen = true;
+						//Window::EditorConsole::isConsoleLogOpen = true;
 					}
 					if (ImGui::MenuItem("Theme generator"))
 					{
@@ -390,7 +389,7 @@ namespace Copium
 			hierarchyList.update();
 			layers.update();
 			//inspector.update();
-			Window::EditorConsole::update();
+			//Window::EditorConsole::update();
 			//Window::Hierarchy::update();
 			game.update();
 			sceneView.update();
@@ -402,9 +401,10 @@ namespace Copium
 				ImGui::ShowDemoWindow(&show_demo_window);
 
 			// Game Camera
-			if (pCameraArray )
+			Scene* scene = MySceneManager.get_current_scene();
+			if (scene && !scene->componentArrays.GetArray<Camera>().empty())
 			{
-				(*MyGraphicsSystem.get_cameras().begin())->update();
+				scene->componentArrays.GetArray<Camera>()[0].update();
 			}
 
 			// Editor Camera
@@ -456,7 +456,6 @@ namespace Copium
 		}
 		std::cout << "After deleting, Undo stack: " << commandManager.undoStack.size() << ", Redo stack:" << commandManager.redoStack.size() << "\n";
 		
-
 		camera.exit();
 	}
 
@@ -475,7 +474,7 @@ namespace Copium
 	void EditorSystem::imguiConsoleAddLog(std::string value)
 	{
 		std::cout << value << "\n";
-		Window::EditorConsole::editorLog.add_logEntry(value);
+		//Window::EditorConsole::editorLog.add_logEntry(value);
 	}
 
 	void EditorSystem::playMode(bool _enabled)
@@ -486,9 +485,10 @@ namespace Copium
 			//camera.get_framebuffer()->exit();
 			glm::vec2 dimension = { MyWindowSystem.get_window_width(), MyWindowSystem.get_window_height() };
 			// Game Camera
-			if (!MyGraphicsSystem.get_cameras().empty())
+			Scene* scene = MySceneManager.get_current_scene();
+			if (scene && !scene->componentArrays.GetArray<Camera>().empty())
 			{
-				(*MyGraphicsSystem.get_cameras().begin())->on_resize(dimension.x, dimension.y);
+				scene->componentArrays.GetArray<Camera>()[0].on_resize(dimension.x, dimension.y);
 				glViewport(0, 0, (GLsizei)dimension.x, (GLsizei)dimension.y);
 			}
 		}

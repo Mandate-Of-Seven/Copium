@@ -49,7 +49,6 @@ namespace Copium
 		{"Rigidbody2D",ComponentType::Rigidbody2D},
 		{"SpriteRenderer",ComponentType::SpriteRenderer},
 		{"Script",ComponentType::Script},
-		{"Button",ComponentType::Button},
 		{"Text",ComponentType::Text},
 		{"SortingGroup",ComponentType::SortingGroup}
 	};
@@ -455,9 +454,14 @@ namespace Copium
 		{
 			PRINT("  Camera Component constructed");
 			// Bean: Checking for archetypes
-			//BaseCamera::init(1280.f, 720.f, CameraType::GAME, true);
+			BaseCamera::init(1280.f, 720.f, CameraType::GAME, true);
 		}
-		Camera& operator=(const Camera& rhs) { return *this; }
+		Camera& operator=(const Camera& rhs) 
+		{
+			BaseCamera::operator=(rhs);
+			BaseCamera::init(1280.f, 720.f, CameraType::GAME, true);
+			return *this; 
+		}
 	};
 
 	class Rigidbody2D : public Component
@@ -489,7 +493,7 @@ namespace Copium
 
 	//using ScriptReferenceables = TemplatePack<GameObject, Component>;
 
-	class Script final : public Component, public IReceiver
+	class Script final : public Component
 	{
 	public:
 		/**************************************************************************/
@@ -502,8 +506,6 @@ namespace Copium
 		/**************************************************************************/
 		Script(GameObject& _gameObj, UUID _uuid = UUID()):Component(_gameObj, _uuid), name{}
 		{
-			//MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_SCRIPTING_UPDATED, this);
-			//MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
 			//MyEventSystem->publish(new ScriptCreatedEvent(*this));
 		}
 		Script& operator=(const Script& rhs)
@@ -677,156 +679,9 @@ namespace Copium
 			previousColor = normalColor;
 			state = ButtonState::None;
 		}
-	//	/*******************************************************************************
-	//	/*!
-	//	*
-	//	\brief
-	//		Logic function to check for collision with mouse pos
-	//	*/
-	//	/*******************************************************************************/
-	//	void update()
-	//	{
-	//		/*updateBounds();
-	//		state = getInternalState();
-	//		if (previousState != state)
-	//		{
-	//			timer = 0;
-	//			previousState = state;
-	//			if (targetGraphic)
-	//				previousColor = targetGraphic->layeredColor;
-	//		}
-	//		switch (state)
-	//		{
-	//		case ButtonState::OnClick:
-	//		{
-	//			PRINT("UI: Clicked " << gameObj.name);
-	//			if (targetGraphic)
-	//			{
-	//				targetGraphic->layeredColor = Linear(previousColor, clickedColor, timer / fadeDuration);
-	//			}
-	//			Script* script = gameObj.GetComponent<Script>();
-	//			if (script)
-	//			{
-	//				MyEventSystem->publish(new ScriptInvokeMethodEvent(*script, callbackName, nullptr, 0));
-	//				if (!gameObj.IsActive())
-	//				{
-	//					hoveredBtn = nullptr;
-	//				}
-	//			}
-	//			break;
-	//		}
-	//		case ButtonState::OnHover:
-	//		{
-	//			PRINT("UI: Hover " << gameObj.name);
-	//			if (targetGraphic)
-	//			{
-	//				targetGraphic->layeredColor = Linear(previousColor, hoverColor, timer / fadeDuration);
-	//			}
-	//			break;
-	//		}
-	//		case ButtonState::OnHeld:
-	//		{
-	//			PRINT("UI: Held " << gameObj.name);
-	//			break;
-	//		}
-	//		case ButtonState::OnRelease:
-	//		{
-	//			PRINT("UI: Released " << gameObj.name);
-	//			break;
-	//		}
-	//		default:
-	//		{
-	//			if (targetGraphic)
-	//			{
-	//				targetGraphic->layeredColor = Linear(previousColor, normalColor, timer / fadeDuration);
-	//			}
-	//			break;
-	//		}
-	//		}
-	//		if (targetGraphic == nullptr)
-	//			return;
-	//		if (timer < fadeDuration)
-	//			timer += (float)MyFrameRateController.getDt();
-	//		else if (timer > fadeDuration)
-	//			timer = fadeDuration;*/
-	//	}
 
-	Button& operator=(const Button& rhs);
+		Button& operator=(const Button& rhs);
 
-	//	AABB getBounds() const
-	//	{
-	//		Math::Vec3& size{ gameObj.transform.scale };
-	//		Math::Vec3& pos{ gameObj.transform.position };
-	//		float x = (bounds.max.x - bounds.min.x) * size.x;
-	//		float y = (bounds.max.y - bounds.min.y) * size.y;
-	//		AABB tmp{ bounds };
-	//		tmp.max.x *= x;
-	//		tmp.min.x *= x;
-	//		tmp.max.y *= y;
-	//		tmp.min.y *= y;
-	//		tmp.max.x += pos.x;
-	//		tmp.min.x += pos.x;
-	//		tmp.max.y += pos.y;
-	//		tmp.min.y += pos.y;
-	//		//PRINT("X: " << tmp.min.x << ", " << tmp.max.x);
-	//		//PRINT("Y: " << tmp.min.y << ", " << tmp.max.y);
-	//		return tmp;
-	//	}
-
-	//	const AABB& getRelativeBounds() const
-	//	{
-	//		return relativeBounds;
-	//	}
-
-	//	static Button* hoveredBtn;
-
-	//	ButtonState GetState() { return state; }
-	//private:
-	//	void updateBounds()
-	//	{
-	//		Math::Vec3 pos{ gameObj.transform.position };
-	//		Math::Vec3 scale{ gameObj.transform.scale };
-	//		//Get ratio first
-	//		// Positive ratio, negative ratio for x and y
-	//		Math::Vec2 _min = bounds.min;
-	//		Math::Vec2 _max = bounds.max;
-	//		_min.x *= scale.x;
-	//		_max.x *= scale.x;
-	//		_min.y *= scale.y;
-	//		_max.y *= scale.y;
-	//		relativeBounds = { _min + pos, _max + pos };
-	//	}
-	//	ButtonState getInternalState()
-	//	{
-	//		//glm::vec2 scenePos = MySceneManager.mainCamera->get_game_ndc();
-	//		////PRINT("x: " << scenePos.x << " , y: " << scenePos.y);
-	//		//if (hoveredBtn == nullptr)
-	//		//{
-	//		//	if (static_collision_pointrect(scenePos, getBounds()))
-	//		//	{
-	//		//		if (MyInputSystem.is_mousebutton_pressed(0))
-	//		//		{
-	//		//			hoveredBtn = this;
-	//		//			if (state == ButtonState::OnClick || state == ButtonState::OnHeld)
-	//		//				return ButtonState::OnHeld;
-	//		//			return ButtonState::OnClick;
-	//		//		}
-	//		//		return ButtonState::OnHover;
-	//		//	}
-	//		//}
-	//		//else if (hoveredBtn == this)
-	//		//{
-	//		//	if (!inputSystem.is_mousebutton_pressed(0))
-	//		//	{
-	//		//		hoveredBtn = nullptr;
-	//		//		return ButtonState::OnRelease;
-	//		//	}
-	//		//	if (state == ButtonState::OnClick || state == ButtonState::OnHeld)
-	//		//		return ButtonState::OnHeld;
-	//		//	return ButtonState::OnClick;
-	//		//}
-	//		return ButtonState::None;
-	//	}
 		std::string callbackName;
 		AABB bounds;
 		ButtonState state;
@@ -841,7 +696,6 @@ namespace Copium
 		float fadeDuration{ 0.1f };
 	};
 
-	//Button* Button::hoveredBtn{ nullptr };
 
 	class Text final : public IUIComponent
 	{
@@ -1017,7 +871,7 @@ namespace Copium
 			The sorting group to add the gameobject into
 		*/
 		/*******************************************************************************/
-		SortingGroup(GameObject& _gameObj, UUID _uuid, int _order = 0, int _sort = 0, bool _replace = false);
+		SortingGroup(GameObject& _gameObj, UUID _uuid = UUID(), int _order = 0, int _sort = 0, bool _replace = false);
 
 		/*******************************************************************************
 		/*!
@@ -1079,6 +933,7 @@ namespace Copium
 	template <typename T>
 	struct GetComponentType {};
 
+	RegisterComponent(Transform);
 	RegisterComponent(BoxCollider2D);
 	RegisterComponent(SpriteRenderer);
 	RegisterComponent(Rigidbody2D);

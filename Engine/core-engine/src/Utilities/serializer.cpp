@@ -1,7 +1,7 @@
 #include "pch.h"
+#include <Events/events-system.h>
 #include "serializer.h"
 #include "Files/assets-system.h"
-#include <Events/events-system.h>
 namespace Copium
 {	
 	// Serialization --------------------------------------------
@@ -11,8 +11,8 @@ namespace Copium
 		PRINT("Serializing a Vector2");
 		rapidjson::Value v2(rapidjson::kObjectType);
 
-		Copium::Serialize(_data.x, v2, _doc, "X");
-		Copium::Serialize(_data.y, v2, _doc, "Y");
+		Copium::SerializeBasic(_data.x, v2, _doc, "X");
+		Copium::SerializeBasic(_data.y, v2, _doc, "Y");
 
 		rapidjson::Value key;
 		CreateJsonString(_key, key, _doc);
@@ -26,9 +26,9 @@ namespace Copium
 
 		rapidjson::Value v3(rapidjson::kObjectType);
 
-		Copium::Serialize(_data.x, v3, _doc, "X");
-		Copium::Serialize(_data.y, v3, _doc, "Y");
-		Copium::Serialize(_data.z, v3, _doc, "Z");
+		Copium::SerializeBasic(_data.x, v3, _doc, "X");
+		Copium::SerializeBasic(_data.y, v3, _doc, "Y");
+		Copium::SerializeBasic(_data.z, v3, _doc, "Z");
 
 		rapidjson::Value key;
 		CreateJsonString(_key, key, _doc);
@@ -42,10 +42,10 @@ namespace Copium
 
 		rapidjson::Value v4(rapidjson::kObjectType);
 
-		Copium::Serialize(_data.x, v4, _doc, "X");
-		Copium::Serialize(_data.y, v4, _doc, "Y");
-		Copium::Serialize(_data.z, v4, _doc, "Z");
-		Copium::Serialize(_data.a, v4, _doc, "A");
+		Copium::SerializeBasic(_data.x, v4, _doc, "X");
+		Copium::SerializeBasic(_data.y, v4, _doc, "Y");
+		Copium::SerializeBasic(_data.z, v4, _doc, "Z");
+		Copium::SerializeBasic(_data.a, v4, _doc, "A");
 
 		rapidjson::Value key;
 		CreateJsonString(_key, key, _doc);
@@ -133,23 +133,21 @@ namespace Copium
 	template<>
 	void Serializer::Serialize<Animation>(Animation& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
-		Copium::Serialize(_data.spriteSheet.name, _value, _doc, "Name");
-		Copium::Serialize(_data.spriteSheet.spriteID, _value, _doc, "Sprite ID");
-		Copium::Serialize(_data.timeDelay, _value, _doc, "Time Delay");
-		Copium::Serialize(_data.frameCount, _value, _doc, "FrameCount");
-		Copium::Serialize(_data.spriteSheet.rows, _value, _doc, "Rows");
-		Copium::Serialize(_data.spriteSheet.columns, _value, _doc, "Columns");
+		Copium::SerializeBasic(_data.spriteSheet.name, _value, _doc, "Name");
+		Copium::SerializeBasic(_data.spriteSheet.spriteID, _value, _doc, "Sprite ID");
+		Copium::SerializeBasic(_data.timeDelay, _value, _doc, "Time Delay");
+		Copium::SerializeBasic(_data.frameCount, _value, _doc, "FrameCount");
+		Copium::SerializeBasic(_data.spriteSheet.rows, _value, _doc, "Rows");
+		Copium::SerializeBasic(_data.spriteSheet.columns, _value, _doc, "Columns");
 
 	}
 	template<>
 	void Serializer::Serialize<Animator>(Animator& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
 		PRINT("Serializing animator component...");
-		Copium::Serialize(_data.uuid, _value, _doc, "UID");
-		Copium::Serialize(GetComponentType<Animator>::name, _value, _doc, "Type");
-		Copium::Serialize(_data.loop, _value, _doc, "Loop");
-		Copium::Serialize(_data.reverse, _value, _doc, "Rev");
-		Copium::Serialize(_data.animations.size(), _value, _doc, "Count");
+		Copium::SerializeBasic(_data.loop, _value, _doc, "Loop");
+		Copium::SerializeBasic(_data.reverse, _value, _doc, "Rev");
+		Copium::SerializeBasic(_data.animations.size(), _value, _doc, "Count");
 
 
 		rapidjson::Value anims(rapidjson::kArrayType);
@@ -168,7 +166,7 @@ namespace Copium
 		constexpr SerializeComponentsStruct(TemplatePack<T, Ts...> pack) {};
 		SerializeComponentsStruct(GameObject& _data, rapidjson::Value& _components, rapidjson::Document& _doc)
 		{
-			SerializeComponent(_data, _components,_doc);
+			SerializeComponent<T,Ts...>(_data, _components,_doc);
 		}
 
 		template <typename T1, typename... T1s>
@@ -178,18 +176,16 @@ namespace Copium
 			for (T1* component : _data.GetComponents<T1>())
 			{
 				rapidjson::Value comp(rapidjson::kObjectType);
+				Copium::SerializeBasic(_data.uuid.GetUUID(), comp, _doc, "UID");
+				Copium::SerializeBasic(GetComponentType<T1>::name, comp, _doc, "Type");
 				//GetComponentType<T1>::name
 				//GetComponentType<T1>::e
-				Serialize(*component, "", comp, _doc);
-				_components.PushBack(comp);
+				//Serializer::Serialize(*component, "", comp, _doc);
+				//_components.PushBack(comp);
 			}
-			if constexpr (sizeof...(T1s) == 0)
+			if constexpr (sizeof...(T1s) != 0)
 			{
-				return;
-			}
-			else
-			{
-				return SerializeComponent<T1s...>SerializeComponent(_data, _components, _doc);
+				return SerializeComponent<T1s...>(_data, _components, _doc);
 			}
 		}
 	};
@@ -202,15 +198,15 @@ namespace Copium
 	template<>
 	void Serializer::Serialize<GameObject>(GameObject& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
-		Copium::Serialize(_data.uuid, _value, _doc, "UID");
-		Copium::Serialize(_data.name, _value, _doc, "Name");
-		Copium::Serialize(_data.active, _value, _doc, "Active");
+		Copium::SerializeBasic(_data.uuid.GetUUID(), _value, _doc, "UID");
+		Copium::SerializeBasic(_data.name, _value, _doc, "Name");
+		Copium::SerializeBasic(_data.active, _value, _doc, "Active");
 
 		rapidjson::Value comps(rapidjson::kArrayType);
 		rapidjson::Value transformComponent(rapidjson::kObjectType);
 		Serialize(_data.transform, "", transformComponent, _doc);
 		comps.PushBack(transformComponent, _doc.GetAllocator());
-		SerializeComponents(_data, comps,_doc);
+		//SerializeComponents(_data, comps,_doc);
 		//for (auto iter = _data.components.begin(); iter != _data.components.end(); ++iter)
 		//{
 		//	rapidjson::Value comp(rapidjson::kObjectType);
@@ -229,9 +225,9 @@ namespace Copium
 		uint64_t uid{ 0 };
 		if (_data.HasParent())
 			uid = _data.parent->gameObject.uuid;
-		Copium::Serialize(uid, _value, _doc, "PID");
+		Copium::SerializeBasic(uid, _value, _doc, "PID");
 
-		Copium::Serialize("Transform", _value, _doc, "Type");
+		Copium::SerializeBasic("Transform", _value, _doc, "Type");
 
 		Serialize(_data.position, "Pos", _value, _doc);
 		Serialize(_data.rotation, "Rot", _value, _doc);
@@ -242,22 +238,20 @@ namespace Copium
 	void Serializer::Serialize<SpriteRenderer>(SpriteRenderer& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
 		PRINT("Serializing sprite renderer...");
-		Copium::Serialize(_data.uuid, _value, _doc, "UID");
-		Copium::Serialize(GetComponentType<SpriteRenderer>::name, _value, _doc, "Type");
 		// Serialize the sprite
 		Serialize(_data.sprite, "", _value, _doc);
 	}
 	template<>
 	void Serializer::Serialize<Sprite>(Sprite& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
-		Copium::Serialize(_data.spriteID, _value, _doc, "Sprite ID");
-		Copium::Serialize(_data.sprite_name, _value, _doc, "Sprite Name");
+		Copium::SerializeBasic(_data.spriteID, _value, _doc, "Sprite ID");
+		Copium::SerializeBasic(_data.sprite_name, _value, _doc, "Sprite Name");
 
 		rapidjson::Value color(rapidjson::kObjectType);
-		Copium::Serialize(_data.color.x, color, _doc, "X");
-		Copium::Serialize(_data.color.y, color, _doc, "Y");
-		Copium::Serialize(_data.color.z, color, _doc, "Z");
-		Copium::Serialize(_data.color.w, color, _doc, "W");
+		Copium::SerializeBasic(_data.color.x, color, _doc, "X");
+		Copium::SerializeBasic(_data.color.y, color, _doc, "Y");
+		Copium::SerializeBasic(_data.color.z, color, _doc, "Z");
+		Copium::SerializeBasic(_data.color.w, color, _doc, "W");
 		_value.AddMember("Color", color, _doc.GetAllocator());
 	}
 
@@ -265,10 +259,8 @@ namespace Copium
 	void Serializer::Serialize<AudioSource>(AudioSource& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
 		PRINT("Serializing audio source...");
-		Copium::Serialize(_data.uuid, _value, _doc, "UID");
-		Copium::Serialize(GetComponentType<AudioSource>::name, _value, _doc, "Type");
 
-		Copium::Serialize(_data.alias, _value, _doc, "Alias");
+		Copium::SerializeBasic(_data.alias, _value, _doc, "Alias");
 
 	}
 
@@ -276,10 +268,8 @@ namespace Copium
 	void Serializer::Serialize<Rigidbody2D>(Rigidbody2D& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
 		PRINT("Serializing rigidbody2d...");
-		Copium::Serialize(_data.uuid, _value, _doc, "UID");
-		Copium::Serialize(GetComponentType<Rigidbody2D>::name, _value, _doc, "Type");
-		Copium::Serialize(_data.useGravity, _value, _doc, "UseGravity");
-		Copium::Serialize(_data.isKinematic, _value, _doc, "IsKinematic");
+		Copium::SerializeBasic(_data.useGravity, _value, _doc, "UseGravity");
+		Copium::SerializeBasic(_data.isKinematic, _value, _doc, "IsKinematic");
 	}
 	template<>
 	void Serializer::Serialize<AABB>(AABB& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
@@ -291,21 +281,19 @@ namespace Copium
 	void Serializer::Serialize<Camera>(Camera& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
 		PRINT("Serializing camera...");
-		Copium::Serialize(_data.uuid, _value, _doc, "UID");
-		Copium::Serialize(GetComponentType<Camera>::name, _value, _doc, "Type");
 
 		rapidjson::Value color(rapidjson::kObjectType);
-		Copium::Serialize(_data.get_bg_color().x, color, _doc, "X");
-		Copium::Serialize(_data.get_bg_color().y, color, _doc, "Y");
-		Copium::Serialize(_data.get_bg_color().z, color, _doc, "Z");
-		Copium::Serialize(_data.get_bg_color().w, color, _doc, "W");
+		Copium::SerializeBasic(_data.get_bg_color().x, color, _doc, "X");
+		Copium::SerializeBasic(_data.get_bg_color().y, color, _doc, "Y");
+		Copium::SerializeBasic(_data.get_bg_color().z, color, _doc, "Z");
+		Copium::SerializeBasic(_data.get_bg_color().w, color, _doc, "W");
 		_value.AddMember("Color", color, _doc.GetAllocator());
 
-		Copium::Serialize(_data.IsOrthographic(), _value, _doc, "Projection");
+		Copium::SerializeBasic(_data.IsOrthographic(), _value, _doc, "Projection");
 
 		rapidjson::Value clippingPlanes(rapidjson::kObjectType);
-		Copium::Serialize(_data.GetNearClip(), clippingPlanes, _doc, "Near");
-		Copium::Serialize(_data.GetFarClip(), clippingPlanes, _doc, "Far");
+		Copium::SerializeBasic(_data.GetNearClip(), clippingPlanes, _doc, "Near");
+		Copium::SerializeBasic(_data.GetFarClip(), clippingPlanes, _doc, "Far");
 		_value.AddMember("Clipping Planes", clippingPlanes, _doc.GetAllocator());
 
 
@@ -314,8 +302,6 @@ namespace Copium
 	void Serializer::Serialize<BoxCollider2D>(BoxCollider2D& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
 		PRINT("Serializing boxcollider2d...");
-		Copium::Serialize(_data.uuid, _value, _doc, "UID");
-		Copium::Serialize(GetComponentType<BoxCollider2D>::name, _value, _doc, "Type");
 
 		rapidjson::Value bb(rapidjson::kObjectType);
 		Serialize(_data.bounds, "", bb, _doc);
@@ -326,11 +312,9 @@ namespace Copium
 	void Serializer::Serialize<Image>(Image& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
 		PRINT("Serializing image...");
-		Copium::Serialize(_data.uuid, _value, _doc, "UID");
-		Copium::Serialize(GetComponentType<Image>::name, _value, _doc, "Type");
 
-		Copium::Serialize((int)_data.hAlignment, _value, _doc, "H_Align");
-		Copium::Serialize((int)_data.vAlignment, _value, _doc, "V_Align");
+		Copium::SerializeBasic((int)_data.hAlignment, _value, _doc, "H_Align");
+		Copium::SerializeBasic((int)_data.vAlignment, _value, _doc, "V_Align");
 
 		// Serialize the sprite
 		Serialize(_data.sprite, "", _value, _doc);
@@ -339,56 +323,52 @@ namespace Copium
 	void Serializer::Serialize<Button>(Button& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
 		PRINT("Serializing button...");
-		Copium::Serialize(_data.uuid, _value, _doc, "UID");
-		Copium::Serialize(GetComponentType<Button>::name, _value, _doc, "Type");
 
 		uint64_t tgID{ 0 };
 		if (_data.targetGraphic)
 			tgID = _data.targetGraphic->uuid;
-		Copium::Serialize(tgID, _value, _doc, "Graphic ID");
+		Copium::SerializeBasic(tgID, _value, _doc, "Graphic ID");
 
 		rapidjson::Value bb(rapidjson::kObjectType);
 		Serialize(_data.bounds, "", bb, _doc);
 		_value.AddMember("Bounding Box", bb, _doc.GetAllocator());
 
-		Copium::Serialize(_data.callbackName, _value, _doc, "Callback");
+		Copium::SerializeBasic(_data.callbackName, _value, _doc, "Callback");
 
-		Copium::Serialize(_data.clickedColor.r, _value, _doc, "clickedR");
-		Copium::Serialize(_data.clickedColor.g, _value, _doc, "clickedG");
-		Copium::Serialize(_data.clickedColor.b, _value, _doc, "clickedB");
-		Copium::Serialize(_data.clickedColor.a, _value, _doc, "clickedA");
+		Copium::SerializeBasic(_data.clickedColor.r, _value, _doc, "clickedR");
+		Copium::SerializeBasic(_data.clickedColor.g, _value, _doc, "clickedG");
+		Copium::SerializeBasic(_data.clickedColor.b, _value, _doc, "clickedB");
+		Copium::SerializeBasic(_data.clickedColor.a, _value, _doc, "clickedA");
 
-		Copium::Serialize(_data.hoverColor.r, _value, _doc, "hoveredR");
-		Copium::Serialize(_data.hoverColor.g, _value, _doc, "hoveredG");
-		Copium::Serialize(_data.hoverColor.b, _value, _doc, "hoveredB");
-		Copium::Serialize(_data.hoverColor.a, _value, _doc, "hoveredA");
+		Copium::SerializeBasic(_data.hoverColor.r, _value, _doc, "hoveredR");
+		Copium::SerializeBasic(_data.hoverColor.g, _value, _doc, "hoveredG");
+		Copium::SerializeBasic(_data.hoverColor.b, _value, _doc, "hoveredB");
+		Copium::SerializeBasic(_data.hoverColor.a, _value, _doc, "hoveredA");
 
-		Copium::Serialize(_data.normalColor.r, _value, _doc, "normalR");
-		Copium::Serialize(_data.normalColor.g, _value, _doc, "normalG");
-		Copium::Serialize(_data.normalColor.b, _value, _doc, "normalB");
-		Copium::Serialize(_data.normalColor.a, _value, _doc, "normalA");
+		Copium::SerializeBasic(_data.normalColor.r, _value, _doc, "normalR");
+		Copium::SerializeBasic(_data.normalColor.g, _value, _doc, "normalG");
+		Copium::SerializeBasic(_data.normalColor.b, _value, _doc, "normalB");
+		Copium::SerializeBasic(_data.normalColor.a, _value, _doc, "normalA");
 
 	}
 	template<>
 	void Serializer::Serialize<Text>(Text& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
 		PRINT("Serializing text...");
-		Copium::Serialize(_data.uuid, _value, _doc, "UID");
-		Copium::Serialize(GetComponentType<Text>::name, _value, _doc, "Type");
 
-		Copium::Serialize(_data.fontName, _value, _doc, "FontName");
-		Copium::Serialize((int)_data.hAlignment, _value, _doc, "H_Align");
-		Copium::Serialize((int)_data.vAlignment, _value, _doc, "V_Align");
+		Copium::SerializeBasic(_data.fontName, _value, _doc, "FontName");
+		Copium::SerializeBasic((int)_data.hAlignment, _value, _doc, "H_Align");
+		Copium::SerializeBasic((int)_data.vAlignment, _value, _doc, "V_Align");
 
-		Copium::Serialize(_data.content, _value, _doc, "Content");
+		Copium::SerializeBasic(_data.content, _value, _doc, "Content");
 
-		Copium::Serialize(_data.fSize, _value, _doc, "Font Size");
-		Copium::Serialize(_data.wrapper, _value, _doc, "Wrapper");
+		Copium::SerializeBasic(_data.fSize, _value, _doc, "Font Size");
+		Copium::SerializeBasic(_data.wrapper, _value, _doc, "Wrapper");
 
-		Copium::Serialize(_data.color.r, _value, _doc, "r");
-		Copium::Serialize(_data.color.g, _value, _doc, "g");
-		Copium::Serialize(_data.color.b, _value, _doc, "b");
-		Copium::Serialize(_data.color.a, _value, _doc, "a");
+		Copium::SerializeBasic(_data.color.r, _value, _doc, "r");
+		Copium::SerializeBasic(_data.color.g, _value, _doc, "g");
+		Copium::SerializeBasic(_data.color.b, _value, _doc, "b");
+		Copium::SerializeBasic(_data.color.a, _value, _doc, "a");
 
 
 	}
@@ -397,8 +377,6 @@ namespace Copium
 	void Serializer::Serialize<Script>(Script& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
 		PRINT("Serializing script...");
-		Copium::Serialize(_data.uuid, _value, _doc, "UID");
-		Copium::Serialize(GetComponentType<Script>::name, _value, _doc, "Type");
 
 		// Field Data References
 		auto it = _data.fieldDataReferences.begin();
@@ -410,58 +388,58 @@ namespace Copium
 			{
 			case FieldType::Float:
 			{
-				Copium::Serialize(*reinterpret_cast<float*>(_data.buffer), _value, _doc, fieldName);
+				Copium::SerializeBasic(*reinterpret_cast<float*>(_data.buffer), _value, _doc, fieldName);
 				break;
 			}
 			case FieldType::Double:
 			{
-				Copium::Serialize(*reinterpret_cast<double*>(_data.buffer), _value, _doc, fieldName);
+				Copium::SerializeBasic(*reinterpret_cast<double*>(_data.buffer), _value, _doc, fieldName);
 				break;
 			}
 			case FieldType::Bool:
 			{
-				Copium::Serialize(*reinterpret_cast<bool*>(_data.buffer), _value, _doc, fieldName);
+				Copium::SerializeBasic(*reinterpret_cast<bool*>(_data.buffer), _value, _doc, fieldName);
 				break;
 			}
 			case FieldType::Char:
 			{
-				Copium::Serialize(*reinterpret_cast<char*>(_data.buffer), _value, _doc, fieldName);
+				Copium::SerializeBasic(*reinterpret_cast<char*>(_data.buffer), _value, _doc, fieldName);
 				break;
 			}
 			case FieldType::Short:
 			{
-				Copium::Serialize(*reinterpret_cast<short*>(_data.buffer), _value, _doc, fieldName);
+				Copium::SerializeBasic(*reinterpret_cast<short*>(_data.buffer), _value, _doc, fieldName);
 				break;
 			}
 			case FieldType::Int:
 			{
-				Copium::Serialize(*reinterpret_cast<int*>(_data.buffer), _value, _doc, fieldName);
+				Copium::SerializeBasic(*reinterpret_cast<int*>(_data.buffer), _value, _doc, fieldName);
 				break;
 			}			
 			case FieldType::Long:
 			{
-				Copium::Serialize(*reinterpret_cast<int64_t*>(_data.buffer), _value, _doc, fieldName);
+				Copium::SerializeBasic(*reinterpret_cast<int64_t*>(_data.buffer), _value, _doc, fieldName);
 				break;
 			}
 			case FieldType::UShort:
 			{
-				Copium::Serialize(*reinterpret_cast<uint16_t*>(_data.buffer), _value, _doc, fieldName);
+				Copium::SerializeBasic(*reinterpret_cast<uint16_t*>(_data.buffer), _value, _doc, fieldName);
 				break;
 			}
 			case FieldType::UInt:
 			{
-				Copium::Serialize(*reinterpret_cast<uint32_t*>(_data.buffer), _value, _doc, fieldName);
+				Copium::SerializeBasic(*reinterpret_cast<uint32_t*>(_data.buffer), _value, _doc, fieldName);
 				break;
 			}
 			case FieldType::ULong:
 			{
-				Copium::Serialize(*reinterpret_cast<uint64_t*>(_data.buffer), _value, _doc, fieldName);
+				Copium::SerializeBasic(*reinterpret_cast<uint64_t*>(_data.buffer), _value, _doc, fieldName);
 				break;
 			}
 			case FieldType::String:
 			{
 				std::string buf(_data.buffer);
-				Copium::Serialize(buf, _value, _doc, fieldName);
+				Copium::SerializeBasic(buf, _value, _doc, fieldName);
 				break;
 			}
 			case FieldType::Vector2:
@@ -488,7 +466,7 @@ namespace Copium
 		while (gameObjsIt != _data.fieldGameObjReferences.end())
 		{
 			const std::string& fieldName{ gameObjsIt->first };
-			Copium::Serialize((*gameObjsIt).second->uuid, _value, _doc, fieldName);
+			Copium::SerializeBasic((*gameObjsIt).second->uuid, _value, _doc, fieldName);
 			++gameObjsIt;
 		}
 
@@ -497,7 +475,7 @@ namespace Copium
 		while (componentsIt != _data.fieldComponentReferences.end())
 		{
 			const std::string& fieldName{ componentsIt->first };
-			Copium::Serialize((*componentsIt).second->uuid, _value, _doc, fieldName);
+			Copium::SerializeBasic((*componentsIt).second->uuid, _value, _doc, fieldName);
 			++componentsIt;
 		}
 
@@ -507,11 +485,9 @@ namespace Copium
 	void Serializer::Serialize<SortingGroup>(SortingGroup& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
 		PRINT("Serializing sorting group...");
-		Copium::Serialize(_data.uuid, _value, _doc, "UID");
-		Copium::Serialize(GetComponentType<SortingGroup>::name, _value, _doc, "Type");
 
-		Copium::Serialize(_data.GetLayerID(), _value, _doc, "SortingLayer");
-		Copium::Serialize(_data.GetOrderInLayer(), _value, _doc, "OrderInLayer");
+		Copium::SerializeBasic(_data.GetLayerID(), _value, _doc, "SortingLayer");
+		Copium::SerializeBasic(_data.GetOrderInLayer(), _value, _doc, "OrderInLayer");
 
 	}
 
@@ -674,8 +650,6 @@ namespace Copium
 							order = component["OrderInLayer"].GetInt();
 
 						SortingGroup* tmp = nullptr;
-
-
 					}
 					else
 					{
@@ -687,71 +661,71 @@ namespace Copium
 							case ComponentType::Animator:
 							{
 								Animator* tmp = nullptr;
-								//MyEventSystem.publish(new ComponentAddEvent<Animator>(tmp, _data));
-								Deserialize(tmp, "", component);
+								MyEventSystem->publish(new ComponentAddEvent(_data,tmp));
+								Deserialize(*tmp, "", component);
 								break;
 							}
 							case ComponentType::BoxCollider2D:
 							{
 								BoxCollider2D* tmp = nullptr;
-								//MyEventSystem.publish(new ComponentAddEvent<BoxCollider2D>(tmp, _data));
-								Deserialize(tmp, "", component);
+								MyEventSystem->publish(new ComponentAddEvent(_data, tmp));
+								Deserialize(*tmp, "", component);
 								break;
 							}
 							case ComponentType::Camera:
 							{
 								Camera* tmp = nullptr;
-								//MyEventSystem.publish(new ComponentAddEvent<Camera>(tmp, _data));
-								Deserialize(tmp, "", component);
+								MyEventSystem->publish(new ComponentAddEvent(_data, tmp));
+								Deserialize(*tmp, "", component);
 								break;
 							}
 							case ComponentType::Rigidbody2D:
 							{
 								Rigidbody2D* tmp = nullptr;
-								//MyEventSystem.publish(new ComponentAddEvent<RigidBody2D>(tmp, _data));
-								Deserialize(tmp, "", component);
+								MyEventSystem->publish(new ComponentAddEvent(_data, tmp));
+								Deserialize(*tmp, "", component);
 								break;
 							}
 							case ComponentType::SpriteRenderer:
 							{
 								SpriteRenderer* tmp = nullptr;
-								//MyEventSystem.publish(new ComponentAddEvent<SpriteRenderer>(tmp, _data));
-								Deserialize(tmp, "", component);
+								MyEventSystem->publish(new ComponentAddEvent(_data, tmp));
+								Deserialize(*tmp, "", component);
 								break;
 							}
 							case ComponentType::Script:
 							{
 								Script* tmp = nullptr;
-								//MyEventSystem.publish(new ComponentAddEvent<Script>(tmp, _data));
-								Deserialize(tmp, "", component);
+								MyEventSystem->publish(new ComponentAddEvent(_data, tmp));
+								Deserialize(*tmp, "", component);
 								break;
 							}
 							case ComponentType::Button:
 							{
 								Button* tmp = nullptr;
-								//MyEventSystem.publish(new ComponentAddEvent<Button>(tmp, _data));
-								Deserialize(tmp, "", component);
+								MyEventSystem->publish(new ComponentAddEvent(_data, tmp));
+								Deserialize(*tmp, "", component);
 								break;
 							}
 							case ComponentType::Image:
 							{
 								Image* tmp = nullptr;
-								//MyEventSystem.publish(new ComponentAddEvent<Image>(tmp, _data));
-								Deserialize(tmp, "", component);
+								MyEventSystem->publish(new ComponentAddEvent(_data, tmp));
+								Deserialize(*tmp, "", component);
 								break;
 							}
 							case ComponentType::Text:
 							{
 								Text* tmp = nullptr;
-								//MyEventSystem.publish(new ComponentAddEvent<Text>(tmp, _data));
-								Deserialize(tmp, "", component);
+								MyEventSystem->publish(new ComponentAddEvent(_data, tmp));
+								Deserialize(*tmp, "", component);
 								break;
 							}
 							case ComponentType::AudioSource:
 							{
 								AudioSource* tmp = nullptr;
-								//MyEventSystem.publish(new ComponentAddEvent<AudioSource>(tmp, _data));
-								Deserialize(tmp, "", component);
+								MyEventSystem->publish(new ComponentAddEvent(_data, tmp));
+								Deserialize(*tmp, "", component);
 								break;
 							}
 						default:
@@ -951,6 +925,8 @@ namespace Copium
 	void Serializer::Deserialize<Script>(Script& _data, const std::string& _key, rapidjson::Value& _value)
 	{
 		Copium::Deserialize(_data.uuid.GetUUID(), _value, "UID");
+		if (_data.fieldDataReferences.empty())
+			return;
 		for (auto it = _data.fieldDataReferences.begin(); it != _data.fieldDataReferences.end(); ++it)
 		{
 			const std::string& _name{ it->first };

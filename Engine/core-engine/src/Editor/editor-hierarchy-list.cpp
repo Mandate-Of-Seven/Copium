@@ -55,6 +55,7 @@ namespace Copium
 				if (ImGui::MenuItem("No scene loaded", nullptr))
 				{
 				}
+				ImGui::EndMenu();
 			}
 			else if (ImGui::BeginMenu("Menu"))
 			{

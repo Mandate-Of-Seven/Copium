@@ -71,7 +71,7 @@ namespace Copium
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		storageScene = nullptr;
 		//MyGOF.register_archetypes("Data/Archetypes");
-		SubscribeComponentsAdd();
+		SubscribeComponentsAdd(ComponentTypes());
 		MyEventSystem->subscribe(this, &SceneManager::CallbackQuitEngine);
 	}
 	void SceneManager::update() {}
@@ -145,13 +145,13 @@ namespace Copium
 			std::cout << "Scene name:" << currentScene->name << std::endl;
 		}
 
-		MyEventSystem->publish(
-			new SceneOpenedEvent(
-				currentScene->get_name().c_str(),
-				currentScene->gameObjects,
-				currentScene->componentArrays
-			)
-		);
+		//MyEventSystem->publish(
+		//	new SceneOpenedEvent(
+		//		currentScene->get_name().c_str(),
+		//		currentScene->gameObjects,
+		//		currentScene->componentArrays
+		//	)
+		//);
 
 		if (document.HasMember("Layers"))
 		{
@@ -196,7 +196,7 @@ namespace Copium
 			rapidjson::Value& _gameObjArr = document["GameObjects"].GetArray();
 			for (rapidjson::Value::ValueIterator iter = _gameObjArr.Begin(); iter != _gameObjArr.End(); ++iter)
 			{
-				MyGOF.Instantiate(*iter);
+				MyGOF.Instantiate(*iter,currentScene->gameObjects);
 			}
 
 			// Linkages
@@ -282,32 +282,33 @@ namespace Copium
 				if (go.HasComponent<Script>())
 				{
 					Script* script = go.GetComponent<Script>();
-					for (auto it = script->fieldDataReferences.begin(); it != script->fieldDataReferences.end(); ++it)
-					{
-						const std::string& _name{ it->first };
-						Field& field = it->second;
-						FieldType fType = field.fType;
+					if (!script->fieldDataReferences.empty())
+						for (auto it = script->fieldDataReferences.begin(); it != script->fieldDataReferences.end(); ++it)
+						{
+							const std::string& _name{ it->first };
+							Field& field = it->second;
+							FieldType fType = field.fType;
 
-						switch (fType)
-						{
-						case FieldType::Component:
-						{
-							uint64_t id{ field.Get<uint64_t>() };
-							Component* pComponent = FindComponentByID(id);
-							if (pComponent)
-								script->fieldComponentReferences[_name] = pComponent;
-							break;
+							switch (fType)
+							{
+							case FieldType::Component:
+							{
+								uint64_t id{ field.Get<uint64_t>() };
+								Component* pComponent = FindComponentByID(id);
+								if (pComponent)
+									script->fieldComponentReferences[_name] = pComponent;
+								break;
+							}
+							case FieldType::GameObject:
+							{
+								uint64_t id{ field.Get<uint64_t>() };
+								GameObject* pGameObject = FindGameObjectByID(id);
+								if (pGameObject)
+									script->fieldGameObjReferences[_name] = pGameObject;
+								break;
+							}
+							}
 						}
-						case FieldType::GameObject:
-						{
-							uint64_t id{ field.Get<uint64_t>() };
-							GameObject* pGameObject = FindGameObjectByID(id);
-							if (pGameObject)
-								script->fieldGameObjReferences[_name] = pGameObject;
-							break;
-						}
-						}
-					}
 				}
 
 			}
@@ -539,7 +540,7 @@ namespace Copium
 
 		doc.SetObject();
 
-		Copium::Serialize(currentScene->get_name(), doc, doc, "Name");
+		Copium::SerializeBasic(currentScene->get_name(), doc, doc, "Name");
 
 		//// Serialize Layer Data
 		//rapidjson::Value layers(rapidjson::kArrayType);
@@ -558,8 +559,8 @@ namespace Copium
 		for (Layer& layer : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
 		{
 			rapidjson::Value obj(rapidjson::kObjectType);
-			Serialize(layer.name, obj, doc, "Name");
-			Serialize(layer.layerID, obj, doc, "ID");
+			SerializeBasic(layer.name, obj, doc, "Name");
+			SerializeBasic(layer.layerID, obj, doc, "ID");
 
 			layers.PushBack(obj, doc.GetAllocator());
 		}
@@ -598,7 +599,7 @@ namespace Copium
 		// Copy game object data
 		for (GameObject& gameObj : storageScene->gameObjects)
 		{
-			MyGOF.Instantiate(gameObj, true);
+			MyGOF.Instantiate(gameObj,currentScene->gameObjects, true);
 		}
 
 		//for (size_t goIndex{ 0 }; goIndex < storageScene->get_gameobjcount(); ++goIndex)

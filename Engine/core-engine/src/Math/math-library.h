@@ -26,7 +26,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <math.h>
 #include <iostream>
 #include <rttr/type>
-#include <rapidjson/document.h>
 #include <glm/vec2.hpp>
 #include <glm/mat3x3.hpp>
 #include "Math/Vector4.h"
@@ -161,7 +160,7 @@ namespace Copium::Math
 			on failure, return false
 		*/
 		/*******************************************************************************/
-		bool deserialize(rapidjson::Value& _value);
+		//bool deserialize(rapidjson::Value& _value);
 		/*******************************************************************************
 		/*!
 		*
@@ -179,7 +178,7 @@ namespace Copium::Math
 			on failure, return false
 		*/
 		/*******************************************************************************/
-		bool serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
+		//bool serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
 		// Conversion operators		
 		/*******************************************************************************
@@ -546,7 +545,7 @@ namespace Copium::Math
 			on failure, return false
 		*/
 		/*******************************************************************************/
-		bool deserialize(rapidjson::Value& _value);
+		//bool deserialize(rapidjson::Value& _value);
 		/*******************************************************************************
 		/*!
 		*
@@ -564,7 +563,7 @@ namespace Copium::Math
 			on failure, return false
 		*/
 		/*******************************************************************************/
-		bool serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
+		//bool serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
 		// Conversion operators
 		/*******************************************************************************
@@ -1540,7 +1539,7 @@ namespace Copium::Math
 		if deserialization was successful, return true
 	*/
 	/*******************************************************************************/
-	bool deserialize_color(rapidjson::Value& _value, glm::vec4& _v);
+	//bool deserialize_color(rapidjson::Value& _value, glm::vec4& _v);
 }
 #endif !MATH_LIBRARY_H
  

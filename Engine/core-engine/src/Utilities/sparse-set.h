@@ -9,8 +9,7 @@ template <typename T, size_t N>
 class SparseSet
 {
     //Uninitialized memory
-    char memoryPool[sizeof(T) * N];
-    T* data = reinterpret_cast<T*>(memoryPool);
+    typename std::aligned_storage<sizeof(T), alignof(T)>::type data[N];
     std::array<size_t,N>indexes;
     size_t size_{ 0 };
 public:
@@ -48,12 +47,11 @@ public:
     };
 
     Iterator begin() {
-        COPIUM_ASSERT(!size_, "THIS ARRAY IS EMPTY!");
         return Iterator(0,*this);
     }
 
     Iterator end() {
-        return Iterator(size_ -1,*this);
+        return Iterator(size_,*this);
     }
 
     SparseSet();
@@ -88,9 +86,18 @@ public:
     T& push_back(T&& val)
     {
         COPIUM_ASSERT(size_ == N, "SPARSE SET IS ALREADY FULL");
-        T& back = data[indexes[size_]];
+        PRINT("MOVE CONSTRUCTOR");
+        T* pBack = data + indexes[size_];
+        memcpy(pBack, &val, sizeof(T));
         ++size_;
-        back = std::move(val);
+        return *pBack;
+    }
+
+    template <typename... Args>
+    T& emplace_back(Args&&... args)
+    {
+        T& back = *new (data + indexes[size_]) T(std::forward<Args>(args)...); // Construct the new element in the array
+        ++size_;
         return back;
     }
 
@@ -198,7 +205,7 @@ public:
 
     void clear(){ size_ = 0;}
 
-    bool empty() { return !size_; }
+    bool empty() const { return !size_; }
 
     template <typename T, size_t N>
     friend std::ostream& operator<<(std::ostream& stream, SparseSet<T, N>& sS);
@@ -270,7 +277,7 @@ template <typename T, size_t N>
 T& SparseSet<T, N>::operator[] (size_t i)
 {
     COPIUM_ASSERT(i >= size_, "ARRAY OUT OF BOUNDS");
-    return data[indexes[i]];
+    return *reinterpret_cast<T*>(data[indexes[i]]);
 }
 
 #endif // !SPARSE_SET_H

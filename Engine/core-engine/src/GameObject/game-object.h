@@ -83,6 +83,8 @@ namespace Copium
             return !components.empty();
         }
 
+        bool HasComponent(ComponentType componentType);
+
         /*******************************************************************************
         /*!
             \brief
@@ -181,6 +183,29 @@ namespace Copium
     using GameObjectsArray = SparseSet<GameObject, MAX_GAMEOBJECTS>;
     using GameObjectsPtrArray = std::vector<GameObject*>;
 
+    template <typename T, typename... Ts>
+    struct HasComponentStruct
+    {
+        GameObject& gameObject;
+        HasComponentStruct(TemplatePack<T, Ts...> pack) {}
+        HasComponentStruct(GameObject& _gameObject) : gameObject{ _gameObject } {}
+        bool HasComponentRecurse(ComponentType componentType) { return false; }
+        template <typename T1, typename... T1s>
+        bool HasComponentRecurse(ComponentType componentType)
+        {
+            if ((int)GetComponentType<T1>::e == (int)componentType)
+                return gameObject.HasComponent<T1>();
+            if constexpr (sizeof...(T1s) != 0)
+                return HasComponentRecurse<T1s...>(componentType);
+            return false;
+        }
+        bool HasComponent(ComponentType componentType)
+        {
+            return HasComponentRecurse<T, Ts...>(componentType);
+        }
+    };
+
+    using HasComponentType = decltype(HasComponentStruct(ComponentTypes()));
 }
 
 

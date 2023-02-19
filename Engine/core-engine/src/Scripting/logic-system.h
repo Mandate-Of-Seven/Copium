@@ -62,33 +62,6 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		void handleMessage(MESSAGE_TYPE mType);
-
-		/**************************************************************************/
-		/*!
-			\brief
-				Creates a script using the parameter
-
-			\param pEvent
-				pointer to the ScriptCreatedEvent which will be used to create the script
-
-			\return 
-				void
-		*/
-		/**************************************************************************/
-		void CallbackScriptCreated(ScriptCreatedEvent* pEvent);
-		/**************************************************************************/
-		/*!
-			\brief
-				Destroy a script
-
-			\param pEvent
-				pointer to the ScriptCreatedEvent which will be used to destroy the script
-
-			\return
-				void
-		*/
-		/**************************************************************************/
-		void CallbackScriptDestroyed(ScriptDestroyedEvent* pEvent);
 	};
 }
 

@@ -16,7 +16,7 @@ namespace Copium
 	}
 
 	template <>
-	void Serialize<bool>(const bool& _data, rapidjson::Value& _value, rapidjson::Document& _doc, const std::string& _key)
+	void SerializeBasic<bool>(const bool& _data, rapidjson::Value& _value, rapidjson::Document& _doc, const std::string& _key)
 	{
 		PRINT("Serializing a Bool");
 
@@ -26,7 +26,7 @@ namespace Copium
 	}
 
 	template <>
-	void Serialize<std::string>(const std::string& _data, rapidjson::Value& _value, rapidjson::Document& _doc, const std::string& _key)
+	void SerializeBasic<std::string>(const std::string& _data, rapidjson::Value& _value, rapidjson::Document& _doc, const std::string& _key)
 	{
 		PRINT("Serializing a String");
 
@@ -38,8 +38,18 @@ namespace Copium
 		_value.AddMember(key, data, _doc.GetAllocator());
 	}
 
+	template <>
+	void SerializeBasic<C_String>(const C_String& _data, rapidjson::Value& _value, rapidjson::Document& _doc, const std::string& _key) 
+	{
+		PRINT("Serializing a C String");
 
+		rapidjson::Value key;
+		CreateJsonString(_key, key, _doc);
+		rapidjson::Value data;
+		CreateJsonString(_data, data, _doc);
 
+		_value.AddMember(key, data, _doc.GetAllocator());
+	}
 
 	template <>
 	bool Deserialize<bool>(bool& _data, rapidjson::Value& _value, const std::string& _key)

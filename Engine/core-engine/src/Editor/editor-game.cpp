@@ -28,7 +28,7 @@ namespace Copium
 {
 	namespace
 	{
-		BaseCamera* gameCamera = nullptr;
+		Camera* gameCamera = nullptr;
 
 		float padding = 16.f;
 	}
@@ -51,9 +51,10 @@ namespace Copium
 		scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
 		
 		unsigned int textureID = 0;
-		if (!MyGraphicsSystem.getCamera().empty())
+		Scene* currScene{ MySceneManager.get_current_scene()};
+		if (currScene && !currScene->componentArrays.GetArray<Camera>().empty())
 		{
-			gameCamera = *MyGraphicsSystem.get_cameras().begin();
+			gameCamera = &*currScene->componentArrays.GetArray<Camera>().begin();
 			textureID = gameCamera->get_framebuffer()->get_color_attachment_id();
 		}
 

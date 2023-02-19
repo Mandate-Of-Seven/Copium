@@ -27,11 +27,10 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "glm/gtc/matrix_transform.hpp"
 #include <GameObject/components.h>
 #include <GameObject/game-object.h>
+#include <SceneManager/scene.h>
 
 namespace Copium
 {
-	GameObjectsArray* pGameObjectsArray{};
-	ComponentsArrays* pComponentsArrays{};
 	namespace
 	{
 		bool toggleAnim = false;
@@ -73,6 +72,9 @@ namespace Copium
 		}
 
 		// Clear the screen
+		if (!camera)
+			PRINT("CAMERA DOES NOT EXIST!");
+		PRINT("CAMERA BEING DRAWN");
 		glm::vec4 clr = camera->get_bg_color();
 		glClearColor(clr.r, clr.g, clr.b, clr.a);
 
@@ -96,6 +98,7 @@ namespace Copium
 
 	void Draw::exit()
 	{
+		PRINT("DRAW EXITTED!");
 		camera = nullptr;
 		renderer.shutdown();
 	}
@@ -127,10 +130,11 @@ namespace Copium
 		}
 
 		// Colliders
-		if (pComponentsArrays)
+		Scene* pScene{ MySceneManager.get_current_scene() };
+		if (pScene)
 		{
 			color = { 0.3f, 1.f, 0.3f, 1.f };
-			for (BoxCollider2D& collider : pComponentsArrays->GetArray<BoxCollider2D>())
+			for (BoxCollider2D& collider : pScene->componentArrays.GetArray<BoxCollider2D>())
 			{
 				if (!collider.enabled || !collider.gameObj.IsActive())
 					continue;
@@ -147,7 +151,7 @@ namespace Copium
 				renderer.draw_line(pos3_1, pos0_1, color);
 			}
 
-			for (Button& button: pComponentsArrays->GetArray<Button>())
+			for (Button& button: pScene->componentArrays.GetArray<Button>())
 			{
 				Transform& transform = button.gameObj.transform;
 				AABB bounds = button.bounds.GetRelativeBounds(transform.GetWorldPosition(), transform.GetWorldScale());
@@ -193,7 +197,8 @@ namespace Copium
 		// Theory WIP
 		renderer.begin_batch();
 		//Scene loaded
-		if (pComponentsArrays)
+		Scene* pScene{ MySceneManager.get_current_scene() };
+		if (pScene)
 		{
 			//if (scene->get_state() == Scene::SceneState::play)
 			//	toggleAnim = true;
@@ -216,7 +221,7 @@ namespace Copium
 			if (layered)
 				continue;*/
 
-			for (SpriteRenderer& spriteRenderer : pComponentsArrays->GetArray<SpriteRenderer>())
+			for (SpriteRenderer& spriteRenderer : pScene->componentArrays.GetArray<SpriteRenderer>())
 			{
 				if (!spriteRenderer.enabled || !spriteRenderer.gameObj.IsActive())
 					continue;
@@ -225,7 +230,7 @@ namespace Copium
 				Sprite& sprite = spriteRenderer.sprite;
 				renderer.draw_quad(t.GetWorldPosition(), Math::Vec2(t.GetWorldScale()), t.GetWorldRotation().z, sprite);
 			}
-			for (Image& image: pComponentsArrays->GetArray<Image>())
+			for (Image& image: pScene->componentArrays.GetArray<Image>())
 			{
 				if (!image.enabled || !image.gameObj.IsActive())
 					continue;
@@ -234,7 +239,7 @@ namespace Copium
 				Sprite& sprite = image.sprite;
 				renderer.draw_quad(t.GetWorldPosition(), Math::Vec2(t.GetWorldScale()), t.GetWorldRotation().z,sprite,&image.layeredColor);
 			}
-			for (Animator& animator: pComponentsArrays->GetArray<Animator>())
+			for (Animator& animator: pScene->componentArrays.GetArray<Animator>())
 			{
 				if (!animator.enabled || !animator.gameObj.IsActive())
 					continue;
@@ -247,7 +252,7 @@ namespace Copium
 				Transform& t = animator.gameObj.transform;
 				renderer.draw_quad(t.GetWorldPosition(), Math::Vec2(t.GetWorldScale()), t.GetWorldRotation().z, anim->spriteSheet, anim->currentFrameIndex,anim->frameCount);
 			}
-			for (Text& text : pComponentsArrays->GetArray<Text>())
+			for (Text& text : pScene->componentArrays.GetArray<Text>())
 			{
 				if (!text.enabled || !text.gameObj.IsActive())
 					continue;
@@ -541,10 +546,11 @@ namespace Copium
 
 		// Button Colliders
 		renderer.set_line_width(1.5f);
-		if (pComponentsArrays)
+		Scene* pScene{ MySceneManager.get_current_scene() };
+		if (pScene)
 		{
 
-			for (BoxCollider2D& boxCol: pComponentsArrays->GetArray<BoxCollider2D>())
+			for (BoxCollider2D& boxCol: pScene->componentArrays.GetArray<BoxCollider2D>())
 			{
 				GameObject& gameObject{ boxCol.gameObj};
 				Transform& transform{gameObject.transform};
@@ -564,7 +570,7 @@ namespace Copium
 				renderer.draw_line(pos3_1, pos0_1, color);
 			}
 
-			for (Button& button : pComponentsArrays->GetArray<Button>())
+			for (Button& button : pScene->componentArrays.GetArray<Button>())
 			{
 				Transform& t = button.gameObj.transform;
 				if (!button.enabled || !button.gameObj.IsActive() ||

@@ -169,10 +169,10 @@ namespace Copium
 			mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 };
 		}
 
-		//mouseToNDC *= orthographicSize;
-		//glm::vec2 worldNDC = { mouseToNDC.x + viewer.x, mouseToNDC.y + viewer.y };
-		////PRINT("~: " << worldNDC.x << ", " << worldNDC.y);
-		//return worldNDC;
+		mouseToNDC *= orthographicSize;
+		glm::vec2 worldNDC = { mouseToNDC.x + viewer.x, mouseToNDC.y + viewer.y };
+		//PRINT("~: " << worldNDC.x << ", " << worldNDC.y);
+		return worldNDC;
 	}
 
 	bool BaseCamera::withinFrustum(const glm::vec3& _position, const glm::vec3& _scale, bool _overlap)

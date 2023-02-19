@@ -99,7 +99,7 @@ namespace Copium::Utils
 		auto it = fieldTypeMap.find(typeName);
 		if (it == fieldTypeMap.end())
 		{
-			if (typeName.starts_with("CopiumEngine."))
+			if (typeName.find_first_of("CopiumEngine.") == 0)
 				return FieldType::Component;
 			typeName = mono_class_get_name(mono_class_get_parent(mono_class_from_mono_type(monoType)));
 			if (typeName == "CopiumScript")
@@ -149,7 +149,7 @@ namespace Copium
 					typeName = mono_type_get_name(type);
 					fieldType = FieldType::Component;
 					//C# List
-					if (typeName.starts_with("System.Collections.Generic.List<"))
+					if (typeName.find_first_of("System.Collections.Generic.List<") == 0)
 					{
 						typeName = typeName.substr(32);
 						typeName.pop_back();
@@ -261,7 +261,6 @@ namespace Copium
 		if (compilingState == CompilingState::SwapAssembly)
 		{
 			swapDll();
-			registerComponents();
 			compilingState = CompilingState::Wait;
 		}
 	}
@@ -436,7 +435,7 @@ namespace Copium
 				//Set scripts to be masked
 				for (File* scriptFile : maskScriptFiles)
 				{
-					if (scriptFile && *scriptFile == pathRef)
+					if (scriptFile && scriptFile->filePath == pathRef)
 					{
 						maskScriptFiles.remove(scriptFile);
 						break;
@@ -446,14 +445,14 @@ namespace Copium
 			}
 		}
 		// Remove deleted scripts using mask
-		for (File* scriptFile : maskScriptFiles)
-		{
-			if (scriptFile != nullptr)
-			{
-				scriptFiles.remove(*scriptFile);
-			}
-		}
-		maskScriptFiles.clear();
+		//for (File* scriptFile : maskScriptFiles)
+		//{
+		//	if (scriptFile != nullptr)
+		//	{
+		//		scriptFiles.remove(*scriptFile);
+		//	}
+		//}
+		//maskScriptFiles.clear();
 	}
 
 	MonoObject* ScriptingSystem::cloneInstance(MonoObject* _instance)
@@ -490,7 +489,7 @@ namespace Copium
 		using scriptFileListIter = std::list<File>::iterator;
 		for (scriptFileListIter it = scriptFiles.begin(); it != scriptFiles.end(); ++it)
 		{
-			if (*it == filePath) return true;
+			if (it->filePath == filePath) return true;
 		}
 		return false;
 	}
@@ -602,11 +601,11 @@ namespace Copium
 				mono_field_set_value(instance, mClassFiend, nullptr);
 				return;
 			}
-			Component* pComponent = sceneManager.findComponentByID(id);
-			if (pComponent)
-				mono_field_set_value(instance, mClassFiend, ReflectComponent(*pComponent));
-			else
-				mono_field_set_value(instance, mClassFiend, nullptr);
+			Component* pComponent = sceneManager.FindComponentByID(id);
+			//if (pComponent)
+			//	mono_field_set_value(instance, mClassFiend, ReflectComponent(*pComponent));
+			//else
+			//	mono_field_set_value(instance, mClassFiend, nullptr);
 			return;
 		}
 		if (field.fType == FieldType::GameObject)
@@ -642,7 +641,6 @@ namespace Copium
 	template <typename T>
 	MonoObject* ScriptingSystem::ReflectComponent(T& component)
 	{
-		static_assert(ComponentTypes::contains<T>());
 		auto pairIt = mComponents[mCurrentScene].find(component.uuid);
 		if (pairIt == mComponents[mCurrentScene].end())
 		{
@@ -735,12 +733,9 @@ namespace Copium
 		return object.uuid;
 	}
 
-	template<typename T>
-	size_t ScriptingSystem::CreateReference(T& object)
+	template<>
+	size_t ScriptingSystem::CreateReference<Component>(Component& object)
 	{
-		//ScriptClass& scriptClass = GetScriptClass());
-		//(void)scriptClass;
-		//ReflectGameObject(object.gameObj.uuid);
 		return object.uuid;
 	}
 
@@ -761,11 +756,10 @@ namespace Copium
 		if (compilingState == CompilingState::SwapAssembly)
 		{
 			swapDll();
-			registerComponents();
 		}
 		compilingState = CompilingState::Deserializing;
-		if (scenes.find(pEvent->sceneName) == scenes.end())
-			scenes[pEvent->sceneName] = mCurrentScene;
+		if (scenes.find(pEvent->scene.name) == scenes.end())
+			scenes[pEvent->scene.name] = mCurrentScene;
 		else
 		{
 			mGameObjects.clear();
@@ -776,14 +770,14 @@ namespace Copium
 	void ScriptingSystem::CallbackReflectComponent(ReflectComponentEvent* pEvent)
 	{
 		ReflectGameObject(pEvent->component.gameObj.uuid);
-		ReflectComponent(pEvent->component);
+		//ReflectComponent(pEvent->component);
 	}
 
 	void ScriptingSystem::CallbackScriptInvokeMethod(ScriptInvokeMethodEvent* pEvent)
 	{
 		auto it = mComponents[mCurrentScene].find(pEvent->script.uuid);
 		MonoObject* mScript = mComponents[mCurrentScene][pEvent->script.uuid];
-		PRINT("Script Invoking " << pEvent->script.Name() << " " << pEvent->methodName << " ,ID: " << pEvent->script.uuid);
+		//PRINT("Script Invoking " << pEvent->script.Name() << " " << pEvent->methodName << " ,ID: " << pEvent->script.uuid);
 		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
 		ScriptClass& scriptClass{ GetScriptClass(pEvent->script.name) };
 		MonoMethod* mMethod{ mono_class_get_method_from_name (scriptClass.mClass,pEvent->methodName.c_str(),(int)pEvent->paramCount)};
@@ -841,7 +835,6 @@ namespace Copium
 		if (state == CompilingState::Compiling && compilingState == CompilingState::SwapAssembly)
 		{
 			swapDll();
-			registerComponents();
 		}
 		compilingState = CompilingState::Previewing;
 		mPreviousScene = mCurrentScene;

@@ -54,7 +54,7 @@ namespace Copium {
 			pointer to the new game object
 		*/
 		/*******************************************************************************/
-		GameObject& Instantiate();
+		GameObject& Instantiate(GameObjectsArray& gameObjectArray);
 
 		/*******************************************************************************
 		/*!
@@ -67,7 +67,7 @@ namespace Copium {
 			pointer to the new game object (head of the tree)
 		*/
 		/*******************************************************************************/
-		GameObject& Instantiate(GameObject& _src, bool copyID = false);
+		GameObject& Instantiate(GameObject& _src, GameObjectsArray& gameObjectArray, bool copyID = false);
 
 		// Set up for future
 		//GameObject* instantiate(prefab);
@@ -83,7 +83,7 @@ namespace Copium {
 			pointer to the new game object
 		*/
 		/*******************************************************************************/
-		GameObject& Instantiate(rapidjson::Value& _value);
+		GameObject& Instantiate(rapidjson::Value& _value, GameObjectsArray& gameObjectArray);
 
 		/*******************************************************************************
 		/*!
@@ -96,7 +96,7 @@ namespace Copium {
 			Note: the game object must exist in the current scene.
 		*/
 		/*******************************************************************************/
-		void Destroy(GameObject& _go);
+		void Destroy(GameObject& _go, GameObjectsArray& gameObjectArray);
 
 		/*******************************************************************************
 		/*!
@@ -108,7 +108,7 @@ namespace Copium {
 			ID of gameobject to be destroyed
 		*/
 		/*******************************************************************************/
-		void Destroy(UUID uuid);
+		void Destroy(UUID uuid, GameObjectsArray& gameObjectArray);
 
 		/*******************************************************************************
 		/*!
@@ -142,7 +142,7 @@ namespace Copium {
 
 		*/
 		/*******************************************************************************/
-		GameObject& Instantiate(const std::string& _archetype);
+		//GameObject& Instantiate(const std::string& _archetype);
 
 		/*******************************************************************************
 		/*!
