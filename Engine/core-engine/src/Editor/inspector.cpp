@@ -21,18 +21,9 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <Scripting/scripting-system.h>
 
 // Bean: Remove once we can auto select gameobjects
-#include "SceneManager/scene-manager.h"
 #include "Files/file-system.h"
 #include <GameObject/components.h>
-#include "GameObject/Components/script-component.h"
-#include <GameObject/Components/collider-components.h>
-#include <GameObject/Components/camera-component.h>
-#include <GameObject/Components/audiosource-component.h>
-#include <Animation/animation-system.h>
-#include <GameObject/Components/renderer-component.h>
-#include <GameObject/Components/sorting-group-component.h>
-#include <GameObject/Components/ui-components.h>
-#include <GameObject/Components/physics-components.h>
+#include <Editor/editor-system.h>
 
 #define BUTTON_HEIGHT .1 //Percent
 #define BUTTON_WIDTH .6 //Percent
@@ -257,6 +248,15 @@ namespace Copium
             DisplayType(name, val);
         }
 
+        void Display(const char* string)
+        {
+            //static std::string displayName{};
+            //displayName = "##";
+            //displayName += name;
+            ImGui::TableNextColumn();
+            ImGui::AlignTextToFramePadding();
+            ImGui::Text(string);
+        }
 
     }
 
@@ -273,7 +273,7 @@ namespace Copium
             static bool AddComponent(ImGuiTextFilter& filter, GameObject& gameObj) { (void)filter; (void)gameObj; return false; }
 
             template <typename T, typename... Ts>
-            static bool AddComponent(ImGuiTextFilter& filter, GameObject& gameOb)
+            static bool AddComponent(ImGuiTextFilter& filter, GameObject& gameObj)
             {
                 static ImVec2 buttonSize = ImGui::GetWindowSize();
                 buttonSize.y *= (float)BUTTON_HEIGHT;
@@ -281,7 +281,7 @@ namespace Copium
                 if (filter.PassFilter(name) && ImGui::Button(name, buttonSize))
                 {
                     T* component;
-                    MyEventSystem.publish(new AddComponentEvent{ gameObjID,component });
+                    //MyEventSystem.publish(new AddComponentEvent{ gameObjID,component });
                     return true;
                 }
                 if constexpr (sizeof...(Ts) == 0)
@@ -290,7 +290,7 @@ namespace Copium
                 }
                 else
                 {
-                    return AddComponent<Ts...>(filter, gameObjID);
+                    return AddComponent<Ts...>(filter, gameObj);
                 }
             }
         };
@@ -336,7 +336,7 @@ namespace Copium
         template <typename T>
         void DisplayComponent(T& component)
         {
-            static_assert(AllComponents::Has<T>());
+            static_assert(ComponentTypes::has<T>());
             PRINT("Component of type: " << typeid(T).name() << "does not exist yet! ");
         }
 
@@ -360,7 +360,7 @@ namespace Copium
 
             //DisplayDragDrop();
             //spriteRenderer.sprite.set_name()
-            Display("Sprite", spriteRenderer.refTexture);
+            Display("Sprite", spriteRenderer.sprite.refTexture);
         }
 
         template <>
@@ -400,14 +400,8 @@ namespace Copium
                 }
 
             }
-
-            ImGui::TableNextRow();
-            ImGui::TableNextColumn();
-            ImGui::Text("Number of Animations:");
-            ImGui::TableNextColumn();
-            ImGui::Text("%d", animator.animationCount);
-            ImGui::TableNextRow();
-            ImGui::TableNextColumn();
+            Display("Number of Animations:");
+            Display(std::to_string(animator.get_animation_vector().size()).c_str());
             if (ImGui::Button("Add Animation"))
             {
                 animator.AddAnimation();
@@ -420,26 +414,13 @@ namespace Copium
                 ImGui::TableNextRow();
                 ImGui::TableNextColumn();
                 ImGui::Text("Animation %d", i + 1);
-
                 ImGui::TableNextRow();
                 Display("Number of Frames", animator.animations[i].frameCount);
-                Display("Columns", animator.animations[i].spriteSheet.xColumns);
-                Display("Rows", animator.animations[i].spriteSheet.yRows);
+                Display("Columns", animator.animations[i].spriteSheet.columns);
+                Display("Rows", animator.animations[i].spriteSheet.rows);
+                Display("Time Delay", animator.animations[i].timeDelay);
+                Display("Sprite", animator.animations[i].spriteSheet.texture);
                 ImGui::PopID();
-
-                ImGui::PushID(i + 1);
-                ImGui::TableNextRow();
-                ImGui::TableNextColumn();
-                ImGui::Text("Time Delay:");
-                ImGui::TableNextColumn();
-                if (ImGui::DragFloat("", &animator.animations[i].timeDelay, 0.1f))
-                {
-                    animator.animations[i].timeDelay = animator.animations[i].timeDelay < 0.f ? 0.f : animator.animations[i].timeDelay;
-
-                }
-                ImGui::PopID();
-
-                Display("Sprite", animator.animations[i].spriteSheet.refTexture);
             }
         }
 
@@ -449,7 +430,7 @@ namespace Copium
         public:
             constexpr DisplayComponentsStruct(TemplatePack<Component, Components...> pack) {}
             DisplayComponentsStruct() = delete;
-            DisplayComponentsStruct(GameObject& gameObj) { DisplayComponent(gameObj.transform); Display<Component, Components>(gameObj); }
+            DisplayComponentsStruct(GameObject& gameObj) { DisplayComponent(gameObj.transform); Display<Component, Components...>(gameObj); }
         private:
             template<typename T, typename... Ts>
             void Display(GameObject& gameObj)
@@ -461,7 +442,7 @@ namespace Copium
                     ImGui::PushID(component->uuid);
                     ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth;
                     DisplayType("Enabled", component->enabled); ImGui::SameLine();
-                    if (ImGui::CollapsingHeader(GetComponentType(T)::name, nodeFlags))
+                    if (ImGui::CollapsingHeader(GetComponentType<T>::name, nodeFlags))
                     {
                         ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
                             | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
@@ -480,7 +461,7 @@ namespace Copium
                             {
                                 static void* container;
                                 container = &component;
-                                ImGui::SetDragDropPayload(GetComponentType(T)::name, &container, sizeof(void*));
+                                ImGui::SetDragDropPayload(GetComponentType<T>::name, &container, sizeof(void*));
                                 ImGui::EndDragDropSource();
                             }
                             DisplayComponent(component);
@@ -596,27 +577,27 @@ namespace Copium
 
         isFocused = ImGui::IsWindowFocused();
 
-        Copium::GameObject* selectedGameObject = sceneManager.selectedGameObject;
+        Copium::GameObject* selectedGameObject = MyEditorSystem.pSelectedGameObject;
         Copium::File* selectedFile = fileSystem.get_selected_file();
         Copium::Directory* selectedDirectory = fileSystem.get_selected_directory();
         if (selectedGameObject && !selectedFile)
         {
             // Set flags for tables
-            selectedGameObject->inspectorView();
+            DisplayGameObject(*selectedGameObject);
 
 
             // Bean: This should be in the selected gameobject inspector view along the isAddingComponent part
-            float textWidth = ImGui::CalcTextSize("Add Component").x;
-            float padding = 150.f;
-            float indent = (ImGui::GetContentRegionAvail().x - textWidth - padding) * 0.5f;
-            ImGui::Indent(indent);
+            //float textWidth = ImGui::CalcTextSize("Add Component").x;
+            //float padding = 150.f;
+            //float indent = (ImGui::GetContentRegionAvail().x - textWidth - padding) * 0.5f;
+            //ImGui::Indent(indent);
 
-            //AlignForWidth(buttonSize.x);
-            ImVec2 buttonSize(textWidth + padding, 0.f);
-            if (ImGui::Button("Add Component", buttonSize)) {
-                isAddingComponent = true;
-                targetGameobjectName = sceneManager.selectedGameObject->uuid;
-            }
+            ////AlignForWidth(buttonSize.x);
+            //ImVec2 buttonSize(textWidth + padding, 0.f);
+            //if (ImGui::Button("Add Component", buttonSize)) {
+            //    isAddingComponent = true;
+            //    targetGameobjectName = sceneManager.selectedGameObject->uuid;
+            //}
         }
         else if (selectedFile)
         {
@@ -631,77 +612,77 @@ namespace Copium
         ImGui::End();
 
         // Adding new components
-        if (isAddingComponent)
-        {
-            if (sceneManager.selectedGameObject != nullptr && sceneManager.selectedGameObject->uuid == targetGameobjectName)
-            {
-                ImGui::Begin("Add Component", &isAddingComponent);
-                AlignforWidth(ImGui::GetWindowSize().x);
-                ImVec2 buttonSize = ImGui::GetWindowSize();
-                buttonSize.y *= (float)BUTTON_HEIGHT;
-                static ImGuiTextFilter filter;
-                ImGui::PushItemWidth(-1);
-                filter.Draw("##ComponentName");
-                ImGui::PopItemWidth();
-                std::map<Copium::ComponentType, std::string>::iterator it;
-                for (it = Copium::MAP_COMPONENT_TYPE_NAME.begin();
-                    it != Copium::MAP_COMPONENT_TYPE_NAME.end(); ++it)
-                {
-                    if (it->first == Copium::ComponentType::Script)
-                        continue;
-                    const std::string& componentName{ it->second };
-                    if (filter.PassFilter(componentName.c_str()) && ImGui::Button(componentName.c_str(), buttonSize))
-                    {
-                        selectedGameObject->AddComponent(it->first);
-                        isAddingComponent = false;
-                        break;
-                    }
-                }
-                for (auto& nameToScriptClass : MyScriptingSystem.getScriptFiles())
-                {
-                    const std::string& name{ nameToScriptClass.filename().stem().string() };
-                    if (!MyScriptingSystem.isScript(name))
-                        continue;
-                    if (filter.PassFilter(name.c_str()) && ImGui::Button((name + "[Script]").c_str(), buttonSize)) {
-                        selectedGameObject->AddComponent<Copium::Script>().Name(name);
-                        isAddingComponent = false;
-                    }
-                }
-                static std::string newScriptPrompt;
-                newScriptPrompt.clear();
-                newScriptPrompt += "[New Script]";
-                newScriptPrompt += filter.InputBuf;
-                if (ImGui::Button(newScriptPrompt.c_str(), buttonSize))
-                {
-                    //Ask scripting system query if file exists
-                    MyScriptingSystem.addEmptyScript(filter.InputBuf);
-                    selectedGameObject->AddComponent<Copium::Script>().Name(filter.InputBuf);
-                    isAddingComponent = false;
-                }
+        //if (isAddingComponent)
+        //{
+        //    if (sceneManager.selectedGameObject != nullptr && sceneManager.selectedGameObject->uuid == targetGameobjectName)
+        //    {
+        //        ImGui::Begin("Add Component", &isAddingComponent);
+        //        AlignforWidth(ImGui::GetWindowSize().x);
+        //        ImVec2 buttonSize = ImGui::GetWindowSize();
+        //        buttonSize.y *= (float)BUTTON_HEIGHT;
+        //        static ImGuiTextFilter filter;
+        //        ImGui::PushItemWidth(-1);
+        //        filter.Draw("##ComponentName");
+        //        ImGui::PopItemWidth();
+        //        std::map<Copium::ComponentType, std::string>::iterator it;
+        //        for (it = Copium::MAP_COMPONENT_TYPE_NAME.begin();
+        //            it != Copium::MAP_COMPONENT_TYPE_NAME.end(); ++it)
+        //        {
+        //            if (it->first == Copium::ComponentType::Script)
+        //                continue;
+        //            const std::string& componentName{ it->second };
+        //            if (filter.PassFilter(componentName.c_str()) && ImGui::Button(componentName.c_str(), buttonSize))
+        //            {
+        //                selectedGameObject->AddComponent(it->first);
+        //                isAddingComponent = false;
+        //                break;
+        //            }
+        //        }
+        //        for (auto& nameToScriptClass : MyScriptingSystem.getScriptFiles())
+        //        {
+        //            const std::string& name{ nameToScriptClass.filename().stem().string() };
+        //            if (!MyScriptingSystem.isScript(name))
+        //                continue;
+        //            if (filter.PassFilter(name.c_str()) && ImGui::Button((name + "[Script]").c_str(), buttonSize)) {
+        //                selectedGameObject->AddComponent<Copium::Script>().Name(name);
+        //                isAddingComponent = false;
+        //            }
+        //        }
+        //        static std::string newScriptPrompt;
+        //        newScriptPrompt.clear();
+        //        newScriptPrompt += "[New Script]";
+        //        newScriptPrompt += filter.InputBuf;
+        //        if (ImGui::Button(newScriptPrompt.c_str(), buttonSize))
+        //        {
+        //            //Ask scripting system query if file exists
+        //            MyScriptingSystem.addEmptyScript(filter.InputBuf);
+        //            selectedGameObject->AddComponent<Copium::Script>().Name(filter.InputBuf);
+        //            isAddingComponent = false;
+        //        }
 
-                newScriptPrompt.clear();
-                newScriptPrompt += "[New Scriptable Object]";
-                newScriptPrompt += filter.InputBuf;
-                if (ImGui::Button(newScriptPrompt.c_str(), buttonSize))
-                {
-                    std::ofstream file(Paths::assetPath + "\\Scripts\\" + filter.InputBuf + ".so");
-                    file << "using System;\n";
-                    file << "using CopiumEngine;\n\n";
-                    file << "public class " << filter.InputBuf << ": ScriptableObject\n{\n\n";
-                    file << "}\n";
-                    file.close();
-                    //selectedGameObject->addComponent<Copium::Script>().Name(filter.InputBuf);
+        //        newScriptPrompt.clear();
+        //        newScriptPrompt += "[New Scriptable Object]";
+        //        newScriptPrompt += filter.InputBuf;
+        //        if (ImGui::Button(newScriptPrompt.c_str(), buttonSize))
+        //        {
+        //            std::ofstream file(Paths::assetPath + "\\Scripts\\" + filter.InputBuf + ".so");
+        //            file << "using System;\n";
+        //            file << "using CopiumEngine;\n\n";
+        //            file << "public class " << filter.InputBuf << ": ScriptableObject\n{\n\n";
+        //            file << "}\n";
+        //            file.close();
+        //            //selectedGameObject->addComponent<Copium::Script>().Name(filter.InputBuf);
 
-                    isAddingComponent = false;
-                }
+        //            isAddingComponent = false;
+        //        }
 
-                ImGui::End();
-            }
-            else
-            {
-                isAddingComponent = false;
-            }
-        }
+        //        ImGui::End();
+        //    }
+        //    else
+        //    {
+        //        isAddingComponent = false;
+        //    }
+        //}
     }
     void EditorInspector::exit()
     {

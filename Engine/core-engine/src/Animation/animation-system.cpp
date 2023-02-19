@@ -29,8 +29,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 namespace Copium
 {
-	ComponentsArray<Animator>* pAnimatorsArray;
-
 	void AnimationSystem::init()
 	{
 		systemFlags |= FLAG_RUN_ON_PLAY | FLAG_RUN_ON_EDITOR;
@@ -40,11 +38,11 @@ namespace Copium
 	}
 	void AnimationSystem::update()
 	{
-
-		if (!pAnimatorsArray)
+		Scene* pScene{ MySceneManager.get_current_scene() };
+		if (!pScene)
 			return;
 
-		for (Animator& animator : *pAnimatorsArray)
+		for (Animator& animator : pScene->componentArrays.GetArray<Animator>())
 		{
 			if (!animator.enabled || !animator.gameObj.IsActive())
 				continue;
@@ -67,9 +65,11 @@ namespace Copium
 
 	void AnimationSystem::PauseAllAnimation()
 	{
-		if (!pAnimatorsArray)
+		Scene* pScene{ MySceneManager.get_current_scene() };
+		if (!pScene)
 			return;
-		for (Animator& animator : *pAnimatorsArray)
+
+		for (Animator& animator : pScene->componentArrays.GetArray<Animator>())
 		{
 			animator.PauseAnimation();
 		}
@@ -77,9 +77,11 @@ namespace Copium
 
 	void AnimationSystem::PlayAllAnimation()
 	{
-		if (!pAnimatorsArray)
+		Scene* pScene{ MySceneManager.get_current_scene() };
+		if (!pScene)
 			return;
-		for (Animator& animator : *pAnimatorsArray)
+
+		for (Animator& animator : pScene->componentArrays.GetArray<Animator>())
 		{
 			animator.PlayAnimation();
 		}

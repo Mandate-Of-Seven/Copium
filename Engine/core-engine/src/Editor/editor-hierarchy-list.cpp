@@ -181,14 +181,18 @@ namespace Copium
 			if (!pScene->gameObjects.empty())
 				rootFlags |= ImGuiTreeNodeFlags_Leaf;
 
-			//if (sm->GetSceneState() == Copium::Scene::SceneState::play)
-			//{
-			//	sceneName += "\t PREVIEWING";
-			//}
-
+			bool nodeOpen{ false };
 			int test{ 0 };
+			if (MySceneManager.GetSceneState() == Copium::Scene::SceneState::play)
+			{
+				nodeOpen = ImGui::TreeNodeEx((void*)(intptr_t)test, rootFlags, (pScene->name + " \t PREVIEWING").c_str());
+			}
+			else
+			{
+				nodeOpen = ImGui::TreeNodeEx((void*)(intptr_t)test, rootFlags, pScene->name.c_str());
+			}
+
 			// Display scene name as the rootiest node
-			bool nodeOpen = ImGui::TreeNodeEx((void*)(intptr_t)test, rootFlags, pScene->name.c_str());
 
 
 			if (nodeOpen)

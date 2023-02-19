@@ -71,10 +71,6 @@ namespace Copium
 			break;
 		}
 
-		// Clear the screen
-		if (!camera)
-			PRINT("CAMERA DOES NOT EXIST!");
-		PRINT("CAMERA BEING DRAWN");
 		glm::vec4 clr = camera->get_bg_color();
 		glClearColor(clr.r, clr.g, clr.b, clr.a);
 

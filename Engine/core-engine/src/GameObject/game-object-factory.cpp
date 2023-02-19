@@ -94,13 +94,13 @@ namespace Copium
 	{
 		if (copyID)
 		{
-			GameObject& tmp = gameObjectArray.push_back(GameObject(_src,_src.uuid));
+			GameObject& tmp = gameObjectArray.emplace_back(_src,_src.uuid);
 			size_t count = gameObjectArray.size() - 1;
 			if (count)
 				tmp.name += '(' + std::to_string(count) + ')';
 			return tmp;
 		}
-		GameObject& tmp = gameObjectArray.push_back(_src);
+		GameObject& tmp = gameObjectArray.emplace_back(_src);
 		size_t count = gameObjectArray.size() - 1;
 		if (count)
 			tmp.name += '(' + std::to_string(count) + ')';

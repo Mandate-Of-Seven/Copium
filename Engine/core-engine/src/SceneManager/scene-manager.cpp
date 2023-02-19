@@ -404,34 +404,33 @@ namespace Copium
 			return false;
 		}
 
-		//MyEventSystem->publish(new StartPreviewEvent());
+		MyEventSystem->publish(new StartPreviewEvent());
 
 
 		//UUID prevSelected = 0;
 		//if (selectedGameObject)
 		//	prevSelected = selectedGameObject->id;
 
-		//backUpCurrScene();
+		backUpCurrScene();
 
-		//for (GameObject* gameObj : currentScene->gameObjects)
-		//{
-		//	mainCamera = gameObj->GetComponent<Camera>();
-		//	if (mainCamera)
-		//		break;
-		//}
+		for (GameObject& gameObj : currentScene->gameObjects)
+		{
+			mainCamera = gameObj.GetComponent<Camera>();
+			if (mainCamera)
+				break;
+		}
 
-		//currSceneState = Scene::SceneState::play;
-		//currentScene->set_state(Scene::SceneState::play);
+		currSceneState = Scene::SceneState::play;
+		currentScene->set_state(Scene::SceneState::play);
 
-		////if (mainCamera == nullptr)
-		////{
-		////	std::cout << "start preview\n";
-
-		////	delete currentScene;
-		////	currentScene = storageScene;
-		////	storageScene = 0;
-		////	return false;
-		////}
+		if (mainCamera == nullptr)
+		{
+			std::cout << "start preview\n";
+			delete currentScene;
+			currentScene = storageScene;
+			storageScene = 0;
+			return false;
+		}
 
 		//if (prevSelected)
 		//	selectedGameObject = findGameObjByID(prevSelected);
@@ -476,8 +475,6 @@ namespace Copium
 		currentScene = storageScene;
 		mainCamera = nullptr;
 		storageScene = nullptr;
-
-		//Button::hoveredBtn = nullptr;
 
 		//if (selectedGameObject)
 		//{
@@ -603,6 +600,7 @@ namespace Copium
 			MyGOF.Instantiate(gameObj,currentScene->gameObjects, true);
 		}
 
+		//ZACH: COMPONENT LINKING
 		//for (size_t goIndex{ 0 }; goIndex < storageScene->get_gameobjcount(); ++goIndex)
 		//{
 		//	GameObject* currGameObj = currentScene->gameObjects[goIndex];
