@@ -96,7 +96,7 @@ namespace Copium
         */
         /*******************************************************************************/
         template <typename T>
-        const ComponentsPtrArray<T>& GetComponents()
+        ComponentsPtrArray<T>& GetComponents()
         {
             return componentPtrArrays.GetArray<T>();
         }

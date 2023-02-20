@@ -46,25 +46,25 @@ namespace Copium
             ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
         }
 
-        //template <>
-        //void DisplayPointer(const Texture& container)
-        //{
-        //    static std::string buttonName{};
-        //    const std::string& filePath{ container.get_file_path() };
-        //    size_t offset = filePath.find_last_of("/");
-        //    if (offset == std::string::npos)
-        //    {
-        //        buttonName = (filePath.c_str());
-        //    }
-        //    else
-        //    {
-        //        buttonName = (filePath.c_str() + offset + 1);
-        //    }
-        //    buttonName += '(';
-        //    buttonName += typeid(Texture).name() + strlen("class Copium::");
-        //    buttonName += ')';
-        //    ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
-        //}
+        template <>
+        void DisplayPointer(const Texture& container)
+        {
+            static std::string buttonName{};
+            const std::string& filePath{ container.get_file_path() };
+            size_t offset = filePath.find_last_of("/");
+            if (offset == std::string::npos)
+            {
+                buttonName = (filePath.c_str());
+            }
+            else
+            {
+                buttonName = (filePath.c_str() + offset + 1);
+            }
+            buttonName += '(';
+            buttonName += typeid(Texture).name() + strlen("class Copium::");
+            buttonName += ')';
+            ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
+        }
 
         template <typename T>
         void DisplayType(const char* name, T*& container)
@@ -136,17 +136,38 @@ namespace Copium
                 cIdName = idName.c_str();
             }
             ImGui::DragFloat(cIdName, &val, 0.15f);
-            if (ImGui::IsItemActivated()) { temp = val; }
-            if (ImGui::IsItemEdited())
-            {
-                printf("temp: %f\n", temp);
-                if (temp != val)
-                {
-                    //UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&position.x, temp);
-                    //EditorSystem::Instance().get_commandmanager()->undoStack.push(tempUndo);
-                    temp = val;
-                }
-            }
+            //if (ImGui::IsItemActivated()) { temp = val; }
+            //if (ImGui::IsItemEdited())
+            //{
+            //    printf("temp: %f\n", temp);
+            //    if (temp != val)
+            //    {
+            //        //UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&position.x, temp);
+            //        //EditorSystem::Instance().get_commandmanager()->undoStack.push(tempUndo);
+            //        temp = val;
+            //    }
+            //}
+        }
+
+        void DisplayType(const char* name, double& val)
+        {
+            static std::string idName{};
+            idName = "##";
+            idName += name;
+            float temp{(float)val};
+            ImGui::DragFloat(idName.c_str(), &temp, 0.15f);
+            val = temp;
+            //if (ImGui::IsItemActivated()) { temp = val; }
+            //if (ImGui::IsItemEdited())
+            //{
+            //    printf("temp: %f\n", temp);
+            //    if (temp != val)
+            //    {
+            //        //UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&position.x, temp);
+            //        //EditorSystem::Instance().get_commandmanager()->undoStack.push(tempUndo);
+            //        temp = val;
+            //    }
+            //}
         }
 
         void DisplayType(const char* name, Math::Vec3& val)
@@ -258,6 +279,7 @@ namespace Copium
             ImGui::Text(string);
         }
 
+
     }
 
     namespace
@@ -295,7 +317,7 @@ namespace Copium
             }
         };
         using AddAllComponentsStruct = decltype(AddComponentStruct(ComponentTypes()));
-        bool AddComponent(ImGuiTextFilter& filter, GameObject& gameObj) { AddAllComponentsStruct::AddComponent(filter, gameObj); }
+        bool AddComponent(ImGuiTextFilter& filter, GameObject& gameObj) { return AddAllComponentsStruct::AddComponent(filter, gameObj); }
 
         void AddComponentPanel(GameObject& gameObj, bool& open)
         {
@@ -336,8 +358,7 @@ namespace Copium
         template <typename T>
         void DisplayComponent(T& component)
         {
-            static_assert(ComponentTypes::has<T>());
-            PRINT("Component of type: " << typeid(T).name() << "does not exist yet! ");
+            PRINT("Component of type: " << GetComponentType<T>::name << " does not exist yet! ");
         }
 
         template <>
@@ -424,73 +445,79 @@ namespace Copium
             }
         }
 
-        template<typename Component, typename... Components>
+        template <typename T>
+        void constexpr DisplayComponentHelper(T& component)
+        {
+            ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth;
+            if (ImGui::CollapsingHeader(GetComponentType<T>::name, nodeFlags))
+            {
+                ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
+                    | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
+                    | ImGuiTableFlags_PadOuterX;
+                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 0));
+                ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 2));
+                if (ImGui::BeginTable("Component", 2, windowFlags))
+                {
+                    ImGui::Indent();
+                    ImGui::TableSetupColumn("Text", 0, 0.4f);
+                    ImGui::TableSetupColumn("Input", 0, 0.6f);
+                    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+                    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
+                    ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
+                    if (ImGui::BeginDragDropSource())
+                    {
+                        static void* container;
+                        container = &component;
+                        ImGui::SetDragDropPayload(GetComponentType<T>::name, &container, sizeof(void*));
+                        ImGui::EndDragDropSource();
+                    }
+                    DisplayComponent(component);
+                    ImGui::PopStyleVar();
+                    ImGui::PopStyleVar();
+                    ImGui::PopStyleVar();
+                    ImGui::Unindent();
+                    ImGui::EndTable();
+                }
+                if (ImGui::Button("Delete", ImVec2(ImGui::GetWindowSize().x, 0.f)))
+                {
+                    PRINT("DELETING COMPONENT OF TYPE: " << typeid(T).name());
+                    //MyEventSystem.publish(new RemoveComponentEvent<Component>{ id });
+                }
+                ImGui::PopStyleVar();
+                ImGui::PopStyleVar();
+            }
+        }
+
+
+        template<typename T, typename... Ts>
         struct DisplayComponentsStruct
         {
         public:
-            constexpr DisplayComponentsStruct(TemplatePack<Component, Components...> pack) {}
+            constexpr DisplayComponentsStruct(TemplatePack<T, Ts...> pack) {}
             DisplayComponentsStruct() = delete;
-            DisplayComponentsStruct(GameObject& gameObj) { DisplayComponent(gameObj.transform); Display<Component, Components...>(gameObj); }
+            DisplayComponentsStruct(GameObject& gameObj) {
+                DisplayComponent(gameObj.transform);
+            
+            DisplayNext<T, Ts...>(gameObj); }
         private:
-            template<typename T, typename... Ts>
-            void Display(GameObject& gameObj)
+            template<typename T1, typename... T1s>
+            void DisplayNext(GameObject& gameObj)
             {
-                static_assert(std::is_base_of<Component,T>());
-                ComponentsPtrArray<T>& components{gameObj.GetComponents<T>()};
-                for (T* component: components)
+                ComponentsPtrArray<T1>& components{gameObj.GetComponents<T1>()};
+                for (T1* component : components)
                 {
                     ImGui::PushID(component->uuid);
-                    ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth;
                     DisplayType("Enabled", component->enabled); ImGui::SameLine();
-                    if (ImGui::CollapsingHeader(GetComponentType<T>::name, nodeFlags))
-                    {
-                        ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
-                            | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
-                            | ImGuiTableFlags_PadOuterX;
-                        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 0));
-                        ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 2));
-                        if (ImGui::BeginTable("Component", 2, windowFlags))
-                        {
-                            ImGui::Indent();
-                            ImGui::TableSetupColumn("Text", 0, 0.4f);
-                            ImGui::TableSetupColumn("Input", 0, 0.6f);
-                            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
-                            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
-                            ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
-                            if (ImGui::BeginDragDropSource())
-                            {
-                                static void* container;
-                                container = &component;
-                                ImGui::SetDragDropPayload(GetComponentType<T>::name, &container, sizeof(void*));
-                                ImGui::EndDragDropSource();
-                            }
-                            DisplayComponent(component);
-                            ImGui::PopStyleVar();
-                            ImGui::PopStyleVar();
-                            ImGui::PopStyleVar();
-                            ImGui::Unindent();
-                            ImGui::EndTable();
-                        }
-                        if constexpr (!std::is_same<Component, Transform>())
-                        {
-                            if (ImGui::Button("Delete", ImVec2(ImGui::GetWindowSize().x, 0.f)))
-                            {
-                                PRINT("DELETING COMPONENT OF TYPE: " << typeid(Component).name());
-                                //MyEventSystem.publish(new RemoveComponentEvent<Component>{ id });
-                            }
-                        }
-                        ImGui::PopStyleVar();
-                        ImGui::PopStyleVar();
-                    }
+                    DisplayComponentHelper(*component);
                     ImGui::PopID();
                 }
-                if constexpr (sizeof...(Components) == 0)
+                if constexpr (sizeof...(T1s) == 0)
                 {
                     return;
                 }
                 else
                 {
-                    Display<Ts...>(gameObj);
+                    DisplayNext<T1s...>(gameObj);
                 }
             }
         };
@@ -512,7 +539,6 @@ namespace Copium
             ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);
             if (ImGui::BeginTable("Components", 1, tableFlags, ImVec2(0.f, ImGui::GetWindowSize().y * 0.8f)))
             {
-                ImGui::TableNextColumn();
                 ImGui::PushID(gameObject.uuid);
                 DisplayComponents(gameObject);
                 ImGui::PopID();
@@ -580,7 +606,7 @@ namespace Copium
         Copium::GameObject* selectedGameObject = MyEditorSystem.pSelectedGameObject;
         Copium::File* selectedFile = fileSystem.get_selected_file();
         Copium::Directory* selectedDirectory = fileSystem.get_selected_directory();
-        if (selectedGameObject && !selectedFile)
+        if (selectedGameObject)
         {
             // Set flags for tables
             DisplayGameObject(*selectedGameObject);
