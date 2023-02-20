@@ -211,6 +211,14 @@ namespace Copium
 						go.transform.SetParent(&p->transform);
 
 				}
+				
+				// Place into respective sorting layer
+				if (go.HasComponent<SortingGroup>())
+				{
+					SortingGroup* sg = go.GetComponent<SortingGroup>();
+					MyEditorSystem.getLayers()->SortLayers()->AddGameObject(sg->sortingLayer, go);
+
+				}
 
 				// Sprite Renderer
 				if (go.HasComponent<SpriteRenderer>())
@@ -403,6 +411,12 @@ namespace Copium
 			PRINT("Currently in play mode...\n");
 			return false;
 		}
+		if (!mainCamera)
+		{
+			PRINT("No camera!");
+			return false;
+
+		}
 
 		MyEventSystem->publish(new StartPreviewEvent());
 
@@ -423,14 +437,6 @@ namespace Copium
 		currSceneState = Scene::SceneState::play;
 		currentScene->set_state(Scene::SceneState::play);
 
-		if (mainCamera == nullptr)
-		{
-			std::cout << "start preview\n";
-			delete currentScene;
-			currentScene = storageScene;
-			storageScene = 0;
-			return false;
-		}
 
 		//if (prevSelected)
 		//	selectedGameObject = findGameObjByID(prevSelected);
@@ -467,7 +473,6 @@ namespace Copium
 				MyEditorSystem.getLayers()->SortLayers()->AddGameObject(sg->GetLayerID(), go);
 			}
 		}
-
 		// Sort based on order in layer
 		MyEditorSystem.getLayers()->SortLayers()->BubbleSortGameObjects();
 
@@ -600,6 +605,7 @@ namespace Copium
 			MyGOF.Instantiate(gameObj,currentScene->gameObjects, true);
 		}
 
+
 		//ZACH: COMPONENT LINKING
 		//for (size_t goIndex{ 0 }; goIndex < storageScene->get_gameobjcount(); ++goIndex)
 		//{
@@ -612,6 +618,9 @@ namespace Copium
 		//		currGameObj->components[compIndex]->previewLink(storedGameObj->components[compIndex]);
 		//	}
 		//}
+
+		// MATT: Sorting Layer Replacement HERE
+
 	}
 
 

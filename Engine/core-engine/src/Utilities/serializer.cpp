@@ -178,10 +178,10 @@ namespace Copium
 				rapidjson::Value comp(rapidjson::kObjectType);
 				Copium::SerializeBasic(_data.uuid.GetUUID(), comp, _doc, "UID");
 				Copium::SerializeBasic(GetComponentType<T1>::name, comp, _doc, "Type");
-				//GetComponentType<T1>::name
-				//GetComponentType<T1>::e
-				//Serializer::Serialize(*component, "", comp, _doc);
-				//_components.PushBack(comp);
+				Copium::SerializeBasic((int)GetComponentType<T1>::e, comp, _doc, "TypeID");
+
+				Serializer::Serialize(*component, "", comp, _doc);
+				_components.PushBack(comp, _doc.GetAllocator());
 			}
 			if constexpr (sizeof...(T1s) != 0)
 			{
@@ -206,7 +206,7 @@ namespace Copium
 		rapidjson::Value transformComponent(rapidjson::kObjectType);
 		Serialize(_data.transform, "", transformComponent, _doc);
 		comps.PushBack(transformComponent, _doc.GetAllocator());
-		//SerializeComponents(_data, comps,_doc);
+		SerializeComponents(_data, comps,_doc);
 		//for (auto iter = _data.components.begin(); iter != _data.components.end(); ++iter)
 		//{
 		//	rapidjson::Value comp(rapidjson::kObjectType);
@@ -632,8 +632,108 @@ namespace Copium
 			{
 				rapidjson::Value& component = *iter;
 
+				int type{ -1 };
 				std::string key;
-				if (Copium::Deserialize(key, component, "Type"))
+
+				if (Copium::Deserialize(type, component, "TypeID"))
+				{
+					PRINT("using typeid");
+					ComponentType ct = (ComponentType)type;
+
+					if (ct == ComponentType::Transform)
+					{
+						Deserialize(_data.transform, "", component);
+					}
+					else if (ct == ComponentType::SortingGroup)
+					{
+
+						SortingGroup* tmp = nullptr;
+						MyEventSystem->publish(new ComponentAddEvent(_data, tmp));
+						Deserialize(*tmp, "", component);
+					}
+					else
+					{
+						//MyEventSystem.publish(new Game)
+						switch (ct)
+						{
+						case ComponentType::Animator:
+						{
+							Animator* tmp = nullptr;
+							MyEventSystem->publish(new ComponentAddEvent(_data, tmp));
+							Deserialize(*tmp, "", component);
+							break;
+						}
+						case ComponentType::BoxCollider2D:
+						{
+							BoxCollider2D* tmp = nullptr;
+							MyEventSystem->publish(new ComponentAddEvent(_data, tmp));
+							Deserialize(*tmp, "", component);
+							break;
+						}
+						case ComponentType::Camera:
+						{
+							Camera* tmp = nullptr;
+							MyEventSystem->publish(new ComponentAddEvent(_data, tmp));
+							Deserialize(*tmp, "", component);
+							break;
+						}
+						case ComponentType::Rigidbody2D:
+						{
+							Rigidbody2D* tmp = nullptr;
+							MyEventSystem->publish(new ComponentAddEvent(_data, tmp));
+							Deserialize(*tmp, "", component);
+							break;
+						}
+						case ComponentType::SpriteRenderer:
+						{
+							SpriteRenderer* tmp = nullptr;
+							MyEventSystem->publish(new ComponentAddEvent(_data, tmp));
+							Deserialize(*tmp, "", component);
+							break;
+						}
+						case ComponentType::Script:
+						{
+							Script* tmp = nullptr;
+							MyEventSystem->publish(new ComponentAddEvent(_data, tmp));
+							Deserialize(*tmp, "", component);
+							break;
+						}
+						case ComponentType::Button:
+						{
+							Button* tmp = nullptr;
+							MyEventSystem->publish(new ComponentAddEvent(_data, tmp));
+							Deserialize(*tmp, "", component);
+							break;
+						}
+						case ComponentType::Image:
+						{
+							Image* tmp = nullptr;
+							MyEventSystem->publish(new ComponentAddEvent(_data, tmp));
+							Deserialize(*tmp, "", component);
+							break;
+						}
+						case ComponentType::Text:
+						{
+							Text* tmp = nullptr;
+							MyEventSystem->publish(new ComponentAddEvent(_data, tmp));
+							Deserialize(*tmp, "", component);
+							break;
+						}
+						case ComponentType::AudioSource:
+						{
+							AudioSource* tmp = nullptr;
+							MyEventSystem->publish(new ComponentAddEvent(_data, tmp));
+							Deserialize(*tmp, "", component);
+							break;
+						}
+						default:
+							PRINT("ADDED NOTHING, MAYBE ADDED THE COMPONENT TO THE GAMEOBJECT.CPP");
+							break;
+						}
+					}
+
+				}
+				else if (Copium::Deserialize(key, component, "Type"))
 				{
 
 					if (key == "Transform")
@@ -642,14 +742,10 @@ namespace Copium
 					}
 					else if (key == "SortingGroup")
 					{
-						int sort = 0, order = 0;
-						if (component.HasMember("SortingLayer"))
-							sort = component["SortingLayer"].GetInt();
-
-						if (component.HasMember("OrderInLayer"))
-							order = component["OrderInLayer"].GetInt();
-
+						
 						SortingGroup* tmp = nullptr;
+						MyEventSystem->publish(new ComponentAddEvent(_data, tmp));
+						Deserialize(*tmp, "", component);
 					}
 					else
 					{
@@ -1046,7 +1142,12 @@ namespace Copium
 
 	void Serializer::DeserializeComponent(ComponentType _type, Component* _data, rapidjson::Value& _value)
 	{
-		switch (_type)
+		Copium::Deserialize(_data->uuid.GetUUID(), _value, "UID");
+		int type{ -1 };
+		Copium::Deserialize(type, _value, "TypeID");
+
+
+		switch ((Copium::ComponentType)type)
 		{
 		case(ComponentType::Animator):
 		{
