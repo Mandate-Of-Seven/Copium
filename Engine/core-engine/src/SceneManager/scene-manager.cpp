@@ -205,7 +205,6 @@ namespace Copium
 				// Transform and Parent
 				if (go.transform.pid.GetUUID())
 				{
-					PRINT("LINKING");
 					GameObject* p = MySceneManager.FindGameObjectByID(go.transform.pid);
 					if (p)
 						go.transform.SetParent(&p->transform);
@@ -644,6 +643,6 @@ namespace Copium
 
 	void SceneManager::CallbackQuitEngine(QuitEngineEvent* pEvent)
 	{
-		//quit_engine();
+		quit_engine();
 	}
 }

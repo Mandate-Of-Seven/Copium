@@ -2,6 +2,7 @@
 #include <Events/events-system.h>
 #include <GameObject/components.h>
 #include <Editor/editor-system.h>
+#include <Graphics/fonts.h>
 
 namespace Copium
 {
@@ -169,4 +170,56 @@ namespace Copium
 			MyEditorSystem.getLayers()->SortLayers()->AddGameObject(sortingLayer, _gameObj);
 	}
 
+	Text::Text(GameObject& _gameObj, UUID _uuid) : IUIComponent(_gameObj, _uuid), fSize{ 1.f }, wrapper{ 0.f }, content{ "New Text" }, fontName{"corbel"}
+	{
+		font = Font::getFont(fontName);
+	}
+
+	void Text::render(BaseCamera* _camera)
+	{
+		if (!font)
+			return;
+		Transform& trans{ gameObj.transform };
+		Math::Vec3 globalPos{ trans.GetWorldPosition()};
+		Math::Vec3 globalScale{trans.GetWorldScale()};
+		float scale = globalScale.x * 0.1f;
+		if (scale > globalScale.y * 0.1f)
+			scale = globalScale.y * 0.1f;
+		scale *= fSize;
+
+		glm::fvec4 mixedColor{ 0 };
+		mixedColor.a = 1 - (1 - layeredColor.a) * (1 - color.a); // 0.75
+		if (mixedColor.a < 0.01f)
+			return;
+		mixedColor.r = layeredColor.r * layeredColor.a / mixedColor.a + color.r * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.67
+		mixedColor.g = layeredColor.g * layeredColor.a / mixedColor.a + color.g * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.33
+		mixedColor.b = layeredColor.b * layeredColor.a / mixedColor.a + color.b * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.00
+
+		/*PRINT("Color: " << color.r << " " << color.g << " " << color.b << " " << color.a);
+		PRINT("Mixed Color: " << mixedColor.r << " " << mixedColor.g << " " << mixedColor.b << " " << mixedColor.a);
+		*/
+
+		glm::vec2 dimensions{ font->getDimensions(content, scale, wrapper) };
+
+		switch (hAlignment)
+		{
+		case HorizontalAlignment::Center:
+			globalPos.x -= dimensions.x / 2.f;
+			break;
+		case HorizontalAlignment::Right:
+			globalPos.x -= dimensions.x;
+			break;
+		}
+		switch (vAlignment)
+		{
+		case VerticalAlignment::Top:
+			globalPos.y -= dimensions.y;
+			break;
+		case VerticalAlignment::Center:
+			globalPos.y -= dimensions.y / 2.f;
+			break;
+		}
+
+		font->draw_text(content, globalPos, mixedColor, scale, wrapper, _camera);
+	}
 }

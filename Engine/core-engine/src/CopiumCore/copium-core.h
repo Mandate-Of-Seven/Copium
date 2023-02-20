@@ -54,6 +54,7 @@ namespace Copium
 			systems =
 			{
 				//Put in sequence of calls
+				MyEventSystem,
 				WindowsSystem::Instance(),
 				pMessageSystem,
 				LoggingSystem::Instance(),
@@ -68,8 +69,7 @@ namespace Copium
 				PhysicsSystem::Instance(),
 				GraphicsSystem::Instance(),
 				ThreadSystem::Instance(),
-				AnimationSystem::Instance(),
-				MyEventSystem
+				AnimationSystem::Instance()
 			};
 			for (ISystem* pSystem : systems)
 			{

@@ -466,39 +466,31 @@ namespace Copium
 		renderer.flush();
 
 		// Only For Text
-		//if (scene != nullptr)
-		//{	
-		//	for (GameObject* gameObject : scene->gameObjects)
-		//	{
-		//		if (gameObject == nullptr || !gameObject->isActive())
-		//			continue;
-
-		//		bool layered{ false };
-		//		for (Component* component : gameObject->GetComponents<SortingGroup>())
-		//		{
-		//			if (component.enabled)
-		//			{
-		//				layered = true;
-		//				break;
-		//			}
-		//		}
-
-		//		if (layered)
-		//			continue;
-
-		//		// If the object isnt within the frustum
-		//		if (!camera->withinFrustum(gameObject->transform.position, gameObject->transform.scale))
-		//			continue;
-
-		//		for (Component* component : gameObject->GetComponents<Text>())
-		//		{
-		//			if (!component.enabled)
-		//				continue;
-
-		//			Text* text = reinterpret_cast<Text*>(component);
-		//			text->render(camera);
-		//		}
-		//	}
+		if (pScene != nullptr)
+		{
+			for (Text& text : pScene->componentArrays.GetArray<Text>())
+			{
+				GameObject& gameObject{ text.gameObj };
+				if (!text.enabled || !gameObject.IsActive())
+					continue;
+				//bool layered{ false };
+				//for (Component* component : gameObject->GetComponents<SortingGroup>())
+				//{
+				//	if (component.enabled)
+				//	{
+				//		layered = true;
+				//		break;
+				//	}
+				//}
+				//if (layered)
+				//	continue;
+				// If the object isnt within the frustum
+				if (!camera->withinFrustum(gameObject.transform.GetWorldPosition(), gameObject.transform.GetWorldScale()))
+					continue;
+				PRINT("RENDERING TEXT");
+				text.render(camera);
+			}
+		}
 
 		//	for (Layer& layer : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
 		//	{

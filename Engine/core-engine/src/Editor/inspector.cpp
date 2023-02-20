@@ -41,7 +41,6 @@ namespace Copium
         template <typename T>
         void DisplayPointer(T& container)
         {
-            PRINT(typeid(T).name());
             static std::string buttonName = std::string("(") + (typeid(T).name() + strlen("class Copium::")) + ")";
             ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
         }
@@ -110,14 +109,13 @@ namespace Copium
             ImGui::DragInt(idName.c_str(), &val);
         }
 
-        void DisplayType(const char* name, unsigned int& val)
+        template <size_t SZ>
+        void DisplayType(const char* name, char (&val)[SZ])
         {
             static std::string idName{};
             idName = "##";
             idName += name;
-            int container = val;
-            ImGui::DragInt(idName.c_str(), &container, 1, 0);
-            val = container;
+            ImGui::InputTextMultiline(idName.c_str(), val, SZ, ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 16));
         }
 
         void DisplayType(const char* name, float& val)
@@ -358,7 +356,7 @@ namespace Copium
         template <typename T>
         void DisplayComponent(T& component)
         {
-            PRINT("Component of type: " << GetComponentType<T>::name << " does not exist yet! ");
+            //PRINT("Component of type: " << GetComponentType<T>::name << " does not exist yet! ");
         }
 
         template <>
@@ -385,6 +383,16 @@ namespace Copium
         }
 
         template <>
+        void DisplayComponent<Text>(Text& text)
+        {
+            Display("Font Size",text.fSize);
+            Display("Content", text.content);
+            Display("Wrapping", text.wrapper);
+            //DisplayDragDrop();
+            //spriteRenderer.sprite.set_name()
+        }
+
+        template <>
         void DisplayComponent<Rigidbody2D>(Rigidbody2D& rb2D)
         {
 
@@ -393,6 +401,16 @@ namespace Copium
             Display("Mass", rb2D.mass);
             Display("Use Gravity", rb2D.useGravity);
             Display("Is Kinematic", rb2D.isKinematic);
+        }
+
+        template <>
+        void DisplayComponent<Button>(Button& btn)
+        {
+
+            //DisplayDragDrop();
+            //spriteRenderer.sprite.set_name()
+            Display("Target Graphic", btn.targetGraphic);
+            Display("Bounds", btn.bounds);
         }
 
         template <>
@@ -495,10 +513,12 @@ namespace Copium
         public:
             constexpr DisplayComponentsStruct(TemplatePack<T, Ts...> pack) {}
             DisplayComponentsStruct() = delete;
-            DisplayComponentsStruct(GameObject& gameObj) {
-                DisplayComponent(gameObj.transform);
-            
-            DisplayNext<T, Ts...>(gameObj); }
+            DisplayComponentsStruct(GameObject& gameObj) 
+            {
+                ImGui::TableNextColumn();
+                DisplayComponentHelper(gameObj.transform);
+                DisplayNext<T, Ts...>(gameObj); 
+            }
         private:
             template<typename T1, typename... T1s>
             void DisplayNext(GameObject& gameObj)

@@ -19,6 +19,7 @@ namespace Copium
 {
 	class GameObject;
 	class UUID;
+	class Font;
 
 	enum class ComponentType : int      // Types of Components
 	{
@@ -709,7 +710,7 @@ namespace Copium
 				Owner of this
 		*/
 		/**************************************************************************/
-		Text(GameObject& _gameObj, UUID _uuid = UUID()) : IUIComponent(_gameObj, _uuid), fSize{ 1.f }, wrapper{ 0.f }, content{ "New Text" }{}
+		Text(GameObject& _gameObj, UUID _uuid = UUID());
 
 		Text& operator=(const Text& rhs) { return *this; }
 		/*******************************************************************************
@@ -719,6 +720,8 @@ namespace Copium
 			Called by graphics to display this
 		*/
 		/*******************************************************************************/
+		void render(BaseCamera* _camera);
+
 		//void render(BaseCamera* _camera)
 		//{
 		//	if (!font)
@@ -814,6 +817,7 @@ namespace Copium
 		//	}
 		//}
 		std::string fontName;
+		Font* font;
 		float fSize;
 		float wrapper;
 		friend class Button;
