@@ -13,6 +13,8 @@
 #include <Graphics/sprite.h>
 #include <Scripting/script-fields.h>
 #include <vector>
+#include <map>
+
 #define RegisterComponent(Type) template <> struct GetComponentType<Type>{static constexpr size_t e{ (size_t)ComponentType::Type }; static constexpr const char* name = #Type;}
 
 namespace Copium
@@ -20,6 +22,7 @@ namespace Copium
 	class GameObject;
 	class UUID;
 	class Font;
+	using FieldMap = std::map<std::string, Field>;
 
 	enum class ComponentType : int      // Types of Components
 	{
@@ -616,7 +619,7 @@ namespace Copium
 		std::string name;
 		std::unordered_map<std::string, GameObject*> fieldGameObjReferences;
 		std::unordered_map<std::string, Component*> fieldComponentReferences;
-		std::unordered_map<std::string, Field> fieldDataReferences;
+		FieldMap fieldDataReferences;
 		static std::pair<const std::string, Field>* editedField;
 		static bool isAddingReference;
 	};

@@ -323,10 +323,17 @@ namespace Copium
 			if (mono_class_get_parent(_class) == mCopiumScript)
 			{
 				scriptClassMap[name] = ScriptClass{ name,_class };
+				reflectionMap[mono_class_get_type(_class)] = ComponentType::Script;
 			}
 			else if(mono_class_get_parent(_class) == mScriptableObject)
 			{
 				scriptableObjectClassMap[name] = ScriptClass{ name,_class };
+			}
+			else if (mono_class_get_parent(_class) == mono_class_from_name(mAssemblyImage, name_space, "Component"))
+			{
+				if (_class == mCopiumScript)
+					continue;
+				reflectionMap[mono_class_get_type(_class)] = NAME_TO_CTYPE[name];
 			}
 		}
 	}
@@ -370,6 +377,7 @@ namespace Copium
 		mCoreAssembly = Utils::loadAssembly(Paths::scriptsAssemblyPath);
 		mAssemblyImage = mono_assembly_get_image(mCoreAssembly);
 		//Update scriptClasses
+		//Scene* pScene{ MySceneManager.get_current_scene() };
 		mGameObject = mono_class_from_name(mAssemblyImage, "CopiumEngine", "GameObject");
 		mCopiumScript = mono_class_from_name(mAssemblyImage, "CopiumEngine", "CopiumScript");
 		mCollision2D = mono_class_from_name(mAssemblyImage, "CopiumEngine", "Collision2D");
@@ -383,27 +391,19 @@ namespace Copium
 		int rows = mono_table_info_get_rows(table_info);
 
 		/* For each row, get some of its values */
-		for (int i = 1; i < rows; i++)
-		{
-			MonoClass* _class = nullptr;
-			uint32_t cols[MONO_TYPEDEF_SIZE];
-			mono_metadata_decode_row(table_info, i, cols, MONO_TYPEDEF_SIZE);
-		
-			const char* name = mono_metadata_string_heap(mAssemblyImage, cols[MONO_TYPEDEF_NAME]);
-			const char* name_space = mono_metadata_string_heap(mAssemblyImage, cols[MONO_TYPEDEF_NAMESPACE]);
-			_class = mono_class_from_name(mAssemblyImage, name_space, name);
-			if (mono_class_get_parent(_class) == mCopiumScript)
-			{
-				reflectionMap[mono_class_get_type(_class)] = ComponentType::Script;
-			}
 
-			if (mono_class_get_parent(_class) == mono_class_from_name(mAssemblyImage, name_space, "Component"))
+		Scene* pScene{ MySceneManager.get_current_scene() };
+		for (Script& script : pScene->componentArrays.GetArray<Script>())
+		{
+			ScriptClass& scriptClass = scriptClassMap[script.name];
+			FieldMap tmp{ std::move(script.fieldDataReferences) };
+			for (auto& fieldData : scriptClass.mFields)
 			{
-				if (_class == mCopiumScript)
-					continue;
-				reflectionMap[mono_class_get_type(_class)] = NAME_TO_CTYPE[name];
+				std::string name = fieldData.first;
+				script.fieldDataReferences.emplace(tmp[name]);
 			}
 		}
+		
 		mCurrentScene = instantiateClass(klassScene);
 		COPIUM_ASSERT(!mGameObject, "GameObject C# script could not be loaded");
 		COPIUM_ASSERT(!mCopiumScript, "CopiumScript C# script could not be loaded");
