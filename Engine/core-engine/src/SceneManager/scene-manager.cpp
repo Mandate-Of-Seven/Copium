@@ -250,7 +250,6 @@ namespace Copium
 				{
 					SortingGroup* sg = go.GetComponent<SortingGroup>();
 					MyEditorSystem.getLayers()->SortLayers()->AddGameObject(sg->sortingLayer, go);
-
 				}
 
 				// Sprite Renderer
@@ -435,6 +434,67 @@ namespace Copium
 			mainCamera = gameObj.GetComponent<Camera>();
 			if (mainCamera)
 				break;
+		}
+
+		for (GameObject& go : currentScene->gameObjects)
+		{
+			// Transform and Parent
+			if (go.transform.pid.GetUUID())
+			{
+				GameObject* p = MySceneManager.FindGameObjectByID(go.transform.pid);
+				if (p)
+					go.transform.SetParent(&p->transform);
+
+			}
+
+			// Replacement
+			if (go.HasComponent<SortingGroup>())
+			{
+				SortingGroup* sg = go.GetComponent<SortingGroup>();
+				MyEditorSystem.getLayers()->SortLayers()->ReplaceGameObject(sg->sortingLayer, go);
+
+			}
+
+			// Target Graphic
+			if (go.HasComponent<Button>())
+			{
+				Button* button = go.GetComponent<Button>();
+				if (button->graphicID)
+					button->targetGraphic = reinterpret_cast<IUIComponent*>(FindComponentByID(button->graphicID));
+			}
+
+			if (go.HasComponent<Script>())
+			{
+				Script* script = go.GetComponent<Script>();
+				if (!script->fieldDataReferences.empty())
+					for (auto it = script->fieldDataReferences.begin(); it != script->fieldDataReferences.end(); ++it)
+					{
+						const std::string& _name{ it->first };
+						Field& field = it->second;
+						FieldType fType = field.fType;
+
+						switch (fType)
+						{
+						case FieldType::Component:
+						{
+							uint64_t id{ field.Get<uint64_t>() };
+							Component* pComponent = FindComponentByID(id);
+							if (pComponent)
+								script->fieldComponentReferences[_name] = pComponent;
+							break;
+						}
+						case FieldType::GameObject:
+						{
+							uint64_t id{ field.Get<uint64_t>() };
+							GameObject* pGameObject = FindGameObjectByID(id);
+							if (pGameObject)
+								script->fieldGameObjReferences[_name] = pGameObject;
+							break;
+						}
+						}
+					}
+			}
+
 		}
 
 		currSceneState = Scene::SceneState::play;
