@@ -74,22 +74,22 @@ namespace Copium
         }
 
         template <>
-        void DisplayPointer(const Texture& container)
+        void DisplayPointer(Texture& container)
         {
             static std::string buttonName{};
             const std::string& filePath{ container.get_file_path() };
             size_t offset = filePath.find_last_of("\\");
-            if (offset == std::string::npos)
-            {
-                buttonName = (filePath.c_str());
-            }
-            else
+            if(offset != 0)
             {
                 buttonName = filePath.substr(offset + 1, filePath.length() - offset);
             }
-            buttonName += '(';
-            buttonName += typeid(Texture).name() + strlen("class Copium::");
-            buttonName += ')';
+            else
+            {
+                buttonName += '(';
+                buttonName += typeid(Texture).name() + strlen("class Copium::");
+                buttonName += ')';
+            }
+            
             ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
         }
 

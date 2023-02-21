@@ -56,6 +56,10 @@ uniform sampler2D uTexture1[32];
 void main()
 {
 	int index = int(vTextureIndex);
+
+	if(index > 31)
+		index = index % 32;
+
 	if(index > 0)
 	{
 		fFragColor = texture(uTexture1[index], vTextureCoordinate) * vInterpColor;

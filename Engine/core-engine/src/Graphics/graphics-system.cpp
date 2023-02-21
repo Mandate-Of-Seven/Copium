@@ -28,6 +28,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 // Bean: remove this after NewManagerInstance is moved
 #include "SceneManager/scene-manager.h"
 #include <GameObject/components.h>
+#include "GameObject/game-object-factory.h"
 
 namespace Copium
 {
@@ -156,10 +157,10 @@ namespace Copium
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		//if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_C) && inputSystem.is_key_pressed(GLFW_KEY_S))
-		//{
-		//	massSpawn = !massSpawn;
-		//}
+		if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_C) && inputSystem.is_key_pressed(GLFW_KEY_S))
+		{
+			massSpawn = !massSpawn;
+		}
 
 		//if (inputSystem.is_key_held(GLFW_KEY_C) && inputSystem.is_key_pressed(GLFW_KEY_V))
 		//{
@@ -194,36 +195,36 @@ namespace Copium
 		//}
 
 		// Mass spawning
-		//if (massSpawn)
-		//{
-		//	SceneManager* sm = SceneManager::Instance();
-		//	Scene* scene = sm->get_current_scene();
-		//	if (scene != nullptr)
-		//	{
-		//		for (size_t i = 0; i < 10; i++)
-		//		{
-		//			GameObject* go = MyGOF.instantiate();
-		//			SpriteRenderer& rc = go->AddComponent<SpriteRenderer>();
-		//			//go->addComponent(ComponentType::Rigidbody);
+		if (massSpawn)
+		{
+			SceneManager* sm = SceneManager::Instance();
+			Scene* scene = sm->get_current_scene();
+			if (scene != nullptr)
+			{
+				for (size_t i = 0; i < 10; i++)
+				{
+					GameObject go = MyGOF.Instantiate(*scene);
+					SpriteRenderer rc(go);
+					//SpriteRenderer& rc = go.AddComponent();
 
-		//			float x = rand() % 2000 * 0.1f - 100.f;
-		//			float y = rand() % 2000 * 0.1f - 100.f;
+					float x = rand() % 2000 * 0.1f - 100.f;
+					float y = rand() % 2000 * 0.1f - 100.f;
 
-		//			go->transform.position = { x, y, 0.f };
-		//			int numSprites = (int)(AssetsSystem::Instance()->get_textures().size() - 1);
-		//			rc.spriteID = rand() % numSprites + 1;
-		//			unsigned int id = (unsigned int)rc.spriteID;
-		//			if (id != 0)
-		//			{
-		//				rc.refTexture = AssetsSystem::Instance()->get_texture(id - 1);
-		//				//std::string str = AssetsSystem::Instance()->get_texture(id - 1)->get_file_path();
-		//				//size_t pos = str.find_last_of('\\');
-		//				//std::string spriteName = str.substr(pos + 1, str.length() - pos);
-		//				//rc.get_sprite_renderer().set_name(spriteName);
-		//			}
-		//		}
-		//	}
-		//}
+					go.transform.position = { x, y, 0.f };
+					int numSprites = (int)(MyAssetSystem.GetTextures().size() - 1);
+					rc.sprite.spriteID = rand() % numSprites + 1;
+					unsigned int id = (unsigned int) rc.sprite.spriteID;
+					if (id != 0)
+					{
+						rc.sprite.refTexture = MyAssetSystem.GetTexture(id - 1);
+						std::string str = MyAssetSystem.GetTexture(id - 1)->get_file_path();
+						size_t pos = str.find_last_of('\\');
+						std::string spriteName = str.substr(pos + 1, str.length() - pos);
+						rc.sprite.sprite_name = spriteName;
+					}
+				}
+			}
+		}
 
 		/*PRINT("Mouse position: " << mousePos.x << ", " << mousePos.y);
 		PRINT("Centre position: " << centreOfScene.x << ", " << centreOfScene.y);
@@ -272,15 +273,14 @@ namespace Copium
 	// parse all textures into the game
 	void GraphicsSystem::parse_textures()
 	{
-		AssetsSystem* assets = AssetsSystem::Instance();
 		// Check for texture slots
 		COPIUM_ASSERT(textureSlotIndex == maxTextures, "Max textures reached! Replace old textures!!");
 
 		// Assign the slot to the texture
 		textureSlotIndex = 1;
-		for (GLuint i = 0; i < assets->GetTextures().size(); i++)
+		for (GLuint i = 0; i < MyAssetSystem.GetTextures().size(); i++)
 		{
-			textureSlots[textureSlotIndex++] = assets->GetTextures()[i].get_object_id();
+			textureSlots[textureSlotIndex++] = MyAssetSystem.GetTextures()[i].get_object_id();
 		}
 	}
 
