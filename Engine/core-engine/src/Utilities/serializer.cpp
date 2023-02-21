@@ -54,82 +54,6 @@ namespace Copium
 
 	}
 
-
-	/*void Serializer::SerializeComponent(const ComponentType& _type, Component* _co, rapidjson::Value& _value, rapidjson::Document& _doc)
-	{
-		switch (_type)
-		{
-		case(ComponentType::Animator):
-		{
-			Animator* animator = reinterpret_cast<Animator*>(_co);
-			Serialize(*animator, "", _value, _doc);
-			break;
-		}
-		case(ComponentType::AudioSource):
-		{
-			AudioSource* audio = reinterpret_cast<AudioSource*>(_co);
-			Serialize(*audio, "", _value, _doc);
-			break;
-		}
-		case(ComponentType::BoxCollider2D):
-		{
-			BoxCollider2D* bc = reinterpret_cast<BoxCollider2D*>(_co);
-			Serialize(*bc, "", _value, _doc);
-			break;	
-		}	
-		case(ComponentType::Button):
-		{
-			Button* button = reinterpret_cast<Button*>(_co);
-			Serialize(*button, "", _value, _doc);
-			break;
-		}
-		case(ComponentType::Camera):
-		{
-			Camera* cam = reinterpret_cast<Camera*>(_co);
-			Serialize(*cam, "", _value, _doc);
-			break;
-		}
-		case(ComponentType::Image):
-		{
-			Image* img = reinterpret_cast<Image*>(_co);
-			Serialize(*img, "", _value, _doc);
-			break;
-		}
-		case(ComponentType::Rigidbody2D):
-		{
-			Rigidbody2D* rb = reinterpret_cast<Rigidbody2D*>(_co);
-			Serialize(*rb, "", _value, _doc);
-			break;
-		}
-		case(ComponentType::SpriteRenderer):
-		{
-			SpriteRenderer* spriteRenderer = reinterpret_cast<SpriteRenderer*>(_co);
-			Serialize(*spriteRenderer, "", _value, _doc);
-			break;
-		}
-		case(ComponentType::Script):
-		{
-			Script* script = reinterpret_cast<Script*>(_co);
-			Serialize(*script, "", _value, _doc);
-			break;
-		}
-		case(ComponentType::Text):
-		{
-			Text* txt = reinterpret_cast<Text*>(_co);
-			Serialize(*txt, "", _value, _doc);
-			break;
-		}
-		case(ComponentType::SortingGroup):
-		{
-			SortingGroup* sg = reinterpret_cast<SortingGroup*>(_co);
-			Serialize(*sg, "", _value, _doc);
-			break;
-		}
-		default:
-			PRINT("component serialization failed!");
-			break;
-		}
-	}*/
 	template<>
 	void Serializer::Serialize<Animation>(Animation& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
@@ -176,7 +100,7 @@ namespace Copium
 			for (T1* component : _data.GetComponents<T1>())
 			{
 				rapidjson::Value comp(rapidjson::kObjectType);
-				Copium::SerializeBasic(_data.uuid.GetUUID(), comp, _doc, "UID");
+				Copium::SerializeBasic(component->uuid.GetUUID(), comp, _doc, "UID");
 				Copium::SerializeBasic(GetComponentType<T1>::name, comp, _doc, "Type");
 				Copium::SerializeBasic((int)GetComponentType<T1>::e, comp, _doc, "TypeID");
 
@@ -377,6 +301,7 @@ namespace Copium
 	void Serializer::Serialize<Script>(Script& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
 		PRINT("Serializing script...");
+		Copium::SerializeBasic(_data.name, _value, _doc, "Name");
 
 		// Field Data References
 		auto it = _data.fieldDataReferences.begin();
@@ -1021,6 +946,8 @@ namespace Copium
 	void Serializer::Deserialize<Script>(Script& _data, const std::string& _key, rapidjson::Value& _value)
 	{
 		Copium::Deserialize(_data.uuid.GetUUID(), _value, "UID");
+		PRINT("Serializing script...");
+		Copium::Deserialize(_data.name, _value, "Name");
 		if (_data.fieldDataReferences.empty())
 			return;
 		for (auto it = _data.fieldDataReferences.begin(); it != _data.fieldDataReferences.end(); ++it)

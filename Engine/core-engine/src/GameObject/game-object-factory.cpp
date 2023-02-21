@@ -101,8 +101,13 @@ namespace Copium
 
 	GameObject& GameObjectFactory::Instantiate(Scene& scene)
 	{
+		size_t count = 0;
+		for (GameObject& gameObject : scene.gameObjects)
+		{
+			if (gameObject.name.find(defaultGameObjName) == 0)
+				++count;
+		}
 		GameObject& tmp = scene.gameObjects.emplace_back();
-		size_t count = scene.gameObjects.size() - 1;
 		if (count)
 			tmp.name += '(' + std::to_string(count) + ')';
 		return tmp;
@@ -143,10 +148,15 @@ namespace Copium
 
 	GameObject& GameObjectFactory::Instantiate(GameObject& _src, Scene& scene, bool copyID)
 	{
+		size_t count = 0;
+		for (GameObject& gameObject : scene.gameObjects)
+		{
+			if (gameObject.name.find(_src.name) == 0)
+				++count;
+		}
 		if (copyID)
 		{
 			GameObject& tmp = scene.gameObjects.emplace_back(_src,_src.uuid);
-			size_t count = scene.gameObjects.size() - 1;
 			if (count)
 				tmp.name += '(' + std::to_string(count) + ')';
 			CloneComponents(tmp,_src,scene,copyID);
@@ -157,7 +167,6 @@ namespace Copium
 			return tmp;
 		}
 		GameObject& tmp = scene.gameObjects.emplace_back(_src);
-		size_t count = scene.gameObjects.size() - 1;
 		if (count)
 			tmp.name += '(' + std::to_string(count) + ')';
 		CloneComponents(tmp, _src, scene, copyID);

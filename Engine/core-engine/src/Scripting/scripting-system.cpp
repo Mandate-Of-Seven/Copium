@@ -32,7 +32,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "mono/metadata/assembly.h"
 #include "mono/metadata/object.h"
 #include "mono/metadata/tabledefs.h"
-#include <mono/metadata/mono-config.h>
+#include <mono/jit/jit.h>
 #include <mono/metadata/debug-helpers.h>
 
 #define SECONDS_TO_RECOMPILE 5
@@ -149,11 +149,11 @@ namespace Copium
 					typeName = mono_type_get_name(type);
 					fieldType = FieldType::Component;
 					//C# List
-					if (typeName.find_first_of("System.Collections.Generic.List<") == 0)
-					{
-						typeName = typeName.substr(32);
-						typeName.pop_back();
-					}
+					//if (typeName.find_first_of("System.Collections.Generic.List<") == 0)
+					//{
+					//	typeName = typeName.substr(32);
+					//	typeName.pop_back();
+					//}
 
 					auto it = fieldTypeMap.find(typeName);
 					//Type that is in the fieldTypeMap
@@ -376,6 +376,34 @@ namespace Copium
 		mScriptableObject = mono_class_from_name(mAssemblyImage, "CopiumEngine", "ScriptableObject");
 		klassScene = mono_class_from_name(mAssemblyImage, "CopiumEngine", "Scene");
 		updateScriptClasses();
+
+		// Iterate through the rows and get the name and namespace of each class
+		const MonoTableInfo* table_info = mono_image_get_table_info(mAssemblyImage, MONO_TABLE_TYPEDEF);
+
+		int rows = mono_table_info_get_rows(table_info);
+
+		/* For each row, get some of its values */
+		for (int i = 1; i < rows; i++)
+		{
+			MonoClass* _class = nullptr;
+			uint32_t cols[MONO_TYPEDEF_SIZE];
+			mono_metadata_decode_row(table_info, i, cols, MONO_TYPEDEF_SIZE);
+		
+			const char* name = mono_metadata_string_heap(mAssemblyImage, cols[MONO_TYPEDEF_NAME]);
+			const char* name_space = mono_metadata_string_heap(mAssemblyImage, cols[MONO_TYPEDEF_NAMESPACE]);
+			_class = mono_class_from_name(mAssemblyImage, name_space, name);
+			if (mono_class_get_parent(_class) == mCopiumScript)
+			{
+				reflectionMap[mono_class_get_type(_class)] = ComponentType::Script;
+			}
+
+			if (mono_class_get_parent(_class) == mono_class_from_name(mAssemblyImage, name_space, "Component"))
+			{
+				if (_class == mCopiumScript)
+					continue;
+				reflectionMap[mono_class_get_type(_class)] = NAME_TO_CTYPE[name];
+			}
+		}
 		mCurrentScene = instantiateClass(klassScene);
 		COPIUM_ASSERT(!mGameObject, "GameObject C# script could not be loaded");
 		COPIUM_ASSERT(!mCopiumScript, "CopiumScript C# script could not be loaded");

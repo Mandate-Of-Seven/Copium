@@ -39,6 +39,7 @@ namespace Copium
 	{
 		messageSystem.subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
+		MyEventSystem->subscribe(this, &EditorSystem::CallbackSceneChanging);
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 
 		//PRINT("FLAGS: " << systemFlags);
@@ -183,19 +184,10 @@ namespace Copium
 						{
 							std::cout << filepath << std::endl;
 
-
-							if (MySceneManager.get_current_scene() != nullptr)
-							{
-								std::cout << "change scene\n";
-								MySceneManager.change_scene(filepath);
-							}
-							else {
-								if (MySceneManager.load_scene(filepath))
-									std::cout << "loading success\n";
-								else
-									std::cout << "loading fail\n";
-							}
-
+							if (MySceneManager.load_scene(filepath))
+								std::cout << "loading success\n";
+							else
+								std::cout << "loading fail\n";
 						}
 						else
 						{
@@ -330,17 +322,10 @@ namespace Copium
 						std::cout << filepath << std::endl;
 
 
-						if (MySceneManager.get_current_scene() != nullptr)
-						{
-							std::cout << "change scene\n";
-							MySceneManager.change_scene(filepath);
-						}
-						else {
-							if (MySceneManager.load_scene(filepath))
-								std::cout << "loading success\n";
-							else
-								std::cout << "loading fail\n";
-						}
+						if (MySceneManager.load_scene(filepath))
+							std::cout << "loading success\n";
+						else
+							std::cout << "loading fail\n";
 
 					}
 					else
@@ -501,6 +486,11 @@ namespace Copium
 		}
 		else if(_enabled)
 			camera.get_framebuffer()->init();
+	}
+
+	void EditorSystem::CallbackSceneChanging(SceneChangingEvent* pEvent)
+	{
+		pSelectedGameObject = nullptr;
 	}
 
 	UndoRedo::CommandManager* EditorSystem::get_commandmanager()

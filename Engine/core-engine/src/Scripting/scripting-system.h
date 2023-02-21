@@ -621,6 +621,7 @@ namespace Copium
 		std::unordered_map<std::string, ScriptClass> scriptableObjectClassMap;
 		std::unordered_map<MonoObject*, MonoGameObjects> mGameObjects;
 		std::unordered_map<MonoObject*, MonoComponents> mComponents;
+		std::unordered_map<MonoType*, ComponentType> reflectionMap;
 		std::list<File>& scriptFiles;
 		std::map<std::string, std::map<std::string,ScriptableObject>> scriptableObjects;
 

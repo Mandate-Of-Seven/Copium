@@ -50,6 +50,11 @@ namespace Copium
 		QuitEngineEvent() {};
 	};
 
+	struct SceneChangingEvent : IEvent
+	{
+		SceneChangingEvent() {}
+	};
+
 	struct SceneOpenedEvent : IEvent
 	{
 		SceneOpenedEvent(Scene& _scene) : scene{_scene}{}

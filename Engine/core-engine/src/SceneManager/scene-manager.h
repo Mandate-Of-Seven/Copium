@@ -107,21 +107,7 @@ namespace Copium {
 		*/
 		/*******************************************************************************/
 		bool load_scene(const std::string& _filepath);
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Switch to another scene, whose data is in a file specified by input param
 
-		\param _newfilepath
-			reference to a string containing the filepath of the file that contains the scene data of the new scene.
-
-		\return
-			on success, return true
-			on failure, return false
-		*/
-		/*******************************************************************************/
-		bool change_scene(const std::string& _newfilepath);
 
 		/*******************************************************************************
 		/*!

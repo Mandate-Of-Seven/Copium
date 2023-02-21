@@ -145,11 +145,6 @@ namespace Copium
 
 	bool SceneManager::load_scene(const std::string& _filepath)
 	{
-		if (currSceneState == Scene::SceneState::play)
-		{
-			PRINT("CANT LOAD SCENE IN PLAY MODE");
-			return false;
-		}
 		std::cout << "loading " << _filepath << std::endl;
 
 		if (_filepath.find(".scene") == std::string::npos)
@@ -158,10 +153,11 @@ namespace Copium
 			return false;
 		}
 
-		if (!currentScene)
+		if (currentScene)
 		{
-			currentScene = new NormalScene(_filepath);
+			delete currentScene;
 		}
+		currentScene = new NormalScene(_filepath);
 
 		sceneFilePath = _filepath;
 
@@ -182,6 +178,7 @@ namespace Copium
 			std::cout << "Scene name:" << currentScene->name << std::endl;
 		}
 
+		MyEventSystem->publish(new SceneChangingEvent());
 		//MyEventSystem->publish(
 		//	new SceneOpenedEvent(
 		//		currentScene->get_name().c_str(),
@@ -368,43 +365,7 @@ namespace Copium
 		return true;
 
 	}
-	bool SceneManager::change_scene(const std::string& _newfilepath)
-	{
-		if (currSceneState == Scene::SceneState::play)
-		{
-			PRINT("CANT LOAD SCENE IN PLAY MODE");
-			return false;
-		}
-		bool result = false;
 
-		// No scene loaded, therefore cannot change
-		if (!currentScene)
-		{
-			return result;
-		}
-
-		// Clear game objects in scene
-		// Deserialize from new file and overwrite other scene data
-		if (std::filesystem::exists(_newfilepath))
-		{
-			std::cout << "file exists\n";
-			delete currentScene;
-			currentScene = nullptr;
-			//selectedGameObject = nullptr;
-			load_scene(_newfilepath);
-			//Scene* tmp = currentScene;
-			//result = load_scene(_newfilepath);
-			//delete tmp;
-		}
-		else
-		{
-			std::cout << "file does not exist, scene change aborted\n";
-			return false;
-		}
-
-		return result;
-
-	}
 
 	Scene* SceneManager::get_current_scene(){ return currentScene; }
 	void SceneManager::set_current_scene(Scene* _src) { currentScene = _src; }
@@ -446,6 +407,12 @@ namespace Copium
 		{
 			PRINT("Currently in play mode...\n");
 			return false;
+		}
+		for (GameObject& gameObj : currentScene->gameObjects)
+		{
+			mainCamera = gameObj.GetComponent<Camera>();
+			if (mainCamera)
+				break;
 		}
 		if (!mainCamera)
 		{

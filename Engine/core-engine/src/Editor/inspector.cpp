@@ -332,28 +332,26 @@ namespace Copium
             constexpr AddComponentStruct(TemplatePack<Component,Components...> pack){}
             AddComponentStruct() {}
 
-            static bool AddComponent(ImGuiTextFilter& filter, GameObject& gameObj) { (void)filter; (void)gameObj; return false; }
+            static bool AddComponent(ImGuiTextFilter& filter, GameObject& gameObj) { return AddComponentHelper<Component,Components...>(filter, gameObj); }
 
             template <typename T, typename... Ts>
-            static bool AddComponent(ImGuiTextFilter& filter, GameObject& gameObj)
+            static bool AddComponentHelper(ImGuiTextFilter& filter, GameObject& gameObj)
             {
-                static ImVec2 buttonSize = ImGui::GetWindowSize();
+                ImVec2 buttonSize = ImGui::GetWindowSize();
                 buttonSize.y *= (float)BUTTON_HEIGHT;
                 static const char* name = GetComponentType<T>::name;
-                if (filter.PassFilter(name) && ImGui::Button(name, buttonSize))
+                PRINT(name);
+                if (ImGui::Button(name, buttonSize))
                 {
                     T* component;
-                    //MyEventSystem.publish(new AddComponentEvent{ gameObjID,component });
+                    MyEventSystem->publish(new ComponentAddEvent{ gameObj,component });
                     return true;
                 }
-                if constexpr (sizeof...(Ts) == 0)
+                if constexpr (sizeof...(Ts) != 0)
                 {
-                    return false;
+                    return AddComponentHelper<Ts...>(filter, gameObj);
                 }
-                else
-                {
-                    return AddComponent<Ts...>(filter, gameObj);
-                }
+                return false;
             }
         };
         using AddAllComponentsStruct = decltype(AddComponentStruct(ComponentTypes()));
@@ -513,7 +511,17 @@ namespace Copium
         void DisplayComponentHelper(T& component)
         {
             ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth;
-            if (ImGui::CollapsingHeader(GetComponentType<T>::name, nodeFlags))
+            static std::string name{};
+            if constexpr (std::is_same<T, Script>())
+            {
+                PRINT("HELLO SCRIPT HERE");
+                name = (component.name + " [Script]");
+            }
+            else
+            {
+                name = GetComponentType<T>::name;
+            }
+            if (ImGui::CollapsingHeader(name.c_str(), nodeFlags))
             {
                 ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
                     | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
@@ -570,6 +578,7 @@ namespace Copium
                     ImGui::PushID(component->uuid);
                     DisplayType("Enabled", component->enabled); ImGui::SameLine();
                     DisplayComponentHelper(*component);
+ 
                     if (ImGui::Button("Delete", ImVec2(ImGui::GetWindowSize().x, 0.f)))
                     {
                         PRINT("DELETING");
@@ -577,11 +586,7 @@ namespace Copium
                     }
                     ImGui::PopID();
                 }
-                if constexpr (sizeof...(T1s) == 0)
-                {
-                    return;
-                }
-                else
+                if constexpr (sizeof...(T1s) != 0)
                 {
                     DisplayNext<T1s...>(gameObj);
                 }

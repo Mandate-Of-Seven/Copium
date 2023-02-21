@@ -134,6 +134,8 @@ namespace Copium
 		EditorInspector inspector;
 		EditorLayers layers;
 		UndoRedo::CommandManager commandManager; //for undo and redo
+
+		void CallbackSceneChanging(SceneChangingEvent* pEvent);
 	};
 }
 #endif // !EDITOR_SYSTEM_H

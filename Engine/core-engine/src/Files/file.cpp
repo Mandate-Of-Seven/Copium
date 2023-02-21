@@ -62,18 +62,10 @@ namespace Copium
 	{
 		if (fileType.fileType == FILE_TYPE::SCENE)
 		{
-			if (Copium::SceneManager::Instance()->get_current_scene() != nullptr)
-			{
-				std::cout << "change scene\n";
-				Copium::SceneManager::Instance()->change_scene(filePath.string().c_str());
-			}
+			if (Copium::SceneManager::Instance()->load_scene(filePath.string().c_str()))
+				std::cout << "loading success\n";
 			else
-			{
-				if (Copium::SceneManager::Instance()->load_scene(filePath.string().c_str()))
-					std::cout << "loading success\n";
-				else
-					std::cout << "loading fail\n";
-			}
+				std::cout << "loading fail\n";
 		}
 		else
 		{
