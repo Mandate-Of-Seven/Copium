@@ -69,6 +69,15 @@ namespace Copium
 		GameObject* pOriginal;
 	};
 
+	struct ChildInstantiateEvent : IEvent
+	{
+		ChildInstantiateEvent(GameObject*& _instanceContainer, GameObject* _parent = nullptr) :
+			instanceContainer{ _instanceContainer }, parent{ _parent }{}
+
+		GameObject*& instanceContainer;
+		GameObject* parent;
+	};
+
 	template <typename T>
 	struct ComponentAddEvent : IEvent
 	{

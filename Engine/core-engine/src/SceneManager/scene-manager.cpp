@@ -73,6 +73,8 @@ namespace Copium
 		//MyGOF.register_archetypes("Data/Archetypes");
 		SubscribeComponentsFunctions(ComponentTypes());
 		MyEventSystem->subscribe(this, &SceneManager::CallbackQuitEngine);
+		MyEventSystem->subscribe(this, &SceneManager::CallbackChildInstantiate);
+		MyEventSystem->subscribe(this, &SceneManager::CallbackGameObjectInstantiate);
 	}
 
 	template <typename T, typename... Ts>
@@ -735,4 +737,33 @@ namespace Copium
 	{
 		quit_engine();
 	}
+
+
+
+
+	void SceneManager::CallbackChildInstantiate(ChildInstantiateEvent* pEvent)
+	{
+		GameObject& child = MyGOF.InstantiateChild(*pEvent->parent, *currentScene);
+		pEvent->instanceContainer = &child;
+	}
+
+	void SceneManager::CallbackGameObjectInstantiate(GameObjectInstantiateEvent* pEvent)
+	{
+
+		if (!pEvent->pOriginal)
+		{
+			GameObject& go = MyGOF.Instantiate(*currentScene);
+			pEvent->instanceContainer = &go;
+		}
+		else
+		{
+			GameObject& go = MyGOF.Instantiate(*pEvent->pOriginal, *currentScene);
+			pEvent->instanceContainer = &go;
+		}
+	}
+	void SceneManager::CallbackGameObjectDelete(GameObjectDestroyEvent* pEvent)
+	{
+		currentScene->gameObjectsForDeletion.push_back(&pEvent->gameObject);
+	}
+
 }
