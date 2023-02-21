@@ -3,6 +3,7 @@
 #include <GameObject/components.h>
 #include <Editor/editor-system.h>
 #include <Graphics/fonts.h>
+#include "glm/gtc/matrix_transform.hpp"
 
 namespace Copium
 {
@@ -202,25 +203,89 @@ namespace Copium
 
 		glm::vec2 dimensions{ font->getDimensions(content, scale, wrapper) };
 
-		switch (hAlignment)
+		if (trans.HasParent())
 		{
-		case HorizontalAlignment::Center:
-			globalPos.x -= dimensions.x / 2.f;
-			break;
-		case HorizontalAlignment::Right:
-			globalPos.x -= dimensions.x;
-			break;
-		}
-		switch (vAlignment)
-		{
-		case VerticalAlignment::Top:
-			globalPos.y -= dimensions.y;
-			break;
-		case VerticalAlignment::Center:
-			globalPos.y -= dimensions.y / 2.f;
-			break;
-		}
+			glm::vec3 updatedPos = trans.position;
+			glm::vec3 updatedScale = trans.scale;
 
-		font->draw_text(content, globalPos, mixedColor, scale, wrapper, _camera);
+			Transform* tempObj = trans.parent;
+			while (tempObj)
+			{
+				glm::vec3 tempPos = tempObj->position.glmVec3;
+				glm::mat4 translate = glm::translate(glm::mat4(1.f), tempPos);
+
+				float rot = glm::radians(tempObj->rotation.z);
+				glm::mat4 lRotate = {
+				glm::vec4(cos(rot), sin(rot), 0.f, 0.f),
+				glm::vec4(-sin(rot), cos(rot), 0.f, 0.f),
+				glm::vec4(0.f, 0.f, 1.f, 0.f),
+				glm::vec4(0.f, 0.f, 0.f, 1.f)
+				};
+
+				glm::vec3 size = tempObj->scale.glmVec3;
+				glm::mat4 lScale = {
+					glm::vec4(size.x, 0.f, 0.f, 0.f),
+					glm::vec4(0.f, size.y, 0.f, 0.f),
+					glm::vec4(0.f, 0.f, 1.f, 0.f),
+					glm::vec4(0.f, 0.f, 0.f, 1.f)
+				};
+
+				glm::mat4 transform = translate * lRotate * lScale;
+
+				updatedPos = glm::vec3(transform * glm::vec4(updatedPos, 1.f));
+				updatedScale *= tempObj->scale.glmVec3;
+				tempObj = tempObj->parent;
+			}
+
+			float updatedSize = updatedScale.x * fSize * 0.1f;
+
+			glm::vec2 dimensions{ font->getDimensions(content, updatedSize, wrapper) };
+
+			switch (hAlignment)
+			{
+			case HorizontalAlignment::Center:
+				updatedPos.x -= dimensions.x / 2.f;
+				break;
+			case HorizontalAlignment::Right:
+				updatedPos.x -= dimensions.x;
+				break;
+			}
+			switch (vAlignment)
+			{
+			case VerticalAlignment::Top:
+				updatedPos.y -= dimensions.y;
+				break;
+			case VerticalAlignment::Center:
+				updatedPos.y -= dimensions.y / 2.f;
+				break;
+			}
+
+			font->draw_text(content, updatedPos, mixedColor, updatedSize, wrapper, _camera);
+		}
+		else
+		{
+			glm::vec2 dimensions{ font->getDimensions(content, scale, wrapper) };
+
+			switch (hAlignment)
+			{
+			case HorizontalAlignment::Center:
+				globalPos.x -= dimensions.x / 2.f;
+				break;
+			case HorizontalAlignment::Right:
+				globalPos.x -= dimensions.x;
+				break;
+			}
+			switch (vAlignment)
+			{
+			case VerticalAlignment::Top:
+				globalPos.y -= dimensions.y;
+				break;
+			case VerticalAlignment::Center:
+				globalPos.y -= dimensions.y / 2.f;
+				break;
+			}
+
+			font->draw_text(content, globalPos, mixedColor, scale, wrapper, _camera);
+		}
 	}
 }

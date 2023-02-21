@@ -74,22 +74,22 @@ namespace Copium
         }
 
         template <>
-        void DisplayPointer(const Texture& container)
+        void DisplayPointer(Texture& container)
         {
             static std::string buttonName{};
             const std::string& filePath{ container.get_file_path() };
-            size_t offset = filePath.find_last_of("/");
-            if (offset == std::string::npos)
+            size_t offset = filePath.find_last_of("\\");
+            if(offset != 0)
             {
-                buttonName = (filePath.c_str());
+                buttonName = filePath.substr(offset + 1, filePath.length() - offset);
             }
             else
             {
-                buttonName = (filePath.c_str() + offset + 1);
+                buttonName += '(';
+                buttonName += typeid(Texture).name() + strlen("class Copium::");
+                buttonName += ')';
             }
-            buttonName += '(';
-            buttonName += typeid(Texture).name() + strlen("class Copium::");
-            buttonName += ')';
+            
             ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
         }
 
@@ -116,6 +116,43 @@ namespace Copium
                 if (payload)
                 {
                     container = (T*)(*reinterpret_cast<void**>(payload->Data));
+                }
+                ImGui::EndDragDropTarget();
+            }
+        }
+
+        template <>
+        void DisplayType(const char* name, Texture*& container)
+        {
+            static std::string buttonName{};
+            if (container == nullptr)
+            {
+                buttonName = "Empty";
+                buttonName += '(';
+                buttonName += typeid(Texture).name() + strlen("class Copium::");
+                buttonName += ')';
+                ImGui::Button("Empty", ImVec2(-FLT_MIN, 0.f));
+            }
+            else
+            {
+                DisplayPointer(*container);
+            }
+
+            if (ImGui::BeginDragDropTarget())
+            {
+                const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ContentBrowserItem");
+                if (payload)
+                {
+                    std::string str = (const char*)(payload->Data);
+                    for (int i = 0; i < MyAssetSystem.GetTextures().size(); i++)
+                    {
+                        if (!MyAssetSystem.GetTexture(i)->get_file_path().compare(str))
+                        {
+                            // Attach Reference
+                            container = MyAssetSystem.GetTexture(i);
+                            break;
+                        }
+                    }
                 }
                 ImGui::EndDragDropTarget();
             }
@@ -420,6 +457,19 @@ namespace Copium
             //DisplayDragDrop();
             //spriteRenderer.sprite.set_name()
             Display("Sprite", spriteRenderer.sprite.refTexture);
+
+            DisplayColor("Color", spriteRenderer.sprite.color);
+
+            // Update sprite data
+            if (spriteRenderer.sprite.refTexture)
+            {
+                std::string filePath = spriteRenderer.sprite.refTexture->get_file_path();
+                uint64_t pathID = std::hash<std::string>{}(filePath);
+                MetaID metaID = MyAssetSystem.GetMetaID(pathID);
+                spriteRenderer.sprite.spriteID = metaID.uuid;
+                size_t pos = filePath.find_last_of('\\');
+                spriteRenderer.sprite.sprite_name = filePath.substr(pos + 1, filePath.length() - pos);
+            }
         }
 
         template <>
@@ -512,6 +562,18 @@ namespace Copium
                 Display("Rows", animator.animations[i].spriteSheet.rows);
                 Display("Time Delay", animator.animations[i].timeDelay);
                 Display("Sprite", animator.animations[i].spriteSheet.texture);
+
+                // Update sprite data
+                if (animator.animations[i].spriteSheet.texture)
+                {
+                    std::string filePath = animator.animations[i].spriteSheet.texture->get_file_path();
+                    uint64_t pathID = std::hash<std::string>{}(filePath);
+                    MetaID metaID = MyAssetSystem.GetMetaID(pathID);
+                    animator.animations[i].spriteSheet.spriteID = metaID.uuid;
+                    size_t pos = filePath.find_last_of('\\');
+                    animator.animations[i].spriteSheet.name = filePath.substr(pos + 1, filePath.length() - pos);
+                }
+
                 ImGui::PopID();
             }
         }

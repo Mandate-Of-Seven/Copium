@@ -62,11 +62,13 @@ namespace Copium
 		std::list<File*> files = MyFileSystem.get_file_references()[FILE_TYPE::SPRITE];
 		for (File* file : files)
 			GenerateMetaFile(file);
+
+		PRINT("Num textures: " << textures.size());
 	}
 
 	void AssetsSystem::update()
 	{
-
+		
 	}
 	
 	void AssetsSystem::exit()
@@ -366,7 +368,7 @@ namespace Copium
 		uint64_t pathID = std::hash<std::string>{}(_file->filePath.string());
 		metaData[pathID].filePath = _file->filePath.string();
 		_outputFile << "File Path: " << metaData[pathID].filePath << "\n";
-		//_outputFile << "uuid: " << metaData[pathID].uuid << "\n";
+		_outputFile << "uuid: " << (uint64_t)metaData[pathID].uuid << "\n";
 
 		// Hidden meta headers
 		std::string str = _file->get_file_type().stringType; // Check Format Importer

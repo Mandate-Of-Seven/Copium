@@ -276,54 +276,68 @@ namespace Copium
 	{
 		if (quadIndexCount)
 		{
-			// Alpha blending for transparent objects
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			// Check for number of textures in the system
+			int numTextures = graphics->get_texture_slot_index();
+			PRINT("Texture count: " << numTextures);
+			int setNumber = 0;
 
-			graphics->get_shader_program()[QUAD_SHADER].Use();
-			glBindVertexArray(quadVertexArrayID);
-
-			// Bean: Matrix assignment to be placed somewhere else
-			GLuint uProjection = glGetUniformLocation(
-				graphics->get_shader_program()[QUAD_SHADER].GetHandle(), "uViewProjection");
-			/*GLuint uTransform = glGetUniformLocation(
-				graphics->get_shader_program()[QUAD_SHADER].GetHandle(), "uTransform");*/
-			glm::mat4 projection = camera->get_view_proj_matrix();
-			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
-			//glm::vec3 pos = camera->get_eye();
-			//glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
-			//glUniformMatrix4fv(uTransform, 1, GL_FALSE, glm::value_ptr(transform));
-
-			/*PRINT("Transform Matrix:");
-			for (int i = 0; i < 4; i++)
+			if (numTextures > 32)
 			{
-				for (int j = 0; j < 4; j++)
-				{
-					std::cout << transform[j][i] << " ";
-				}
-				std::cout << "\n";
-			}*/
-			// End of matrix assignment
-
-			if (graphics->get_texture_slot_index() >= 32)
-			{
-				glClear(GL_COLOR_BUFFER_BIT);
-				graphics->set_texture_slot_index(1);
-				end_batch();
-				flush();
-				begin_batch();
+				setNumber = numTextures / 32;
 			}
 
-			for (GLuint i = 1; i < 32; i++)
-				glBindTextureUnit(i, graphics->get_texture_slots()[i]);
+			for (int i = 0; i <= setNumber; i++)
+			{
+				if (i > 0)
+					end_batch();
 
-			glDrawElements(GL_TRIANGLES, quadIndexCount, GL_UNSIGNED_SHORT, NULL);
-			drawCount++;
+				// Alpha blending for transparent objects
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+				graphics->get_shader_program()[QUAD_SHADER].Use();
+				glBindVertexArray(quadVertexArrayID);
 
-			glBindVertexArray(0);
-			graphics->get_shader_program()[QUAD_SHADER].UnUse();
-			glDisable(GL_BLEND);
+				// Bean: Matrix assignment to be placed somewhere else
+				GLuint uProjection = glGetUniformLocation(
+					graphics->get_shader_program()[QUAD_SHADER].GetHandle(), "uViewProjection");
+				/*GLuint uTransform = glGetUniformLocation(
+					graphics->get_shader_program()[QUAD_SHADER].GetHandle(), "uTransform");*/
+				glm::mat4 projection = camera->get_view_proj_matrix();
+				glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
+				//glm::vec3 pos = camera->get_eye();
+				//glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
+				//glUniformMatrix4fv(uTransform, 1, GL_FALSE, glm::value_ptr(transform));
+
+				/*PRINT("Transform Matrix:");
+				for (int i = 0; i < 4; i++)
+				{
+					for (int j = 0; j < 4; j++)
+					{
+						std::cout << transform[j][i] << " ";
+					}
+					std::cout << "\n";
+				}*/
+				// End of matrix assignment
+
+				for (GLuint j = 1, k = j; j < 32; j++)
+				{
+					if (setNumber > 0)
+						k -= setNumber;
+					glBindTextureUnit(j, graphics->get_texture_slots()[32 * setNumber + k]);
+				}
+				
+
+				glDrawElements(GL_TRIANGLES, quadIndexCount, GL_UNSIGNED_SHORT, NULL);
+				drawCount++;
+
+				glBindVertexArray(0);
+				graphics->get_shader_program()[QUAD_SHADER].UnUse();
+				glDisable(GL_BLEND);
+
+				if (i > 0)
+					begin_batch();
+			}
 		}
 
 		if (lineVertexCount)

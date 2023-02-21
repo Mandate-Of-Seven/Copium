@@ -217,8 +217,29 @@ namespace Copium
 					continue;
 
 				Transform& t = spriteRenderer.gameObj.transform;
-				Sprite& sprite = spriteRenderer.sprite;
-				renderer.draw_quad(t.GetWorldPosition(), Math::Vec2(t.GetWorldScale()), t.GetWorldRotation().z, sprite);
+				Sprite& sr = spriteRenderer.sprite;
+				glm::vec2 size(t.scale.x, t.scale.y);
+				float rotation = t.rotation.z;
+
+				if (t.HasParent())
+				{
+					glm::vec3 updatedPos = t.position.glmVec3;
+					glm::vec3 updatedScale = t.scale.glmVec3;
+					float updatedRot = t.rotation.z;
+					UpdateTransform(t, updatedPos, updatedRot, updatedScale);
+
+					if (!camera->withinFrustum(updatedPos, updatedScale))
+						continue;
+
+					renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr);
+				}
+				else
+				{
+					if (!camera->withinFrustum(t.position, t.scale))
+						continue;
+
+					renderer.draw_quad(t.position, size, rotation, sr);
+				}
 			}
 			for (Image& image: pScene->componentArrays.GetArray<Image>())
 			{
@@ -233,8 +254,29 @@ namespace Copium
 					continue;
 
 				Transform& t = image.gameObj.transform;
-				Sprite& sprite = image.sprite;
-				renderer.draw_quad(t.GetWorldPosition(), Math::Vec2(t.GetWorldScale()), t.GetWorldRotation().z,sprite,&image.layeredColor);
+				Sprite& sr = image.sprite;
+				glm::vec2 size(t.scale.x, t.scale.y);
+				float rotation = t.rotation.z;
+
+				if (t.HasParent())
+				{
+					glm::vec3 updatedPos = t.position.glmVec3;
+					glm::vec3 updatedScale = t.scale.glmVec3;
+					float updatedRot = t.rotation.z;
+					UpdateTransform(t, updatedPos, updatedRot, updatedScale);
+
+					if (!camera->withinFrustum(updatedPos, updatedScale))
+						continue;
+
+					renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr);
+				}
+				else
+				{
+					if (!camera->withinFrustum(t.position, t.scale))
+						continue;
+
+					renderer.draw_quad(t.position, size, rotation, sr);
+				}
 			}
 			for (Animator& animator: pScene->componentArrays.GetArray<Animator>())
 			{
@@ -254,7 +296,27 @@ namespace Copium
 					continue;
 
 				Transform& t = animator.gameObj.transform;
-				renderer.draw_quad(t.GetWorldPosition(), Math::Vec2(t.GetWorldScale()), t.GetWorldRotation().z, anim->spriteSheet, anim->currentFrameIndex,anim->frameCount);
+				glm::vec2 size(t.scale.x, t.scale.y);
+
+				if (t.HasParent())
+				{
+					glm::vec3 updatedPos = t.position.glmVec3;
+					glm::vec3 updatedScale = t.scale.glmVec3;
+					float updatedRot = t.rotation.z;
+					UpdateTransform(t, updatedPos, updatedRot, updatedScale);
+
+					if (!camera->withinFrustum(updatedPos, updatedScale))
+						continue;
+
+					renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
+				}
+				else
+				{
+					if (!camera->withinFrustum(t.position, t.scale))
+						continue;
+
+					renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
+				}
 			}
 			for (Text& text : pScene->componentArrays.GetArray<Text>())
 			{
