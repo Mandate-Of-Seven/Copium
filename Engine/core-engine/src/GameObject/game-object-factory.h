@@ -231,7 +231,7 @@ namespace Copium {
 
 		*/
 		/*******************************************************************************/
-		GameObject* create_child(GameObject& _parent);
+		GameObject& InstantiateChild(GameObject& _parent, Scene& _scene);
 
 
 	private:

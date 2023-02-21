@@ -225,129 +225,17 @@ namespace Copium
 		}
 	}
 
-	//GameObject* GameObjectFactory::build_archetype(rapidjson::Value& _value)
-	//{
-	//	Scene* currScene = sceneManager.get_current_scene();
-	//	if (!currScene)
-	//		return nullptr;
-
-	//	GameObject* go = new GameObject(0);
-
-	//	if (!go)
-	//		return nullptr;
-
-	//	if (!go->deserialize(_value))
-	//	{
-	//		delete go;
-	//		return nullptr;
-	//	}
-
-	//	if (_value.HasMember("Components"))
-	//	{
-	//		rapidjson::Value& compArr = _value["Components"].GetArray();
-	//		for (rapidjson::Value::ValueIterator iter = compArr.Begin(); iter != compArr.End(); ++iter)
-	//		{
-
-	//			rapidjson::Value& component = *iter;
-	//			if (component.HasMember("ComponentType"))
-	//			{
-	//				ComponentType componentType = (ComponentType)component["ComponentType"].GetInt();
-	//				if (componentType == ComponentType::Transform)
-	//					go->transform.deserialize(component);
-	//				else
-	//				{
-	//					Component* tmp = AddComponent(*go, componentType);
-	//					if (tmp)
-	//						tmp->deserialize(component);
-	//				}
-	//			}
-	//		}
-	//	}
-	//	// Deserialize children (if any)
-	//	if (_value.HasMember("Children")) {
-	//		rapidjson::Value& childArr = _value["Children"].GetArray();
-	//		for (rapidjson::Value::ValueIterator iter = childArr.Begin(); iter != childArr.End(); ++iter)
-	//		{
-	//			GameObject* cgo = instantiate(*iter);
-	//			go->transform.SetParent(&cgo->transform);
-	//		}
-	//	}
-
-	//	//std::cout << "No. of children:" << childCount << std::endl;
-	//	return go;
-	//}
-	//bool GameObjectFactory::register_archetypes(const std::filesystem::path& _directoryPath)
-	//{
-	//	std::cout << "Registration of Archetypes Begin----\n";
-	//	std::filesystem::directory_entry dir(_directoryPath);
-
-	//	// Iterate through the Archetypes folder and create a game object for each archetype file
-	//	for (const auto& dir_entry : std::filesystem::directory_iterator{ dir })
-	//	{
-	//		std::ifstream ifs(dir_entry.path());
-	//		if (!ifs)
-	//			continue;
-	//		rapidjson::IStreamWrapper isw(ifs);
-	//		rapidjson::Document doc;
-	//		doc.ParseStream(isw);
-	//		GameObject* tmp = build_archetype(doc);
-	//		if (tmp)
-	//		{
-	//			std::cout << "Registering " << doc["Archetype"].GetString() << std::endl;
-	//			archetypes.emplace(doc["Archetype"].GetString(), tmp);
-	//		}
-
-	//		ifs.close();
-	//	}
-	//	std::cout << "Registration of Archetypes End----\n";
-	//	return true;
-	//}
-	//void GameObjectFactory::clear_archetypes()
-	//{
-	//	for (std::map<std::string, GameObject*>::iterator iter = archetypes.begin(); iter != archetypes.end(); ++iter)
-	//	{
-	//		if ((*iter).second != nullptr) {
-	//			delete (*iter).second;
-	//			(*iter).second = nullptr;
-	//		}
-	//	}
-	//}
-
 	std::map<std::string, GameObject*>& GameObjectFactory::get_archetype_map()
 	{
 		return archetypes;
 	}
 
-	GameObject* GameObjectFactory::create_child(GameObject& _parent)
+	GameObject& GameObjectFactory::InstantiateChild(GameObject& _parent, Scene& _scene)
 	{
-		//Scene* currScene = sceneManager.get_current_scene();
-		//GameObject* newChild = new GameObject();
-		//newChild->transform.SetParent(&_parent.transform);
-		//currScene->add_gameobject(newChild);
-		//auto it = currScene->gameObjects.begin();
-		//for (auto pGameObject : currScene->gameObjects)
-		//{
-		//	if (pGameObject->id == _parent.id)
-		//	{
-		//		currScene->gameObjects.insert(it + 1, newChild);
-		//		_parent.transform.SetParent(&newChild->transform);
-		//		return newChild;
-		//	}
-		//	++it;
-		//}
-		
-		//for (auto iter = currScene->gameObjects.begin(); iter != currScene->gameObjects.end(); ++iter)
-		//{
-		//	if ((*iter)->id == _parent.id)
-		//	{
-		//		//currScene->gameObjects.insert(iter + 1, newChild);
-		//		currScene->add_gameobject(newChild);
-		//		newChild->transform.SetParent(&_parent.transform);
-		//		return newChild;
-		//	}
-		//}
+		GameObject& child = _scene.gameObjects.emplace_back();
+		child.transform.SetParent(&_parent.transform);
 
-		return nullptr;
+		return child;
 
 	}
 

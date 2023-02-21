@@ -282,7 +282,9 @@ namespace Copium {
 
 	private:
 		void CallbackQuitEngine(QuitEngineEvent* pEvent);
-
+		void CallbackChildInstantiate(ChildInstantiateEvent* pEvent);
+		void CallbackGameObjectInstantiate(GameObjectInstantiateEvent* pEvent);
+		void CallbackGameObjectDelete(GameObjectDestroyEvent* pEvent);
 	private:
 		Scene* currentScene;	// Pointer to the current scene
 		Scene* storageScene;	// Scene Pointer that acts as buffer for preview scene

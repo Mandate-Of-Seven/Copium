@@ -80,14 +80,15 @@ namespace Copium
 					//{
 					//	std::cout << "Error creating game object\n";
 					//}
+
 				}
 				if (ImGui::MenuItem("Delete Selected GameObject", nullptr))
 				{
 					if (MyEditorSystem.pSelectedGameObject)
 					{
 						//std::cout << "Delete\n";
-						Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::GameObjectCommand(MySceneManager.get_selected_gameobject_sptr(), false);
-						Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
+						//Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::GameObjectCommand(MySceneManager.get_selected_gameobject_sptr(), false);
+						//Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
 						MyEventSystem->publish(new GameObjectDestroyEvent(*MyEditorSystem.pSelectedGameObject));
 						MyEditorSystem.pSelectedGameObject = nullptr;
 					}
@@ -100,13 +101,14 @@ namespace Copium
 						MyEventSystem->publish(new GameObjectInstantiateEvent(temp, MyEditorSystem.pSelectedGameObject));
 					}
 				}
-				//if (ImGui::MenuItem("Create a Child GameObject"))
-				//{
-				//	if (MySceneManager.get_selected_gameobject())
-				//	{
-				//		MyGOF.create_child(*MySceneManager.get_selected_gameobject());
-				//	}
-				//}
+				if (ImGui::MenuItem("Create a Child GameObject"))
+				{
+					if (MyEditorSystem.pSelectedGameObject)
+					{
+						GameObject* temp{};
+						MyEventSystem->publish(new ChildInstantiateEvent(temp, MyEditorSystem.pSelectedGameObject));
+					}
+				}
 				if (ImGui::MenuItem("Shift Up"))
 				{
 					ShiftUp();
@@ -582,7 +584,7 @@ namespace Copium
 		GameObject* parent = &target->transform.parent->gameObject;
 		for (std::list<Transform*>::iterator it = parent->transform.children.begin(); it != parent->transform.children.end(); ++it)
 		{
-			if (&target->transform == *it)
+			if (target->transform.gameObject.uuid == (*it)->gameObject.uuid)
 			{
 				parent->transform.children.erase(it);
 				break;
@@ -598,8 +600,7 @@ namespace Copium
 		else
 		{
 			GameObject* grandparent = &parent->transform.parent->gameObject;
-			grandparent->transform.children.push_back(&target->transform);
-			target->transform.parent = &grandparent->transform;
+			target->transform.SetParent(&grandparent->transform);
 		}
 
 
