@@ -445,6 +445,15 @@ namespace Copium
         }
 
         template <>
+        void DisplayComponent<Script>(Script& script)
+        {
+            for (auto pair : script.fieldDataReferences)
+            {
+                Display(pair.first.c_str());
+            }
+        }
+
+        template <>
         void DisplayComponent<Button>(Button& btn)
         {
 
@@ -514,7 +523,6 @@ namespace Copium
             static std::string name{};
             if constexpr (std::is_same<T, Script>())
             {
-                PRINT("HELLO SCRIPT HERE");
                 name = (component.name + " [Script]");
             }
             else
