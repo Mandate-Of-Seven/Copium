@@ -97,10 +97,39 @@ namespace Copium
 				CleanComponents<T1s...>();
 			}
 		}
-		//void CleanGameObjects();
+		template <typename T1, typename... T1s>
+		void CleanGameObjects()
+		{
+			//iterate through an array for deletion of game object
+			//if found, call remove
+			for (auto& gameobj : scene.gameObjectsForDeletion)
+			{
+				for (T1* pComponent : gameobj->componentPtrArrays.GetArray<T1>())
+				{
+					MyGOF.RemoveComponent(*pComponent, scene);
+				}
+				
+			}
+			if constexpr (sizeof...(T1s) != 0)
+			{
+				CleanGameObjects<T1s...>();
+			}
+			else
+			{
+				for (auto& gameobj : scene.gameObjectsForDeletion)
+				{
+
+					MyGOF.Destroy(gameobj, scene.gameObjects);
+
+				}
+				scene.gameObjectsForDeletion.clear();
+			}
+
+		}
 	};
 
 	using CleanUpSceneStruct = decltype(CleanerStruct(ComponentTypes()));
+
 
 	void CleanUpScene(Scene& scene)
 	{
