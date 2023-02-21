@@ -25,6 +25,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <imgui.h>
 #include "SceneManager/scene-manager.h"
 #include "GameObject/game-object.h"
+#include "Audio/sound-system.h"
 
 namespace Copium
 {

@@ -367,6 +367,9 @@ namespace Copium
 		bool overLap = false;
 		bool loop = false;
 		int loopCount{ 0 };
+		std::string channel;
+		float volume = 1.0f;
+		const char* channelName[4] = { "Default", "BGM", "SFX", "Voice" };
 		/***************************************************************************/
 		/*!
 		\brief
