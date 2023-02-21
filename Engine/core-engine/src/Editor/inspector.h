@@ -42,6 +42,9 @@ namespace Copium
 		bool isInspectorOpen;
 		bool isFocused;
 		UUID targetGameobjectName;
+
+		void CallbackStartPreview(StartPreviewEvent* pEvent);
+		void CallbackStopPreview(StopPreviewEvent* pEvent);
 	};
 }
 

@@ -261,15 +261,23 @@ namespace Copium
 					if (ImGui::MenuItem("Play Scene"))
 					{
 						printf("Starting scene\n");
+						UUID selectedID{};
+						if (pSelectedGameObject)
+							selectedID = pSelectedGameObject->uuid;
 						if (MySceneManager.startPreview())
 						{
+							pSelectedGameObject = MySceneManager.FindGameObjectByID(selectedID);
 							messageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
 						}
 					}
 					if (ImGui::MenuItem("Stop Scene"))
 					{
+						UUID selectedID{};
+						if (pSelectedGameObject)
+							selectedID = pSelectedGameObject->uuid;
 						if (MySceneManager.endPreview())
 						{
+							pSelectedGameObject = MySceneManager.FindGameObjectByID(selectedID);
 							messageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
 						}
 					}

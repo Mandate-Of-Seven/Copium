@@ -527,7 +527,7 @@ namespace Copium
 	{
 		Scene* scene = MySceneManager.get_current_scene();
 		COPIUM_ASSERT(!scene, "SCENE NOT LOADED");
-		GameObject& clone = MyGOF.Instantiate(scene->gameObjects);
+		GameObject& clone = MyGOF.Instantiate(*scene);
 		return clone.uuid;
 	}
 

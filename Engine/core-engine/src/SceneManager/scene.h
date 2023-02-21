@@ -42,6 +42,8 @@ class Scene
 public:
 	GameObjectsArray gameObjects;	//Vector should be in order
 	ComponentsArrays componentArrays;
+	GameObjectsPtrArray gameObjectsForDeletion;
+	ComponentsPtrArrays componentsForDeletion;
 
 	std::vector<std::shared_ptr<GameObject>> gameObjectSPTRS;
 

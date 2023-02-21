@@ -257,6 +257,11 @@ namespace Copium
 		Animator(GameObject& _gameObj,UUID _uuid = UUID()) : Component(_gameObj)
 		{
 		}
+		Animator(GameObject& _gameObj, const Animator& rhs, UUID _uuid = UUID()) :
+			Component(_gameObj, _uuid), animations{ rhs.animations },
+			currentAnimationIndex{rhs.currentAnimationIndex},
+			startingAnimationIndex{rhs.startingAnimationIndex},
+			loop{ rhs.loop }, reverse{ rhs.reverse }, status{ rhs.status }{}
 		/***************************************************************************/
 		/*!
 		\brief
@@ -353,10 +358,6 @@ namespace Copium
 		int startingAnimationIndex{0};     // The first animation that is playing
 		bool loop{ true }, reverse{ false };
 		AnimatorStatus status{ AnimatorStatus::idle };
-		Animator& operator=(const Animator& rhs)
-		{
-			return *this;
-		}
 	};
 
 	class AudioSource : public Component
@@ -383,11 +384,8 @@ namespace Copium
 			reference to audio source whose values need to be assigned
 		*/
 		/**************************************************************************/
-		AudioSource& operator=(const AudioSource& rhs)
-		{
-			alias = rhs.alias;
-			return *this;
-		}
+		AudioSource(GameObject& _gameObj, const AudioSource& rhs, UUID _uuid = UUID()) :
+			Component(_gameObj, _uuid), alias{ rhs.alias }{}
 		/***************************************************************************/
 		/*!
 		\brief
@@ -435,7 +433,8 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		BoxCollider2D(GameObject& _gameObj, UUID _uuid = UUID()) :Component(_gameObj, _uuid) {}
-		BoxCollider2D& operator=(const BoxCollider2D& rhs){bounds = rhs.bounds;return *this;}
+		BoxCollider2D(GameObject& _gameObj, const BoxCollider2D& rhs, UUID _uuid = UUID()):
+			Component(_gameObj, _uuid),bounds{rhs.bounds}{}
 		AABB bounds{};
 	};
 
@@ -457,11 +456,11 @@ namespace Copium
 			// Bean: Checking for archetypes
 			BaseCamera::init(1280.f, 720.f, CameraType::GAME, true);
 		}
-		Camera& operator=(const Camera& rhs) 
+
+		Camera(GameObject& _gameObj, const Camera& rhs, UUID _uuid = UUID()) :
+			Component(_gameObj, _uuid), BaseCamera(rhs)
 		{
-			BaseCamera::operator=(rhs);
 			BaseCamera::init(1280.f, 720.f, CameraType::GAME, true);
-			return *this; 
 		}
 	};
 
@@ -484,10 +483,11 @@ namespace Copium
 		bool isKinematic{true};					//is object active?
 		bool useGravity{true};					//is object affected by gravity?
 
-		Rigidbody2D& operator=(const Rigidbody2D& rhs)
-		{
-			return *this;
-		}
+
+		Rigidbody2D(GameObject& _gameObj, const Rigidbody2D& rhs, UUID _uuid = UUID()) :
+			Component(_gameObj, _uuid), mass{rhs.mass}, isKinematic{rhs.isKinematic},
+			useGravity{rhs.useGravity}
+		{}
 	};
 
 
@@ -509,6 +509,11 @@ namespace Copium
 		{
 			//MyEventSystem->publish(new ScriptCreatedEvent(*this));
 		}
+
+
+		Script(GameObject& _gameObj, const Script& rhs, UUID _uuid = UUID()) :
+			Component(_gameObj, _uuid), name{ rhs.name }, fieldDataReferences{ rhs.fieldDataReferences }{}
+
 		Script& operator=(const Script& rhs)
 		{
 			return *this;
@@ -655,6 +660,10 @@ namespace Copium
 		glm::fvec4 layeredColor{ 0.f };
 	protected:
 		IUIComponent(GameObject& _gameObj, UUID _uuid = UUID()) : Component(_gameObj, _uuid) {}
+		IUIComponent(GameObject& _gameObj, const IUIComponent& rhs,UUID _uuid = UUID()) : 
+			hAlignment{rhs.hAlignment},vAlignment{rhs.vAlignment},offset{rhs.offset},color{rhs.color},
+			layeredColor{rhs.layeredColor}, Component(_gameObj, _uuid)
+		{}
 	};
 	class Button final : public Component
 	{
@@ -681,11 +690,19 @@ namespace Copium
 			state = ButtonState::None;
 		}
 
+
+		Button(GameObject& _gameObj, const Button& rhs, UUID _uuid = UUID()) :
+			Component(_gameObj, _uuid), callbackName{ rhs.callbackName },
+			bounds{ rhs.bounds }, normalColor{ rhs.normalColor }, 
+			hoverColor{ rhs.hoverColor }, clickedColor{ rhs.clickedColor },
+			fadeDuration{ rhs.fadeDuration}
+		{}
+
 		Button& operator=(const Button& rhs);
 
 		std::string callbackName;
 		AABB bounds;
-		ButtonState state;
+		ButtonState state{ButtonState::None};
 		glm::fvec4 normalColor;
 		glm::fvec4 hoverColor;
 		glm::fvec4 clickedColor;
@@ -712,7 +729,10 @@ namespace Copium
 		/**************************************************************************/
 		Text(GameObject& _gameObj, UUID _uuid = UUID());
 
-		Text& operator=(const Text& rhs) { return *this; }
+		Text(GameObject& _gameObj, const Text& rhs, UUID _uuid = UUID()) :
+			IUIComponent(_gameObj, rhs ,_uuid), fontName{ rhs.fontName }, font{ rhs.font },
+			fSize{rhs.fSize},wrapper{rhs.wrapper}
+		{strcpy(content, rhs.content); }
 		/*******************************************************************************
 		/*!
 		*
@@ -823,22 +843,13 @@ namespace Copium
 		friend class Button;
 	};
 
-	//class SpriteRenderer : public Component
-	//{
-	//public:
-	//	SpriteRenderer(GameObject& _gameObj, UUID _uuid = UUID())
-	//		:Component(_gameObj, _uuid), isAddingSprite{ false }
-	//	{
-	//	}
-
 	class SpriteRenderer final : public Component
 	{
 	public:
 		SpriteRenderer(GameObject& _gameObj, UUID _uuid = UUID()) : Component(_gameObj, _uuid){}
-		SpriteRenderer& operator=(const SpriteRenderer& rhs)
-		{
-			return *this;
-		}
+		SpriteRenderer(GameObject& _gameObj, const SpriteRenderer& rhs, UUID _uuid = UUID()) :
+			Component(_gameObj, _uuid), sprite{rhs.sprite}
+		{}
 		/* Sprite Information ***********************************************************/
 		Sprite sprite{};
 	};
@@ -897,10 +908,9 @@ namespace Copium
 		*/
 		/*******************************************************************************/
 		int GetOrderInLayer() const { return orderInLayer; }
-		SortingGroup& operator=(const SortingGroup& rhs)
-		{
-			return *this;
-		}		
+		SortingGroup(GameObject& _gameObj, const SortingGroup& rhs, UUID _uuid = UUID()) :
+			Component(_gameObj, _uuid), sortingLayer{ rhs.sortingLayer }, orderInLayer{rhs.orderInLayer}
+		{}
 		int sortingLayer;
 		int orderInLayer;
 	};
@@ -918,6 +928,8 @@ namespace Copium
 		/**************************************************************************/
 		Image(GameObject& _gameObj, UUID _uuid = UUID()) : IUIComponent(_gameObj, _uuid){}
 
+		Image(GameObject& _gameObj, const Image& rhs, UUID _uuid = UUID()) :
+			IUIComponent(_gameObj, rhs, _uuid), sprite{ rhs.sprite }{};
 
 		Image& operator=(const Image& rhs) { return *this; }
 		/*******************************************************************************
@@ -930,10 +942,7 @@ namespace Copium
 		Math::Vec2 Offset();
 		Sprite sprite;
 	};
-}
 
-namespace Copium
-{
 	template <typename T>
 	struct GetComponentType {};
 

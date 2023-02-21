@@ -73,49 +73,110 @@ namespace Copium
 	//	return nullptr;
 	//}
 
-	GameObjectFactory::GameObjectFactory()
-	{
 
-	}
-	GameObjectFactory::~GameObjectFactory()
+
+	template <typename T>
+	T& GameObjectFactory::AddComponent(GameObject& gameObj, Scene& scene, T* pCopy, bool copyID)
 	{
+		if (pCopy)
+		{
+			if (copyID)
+			{
+				T& component = scene.componentArrays.GetArray<T>().emplace_back(gameObj, *pCopy, pCopy->uuid);
+				gameObj.AddComponent(&component);
+				return component;
+			}
+			else
+			{
+				T& component = scene.componentArrays.GetArray<T>().emplace_back(gameObj, *pCopy);
+				gameObj.AddComponent(&component);
+				return component;
+			}
+		}
+		T& component = scene.componentArrays.GetArray<T>().emplace_back(gameObj);
+		gameObj.AddComponent(&component);
+		return component;
 	}
 
-	GameObject& GameObjectFactory::Instantiate(GameObjectsArray& gameObjectArray)
+
+	GameObject& GameObjectFactory::Instantiate(Scene& scene)
 	{
-		GameObject& tmp = gameObjectArray.push_back();
-		size_t count = gameObjectArray.size() - 1;
+		GameObject& tmp = scene.gameObjects.emplace_back();
+		size_t count = scene.gameObjects.size() - 1;
 		if (count)
 			tmp.name += '(' + std::to_string(count) + ')';
 		return tmp;
 	}
 
-	GameObject& GameObjectFactory::Instantiate(GameObject& _src, GameObjectsArray& gameObjectArray, bool copyID)
+	template<typename T, typename... Ts>
+	struct CloneComponentsHelper
+	{
+		GameObject& dest;
+		GameObject& src;
+		Scene& scene;
+		bool copyID;
+		constexpr CloneComponentsHelper(TemplatePack<T, Ts...> pack) {};
+		CloneComponentsHelper(GameObject& _dest, GameObject& _src, Scene& _scene, bool _copyID) :
+			dest{_dest},src{_src},scene{_scene},copyID{_copyID}
+		{ CloneComponents<T,Ts...>(); }
+		template <typename T1, typename... T1s>
+		void CloneComponents()
+		{
+			for (T1* pComponent : src.GetComponents<T1>())
+			{
+				MyGOF.AddComponent(dest, scene, pComponent, copyID);
+			}
+			if constexpr (sizeof...(T1s) != 0)
+			{
+				return CloneComponents<T1s...>();
+			}
+		}
+	};
+
+	using CloneAllComponents = decltype(CloneComponentsHelper(ComponentTypes()));
+
+	void CloneComponents(GameObject& _dest, GameObject& _src, Scene& _scene, bool _copyID = false)
+	{
+		CloneAllComponents clone{_dest,_src,_scene,_copyID};
+		return;
+	}
+
+	GameObject& GameObjectFactory::Instantiate(GameObject& _src, Scene& scene, bool copyID)
 	{
 		if (copyID)
 		{
-			GameObject& tmp = gameObjectArray.emplace_back(_src,_src.uuid);
-			size_t count = gameObjectArray.size() - 1;
+			GameObject& tmp = scene.gameObjects.emplace_back(_src,_src.uuid);
+			size_t count = scene.gameObjects.size() - 1;
 			if (count)
 				tmp.name += '(' + std::to_string(count) + ')';
+			CloneComponents(tmp,_src,scene,copyID);
+			for (Transform* pChild : _src.transform.children)
+			{
+				Instantiate(pChild->gameObject, scene, copyID).transform.SetParent(&tmp.transform);
+			}
 			return tmp;
 		}
-		GameObject& tmp = gameObjectArray.emplace_back(_src);
-		size_t count = gameObjectArray.size() - 1;
+		GameObject& tmp = scene.gameObjects.emplace_back(_src);
+		size_t count = scene.gameObjects.size() - 1;
 		if (count)
 			tmp.name += '(' + std::to_string(count) + ')';
+		CloneComponents(tmp, _src, scene, copyID);
+		for (Transform* pChild : _src.transform.children)
+		{
+			Instantiate(pChild->gameObject, scene, copyID).transform.SetParent(&tmp.transform);
+		}
 		return tmp;
 	}
 
-	GameObject& GameObjectFactory::Instantiate(rapidjson::Value& _value, GameObjectsArray& gameObjectArray)
+	GameObject& GameObjectFactory::Instantiate(rapidjson::Value& _value, Scene& scene)
 	{
 		if (_value.HasMember("ID"))
 		{
-			GameObject& go = gameObjectArray.emplace_back(_value["ID"].GetUint64());
+			GameObject& go = scene.gameObjects.emplace_back(_value["ID"].GetUint64());
 			Serializer::Deserialize(go, "", _value);
 			return go;
 		}
-		GameObject& go = gameObjectArray.emplace_back();
+		GameObject& go = scene.gameObjects.emplace_back();
 		Serializer::Deserialize(go, "", _value);
 		return go;
 	}

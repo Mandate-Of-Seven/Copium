@@ -15,6 +15,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 *****************************************************************************************/
 
 #include "pch.h"
+#include <Events/events-system.h>
 #include "Editor/inspector.h"
 #include "Editor/editor-hierarchy-list.h"
 #include "Files/assets-system.h"
@@ -33,6 +34,14 @@ namespace Copium
 {
     namespace
     {
+        //bool isInspectorOpen;
+        bool isAddingComponent;
+        float* editedColor{ nullptr };
+        Copium::SceneManager& sceneManager{ *Copium::SceneManager::Instance() };
+        Copium::FileSystem& fileSystem{ *Copium::FileSystem::Instance() };
+        Copium::AssetsSystem& assetsSystem{ *Copium::AssetsSystem::Instance() };
+        char nameBuffer[INPUT_BUFFER_SIZE];
+
         using namespace Copium;
 
         template <typename T>
@@ -41,8 +50,27 @@ namespace Copium
         template <typename T>
         void DisplayPointer(T& container)
         {
-            static std::string buttonName = std::string("(") + (typeid(T).name() + strlen("class Copium::")) + ")";
-            ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
+            if constexpr (ComponentTypes::has<T>())
+            {
+                static std::string buttonName;
+                buttonName = container.gameObj.name + "(" + GetComponentType<T>::name + ")";
+                ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
+            }
+            else if constexpr(std::is_same<T, Component>())
+            {
+                static std::string buttonName = container.gameObj.name + std::string("(") + (typeid(T).name() + strlen("class Copium::")) + ")";
+                ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
+            }
+            else if constexpr (std::is_same<T, IUIComponent>())
+            {
+                static std::string buttonName = ((Component&)container).gameObj.name + std::string("(") + (typeid(T).name() + strlen("class Copium::")) + ")";
+                ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
+            }
+            else
+            {
+                static std::string buttonName = std::string("(") + (typeid(T).name() + strlen("class Copium::")) + ")";
+                ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
+            }
         }
 
         template <>
@@ -277,7 +305,21 @@ namespace Copium
             ImGui::Text(string);
         }
 
+        template <typename T>
+        void DisplayColor(const char* name, T& val)
+        {
+            static_assert(sizeof(T) == sizeof(float) * 4);
+            ImGui::TableNextColumn();
+            ImGui::Text(name);
+            ImGui::TableNextColumn();
+            static ImGuiColorEditFlags miscFlags = ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip
+                | ImGuiColorEditFlags_NoLabel;
+            if (ImGui::ColorButton(name, reinterpret_cast<ImVec4&>(val), miscFlags, ImVec2(FLT_MAX, 0)))
+            {
+                editedColor = reinterpret_cast<float*>(&val);
+            }
 
+        }
     }
 
     namespace
@@ -388,6 +430,7 @@ namespace Copium
             Display("Font Size",text.fSize);
             Display("Content", text.content);
             Display("Wrapping", text.wrapper);
+            DisplayColor("Color", text.color);
             //DisplayDragDrop();
             //spriteRenderer.sprite.set_name()
         }
@@ -411,6 +454,9 @@ namespace Copium
             //spriteRenderer.sprite.set_name()
             Display("Target Graphic", btn.targetGraphic);
             Display("Bounds", btn.bounds);
+            DisplayColor("Normal Color", btn.normalColor);
+            DisplayColor("Hover Color", btn.hoverColor);
+            DisplayColor("Clicked Color", btn.clickedColor);
         }
 
         template <>
@@ -464,7 +510,7 @@ namespace Copium
         }
 
         template <typename T>
-        void constexpr DisplayComponentHelper(T& component)
+        void DisplayComponentHelper(T& component)
         {
             ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth;
             if (ImGui::CollapsingHeader(GetComponentType<T>::name, nodeFlags))
@@ -496,11 +542,6 @@ namespace Copium
                     ImGui::Unindent();
                     ImGui::EndTable();
                 }
-                if (ImGui::Button("Delete", ImVec2(ImGui::GetWindowSize().x, 0.f)))
-                {
-                    PRINT("DELETING COMPONENT OF TYPE: " << typeid(T).name());
-                    //MyEventSystem.publish(new RemoveComponentEvent<Component>{ id });
-                }
                 ImGui::PopStyleVar();
                 ImGui::PopStyleVar();
             }
@@ -529,6 +570,11 @@ namespace Copium
                     ImGui::PushID(component->uuid);
                     DisplayType("Enabled", component->enabled); ImGui::SameLine();
                     DisplayComponentHelper(*component);
+                    if (ImGui::Button("Delete", ImVec2(ImGui::GetWindowSize().x, 0.f)))
+                    {
+                        PRINT("DELETING");
+                        MyEventSystem->publish(new ComponentDeleteEvent<T1>(*component));
+                    }
                     ImGui::PopID();
                 }
                 if constexpr (sizeof...(T1s) == 0)
@@ -579,15 +625,7 @@ namespace Copium
         }
 
     }
-    namespace
-    {
-        //bool isInspectorOpen;
-        bool isAddingComponent;
-        Copium::SceneManager& sceneManager{ *Copium::SceneManager::Instance() };
-        Copium::FileSystem& fileSystem{ *Copium::FileSystem::Instance() };
-        Copium::AssetsSystem& assetsSystem{ *Copium::AssetsSystem::Instance() };
-        char nameBuffer[INPUT_BUFFER_SIZE];
-    }
+
     void EditorInspector::AlignforWidth(float width, float alignment)
     {
         //ImGuiStyle& style = ImGui::GetStyle();
@@ -600,6 +638,9 @@ namespace Copium
     {
         isAddingComponent = false;
         isInspectorOpen = true;
+
+        MyEventSystem->subscribe(this, &EditorInspector::CallbackStartPreview);
+        MyEventSystem->subscribe(this, &EditorInspector::CallbackStopPreview);
 
         for (size_t i{ 0 }; i < 128; ++i)
         {
@@ -655,6 +696,21 @@ namespace Copium
         }
 
         ImGui::PopStyleVar();
+
+
+        bool editing = editedColor;
+        if (editing)
+            ImGui::OpenPopup("Color");
+        if (ImGui::BeginPopupModal("Color", &editing, ImGuiTableFlags_NoBordersInBody))
+        {
+            static ImGuiWindowFlags miscFlags = ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview;
+            ImGui::ColorPicker4("##", editedColor, miscFlags);
+
+            ImGui::EndPopup();
+        }
+        if (!editing)
+            editedColor = nullptr;
+
         ImGui::End();
 
         // Adding new components
@@ -734,4 +790,17 @@ namespace Copium
     {
 
     }
+
+    void EditorInspector::CallbackStartPreview(StartPreviewEvent* pEvent)
+    {
+        editedColor = nullptr;
+        isAddingComponent = false;
+    }
+
+    void EditorInspector::CallbackStopPreview(StopPreviewEvent* pEvent)
+    {
+        editedColor = nullptr;
+        isAddingComponent = false;
+    }
+
 }

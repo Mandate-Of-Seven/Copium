@@ -71,10 +71,47 @@ namespace Copium
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		storageScene = nullptr;
 		//MyGOF.register_archetypes("Data/Archetypes");
-		SubscribeComponentsAdd(ComponentTypes());
+		SubscribeComponentsFunctions(ComponentTypes());
 		MyEventSystem->subscribe(this, &SceneManager::CallbackQuitEngine);
 	}
-	void SceneManager::update() {}
+
+	template <typename T, typename... Ts>
+	struct CleanerStruct
+	{
+		Scene& scene;
+		CleanerStruct(TemplatePack<T, Ts...> pack){}
+		CleanerStruct(Scene& _scene) : scene{_scene}
+		{
+			CleanComponents<T,Ts...>();
+		}
+		template <typename T1, typename... T1s>
+		void CleanComponents()
+		{
+			for (T1* pComponent : scene.componentsForDeletion.GetArray<T1>())
+			{
+				MyGOF.RemoveComponent(*pComponent,scene);
+			}
+			scene.componentsForDeletion.GetArray<T1>().clear();
+			if constexpr (sizeof...(T1s) != 0)
+			{
+				CleanComponents<T1s...>();
+			}
+		}
+		//void CleanGameObjects();
+	};
+
+	using CleanUpSceneStruct = decltype(CleanerStruct(ComponentTypes()));
+
+	void CleanUpScene(Scene& scene)
+	{
+		CleanUpSceneStruct cleanUp(scene);
+	}
+
+	void SceneManager::update() 
+	{
+		if (currentScene)
+			CleanUpScene(*currentScene);
+	}
 	void SceneManager::exit()
 	{
 		if (currSceneState == Scene::SceneState::play)
@@ -196,7 +233,7 @@ namespace Copium
 			rapidjson::Value& _gameObjArr = document["GameObjects"].GetArray();
 			for (rapidjson::Value::ValueIterator iter = _gameObjArr.Begin(); iter != _gameObjArr.End(); ++iter)
 			{
-				MyGOF.Instantiate(*iter,currentScene->gameObjects);
+				MyGOF.Instantiate(*iter,*currentScene);
 			}
 
 			// Linkages
@@ -448,6 +485,8 @@ namespace Copium
 			return false;
 		}
 
+		MyEventSystem->publish(new StopPreviewEvent());
+
 		std::cout << "stop preview\n";
 		currSceneState = Scene::SceneState::edit;
 
@@ -579,6 +618,7 @@ namespace Copium
 		return true;
 	}
 
+
 	void SceneManager::backUpCurrScene()
 	{
 		storageScene = currentScene;
@@ -596,7 +636,7 @@ namespace Copium
 		// Copy game object data
 		for (GameObject& gameObj : storageScene->gameObjects)
 		{
-			MyGOF.Instantiate(gameObj,currentScene->gameObjects, true);
+			MyGOF.Instantiate(gameObj,*currentScene, true);
 		}
 
 		//ZACH: COMPONENT LINKING
@@ -611,6 +651,20 @@ namespace Copium
 		//		currGameObj->components[compIndex]->previewLink(storedGameObj->components[compIndex]);
 		//	}
 		//}
+	}
+
+	template <typename T>
+	void SceneManager::CallbackComponentAdd(ComponentAddEvent<T>* pEvent)
+	{
+		T& component = currentScene->componentArrays.GetArray<T>().emplace_back(pEvent->gameObject);
+		pEvent->gameObject.AddComponent(&component);
+		pEvent->componentContainer = &component;
+	}
+
+	template <typename T>
+	void SceneManager::CallbackComponentDelete(ComponentDeleteEvent<T>* pEvent)
+	{
+		currentScene->componentsForDeletion.GetArray<T>().push_back(&pEvent->component);
 	}
 
 

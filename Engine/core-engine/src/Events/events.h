@@ -73,6 +73,13 @@ namespace Copium
 		T*& componentContainer;
 	};
 
+	template <typename T>
+	struct ComponentDeleteEvent : IEvent
+	{
+		ComponentDeleteEvent(T& _component) : component{_component}{}
+		T& component;
+	};
+
 	struct EditorConsoleLogEvent : IEvent
 	{
 		EditorConsoleLogEvent(const std::string& _message) : message{_message}{}

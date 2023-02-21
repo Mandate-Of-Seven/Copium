@@ -23,9 +23,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #define MyGOF (*Copium::GameObjectFactory::Instance())
 
 namespace Copium {
-	class GameObject;
-	class Scene;
-	class UUID;
 
 	class GameObjectCreator {
 
@@ -41,9 +38,6 @@ namespace Copium {
 	{
 		
 	public:
-		GameObjectFactory();
-		~GameObjectFactory();
-
 		/*******************************************************************************
 		/*!
 		*
@@ -54,7 +48,7 @@ namespace Copium {
 			pointer to the new game object
 		*/
 		/*******************************************************************************/
-		GameObject& Instantiate(GameObjectsArray& gameObjectArray);
+		GameObject& Instantiate(Scene& scene);
 
 		/*******************************************************************************
 		/*!
@@ -67,7 +61,7 @@ namespace Copium {
 			pointer to the new game object (head of the tree)
 		*/
 		/*******************************************************************************/
-		GameObject& Instantiate(GameObject& _src, GameObjectsArray& gameObjectArray, bool copyID = false);
+		GameObject& Instantiate(GameObject& _src, Scene& scene, bool copyID = false);
 
 		// Set up for future
 		//GameObject* instantiate(prefab);
@@ -83,7 +77,10 @@ namespace Copium {
 			pointer to the new game object
 		*/
 		/*******************************************************************************/
-		GameObject& Instantiate(rapidjson::Value& _value, GameObjectsArray& gameObjectArray);
+		GameObject& Instantiate(rapidjson::Value& _value, Scene& scene);
+
+		template <typename T>
+		T& AddComponent(GameObject& gameObject, Scene& scene,T* pCopy = nullptr, bool copyID = false);
 
 		/*******************************************************************************
 		/*!
@@ -97,6 +94,37 @@ namespace Copium {
 		*/
 		/*******************************************************************************/
 		void Destroy(GameObject& _go, GameObjectsArray& gameObjectArray);
+
+
+		template <typename T>
+		void RemoveComponent(T& component, Scene& scene)
+		{
+			auto it = component.gameObj.componentPtrArrays.GetArray<T>().begin();
+			auto end = component.gameObj.componentPtrArrays.GetArray<T>().end();
+			while (it != end)
+			{
+				if (component.uuid == (*it)->uuid)
+				{
+					component.gameObj.componentPtrArrays.GetArray<T>().erase(it);
+					PRINT("REMOVED FROM GAMEOBJECT");
+					break;
+				}
+				++it;
+			}
+
+			auto sceneIt = scene.componentArrays.GetArray<T>().begin();
+			auto sceneEnd = scene.componentArrays.GetArray<T>().end();
+			while (sceneIt != sceneEnd)
+			{
+				if (component.uuid == (*sceneIt).uuid)
+				{
+					scene.componentArrays.GetArray<T>().erase(sceneIt);
+					PRINT("REMOVED FROM SCENE");
+					break;
+				}
+				++sceneIt;
+			}
+		}
 
 		/*******************************************************************************
 		/*!

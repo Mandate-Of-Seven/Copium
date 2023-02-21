@@ -29,13 +29,10 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 namespace Copium
 {
+    static const std::string defaultGameObjName = "New GameObject"; // Append (No.) if its not the first
     class UUID;
     class GameObject final
     {
-    private:
-        //friend class GameObjectFactory;
-        ComponentsPtrArrays componentPtrArrays{};
-
     public:           
         //Global ID for gameObjects
         UUID uuid;
@@ -60,20 +57,11 @@ namespace Copium
             Math::Vec3 _rotation = { 0,0,0 },
             Math::Vec3 _scale = { 1,1,1 });
 
-        GameObject& operator=(const GameObject& rhs)
-        {
-            name = rhs.name;
-            active = rhs.active;
-            transform = rhs.transform;
-            //Find Components?
-            return *this;
-        }
-
         GameObject(const GameObject& rhs, UUID _uuid = UUID()) : uuid{_uuid}, transform{rhs.transform}
         {
             name = rhs.name;
             active = rhs.active;
-            //Find Components?
+            //Dont copy components here because GOF helps you do it already
         }
 
         template <typename T>
@@ -176,6 +164,7 @@ namespace Copium
         ~GameObject();
         bool IsActive();
         void SetActive(bool _active);
+        ComponentsPtrArrays componentPtrArrays{};
     };
 
     std::ostream& operator<<(std::ostream& _os, const GameObject& _go);

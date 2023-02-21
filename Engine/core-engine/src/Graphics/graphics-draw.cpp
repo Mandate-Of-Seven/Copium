@@ -487,7 +487,6 @@ namespace Copium
 				// If the object isnt within the frustum
 				if (!camera->withinFrustum(gameObject.transform.GetWorldPosition(), gameObject.transform.GetWorldScale()))
 					continue;
-				PRINT("RENDERING TEXT");
 				text.render(camera);
 			}
 		}

@@ -275,20 +275,20 @@ namespace Copium {
 
 
 		template <typename T>
-		void CallbackComponentAdd(ComponentAddEvent<T>* pEvent)
-		{
-			T& component = currentScene->componentArrays.GetArray<T>().emplace_back(pEvent->gameObject);
-			pEvent->gameObject.AddComponent(&component);
-			pEvent->componentContainer = &component;
-		}
+		void CallbackComponentAdd(ComponentAddEvent<T>* pEvent);
+
+		template <typename T>
+		void CallbackComponentDelete(ComponentDeleteEvent<T>* pEvent);
+
 
 		template<typename T, typename... Ts>
-		void SubscribeComponentsAdd(TemplatePack<T,Ts...> pack)
+		void SubscribeComponentsFunctions(TemplatePack<T,Ts...> pack)
 		{
 			MyEventSystem->subscribe(this, &SceneManager::CallbackComponentAdd<T>);
+			MyEventSystem->subscribe(this, &SceneManager::CallbackComponentDelete<T>);
 			if constexpr (sizeof...(Ts) != 0)
 			{
-				SubscribeComponentsAdd(TemplatePack<Ts...>());
+				SubscribeComponentsFunctions(TemplatePack<Ts...>());
 			}
 		}
 

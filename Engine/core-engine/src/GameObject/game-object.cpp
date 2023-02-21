@@ -20,13 +20,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "pch.h"
 #include "GameObject/game-object.h"
 
-//USING
-
-namespace 
-{
-    const std::string defaultGameObjName = "New GameObject"; // Append (No.) if its not the first
-}
-
 namespace Copium
 {
     GameObject::~GameObject()
