@@ -873,6 +873,8 @@ namespace Copium
 		//	//MyEditorSystem.getLayers()->SortLayers()->AddGameObject(0, _gameObj);
 		//}
 
+		//SortingGroup(GameObject& _gameObj, UUID _uuid = UUID(), bool _add = false);
+
 		/*******************************************************************************
 		/*!
 		*
@@ -886,7 +888,7 @@ namespace Copium
 			The sorting group to add the gameobject into
 		*/
 		/*******************************************************************************/
-		SortingGroup(GameObject& _gameObj, UUID _uuid = UUID(), int _order = 0, int _sort = 0, bool _replace = false);
+		SortingGroup(GameObject& _gameObj, UUID _uuid = UUID());
 
 		/*******************************************************************************
 		/*!

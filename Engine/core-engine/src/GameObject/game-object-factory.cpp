@@ -304,13 +304,6 @@ namespace Copium
 	//	}
 	//}
 
-	//GameObject& GameObjectFactory::Instantiate(const std::string& _archetype, )
-	//{
-	//	std::cout << "Making an archetype: " << _archetype << std::endl;
-	//	GameObject& tmp = Instantiate(*archetypes[_archetype], gameObjectArray);
-	//	return tmp;
-	//}
-
 	std::map<std::string, GameObject*>& GameObjectFactory::get_archetype_map()
 	{
 		return archetypes;

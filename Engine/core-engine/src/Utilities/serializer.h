@@ -216,8 +216,6 @@ namespace Copium::Serializer {
 
 	template<>
 	void Deserialize<Script>(Script& _data, const std::string& _key, rapidjson::Value& _value);
-
-
 	void DeserializeComponent(ComponentType _type, Component* _data, rapidjson::Value& _value);
 
 
