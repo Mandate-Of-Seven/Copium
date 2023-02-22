@@ -382,35 +382,37 @@ namespace Copium
 	template <typename T, typename... Ts>
 	struct ReflectExistingStruct
 	{
-		ReflectExistingStruct(TemplatePack<T> pack) {};
-		//ReflectExistingStruct() 
-		//{
-		//	Scene* pScene{ MySceneManager.get_current_scene() };
-		//	if (pScene)
-		//	{
-		//		for (GameObject& gameObject : pScene->gameObjects)
-		//		{
-		//			Reflect(gameObject);
-		//			ReflectGameObject<T, Ts...>(gameObject);
-		//		}
-		//	}
-		//}
-
-		//template <typename T1, typename... T1s>
-		//ReflectGameObject(GameObject& gameObj)
-		//{
-		//	for (T1* pComponent : gameObj.GetComponents<T1>())
-		//	{
-		//		Reflect(*pComponent);
-		//	}
-		//	if constexpr (sizeof...(T1s) != 0)
-		//		ReflectGameObject<T1s...>(gameObj);
-		//}
+		ReflectExistingStruct(TemplatePack<T,Ts...> pack) {};
+		ReflectExistingStruct() 
+		{
+			Scene* pScene{ MySceneManager.get_current_scene() };
+			if (pScene)
+			{
+				for (GameObject& gameObject : pScene->gameObjects)
+				{
+					MyScriptingSystem.ReflectGameObject(gameObject);
+					Reflect<T, Ts...>(gameObject);
+				}
+			}
+		}
+		template <typename T1, typename... T1s>
+		void Reflect(GameObject& gameObj)
+		{
+			for (T1* pComponent : gameObj.GetComponents<T1>())
+			{
+				MyScriptingSystem.ReflectComponent(*pComponent);
+			}
+			if constexpr (sizeof...(T1s) != 0)
+				Reflect<T1s...>(gameObj);
+		}
 	};
+
+	using ReflectAll = decltype(ReflectExistingStruct(ComponentTypes()));
 
 	void ScriptingSystem::swapDll()
 	{
 		PRINT("SWAPPING DLL_____________________________________");
+		registerScriptWrappers();
 		unloadAppDomain();
 		createAppDomain();
 		mGameObjects.clear();
@@ -425,10 +427,11 @@ namespace Copium
 		updateScriptClasses();
 
 		/* For each row, get some of its values */
+		mCurrentScene = instantiateClass(klassScene);
 
+		ReflectAll();
 
 		
-		mCurrentScene = instantiateClass(klassScene);
 		COPIUM_ASSERT(!mGameObject, "GameObject C# script could not be loaded");
 		COPIUM_ASSERT(!mCopiumScript, "CopiumScript C# script could not be loaded");
 		COPIUM_ASSERT(!mCollision2D, "Collision2D C# script could not be loaded");
@@ -733,6 +736,7 @@ namespace Copium
 				{
 					fieldSize = sizeof(uint64_t);
 				}
+				//Field has not been created onto script yet
 				if (nameField == script.fieldDataReferences.end())
 				{
 					Field newField = Field(fieldType, fieldSize, nullptr);
@@ -751,13 +755,100 @@ namespace Copium
 					}
 					script.fieldDataReferences[fieldName] = std::move(newField);
 				}
+				//Field exists
 				else
 				{
 					Field& field = nameField->second;
+					//If the field type is not the same
 					if (field.fType != fieldType)
 					{
 						field.Resize(fieldSize);
 						mono_field_get_value(mComponent, mField, field.data);
+					}
+					//Field exists, setback the values first
+					else
+					{
+						if (field.fType == FieldType::GameObject)
+						{
+							GameObject* reference = script.fieldGameObjReferences[fieldName];
+							if (reference)
+							{
+								MonoObject* monoReference{};
+								monoReference = ReflectGameObject(*reference);
+								mono_field_set_value(mComponent, mField, monoReference);
+							}
+						}
+						else if (field.fType == FieldType::Component)
+						{
+							Component* reference = script.fieldComponentReferences[fieldName];
+							if (reference)
+							{
+								MonoObject* monoReference{};
+								switch ((ComponentType)field.fType)
+								{
+								case(ComponentType::Animator):
+								{
+									monoReference = ReflectComponent(*(Animator*)reference);
+									break;
+								}
+								case(ComponentType::AudioSource):
+								{
+									monoReference = ReflectComponent(*(AudioSource*)reference);
+									break;
+								}
+								case(ComponentType::BoxCollider2D):
+								{
+									monoReference = ReflectComponent(*(BoxCollider2D*)reference);
+									break;
+								}
+								case(ComponentType::Button):
+								{
+									monoReference = ReflectComponent(*(Button*)reference);
+									break;
+								}
+								case(ComponentType::Camera):
+								{
+									monoReference = ReflectComponent(*(Camera*)reference);
+									break;
+								}
+								case(ComponentType::Image):
+								{
+									monoReference = ReflectComponent(*(Image*)reference);
+									break;
+								}
+								case(ComponentType::Rigidbody2D):
+								{
+									monoReference = ReflectComponent(*(Rigidbody2D*)reference);
+									break;
+								}
+								case(ComponentType::SpriteRenderer):
+								{
+									monoReference = ReflectComponent(*(SpriteRenderer*)reference);
+									break;
+								}
+								case(ComponentType::Script):
+								{
+									monoReference = ReflectComponent(*(Script*)reference);
+									break;
+								}
+								case(ComponentType::Text):
+								{
+									monoReference = ReflectComponent(*(Text*)reference);
+									break;
+								}
+								case(ComponentType::SortingGroup):
+								{
+									monoReference = ReflectComponent(*(SortingGroup*)reference);
+									break;
+								}
+								}
+								mono_field_set_value(mComponent, mField, monoReference);
+							}
+						}
+						else
+						{
+							SetFieldValue(mComponent, mField, field,field.data);
+						}
 					}
 					//CHECK TYPENAME
 					//else if (field.typeName)

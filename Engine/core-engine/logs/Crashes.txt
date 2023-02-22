@@ -1,5 +1,5 @@
-[2023-02-22 23:23:41.384] [Error] [critical] 
+[2023-02-23 03:57:43.208] [Error] [critical] 
 Caused By:	!mScript
-Info:		MONO OBJECT OF Bullet NOT LOADED
-Source:		C:\Users\FLESH\ECS\Copium\Engine\core-engine\src\Scripting\scripting-system.cpp (Line: 808)
+Info:		MONO OBJECT OF AudioManager NOT LOADED
+Source:		C:\Users\FLESH\ECS\Copium\Engine\core-engine\src\Scripting\scripting-system.cpp (Line: 897)
 

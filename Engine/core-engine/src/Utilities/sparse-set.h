@@ -126,6 +126,7 @@ public:
 
     void erase(const Iterator& iter)
     {
+        COPIUM_ASSERT(size_ == 0, "Can't erase from empty array");
         PRINT("BEFORE:");
         for (int i = 0; i < size_; ++i)
         {

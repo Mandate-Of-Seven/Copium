@@ -5,8 +5,8 @@ public class Bullet: CopiumScript
 {
 	public float speed = 0.5f;
     public string yes = "hello";
+    public string yes2 = "hello";
     public ShooterBehaviour behaviour;
-    public float yessur = 0;
     float timer = 0;
 
 	void Update()

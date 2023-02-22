@@ -219,6 +219,9 @@ namespace Copium::Serializer {
 	void DeserializeComponent(ComponentType _type, Component* _data, rapidjson::Value& _value);
 
 
+	void DeserializeLink(GameObject& _data, rapidjson::Value& _value);
+	void DeserializeLink(Script& _data,rapidjson::Value& _value);
+	void DeserializeLink(Button& _data, rapidjson::Value& _value);
 }
 
 

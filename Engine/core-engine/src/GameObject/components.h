@@ -221,7 +221,6 @@ namespace Copium
 		Math::Vec3 position{};
 		Math::Vec3 rotation{};
 		Math::Vec3 scale{1,1,1};
-		UUID pid{0};
 		GameObject& gameObject;
 		/***************************************************************************/
 		/*!
@@ -516,7 +515,8 @@ namespace Copium
 
 
 		Script(GameObject& _gameObj, const Script& rhs, UUID _uuid = UUID()) :
-			Component(_gameObj, _uuid), name{ rhs.name }, fieldDataReferences{ rhs.fieldDataReferences }{}
+			Component(_gameObj, _uuid), name{ rhs.name }, fieldDataReferences{ rhs.fieldDataReferences }, 
+			fieldComponentReferences{ rhs.fieldComponentReferences }, fieldGameObjReferences{ rhs.fieldGameObjReferences }{}
 
 		Script& operator=(const Script& rhs)
 		{
@@ -663,7 +663,7 @@ namespace Copium
 			Component(_gameObj, _uuid), callbackName{ rhs.callbackName },
 			bounds{ rhs.bounds }, normalColor{ rhs.normalColor }, 
 			hoverColor{ rhs.hoverColor }, clickedColor{ rhs.clickedColor },
-			fadeDuration{ rhs.fadeDuration}
+			fadeDuration{ rhs.fadeDuration}, targetGraphic{rhs.targetGraphic}
 		{}
 
 		Button& operator=(const Button& rhs);
@@ -676,7 +676,6 @@ namespace Copium
 		glm::fvec4 clickedColor;
 		IUIComponent* targetGraphic;
 		ButtonState previousState{ ButtonState::None };
-		UUID graphicID;
 		glm::fvec4 previousColor;
 		float timer{ 0 };
 		float fadeDuration{ 0.1f };

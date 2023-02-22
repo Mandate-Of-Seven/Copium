@@ -450,7 +450,7 @@ namespace Copium
 	template<>
 	void Serializer::Deserialize<Transform>(Transform& _data, const std::string& _key, rapidjson::Value& _value)
 	{
-		Copium::Deserialize(_data.pid.GetUUID(), _value, "PID");
+		Copium::Deserialize((uint64_t&)_data.parent, _value, "PID");
 		Deserialize(_data.position, "Pos", _value);
 		Deserialize(_data.rotation, "Rot", _value);
 		Deserialize(_data.scale, "Scale", _value);
@@ -530,106 +530,7 @@ namespace Copium
 				UUID uuid{};
 				Copium::Deserialize(uuid.GetUUID(), component, "UID");
 
-				if (Copium::Deserialize(type, component, "TypeID"))
-				{
-					PRINT("using typeid");
-					ComponentType ct = (ComponentType)type;
-
-
-					if (ct == ComponentType::Transform)
-					{
-						Deserialize(_data.transform, "", component);
-					}
-					else if (ct == ComponentType::SortingGroup)
-					{
-						SortingGroup* tmp = nullptr;
-						MyEventSystem->publish(new ComponentAddEvent(_data, tmp,uuid));
-						Deserialize(*tmp, "", component);
-					}
-					else
-					{
-						switch (ct)
-						{
-						case ComponentType::Animator:
-						{
-							Animator* tmp = nullptr;
-							MyEventSystem->publish(new ComponentAddEvent(_data, tmp, uuid));
-							Deserialize(*tmp, "", component);
-							break;
-						}
-						case ComponentType::BoxCollider2D:
-						{
-							BoxCollider2D* tmp = nullptr;
-							MyEventSystem->publish(new ComponentAddEvent(_data, tmp, uuid));
-							Deserialize(*tmp, "", component);
-							break;
-						}
-						case ComponentType::Camera:
-						{
-							Camera* tmp = nullptr;
-							MyEventSystem->publish(new ComponentAddEvent(_data, tmp, uuid));
-							Deserialize(*tmp, "", component);
-							break;
-						}
-						case ComponentType::Rigidbody2D:
-						{
-							Rigidbody2D* tmp = nullptr;
-							MyEventSystem->publish(new ComponentAddEvent(_data, tmp, uuid));
-							Deserialize(*tmp, "", component);
-							break;
-						}
-						case ComponentType::SpriteRenderer:
-						{
-							SpriteRenderer* tmp = nullptr;
-							MyEventSystem->publish(new ComponentAddEvent(_data, tmp, uuid));
-							Deserialize(*tmp, "", component);
-							break;
-						}
-						case ComponentType::Script:
-						{
-							Script* tmp = nullptr;
-							std::string scriptName{};
-							Copium::Deserialize(scriptName, component, "Name");
-							MyEventSystem->publish(new ComponentAddEvent<Script>(_data, tmp, scriptName.c_str(),uuid));
-							Deserialize(*tmp, "", component);
-							break;
-						}
-						case ComponentType::Button:
-						{
-							Button* tmp = nullptr;
-							MyEventSystem->publish(new ComponentAddEvent(_data, tmp, uuid));
-							Deserialize(*tmp, "", component);
-							break;
-						}
-						case ComponentType::Image:
-						{
-							Image* tmp = nullptr;
-							MyEventSystem->publish(new ComponentAddEvent(_data, tmp, uuid));
-							Deserialize(*tmp, "", component);
-							break;
-						}
-						case ComponentType::Text:
-						{
-							Text* tmp = nullptr;
-							MyEventSystem->publish(new ComponentAddEvent(_data, tmp, uuid));
-							Deserialize(*tmp, "", component);
-							break;
-						}
-						case ComponentType::AudioSource:
-						{
-							AudioSource* tmp = nullptr;
-							MyEventSystem->publish(new ComponentAddEvent(_data, tmp, uuid));
-							Deserialize(*tmp, "", component);
-							break;
-						}
-						default:
-							PRINT("ADDED NOTHING, MAYBE ADDED THE COMPONENT TO THE GAMEOBJECT.CPP");
-							break;
-						}
-					}
-
-				}
-				else if (Copium::Deserialize(key, component, "Type"))
+				if (Copium::Deserialize(key, component, "Type"))
 				{
 
 					if (key == "Transform")
@@ -849,9 +750,7 @@ namespace Copium
 	void Serializer::Deserialize<Button>(Button& _data, const std::string& _key, rapidjson::Value& _value)
 	{
 		Copium::Deserialize(_data.uuid.GetUUID(), _value, "UID");
-		uint64_t graphicID{ 0 };
-		Copium::Deserialize(graphicID, _value, "Graphic ID");
-		_data.graphicID = graphicID;
+		Copium::Deserialize((uint64_t&)_data.targetGraphic, _value, "Graphic ID");
 
 		Deserialize(_data.bounds, "BoundingBox", _value);
 
@@ -1022,6 +921,16 @@ namespace Copium
 				memcpy(_data.buffer, &tmp, sizeof(Math::Vec3));
 				break;
 			}
+			case FieldType::GameObject:
+			{
+				Copium::Deserialize((uint64_t&)_data.fieldGameObjReferences[_name], _value, _name);
+				break;
+			}
+			case FieldType::Component:
+			{
+				Copium::Deserialize((uint64_t&)_data.fieldComponentReferences[_name], _value, _name);
+				break;
+			}
 			}
 			MyEventSystem->publish(new ScriptSetFieldEvent(_data, _name.c_str(), _data.buffer));
 		}
@@ -1032,81 +941,81 @@ namespace Copium
 	void Serializer::DeserializeComponent(ComponentType _type, Component* _data, rapidjson::Value& _value)
 	{
 		int type{ -1 };
-		Copium::Deserialize(type, _value, "TypeID");
+		//Copium::Deserialize(type, _value, "TypeID");
 
 
-		switch ((Copium::ComponentType)type)
-		{
-		case(ComponentType::Animator):
-		{
-			Animator* animator = reinterpret_cast<Animator*>(_data);
-			Deserialize(*animator, "", _value);
-			break;
-		}
-		case(ComponentType::AudioSource):
-		{
-			AudioSource* audio = reinterpret_cast<AudioSource*>(_data);
-			Deserialize(*audio, "", _value);
-			break;
-		}
-		case(ComponentType::BoxCollider2D):
-		{
-			BoxCollider2D* bc = reinterpret_cast<BoxCollider2D*>(_data);
-			Deserialize(*bc, "", _value);
-			break;
-		}
-		case(ComponentType::Button):
-		{
-			Button* button = reinterpret_cast<Button*>(_data);
-			Deserialize(*button, "", _value);
-			break;
-		}
-		case(ComponentType::Camera):
-		{
-			Camera* cam = reinterpret_cast<Camera*>(_data);
-			Deserialize(*cam, "", _value);
-			break;
-		}
-		case(ComponentType::Image):
-		{
-			Image* img = reinterpret_cast<Image*>(_data);
-			Deserialize(*img, "", _value);
-			break;
-		}
-		case(ComponentType::Rigidbody2D):
-		{
-			Rigidbody2D* rb = reinterpret_cast<Rigidbody2D*>(_data);
-			Deserialize(*rb, "", _value);
-			break;
-		}
-		case(ComponentType::SpriteRenderer):
-		{
-			SpriteRenderer* spriteRenderer = reinterpret_cast<SpriteRenderer*>(_data);
-			Deserialize(*spriteRenderer, "", _value);
-			break;
-		}
-		case(ComponentType::Script):
-		{
-			Script* script = reinterpret_cast<Script*>(_data);
-			Deserialize(*script, "", _value);
-			break;
-		}
-		case(ComponentType::Text):
-		{
-			Text* txt = reinterpret_cast<Text*>(_data);
-			Deserialize(*txt, "", _value);
-			break;
-		}
-		case(ComponentType::SortingGroup):
-		{
-			SortingGroup* sg = reinterpret_cast<SortingGroup*>(_data);
-			Deserialize(*sg, "", _value);
-			break;
-		}
-		default:
-			PRINT("component serialization failed!");
-			break;
-		}
+		//switch ((Copium::ComponentType)type)
+		//{
+		//case(ComponentType::Animator):
+		//{
+		//	Animator* animator = reinterpret_cast<Animator*>(_data);
+		//	Deserialize(*animator, "", _value);
+		//	break;
+		//}
+		//case(ComponentType::AudioSource):
+		//{
+		//	AudioSource* audio = reinterpret_cast<AudioSource*>(_data);
+		//	Deserialize(*audio, "", _value);
+		//	break;
+		//}
+		//case(ComponentType::BoxCollider2D):
+		//{
+		//	BoxCollider2D* bc = reinterpret_cast<BoxCollider2D*>(_data);
+		//	Deserialize(*bc, "", _value);
+		//	break;
+		//}
+		//case(ComponentType::Button):
+		//{
+		//	Button* button = reinterpret_cast<Button*>(_data);
+		//	Deserialize(*button, "", _value);
+		//	break;
+		//}
+		//case(ComponentType::Camera):
+		//{
+		//	Camera* cam = reinterpret_cast<Camera*>(_data);
+		//	Deserialize(*cam, "", _value);
+		//	break;
+		//}
+		//case(ComponentType::Image):
+		//{
+		//	Image* img = reinterpret_cast<Image*>(_data);
+		//	Deserialize(*img, "", _value);
+		//	break;
+		//}
+		//case(ComponentType::Rigidbody2D):
+		//{
+		//	Rigidbody2D* rb = reinterpret_cast<Rigidbody2D*>(_data);
+		//	Deserialize(*rb, "", _value);
+		//	break;
+		//}
+		//case(ComponentType::SpriteRenderer):
+		//{
+		//	SpriteRenderer* spriteRenderer = reinterpret_cast<SpriteRenderer*>(_data);
+		//	Deserialize(*spriteRenderer, "", _value);
+		//	break;
+		//}
+		//case(ComponentType::Script):
+		//{
+		//	Script* script = reinterpret_cast<Script*>(_data);
+		//	Deserialize(*script, "", _value);
+		//	break;
+		//}
+		//case(ComponentType::Text):
+		//{
+		//	Text* txt = reinterpret_cast<Text*>(_data);
+		//	Deserialize(*txt, "", _value);
+		//	break;
+		//}
+		//case(ComponentType::SortingGroup):
+		//{
+		//	SortingGroup* sg = reinterpret_cast<SortingGroup*>(_data);
+		//	Deserialize(*sg, "", _value);
+		//	break;
+		//}
+		//default:
+		//	PRINT("component serialization failed!");
+		//	break;
+		//}
 	}
 	//-----------------------------------------------------------
 }

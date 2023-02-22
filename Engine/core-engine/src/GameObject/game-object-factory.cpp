@@ -84,17 +84,45 @@ namespace Copium
 			{
 				T& component = scene.componentArrays.GetArray<T>().emplace_back(gameObj, *pCopy, pCopy->uuid);
 				gameObj.AddComponent(&component);
+				MyEventSystem->publish(new ReflectComponentEvent(component));
 				return component;
 			}
 			else
 			{
 				T& component = scene.componentArrays.GetArray<T>().emplace_back(gameObj, *pCopy);
 				gameObj.AddComponent(&component);
+				MyEventSystem->publish(new ReflectComponentEvent(component));
 				return component;
 			}
 		}
 		T& component = scene.componentArrays.GetArray<T>().emplace_back(gameObj);
 		gameObj.AddComponent(&component);
+		MyEventSystem->publish(new ReflectComponentEvent(component));
+		return component;
+	}
+
+	Script& GameObjectFactory::AddComponent(GameObject& gameObj, Scene& scene, const char* scriptName , Script* pCopy, bool copyID)
+	{
+		if (pCopy)
+		{
+			if (copyID)
+			{
+				Script& component = scene.componentArrays.GetArray<Script>().emplace_back(gameObj, *pCopy, pCopy->uuid);
+				gameObj.AddComponent(&component);
+				MyEventSystem->publish(new ReflectComponentEvent(component));
+				return component;
+			}
+			else
+			{
+				Script& component = scene.componentArrays.GetArray<Script>().emplace_back(gameObj, *pCopy);
+				gameObj.AddComponent(&component);
+				MyEventSystem->publish(new ReflectComponentEvent(component));
+				return component;
+			}
+		}
+		Script& component = scene.componentArrays.GetArray<Script>().emplace_back(gameObj, UUID(), scriptName);
+		gameObj.AddComponent(&component);
+		MyEventSystem->publish(new ReflectComponentEvent(component));
 		return component;
 	}
 

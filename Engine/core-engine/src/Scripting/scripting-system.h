@@ -312,8 +312,6 @@ namespace Copium
 
 		CompilingState compilingState{ CompilingState::Wait };
 
-	private:
-
 		/**************************************************************************/
 		/*!
 			\brief
