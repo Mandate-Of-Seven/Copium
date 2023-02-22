@@ -16,6 +16,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #define FILE_H
 
 #include <filesystem>
+#include <Windows.h>
+#include <shellapi.h>
 #include "CopiumCore/uuid.h"
 
 namespace Copium
