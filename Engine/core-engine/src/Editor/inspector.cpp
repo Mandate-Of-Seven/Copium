@@ -635,7 +635,10 @@ namespace Copium
                 {
                     return AddComponentHelper<Ts...>(filter, gameObj);
                 }
-                return false;
+                else
+                {
+                    return false;
+                }
             }
         };
         using AddAllComponentsStruct = decltype(AddComponentStruct(ComponentTypes()));

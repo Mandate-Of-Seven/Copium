@@ -496,15 +496,6 @@ namespace Copium
 
 		for (GameObject& go : currentScene->gameObjects)
 		{
-			// Transform and Parent
-			if (go.transform.pid.GetUUID())
-			{
-				GameObject* p = MySceneManager.FindGameObjectByID(go.transform.pid);
-				if (p)
-					go.transform.SetParent(&p->transform);
-
-			}
-
 			// Replacement
 			if (go.HasComponent<SortingGroup>())
 			{

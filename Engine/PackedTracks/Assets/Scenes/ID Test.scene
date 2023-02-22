@@ -38,7 +38,6 @@
                 {
                     "UID": 18281188297279584149,
                     "Type": "SpriteRenderer",
-                    "TypeID": 7,
                     "Sprite ID": 13074272764253053419,
                     "Sprite Name": "Shooter.png",
                     "Color": {
@@ -51,7 +50,6 @@
                 {
                     "UID": 4943475834754382672,
                     "Type": "SortingGroup",
-                    "TypeID": 11,
                     "SortingLayer": 0,
                     "OrderInLayer": 0
                 }
@@ -84,7 +82,6 @@
                 {
                     "UID": 930485725828389189,
                     "Type": "SpriteRenderer",
-                    "TypeID": 7,
                     "Sprite ID": 0,
                     "Sprite Name": "empty",
                     "Color": {
@@ -97,7 +94,6 @@
                 {
                     "UID": 1117709405590687568,
                     "Type": "SortingGroup",
-                    "TypeID": 11,
                     "SortingLayer": 2,
                     "OrderInLayer": 0
                 }
@@ -130,7 +126,6 @@
                 {
                     "UID": 14220800906530986434,
                     "Type": "SpriteRenderer",
-                    "TypeID": 7,
                     "Sprite ID": 0,
                     "Sprite Name": "empty",
                     "Color": {
@@ -143,14 +138,12 @@
                 {
                     "UID": 569123808282858602,
                     "Type": "SortingGroup",
-                    "TypeID": 11,
                     "SortingLayer": 2,
                     "OrderInLayer": 30
                 },
                 {
                     "UID": 9276510642498082651,
                     "Type": "Text",
-                    "TypeID": 10,
                     "FontName": "corbel",
                     "H_Align": 1,
                     "V_Align": 1,
@@ -191,14 +184,12 @@
                 {
                     "UID": 6529609472700732640,
                     "Type": "SortingGroup",
-                    "TypeID": 11,
                     "SortingLayer": 2,
                     "OrderInLayer": 94
                 },
                 {
                     "UID": 8544013959230684447,
                     "Type": "Text",
-                    "TypeID": 10,
                     "FontName": "corbel",
                     "H_Align": 1,
                     "V_Align": 1,
@@ -239,7 +230,6 @@
                 {
                     "UID": 17691771714185020590,
                     "Type": "SpriteRenderer",
-                    "TypeID": 7,
                     "Sprite ID": 0,
                     "Sprite Name": "empty",
                     "Color": {
@@ -278,7 +268,6 @@
                 {
                     "UID": 2450263036419716710,
                     "Type": "Camera",
-                    "TypeID": 4,
                     "Color": {
                         "X": 0.27799999713897705,
                         "Y": 0.27799999713897705,
