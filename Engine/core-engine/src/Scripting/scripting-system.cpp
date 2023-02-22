@@ -262,11 +262,12 @@ namespace Copium
 		systemFlags |= FLAG_RUN_ON_EDITOR;
 		ThreadSystem::Instance()->addThread(new std::thread(&ScriptingSystem::recompileThreadWork, this));
 		messageSystem.subscribe(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT, this);
-		MyEventSystem->subscribe(this,&ScriptingSystem::CallbackSceneOpened);
+		MyEventSystem->subscribe(this,&ScriptingSystem::CallbackSceneChanging);
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptInvokeMethod);
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetMethodNames);
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptSetField);
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetField);
+		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetNames);
 		SubscribeComponentBasedCallbacks(ComponentTypes());
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptSetFieldReference<GameObject>);
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackStartPreview);
@@ -378,6 +379,35 @@ namespace Copium
 		}
 	}
 
+	template <typename T, typename... Ts>
+	struct ReflectExistingStruct
+	{
+		ReflectExistingStruct(TemplatePack<T> pack) {};
+		//ReflectExistingStruct() 
+		//{
+		//	Scene* pScene{ MySceneManager.get_current_scene() };
+		//	if (pScene)
+		//	{
+		//		for (GameObject& gameObject : pScene->gameObjects)
+		//		{
+		//			Reflect(gameObject);
+		//			ReflectGameObject<T, Ts...>(gameObject);
+		//		}
+		//	}
+		//}
+
+		//template <typename T1, typename... T1s>
+		//ReflectGameObject(GameObject& gameObj)
+		//{
+		//	for (T1* pComponent : gameObj.GetComponents<T1>())
+		//	{
+		//		Reflect(*pComponent);
+		//	}
+		//	if constexpr (sizeof...(T1s) != 0)
+		//		ReflectGameObject<T1s...>(gameObj);
+		//}
+	};
+
 	void ScriptingSystem::swapDll()
 	{
 		PRINT("SWAPPING DLL_____________________________________");
@@ -396,21 +426,7 @@ namespace Copium
 
 		/* For each row, get some of its values */
 
-		//Scene* pScene{ MySceneManager.get_current_scene() };
-		//if (pScene)
-		//{
-		//	for (Script& script : pScene->componentArrays.GetArray<Script>())
-		//	{
-		//		ScriptClass& scriptClass = scriptClassMap[script.name];
-		//		FieldMap tmp{ std::move(script.fieldDataReferences) };
-		//		for (auto& fieldData : scriptClass.mFields)
-		//		{
-		//			std::string name = fieldData.first;
-		//			
-		//			script.fieldDataReferences.emplace(fieldData.first,fieldData.second);
-		//		}
-		//	}
-		//}
+
 		
 		mCurrentScene = instantiateClass(klassScene);
 		COPIUM_ASSERT(!mGameObject, "GameObject C# script could not be loaded");
@@ -752,16 +768,21 @@ namespace Copium
 		return (*pairIt).second;
 	}
 
-	void ScriptingSystem::CallbackSceneOpened(SceneOpenedEvent* pEvent)
+	void ScriptingSystem::CallbackSceneChanging(SceneChangingEvent* pEvent)
 	{
-		//CompilingState state = compilingState;
-		while (compilingState == CompilingState::Compiling);
-		//If thread was Recompiling and is ready to swap
-		if (compilingState == CompilingState::SwapAssembly)
+		//If there is no assembly loaded at all
+		if (mAssemblyImage == nullptr)
 		{
-			swapDll();
+			//Wait if it is still compiling
+			while (compilingState == CompilingState::Compiling) {};
+			//If it finished compiling and needs to swap
+			if (compilingState == CompilingState::SwapAssembly)
+			{
+				//Swap dll and set back to wait for compiling
+				swapDll();
+				compilingState = CompilingState::Wait;
+			}
 		}
-		compilingState = CompilingState::Deserializing;
 		if (scenes.find(pEvent->scene.name) == scenes.end())
 			scenes[pEvent->scene.name] = mCurrentScene;
 		else
@@ -834,16 +855,18 @@ namespace Copium
 
 	void ScriptingSystem::CallbackStartPreview(StartPreviewEvent* pEvent)
 	{
-		CompilingState state = compilingState;
-		while (compilingState == CompilingState::Compiling);
-		//If thread was Recompiling and is ready to swap
-		if (state == CompilingState::Compiling && compilingState == CompilingState::SwapAssembly)
-		{
-			swapDll();
-		}
 		compilingState = CompilingState::Previewing;
 		mPreviousScene = mCurrentScene;
 		mCurrentScene = instantiateClass(klassScene);
 		PRINT("SCENE IN SCRIPTING SWAPPED!");
+	}
+
+	void ScriptingSystem::CallbackScriptGetNames(ScriptGetNamesEvent* pEvent)
+	{
+		for (auto& pair : scriptClassMap)
+		{
+			if (NAME_TO_CTYPE[pair.first] == ComponentType::None)
+				pEvent->names.push_back(pair.first.c_str());
+		}
 	}
 }

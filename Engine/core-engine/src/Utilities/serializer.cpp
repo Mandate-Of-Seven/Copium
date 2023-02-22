@@ -922,11 +922,6 @@ namespace Copium
 			const std::string& _name{ it->first };
 			if (!_value.HasMember(_name.c_str()))
 			{
-				PRINT("SKIPPING: " << _name);
-				if (it->second.fType == FieldType::Float)
-				{
-					PRINT(it->second.Get<float>());
-				}
 				continue;
 			}
 
@@ -1026,13 +1021,6 @@ namespace Copium
 				Deserialize(tmp, "", _v);
 				memcpy(_data.buffer, &tmp, sizeof(Math::Vec3));
 				break;
-			}
-			case FieldType::Component:
-			case FieldType::GameObject:
-			{
-				uint64_t buf{ 0 };
-				Copium::Deserialize(buf, _value, _name);
-				memcpy(_data.buffer, &buf, sizeof(uint64_t));
 			}
 			}
 			MyEventSystem->publish(new ScriptSetFieldEvent(_data, _name.c_str(), _data.buffer));

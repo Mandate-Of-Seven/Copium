@@ -209,7 +209,7 @@ namespace Copium
 			std::cout << "Scene name:" << currentScene->name << std::endl;
 		}
 
-		MyEventSystem->publish(new SceneChangingEvent());
+		MyEventSystem->publish(new SceneChangingEvent(*currentScene));
 		//MyEventSystem->publish(
 		//	new SceneOpenedEvent(
 		//		currentScene->get_name().c_str(),

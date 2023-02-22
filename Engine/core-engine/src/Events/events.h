@@ -52,12 +52,7 @@ namespace Copium
 
 	struct SceneChangingEvent : IEvent
 	{
-		SceneChangingEvent() {}
-	};
-
-	struct SceneOpenedEvent : IEvent
-	{
-		SceneOpenedEvent(Scene& _scene) : scene{_scene}{}
+		SceneChangingEvent(Scene& _scene) : scene{ _scene } {}
 		Scene& scene;
 	};
 
@@ -209,6 +204,12 @@ namespace Copium
 	{
 		ScriptDestroyedEvent(Script& _script) :script{ _script } {}
 		Script& script;
+	};
+
+	struct ScriptGetNamesEvent : public IEvent
+	{
+		ScriptGetNamesEvent(std::vector<const char*>& _names) :names{ _names }{}
+		std::vector<const char*>& names;
 	};
 
 }

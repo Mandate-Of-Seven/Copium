@@ -74,15 +74,16 @@ namespace Copium
                 buttonName = container.gameObj.name + " (" + container.Name() + ")";
                 ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
             }
+            else if constexpr (std::is_same<T, GameObject>())
+            {
+                static std::string buttonName;
+                buttonName = container.name + " (GameObject)";
+                ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
+            }
             else if constexpr (ComponentTypes::has<T>())
             {
                 static std::string buttonName;
                 buttonName = container.gameObj.name + " (" + GetComponentType<T>::name + ")";
-                ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
-            }
-            else if constexpr(std::is_same<T, Component>())
-            {
-                static std::string buttonName = container.gameObj.name + " (" + GetTypeName<T>() + ")";
                 ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
             }
             else if constexpr (std::is_same<T, IUIComponent>())
@@ -143,6 +144,8 @@ namespace Copium
             {
                 windowName += GetTypeName<T>();
             }
+            ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+            ImGui::SetNextWindowPos(ImVec2(100.f, 100.f), ImGuiCond_FirstUseEver);
             windowName += " Reference";
             if (ImGui::Begin(windowName.c_str(), &isAddingReference))
             {
@@ -161,6 +164,7 @@ namespace Copium
                         {
                             isAddingReference = false;
                             container = &gameObject;
+                            break;
                         }
                     }
                 }
@@ -188,6 +192,7 @@ namespace Copium
                         {
                             isAddingReference = false;
                             container = &component;
+                            break;
                         }
                     }
                 }
@@ -203,6 +208,7 @@ namespace Copium
                         {
                             isAddingReference = false;
                             container = &component;
+                            break;
                         }
                     }
                     for (Text& component : pScene->componentArrays.GetArray<Text>())
@@ -215,6 +221,25 @@ namespace Copium
                         {
                             isAddingReference = false;
                             container = &component;
+                            break;
+                        }
+                    }
+                }
+                else if constexpr (std::is_same<T, Texture>()) 
+                {
+                    for (int i = 0; i < MyAssetSystem.GetTextures().size(); i++)
+                    {
+                        std::string path = MyAssetSystem.GetTexture(i)->get_file_path();
+                        buttonName = path;
+                        buttonName += " [Texture]";
+                        ImVec2 buttonSize = ImGui::GetWindowSize();
+                        buttonSize.y *= (float)BUTTON_HEIGHT;
+                        if (filter.PassFilter(path.c_str()) && ImGui::Button(buttonName.c_str(), buttonSize))
+                        {
+                            // Attach Reference
+                            container = MyAssetSystem.GetTexture(i);
+                            isAddingReference = false;
+                            break;
                         }
                     }
                 }
@@ -253,8 +278,7 @@ namespace Copium
 
             if (ImGui::BeginDragDropTarget())
             {
-                const ImGuiPayload* payload{}; 
-                ImGui::AcceptDragDropPayload(GetTypeName<T>());
+                const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(GetTypeName<T>());
                 if (payload)
                 {
                     container = (T*)(*reinterpret_cast<void**>(payload->Data));
@@ -266,7 +290,6 @@ namespace Copium
 
         void DisplayType(const char* name, Script*& container, const char* scriptName)
         {
-            PRINT(scriptName);
             static std::string buttonName{};
             if (container == nullptr)
             {
@@ -291,8 +314,7 @@ namespace Copium
 
             if (ImGui::BeginDragDropTarget())
             {
-                const ImGuiPayload* payload{};
-                ImGui::AcceptDragDropPayload(scriptName);
+                const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(scriptName);
                 if (payload)
                 {
                     container = (Script*)(*reinterpret_cast<void**>(payload->Data));
@@ -317,6 +339,12 @@ namespace Copium
                 DisplayPointer(*container);
             }
 
+            if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+            {
+                isAddingReference = true;
+                pEditedContainer = reinterpret_cast<void**>(&container);
+            }
+
             if (ImGui::BeginDragDropTarget())
             {
                 const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ContentBrowserItem");
@@ -335,6 +363,7 @@ namespace Copium
                 }
                 ImGui::EndDragDropTarget();
             }
+            AddReferencePanel(container);
         }
 
         void DisplayType(const char* name, bool& val)
@@ -575,7 +604,21 @@ namespace Copium
                 buttonSize.y *= (float)BUTTON_HEIGHT;
                 if constexpr (std::is_same<Script, T>())
                 {
-
+                    static std::vector<const char*> scriptNames;
+                    MyEventSystem->publish(new ScriptGetNamesEvent(scriptNames));
+                    for (const char* name : scriptNames)
+                    {
+                        static std::string newName;
+                        newName = name;
+                        newName += " [Script]";
+                        if (filter.PassFilter(newName.c_str()) && ImGui::Button(newName.c_str(), buttonSize))
+                        {
+                            T* component;
+                            MyEventSystem->publish(new ComponentAddEvent<Script>{ gameObj,component,name});
+                            return true;
+                        }
+                    }
+                    scriptNames.clear();
                 }
                 else
                 {
@@ -662,52 +705,7 @@ namespace Copium
             //DisplayDragDrop();
             //spriteRenderer.sprite.set_name()
             Display("Sprite", spriteRenderer.sprite.refTexture);
-
-            static bool isAddingSprite = false;
-            if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
-            {
-                isAddingSprite = true;
-            }
-            if (isAddingSprite)
-            {
-                // Open pop-up window
-                ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
-                ImGui::SetNextWindowPos(ImVec2(100.f, 100.f), ImGuiCond_FirstUseEver);
-                ImGui::Begin("Add Sprite", &isAddingSprite);
-                ImVec2 buttonSize = ImGui::GetWindowSize();
-                buttonSize.y *= (float)0.1;
-                static ImGuiTextFilter filter;
-                ImGui::PushItemWidth(-1);
-                filter.Draw("##SpriteName");
-                ImGui::PopItemWidth();
-
-                for (int i = 0; i < MyAssetSystem.GetTextures().size(); i++)
-                {
-                    size_t startPos = MyAssetSystem.GetTexture(i)->get_file_path().find_last_of('\\');
-                    std::string name = MyAssetSystem.GetTexture(i)->get_file_path().substr(startPos + 1, MyAssetSystem.GetTexture(i)->get_file_path().length() - startPos);
-                    if (ImGui::Button(name.c_str(), buttonSize))
-                    {
-                        if (filter.PassFilter(name.c_str()))
-                        {
-                            spriteRenderer.sprite.sprite_name = name;
-                            std::string path = MyAssetSystem.GetTexture(i)->get_file_path();
-                            uint64_t pathID = std::hash<std::string>{}(path);
-                            MetaID metaID = MyAssetSystem.GetMetaID(pathID);
-                            spriteRenderer.sprite.spriteID = metaID.uuid;
-
-                            // Attach Reference
-                            spriteRenderer.sprite.refTexture = MyAssetSystem.GetTexture(i);
-                            isAddingSprite = false;
-                            break;
-                        }
-                    }
-                }
-                ImGui::End();
-            }
-
             DisplayColor("Color", spriteRenderer.sprite.color);
-
-            // Update sprite data
             if (spriteRenderer.sprite.refTexture)
             {
                 std::string filePath = spriteRenderer.sprite.refTexture->get_file_path();
@@ -734,52 +732,9 @@ namespace Copium
         void DisplayComponent<Image>(Image& image)
         {
             Display("Image", image.sprite.refTexture);
-
-            static bool isAddingImage = false;
-            if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
-            {
-                isAddingImage = true;
-            }
-            if (isAddingImage)
-            {
-                // Open pop-up window
-                ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
-                ImGui::SetNextWindowPos(ImVec2(100.f, 100.f), ImGuiCond_FirstUseEver);
-                ImGui::Begin("Add Sprite", &isAddingImage);
-                ImVec2 buttonSize = ImGui::GetWindowSize();
-                buttonSize.y *= (float)0.1;
-                static ImGuiTextFilter filter;
-                ImGui::PushItemWidth(-1);
-                filter.Draw("##SpriteName");
-                ImGui::PopItemWidth();
-
-                for (int i = 0; i < MyAssetSystem.GetTextures().size(); i++)
-                {
-                    size_t startPos = MyAssetSystem.GetTexture(i)->get_file_path().find_last_of('\\');
-                    std::string name = MyAssetSystem.GetTexture(i)->get_file_path().substr(startPos + 1, MyAssetSystem.GetTexture(i)->get_file_path().length() - startPos);
-                    if (ImGui::Button(name.c_str(), buttonSize))
-                    {
-                        if (filter.PassFilter(name.c_str()))
-                        {
-                            image.sprite.sprite_name = name;
-                            std::string path = MyAssetSystem.GetTexture(i)->get_file_path();
-                            uint64_t pathID = std::hash<std::string>{}(path);
-                            MetaID metaID = MyAssetSystem.GetMetaID(pathID);
-                            image.sprite.spriteID = metaID.uuid;
-
-                            // Attach Reference
-                            image.sprite.refTexture = MyAssetSystem.GetTexture(i);
-                            isAddingImage = false;
-                            break;
-                        }
-                    }
-                }
-                ImGui::End();
-            }
-
             DisplayColor("Color", image.sprite.color);
 
-            // Update sprite data
+            //Update sprite data
             if (image.sprite.refTexture)
             {
                 std::string filePath = image.sprite.refTexture->get_file_path();
@@ -1363,6 +1318,20 @@ namespace Copium
             }
             if (ImGui::CollapsingHeader(name.c_str(), nodeFlags))
             {
+                if (ImGui::BeginDragDropSource())
+                {
+                    void* container = &component;
+                    if constexpr (std::is_same<T, Script>())
+                    {
+                        ImGui::SetDragDropPayload(component.Name().c_str(), &container, sizeof(void*));
+                        ImGui::EndDragDropSource();
+                    }
+                    else
+                    {
+                        ImGui::SetDragDropPayload(GetTypeName<T>(), &container, sizeof(void*));
+                        ImGui::EndDragDropSource();
+                    }
+                }
                 ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
                     | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
                     | ImGuiTableFlags_PadOuterX;
@@ -1376,13 +1345,6 @@ namespace Copium
                     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
                     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
                     ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
-                    if (ImGui::BeginDragDropSource())
-                    {
-                        static void* container;
-                        container = &component;
-                        ImGui::SetDragDropPayload(GetComponentType<T>::name, &container, sizeof(void*));
-                        ImGui::EndDragDropSource();
-                    }
                     DisplayComponent(component);
                     ImGui::PopStyleVar();
                     ImGui::PopStyleVar();

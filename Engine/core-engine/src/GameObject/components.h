@@ -834,7 +834,7 @@ namespace Copium
 	RegisterComponent(Image);
 	RegisterComponent(Text);
 	RegisterComponent(Button);
-	using ComponentTypes = TemplatePack<BoxCollider2D, Rigidbody2D, SpriteRenderer, Animator,Camera, SortingGroup, AudioSource, Script, Image, Text, Button>;
+	using ComponentTypes = TemplatePack<SortingGroup, SpriteRenderer,BoxCollider2D, Rigidbody2D, Animator,Camera, AudioSource, Image, Text, Button, Script>;
 	using ComponentsArrays = decltype(ComponentGroup(ComponentTypes()));
 	using ComponentsPtrArrays = decltype(ComponentPtrGroup(ComponentTypes()));
 
