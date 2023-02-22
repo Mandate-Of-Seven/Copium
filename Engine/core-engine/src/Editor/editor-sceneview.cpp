@@ -353,7 +353,15 @@ namespace Copium
 			ImGuizmo::SetDrawlist();
 
 			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, (float)sceneWidth, (float)sceneHeight + 50.f);
-			glm::mat4 camProj = camera.get_projection();
+			//glm::mat4 camProj = camera.get_projection();
+
+			// Offset the zl for bottom and top because of the scene view window bar height of 50.f
+			float ar = camera.GetAspect();
+			float nearClip = camera.GetNearClip();
+			float farClip = camera.GetFarClip(); 
+			float zl = camera.get_zoom();
+			float x = (sceneHeight + 50.f) / (float)sceneHeight;
+			glm::mat4 camProj = glm::ortho(-ar * zl, ar * zl, -zl * x, zl * x, nearClip, farClip);
 			glm::mat4 camView = camera.get_view_matrix();
 
 			glm::mat4 translate = glm::translate(glm::mat4(1.f), pos);

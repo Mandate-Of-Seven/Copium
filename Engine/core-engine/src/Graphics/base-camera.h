@@ -160,6 +160,7 @@ namespace Copium
 		void set_bg_color(glm::vec4 const& _color) { backgroundColor = _color; }
 		const glm::vec4& get_bg_color() const { return backgroundColor; }
 
+		float GetAspect() const { return aspect; }
 		float GetNearClip() const { return nearClip; }
 		float GetFarClip() const { return farClip; }
 		bool IsOrthographic() const { return orthographic; }
@@ -169,7 +170,7 @@ namespace Copium
 		void SetNearClip(float _value) { nearClip = _value; }
 		void SetFarClip(float _value) { farClip = _value; }
 		void SetOrthographic(bool _value) { orthographic = _value; }
-		void SetFocalPoint(glm::vec3 _value) { focalPoint= _value; }
+		void SetFocalPoint(glm::vec3 _value) { focalPoint = _value; }
 
 	protected:
 		
