@@ -13,7 +13,7 @@
 	sprite or particle system (if any). Renderers can be disabled to make objects
 	invisble (see enabled).
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #ifndef RENDERER_H
 #define RENDERER_H

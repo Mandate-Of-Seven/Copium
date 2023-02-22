@@ -10,7 +10,7 @@
 \brief
 	This file contains the fragment shader of the application.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #version 450 core
 
@@ -57,19 +57,7 @@ void main()
 {
 	int index = int(vTextureIndex);
 
-	if(index > 31)
-		index = index % 32;
-
-	if(index > 0)
-	{
-		fFragColor = texture(uTexture1[index], vTextureCoordinate) * vInterpColor;
-		if(fFragColor.a < 0.1)
-			discard;
-	}
-	else
-	{
-		fFragColor = vInterpColor;
-	}
+	fFragColor = texture(uTexture1[index], vTextureCoordinate) * vInterpColor;
 	
 
 //	switch (index)

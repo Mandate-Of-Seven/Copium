@@ -39,8 +39,8 @@
                     "UID": 18281188297279584149,
                     "Type": "SpriteRenderer",
                     "TypeID": 7,
-                    "Sprite ID": 0,
-                    "Sprite Name": "empty",
+                    "Sprite ID": 13074272764253053419,
+                    "Sprite Name": "Shooter.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
@@ -276,7 +276,7 @@
                     }
                 },
                 {
-                    "UID": 7190982615431394733,
+                    "UID": 2450263036419716710,
                     "Type": "Camera",
                     "TypeID": 4,
                     "Color": {
