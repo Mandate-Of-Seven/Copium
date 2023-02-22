@@ -171,6 +171,7 @@ namespace Copium
 		void SetFarClip(float _value) { farClip = _value; }
 		void SetOrthographic(bool _value) { orthographic = _value; }
 		void SetFocalPoint(glm::vec3 _value) { focalPoint = _value; }
+		void SetCameraPosition(glm::vec3 _value) { viewer = _value; }
 
 	protected:
 		

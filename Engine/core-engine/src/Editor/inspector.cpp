@@ -465,6 +465,48 @@ namespace Copium
             //spriteRenderer.sprite.set_name()
             Display("Sprite", spriteRenderer.sprite.refTexture);
 
+            static bool isAddingSprite = false;
+            if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+            {
+                isAddingSprite = true;
+            }
+            if (isAddingSprite)
+            {
+                // Open pop-up window
+                ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+                ImGui::SetNextWindowPos(ImVec2(100.f, 100.f), ImGuiCond_FirstUseEver);
+                ImGui::Begin("Add Sprite", &isAddingSprite);
+                ImVec2 buttonSize = ImGui::GetWindowSize();
+                buttonSize.y *= (float)0.1;
+                static ImGuiTextFilter filter;
+                ImGui::PushItemWidth(-1);
+                filter.Draw("##SpriteName");
+                ImGui::PopItemWidth();
+
+                for (int i = 0; i < MyAssetSystem.GetTextures().size(); i++)
+                {
+                    size_t startPos = MyAssetSystem.GetTexture(i)->get_file_path().find_last_of('\\');
+                    std::string name = MyAssetSystem.GetTexture(i)->get_file_path().substr(startPos + 1, MyAssetSystem.GetTexture(i)->get_file_path().length() - startPos);
+                    if (ImGui::Button(name.c_str(), buttonSize))
+                    {
+                        if (filter.PassFilter(name.c_str()))
+                        {
+                            spriteRenderer.sprite.sprite_name = name;
+                            std::string path = MyAssetSystem.GetTexture(i)->get_file_path();
+                            uint64_t pathID = std::hash<std::string>{}(path);
+                            MetaID metaID = MyAssetSystem.GetMetaID(pathID);
+                            spriteRenderer.sprite.spriteID = metaID.uuid;
+
+                            // Attach Reference
+                            spriteRenderer.sprite.refTexture = MyAssetSystem.GetTexture(i);
+                            isAddingSprite = false;
+                            break;
+                        }
+                    }
+                }
+                ImGui::End();
+            }
+
             DisplayColor("Color", spriteRenderer.sprite.color);
 
             // Update sprite data
@@ -488,6 +530,67 @@ namespace Copium
             DisplayColor("Color", text.color);
             //DisplayDragDrop();
             //spriteRenderer.sprite.set_name()
+        }
+
+        template <>
+        void DisplayComponent<Image>(Image& image)
+        {
+            Display("Image", image.sprite.refTexture);
+
+            static bool isAddingImage = false;
+            if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+            {
+                isAddingImage = true;
+            }
+            if (isAddingImage)
+            {
+                // Open pop-up window
+                ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+                ImGui::SetNextWindowPos(ImVec2(100.f, 100.f), ImGuiCond_FirstUseEver);
+                ImGui::Begin("Add Sprite", &isAddingImage);
+                ImVec2 buttonSize = ImGui::GetWindowSize();
+                buttonSize.y *= (float)0.1;
+                static ImGuiTextFilter filter;
+                ImGui::PushItemWidth(-1);
+                filter.Draw("##SpriteName");
+                ImGui::PopItemWidth();
+
+                for (int i = 0; i < MyAssetSystem.GetTextures().size(); i++)
+                {
+                    size_t startPos = MyAssetSystem.GetTexture(i)->get_file_path().find_last_of('\\');
+                    std::string name = MyAssetSystem.GetTexture(i)->get_file_path().substr(startPos + 1, MyAssetSystem.GetTexture(i)->get_file_path().length() - startPos);
+                    if (ImGui::Button(name.c_str(), buttonSize))
+                    {
+                        if (filter.PassFilter(name.c_str()))
+                        {
+                            image.sprite.sprite_name = name;
+                            std::string path = MyAssetSystem.GetTexture(i)->get_file_path();
+                            uint64_t pathID = std::hash<std::string>{}(path);
+                            MetaID metaID = MyAssetSystem.GetMetaID(pathID);
+                            image.sprite.spriteID = metaID.uuid;
+
+                            // Attach Reference
+                            image.sprite.refTexture = MyAssetSystem.GetTexture(i);
+                            isAddingImage = false;
+                            break;
+                        }
+                    }
+                }
+                ImGui::End();
+            }
+
+            DisplayColor("Color", image.sprite.color);
+
+            // Update sprite data
+            if (image.sprite.refTexture)
+            {
+                std::string filePath = image.sprite.refTexture->get_file_path();
+                uint64_t pathID = std::hash<std::string>{}(filePath);
+                MetaID metaID = MyAssetSystem.GetMetaID(pathID);
+                image.sprite.spriteID = metaID.uuid;
+                size_t pos = filePath.find_last_of('\\');
+                image.sprite.sprite_name = filePath.substr(pos + 1, filePath.length() - pos);
+            }
         }
 
         template <>
@@ -521,6 +624,25 @@ namespace Copium
             DisplayColor("Normal Color", btn.normalColor);
             DisplayColor("Hover Color", btn.hoverColor);
             DisplayColor("Clicked Color", btn.clickedColor);
+
+            // If it has an image, set bounds based on image once
+            static bool setOnce = false;
+            if (btn.gameObj.HasComponent<Image>() && !setOnce)
+            {
+                Image* image = btn.gameObj.GetComponent<Image>();
+                Texture* texture = image->sprite.refTexture;
+                
+                float height = texture->get_pixel_height();
+                float width = texture->get_pixel_width();
+
+                btn.bounds.max.x *= (1 / (float)width * 0.5f);
+                btn.bounds.max.y *= (1 / (float)height * 0.5f);
+                btn.bounds.min.x *= (1 / (float)width * 0.5f);
+                btn.bounds.min.y *= (1 / (float)height * 0.5f);
+
+                setOnce = true;
+            }
+            
         }
 
         template <>
@@ -656,10 +778,6 @@ namespace Copium
 
             ImGui::Unindent();
             //ImGui::EndTable();
-
-
-            camera.SetFocalPoint(camera.gameObj.transform.position);
-            
         }
 
 

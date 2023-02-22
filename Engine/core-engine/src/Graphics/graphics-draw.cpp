@@ -149,6 +149,8 @@ namespace Copium
 
 			for (Button& button: pScene->componentArrays.GetArray<Button>())
 			{
+				if (!button.enabled || !button.gameObj.IsActive())
+					continue;
 				Transform& transform = button.gameObj.transform;
 				AABB bounds = button.bounds.GetRelativeBounds(transform.GetWorldPosition(), transform.GetWorldScale());
 				glm::vec3 pos0_1 = { bounds.min.to_glm(),0.f };

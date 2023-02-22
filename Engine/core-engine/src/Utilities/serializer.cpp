@@ -255,7 +255,7 @@ namespace Copium
 
 		rapidjson::Value bb(rapidjson::kObjectType);
 		Serialize(_data.bounds, "", bb, _doc);
-		_value.AddMember("Bounding Box", bb, _doc.GetAllocator());
+		_value.AddMember("BoundingBox", bb, _doc.GetAllocator());
 
 		Copium::SerializeBasic(_data.callbackName, _value, _doc, "Callback");
 
@@ -286,7 +286,7 @@ namespace Copium
 
 		Copium::SerializeBasic(_data.content, _value, _doc, "Content");
 
-		Copium::SerializeBasic(_data.fSize, _value, _doc, "Font Size");
+		Copium::SerializeBasic(_data.fSize, _value, _doc, "FontSize");
 		Copium::SerializeBasic(_data.wrapper, _value, _doc, "Wrapper");
 
 		Copium::SerializeBasic(_data.color.r, _value, _doc, "r");
