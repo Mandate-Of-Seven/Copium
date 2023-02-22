@@ -26,6 +26,12 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 namespace Copium
 {
+	namespace
+	{
+		int textureCount = 0;
+		std::unordered_map<GLuint, std::pair<GLuint,GLuint>> textureIDs;
+	}
+
 	void Renderer::init(BaseCamera* _camera)
 	{
 		graphics = &MyGraphicsSystem;
@@ -43,7 +49,7 @@ namespace Copium
 		// Setup Text Vertex Array Object
 		setup_text_vao();
 
-		GLuint texture = graphics->get_white_texture();
+		GLuint& texture = graphics->get_white_texture();
 		glCreateTextures(GL_TEXTURE_2D, 1, &texture);
 		glTextureStorage2D(texture, 1, GL_RGBA8, 1, 1);
 
@@ -276,68 +282,44 @@ namespace Copium
 	{
 		if (quadIndexCount)
 		{
-			// Check for number of textures in the system
-			int numTextures = graphics->get_texture_slot_index();
-			PRINT("Texture count: " << numTextures);
-			int setNumber = 0;
+			// Alpha blending for transparent objects
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			if (numTextures > 32)
+			graphics->get_shader_program()[QUAD_SHADER].Use();
+			glBindVertexArray(quadVertexArrayID);
+
+			// Bean: Matrix assignment to be placed somewhere else
+			GLuint uProjection = glGetUniformLocation(
+				graphics->get_shader_program()[QUAD_SHADER].GetHandle(), "uViewProjection");
+			/*GLuint uTransform = glGetUniformLocation(
+				graphics->get_shader_program()[QUAD_SHADER].GetHandle(), "uTransform");*/
+			glm::mat4 projection = camera->get_view_proj_matrix();
+			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
+			//glm::vec3 pos = camera->get_eye();
+			//glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
+			//glUniformMatrix4fv(uTransform, 1, GL_FALSE, glm::value_ptr(transform));
+
+			/*PRINT("Transform Matrix:");
+			for (int i = 0; i < 4; i++)
 			{
-				setNumber = numTextures / 32;
-			}
-
-			for (int i = 0; i <= setNumber; i++)
-			{
-				if (i > 0)
-					end_batch();
-
-				// Alpha blending for transparent objects
-				glEnable(GL_BLEND);
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-				graphics->get_shader_program()[QUAD_SHADER].Use();
-				glBindVertexArray(quadVertexArrayID);
-
-				// Bean: Matrix assignment to be placed somewhere else
-				GLuint uProjection = glGetUniformLocation(
-					graphics->get_shader_program()[QUAD_SHADER].GetHandle(), "uViewProjection");
-				/*GLuint uTransform = glGetUniformLocation(
-					graphics->get_shader_program()[QUAD_SHADER].GetHandle(), "uTransform");*/
-				glm::mat4 projection = camera->get_view_proj_matrix();
-				glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
-				//glm::vec3 pos = camera->get_eye();
-				//glm::mat4 transform = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
-				//glUniformMatrix4fv(uTransform, 1, GL_FALSE, glm::value_ptr(transform));
-
-				/*PRINT("Transform Matrix:");
-				for (int i = 0; i < 4; i++)
+				for (int j = 0; j < 4; j++)
 				{
-					for (int j = 0; j < 4; j++)
-					{
-						std::cout << transform[j][i] << " ";
-					}
-					std::cout << "\n";
-				}*/
-				// End of matrix assignment
-
-				for (GLuint j = 1, k = j; j < 32; j++)
-				{
-					if (setNumber > 0)
-						k -= setNumber;
-					glBindTextureUnit(j, graphics->get_texture_slots()[32 * setNumber + k]);
+					std::cout << transform[j][i] << " ";
 				}
-				
+				std::cout << "\n";
+			}*/
+			// End of matrix assignment
 
-				glDrawElements(GL_TRIANGLES, quadIndexCount, GL_UNSIGNED_SHORT, NULL);
-				drawCount++;
+			for (auto map : textureIDs)
+				glBindTextureUnit(map.second.first, map.second.second);
 
-				glBindVertexArray(0);
-				graphics->get_shader_program()[QUAD_SHADER].UnUse();
-				glDisable(GL_BLEND);
+			glDrawElements(GL_TRIANGLES, quadIndexCount, GL_UNSIGNED_SHORT, NULL);
+			drawCount++;
 
-				if (i > 0)
-					begin_batch();
-			}
+			glBindVertexArray(0);
+			graphics->get_shader_program()[QUAD_SHADER].UnUse();
+			glDisable(GL_BLEND);
 		}
 
 		if (lineVertexCount)
@@ -593,12 +575,28 @@ namespace Copium
 
 		GLfloat textureIndex = 0.f;
 
+		if (textureIDs.size() > 31 || textureCount > 31)
+		{
+			end_batch();
+			flush();
+			begin_batch();
+
+			textureCount = 0;
+			textureIDs.clear();
+		}
+
+		// Map texture unit to the texture object id
+		auto it = textureIDs.find(textureIndex);
+		if (it == textureIDs.end())
+			textureIDs.emplace(std::make_pair(textureIndex, std::make_pair(textureCount++, graphics->get_texture_slots()[textureIndex])));
+
+
 		for (GLint i = 0; i < 4; i++)
 		{
 			quadBufferPtr->pos = _transform * quadVertexPosition[i];
 			quadBufferPtr->textCoord = quadTextCoord[i];
 			quadBufferPtr->color = _color;
-			quadBufferPtr->texID = textureIndex;
+			quadBufferPtr->texID = textureIDs[textureIndex].first;
 			quadBuffer->entityID = quadCount;
 			quadBufferPtr++;
 		}
@@ -638,12 +636,28 @@ namespace Copium
 			graphics->set_texture_slot_index((GLuint)textureIndex + 1);
 		}
 
+		if (textureIDs.size() > 31 || textureCount > 31)
+		{
+			end_batch();
+			flush();
+			begin_batch();
+
+			textureCount = 0;
+			textureIDs.clear();
+		}
+
+		// Map texture unit to the texture object id
+		auto it = textureIDs.find(textureIndex);
+		if (it == textureIDs.end())
+			textureIDs.emplace(std::make_pair(textureIndex, std::make_pair(textureCount++, graphics->get_texture_slots()[textureIndex])));
+
+
 		for (GLint i = 0; i < 4; i++)
 		{
 			quadBufferPtr->pos = _transform * quadVertexPosition[i];
 			quadBufferPtr->textCoord = quadTextCoord[i];
 			quadBufferPtr->color = color;
-			quadBufferPtr->texID = textureIndex;
+			quadBufferPtr->texID = textureIDs[textureIndex].first;
 			quadBufferPtr++;
 		}
 
@@ -683,6 +697,21 @@ namespace Copium
 			graphics->set_texture_slot_index((GLuint)textureIndex + 1);
 		}
 
+		if(textureIDs.size() > 31 || textureCount > 31)
+		{
+			end_batch();
+			flush();
+			begin_batch();
+
+			textureCount = 0;
+			textureIDs.clear();
+		}
+
+		// Map texture unit to the texture object id
+		auto it = textureIDs.find(textureIndex);
+		if(it == textureIDs.end())
+			textureIDs.emplace(std::make_pair(textureIndex, std::make_pair(textureCount++,graphics->get_texture_slots()[textureIndex])));
+
 		for (GLint i = 0; i < 4; i++)
 		{
 			quadBufferPtr->pos = _transform * quadVertexPosition[i];
@@ -703,7 +732,7 @@ namespace Copium
 				mixedColor.b = layeredColor.b * layeredColor.a / mixedColor.a + color.b * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.00
 				quadBufferPtr->color = mixedColor;
 			}
-			quadBufferPtr->texID = textureIndex;
+			quadBufferPtr->texID = textureIDs[textureIndex].first;
 			quadBufferPtr++;
 		}
 
@@ -752,6 +781,22 @@ namespace Copium
 		if (!_frames)
 			return;
 
+		if (textureIDs.size() > 31 || textureCount > 31)
+		{
+			end_batch();
+			flush();
+			begin_batch();
+
+			textureCount = 0;
+			textureIDs.clear();
+		}
+
+		// Map texture unit to the texture object id
+		auto it = textureIDs.find(textureIndex);
+		if (it == textureIDs.end())
+			textureIDs.emplace(std::make_pair(textureIndex, std::make_pair(textureCount++, graphics->get_texture_slots()[textureIndex])));
+
+
 		float xStep = (1.0f / (float)_spritesheet.columns);
 		float yStep = (1.0f / (float)_spritesheet.rows);
 		float xOffset = colOffset * xStep;
@@ -770,7 +815,7 @@ namespace Copium
 			quadBufferPtr->pos = _transform * quadVertexPosition[i];
 			quadBufferPtr->textCoord = spriteTextCoord[i];
 			quadBufferPtr->color = color;
-			quadBufferPtr->texID = textureIndex;
+			quadBufferPtr->texID = textureIDs[textureIndex].first;
 			quadBufferPtr++;
 		}
 

@@ -212,10 +212,6 @@ namespace Copium
 				if (spriteRenderer.gameObj.HasComponent<SortingGroup>())
 					continue;
 
-				// If the object isnt within the frustum
-				if (!camera->withinFrustum(spriteRenderer.gameObj.transform.position, spriteRenderer.gameObj.transform.scale))
-					continue;
-
 				Transform& t = spriteRenderer.gameObj.transform;
 				Sprite& sr = spriteRenderer.sprite;
 				glm::vec2 size(t.scale.x, t.scale.y);
@@ -228,6 +224,7 @@ namespace Copium
 					float updatedRot = t.rotation.z;
 					UpdateTransform(t, updatedPos, updatedRot, updatedScale);
 
+					// If the object isnt within the frustum
 					if (!camera->withinFrustum(updatedPos, updatedScale))
 						continue;
 
@@ -235,6 +232,7 @@ namespace Copium
 				}
 				else
 				{
+					// If the object isnt within the frustum
 					if (!camera->withinFrustum(t.position, t.scale))
 						continue;
 
@@ -249,10 +247,6 @@ namespace Copium
 				if (image.gameObj.HasComponent<SortingGroup>())
 					continue;
 
-				// If the object isnt within the frustum
-				if (!camera->withinFrustum(image.gameObj.transform.position, image.gameObj.transform.scale))
-					continue;
-
 				Transform& t = image.gameObj.transform;
 				Sprite& sr = image.sprite;
 				glm::vec2 size(t.scale.x, t.scale.y);
@@ -265,6 +259,7 @@ namespace Copium
 					float updatedRot = t.rotation.z;
 					UpdateTransform(t, updatedPos, updatedRot, updatedScale);
 
+					// If the object isnt within the frustum
 					if (!camera->withinFrustum(updatedPos, updatedScale))
 						continue;
 
@@ -272,6 +267,7 @@ namespace Copium
 				}
 				else
 				{
+					// If the object isnt within the frustum
 					if (!camera->withinFrustum(t.position, t.scale))
 						continue;
 
@@ -305,6 +301,7 @@ namespace Copium
 					float updatedRot = t.rotation.z;
 					UpdateTransform(t, updatedPos, updatedRot, updatedScale);
 
+					// If the object isnt within the frustum
 					if (!camera->withinFrustum(updatedPos, updatedScale))
 						continue;
 
@@ -312,6 +309,7 @@ namespace Copium
 				}
 				else
 				{
+					// If the object isnt within the frustum
 					if (!camera->withinFrustum(t.position, t.scale))
 						continue;
 
@@ -403,9 +401,31 @@ namespace Copium
 							continue;
 
 						Transform& t = spriteRenderer.gameObj.transform;
-						Sprite& sprite = spriteRenderer.sprite;
-						renderer.draw_quad(t.GetWorldPosition(), Math::Vec2(t.GetWorldScale()), t.GetWorldRotation().z, sprite);
+						Sprite& sr = spriteRenderer.sprite;
+						glm::vec2 size(t.scale.x, t.scale.y);
+						float rotation = t.rotation.z;
 
+						if (t.HasParent())
+						{
+							glm::vec3 updatedPos = t.position.glmVec3;
+							glm::vec3 updatedScale = t.scale.glmVec3;
+							float updatedRot = t.rotation.z;
+							UpdateTransform(t, updatedPos, updatedRot, updatedScale);
+
+							// If the object isnt within the frustum
+							if (!camera->withinFrustum(updatedPos, updatedScale))
+								continue;
+
+							renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr);
+						}
+						else
+						{
+							// If the object isnt within the frustum
+							if (!camera->withinFrustum(t.position, t.scale))
+								continue;
+
+							renderer.draw_quad(t.position, size, rotation, sr);
+						}
 					}
 
 					if (go->HasComponent<Image>())
@@ -415,8 +435,31 @@ namespace Copium
 							continue;
 
 						Transform& t = image.gameObj.transform;
-						Sprite& sprite = image.sprite;
-						renderer.draw_quad(t.GetWorldPosition(), Math::Vec2(t.GetWorldScale()), t.GetWorldRotation().z, sprite, &image.layeredColor);
+						Sprite& sr = image.sprite;
+						glm::vec2 size(t.scale.x, t.scale.y);
+						float rotation = t.rotation.z;
+
+						if (t.HasParent())
+						{
+							glm::vec3 updatedPos = t.position.glmVec3;
+							glm::vec3 updatedScale = t.scale.glmVec3;
+							float updatedRot = t.rotation.z;
+							UpdateTransform(t, updatedPos, updatedRot, updatedScale);
+
+							// If the object isnt within the frustum
+							if (!camera->withinFrustum(updatedPos, updatedScale))
+								continue;
+
+							renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr);
+						}
+						else
+						{
+							// If the object isnt within the frustum
+							if (!camera->withinFrustum(t.position, t.scale))
+								continue;
+
+							renderer.draw_quad(t.position, size, rotation, sr);
+						}
 					}
 
 					if (go->HasComponent<Animator>())
@@ -432,8 +475,29 @@ namespace Copium
 							continue;
 
 						Transform& t = animator.gameObj.transform;
-						renderer.draw_quad(t.GetWorldPosition(), Math::Vec2(t.GetWorldScale()), t.GetWorldRotation().z, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
+						glm::vec2 size(t.scale.x, t.scale.y);
 
+						if (t.HasParent())
+						{
+							glm::vec3 updatedPos = t.position.glmVec3;
+							glm::vec3 updatedScale = t.scale.glmVec3;
+							float updatedRot = t.rotation.z;
+							UpdateTransform(t, updatedPos, updatedRot, updatedScale);
+
+							// If the object isnt within the frustum
+							if (!camera->withinFrustum(updatedPos, updatedScale))
+								continue;
+
+							renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
+						}
+						else
+						{
+							// If the object isnt within the frustum
+							if (!camera->withinFrustum(t.position, t.scale))
+								continue;
+
+							renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
+						}
 					}
 
 					if (go->HasComponent<Text>())

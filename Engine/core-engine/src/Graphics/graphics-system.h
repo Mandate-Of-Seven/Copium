@@ -75,7 +75,6 @@ namespace Copium
 		void const set_texture_slot_index(GLuint _index) { textureSlotIndex = _index; }
 		
 		GLuint& get_white_texture() { return whiteTexture; }
-		GLuint const get_white_texture_slot() { return whiteTextureSlot; }
 
 		// Data Members
 		GLSLShader* const get_shader_program() { return shaderProgram; }
@@ -126,7 +125,6 @@ namespace Copium
 		std::vector<GLuint> textureSlots;
 		GLuint textureSlotIndex = 1; // Initializes with 1
 		GLuint whiteTexture = 0;
-		GLuint whiteTextureSlot = 0;
 
 		/* Shaders **********************************************************************/
 		GLSLShader shaderProgram[NUM_SHADERS]; // Shader program to use
