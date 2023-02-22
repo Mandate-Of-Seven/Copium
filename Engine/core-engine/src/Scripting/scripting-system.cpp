@@ -256,6 +256,7 @@ namespace Copium
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptInvokeMethod);
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetMethodNames);
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptSetField);
+		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetField);
 		SubscribeComponentBasedCallbacks(ComponentTypes());
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptSetFieldReference<GameObject>);
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackStartPreview);
@@ -697,9 +698,11 @@ namespace Copium
 				FieldType fieldType = Utils::monoTypeToFieldType(type);
 				const char* fieldName = pair.first.c_str();
 				std::string typeName = mono_type_get_name(type);
+				PRINT(typeName << " " << (int)fieldType);
 				auto nameField{ script.fieldDataReferences.find(fieldName) };
 				int alignment{};
 				int fieldSize = mono_type_size(type, &alignment);
+				//POINTER
 				if (fieldType == FieldType::Component || fieldType == FieldType::GameObject)
 				{
 					fieldSize = sizeof(uint64_t);

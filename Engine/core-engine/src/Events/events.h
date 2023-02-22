@@ -82,20 +82,22 @@ namespace Copium
 	struct ComponentAddEvent : IEvent
 	{
 		static_assert(!std::is_same<T, Script>());
-		ComponentAddEvent(GameObject& _gameObject, T*& _componentContainer) :
-			gameObject{ _gameObject }, componentContainer{ _componentContainer }{}
+		ComponentAddEvent(GameObject& _gameObject, T*& _componentContainer, UUID _uuid = UUID()) :
+			gameObject{ _gameObject }, componentContainer{ _componentContainer }, uuid{_uuid} {}
 		GameObject& gameObject;
 		T*& componentContainer;
+		UUID uuid;
 	};
 
 	template <>
 	struct ComponentAddEvent<Script> : IEvent
 	{
-		ComponentAddEvent(GameObject& _gameObject, Script*& _componentContainer, const char* _scriptName) :
-			gameObject{ _gameObject }, componentContainer{ _componentContainer }, scriptName{ _scriptName }{}
+		ComponentAddEvent(GameObject& _gameObject, Script*& _componentContainer, const char* _scriptName, UUID _uuid = UUID()) :
+			gameObject{ _gameObject }, componentContainer{ _componentContainer }, scriptName{ _scriptName }, uuid{ _uuid }{}
 		GameObject& gameObject;
 		Script*& componentContainer;
 		const char* scriptName;
+		UUID uuid;
 	};
 
 	template <typename T>

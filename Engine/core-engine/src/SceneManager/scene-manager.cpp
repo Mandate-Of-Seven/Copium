@@ -725,14 +725,14 @@ namespace Copium
 	{
 		if constexpr (std::is_same<T,Script>())
 		{
-			T& component = currentScene->componentArrays.GetArray<T>().emplace_back(pEvent->gameObject,UUID(),pEvent->scriptName);
+			T& component = currentScene->componentArrays.GetArray<T>().emplace_back(pEvent->gameObject,pEvent->uuid,pEvent->scriptName);
 			pEvent->gameObject.AddComponent(&component);
 			pEvent->componentContainer = &component;
 			MyEventSystem->publish(new ReflectComponentEvent(component));
 		}
 		else
 		{
-			T& component = currentScene->componentArrays.GetArray<T>().emplace_back(pEvent->gameObject);
+			T& component = currentScene->componentArrays.GetArray<T>().emplace_back(pEvent->gameObject, pEvent->uuid);
 			pEvent->gameObject.AddComponent(&component);
 			pEvent->componentContainer = &component;
 			MyEventSystem->publish(new ReflectComponentEvent(component));

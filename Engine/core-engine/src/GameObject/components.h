@@ -26,7 +26,7 @@ namespace Copium
 
 	enum class ComponentType : int      // Types of Components
 	{
-		Animator,
+		Animator = (int)FieldType::Component,
 		AudioSource,
 		BoxCollider2D,
 		Button,
@@ -577,40 +577,6 @@ namespace Copium
 		{
 			name = _name;
 			instantiate();
-		}
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Gets a field from a C# field using its name
-		\param name
-			Name of the field
-		\param buffer
-			Buffer to store the values, needs to be type casted
-		\return
-			False if operation failed, true if it was successful
-		*/
-		/*******************************************************************************/
-		void GetFieldValue(const std::string& fieldName, char* outBuffer)
-		{
-			//MyEventSystem->publish(new ScriptGetFieldEvent(*this, fieldName.c_str(), (void*)outBuffer));
-		}
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Sets a field from a C# field using its name
-		\param name
-			Name of the field
-		\param value
-			Value to write into C# memory space
-		\return
-			False if operation failed, true if it was successful
-		*/
-		/*******************************************************************************/
-		void SetFieldValue(const std::string& _name, const char* value)
-		{
-			//MyEventSystem->publish(new ScriptSetFieldEvent(*this, _name.c_str(), (void*)value));
 		}
 		void instantiate()
 		{

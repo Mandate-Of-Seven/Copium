@@ -1,5 +1,5 @@
-[2023-02-22 03:50:21.024] [Error] [critical] 
-Caused By:	mClass == nullptr
-Info:		MONO CLASS NOT LOADED
-Source:		C:\Users\FLESH\ECS\Copium\Engine\core-engine\src\Scripting\scripting-system.cpp (Line: 288)
+[2023-02-22 13:17:49.946] [Error] [critical] 
+Caused By:	sizeof(T) > size
+Info:		FIELD DOES NOT HAVE ENOUGH SPACE TO STORE TYPE
+Source:		C:\Users\FLESH\ECS\Copium\Engine\core-engine\src\Scripting\script-fields.h (Line: 46)
 

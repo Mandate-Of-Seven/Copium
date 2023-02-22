@@ -4,18 +4,18 @@
 
 #include <string>
 
-enum class FieldType
+enum class FieldType :int
 {
-	Float, Double,
+	None, Float, Double,
 	Bool, Char, Short, Int, Long,
 	UShort, UInt, ULong, String,
-	Vector2, Vector3, GameObject, Component, None
+	Vector2, Vector3, GameObject, Component
 };
 
 struct Field
 {
 	Field() = default;
-	char* data{ nullptr };
+	void* data{ nullptr };
 	FieldType fType{};
 	std::string typeName;
 	/***************************************************************************/
@@ -55,7 +55,7 @@ struct Field
 	T& Get()
 	{
 		COPIUM_ASSERT(sizeof(T) > size, "FIELD DOES NOT HAVE ENOUGH SPACE TO STORE TYPE");
-		return *reinterpret_cast<T*>(data);
+		return *static_cast<T*>(data);
 	}
 	void Resize(size_t _size)
 	{

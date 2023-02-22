@@ -278,7 +278,7 @@ namespace Copium
 		{
 			// Check for number of textures in the system
 			int numTextures = graphics->get_texture_slot_index();
-			PRINT("Texture count: " << numTextures);
+			//PRINT("Texture count: " << numTextures);
 			int setNumber = 0;
 
 			if (numTextures > 32)

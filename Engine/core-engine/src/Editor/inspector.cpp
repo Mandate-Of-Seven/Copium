@@ -34,6 +34,13 @@ namespace Copium
 {
     namespace
     {
+        template <typename T>
+        const char* GetTypeName() {
+            #define FuncName std::string(__FUNCSIG__)
+            static std::string typeName = FuncName.substr(FuncName.find_last_of('::') + 1, FuncName.find_last_of('>') - FuncName.find_last_of("::") - 1);
+            return typeName.c_str();
+        }
+
         //bool isInspectorOpen;
         bool isAddingComponent;
         float* editedColor{ nullptr };
@@ -58,17 +65,18 @@ namespace Copium
             }
             else if constexpr(std::is_same<T, Component>())
             {
-                static std::string buttonName = container.gameObj.name + std::string("(") + (typeid(T).name() + strlen("class Copium::")) + ")";
+                static std::string buttonName = container.gameObj.name + "(" + GetTypeName<T>() + ")";
                 ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
             }
             else if constexpr (std::is_same<T, IUIComponent>())
             {
-                static std::string buttonName = ((Component&)container).gameObj.name + std::string("(") + (typeid(T).name() + strlen("class Copium::")) + ")";
+                static std::string buttonName{};
+                buttonName = ((Component&)container).gameObj.name + "(" + GetTypeName<T>() + ")";
                 ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
             }
             else
             {
-                static std::string buttonName = std::string("(") + (typeid(T).name() + strlen("class Copium::")) + ")";
+                static std::string buttonName = "(" + GetTypeName<T>() + ")";
                 ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
             }
         }
@@ -81,13 +89,11 @@ namespace Copium
             size_t offset = filePath.find_last_of("\\");
             if(offset != 0)
             {
-                buttonName = filePath.substr(offset + 1, filePath.length() - offset);
+                buttonName = filePath.substr(offset + 1, filePath.length() - offset) + " (Texture)";
             }
             else
             {
-                buttonName += '(';
-                buttonName += typeid(Texture).name() + strlen("class Copium::");
-                buttonName += ')';
+                buttonName = "None (Texture)";
             }
             
             ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
@@ -99,11 +105,11 @@ namespace Copium
             static std::string buttonName{};
             if (container == nullptr)
             {
-                buttonName = "Empty";
+                buttonName = "Empty ";
                 buttonName += '(';
-                buttonName += typeid(T).name() + strlen("class Copium::");
+                buttonName += GetTypeName<T>();
                 buttonName += ')';
-                ImGui::Button("Empty", ImVec2(-FLT_MIN, 0.f));
+                ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
             }
             else
             {
@@ -112,7 +118,8 @@ namespace Copium
 
             if (ImGui::BeginDragDropTarget())
             {
-                const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(typeid(T).name());
+                const ImGuiPayload* payload{}; 
+                ImGui::AcceptDragDropPayload(GetTypeName<T>());
                 if (payload)
                 {
                     container = (T*)(*reinterpret_cast<void**>(payload->Data));
@@ -127,14 +134,12 @@ namespace Copium
             static std::string buttonName{};
             if (container == nullptr)
             {
-                buttonName = "Empty";
-                buttonName += '(';
-                buttonName += typeid(Texture).name() + strlen("class Copium::");
-                buttonName += ')';
-                ImGui::Button("Empty", ImVec2(-FLT_MIN, 0.f));
+                buttonName = "Empty (Texture)";
+                ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
             }
             else
             {
+                buttonName = container->get_file_path() + " (Texture)";
                 DisplayPointer(*container);
             }
 
@@ -183,6 +188,14 @@ namespace Copium
             ImGui::InputTextMultiline(idName.c_str(), val, SZ, ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 16));
         }
 
+        void DisplayType(const char* name, char*& val)
+        {
+            static std::string idName{};
+            idName = "##";
+            idName += name;
+            ImGui::InputTextMultiline(idName.c_str(), val, TEXT_BUFFER_SIZE, ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 16));
+        }
+
         void DisplayType(const char* name, float& val)
         {
             static float temp{};
@@ -199,17 +212,6 @@ namespace Copium
                 cIdName = idName.c_str();
             }
             ImGui::DragFloat(cIdName, &val, 0.15f);
-            //if (ImGui::IsItemActivated()) { temp = val; }
-            //if (ImGui::IsItemEdited())
-            //{
-            //    printf("temp: %f\n", temp);
-            //    if (temp != val)
-            //    {
-            //        //UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&position.x, temp);
-            //        //EditorSystem::Instance().get_commandmanager()->undoStack.push(tempUndo);
-            //        temp = val;
-            //    }
-            //}
         }
 
         void DisplayType(const char* name, double& val)
@@ -220,17 +222,6 @@ namespace Copium
             float temp{(float)val};
             ImGui::DragFloat(idName.c_str(), &temp, 0.15f);
             val = temp;
-            //if (ImGui::IsItemActivated()) { temp = val; }
-            //if (ImGui::IsItemEdited())
-            //{
-            //    printf("temp: %f\n", temp);
-            //    if (temp != val)
-            //    {
-            //        //UndoRedo::Command* tempUndo = new UndoRedo::TransformCommand(&position.x, temp);
-            //        //EditorSystem::Instance().get_commandmanager()->undoStack.push(tempUndo);
-            //        temp = val;
-            //    }
-            //}
         }
 
         void DisplayType(const char* name, Math::Vec3& val)
@@ -322,11 +313,8 @@ namespace Copium
         template <typename T>
         void Display(const char* name, T& val)
         {
-            //static std::string displayName{};
-            //displayName = "##";
-            //displayName += name;
-            ImGui::TableNextColumn();
             ImGui::AlignTextToFramePadding();
+            ImGui::TableNextColumn();
             ImGui::Text(name);
             ImGui::TableNextColumn();
             DisplayType(name, val);
@@ -334,12 +322,58 @@ namespace Copium
 
         void Display(const char* string)
         {
-            //static std::string displayName{};
-            //displayName = "##";
-            //displayName += name;
             ImGui::TableNextColumn();
             ImGui::AlignTextToFramePadding();
             ImGui::Text(string);
+        }
+
+        void Display(const char* name, Field& field)
+        {
+            switch (field.fType)
+            {
+                case FieldType::Float:
+                    Display(name, field.Get<float>());
+                    break;
+                case FieldType::Double:
+                    Display(name, field.Get<double>());
+                    break;
+                case FieldType::Bool:
+                    Display(name, field.Get<bool>());
+                    break;
+                case FieldType::Char:
+                    //Display(name, field.Get<char>());
+                    break;
+                case FieldType::Short:
+                    Display(name, field.Get<int>());
+                    break;
+                case FieldType::Int:
+                    Display(name, field.Get<int>());
+                    break;
+                case FieldType::Long:
+                    Display(name, field.Get<int>());
+                    break;
+                case FieldType::UShort:
+                    break;
+                case FieldType::UInt:
+                    break;
+                case FieldType::ULong:
+                    break;
+                case FieldType::String:
+                {
+                    Display(name, (char*&)field.data);
+                    break;
+                }
+                case FieldType::Vector2:
+                {
+                    Display(name, field.Get<Math::Vec2>());
+                    break;
+                }
+                case FieldType::Vector3:
+                {
+                    Display(name, field.Get<Math::Vec3>());
+                    break;
+                }
+            }
         }
 
         template <typename T>
@@ -504,9 +538,49 @@ namespace Copium
         template <>
         void DisplayComponent<Script>(Script& script)
         {
+            static Field buffer(FieldType::None, 128);
             for (auto pair : script.fieldDataReferences)
             {
-                Display(pair.first.c_str());
+                const char* name = pair.first.c_str();
+                Field& field{ pair.second };
+            //    //Component Enum + ComponentType Enum
+            //    if (field.fType == FieldType::Component)
+            //    {
+            //        auto componentRef = script.fieldComponentReferences.find(name);
+            //        //Component does not exist
+            //        if (componentRef == script.fieldComponentReferences.end())
+            //        {
+            //            std::string displayName = "None (" + field.typeName + ")";
+            //            ImGui::Button(displayName.c_str(), ImVec2(-FLT_MIN, 0.f));
+            //        }
+            //        //Component exists
+            //        else
+            //        {
+            //            std::string displayName = (*componentRef).second->gameObj.name + "(" + field.typeName + ")";
+            //            ImGui::Button(displayName.c_str(), ImVec2(-FLT_MIN, 0.f));
+
+            //        }
+            //        if (ImGui::BeginDragDropTarget())
+            //        {
+            //            const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(field.typeName.c_str());
+            //            if (payload)
+            //            {
+            //                componentRef->second = (Component*)(*reinterpret_cast<void**>(payload->Data));
+            //            }
+            //            ImGui::EndDragDropTarget();
+            //        }
+            //    }
+            //    else if (field.fType == FieldType::GameObject)
+            //    {
+            //        //Display(name,script.fieldGameObjReferences[name]);
+            //    }
+            //    else
+            //    {
+                    buffer.fType = field.fType;
+                    MyEventSystem->publish(new ScriptGetFieldEvent(script, name, field.data));
+                    Display(name, field);
+                    MyEventSystem->publish(new ScriptSetFieldEvent(script, name, field.data));
+                //}
             }
         }
 
