@@ -844,6 +844,143 @@ namespace Copium
 
 
         template <>
+        void DisplayComponent<AudioSource>(AudioSource& audioSource)
+        {
+            ImGui::Indent();
+            // Sprite
+            // Extern source file
+
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Audio File");
+            ImGui::TableNextColumn();
+            ImGui::Button(audioSource.alias.c_str(), ImVec2(-FLT_MIN, 0.f));
+            if (ImGui::BeginDragDropTarget())
+            {
+                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ContentBrowserItem"))
+                {
+                    std::string str = (const char*)(payload->Data);
+                    size_t fileDot = str.find_last_of(".");
+                    std::string extension = str.substr(fileDot, str.size());
+
+                    if (extension == ".wav")
+                    {
+                        audioSource.stop_sound();//stop any currently playing audio
+
+                        size_t lastSlash = str.find_last_of("\\");
+                        std::string temp = str.substr(lastSlash + 1);
+                        size_t lastDot = temp.find_last_of(".");
+                        audioSource.alias = temp.substr(0, lastDot);
+                        //std::cout << "Alias: " << temp << "\n";
+
+
+                        if (MySoundSystem.soundList.find(audioSource.alias) == MySoundSystem.soundList.end())//if its true it means file doesnt exist yet
+                        {
+                            std::cout << "New sound file detected: " << str << " / Alias (" << audioSource.alias << ")\n";
+                            SoundSystem::Instance()->CreateSound(str, audioSource.alias);
+                        }
+                        else
+                        {
+                            MySoundSystem.soundList[audioSource.alias].first->getVolume(&audioSource.volume);
+                        }
+                    }
+                    else
+                    {
+                        std::cout << "Wrong file type\n";
+                        Window::EditorConsole::editorLog.add_logEntry("AudioSource only accepts the.wav file format");
+                        Window::EditorConsole::editorLog.bring_to_front();
+                    }
+
+                }
+                ImGui::EndDragDropTarget();
+            }
+
+
+            //drop down for channel sellection
+            if (ImGui::BeginCombo("##combo", audioSource.channel.c_str()))
+            {
+                for (int n = 0; n < IM_ARRAYSIZE(audioSource.channelName); n++)
+                {
+                    bool is_selected = (audioSource.channel == audioSource.channelName[n]);
+                    if (ImGui::Selectable(audioSource.channelName[n], is_selected))
+                    {
+                        audioSource.channel = audioSource.channelName[n];
+                    }
+                    if (is_selected)
+                        ImGui::SetItemDefaultFocus();
+                }
+                ImGui::EndCombo();
+            }
+            ImGui::SameLine();
+            ImGui::Text("Channel");
+
+            //volume slider
+            ImGui::SliderFloat("Volume", &audioSource.volume, 0.0f, 1.0f, "%.2f");
+            SoundSystem::Instance()->soundList[audioSource.alias].first->setVolume(audioSource.volume);
+
+            ImGui::Checkbox("Overlap", &audioSource.overLap);
+            ImGui::Checkbox("Loop", &audioSource.loop);
+
+            if (ImGui::Button("Preview")) //play
+            {
+                if (audioSource.alias.size())
+                {
+                    if (audioSource.channel == "Default")
+                    {
+                        MySoundSystem.Play(audioSource.alias, MySoundSystem.channelDefault, audioSource.overLap, audioSource.loop, audioSource.loopCount);
+                    }
+                    else if (audioSource.channel == "BGM")
+                    {
+                        MySoundSystem.Play(audioSource.alias, MySoundSystem.channelBGM, audioSource.overLap, audioSource.loop, audioSource.loopCount);
+                    }
+                    else if (audioSource.channel == "SFX")
+                    {
+                        MySoundSystem.Play(audioSource.alias, MySoundSystem.channelSFX, audioSource.overLap, audioSource.loop, audioSource.loopCount);
+                    }
+                    else if (audioSource.channel == "Voice")
+                    {
+                        MySoundSystem.Play(audioSource.alias, MySoundSystem.channelVoice, audioSource.overLap, audioSource.loop, audioSource.loopCount);
+                    }
+                    else if (true)
+                    {
+                        PRINT("No channel detected, Playing on default");
+                        MySoundSystem.Play(audioSource.alias, MySoundSystem.channelDefault, audioSource.overLap, audioSource.loop, audioSource.loopCount);
+                    }
+                }
+                else
+                {
+                    Window::EditorConsole::editorLog.add_logEntry("Error: No audio file to preview");
+                }
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Stop")) //stop
+            {
+                if (audioSource.alias.size())
+                {
+                    MySoundSystem.Stop(audioSource.alias);
+                }
+                else
+                {
+                    Window::EditorConsole::editorLog.add_logEntry("Error: No audio file to stop");
+                }
+            }
+
+
+            if (ImGui::Button("Stop ALL"))
+            {
+                if (audioSource.alias.size())
+                {
+                    std::cout << "Stopping all audio\n";
+                    MySoundSystem.StopAll();
+                }
+            }
+
+            ImGui::Unindent();
+            //ImGui::EndTable();
+
+        }
+
+        template <>
         void DisplayComponent<Camera>(Camera& camera)
         {
             bool openPopup = false;
@@ -950,7 +1087,6 @@ namespace Copium
 
             if (ImGui::BeginCombo("##LayerSelection", previewItem))
             {
-                std::cout << "Is This Called?" << "\n\n\n\n\n\n";
                 for (int i = 0; i < editorSortingLayer.GetSortingLayers().size(); i++)
                 {
                     const bool isSelected = ((unsigned int)sortingGroup.sortingLayer == editorSortingLayer.GetSortingLayers()[i].layerID);
