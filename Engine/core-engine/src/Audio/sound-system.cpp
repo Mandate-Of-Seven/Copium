@@ -110,6 +110,7 @@ void SoundSystem::Play(std::string alias, FMOD::Channel* channel, bool overLap, 
 	{
 		rSound->setMode(FMOD_LOOP_OFF);
 	}
+
 	soundSystem->playSound(rSound, nullptr, false, &channel);
 }
 

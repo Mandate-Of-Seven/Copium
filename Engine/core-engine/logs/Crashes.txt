@@ -1,5 +1,5 @@
-[2023-02-21 15:06:22.214] [Error] [critical] 
-Caused By:	!mScript
-Info:		MONO OBJECT OF AudioManager NOT LOADED
-Source:		C:\Users\FLESH\ECS\Copium\Engine\core-engine\src\Scripting\scripting-system.cpp (Line: 809)
+[2023-02-22 16:28:48.214] [Error] [critical] 
+Caused By:	1
+Info:		TRYING TO STOP AUDIO WITH NO SCENE LOADED!
+Source:		D:\Digipen\Sem 2.1\GAM200 (Engine Project 3)\Engine\core-engine\src\Audio\sound-system.cpp (Line: 128)
 
