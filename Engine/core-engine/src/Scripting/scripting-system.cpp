@@ -100,12 +100,22 @@ namespace Copium::Utils
 		if (it == fieldTypeMap.end())
 		{
 			if (typeName.find_first_of("CopiumEngine.") == 0)
-				return FieldType::Component;
+			{
+				std::string componentName = typeName.substr(typeName.find_last_of('.') + 1);
+				auto it{ NAME_TO_CTYPE.find(componentName) };
+				if (it == NAME_TO_CTYPE.end())
+				{
+					//PRINT(componentName << " is a script");
+					return (FieldType)ComponentType::Script;
+				}
+				//PRINT(componentName << " is a component");
+				return (FieldType)it->second;
+			}
 			typeName = mono_class_get_name(mono_class_get_parent(mono_class_from_mono_type(monoType)));
 			if (typeName == "CopiumScript")
-				return FieldType::Component;
-			MonoClass* rootClass;
-			(void)rootClass;
+			{
+				return (FieldType)ComponentType::Script;
+			}
 			return FieldType::None;
 		}
 		return it->second;

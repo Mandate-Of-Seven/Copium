@@ -587,8 +587,6 @@ namespace Copium
 		std::unordered_map<std::string, GameObject*> fieldGameObjReferences;
 		std::unordered_map<std::string, Component*> fieldComponentReferences;
 		FieldMap fieldDataReferences;
-		static std::pair<const std::string, Field>* editedField;
-		static bool isAddingReference;
 	};
 	
 	using ButtonCallback = void (*)();

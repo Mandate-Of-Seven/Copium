@@ -41,8 +41,19 @@ namespace Copium
             return typeName.c_str();
         }
 
+        static ImGuiTableFlags windowFlags =
+            ImGuiTableFlags_Resizable |
+            ImGuiTableFlags_NoBordersInBody |
+            ImGuiTableFlags_NoSavedSettings |
+            ImGuiTableFlags_SizingStretchProp;
+
         //bool isInspectorOpen;
-        bool isAddingComponent;
+        bool isAddingComponent {false};
+        bool isAddingReference { false};
+        //Either edited field, script or gameObject, or reference to other components
+
+        void** pEditedContainer{nullptr};
+
         float* editedColor{ nullptr };
         Copium::SceneManager& sceneManager{ *Copium::SceneManager::Instance() };
         Copium::FileSystem& fileSystem{ *Copium::FileSystem::Instance() };
@@ -57,26 +68,32 @@ namespace Copium
         template <typename T>
         void DisplayPointer(T& container)
         {
-            if constexpr (ComponentTypes::has<T>())
+            if constexpr (std::is_same<T, Script>())
+            {
+                static std::string buttonName{};
+                buttonName = container.gameObj.name + " (" + container.Name() + ")";
+                ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
+            }
+            else if constexpr (ComponentTypes::has<T>())
             {
                 static std::string buttonName;
-                buttonName = container.gameObj.name + "(" + GetComponentType<T>::name + ")";
+                buttonName = container.gameObj.name + " (" + GetComponentType<T>::name + ")";
                 ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
             }
             else if constexpr(std::is_same<T, Component>())
             {
-                static std::string buttonName = container.gameObj.name + "(" + GetTypeName<T>() + ")";
+                static std::string buttonName = container.gameObj.name + " (" + GetTypeName<T>() + ")";
                 ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
             }
             else if constexpr (std::is_same<T, IUIComponent>())
             {
                 static std::string buttonName{};
-                buttonName = ((Component&)container).gameObj.name + "(" + GetTypeName<T>() + ")";
+                buttonName = ((Component&)container).gameObj.name + " (" + GetTypeName<T>() + ")";
                 ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
             }
             else
             {
-                static std::string buttonName = "(" + GetTypeName<T>() + ")";
+                static std::string buttonName { GetTypeName<T>() };
                 ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
             }
         }
@@ -99,13 +116,125 @@ namespace Copium
             ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
         }
 
+
+        //Field name, Container
+        template <typename T>
+        void AddReferencePanel(T*& container, const char* alternateName = nullptr)
+        {
+            //ZACH: If no one is adding reference or the container does not match
+            if (!isAddingReference || (T**)pEditedContainer != &container)
+            {
+                return;
+            }
+            Scene* pScene = MySceneManager.get_current_scene();
+            if (!pScene)
+                return;
+            static ImGuiTextFilter filter;
+            static std::string windowName;
+            windowName = "Add ";
+            if (alternateName)
+            {
+                windowName += alternateName;
+                windowName += " [";
+                windowName += GetTypeName<T>();
+                windowName += "]";
+            }
+            else
+            {
+                windowName += GetTypeName<T>();
+            }
+            windowName += " Reference";
+            if (ImGui::Begin(windowName.c_str(), &isAddingReference))
+            {
+                ImGui::PushItemWidth(-1);
+                filter.Draw("##References");
+                ImGui::PopItemWidth();
+                static std::string buttonName{};
+                if constexpr (std::is_same<T, GameObject>())
+                {
+                    for (T& gameObject : pScene->gameObjects)
+                    {
+                        ImVec2 buttonSize = ImGui::GetWindowSize();
+                        buttonSize.y *= (float)BUTTON_HEIGHT;
+                        buttonName = gameObject.name + " [GameObject]";
+                        if (filter.PassFilter(gameObject.name.c_str()) && ImGui::Button(buttonName.c_str(), buttonSize))
+                        {
+                            isAddingReference = false;
+                            container = &gameObject;
+                        }
+                    }
+                }
+                else if constexpr (ComponentTypes::has<T>())
+                {
+                    for (T& component : pScene->componentArrays.GetArray<T>())
+                    {
+                        if constexpr (std::is_same<T, Script>())
+                        {
+                            if (component.Name() != alternateName)
+                                continue;
+                        }
+                        buttonName = component.gameObj.name;
+                        buttonName += " [";
+                        if (alternateName)
+                        {
+                            buttonName += alternateName;
+                            buttonName += " - ";
+                        }
+                        buttonName += GetTypeName<T>();
+                        buttonName += "]";
+                        ImVec2 buttonSize = ImGui::GetWindowSize();
+                        buttonSize.y *= (float)BUTTON_HEIGHT;
+                        if (filter.PassFilter(component.gameObj.name.c_str()) && ImGui::Button(buttonName.c_str(), buttonSize))
+                        {
+                            isAddingReference = false;
+                            container = &component;
+                        }
+                    }
+                }
+                else if constexpr (std::is_same<T, IUIComponent>())
+                {
+                    for (Image& component : pScene->componentArrays.GetArray<Image>())
+                    {
+                        buttonName = component.gameObj.name;
+                        buttonName += " [Image]";
+                        ImVec2 buttonSize = ImGui::GetWindowSize();
+                        buttonSize.y *= (float)BUTTON_HEIGHT;
+                        if (filter.PassFilter(component.gameObj.name.c_str()) && ImGui::Button(buttonName.c_str(), buttonSize))
+                        {
+                            isAddingReference = false;
+                            container = &component;
+                        }
+                    }
+                    for (Text& component : pScene->componentArrays.GetArray<Text>())
+                    {
+                        buttonName = component.gameObj.name;
+                        buttonName += " [Text]";
+                        ImVec2 buttonSize = ImGui::GetWindowSize();
+                        buttonSize.y *= (float)BUTTON_HEIGHT;
+                        if (filter.PassFilter(component.gameObj.name.c_str()) && ImGui::Button(buttonName.c_str(), buttonSize))
+                        {
+                            isAddingReference = false;
+                            container = &component;
+                        }
+                    }
+                }
+                ImGui::End();
+            }
+            //Reset the edited container back to false
+            if (isAddingReference == false)
+            {
+                pEditedContainer = nullptr;
+            }
+        }
+
         template <typename T>
         void DisplayType(const char* name, T*& container)
         {
+            //static_assert(std::is_same<T, Script>());
             static std::string buttonName{};
             if (container == nullptr)
             {
-                buttonName = "Empty ";
+                buttonName = "None ";
                 buttonName += '(';
                 buttonName += GetTypeName<T>();
                 buttonName += ')';
@@ -114,6 +243,12 @@ namespace Copium
             else
             {
                 DisplayPointer(*container);
+            }
+            if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+            {
+                PRINT("Double clicked on " << GetTypeName<T>() << " reference field");
+                isAddingReference = true;
+                pEditedContainer = reinterpret_cast<void**>(&container);
             }
 
             if (ImGui::BeginDragDropTarget())
@@ -126,6 +261,45 @@ namespace Copium
                 }
                 ImGui::EndDragDropTarget();
             }
+            AddReferencePanel(container);
+        }
+
+        void DisplayType(const char* name, Script*& container, const char* scriptName)
+        {
+            PRINT(scriptName);
+            static std::string buttonName{};
+            if (container == nullptr)
+            {
+                buttonName = "None ";
+                buttonName += '(';
+                buttonName += scriptName;
+                buttonName += " - Script";
+                buttonName += ')';
+                ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
+            }
+            else
+            {
+                DisplayPointer(*container);
+            }
+            if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+            {
+                std::cout << "double clicked on game object reference field\n";
+                isAddingReference = true;
+                pEditedContainer = reinterpret_cast<void**>(&container);
+
+            }
+
+            if (ImGui::BeginDragDropTarget())
+            {
+                const ImGuiPayload* payload{};
+                ImGui::AcceptDragDropPayload(scriptName);
+                if (payload)
+                {
+                    container = (Script*)(*reinterpret_cast<void**>(payload->Data));
+                }
+                ImGui::EndDragDropTarget();
+            }
+            AddReferencePanel(container,scriptName);
         }
 
         template <>
@@ -134,7 +308,7 @@ namespace Copium
             static std::string buttonName{};
             if (container == nullptr)
             {
-                buttonName = "Empty (Texture)";
+                buttonName = "None (Texture)";
                 ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
             }
             else
@@ -226,13 +400,6 @@ namespace Copium
 
         void DisplayType(const char* name, Math::Vec3& val)
         {
-            static ImGuiTableFlags windowFlags =
-                ImGuiTableFlags_Resizable |
-                ImGuiTableFlags_NoBordersInBody |
-                ImGuiTableFlags_NoSavedSettings |
-                ImGuiTableFlags_SizingStretchProp;
-
-
             static float temp{};
             static std::string idName{};
             idName = "##";
@@ -260,13 +427,6 @@ namespace Copium
 
         void DisplayType(const char* name, Math::Vec2& val)
         {
-            static ImGuiTableFlags windowFlags =
-                ImGuiTableFlags_Resizable |
-                ImGuiTableFlags_NoBordersInBody |
-                ImGuiTableFlags_NoSavedSettings |
-                ImGuiTableFlags_SizingStretchProp;
-
-
             static float temp{};
             static std::string idName{};
             idName = "##";
@@ -290,12 +450,6 @@ namespace Copium
 
         void DisplayType(const char* name, AABB& val)
         {
-            static ImGuiTableFlags windowFlags =
-                ImGuiTableFlags_Resizable |
-                ImGuiTableFlags_NoBordersInBody |
-                ImGuiTableFlags_NoSavedSettings |
-                ImGuiTableFlags_SizingStretchProp;
-
             static std::string idName{};
             idName = "##";
             idName += name;
@@ -318,6 +472,15 @@ namespace Copium
             ImGui::Text(name);
             ImGui::TableNextColumn();
             DisplayType(name, val);
+        }
+
+        void Display(const char* name, Script*& val, const char* scriptName)
+        {
+            ImGui::AlignTextToFramePadding();
+            ImGui::TableNextColumn();
+            ImGui::Text(name);
+            ImGui::TableNextColumn();
+            DisplayType(name, val, scriptName);
         }
 
         void Display(const char* string)
@@ -418,7 +581,7 @@ namespace Copium
                 {
                     static const char* name = GetComponentType<T>::name;
                     PRINT(name);
-                    if (ImGui::Button(name, buttonSize))
+                    if (filter.PassFilter(name) && ImGui::Button(name, buttonSize))
                     {
                         T* component;
                         MyEventSystem->publish(new ComponentAddEvent{ gameObj,component });
@@ -463,13 +626,14 @@ namespace Copium
                 //if (ImGui::Button(newScriptPrompt.c_str(), buttonSize))
                 //{
                 //    //Ask scripting system query if file exists
-                //    //scriptingSystem.addEmptyScript(filter.InputBuf);
+                //    //scriptingSystem.addNoneScript(filter.InputBuf);
                 //    //selectedGameObject->addComponent<Copium::Script>().Name(filter.InputBuf);
                 //    isAddingComponent = false;
                 //}
                 ImGui::End();
             }
         }
+
 
         template <typename T>
         void DisplayComponent(T& component)
@@ -544,43 +708,62 @@ namespace Copium
                 const char* name = pair.first.c_str();
                 Field& field{ pair.second };
             //    //Component Enum + ComponentType Enum
-            //    if (field.fType == FieldType::Component)
-            //    {
-            //        auto componentRef = script.fieldComponentReferences.find(name);
-            //        //Component does not exist
-            //        if (componentRef == script.fieldComponentReferences.end())
-            //        {
-            //            std::string displayName = "None (" + field.typeName + ")";
-            //            ImGui::Button(displayName.c_str(), ImVec2(-FLT_MIN, 0.f));
-            //        }
-            //        //Component exists
-            //        else
-            //        {
-            //            std::string displayName = (*componentRef).second->gameObj.name + "(" + field.typeName + ")";
-            //            ImGui::Button(displayName.c_str(), ImVec2(-FLT_MIN, 0.f));
-
-            //        }
-            //        if (ImGui::BeginDragDropTarget())
-            //        {
-            //            const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(field.typeName.c_str());
-            //            if (payload)
-            //            {
-            //                componentRef->second = (Component*)(*reinterpret_cast<void**>(payload->Data));
-            //            }
-            //            ImGui::EndDragDropTarget();
-            //        }
-            //    }
-            //    else if (field.fType == FieldType::GameObject)
-            //    {
-            //        //Display(name,script.fieldGameObjReferences[name]);
-            //    }
-            //    else
-            //    {
+                if (field.fType >= FieldType::Component)
+                {
+                    ComponentType cType = (ComponentType)field.fType;
+                    switch (cType) {
+                    case ComponentType::Animator:
+                        Display(name, (Animator*&)script.fieldComponentReferences[name]);
+                        break;
+                    case ComponentType::AudioSource:
+                        Display(name, (AudioSource*&)script.fieldComponentReferences[name]);
+                        break;
+                    case ComponentType::BoxCollider2D:
+                        Display(name, (BoxCollider2D*&)script.fieldComponentReferences[name]);
+                        break;
+                    case ComponentType::Button:
+                        Display(name, (Button*&)script.fieldComponentReferences[name]);
+                        break;
+                    case ComponentType::Camera:
+                        Display(name, (Camera*&)script.fieldComponentReferences[name]);
+                        break;
+                    case ComponentType::Image:
+                        Display(name, (Image*&)script.fieldComponentReferences[name]);
+                        break;
+                    case ComponentType::Rigidbody2D:
+                        Display(name, (Rigidbody2D*&)script.fieldComponentReferences[name]);
+                        break;
+                    case ComponentType::SpriteRenderer:
+                        Display(name, (SpriteRenderer*&)script.fieldComponentReferences[name]);
+                        break;
+                    case ComponentType::Script:
+                        Display(name, (Script*&)script.fieldComponentReferences[name], field.typeName.c_str());
+                        break;
+                    case ComponentType::Transform:
+                        Display(name, (Transform*&)script.fieldComponentReferences[name]);
+                        break;
+                    case ComponentType::Text:
+                        Display(name, (Text*&)script.fieldComponentReferences[name]);
+                        break;
+                    case ComponentType::SortingGroup:
+                        Display(name, (SortingGroup*&)script.fieldComponentReferences[name]);
+                        break;
+                    default:
+                        // handle invalid case
+                        break;
+                    }
+                }
+                else if (field.fType == FieldType::GameObject)
+                {
+                    Display(name,script.fieldGameObjReferences[name]);
+                }
+                else
+                {
                     buffer.fType = field.fType;
                     MyEventSystem->publish(new ScriptGetFieldEvent(script, name, field.data));
                     Display(name, field);
                     MyEventSystem->publish(new ScriptSetFieldEvent(script, name, field.data));
-                //}
+                }
             }
         }
 
@@ -1165,7 +1348,7 @@ namespace Copium
         //        if (ImGui::Button(newScriptPrompt.c_str(), buttonSize))
         //        {
         //            //Ask scripting system query if file exists
-        //            MyScriptingSystem.addEmptyScript(filter.InputBuf);
+        //            MyScriptingSystem.addNoneScript(filter.InputBuf);
         //            selectedGameObject->AddComponent<Copium::Script>().Name(filter.InputBuf);
         //            isAddingComponent = false;
         //        }

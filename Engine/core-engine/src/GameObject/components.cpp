@@ -75,8 +75,6 @@ namespace Copium
 	}
 
 	char Script::buffer[128];
-	std::pair<const std::string, Field>* Script::editedField;
-	bool Script::isAddingReference{ nullptr };
 
 	void Animator::Update(double _dt)
 	{
