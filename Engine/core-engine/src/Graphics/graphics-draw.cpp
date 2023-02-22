@@ -85,6 +85,9 @@ namespace Copium
 		if (drawMode[DRAW::WORLD])
 			world();
 
+		if (drawMode[DRAW::EDITOR])
+			editor(1);
+
 		if (drawMode[DRAW::DEBUG])
 			debug();
 
@@ -99,69 +102,76 @@ namespace Copium
 		renderer.shutdown();
 	}
 
-	void Draw::editor()
+	void Draw::editor(int _index)
 	{
 		// Bean: this should be the background color of the camera
 		//glClearColor(0.278f, 0.278f, 0.278f, 1.f);
 		renderer.begin_batch();
 
-		// Grid system
-		glm::vec4 color = { 1.f, 1.f, 1.f, 0.4f };
-		float start = -100.f, end = -start;
-		float numDivision = 24.f, iteration = (end - start) / numDivision;
-		for (float i = start; i < end + iteration; i += iteration)
+		if (_index == 0)
 		{
-			renderer.draw_line({ i, start, -100.f }, { i, end, -100.f }, color);
-			renderer.draw_line({ start, i, -100.f }, { end, i, -100.f }, color);
-		}
-
-		float subDivision = 5.f;
-		numDivision *= subDivision;
-		iteration = (end - start) / numDivision;
-		start = -10.f, end = -start;
-		for (float i = start; i <= end; i += iteration)
-		{
-			renderer.draw_line({ i, start, -100.f }, { i, end, -100.f }, color);
-			renderer.draw_line({ start, i, -100.f }, { end, i, -100.f }, color);
-		}
-
-		// Colliders
-		Scene* pScene{ MySceneManager.get_current_scene() };
-		if (pScene)
-		{
-			color = { 0.3f, 1.f, 0.3f, 1.f };
-			for (BoxCollider2D& collider : pScene->componentArrays.GetArray<BoxCollider2D>())
+			// Grid system
+			glm::vec4 color = { 1.f, 1.f, 1.f, 0.4f };
+			float start = -100.f, end = -start;
+			float numDivision = 24.f, iteration = (end - start) / numDivision;
+			for (float i = start; i < end + iteration; i += iteration)
 			{
-				if (!collider.enabled || !collider.gameObj.IsActive())
-					continue;
-				Transform& transform = collider.gameObj.transform;
-				AABB bounds = collider.bounds.GetRelativeBounds(transform.GetWorldPosition(), transform.GetWorldScale());
-				glm::vec3 pos0_1 = { bounds.min.to_glm(), 0.f };
-				glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y, 0.f };
-				glm::vec3 pos2_1 = { bounds.max.to_glm(), 0.f };
-				glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y, 0.f };
-
-				renderer.draw_line(pos0_1, pos1_1, color);
-				renderer.draw_line(pos1_1, pos2_1, color);
-				renderer.draw_line(pos2_1, pos3_1, color);
-				renderer.draw_line(pos3_1, pos0_1, color);
+				renderer.draw_line({ i, start, -100.f }, { i, end, -100.f }, color);
+				renderer.draw_line({ start, i, -100.f }, { end, i, -100.f }, color);
 			}
 
-			for (Button& button: pScene->componentArrays.GetArray<Button>())
+			float subDivision = 5.f;
+			numDivision *= subDivision;
+			iteration = (end - start) / numDivision;
+			start = -10.f, end = -start;
+			for (float i = start; i <= end; i += iteration)
 			{
-				if (!button.enabled || !button.gameObj.IsActive())
-					continue;
-				Transform& transform = button.gameObj.transform;
-				AABB bounds = button.bounds.GetRelativeBounds(transform.GetWorldPosition(), transform.GetWorldScale());
-				glm::vec3 pos0_1 = { bounds.min.to_glm(),0.f };
-				glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y,0.f };
-				glm::vec3 pos2_1 = { bounds.max.to_glm(),0.f };
-				glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y,0.f };
+				renderer.draw_line({ i, start, -100.f }, { i, end, -100.f }, color);
+				renderer.draw_line({ start, i, -100.f }, { end, i, -100.f }, color);
+			}
+		}
 
-				renderer.draw_line(pos0_1, pos1_1, color);
-				renderer.draw_line(pos1_1, pos2_1, color);
-				renderer.draw_line(pos2_1, pos3_1, color);
-				renderer.draw_line(pos3_1, pos0_1, color);
+		if (_index == 1)
+		{
+			// Colliders
+			Scene* pScene{ MySceneManager.get_current_scene() };
+			if (pScene)
+			{
+				glm::vec4 color = { 1.f, 1.f, 1.f, 0.4f };
+				color = { 0.3f, 1.f, 0.3f, 1.f };
+				for (BoxCollider2D& collider : pScene->componentArrays.GetArray<BoxCollider2D>())
+				{
+					if (!collider.enabled || !collider.gameObj.IsActive())
+						continue;
+					Transform& transform = collider.gameObj.transform;
+					AABB bounds = collider.bounds.GetRelativeBounds(transform.GetWorldPosition(), transform.GetWorldScale());
+					glm::vec3 pos0_1 = { bounds.min.to_glm(), 0.f };
+					glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y, 0.f };
+					glm::vec3 pos2_1 = { bounds.max.to_glm(), 0.f };
+					glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y, 0.f };
+
+					renderer.draw_line(pos0_1, pos1_1, color);
+					renderer.draw_line(pos1_1, pos2_1, color);
+					renderer.draw_line(pos2_1, pos3_1, color);
+					renderer.draw_line(pos3_1, pos0_1, color);
+				}
+
+				for (Button& button : pScene->componentArrays.GetArray<Button>())
+				{
+					if (!button.enabled || !button.gameObj.IsActive())
+						continue;
+					Transform& transform = button.gameObj.transform;
+					AABB bounds = button.bounds.GetRelativeBounds(transform.GetWorldPosition(), transform.GetWorldScale());
+					glm::vec3 pos0_1 = { bounds.min.to_glm(),0.f };
+					glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y,0.f };
+					glm::vec3 pos2_1 = { bounds.max.to_glm(),0.f };
+					glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y,0.f };
+
+					renderer.draw_line(pos0_1, pos1_1, color);
+					renderer.draw_line(pos1_1, pos2_1, color);
+					renderer.draw_line(pos2_1, pos3_1, color);
+					renderer.draw_line(pos3_1, pos0_1, color);
+				}
 			}
 		}
 
@@ -332,13 +342,13 @@ namespace Copium
 
 				Transform& t = text.gameObj.transform;
 
-				/*Math::Vec3 pos{ t.position };
+				Math::Vec3 pos{ t.position };
 				float scale = t.scale.x * 0.1f;
 				if (scale > t.scale.y)
 					scale = t.scale.y;
-				glm::vec2 dimensions{ text->GetFont()->getDimensions(text->content, scale)};
+				glm::vec2 dimensions{ text.font->getDimensions(text.content, scale, text.wrapper) };
 
-				switch (text->get_hAlign())
+				switch (text.get_hAlign())
 				{
 				case HorizontalAlignment::Center:
 					pos.x -= dimensions.x / 2.f;
@@ -347,7 +357,7 @@ namespace Copium
 					pos.x -= dimensions.x;
 					break;
 				}
-				switch (text->get_vAlign())
+				switch (text.get_vAlign())
 				{
 				case VerticalAlignment::Top:
 					pos.y -= dimensions.y;
@@ -357,20 +367,19 @@ namespace Copium
 					break;
 				}
 
-				if (gameObject->transform.HasParent())
+				if (t.HasParent())
 				{
 					glm::vec3 updatedPos = pos;
 					glm::vec3 updatedScale = t.scale.glmVec3;
 					float updatedRot = t.rotation.z;
-					UpdateTransform(gameObject->transform, updatedPos, updatedRot, updatedScale);
+					UpdateTransform(t, updatedPos, updatedRot, updatedScale);
 
-					renderer.draw_text(text->content, updatedPos, text->get_color(), scale, text->GetFont());
+					renderer.draw_text(text.content, updatedPos, text.get_color(), scale, text.font);
 				}
 				else
 				{
-					renderer.draw_text(text->content, pos, text->get_color(), scale, text->GetFont());
-				}*/
-				//text.render(camera);
+					renderer.draw_text(text.content, pos, text.get_color(), scale, text.font);
+				}
 			}
 			++count;
 			//PRINT("Num of Rendered GO: " << count);
@@ -508,18 +517,15 @@ namespace Copium
 						if (!text.enabled || !text.gameObj.IsActive())
 							continue;
 
-						if (text.gameObj.HasComponent<SortingGroup>())
-							continue;
-
 						Transform& t = text.gameObj.transform;
 
-						/*Math::Vec3 pos{ t.position };
+						Math::Vec3 pos{ t.position };
 						float scale = t.scale.x * 0.1f;
 						if (scale > t.scale.y)
 							scale = t.scale.y;
-						glm::vec2 dimensions{ text->GetFont()->getDimensions(text->content, scale)};
+						glm::vec2 dimensions{ text.font->getDimensions(text.content, scale, text.wrapper)};
 
-						switch (text->get_hAlign())
+						switch (text.get_hAlign())
 						{
 						case HorizontalAlignment::Center:
 							pos.x -= dimensions.x / 2.f;
@@ -528,7 +534,7 @@ namespace Copium
 							pos.x -= dimensions.x;
 							break;
 						}
-						switch (text->get_vAlign())
+						switch (text.get_vAlign())
 						{
 						case VerticalAlignment::Top:
 							pos.y -= dimensions.y;
@@ -538,34 +544,24 @@ namespace Copium
 							break;
 						}
 
-						if (gameObject->transform.HasParent())
+						if (t.HasParent())
 						{
 							glm::vec3 updatedPos = pos;
 							glm::vec3 updatedScale = t.scale.glmVec3;
 							float updatedRot = t.rotation.z;
-							UpdateTransform(gameObject->transform, updatedPos, updatedRot, updatedScale);
+							UpdateTransform(t, updatedPos, updatedRot, updatedScale);
 
-							renderer.draw_text(text->content, updatedPos, text->get_color(), scale, text->GetFont());
+							renderer.draw_text(text.content, updatedPos, text.get_color(), scale, text.font);
 						}
 						else
 						{
-							renderer.draw_text(text->content, pos, text->get_color(), scale, text->GetFont());
-						}*/
-						//text.render(camera);
+							renderer.draw_text(text.content, pos, text.get_color(), scale, text.font);
+						}
 					}
 
 				}
 			}
 		}
-
-
-
-		//if (scene != nullptr && false)
-		//{
-		//	if (scene->get_state() == Scene::SceneState::play)
-		//		toggleAnim = true;
-		//	else
-		//		toggleAnim = false;
 
 		renderer.end_batch();
 		renderer.flush();
@@ -573,52 +569,45 @@ namespace Copium
 		// Only For Text
 		if (pScene != nullptr)
 		{
-			for (Text& text : pScene->componentArrays.GetArray<Text>())
-			{
-				GameObject& gameObject{ text.gameObj };
-				if (!text.enabled || !gameObject.IsActive())
-					continue;
-				//bool layered{ false };
-				//for (Component* component : gameObject->GetComponents<SortingGroup>())
-				//{
-				//	if (component.enabled)
-				//	{
-				//		layered = true;
-				//		break;
-				//	}
-				//}
-				//if (layered)
-				//	continue;
-				// If the object isnt within the frustum
-				if (!camera->withinFrustum(gameObject.transform.GetWorldPosition(), gameObject.transform.GetWorldScale()))
-					continue;
-				text.render(camera);
-			}
+			//for (Text& text : pScene->componentArrays.GetArray<Text>())
+			//{
+			//	GameObject& gameObject{ text.gameObj };
+			//	if (!text.enabled || !gameObject.IsActive())
+			//		continue;
+
+			//	// If the object isnt within the frustum
+			//	if (!camera->withinFrustum(gameObject.transform.GetWorldPosition(), gameObject.transform.GetWorldScale()))
+			//		continue;
+			//	text.render(camera);
+			//}
+
+			//for (Layer& layer : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
+			//{
+			//	// Only For Text
+			//	for (GameObject* go : layer.gameObjects)
+			//	{
+			//		if (go == nullptr || !go->IsActive())
+			//			continue;
+
+			//		// If the object isnt within the frustum
+			//		if (!camera->withinFrustum(go->transform.position, go->transform.scale))
+			//			continue;
+
+			//		if (go->HasComponent<Text>())
+			//		{
+			//			Text& text = *go->GetComponent<Text>();
+			//			if (!text.enabled || !text.gameObj.IsActive())
+			//				continue;
+
+			//			Transform& t = text.gameObj.transform;
+			//			text.render(camera);
+			//		}
+			//	}
+			//}
+
 		}
 
-		//	for (Layer& layer : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
-		//	{
-		//		// Only For Text
-		//		for (GameObject* gameObject : layer.gameObjects)
-		//		{
-		//			if (gameObject == nullptr || !gameObject->isActive())
-		//				continue;
-
-		//			// If the object isnt within the frustum
-		//			if (!camera->withinFrustum(gameObject->transform.position, gameObject->transform.scale))
-		//				continue;
-
-		//			for (Component* component : gameObject->GetComponents<Text>())
-		//			{
-		//				if (!component.enabled)
-		//					continue;
-
-		//				Text* text = reinterpret_cast<Text*>(component);
-		//				text->render(camera);
-		//			}
-		//		}
-		//	}
-		//}
+		
 	}
 
 	void Draw::debug()

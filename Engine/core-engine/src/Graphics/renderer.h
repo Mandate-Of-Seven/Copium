@@ -280,6 +280,7 @@ namespace Copium
 		*/
 		/***************************************************************************/
 		void draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float _scale, Font* _font);
+		void draw_text2(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float _scale, Font* _font);
 
 		// Accessing Properties
 

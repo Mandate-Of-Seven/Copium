@@ -229,11 +229,11 @@ namespace Copium
 						continue;
 					if (sortingLayers[i].gameObjects[j]->uuid == _gameObject.uuid)
 					{
-						for (int k = 0; k < sortingLayers[i].gameObjects.size(); k++)
-						{
-							if(sortingLayers[i].gameObjects[k])
-								PRINT("Name: " << sortingLayers[i].gameObjects[k]->name);
-						}
+						//for (int k = 0; k < sortingLayers[i].gameObjects.size(); k++)
+						//{
+						//	if(sortingLayers[i].gameObjects[k])
+						//		PRINT("Name: " << sortingLayers[i].gameObjects[k]->name);
+						//}
 						sortingLayers[i].gameObjects[j] = &_gameObject;
 						break;
 					}

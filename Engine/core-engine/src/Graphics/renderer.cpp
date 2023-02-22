@@ -30,6 +30,7 @@ namespace Copium
 	{
 		int textureCount = 0;
 		std::unordered_map<GLuint, std::pair<GLuint,GLuint>> textureIDs;
+		std::unordered_map<GLuint, GLuint> fontIDs;
 	}
 
 	void Renderer::init(BaseCamera* _camera)
@@ -227,9 +228,9 @@ namespace Copium
 		glVertexArrayAttribFormat(textVertexArrayID, 2, 2, GL_FLOAT, GL_FALSE, offsetof(TextVertex, textCoord));
 		glVertexArrayAttribBinding(textVertexArrayID, 2, 3);
 
-		/*glEnableVertexArrayAttrib(textVertexArrayID, 3);
+		glEnableVertexArrayAttrib(textVertexArrayID, 3);
 		glVertexArrayAttribFormat(textVertexArrayID, 3, 1, GL_FLOAT, GL_FALSE, offsetof(TextVertex, fontID));
-		glVertexArrayAttribBinding(textVertexArrayID, 3, 3);*/
+		glVertexArrayAttribBinding(textVertexArrayID, 3, 3);
 
 		// Setup default text texture coordinates
 		textTextCoord[0] = { 0.f, 0.f };
@@ -375,15 +376,7 @@ namespace Copium
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			graphics->get_shader_program()[TEXT_SHADER].Use();
-			glActiveTexture(GL_TEXTURE0);
 			glBindVertexArray(textVertexArrayID);
-
-			// Bind texture unit
-			// 
-
-			// Cannot just bind texture because there is multiple textures in this one draw
-			// Requires an array of textures and reference from there
-			//glBindTexture(GL_TEXTURE_2D, ch.textureID);
 
 			// Bean: Matrix assignment to be placed somewhere else
 			GLuint uProjection = glGetUniformLocation(
@@ -394,12 +387,19 @@ namespace Copium
 
 			// End of matrix assignment
 
+			// Bind texture unit
+			for (auto map : fontIDs)
+				glBindTextureUnit(map.second, map.first);
+			
+			// Cannot just bind texture because there is multiple textures in this one draw
+			// Requires an array of textures and reference from there
+			//glBindTexture(GL_TEXTURE_2D, ch.textureID);
+
 			// Draws the entire text out
 			glDrawArrays(GL_TRIANGLES, 0, textVertexCount);
 			drawCount++;
 
 			glBindVertexArray(0);
-			glBindTexture(GL_TEXTURE_2D, 0);
 			graphics->get_shader_program()[TEXT_SHADER].UnUse();
 			glDisable(GL_BLEND);
 		}
@@ -930,6 +930,93 @@ namespace Copium
 			begin_batch();
 		}
 
+		float x = _position.x;
+		float y = _position.y;
+		float z = _position.z;
+
+		glm::vec2 fontTextCoord[6] = {
+			glm::vec2(0.f, 0.f),
+			glm::vec2(0.f, 1.f),
+			glm::vec2(1.f, 1.f),
+			glm::vec2(0.f, 0.f),
+			glm::vec2(1.f, 1.f),
+			glm::vec2(1.f, 0.f)
+		};
+
+		int newLine = 0;
+		float xpos = 0.f, ypos = 0.f;
+		const float scaler = 0.01f;
+
+		std::map<char, Character> characters = _font->get_characters();
+
+		for (char c : _text)
+		{
+			Character ch = characters[c];
+
+			// If it is a newline
+			if (c == '\n')
+			{
+				newLine++;
+				x = _position.x;
+				continue;
+			}
+
+			xpos = x + ch.bearing.x * (_scale * scaler);
+			ypos = y - (ch.size.y - ch.bearing.y) * (_scale * scaler) - newLine * (_scale * 2.5f);
+
+			float w = ch.size.x * (_scale * scaler);
+			float h = ch.size.y * (_scale * scaler);
+
+			if (fontIDs.size() > 31 || textureCount > 31)
+			{
+				end_batch();
+				flush();
+				begin_batch();
+
+				textureCount = 0;
+				fontIDs.clear();
+			}
+
+			// Map texture unit to the texture object id
+			auto it = fontIDs.find(ch.textureID);
+			if (it == fontIDs.end())
+				fontIDs.emplace(std::make_pair(ch.textureID, textureCount++));
+
+			// Update VBO for each character
+			glm::vec3 textVertexPosition[6] = {
+				glm::vec3(xpos, ypos + h, 0.f),
+				glm::vec3(xpos, ypos, 0.f),
+				glm::vec3(xpos + w, ypos, 0.f),
+				glm::vec3(xpos, ypos + h, 0.f),
+				glm::vec3(xpos + w, ypos, 0.f),
+				glm::vec3(xpos + w, ypos + h, 0.f)
+			};
+
+			for (GLint i = 0; i < 6; i++)
+			{
+				textBufferPtr->pos = textVertexPosition[i];
+				textBufferPtr->textCoord = fontTextCoord[i];
+				textBufferPtr->color = _color;
+				textBufferPtr->fontID = fontIDs[ch.textureID];
+				textBufferPtr++;
+			}
+
+			x += (ch.advance >> 6) * (_scale * scaler); // Bitshift by 6 to get value in pixels
+			textVertexCount += 6;
+		}
+
+		textCount++;
+	}
+
+	void Renderer::draw_text2(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float _scale, Font* _font)
+	{
+		if (textVertexCount >= maxTextCount)
+		{
+			end_batch();
+			flush();
+			begin_batch();
+		}
+
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -1013,7 +1100,7 @@ namespace Copium
 
 		glDisable(GL_BLEND);
 
-		//textCount++;
+		textCount++;
 	}
 
 }

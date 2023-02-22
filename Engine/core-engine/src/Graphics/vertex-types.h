@@ -46,7 +46,7 @@ namespace Copium
 		glm::vec3 pos;		// Position of vertex
 		glm::vec4 color;	// Color of vertex
 		glm::vec2 textCoord;// Texture coordinate of vertex
-		//float fontID;		// Font index
+		float fontID;		// Font index
 	};
 
 }
