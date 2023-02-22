@@ -578,7 +578,6 @@ namespace Copium
 					}
 					else
 					{
-						//MyEventSystem.publish(new Game)
 						switch (ct)
 						{
 						case ComponentType::Animator:
@@ -619,7 +618,9 @@ namespace Copium
 						case ComponentType::Script:
 						{
 							Script* tmp = nullptr;
-							MyEventSystem->publish(new ComponentAddEvent(_data, tmp));
+							std::string scriptName{};
+							Copium::Deserialize(scriptName, component, "Name");
+							MyEventSystem->publish(new ComponentAddEvent<Script>(_data, tmp, scriptName.c_str()));
 							Deserialize(*tmp, "", component);
 							break;
 						}
@@ -717,7 +718,9 @@ namespace Copium
 							case ComponentType::Script:
 							{
 								Script* tmp = nullptr;
-								MyEventSystem->publish(new ComponentAddEvent(_data, tmp));
+								std::string scriptName{};
+								Copium::Deserialize(scriptName, component, "Name");
+								MyEventSystem->publish(new ComponentAddEvent<Script>(_data, tmp, scriptName.c_str()));
 								Deserialize(*tmp, "", component);
 								break;
 							}
@@ -947,7 +950,6 @@ namespace Copium
 	{
 		Copium::Deserialize(_data.uuid.GetUUID(), _value, "UID");
 		PRINT("Serializing script...");
-		Copium::Deserialize(_data.name, _value, "Name");
 		if (_data.fieldDataReferences.empty())
 			return;
 		for (auto it = _data.fieldDataReferences.begin(); it != _data.fieldDataReferences.end(); ++it)

@@ -376,13 +376,20 @@ namespace Copium
             {
                 ImVec2 buttonSize = ImGui::GetWindowSize();
                 buttonSize.y *= (float)BUTTON_HEIGHT;
-                static const char* name = GetComponentType<T>::name;
-                PRINT(name);
-                if (ImGui::Button(name, buttonSize))
+                if constexpr (std::is_same<Script, T>())
                 {
-                    T* component;
-                    MyEventSystem->publish(new ComponentAddEvent{ gameObj,component });
-                    return true;
+
+                }
+                else
+                {
+                    static const char* name = GetComponentType<T>::name;
+                    PRINT(name);
+                    if (ImGui::Button(name, buttonSize))
+                    {
+                        T* component;
+                        MyEventSystem->publish(new ComponentAddEvent{ gameObj,component });
+                        return true;
+                    }
                 }
                 if constexpr (sizeof...(Ts) != 0)
                 {

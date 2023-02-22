@@ -723,9 +723,20 @@ namespace Copium
 	template <typename T>
 	void SceneManager::CallbackComponentAdd(ComponentAddEvent<T>* pEvent)
 	{
-		T& component = currentScene->componentArrays.GetArray<T>().emplace_back(pEvent->gameObject);
-		pEvent->gameObject.AddComponent(&component);
-		pEvent->componentContainer = &component;
+		if constexpr (std::is_same<T,Script>())
+		{
+			T& component = currentScene->componentArrays.GetArray<T>().emplace_back(pEvent->gameObject,UUID(),pEvent->scriptName);
+			pEvent->gameObject.AddComponent(&component);
+			pEvent->componentContainer = &component;
+			MyEventSystem->publish(new ReflectComponentEvent(component));
+		}
+		else
+		{
+			T& component = currentScene->componentArrays.GetArray<T>().emplace_back(pEvent->gameObject);
+			pEvent->gameObject.AddComponent(&component);
+			pEvent->componentContainer = &component;
+			MyEventSystem->publish(new ReflectComponentEvent(component));
+		}
 	}
 
 	template <typename T>

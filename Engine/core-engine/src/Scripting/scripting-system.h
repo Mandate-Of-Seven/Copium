@@ -127,18 +127,6 @@ namespace Copium
 		/**************************************************************************/
 		/*!
 			\brief
-				Gets the shared pointer of a ScriptClass from its name
-			\param _name
-				Name of ScriptClass to get
-			\return
-				Shared pointer to a ScriptClass
-		*/
-		/**************************************************************************/
-		ScriptClass& GetScriptClass(const std::string & _name);
-
-		/**************************************************************************/
-		/*!
-			\brief
 				Creates an instance of a monoClass
 			\param mClass
 				Class to create instance or clone from
@@ -407,55 +395,6 @@ namespace Copium
 		/*!
 		*
 		\brief
-			Create a reference to the specified object in c#
-
-		\param object
-			reference to the object
-
-		\return
-			id of the component/gameobject]
-			if reference fails, returns -1
-		*/
-		/*******************************************************************************/
-		template<typename T>
-		size_t CreateReference(T& object) { static_assert(true); };
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Create a reference to the specified game object in c#
-
-		\param object
-			reference to the game object
-
-		\return
-			id of the gameobject
-			if reference fails, returns -1
-		*/
-		/*******************************************************************************/
-		template<>
-		size_t CreateReference<GameObject>(GameObject& object);
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Create a reference to the specified component in c#
-
-		\param object
-			reference to the component
-
-		\return
-			id of the component
-			if reference fails, returns -1
-		*/
-		/*******************************************************************************/
-		template<>
-		size_t CreateReference<Component>(Component& object);
-
-		/*******************************************************************************
-		/*!
-		*
-		\brief
 			Sets a field from a C# field using its name
 		\param name
 			Name of the field
@@ -466,6 +405,9 @@ namespace Copium
 		*/
 		/*******************************************************************************/
 		void SetFieldValue(MonoObject* instance, MonoClassField* mClassFiend, Field& field, const void* value);
+
+		template<typename T>
+		void SetFieldReference(MonoObject* instance, MonoClassField* mClassFiend, Field& field, T* reference);
 
 		/*******************************************************************************
 		/*!
@@ -494,7 +436,8 @@ namespace Copium
 			void
 		*/
 		/*******************************************************************************/
-		void CallbackReflectComponent(ReflectComponentEvent* pEvent);
+		template <typename T>
+		void CallbackReflectComponent(ReflectComponentEvent<T>* pEvent);
 		/*******************************************************************************
 		/*!
 		*
@@ -552,6 +495,7 @@ namespace Copium
 		/*******************************************************************************/
 		template<typename T>
 		void CallbackScriptSetFieldReference(ScriptSetFieldReferenceEvent<T>* pEvent);
+
 		/*******************************************************************************
 		/*!
 		*
@@ -581,6 +525,10 @@ namespace Copium
 		/*******************************************************************************/
 		void CallbackStartPreview(StartPreviewEvent* pEvent);
 
+
+		template<typename T, typename... Ts>
+		void SubscribeComponentBasedCallbacks(TemplatePack<T, Ts...> pack);
+
 		/*******************************************************************************
 		/*!
 		*
@@ -594,7 +542,7 @@ namespace Copium
 			ptr to the c# instance
 		*/
 		/*******************************************************************************/
-		MonoObject* ReflectGameObject(UUID id);
+		MonoObject* ReflectGameObject(GameObject& gameObject);
 		/*******************************************************************************
 		/*!
 		*
@@ -649,19 +597,11 @@ namespace Copium
 	{
 		MonoObject* mScript = mComponents[mCurrentScene][pEvent->script.uuid];
 		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
-		ScriptClass& scriptClass{ GetScriptClass(pEvent->script.name) };
+		ScriptClass& scriptClass{ scriptClassMap[pEvent->script.name] };
 		MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };
 		COPIUM_ASSERT(!mClassField, std::string("FIELD ") + pEvent->fieldName + "COULD NOT BE FOUND IN SCRIPT " + pEvent->script.name);
-		size_t result = (size_t)(-1);
-		if (pEvent->reference == nullptr)
-		{
-			//REMOVE REFERENCE
-			SetFieldValue(mScript, mClassField, pEvent->script.fieldDataReferences[pEvent->fieldName], &result);
-			return;
-		}
-		result = CreateReference(*pEvent->reference);
-		//SET REFERENCE
-		SetFieldValue(mScript, mClassField, pEvent->script.fieldDataReferences[pEvent->fieldName], &result);
+		SetFieldReference<T>(mScript, mClassField, pEvent->script.fieldDataReferences[pEvent->fieldName], pEvent->reference);
 	}
+
 }
 #endif // !SCRIPTING_SYSTEM_H

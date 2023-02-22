@@ -511,10 +511,8 @@ namespace Copium
 				Owner of this
 		*/
 		/**************************************************************************/
-		Script(GameObject& _gameObj, UUID _uuid = UUID()):Component(_gameObj, _uuid), name{}
-		{
-			//MyEventSystem->publish(new ScriptCreatedEvent(*this));
-		}
+		Script(GameObject& _gameObj, UUID _uuid = UUID(), const std::string& _name = "New Script") :Component(_gameObj, _uuid), name{ _name }
+		{}
 
 
 		Script(GameObject& _gameObj, const Script& rhs, UUID _uuid = UUID()) :
@@ -748,100 +746,6 @@ namespace Copium
 		/*******************************************************************************/
 		void render(BaseCamera* _camera);
 
-		//void render(BaseCamera* _camera)
-		//{
-		//	if (!font)
-		//		return;
-		//	Transform& trans{ gameObj.transform };
-		//	Math::Vec3 pos{ trans.position };
-		//	float scale = trans.scale.x * 0.1f;
-		//	if (scale > trans.scale.y)
-		//		scale = trans.scale.y;
-		//	scale *= fSize;
-		//	glm::fvec4 mixedColor{ 0 };
-		//	mixedColor.a = 1 - (1 - layeredColor.a) * (1 - color.a); // 0.75
-		//	if (mixedColor.a < 0.01f)
-		//		return;
-		//	mixedColor.r = layeredColor.r * layeredColor.a / mixedColor.a + color.r * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.67
-		//	mixedColor.g = layeredColor.g * layeredColor.a / mixedColor.a + color.g * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.33
-		//	mixedColor.b = layeredColor.b * layeredColor.a / mixedColor.a + color.b * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.00
-		//	/*PRINT("Color: " << color.r << " " << color.g << " " << color.b << " " << color.a);
-		//	PRINT("Mixed Color: " << mixedColor.r << " " << mixedColor.g << " " << mixedColor.b << " " << mixedColor.a);
-		//	*/
-		//	if (gameObj.transform.HasParent())
-		//	{
-		//		glm::vec3 updatedPos = gameObj.transform.position;
-		//		glm::vec3 updatedScale = gameObj.transform.scale;
-		//		Transform* tempObj = trans.parent;
-		//		while (tempObj)
-		//		{
-		//			glm::vec3 tempPos = tempObj->position.glmVec3;
-		//			glm::mat4 translate = glm::translate(glm::mat4(1.f), tempPos);
-		//			float rot = glm::radians(tempObj->rotation.z);
-		//			glm::mat4 lRotate = {
-		//			glm::vec4(cos(rot), sin(rot), 0.f, 0.f),
-		//			glm::vec4(-sin(rot), cos(rot), 0.f, 0.f),
-		//			glm::vec4(0.f, 0.f, 1.f, 0.f),
-		//			glm::vec4(0.f, 0.f, 0.f, 1.f)
-		//			};
-		//			glm::vec3 size = tempObj->scale.glmVec3;
-		//			glm::mat4 lScale = {
-		//				glm::vec4(size.x, 0.f, 0.f, 0.f),
-		//				glm::vec4(0.f, size.y, 0.f, 0.f),
-		//				glm::vec4(0.f, 0.f, 1.f, 0.f),
-		//				glm::vec4(0.f, 0.f, 0.f, 1.f)
-		//			};
-		//			glm::mat4 transform = translate * lRotate * lScale;
-		//			updatedPos = glm::vec3(transform * glm::vec4(updatedPos, 1.f));
-		//			updatedScale *= tempObj->scale.glmVec3;
-		//			tempObj = tempObj->parent;
-		//		}
-		//		float updatedSize = updatedScale.x * fSize * 0.1f;
-		//		glm::vec2 dimensions{ font->getDimensions(content, updatedSize, wrapper) };
-		//		switch (hAlignment)
-		//		{
-		//		case HorizontalAlignment::Center:
-		//			updatedPos.x -= dimensions.x / 2.f;
-		//			break;
-		//		case HorizontalAlignment::Right:
-		//			updatedPos.x -= dimensions.x;
-		//			break;
-		//		}
-		//		switch (vAlignment)
-		//		{
-		//		case VerticalAlignment::Top:
-		//			updatedPos.y -= dimensions.y;
-		//			break;
-		//		case VerticalAlignment::Center:
-		//			updatedPos.y -= dimensions.y / 2.f;
-		//			break;
-		//		}
-		//		font->draw_text(content, updatedPos, mixedColor, updatedSize, wrapper, _camera);
-		//	}
-		//	else
-		//	{
-		//		glm::vec2 dimensions{ font->getDimensions(content, scale, wrapper) };
-		//		switch (hAlignment)
-		//		{
-		//		case HorizontalAlignment::Center:
-		//			pos.x -= dimensions.x / 2.f;
-		//			break;
-		//		case HorizontalAlignment::Right:
-		//			pos.x -= dimensions.x;
-		//			break;
-		//		}
-		//		switch (vAlignment)
-		//		{
-		//		case VerticalAlignment::Top:
-		//			pos.y -= dimensions.y;
-		//			break;
-		//		case VerticalAlignment::Center:
-		//			pos.y -= dimensions.y / 2.f;
-		//			break;
-		//		}
-		//		font->draw_text(content, pos, mixedColor, scale, wrapper, _camera);
-		//	}
-		//}
 		std::string fontName;
 		Font* font;
 		float fSize;

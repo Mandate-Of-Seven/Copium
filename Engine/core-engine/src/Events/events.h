@@ -81,10 +81,21 @@ namespace Copium
 	template <typename T>
 	struct ComponentAddEvent : IEvent
 	{
+		static_assert(!std::is_same<T, Script>());
 		ComponentAddEvent(GameObject& _gameObject, T*& _componentContainer) :
 			gameObject{ _gameObject }, componentContainer{ _componentContainer }{}
 		GameObject& gameObject;
 		T*& componentContainer;
+	};
+
+	template <>
+	struct ComponentAddEvent<Script> : IEvent
+	{
+		ComponentAddEvent(GameObject& _gameObject, Script*& _componentContainer, const char* _scriptName) :
+			gameObject{ _gameObject }, componentContainer{ _componentContainer }, scriptName{ _scriptName }{}
+		GameObject& gameObject;
+		Script*& componentContainer;
+		const char* scriptName;
 	};
 
 	template <typename T>
@@ -129,11 +140,12 @@ namespace Copium
 	{
 		DeleteFromBrowserEvent() {};
 	};
-	
+
+	template <typename T>
 	struct ReflectComponentEvent : IEvent
 	{
-		ReflectComponentEvent(Component& _component): component{_component}{}
-		Component& component;
+		ReflectComponentEvent(T& _component): component{_component}{}
+		T& component;
 	};
 
 	struct ScriptInvokeMethodEvent : IEvent

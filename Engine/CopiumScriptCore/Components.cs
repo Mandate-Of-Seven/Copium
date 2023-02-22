@@ -148,7 +148,7 @@ namespace CopiumEngine
         }
     }
 
-    public class Collider2D : Component
+    public class BoxCollider2D : Component
     {
     }
 
@@ -195,6 +195,11 @@ namespace CopiumEngine
     }
 
     public class SortingGroup : Component
+    {
+
+    }
+
+    public class Animator : Component
     {
 
     }

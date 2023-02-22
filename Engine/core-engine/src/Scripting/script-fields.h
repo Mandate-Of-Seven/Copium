@@ -60,7 +60,7 @@ struct Field
 	void Resize(size_t _size)
 	{
 		if (data)
-			delete data;
+			delete[] data;
 		size = _size;
 		data = new char[size];
 	}
@@ -75,6 +75,8 @@ struct Field
 	/**************************************************************************/
 	Field(const Field& rhs)
 	{
+		if (data)
+			delete[] data;
 		size = rhs.size;
 		data = new char[size];
 		fType = rhs.fType;
