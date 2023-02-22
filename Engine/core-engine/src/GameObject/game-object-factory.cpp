@@ -160,20 +160,20 @@ namespace Copium
 			if (count)
 				tmp.name += '(' + std::to_string(count) + ')';
 			CloneComponents(tmp,_src,scene,copyID);
-			for (Transform* pChild : _src.transform.children)
-			{
-				Instantiate(pChild->gameObject, scene, copyID).transform.SetParent(&tmp.transform);
-			}
+			//for (Transform* pChild : _src.transform.children)
+			//{
+			//	Instantiate(pChild->gameObject, scene, copyID).transform.SetParent(&tmp.transform);
+			//}
 			return tmp;
 		}
 		GameObject& tmp = scene.gameObjects.emplace_back(_src);
 		if (count)
 			tmp.name += '(' + std::to_string(count) + ')';
 		CloneComponents(tmp, _src, scene, copyID);
-		for (Transform* pChild : _src.transform.children)
-		{
-			Instantiate(pChild->gameObject, scene, copyID).transform.SetParent(&tmp.transform);
-		}
+		//for (Transform* pChild : _src.transform.children)
+		//{
+		//	Instantiate(pChild->gameObject, scene, copyID).transform.SetParent(&tmp.transform);
+		//}
 		return tmp;
 	}
 
