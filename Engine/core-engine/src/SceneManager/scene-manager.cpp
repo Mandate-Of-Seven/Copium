@@ -351,6 +351,33 @@ namespace Copium
 						button->targetGraphic = reinterpret_cast<IUIComponent*>(FindComponentByID(button->graphicID));
 				}
 
+				// Image
+				if (go.HasComponent<Image>())
+				{
+					Image* image = go.GetComponent<Image>();
+					if (image->sprite.spriteID != 0)
+					{
+						const std::vector<Texture>& textures = MyAssetSystem.GetTextures();
+						bool reference = false;
+						for (int i = 0; i < textures.size(); i++)
+						{
+							uint64_t pathID = std::hash<std::string>{}(textures[i].get_file_path());
+							MetaID metaID = MyAssetSystem.GetMetaID(pathID);
+							// Check if the uuid of the sprite is the same as the meta file
+							if (metaID.uuid == image->sprite.spriteID)
+							{
+								// If so set the reference texture to that file
+								reference = true;
+								image->sprite.refTexture = MyAssetSystem.GetTexture(i);
+								break;
+							}
+						}
+						// If there is no references, set the spriteID to 0
+						if (!reference)
+							image->sprite.spriteID = 0;
+					}
+				}
+
 				if (go.HasComponent<Script>())
 				{
 					Script* script = go.GetComponent<Script>();
