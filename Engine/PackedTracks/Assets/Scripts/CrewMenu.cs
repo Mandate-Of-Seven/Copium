@@ -6,7 +6,11 @@ public class CrewMenu: CopiumScript
 	public Text fuelText;
     public Text heatText;
     public Text foodText;
+    public Text prepareText;
+
     public Button prepareButton;
+
+    public GameObject prepareCanvas;
 
     public int fuel,heat,food;
     //std::string
@@ -21,12 +25,15 @@ public class CrewMenu: CopiumScript
        //show what event happened
        //update values based on event that happened
        //have condition for when certain values hit 0??
+
+       
        if (prepareButton.state == ButtonState.OnRelease)
        {
         generateEvents();
        }
-       updateTexts();
-	}
+
+        //updateTexts();
+    }
 
     void updateTexts()
     {
@@ -35,10 +42,11 @@ public class CrewMenu: CopiumScript
         foodText.text = "Food: " +food;
     }
 
-
      void generateEvents()
     {
         float chance = RNG.Range(0,1);
+        
+        prepareCanvas.SetActive(true);      
         updateValues(chance);
     }
 
@@ -50,32 +58,32 @@ public class CrewMenu: CopiumScript
         //depending on chance, change text that appears
         if (chance >=0 && chance <0.25)
         {
-            //text = "Horrible event, lose 1 of every resource";
+            prepareText.text = "Horrible event, lose 1 of every resource";
             fuel -= 1;
             food -= 1;
             heat -=1;
         }
         else if (chance >= 0.25 && chance <0.50)
         {
-            //text = "Found more fuel, but required to use more food to return.\nGain 1 fuel, lose 1 food";
+            prepareText.text = "Found more fuel, but required to use more food \nto return.\n\nGain 1 fuel, lose 1 food";
             fuel +=1;
             food -=1;
         }
         else if (chance >= 0.50 && chance < 0.75)
         {
-            //text = "Found more food, but the bad weather reequires more heat to be consumed.\n Gain 1 food, lose 1 heat";
+            prepareText.text = "Found more food, but the bad weather reequires \nmore heat to be consumed.\n\n Gain 1 food, lose 1 heat";
             food +=1;
             heat -=1;
         }
         else if(chance >= 0.75 && chance <0.95)
         {
-            //text = "Gained more resources for heat, but something about losing fuel.\n Gain 1 heat, lose 1 fuel";
+            prepareText.text = "Gained more resources for heat, but something about \nlosing fuel.\n\n Gain 1 heat, lose 1 fuel";
             fuel -=1;
             heat +=1;
         }
         else if (chance >=0.95)
         {
-            //text = "Good event, gain 2 of every resource.";
+            prepareText.text = "Good event, gain 2 of every resource.";
             fuel +=2;
             food +=2;
             heat +=2;
@@ -90,8 +98,8 @@ public class CrewMenu: CopiumScript
         if (heat < 0)
         heat = 0;
 
-        //hide event screen when ok/return button pressed
-
+        //hide crewscreen
+        gameObject.SetActive(false);
     }
 
    
