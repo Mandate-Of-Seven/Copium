@@ -34,6 +34,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "mono/metadata/tabledefs.h"
 #include <mono/jit/jit.h>
 #include <mono/metadata/debug-helpers.h>
+#include <mono/metadata/exception.h>
 
 #define SECONDS_TO_RECOMPILE 5
 namespace
@@ -446,7 +447,15 @@ namespace Copium
 	{
 		if (mObj && mMethod && mAppDomain)
 		{
-			return mono_runtime_invoke(mMethod, mObj, params, nullptr);
+			MonoObject* exception = NULL;
+			try {
+				MonoObject* obj = mono_runtime_invoke(mMethod, mObj, params, &exception);
+				return obj;
+			}
+			catch (...) {
+				// Handle the error
+				std::cerr << "Caught exception: " << std::endl;
+			}
 		}
 		return nullptr;
 	}

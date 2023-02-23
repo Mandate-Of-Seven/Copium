@@ -231,8 +231,8 @@ namespace Copium
 				if (!spriteRenderer.enabled || !spriteRenderer.gameObj.IsActive())
 					continue;
 
-				if (spriteRenderer.gameObj.HasComponent<SortingGroup>())
-					continue;
+				//if (spriteRenderer.gameObj.HasComponent<SortingGroup>())
+				//	continue;
 
 				Transform& t = spriteRenderer.gameObj.transform;
 				Sprite& sr = spriteRenderer.sprite;

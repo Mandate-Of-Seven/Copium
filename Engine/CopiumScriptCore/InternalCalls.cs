@@ -103,6 +103,10 @@ namespace CopiumEngine
 
         #endregion
 
+        #region SCENE
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void LoadScene(string sceneName);
+        #endregion
 
         #region AUDIO_SOURCE
         [MethodImpl(MethodImplOptions.InternalCall)]

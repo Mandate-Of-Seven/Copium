@@ -461,6 +461,12 @@ namespace Copium
 			DelinkDeleted();
 			CleanUpScene(*currentScene);
 		}
+		//if theres a scene to load
+		if (!sceneFile.empty())
+		{
+			//load_scene(sceneFile);
+			//sceneFile.clear();
+		}
 	}
 	void SceneManager::exit()
 	{

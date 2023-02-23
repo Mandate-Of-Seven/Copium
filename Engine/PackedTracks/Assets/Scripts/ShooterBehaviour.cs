@@ -21,6 +21,7 @@ public class ShooterBehaviour: CopiumScript
 
 	void Update()
 	{
+		SceneManager.LoadScene("Demo");
 		if (scripto == null)
 			Console.WriteLine("SCRIPTO IS NULL");
 		else

@@ -287,6 +287,7 @@ namespace Copium {
 		void DelinkDeleted();
 
 		Camera* mainCamera{nullptr};
+		std::string sceneFile{};
 
 	private:
 		void CallbackQuitEngine(QuitEngineEvent* pEvent);
@@ -300,7 +301,6 @@ namespace Copium {
 		std::string sceneFilePath;
 		Scene::SceneState currSceneState{ Scene::SceneState::edit };
 		std::vector<Scene*> scenes;
-
 	};
 
 	/*******************************************************************************
