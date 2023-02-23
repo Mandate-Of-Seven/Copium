@@ -620,6 +620,17 @@ namespace Copium
                     }
                     scriptNames.clear();
                 }
+                else if constexpr (std::is_same<SortingGroup, T>())
+                {
+                    MyEditorSystem.getLayers()->SortLayers()->AddGameObject(0, gameObj);
+                    static const char* name = GetComponentType<T>::name;
+                    if (filter.PassFilter(name) && ImGui::Button(name, buttonSize))
+                    {
+                        T* component;
+                        MyEventSystem->publish(new ComponentAddEvent{ gameObj,component });
+                        return true;
+                    }
+                }
                 else
                 {
                     static const char* name = GetComponentType<T>::name;

@@ -162,7 +162,6 @@ namespace Copium
 	
 	SortingGroup::SortingGroup(GameObject& _gameObj, UUID _uuid) :Component(_gameObj, _uuid)
 	{
-		MyEditorSystem.getLayers()->SortLayers()->AddGameObject(0, _gameObj);
 	}
 
 	Text::Text(GameObject& _gameObj, UUID _uuid) : IUIComponent(_gameObj, _uuid), fSize{ 1.f }, wrapper{ 0.f }, content{ "New Text" }, fontName{"corbel"}

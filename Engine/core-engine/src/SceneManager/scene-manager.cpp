@@ -609,7 +609,6 @@ namespace Copium
 				if (go.HasComponent<SortingGroup>())
 				{
 					SortingGroup* sg = go.GetComponent<SortingGroup>();
-					MyEditorSystem.getLayers()->SortLayers()->RemoveGameObject(0, go);
 					MyEditorSystem.getLayers()->SortLayers()->AddGameObject(sg->sortingLayer, go);
 				}
 
