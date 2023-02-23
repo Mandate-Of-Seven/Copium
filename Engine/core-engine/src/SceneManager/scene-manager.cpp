@@ -1021,6 +1021,17 @@ namespace Copium
 
 	void SceneManager::CallbackQuitEngine(QuitEngineEvent* pEvent)
 	{
+		PRINT("QUIT ENGINE");
+		if (currentScene)
+		{
+			delete currentScene;
+			currentScene = nullptr;
+		}
+		if (storageScene = nullptr)
+		{
+			delete storageScene;
+			storageScene = nullptr;
+		}
 		quit_engine();
 	}
 
