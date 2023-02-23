@@ -921,7 +921,7 @@ namespace Copium
 		//graphics->get_shader_program()[LINE_SHADER].UnUse();
 	}
 
-	void Renderer::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float _scale, Font* _font)
+	void Renderer::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float& _scale, const float& _wrapper, Font* _font)
 	{
 		if (textVertexCount >= maxTextCount)
 		{
@@ -959,6 +959,11 @@ namespace Copium
 				newLine++;
 				x = _position.x;
 				continue;
+			}
+			else if (c == ' ' && x > _position.x + _wrapper && _wrapper != 0.f)
+			{
+				newLine++;
+				x = _position.x;
 			}
 
 			xpos = x + ch.bearing.x * (_scale * scaler);
@@ -1008,7 +1013,7 @@ namespace Copium
 		textCount++;
 	}
 
-	void Renderer::draw_text2(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float _scale, Font* _font)
+	void Renderer::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float _scale, Font* _font)
 	{
 		if (textVertexCount >= maxTextCount)
 		{

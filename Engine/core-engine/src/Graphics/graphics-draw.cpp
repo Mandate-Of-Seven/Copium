@@ -344,8 +344,10 @@ namespace Copium
 
 				Math::Vec3 pos{ t.position };
 				float scale = t.scale.x * 0.1f;
-				if (scale > t.scale.y)
-					scale = t.scale.y;
+				if (scale > t.scale.y * 0.1f)
+					scale = t.scale.y * 0.1f;
+
+				scale *= text.fSize;
 				glm::vec2 dimensions{ text.font->getDimensions(text.content, scale, text.wrapper) };
 
 				switch (text.get_hAlign())
@@ -374,11 +376,13 @@ namespace Copium
 					float updatedRot = t.rotation.z;
 					UpdateTransform(t, updatedPos, updatedRot, updatedScale);
 
-					renderer.draw_text(text.content, updatedPos, text.get_color(), scale, text.font);
+					float updatedSize = updatedScale.x * text.fSize * 0.1f;
+
+					renderer.draw_text(text.content, updatedPos, text.get_color(), scale, text.wrapper, text.font);
 				}
 				else
 				{
-					renderer.draw_text(text.content, pos, text.get_color(), scale, text.font);
+					renderer.draw_text(text.content, pos, text.get_color(), scale, text.wrapper, text.font);
 				}
 			}
 			++count;
@@ -521,9 +525,11 @@ namespace Copium
 
 						Math::Vec3 pos{ t.position };
 						float scale = t.scale.x * 0.1f;
-						if (scale > t.scale.y)
-							scale = t.scale.y;
-						glm::vec2 dimensions{ text.font->getDimensions(text.content, scale, text.wrapper)};
+						if (scale > t.scale.y * 0.1f)
+							scale = t.scale.y * 0.1f;
+
+						scale *= text.fSize;
+						glm::vec2 dimensions{ text.font->getDimensions(text.content, scale, text.wrapper) };
 
 						switch (text.get_hAlign())
 						{
@@ -551,11 +557,13 @@ namespace Copium
 							float updatedRot = t.rotation.z;
 							UpdateTransform(t, updatedPos, updatedRot, updatedScale);
 
-							renderer.draw_text(text.content, updatedPos, text.get_color(), scale, text.font);
+							float updatedSize = updatedScale.x * text.fSize * 0.1f;
+
+							renderer.draw_text(text.content, updatedPos, text.get_color(), scale, text.wrapper, text.font);
 						}
 						else
 						{
-							renderer.draw_text(text.content, pos, text.get_color(), scale, text.font);
+							renderer.draw_text(text.content, pos, text.get_color(), scale, text.wrapper, text.font);
 						}
 					}
 

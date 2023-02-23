@@ -725,6 +725,25 @@ namespace Copium
             Display("Font Size",text.fSize);
             Display("Content", text.content);
             Display("Wrapping", text.wrapper);
+
+            ImGui::TableNextColumn();
+            ImGui::AlignTextToFramePadding();
+            ImGui::Text("Horizontal Alignment");
+            ImGui::TableNextColumn();
+            static const char* const horizontal[] = { "Left", "Center", "Right" };
+            ImGui::PushItemWidth(-1);
+            ImGui::Combo("hAlign", reinterpret_cast<int*>(&text.hAlignment), horizontal, 3);
+            ImGui::PopItemWidth();
+
+            ImGui::TableNextColumn();
+            ImGui::AlignTextToFramePadding();
+            ImGui::Text("Vertical Alignment");
+            ImGui::TableNextColumn();
+            static const char* const vertical[] = { "Top", "Center", "Bottom" };
+            ImGui::PushItemWidth(-1);
+            ImGui::Combo("vAlign", reinterpret_cast<int*>(&text.vAlignment), vertical, 3);
+            ImGui::PopItemWidth();
+
             DisplayColor("Color", text.color);
             //DisplayDragDrop();
             //spriteRenderer.sprite.set_name()
