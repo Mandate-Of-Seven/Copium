@@ -186,10 +186,10 @@ public:
 
     void swap(T& lhs, T& rhs)
     {
-        size_t rhsDenseIndex = &rhs - reinterpret_cast<T*>(data) >= size_;
-        size_t lhsDenseIndex = &lhs - reinterpret_cast<T*>(data) >= size_;
-        COPIUM_ASSERT(rhsDenseIndex, "RHS is not an element of this array");
-        COPIUM_ASSERT(lhsDenseIndex, "LHS is not an element of this array");
+        size_t rhsDenseIndex = &rhs - reinterpret_cast<T*>(data) ;
+        size_t lhsDenseIndex = &lhs - reinterpret_cast<T*>(data) ;
+        COPIUM_ASSERT(rhsDenseIndex >= size_, "RHS is not an element of this array");
+        COPIUM_ASSERT(lhsDenseIndex >= size_, "LHS is not an element of this array");
         if (lhsDenseIndex > rhsDenseIndex)
         {
             for (size_t i = 0; i < size_; ++i)

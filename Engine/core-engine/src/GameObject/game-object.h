@@ -185,8 +185,13 @@ namespace Copium
             if ((int)GetComponentType<T1>::e == (int)componentType)
                 return gameObject.HasComponent<T1>();
             if constexpr (sizeof...(T1s) != 0)
+            {
                 return HasComponentRecurse<T1s...>(componentType);
-            return false;
+            }
+            else
+            {
+                return false;
+            }
         }
         bool HasComponent(ComponentType componentType)
         {

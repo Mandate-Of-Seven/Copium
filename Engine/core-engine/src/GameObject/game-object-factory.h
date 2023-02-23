@@ -80,9 +80,9 @@ namespace Copium {
 		GameObject& Instantiate(rapidjson::Value& _value, Scene& scene);
 
 		template <typename T>
-		T& AddComponent(GameObject& gameObject, Scene& scene,T* pCopy = nullptr, bool copyID = false);
+		T& AddComponent(GameObject& gameObject, Scene& scene, UUID uuid = UUID(),T* pCopy = nullptr);
 
-		Script& AddComponent(GameObject& gameObj, Scene& scene, const char* scriptName, Script* pCopy = nullptr, bool copyID = false);
+		Script& AddComponent(GameObject& gameObj, Scene& scene, const char* scriptName, UUID uuid = UUID() , Script* pCopy = nullptr);
 
 		/*******************************************************************************
 		/*!

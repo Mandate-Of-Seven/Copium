@@ -623,7 +623,6 @@ namespace Copium
                 else
                 {
                     static const char* name = GetComponentType<T>::name;
-                    PRINT(name);
                     if (filter.PassFilter(name) && ImGui::Button(name, buttonSize))
                     {
                         T* component;
@@ -775,39 +774,51 @@ namespace Copium
                     switch (cType) {
                     case ComponentType::Animator:
                         Display(name, (Animator*&)script.fieldComponentReferences[name]);
+                        MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Animator*)script.fieldComponentReferences[name]));
                         break;
                     case ComponentType::AudioSource:
                         Display(name, (AudioSource*&)script.fieldComponentReferences[name]);
+                        MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (AudioSource*)script.fieldComponentReferences[name]));
                         break;
                     case ComponentType::BoxCollider2D:
                         Display(name, (BoxCollider2D*&)script.fieldComponentReferences[name]);
+                        MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (BoxCollider2D*)script.fieldComponentReferences[name]));
                         break;
                     case ComponentType::Button:
                         Display(name, (Button*&)script.fieldComponentReferences[name]);
+                        MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Button*)script.fieldComponentReferences[name]));
                         break;
                     case ComponentType::Camera:
                         Display(name, (Camera*&)script.fieldComponentReferences[name]);
+                        MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Camera*)script.fieldComponentReferences[name]));
                         break;
                     case ComponentType::Image:
                         Display(name, (Image*&)script.fieldComponentReferences[name]);
+                        MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Image*)script.fieldComponentReferences[name]));
                         break;
                     case ComponentType::Rigidbody2D:
                         Display(name, (Rigidbody2D*&)script.fieldComponentReferences[name]);
+                        MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Rigidbody2D*)script.fieldComponentReferences[name]));
                         break;
                     case ComponentType::SpriteRenderer:
                         Display(name, (SpriteRenderer*&)script.fieldComponentReferences[name]);
+                        MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (SpriteRenderer*)script.fieldComponentReferences[name]));
                         break;
                     case ComponentType::Script:
                         Display(name, (Script*&)script.fieldComponentReferences[name], field.typeName.c_str());
+                        MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Script*)script.fieldComponentReferences[name]));
                         break;
                     case ComponentType::Transform:
                         Display(name, (Transform*&)script.fieldComponentReferences[name]);
+                        MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Transform*)script.fieldComponentReferences[name]));
                         break;
                     case ComponentType::Text:
                         Display(name, (Text*&)script.fieldComponentReferences[name]);
+                        MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Text*)script.fieldComponentReferences[name]));
                         break;
                     case ComponentType::SortingGroup:
                         Display(name, (SortingGroup*&)script.fieldComponentReferences[name]);
+                        MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (SortingGroup*)script.fieldComponentReferences[name]));
                         break;
                     default:
                         // handle invalid case
@@ -817,6 +828,7 @@ namespace Copium
                 else if (field.fType == FieldType::GameObject)
                 {
                     Display(name,script.fieldGameObjReferences[name]);
+                    MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, script.fieldGameObjReferences[name]));
                 }
                 else
                 {

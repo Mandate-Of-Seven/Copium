@@ -100,14 +100,17 @@ namespace Copium
 						UUID uuid{ (uint64_t)pScript->fieldGameObjReferences[fieldName] };
 						if (uuid == 0)
 							continue;
-						pScript->fieldGameObjReferences[fieldName] = MySceneManager.FindGameObjectByID(uuid);
+						GameObject* gameObject{ FindGameObjectByID(uuid) };
+						pScript->fieldGameObjReferences[fieldName] = gameObject;
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), gameObject));
 					}
 					else if (field.fType >= FieldType::Component)
 					{
 						UUID uuid{ (uint64_t)pScript->fieldComponentReferences[fieldName] };
 						if (uuid == 0)
 							continue;
-						Component* component = MySceneManager.FindComponentByID(uuid);
+						Component* component = FindComponentByID(uuid);
+						pScript->fieldComponentReferences[fieldName] = component;
 						switch ((ComponentType)field.fType)
 						{
 						case(ComponentType::Animator):
@@ -153,7 +156,7 @@ namespace Copium
 						case(ComponentType::Script):
 						{
 							//Different scripts
-							if (((Script*)component)->Name() != field.typeName)
+							if (component && ((Script*)component)->Name() != field.typeName)
 								continue;
 							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Script*)component));
 							break;
@@ -169,7 +172,6 @@ namespace Copium
 							break;
 						}
 						}
-						pScript->fieldComponentReferences[fieldName] = component;
 					}
 				}
 			}
@@ -248,8 +250,6 @@ namespace Copium
 					}
 					case(ComponentType::Script):
 					{
-						std::string scriptName{};
-						COPIUM_ASSERT(scriptName.empty(), "Couldn't get script name");
 						//Different scripts
 						if (((Script*)component)->Name() != field.typeName)
 							continue;
@@ -851,12 +851,12 @@ namespace Copium
 		if constexpr (std::is_same<T,Script>())
 		{
 			
-			T& component = MyGOF.AddComponent(pEvent->gameObject, *currentScene, pEvent->scriptName, nullptr, false);
+			T& component = MyGOF.AddComponent(pEvent->gameObject, *currentScene, pEvent->scriptName, pEvent->uuid );
 			pEvent->componentContainer = &component;
 		}
 		else
 		{
-			T& component = MyGOF.AddComponent<T>(pEvent->gameObject, *currentScene,nullptr, false);
+			T& component = MyGOF.AddComponent<T>(pEvent->gameObject, *currentScene, pEvent->uuid,nullptr);
 			pEvent->componentContainer = &component;
 		}
 	}
