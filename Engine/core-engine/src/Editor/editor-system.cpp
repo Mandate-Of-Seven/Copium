@@ -39,6 +39,7 @@ namespace Copium
 		MyMessageSystem.subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
 		MyMessageSystem.subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
 		MyEventSystem->subscribe(this, &EditorSystem::CallbackSceneChanging);
+		MyEventSystem->subscribe(this, &EditorSystem::CallbackEditorConsoleLog);
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 
 		//PRINT("FLAGS: " << systemFlags);
@@ -60,10 +61,8 @@ namespace Copium
 		ImGui_ImplOpenGL3_Init("#version 330");
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		ImGui::GetIO().ConfigDockingWithShift = true;
-		//Window::Inspector::init();
-		//Window::EditorConsole::init();
-		//Window::ColorTheme::init();
 
+		Window::EditorConsole::init();
 		sceneView.init();
 		game.init();
 		contentBrowser.init();
@@ -389,8 +388,7 @@ namespace Copium
 			hierarchyList.update();
 			layers.update();
 			inspector.update();
-			//Window::EditorConsole::update();
-			//Window::Hierarchy::update();
+			Window::EditorConsole::update();
 			game.update();
 			sceneView.update();
 			contentBrowser.update();
@@ -468,13 +466,20 @@ namespace Copium
 		else if (_mType == MESSAGE_TYPE::MT_STOP_PREVIEW)
 		{
 			//tempMode = true;
+			Scene* scene = MySceneManager.get_current_scene();
+			if (scene && !scene->componentArrays.GetArray<Camera>().empty())
+				for (Camera& camera : scene->componentArrays.GetArray<Camera>())
+				{
+					// Bean: Reset all the framebuffers for now, next time only need to reset active main camera
+					camera.get_framebuffer()->init();
+				}
 		}
 	}
 
 	void EditorSystem::imguiConsoleAddLog(std::string value)
 	{
 		std::cout << value << "\n";
-		//Window::EditorConsole::editorLog.add_logEntry(value);
+		Window::EditorConsole::editorLog.add_logEntry(value);
 	}
 
 	void EditorSystem::playMode(bool _enabled)
@@ -494,6 +499,11 @@ namespace Copium
 		}
 		else if(_enabled)
 			camera.get_framebuffer()->init();
+	}
+
+	void EditorSystem::CallbackEditorConsoleLog(EditorConsoleLogEvent* pEvent)
+	{
+		imguiConsoleAddLog(pEvent->message);
 	}
 
 	void EditorSystem::CallbackSceneChanging(SceneChangingEvent* pEvent)

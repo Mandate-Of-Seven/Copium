@@ -41,6 +41,8 @@ namespace Copium
 	public:
 		Font() = delete;
 
+		Font(const std::string& name, bool _hasPath = false);
+
 		/***************************************************************************/
 		/*!
 		\brief
@@ -103,7 +105,7 @@ namespace Copium
 			The font
 		*/
 		/***************************************************************************/
-		static Font* getFont(const std::string& _name);
+		static Font* getFont(const std::string& _name, bool _hasPath = false);
 		static std::unordered_map<std::string, Font*>& GetFonts() { return mapNameFonts; }
 
 		void SetName(const std::string& _name) { name = _name; }
@@ -121,7 +123,6 @@ namespace Copium
 		static void cleanUp();
 
 	private:
-		Font(const std::string& name);
 		std::string name;
 		static std::unordered_map<std::string, Font*> mapNameFonts;
 		std::map<char, Character> characters;

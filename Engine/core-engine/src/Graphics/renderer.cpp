@@ -28,6 +28,7 @@ namespace Copium
 {
 	namespace
 	{
+		GLuint whiteTexture = 0;
 		int textureCount = 0;
 		std::unordered_map<GLuint, std::pair<GLuint,GLuint>> textureIDs;
 		std::unordered_map<GLuint, GLuint> fontIDs;
@@ -50,7 +51,8 @@ namespace Copium
 		// Setup Text Vertex Array Object
 		setup_text_vao();
 
-		GLuint& texture = graphics->get_white_texture();
+		//GLuint& texture = graphics->get_white_texture();
+		GLuint& texture = whiteTexture;
 		glCreateTextures(GL_TEXTURE_2D, 1, &texture);
 		glTextureStorage2D(texture, 1, GL_RGBA8, 1, 1);
 
@@ -62,7 +64,6 @@ namespace Copium
 
 		GLuint color = 0xFFFFFFFF;
 		glTextureSubImage2D(texture, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &color);
-
 		graphics->get_texture_slots().resize(maxTextures);
 		graphics->get_texture_slots()[0] = texture;
 

@@ -4,6 +4,14 @@ using System;
 
 namespace CopiumEngine
 {
+    public static class SceneManager
+    {
+        public static void LoadScene(string sceneName)
+        {
+            InternalCalls.LoadScene(sceneName);
+        }
+   
+    }
     public class Scene
     {
         List<GameObject> gameObjects = new List<GameObject>();

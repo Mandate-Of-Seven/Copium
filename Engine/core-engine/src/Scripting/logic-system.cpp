@@ -24,6 +24,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <Events/events-system.h>
 #include <GameObject/components.h>
 #include <Utilities/easing.h>
+#include "Editor/editor-system.h"
 
 namespace Copium
 {
@@ -130,6 +131,58 @@ namespace Copium
 			btn.timer = btn.fadeDuration;
 	}
 
+	void HoverFrontButton()
+	{
+		// Update button behaviour for layered game objects
+		// Update from back to front within layer
+		Scene* pScene = sceneManager.get_current_scene();
+		if (!pScene)
+			return;
+		//std::vector<Layer>& sortingLayers{ MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers() };
+		//if (!sortingLayers.empty())
+		//	for (size_t i{ sortingLayers.size() - 1}; i != 0; --i)
+		//	{
+		//		Layer& l = sortingLayers[i];
+		//		for (size_t j{ l.gameObjects.size() - 1 }; j != 0; --j)
+		//		{
+		//			GameObject* go = l.gameObjects[j];
+		//			if (!go->IsActive() || !go->HasComponent<Button>())
+		//				continue;
+
+		//			Button* button = go->GetComponent<Button>();
+		//			if (!button->enabled)
+		//				continue;
+
+		//			ButtonBehavior(*button);
+		//			if (pHoveredBtn == button)
+		//			{
+		//				return;
+		//			}
+		//		}
+
+		//	}
+
+		for (Button& button : pScene->componentArrays.GetArray<Button>())
+		{
+			if (!button.enabled)
+				continue;
+			if (!button.gameObj.IsActive())
+				continue;
+			//if (button.gameObj.HasComponent<SortingGroup>())
+			//	continue;
+			ButtonBehavior(button);
+			if (pHoveredBtn == &button)
+			{
+				return;
+			}
+		}
+		if (pHoveredBtn && (!pHoveredBtn->gameObj.IsActive() || !pHoveredBtn->enabled))
+		{
+			pHoveredBtn->state = ButtonState::None;
+			pHoveredBtn = nullptr;
+		}
+	}
+
 	void LogicSystem::init()
 	{
 		messageSystem.subscribe(MESSAGE_TYPE::MT_START_PREVIEW,this);
@@ -161,19 +214,8 @@ namespace Copium
 				//	return;
 		}
 
-		for (Button& button : pScene->componentArrays.GetArray<Button>())
-		{
-			if (!button.enabled)
-				continue;
-			if (!button.gameObj.IsActive())
-				continue;
-			ButtonBehavior(button);
-		}
-		if (pHoveredBtn && (!pHoveredBtn->gameObj.IsActive() || !pHoveredBtn->enabled))
-		{
-			pHoveredBtn->state = ButtonState::None;
-			pHoveredBtn = nullptr;
-		}
+
+		HoverFrontButton();
 	}
 
 	void LogicSystem::exit()
@@ -204,5 +246,6 @@ namespace Copium
 		{
 			inPlayMode = false;
 		}
+		pHoveredBtn = nullptr;
 	}
 }

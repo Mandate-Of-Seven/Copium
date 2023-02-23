@@ -28,10 +28,22 @@ namespace Copium
 {
 	std::unordered_map<std::string, Font*> Font::mapNameFonts;
 
-	Font::Font(const std::string& _name)
+	Font::Font(const std::string& _name, bool _hasPath)
 	{
-		std::string path = Paths::assetPath + "/Fonts/" + _name + ".ttf";
-		name = _name;
+		std::string path;
+
+		if (_hasPath)
+		{
+			path = _name;
+			size_t pos = _name.find_last_of('\\');
+			name = _name.substr(pos + 1, _name.length() - pos - 5);
+		}
+		else
+		{
+			path = Paths::assetPath + "/Fonts/" + _name + ".ttf";
+			name = _name;
+		}
+
 		FT_Library ft;
 		COPIUM_ASSERT(FT_Init_FreeType(&ft), "Could not initialize FreeType Library");
 
@@ -78,16 +90,20 @@ namespace Copium
 		FT_Done_FreeType(ft);
 
 #if defined(DEBUG) | defined(_DEBUG)
-		PRINT("Font " << _name << " loaded...");
+		PRINT("FONT " << _name << " LOADED...");
 #endif
 	}
 
-	Font* Font::getFont(const std::string& _name)
+	Font* Font::getFont(const std::string& _name, bool _hasPath)
 	{
-		auto pairNameFont = mapNameFonts.find(_name);
-		if (pairNameFont != mapNameFonts.end())
-			return pairNameFont->second;
-		Font* pFont = new Font(_name);
+		if (!_hasPath)
+		{
+			auto pairNameFont = mapNameFonts.find(_name);
+			if (pairNameFont != mapNameFonts.end())
+				return pairNameFont->second;
+		}
+		
+		Font* pFont = new Font(_name, _hasPath);
 		pFont->setup_font_vao();
 		mapNameFonts.emplace(std::make_pair(_name, pFont));
 		return pFont;
