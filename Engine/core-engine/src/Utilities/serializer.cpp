@@ -786,6 +786,7 @@ namespace Copium
 	void Serializer::Deserialize<Text>(Text& _data, const std::string& _key, rapidjson::Value& _value)
 	{
 		Copium::Deserialize(_data.fontName, _value, "FontName");
+		_data.font = Font::getFont(_data.fontName);
 		int va, ha;
 		Copium::Deserialize(ha, _value, "H_Align");
 		Copium::Deserialize(va, _value, "V_Align");

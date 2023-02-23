@@ -708,7 +708,7 @@ namespace Copium
 				Owner of this
 		*/
 		/**************************************************************************/
-		Text(GameObject& _gameObj, UUID _uuid = UUID());
+		Text(GameObject& _gameObj, UUID _uuid = UUID(), bool _inspector = false);
 
 		Text(GameObject& _gameObj, const Text& rhs, UUID _uuid = UUID()) :
 			IUIComponent(_gameObj, rhs ,_uuid), fontName{ rhs.fontName }, font{ rhs.font },

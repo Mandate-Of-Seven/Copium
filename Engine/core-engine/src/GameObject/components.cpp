@@ -164,9 +164,13 @@ namespace Copium
 	{
 	}
 
-	Text::Text(GameObject& _gameObj, UUID _uuid) : IUIComponent(_gameObj, _uuid), fSize{ 1.f }, wrapper{ 0.f }, content{ "New Text" }, fontName{"corbel"}
+	Text::Text(GameObject& _gameObj, UUID _uuid, bool _inspector) : IUIComponent(_gameObj, _uuid), fSize{ 1.f }, wrapper{ 0.f }, content{ "New Text" }
 	{
-		font = Font::getFont(fontName);
+		if (_inspector)
+		{
+			fontName = "corbel";
+			font = Font::getFont(fontName);
+		}
 	}
 
 	void AudioSource::play_sound()

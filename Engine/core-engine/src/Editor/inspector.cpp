@@ -700,6 +700,16 @@ namespace Copium
                         return true;
                     }
                 }
+                else if constexpr (std::is_same<Text, T>())
+                {
+                    static const char* name = GetComponentType<T>::name;
+                    if (filter.PassFilter(name) && ImGui::Button(name, buttonSize))
+                    {
+                        T* component;
+                        MyEventSystem->publish(new ComponentAddEvent{ gameObj,component,true });
+                        return true;
+                    }
+                }
                 else
                 {
                     static const char* name = GetComponentType<T>::name;
@@ -803,6 +813,8 @@ namespace Copium
         void DisplayComponent<Text>(Text& text)
         {
             Display("Font", text.font);
+            text.fontName = text.font->GetName();
+
             Display("Font Size",text.fSize);
             Display("Content", text.content);
             Display("Wrapping", text.wrapper);
