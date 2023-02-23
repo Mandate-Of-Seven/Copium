@@ -1098,27 +1098,7 @@ namespace Copium
             {
                 if (audioSource.alias.size())
                 {
-                    if (audioSource.channel == "Default")
-                    {
-                        MySoundSystem.Play(audioSource.alias, MySoundSystem.channelDefault, audioSource.overLap, audioSource.loop, audioSource.loopCount);
-                    }
-                    else if (audioSource.channel == "BGM")
-                    {
-                        MySoundSystem.Play(audioSource.alias, MySoundSystem.channelBGM, audioSource.overLap, audioSource.loop, audioSource.loopCount);
-                    }
-                    else if (audioSource.channel == "SFX")
-                    {
-                        MySoundSystem.Play(audioSource.alias, MySoundSystem.channelSFX, audioSource.overLap, audioSource.loop, audioSource.loopCount);
-                    }
-                    else if (audioSource.channel == "Voice")
-                    {
-                        MySoundSystem.Play(audioSource.alias, MySoundSystem.channelVoice, audioSource.overLap, audioSource.loop, audioSource.loopCount);
-                    }
-                    else if (true)
-                    {
-                        PRINT("No channel detected, Playing on default");
-                        MySoundSystem.Play(audioSource.alias, MySoundSystem.channelDefault, audioSource.overLap, audioSource.loop, audioSource.loopCount);
-                    }
+                    audioSource.play_sound();
                 }
                 else
                 {

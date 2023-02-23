@@ -169,6 +169,31 @@ namespace Copium
 		font = Font::getFont(fontName);
 	}
 
+	void AudioSource::play_sound()
+	{
+		if (channel == "Default")
+		{
+			MySoundSystem.Play(alias, MySoundSystem.channelDefault, overLap, loop, loopCount);
+		}
+		else if (channel == "BGM")
+		{
+			MySoundSystem.Play(alias, MySoundSystem.channelBGM, overLap, loop, loopCount);
+		}
+		else if (channel == "SFX")
+		{
+			MySoundSystem.Play(alias, MySoundSystem.channelSFX, overLap, loop, loopCount);
+		}
+		else if (channel == "Voice")
+		{
+			MySoundSystem.Play(alias, MySoundSystem.channelVoice, overLap, loop, loopCount);
+		}
+		else if (true)
+		{
+			PRINT("No channel detected, Playing on default");
+			MySoundSystem.Play(alias, MySoundSystem.channelDefault, overLap, loop, loopCount);
+		}
+	}
+
 	void Text::render(BaseCamera* _camera)
 	{
 		if (!font)

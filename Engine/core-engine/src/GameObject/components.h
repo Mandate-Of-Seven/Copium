@@ -405,10 +405,7 @@ namespace Copium
 			Plays the audio file inside the audio source
 		*/
 		/**************************************************************************/
-		void play_sound()
-		{
-
-		}
+		void play_sound();
 		/***************************************************************************/
 		/*!
 		\brief
