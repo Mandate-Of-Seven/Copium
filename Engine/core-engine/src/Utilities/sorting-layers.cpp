@@ -219,7 +219,7 @@ namespace Copium
 				if (layer.gameObjects[i])
 					continue;
 
-				//PRINT("	Added " << _gameObject.name << " to " << layer.name);
+				PRINT("	Added " << _gameObject.name << " to " << layer.name);
 				layer.gameObjects[i] = &_gameObject;
 				break;
 			}
@@ -361,7 +361,7 @@ namespace Copium
 				layer.gameObjects.clear();
 		else if (!_clear)
 			for (Layer& layer : sortingLayers)
-				for (GameObject* gameObject : layer.gameObjects)
+				for (GameObject*& gameObject : layer.gameObjects)
 					gameObject = nullptr;
 	}
 

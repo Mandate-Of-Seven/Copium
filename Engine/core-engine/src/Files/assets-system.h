@@ -140,6 +140,36 @@ namespace Copium
 		/***************************************************************************/
 		/*!
 		\brief
+			Loads all font into the engine
+		\param _path
+			The file path to load from
+		*/
+		/**************************************************************************/
+		void LoadAllFont(std::list<File*>&_files);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Loads a font into the asset system
+		\param _file
+			The file path to load from
+		*/
+		/**************************************************************************/
+		void LoadFont(File * _file);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Unloads a font into the asset system
+		\param _file
+			The file path to unload from
+		*/
+		/**************************************************************************/
+		//void UnloadFont(File* _file);
+
+		/***************************************************************************/
+		/*!
+		\brief
 			Loads all audio into the engine
 		\param _path
 			The file path to load from

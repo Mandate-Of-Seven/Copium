@@ -466,6 +466,13 @@ namespace Copium
 		else if (_mType == MESSAGE_TYPE::MT_STOP_PREVIEW)
 		{
 			//tempMode = true;
+			Scene* scene = MySceneManager.get_current_scene();
+			if (scene && !scene->componentArrays.GetArray<Camera>().empty())
+				for (Camera& camera : scene->componentArrays.GetArray<Camera>())
+				{
+					// Bean: Reset all the framebuffers for now, next time only need to reset active main camera
+					camera.get_framebuffer()->init();
+				}
 		}
 	}
 
