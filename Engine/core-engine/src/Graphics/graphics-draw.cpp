@@ -103,7 +103,6 @@ namespace Copium
 		renderer.shutdown();
 	}
 
-
 	void Draw::ResetRenderer()
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
