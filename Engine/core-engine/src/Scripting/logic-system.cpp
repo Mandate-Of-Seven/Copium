@@ -138,29 +138,24 @@ namespace Copium
 		Scene* pScene = sceneManager.get_current_scene();
 		if (!pScene)
 			return;
-		//std::vector<Layer>& sortingLayers{ MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers() };
-		//if (!sortingLayers.empty())
-		//	for (size_t i{ sortingLayers.size() - 1}; i != 0; --i)
-		//	{
-		//		Layer& l = sortingLayers[i];
-		//		for (size_t j{ l.gameObjects.size() - 1 }; j != 0; --j)
-		//		{
-		//			GameObject* go = l.gameObjects[j];
-		//			if (!go->IsActive() || !go->HasComponent<Button>())
-		//				continue;
-
-		//			Button* button = go->GetComponent<Button>();
-		//			if (!button->enabled)
-		//				continue;
-
-		//			ButtonBehavior(*button);
-		//			if (pHoveredBtn == button)
-		//			{
-		//				return;
-		//			}
-		//		}
-
-		//	}
+		std::vector<Layer>& sortingLayers{ MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers() };
+		if (!sortingLayers.empty())
+			for (size_t i{ sortingLayers.size() - 1}; i != 0; --i)
+			{
+				Layer& l = sortingLayers[i];
+				for (size_t j{ l.gameObjects.size() - 1 }; j != 0; --j)
+				{
+					GameObject* go = l.gameObjects[j];
+					if (!go)
+						continue;
+					if (!go->IsActive() || !go->HasComponent<Button>())
+						continue;
+					Button* button = go->GetComponent<Button>();
+					if (!button->enabled)
+						continue;
+					ButtonBehavior(*button);
+				}
+			}
 
 		for (Button& button : pScene->componentArrays.GetArray<Button>())
 		{
@@ -168,13 +163,13 @@ namespace Copium
 				continue;
 			if (!button.gameObj.IsActive())
 				continue;
-			//if (button.gameObj.HasComponent<SortingGroup>())
-			//	continue;
+			if (button.gameObj.HasComponent<SortingGroup>())
+				continue;
 			ButtonBehavior(button);
-			//if (pHoveredBtn == &button)
-			//{
-			//	return;
-			//}
+			if (pHoveredBtn == &button)
+			{
+				return;
+			}
 		}
 		if (pHoveredBtn && (!pHoveredBtn->gameObj.IsActive() || !pHoveredBtn->enabled))
 		{
