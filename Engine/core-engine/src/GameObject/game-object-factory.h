@@ -111,7 +111,7 @@ namespace Copium {
 				}
 				++it;
 			}
-
+			int i{ 0 };
 			auto sceneIt = scene.componentArrays.GetArray<T>().begin();
 			auto sceneEnd = scene.componentArrays.GetArray<T>().end();
 			while (sceneIt != sceneEnd)
@@ -123,6 +123,7 @@ namespace Copium {
 					break;
 				}
 				++sceneIt;
+				PRINT(i);
 			}
 		}
 

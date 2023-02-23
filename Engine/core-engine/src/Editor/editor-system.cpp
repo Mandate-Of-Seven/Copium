@@ -205,7 +205,10 @@ namespace Copium
 							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
 							std::cout << filepath << std::endl;
-							MySceneManager.save_scene(filepath);
+
+							size_t pos = filepath.find_last_of("/\\") + 1;
+							std::string sceneName = filepath.substr(pos);
+							MySceneManager.save_scene(filepath, sceneName, true);
 						}
 						else 
 						{
@@ -223,7 +226,9 @@ namespace Copium
 							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
 							std::cout << filepath << std::endl;
-							MySceneManager.save_scene(filepath);
+							size_t pos = filepath.find_last_of("/\\") + 1;
+							std::string sceneName = filepath.substr(pos);
+							MySceneManager.save_scene(filepath, sceneName);
 						}
 						else
 						{
@@ -345,7 +350,9 @@ namespace Copium
 							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
 							std::cout << filepath << std::endl;
-							MySceneManager.save_scene(filepath);
+							size_t pos = filepath.find_last_of("/\\") + 1;
+							std::string sceneName = filepath.substr(pos);
+							MySceneManager.save_scene(filepath, sceneName);
 						}
 						else
 						{
@@ -361,7 +368,9 @@ namespace Copium
 							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
 							std::cout << filepath << std::endl;
-							MySceneManager.save_scene(filepath);
+							size_t pos = filepath.find_last_of("/\\") + 1;
+							std::string sceneName = filepath.substr(pos);
+							MySceneManager.save_scene(filepath, sceneName, true);
 						}
 						else
 						{

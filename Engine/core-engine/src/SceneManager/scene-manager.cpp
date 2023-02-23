@@ -70,7 +70,6 @@ namespace Copium
 	{
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		storageScene = nullptr;
-		//MyGOF.register_archetypes("Data/Archetypes");
 		SubscribeComponentsFunctions(ComponentTypes());
 		MyEventSystem->subscribe(this, &SceneManager::CallbackQuitEngine);
 		MyEventSystem->subscribe(this, &SceneManager::CallbackChildInstantiate);
@@ -150,8 +149,14 @@ namespace Copium
 			endPreview();
 		}
 
+		for (GameObject& go : currentScene->gameObjects)
+		{
+			PRINT(std::hex << &go);
+		}
+
 		if (currentScene)
 		{
+			PRINT("Scene Address:" << currentScene);
 			delete currentScene;
 			currentScene = nullptr;
 		}
@@ -161,17 +166,6 @@ namespace Copium
 			storageScene = nullptr;
 		}
 
-		/*
-		// For multiple scenes
-		//for (Scene* sc : scenes)
-		//{
-		//	if (sc)
-		//	{
-		//		delete sc;
-		//		sc = nullptr;
-		//	}
-		//}
-		*/	
 	}
 
 	bool SceneManager::load_scene(const std::string& _filepath)
@@ -210,13 +204,6 @@ namespace Copium
 		}
 
 		MyEventSystem->publish(new SceneChangingEvent());
-		//MyEventSystem->publish(
-		//	new SceneOpenedEvent(
-		//		currentScene->get_name().c_str(),
-		//		currentScene->gameObjects,
-		//		currentScene->componentArrays
-		//	)
-		//);
 
 		if (document.HasMember("Layers"))
 		{
@@ -453,11 +440,6 @@ namespace Copium
 
 		MyEventSystem->publish(new StartPreviewEvent());
 
-
-		//UUID prevSelected = 0;
-		//if (selectedGameObject)
-		//	prevSelected = selectedGameObject->id;
-
 		backUpCurrScene();
 
 		for (GameObject& gameObj : currentScene->gameObjects)
@@ -466,7 +448,19 @@ namespace Copium
 			if (mainCamera)
 				break;
 		}
+		for (int i = 0; i < MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers().size(); i++)
+		{
+			PRINT("Layer Name: " << MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers()[i].name);
 
+			for (int j = 0; j < MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers()[i].gameObjects.size(); j++)
+			{
+				if (!MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers()[i].gameObjects[j])
+					continue;
+
+				PRINT("Name: " << MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers()[i].gameObjects[j]->name);
+			}
+
+		}
 		for (GameObject& go : currentScene->gameObjects)
 		{
 			// Transform and Parent
@@ -485,6 +479,7 @@ namespace Copium
 				MyEditorSystem.getLayers()->SortLayers()->ReplaceGameObject(sg->sortingLayer, go);
 
 			}
+
 
 			// Target Graphic
 			if (go.HasComponent<Button>())
@@ -527,13 +522,22 @@ namespace Copium
 			}
 
 		}
+		for (int i = 0; i < MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers().size(); i++)
+		{
+			PRINT("Layer Name: " << MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers()[i].name);
 
+
+			for (int j = 0; j < MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers()[i].gameObjects.size(); j++)
+			{
+				if (!MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers()[i].gameObjects[j])
+					continue;
+
+				PRINT("Name: " << MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers()[i].gameObjects[j]->name);
+			}
+
+		}
 		currSceneState = Scene::SceneState::play;
 		currentScene->set_state(Scene::SceneState::play);
-
-
-		//if (prevSelected)
-		//	selectedGameObject = findGameObjByID(prevSelected);
 
 		//SoundSystem::Instance()->StopAll();
 
@@ -577,10 +581,6 @@ namespace Copium
 		mainCamera = nullptr;
 		storageScene = nullptr;
 
-		//if (selectedGameObject)
-		//{
-		//	selectedGameObject = FindGameObjByID(selectedGameObject->id);
-		//}
 
 		delete tmp;
 
@@ -681,6 +681,57 @@ namespace Copium
 		return true;
 	}
 
+	bool SceneManager::save_scene(const std::string& _filepath, const std::string& _filename, bool _modifyname)
+	{
+		std::string fp(_filepath);
+		if (fp.find(".scene") == std::string::npos)
+		{
+			fp += ".scene";
+		}
+
+		if (sceneFilePath.empty())
+		{
+			sceneFilePath = fp;
+		}
+		std::ofstream ofs(fp);
+		rapidjson::Document doc;
+
+		doc.SetObject();
+
+		if (_modifyname)
+		{
+			currentScene->set_name(_filename);
+		}
+
+		Copium::SerializeBasic(_filename, doc, doc, "Name");
+
+		// Serialize Layer Data
+		rapidjson::Value layers(rapidjson::kArrayType);
+		for (Layer& layer : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
+		{
+			rapidjson::Value obj(rapidjson::kObjectType);
+			SerializeBasic(layer.name, obj, doc, "Name");
+			SerializeBasic(layer.layerID, obj, doc, "ID");
+
+			layers.PushBack(obj, doc.GetAllocator());
+		}
+		doc.AddMember("Layers", layers, doc.GetAllocator());
+
+
+		//Create array of game objects
+		rapidjson::Value gameObjects(rapidjson::kArrayType);
+		for (GameObject& gameObject : currentScene->gameObjects)
+		{
+			rapidjson::Value go(rapidjson::kObjectType);
+			Serializer::Serialize(gameObject, "", go, doc);
+			gameObjects.PushBack(go, doc.GetAllocator());
+		}
+		doc.AddMember("GameObjects", gameObjects, doc.GetAllocator());
+
+		rapidjson::StringBuffer sb;
+		Serializer::WriteToFile(sb, doc, ofs);
+		return true;
+	}
 
 	void SceneManager::backUpCurrScene()
 	{
