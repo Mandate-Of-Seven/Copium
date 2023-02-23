@@ -64,6 +64,17 @@
                     "Type": "AudioSource",
                     "TypeID": 16,
                     "Alias": "BGM_Train"
+                },
+                {
+                    "UID": 7036692997401670936,
+                    "Type": "Script",
+                    "TypeID": 23,
+                    "Name": "AudioManager",
+                    "state": 0,
+                    "MainMenuStartGameObject": 11062517815291545482,
+                    "bgmMainMenu": 3980600980402691954,
+                    "ambTrain": 10395333414142043547,
+                    "bgmTrain": 15478641588138346794
                 }
             ]
         },
