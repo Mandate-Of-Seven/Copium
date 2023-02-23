@@ -429,7 +429,7 @@ namespace Copium
 			mCurrentScene = instantiateClass(klassScene);
 			ReflectAll();
 		}
-
+	
 
 		
 		COPIUM_ASSERT(!mGameObject, "GameObject C# script could not be loaded");
