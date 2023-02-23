@@ -840,6 +840,7 @@ namespace Copium
 		//SoundSystem::Instance()->StopAll();
 
 		return true;
+
 	}
 
 	bool SceneManager::save_scene()
