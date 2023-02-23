@@ -247,8 +247,7 @@ namespace Copium
 
 	glm::vec2 Font::getDimensions(const std::string& _text, GLfloat _scale, const float& _wrapper)
 	{
-		float x = 0;
-		float y = 0;
+		float x = 0.f, y = 0.f, maxX = 0.f, maxY = 0.f, scaledY = 0.f;
 		int newLine = 0;
 		for (char c : _text)
 		{
@@ -261,15 +260,25 @@ namespace Copium
 			else if (c == ' ' && x > _wrapper && _wrapper != 0.f)
 			{
 				newLine++;
-				x = 0;
+				x = 0.f;
 			}
 
 			Character& ch = characters[c];
-			float scaledY = ch.size.y * (_scale * 0.01f) - newLine * (_scale * 2.5f);
+			scaledY = ch.size.y * (_scale * 0.01f) - newLine * (_scale * 2.5f);
 			if (scaledY > y)
 				y = scaledY;
 			x += (ch.advance >> 6) * (_scale * 0.01f); // Bitshift by 6 to get value in pixels
+
+			maxX = std::max(maxX, x);
+			maxY = std::max(maxY, ch.size.y * (_scale * 0.01f));
 		}
-		return {x,y};
+
+		maxY *= newLine + 1;
+		
+		if(newLine)
+			maxY = -maxY;
+		PRINT("Max V: " << maxY);
+		
+		return { maxX,maxY };
 	}
 }

@@ -359,25 +359,6 @@ namespace Copium
 				scale *= text.fSize;
 				glm::vec2 dimensions{ text.font->getDimensions(text.content, scale, text.wrapper) };
 
-				switch (text.get_hAlign())
-				{
-				case HorizontalAlignment::Center:
-					pos.x -= dimensions.x / 2.f;
-					break;
-				case HorizontalAlignment::Right:
-					pos.x -= dimensions.x;
-					break;
-				}
-				switch (text.get_vAlign())
-				{
-				case VerticalAlignment::Top:
-					pos.y -= dimensions.y;
-					break;
-				case VerticalAlignment::Center:
-					pos.y -= dimensions.y / 2.f;
-					break;
-				}
-
 				if (t.HasParent())
 				{
 					glm::vec3 updatedPos = pos;
@@ -387,10 +368,48 @@ namespace Copium
 
 					float updatedSize = updatedScale.x * text.fSize * 0.1f;
 
+					switch (text.get_hAlign())
+					{
+					case HorizontalAlignment::Right:
+						updatedPos.x -= dimensions.x;
+						break;
+					case HorizontalAlignment::Center:
+						updatedPos.x -= dimensions.x / 2.f;
+						break;
+					}
+					switch (text.get_vAlign())
+					{
+					case VerticalAlignment::Top:
+						updatedPos.y -= dimensions.y;
+						break;
+					case VerticalAlignment::Center:
+						updatedPos.y -= dimensions.y / 2.f;
+						break;
+					}
+
 					renderer.draw_text(text.content, updatedPos, text.get_color(), scale, text.wrapper, text.font);
 				}
 				else
 				{
+					switch (text.get_hAlign())
+					{
+					case HorizontalAlignment::Center:
+						pos.x -= dimensions.x / 2.f;
+						break;
+					case HorizontalAlignment::Right:
+						pos.x -= dimensions.x;
+						break;
+					}
+					switch (text.get_vAlign())
+					{
+					case VerticalAlignment::Top:
+						pos.y -= dimensions.y;
+						break;
+					case VerticalAlignment::Center:
+						pos.y -= dimensions.y / 2.f;
+						break;
+					}
+
 					renderer.draw_text(text.content, pos, text.get_color(), scale, text.wrapper, text.font);
 				}
 			}
@@ -539,25 +558,6 @@ namespace Copium
 						scale *= text.fSize;
 						glm::vec2 dimensions{ text.font->getDimensions(text.content, scale, text.wrapper) };
 
-						switch (text.get_hAlign())
-						{
-						case HorizontalAlignment::Center:
-							pos.x -= dimensions.x / 2.f;
-							break;
-						case HorizontalAlignment::Right:
-							pos.x -= dimensions.x;
-							break;
-						}
-						switch (text.get_vAlign())
-						{
-						case VerticalAlignment::Top:
-							pos.y -= dimensions.y;
-							break;
-						case VerticalAlignment::Center:
-							pos.y -= dimensions.y / 2.f;
-							break;
-						}
-
 						if (t.HasParent())
 						{
 							glm::vec3 updatedPos = pos;
@@ -567,10 +567,48 @@ namespace Copium
 
 							float updatedSize = updatedScale.x * text.fSize * 0.1f;
 
+							switch (text.get_hAlign())
+							{
+							case HorizontalAlignment::Right:
+								updatedPos.x -= dimensions.x;
+								break;
+							case HorizontalAlignment::Center:
+								updatedPos.x -= dimensions.x / 2.f;
+								break;
+							}
+							switch (text.get_vAlign())
+							{
+							case VerticalAlignment::Top:
+								updatedPos.y -= dimensions.y;
+								break;
+							case VerticalAlignment::Center:
+								updatedPos.y -= dimensions.y / 2.f;
+								break;
+							}
+
 							renderer.draw_text(text.content, updatedPos, text.get_color(), scale, text.wrapper, text.font);
 						}
 						else
 						{
+							switch (text.get_hAlign())
+							{
+							case HorizontalAlignment::Center:
+								pos.x -= dimensions.x / 2.f;
+								break;
+							case HorizontalAlignment::Right:
+								pos.x -= dimensions.x;
+								break;
+							}
+							switch (text.get_vAlign())
+							{
+							case VerticalAlignment::Top:
+								pos.y -= dimensions.y;
+								break;
+							case VerticalAlignment::Center:
+								pos.y -= dimensions.y / 2.f;
+								break;
+							}
+
 							renderer.draw_text(text.content, pos, text.get_color(), scale, text.wrapper, text.font);
 						}
 					}
