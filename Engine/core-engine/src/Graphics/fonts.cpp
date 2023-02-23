@@ -277,7 +277,6 @@ namespace Copium
 		
 		if(newLine)
 			maxY = -maxY;
-		PRINT("Max V: " << maxY);
 		
 		return { maxX,maxY };
 	}
