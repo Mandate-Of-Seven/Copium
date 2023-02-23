@@ -475,6 +475,11 @@ namespace Copium
 		{
 			BaseCamera::init(1280.f, 720.f, CameraType::GAME, true);
 		}
+
+		~Camera()
+		{
+			BaseCamera::exit();
+		}
 	};
 
 	class Rigidbody2D : public Component

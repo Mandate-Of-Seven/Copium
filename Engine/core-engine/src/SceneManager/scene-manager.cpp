@@ -75,6 +75,7 @@ namespace Copium
 		MyEventSystem->subscribe(this, &SceneManager::CallbackQuitEngine);
 		MyEventSystem->subscribe(this, &SceneManager::CallbackChildInstantiate);
 		MyEventSystem->subscribe(this, &SceneManager::CallbackGameObjectInstantiate);
+		MyEventSystem->subscribe(this, &SceneManager::CallbackGameObjectDestroy);
 	}
 
 	void SceneManager::DeserializeLink()
@@ -415,6 +416,7 @@ namespace Copium
 		CleanerStruct(Scene& _scene) : scene{_scene}
 		{
 			CleanComponents<T,Ts...>();
+			CleanGameObjects();
 		}
 		template <typename T1, typename... T1s>
 		void CleanComponents()
@@ -429,34 +431,18 @@ namespace Copium
 				CleanComponents<T1s...>();
 			}
 		}
-		template <typename T1, typename... T1s>
 		void CleanGameObjects()
 		{
 			//iterate through an array for deletion of game object
 			//if found, call remove
-			for (auto& gameobj : scene.gameObjectsForDeletion)
-			{
-				for (T1* pComponent : gameobj->componentPtrArrays.GetArray<T1>())
-				{
-					MyGOF.RemoveComponent(*pComponent, scene);
-				}
-				
-			}
-			if constexpr (sizeof...(T1s) != 0)
-			{
-				CleanGameObjects<T1s...>();
-			}
-			else
-			{
-				for (auto& gameobj : scene.gameObjectsForDeletion)
-				{
 
-					MyGOF.Destroy(gameobj, scene.gameObjects);
+			for (GameObject* gameobj : scene.gameObjectsForDeletion)
+			{
+				PRINT("DESTROYING " << gameobj->name);
+				MyGOF.Destroy(*gameobj, scene.gameObjects);
 
-				}
-				scene.gameObjectsForDeletion.clear();
 			}
-
+			scene.gameObjectsForDeletion.clear();
 		}
 	};
 
@@ -1021,17 +1007,6 @@ namespace Copium
 
 	void SceneManager::CallbackQuitEngine(QuitEngineEvent* pEvent)
 	{
-		PRINT("QUIT ENGINE");
-		if (currentScene)
-		{
-			delete currentScene;
-			currentScene = nullptr;
-		}
-		if (storageScene = nullptr)
-		{
-			delete storageScene;
-			storageScene = nullptr;
-		}
 		quit_engine();
 	}
 
@@ -1058,8 +1033,37 @@ namespace Copium
 			pEvent->instanceContainer = &go;
 		}
 	}
-	void SceneManager::CallbackGameObjectDelete(GameObjectDestroyEvent* pEvent)
+
+	template <typename T, typename... Ts>
+	struct CleanGameObjectStruct
 	{
+		GameObject& gameObject;
+		Scene& scene;
+		CleanGameObjectStruct(TemplatePack<T, Ts...> pack) {}
+		CleanGameObjectStruct(GameObject& _gameObject, Scene& _scene) : gameObject{ _gameObject }, scene{_scene}
+		{
+			Clean<T, Ts...>();
+		}
+		template <typename T1, typename... T1s>
+		void Clean()
+		{
+			for (T1* pComponent : gameObject.componentPtrArrays.GetArray<T1>())
+			{
+				scene.componentsForDeletion.GetArray<T1>().push_back(pComponent);
+			}
+			if constexpr (sizeof...(T1s) != 0)
+			{
+				Clean<T1s...>();
+			}
+		}
+	};
+
+	using CleanGameObject = decltype(CleanGameObjectStruct(ComponentTypes()));
+
+	void SceneManager::CallbackGameObjectDestroy(GameObjectDestroyEvent* pEvent)
+	{
+		COPIUM_ASSERT(currentScene == nullptr, "No scene is loaded, where did you get this gameObject from?");
+		CleanGameObject(pEvent->gameObject, *currentScene);
 		currentScene->gameObjectsForDeletion.push_back(&pEvent->gameObject);
 	}
 

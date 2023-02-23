@@ -509,7 +509,6 @@ namespace Copium
 	void Serializer::Deserialize<GameObject>(GameObject& _data, const std::string& _key, rapidjson::Value& _value)
 	{
 		(void)_key;
-
 		std::string name;
 		if (!Copium::Deserialize(name, _value, "Name"))
 			name = "New GameObject";
@@ -551,7 +550,6 @@ namespace Copium
 					else
 					{
 						PRINT("Deserializing " << key);
-						//MyEventSystem.publish(new Game)
 						ComponentType cType;
 						switch (NAME_TO_CTYPE[key])
 						{
@@ -631,16 +629,7 @@ namespace Copium
 							PRINT("ADDED NOTHING, MAYBE ADDED THE COMPONENT TO THE GAMEOBJECT.CPP");
 							break;
 						}
-						/*
-						Component* tmp = _data.addComponent(NAME_TO_CTYPE[key]);
-						if (tmp)
-						{
-							 //Deserialize stuff
-							DeserializeComponent(NAME_TO_CTYPE[key], tmp, component);
-
-						}*/
 					}
-
 
 				}
 

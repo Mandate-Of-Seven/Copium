@@ -63,7 +63,7 @@ public:
         {
             element.~T();
         }
-        PRINT("SPARSE SET DECONSTRUCTOR " << sizeof(*this)/8);
+        PRINT("SPARSE SET DECONSTRUCTOR ");
     }
 
     template <typename... Args>
@@ -193,6 +193,7 @@ SparseSet<T, N>::SparseSet()
     {
         indexes[i] = i;
     }
+    PRINT("SPARSE SET CONSTRUCTED");
 }
 
 template <typename T, size_t N>

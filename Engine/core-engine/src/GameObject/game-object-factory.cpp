@@ -82,7 +82,7 @@ namespace Copium
 		{
 			T& component = scene.componentArrays.GetArray<T>().emplace_back(gameObj, *pCopy , uuid);
 			gameObj.AddComponent(&component);
-			MyEventSystem->publish(new ReflectComponentEvent(component));
+			//MyEventSystem->publish(new ReflectComponentEvent(component));
 			return component;
 		}
 		T& component = scene.componentArrays.GetArray<T>().emplace_back(gameObj, uuid);
@@ -214,10 +214,8 @@ namespace Copium
 
 	void GameObjectFactory::Destroy(GameObject& _go, GameObjectsArray& gameObjectArray)
 	{
-		_go.transform.SetParent(nullptr);
 		for (Transform* pTransform : _go.transform.children)
 		{
-			pTransform->SetParent(nullptr);
 			Destroy(pTransform->gameObject, gameObjectArray);
 		}
 		gameObjectArray.erase(_go);
