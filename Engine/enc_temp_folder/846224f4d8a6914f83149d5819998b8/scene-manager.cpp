@@ -189,9 +189,13 @@ namespace Copium
 				if (pButton->targetGraphic)
 				{
 					pButton->targetGraphic = reinterpret_cast<IUIComponent*>(FindComponentByID(pButton->targetGraphic->uuid));
-					PRINT(pButton->targetGraphic->uuid.GetUUID());
+					PRINT("TARGET GRAPHIC: " << pButton->targetGraphic->uuid.GetUUID());
+					if (pButton->targetGraphic == nullptr)
+					{
+						PRINT("COULDN'T FIND THE LINKAGE FOR BUTTON");
+					}
+					COPIUM_ASSERT(pButton->targetGraphic == nullptr, "Could find the linkage for button");
 				}
-
 			}
 
 			for (Script* pScript : go.GetComponents<Script>())
@@ -662,6 +666,8 @@ namespace Copium
 					}
 				}
 
+
+
 				// Image
 				if (go.HasComponent<Image>())
 				{
@@ -834,6 +840,7 @@ namespace Copium
 		//SoundSystem::Instance()->StopAll();
 
 		return true;
+
 	}
 
 	bool SceneManager::save_scene()
