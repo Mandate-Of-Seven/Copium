@@ -58,7 +58,7 @@ namespace Copium
 
 		// Bind textures to quad fragment shader
 		shaderProgram[QUAD_SHADER].Use();
-		GLuint loc1 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture1");
+		GLuint loc = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture1");
 		/*GLuint loc2 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture2");
 		GLuint loc3 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture3");
 		GLuint loc4 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture4");
@@ -95,7 +95,7 @@ namespace Copium
 		GLuint loc32 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture32");*/
 		GLint samplers[maxTextures]{};
 
-		for (GLuint i = 1; i < maxTextures; i++)
+		for (GLuint i = 0; i < maxTextures; i++)
 			samplers[i] = i;
 
 		/*glUniform1i(loc1, samplers[1]);
@@ -130,14 +130,14 @@ namespace Copium
 		glUniform1i(loc30, samplers[30]);
 		glUniform1i(loc31, samplers[31]);
 		glUniform1i(loc32, samplers[32]);*/
-		glUniform1iv(loc1, maxTextures, samplers);
+		glUniform1iv(loc, maxTextures, samplers);
 		shaderProgram[QUAD_SHADER].UnUse();
 
 		// Bind fonts to text fragment shader
-		/*shaderProgram[TEXT_SHADER].Use();
+		shaderProgram[TEXT_SHADER].Use();
 		loc = glGetUniformLocation(shaderProgram[TEXT_SHADER].GetHandle(), "uFont");
 		glUniform1iv(loc, maxTextures, samplers);
-		shaderProgram[TEXT_SHADER].UnUse();*/
+		shaderProgram[TEXT_SHADER].UnUse();
 
 		// Parse all textures loaded into the engine into the graphics
 		// Bean: Seems like i dont need to parse the textures during startup because the 

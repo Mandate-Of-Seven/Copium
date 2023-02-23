@@ -20,13 +20,11 @@ layout (location=2) in float vFontIndex;
 
 layout (location=0) out vec4 fFragColor;
 
-uniform sampler2D uFont;
+uniform sampler2D uFont[32];
 
 void main()
 {
 	int index = int(vFontIndex);
-	vec4 sampled = vec4(1.0, 1.0, 1.0, texture(uFont, vTextureCoordinate).r);
-	fFragColor = vInterpColor * sampled;
-	if(fFragColor.a < 0.5)
-			discard;
+	vec4 sampled = vec4(1.0, 1.0, 1.0, texture(uFont[index], vTextureCoordinate).r);
+	fFragColor = sampled * vInterpColor;
 }

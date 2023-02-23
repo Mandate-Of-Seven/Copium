@@ -850,26 +850,7 @@ namespace Copium
             Display("Bounds", btn.bounds);
             DisplayColor("Normal Color", btn.normalColor);
             DisplayColor("Hover Color", btn.hoverColor);
-            DisplayColor("Clicked Color", btn.clickedColor);
-
-            // If it has an image, set bounds based on image once
-            static bool setOnce = false;
-            if (btn.gameObj.HasComponent<Image>() && !setOnce)
-            {
-                Image* image = btn.gameObj.GetComponent<Image>();
-                Texture* texture = image->sprite.refTexture;
-                
-                float height = texture->get_pixel_height();
-                float width = texture->get_pixel_width();
-
-                btn.bounds.max.x *= (1 / (float)width * 0.5f);
-                btn.bounds.max.y *= (1 / (float)height * 0.5f);
-                btn.bounds.min.x *= (1 / (float)width * 0.5f);
-                btn.bounds.min.y *= (1 / (float)height * 0.5f);
-
-                setOnce = true;
-            }
-            
+            DisplayColor("Clicked Color", btn.clickedColor); 
         }
 
         template <>
