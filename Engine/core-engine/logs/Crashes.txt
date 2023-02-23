@@ -1,5 +1,5 @@
-[2023-02-23 19:03:04.977] [Error] [critical] 
-Caused By:	size_ == 0
-Info:		EMPTY
-Source:		C:\Users\FLESH\ECS\Copium\Engine\core-engine\src\Utilities\sparse-set.h (Line: 54)
+[2023-02-23 22:27:13.872] [Error] [critical] 
+Caused By:	!mClassField
+Info:		FIELD PrepareButtonCOULD NOT BE FOUND IN SCRIPT CrewMenu
+Source:		C:\Users\Owner\OneDrive\Documents\GitHub\Copium\Engine\core-engine\src\Scripting\scripting-system.h (Line: 614)
 
