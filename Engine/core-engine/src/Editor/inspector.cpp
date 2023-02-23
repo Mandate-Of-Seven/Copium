@@ -92,6 +92,12 @@ namespace Copium
                 buttonName = ((Component&)container).gameObj.name + " (" + GetTypeName<T>() + ")";
                 ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
             }
+            else if constexpr (std::is_same<T, IUIComponent>())
+            {
+                static std::string buttonName{};
+                buttonName = ((Component&) container).gameObj.name + " (" + GetTypeName<T>() + ")";
+                ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
+            }
             else
             {
                 static std::string buttonName { GetTypeName<T>() };
@@ -99,7 +105,6 @@ namespace Copium
             }
         }
 
-        template <>
         void DisplayPointer(Texture& container)
         {
             static std::string buttonName{};
@@ -116,7 +121,6 @@ namespace Copium
             
             ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
         }
-
 
         //Field name, Container
         template <typename T>
@@ -229,7 +233,8 @@ namespace Copium
                 {
                     for (int i = 0; i < MyAssetSystem.GetTextures().size(); i++)
                     {
-                        std::string path = MyAssetSystem.GetTexture(i)->get_file_path();
+                        size_t pos = MyAssetSystem.GetTexture(i)->get_file_path().find_first_of('\\');
+                        std::string path = MyAssetSystem.GetTexture(i)->get_file_path().substr(pos);
                         buttonName = path;
                         buttonName += " [Texture]";
                         ImVec2 buttonSize = ImGui::GetWindowSize();
@@ -238,6 +243,26 @@ namespace Copium
                         {
                             // Attach Reference
                             container = MyAssetSystem.GetTexture(i);
+                            isAddingReference = false;
+                            break;
+                        }
+                    }
+                }
+                else if constexpr (std::is_same<T, Font>())
+                {
+                    for (auto& font : Font::GetFonts())
+                    {
+                        
+                        std::string path = font.second->GetName();
+                        buttonName = path;
+                        buttonName += " [Font]";
+
+                        ImVec2 buttonSize = ImGui::GetWindowSize();
+                        buttonSize.y *= (float) BUTTON_HEIGHT;
+                        if (filter.PassFilter(path.c_str()) && ImGui::Button(buttonName.c_str(), buttonSize))
+                        {
+                            // Assign Font
+                            container = Font::getFont(font.second->GetName());
                             isAddingReference = false;
                             break;
                         }
@@ -324,7 +349,6 @@ namespace Copium
             AddReferencePanel(container,scriptName);
         }
 
-        template <>
         void DisplayType(const char* name, Texture*& container)
         {
             static std::string buttonName{};
@@ -359,6 +383,51 @@ namespace Copium
                             container = MyAssetSystem.GetTexture(i);
                             break;
                         }
+                    }
+                }
+                ImGui::EndDragDropTarget();
+            }
+            AddReferencePanel(container);
+        }
+
+        void DisplayType(const char* name, Font*& container)
+        {
+            static std::string buttonName{};
+            if (container == nullptr)
+            {
+                buttonName = "None (Font)";
+                ImGui::Button(buttonName.c_str(), ImVec2(-FLT_MIN, 0.f));
+            }
+            else
+            {
+                ImGui::Button(container->GetName().c_str(), ImVec2(-FLT_MIN, 0.f));
+            }
+
+            if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+            {
+                isAddingReference = true;
+                pEditedContainer = reinterpret_cast<void**>(&container);
+            }
+
+            if (ImGui::BeginDragDropTarget())
+            {
+                const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ContentBrowserItem");
+                if (payload)
+                {
+                    std::string str = (const char*) (payload->Data);
+                    size_t pos = str.find_last_of('\\');
+
+                    std::string ext = str.substr(str.length() - 3);
+                    str = str.substr(pos + 1, str.length() - pos - 5);
+
+                    // Check that it is a font file
+                    if (!ext.compare("ttf"))
+                    {
+                        Font* font = Font::getFont(str);
+
+                        // Check that the str is a valid font
+                        if (font)
+                            container = font;
                     }
                 }
                 ImGui::EndDragDropTarget();
@@ -733,6 +802,7 @@ namespace Copium
         template <>
         void DisplayComponent<Text>(Text& text)
         {
+            Display("Font", text.font);
             Display("Font Size",text.fSize);
             Display("Content", text.content);
             Display("Wrapping", text.wrapper);

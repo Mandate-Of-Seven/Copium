@@ -7,16 +7,14 @@ public class GameManager: CopiumScript
     public GameObject MainMenuCanvas;
 	public GameObject TrainCanvas;
 	public GameObject MainScreenCanvas;
-	public GameObject CombatCanvas;
     public GameObject PauseCanvas;
 
     public GameObject ManualPopUp;
     
-
     public GameObject MainMenuStartGameObject;
     public GameObject MainMenuQuitGameObject;
-    Button MainMenuStartBtn;
-    Button MainMenuQuitBtn;
+    public Button MainMenuStartBtn;
+    public Button MainMenuQuitBtn;
 
     public GameObject ReportTab;
     public GameObject MessageTab;
@@ -24,7 +22,6 @@ public class GameManager: CopiumScript
 
     public GameObject ReportScreenGameObject;
     public Button ReportScreenBtn;
-    public Button CombatScreenBtn;
     public Button OtherScreenBtn;
     public Button ManualBtn;
     public Button PauseResumeBtn;
@@ -42,20 +39,26 @@ public class GameManager: CopiumScript
 	{
         isReportScreenOn = false;
         PauseCanvas.SetActive(false);
+        MainScreenCanvas.SetActive(false);
         Console.WriteLine("CRASH1");
-        UpdateCanvases();
+        //UpdateCanvases();
 
         Console.WriteLine("CRASH2");
-        ReportScreenBtn = ReportScreenGameObject.GetComponent<Button>();
+        //ReportScreenBtn = ReportScreenGameObject.GetComponent<Button>();
         Console.WriteLine("CRASH3");
-        MainMenuStartBtn = MainMenuStartGameObject.GetComponent<Button>();
+        //MainMenuStartBtn = MainMenuStartGameObject.GetComponent<Button>();
         Console.WriteLine("CRASH4");
-        MainMenuQuitBtn = MainMenuQuitGameObject.GetComponent<Button>();
+        //MainMenuQuitBtn = MainMenuQuitGameObject.GetComponent<Button>();
+
+
+        ManualPopUp.SetActive(false);
+
     }
 	void Update()
-    {
+    {        
         if (MainMenuStartBtn.state == ButtonState.OnClick)
         {
+
             state = 1;
             UpdateCanvases();
         }
@@ -67,6 +70,8 @@ public class GameManager: CopiumScript
 
         if(ManualBtn.state == ButtonState.OnClick)
         {
+            Console.WriteLine("Bleep1");
+
             ManualPopUp.SetActive(true);
             ReportScreenGameObject.SetActive(false);
         }
@@ -166,6 +171,7 @@ public class GameManager: CopiumScript
     {
         if (state == 0)
         {
+            Console.WriteLine("bleep2");
             if (!MainMenuCanvas.activeSelf)
                 MainMenuCanvas.SetActive(true);
 
@@ -174,17 +180,12 @@ public class GameManager: CopiumScript
 
             if (MainScreenCanvas.activeSelf)
                 MainScreenCanvas.SetActive(false);
-
-            if (CombatCanvas.activeSelf)
-                CombatCanvas.SetActive(false);
         }
         else if (isReportScreenOn)
         {
             if(!MainScreenCanvas.activeSelf)
                 MainScreenCanvas.SetActive(true);
 
-            if (CombatCanvas.activeSelf)
-                CombatCanvas.SetActive(false);
         }
         else if (state == 1)
         {
@@ -200,8 +201,6 @@ public class GameManager: CopiumScript
             if (MainScreenCanvas.activeSelf)
                 MainScreenCanvas.SetActive(false);
 
-            if (CombatCanvas.activeSelf)
-                CombatCanvas.SetActive(false);
         }
     }
 }

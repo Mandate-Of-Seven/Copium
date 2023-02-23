@@ -104,6 +104,11 @@ namespace Copium
 		*/
 		/***************************************************************************/
 		static Font* getFont(const std::string& _name);
+		static std::unordered_map<std::string, Font*>& GetFonts() { return mapNameFonts; }
+
+		void SetName(const std::string& _name) { name = _name; }
+		const std::string& GetName() { return name; }
+
 		const GLuint& get_VAO() { return fontVertexArrayID; }
 		const GLuint& get_VBO() { return fontVertexBufferID; }
 
@@ -117,6 +122,7 @@ namespace Copium
 
 	private:
 		Font(const std::string& name);
+		std::string name;
 		static std::unordered_map<std::string, Font*> mapNameFonts;
 		std::map<char, Character> characters;
 		GLuint fontVertexArrayID = 0; // Handle to Font Vertex Array Object

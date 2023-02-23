@@ -139,6 +139,8 @@ namespace Copium {
 		/*******************************************************************************/
 		bool save_scene(const std::string& _filepath);
 
+		bool save_scene(const std::string& _filepath, const std::string& _filename, bool _modifyname = false);
+
 		/*******************************************************************************
 		/*!
 		*
@@ -246,7 +248,7 @@ namespace Copium {
 			reference to the vector of scenes
 		*/
 		/*******************************************************************************/
-		std::vector<Scene*>& GetSceneVector() { return scenes; }
+		//std::vector<Scene*>& GetSceneVector() { return scenes; }
 
 		void DeserializeLink();
 		void PreviewLink();
@@ -300,7 +302,6 @@ namespace Copium {
 		rapidjson::Document document;
 		std::string sceneFilePath;
 		Scene::SceneState currSceneState{ Scene::SceneState::edit };
-		std::vector<Scene*> scenes;
 	};
 
 	/*******************************************************************************

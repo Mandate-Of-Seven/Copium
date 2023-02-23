@@ -70,7 +70,6 @@ namespace Copium
 	{
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		storageScene = nullptr;
-		//MyGOF.register_archetypes("Data/Archetypes");
 		SubscribeComponentsFunctions(ComponentTypes());
 		MyEventSystem->subscribe(this, &SceneManager::CallbackQuitEngine);
 		MyEventSystem->subscribe(this, &SceneManager::CallbackChildInstantiate);
@@ -475,8 +474,14 @@ namespace Copium
 			endPreview();
 		}
 
+		for (GameObject& go : currentScene->gameObjects)
+		{
+			PRINT(std::hex << &go);
+		}
+
 		if (currentScene)
 		{
+			PRINT("Scene Address:" << currentScene);
 			delete currentScene;
 			currentScene = nullptr;
 		}
@@ -486,17 +491,6 @@ namespace Copium
 			storageScene = nullptr;
 		}
 
-		/*
-		// For multiple scenes
-		//for (Scene* sc : scenes)
-		//{
-		//	if (sc)
-		//	{
-		//		delete sc;
-		//		sc = nullptr;
-		//	}
-		//}
-		*/	
 	}
 
 	bool SceneManager::load_scene(const std::string& _filepath)
@@ -763,11 +757,6 @@ namespace Copium
 
 		MyEventSystem->publish(new StartPreviewEvent());
 
-
-		//UUID prevSelected = 0;
-		//if (selectedGameObject)
-		//	prevSelected = selectedGameObject->id;
-
 		backUpCurrScene();
 
 		for (GameObject& gameObj : currentScene->gameObjects)
@@ -786,6 +775,47 @@ namespace Copium
 				SortingGroup* sg = go.GetComponent<SortingGroup>();
 				MyEditorSystem.getLayers()->SortLayers()->ReplaceGameObject(sg->sortingLayer, go);
 
+			}
+
+
+			// Target Graphic
+			if (go.HasComponent<Button>())
+			{
+				Button* button = go.GetComponent<Button>();
+				UUID uuid{ (uint64_t) button->targetGraphic };
+				button->targetGraphic = reinterpret_cast<IUIComponent*>(FindComponentByID(uuid));
+			}
+
+			if (go.HasComponent<Script>())
+			{
+				Script* script = go.GetComponent<Script>();
+				if (!script->fieldDataReferences.empty())
+					for (auto it = script->fieldDataReferences.begin(); it != script->fieldDataReferences.end(); ++it)
+					{
+						const std::string& _name{ it->first };
+						Field& field = it->second;
+						FieldType fType = field.fType;
+
+						switch (fType)
+						{
+						case FieldType::Component:
+						{
+							uint64_t id{ field.Get<uint64_t>() };
+							Component* pComponent = FindComponentByID(id);
+							if (pComponent)
+								script->fieldComponentReferences[_name] = pComponent;
+							break;
+						}
+						case FieldType::GameObject:
+						{
+							uint64_t id{ field.Get<uint64_t>() };
+							GameObject* pGameObject = FindGameObjectByID(id);
+							if (pGameObject)
+								script->fieldGameObjReferences[_name] = pGameObject;
+							break;
+						}
+						}
+					}
 			}
 		}
 
@@ -935,6 +965,57 @@ namespace Copium
 		return true;
 	}
 
+	bool SceneManager::save_scene(const std::string& _filepath, const std::string& _filename, bool _modifyname)
+	{
+		std::string fp(_filepath);
+		if (fp.find(".scene") == std::string::npos)
+		{
+			fp += ".scene";
+		}
+
+		if (sceneFilePath.empty())
+		{
+			sceneFilePath = fp;
+		}
+		std::ofstream ofs(fp);
+		rapidjson::Document doc;
+
+		doc.SetObject();
+
+		if (_modifyname)
+		{
+			currentScene->set_name(_filename);
+		}
+
+		Copium::SerializeBasic(_filename, doc, doc, "Name");
+
+		// Serialize Layer Data
+		rapidjson::Value layers(rapidjson::kArrayType);
+		for (Layer& layer : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
+		{
+			rapidjson::Value obj(rapidjson::kObjectType);
+			SerializeBasic(layer.name, obj, doc, "Name");
+			SerializeBasic(layer.layerID, obj, doc, "ID");
+
+			layers.PushBack(obj, doc.GetAllocator());
+		}
+		doc.AddMember("Layers", layers, doc.GetAllocator());
+
+
+		//Create array of game objects
+		rapidjson::Value gameObjects(rapidjson::kArrayType);
+		for (GameObject& gameObject : currentScene->gameObjects)
+		{
+			rapidjson::Value go(rapidjson::kObjectType);
+			Serializer::Serialize(gameObject, "", go, doc);
+			gameObjects.PushBack(go, doc.GetAllocator());
+		}
+		doc.AddMember("GameObjects", gameObjects, doc.GetAllocator());
+
+		rapidjson::StringBuffer sb;
+		Serializer::WriteToFile(sb, doc, ofs);
+		return true;
+	}
 
 	void SceneManager::backUpCurrScene()
 	{
