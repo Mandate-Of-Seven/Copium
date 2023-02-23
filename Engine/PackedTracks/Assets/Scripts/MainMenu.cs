@@ -4,7 +4,7 @@ using System;
 public class MainMenu: CopiumScript
 {
     public AudioSource audio;
-    public Button NewGameButton;
+    public Button StartGameButton;
     public Button QuitGameButton;
 
     void Start()
@@ -14,6 +14,11 @@ public class MainMenu: CopiumScript
 
     void Update()
     {
+        if(StartGameButton.state == ButtonState.OnClick)
+        {
+            
+        }
+
         if (QuitGameButton.state == ButtonState.OnClick)
         {
             Application.Quit();

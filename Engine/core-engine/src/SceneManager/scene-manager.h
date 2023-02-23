@@ -248,7 +248,7 @@ namespace Copium {
 			reference to the vector of scenes
 		*/
 		/*******************************************************************************/
-		std::vector<Scene*>& GetSceneVector() { return scenes; }
+		//std::vector<Scene*>& GetSceneVector() { return scenes; }
 
 		void DeserializeLink();
 		void PreviewLink();

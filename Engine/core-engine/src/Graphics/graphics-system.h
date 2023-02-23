@@ -79,7 +79,7 @@ namespace Copium
 		// Data Members
 		GLSLShader* const get_shader_program() { return shaderProgram; }
 
-		const bool& is_loaded() const { return loaded; }
+		//const bool& is_loaded() const { return loaded; }
 		
 #pragma region MemberFunctions
 		// Public Member Functions
@@ -130,9 +130,8 @@ namespace Copium
 		GLSLShader shaderProgram[NUM_SHADERS]; // Shader program to use
 
 		/* Stored Information ***********************************************************/
-		bool loaded = false;
+		//bool loaded = false;
 
-		BaseCamera* editorCamera{};
 #pragma endregion DataMembers
 	};
 
