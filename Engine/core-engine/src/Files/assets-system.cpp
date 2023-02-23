@@ -307,7 +307,10 @@ namespace Copium
 			uint64_t uuid;
 
 			// File path
-			readMetaFile >> str >> str >> filePath;
+			std::getline(readMetaFile, filePath);
+
+			size_t pos = filePath.find_first_of('.');
+			filePath = filePath.substr(pos);
 
 			// UUID
 			readMetaFile >> str >> uuid;
