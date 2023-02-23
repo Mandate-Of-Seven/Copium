@@ -273,6 +273,140 @@ namespace Copium
 		}
 	}
 
+	template <typename T>
+	bool SceneManager::DelinkComponent(T*& container)
+	{
+		for (T* pComponent : currentScene->componentsForDeletion.GetArray<T>())
+		{
+			//If there is no reference
+			if (container == pComponent)
+			{
+				container = nullptr;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	void SceneManager::DelinkDeleted()
+	{
+		// Target Graphic
+		for (Button& button : currentScene->componentArrays.GetArray<Button>())
+		{
+			//If button has no reference
+			if (button.targetGraphic == nullptr)
+			{
+				continue;
+			}
+			//If target was a image and was delinked
+			if (DelinkComponent((Image*&)button.targetGraphic))
+				continue;
+			DelinkComponent((Text*&)button.targetGraphic);
+		}
+
+		for (Script& script : currentScene->componentArrays.GetArray<Script>())
+		{
+			for (auto& pair : script.fieldGameObjReferences)
+			{
+				//If there is no reference
+				if (pair.second == nullptr)
+					continue;
+				for (GameObject* pGameObject : currentScene->gameObjectsForDeletion)
+				{
+					//If there is no reference
+					if (pair.second == pGameObject)
+					{
+						pair.second = nullptr;
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, pair.first.c_str(), pair.second));
+						break;
+					}
+				}
+			}
+
+			for (auto& pair : script.fieldComponentReferences)
+			{
+				//If there is no reference
+				if (!pair.second)
+					continue;
+				const std::string fieldName{ pair.first };
+				Component*& component{ pair.second };
+				Field& field{ script.fieldDataReferences[fieldName] };
+				switch ((ComponentType)field.fType)
+				{
+				case(ComponentType::Animator):
+				{
+					if (DelinkComponent((Animator*&)component))
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName.c_str(), (Animator*)component));
+					break;
+				}
+				case(ComponentType::AudioSource):
+				{
+					if (DelinkComponent((AudioSource*&)component))
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName.c_str(), (AudioSource*)component));
+					break;
+				}
+				case(ComponentType::BoxCollider2D):
+				{
+					if (DelinkComponent((BoxCollider2D*&)component))
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName.c_str(), (BoxCollider2D*)component));
+					break;
+				}
+				case(ComponentType::Button):
+				{
+					if (DelinkComponent((Button*&)component))
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName.c_str(), (Button*)component));
+					break;
+				}
+				case(ComponentType::Camera):
+				{
+					if (DelinkComponent((Camera*&)component))
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName.c_str(), (Camera*)component));
+					break;
+				}
+				case(ComponentType::Image):
+				{
+					if (DelinkComponent((Image*&)component))
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName.c_str(), (Image*)component));
+					break;
+				}
+				case(ComponentType::Rigidbody2D):
+				{
+					if (DelinkComponent((Rigidbody2D*&)component))
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName.c_str(), (Rigidbody2D*)component));
+					break;
+				}
+				case(ComponentType::SpriteRenderer):
+				{
+					if (DelinkComponent((SpriteRenderer*&)component))
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName.c_str(), (SpriteRenderer*)component));
+					break;
+				}
+				case(ComponentType::Script):
+				{
+					//Different scripts
+					if (((Script*)component)->Name() != field.typeName)
+						continue;
+					if (DelinkComponent((Script*&)component))
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName.c_str(), (Script*)component));
+					break;
+				}
+				case(ComponentType::Text):
+				{
+					if (DelinkComponent((Text*&)component))
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName.c_str(), (Text*)component));
+					break;
+				}
+				case(ComponentType::SortingGroup):
+				{
+					if (DelinkComponent((SortingGroup*&)component))
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName.c_str(), (SortingGroup*)component));
+					break;
+				}
+				}
+			}
+		}
+	}
+
 	template <typename T, typename... Ts>
 	struct CleanerStruct
 	{
@@ -337,7 +471,10 @@ namespace Copium
 	void SceneManager::update() 
 	{
 		if (currentScene)
+		{
+			DelinkDeleted();
 			CleanUpScene(*currentScene);
+		}
 	}
 	void SceneManager::exit()
 	{
@@ -406,13 +543,6 @@ namespace Copium
 		}
 
 		MyEventSystem->publish(new SceneChangingEvent(*currentScene));
-		//MyEventSystem->publish(
-		//	new SceneOpenedEvent(
-		//		currentScene->get_name().c_str(),
-		//		currentScene->gameObjects,
-		//		currentScene->componentArrays
-		//	)
-		//);
 
 		if (document.HasMember("Layers"))
 		{
@@ -684,7 +814,6 @@ namespace Copium
 			return false;
 		}
 
-		MyEventSystem->publish(new StopPreviewEvent());
 
 		std::cout << "stop preview\n";
 		currSceneState = Scene::SceneState::edit;
@@ -693,6 +822,7 @@ namespace Copium
 		// Delete memory for the preview scene
 		if (!storageScene)
 			return false;
+
 
 		// Replace gameobjects in sorting layer
 		MyEditorSystem.getLayers()->SortLayers()->ClearAllLayer();
@@ -712,10 +842,7 @@ namespace Copium
 		mainCamera = nullptr;
 		storageScene = nullptr;
 
-		//if (selectedGameObject)
-		//{
-		//	selectedGameObject = FindGameObjByID(selectedGameObject->id);
-		//}
+		MyEventSystem->publish(new StopPreviewEvent());
 
 		delete tmp;
 

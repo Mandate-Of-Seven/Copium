@@ -1,5 +1,5 @@
-[2023-02-23 15:52:03.474] [Error] [critical] 
+[2023-02-23 16:12:42.935] [Error] [critical] 
 Caused By:	!mScript
-Info:		MONO OBJECT OF Bullet NOT LOADED
+Info:		MONO OBJECT OF ShooterBehaviour NOT LOADED
 Source:		C:\Users\FLESH\ECS\Copium\Engine\core-engine\src\Scripting\scripting-system.h (Line: 611)
 

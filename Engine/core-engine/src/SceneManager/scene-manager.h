@@ -281,6 +281,11 @@ namespace Copium {
 			}
 		}
 
+		template <typename T>
+		bool DelinkComponent(T*& container);
+
+		void DelinkDeleted();
+
 		Camera* mainCamera{nullptr};
 
 	private:
