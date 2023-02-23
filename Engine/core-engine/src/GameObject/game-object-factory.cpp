@@ -135,9 +135,21 @@ namespace Copium
 		template <typename T1, typename... T1s>
 		void CloneComponents()
 		{
-			for (T1* pComponent : src.GetComponents<T1>())
+			//ASSIGN THE SAME UUID AS THE ORIGINAL COPY
+			if (copyID)
 			{
-				MyGOF.AddComponent(dest, scene, pComponent->uuid,pComponent);
+				for (T1* pComponent : src.GetComponents<T1>())
+				{
+					MyGOF.AddComponent(dest, scene, pComponent->uuid, pComponent);
+				}
+			}
+			//GENERATE NEW UUID FOR CLONED COMPONENTS
+			else
+			{
+				for (T1* pComponent : src.GetComponents<T1>())
+				{
+					MyGOF.AddComponent(dest, scene, UUID(), pComponent);
+				}
 			}
 			if constexpr (sizeof...(T1s) != 0)
 			{
@@ -168,20 +180,22 @@ namespace Copium
 			if (count)
 				tmp.name += '(' + std::to_string(count) + ')';
 			CloneComponents(tmp,_src,scene,copyID);
-			//for (Transform* pChild : _src.transform.children)
-			//{
-			//	Instantiate(pChild->gameObject, scene, copyID).transform.SetParent(&tmp.transform);
-			//}
+			size_t childCount = 0;
+			for (Transform* pChild : _src.transform.children)
+			{
+				Instantiate(pChild->gameObject, scene, copyID).transform.SetParent(&tmp.transform);
+				++childCount;
+			}
 			return tmp;
 		}
 		GameObject& tmp = scene.gameObjects.emplace_back(_src);
 		if (count)
 			tmp.name += '(' + std::to_string(count) + ')';
 		CloneComponents(tmp, _src, scene, copyID);
-		//for (Transform* pChild : _src.transform.children)
-		//{
-		//	Instantiate(pChild->gameObject, scene, copyID).transform.SetParent(&tmp.transform);
-		//}
+		for (Transform* pChild : _src.transform.children)
+		{
+			Instantiate(pChild->gameObject, scene, copyID).transform.SetParent(&tmp.transform);
+		}
 		return tmp;
 	}
 

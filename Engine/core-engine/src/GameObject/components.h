@@ -232,8 +232,17 @@ namespace Copium
 			parent to nullptr
 		*/
 		/**************************************************************************/
-		Transform(GameObject& _gameObject) : gameObject{_gameObject} {}
-		Transform& operator=(const Transform& rhs);
+		Transform(GameObject& _gameObject) : gameObject{ _gameObject }, parent{ nullptr } {}
+		Transform(GameObject& _gameObject, const Transform& rhs);
+		~Transform() 
+		{
+			for (Transform* child : children)
+			{
+				child->SetParent(parent);
+			}
+			SetParent(nullptr);
+			children.clear();
+		}
 		Math::Vec3 GetWorldPosition() const;
 		Math::Vec3 GetWorldRotation() const;
 		Math::Vec3 GetWorldScale() const;

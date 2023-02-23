@@ -984,8 +984,7 @@ namespace Copium
 					}
 				}
 			}
-			std::swap(pScene->gameObjects[pos], pScene->gameObjects[dest]);
-
+			pScene->gameObjects.swap(pos, dest);
 		}
 	}
 }

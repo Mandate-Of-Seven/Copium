@@ -9,6 +9,7 @@ namespace Copium
 {
 	void Transform::SetParent(Transform* _parent)
 	{
+		//Set Parent;
 		//Previously had a parent
 		if (parent)
 			parent->children.remove(this);
@@ -18,17 +19,11 @@ namespace Copium
 			_parent->children.push_back(this);
 	}
 
-	Transform& Transform::operator=(const Transform& rhs)
+	Transform::Transform(GameObject& _gameObject, const Transform& rhs) : gameObject{_gameObject}
 	{
-		parent = rhs.parent;
 		position = rhs.position;
 		rotation = rhs.rotation;
 		scale = rhs.scale;
-		for (Transform* pTransform : rhs.children)
-		{
-			//Create Child GameObject
-		}
-		return *this;
 	}
 
 	Math::Vec3 Transform::GetWorldPosition() const

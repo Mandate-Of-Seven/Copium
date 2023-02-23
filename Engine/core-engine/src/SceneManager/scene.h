@@ -144,21 +144,6 @@ public:
 	/*!
 	*
 	\brief
-		Adds a GameObject to the scene
-
-	\param	_gameObj
-		pointer to the GameObject that is to be added to the scene
-
-	\return
-		pointer to the newly added GameObject
-	*/
-	/*******************************************************************************/
-	GameObject* add_gameobject(GameObject* _gameObj);
-
-	/*******************************************************************************
-	/*!
-	*
-	\brief
 		Sets the name of this scene
 
 	\param	_name
@@ -181,7 +166,6 @@ public:
 	/*******************************************************************************/
 	std::string get_name() const;
 
-	void inspector_view();
 	/*******************************************************************************
 	/*!
 	*
