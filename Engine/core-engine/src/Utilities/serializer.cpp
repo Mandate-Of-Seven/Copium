@@ -518,6 +518,8 @@ namespace Copium
 		if (!Copium::Deserialize(_data.uuid.GetUUID(), _value, "UID"))
 			_data.uuid = uid;
 
+		Copium::Deserialize(_data.active, _value, "Active");
+
 		rapidjson::Value components(rapidjson::kArrayType);
 		if (_value.HasMember("Components"))
 		{
