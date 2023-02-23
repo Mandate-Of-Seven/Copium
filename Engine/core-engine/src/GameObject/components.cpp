@@ -9,6 +9,7 @@ namespace Copium
 {
 	void Transform::SetParent(Transform* _parent)
 	{
+		//Set Parent;
 		//Previously had a parent
 		if (parent)
 			parent->children.remove(this);
@@ -18,17 +19,11 @@ namespace Copium
 			_parent->children.push_back(this);
 	}
 
-	Transform& Transform::operator=(const Transform& rhs)
+	Transform::Transform(GameObject& _gameObject, const Transform& rhs) : gameObject{_gameObject}
 	{
-		parent = rhs.parent;
 		position = rhs.position;
 		rotation = rhs.rotation;
 		scale = rhs.scale;
-		for (Transform* pTransform : rhs.children)
-		{
-			//Create Child GameObject
-		}
-		return *this;
 	}
 
 	Math::Vec3 Transform::GetWorldPosition() const
@@ -167,7 +162,6 @@ namespace Copium
 	
 	SortingGroup::SortingGroup(GameObject& _gameObj, UUID _uuid) :Component(_gameObj, _uuid)
 	{
-		MyEditorSystem.getLayers()->SortLayers()->AddGameObject(0, _gameObj);
 	}
 
 	Text::Text(GameObject& _gameObj, UUID _uuid) : IUIComponent(_gameObj, _uuid), fSize{ 1.f }, wrapper{ 0.f }, content{ "New Text" }, fontName{"corbel"}

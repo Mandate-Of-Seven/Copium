@@ -56,14 +56,13 @@
                     }
                 },
                 {
-                    "UID": 15313542779186228299,
+                    "UID": 15482849486173671774,
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "Bullet",
-                    "speed": 0.009999999776482582,
+                    "speed": 0.5,
                     "yes": "hello",
-                    "yes2": "hello",
-                    "behaviour": 10866334491295860495
+                    "yes2": "hello"
                 }
             ]
         },
@@ -308,7 +307,7 @@
                     "Name": "ShooterBehaviour",
                     "enemy": false,
                     "bullet": 1,
-                    "scripto": 15313542779186228299
+                    "scripto": 15482849486173671774
                 }
             ]
         }

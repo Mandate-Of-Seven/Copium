@@ -57,7 +57,7 @@ namespace Copium
             Math::Vec3 _rotation = { 0,0,0 },
             Math::Vec3 _scale = { 1,1,1 });
 
-        GameObject(const GameObject& rhs, UUID _uuid = UUID()) : uuid{_uuid}, transform{rhs.transform}
+        GameObject(const GameObject& rhs, UUID _uuid = UUID()) : uuid{_uuid}, transform{*this,rhs.transform}
         {
             name = rhs.name;
             active = rhs.active;

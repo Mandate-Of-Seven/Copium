@@ -509,7 +509,6 @@ namespace Copium
 	void Serializer::Deserialize<GameObject>(GameObject& _data, const std::string& _key, rapidjson::Value& _value)
 	{
 		(void)_key;
-
 		std::string name;
 		if (!Copium::Deserialize(name, _value, "Name"))
 			name = "New GameObject";
@@ -551,7 +550,6 @@ namespace Copium
 					else
 					{
 						PRINT("Deserializing " << key);
-						//MyEventSystem.publish(new Game)
 						ComponentType cType;
 						switch (NAME_TO_CTYPE[key])
 						{
@@ -631,16 +629,7 @@ namespace Copium
 							PRINT("ADDED NOTHING, MAYBE ADDED THE COMPONENT TO THE GAMEOBJECT.CPP");
 							break;
 						}
-						/*
-						Component* tmp = _data.addComponent(NAME_TO_CTYPE[key]);
-						if (tmp)
-						{
-							 //Deserialize stuff
-							DeserializeComponent(NAME_TO_CTYPE[key], tmp, component);
-
-						}*/
 					}
-
 
 				}
 
@@ -699,11 +688,27 @@ namespace Copium
 		if (!_value.HasMember(_key.c_str()))
 			return;
 
+		
+
 		rapidjson::Value bb(rapidjson::kObjectType);
 		bb = _value[_key.c_str()].GetObj();
 
-		Deserialize(_data.min, "Min", bb);
-		Deserialize(_data.max, "Max", bb);
+		if (bb.HasMember("Min"))
+		{
+
+			rapidjson::Value min(rapidjson::kObjectType);
+			min = bb["Min"].GetObj();
+			Deserialize(_data.min, "", min);
+
+		}
+		if (bb.HasMember("Max"))
+		{
+
+			rapidjson::Value max(rapidjson::kObjectType);
+			max = bb["Max"].GetObj();
+			Deserialize(_data.max, "", max);
+
+		}
 
 	}
 	template<>
@@ -791,7 +796,7 @@ namespace Copium
 
 
 
-		Copium::Deserialize(_data.fSize, _value, "FontSize");
+		Copium::Deserialize(_data.fSize, _value, "Font Size");
 		Copium::Deserialize(_data.wrapper, _value, "Wrapper");
 
 		Copium::Deserialize(_data.color.r, _value, "r");

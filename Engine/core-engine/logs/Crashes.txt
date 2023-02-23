@@ -1,5 +1,5 @@
-[2023-02-23 23:12:40.192] [Error] [critical] 
-Caused By:	!mClassField
-Info:		FIELD CombatCanvasCOULD NOT BE FOUND IN SCRIPT GameManager
-Source:		C:\Users\matth\Documents\GitHub\GAM-200\Engine\core-engine\src\Scripting\scripting-system.h (Line: 614)
+[2023-02-23 19:03:04.977] [Error] [critical] 
+Caused By:	size_ == 0
+Info:		EMPTY
+Source:		C:\Users\FLESH\ECS\Copium\Engine\core-engine\src\Utilities\sparse-set.h (Line: 54)
 

@@ -32,4 +32,12 @@ namespace Copium
 		
 	}
 
+	bool operator==(UUID& lhs, UUID& rhs)
+	{
+		if (lhs.ConstGetUUID() == rhs.ConstGetUUID())
+			return true;
+
+		return false;
+	}
+
 }

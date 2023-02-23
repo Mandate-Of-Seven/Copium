@@ -70,11 +70,11 @@ namespace Copium
 	{
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		storageScene = nullptr;
-		//MyGOF.register_archetypes("Data/Archetypes");
 		SubscribeComponentsFunctions(ComponentTypes());
 		MyEventSystem->subscribe(this, &SceneManager::CallbackQuitEngine);
 		MyEventSystem->subscribe(this, &SceneManager::CallbackChildInstantiate);
 		MyEventSystem->subscribe(this, &SceneManager::CallbackGameObjectInstantiate);
+		MyEventSystem->subscribe(this, &SceneManager::CallbackGameObjectDestroy);
 	}
 
 	void SceneManager::DeserializeLink()
@@ -273,6 +273,140 @@ namespace Copium
 		}
 	}
 
+	template <typename T>
+	bool SceneManager::DelinkComponent(T*& container)
+	{
+		for (T* pComponent : currentScene->componentsForDeletion.GetArray<T>())
+		{
+			//If there is no reference
+			if (container == pComponent)
+			{
+				container = nullptr;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	void SceneManager::DelinkDeleted()
+	{
+		// Target Graphic
+		for (Button& button : currentScene->componentArrays.GetArray<Button>())
+		{
+			//If button has no reference
+			if (button.targetGraphic == nullptr)
+			{
+				continue;
+			}
+			//If target was a image and was delinked
+			if (DelinkComponent((Image*&)button.targetGraphic))
+				continue;
+			DelinkComponent((Text*&)button.targetGraphic);
+		}
+
+		for (Script& script : currentScene->componentArrays.GetArray<Script>())
+		{
+			for (auto& pair : script.fieldGameObjReferences)
+			{
+				//If there is no reference
+				if (pair.second == nullptr)
+					continue;
+				for (GameObject* pGameObject : currentScene->gameObjectsForDeletion)
+				{
+					//If there is no reference
+					if (pair.second == pGameObject)
+					{
+						pair.second = nullptr;
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, pair.first.c_str(), pair.second));
+						break;
+					}
+				}
+			}
+
+			for (auto& pair : script.fieldComponentReferences)
+			{
+				//If there is no reference
+				if (!pair.second)
+					continue;
+				const std::string fieldName{ pair.first };
+				Component*& component{ pair.second };
+				Field& field{ script.fieldDataReferences[fieldName] };
+				switch ((ComponentType)field.fType)
+				{
+				case(ComponentType::Animator):
+				{
+					if (DelinkComponent((Animator*&)component))
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName.c_str(), (Animator*)component));
+					break;
+				}
+				case(ComponentType::AudioSource):
+				{
+					if (DelinkComponent((AudioSource*&)component))
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName.c_str(), (AudioSource*)component));
+					break;
+				}
+				case(ComponentType::BoxCollider2D):
+				{
+					if (DelinkComponent((BoxCollider2D*&)component))
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName.c_str(), (BoxCollider2D*)component));
+					break;
+				}
+				case(ComponentType::Button):
+				{
+					if (DelinkComponent((Button*&)component))
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName.c_str(), (Button*)component));
+					break;
+				}
+				case(ComponentType::Camera):
+				{
+					if (DelinkComponent((Camera*&)component))
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName.c_str(), (Camera*)component));
+					break;
+				}
+				case(ComponentType::Image):
+				{
+					if (DelinkComponent((Image*&)component))
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName.c_str(), (Image*)component));
+					break;
+				}
+				case(ComponentType::Rigidbody2D):
+				{
+					if (DelinkComponent((Rigidbody2D*&)component))
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName.c_str(), (Rigidbody2D*)component));
+					break;
+				}
+				case(ComponentType::SpriteRenderer):
+				{
+					if (DelinkComponent((SpriteRenderer*&)component))
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName.c_str(), (SpriteRenderer*)component));
+					break;
+				}
+				case(ComponentType::Script):
+				{
+					//Different scripts
+					if (((Script*)component)->Name() != field.typeName)
+						continue;
+					if (DelinkComponent((Script*&)component))
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName.c_str(), (Script*)component));
+					break;
+				}
+				case(ComponentType::Text):
+				{
+					if (DelinkComponent((Text*&)component))
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName.c_str(), (Text*)component));
+					break;
+				}
+				case(ComponentType::SortingGroup):
+				{
+					if (DelinkComponent((SortingGroup*&)component))
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName.c_str(), (SortingGroup*)component));
+					break;
+				}
+				}
+			}
+		}
+	}
+
 	template <typename T, typename... Ts>
 	struct CleanerStruct
 	{
@@ -281,6 +415,7 @@ namespace Copium
 		CleanerStruct(Scene& _scene) : scene{_scene}
 		{
 			CleanComponents<T,Ts...>();
+			CleanGameObjects();
 		}
 		template <typename T1, typename... T1s>
 		void CleanComponents()
@@ -295,34 +430,18 @@ namespace Copium
 				CleanComponents<T1s...>();
 			}
 		}
-		template <typename T1, typename... T1s>
 		void CleanGameObjects()
 		{
 			//iterate through an array for deletion of game object
 			//if found, call remove
-			for (auto& gameobj : scene.gameObjectsForDeletion)
-			{
-				for (T1* pComponent : gameobj->componentPtrArrays.GetArray<T1>())
-				{
-					MyGOF.RemoveComponent(*pComponent, scene);
-				}
-				
-			}
-			if constexpr (sizeof...(T1s) != 0)
-			{
-				CleanGameObjects<T1s...>();
-			}
-			else
-			{
-				for (auto& gameobj : scene.gameObjectsForDeletion)
-				{
 
-					MyGOF.Destroy(gameobj, scene.gameObjects);
+			for (GameObject* gameobj : scene.gameObjectsForDeletion)
+			{
+				PRINT("DESTROYING " << gameobj->name);
+				MyGOF.Destroy(*gameobj, scene.gameObjects);
 
-				}
-				scene.gameObjectsForDeletion.clear();
 			}
-
+			scene.gameObjectsForDeletion.clear();
 		}
 	};
 
@@ -337,7 +456,10 @@ namespace Copium
 	void SceneManager::update() 
 	{
 		if (currentScene)
+		{
+			DelinkDeleted();
 			CleanUpScene(*currentScene);
+		}
 	}
 	void SceneManager::exit()
 	{
@@ -346,8 +468,14 @@ namespace Copium
 			endPreview();
 		}
 
+		for (GameObject& go : currentScene->gameObjects)
+		{
+			PRINT(std::hex << &go);
+		}
+
 		if (currentScene)
 		{
+			PRINT("Scene Address:" << currentScene);
 			delete currentScene;
 			currentScene = nullptr;
 		}
@@ -357,17 +485,6 @@ namespace Copium
 			storageScene = nullptr;
 		}
 
-		/*
-		// For multiple scenes
-		//for (Scene* sc : scenes)
-		//{
-		//	if (sc)
-		//	{
-		//		delete sc;
-		//		sc = nullptr;
-		//	}
-		//}
-		*/	
 	}
 
 	bool SceneManager::load_scene(const std::string& _filepath)
@@ -406,13 +523,6 @@ namespace Copium
 		}
 
 		MyEventSystem->publish(new SceneChangingEvent(*currentScene));
-		//MyEventSystem->publish(
-		//	new SceneOpenedEvent(
-		//		currentScene->get_name().c_str(),
-		//		currentScene->gameObjects,
-		//		currentScene->componentArrays
-		//	)
-		//);
 
 		if (document.HasMember("Layers"))
 		{
@@ -479,7 +589,6 @@ namespace Copium
 				if (go.HasComponent<SortingGroup>())
 				{
 					SortingGroup* sg = go.GetComponent<SortingGroup>();
-					MyEditorSystem.getLayers()->SortLayers()->RemoveGameObject(0, go);
 					MyEditorSystem.getLayers()->SortLayers()->AddGameObject(sg->sortingLayer, go);
 				}
 
@@ -642,11 +751,6 @@ namespace Copium
 
 		MyEventSystem->publish(new StartPreviewEvent());
 
-
-		//UUID prevSelected = 0;
-		//if (selectedGameObject)
-		//	prevSelected = selectedGameObject->id;
-
 		backUpCurrScene();
 
 		for (GameObject& gameObj : currentScene->gameObjects)
@@ -666,14 +770,51 @@ namespace Copium
 				MyEditorSystem.getLayers()->SortLayers()->ReplaceGameObject(sg->sortingLayer, go);
 
 			}
+
+
+			// Target Graphic
+			if (go.HasComponent<Button>())
+			{
+				Button* button = go.GetComponent<Button>();
+				if (button->graphicID)
+					button->targetGraphic = reinterpret_cast<IUIComponent*>(FindComponentByID(button->graphicID));
+			}
+
+			if (go.HasComponent<Script>())
+			{
+				Script* script = go.GetComponent<Script>();
+				if (!script->fieldDataReferences.empty())
+					for (auto it = script->fieldDataReferences.begin(); it != script->fieldDataReferences.end(); ++it)
+					{
+						const std::string& _name{ it->first };
+						Field& field = it->second;
+						FieldType fType = field.fType;
+
+						switch (fType)
+						{
+						case FieldType::Component:
+						{
+							uint64_t id{ field.Get<uint64_t>() };
+							Component* pComponent = FindComponentByID(id);
+							if (pComponent)
+								script->fieldComponentReferences[_name] = pComponent;
+							break;
+						}
+						case FieldType::GameObject:
+						{
+							uint64_t id{ field.Get<uint64_t>() };
+							GameObject* pGameObject = FindGameObjectByID(id);
+							if (pGameObject)
+								script->fieldGameObjReferences[_name] = pGameObject;
+							break;
+						}
+						}
+					}
+			}
 		}
 
 		currSceneState = Scene::SceneState::play;
 		currentScene->set_state(Scene::SceneState::play);
-
-
-		//if (prevSelected)
-		//	selectedGameObject = findGameObjByID(prevSelected);
 
 		//SoundSystem::Instance()->StopAll();
 
@@ -689,7 +830,6 @@ namespace Copium
 			return false;
 		}
 
-		MyEventSystem->publish(new StopPreviewEvent());
 
 		std::cout << "stop preview\n";
 		currSceneState = Scene::SceneState::edit;
@@ -698,6 +838,7 @@ namespace Copium
 		// Delete memory for the preview scene
 		if (!storageScene)
 			return false;
+
 
 		// Replace gameobjects in sorting layer
 		MyEditorSystem.getLayers()->SortLayers()->ClearAllLayer();
@@ -717,10 +858,7 @@ namespace Copium
 		mainCamera = nullptr;
 		storageScene = nullptr;
 
-		//if (selectedGameObject)
-		//{
-		//	selectedGameObject = FindGameObjByID(selectedGameObject->id);
-		//}
+		MyEventSystem->publish(new StopPreviewEvent());
 
 		delete tmp;
 
@@ -821,6 +959,57 @@ namespace Copium
 		return true;
 	}
 
+	bool SceneManager::save_scene(const std::string& _filepath, const std::string& _filename, bool _modifyname)
+	{
+		std::string fp(_filepath);
+		if (fp.find(".scene") == std::string::npos)
+		{
+			fp += ".scene";
+		}
+
+		if (sceneFilePath.empty())
+		{
+			sceneFilePath = fp;
+		}
+		std::ofstream ofs(fp);
+		rapidjson::Document doc;
+
+		doc.SetObject();
+
+		if (_modifyname)
+		{
+			currentScene->set_name(_filename);
+		}
+
+		Copium::SerializeBasic(_filename, doc, doc, "Name");
+
+		// Serialize Layer Data
+		rapidjson::Value layers(rapidjson::kArrayType);
+		for (Layer& layer : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
+		{
+			rapidjson::Value obj(rapidjson::kObjectType);
+			SerializeBasic(layer.name, obj, doc, "Name");
+			SerializeBasic(layer.layerID, obj, doc, "ID");
+
+			layers.PushBack(obj, doc.GetAllocator());
+		}
+		doc.AddMember("Layers", layers, doc.GetAllocator());
+
+
+		//Create array of game objects
+		rapidjson::Value gameObjects(rapidjson::kArrayType);
+		for (GameObject& gameObject : currentScene->gameObjects)
+		{
+			rapidjson::Value go(rapidjson::kObjectType);
+			Serializer::Serialize(gameObject, "", go, doc);
+			gameObjects.PushBack(go, doc.GetAllocator());
+		}
+		doc.AddMember("GameObjects", gameObjects, doc.GetAllocator());
+
+		rapidjson::StringBuffer sb;
+		Serializer::WriteToFile(sb, doc, ofs);
+		return true;
+	}
 
 	void SceneManager::backUpCurrScene()
 	{
@@ -839,7 +1028,8 @@ namespace Copium
 		// Copy game object data
 		for (GameObject& gameObj : storageScene->gameObjects)
 		{
-			MyGOF.Instantiate(gameObj,*currentScene, true);
+			if (!gameObj.transform.HasParent())
+				MyGOF.Instantiate(gameObj,*currentScene, true);
 		}
 
 		// MATT: Sorting Layer Replacement HERE
@@ -924,8 +1114,37 @@ namespace Copium
 			pEvent->instanceContainer = &go;
 		}
 	}
-	void SceneManager::CallbackGameObjectDelete(GameObjectDestroyEvent* pEvent)
+
+	template <typename T, typename... Ts>
+	struct CleanGameObjectStruct
 	{
+		GameObject& gameObject;
+		Scene& scene;
+		CleanGameObjectStruct(TemplatePack<T, Ts...> pack) {}
+		CleanGameObjectStruct(GameObject& _gameObject, Scene& _scene) : gameObject{ _gameObject }, scene{_scene}
+		{
+			Clean<T, Ts...>();
+		}
+		template <typename T1, typename... T1s>
+		void Clean()
+		{
+			for (T1* pComponent : gameObject.componentPtrArrays.GetArray<T1>())
+			{
+				scene.componentsForDeletion.GetArray<T1>().push_back(pComponent);
+			}
+			if constexpr (sizeof...(T1s) != 0)
+			{
+				Clean<T1s...>();
+			}
+		}
+	};
+
+	using CleanGameObject = decltype(CleanGameObjectStruct(ComponentTypes()));
+
+	void SceneManager::CallbackGameObjectDestroy(GameObjectDestroyEvent* pEvent)
+	{
+		COPIUM_ASSERT(currentScene == nullptr, "No scene is loaded, where did you get this gameObject from?");
+		CleanGameObject(pEvent->gameObject, *currentScene);
 		currentScene->gameObjectsForDeletion.push_back(&pEvent->gameObject);
 	}
 

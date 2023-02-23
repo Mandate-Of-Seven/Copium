@@ -56,41 +56,14 @@ public:
 
     SparseSet();
 
-    T& push_back()
-    {
-        COPIUM_ASSERT(size_ == N, "SPARSE SET IS ALREADY FULL");
-        T& back = *reinterpret_cast<T*>(data + indexes[size_]);
-        ++size_;
-        back = T();
-        return back;
-    }
 
-    T& push_back(const T& val)
+    ~SparseSet()
     {
-        COPIUM_ASSERT(size_ == N, "SPARSE SET IS ALREADY FULL");
-        T& back = *reinterpret_cast<T*>(data+indexes[size_]);
-        ++size_;
-        back = val;
-        return back;
-    }
-
-    T& push_back(std::initializer_list<T>&& rhsList)
-    {
-        COPIUM_ASSERT(size_ == N, "SPARSE SET IS ALREADY FULL");
-        T& back = *reinterpret_cast<T*>(data + indexes[size_]);
-        ++size_;
-        back = T(rhsList);
-        return back;
-    }
-
-    T& push_back(T&& val)
-    {
-        COPIUM_ASSERT(size_ == N, "SPARSE SET IS ALREADY FULL");
-        PRINT("MOVE CONSTRUCTOR");
-        T* pBack = reinterpret_cast<T*>(data + indexes[size_]) ;
-        memcpy(pBack, &val, sizeof(T));
-        ++size_;
-        return *pBack;
+        for (T& element: *this)
+        {
+            element.~T();
+        }
+        PRINT("SPARSE SET DECONSTRUCTOR ");
     }
 
     template <typename... Args>
@@ -101,20 +74,18 @@ public:
         return back;
     }
 
-    size_t AddFromDenseIndex(size_t);
-
-    void Delete(size_t indexToDelete);
-
     void erase(T& val)
     {
-        size_t denseIndex = &val - reinterpret_cast<T*>(data) >= size_;
-        COPIUM_ASSERT(denseIndex, "Value is not an element of this array");
+        size_t denseIndex = &val - reinterpret_cast<T*>(data) ;
+        COPIUM_ASSERT(denseIndex >= size_, "Value is not an element of this array");
         //Find index first
         for (size_t i = 0; i < size_; ++i)
         {
             if (reinterpret_cast<T*>(data + indexes[i])  == &val)
             {
                 size_t index = indexes[i];
+
+                reinterpret_cast<T*>(data)[index].~T();
                 std::remove(indexes.begin(), indexes.begin()+size_, i);
                 indexes[size_ - 1] = index;
                 --size_;
@@ -127,21 +98,10 @@ public:
     void erase(const Iterator& iter)
     {
         COPIUM_ASSERT(size_ == 0, "Can't erase from empty array");
-        PRINT("BEFORE:");
-        for (int i = 0; i < size_; ++i)
-        {
-            std::cout << indexes[i] << " ";
-        }
-        std::cout << std::endl;
         size_t index = indexes[iter.sparseIndex];
+        reinterpret_cast<T*>(data)[index].~T();
         std::remove(indexes.begin(), indexes.begin() + size_, iter.sparseIndex);
         indexes[size_-1] = index;
-        PRINT("AFTER:");
-        for (int i = 0; i < size_; ++i)
-        {
-            std::cout << indexes[i] << " ";
-        }
-        std::cout << std::endl;
         --size_;
     }
 
@@ -152,29 +112,17 @@ public:
 
     T& operator[] (size_t i);
 
-    size_t GetDenseIndex(size_t sparseIndex)
+    bool exists(T* pValue)
     {
-        return indexes[sparseIndex];
-    }
-
-    T& DenseGet(size_t denseIndex)
-    {
-        return data[denseIndex];
-    }
-
-    bool DenseExists(size_t denseIndex)
-    {
-        for (size_t i : indexes)
+        size_t denseIndex = pValue - static_cast<T*>(data);
+        for (size_t i = 0; i < size_; ++i)
         {
-            if (i == denseIndex)
+            if (indexes[i] == denseIndex)
+            {
                 return true;
+            }
         }
         return false;
-    }
-
-    size_t(&GetIndexes())[N]
-    {
-        return indexes;
     }
 
     void swap(size_t sparseIndex1, size_t sparseIndex2)
@@ -245,49 +193,7 @@ SparseSet<T, N>::SparseSet()
     {
         indexes[i] = i;
     }
-}
-
-template <typename T, size_t N>
-size_t SparseSet<T, N>::AddFromDenseIndex(size_t denseIndex)
-{
-    for (size_t i = 0; i < size_; ++i)
-    {
-        if (indexes[i] == denseIndex)
-            return i;
-    }
-    ++size_;
-    size_t* index{};
-    for (size_t& i : indexes)
-    {
-        if (i == denseIndex)
-        {
-            index = &i;
-            break;
-        }
-    }
-    size_t tmp = indexes[size_ - 1];
-    indexes[size_ - 1] = denseIndex;
-    *index = tmp;
-    data[indexes[size_ - 1]] = T();
-    //Return sparse index, aka position of pooled object
-    return size_ - 1;
-}
-
-template <typename T, size_t N>
-void SparseSet<T, N>::Delete(size_t indexToDelete)
-{
-    for (size_t i = 0; i < size_; ++i)
-    {
-        size_t index = indexes[i];
-        if (index == indexToDelete)
-        {
-            size_t tmp = index;
-            indexes[i] = indexes[size_ - 1];
-            indexes[size_ - 1] = tmp;
-            --size_;
-            return;
-        }
-    }
+    PRINT("SPARSE SET CONSTRUCTED");
 }
 
 template <typename T, size_t N>

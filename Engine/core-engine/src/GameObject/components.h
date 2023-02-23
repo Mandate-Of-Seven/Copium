@@ -68,6 +68,8 @@ namespace Copium
 	{
 	public:
 		Component() = delete;
+		~Component() {};
+
 		bool enabled{ true };
 		UUID uuid;
 		GameObject& gameObj;
@@ -232,8 +234,11 @@ namespace Copium
 			parent to nullptr
 		*/
 		/**************************************************************************/
-		Transform(GameObject& _gameObject) : gameObject{_gameObject} {}
-		Transform& operator=(const Transform& rhs);
+		Transform(GameObject& _gameObject) : gameObject{ _gameObject }, parent{ nullptr } {}
+		Transform(GameObject& _gameObject, const Transform& rhs);
+		~Transform() 
+		{
+		}
 		Math::Vec3 GetWorldPosition() const;
 		Math::Vec3 GetWorldRotation() const;
 		Math::Vec3 GetWorldScale() const;
@@ -469,6 +474,11 @@ namespace Copium
 			Component(_gameObj, _uuid), BaseCamera(rhs)
 		{
 			BaseCamera::init(1280.f, 720.f, CameraType::GAME, true);
+		}
+
+		~Camera()
+		{
+			BaseCamera::exit();
 		}
 	};
 
