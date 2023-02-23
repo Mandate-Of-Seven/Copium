@@ -774,7 +774,6 @@ namespace Copium
 			{
 				SortingGroup* sg = go.GetComponent<SortingGroup>();
 				MyEditorSystem.getLayers()->SortLayers()->ReplaceGameObject(sg->sortingLayer, go);
-
 			}
 
 
@@ -856,6 +855,7 @@ namespace Copium
 				MyEditorSystem.getLayers()->SortLayers()->AddGameObject(sg->GetLayerID(), go);
 			}
 		}
+
 		// Sort based on order in layer
 		MyEditorSystem.getLayers()->SortLayers()->BubbleSortGameObjects();
 
