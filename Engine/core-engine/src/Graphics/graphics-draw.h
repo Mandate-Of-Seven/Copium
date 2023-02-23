@@ -57,6 +57,14 @@ namespace Copium
 		/***************************************************************************/
 		/*!
 		\brief
+			Resets the batch renderer and all textures loaded into the gpu
+		*/
+		/***************************************************************************/
+		void ResetRenderer();
+
+		/***************************************************************************/
+		/*!
+		\brief
 			Draw the editor mode of the engine where the grids, gizmos and 
 			information of the gameobjects are shown
 		*/

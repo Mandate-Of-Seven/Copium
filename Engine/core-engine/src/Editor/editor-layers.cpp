@@ -102,6 +102,6 @@ namespace Copium
 
 	void EditorLayers::exit()
 	{
-
+        sortingLayers.ClearAllLayer(true);
 	}
 }

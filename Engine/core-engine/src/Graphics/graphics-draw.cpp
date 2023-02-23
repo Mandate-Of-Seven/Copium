@@ -28,6 +28,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <GameObject/components.h>
 #include <GameObject/game-object.h>
 #include <SceneManager/scene.h>
+#include "Events/events-system.h"
 
 namespace Copium
 {
@@ -100,6 +101,15 @@ namespace Copium
 		PRINT("DRAW EXITTED!");
 		camera = nullptr;
 		renderer.shutdown();
+	}
+
+
+	void Draw::ResetRenderer()
+	{
+		glClear(GL_COLOR_BUFFER_BIT);
+		renderer.end_batch();
+		renderer.flush();
+		renderer.begin_batch();
 	}
 
 	void Draw::editor(int _index)
