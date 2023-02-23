@@ -56,43 +56,6 @@ public:
 
     SparseSet();
 
-    T& push_back()
-    {
-        COPIUM_ASSERT(size_ == N, "SPARSE SET IS ALREADY FULL");
-        T& back = *reinterpret_cast<T*>(data + indexes[size_]);
-        ++size_;
-        back = T();
-        return back;
-    }
-
-    T& push_back(const T& val)
-    {
-        COPIUM_ASSERT(size_ == N, "SPARSE SET IS ALREADY FULL");
-        T& back = *reinterpret_cast<T*>(data+indexes[size_]);
-        ++size_;
-        back = val;
-        return back;
-    }
-
-    T& push_back(std::initializer_list<T>&& rhsList)
-    {
-        COPIUM_ASSERT(size_ == N, "SPARSE SET IS ALREADY FULL");
-        T& back = *reinterpret_cast<T*>(data + indexes[size_]);
-        ++size_;
-        back = T(rhsList);
-        return back;
-    }
-
-    T& push_back(T&& val)
-    {
-        COPIUM_ASSERT(size_ == N, "SPARSE SET IS ALREADY FULL");
-        PRINT("MOVE CONSTRUCTOR");
-        T* pBack = reinterpret_cast<T*>(data + indexes[size_]) ;
-        memcpy(pBack, &val, sizeof(T));
-        ++size_;
-        return *pBack;
-    }
-
     template <typename... Args>
     T& emplace_back(Args&&... args)
     {

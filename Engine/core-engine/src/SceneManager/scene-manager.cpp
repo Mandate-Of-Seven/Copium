@@ -670,10 +670,6 @@ namespace Copium
 		currSceneState = Scene::SceneState::play;
 		currentScene->set_state(Scene::SceneState::play);
 
-
-		//if (prevSelected)
-		//	selectedGameObject = findGameObjByID(prevSelected);
-
 		//SoundSystem::Instance()->StopAll();
 
 		return true;
@@ -838,7 +834,8 @@ namespace Copium
 		// Copy game object data
 		for (GameObject& gameObj : storageScene->gameObjects)
 		{
-			MyGOF.Instantiate(gameObj,*currentScene, true);
+			if (!gameObj.transform.HasParent())
+				MyGOF.Instantiate(gameObj,*currentScene, true);
 		}
 
 		// MATT: Sorting Layer Replacement HERE

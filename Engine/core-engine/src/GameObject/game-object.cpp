@@ -67,21 +67,6 @@ namespace Copium
         return hasComponent.HasComponent(componentType);
     }
 
-    //void GameObject::removeComponent(UUID UUID)
-    //{
-    //    //auto it{ components.begin() };
-    //    //while (it != components.end())
-    //    //{
-    //    //    if ((*it)->id == UUID)
-    //    //    {
-    //    //        delete *it;
-    //    //        components.erase(it);
-    //    //        return;
-    //    //    }
-    //    //    ++it;
-    //    //}
-    //}
-
     std::ostream& operator<<(std::ostream& _os, const GameObject& _go) 
     {
         //_os << "-----\n";
