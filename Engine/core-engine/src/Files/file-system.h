@@ -103,14 +103,6 @@ namespace Copium
 		/*******************************************************************************
 		/*!
 		\brief
-			Initializes all file types that was retrieve from the configuration files
-		*/
-		/*******************************************************************************/
-		void init_file_types();
-
-		/*******************************************************************************
-		/*!
-		\brief
 			Accept dropped file from external folders into the content browser and pass
 			the information into this function to generate a file
 		\param _pathCount

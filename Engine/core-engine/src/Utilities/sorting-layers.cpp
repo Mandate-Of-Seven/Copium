@@ -196,7 +196,7 @@ namespace Copium
 				if (layer.gameObjects[i])
 					continue;
 
-				PRINT("	Added " << _gameObject.name << " to " << layer.name);
+				//PRINT("	Added " << _gameObject.name << " to " << layer.name);
 				layer.gameObjects[i] = &_gameObject;
 				break;
 			}
@@ -219,7 +219,7 @@ namespace Copium
 				if (layer.gameObjects[i])
 					continue;
 
-				PRINT("	Added " << _gameObject.name << " to " << layer.name);
+				//PRINT("	Added " << _gameObject.name << " to " << layer.name);
 				layer.gameObjects[i] = &_gameObject;
 				break;
 			}
@@ -240,7 +240,7 @@ namespace Copium
 
 				if (gameObject->uuid == _gameObject.uuid)
 				{
-					PRINT("Replaced " << gameObject->name);
+					//PRINT("Replaced " << gameObject->name);
 					gameObject = &_gameObject;
 					break;
 				}
@@ -262,7 +262,7 @@ namespace Copium
 
 				if (layer.gameObjects[i]->uuid == _gameObject.uuid)
 				{
-					PRINT("Removed " << layer.gameObjects[i]->name << " from " << layer.name);
+					//PRINT("Removed " << layer.gameObjects[i]->name << " from " << layer.name);
 					layer.gameObjects[i] = nullptr;
 					break;
 				}
@@ -277,7 +277,7 @@ namespace Copium
 			if (layer.layerID != _layerID)
 				continue;
 			
-			PRINT("Attempt to remove an object from " << layer.name);
+			//PRINT("Attempt to remove an object from " << layer.name);
 
 			for (int i = 0; i < layer.gameObjects.size(); i++)
 			{
@@ -286,7 +286,7 @@ namespace Copium
 
 				if (layer.gameObjects[i]->uuid == _gameObject.uuid)
 				{
-					PRINT("Removed " << layer.gameObjects[i]->name << " from " << layer.name);
+					//PRINT("Removed " << layer.gameObjects[i]->name << " from " << layer.name);
 					layer.gameObjects[i] = nullptr;
 					break;
 				}

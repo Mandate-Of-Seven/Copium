@@ -688,11 +688,27 @@ namespace Copium
 		if (!_value.HasMember(_key.c_str()))
 			return;
 
+		
+
 		rapidjson::Value bb(rapidjson::kObjectType);
 		bb = _value[_key.c_str()].GetObj();
 
-		Deserialize(_data.min, "Min", bb);
-		Deserialize(_data.max, "Max", bb);
+		if (bb.HasMember("Min"))
+		{
+
+			rapidjson::Value min(rapidjson::kObjectType);
+			min = bb["Min"].GetObj();
+			Deserialize(_data.min, "", min);
+
+		}
+		if (bb.HasMember("Max"))
+		{
+
+			rapidjson::Value max(rapidjson::kObjectType);
+			max = bb["Max"].GetObj();
+			Deserialize(_data.max, "", max);
+
+		}
 
 	}
 	template<>

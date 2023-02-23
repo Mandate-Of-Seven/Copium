@@ -143,9 +143,7 @@ namespace Copium
 		//		 to improve runtime rendering(no spikes)
 		parse_textures();
 
-		// Bean: Checking for archetypes, to be removed once we found a better implementation
-		loaded = true;
-		//cameras.pop_front();
+		//loaded = true;
 	}
 
 	void GraphicsSystem::update()
@@ -291,11 +289,10 @@ namespace Copium
 
 	void GraphicsSystem::batch_render()
 	{
-		//if (pCamerasArray)
-		//	for (Camera& camera : *pCamerasArray)
-		//	{
-		//		PRINT("UPDATING CAMERA");
-		//		camera.update();
-		//	}
+		// Updating all in-game cameras
+		Scene* scene = MySceneManager.get_current_scene();
+		if (scene && !scene->componentArrays.GetArray<Camera>().empty())
+			for (Camera& camera : scene->componentArrays.GetArray<Camera>())
+				camera.update();
 	}
 }
