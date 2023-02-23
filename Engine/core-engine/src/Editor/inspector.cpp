@@ -1154,19 +1154,11 @@ namespace Copium
             std::vector<Layer>& sortingLayers = editorSortingLayer.GetSortingLayers();
             
             const char* previewItem =nullptr;
-            for (Layer& lay : sortingLayers)
-            {
-                if (lay.layerID == (unsigned int)sortingGroup.sortingLayer)
-                {
-                    //PRINT("Layer Name: " << lay.name);
-                    previewItem = lay.name.c_str();
-                    break;
-                }
-            }
+            Layer& layer = *editorSortingLayer.GetLayer(sortingGroup.sortingLayer);
+            previewItem = layer.name.c_str();
+
             if (!previewItem)
                 previewItem = "NULL";
-
-            
 
             ImGui::TableNextRow();
             ImGui::TableNextColumn();
@@ -1188,9 +1180,9 @@ namespace Copium
                         index = editorSortingLayer.GetSortingLayers()[i].layerID;
                         if (index != sortingGroup.sortingLayer)
                         {
+                            editorSortingLayer.RemoveGameObject(sortingGroup.sortingLayer, *MyEditorSystem.pSelectedGameObject);
                             sortingGroup.sortingLayer = index;
-                            MyEditorSystem.getLayers()->SortLayers()->RemoveGameObject(sortingGroup.sortingLayer, *MyEditorSystem.pSelectedGameObject);
-                            MyEditorSystem.getLayers()->SortLayers()->AddGameObject(editorSortingLayer.GetSortingLayers()[i].layerID, *MyEditorSystem.pSelectedGameObject);
+                            editorSortingLayer.AddGameObject(editorSortingLayer.GetSortingLayers()[i].layerID, *MyEditorSystem.pSelectedGameObject);
 
                             // Michael Buble sort here
                             Layer* layer = &editorSortingLayer.GetSortingLayers()[i];
@@ -1256,15 +1248,8 @@ namespace Copium
                 // Sort the layer based on all order ids
                 // Michael Buble sort here
                 Layer* layer{ nullptr };
-                for (Layer& lay : sortingLayers)
-                {
-                    if (lay.layerID == (unsigned int)sortingGroup.sortingLayer)
-                    {
-                        //PRINT("Layer Name: " << lay.name);
-                        layer = &lay;
-                        break;
-                    }
-                }
+                layer = editorSortingLayer.GetLayer(sortingGroup.sortingLayer);
+
                 if (layer)
                 {
                     bool swapped{ false };
