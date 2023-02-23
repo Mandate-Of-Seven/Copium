@@ -796,7 +796,7 @@ namespace Copium
 
 
 
-		Copium::Deserialize(_data.fSize, _value, "Font Size");
+		Copium::Deserialize(_data.fSize, _value, "FontSize");
 		Copium::Deserialize(_data.wrapper, _value, "Wrapper");
 
 		Copium::Deserialize(_data.color.r, _value, "r");

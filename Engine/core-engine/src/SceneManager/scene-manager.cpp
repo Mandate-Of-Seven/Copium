@@ -776,8 +776,8 @@ namespace Copium
 			if (go.HasComponent<Button>())
 			{
 				Button* button = go.GetComponent<Button>();
-				if (button->graphicID)
-					button->targetGraphic = reinterpret_cast<IUIComponent*>(FindComponentByID(button->graphicID));
+				UUID uuid{ (uint64_t) button->targetGraphic };
+				button->targetGraphic = reinterpret_cast<IUIComponent*>(FindComponentByID(uuid));
 			}
 
 			if (go.HasComponent<Script>())
