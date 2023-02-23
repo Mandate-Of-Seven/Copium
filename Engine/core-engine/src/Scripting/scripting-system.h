@@ -17,7 +17,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #define SCRIPTING_SYSTEM_H
 
 #include "CopiumCore\system-interface.h"
-#include "Messaging\message-system.h"
 #include "Files\file-system.h"
 #include <Scripting/scriptable-object.h>
 #include <Events/events.h>
@@ -64,9 +63,7 @@ namespace Copium
 	{
 		Compiling,
 		SwapAssembly,
-		Deserializing,
 		Wait,
-		Previewing,
 	};
 
 	struct ScriptClass
@@ -88,7 +85,7 @@ namespace Copium
 
 	};
 
-	CLASS_SYSTEM(ScriptingSystem), IReceiver
+	CLASS_SYSTEM(ScriptingSystem)
 	{
 	public:
 		/**************************************************************************/
@@ -175,18 +172,6 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		MonoObject* invoke(MonoObject * mObj, MonoMethod * mMethod, void** params = nullptr);
-
-		/**************************************************************************/
-		/*!
-			\brief
-				Listens to MT_REFLECT_CS_GAMEOBJECT to know when to tell scripts
-				to create their version of a gameObject
-			\param mType
-				Message type, used if this listens to two or more messages
-		*/
-		/**************************************************************************/
-		void handleMessage(MESSAGE_TYPE mType);
-
 
 
 		/**************************************************************************/
@@ -310,7 +295,6 @@ namespace Copium
 		/**************************************************************************/
 		bool isScript(const std::string& name);
 
-		CompilingState compilingState{ CompilingState::Wait };
 
 		/**************************************************************************/
 		/*!
@@ -405,7 +389,7 @@ namespace Copium
 		void SetFieldValue(MonoObject* instance, MonoClassField* mClassFiend, Field& field, const void* value);
 
 		template<typename T>
-		void SetFieldReference(MonoObject* instance, MonoClassField* mClassFiend, Field& field, T* reference);
+		void SetFieldReference(MonoObject* instance, MonoClassField* mClassFiend, T* reference);
 
 		/*******************************************************************************
 		/*!
@@ -535,6 +519,20 @@ namespace Copium
 			void
 		*/
 		/*******************************************************************************/
+		void CallbackStopPreview(StopPreviewEvent* pEvent);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Callback function when preview is started
+
+		\param pEvent
+			pointer to the relevant event
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
 		void CallbackScriptGetNames(ScriptGetNamesEvent* pEvent);
 
 
@@ -589,6 +587,8 @@ namespace Copium
 		std::unordered_map<std::string, MonoObject*> scenes;
 		MonoObject* mCurrentScene;
 		MonoObject* mPreviousScene;
+		CompilingState compilingState{ CompilingState::Wait };
+		bool inPlayMode{false};
 	};
 
 	/*******************************************************************************
@@ -612,7 +612,7 @@ namespace Copium
 		ScriptClass& scriptClass{ scriptClassMap[pEvent->script.name] };
 		MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };
 		COPIUM_ASSERT(!mClassField, std::string("FIELD ") + pEvent->fieldName + "COULD NOT BE FOUND IN SCRIPT " + pEvent->script.name);
-		SetFieldReference<T>(mScript, mClassField, pEvent->script.fieldDataReferences[pEvent->fieldName], pEvent->reference);
+		SetFieldReference<T>(mScript, mClassField,pEvent->reference);
 	}
 
 	

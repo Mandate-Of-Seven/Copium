@@ -370,7 +370,9 @@ namespace Copium
 		while (gameObjsIt != _data.fieldGameObjReferences.end())
 		{
 			const std::string& fieldName{ gameObjsIt->first };
-			Copium::SerializeBasic((*gameObjsIt).second->uuid, _value, _doc, fieldName);
+			//If there was a reference assigned
+			if (gameObjsIt->second != nullptr)
+				Copium::SerializeBasic((*gameObjsIt).second->uuid, _value, _doc, fieldName);
 			++gameObjsIt;
 		}
 
@@ -379,7 +381,9 @@ namespace Copium
 		while (componentsIt != _data.fieldComponentReferences.end())
 		{
 			const std::string& fieldName{ componentsIt->first };
-			Copium::SerializeBasic((*componentsIt).second->uuid, _value, _doc, fieldName);
+			//If there was a reference assigned
+			if (componentsIt->second != nullptr)
+				Copium::SerializeBasic((*componentsIt).second->uuid, _value, _doc, fieldName);
 			++componentsIt;
 		}
 
@@ -902,7 +906,7 @@ namespace Copium
 			case FieldType::String:
 			{
 				const char* buf = _value[_name.c_str()].GetString();
-				memcpy(_data.buffer, &buf, sizeof(char));
+				strcpy(_data.buffer, buf);
 				break;
 			}
 			case FieldType::Vector2:
@@ -923,15 +927,24 @@ namespace Copium
 			}
 			case FieldType::GameObject:
 			{
+				PRINT("GAMEOBJECT!");
 				Copium::Deserialize((uint64_t&)_data.fieldGameObjReferences[_name], _value, _name);
+				continue;
 				break;
 			}
-			case FieldType::Component:
+
+			case (FieldType)ComponentType::None:
+				break;
+			default:
 			{
+				PRINT("COMPONENT!");
 				Copium::Deserialize((uint64_t&)_data.fieldComponentReferences[_name], _value, _name);
+				PRINT("COMPONENT!" << (uint64_t&)_data.fieldComponentReferences[_name]);
+				continue;
 				break;
 			}
 			}
+			PRINT("FIELDTYPE: " << (int)fType);
 			MyEventSystem->publish(new ScriptSetFieldEvent(_data, _name.c_str(), _data.buffer));
 		}
 

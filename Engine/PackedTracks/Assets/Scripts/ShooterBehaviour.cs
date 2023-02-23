@@ -4,11 +4,12 @@ using System;
 public class ShooterBehaviour: CopiumScript
 {
 	public GameManager gameManager;
-	public Bullet bullet;
+	public GameObject bullet;
+	public Bullet scripto;
 	public bool enemy = false;
 	ShooterBehaviour target;
 	float baseHealth = 100f;
-
+	float yess = 10.0f;
 
 	float timer = 0f;
 
@@ -20,16 +21,25 @@ public class ShooterBehaviour: CopiumScript
 
 	void Update()
 	{
+		if (scripto == null)
+			Console.WriteLine("SCRIPTO IS NULL");
+		else
+		{
+			Console.WriteLine("SCRIPTO EXISTS");
+			Console.WriteLine(scripto.gameObject.transform.position.x);
+		}
 		timer += Time.deltaTime;
 		if (timer > shootingInterval)
         {
-			if (newBullet == null)
-				newBullet = Instantiate(bullet.gameObject);
-			newBullet.transform.position = transform.position;
+			// if (newBullet == null)
+			// 	newBullet = Instantiate(bullet.gameObject);
+			//newBullet.transform.position = transform.position;
+			Vector3 pos2 = bullet.transform.position;
+			pos2.x += 10.0f;
+			bullet.transform.position = pos2;
 			timer = 0f;
         }
 		//Look for enemies
-
 		Vector3 pos = transform.position;
 		if (enemy)
         {
