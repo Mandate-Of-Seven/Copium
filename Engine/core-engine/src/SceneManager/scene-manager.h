@@ -289,6 +289,7 @@ namespace Copium {
 		void DelinkDeleted();
 
 		Camera* mainCamera{nullptr};
+		std::string sceneFile{};
 
 	private:
 		void CallbackQuitEngine(QuitEngineEvent* pEvent);

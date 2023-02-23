@@ -243,16 +243,25 @@ namespace Copium
 	/*******************************************************************************/
 	static bool HasComponent(UUID UUID, MonoReflectionType* componentType)
 	{
-		return false;
-		//GameObject* gameObj = sceneManager.FindGameObjectByID(UUID);
-		//if (gameObj == nullptr)
-		//{
-		//	PRINT("CANT FIND GAMEOBJECT");
-		//	return false;
-		//}
-		//MonoType* managedType = mono_reflection_type_get_type(componentType);
-		//ComponentType cType = s_EntityHasComponentFuncs[mono_type_get_name(managedType)];
-		//return gameObj->HasComponent(cType);
+		GameObject* gameObj = sceneManager.FindGameObjectByID(UUID);
+		if (gameObj == nullptr)
+		{
+			PRINT("CANT FIND GAMEOBJECT");
+			return false;
+		}
+		MonoType* managedType = mono_reflection_type_get_type(componentType);
+		mono_class_from_mono_type(managedType);
+		const auto& pair = MyScriptingSystem.reflectionMap.find(managedType);
+		if (pair != MyScriptingSystem.reflectionMap.end())
+		{
+
+		}
+		else
+		{
+
+		}
+		ComponentType cType = MyScriptingSystem.reflectionMap[managedType];
+		return gameObj->HasComponent(cType);
 	}
 
 	static UUID AddComponent(UUID UUID, MonoReflectionType* componentType)
@@ -546,6 +555,36 @@ namespace Copium
 		MyGOF.Destroy(ID,MySceneManager.get_current_scene()->gameObjects);
 	}
 
+	/*******************************************************************************
+	/*!
+	\brief
+		Destroys a gameobject by ID
+	\param ID
+		GameObject ID of the gameObject to delete
+	*/
+	/*******************************************************************************/
+	static void LoadScene(MonoString* str)
+	{
+		static std::string name{};
+		char* monoStr = mono_string_to_utf8(str);
+		name = monoStr;
+		name += ".scene";
+		namespace fs = std::filesystem;
+		for (const fs::directory_entry& p : fs::recursive_directory_iterator(Paths::projectPath))
+		{
+			const fs::path& pathRef{ p.path() };
+			if (pathRef.extension() != ".scene")
+				continue;
+			if (pathRef.filename().string() == name)
+			{
+				//PRINT("LOADING " << name);
+				MySceneManager.sceneFile = pathRef.filename().string();
+				return;
+			}
+		}
+		PRINT("NO SCENE WITH THE NAME COULD BE FOUND");
+	}
+
 
 	static float GetFPS()
 	{
@@ -624,6 +663,7 @@ namespace Copium
 		Register(GetActive);
 		Register(GetTextString);
 		Register(SetTextString);
+		Register(LoadScene);
 		Register(CloneGameObject);
 		Register(InstantiateGameObject);
 		Register(DestroyGameObject);

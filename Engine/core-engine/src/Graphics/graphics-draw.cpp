@@ -103,7 +103,6 @@ namespace Copium
 		renderer.shutdown();
 	}
 
-
 	void Draw::ResetRenderer()
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -402,13 +401,12 @@ namespace Copium
 		renderer.flush();
 
 		// Gameobjects with Sorting Layers
-		renderer.begin_batch();
-
 		if (pScene)
 		{
 			int count = 0;
 			for (Layer& layer : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
 			{
+				renderer.begin_batch();
 				for (GameObject* go : layer.gameObjects)
 				{
 					if (!go || !go->IsActive())
@@ -578,11 +576,11 @@ namespace Copium
 					}
 
 				}
+				
+				renderer.end_batch();
+				renderer.flush();
 			}
 		}
-
-		renderer.end_batch();
-		renderer.flush();
 
 		// Only For Text
 		if (pScene != nullptr)

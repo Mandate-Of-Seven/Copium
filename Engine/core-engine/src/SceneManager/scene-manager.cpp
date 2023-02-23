@@ -464,6 +464,12 @@ namespace Copium
 			DelinkDeleted();
 			CleanUpScene(*currentScene);
 		}
+		//if theres a scene to load
+		if (!sceneFile.empty())
+		{
+			//load_scene(sceneFile);
+			//sceneFile.clear();
+		}
 	}
 	void SceneManager::exit()
 	{
@@ -770,7 +776,6 @@ namespace Copium
 			{
 				SortingGroup* sg = go.GetComponent<SortingGroup>();
 				MyEditorSystem.getLayers()->SortLayers()->ReplaceGameObject(sg->sortingLayer, go);
-
 			}
 
 
@@ -852,6 +857,7 @@ namespace Copium
 				MyEditorSystem.getLayers()->SortLayers()->AddGameObject(sg->GetLayerID(), go);
 			}
 		}
+
 		// Sort based on order in layer
 		MyEditorSystem.getLayers()->SortLayers()->BubbleSortGameObjects();
 
@@ -869,7 +875,6 @@ namespace Copium
 		//SoundSystem::Instance()->StopAll();
 
 		return true;
-
 	}
 
 	bool SceneManager::save_scene()
