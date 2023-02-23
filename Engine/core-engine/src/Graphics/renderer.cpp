@@ -277,6 +277,10 @@ namespace Copium
 
 		textVertexCount = 0;
 		textBufferPtr = textBuffer;
+
+		textureCount = 0;
+		fontIDs.clear();
+		textureIDs.clear();
 	}
 
 	void Renderer::flush()
@@ -641,9 +645,6 @@ namespace Copium
 			end_batch();
 			flush();
 			begin_batch();
-
-			textureCount = 0;
-			textureIDs.clear();
 		}
 
 		// Map texture unit to the texture object id
@@ -702,9 +703,6 @@ namespace Copium
 			end_batch();
 			flush();
 			begin_batch();
-
-			textureCount = 0;
-			textureIDs.clear();
 		}
 
 		// Map texture unit to the texture object id
@@ -786,9 +784,6 @@ namespace Copium
 			end_batch();
 			flush();
 			begin_batch();
-
-			textureCount = 0;
-			textureIDs.clear();
 		}
 
 		// Map texture unit to the texture object id
@@ -977,9 +972,6 @@ namespace Copium
 				end_batch();
 				flush();
 				begin_batch();
-
-				textureCount = 0;
-				fontIDs.clear();
 			}
 
 			// Map texture unit to the texture object id

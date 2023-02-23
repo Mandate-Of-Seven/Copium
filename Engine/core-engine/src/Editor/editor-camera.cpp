@@ -26,8 +26,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 namespace
 {
-	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
-
 	bool enableCamera = false;
 }
 
@@ -36,8 +34,7 @@ namespace Copium
 	void EditorCamera::init(float _width, float _height, bool _orthographic)
 	{
 		BaseCamera::init(_width, _height, CameraType::SCENEVIEW, _orthographic);
-		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
-		MessageSystem::Instance()->subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
+		MyMessageSystem.subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
 	}
 
 	void EditorCamera::update()
@@ -51,7 +48,7 @@ namespace Copium
 		static bool debugMode = false;
 		if (sceneView->is_window_focused() || sceneView->is_window_hovered())
 		{
-			if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_D))
+			if (MyInputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && MyInputSystem.is_key_pressed(GLFW_KEY_D))
 			{
 				debugMode = !debugMode;
 			}
@@ -75,6 +72,11 @@ namespace Copium
 		{
 			//enableCamera = false;
 		}
+
+		if (_mType == MESSAGE_TYPE::MT_SCENE_DESERIALIZED)
+		{
+			draw.ResetRenderer();
+		}
 	}
 
 	float EditorCamera::get_zoom_speed() const
@@ -91,7 +93,7 @@ namespace Copium
 		EditorSceneView* sceneView = EditorSystem::Instance()->get_scene_view();
 		glm::vec2 scenePos = sceneView->get_position();
 		glm::vec2 sceneDim = sceneView->get_dimension();
-		Math::Vec2 mousePos = inputSystem.get_mouseposition();
+		Math::Vec2 mousePos = MyInputSystem.get_mouseposition();
 		//PRINT("Mouse position: " << mousePos.x << " " << mousePos.y);
 		glm::vec2 centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
 		glm::vec2 mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
@@ -103,7 +105,7 @@ namespace Copium
 
 	void EditorCamera::mouse_controls()
 	{
-		Math::Vec2 mousePos = inputSystem.get_mouseposition();
+		Math::Vec2 mousePos = MyInputSystem.get_mouseposition();
 		//PRINT("Mouse position: " << mousePos.x << " " << mousePos.y);
 		//PRINT("NDC: " << get_ndc().x << " " << get_ndc().y);
 		glm::vec2 worldNDC = get_ndc() - glm::vec2(viewer.x , viewer.y);
@@ -112,7 +114,7 @@ namespace Copium
 		mousePosition = worldNDC;
 
 		// Movement using right click and drag
-		if (inputSystem.is_mousebutton_pressed(1) || inputSystem.is_mousebutton_pressed(2))
+		if (MyInputSystem.is_mousebutton_pressed(1) || MyInputSystem.is_mousebutton_pressed(2))
 		{
 			ImGui::SetWindowFocus("Scene View");
 			glm::vec2 speed = get_pan_speed();
@@ -132,36 +134,36 @@ namespace Copium
 
 		//PRINT("Camera Pos: " << focalPoint.x << " " << focalPoint.y);
 			 
-		//if (inputSystem.is_key_held(GLFW_KEY_LEFT_CONTROL))
+		//if (MyInputSystem.is_key_held(GLFW_KEY_LEFT_CONTROL))
 		//{
 		//	glm::vec2 speed = get_pan_speed();
 		//	// Bean: Zoomlevel should be positive
-		//	if (inputSystem.is_key_held(GLFW_KEY_W)) // Up
+		//	if (MyInputSystem.is_key_held(GLFW_KEY_W)) // Up
 		//	{
 		//		focalPoint += get_up_direction() * 0.1f * speed.y * zoomLevel;
 		//	}
-		//	if (inputSystem.is_key_held(GLFW_KEY_A)) // Left
+		//	if (MyInputSystem.is_key_held(GLFW_KEY_A)) // Left
 		//	{
 		//		focalPoint += -get_right_direction() * 0.1f * speed.x * zoomLevel;
 		//	}
-		//	if (inputSystem.is_key_held(GLFW_KEY_S)) // Down
+		//	if (MyInputSystem.is_key_held(GLFW_KEY_S)) // Down
 		//	{
 		//		focalPoint += get_up_direction() * -0.1f * speed.y * zoomLevel;
 		//	}
-		//	if (inputSystem.is_key_held(GLFW_KEY_D)) // Right
+		//	if (MyInputSystem.is_key_held(GLFW_KEY_D)) // Right
 		//	{
 		//		focalPoint += -get_right_direction() * -0.1f * speed.x * zoomLevel;
 		//	}
 		//}
 
 		// Rotation
-		/*if (inputSystem.is_key_held(GLFW_KEY_LEFT_ALT))
+		/*if (MyInputSystem.is_key_held(GLFW_KEY_LEFT_ALT))
 		{
-			glm::vec2 mouse{ inputSystem.get_mouseX(), inputSystem.get_mouseY() };
+			glm::vec2 mouse{ MyInputSystem.get_mouseX(), MyInputSystem.get_mouseY() };
 			glm::vec2 delta = (mouse - mousePosition) * 0.003f;
 			mousePosition = mouse;
 
-			if (inputSystem.is_mousebutton_pressed(GLFW_MOUSE_BUTTON_RIGHT))
+			if (MyInputSystem.is_mousebutton_pressed(GLFW_MOUSE_BUTTON_RIGHT))
 			{
 				float yawSign = (get_up_direction().y < 0.f) ? -1.f : 1.f;
 				yaw += yawSign * delta.x * 0.8f;
@@ -170,7 +172,7 @@ namespace Copium
 		}*/
 
 		// Zoom In and Out
-		int scroll = (int) inputSystem.get_mousescroll();
+		int scroll = (int) MyInputSystem.get_mousescroll();
 		if (scroll && !enableCamera)
 		{
 			orthographicSize -= scroll * 0.1f * get_zoom_speed();
@@ -179,6 +181,6 @@ namespace Copium
 			update_ortho_projection();
 		}
 
-		//scroll = inputSystem.get_mousescroll();
+		//scroll = MyInputSystem.get_mousescroll();
 	}
 }

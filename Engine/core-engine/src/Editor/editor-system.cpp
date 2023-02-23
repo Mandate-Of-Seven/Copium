@@ -31,14 +31,13 @@ namespace Copium
 		// Our state
 		bool show_demo_window = false;
 		ThreadSystem& threadSystem{ *ThreadSystem::Instance() };
-		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 		bool tempMode = true;
 	}
 
 	void EditorSystem::init()
 	{
-		messageSystem.subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
-		messageSystem.subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
+		MyMessageSystem.subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
+		MyMessageSystem.subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
 		MyEventSystem->subscribe(this, &EditorSystem::CallbackSceneChanging);
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 
@@ -93,7 +92,7 @@ namespace Copium
 			playMode(enableEditor);
 			if (MySceneManager.startPreview())
 			{
-				messageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
+				MyMessageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
 			}
 		}
 
@@ -259,7 +258,7 @@ namespace Copium
 						if (MySceneManager.startPreview())
 						{
 							pSelectedGameObject = MySceneManager.FindGameObjectByID(selectedID);
-							messageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
+							MyMessageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
 						}
 					}
 					if (ImGui::MenuItem("Stop Scene"))
@@ -270,7 +269,7 @@ namespace Copium
 						if (MySceneManager.endPreview())
 						{
 							pSelectedGameObject = MySceneManager.FindGameObjectByID(selectedID);
-							messageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
+							MyMessageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
 						}
 					}
 

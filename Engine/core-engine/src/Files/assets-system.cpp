@@ -62,8 +62,6 @@ namespace Copium
 		std::list<File*> files = MyFileSystem.get_file_references()[FILE_TYPE::SPRITE];
 		for (File* file : files)
 			GenerateMetaFile(file);
-
-		PRINT("Num textures: " << textures.size());
 	}
 
 	void AssetsSystem::update()
@@ -155,6 +153,7 @@ namespace Copium
 		PRINT("LOADING TEXTURES");
 		// Load Textures (.png)
 		LoadAllTextures(MyFileSystem.get_file_references()[FILE_TYPE::SPRITE]);
+		PRINT("TEXTURES LOADED: " << textures.size());
 
 		PRINT("LOADING SHADERS");
 		// Load Shaders (.vert & .frag)

@@ -35,8 +35,6 @@ namespace Copium
 	
 	namespace
 	{
-		InputSystem& inputSystem{ *InputSystem::Instance() };
-
 		// Temporary global variables
 		GLfloat rotate = 0.f;
 		bool massSpawn = false;
@@ -157,12 +155,12 @@ namespace Copium
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_C) && inputSystem.is_key_pressed(GLFW_KEY_S))
+		if (MyInputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && MyInputSystem.is_key_pressed(GLFW_KEY_C) && MyInputSystem.is_key_pressed(GLFW_KEY_S))
 		{
 			massSpawn = !massSpawn;
 		}
 
-		if (inputSystem.is_key_held(GLFW_KEY_C) && inputSystem.is_key_pressed(GLFW_KEY_V))
+		if (MyInputSystem.is_key_held(GLFW_KEY_C) && MyInputSystem.is_key_pressed(GLFW_KEY_V))
 		{
 			SceneManager* sm = SceneManager::Instance();
 			Scene* scene = sm->get_current_scene();
