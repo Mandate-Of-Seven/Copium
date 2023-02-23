@@ -64,10 +64,16 @@ namespace Copium
 		void Serialize(rapidjson::Value& _val, rapidjson::Document& _doc, const std::string& _name = "UID");
 
 		uint64_t& GetUUID() { return uuid; }
+		
+		uint64_t ConstGetUUID() { return uuid; }
 
 	private:
 		uint64_t uuid;
 	};
+
+
+	bool operator==(UUID& lhs, UUID& rhs);
+
 }
 
 namespace std
