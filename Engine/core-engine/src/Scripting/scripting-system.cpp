@@ -450,11 +450,17 @@ namespace Copium
 			MonoObject* exception = NULL;
 			try {
 				MonoObject* obj = mono_runtime_invoke(mMethod, mObj, params, &exception);
+				if (exception)
+				{
+					const char* message = mono_string_to_utf8(mono_object_to_string(exception, NULL));
+					MyEventSystem->publish(new EditorConsoleLogEvent(message));
+				}
 				return obj;
 			}
 			catch (...) {
 				// Handle the error
-				std::cerr << "Caught exception: " << std::endl;
+				abort();
+				std::cerr << "Caught exceptionDASDSADASDASDADAASSAD: " << std::endl;
 			}
 		}
 		return nullptr;

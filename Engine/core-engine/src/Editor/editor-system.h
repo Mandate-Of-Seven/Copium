@@ -136,6 +136,7 @@ namespace Copium
 		UndoRedo::CommandManager commandManager; //for undo and redo
 
 		void CallbackSceneChanging(SceneChangingEvent* pEvent);
+		void CallbackEditorConsoleLog(EditorConsoleLogEvent* pEvent);
 	};
 }
 #endif // !EDITOR_SYSTEM_H
