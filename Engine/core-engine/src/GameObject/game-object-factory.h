@@ -82,6 +82,8 @@ namespace Copium {
 		template <typename T>
 		T& AddComponent(GameObject& gameObject, Scene& scene, UUID uuid = UUID(),T* pCopy = nullptr);
 
+		Text& AddComponent(GameObject& gameObj, Scene& scene, bool inspector, UUID uuid = UUID() , Text* pCopy = nullptr);
+		
 		Script& AddComponent(GameObject& gameObj, Scene& scene, const char* scriptName, UUID uuid = UUID() , Script* pCopy = nullptr);
 
 		/*******************************************************************************

@@ -1006,6 +1006,12 @@ namespace Copium
 			T& component = MyGOF.AddComponent(pEvent->gameObject, *currentScene, pEvent->scriptName, pEvent->uuid );
 			pEvent->componentContainer = &component;
 		}
+		else if constexpr (std::is_same<T, Text>())
+		{
+
+			T& component = MyGOF.AddComponent(pEvent->gameObject, *currentScene, pEvent->inspector, pEvent->uuid);
+			pEvent->componentContainer = &component;
+		}
 		else
 		{
 			T& component = MyGOF.AddComponent<T>(pEvent->gameObject, *currentScene, pEvent->uuid,nullptr);
