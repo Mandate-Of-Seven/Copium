@@ -677,7 +677,11 @@ namespace Copium
 			bounds{ rhs.bounds }, normalColor{ rhs.normalColor }, 
 			hoverColor{ rhs.hoverColor }, clickedColor{ rhs.clickedColor },
 			fadeDuration{ rhs.fadeDuration}, targetGraphic{rhs.targetGraphic}
-		{}
+		{
+			PRINT(size_t(rhs.uuid));
+			PRINT(_uuid.GetUUID());
+			PRINT("BUTTON COPY CONSTRUCTED!");
+		}
 
 		Button& operator=(const Button& rhs);
 
