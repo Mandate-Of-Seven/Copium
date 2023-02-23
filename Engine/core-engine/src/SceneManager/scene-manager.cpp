@@ -187,7 +187,11 @@ namespace Copium
 			for (Button* pButton : go.GetComponents<Button>())
 			{
 				if (pButton->targetGraphic)
+				{
 					pButton->targetGraphic = reinterpret_cast<IUIComponent*>(FindComponentByID(pButton->targetGraphic->uuid));
+					PRINT(pButton->targetGraphic->uuid.GetUUID());
+				}
+
 			}
 
 			for (Script* pScript : go.GetComponents<Script>())
@@ -651,8 +655,6 @@ namespace Copium
 						}
 					}
 				}
-
-
 
 				// Image
 				if (go.HasComponent<Image>())

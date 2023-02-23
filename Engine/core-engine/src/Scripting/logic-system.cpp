@@ -163,7 +163,7 @@ namespace Copium
 		}
 
 		// Button behaviour for non layered game objects
-		for (int i{ MySceneManager.get_current_scene()->gameObjects.size() - 1}; i >= 0; --i)
+		for (size_t i{ MySceneManager.get_current_scene()->gameObjects.size() - 1}; i >= 0; --i)
 		{
 			GameObject& go = MySceneManager.get_current_scene()->gameObjects[i];
 			if (!go.IsActive() || go.HasComponent<SortingGroup>())
@@ -183,7 +183,7 @@ namespace Copium
 		{
 
 			Layer& l = MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers()[i];
-			for (int j{ l.gameObjects.size() }; j >= 0; --j)
+			for (size_t j{ l.gameObjects.size() }; j >= 0; --j)
 			{
 				GameObject* go = l.gameObjects[j];
 				if (!go->IsActive() || !go->HasComponent<Button>())

@@ -1,5 +1,5 @@
-[2023-02-24 00:14:22.492] [Error] [critical] 
-Caused By:	FT_New_Face(ft, path.c_str(), 0, &face)
-Info:		Fail to load font
-Source:		C:\Users\prawn\Documents\GitHub\GAM-200\Engine\core-engine\src\Graphics\fonts.cpp (Line: 39)
+[2023-02-24 01:49:35.030] [Error] [critical] 
+Caused By:	mClass == nullptr
+Info:		MONO CLASS NOT LOADED
+Source:		C:\Users\matth\Documents\GitHub\GAM-200\Engine\core-engine\src\Scripting\scripting-system.cpp (Line: 295)
 
