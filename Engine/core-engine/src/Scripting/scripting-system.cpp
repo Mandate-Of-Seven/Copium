@@ -261,7 +261,6 @@ namespace Copium
 		registerScriptWrappers();
 		systemFlags |= FLAG_RUN_ON_EDITOR;
 		ThreadSystem::Instance()->addThread(new std::thread(&ScriptingSystem::recompileThreadWork, this));
-		messageSystem.subscribe(MESSAGE_TYPE::MT_REFLECT_CS_GAMEOBJECT, this);
 		MyEventSystem->subscribe(this,&ScriptingSystem::CallbackSceneChanging);
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptInvokeMethod);
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetMethodNames);
@@ -271,16 +270,12 @@ namespace Copium
 		SubscribeComponentBasedCallbacks(ComponentTypes());
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptSetFieldReference<GameObject>);
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackStartPreview);
-		messageSystem.subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
-		messageSystem.subscribe(MESSAGE_TYPE::MT_ENGINE_INITIALIZED, this);
-		messageSystem.subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
-		messageSystem.subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
-		messageSystem.subscribe(MESSAGE_TYPE::MT_COLLISION_ENTER, this);
+		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackStopPreview);
 	}
 
 	void ScriptingSystem::update()
 	{
-		if (compilingState == CompilingState::SwapAssembly)
+		if (compilingState == CompilingState::SwapAssembly && !inPlayMode)
 		{
 			swapDll();
 			compilingState = CompilingState::Wait;
@@ -427,9 +422,14 @@ namespace Copium
 		updateScriptClasses();
 
 		/* For each row, get some of its values */
-		mCurrentScene = instantiateClass(klassScene);
+		mComponents.clear();
+		mGameObjects.clear();
+		if (mCurrentScene)
+		{
+			mCurrentScene = instantiateClass(klassScene);
+			ReflectAll();
+		}
 
-		ReflectAll();
 
 		
 		COPIUM_ASSERT(!mGameObject, "GameObject C# script could not be loaded");
@@ -558,55 +558,6 @@ namespace Copium
 		return mono_string_new(mAppDomain, str);
 	}
 
-	void ScriptingSystem::handleMessage(MESSAGE_TYPE mType)
-	{
-		switch (mType)
-		{
-			case MESSAGE_TYPE::MT_SCENE_DESERIALIZED:
-			{
-				compilingState = CompilingState::Wait;
-				break;
-			}
-			case MESSAGE_TYPE::MT_ENGINE_INITIALIZED:
-			{
-				if (!mAssemblyImage)
-					return;
-				break;
-			}
-			case MESSAGE_TYPE::MT_START_PREVIEW:
-			{
-				break;
-			}
-			case MESSAGE_TYPE::MT_STOP_PREVIEW:
-			{
-				MonoGameObjects& gameObjects{mGameObjects[mCurrentScene]};
-				MonoComponents& components{ mComponents[mCurrentScene] };
-
-				for (auto& pair : gameObjects)
-				{
-					pair.second = nullptr;
-				}
-
-				for (auto& pair : components)
-				{
-					pair.second = nullptr;
-				}
-
-				mGameObjects.erase(mCurrentScene);
-				mComponents.erase(mCurrentScene);
-
-				mCurrentScene = mPreviousScene;
-				mPreviousScene = nullptr;
-				compilingState = CompilingState::Wait;
-				break;
-			}
-			case MESSAGE_TYPE::MT_COLLISION_ENTER:
-			{
-				break;
-			}
-		}
-	}
-
 	void ScriptingSystem::GetFieldValue(MonoObject* instance, MonoClassField* mClassFiend ,Field& field, void* container)
 	{
 		if (field.fType == FieldType::String)
@@ -637,7 +588,7 @@ namespace Copium
 	}
 
 	template<typename T>
-	void ScriptingSystem::SetFieldReference(MonoObject* instance, MonoClassField* mClassFiend, Field& field, T* reference)
+	void ScriptingSystem::SetFieldReference(MonoObject* instance, MonoClassField* mClassFiend, T* reference)
 	{
 		//When you set a reference, you need to create a MonoObject of it first
 
@@ -736,6 +687,11 @@ namespace Copium
 				{
 					fieldSize = sizeof(uint64_t);
 				}
+				else if(fieldType == FieldType::String)
+				{
+					fieldSize = TEXT_BUFFER_SIZE;
+				}
+
 				//Field has not been created onto script yet
 				if (nameField == script.fieldDataReferences.end())
 				{
@@ -751,7 +707,7 @@ namespace Copium
 					}
 					else
 					{
-						mono_field_get_value(mComponent, mField, newField.data);
+						MyEventSystem->publish(new ScriptGetFieldEvent(script, fieldName, newField.data));
 					}
 					script.fieldDataReferences[fieldName] = std::move(newField);
 				}
@@ -771,78 +727,68 @@ namespace Copium
 						if (field.fType == FieldType::GameObject)
 						{
 							GameObject* reference = script.fieldGameObjReferences[fieldName];
-							if (reference)
-							{
-								MonoObject* monoReference{};
-								monoReference = ReflectGameObject(*reference);
-								mono_field_set_value(mComponent, mField, monoReference);
-							}
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, reference));
 						}
 						else if (field.fType == FieldType::Component)
 						{
 							Component* reference = script.fieldComponentReferences[fieldName];
-							if (reference)
+							switch ((ComponentType)field.fType)
 							{
-								MonoObject* monoReference{};
-								switch ((ComponentType)field.fType)
-								{
-								case(ComponentType::Animator):
-								{
-									monoReference = ReflectComponent(*(Animator*)reference);
-									break;
-								}
-								case(ComponentType::AudioSource):
-								{
-									monoReference = ReflectComponent(*(AudioSource*)reference);
-									break;
-								}
-								case(ComponentType::BoxCollider2D):
-								{
-									monoReference = ReflectComponent(*(BoxCollider2D*)reference);
-									break;
-								}
-								case(ComponentType::Button):
-								{
-									monoReference = ReflectComponent(*(Button*)reference);
-									break;
-								}
-								case(ComponentType::Camera):
-								{
-									monoReference = ReflectComponent(*(Camera*)reference);
-									break;
-								}
-								case(ComponentType::Image):
-								{
-									monoReference = ReflectComponent(*(Image*)reference);
-									break;
-								}
-								case(ComponentType::Rigidbody2D):
-								{
-									monoReference = ReflectComponent(*(Rigidbody2D*)reference);
-									break;
-								}
-								case(ComponentType::SpriteRenderer):
-								{
-									monoReference = ReflectComponent(*(SpriteRenderer*)reference);
-									break;
-								}
-								case(ComponentType::Script):
-								{
-									monoReference = ReflectComponent(*(Script*)reference);
-									break;
-								}
-								case(ComponentType::Text):
-								{
-									monoReference = ReflectComponent(*(Text*)reference);
-									break;
-								}
-								case(ComponentType::SortingGroup):
-								{
-									monoReference = ReflectComponent(*(SortingGroup*)reference);
-									break;
-								}
-								}
-								mono_field_set_value(mComponent, mField, monoReference);
+							case(ComponentType::Animator):
+							{
+								MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Animator*)reference));
+								break;
+							}
+							case(ComponentType::AudioSource):
+							{
+								MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (AudioSource*)reference));
+								break;
+							}
+							case(ComponentType::BoxCollider2D):
+							{
+								MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (BoxCollider2D*)reference));
+								break;
+							}
+							case(ComponentType::Button):
+							{
+								MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Button*)reference));
+								break;
+							}
+							case(ComponentType::Camera):
+							{
+								MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Camera*)reference));
+								break;
+							}
+							case(ComponentType::Image):
+							{
+								MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Image*)reference));
+								break;
+							}
+							case(ComponentType::Rigidbody2D):
+							{
+								MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Rigidbody2D*)reference));
+								break;
+							}
+							case(ComponentType::SpriteRenderer):
+							{
+								MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (SpriteRenderer*)reference));
+								break;
+							}
+							case(ComponentType::Script):
+							{
+								MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Script*)reference));
+								break;
+							}
+							case(ComponentType::Text):
+							{
+								MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Text*)reference));
+								break;
+							}
+							case(ComponentType::SortingGroup):
+							{
+								MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (SortingGroup*)reference));
+								break;
+							}
 							}
 						}
 						else
@@ -874,13 +820,12 @@ namespace Copium
 				compilingState = CompilingState::Wait;
 			}
 		}
-		if (scenes.find(pEvent->scene.name) == scenes.end())
-			scenes[pEvent->scene.name] = mCurrentScene;
-		else
-		{
-			mGameObjects.clear();
-			mComponents.clear();
-		}
+
+		mGameObjects.clear();
+		mComponents.clear();
+		PRINT("CREATING NEW SCENE!");
+		mCurrentScene = instantiateClass(klassScene);
+		ReflectAll();
 	}
 
 	template <typename T>
@@ -946,9 +891,19 @@ namespace Copium
 
 	void ScriptingSystem::CallbackStartPreview(StartPreviewEvent* pEvent)
 	{
-		compilingState = CompilingState::Previewing;
+		inPlayMode = true;
 		mPreviousScene = mCurrentScene;
 		mCurrentScene = instantiateClass(klassScene);
+		ReflectAll();
+		PRINT("SCENE IN SCRIPTING SWAPPED!");
+	}
+
+	void ScriptingSystem::CallbackStopPreview(StopPreviewEvent* pEvent)
+	{
+		inPlayMode = false;
+		mPreviousScene = mCurrentScene;
+		mCurrentScene = instantiateClass(klassScene);
+		ReflectAll();
 		PRINT("SCENE IN SCRIPTING SWAPPED!");
 	}
 
@@ -956,7 +911,7 @@ namespace Copium
 	{
 		for (auto& pair : scriptClassMap)
 		{
-			if (NAME_TO_CTYPE[pair.first] == ComponentType::None)
+			if ((int)NAME_TO_CTYPE[pair.first] == 0)
 				pEvent->names.push_back(pair.first.c_str());
 		}
 	}

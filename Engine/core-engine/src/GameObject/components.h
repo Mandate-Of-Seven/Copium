@@ -120,7 +120,10 @@ namespace Copium
 			{
 				return others.FindByUUID(_uuid);
 			}
-			return nullptr;
+			else
+			{
+				return nullptr;
+			}
 		}
 	};
 
