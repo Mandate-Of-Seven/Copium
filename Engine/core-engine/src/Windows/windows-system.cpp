@@ -25,6 +25,11 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 namespace Copium
 {
+    namespace
+    {
+        bool fullscreen = false;
+    }
+
     int WindowsSystem::windowWidth;
     int WindowsSystem::windowHeight;
     bool WindowsSystem::windowFocused;
@@ -106,12 +111,13 @@ namespace Copium
 
         // Initialise Viewport
         glViewport(0, 0, windowWidth, windowHeight);
+
+        Fullscreen(fullscreen, 1600, 900);
     }
 
     void WindowsSystem::update()
     {
-        static bool fullscreen = false;
-        if (InputSystem::Instance()->is_key_held(GLFW_KEY_LEFT_CONTROL) && InputSystem::Instance()->is_key_pressed(GLFW_KEY_F))
+        if (MyInputSystem.is_key_held(GLFW_KEY_LEFT_CONTROL) && MyInputSystem.is_key_pressed(GLFW_KEY_F))
         {
             fullscreen = !fullscreen;
             Fullscreen(fullscreen, 1600, 900);
@@ -205,7 +211,7 @@ namespace Copium
 #ifdef _DEBUG
         PRINT("Window drop getting called!!!");
 #endif        
-        FileSystem::Instance()->accept_dropped_files(_pathCount, _paths);
+        MyFileSystem.accept_dropped_files(_pathCount, _paths);
 
         (void) _window;
     }

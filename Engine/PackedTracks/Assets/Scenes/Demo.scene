@@ -1,15 +1,33 @@
 {
     "Name": "Demo",
-    "Unused GIDs": [],
-    "Unused CIDs": [],
+    "Layers": [
+        {
+            "Name": "Default",
+            "ID": 0
+        },
+        {
+            "Name": "Effects",
+            "ID": 1
+        },
+        {
+            "Name": "Train",
+            "ID": 4
+        },
+        {
+            "Name": "UI",
+            "ID": 2
+        }
+    ],
     "GameObjects": [
         {
             "ID": 1,
             "Name": "Main Camera",
+            "UID": 17648900612414737673,
             "Components": [
                 {
                     "PID": 0,
                     "ID": 1,
+                    "UID": 17806233165552961397,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -40,21 +58,2280 @@
                         "Near": 0.029999999329447746,
                         "Far": 500.0
                     }
+                },
+                {
+                    "ID": 78,
+                    "UID": 15478641588138346794,
+                    "Type": "AudioSource",
+                    "Alias": "BGM_Train"
+                },
+                {
+                    "ID": 79,
+                    "UID": 9207149592710262132,
+                    "Type": "Script",
+                    "Name": "AudioManager",
+                    "state": 0
                 }
             ]
         },
         {
-            "ID": 2,
-            "Name": "Player",
+            "ID": 24,
+            "Name": "Effects",
+            "UID": 17600260081740642465,
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 3,
+                    "ID": 5,
+                    "UID": 9683413832177155975,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
                         "Y": 0.0,
                         "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 2,
+            "Name": "Train Background",
+            "UID": 16243190110120876333,
+            "Components": [
+                {
+                    "PID": 6642123175702952797,
+                    "ID": 6,
+                    "UID": 5925716589359093746,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.319999933242798,
+                        "Y": 2.319999933242798,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 4,
+                    "UID": 16385119921634632996,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 15031539786128006511,
+                    "Sprite Name": "Train_Background_02.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "SortingGroup",
+                    "SortingLayer": 4,
+                    "OrderInLayer": 1
+                }
+            ]
+        },
+        {
+            "ID": 4,
+            "Name": "Train Canvas",
+            "UID": 6642123175702952797,
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 9,
+                    "UID": 2430187631637915887,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": -10.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 5,
+            "Name": "Report Screen Btn",
+            "UID": 11504437262643903370,
+            "Components": [
+                {
+                    "PID": 6642123175702952797,
+                    "ID": 10,
+                    "UID": 15420820919236176503,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.002354264259338379,
+                        "Y": -0.740162193775177,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 5.466695785522461,
+                        "Y": 2.4947621822357178,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 49,
+                    "UID": 1437231511245843179,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "",
+                    "Font Size": 1.0,
+                    "Wrapper": 0.0,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                },
+                {
+                    "Type": "Button",
+                    "ID": 9,
+                    "UID": 33209366390973251,
+                    "Graphic ID": 0,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.5,
+                            "Y": -0.5
+                        },
+                        "Max": {
+                            "X": 0.5,
+                            "Y": 0.5
+                        }
+                    },
+                    "Callback": "OpenGameObject",
+                    "clickedR": 0.5,
+                    "clickedG": 0.5,
+                    "clickedB": 0.5,
+                    "clickedA": 0.5,
+                    "hoveredR": 0.5,
+                    "hoveredG": 1.0,
+                    "hoveredB": 1.0,
+                    "hoveredA": 0.5,
+                    "normalR": 1.0,
+                    "normalG": 1.0,
+                    "normalB": 1.0,
+                    "normalA": 0.5
+                }
+            ]
+        },
+        {
+            "ID": 6,
+            "Name": "Combat Screen Btn",
+            "UID": 11316476502127272732,
+            "Components": [
+                {
+                    "PID": 6642123175702952797,
+                    "ID": 13,
+                    "UID": 16977603856763799463,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 6.469001770019531,
+                        "Y": -1.2143914699554443,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 5.224280834197998,
+                        "Y": 2.792959213256836,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 50,
+                    "UID": 17702894990884452006,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "",
+                    "Font Size": 0.10000000149011612,
+                    "Wrapper": 0.0,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                },
+                {
+                    "ID": 51,
+                    "UID": 15977267928865401311,
+                    "Type": "Script",
+                    "Name": "ButtonCalls"
+                },
+                {
+                    "Type": "Button",
+                    "ID": 12,
+                    "UID": 7295259738988975477,
+                    "Graphic ID": 0,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.5,
+                            "Y": -0.5
+                        },
+                        "Max": {
+                            "X": 0.5,
+                            "Y": 0.5
+                        }
+                    },
+                    "Callback": "OpenGameObject",
+                    "clickedR": 0.5,
+                    "clickedG": 0.5,
+                    "clickedB": 0.5,
+                    "clickedA": 0.5,
+                    "hoveredR": 0.5,
+                    "hoveredG": 1.0,
+                    "hoveredB": 1.0,
+                    "hoveredA": 0.5,
+                    "normalR": 1.0,
+                    "normalG": 1.0,
+                    "normalB": 1.0,
+                    "normalA": 0.5
+                }
+            ]
+        },
+        {
+            "ID": 7,
+            "Name": "Background 1",
+            "UID": 12983590837959087399,
+            "Components": [
+                {
+                    "PID": 13016513725544699197,
+                    "ID": 17,
+                    "UID": 13931835776885012654,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.1500000953674316,
+                        "Y": 2.1500000953674316,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 14,
+                    "UID": 3852157845266022312,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 4874611181005233622,
+                    "Sprite Name": "Panel_02.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 0.9998999834060669,
+                        "Z": 0.9998999834060669,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "SortingGroup",
+                    "SortingLayer": 2,
+                    "OrderInLayer": 0
+                }
+            ]
+        },
+        {
+            "ID": 8,
+            "Name": "Report Btn",
+            "UID": 4738404728576611707,
+            "Components": [
+                {
+                    "PID": 13016513725544699197,
+                    "ID": 20,
+                    "UID": 8114187323212565792,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -6.0,
+                        "Y": 2.781108856201172,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 8.0,
+                        "Y": 8.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 16,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 2773572572927185668,
+                    "Sprite Name": "Btn_01.png",
+                    "Color": {
+                        "X": 0.0,
+                        "Y": 1.0,
+                        "Z": 0.12941177189350128,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "Button",
+                    "ID": 17,
+                    "UID": 18403743772477479216,
+                    "Graphic ID": 0,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.3199999928474426,
+                            "Y": -0.18000000715255737
+                        },
+                        "Max": {
+                            "X": 0.3199999928474426,
+                            "Y": 0.2199999988079071
+                        }
+                    },
+                    "Callback": "OpenReportTab",
+                    "clickedR": 0.5,
+                    "clickedG": 0.5,
+                    "clickedB": 0.5,
+                    "clickedA": 0.5,
+                    "hoveredR": 0.5,
+                    "hoveredG": 1.0,
+                    "hoveredB": 1.0,
+                    "hoveredA": 0.5,
+                    "normalR": 1.0,
+                    "normalG": 1.0,
+                    "normalB": 1.0,
+                    "normalA": 0.5
+                },
+                {
+                    "Type": "Text",
+                    "ID": 18,
+                    "UID": 16959184311648873933,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Report",
+                    "Font Size": 0.20000000298023224,
+                    "Wrapper": 0.0,
+                    "r": 1.0,
+                    "g": 0.9998999834060669,
+                    "b": 0.9998999834060669,
+                    "a": 1.0
+                },
+                {
+                    "Type": "SortingGroup",
+                    "SortingLayer": 2,
+                    "OrderInLayer": 3
+                }
+            ]
+        },
+        {
+            "ID": 9,
+            "Name": "Message Btn",
+            "UID": 18015345159000112736,
+            "Components": [
+                {
+                    "PID": 13016513725544699197,
+                    "ID": 25,
+                    "UID": 13218216793397414281,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -6.0,
+                        "Y": 0.0,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 8.0,
+                        "Y": 8.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 21,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 2773572572927185668,
+                    "Sprite Name": "Btn_01.png",
+                    "Color": {
+                        "X": 0.0,
+                        "Y": 1.0,
+                        "Z": 0.12941177189350128,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "Button",
+                    "ID": 22,
+                    "UID": 314378769541143130,
+                    "Graphic ID": 0,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.3199999928474426,
+                            "Y": -0.18000000715255737
+                        },
+                        "Max": {
+                            "X": 0.3199999928474426,
+                            "Y": 0.2199999988079071
+                        }
+                    },
+                    "Callback": "OpenMessageTab",
+                    "clickedR": 0.5,
+                    "clickedG": 0.5,
+                    "clickedB": 0.5,
+                    "clickedA": 0.5,
+                    "hoveredR": 0.5,
+                    "hoveredG": 1.0,
+                    "hoveredB": 1.0,
+                    "hoveredA": 0.5,
+                    "normalR": 1.0,
+                    "normalG": 1.0,
+                    "normalB": 1.0,
+                    "normalA": 0.5
+                },
+                {
+                    "Type": "Text",
+                    "ID": 23,
+                    "UID": 12023453833481404213,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Messages",
+                    "Font Size": 0.20000000298023224,
+                    "Wrapper": 0.0,
+                    "r": 1.0,
+                    "g": 0.9998999834060669,
+                    "b": 0.9998999834060669,
+                    "a": 1.0
+                },
+                {
+                    "Type": "SortingGroup",
+                    "SortingLayer": 2,
+                    "OrderInLayer": 3
+                }
+            ]
+        },
+        {
+            "ID": 10,
+            "Name": "Crew Status Btn",
+            "UID": 16668864546539558113,
+            "Components": [
+                {
+                    "PID": 13016513725544699197,
+                    "ID": 30,
+                    "UID": 9230095723220284703,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -6.0,
+                        "Y": -2.547485589981079,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 8.0,
+                        "Y": 8.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 26,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 2773572572927185668,
+                    "Sprite Name": "Btn_01.png",
+                    "Color": {
+                        "X": 0.0,
+                        "Y": 1.0,
+                        "Z": 0.12941177189350128,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "Button",
+                    "ID": 27,
+                    "UID": 9762107524187045268,
+                    "Graphic ID": 0,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.3199999928474426,
+                            "Y": -0.18000000715255737
+                        },
+                        "Max": {
+                            "X": 0.3199999928474426,
+                            "Y": 0.2199999988079071
+                        }
+                    },
+                    "Callback": "OpenCrewTab",
+                    "clickedR": 0.5,
+                    "clickedG": 0.5,
+                    "clickedB": 0.5,
+                    "clickedA": 0.5,
+                    "hoveredR": 0.5,
+                    "hoveredG": 1.0,
+                    "hoveredB": 1.0,
+                    "hoveredA": 0.5,
+                    "normalR": 1.0,
+                    "normalG": 1.0,
+                    "normalB": 1.0,
+                    "normalA": 0.5
+                },
+                {
+                    "Type": "Text",
+                    "ID": 28,
+                    "UID": 12541598801998189137,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Crew Status",
+                    "Font Size": 0.20000000298023224,
+                    "Wrapper": 0.0,
+                    "r": 1.0,
+                    "g": 0.9998999834060669,
+                    "b": 0.9998999834060669,
+                    "a": 1.0
+                },
+                {
+                    "Type": "SortingGroup",
+                    "SortingLayer": 2,
+                    "OrderInLayer": 3
+                }
+            ]
+        },
+        {
+            "ID": 11,
+            "Name": "Report Tab",
+            "UID": 10859932478542320768,
+            "Components": [
+                {
+                    "PID": 13016513725544699197,
+                    "ID": 35,
+                    "UID": 147252521619405420,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 12,
+            "Name": "Border",
+            "UID": 9535795683617616776,
+            "Components": [
+                {
+                    "PID": 10859932478542320768,
+                    "ID": 36,
+                    "UID": 17035729097231950615,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 2.0,
+                        "Y": 0.12523186206817627,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 11.0,
+                        "Y": 9.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 32,
+                    "UID": 14273993358878549204,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 13292609945703451902,
+                    "Sprite Name": "Panel_01.png",
+                    "Color": {
+                        "X": 0.11424887180328369,
+                        "Y": 1.0,
+                        "Z": 0.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "SortingGroup",
+                    "SortingLayer": 2,
+                    "OrderInLayer": 3
+                }
+            ]
+        },
+        {
+            "ID": 13,
+            "Name": "Header",
+            "UID": 9390302505897738043,
+            "Components": [
+                {
+                    "PID": 10859932478542320768,
+                    "ID": 39,
+                    "UID": 11317309171169207398,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 2.0,
+                        "Y": 3.4720780849456787,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 31,
+                    "UID": 15497164812813195796,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Header\n",
+                    "Font Size": 2.0,
+                    "Wrapper": 0.0,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 14,
+            "Name": "Options",
+            "UID": 15073166646770035811,
+            "Components": [
+                {
+                    "PID": 10859932478542320768,
+                    "ID": 41,
+                    "UID": 792097583910460010,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 15,
+            "Name": "Option 1",
+            "UID": 9580382767776116236,
+            "Components": [
+                {
+                    "PID": 15073166646770035811,
+                    "ID": 42,
+                    "UID": 15431937059709065084,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 1.100000023841858,
+                        "Y": -2.75,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 3.799999952316284,
+                        "Y": 3.799999952316284,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 36,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 8004758063171796349,
+                    "Sprite Name": "Option_01.png",
+                    "Color": {
+                        "X": 0.0,
+                        "Y": 0.5490196347236633,
+                        "Z": 0.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "Button",
+                    "ID": 37,
+                    "UID": 14633390078747120407,
+                    "Graphic ID": 0,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.699999988079071,
+                            "Y": -0.20000000298023224
+                        },
+                        "Max": {
+                            "X": 0.699999988079071,
+                            "Y": 0.20000000298023224
+                        }
+                    },
+                    "Callback": "",
+                    "clickedR": 0.5,
+                    "clickedG": 0.5,
+                    "clickedB": 0.5,
+                    "clickedA": 0.5,
+                    "hoveredR": 0.5,
+                    "hoveredG": 1.0,
+                    "hoveredB": 1.0,
+                    "hoveredA": 0.5,
+                    "normalR": 1.0,
+                    "normalG": 1.0,
+                    "normalB": 1.0,
+                    "normalA": 0.5
+                },
+                {
+                    "Type": "Text",
+                    "ID": 52,
+                    "UID": 14045026915257419263,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "",
+                    "Font Size": 0.029999999329447746,
+                    "Wrapper": 0.0,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                },
+                {
+                    "Type": "SortingGroup",
+                    "SortingLayer": 2,
+                    "OrderInLayer": 3
+                }
+            ]
+        },
+        {
+            "ID": 16,
+            "Name": "Option 2",
+            "UID": 10025263737657599060,
+            "Components": [
+                {
+                    "PID": 15073166646770035811,
+                    "ID": 47,
+                    "UID": 18037790897596395722,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 1.100000023841858,
+                        "Y": -3.5,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 3.799999952316284,
+                        "Y": 3.799999952316284,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 38,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 8004758063171796349,
+                    "Sprite Name": "Option_01.png",
+                    "Color": {
+                        "X": 0.0,
+                        "Y": 0.5490196347236633,
+                        "Z": 0.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "Button",
+                    "ID": 39,
+                    "UID": 11677831846571942442,
+                    "Graphic ID": 0,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.699999988079071,
+                            "Y": -0.20000000298023224
+                        },
+                        "Max": {
+                            "X": 0.699999988079071,
+                            "Y": 0.20000000298023224
+                        }
+                    },
+                    "Callback": "",
+                    "clickedR": 0.5,
+                    "clickedG": 0.5,
+                    "clickedB": 0.5,
+                    "clickedA": 0.5,
+                    "hoveredR": 0.5,
+                    "hoveredG": 1.0,
+                    "hoveredB": 1.0,
+                    "hoveredA": 0.5,
+                    "normalR": 1.0,
+                    "normalG": 1.0,
+                    "normalB": 1.0,
+                    "normalA": 0.5
+                },
+                {
+                    "Type": "Text",
+                    "ID": 53,
+                    "UID": 1106834733728225242,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "",
+                    "Font Size": 0.029999999329447746,
+                    "Wrapper": 0.0,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                },
+                {
+                    "Type": "SortingGroup",
+                    "SortingLayer": 2,
+                    "OrderInLayer": 3
+                }
+            ]
+        },
+        {
+            "ID": 17,
+            "Name": "Text 01",
+            "UID": 17021031462184498984,
+            "Components": [
+                {
+                    "PID": 9580382767776116236,
+                    "ID": 52,
+                    "UID": 5747218832998617159,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -0.8999999761581421,
+                        "Y": 0.0,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 42,
+                    "UID": 16931335441692169638,
+                    "FontName": "corbel",
+                    "H_Align": 0,
+                    "V_Align": 1,
+                    "Content": "Option 1",
+                    "Font Size": 0.30000001192092896,
+                    "Wrapper": 0.0,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 18,
+            "Name": "Text 02",
+            "UID": 13535077627254648872,
+            "Components": [
+                {
+                    "PID": 10025263737657599060,
+                    "ID": 54,
+                    "UID": 14338617212486848039,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -0.8999999761581421,
+                        "Y": 0.0,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 43,
+                    "UID": 14702735325457480603,
+                    "FontName": "corbel",
+                    "H_Align": 0,
+                    "V_Align": 1,
+                    "Content": "Option 2",
+                    "Font Size": 0.30000001192092896,
+                    "Wrapper": 0.0,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 19,
+            "Name": "Body",
+            "UID": 9628951804995862301,
+            "Components": [
+                {
+                    "PID": 10859932478542320768,
+                    "ID": 56,
+                    "UID": 10802616161661811348,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -2.5,
+                        "Y": 2.437000036239624,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 44,
+                    "UID": 4507042036207199486,
+                    "FontName": "corbel",
+                    "H_Align": 0,
+                    "V_Align": 1,
+                    "Content": "Body",
+                    "Font Size": 1.0,
+                    "Wrapper": 7.5,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 3,
+            "Name": "Main Screen Canvas",
+            "UID": 13016513725544699197,
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 58,
+                    "UID": 8347447431935136709,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": -8.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 21,
+            "Name": "Combat Canvas",
+            "UID": 5352610491280618753,
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 59,
+                    "UID": 15169102713106605426,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": -3.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 22,
+            "Name": "Message Tab",
+            "UID": 15941296303644650595,
+            "Components": [
+                {
+                    "PID": 13016513725544699197,
+                    "ID": 60,
+                    "UID": 13744351976772246501,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 23,
+            "Name": "Crew Tab",
+            "UID": 17483565579333082669,
+            "Components": [
+                {
+                    "PID": 13016513725544699197,
+                    "ID": 61,
+                    "UID": 2946028661215598268,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 41,
+            "Name": "Main Menu Canvas",
+            "UID": 6010295240560106887,
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 62,
+                    "UID": 16397389672845186590,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 118,
+                    "UID": 3980600980402691954,
+                    "Type": "AudioSource",
+                    "Alias": "BGM _Menu"
+                }
+            ]
+        },
+        {
+            "ID": 28,
+            "Name": "Snowing",
+            "UID": 12962962280028128638,
+            "Components": [
+                {
+                    "PID": 17600260081740642465,
+                    "ID": 64,
+                    "UID": 3315373700576312276,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.20270991325378418,
+                        "Y": 2.609424352645874,
+                        "Z": -11.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 45.0,
+                        "Y": 20.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 71,
+                    "UID": 11135358241762452116,
+                    "Type": "Animator",
+                    "Loop": true,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "Snow_Spritesheet_01.png",
+                            "Sprite ID": 14648573232611291926,
+                            "Time Delay": 0.009999999776482582,
+                            "FrameCount": 54,
+                            "Rows": 9,
+                            "Columns": 6
+                        }
+                    ]
+                },
+                {
+                    "Type": "SortingGroup",
+                    "SortingLayer": 1,
+                    "OrderInLayer": 2
+                }
+            ]
+        },
+        {
+            "ID": 26,
+            "Name": "Next",
+            "UID": 6643851363947857141,
+            "Components": [
+                {
+                    "PID": 10859932478542320768,
+                    "ID": 67,
+                    "UID": 2443539809303890500,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 5.876922607421875,
+                        "Y": -3.184553861618042,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 4.0,
+                        "Y": 4.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 65,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 18094748837859732085,
+                    "Sprite Name": "Next_Btn.png",
+                    "Color": {
+                        "X": 0.9999076128005981,
+                        "Y": 1.0,
+                        "Z": 0.9998999834060669,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "Button",
+                    "ID": 66,
+                    "UID": 3481733135209103907,
+                    "Graphic ID": 0,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.30000001192092896,
+                            "Y": -0.23000000417232513
+                        },
+                        "Max": {
+                            "X": 0.3199999928474426,
+                            "Y": 0.23000000417232513
+                        }
+                    },
+                    "Callback": "",
+                    "clickedR": 0.5,
+                    "clickedG": 0.5,
+                    "clickedB": 0.5,
+                    "clickedA": 0.5,
+                    "hoveredR": 0.5,
+                    "hoveredG": 1.0,
+                    "hoveredB": 1.0,
+                    "hoveredA": 0.5,
+                    "normalR": 1.0,
+                    "normalG": 1.0,
+                    "normalB": 1.0,
+                    "normalA": 0.5
+                },
+                {
+                    "Type": "Text",
+                    "ID": 67,
+                    "UID": 7765396048952580583,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Next",
+                    "Font Size": 0.30000001192092896,
+                    "Wrapper": 0.0,
+                    "r": 0.9999080896377563,
+                    "g": 1.0,
+                    "b": 0.9998999834060669,
+                    "a": 1.0
+                },
+                {
+                    "Type": "SortingGroup",
+                    "SortingLayer": 2,
+                    "OrderInLayer": 3
+                }
+            ]
+        },
+        {
+            "ID": 25,
+            "Name": "Tracks",
+            "UID": 4749018423548755724,
+            "Components": [
+                {
+                    "PID": 17600260081740642465,
+                    "ID": 72,
+                    "UID": 639288693235478136,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 2.274596929550171,
+                        "Z": -11.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 4.280946731567383,
+                        "Y": 2.4860777854919434,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 63,
+                    "UID": 180502757048782684,
+                    "Type": "Animator",
+                    "Loop": true,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "Tracks.png",
+                            "Sprite ID": 1100315501279954735,
+                            "Time Delay": 0.019999999552965164,
+                            "FrameCount": 4,
+                            "Rows": 1,
+                            "Columns": 4
+                        }
+                    ]
+                },
+                {
+                    "Type": "SortingGroup",
+                    "SortingLayer": 1,
+                    "OrderInLayer": 1
+                },
+                {
+                    "ID": 119,
+                    "UID": 10395333414142043547,
+                    "Type": "AudioSource",
+                    "Alias": "Amb_TrainInterior"
+                }
+            ]
+        },
+        {
+            "ID": 27,
+            "Name": "Warning",
+            "UID": 228040955233895855,
+            "Components": [
+                {
+                    "PID": 17600260081740642465,
+                    "ID": 76,
+                    "UID": 4522056754345730861,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 6.304711818695068,
+                        "Y": -1.3121013641357422,
+                        "Z": -9.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": -8.998576164245605
+                    },
+                    "Scale": {
+                        "X": 7.0,
+                        "Y": 7.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 69,
+                    "UID": 16523727768656661552,
+                    "Type": "Animator",
+                    "Loop": false,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "Warning_Spritesheet_01.png",
+                            "Sprite ID": 12404360149057679809,
+                            "Time Delay": 0.05000000074505806,
+                            "FrameCount": 30,
+                            "Rows": 5,
+                            "Columns": 6
+                        }
+                    ]
+                },
+                {
+                    "Type": "SortingGroup",
+                    "SortingLayer": 4,
+                    "OrderInLayer": 2
+                }
+            ]
+        },
+        {
+            "ID": 29,
+            "Name": "Manual",
+            "UID": 16422179859455161762,
+            "Components": [
+                {
+                    "PID": 6642123175702952797,
+                    "ID": 79,
+                    "UID": 14138180957664440150,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": -3.6497156620025635,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 8.0,
+                        "Y": 8.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "SortingGroup",
+                    "SortingLayer": 4,
+                    "OrderInLayer": 2
+                },
+                {
+                    "Type": "Button",
+                    "ID": 129,
+                    "UID": 3544441234013744358,
+                    "Graphic ID": 0,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.33000001311302185,
+                            "Y": -0.25999999046325684
+                        },
+                        "Max": {
+                            "X": 0.33000001311302185,
+                            "Y": 0.25999999046325684
+                        }
+                    },
+                    "Callback": "",
+                    "clickedR": 0.5,
+                    "clickedG": 0.5,
+                    "clickedB": 0.5,
+                    "clickedA": 0.5,
+                    "hoveredR": 0.5,
+                    "hoveredG": 1.0,
+                    "hoveredB": 1.0,
+                    "hoveredA": 0.5,
+                    "normalR": 1.0,
+                    "normalG": 1.0,
+                    "normalB": 1.0,
+                    "normalA": 0.5
+                }
+            ]
+        },
+        {
+            "ID": 30,
+            "Name": "Lever",
+            "UID": 2892941001364867176,
+            "Components": [
+                {
+                    "PID": 6642123175702952797,
+                    "ID": 82,
+                    "UID": 2238886702781362304,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -2.964315891265869,
+                        "Y": -3.480893850326538,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.0,
+                        "Y": 2.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 75,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 7229591644963984314,
+                    "Sprite Name": "Lever.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "SortingGroup",
+                    "SortingLayer": 4,
+                    "OrderInLayer": 2
+                }
+            ]
+        },
+        {
+            "ID": 32,
+            "Name": "Report Screen Highlight",
+            "UID": 15877612516600515798,
+            "Components": [
+                {
+                    "PID": 6642123175702952797,
+                    "ID": 85,
+                    "UID": 221440335752384622,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.05472242832183838,
+                        "Y": -0.6735561490058899,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.8237757682800293,
+                        "Y": 2.836432456970215,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 77,
+                    "UID": 618169328986704273,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 5464368652596582388,
+                    "Sprite Name": "M_Screen_Hightlight.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "SortingGroup",
+                    "SortingLayer": 4,
+                    "OrderInLayer": 2
+                }
+            ]
+        },
+        {
+            "ID": 33,
+            "Name": "Combat Screen Highlight",
+            "UID": 9048913361650294823,
+            "Components": [
+                {
+                    "PID": 6642123175702952797,
+                    "ID": 88,
+                    "UID": 8288425270849096022,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 6.444356918334961,
+                        "Y": -1.4124579429626465,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.647845983505249,
+                        "Y": 2.6822762489318848,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 80,
+                    "UID": 3337311308950521611,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 6847983346719718934,
+                    "Sprite Name": "Right_Screen_Highlight.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "SortingGroup",
+                    "SortingLayer": 4,
+                    "OrderInLayer": 2
+                }
+            ]
+        },
+        {
+            "ID": 35,
+            "Name": "Glass",
+            "UID": 2011668778475937809,
+            "Components": [
+                {
+                    "PID": 6642123175702952797,
+                    "ID": 91,
+                    "UID": 9629852686802283871,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 22.0,
+                        "Y": 22.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 80,
+                    "UID": 8052160640008293207,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 17236820672172375526,
+                    "Sprite Name": "Glasdirty.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "Type": "SortingGroup",
+                    "SortingLayer": 1,
+                    "OrderInLayer": 63
+                }
+            ]
+        },
+        {
+            "ID": 40,
+            "Name": "Pause Canvas",
+            "UID": 1722160444903115838,
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 94,
+                    "UID": 8343349981171578442,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 31,
+            "Name": "Introduction",
+            "UID": 12889490517326974467,
+            "Components": [
+                {
+                    "PID": 11033010850512695424,
+                    "ID": 95,
+                    "UID": 3656191359194818359,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 79,
+                    "UID": 11638602497398801256,
+                    "Type": "Script",
+                    "Name": "Event_Intro"
+                }
+            ]
+        },
+        {
+            "ID": 36,
+            "Name": "Border",
+            "UID": 16284613037981122953,
+            "Components": [
+                {
+                    "PID": 5352610491280618753,
+                    "ID": 97,
+                    "UID": 13079904256003103692,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 3.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 6.297298908233643,
+                        "Y": 7.346395492553711,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 83,
+                    "UID": 4180163344077572050,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 5464368652596582388,
+                    "Sprite Name": "M_Screen_Hightlight.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 37,
+            "Name": "Field",
+            "UID": 14659235077959355701,
+            "Components": [
+                {
+                    "PID": 16284613037981122953,
+                    "ID": 99,
+                    "UID": 15622519304345784523,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 5.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.8969999551773071,
+                        "Y": 0.8119999766349792,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 84,
+                    "UID": 16075966312356606985,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
+                    "Color": {
+                        "X": 0.42682838439941406,
+                        "Y": 0.4267857074737549,
+                        "Z": 0.4267857074737549,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 38,
+            "Name": "Ally1",
+            "UID": 15972763550374758079,
+            "Components": [
+                {
+                    "PID": 5352610491280618753,
+                    "ID": 101,
+                    "UID": 9954707222135465009,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -4.044619083404541,
+                        "Y": -2.3220953941345215,
+                        "Z": 9.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 93,
+                    "UID": 3679966259689616814,
+                    "Type": "Script",
+                    "Name": "ShooterBehaviour",
+                    "enemy": false
+                },
+                {
+                    "Type": "BoxCollider2D",
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.5,
+                            "Y": -0.5
+                        },
+                        "Max": {
+                            "X": 0.5,
+                            "Y": 0.5
+                        }
+                    }
+                },
+                {
+                    "ID": 95,
+                    "UID": 12372349387857469882,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 13074272764253053419,
+                    "Sprite Name": "Shooter.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 20,
+            "Name": "Game Manager",
+            "UID": 18149848984709464093,
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 105,
+                    "UID": 4632128633800175691,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 134,
+                    "UID": 14452000689302103011,
+                    "Type": "Script",
+                    "Name": "GameManager",
+                    "isPaused": false
+                }
+            ]
+        },
+        {
+            "ID": 39,
+            "Name": "M Background",
+            "UID": 8185439887664340781,
+            "Components": [
+                {
+                    "PID": 6010295240560106887,
+                    "ID": 107,
+                    "UID": 3866708009035527030,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 9.550000190734863,
+                        "Y": 9.550000190734863,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 108,
+                    "UID": 12106142585880980605,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 9773656205542796846,
+                    "Sprite Name": "MainMenu_BG.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 42,
+            "Name": "M Title",
+            "UID": 12732539976782478035,
+            "Components": [
+                {
+                    "PID": 6010295240560106887,
+                    "ID": 109,
+                    "UID": 4464471865429786132,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 3.814497709274292,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Text",
+                    "ID": 110,
+                    "UID": 2273646825822374204,
+                    "FontName": "corbel",
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Content": "Packed Tracks",
+                    "Font Size": 6.0,
+                    "Wrapper": 0.0,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 43,
+            "Name": "M Start Btn",
+            "UID": 11062517815291545482,
+            "Components": [
+                {
+                    "PID": 12132292203907954623,
+                    "ID": 111,
+                    "UID": 13393446451854986167,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -8.5,
+                        "Y": -2.5,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Button",
+                    "ID": 113,
+                    "UID": 311354089671163994,
+                    "Graphic ID": 0,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.0,
+                            "Y": -0.5
+                        },
+                        "Max": {
+                            "X": 2.200000047683716,
+                            "Y": 0.5
+                        }
+                    },
+                    "Callback": "",
+                    "clickedR": 0.5,
+                    "clickedG": 0.5,
+                    "clickedB": 0.5,
+                    "clickedA": 0.5,
+                    "hoveredR": 0.5,
+                    "hoveredG": 1.0,
+                    "hoveredB": 1.0,
+                    "hoveredA": 0.5,
+                    "normalR": 1.0,
+                    "normalG": 1.0,
+                    "normalB": 1.0,
+                    "normalA": 0.5
+                },
+                {
+                    "Type": "Text",
+                    "ID": 114,
+                    "UID": 2878682979164196974,
+                    "FontName": "corbel",
+                    "H_Align": 0,
+                    "V_Align": 1,
+                    "Content": "Start Game",
+                    "Font Size": 4.0,
+                    "Wrapper": 0.0,
+                    "r": 1.0,
+                    "g": 0.9998999834060669,
+                    "b": 0.9998999834060669,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 44,
+            "Name": "M Buttons",
+            "UID": 12132292203907954623,
+            "Components": [
+                {
+                    "PID": 6010295240560106887,
+                    "ID": 114,
+                    "UID": 13734471767606005997,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 45,
+            "Name": "M Quit Btn",
+            "UID": 3187835292925036174,
+            "Components": [
+                {
+                    "PID": 12132292203907954623,
+                    "ID": 115,
+                    "UID": 12598581448696707903,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -8.5,
+                        "Y": -4.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Button",
+                    "ID": 116,
+                    "UID": 18023528754360494802,
+                    "Graphic ID": 0,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": 0.0,
+                            "Y": -0.5
+                        },
+                        "Max": {
+                            "X": 2.200000047683716,
+                            "Y": 0.5
+                        }
+                    },
+                    "Callback": "",
+                    "clickedR": 0.5,
+                    "clickedG": 0.5,
+                    "clickedB": 0.5,
+                    "clickedA": 0.5,
+                    "hoveredR": 0.5,
+                    "hoveredG": 1.0,
+                    "hoveredB": 1.0,
+                    "hoveredA": 0.5,
+                    "normalR": 1.0,
+                    "normalG": 1.0,
+                    "normalB": 1.0,
+                    "normalA": 0.5
+                },
+                {
+                    "Type": "Text",
+                    "ID": 117,
+                    "UID": 18219480460413580662,
+                    "FontName": "corbel",
+                    "H_Align": 0,
+                    "V_Align": 1,
+                    "Content": "Quit Game",
+                    "Font Size": 4.0,
+                    "Wrapper": 0.0,
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 34,
+            "Name": "Event Manager",
+            "UID": 11033010850512695424,
+            "Components": [
+                {
+                    "PID": 0,
+                    "ID": 118,
+                    "UID": 2090527385638163264,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 76,
+                    "UID": 15659786266280555420,
+                    "Type": "Script",
+                    "Name": "EventManager",
+                    "EventSequence": 0,
+                    "DaySequence": 1,
+                    "LuckSequence": 0
+                }
+            ]
+        },
+        {
+            "ID": 46,
+            "Name": "Background",
+            "UID": 11948856811499114110,
+            "Components": [
+                {
+                    "PID": 1722160444903115838,
+                    "ID": 120,
+                    "UID": 17679201384445442269,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.4000000953674316,
+                        "Y": 2.4000000953674316,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 121,
+                    "UID": 15114354479178267429,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 4874611181005233622,
+                    "Sprite Name": "Panel_02.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 47,
+            "Name": "Pause",
+            "UID": 11423705871834854949,
+            "Components": [
+                {
+                    "PID": 1722160444903115838,
+                    "ID": 122,
+                    "UID": 2548371791561503206,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 3.0
                     },
                     "Rot": {
                         "X": 0.0,
@@ -68,14 +2345,629 @@
                     }
                 },
                 {
-                    "ID": 4,
-                    "Type": "SpriteRenderer",
-                    "Sprite ID": 3,
-                    "Sprite Name": "Train_Placeholder_01.png",
+                    "Type": "ImageComponent",
+                    "ID": 133,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 815116223952477642,
+                    "Sprite Name": "PauseMenu_BG.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
                         "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 48,
+            "Name": "P Resume",
+            "UID": 7234497426690459476,
+            "Components": [
+                {
+                    "PID": 1722160444903115838,
+                    "ID": 124,
+                    "UID": 12655284626483967210,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 4.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 8.0,
+                        "Y": 8.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Button",
+                    "ID": 124,
+                    "UID": 7338901696821162260,
+                    "Graphic ID": 0,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.3700000047683716,
+                            "Y": -0.20000000298023224
+                        },
+                        "Max": {
+                            "X": 0.3700000047683716,
+                            "Y": 0.20000000298023224
+                        }
+                    },
+                    "Callback": "",
+                    "clickedR": 0.5,
+                    "clickedG": 0.5,
+                    "clickedB": 0.5,
+                    "clickedA": 0.5,
+                    "hoveredR": 0.7731319069862366,
+                    "hoveredG": 0.7732092142105103,
+                    "hoveredB": 0.7732092142105103,
+                    "hoveredA": 0.5,
+                    "normalR": 1.0,
+                    "normalG": 1.0,
+                    "normalB": 1.0,
+                    "normalA": 0.5
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 135,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 3632161404554295764,
+                    "Sprite Name": "ResumeBtn.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 49,
+            "Name": "Manual PopUp",
+            "UID": 18214688194793872927,
+            "Components": [
+                {
+                    "PID": 6642123175702952797,
+                    "ID": 127,
+                    "UID": 7870217325188693691,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": -0.47999998927116394,
+                        "Z": 2.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 8.0,
+                        "Y": 8.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 128,
+                    "UID": 15988036514111329911,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 8689095936251823203,
+                    "Sprite Name": "TempTut-40.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 50,
+            "Name": "Manual Flip",
+            "UID": 16232360763330651275,
+            "Components": [
+                {
+                    "PID": 17600260081740642465,
+                    "ID": 129,
+                    "UID": 7943400136252988972,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": -0.49000000953674316,
+                        "Z": -8.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 8.0,
+                        "Y": 8.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 131,
+                    "UID": 7260043237311215262,
+                    "Type": "Animator",
+                    "Loop": true,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "manual_spritesheet_01.png",
+                            "Sprite ID": 5095687623820804906,
+                            "Time Delay": 0.10000000149011612,
+                            "FrameCount": 1,
+                            "Rows": 1,
+                            "Columns": 16
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 51,
+            "Name": "P Quit Game",
+            "UID": 11998269805652527380,
+            "Components": [
+                {
+                    "PID": 1722160444903115838,
+                    "ID": 131,
+                    "UID": 7845173898275587771,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": -2.4000000953674316,
+                        "Z": 4.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 8.0,
+                        "Y": 8.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "Type": "Button",
+                    "ID": 132,
+                    "UID": 4561109446918292296,
+                    "Graphic ID": 0,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.3700000047683716,
+                            "Y": -0.20000000298023224
+                        },
+                        "Max": {
+                            "X": 0.3700000047683716,
+                            "Y": 0.20000000298023224
+                        }
+                    },
+                    "Callback": "",
+                    "clickedR": 0.5,
+                    "clickedG": 0.5,
+                    "clickedB": 0.5,
+                    "clickedA": 0.5,
+                    "hoveredR": 0.7678682208061218,
+                    "hoveredG": 0.7679450511932373,
+                    "hoveredB": 0.7679450511932373,
+                    "hoveredA": 0.5,
+                    "normalR": 1.0,
+                    "normalG": 1.0,
+                    "normalB": 1.0,
+                    "normalA": 0.5
+                },
+                {
+                    "Type": "ImageComponent",
+                    "ID": 126,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 14765554087980337725,
+                    "Sprite Name": "QuitBtn.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 52,
+            "Name": "Bullet",
+            "UID": 1935096024227722542,
+            "Components": [
+                {
+                    "PID": 5352610491280618753,
+                    "ID": 134,
+                    "UID": 14907318917629648640,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -0.38715338706970215,
+                        "Y": -6.651930332183838,
+                        "Z": 11.300000190734863
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 0.5,
+                        "Y": 0.10000000149011612,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 136,
+                    "UID": 14115120541849231103,
+                    "Type": "Script",
+                    "Name": "Bullet",
+                    "enemy": false
+                },
+                {
+                    "ID": 137,
+                    "UID": 18331324015060606888,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 0.5835156440734863,
+                        "Z": 0.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 53,
+            "Name": "Ally4",
+            "UID": 13569992118108298377,
+            "Components": [
+                {
+                    "PID": 5352610491280618753,
+                    "ID": 137,
+                    "UID": 7709648583127269500,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -3.9750938415527344,
+                        "Y": 1.8995826244354248,
+                        "Z": 9.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 145,
+                    "UID": 8425519474498084885,
+                    "Type": "Script",
+                    "Name": "ShooterBehaviour",
+                    "enemy": false
+                },
+                {
+                    "ID": 134,
+                    "UID": 16016360790536549191,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 13074272764253053419,
+                    "Sprite Name": "Shooter.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 54,
+            "Name": "Ally2",
+            "UID": 15010822822985376422,
+            "Components": [
+                {
+                    "PID": 5352610491280618753,
+                    "ID": 140,
+                    "UID": 14145399291760255492,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -3.4883475303649902,
+                        "Y": -0.39471882581710815,
+                        "Z": 9.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 146,
+                    "UID": 17257709759179408486,
+                    "Type": "Script",
+                    "Name": "ShooterBehaviour",
+                    "enemy": false
+                },
+                {
+                    "ID": 152,
+                    "UID": 5682882130532431688,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 13074272764253053419,
+                    "Sprite Name": "Shooter.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 55,
+            "Name": "Ally3",
+            "UID": 15646094530424686423,
+            "Components": [
+                {
+                    "PID": 5352610491280618753,
+                    "ID": 143,
+                    "UID": 16434162533949316625,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -3.326098680496216,
+                        "Y": 1.0114659070968628,
+                        "Z": 9.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 147,
+                    "UID": 15243957718011285090,
+                    "Type": "Script",
+                    "Name": "ShooterBehaviour",
+                    "enemy": false
+                },
+                {
+                    "ID": 153,
+                    "UID": 4486753070236679417,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 13074272764253053419,
+                    "Sprite Name": "Shooter.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 56,
+            "Name": "Enemy1",
+            "UID": 9031854693585046773,
+            "Components": [
+                {
+                    "PID": 5352610491280618753,
+                    "ID": 146,
+                    "UID": 16081563303163769197,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 3.488347291946411,
+                        "Y": -2.1709516048431396,
+                        "Z": 9.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": -179.99989318847656
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 154,
+                    "UID": 4306034270618855539,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 13074272764253053419,
+                    "Sprite Name": "Shooter.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 0.0,
+                        "Z": 0.0,
+                        "W": 1.0
+                    }
+                },
+                {
+                    "ID": 156,
+                    "UID": 16764923935188798841,
+                    "Type": "Script",
+                    "Name": "ShooterBehaviour",
+                    "enemy": true
+                }
+            ]
+        },
+        {
+            "ID": 57,
+            "Name": "Enemy2",
+            "UID": 13916202076230194006,
+            "Components": [
+                {
+                    "PID": 5352610491280618753,
+                    "ID": 149,
+                    "UID": 8913182125534254474,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 3.569471836090088,
+                        "Y": 1.4308545589447021,
+                        "Z": 9.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": -179.99989318847656
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 149,
+                    "UID": 8088864182122659685,
+                    "Type": "Script",
+                    "Name": "ShooterBehaviour",
+                    "enemy": true
+                },
+                {
+                    "ID": 155,
+                    "UID": 5478383924701126858,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 13074272764253053419,
+                    "Sprite Name": "Shooter.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 0.0,
+                        "Z": 0.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 58,
+            "Name": "Enemy3",
+            "UID": 10312832986124389292,
+            "Components": [
+                {
+                    "PID": 5352610491280618753,
+                    "ID": 152,
+                    "UID": 3354221719393007194,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 3.6505959033966064,
+                        "Y": -1.1594855785369873,
+                        "Z": 9.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": -179.99989318847656
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 150,
+                    "UID": 7312538200508330450,
+                    "Type": "Script",
+                    "Name": "ShooterBehaviour",
+                    "enemy": true
+                },
+                {
+                    "ID": 156,
+                    "UID": 8801744270318175921,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 13074272764253053419,
+                    "Sprite Name": "Shooter.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 0.0,
+                        "Z": 0.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 59,
+            "Name": "Enemy4",
+            "UID": 15227117562104515932,
+            "Components": [
+                {
+                    "PID": 5352610491280618753,
+                    "ID": 155,
+                    "UID": 13362390799151998808,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 3.3260979652404785,
+                        "Y": 0.22202980518341064,
+                        "Z": 9.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 180.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "ID": 151,
+                    "UID": 12485591651397772323,
+                    "Type": "Script",
+                    "Name": "ShooterBehaviour",
+                    "enemy": true
+                },
+                {
+                    "ID": 157,
+                    "UID": 5987444797250593235,
+                    "Type": "SpriteRenderer",
+                    "Sprite ID": 13074272764253053419,
+                    "Sprite Name": "Shooter.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 0.0,
+                        "Z": 0.0,
                         "W": 1.0
                     }
                 }

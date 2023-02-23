@@ -50,7 +50,7 @@ namespace Copium
 		float get_pixel_width() const { return width / PIXELRATIO; }
 		float get_pixel_height() const { return height / PIXELRATIO; }
 		const unsigned int& get_object_id() const { return textureObjectID; }
-		std::string& get_file_path() { return filePath; }
+		const std::string& get_file_path() const { return filePath; }
 
 	protected:
 		unsigned int instanceID = 0; // To reference to the file that contains the texture

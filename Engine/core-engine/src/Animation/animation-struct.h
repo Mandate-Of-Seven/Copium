@@ -2,6 +2,7 @@
 \file			animation-struct.h
 \project
 \author			Sean Ngo
+\co-author		Matthew Lau
 
 \par			Course: GAM200
 \par			Section:
@@ -19,6 +20,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Math/math-library.h"
 #include "Graphics/spritesheet.h"
 
+#define MAX_ANIMATION_COUNT 5
+
 namespace Copium
 {
 	struct Frame
@@ -30,16 +33,67 @@ namespace Copium
 
 	struct Animation
 	{
+		enum class AnimationStatus : char
+		{
+			idle,
+			playing,
+			paused,
+			completed
+		};
 
 		Spritesheet spriteSheet;
-		float timer, timeDelay;
+		double timer, timeDelay;
 		int frameCount, currentFrameIndex;
-		unsigned int rowIndex, columnIndex;
+		int rowIndex, columnIndex;
 		int columns, rows;
+		AnimationStatus status;
+		bool loop;
 
 		Animation();
-		bool UpdateFrame(float _dt);
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Updates the timer using dt
+
+		\param _dt
+			delta time
+
+		\return
+			true if timer has hit 0
+			false if timer has not hit 0
+		*/
+		/**************************************************************************/
+		bool UpdateFrame(double _dt);
+		/***************************************************************************/
+		/*!
+		\brief
+			Move to the next frame. Wraparounds if appropriate
+
+		\return
+			void
+		*/
+		/**************************************************************************/
 		void IncrementFrame();
+		/***************************************************************************/
+		/*!
+		\brief
+			Move to next frame but in reverse order. Wraparounds if appropriate
+
+		\return
+			void
+		*/
+		/**************************************************************************/
+		void DecrementFrame();
+		/***************************************************************************/
+		/*!
+		\brief
+			Reset the frame offsets to the 1st frame
+
+		\return
+			void
+		*/
+		/**************************************************************************/
 		void ResetFrame();
 
 	};

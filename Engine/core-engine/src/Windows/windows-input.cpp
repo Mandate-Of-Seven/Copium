@@ -21,6 +21,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Math/math-library.h"
 #include "Windows/windows-input.h"
 #include "Windows/windows-system.h"
+#include <Debugging/logging-system.h>
 
 #define COPIUM_MAX_MOUSEBUTTONS 5
 

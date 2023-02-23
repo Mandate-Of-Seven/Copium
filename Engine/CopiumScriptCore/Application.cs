@@ -34,5 +34,10 @@ namespace CopiumEngine
         {
             InternalCalls.QuitGame();
         }
+
+        public static float GetFPS()
+        {
+            return InternalCalls.GetFPS();
+        }
     }
 }

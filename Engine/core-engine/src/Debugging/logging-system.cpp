@@ -97,10 +97,9 @@ namespace Copium
 
     void LoggingSystem::assert_to_file(std::string expr_str, bool expr, std::string file, int line, std::string msg)
     {
-        error_log();
-
         if (expr)
         {
+            error_log();
             std::string temp =  "\nCaused By:\t" + expr_str + '\n' +
                                 "Info:\t\t" + msg + '\n' +
                                 "Source:\t\t" + file + " (Line: " + std::to_string(line) + ")\n";

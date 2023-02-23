@@ -65,9 +65,23 @@ namespace Copium
 			The font to use
 		*/
 		/***************************************************************************/
-		void draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, GLfloat _scale, GLuint _fontID, BaseCamera* _camera);
+		void draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, GLfloat _scale, const float& _wrapper, BaseCamera* _camera);
 
-		glm::vec2 getDimensions(const std::string& _text, GLfloat _scale);
+		/***************************************************************************/
+		/*!
+		\brief
+			Exits the font system
+		\param _text
+			The content to draw
+		\param _scale
+			The scale of the text
+		\param _wrapper
+			The max length that the text can draw to
+		\return
+			A vector2 containing the x and y values of the dimension of the text
+		*/
+		/***************************************************************************/
+		glm::vec2 getDimensions(const std::string& _text, GLfloat _scale, const float& _wrapper);
 
 		/***************************************************************************/
 		/*!
@@ -90,6 +104,8 @@ namespace Copium
 		*/
 		/***************************************************************************/
 		static Font* getFont(const std::string& _name);
+		const GLuint& get_VAO() { return fontVertexArrayID; }
+		const GLuint& get_VBO() { return fontVertexBufferID; }
 
 		/***************************************************************************/
 		/*!

@@ -25,6 +25,8 @@ struct GLFWwindow;
 
 #define COPIUM_MAX_KEYS 400
 
+#define MyInputSystem (*Copium::InputSystem::Instance())
+
 namespace Copium
 {
 	CLASS_SYSTEM(InputSystem)

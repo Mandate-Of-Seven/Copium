@@ -48,26 +48,6 @@ namespace Copium
 			mouse_controls();
 		}
 
-		if (enableCamera)
-		{
-			SceneManager* sm = SceneManager::Instance();
-			Scene* scene = sm->get_current_scene();
-			if (scene != nullptr && !scene->get_name().compare("DemoCLONE"))
-			{
-				orthographicSize = 5.f;
-				update_ortho_projection();
-				for (GameObject* pGameObj : scene->gameObjects)
-				{
-					// If the object is the player
-					if (!pGameObj->get_name().compare("PlayerTrain"))
-					{
-						focalPoint = pGameObj->transform.position; // Fix the camera onto the player
-						//PRINT("Focal point: " << focalPoint.x << " " << focalPoint.y);
-					}
-				}
-			}
-		}
-
 		static bool debugMode = false;
 		if (sceneView->is_window_focused() || sceneView->is_window_hovered())
 		{
@@ -137,7 +117,7 @@ namespace Copium
 			ImGui::SetWindowFocus("Scene View");
 			glm::vec2 speed = get_pan_speed();
 			glm::vec3 point = focalPoint;
-			point += get_up_direction() * delta.y * speed.y;
+			point += -get_up_direction() * delta.y * speed.y;
 			point += -get_right_direction() * delta.x * speed.x;
 
 			// Bean: shouldnt be necessary here
@@ -145,7 +125,7 @@ namespace Copium
 			point.x = std::clamp(point.x, -100.f, 100.f);
 			point.y = std::clamp(point.y, -100.f, 100.f);
 
-			focalPoint = point;
+			viewer = point;
 		}
 		else
 			ImGui::SetWindowFocus();

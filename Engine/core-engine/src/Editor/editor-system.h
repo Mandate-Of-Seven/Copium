@@ -3,6 +3,7 @@
 \project
 \author			Sean Ngo
 \co-author		Shawn Tanary
+				Matthew Lau
 
 \par			Course: GAM200
 \par			Section:
@@ -25,8 +26,11 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor/editor-undoredo.h"
 #include "Editor/editor-hierarchy-list.h"
 #include "Editor/editor-layers.h"
+#include "Editor/editor-consolelog.h"
 #include "Editor/inspector.h"
 #include "Messaging/message-system.h"
+
+#define MyEditorSystem (*Copium::EditorSystem::Instance())
 
 namespace Copium
 {
@@ -114,6 +118,10 @@ namespace Copium
 		EditorInspector* get_inspector() { return &inspector; }
 		EditorLayers* getLayers() { return &layers; }
 
+		GameObject* pSelectedGameObject{};
+	private:
+		
+
 	private:
 		bool enableEditor = true;
 
@@ -126,6 +134,8 @@ namespace Copium
 		EditorInspector inspector;
 		EditorLayers layers;
 		UndoRedo::CommandManager commandManager; //for undo and redo
+
+		void CallbackSceneChanging(SceneChangingEvent* pEvent);
 	};
 }
 #endif // !EDITOR_SYSTEM_H

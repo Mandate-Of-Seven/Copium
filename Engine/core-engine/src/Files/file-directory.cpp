@@ -54,7 +54,7 @@ namespace Copium
 	{
 		for (auto dirEntry : std::filesystem::directory_iterator(path()))
 		{
-			if (dirEntry.path() == *_file)
+			if (dirEntry.path() == _file->filePath)
 				return true;
 		}
 

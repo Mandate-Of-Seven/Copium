@@ -21,6 +21,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
+	class Transform;
+
 	class Draw
 	{
 	public:
@@ -59,7 +61,7 @@ namespace Copium
 			information of the gameobjects are shown
 		*/
 		/***************************************************************************/
-		void editor();
+		void editor(int _index = 0);
 
 		/***************************************************************************/
 		/*!
@@ -86,6 +88,8 @@ namespace Copium
 		*/
 		/***************************************************************************/
 		void development();
+
+		void UpdateTransform(const Transform& _transform, glm::vec3& _position, float& _rotation, glm::vec3& _scale);
 
 		void enable(DRAW _draw) { drawMode[_draw] = true; }
 		void disable(DRAW _draw){ drawMode[_draw] = false; }

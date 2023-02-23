@@ -17,17 +17,12 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #ifndef GAME_OBJECT_FACTORY_H
 #define GAME_OBJECT_FACTORY_H
-#include "CopiumCore/system-interface.h"
 #include <CopiumCore/system-interface.h>
-
-#include <rapidjson/document.h>
-#include <rapidjson/istreamwrapper.h>
+#include <Events/events-system.h>
 
 #define MyGOF (*Copium::GameObjectFactory::Instance())
 
 namespace Copium {
-	class GameObject;
-	class Scene;
 
 	class GameObjectCreator {
 
@@ -43,9 +38,6 @@ namespace Copium {
 	{
 		
 	public:
-		GameObjectFactory();
-		~GameObjectFactory();
-
 		/*******************************************************************************
 		/*!
 		*
@@ -56,7 +48,7 @@ namespace Copium {
 			pointer to the new game object
 		*/
 		/*******************************************************************************/
-		GameObject* instantiate();
+		GameObject& Instantiate(Scene& scene);
 
 		/*******************************************************************************
 		/*!
@@ -69,24 +61,10 @@ namespace Copium {
 			pointer to the new game object (head of the tree)
 		*/
 		/*******************************************************************************/
-		GameObject* instantiate(GameObject& _src);
+		GameObject& Instantiate(GameObject& _src, Scene& scene, bool copyID = false);
 
 		// Set up for future
 		//GameObject* instantiate(prefab);
-
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			DOES NOT ASSIGN new ID and build a game object that is a copy of specified game object.
-			Adds the created gameObject into given scene.
-			Note: if the specified game object has a family tree, the whole tree is duplicated.
-
-		\return
-			pointer to the new game object (head of the tree)
-		*/
-		/*******************************************************************************/
-		GameObject* clone(const GameObject& _src, Scene* scene);
 
 		/*******************************************************************************
 		/*!
@@ -99,7 +77,12 @@ namespace Copium {
 			pointer to the new game object
 		*/
 		/*******************************************************************************/
-		GameObject* instantiate(rapidjson::Value& _value);
+		GameObject& Instantiate(rapidjson::Value& _value, Scene& scene);
+
+		template <typename T>
+		T& AddComponent(GameObject& gameObject, Scene& scene,T* pCopy = nullptr, bool copyID = false);
+
+		Script& AddComponent(GameObject& gameObj, Scene& scene, const char* scriptName, Script* pCopy = nullptr, bool copyID = false);
 
 		/*******************************************************************************
 		/*!
@@ -110,34 +93,53 @@ namespace Copium {
 		\param _go
 			Ptr to the game object that is to be destroyed.
 			Note: the game object must exist in the current scene.
-
-		\return
-			on success, return true
-			on failure, return false
 		*/
 		/*******************************************************************************/
-		bool destroy(GameObject* _go);
+		void Destroy(GameObject& _go, GameObjectsArray& gameObjectArray);
+
+
+		template <typename T>
+		void RemoveComponent(T& component, Scene& scene)
+		{
+			auto it = component.gameObj.componentPtrArrays.GetArray<T>().begin();
+			auto end = component.gameObj.componentPtrArrays.GetArray<T>().end();
+			while (it != end)
+			{
+				if (component.uuid == (*it)->uuid)
+				{
+					component.gameObj.componentPtrArrays.GetArray<T>().erase(it);
+					PRINT("REMOVED FROM GAMEOBJECT");
+					break;
+				}
+				++it;
+			}
+
+			auto sceneIt = scene.componentArrays.GetArray<T>().begin();
+			auto sceneEnd = scene.componentArrays.GetArray<T>().end();
+			while (sceneIt != sceneEnd)
+			{
+				if (component.uuid == (*sceneIt).uuid)
+				{
+					scene.componentArrays.GetArray<T>().erase(sceneIt);
+					PRINT("REMOVED FROM SCENE");
+					break;
+				}
+				++sceneIt;
+			}
+		}
 
 		/*******************************************************************************
 		/*!
 		*
 		\brief
-			Adds a component to the specified game object
+			Destroy a gameobject by ID
 
-		\param _key
-			read-only reference to a string that contains the key that will determine what component to add
-
-		\param _go
-			pointer to the game object that the component is to be attached to
-
-		\return
-			if successful, return true
-			if specified key does not exist, return false
-			if there is an error in creation of component, return false
-
+		\param id
+			ID of gameobject to be destroyed
 		*/
 		/*******************************************************************************/
-		bool add_component(const std::string& _key, GameObject* _go);
+		void Destroy(UUID uuid, GameObjectsArray& gameObjectArray);
+
 		/*******************************************************************************
 		/*!
 		*
@@ -153,7 +155,7 @@ namespace Copium {
 
 		*/
 		/*******************************************************************************/
-		GameObject* build_archetype(rapidjson::Value& _value);
+		//GameObject* build_archetype(rapidjson::Value& _value);
 
 		/*******************************************************************************
 		/*!
@@ -170,7 +172,7 @@ namespace Copium {
 
 		*/
 		/*******************************************************************************/
-		GameObject* instantiate(const std::string& _archetype);
+		//GameObject& Instantiate(const std::string& _archetype);
 
 		/*******************************************************************************
 		/*!
@@ -231,7 +233,7 @@ namespace Copium {
 
 		*/
 		/*******************************************************************************/
-		GameObject* create_child(GameObject& _parent);
+		GameObject& InstantiateChild(GameObject& _parent, Scene& _scene);
 
 
 	private:

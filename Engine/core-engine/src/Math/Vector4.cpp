@@ -91,28 +91,35 @@ namespace Copium::Math {
 	Vec4::operator glm::vec4() { return glmVec4; }
 
 	// De/serialization
-	bool Vec4::Deserialize(rapidjson::Value& _value)
-	{
-		if (!_value.HasMember("X") || !_value.HasMember("Y") || !_value.HasMember("Z") || !_value.HasMember("A"))
-			return false;
+	//bool Vec4::Deserialize(rapidjson::Value& _value)
+	//{
+	//	if (!_value.HasMember("X") || !_value.HasMember("Y") || !_value.HasMember("Z") || !_value.HasMember("A"))
+	//		return false;
 
-		x = _value["X"].GetFloat();
-		y = _value["Y"].GetFloat();
-		z = _value["Z"].GetFloat();
-		a = _value["A"].GetFloat();
+	//	x = _value["X"].GetFloat();
+	//	y = _value["Y"].GetFloat();
+	//	z = _value["Z"].GetFloat();
+	//	a = _value["A"].GetFloat();
 
-		return true;
 
-	}
-	bool Vec4::Serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
-	{
-		_value.AddMember("X", x, _doc.GetAllocator());
-		_value.AddMember("Y", y, _doc.GetAllocator());
-		_value.AddMember("Z", z, _doc.GetAllocator());
-		_value.AddMember("A", a, _doc.GetAllocator());
+	//	return true;
 
-		return true;
-	}
+	//}
+	//bool Vec4::Serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
+	//{
+	//	//_value.AddMember("X", x, _doc.GetAllocator());
+	//	//_value.AddMember("Y", y, _doc.GetAllocator());
+	//	//_value.AddMember("Z", z, _doc.GetAllocator());
+	//	//_value.AddMember("A", a, _doc.GetAllocator());
+
+	//	Copium::Serialize(x, _value, _doc, "X");
+	//	Copium::Serialize(y, _value, _doc, "Y");
+	//	Copium::Serialize(z, _value, _doc, "Z");
+	//	Copium::Serialize(a, _value, _doc, "A");
+
+
+	//	return true;
+	//}
 
 	// Binary operator overloads
 	Vec4 operator+ (const Vec4& _lhs, const Vec4& _rhs)

@@ -15,28 +15,27 @@
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
-#include "Windows/windows-system.h"
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 #include <Debugging/frame-rate-controller.h>
 
 #include "Graphics/graphics-system.h"
-#include "Graphics/spritesheet.h"
-#include "Graphics/fonts.h"
 #include "Windows/windows-input.h"
 
-#include "Editor/editor-system.h"
 #include "Files/assets-system.h"
+#include "Events/events-system.h"
 
 // Bean: remove this after NewManagerInstance is moved
 #include "SceneManager/scene-manager.h"
-#include "GameObject/Components/renderer-component.h"
-#include "GameObject/Components/camera-component.h"
+#include <GameObject/components.h>
+#include "GameObject/game-object-factory.h"
 
 namespace Copium
 {
+	
 	namespace
 	{
 		InputSystem& inputSystem{ *InputSystem::Instance() };
-		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 
 		// Temporary global variables
 		GLfloat rotate = 0.f;
@@ -45,13 +44,12 @@ namespace Copium
 
 	void GraphicsSystem::init()
 	{
-		messageSystem.subscribe(MESSAGE_TYPE::MT_SCENE_DESERIALIZED, this);
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 
 		// Bean: 3D Depth Testing
-		glEnable(GL_DEPTH_TEST);
-		glAlphaFunc(GL_GREATER, 0.5);
-		glEnable(GL_ALPHA_TEST);
+		//glEnable(GL_DEPTH_TEST);
+		//glAlphaFunc(GL_GREATER, 0.5);
+		//glEnable(GL_ALPHA_TEST);
 		//glEnable(GL_STENCIL_TEST);
 
 		glClearColor(1.f, 1.f, 1.f, 1.f);
@@ -60,8 +58,8 @@ namespace Copium
 
 		// Bind textures to quad fragment shader
 		shaderProgram[QUAD_SHADER].Use();
-		GLuint loc1 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture1");
-		GLuint loc2 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture2");
+		GLuint loc = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture1");
+		/*GLuint loc2 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture2");
 		GLuint loc3 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture3");
 		GLuint loc4 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture4");
 		GLuint loc5 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture5");
@@ -94,13 +92,13 @@ namespace Copium
 		GLuint loc29 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture29");
 		GLuint loc30 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture30");
 		GLuint loc31 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture31");
-		GLuint loc32 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture32");
+		GLuint loc32 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture32");*/
 		GLint samplers[maxTextures]{};
 
-		for (GLuint i = 1; i < maxTextures; i++)
+		for (GLuint i = 0; i < maxTextures; i++)
 			samplers[i] = i;
 
-		glUniform1i(loc1, samplers[1]);
+		/*glUniform1i(loc1, samplers[1]);
 		glUniform1i(loc2, samplers[2]);
 		glUniform1i(loc3, samplers[3]);
 		glUniform1i(loc4, samplers[4]);
@@ -131,14 +129,15 @@ namespace Copium
 		glUniform1i(loc29, samplers[29]);
 		glUniform1i(loc30, samplers[30]);
 		glUniform1i(loc31, samplers[31]);
-		glUniform1i(loc32, samplers[32]);
+		glUniform1i(loc32, samplers[32]);*/
+		glUniform1iv(loc, maxTextures, samplers);
 		shaderProgram[QUAD_SHADER].UnUse();
 
 		// Bind fonts to text fragment shader
-		/*shaderProgram[TEXT_SHADER].Use();
+		shaderProgram[TEXT_SHADER].Use();
 		loc = glGetUniformLocation(shaderProgram[TEXT_SHADER].GetHandle(), "uFont");
 		glUniform1iv(loc, maxTextures, samplers);
-		shaderProgram[TEXT_SHADER].UnUse();*/
+		shaderProgram[TEXT_SHADER].UnUse();
 
 		// Parse all textures loaded into the engine into the graphics
 		// Bean: Seems like i dont need to parse the textures during startup because the 
@@ -169,26 +168,29 @@ namespace Copium
 			Scene* scene = sm->get_current_scene();
 			if (scene != nullptr)
 			{
-				for (size_t i = 0; i < 10; i++)
+				int numSprites = (int)(MyAssetSystem.GetTextures().size() - 1);
+				for (size_t i = 0; i < numSprites; i++)
 				{
-					GameObject* go = MyGOF.instantiate();
-					go->addComponent(ComponentType::SpriteRenderer);
-					//go->addComponent(ComponentType::Rigidbody);
+					GameObject* go = nullptr;
+					MyEventSystem->publish(new GameObjectInstantiateEvent(go));
+					SpriteRenderer* rc = nullptr;
+					MyEventSystem->publish(new ComponentAddEvent<SpriteRenderer>(*go, rc));
 
-					float x = rand() % 2000 * 0.1f - 100.f;
-					float y = rand() % 2000 * 0.1f - 100.f;
+					float x = rand() % 500 * 0.1f - 25.f;
+					float y = rand() % 500 * 0.1f - 25.f;
 
 					go->transform.position = { x, y, 0.f };
-					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->getComponent(ComponentType::SpriteRenderer));
-					rc->get_sprite_renderer().set_sprite_id(rand() % 20 + 1);
-					unsigned int id = rc->get_sprite_renderer().get_sprite_id();
+					go->transform.scale = { 5.f, 5.f, 1.f };
+					
+					rc->sprite.spriteID = i;
+					unsigned int id = (unsigned int)rc->sprite.spriteID;
 					if (id != 0)
 					{
-						rc->get_sprite_renderer().set_texture(AssetsSystem::Instance()->get_texture(id - 1));
-						std::string str = AssetsSystem::Instance()->get_texture(id - 1)->get_file_path();
-						size_t pos = str.find_last_of('/');
+						rc->sprite.refTexture = MyAssetSystem.GetTexture(id - 1);
+						std::string str = MyAssetSystem.GetTexture(id - 1)->get_file_path();
+						size_t pos = str.find_last_of('\\');
 						std::string spriteName = str.substr(pos + 1, str.length() - pos);
-						rc->get_sprite_renderer().set_name(spriteName);
+						rc->sprite.sprite_name = spriteName;
 					}
 				}
 			}
@@ -203,24 +205,29 @@ namespace Copium
 			{
 				for (size_t i = 0; i < 10; i++)
 				{
-					GameObject* go = MyGOF.instantiate();
-					go->addComponent(ComponentType::SpriteRenderer);
-					//go->addComponent(ComponentType::Rigidbody);
+					GameObject* go = nullptr;
+					MyEventSystem->publish(new GameObjectInstantiateEvent(go));
+					SpriteRenderer* rc = nullptr;
+					MyEventSystem->publish(new ComponentAddEvent<SpriteRenderer>(*go, rc));
 
 					float x = rand() % 2000 * 0.1f - 100.f;
 					float y = rand() % 2000 * 0.1f - 100.f;
 
+					float sx = rand() % 4 + 1.f;
+					float sy = rand() % 4 + 1.f;
+
 					go->transform.position = { x, y, 0.f };
-					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(go->getComponent(ComponentType::SpriteRenderer));
-					rc->get_sprite_renderer().set_sprite_id(rand() % 20 + 1);
-					unsigned int id = rc->get_sprite_renderer().get_sprite_id();
+					go->transform.scale = { sx, sy, 1.f };
+					int numSprites = (int)(MyAssetSystem.GetTextures().size() - 1);
+					rc->sprite.spriteID = rand() % numSprites + 1;
+					unsigned int id = (unsigned int) rc->sprite.spriteID;
 					if (id != 0)
 					{
-						rc->get_sprite_renderer().set_texture(AssetsSystem::Instance()->get_texture(id - 1));
-						std::string str = AssetsSystem::Instance()->get_texture(id - 1)->get_file_path();
-						size_t pos = str.find_last_of('/');
+						rc->sprite.refTexture = MyAssetSystem.GetTexture(id - 1);
+						std::string str = MyAssetSystem.GetTexture(id - 1)->get_file_path();
+						size_t pos = str.find_last_of('\\');
 						std::string spriteName = str.substr(pos + 1, str.length() - pos);
-						rc->get_sprite_renderer().set_name(spriteName);
+						rc->sprite.sprite_name = spriteName;
 					}
 				}
 			}
@@ -231,10 +238,10 @@ namespace Copium
 		PRINT("Mouse NDC position: " << mouseToNDC.x << ", " << mouseToNDC.y);
 		PRINT("World NDC position: " << worldNDC.x << ", " << worldNDC.y);*/
 
-		//if (inputSystem.is_key_pressed(GLFW_KEY_Y))
+		//if (MyInputSystem.is_key_pressed(GLFW_KEY_Y))
 		//{
-		//	SceneManager* sm = SceneManager::Instance();
-		//	PRINT("Number of Gameobjects: " << sm->get_current_scene()->get_gameobjcount());
+		//	SceneManager* MySceneManager = SceneManager::Instance();
+		//	PRINT("Number of Gameobjects: " << MySceneManager.get_current_scene()->get_gameobjcount());
 		//}
 	
 		batch_render();
@@ -245,26 +252,8 @@ namespace Copium
 		Font::cleanUp();
 	}
 
-	void GraphicsSystem::handleMessage(MESSAGE_TYPE mType)
-	{
-		if (mType == MESSAGE_TYPE::MT_SCENE_DESERIALIZED)
-		{
-			cameras.clear();
-			SceneManager* sm = SceneManager::Instance();
-			Scene* scene = sm->get_current_scene();
-			for (GameObject* gameObject : scene->gameObjects)
-			{
-				if (gameObject->hasComponent(ComponentType::Camera))
-				{
-					Camera* camera = reinterpret_cast<Camera*>(gameObject->getComponent(ComponentType::Camera));
-					cameras.push_back(camera);
-				}
-			}
-		}
-	}
-
 	// Setup default shaders for the graphics system
-	void GraphicsSystem::setup_shader_program(std::string _vtx_shdr, std::string _frg_shdr)
+	void GraphicsSystem::SetupShaderProgram(const std::string& _vtx_shdr, const std::string& _frg_shdr)
 	{
 		std::vector<std::pair<GLenum, std::string>> shdr_files;
 		shdr_files.emplace_back(std::make_pair(GL_VERTEX_SHADER, _vtx_shdr));
@@ -291,23 +280,24 @@ namespace Copium
 	// parse all textures into the game
 	void GraphicsSystem::parse_textures()
 	{
-		AssetsSystem* assets = AssetsSystem::Instance();
 		// Check for texture slots
 		COPIUM_ASSERT(textureSlotIndex == maxTextures, "Max textures reached! Replace old textures!!");
 
 		// Assign the slot to the texture
 		textureSlotIndex = 1;
-		for (GLuint i = 0; i < assets->get_textures().size(); i++)
+		for (GLuint i = 0; i < MyAssetSystem.GetTextures().size(); i++)
 		{
-			textureSlots[textureSlotIndex++] = assets->get_textures()[i].get_object_id();
+			textureSlots[textureSlotIndex++] = MyAssetSystem.GetTextures()[i].get_object_id();
 		}
 	}
 
 	void GraphicsSystem::batch_render()
 	{
-		for (auto& camera : cameras)
-		{
-			camera->update();
-		}
+		//if (pCamerasArray)
+		//	for (Camera& camera : *pCamerasArray)
+		//	{
+		//		PRINT("UPDATING CAMERA");
+		//		camera.update();
+		//	}
 	}
 }

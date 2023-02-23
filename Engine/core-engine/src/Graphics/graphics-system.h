@@ -12,7 +12,7 @@
 	various sub-systems which includes asset loading, matrice calculations and rendering.
 	Components and objects which require rendering would refer to this class.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #ifndef GRAPHICS_SYSTEM_H
 #define GRAPHICS_SYSTEM_H
@@ -22,6 +22,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Graphics/glslshader.h"
 #include "Graphics/base-camera.h"
 #include "Messaging/message-system.h"
+
+#define MyGraphicsSystem (*Copium::GraphicsSystem::Instance())
 
 namespace Copium
 {
@@ -34,7 +36,7 @@ namespace Copium
 	};
 
 	// Inherits from System
-	CLASS_SYSTEM(GraphicsSystem), public IReceiver
+	CLASS_SYSTEM(GraphicsSystem)
 	{
 	public:
 		// Constructors
@@ -63,15 +65,6 @@ namespace Copium
 		/***************************************************************************/
 		void exit();
 
-		/**************************************************************************/
-		/*!
-			\brief
-			Interface function for MessageSystem to call for IReceivers to handle
-			a messageType
-		*/
-		/**************************************************************************/
-		void handleMessage(MESSAGE_TYPE mType);
-
 		// Accessing Properties
 
 		// Texture Properties
@@ -82,15 +75,12 @@ namespace Copium
 		void const set_texture_slot_index(GLuint _index) { textureSlotIndex = _index; }
 		
 		GLuint& get_white_texture() { return whiteTexture; }
-		GLuint const get_white_texture_slot() { return whiteTextureSlot; }
 
 		// Data Members
 		GLSLShader* const get_shader_program() { return shaderProgram; }
 
 		const bool& is_loaded() const { return loaded; }
 		
-		std::list<BaseCamera*>& get_cameras() { return cameras; }
-
 #pragma region MemberFunctions
 		// Public Member Functions
 
@@ -105,7 +95,7 @@ namespace Copium
 			The fragment shader to bind
 		*/
 		/***************************************************************************/
-		void setup_shader_program(std::string _vtx_shdr, std::string _frg_shdr);
+		void SetupShaderProgram(const std::string& _vtx_shdr, const std::string& _frg_shdr);
 
 	private:
 		// Private Member functions 
@@ -135,7 +125,6 @@ namespace Copium
 		std::vector<GLuint> textureSlots;
 		GLuint textureSlotIndex = 1; // Initializes with 1
 		GLuint whiteTexture = 0;
-		GLuint whiteTextureSlot = 0;
 
 		/* Shaders **********************************************************************/
 		GLSLShader shaderProgram[NUM_SHADERS]; // Shader program to use
@@ -143,8 +132,7 @@ namespace Copium
 		/* Stored Information ***********************************************************/
 		bool loaded = false;
 
-		std::list<BaseCamera*> cameras; // Stores the reference to the cameras in the engine
-
+		BaseCamera* editorCamera{};
 #pragma endregion DataMembers
 	};
 

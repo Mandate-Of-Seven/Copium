@@ -18,375 +18,183 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 //INCLUDES
 
-#include <list>
-#include <string>
-
-#include "Messaging/message-system.h"
-#include <rapidjson/document.h>
 #include "Math/math-library.h"
-#include "GameObject/Components/transform-component.h"
+#include <Utilities/sparse-set.h>
+#include <config.h>
+#include <string>
+#include <GameObject/components.h>
+#include "CopiumCore/uuid.h"
 
 //USING
 
 namespace Copium
 {
-
-using GameObjectID = uint64_t;
-
-class GameObject final : public IReceiver
-{
-private:
-    friend class GameObjectFactory;
-    std::string name;                   //Name of gameObject
-    bool active;
-
-    /***************************************************************************/
-    /*!
-    \brief
-        Constructor that initializes Transform with given values
-    \param _position
-        Position of transform to initialize with
-    \param _rotation
-        Rotation of transform to initialize with
-    \param _scale
-        Scale of transform to initialize with
-    */
-    /**************************************************************************/
-    GameObject(GameObjectID _id,
-        Math::Vec3 _position = { 0,0,0 },
-        Math::Vec3 _rotation = { 0,0,0 },
-        Math::Vec3 _scale = { 1,1,1 });
-
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Copy Constructs using a deep copy of another GameObject
-    \param rhs
-        Reference to another GameObject
-
-    */
-    /*******************************************************************************/
-    GameObject(const GameObject& rhs);
-
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Copy assignment operator, only usable by GOF
-    \param _src
-        GameObject to copy from
-    \return
-        Ref to this gameObject after copy assignment
-
-    */
-    /*******************************************************************************/
-    GameObject& operator=(const GameObject& _src);
-
-public:           
-    //Global ID for gameObjects
-    const GameObjectID id;
-    Transform transform;
-    std::vector<Component*> components;   //Components for gameObject
-    ComponentID assign_id();
-
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Checks whether a gameobject is active depending on their parent
-    \return
-        Whether a gameObject is active based on its parent's activeness
-    */
-    /*******************************************************************************/
-    bool isActive();
-
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Sets a gameeobject's activeness
-    \param _active
-        Bool to set activeness of gameObject
-    */
-    /*******************************************************************************/
-    void setActive(bool _active);
-
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Adds a component using a template
-    \param T
-        Any derived classes of component to be added
-    \return
-        Added component
-    */
-    /*******************************************************************************/
-    template <typename T>
-    T& addComponent()
+    static const std::string defaultGameObjName = "New GameObject"; // Append (No.) if its not the first
+    class UUID;
+    class GameObject final
     {
-        static_assert(std::is_base_of<Component, T>::value);
-        T* component = new T(*this);
-        components.push_back(component);
+    public:           
+        //Global ID for gameObjects
+        UUID uuid;
+        Transform transform;
+        std::string name;                   //Name of gameObject
+        bool active;
 
-        component->id = assign_id();
-
-
-        return *component;
-    }
-
-    /*******************************************************************************
-    /*!
+        /***************************************************************************/
+        /*!
         \brief
-            Gets all components of type from components list
+            Constructor that initializes Transform with given values
+        \param _position
+            Position of transform to initialize with
+        \param _rotation
+            Rotation of transform to initialize with
+        \param _scale
+            Scale of transform to initialize with
+        */
+        /**************************************************************************/
+        GameObject(UUID _uuid = UUID(),
+            Math::Vec3 _position = { 0,0,0 },
+            Math::Vec3 _rotation = { 0,0,0 },
+            Math::Vec3 _scale = { 1,1,1 });
+
+        GameObject(const GameObject& rhs, UUID _uuid = UUID()) : uuid{_uuid}, transform{rhs.transform}
+        {
+            name = rhs.name;
+            active = rhs.active;
+            //Dont copy components here because GOF helps you do it already
+        }
+
+        template <typename T>
+        bool HasComponent()
+        {
+            ComponentsPtrArray<T>& components{ componentPtrArrays.GetArray<T>() };
+            return !components.empty();
+        }
+
+        bool HasComponent(ComponentType componentType);
+
+        /*******************************************************************************
+        /*!
+            \brief
+                Gets all components of type from components list
+            \param T
+                Type of component to get
+            \return
+                Vector of components gotten
+        */
+        /*******************************************************************************/
+        template <typename T>
+        ComponentsPtrArray<T>& GetComponents()
+        {
+            return componentPtrArrays.GetArray<T>();
+        }
+
+        /*******************************************************************************
+        /*!
+        *
+        \brief
+            Template function to add a component to components list
+        \param T
+            Type of component to add
+        \return
+            Pointer to component added
+        */
+        /*******************************************************************************/
+        template <typename T>
+        void AddComponent(T* component)
+        {
+            componentPtrArrays.GetArray<T>().push_back(component);
+        }
+
+        /*******************************************************************************
+        /*!
+        *
+        \brief
+            Template function to get a component from components list
         \param T
             Type of component to get
         \return
-            Vector of components gotten
-    */
-    /*******************************************************************************/
-    template <typename T>
-    const std::vector<T*>& getComponents()
-    {
-        static_assert(std::is_base_of<Component, T>::value);
-        static std::vector<T*> typedComponents;
-        typedComponents.clear();
-
-        std::string tName = typeid(T).name() + std::string("class Copium::").length();
-        ComponentType componentType = Component::nameToType(tName);
-        for (Component* pComponent : components)
-        {
-            if (pComponent->componentType == componentType)
-            {
-                typedComponents.push_back(reinterpret_cast<T*>(pComponent));
-            }
-        }
-        return typedComponents;
-    }
-
-    /*******************************************************************************
-    /*!
-        \brief
-            Gets a component of type from components list
-        \param componentType
-            ComponentType of component to get
-        \return
             Pointer to component gotten
-    */
-    /*******************************************************************************/
-    Component* getComponent(ComponentType componentType);
-
-    /***************************************************************************/
-    /*!
-    \brief
-        Appends a new component by taking in component type to components list
-    \param componentType
-        Type of component to append to components list
-    */
-    /**************************************************************************/
-    Component* addComponent(ComponentType componentType);
-
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Checks if components list has a component of given type
-    \param componentType
-        Type of component to find
-    \return
-        True if component of type exists in components list
-    */
-    /*******************************************************************************/
-    bool hasComponent(ComponentType componentType) const;
-
-
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Template function to add a component to components list
-    \param T
-        Type of component to add
-    \return
-        Pointer to component added
-    */
-    /*******************************************************************************/
-    template <typename T>
-    T& addComponent(const T& component)
-    {
-        static_assert(std::is_base_of<Component, T>::value);
-        T* tmp = new T(this);
-        components.push_back(tmp);
-
-        MESSAGE_CONTAINER::addOrDeleteComponent.gameObjID = id;
-        MESSAGE_CONTAINER::addOrDeleteComponent.componentID = component->id;
-        MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_ADD_COMPONENT);
-        return *tmp;
-    }
-
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Template function to get a component from components list
-    \param T
-        Type of component to get
-    \return
-        Pointer to component gotten
-    */
-    /*******************************************************************************/
-    template <typename T>
-    T* getComponent()
-    {
-        //std::is_same<>
-        static_assert(std::is_base_of<Component, T>::value);
-        std::string tName = typeid(T).name() + std::string("class Copium::").length();
-        ComponentType componentType = Component::nameToType(tName);
-        for (Component* pComponent : components)
+        */
+        /*******************************************************************************/
+        template <typename T>
+        T* GetComponent()
         {
-            if (pComponent->componentType == componentType)
-            {
-                return reinterpret_cast<T*>(pComponent);
-            }
+            ComponentsPtrArray<T>& components{componentPtrArrays.GetArray<T>()};
+            if (!components.empty())
+                return components[0];
+            return nullptr;
         }
-       /* std::cout << tName << "returns a nullptr" << std::endl;*/
-        return nullptr;
-    }
 
-    /***************************************************************************/
-    /*!
-    \brief
-        Deletes a component from components list
-    \param component
-        Pointer to component to delete from components list
-    */
-    /**************************************************************************/
-    void removeComponent(ComponentType componentType);
+        /*******************************************************************************
+        /*!
+        *
+        \brief
+            Deletes a component from components list
+        \param UUID
+            ID of component to match in order to delete it from the components list
+        */
+        /*******************************************************************************/
+        //void removeComponent(UUID UUID);
 
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Deletes a component from components list
-    \param componentID
-        ID of component to match in order to delete it from the components list
-    */
-    /*******************************************************************************/
-    void removeComponent(ComponentID componentID);
+        /*******************************************************************************
+        /*!
+        *
+        \brief
+            Template function to delete a component from components list
+        \param T
+            Type of component to delete
+        */
+        /*******************************************************************************/
+        //template <typename T>
+        //void removeComponent()
+        //{
+        //    static_assert(std::is_base_of<Component, T>::value);
+        //    std::string tName = typeid(T).name() + std::string("class Copium::").length();
+        //    ComponentType componentType = Component::nameToType(tName); 
+        //    removeComponent(componentType);
+        //}
 
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Template function to delete a component from components list
-    \param T
-        Type of component to delete
-    */
-    /*******************************************************************************/
-    template <typename T>
-    void removeComponent()
+        /***************************************************************************/
+        /*!
+        \brief
+            Destructor, does nothing
+        */
+        /**************************************************************************/
+        ~GameObject();
+        bool IsActive();
+        void SetActive(bool _active);
+        ComponentsPtrArrays componentPtrArrays{};
+    };
+
+    std::ostream& operator<<(std::ostream& _os, const GameObject& _go);
+
+    using GameObjectsArray = SparseSet<GameObject, MAX_GAMEOBJECTS>;
+    using GameObjectsPtrArray = std::vector<GameObject*>;
+
+    template <typename T, typename... Ts>
+    struct HasComponentStruct
     {
-        static_assert(std::is_base_of<Component, T>::value);
-        std::string tName = typeid(T).name() + std::string("class Copium::").length();
-        ComponentType componentType = Component::nameToType(tName); 
-        removeComponent(componentType);
-    }
+        GameObject& gameObject;
+        HasComponentStruct(TemplatePack<T, Ts...> pack) {}
+        HasComponentStruct(GameObject& _gameObject) : gameObject{ _gameObject } {}
+        bool HasComponentRecurse(ComponentType componentType) { return false; }
+        template <typename T1, typename... T1s>
+        bool HasComponentRecurse(ComponentType componentType)
+        {
+            if ((int)GetComponentType<T1>::e == (int)componentType)
+                return gameObject.HasComponent<T1>();
+            if constexpr (sizeof...(T1s) != 0)
+                return HasComponentRecurse<T1s...>(componentType);
+            return false;
+        }
+        bool HasComponent(ComponentType componentType)
+        {
+            return HasComponentRecurse<T, Ts...>(componentType);
+        }
+    };
 
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Sets the name of the GameObject
-
-    \param	_name
-        string containing the GameObject's new name
-
-    \return
-        void
-    */
-    /*******************************************************************************/
-    void set_name(const std::string& _name);
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Gets the GameObject's name
-
-    \return
-        reference to a string that contains the name of the GameObject
-    */
-    /*******************************************************************************/
-    std::string get_name() const;
-
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Deserialize GameObject data from rapidJson value and populate this GameObject with the data
-
-    \param  _value
-        reference to the rapidjson::Value that contains the GameObject data
-
-    \return
-        if deserialization was successful, return true
-        if deserialization was unsuccessful, return false
-    */
-    /*******************************************************************************/
-    bool deserialize(rapidjson::Value& _value);
-
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Serialize this GameObject's data into a rapidjson::Value
-
-    \param  _value
-        reference to the rapidjson::Value that will contain the GameObject data
-
-    \param _doc
-        reference to the rapidjson::Document which is associated with the save file
-
-    \return
-        if deserialization was successful, return true
-        if deserialization was unsuccessful, return false
-    */
-    /*******************************************************************************/
-    bool serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
-
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Displays the inspector view with its transform and all its components
-
-    */
-    /*******************************************************************************/
-    void inspectorView();
-
-
-    /***************************************************************************/
-    /*!
-    \brief
-        Destructor, does nothing
-    */
-    /**************************************************************************/
-    ~GameObject();
-
-    /*******************************************************************************
-    /*!
-    *
-    \brief
-        Mainly waits for scripting to be updated so that it can tell scripting
-           system to remake a copy of this gameObject
-    \param mType
-        Type of message gotten
-
-    */
-    /*******************************************************************************/
-    void handleMessage(MESSAGE_TYPE mType);
-};
-
+    using HasComponentType = decltype(HasComponentStruct(ComponentTypes()));
 }
 
 

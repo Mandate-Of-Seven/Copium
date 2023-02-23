@@ -18,69 +18,52 @@
 	3. de-allocation of resources used by current scene (cleanup before engine close)
 	4. Calling scene's update functions
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************
 ****/
 #include <pch.h>
 #include "SceneManager/scene-manager.h"
-#include "Graphics/graphics-system.h"
-#include "Windows/windows-system.h"
+//#include "Graphics/graphics-system.h"
+//#include "Windows/windows-system.h"
+#include "Editor/editor-system.h"
+#include <rapidjson/istreamwrapper.h>
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/prettywriter.h>
-#include <GameObject/Components/camera-component.h>
-#include "GameObject/Components/ui-components.h"
+#include <GameObject/game-object-factory.h>
+#include <SceneManager/state-manager.h>
+//#include <Audio/sound-system.h>
+#include <Events/events-system.h>
 
-namespace Copium {
+#include "Utilities/json-utilities.h"
+#include "SceneManager/scene-manager.h"
+#include "Utilities/serializer.h"
 
+#include "Files/assets-system.h"
+
+namespace Copium 
+{
 	std::string prefix("../PackedTracks/Assets/Scenes/");
 
-	GameObject* SceneManager::findGameObjByID(GameObjectID _ID)
+	GameObject* SceneManager::FindGameObjectByID(UUID _id)
 	{
-		for (GameObject* pGameObj : currentScene->gameObjects)
+		if (!currentScene)
+			return nullptr;
+
+		for (GameObject& go : currentScene->gameObjects)
 		{
-			if (pGameObj->id == _ID)
-			{
-				return pGameObj;
-			}
+			if (go.uuid == _id)
+				return &go;
 		}
 		return nullptr;
 	}
-	GameObject* SceneManager::findGameObjByName(const std::string& name)
-	{
-		for (GameObject* pGameObj : currentScene->gameObjects)
-		{
-			if (pGameObj->get_name() == name)
-			{
-				return pGameObj;
-			}
-		}
-		return nullptr;
-	}
-	Component* SceneManager::findComponentByID(ComponentID _ID)
-	{
-		for (GameObject* pGameObj : currentScene->gameObjects)
-		{
-			for (Component* pComponent : pGameObj->components)
-			{	
-				if (pComponent->id == _ID)
-				{
-					return pComponent;
-				}
-			}
-		}
-		return nullptr;
-	}
-
-	SceneManager::SceneManager() : currentScene{nullptr}, selectedGameObject{nullptr}, storageScene{nullptr}, currSceneState{Scene::SceneState::edit}
-	{
-	}
-
-	SceneManager::~SceneManager()
+	Component* SceneManager::FindComponentByID(UUID _id)
 	{
 
 
-		//std::cout << "new scene manager destruction called\n";
+		if (!currentScene)
+			return nullptr;
 
+		return currentScene->componentArrays.FindByUUID(_id);
 	}
 
 	void SceneManager::init()
@@ -88,15 +71,276 @@ namespace Copium {
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 		storageScene = nullptr;
 		//MyGOF.register_archetypes("Data/Archetypes");
+		SubscribeComponentsFunctions(ComponentTypes());
+		MyEventSystem->subscribe(this, &SceneManager::CallbackQuitEngine);
+		MyEventSystem->subscribe(this, &SceneManager::CallbackChildInstantiate);
+		MyEventSystem->subscribe(this, &SceneManager::CallbackGameObjectInstantiate);
 	}
-	void SceneManager::update()
-	{
 
+	void SceneManager::DeserializeLink()
+	{
+		for (GameObject& go : currentScene->gameObjects)
+		{
+			// Target Graphic
+			if (go.HasComponent<Button>())
+			{
+				Button* button = go.GetComponent<Button>();
+				UUID uuid{ (uint64_t)button->targetGraphic };
+				button->targetGraphic = reinterpret_cast<IUIComponent*>(FindComponentByID(uuid));
+			}
+
+			for (Script* pScript : go.GetComponents<Script>())
+			{
+				for (auto& pair : pScript->fieldDataReferences)
+				{
+					const std::string& fieldName{ pair.first };
+					Field& field{ pair.second };
+					if (field.fType == FieldType::GameObject)
+					{
+						UUID uuid{ (uint64_t)pScript->fieldGameObjReferences[fieldName] };
+						if (uuid == 0)
+							continue;
+						pScript->fieldGameObjReferences[fieldName] = MySceneManager.FindGameObjectByID(uuid);
+					}
+					else if (field.fType >= FieldType::Component)
+					{
+						UUID uuid{ (uint64_t)pScript->fieldComponentReferences[fieldName] };
+						if (uuid == 0)
+							continue;
+						Component* component = MySceneManager.FindComponentByID(uuid);
+						switch ((ComponentType)field.fType)
+						{
+						case(ComponentType::Animator):
+						{
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Animator*)component));
+							break;
+						}
+						case(ComponentType::AudioSource):
+						{
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (AudioSource*)component));
+							break;
+						}
+						case(ComponentType::BoxCollider2D):
+						{
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (BoxCollider2D*)component));
+							break;
+						}
+						case(ComponentType::Button):
+						{
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Button*)component));
+							break;
+						}
+						case(ComponentType::Camera):
+						{
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Camera*)component));
+							break;
+						}
+						case(ComponentType::Image):
+						{
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Image*)component));
+							break;
+						}
+						case(ComponentType::Rigidbody2D):
+						{
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Rigidbody2D*)component));
+							break;
+						}
+						case(ComponentType::SpriteRenderer):
+						{
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (SpriteRenderer*)component));
+							break;
+						}
+						case(ComponentType::Script):
+						{
+							//Different scripts
+							if (((Script*)component)->Name() != field.typeName)
+								continue;
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Script*)component));
+							break;
+						}
+						case(ComponentType::Text):
+						{
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Text*)component));
+							break;
+						}
+						case(ComponentType::SortingGroup):
+						{
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (SortingGroup*)component));
+							break;
+						}
+						}
+						pScript->fieldComponentReferences[fieldName] = component;
+					}
+				}
+			}
+
+		}
+	}
+
+	void SceneManager::PreviewLink()
+	{
+		for (GameObject& go : currentScene->gameObjects)
+		{
+			// Target Graphic
+			for (Button* pButton : go.GetComponents<Button>())
+			{
+				if (pButton->targetGraphic)
+					pButton->targetGraphic = reinterpret_cast<IUIComponent*>(FindComponentByID(pButton->targetGraphic->uuid));
+			}
+
+			for (Script* pScript : go.GetComponents<Script>())
+			{
+				for (auto& pair : pScript->fieldGameObjReferences)
+				{
+					if (pair.second)
+						pair.second = FindGameObjectByID(pair.second->uuid);
+				}
+
+				for (auto& pair : pScript->fieldComponentReferences)
+				{
+					if (!pair.second)
+						continue;
+					pair.second = FindComponentByID(pair.second->uuid);
+					std::string fieldName{ pair.first };
+					Field& field = pScript->fieldDataReferences[pair.first];
+					Component* component = pair.second;
+					switch ((ComponentType)field.fType)
+					{
+					case(ComponentType::Animator):
+					{
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Animator*)component));
+						break;
+					}
+					case(ComponentType::AudioSource):
+					{
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (AudioSource*)component));
+						break;
+					}
+					case(ComponentType::BoxCollider2D):
+					{
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (BoxCollider2D*)component));
+						break;
+					}
+					case(ComponentType::Button):
+					{
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Button*)component));
+						break;
+					}
+					case(ComponentType::Camera):
+					{
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Camera*)component));
+						break;
+					}
+					case(ComponentType::Image):
+					{
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Image*)component));
+						break;
+					}
+					case(ComponentType::Rigidbody2D):
+					{
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Rigidbody2D*)component));
+						break;
+					}
+					case(ComponentType::SpriteRenderer):
+					{
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (SpriteRenderer*)component));
+						break;
+					}
+					case(ComponentType::Script):
+					{
+						std::string scriptName{};
+						COPIUM_ASSERT(scriptName.empty(), "Couldn't get script name");
+						//Different scripts
+						if (((Script*)component)->Name() != field.typeName)
+							continue;
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Script*)component));
+						break;
+					}
+					case(ComponentType::Text):
+					{
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Text*)component));
+						break;
+					}
+					case(ComponentType::SortingGroup):
+					{
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (SortingGroup*)component));
+						break;
+					}
+					}
+					pScript->fieldComponentReferences[fieldName] = component;
+				}
+			}
+		}
+	}
+
+	template <typename T, typename... Ts>
+	struct CleanerStruct
+	{
+		Scene& scene;
+		CleanerStruct(TemplatePack<T, Ts...> pack){}
+		CleanerStruct(Scene& _scene) : scene{_scene}
+		{
+			CleanComponents<T,Ts...>();
+		}
+		template <typename T1, typename... T1s>
+		void CleanComponents()
+		{
+			for (T1* pComponent : scene.componentsForDeletion.GetArray<T1>())
+			{
+				MyGOF.RemoveComponent(*pComponent,scene);
+			}
+			scene.componentsForDeletion.GetArray<T1>().clear();
+			if constexpr (sizeof...(T1s) != 0)
+			{
+				CleanComponents<T1s...>();
+			}
+		}
+		template <typename T1, typename... T1s>
+		void CleanGameObjects()
+		{
+			//iterate through an array for deletion of game object
+			//if found, call remove
+			for (auto& gameobj : scene.gameObjectsForDeletion)
+			{
+				for (T1* pComponent : gameobj->componentPtrArrays.GetArray<T1>())
+				{
+					MyGOF.RemoveComponent(*pComponent, scene);
+				}
+				
+			}
+			if constexpr (sizeof...(T1s) != 0)
+			{
+				CleanGameObjects<T1s...>();
+			}
+			else
+			{
+				for (auto& gameobj : scene.gameObjectsForDeletion)
+				{
+
+					MyGOF.Destroy(gameobj, scene.gameObjects);
+
+				}
+				scene.gameObjectsForDeletion.clear();
+			}
+
+		}
+	};
+
+	using CleanUpSceneStruct = decltype(CleanerStruct(ComponentTypes()));
+
+
+	void CleanUpScene(Scene& scene)
+	{
+		CleanUpSceneStruct cleanUp(scene);
+	}
+
+	void SceneManager::update() 
+	{
+		if (currentScene)
+			CleanUpScene(*currentScene);
 	}
 	void SceneManager::exit()
 	{
-		selectedGameObject = nullptr;
-
 		if (currSceneState == Scene::SceneState::play)
 		{
 			endPreview();
@@ -113,6 +357,7 @@ namespace Copium {
 			storageScene = nullptr;
 		}
 
+		/*
 		// For multiple scenes
 		//for (Scene* sc : scenes)
 		//{
@@ -122,29 +367,24 @@ namespace Copium {
 		//		sc = nullptr;
 		//	}
 		//}
-
-		
+		*/	
 	}
 
 	bool SceneManager::load_scene(const std::string& _filepath)
 	{
-		if (currSceneState == Scene::SceneState::play)
-		{
-			PRINT("CANT LOAD SCENE IN PLAY MODE");
-			return false;
-		}
 		std::cout << "loading " << _filepath << std::endl;
 
 		if (_filepath.find(".scene") == std::string::npos)
 		{
-			Window::EditorConsole::editorLog.add_logEntry("file selected is not a Copium Scene!");
+			MyEventSystem->publish(new EditorConsoleLogEvent("File selected is not a Copium Scene!"));
 			return false;
 		}
-		
-		if (!currentScene)
+
+		if (currentScene)
 		{
-			currentScene = new NormalScene(_filepath);
+			delete currentScene;
 		}
+		currentScene = new NormalScene(_filepath);
 
 		sceneFilePath = _filepath;
 
@@ -159,38 +399,56 @@ namespace Copium {
 			return false;
 		}
 
-		// WAIT
-		MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_SCENE_OPENED);
-
 		if (document.HasMember("Name"))
 		{
 			currentScene->set_name(document["Name"].GetString());
 			std::cout << "Scene name:" << currentScene->name << std::endl;
-
 		}
 
-		if (document.HasMember("Unused GIDs"))
+		MyEventSystem->publish(new SceneChangingEvent(*currentScene));
+		//MyEventSystem->publish(
+		//	new SceneOpenedEvent(
+		//		currentScene->get_name().c_str(),
+		//		currentScene->gameObjects,
+		//		currentScene->componentArrays
+		//	)
+		//);
+
+		if (document.HasMember("Layers"))
 		{
-			std::cout << "Adding unused gids: ";
-			rapidjson::Value& _arr = document["Unused GIDs"].GetArray();
-			for (rapidjson::Value::ValueIterator iter = _arr.Begin(); iter != _arr.End(); ++iter)
+			rapidjson::Value& arr = document["Layers"].GetArray();
+			if (MyEditorSystem.getLayers()->SortLayers()->GetLayerCount())
 			{
-				GameObjectID id = (*iter).GetUint64();
-				currentScene->add_unused_gid(id);
-				std::cout << id << ' ';
+				MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers().clear();
+				MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers().shrink_to_fit();
+				PRINT(MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers().size());
 			}
-			std::cout << std::endl;
-		}
-		if (document.HasMember("Unused CIDs"))
-		{
-			rapidjson::Value& arr = document["Unused CIDs"].GetArray();
+
+			unsigned int idx{ 0 };
+			// Set-up all the layers
 			for (rapidjson::Value::ValueIterator iter = arr.Begin(); iter != arr.End(); ++iter)
 			{
-				ComponentID id = (*iter).GetUint64();
-				currentScene->add_unused_cid(id);
-				std::cout << id << ' ';
+				std::string name;
+				rapidjson::Value& layer = *iter;
+				if (layer.HasMember("Name"))
+				{
+					name = layer["Name"].GetString();
+				}
+				Layer* lay = MyEditorSystem.getLayers()->SortLayers()->CreateNewLayer(name);
+				PRINT("making new layer");
+				if (layer.HasMember("ID"))
+				{
+					lay->layerID = layer["ID"].GetUint();
+					PRINT("Layer's id: " << lay->layerID);
+				}
+				else
+				{
+					lay->layerID = idx;
+				}
+
+				++idx;
+
 			}
-			std::cout << std::endl;
 
 		}
 
@@ -199,94 +457,148 @@ namespace Copium {
 			rapidjson::Value& _gameObjArr = document["GameObjects"].GetArray();
 			for (rapidjson::Value::ValueIterator iter = _gameObjArr.Begin(); iter != _gameObjArr.End(); ++iter)
 			{
-				GameObject* tmpGO = nullptr;
-				tmpGO = MyGOF.instantiate(*iter);
+				MyGOF.Instantiate(*iter,*currentScene);
 			}
 
-			// Linkage of components to each other
-			auto gameObjectIt = _gameObjArr.Begin();
-			for (GameObject* go : currentScene->gameObjects)
+			// Linkages
+			DeserializeLink();
+			for (GameObject& go : currentScene->gameObjects)
 			{
-				if ((*gameObjectIt).HasMember("Components"))
+				// Transform and Parent
+				if (go.transform.parent)
 				{
-					rapidjson::Value& compArr = (*gameObjectIt)["Components"].GetArray();
-					auto componentIt = compArr.Begin();
-					go->transform.deserializeLink(*componentIt);
-					for (Component* component : go->components)
+					UUID uuid{ (uint64_t)go.transform.parent };
+					go.transform.parent = nullptr;
+					GameObject* p = MySceneManager.FindGameObjectByID(uuid);
+					if (p)
+						go.transform.SetParent(&p->transform);
+
+				}
+				
+				// Place into respective sorting layer
+				if (go.HasComponent<SortingGroup>())
+				{
+					SortingGroup* sg = go.GetComponent<SortingGroup>();
+					MyEditorSystem.getLayers()->SortLayers()->AddGameObject(sg->sortingLayer, go);
+				}
+
+				// Sprite Renderer
+				if (go.HasComponent<SpriteRenderer>())
+				{
+					SpriteRenderer* sr = go.GetComponent<SpriteRenderer>();
+					if (sr->sprite.spriteID != 0)
 					{
-						PRINT(component->Name());
-						//Offset TransformComponent
-						++componentIt;
-						component->deserializeLink(*componentIt);
+						const std::vector<Texture>& textures = MyAssetSystem.GetTextures();
+						bool reference = false;
+						for (int i = 0; i < textures.size(); i++)
+						{
+							uint64_t pathID = std::hash<std::string>{}(textures[i].get_file_path());
+							MetaID metaID = MyAssetSystem.GetMetaID(pathID);
+							// Check if the uuid of the sprite is the same as the meta file
+							if (metaID.uuid == sr->sprite.spriteID)
+							{
+								// If so set the reference texture to that file
+								reference = true;
+								sr->sprite.refTexture = MyAssetSystem.GetTexture(i);
+								break;
+							}
+						}
+						// If there is no references, set the spriteID to 0
+						if (!reference)
+							sr->sprite.spriteID = 0;
 					}
 				}
-				++gameObjectIt;
+
+				// SpriteSheet
+				if (go.HasComponent<Animator>())
+				{
+					Animator* animator = go.GetComponent<Animator>();
+					for (Animation& anim : animator->get_animation_vector())
+					{
+						uint64_t sid = anim.spriteSheet.spriteID;
+						if (sid != 0)
+						{
+							const std::vector<Texture>& textures = MyAssetSystem.GetTextures();
+							bool reference = false;
+							for (int j = 0; j < textures.size(); j++)
+							{
+								uint64_t pathID = std::hash<std::string>{}(textures[j].get_file_path());
+								MetaID metaID = MyAssetSystem.GetMetaID(pathID);
+
+								// Check if the uuid of the sprite is the same as the meta file
+								if (metaID.uuid == sid)
+								{
+									// If so set the reference texture to that file
+									reference = true;
+									anim.spriteSheet.texture = MyAssetSystem.GetTexture(j);
+									break;
+								}
+							}
+
+							// If there is no references, set the spriteID to 0
+							if (!reference)
+								sid = 0;
+						}
+					}
+				}
+
+
+
+				// Image
+				if (go.HasComponent<Image>())
+				{
+					Image* image = go.GetComponent<Image>();
+					if (image->sprite.spriteID != 0)
+					{
+						const std::vector<Texture>& textures = MyAssetSystem.GetTextures();
+						bool reference = false;
+						for (int i = 0; i < textures.size(); i++)
+						{
+							uint64_t pathID = std::hash<std::string>{}(textures[i].get_file_path());
+							MetaID metaID = MyAssetSystem.GetMetaID(pathID);
+							// Check if the uuid of the sprite is the same as the meta file
+							if (metaID.uuid == image->sprite.spriteID)
+							{
+								// If so set the reference texture to that file
+								reference = true;
+								image->sprite.refTexture = MyAssetSystem.GetTexture(i);
+								break;
+							}
+						}
+						// If there is no references, set the spriteID to 0
+						if (!reference)
+							image->sprite.spriteID = 0;
+					}
+				}
+
 			}
+
 		}
-		
+		MyEditorSystem.getLayers()->SortLayers()->BubbleSortGameObjects();
+
 		ifs.close();
 
-
 		MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_SCENE_DESERIALIZED);
-
-		// For multiple scenes within an instance
-		//scenes.emplace_back(currentScene);
 
 		return true;
 
 	}
-	bool SceneManager::change_scene(const std::string& _newfilepath)
-	{
-		if (currSceneState == Scene::SceneState::play)
-		{
-			PRINT("CANT LOAD SCENE IN PLAY MODE");
-			return false;
-		}
-		bool result = false;
 
-		// No scene loaded, therefore cannot change
-		if (!currentScene)
-		{
-			return result;
-		}
-
-		// Clear game objects in scene
-		// Deserialize from new file and overwrite other scene data
-		if (std::filesystem::exists(_newfilepath))
-		{
-			std::cout << "file exists\n";
-			delete currentScene;
-			currentScene = nullptr;
-			selectedGameObject = nullptr;
-			load_scene(_newfilepath);
-			//Scene* tmp = currentScene;
-			//result = load_scene(_newfilepath);
-			//delete tmp;
-		}
-		else
-		{
-			std::cout << "file does not exist, scene change aborted\n";
-			return false;
-		}
-
-		return result;
-
-	}
 
 	Scene* SceneManager::get_current_scene(){ return currentScene; }
 	void SceneManager::set_current_scene(Scene* _src) { currentScene = _src; }
 
-	void SceneManager::set_selected_gameobject(GameObject* _go) { selectedGameObject = _go; }
-	GameObject* SceneManager::get_selected_gameobject() { return selectedGameObject; }
 	std::shared_ptr<GameObject>& SceneManager::get_selected_gameobject_sptr()
 	{
 		for (size_t i{ 0 }; i < currentScene->gameObjectSPTRS.size(); ++i)
 		{
-			if (currentScene->gameObjectSPTRS[i].get() == selectedGameObject)
-			{
-				return currentScene->gameObjectSPTRS[i];
-			}
+			//if (currentScene->gameObjectSPTRS[i].get() == selectedGameObject)
+			//{
+			//	return currentScene->gameObjectSPTRS[i];
+			//}
 		}
+		
+		return currentScene->gameObjectSPTRS[0];
 	}
 	std::shared_ptr<GameObject>* SceneManager::find_gameobject_sptr(GameObject* _go)
 	{
@@ -314,41 +626,59 @@ namespace Copium {
 			PRINT("Currently in play mode...\n");
 			return false;
 		}
+		for (GameObject& gameObj : currentScene->gameObjects)
+		{
+			mainCamera = gameObj.GetComponent<Camera>();
+			if (mainCamera)
+				break;
+		}
+		if (!mainCamera)
+		{
+			PRINT("No camera!");
+			return false;
+
+		}
+
+		MyEventSystem->publish(new StartPreviewEvent());
 
 
-
-		GameObjectID prevSelected = 0;
-		if (selectedGameObject)
-			prevSelected = selectedGameObject->id;
+		//UUID prevSelected = 0;
+		//if (selectedGameObject)
+		//	prevSelected = selectedGameObject->id;
 
 		backUpCurrScene();
 
-		for (GameObject* gameObj : currentScene->gameObjects)
+		for (GameObject& gameObj : currentScene->gameObjects)
 		{
-			mainCamera = gameObj->getComponent<Camera>();
+			mainCamera = gameObj.GetComponent<Camera>();
 			if (mainCamera)
 				break;
+		}
+
+		PreviewLink();
+		for (GameObject& go : currentScene->gameObjects)
+		{
+			// Replacement
+			if (go.HasComponent<SortingGroup>())
+			{
+				SortingGroup* sg = go.GetComponent<SortingGroup>();
+				MyEditorSystem.getLayers()->SortLayers()->ReplaceGameObject(sg->sortingLayer, go);
+
+			}
 		}
 
 		currSceneState = Scene::SceneState::play;
 		currentScene->set_state(Scene::SceneState::play);
 
-		//if (mainCamera == nullptr)
-		//{
-		//	std::cout << "start preview\n";
 
-		//	delete currentScene;
-		//	currentScene = storageScene;
-		//	storageScene = 0;
-		//	return false;
-		//}
+		//if (prevSelected)
+		//	selectedGameObject = findGameObjByID(prevSelected);
 
-		if (prevSelected)
-			selectedGameObject = findGameObjByID(prevSelected);
-
+		//SoundSystem::Instance()->StopAll();
 
 		return true;
 	}
+
 	bool SceneManager::endPreview()
 	{
 		if (!currentScene)
@@ -358,6 +688,8 @@ namespace Copium {
 			return false;
 		}
 
+		MyEventSystem->publish(new StopPreviewEvent());
+
 		std::cout << "stop preview\n";
 		currSceneState = Scene::SceneState::edit;
 
@@ -366,21 +698,34 @@ namespace Copium {
 		if (!storageScene)
 			return false;
 
+		// Replace gameobjects in sorting layer
+		MyEditorSystem.getLayers()->SortLayers()->ClearAllLayer();
+		for (GameObject& go : storageScene->gameObjects)
+		{
+			if (go.HasComponent<SortingGroup>())
+			{
+				SortingGroup* sg = go.GetComponent<SortingGroup>();
+				MyEditorSystem.getLayers()->SortLayers()->AddGameObject(sg->GetLayerID(), go);
+			}
+		}
+		// Sort based on order in layer
+		MyEditorSystem.getLayers()->SortLayers()->BubbleSortGameObjects();
+
 		Scene* tmp = currentScene;
 		currentScene = storageScene;
 		mainCamera = nullptr;
 		storageScene = nullptr;
 
-		Button::hoveredBtn = nullptr;
-
-		if (selectedGameObject)
-		{
-			selectedGameObject = findGameObjByID(selectedGameObject->id);
-		}
+		//if (selectedGameObject)
+		//{
+		//	selectedGameObject = FindGameObjByID(selectedGameObject->id);
+		//}
 
 		delete tmp;
 
 		currentScene->set_state(Scene::SceneState::edit);
+
+		//SoundSystem::Instance()->StopAll();
 
 		return true;
 
@@ -394,28 +739,29 @@ namespace Copium {
 			return false;
 		}
 
-		double startTime = glfwGetTime();
+		//double startTime = glfwGetTime();
 		std::cout << "saving scene...\n";
 		if (!save_scene(sceneFilePath))
 			return false;
 
 		std::cout << "save complete\n";
-		std::cout << "Time taken: " << glfwGetTime() - startTime << std::endl;
+		//std::cout << "Time taken: " << glfwGetTime() - startTime << std::endl;
 		return true;
 	}
+
 	bool SceneManager::save_scene(const std::string& _filepath)
 	{
-		if(!currentScene)
-		{
-			Window::EditorConsole::editorLog.add_logEntry("No Scene loaded, cannot perform save!");
-			return false;
-		}
+		//if(!currentScene)
+		//{
+		//	Window::EditorConsole::editorLog.add_logEntry("No Scene loaded, cannot perform save!");
+		//	return false;
+		//}
 
-		if (currSceneState != Scene::SceneState::edit)
-		{
-			Window::EditorConsole::editorLog.add_logEntry("In edit mode, cannot perform save!");
-			return false;
-		}
+		//if (currSceneState != Scene::SceneState::edit)
+		//{
+		//	Window::EditorConsole::editorLog.add_logEntry("In edit mode, cannot perform save!");
+		//	return false;
+		//}
 
 		std::string fp(_filepath);
 		if (fp.find(".scene") == std::string::npos)
@@ -432,104 +778,48 @@ namespace Copium {
 
 		doc.SetObject();
 
-		//rapidjson::Value sceneArray(rapidjson::kArrayType);
-		//for (Scene* sc : scenes)
+		Copium::SerializeBasic(currentScene->get_name(), doc, doc, "Name");
+
+		//// Serialize Layer Data
+		//rapidjson::Value layers(rapidjson::kArrayType);
+		//for (Layer& layer : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
 		//{
-		//	rapidjson::Value scene(rapidjson::kObjectType);
-		//	rapidjson::Value name;
-		//	create_rapidjson_string(doc, name, sc->get_name());
-		//	scene.AddMember("Name", name, doc.GetAllocator());
+		//	rapidjson::Value obj(rapidjson::kObjectType);
+		//	rapidjson::Value layerName;
+		//	create_rapidjson_string(doc, layerName, layer.name);
+		//	obj.AddMember("Name", layerName, doc.GetAllocator());
 
-		//	// Serialize UGIDs
-		//	rapidjson::Value ugids(rapidjson::kArrayType);
-		//	for (GameObjectID id : sc->get_unusedgids())
-		//	{
-		//		ugids.PushBack(id, doc.GetAllocator());
-		//	}
-		//	scene.AddMember("Unused GIDs", ugids, doc.GetAllocator());
+		//	obj.AddMember("ID", layer.layerID, doc.GetAllocator());
 
-		//	// Serialize UCIDs
-		//	rapidjson::Value ucids(rapidjson::kArrayType);
-		//	for (ComponentID id : sc->get_unusedcids())
-		//	{
-		//		ucids.PushBack(id, doc.GetAllocator());
-		//	}
-		//	scene.AddMember("Unused CIDs", ucids, doc.GetAllocator());
-
-		//	std::vector<GameObject*> roots;
-		//	for (GameObject* pGameObject : sc->gameObjects)
-		//	{
-		//		if (!pGameObject->transform.hasParent())
-		//			roots.emplace_back(pGameObject);
-		//	}
-		//	//Create array of game objects
-		//	rapidjson::Value gameObjects(rapidjson::kArrayType);
-		//	for (GameObject* pGameObject : sc->gameObjects)
-		//	{
-		//		rapidjson::Value go(rapidjson::kObjectType);
-		//		pGameObject->serialize(go, doc);
-
-
-		//		//rapidjson::Value components(rapidjson::kArrayType);
-		//		// Insert transform component into component array
-
-
-		//		gameObjects.PushBack(go, doc.GetAllocator());
-		//	}
-
-		//	scene.AddMember("GameObjects", gameObjects, doc.GetAllocator());
-		//	sceneArray.PushBack(scene, doc.GetAllocator());
-		//}
-		//doc.AddMember("Scenes:", sceneArray, doc.GetAllocator());
-		rapidjson::Value name;
-		create_rapidjson_string(doc, name,  currentScene->get_name());
-		doc.AddMember("Name", name, doc.GetAllocator());
-
-		// Serialize UGIDs
-		rapidjson::Value ugids(rapidjson::kArrayType);
-		for (GameObjectID id : currentScene->get_unusedgids())
+		//	layers.PushBack(obj, doc.GetAllocator());
+		// Serialize Layer Data
+		rapidjson::Value layers(rapidjson::kArrayType);
+		for (Layer& layer : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
 		{
-			ugids.PushBack(id, doc.GetAllocator());
-		}
-		doc.AddMember("Unused GIDs", ugids, doc.GetAllocator());
+			rapidjson::Value obj(rapidjson::kObjectType);
+			SerializeBasic(layer.name, obj, doc, "Name");
+			SerializeBasic(layer.layerID, obj, doc, "ID");
 
-		// Serialize UCIDs
-		rapidjson::Value ucids(rapidjson::kArrayType);
-		for (ComponentID id : currentScene->get_unusedcids())
-		{
-			ucids.PushBack(id, doc.GetAllocator());
+			layers.PushBack(obj, doc.GetAllocator());
 		}
-		doc.AddMember("Unused CIDs", ucids, doc.GetAllocator());
+		doc.AddMember("Layers", layers, doc.GetAllocator());
 
-		std::vector<GameObject*> roots;
-		for (GameObject* pGameObject : currentScene->gameObjects)
-		{
-			if (!pGameObject->transform.hasParent())
-				roots.emplace_back(pGameObject);
-		}
+		
 		//Create array of game objects
 		rapidjson::Value gameObjects(rapidjson::kArrayType);
-		for (GameObject* pGameObject : currentScene->gameObjects)
+		for (GameObject& gameObject : currentScene->gameObjects)
 		{
 			rapidjson::Value go(rapidjson::kObjectType);
-			pGameObject->serialize(go, doc);
-
-
-			//rapidjson::Value components(rapidjson::kArrayType);
-			// Insert transform component into component array
-
-
+			Serializer::Serialize(gameObject, "", go, doc);
 			gameObjects.PushBack(go, doc.GetAllocator());
 		}
-
 		doc.AddMember("GameObjects", gameObjects, doc.GetAllocator());
 
 		rapidjson::StringBuffer sb;
-		rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(sb);
-		doc.Accept(writer);
-		ofs << sb.GetString();
+		Serializer::WriteToFile(sb, doc, ofs);
 		return true;
 	}
+
 
 	void SceneManager::backUpCurrScene()
 	{
@@ -545,30 +835,38 @@ namespace Copium {
 
 		currentScene->name = storageScene->name;
 
-		currentScene->unusedCIDs = storageScene->unusedCIDs;
-		currentScene->unusedGIDs = storageScene->unusedGIDs;
-
 		// Copy game object data
-		for (const GameObject* gameObj : storageScene->gameObjects)
+		for (GameObject& gameObj : storageScene->gameObjects)
 		{
-			MyGOF.clone(*gameObj, currentScene);
+			MyGOF.Instantiate(gameObj,*currentScene, true);
 		}
 
-		//std::cout << "Storage scene game object count: " << storageScene->gameObjects.size() << std::endl;
-		//std::cout << "Preview scene game object count: " << currentScene->gameObjects.size() << std::endl;
+		// MATT: Sorting Layer Replacement HERE
 
-		for (size_t goIndex{ 0 }; goIndex < storageScene->get_gameobjcount(); ++goIndex)
+	}
+
+	template <typename T>
+	void SceneManager::CallbackComponentAdd(ComponentAddEvent<T>* pEvent)
+	{
+		if constexpr (std::is_same<T,Script>())
 		{
-			GameObject* currGameObj = currentScene->gameObjects[goIndex];
-			GameObject* storedGameObj = storageScene->gameObjects[goIndex];
-			currGameObj->transform.previewLink(&storedGameObj->transform);
-			//std::cout << "Name comparisons: " << currGameObj->get_name() << '|' << storedGameObj->get_name() << std::endl;
-			for (size_t compIndex{ 0 }; compIndex < currGameObj->components.size(); ++compIndex)
-			{
-				currGameObj->components[compIndex]->previewLink(storedGameObj->components[compIndex]);
-			}
+			
+			T& component = MyGOF.AddComponent(pEvent->gameObject, *currentScene, pEvent->scriptName, nullptr, false);
+			pEvent->componentContainer = &component;
+		}
+		else
+		{
+			T& component = MyGOF.AddComponent<T>(pEvent->gameObject, *currentScene,nullptr, false);
+			pEvent->componentContainer = &component;
 		}
 	}
+
+	template <typename T>
+	void SceneManager::CallbackComponentDelete(ComponentDeleteEvent<T>* pEvent)
+	{
+		currentScene->componentsForDeletion.GetArray<T>().push_back(&pEvent->component);
+	}
+
 
 	void create_rapidjson_string(rapidjson::Document& _doc, rapidjson::Value& _value, const std::string& _str)
 	{
@@ -585,7 +883,6 @@ namespace Copium {
 			std::cout << "Destroying Current Scene!\n";
 			delete currentScene;
 			currentScene = nullptr;
-			selectedGameObject = nullptr;
 			sceneFilePath.clear();
 		}
 
@@ -597,4 +894,38 @@ namespace Copium {
 		return true;
 	}
 	Scene* SceneManager::get_storage_scene() { return storageScene; }
+
+	void SceneManager::CallbackQuitEngine(QuitEngineEvent* pEvent)
+	{
+		quit_engine();
+	}
+
+
+
+
+	void SceneManager::CallbackChildInstantiate(ChildInstantiateEvent* pEvent)
+	{
+		GameObject& child = MyGOF.InstantiateChild(*pEvent->parent, *currentScene);
+		pEvent->instanceContainer = &child;
+	}
+
+	void SceneManager::CallbackGameObjectInstantiate(GameObjectInstantiateEvent* pEvent)
+	{
+
+		if (!pEvent->pOriginal)
+		{
+			GameObject& go = MyGOF.Instantiate(*currentScene);
+			pEvent->instanceContainer = &go;
+		}
+		else
+		{
+			GameObject& go = MyGOF.Instantiate(*pEvent->pOriginal, *currentScene);
+			pEvent->instanceContainer = &go;
+		}
+	}
+	void SceneManager::CallbackGameObjectDelete(GameObjectDestroyEvent* pEvent)
+	{
+		currentScene->gameObjectsForDeletion.push_back(&pEvent->gameObject);
+	}
+
 }

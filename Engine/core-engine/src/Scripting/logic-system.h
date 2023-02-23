@@ -1,5 +1,5 @@
 ﻿/*!***************************************************************************************
-\file			logic-system.cpp
+\file			logic-system.h
 \project
 \author			Zacharie Hong
 
@@ -22,7 +22,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 //INCLUDES
 #include "CopiumCore/system-interface.h"
 #include "Messaging/message-system.h"
-
+#include <Events/events-system.h>
 //USING
 
 namespace Copium

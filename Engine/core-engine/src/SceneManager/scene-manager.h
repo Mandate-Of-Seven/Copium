@@ -21,15 +21,15 @@
 All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************
 ****/
-#pragma once
 #ifndef SM_H
 #define SM_H
 
 
-#include "GameObject/game-object-factory.h"
 #include "CopiumCore/system-interface.h"
 #include "SceneManager/scene.h"
+#include "Events/events-system.h"
 #include <filesystem>
+#include <config.h>
 
 #define MySceneManager (*Copium::SceneManager::Instance())
 
@@ -40,13 +40,9 @@ namespace Copium {
 	CLASS_SYSTEM(SceneManager)
 	{
 	public:
-		GameObject* findGameObjByID(GameObjectID _ID);
-		GameObject* findGameObjByName(const std::string& name);
-		Component* findComponentByID(ComponentID _ID);
 
-		SceneManager();
-		~SceneManager();
-
+		GameObject* FindGameObjectByID(UUID _id);
+		Component* FindComponentByID(UUID _id);
 		/*******************************************************************************
 		/*!
 		*
@@ -111,21 +107,7 @@ namespace Copium {
 		*/
 		/*******************************************************************************/
 		bool load_scene(const std::string& _filepath);
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Switch to another scene, whose data is in a file specified by input param
 
-		\param _newfilepath
-			reference to a string containing the filepath of the file that contains the scene data of the new scene.
-
-		\return
-			on success, return true
-			on failure, return false
-		*/
-		/*******************************************************************************/
-		bool change_scene(const std::string& _newfilepath);
 
 		/*******************************************************************************
 		/*!
@@ -184,33 +166,6 @@ namespace Copium {
 		*/
 		/*******************************************************************************/
 		void set_current_scene(Scene* _src);
-
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Set the selected game object
-
-		\param _go
-			ptr to the game object that is selected
-
-		\return
-			void
-		*/
-		/*******************************************************************************/
-		void set_selected_gameobject(GameObject* _go);
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Get pointer to the selected game object (if any)
-
-		\return
-			pointer to the selected game object
-			if there is no game object selected, return nullptr
-		*/
-		/*******************************************************************************/
-		GameObject* get_selected_gameobject();
 
 		std::shared_ptr<GameObject>& get_selected_gameobject_sptr();
 		std::shared_ptr<GameObject>* find_gameobject_sptr(GameObject* _go);
@@ -281,20 +236,66 @@ namespace Copium {
 		/*******************************************************************************/
 		Scene* get_storage_scene();
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Get a reference to the vector of scenes
+
+		\return
+			reference to the vector of scenes
+		*/
+		/*******************************************************************************/
 		std::vector<Scene*>& GetSceneVector() { return scenes; }
 
+		void DeserializeLink();
+		void PreviewLink();
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Get the current scene state
+
+		\return
+			the current scene state
+		*/
+		/*******************************************************************************/
 		Scene::SceneState GetSceneState() const { return currSceneState; }
 
-		GameObject* selectedGameObject;
+
+		template <typename T>
+		void CallbackComponentAdd(ComponentAddEvent<T>* pEvent);
+
+		template <typename T>
+		void CallbackComponentDelete(ComponentDeleteEvent<T>* pEvent);
+
+
+		template<typename T, typename... Ts>
+		void SubscribeComponentsFunctions(TemplatePack<T,Ts...> pack)
+		{
+			MyEventSystem->subscribe(this, &SceneManager::CallbackComponentAdd<T>);
+			MyEventSystem->subscribe(this, &SceneManager::CallbackComponentDelete<T>);
+			if constexpr (sizeof...(Ts) != 0)
+			{
+				SubscribeComponentsFunctions(TemplatePack<Ts...>());
+			}
+		}
+
 		Camera* mainCamera{nullptr};
 
+	private:
+		void CallbackQuitEngine(QuitEngineEvent* pEvent);
+		void CallbackChildInstantiate(ChildInstantiateEvent* pEvent);
+		void CallbackGameObjectInstantiate(GameObjectInstantiateEvent* pEvent);
+		void CallbackGameObjectDelete(GameObjectDestroyEvent* pEvent);
 	private:
 		Scene* currentScene;	// Pointer to the current scene
 		Scene* storageScene;	// Scene Pointer that acts as buffer for preview scene
 		rapidjson::Document document;
 		std::string sceneFilePath;
-		Scene::SceneState currSceneState;
+		Scene::SceneState currSceneState{ Scene::SceneState::edit };
 		std::vector<Scene*> scenes;
+
 	};
 
 	/*******************************************************************************

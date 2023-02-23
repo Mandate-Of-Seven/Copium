@@ -16,8 +16,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef BASE_CAMERA_H
 #define BASE_CAMERA_H
 
-#include <rapidjson/document.h>
-
 #include "Graphics/graphics-typedef.h"
 #include "Graphics/framebuffer.h"
 #include "Graphics/graphics-draw.h"
@@ -28,30 +26,6 @@ namespace Copium
 	class BaseCamera
 	{
 	public:
-		/*******************************************************************************
-		/*!
-		\brief
-			Deserialize this renderer component's data from the specified rapidjson Value
-		\param _value
-			reference to the rapidjson Value which the renderer component's data
-			deserializes its data
-		*/
-		/*******************************************************************************/
-		bool deserialize(rapidjson::Value& _value);
-
-		/*******************************************************************************
-		/*!
-		\brief
-			Serialize this renderer component's data to the specified rapidjson Value
-		\param _value
-			reference to the rapidjson Value which the renderer component's data is to
-			serialize its data to
-		\param _doc
-			reference to the rapidjson Document which is associated to the save file
-			which the data is being saved to
-		*/
-		/*******************************************************************************/
-		bool serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
 		/***************************************************************************/
 		/*!
@@ -178,12 +152,26 @@ namespace Copium
 		glm::mat4 get_projection() const { return projMatrix; }
 		glm::mat4 get_view_matrix() const { return viewMatrix; }
 		glm::mat4 get_view_proj_matrix() const { return viewProjMatrix; }
+		glm::mat4 get_test_proj_matrix() const { return testProjMatrix; }
 
 		Framebuffer* get_framebuffer() { return &framebuffer; }
 		Draw* getDraw() { return &draw; }
 
 		void set_bg_color(glm::vec4 const& _color) { backgroundColor = _color; }
 		const glm::vec4& get_bg_color() const { return backgroundColor; }
+
+		float GetAspect() const { return aspect; }
+		float GetNearClip() const { return nearClip; }
+		float GetFarClip() const { return farClip; }
+		bool IsOrthographic() const { return orthographic; }
+		glm::vec4 GetBackgroundColor() { return backgroundColor; }
+		glm::vec4& getBackgroundColor() { return backgroundColor; }
+
+		void SetNearClip(float _value) { nearClip = _value; }
+		void SetFarClip(float _value) { farClip = _value; }
+		void SetOrthographic(bool _value) { orthographic = _value; }
+		void SetFocalPoint(glm::vec3 _value) { focalPoint = _value; }
+		void SetCameraPosition(glm::vec3 _value) { viewer = _value; }
 
 	protected:
 		
@@ -257,6 +245,7 @@ namespace Copium
 		glm::mat4 projMatrix{ 0 };			// The projection matrix to use, either orthographic or perspective
 		glm::mat4 viewMatrix{ 0 };			// The view matrix -> worldToCamera matrix
 		glm::mat4 viewProjMatrix{ 0 };		// The view projection matrix -> viewMatrix * projMatrix
+		glm::mat4 testProjMatrix{ 0 };		// The test projection matrix -> viewMatrix * projMatrix
 
 		glm::mat4 cameraToNDC{ 0 };
 		glm::mat4 ndcToViewport{ 0 };

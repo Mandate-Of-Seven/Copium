@@ -2,6 +2,7 @@
 \file			editor-layers.h
 \project
 \author			Sean Ngo
+\co-author		Matthew Lau
 
 \par			Course: GAM200
 \par			Section:
@@ -47,13 +48,33 @@ namespace Copium
 		/***************************************************************************/
 		void exit();
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Get the SortingLayers struct
+
+		\return
+			pointer to the SortingLayers struct
+		*/
+		/***************************************************************************/
 		SortingLayers* SortLayers() { return &sortingLayers; }
+
+		/***************************************************************************/
+		/*!
+		\brief
+			Get the Layering struct
+
+		\return
+			pointer to the Layering struct
+		*/
+		/***************************************************************************/
 		Layering* Layers() { return &layers; }
 
 	private:
 		/* Layer Data *******************************************************************/
 		SortingLayers sortingLayers;
 		Layering layers;
+
 		
 	};
 }

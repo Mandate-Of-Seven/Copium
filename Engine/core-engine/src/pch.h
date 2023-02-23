@@ -44,6 +44,15 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 //DEBUGGING
 #include "Debugging/logging-system.h"
 
+void print(){}
+
+template <typename T, typename... Ts>
+void print(T val, Ts... others)
+{
+    std::cout << val;
+    print(others);
+}
+
 #define PRINT(str) std::cout << str << std::endl
 
 #endif // !PCH_H

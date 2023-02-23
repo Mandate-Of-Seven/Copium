@@ -157,25 +157,6 @@ namespace Copium::Math
 		_os << "x:" << _v.x << " " << "y:" << _v.y << std::endl;
 		return _os;
 	}
-	bool Vec2::deserialize(rapidjson::Value& _value	)
-	{
-		if (!_value.HasMember("X") || !_value.HasMember("Y"))
-			return false;
-
-		x = _value["X"].GetFloat();
-		y = _value["Y"].GetFloat();
-			
-		return false;
-
-	}
-	bool Vec2::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
-	{
-		_value.AddMember("X", x, _doc.GetAllocator());
-		_value.AddMember("Y", y, _doc.GetAllocator());
-
-		return true;
-
-	}
 	////////////////////////////
 
 
@@ -208,12 +189,26 @@ namespace Copium::Math
 		z *= _rhs;
 		return *this;
 	}
+
+	Vec3& Vec3::operator*= (const Vec3& _rhs)
+	{
+		x *= _rhs.x;
+		y *= _rhs.y;
+		z *= _rhs.z;
+		return *this;
+	}
+
 	Vec3& Vec3::operator/= (float _rhs)
 	{
 		x /= _rhs;
 		y /= _rhs;
 		z /= _rhs;
 		return *this;
+	}
+
+	Vec3 Vec3::operator* (const Vec3& _rhs)
+	{
+		return { x * _rhs.x,y * _rhs.y,z * _rhs.z };
 	}
 
 	// Unary operator overloads
@@ -307,24 +302,6 @@ namespace Copium::Math
 	{
 		_os << "x:" << _v.x << " y:" << _v.y << " z:" << _v.z << std::endl;
 		return _os;
-	}
-	bool Vec3::deserialize(rapidjson::Value& _value)
-	{
-		if (!_value.HasMember("X") || !_value.HasMember("Y") || !_value.HasMember("Z"))
-			return false;
-
-		x = _value["X"].GetFloat();
-		y = _value["Y"].GetFloat();
-		z = _value["Z"].GetFloat();
-		return true;
-
-	}
-	bool Vec3::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
-	{
-		_value.AddMember("X", x, _doc.GetAllocator());
-		_value.AddMember("Y", y, _doc.GetAllocator());
-		_value.AddMember("Z", z, _doc.GetAllocator());
-		return true;
 	}
 	////////////////////////////
 
@@ -899,24 +876,24 @@ namespace Copium::Math
 	////////////////////////////
 
 	// Deserialize glm color 
-	bool deserialize_color(rapidjson::Value& _value, glm::vec4& _v)
-	{
-		if (!_value.HasMember("R"))
-			return false;
-		if (!_value.HasMember("G"))
-			return false;
-		if (!_value.HasMember("B"))
-			return false;
-		if (!_value.HasMember("A"))
-			return false;
+	//bool deserialize_color(rapidjson::Value& _value, glm::vec4& _v)
+	//{
+	//	if (!_value.HasMember("R"))
+	//		return false;
+	//	if (!_value.HasMember("G"))
+	//		return false;
+	//	if (!_value.HasMember("B"))
+	//		return false;
+	//	if (!_value.HasMember("A"))
+	//		return false;
 
-		_v[0] = _value["R"].GetFloat();
-		_v[1] = _value["G"].GetFloat();
-		_v[2] = _value["B"].GetFloat();
-		_v[3] = _value["A"].GetFloat();
-		return true;
+	//	_v[0] = _value["R"].GetFloat();
+	//	_v[1] = _value["G"].GetFloat();
+	//	_v[2] = _value["B"].GetFloat();
+	//	_v[3] = _value["A"].GetFloat();
+	//	return true;
 
-	}
+	//}
 
 	// Degree to Radian conversions
 	float deg_to_rad(float _angle)

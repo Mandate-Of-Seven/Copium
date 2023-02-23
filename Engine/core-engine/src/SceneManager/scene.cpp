@@ -21,7 +21,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 ******************************************************************************************/
 #include "pch.h"
 #include "SceneManager/scene.h"
-#include <SceneManager/scene-manager.h>
 
 namespace Copium
 {
@@ -36,21 +35,6 @@ Scene::Scene(const std::string& _filepath) : filename(_filepath)
 Scene::~Scene()
 {
 
-	std::cout << get_gameobjcount() << std::endl;
-
-
-	for (size_t i{ 0 }; i < gameObjects.size(); ++i)
-	{
-		if (gameObjects[i] != nullptr)
-		{
-			//std::cout << "deleting a game object\n";
-			//delete gameObjects[i];
-			//gameObjects[i] = nullptr;
-		}
-		
-	}
-	
-	gameObjects.shrink_to_fit();
 	std::cout << "game objects destroyed\n";
 }
 
@@ -64,7 +48,6 @@ void Scene::draw_scene()
 }
 
 std::string Scene::get_filename() const {return filename;}
-size_t Scene::get_gameobjcount() const { return gameObjects.size(); }
 GameObject* Scene::add_gameobject(GameObject* _gameObj) 
 {
 	std::shared_ptr<GameObject> sptr(_gameObj, [](GameObject* _go) {
@@ -75,13 +58,13 @@ GameObject* Scene::add_gameobject(GameObject* _gameObj)
 			_go = nullptr;
 		}
 	});
-	gameObjects.push_back(_gameObj);
+	gameObjects.push_back(*_gameObj);
 	gameObjectSPTRS.push_back(sptr);
 	std::cout << "SPTR reference count:" << sptr.use_count() << std::endl;
 	return _gameObj;
 }
 
-void Scene::set_name(const std::string& _name) { name = _name; std::cout << name << std::endl; }
+void Scene::set_name(const std::string& _name) { name = _name; }
 std::string Scene::get_name() const{ return name; }
 void Scene::inspector_view()
 {
@@ -89,50 +72,6 @@ void Scene::inspector_view()
 }
 
 //M3
-void Scene::incr_component_count() { ++numberOfComponents; }
-unsigned int Scene::get_component_count() const { return numberOfComponents; }
-ComponentID Scene::assignComponentID()
-{
-	if (unusedCIDs.empty())
-	{
-		incr_component_count();
-		//std::cout << "Assigning Component ID: " << numberOfComponents << std::endl;
-		return static_cast<ComponentID>(numberOfComponents);
-	}
-	else {
-		ComponentID cid = unusedCIDs.front();
-		//std::cout << "Taking over cid: " << cid << std::endl;
-		unusedCIDs.erase(unusedCIDs.begin());
-		return cid;
-	}
-
-}
-void Scene::add_unused_cid(ComponentID _id)
-{
-	unusedCIDs.emplace_back(_id);
-}
-std::vector<ComponentID>& Scene::get_unusedcids() { return unusedCIDs; }
-GameObjectID Scene::assignGameObjID()
-{
-	if (!unusedGIDs.empty())
-	{
-		// Pop the first unused GID
-		GameObjectID id = unusedGIDs[0];
-		unusedGIDs.erase(unusedGIDs.begin());
-		//std::cout << "taking over unused ID: " << id << std::endl;
-		return id;
-	}
-
-	GameObjectID id = (GameObjectID)gameObjects.size() + 1;
-	//std::cout << "assigning new ID " << id << std::endl;
-	return id;
-}
-void Scene::add_unused_gid(GameObjectID _id)
-{
-	unusedGIDs.emplace_back(_id);
-	//Sort?
-}
-std::vector<GameObjectID>& Scene::get_unusedgids() { return unusedGIDs; }
 Scene::SceneState Scene::get_state() const { return currSceneState; }
 void Scene::set_state(SceneState _newState) { currSceneState = _newState; }
 // Normal Scene

@@ -18,7 +18,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "sound-system.h"
 #include "Windows/windows-system.h"
 #include "Windows/windows-input.h"
-
+#include "SceneManager/scene-manager.h"
 
 namespace
 {
@@ -27,6 +27,7 @@ namespace
 
 namespace Copium
 {
+	ComponentsArray<AudioSource>* pAudioSourcesArray{nullptr};
 
 // Initialize sound system
 void SoundSystem::init()
@@ -41,22 +42,7 @@ void SoundSystem::init()
 
 void SoundSystem::update()
 {
-	//soundSystem->update();
-	//if (inputSystem.is_key_pressed(GLFW_KEY_1))
-	//{
-	//	Copium::SoundSystem::Instance()->Play("zap", true, false);
-	//	std::cout << "Zap sound is being played\n";
-	//}
-	//if (inputSystem.is_key_pressed(GLFW_KEY_2))
-	//{
-	//	Copium::SoundSystem::Instance()->Play("reeling", true, false);
-	//	std::cout << "Reeling sound is being played\n";
-	//}
-	//if (inputSystem.is_key_pressed(GLFW_KEY_3))
-	//{
-	//	Copium::SoundSystem::Instance()->Play("testbgm", false, true);
-	//	std::cout << "BGM is being played\n";
-	//}
+
 }
 
 void SoundSystem::exit()
@@ -100,7 +86,7 @@ void DeleteSound()
 
 }
 // Play sound
-void SoundSystem::Play(std::string alias, bool overLap, bool loop, int loopCount)
+void SoundSystem::Play(std::string alias, FMOD::Channel* channel, bool overLap, bool loop, int loopCount)
 {
 	FMOD::Sound *rSound(soundList[alias].second);
 	int numPlaying(0);
@@ -124,7 +110,8 @@ void SoundSystem::Play(std::string alias, bool overLap, bool loop, int loopCount
 	{
 		rSound->setMode(FMOD_LOOP_OFF);
 	}
-	soundSystem->playSound(rSound, nullptr, false, nullptr);
+
+	soundSystem->playSound(rSound, nullptr, false, &channel);
 }
 
 // Stop sound
@@ -132,9 +119,20 @@ void SoundSystem::Stop(std::string alias)
 {
 	if (soundList[alias].first)
 	{
-			soundList[alias].first->stop();
+		soundList[alias].first->stop();
 	}
 }
+
+void SoundSystem::StopAll()
+{
+	if (!pAudioSourcesArray)
+		COPIUM_ASSERT(1, "TRYING TO STOP AUDIO WITH NO SCENE LOADED!");
+	for (AudioSource& audioSource : *pAudioSourcesArray)
+	{
+		audioSource.stop_sound();
+	}
+}
+
 
 // Set volume
 void SoundSystem::SetVolume(std::string alias, float volume)

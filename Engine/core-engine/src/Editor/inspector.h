@@ -25,6 +25,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <imgui.h>
 #include "SceneManager/scene-manager.h"
 #include "GameObject/game-object.h"
+#include "Audio/sound-system.h"
 
 namespace Copium
 {
@@ -41,7 +42,10 @@ namespace Copium
 	private:
 		bool isInspectorOpen;
 		bool isFocused;
+		UUID targetGameobjectName;
 
+		void CallbackStartPreview(StartPreviewEvent* pEvent);
+		void CallbackStopPreview(StopPreviewEvent* pEvent);
 	};
 }
 

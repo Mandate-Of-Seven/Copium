@@ -154,7 +154,7 @@ namespace Copium
 	{
 		std::cout << "game obj command destructed\n";
 		std::cout << "reference count: " << sptr.use_count() << std::endl;
-		//std::cout << "Undo Redo being destroyed: " << this->value->get_name() << " | " << this->value << "\n\n";
+		//std::cout << "Undo Redo being destroyed: " << this->value->name << " | " << this->value << "\n\n";
 		//MyGOF.destroy(this->value);
 		//delete this->value;
 
@@ -172,10 +172,10 @@ namespace Copium
 
 		if (isDeleting)
 		{
-			if (!value->get_name().empty())
+			if (!value->name.empty())
 			{
 				std::cout << "Deleting game object" << std::endl;
-				MyGOF.destroy(this->pointer);
+				//MyGOF.destroy(this->pointer);
 				Command* temp = new GameObjectCommand(sptr, false);
 				stackPointer->push(temp);
 			}
@@ -186,11 +186,11 @@ namespace Copium
 		}
 		else
 		{
-			if (!value->get_name().empty())
+			if (!value->name.empty())
 			{
 				std::cout << "Create" << std::endl;
 				//GameObject* newObj = MyGOF.instantiate(*this->value);
-				Copium::SceneManager::Instance()->get_current_scene()->gameObjects.push_back(value);
+				//Copium::SceneManager::Instance()->get_current_scene()->gameObjects.push_back(value);
 				Copium::SceneManager::Instance()->get_current_scene()->gameObjectSPTRS.push_back(sptr);				
 				Command* temp = new GameObjectCommand(sptr, true);
 				stackPointer->push(temp);
@@ -214,10 +214,10 @@ namespace Copium
 		if (isDeleting)
 		{
 
-			if (!value->get_name().empty())
+			if (!value->name.empty())
 			{
 				std::cout << "Delete" << std::endl;
-				MyGOF.destroy(this->pointer);
+				//MyGOF.destroy(this->pointer);
 				Command* temp = new GameObjectCommand(sptr, false);
 				stackPointer->push(temp);
 			}
@@ -228,11 +228,11 @@ namespace Copium
 		}
 		else
 		{
-			if (!value->get_name().empty())
+			if (!value->name.empty())
 			{
 				std::cout << "Create" << std::endl;
 				//GameObject* newObj = MyGOF.instantiate(*this->value);
-				Copium::SceneManager::Instance()->get_current_scene()->gameObjects.push_back(value);
+				//Copium::SceneManager::Instance()->get_current_scene()->gameObjects.push_back(value);
 				Copium::SceneManager::Instance()->get_current_scene()->gameObjectSPTRS.push_back(sptr);
 
 
@@ -248,9 +248,9 @@ namespace Copium
 	void UndoRedo::GameObjectCommand::printCommand()
 	{
 		std::cout << "//Printing Command Info//\n";
-		if (!value->get_name().empty())
+		if (!value->name.empty())
 		{
-			std::cout << value->get_name() << std::endl;
+			std::cout << value->name << std::endl;
 		}
 		std::cout << "//End Command Info//\n";
 	}

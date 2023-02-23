@@ -1,4 +1,4 @@
-/*!***************************************************************************************
+ï»¿/*!***************************************************************************************
 \file			renderer.h
 \project
 \author			Sean Ngo
@@ -8,12 +8,12 @@
 \date			21/09/2022
 
 \brief
-	This file holds the declaration of the Renderer class. The Renderer renders all 
+	This file holds the declaration of the Renderer class. The Renderer renders all
 	objects in the game/scene. Use this class to access the renderer of any object,
 	sprite or particle system (if any). Renderers can be disabled to make objects
 	invisble (see enabled).
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content Â© 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #ifndef RENDERER_H
 #define RENDERER_H
@@ -23,8 +23,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Graphics/spritesheet.h"
 #include "Graphics/sprite.h"
+#include "Graphics/fonts.h"
 
-namespace Copium 
+namespace Copium
 {
 	// Global variables
 	static const GLuint maxQuadCount = 1000;	// Number of sprites per batch
@@ -168,7 +169,7 @@ namespace Copium
 			The sprite to use to draw
 		*/
 		/***************************************************************************/
-		void draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Sprite& _sprite);
+		void draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Sprite& _sprite, glm::fvec4* tintColor = nullptr);
 
 		/***************************************************************************/
 		/*!
@@ -188,7 +189,7 @@ namespace Copium
 			The index of the texture to be used
 		*/
 		/***************************************************************************/
-		void draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Spritesheet& _spritesheet, GLuint _offsetID, GLuint _textureID, int _frames);
+		void draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Spritesheet& _spritesheet, GLuint _offsetID, int _frames);
 
 		/***************************************************************************/
 		/*!
@@ -228,7 +229,7 @@ namespace Copium
 			The sprite to use to draw
 		*/
 		/***************************************************************************/
-		void draw_quad(const glm::mat4& _transform, const Sprite& _sprite);
+		void draw_quad(const glm::mat4& _transform, const Sprite& _sprite, glm::fvec4* tint = nullptr);
 
 		/***************************************************************************/
 		/*!
@@ -244,7 +245,7 @@ namespace Copium
 			The index of the texture to be used
 		*/
 		/***************************************************************************/
-		void draw_quad(const glm::mat4& _transform, const Spritesheet& _spritesheet, GLuint _offsetID, GLuint _textureID, int _frames);
+		void draw_quad(const glm::mat4& _transform, const Spritesheet& _spritesheet, GLuint _offsetID, int _frames);
 
 		/***************************************************************************/
 		/*!
@@ -267,30 +268,19 @@ namespace Copium
 		/***************************************************************************/
 		/*!
 		\brief
-			Draws the text onto the game window
-		\param position
-			The position of the text
-		\param size
-			The size of the text
-		\param textureID
-			The index of the font to be used
-		*/
-		/***************************************************************************/
-		void draw_text(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const glm::vec4& _color, GLuint _fontID);
-
-		/***************************************************************************/
-		/*!
-		\brief
 			Draws a text onto the game window
 		\param position
 			The position of the text
 		\param color
 			The color of the text
-		\param fontID
+		\param _scale
+			The size of the text
+		\param _font
 			The font to draw
 		*/
 		/***************************************************************************/
-		void draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float _scale, GLuint _fontID);
+		void draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float _scale, Font* _font);
+		void draw_text2(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float _scale, Font* _font);
 
 		// Accessing Properties
 
@@ -300,13 +290,13 @@ namespace Copium
 		void set_circle_width(GLfloat _circleWidth) { circleWidth = _circleWidth; }
 		GLfloat get_circle_width() const { return circleWidth; }
 
-		const GLint& getDrawCount() { return drawCount; }
-		const GLint& getQuadCount() { return quadCount; }
-		const GLint& getLineCount() { return lineCount; }
-		const GLint& getCircleCount() { return circleCount; }
-		const GLint& getTextCount() { return textCount; }
+		const GLuint& getDrawCount() { return drawCount; }
+		const GLuint& getQuadCount() { return quadCount; }
+		const GLuint& getLineCount() { return lineCount; }
+		const GLuint& getCircleCount() { return circleCount; }
+		const GLuint& getTextCount() { return textCount; }
 
-		const GLint& getVertices() { return quadCount * 4 + lineCount * 2 + circleCount * circleVertices + textCount * 4; }
+		//const GLuint& getVertices() { return (unsigned int)(quadCount * 4 + lineCount * 2 + circleCount * circleVertices + textCount * 4); }
 
 		/***************************************************************************/
 		/*!
@@ -326,7 +316,7 @@ namespace Copium
 			Resets the number of draw, quad and line count
 		*/
 		/***************************************************************************/
-		void reset_stats() { drawCount = quadCount = lineCount = circleCount = textCount = 0; };		
+		void reset_stats() { drawCount = quadCount = lineCount = circleCount = textCount = 0; };
 
 	private:
 
@@ -382,4 +372,3 @@ namespace Copium
 }
 
 #endif // !RENDERER_H
-

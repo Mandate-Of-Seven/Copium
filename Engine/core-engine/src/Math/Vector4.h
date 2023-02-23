@@ -4,7 +4,7 @@
 #include <math.h>
 #include <iostream>
 #include <glm/vec4.hpp>
-#include <rapidjson/document.h>
+//#include <rapidjson/document.h>
 
 #pragma warning(disable : 4201)
 
@@ -45,8 +45,8 @@ namespace Copium::Math {
 		operator glm::vec4();
 
 		// De/serialization
-		bool Deserialize(rapidjson::Value& _value);
-		bool Serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
+		//bool Deserialize(rapidjson::Value& _value);
+		//bool Serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
 	};
 

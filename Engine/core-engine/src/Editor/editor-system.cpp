@@ -3,6 +3,7 @@
 \project
 \author			Sean Ngo
 \co-author		Shawn Tanary
+				Matthew Lau
 
 \par			Course: GAM200
 \par			Section:
@@ -17,16 +18,9 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Windows/windows-system.h"
 #include "Windows/windows-input.h"
 #include "Editor/editor-system.h"
-#include "GameObject/game-object.h"
-#include "Editor/inspector.h"
-#include "Editor/editor-consolelog.h"
-#include "Editor/editor-hierarchy-list.h"
-#include "Editor/editor-colortheme.h"
-#include "Windows/windows-utils.h"
 #include "Utilities/thread-system.h"
-#include "SceneManager/state-manager.h"
-#include "Messaging/message-system.h"
-#include "Graphics/graphics-system.h"
+#include "Events/events-system.h"
+#include <SceneManager/scene-manager.h>
 #include <ImGuizmo.h>
 
 
@@ -38,9 +32,6 @@ namespace Copium
 		bool show_demo_window = false;
 		ThreadSystem& threadSystem{ *ThreadSystem::Instance() };
 		MessageSystem& messageSystem{ *MessageSystem::Instance() };
-		InputSystem& inputSystem{ *InputSystem::Instance() };
-		WindowsSystem& windowsSystem{ *WindowsSystem::Instance() };
-		GraphicsSystem& graphicsSystem{ *GraphicsSystem::Instance() };
 		bool tempMode = true;
 	}
 
@@ -48,7 +39,9 @@ namespace Copium
 	{
 		messageSystem.subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
+		MyEventSystem->subscribe(this, &EditorSystem::CallbackSceneChanging);
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
+
 		//PRINT("FLAGS: " << systemFlags);
 
 		//imgui
@@ -64,12 +57,12 @@ namespace Copium
 		
 		ImGui::StyleColorsDark();
 
-		ImGui_ImplGlfw_InitForOpenGL(windowsSystem.get_window(), true);
+		ImGui_ImplGlfw_InitForOpenGL(MyWindowSystem.get_window(), true);
 		ImGui_ImplOpenGL3_Init("#version 330");
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		ImGui::GetIO().ConfigDockingWithShift = true;
 		//Window::Inspector::init();
-		Window::EditorConsole::init();
+		//Window::EditorConsole::init();
 		//Window::ColorTheme::init();
 
 		sceneView.init();
@@ -87,16 +80,21 @@ namespace Copium
 	{
 		if (game.is_window_focused())
 		{
-			if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_E))
+			if (MyInputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && MyInputSystem.is_key_pressed(GLFW_KEY_E))
 			{
 				tempMode = !tempMode;
 			}
 		}
 
-		if (tempMode != enableEditor)
+		static bool loadOnce = false;
+		if (tempMode != enableEditor && loadOnce)
 		{
 			enableEditor = tempMode;
 			playMode(enableEditor);
+			if (MySceneManager.startPreview())
+			{
+				messageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
+			}
 		}
 
 		// Start the Dear ImGui frame
@@ -173,7 +171,7 @@ namespace Copium
 					if (ImGui::MenuItem("New", "Ctrl+N"))
 					{
 						//create new scene
-						Copium::SceneManager::Instance()->create_scene();
+						MySceneManager.create_scene();
 					}
 
 					if (ImGui::MenuItem("Open...", "Ctrl+O"))
@@ -186,19 +184,10 @@ namespace Copium
 						{
 							std::cout << filepath << std::endl;
 
-
-							if (Copium::SceneManager::Instance()->get_current_scene() != nullptr)
-							{
-								std::cout << "change scene\n";
-								Copium::SceneManager::Instance()->change_scene(filepath);
-							}
-							else {
-								if (Copium::SceneManager::Instance()->load_scene(filepath))
-									std::cout << "loading success\n";
-								else
-									std::cout << "loading fail\n";
-							}
-
+							if (MySceneManager.load_scene(filepath))
+								std::cout << "loading success\n";
+							else
+								std::cout << "loading fail\n";
 						}
 						else
 						{
@@ -210,31 +199,31 @@ namespace Copium
 					if (ImGui::MenuItem("Save", "Ctrl+S"))
 					{
 						//save scene
-						if (SceneManager::Instance()->get_scenefilepath().empty()) {
+						if (MySceneManager.get_scenefilepath().empty()) {
 							//save sceen as
 							while (!threadSystem.acquireMutex(MutexType::FileSystem));
 							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
 							std::cout << filepath << std::endl;
-							Copium::SceneManager::Instance()->save_scene(filepath);
+							MySceneManager.save_scene(filepath);
 						}
 						else 
 						{
-							SceneManager::Instance()->save_scene();
+							MySceneManager.save_scene();
 						}
 					}
 
 					if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
 					{
 						
-						if (Copium::SceneManager::Instance()->get_current_scene())
+						if (MySceneManager.get_current_scene())
 						{
 							//save sceen as
 							while (!threadSystem.acquireMutex(MutexType::FileSystem));
 							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
 							std::cout << filepath << std::endl;
-							Copium::SceneManager::Instance()->save_scene(filepath);
+							MySceneManager.save_scene(filepath);
 						}
 						else
 						{
@@ -245,13 +234,13 @@ namespace Copium
 
 					if (ImGui::MenuItem("Exit"))
 					{
-						Scene* s = SceneManager::Instance()->get_storage_scene();
+						Scene* s = MySceneManager.get_storage_scene();
 						if (s)
 						{
-							SceneManager::Instance()->endPreview();
+							MySceneManager.endPreview();
 						}
 						//exit game engine
-						change_enginestate(EngineState::esQuit);
+						MyEventSystem->publish(new QuitEngineEvent);
 						std::cout << "Copium has been huffed, Engine shutting down" << std::endl;
 
 					}
@@ -264,15 +253,23 @@ namespace Copium
 					if (ImGui::MenuItem("Play Scene"))
 					{
 						printf("Starting scene\n");
-						if (SceneManager::Instance()->startPreview())
+						UUID selectedID{};
+						if (pSelectedGameObject)
+							selectedID = pSelectedGameObject->uuid;
+						if (MySceneManager.startPreview())
 						{
+							pSelectedGameObject = MySceneManager.FindGameObjectByID(selectedID);
 							messageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
 						}
 					}
 					if (ImGui::MenuItem("Stop Scene"))
 					{
-						if (SceneManager::Instance()->endPreview())
+						UUID selectedID{};
+						if (pSelectedGameObject)
+							selectedID = pSelectedGameObject->uuid;
+						if (MySceneManager.endPreview())
 						{
+							pSelectedGameObject = MySceneManager.FindGameObjectByID(selectedID);
 							messageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
 						}
 					}
@@ -289,11 +286,11 @@ namespace Copium
 					}
 					if (ImGui::MenuItem("Console Log"))
 					{
-						Window::EditorConsole::isConsoleLogOpen = true;
+						//Window::EditorConsole::isConsoleLogOpen = true;
 					}
 					if (ImGui::MenuItem("Theme generator"))
 					{
-						Copium::isColorThemeOpen = true;
+						isColorThemeOpen = true;
 					}
 					if (ImGui::MenuItem("Inspector"))
 					{
@@ -307,14 +304,14 @@ namespace Copium
 			}
 
 			//top menu shortcuts
-			if (inputSystem.is_key_held(GLFW_KEY_LEFT_CONTROL))
+			if (MyInputSystem.is_key_held(GLFW_KEY_LEFT_CONTROL))
 			{
-				if (inputSystem.is_key_pressed(GLFW_KEY_N))
+				if (MyInputSystem.is_key_pressed(GLFW_KEY_N))
 				{
 					//create new scene
-					Copium::SceneManager::Instance()->create_scene();
+					MySceneManager.create_scene();
 				}
-				else if (inputSystem.is_key_pressed(GLFW_KEY_O))
+				else if (MyInputSystem.is_key_pressed(GLFW_KEY_O))
 				{
 					//open scene
 					while (!threadSystem.acquireMutex(MutexType::FileSystem));
@@ -325,17 +322,10 @@ namespace Copium
 						std::cout << filepath << std::endl;
 
 
-						if (Copium::SceneManager::Instance()->get_current_scene() != nullptr)
-						{
-							std::cout << "change scene\n";
-							Copium::SceneManager::Instance()->change_scene(filepath);
-						}
-						else {
-							if (Copium::SceneManager::Instance()->load_scene(filepath))
-								std::cout << "loading success\n";
-							else
-								std::cout << "loading fail\n";
-						}
+						if (MySceneManager.load_scene(filepath))
+							std::cout << "loading success\n";
+						else
+							std::cout << "loading fail\n";
 
 					}
 					else
@@ -343,19 +333,19 @@ namespace Copium
 						std::cout << "file failed to open\n";
 					}
 				}
-				else if (inputSystem.is_key_pressed(GLFW_KEY_S))
+				else if (MyInputSystem.is_key_pressed(GLFW_KEY_S))
 				{
 
-					if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT))
+					if (MyInputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT))
 					{
-						if (Copium::SceneManager::Instance()->get_current_scene())
+						if (MySceneManager.get_current_scene())
 						{
 							//save sceen as
 							while (!threadSystem.acquireMutex(MutexType::FileSystem));
 							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
 							std::cout << filepath << std::endl;
-							Copium::SceneManager::Instance()->save_scene(filepath);
+							MySceneManager.save_scene(filepath);
 						}
 						else
 						{
@@ -365,17 +355,17 @@ namespace Copium
 					else
 					{
 						//save scene
-						if (SceneManager::Instance()->get_scenefilepath().empty()) {
+						if (MySceneManager.get_scenefilepath().empty()) {
 							//save sceen as
 							while (!threadSystem.acquireMutex(MutexType::FileSystem));
 							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
 							std::cout << filepath << std::endl;
-							Copium::SceneManager::Instance()->save_scene(filepath);
+							MySceneManager.save_scene(filepath);
 						}
 						else
 						{
-							SceneManager::Instance()->save_scene();
+							MySceneManager.save_scene();
 						}
 					}
 
@@ -389,12 +379,12 @@ namespace Copium
 			
 			colorTheme.update();
 			hierarchyList.update();
-			inspector.update();
 			layers.update();
-			Window::EditorConsole::update();
+			inspector.update();
+			//Window::EditorConsole::update();
 			//Window::Hierarchy::update();
-			sceneView.update();
 			game.update();
+			sceneView.update();
 			contentBrowser.update();
 			
 
@@ -403,9 +393,10 @@ namespace Copium
 				ImGui::ShowDemoWindow(&show_demo_window);
 
 			// Game Camera
-			if (!graphicsSystem.get_cameras().empty())
+			Scene* scene = MySceneManager.get_current_scene();
+			if (scene && !scene->componentArrays.GetArray<Camera>().empty())
 			{
-				(*graphicsSystem.get_cameras().begin())->update();
+				scene->componentArrays.GetArray<Camera>()[0].update();
 			}
 
 			// Editor Camera
@@ -415,6 +406,9 @@ namespace Copium
 		}
 		
 		ImGui::EndFrame();
+
+		if (!loadOnce)
+			loadOnce = true;
 	}
 
 	void EditorSystem::draw()
@@ -439,22 +433,21 @@ namespace Copium
 		std::cout << "Before deleting, Undo stack: " << commandManager.undoStack.size() << ", Redo stack:" << commandManager.redoStack.size()<<"\n";
 		while (commandManager.undoStack.size() > 0)
 		{
-			UndoRedo::Command* temp = EditorSystem::Instance()->get_commandmanager()->undoStack.top();
+			UndoRedo::Command* temp = get_commandmanager()->undoStack.top();
 			delete temp;
-			EditorSystem::Instance()->get_commandmanager()->undoStack.pop();
+			get_commandmanager()->undoStack.pop();
 			
 		}
 
 		while (commandManager.redoStack.size() > 0)
 		{
-			UndoRedo::Command* temp = EditorSystem::Instance()->get_commandmanager()->redoStack.top();
+			UndoRedo::Command* temp = get_commandmanager()->redoStack.top();
 			delete temp;
-			EditorSystem::Instance()->get_commandmanager()->redoStack.pop();
+			get_commandmanager()->redoStack.pop();
 			
 		}
 		std::cout << "After deleting, Undo stack: " << commandManager.undoStack.size() << ", Redo stack:" << commandManager.redoStack.size() << "\n";
 		
-
 		camera.exit();
 	}
 
@@ -473,7 +466,7 @@ namespace Copium
 	void EditorSystem::imguiConsoleAddLog(std::string value)
 	{
 		std::cout << value << "\n";
-		Window::EditorConsole::editorLog.add_logEntry(value);
+		//Window::EditorConsole::editorLog.add_logEntry(value);
 	}
 
 	void EditorSystem::playMode(bool _enabled)
@@ -482,16 +475,22 @@ namespace Copium
 		{
 			// Swap camera
 			//camera.get_framebuffer()->exit();
-			glm::vec2 dimension = { windowsSystem.get_window_width(), windowsSystem.get_window_height() };
+			glm::vec2 dimension = { MyWindowSystem.get_window_width(), MyWindowSystem.get_window_height() };
 			// Game Camera
-			if (!graphicsSystem.get_cameras().empty())
+			Scene* scene = MySceneManager.get_current_scene();
+			if (scene && !scene->componentArrays.GetArray<Camera>().empty())
 			{
-				(*graphicsSystem.get_cameras().begin())->on_resize(dimension.x, dimension.y);
+				scene->componentArrays.GetArray<Camera>()[0].on_resize(dimension.x, dimension.y);
 				glViewport(0, 0, (GLsizei)dimension.x, (GLsizei)dimension.y);
 			}
 		}
 		else if(_enabled)
 			camera.get_framebuffer()->init();
+	}
+
+	void EditorSystem::CallbackSceneChanging(SceneChangingEvent* pEvent)
+	{
+		pSelectedGameObject = nullptr;
 	}
 
 	UndoRedo::CommandManager* EditorSystem::get_commandmanager()

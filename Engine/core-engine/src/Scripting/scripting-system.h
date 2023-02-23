@@ -15,11 +15,13 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 #ifndef SCRIPTING_SYSTEM_H
 #define SCRIPTING_SYSTEM_H
-#pragma once
 
 #include "CopiumCore\system-interface.h"
 #include "Messaging\message-system.h"
 #include "Files\file-system.h"
+#include <Scripting/scriptable-object.h>
+#include <Events/events.h>
+#include <GameObject/game-object.h>
 
 #include <string>
 #include <unordered_map>
@@ -34,27 +36,11 @@ extern "C"
 	typedef struct _MonoString MonoString;
 }
 
+#define MyScriptingSystem (*Copium::ScriptingSystem::Instance())
+
 namespace Copium
 {
-	using FieldFlag = uint8_t;
-	#define FieldFlagList	0b00000001
-
-	enum class FieldType
-	{
-		Float, Double,
-		Bool, Char, Short, Int, Long,
-		UShort, UInt, ULong,
-		Vector2, Vector3, GameObject, Component ,None
-	};
-
-	struct Field
-	{
-		FieldType type{};
-		std::string typeName;
-		MonoClassField* classField{nullptr};
-		FieldFlag flags{0};
-	};
-
+	// Map of all the field types
 	static std::unordered_map<std::string, FieldType> fieldTypeMap =
 	{
 		{ "System.Single",				FieldType::Float		},
@@ -67,10 +53,12 @@ namespace Copium
 		{ "System.UInt16",				FieldType::UShort		},
 		{ "System.UInt32",				FieldType::UInt			},
 		{ "System.UInt64",				FieldType::ULong		},
+		{ "System.String",				FieldType::String		},
 		{ "CopiumEngine.Vector2",		FieldType::Vector2		},
 		{ "CopiumEngine.Vector3",		FieldType::Vector3		},
 		{ "CopiumEngine.GameObject",	FieldType::GameObject	},
 	};
+
 
 	enum class CompilingState
 	{
@@ -83,20 +71,20 @@ namespace Copium
 
 	struct ScriptClass
 	{
-		ScriptClass() = delete;
+		ScriptClass() = default;
 		/**************************************************************************/
 		/*!
 			\brief
 				Stores a monoClass and retrieves all the default functions
+
 			\param _mClass
 				Class to load functions from
 		*/
 		/**************************************************************************/
 		ScriptClass(const std::string& _name, MonoClass* _mClass);
-		const		std::string name;
-		MonoClass* mClass;
+		MonoClass* mClass{};
 		std::unordered_map<std::string, MonoMethod*> mMethods;
-		std::unordered_map<std::string, Field> mFields;
+		std::unordered_map<std::string, MonoClassField*> mFields;
 
 	};
 
@@ -139,18 +127,6 @@ namespace Copium
 		/**************************************************************************/
 		/*!
 			\brief
-				Gets the shared pointer of a ScriptClass from its name
-			\param _name
-				Name of ScriptClass to get
-			\return
-				Shared pointer to a ScriptClass
-		*/
-		/**************************************************************************/
-		ScriptClass* getScriptClass(const std::string & _name);
-
-		/**************************************************************************/
-		/*!
-			\brief
 				Creates an instance of a monoClass
 			\param mClass
 				Class to create instance or clone from
@@ -160,6 +136,15 @@ namespace Copium
 		/**************************************************************************/
 		MonoObject* instantiateClass(MonoClass * mClass);
 
+		/**************************************************************************/
+		/*!
+			\brief
+				Get the list that contains the ScriptFiles
+
+			\return
+				read-only reference to the list containing all the script files
+		*/
+		/**************************************************************************/
 		const std::list<Copium::File>& getScriptFiles();
 		/**************************************************************************/
 		/*!
@@ -189,7 +174,7 @@ namespace Copium
 				Parameters to pass into mono function
 		*/
 		/**************************************************************************/
-		void invoke(MonoObject * mObj, MonoMethod * mMethod, void** params = nullptr);
+		MonoObject* invoke(MonoObject * mObj, MonoMethod * mMethod, void** params = nullptr);
 
 		/**************************************************************************/
 		/*!
@@ -245,7 +230,18 @@ namespace Copium
 				Map of names to ScriptClasses
 		*/
 		/**************************************************************************/
-		const std::unordered_map<std::string, ScriptClass*>& getScriptClassMap();
+		const std::unordered_map<std::string, ScriptClass>& getScriptClassMap();
+
+
+		/**************************************************************************/
+		/*!
+			\brief
+				Gets the map of names to ScriptClasses
+			\return
+				Map of names to ScriptClasses
+		*/
+		/**************************************************************************/
+		const std::unordered_map<std::string, ScriptClass>& getScriptableObjectClassMap();
 
 		/*******************************************************************************
 		/*!
@@ -286,15 +282,35 @@ namespace Copium
 		/**************************************************************************/
 		/*!
 			\brief
-				Creates a collision data for scripts
-			\param collided
-				Rhs gameobject
-			\param collidee
-				Lhs gameObject
+				Checks if this script is a scriptable object
+
+			\param name
+				name of the object to be checked
+
+			\return 
+				true if script is a scriptable object
+				false if its not
 		*/
 		/**************************************************************************/
-		void instantiateCollision2D(GameObject& collided, GameObject& collidee);
-	private:
+		bool isScriptableObject(const std::string& name);
+
+		/**************************************************************************/
+		/*!
+			\brief
+				Checks if the script is indeed a script
+
+			\param name
+				name of the script to check
+
+			\return
+				true if script is indeed a script
+				false if not
+
+		*/
+		/**************************************************************************/
+		bool isScript(const std::string& name);
+
+		CompilingState compilingState{ CompilingState::Wait };
 
 		/**************************************************************************/
 		/*!
@@ -357,9 +373,248 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		bool scriptIsLoaded(const std::filesystem::path& filePath);
-		std::unordered_map<std::string, ScriptClass*> scriptClassMap;
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Gets a field from a C# field using its name
+		\param name
+			Name of the field
+		\param buffer
+			Buffer to store the values, needs to be type casted
+		\return
+			False if operation failed, true if it was successful
+		*/
+		/*******************************************************************************/
+		void GetFieldValue(MonoObject* instance, MonoClassField* mClassFiend,  Field& field, void* container);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Sets a field from a C# field using its name
+		\param name
+			Name of the field
+		\param value
+			Value to write into C# memory space
+		\return
+			False if operation failed, true if it was successful
+		*/
+		/*******************************************************************************/
+		void SetFieldValue(MonoObject* instance, MonoClassField* mClassFiend, Field& field, const void* value);
+
+		template<typename T>
+		void SetFieldReference(MonoObject* instance, MonoClassField* mClassFiend, Field& field, T* reference);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Callback function when a scene is opened
+
+		\param pEvent
+			pointer to the relevant event 
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		void CallbackSceneChanging(SceneChangingEvent* pEvent);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Callback function when a component is reflected
+
+		\param pEvent
+			pointer to the relevant event
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		template <typename T>
+		void CallbackReflectComponent(ReflectComponentEvent<T>* pEvent);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Callback function when a script is invoked
+
+		\param pEvent
+			pointer to the relevant event
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		void CallbackScriptInvokeMethod(ScriptInvokeMethodEvent* pEvent);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Callback function when a field is set
+
+		\param pEvent
+			pointer to the relevant event
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		void CallbackScriptSetField(ScriptSetFieldEvent* pEvent);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Callback function when a field is accessed
+
+		\param pEvent
+			pointer to the relevant event
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		void CallbackScriptGetField(ScriptGetFieldEvent* pEvent);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Callback function when a field reference is set
+
+		\param pEvent
+			pointer to the relevant event
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		template<typename T>
+		void CallbackScriptSetFieldReference(ScriptSetFieldReferenceEvent<T>* pEvent);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Callback function when method name is accessed
+
+		\param pEvent
+			pointer to the relevant event
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		void CallbackScriptGetMethodNames(ScriptGetMethodNamesEvent* pEvent);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Callback function when preview is started
+
+		\param pEvent
+			pointer to the relevant event
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		void CallbackStartPreview(StartPreviewEvent* pEvent);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Callback function when preview is started
+
+		\param pEvent
+			pointer to the relevant event
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		void CallbackScriptGetNames(ScriptGetNamesEvent* pEvent);
+
+
+		template<typename T, typename... Ts>
+		void SubscribeComponentBasedCallbacks(TemplatePack<T, Ts...> pack);
+
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Get the corresponding instance of the game object with the specified id in c#
+
+		\param id
+			the id of the game object whose instance is to be obtained
+
+		\return
+			ptr to the c# instance
+		*/
+		/*******************************************************************************/
+		MonoObject* ReflectGameObject(GameObject& gameObject);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Get the corresponding instance of the component with the specified id in c#
+
+		\param id
+			the id of the component whose instance is to be obtained
+
+		\return
+			ptr to the c# instance
+		*/
+		/*******************************************************************************/
+		template <typename T>
+		MonoObject* ReflectComponent(T& component);
+		template <>
+		MonoObject* ReflectComponent(Script& component);
+
+
+		using MonoGameObjects = std::unordered_map<UUID, MonoObject*>;
+		using MonoComponents = std::unordered_map<UUID, MonoObject*>;
+
+		std::unordered_map<std::string, ScriptClass> scriptClassMap;
+		std::unordered_map<std::string, ScriptClass> scriptableObjectClassMap;
+		std::unordered_map<MonoObject*, MonoGameObjects> mGameObjects;
+		std::unordered_map<MonoObject*, MonoComponents> mComponents;
+		std::unordered_map<MonoType*, ComponentType> reflectionMap;
 		std::list<File>& scriptFiles;
-		CompilingState compilingState{ CompilingState::Wait };
+		std::map<std::string, std::map<std::string,ScriptableObject>> scriptableObjects;
+
+		MonoClass* klassScene{};
+		std::unordered_map<std::string, MonoObject*> scenes;
+		MonoObject* mCurrentScene;
+		MonoObject* mPreviousScene;
 	};
+
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Callback function for when a field reference is set
+
+	\param pEvent
+		ptr to the relevant event
+
+	\return
+		void
+	*/
+	/*******************************************************************************/
+	template<typename T>
+	void ScriptingSystem::CallbackScriptSetFieldReference(ScriptSetFieldReferenceEvent<T>* pEvent)
+	{
+		MonoObject* mScript = mComponents[mCurrentScene][pEvent->script.uuid];
+		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
+		ScriptClass& scriptClass{ scriptClassMap[pEvent->script.name] };
+		MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };
+		COPIUM_ASSERT(!mClassField, std::string("FIELD ") + pEvent->fieldName + "COULD NOT BE FOUND IN SCRIPT " + pEvent->script.name);
+		SetFieldReference<T>(mScript, mClassField, pEvent->script.fieldDataReferences[pEvent->fieldName], pEvent->reference);
+	}
+
+	
 }
 #endif // !SCRIPTING_SYSTEM_H

@@ -18,31 +18,21 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include <GL/glew.h> // for access to OpenGL API declarations
 
 #include "Graphics/graphics-draw.h"
-#include "Graphics/graphics-system.h"
-#include "Files/assets-system.h"
 #include "Editor/editor-system.h"
 #include "Debugging/frame-rate-controller.h"
-#include "Windows/windows-input.h"
 
 // Bean: remove this after NewManagerInstance is moved
-#include "GameObject/Components/renderer-component.h"
-#include "GameObject/Components/ui-components.h"
-#include "GameObject/Components/collider-components.h"
 #include "Animation/animation-system.h"
-#include "SceneManager/scene-manager.h"
 #include "Math/math-library.h"
-#include "Graphics/fonts.h"
+#include "glm/gtc/matrix_transform.hpp"
+#include <GameObject/components.h>
+#include <GameObject/game-object.h>
+#include <SceneManager/scene.h>
 
 namespace Copium
 {
 	namespace
 	{
-		AssetsSystem* assets = AssetsSystem::Instance();
-		EditorSystem* editorSys = EditorSystem::Instance();
-		GraphicsSystem* graphics = GraphicsSystem::Instance();
-		SceneManager* sm = SceneManager::Instance();
-		InputSystem* inputSystem = InputSystem::Instance();
-
 		bool toggleAnim = false;
 	}
 
@@ -81,18 +71,22 @@ namespace Copium
 			break;
 		}
 
-		// Clear the screen
 		glm::vec4 clr = camera->get_bg_color();
 		glClearColor(clr.r, clr.g, clr.b, clr.a);
 
 		// Clear the screen bits
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT);
+
 
 		if(drawMode[DRAW::EDITOR])
 			editor();
 
 		if (drawMode[DRAW::WORLD])
 			world();
+
+		if (drawMode[DRAW::EDITOR])
+			editor(1);
 
 		if (drawMode[DRAW::DEBUG])
 			debug();
@@ -103,51 +97,54 @@ namespace Copium
 
 	void Draw::exit()
 	{
+		PRINT("DRAW EXITTED!");
 		camera = nullptr;
 		renderer.shutdown();
 	}
 
-	void Draw::editor()
+	void Draw::editor(int _index)
 	{
 		// Bean: this should be the background color of the camera
 		//glClearColor(0.278f, 0.278f, 0.278f, 1.f);
 		renderer.begin_batch();
 
-		// Grid system
-		glm::vec4 color = { 1.f, 1.f, 1.f, 0.4f };
-		float start = -100.f, end = -start;
-		float numDivision = 24.f, iteration = (end - start) / numDivision;
-		for (float i = start; i < end + iteration; i += iteration)
+		if (_index == 0)
 		{
-			renderer.draw_line({ i, start, -100.f }, { i, end, -100.f }, color);
-			renderer.draw_line({ start, i, -100.f }, { end, i, -100.f }, color);
-		}
-
-		float subDivision = 5.f;
-		numDivision *= subDivision;
-		iteration = (end - start) / numDivision;
-		start = -10.f, end = -start;
-		for (float i = start; i <= end; i += iteration)
-		{
-			renderer.draw_line({ i, start, -100.f }, { i, end, -100.f }, color);
-			renderer.draw_line({ start, i, -100.f }, { end, i, -100.f }, color);
-		}
-
-		// Colliders
-		Scene* scene = sm->get_current_scene();
-		if (scene != nullptr)
-		{
-			color = { 0.3f, 1.f, 0.3f, 1.f };
-			GameObject* gameObject = sm->get_selected_gameobject();
-			if (gameObject != nullptr)
+			// Grid system
+			glm::vec4 color = { 1.f, 1.f, 1.f, 0.4f };
+			float start = -100.f, end = -start;
+			float numDivision = 24.f, iteration = (end - start) / numDivision;
+			for (float i = start; i < end + iteration; i += iteration)
 			{
-				for (Component* component : gameObject->getComponents<BoxCollider2D>())
-				{
-					if (!component->Enabled())
-						continue;
+				renderer.draw_line({ i, start, -100.f }, { i, end, -100.f }, color);
+				renderer.draw_line({ start, i, -100.f }, { end, i, -100.f }, color);
+			}
 
-					BoxCollider2D* collider = reinterpret_cast<BoxCollider2D*>(component);
-					AABB bounds = collider->getBounds();
+			float subDivision = 5.f;
+			numDivision *= subDivision;
+			iteration = (end - start) / numDivision;
+			start = -10.f, end = -start;
+			for (float i = start; i <= end; i += iteration)
+			{
+				renderer.draw_line({ i, start, -100.f }, { i, end, -100.f }, color);
+				renderer.draw_line({ start, i, -100.f }, { end, i, -100.f }, color);
+			}
+		}
+
+		if (_index == 1)
+		{
+			// Colliders
+			Scene* pScene{ MySceneManager.get_current_scene() };
+			if (pScene)
+			{
+				glm::vec4 color = { 1.f, 1.f, 1.f, 0.4f };
+				color = { 0.3f, 1.f, 0.3f, 1.f };
+				for (BoxCollider2D& collider : pScene->componentArrays.GetArray<BoxCollider2D>())
+				{
+					if (!collider.enabled || !collider.gameObj.IsActive())
+						continue;
+					Transform& transform = collider.gameObj.transform;
+					AABB bounds = collider.bounds.GetRelativeBounds(transform.GetWorldPosition(), transform.GetWorldScale());
 					glm::vec3 pos0_1 = { bounds.min.to_glm(), 0.f };
 					glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y, 0.f };
 					glm::vec3 pos2_1 = { bounds.max.to_glm(), 0.f };
@@ -159,10 +156,12 @@ namespace Copium
 					renderer.draw_line(pos3_1, pos0_1, color);
 				}
 
-				for (Component* component : gameObject->getComponents<Button>())
+				for (Button& button : pScene->componentArrays.GetArray<Button>())
 				{
-					Button* collider = reinterpret_cast<Button*>(component);
-					AABB bounds = collider->getBounds();
+					if (!button.enabled || !button.gameObj.IsActive())
+						continue;
+					Transform& transform = button.gameObj.transform;
+					AABB bounds = button.bounds.GetRelativeBounds(transform.GetWorldPosition(), transform.GetWorldScale());
 					glm::vec3 pos0_1 = { bounds.min.to_glm(),0.f };
 					glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y,0.f };
 					glm::vec3 pos2_1 = { bounds.max.to_glm(),0.f };
@@ -183,7 +182,6 @@ namespace Copium
 
 	void Draw::world()
 	{
-		renderer.begin_batch();
 
 		/*
 			Bean Theory:
@@ -205,259 +203,507 @@ namespace Copium
 		*/
 
 		// Theory WIP
-		
-		Scene* scene = sm->get_current_scene();
-		if (scene != nullptr)
+		renderer.begin_batch();
+		//Scene loaded
+		Scene* pScene{ MySceneManager.get_current_scene() };
+		if (pScene)
 		{
-			if (scene->get_state() == Scene::SceneState::play)
-				toggleAnim = true;
-			else
-				toggleAnim = false;
+			//if (scene->get_state() == Scene::SceneState::play)
+			//	toggleAnim = true;
+			//else
+			//	toggleAnim = false;
 
 			int count = 0;
+			// Draw non layered game objects first, followed by game objects in layers in the order of the layer
 
-			for (GameObject* gameObject : scene->gameObjects)
+			for (SpriteRenderer& spriteRenderer : pScene->componentArrays.GetArray<SpriteRenderer>())
 			{
-				if (!gameObject->isActive())
+				if (!spriteRenderer.enabled || !spriteRenderer.gameObj.IsActive())
+					continue;
+
+				if (spriteRenderer.gameObj.HasComponent<SortingGroup>())
+					continue;
+
+				Transform& t = spriteRenderer.gameObj.transform;
+				Sprite& sr = spriteRenderer.sprite;
+				glm::vec2 size(t.scale.x, t.scale.y);
+				float rotation = t.rotation.z;
+
+				if (t.HasParent())
+				{
+					glm::vec3 updatedPos = t.position.glmVec3;
+					glm::vec3 updatedScale = t.scale.glmVec3;
+					float updatedRot = t.rotation.z;
+					UpdateTransform(t, updatedPos, updatedRot, updatedScale);
+
+					// If the object isnt within the frustum
+					if (!camera->withinFrustum(updatedPos, updatedScale))
+						continue;
+
+					renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr);
+				}
+				else
+				{
+					// If the object isnt within the frustum
+					if (!camera->withinFrustum(t.position, t.scale))
+						continue;
+
+					renderer.draw_quad(t.position, size, rotation, sr);
+				}
+			}
+			for (Image& image: pScene->componentArrays.GetArray<Image>())
+			{
+				if (!image.enabled || !image.gameObj.IsActive())
+					continue;
+
+				if (image.gameObj.HasComponent<SortingGroup>())
+					continue;
+
+				Transform& t = image.gameObj.transform;
+				Sprite& sr = image.sprite;
+				glm::vec2 size(t.scale.x, t.scale.y);
+				float rotation = t.rotation.z;
+
+				if (t.HasParent())
+				{
+					glm::vec3 updatedPos = t.position.glmVec3;
+					glm::vec3 updatedScale = t.scale.glmVec3;
+					float updatedRot = t.rotation.z;
+					UpdateTransform(t, updatedPos, updatedRot, updatedScale);
+
+					// If the object isnt within the frustum
+					if (!camera->withinFrustum(updatedPos, updatedScale))
+						continue;
+
+					renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr);
+				}
+				else
+				{
+					// If the object isnt within the frustum
+					if (!camera->withinFrustum(t.position, t.scale))
+						continue;
+
+					renderer.draw_quad(t.position, size, rotation, sr);
+				}
+			}
+			for (Animator& animator: pScene->componentArrays.GetArray<Animator>())
+			{
+				if (!animator.enabled || !animator.gameObj.IsActive())
+					continue;
+
+				if (animator.gameObj.HasComponent<SortingGroup>())
 					continue;
 
 				// If the object isnt within the frustum
-				if (!camera->withinFrustum(gameObject->transform.position, gameObject->transform.scale))
+				if (!camera->withinFrustum(animator.gameObj.transform.position, animator.gameObj.transform.scale))
 					continue;
 
-				count++;
+				Animation* anim = animator.GetCurrentAnimation();
 
-				for (Component* component : gameObject->getComponents<SpriteRenderer>())
+				if (!anim || !anim->spriteSheet.GetTexture())
+					continue;
+
+				Transform& t = animator.gameObj.transform;
+				glm::vec2 size(t.scale.x, t.scale.y);
+
+				if (t.HasParent())
 				{
-					if (!component->Enabled())
+					glm::vec3 updatedPos = t.position.glmVec3;
+					glm::vec3 updatedScale = t.scale.glmVec3;
+					float updatedRot = t.rotation.z;
+					UpdateTransform(t, updatedPos, updatedRot, updatedScale);
+
+					// If the object isnt within the frustum
+					if (!camera->withinFrustum(updatedPos, updatedScale))
 						continue;
 
-					Transform& t = gameObject->transform;
-					SpriteRenderer* rc = reinterpret_cast<SpriteRenderer*>(component);
-					Sprite& sr = rc->get_sprite_renderer();
-					glm::vec2 size(t.scale.x, t.scale.y);
-					float rotation = t.rotation.z;
-					// Bean: It should be set in inspector view of the renderer component instead
-					unsigned int id = sr.get_sprite_id() - 1;
-
-					// The index of the texture must be less than the size of textures
-					if (id != -1 && id < assets->get_textures().size())
-					{
-						sr.set_texture(assets->get_texture(id));
-					}
-					else
-					{
-						sr.set_sprite_id(0);
-						sr.set_texture(nullptr);
-					}
-
-					if (gameObject->transform.hasParent())
-					{
-						Transform& t1 = *gameObject->transform.parent;
-						Copium::Math::Matrix3x3 rot;
-						Copium::Math::matrix3x3_rotdeg(rot, t1.rotation.z);
-						Copium::Math::Vec3 intermediate = (rot * t.position);
-
-						renderer.draw_quad(intermediate + t1.position, size, rotation+t1.rotation.z, sr);
-					}
-					else
-					{
-						renderer.draw_quad(t.position, size, rotation, sr);
-					}
-
+					renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
 				}
-				for (Component* component : gameObject->getComponents<ImageComponent>())
+				else
 				{
-					if (!component->Enabled())
+					// If the object isnt within the frustum
+					if (!camera->withinFrustum(t.position, t.scale))
 						continue;
 
-					Transform& t = gameObject->transform;
-					ImageComponent* rc = reinterpret_cast<ImageComponent*>(component);
-					Sprite& sr = rc->get_sprite_renderer();
-					glm::vec2 size(t.scale.x, t.scale.y);
-					float rotation = t.rotation.z;
-					// Bean: It should be set in inspector view of the renderer component instead
-					unsigned int id = sr.get_sprite_id() - 1;
-
-					// The index of the texture must be less than the size of textures
-					if (id != -1 && id < assets->get_textures().size())
-					{
-						sr.set_texture(assets->get_texture(id));
-					}
-					else
-					{
-						sr.set_sprite_id(0);
-						sr.set_texture(nullptr);
-					}
-
-					renderer.draw_quad({ rc->Offset(),t.position.z }, size, rotation, sr);
+					renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
 				}
-				for (Component* component : gameObject->getComponents<Text>())
-				{
-					if (!component->Enabled())
-						continue;
+			}
+			for (Text& text : pScene->componentArrays.GetArray<Text>())
+			{
+				if (!text.enabled || !text.gameObj.IsActive())
+					continue;
 
-					Text* text = reinterpret_cast<Text*>(component);
-					text->render(camera);
+				if (text.gameObj.HasComponent<SortingGroup>())
+					continue;
+
+				// If the object isnt within the frustum
+				if (!camera->withinFrustum(text.gameObj.transform.position, text.gameObj.transform.scale))
+					continue;
+
+				Transform& t = text.gameObj.transform;
+
+				Math::Vec3 pos{ t.position };
+				float scale = t.scale.x * 0.1f;
+				if (scale > t.scale.y)
+					scale = t.scale.y;
+				glm::vec2 dimensions{ text.font->getDimensions(text.content, scale, text.wrapper) };
+
+				switch (text.get_hAlign())
+				{
+				case HorizontalAlignment::Center:
+					pos.x -= dimensions.x / 2.f;
+					break;
+				case HorizontalAlignment::Right:
+					pos.x -= dimensions.x;
+					break;
+				}
+				switch (text.get_vAlign())
+				{
+				case VerticalAlignment::Top:
+					pos.y -= dimensions.y;
+					break;
+				case VerticalAlignment::Center:
+					pos.y -= dimensions.y / 2.f;
+					break;
 				}
 
-				for (Component* component : gameObject->getComponents<Animator>())
+				if (t.HasParent())
 				{
-					Animator* animator = reinterpret_cast<Animator*>(component);
-					Animation* anim = animator->GetCurrentAnimation();
-					
-					//if(anim)
-					//	PRINT("bloopbloppp");
+					glm::vec3 updatedPos = pos;
+					glm::vec3 updatedScale = t.scale.glmVec3;
+					float updatedRot = t.rotation.z;
+					UpdateTransform(t, updatedPos, updatedRot, updatedScale);
 
-					if (!anim)
+					renderer.draw_text(text.content, updatedPos, text.get_color(), scale, text.font);
+				}
+				else
+				{
+					renderer.draw_text(text.content, pos, text.get_color(), scale, text.font);
+				}
+			}
+			++count;
+			//PRINT("Num of Rendered GO: " << count);
+		}
+		renderer.end_batch();
+		renderer.flush();
+
+		// Gameobjects with Sorting Layers
+		renderer.begin_batch();
+
+		if (pScene)
+		{
+			int count = 0;
+			for (Layer& layer : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
+			{
+				for (GameObject* go : layer.gameObjects)
+				{
+					if (!go || !go->IsActive())
+						continue;
+
+					// If the object isnt within the frustum
+					if (!camera->withinFrustum(go->transform.position, go->transform.scale))
 						continue;
 
 
-					unsigned int sid = anim->spriteSheet.spriteID - 1;
-					// The index of the texture must be less than the size of textures
-					if (sid != -1 && sid < assets->get_textures().size())
+					if (go->HasComponent<SpriteRenderer>())
 					{
-						anim->spriteSheet.texture = assets->get_texture(sid);
+						SpriteRenderer& spriteRenderer = *go->GetComponent<SpriteRenderer>();
+						if (!spriteRenderer.enabled || !spriteRenderer.gameObj.IsActive())
+							continue;
+
+						Transform& t = spriteRenderer.gameObj.transform;
+						Sprite& sr = spriteRenderer.sprite;
+						glm::vec2 size(t.scale.x, t.scale.y);
+						float rotation = t.rotation.z;
+
+						if (t.HasParent())
+						{
+							glm::vec3 updatedPos = t.position.glmVec3;
+							glm::vec3 updatedScale = t.scale.glmVec3;
+							float updatedRot = t.rotation.z;
+							UpdateTransform(t, updatedPos, updatedRot, updatedScale);
+
+							// If the object isnt within the frustum
+							if (!camera->withinFrustum(updatedPos, updatedScale))
+								continue;
+
+							renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr);
+						}
+						else
+						{
+							// If the object isnt within the frustum
+							if (!camera->withinFrustum(t.position, t.scale))
+								continue;
+
+							renderer.draw_quad(t.position, size, rotation, sr);
+						}
 					}
-					else
+
+					if (go->HasComponent<Image>())
 					{
+						Image& image = *go->GetComponent<Image>();
+						if (!image.enabled || !image.gameObj.IsActive())
+							continue;
 
-						anim->spriteSheet.spriteID = 0;
-						anim->spriteSheet.texture = nullptr;
+						Transform& t = image.gameObj.transform;
+						Sprite& sr = image.sprite;
+						glm::vec2 size(t.scale.x, t.scale.y);
+						float rotation = t.rotation.z;
+
+						if (t.HasParent())
+						{
+							glm::vec3 updatedPos = t.position.glmVec3;
+							glm::vec3 updatedScale = t.scale.glmVec3;
+							float updatedRot = t.rotation.z;
+							UpdateTransform(t, updatedPos, updatedRot, updatedScale);
+
+							// If the object isnt within the frustum
+							if (!camera->withinFrustum(updatedPos, updatedScale))
+								continue;
+
+							renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr);
+						}
+						else
+						{
+							// If the object isnt within the frustum
+							if (!camera->withinFrustum(t.position, t.scale))
+								continue;
+
+							renderer.draw_quad(t.position, size, rotation, sr);
+						}
 					}
 
-					if (!anim || !anim->spriteSheet.GetTexture())
-						continue;
-					//PRINT("bloopbloop");
-					Transform& t = gameObject->transform;
-					unsigned int textureID = anim->spriteSheet.GetTexture()->get_id();
-					glm::vec2 size(t.scale.x, t.scale.y);
-
-					GLuint nid = 0;
-					for (GLuint i = 0; i < assets->get_textures().size(); ++i)
+					if (go->HasComponent<Animator>())
 					{
-						if (assets->get_textures()[i].get_object_id() == anim->spriteSheet.texture->get_object_id())
-							nid = i + 1;
+						Animator& animator = *go->GetComponent<Animator>();
+
+						if (!animator.enabled || !animator.gameObj.IsActive())
+							continue;
+
+						Animation* anim = animator.GetCurrentAnimation();
+
+						if (!anim || !anim->spriteSheet.GetTexture())
+							continue;
+
+						Transform& t = animator.gameObj.transform;
+						glm::vec2 size(t.scale.x, t.scale.y);
+
+						if (t.HasParent())
+						{
+							glm::vec3 updatedPos = t.position.glmVec3;
+							glm::vec3 updatedScale = t.scale.glmVec3;
+							float updatedRot = t.rotation.z;
+							UpdateTransform(t, updatedPos, updatedRot, updatedScale);
+
+							// If the object isnt within the frustum
+							if (!camera->withinFrustum(updatedPos, updatedScale))
+								continue;
+
+							renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
+						}
+						else
+						{
+							// If the object isnt within the frustum
+							if (!camera->withinFrustum(t.position, t.scale))
+								continue;
+
+							renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
+						}
 					}
-					//renderer.draw_quad(t.position, size, t.rotation.z, nid);
-					renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex, nid, anim->frameCount);
+
+					if (go->HasComponent<Text>())
+					{
+						Text& text = *go->GetComponent<Text>();
+						if (!text.enabled || !text.gameObj.IsActive())
+							continue;
+
+						Transform& t = text.gameObj.transform;
+
+						Math::Vec3 pos{ t.position };
+						float scale = t.scale.x * 0.1f;
+						if (scale > t.scale.y)
+							scale = t.scale.y;
+						glm::vec2 dimensions{ text.font->getDimensions(text.content, scale, text.wrapper)};
+
+						switch (text.get_hAlign())
+						{
+						case HorizontalAlignment::Center:
+							pos.x -= dimensions.x / 2.f;
+							break;
+						case HorizontalAlignment::Right:
+							pos.x -= dimensions.x;
+							break;
+						}
+						switch (text.get_vAlign())
+						{
+						case VerticalAlignment::Top:
+							pos.y -= dimensions.y;
+							break;
+						case VerticalAlignment::Center:
+							pos.y -= dimensions.y / 2.f;
+							break;
+						}
+
+						if (t.HasParent())
+						{
+							glm::vec3 updatedPos = pos;
+							glm::vec3 updatedScale = t.scale.glmVec3;
+							float updatedRot = t.rotation.z;
+							UpdateTransform(t, updatedPos, updatedRot, updatedScale);
+
+							renderer.draw_text(text.content, updatedPos, text.get_color(), scale, text.font);
+						}
+						else
+						{
+							renderer.draw_text(text.content, pos, text.get_color(), scale, text.font);
+						}
+					}
 
 				}
 			}
-
-			//PRINT("Num of Rendered GO: " << count);
 		}
 
-		// Bean : Testing Text
-		/*glm::vec3 position = { 0.f, -1.f, 0.f };
-		color = { 1.f, 1.f, 0.f, 1.f };
-		renderer.draw_text("Testing Arial", position, color, 0.1f, 0);*/
-
 		renderer.end_batch();
-
 		renderer.flush();
+
+		// Only For Text
+		if (pScene != nullptr)
+		{
+			//for (Text& text : pScene->componentArrays.GetArray<Text>())
+			//{
+			//	GameObject& gameObject{ text.gameObj };
+			//	if (!text.enabled || !gameObject.IsActive())
+			//		continue;
+
+			//	// If the object isnt within the frustum
+			//	if (!camera->withinFrustum(gameObject.transform.GetWorldPosition(), gameObject.transform.GetWorldScale()))
+			//		continue;
+			//	text.render(camera);
+			//}
+
+			//for (Layer& layer : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
+			//{
+			//	// Only For Text
+			//	for (GameObject* go : layer.gameObjects)
+			//	{
+			//		if (go == nullptr || !go->IsActive())
+			//			continue;
+
+			//		// If the object isnt within the frustum
+			//		if (!camera->withinFrustum(go->transform.position, go->transform.scale))
+			//			continue;
+
+			//		if (go->HasComponent<Text>())
+			//		{
+			//			Text& text = *go->GetComponent<Text>();
+			//			if (!text.enabled || !text.gameObj.IsActive())
+			//				continue;
+
+			//			Transform& t = text.gameObj.transform;
+			//			text.render(camera);
+			//		}
+			//	}
+			//}
+
+		}
+
+		
 	}
 
 	void Draw::debug()
 	{
-		renderer.begin_batch();
+		//renderer.begin_batch();
 		// Bean: Temporary green dot in the centre of the scene
 		glm::vec4 color = { 0.1f, 1.f, 0.1f, 1.f };
 		glm::vec2 worldNDC{ 0 };
 		glm::vec2 scale = { 0.01f, 0.01f };
-		glm::vec2 cameraPos = editorSys->get_camera()->get_eye();
-		float zoom = editorSys->get_camera()->get_zoom();
+		glm::vec2 cameraPos = MyEditorSystem.get_camera()->get_eye();
+		float zoom = MyEditorSystem.get_camera()->get_zoom();
 
-		worldNDC = { cameraPos.x, cameraPos.y };
-		scale *= zoom;
-
-		renderer.end_batch();
-		renderer.flush();
+		//renderer.end_batch();
+		//renderer.flush();
 
 		renderer.begin_batch();
 
 		// Button Colliders
-		Scene* scene = sm->get_current_scene();
 		renderer.set_line_width(1.5f);
-		if (scene != nullptr)
+		Scene* pScene{ MySceneManager.get_current_scene() };
+		if (pScene)
 		{
-			for (GameObject* gameObject : scene->gameObjects)
+
+			for (BoxCollider2D& boxCol: pScene->componentArrays.GetArray<BoxCollider2D>())
 			{
-				// If the object isnt within the frustum
-				if (!camera->withinFrustum(gameObject->transform.position, gameObject->transform.scale))
+				GameObject& gameObject{ boxCol.gameObj};
+				Transform& transform{gameObject.transform};
+				if (!boxCol.enabled || !gameObject.IsActive() ||
+					// If the object isnt within the frustum
+					!camera->withinFrustum(transform.GetWorldPosition(), transform.GetWorldScale()))
 					continue;
+				AABB bounds = boxCol.bounds.GetRelativeBounds(transform.GetWorldPosition(),transform.GetWorldScale());
+				glm::vec3 pos0_1 = { bounds.min.to_glm(), 0.f };
+				glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y, 0.f };
+				glm::vec3 pos2_1 = { bounds.max.to_glm() , 0.f };
+				glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y, 0.f };
 
-				for (Component* component : gameObject->getComponents<BoxCollider2D>())
-				{
-					if (!component->Enabled())
-						continue;
+				renderer.draw_line(pos0_1, pos1_1, color);
+				renderer.draw_line(pos1_1, pos2_1, color);
+				renderer.draw_line(pos2_1, pos3_1, color);
+				renderer.draw_line(pos3_1, pos0_1, color);
+			}
 
-					BoxCollider2D* collider = reinterpret_cast<BoxCollider2D*>(component);
-					AABB bounds = collider->getBounds();
-					glm::vec3 pos0_1 = { bounds.min.to_glm(), 0.f };
-					glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y, 0.f };
-					glm::vec3 pos2_1 = { bounds.max.to_glm() , 0.f };
-					glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y, 0.f };
+			for (Button& button : pScene->componentArrays.GetArray<Button>())
+			{
+				Transform& t = button.gameObj.transform;
+				if (!button.enabled || !button.gameObj.IsActive() ||
+					// If the object isnt within the frustum
+					!camera->withinFrustum(t.GetWorldPosition(), t.GetWorldScale()))
+					continue;
+				glm::vec3 position = t.position;
+				glm::vec2 size(t.scale.x, t.scale.y);
+				float rotation = t.rotation.z;
 
-					renderer.draw_line(pos0_1, pos1_1, color);
-					renderer.draw_line(pos1_1, pos2_1, color);
-					renderer.draw_line(pos2_1, pos3_1, color);
-					renderer.draw_line(pos3_1, pos0_1, color);
-				}
+				glm::mat4 translate = {
+					glm::vec4(1.f, 0.f, 0.f, 0.f),
+					glm::vec4(0.f, 1.f, 0.f, 0.f),
+					glm::vec4(position.x, position.y, 1.f, 0.f),
+					glm::vec4(0.f, 0.f, 0.f, 1.f)
+				};
 
-				for (Component* component : gameObject->getComponents<Button>())
-				{
-					(void) component;
-					Transform& t = gameObject->transform;
+				float rad = glm::radians(rotation);
 
-					glm::vec3 position = t.position;
-					glm::vec2 size(t.scale.x, t.scale.y);
-					float rotation = t.rotation.z;
+				glm::mat4 rotate = {
+					glm::vec4(cos(rad), sin(rad), 0.f, 0.f),
+					glm::vec4(-sin(rad), cos(rad), 0.f, 0.f),
+					glm::vec4(0.f, 0.f, 1.f, 0.f),
+					glm::vec4(0.f, 0.f, 0.f, 1.f)
+				};
 
-					glm::mat4 translate = {
-						glm::vec4(1.f, 0.f, 0.f, 0.f),
-						glm::vec4(0.f, 1.f, 0.f, 0.f),
-						glm::vec4(position.x, position.y, 1.f, 0.f),
-						glm::vec4(0.f, 0.f, 0.f, 1.f)
-					};
+				glm::mat4 transform = translate * rotate;
 
-					float rad = glm::radians(rotation);
+				color = { 0.3f, 1.f, 0.3f, 1.f };
 
-					glm::mat4 rotate = {
-						glm::vec4(cos(rad), sin(rad), 0.f, 0.f),
-						glm::vec4(-sin(rad), cos(rad), 0.f, 0.f),
-						glm::vec4(0.f, 0.f, 1.f, 0.f),
-						glm::vec4(0.f, 0.f, 0.f, 1.f)
-					};
+				glm::vec4 pos0 = transform * glm::vec4(-size.x / 2, -size.y / 2, 1.f, 1.f);
+				glm::vec4 pos1 = transform * glm::vec4(size.x / 2, -size.y / 2, 1.f, 1.f);
+				glm::vec4 pos2 = transform * glm::vec4(size.x / 2, size.y / 2, 1.f, 1.f);
+				glm::vec4 pos3 = transform * glm::vec4(-size.x / 2, size.y / 2, 1.f, 1.f);
 
-					glm::mat4 transform = translate * rotate;
+				float minX = fminf(pos0.x, fminf(pos1.x, fminf(pos2.x, pos3.x)));
+				float minY = fminf(pos0.y, fminf(pos1.y, fminf(pos2.y, pos3.y)));
+				float maxX = fmaxf(pos0.x, fmaxf(pos1.x, fmaxf(pos2.x, pos3.x)));
+				float maxY = fmaxf(pos0.y, fmaxf(pos1.y, fmaxf(pos2.y, pos3.y)));
 
-					color = { 0.3f, 1.f, 0.3f, 1.f };
-
-					glm::vec4 pos0 = transform * glm::vec4(-size.x / 2, -size.y / 2, 1.f, 1.f);
-					glm::vec4 pos1 = transform * glm::vec4(size.x / 2, -size.y / 2, 1.f, 1.f);
-					glm::vec4 pos2 = transform * glm::vec4(size.x / 2, size.y / 2, 1.f, 1.f);
-					glm::vec4 pos3 = transform * glm::vec4(-size.x / 2, size.y / 2, 1.f, 1.f);
-
-					float minX = fminf(pos0.x, fminf(pos1.x, fminf(pos2.x, pos3.x)));
-					float minY = fminf(pos0.y, fminf(pos1.y, fminf(pos2.y, pos3.y)));
-					float maxX = fmaxf(pos0.x, fmaxf(pos1.x, fmaxf(pos2.x, pos3.x)));
-					float maxY = fmaxf(pos0.y, fmaxf(pos1.y, fmaxf(pos2.y, pos3.y)));
-
-					glm::vec3 pos0_1 = { minX, minY, 0.f };
-					glm::vec3 pos1_1 = { maxX, minY, 0.f };
-					glm::vec3 pos2_1 = { maxX, maxY, 0.f };
-					glm::vec3 pos3_1 = { minX, maxY, 0.f };
-
-					renderer.draw_line(pos0_1, pos1_1, color);
-					renderer.draw_line(pos1_1, pos2_1, color);
-					renderer.draw_line(pos2_1, pos3_1, color);
-					renderer.draw_line(pos3_1, pos0_1, color);
-				}
+				glm::vec3 pos0_1 = { minX, minY, 0.f };
+				glm::vec3 pos1_1 = { maxX, minY, 0.f };
+				glm::vec3 pos2_1 = { maxX, maxY, 0.f };
+				glm::vec3 pos3_1 = { minX, maxY, 0.f };
+				renderer.draw_line(pos0_1, pos1_1, color);
+				renderer.draw_line(pos1_1, pos2_1, color);
+				renderer.draw_line(pos2_1, pos3_1, color);
+				renderer.draw_line(pos3_1, pos0_1, color);
 			}
 		}
 
-		renderer.draw_quad({ worldNDC.x, worldNDC.y , 1.f }, scale, 0.f, color);
+		//renderer.draw_quad({ worldNDC.x, worldNDC.y , 1.f }, scale, 0.f, color);
 
 		renderer.end_batch();
 		renderer.flush();
@@ -469,14 +715,14 @@ namespace Copium
 		renderer.begin_batch();
 
 		// Bean: Enable if depth testing is disabled
-		/*Scene* scene = sm->get_current_scene();
+		/*Scene* scene = MySceneManager.get_current_scene();
 		if (scene != nullptr)
 		{
 			for (GameObject* gameObject : scene->gameObjects)
 			{
-				for (Component* component : gameObject->getComponents<Text>())
+				for (Component* component : gameObject->GetComponents<Text>())
 				{
-					if (!component->Enabled())
+					if (!component.enabled)
 						continue;
 
 					Text* text = reinterpret_cast<Text*>(component);
@@ -485,14 +731,12 @@ namespace Copium
 			}
 		}*/
 
+		// Bean : Testing Circles
 		glm::vec2 scale = glm::vec2(1.f, 1.f);
 		glm::vec3 pos = glm::vec3(-10.f, 3.f, 0.f);
 		glm::vec4 color = glm::vec4(1.f, 1.f, 1.f, 1.f);
 
 		static int count = 0;
-
-		if (inputSystem->is_key_held(68))
-			count++;
 
 		int posX = -100, posY = 100;
 		for (int i = 0; i < count; i++)
@@ -515,5 +759,57 @@ namespace Copium
 
 		/*Font* font = Font::getFont("corbel");
 		font->draw_text("Lorem ipsum dolor sit amet", pos, color, 0.3f, 0, camera);*/
+	}
+
+	void Draw::UpdateTransform(const Transform& _transform, glm::vec3& _position, float& _rotation, glm::vec3& _scale)
+	{
+		Transform* tempObj = _transform.parent;
+
+		/*glm::mat4 translate = glm::translate(glm::mat4(1.f), _position);
+		glm::mat4 rotation = {
+		glm::vec4(cos(_rotation), sin(_rotation), 0.f, 0.f),
+		glm::vec4(-sin(_rotation), cos(_rotation), 0.f, 0.f),
+		glm::vec4(0.f, 0.f, 1.f, 0.f),
+		glm::vec4(0.f, 0.f, 0.f, 1.f)
+		};
+
+		glm::mat4 scale = {
+			glm::vec4(_scale.x, 0.f, 0.f, 0.f),
+			glm::vec4(0.f, _scale.y, 0.f, 0.f),
+			glm::vec4(0.f, 0.f, 1.f, 0.f),
+			glm::vec4(0.f, 0.f, 0.f, 1.f)
+		};
+		glm::mat4 transform = translate * rotation * scale;*/
+
+		while (tempObj)
+		{
+			glm::vec3 tempPos = tempObj->position.glmVec3;
+			glm::mat4 pTranslate = glm::translate(glm::mat4(1.f), tempPos);
+
+			float rot = glm::radians(tempObj->rotation.z);
+			glm::mat4 pRotate = {
+			glm::vec4(cos(rot), sin(rot), 0.f, 0.f),
+			glm::vec4(-sin(rot), cos(rot), 0.f, 0.f),
+			glm::vec4(0.f, 0.f, 1.f, 0.f),
+			glm::vec4(0.f, 0.f, 0.f, 1.f)
+			};
+
+			glm::vec3 size = tempObj->scale.glmVec3;
+			glm::mat4 pScale = {
+				glm::vec4(size.x, 0.f, 0.f, 0.f),
+				glm::vec4(0.f, size.y, 0.f, 0.f),
+				glm::vec4(0.f, 0.f, 1.f, 0.f),
+				glm::vec4(0.f, 0.f, 0.f, 1.f)
+			};
+
+			glm::mat4 pTransform = pTranslate * pRotate * pScale;
+
+			_position = glm::vec3(pTransform * glm::vec4(_position, 1.f));
+
+			_scale *= tempObj->scale.glmVec3;
+			_rotation += tempObj->rotation.z;
+
+			tempObj = tempObj->parent;
+		}
 	}
 }

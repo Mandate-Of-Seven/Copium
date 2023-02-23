@@ -21,6 +21,15 @@ using System.Threading.Tasks;
 
 namespace CopiumEngine
 {
+    public enum ButtonState 
+    {
+        OnHover,
+		OnClick,
+		OnHeld,
+		OnRelease,
+		None,
+	};
+
     public class Component
     {
         public ulong ID;
@@ -139,31 +148,59 @@ namespace CopiumEngine
         }
     }
 
-    public class Collider2D : Component
+    public class BoxCollider2D : Component
     {
     }
 
-    namespace UI
+    public class Button : Component
+    {
+        public ButtonState state
+        {
+            get { return (ButtonState)InternalCalls.GetButtonState(gameObject.ID); }
+        }
+        public bool interactable
+        {
+            get;
+            set;
+        }
+    }
+
+    public class Text : Component
+    {
+        public string text
+        {
+            get
+            {
+                InternalCalls.GetTextString(gameObject.ID, ID,out string text);
+                return text;
+            }
+            set
+            {
+                InternalCalls.SetTextString(gameObject.ID, ID, value);
+            }
+        }
+    }
+
+    public class AudioSource : Component
+    {
+        public void Play()
+        {
+            InternalCalls.AudioSourcePlay(gameObject.ID);
+        }
+    }
+
+    public class Image : Component
     {
 
-        public class Button : Component
-        {
-            public bool interactable
-            {
-                get;
-                set;
-            }
+    }
 
+    public class SortingGroup : Component
+    {
 
-        }
+    }
 
-        public class Text : Component
-        {
-            public string text
-            {
-                get;
-                set;
-            }
-        }
+    public class Animator : Component
+    {
+
     }
 }

@@ -1,0 +1,89 @@
+{
+    "Name": "NewScene",
+    "Layers": [
+        {
+            "Name": "Default",
+            "ID": 0
+        }
+    ],
+    "GameObjects": [
+        {
+            "UID": 8607036529408690644,
+            "Name": "Bmo",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 0,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "UID": 12227533474727644905,
+                    "Type": "SpriteRenderer",
+                    "TypeID": 7,
+                    "Sprite ID": 2923496999574479984,
+                    "Sprite Name": "sprite-image-horizontal.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 3022185819959505309,
+            "Name": "MousePicking",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 0,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 5.75,
+                        "Y": 0.5,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "UID": 1605311997034378879,
+                    "Type": "SpriteRenderer",
+                    "TypeID": 7,
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 0.24705882370471954
+                    }
+                }
+            ]
+        }
+    ]
+}

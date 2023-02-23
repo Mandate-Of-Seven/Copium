@@ -11,75 +11,30 @@
 	This file contains the definitions of the functions of the base camera class which
 	draws the objects within the camera using orthographic or perspective projection
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 
 #include <glm/gtx/quaternion.hpp>
 
 #include "Graphics/base-camera.h"
-#include "Editor/editor-system.h"
 #include "Windows/windows-system.h"
 #include "Windows/windows-input.h"
+#include <Math/math-library.h>
+#include <Editor/editor-system.h>
 
 namespace Copium
 {
 	namespace
 	{
-		EditorSystem& editorSystem{ *EditorSystem::Instance() };
 		InputSystem& inputSystem{ *InputSystem::Instance() };
 		WindowsSystem& windowSystem{ *WindowsSystem::Instance() };
-	}
-
-	bool BaseCamera::deserialize(rapidjson::Value& _value)
-	{
-		if (!_value.HasMember("Color"))
-			return false;
-
-		rapidjson::Value& _v = _value["Color"].GetObj();
-		backgroundColor.x = _v["X"].GetFloat();
-		backgroundColor.y = _v["Y"].GetFloat();
-		backgroundColor.z = _v["Z"].GetFloat();
-		backgroundColor.w = _v["W"].GetFloat();
-
-		if (!_value.HasMember("Projection"))
-			return false;
-
-		orthographic = _value["Projection"].GetBool();
-
-		if (!_value.HasMember("Clipping Planes"))
-			return false;
-
-		_v = _value["Clipping Planes"].GetObj();
-		nearClip = _v["Near"].GetFloat();
-		farClip = _v["Far"].GetFloat();
-
-		return true;
-	}
-
-	bool BaseCamera::serialize(rapidjson::Value& _value, rapidjson::Document& _doc)
-	{
-		rapidjson::Value color(rapidjson::kObjectType);
-		color.AddMember("X", backgroundColor.x, _doc.GetAllocator());
-		color.AddMember("Y", backgroundColor.y, _doc.GetAllocator());
-		color.AddMember("Z", backgroundColor.z, _doc.GetAllocator());
-		color.AddMember("W", backgroundColor.w, _doc.GetAllocator());
-		_value.AddMember("Color", color, _doc.GetAllocator());
-
-		_value.AddMember("Projection", orthographic, _doc.GetAllocator());
-
-		rapidjson::Value clippingPlanes(rapidjson::kObjectType);
-		clippingPlanes.AddMember("Near", nearClip, _doc.GetAllocator());
-		clippingPlanes.AddMember("Far", farClip, _doc.GetAllocator());
-		_value.AddMember("Clipping Planes", clippingPlanes, _doc.GetAllocator());
-
-		return true;
 	}
 
 	void BaseCamera::init(float _width, float _height, CameraType _cameraType, bool _orthographic)
 	{
 		// Setting up data
-		viewer = { 0.f, 0.f, -10.f };
+		viewer = { 0.f, 0.f, 10.f };
 		focalPoint = { viewer.x, viewer.y, 0.f };
 		/*viewer = { 0.f, 0.f, 0.f };
 		focalPoint = { viewer.x, viewer.y, 0.f };*/
@@ -139,7 +94,7 @@ namespace Copium
 	{
 		updateFrustum();
 
-		if (cameraType == CameraType::GAME && !editorSystem.is_enabled())
+		if (cameraType == CameraType::GAME && !MyEditorSystem.is_enabled())
 		{
 			draw.update(cameraType);
 		}
@@ -166,7 +121,7 @@ namespace Copium
 
 	glm::vec3 BaseCamera::get_up_direction() const
 	{
-		return glm::rotate(get_orientation(), glm::vec3(0.f, -1.f, 0.f));
+		return glm::rotate(get_orientation(), glm::vec3(0.f, 1.f, 0.f));
 	}
 
 	glm::vec3 BaseCamera::get_forward_direction() const
@@ -191,32 +146,32 @@ namespace Copium
 
 	glm::vec2 BaseCamera::get_game_ndc()
 	{
-		EditorGame* gameView = editorSystem.get_game_view();
+		EditorGame* gameView = MyEditorSystem.get_game_view();
 
 		glm::vec2 scenePos = gameView->get_position();
 		scenePos.x += gameView->get_indent();
 		glm::vec2 sceneDim = gameView->get_dimension();
-		if (!editorSystem.is_enabled())
+		if (!MyEditorSystem.is_enabled())
 		{
 			scenePos = { 0.f, 0.f };
-			sceneDim = glm::vec2(windowSystem.get_window_width(), windowSystem.get_window_height());
+			sceneDim = glm::vec2(MyWindowSystem.get_window_width(), MyWindowSystem.get_window_height());
 		}
 
 		//PRINT("Scene Dimension: " << scenePos.x << " " << scenePos.y);
-		Math::Vec2 mousePos = inputSystem.get_mouseposition();
+		Math::Vec2 mousePos = MyInputSystem.get_mouseposition();
 		//PRINT("Mouse position : " << mousePos.x << " " << mousePos.y);
 		glm::vec2 centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
 		glm::vec2 mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
 		glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
 
-		if (!editorSystem.is_enabled())
+		if (!MyEditorSystem.is_enabled())
 		{
 			mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 };
 		}
 
 		mouseToNDC *= orthographicSize;
 		glm::vec2 worldNDC = { mouseToNDC.x + viewer.x, mouseToNDC.y + viewer.y };
-		PRINT("~: " << worldNDC.x << ", " << worldNDC.y);
+		//PRINT("~: " << worldNDC.x << ", " << worldNDC.y);
 		return worldNDC;
 	}
 
@@ -257,7 +212,9 @@ namespace Copium
 		float ar = aspect;
 		float zl = orthographicSize;
 		projMatrix = glm::ortho(-ar * zl, ar * zl, -zl, zl, nearClip, farClip);
+		
 		viewProjMatrix = projMatrix * viewMatrix;
+		//viewProjMatrix = viewMatrix * projMatrix;
 	}
 
 	void BaseCamera::update_ortho_projection(float _left, float _right, float _bottom, float _top)
@@ -270,6 +227,8 @@ namespace Copium
 	{
 		// Get updated viewer / eye location
 		viewer = calculate_position();
+		viewer.z = 10.f;
+
 		focalPoint = { viewer.x, viewer.y, 0.f };
 		upVector = { 0.f, 1.f, 0.f };
 
@@ -296,7 +255,8 @@ namespace Copium
 	}
 
 	glm::vec3 BaseCamera::calculate_position()
-	{
-		return focalPoint - get_forward_direction() * orthographicSize;
+	{ 
+		//glm::vec3 viewVector = get_forward_direction();
+		return viewer - get_forward_direction() * orthographicSize;
 	}
 }

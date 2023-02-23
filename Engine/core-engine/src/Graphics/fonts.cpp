@@ -21,7 +21,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include FT_FREETYPE_H
 
 #include "Graphics/graphics-system.h"
-#include "Editor/editor-system.h"
 #include "Files/file-system.h"
 #include <glm/gtc/type_ptr.hpp>
 
@@ -130,7 +129,7 @@ namespace Copium
 		glVertexArrayAttribBinding(fontVertexArrayID, 3, 2);*/
 	}
 
-	void Font::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, GLfloat _scale, GLuint _fontID, BaseCamera* _camera)
+	void Font::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, GLfloat _scale, const float& _wrapper, BaseCamera* _camera)
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -160,6 +159,10 @@ namespace Copium
 			glm::vec2(1.f, 0.f)
 		};
 
+		int newLine = 0;
+		float xpos = 0.f, ypos = 0.f;
+		const float scaler = 0.01f;
+
 		/*float w = 0.f, h = 0.f, xpos = 0.f, ypos = 0.f;
 		glm::vec3 fontVertexPosition[6] = {
 			glm::vec3(xpos, ypos + h, 0.f),
@@ -173,11 +176,24 @@ namespace Copium
 		{
 			Character ch = characters[c];
 
-			float xpos = x + ch.bearing.x * (_scale * 0.01f);
-			float ypos = y - (ch.size.y - ch.bearing.y) * (_scale * 0.01f);
+			// If it is a newline
+			if (c == '\n')
+			{
+				newLine++;
+				x = _position.x;
+				continue;
+			}
+			else if (c == ' ' && x > _position.x + _wrapper && _wrapper != 0.f)
+			{
+				newLine++;
+				x = _position.x;
+			}
 
-			float w = ch.size.x * (_scale * 0.01f);
-			float h = ch.size.y * (_scale * 0.01f);
+			xpos = x + ch.bearing.x * (_scale * scaler);
+			ypos = y - (ch.size.y - ch.bearing.y) * (_scale * scaler) - newLine * (_scale * 2.5f);
+
+			float w = ch.size.x * (_scale * scaler);
+			float h = ch.size.y * (_scale * scaler);
 
 			// Update VBO for each character
 			TextVertex vertices[6];
@@ -203,7 +219,7 @@ namespace Copium
 
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 
-			x += (ch.advance >> 6) * (_scale * 0.01f); // Bitshift by 6 to get value in pixels
+			x += (ch.advance >> 6) * (_scale * scaler); // Bitshift by 6 to get value in pixels
 		}
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -212,15 +228,27 @@ namespace Copium
 		glDisable(GL_BLEND);
 	}
 
-	glm::vec2 Font::getDimensions(const std::string& _text, GLfloat _scale)
+	glm::vec2 Font::getDimensions(const std::string& _text, GLfloat _scale, const float& _wrapper)
 	{
 		float x = 0;
 		float y = 0;
-
+		int newLine = 0;
 		for (char c : _text)
 		{
+			if (c == '\n')
+			{
+				newLine++;
+				x = 0.f;
+				continue;
+			}
+			else if (c == ' ' && x > _wrapper && _wrapper != 0.f)
+			{
+				newLine++;
+				x = 0;
+			}
+
 			Character& ch = characters[c];
-			float scaledY = ch.size.y * (_scale * 0.01f);
+			float scaledY = ch.size.y * (_scale * 0.01f) - newLine * (_scale * 2.5f);
 			if (scaledY > y)
 				y = scaledY;
 			x += (ch.advance >> 6) * (_scale * 0.01f); // Bitshift by 6 to get value in pixels

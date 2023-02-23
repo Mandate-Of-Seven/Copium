@@ -25,17 +25,19 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Physics/physics-system.h"
 #include "Graphics/graphics-system.h"
 #include "Utilities/thread-system.h"
-#include "SceneManager/scene-manager.h"
-#include "Debugging/logging-system.h"
+//#include "SceneManager/scene-manager.h"
+//#include "Debugging/logging-system.h"
 #include "Audio/sound-system.h"
+#include <Files/file-system.h>
 #include "Scripting/logic-system.h"
 #include <Debugging/frame-rate-controller.h>
 #include "Animation/animation-system.h"
 //#include "string.h"
+#include <Events/events-system.h>
 
 namespace Copium
 {
-	CLASS_SYSTEM(CopiumCore) , public IReceiver
+	CLASS_SYSTEM(CopiumCore) //, public IReceiver
 	{
 	public:
 		CopiumCore() {}
@@ -52,14 +54,15 @@ namespace Copium
 			systems =
 			{
 				//Put in sequence of calls
+				MyEventSystem,
 				WindowsSystem::Instance(),
 				pMessageSystem,
 				LoggingSystem::Instance(),
 				SoundSystem::Instance(),
 				FileSystem::Instance(),
 				AssetsSystem::Instance(),
-				SceneManager::Instance(),
 				ScriptingSystem::Instance(),
+				SceneManager::Instance(),
 				InputSystem::Instance(),
 				EditorSystem::Instance(),
 				LogicSystem::Instance(),
@@ -71,11 +74,16 @@ namespace Copium
 			for (ISystem* pSystem : systems)
 			{
 				pSystem->init();
+				//std::cout << typeid(*pSystem).name() << ": init!\n";
 			}
 
-			pMessageSystem->subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
-			pMessageSystem->subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
-			pMessageSystem->subscribe(MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW, this);
+			//pMessageSystem->subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
+			//pMessageSystem->subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
+			//pMessageSystem->subscribe(MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW, this);
+			//while (MyScriptingSystem.compilingState == CompilingState::Compiling);
+			//MySceneManager.load_scene(Paths::assetPath+"\\Scenes\\Demo.scene");
+			//MySceneManager.load_scene("C:\\Users\\FLESH\\Desktop\\Copium\\Engine\\x64\\PackedTracks\\Assets\\Scenes\\Demo.scene");
+			
 		}
 
 		/**************************************************************************/
@@ -87,6 +95,7 @@ namespace Copium
 		/**************************************************************************/
 		void update()
 		{
+
 			double totalUpdateTime = 0;
 			for (ISystem* pSystem : systems)
 			{
@@ -94,6 +103,7 @@ namespace Copium
 				{
 					double startTime = glfwGetTime();
 					pSystem->update();
+					//std::cout << typeid(*pSystem).name() << ": update!\n";
 					pSystem->updateTime = glfwGetTime() - startTime;
 					totalUpdateTime += pSystem->updateTime;
 				}
@@ -101,6 +111,7 @@ namespace Copium
 				{
 					double startTime = glfwGetTime();
 					pSystem->update();
+					//std::cout << typeid(*pSystem).name() << ": update!\n";
 					pSystem->updateTime = glfwGetTime() - startTime;
 					totalUpdateTime += pSystem->updateTime;
 					continue;
@@ -115,16 +126,16 @@ namespace Copium
 					std::string temp = "\n";
 					for (ISystem* pSystem : systems)
 					{
-						pSystem->updateTimePercent = (pSystem->updateTime<=0) ? 0:((pSystem->updateTime / totalUpdateTime) * 100);
+						pSystem->updateTimePercent = (pSystem->updateTime <= 0) ? 0 : ((pSystem->updateTime / totalUpdateTime) * 100);
 						//std::cout<< pSystem->updateTime << "\n";
 						temp += typeid(*pSystem).name();
 						temp += ": ";
 						temp += std::to_string(pSystem->updateTimePercent);
 						temp += "%%\n\n";
-						//std::cout << typeid(*pSystem).name() << ": " << pSystem->updateTimePercent << "%\n";
+						std::cout << typeid(*pSystem).name() << ": " << pSystem->updateTimePercent << "%\n";
 					}
 					//std::cout << temp;
-					Window::EditorConsole::editorLog.set_performancetext(temp);
+					//Window::EditorConsole::editorLog.set_performancetext(temp);
 					//std::cout << "End\n\n";
 					performanceCounter = 0;
 				}
@@ -150,28 +161,28 @@ namespace Copium
 			}
 		}
 
-		void handleMessage(MESSAGE_TYPE mType)
-		{
-			switch (mType)
-			{
-				case MESSAGE_TYPE::MT_START_PREVIEW:
-				{
-					inPlayMode = true;
-					break;
-				}
-				case MESSAGE_TYPE::MT_STOP_PREVIEW:
-				{
-					inPlayMode = false;
-					break;
-				}
-				case MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW:
-				{
-					displayPerformance = !displayPerformance;
-					performanceCounter = 0.05f;
-					break;
-				}
-			}
-		}
+		//void handleMessage(MESSAGE_TYPE mType)
+		//{
+		//	switch (mType)
+		//	{
+		//		case MESSAGE_TYPE::MT_START_PREVIEW:
+		//		{
+		//			inPlayMode = true;
+		//			break;
+		//		}
+		//		case MESSAGE_TYPE::MT_STOP_PREVIEW:
+		//		{
+		//			inPlayMode = false;
+		//			break;
+		//		}
+		//		case MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW:
+		//		{
+		//			displayPerformance = !displayPerformance;
+		//			performanceCounter = 0.05f;
+		//			break;
+		//		}
+		//	}
+		//}
 
 		bool get_inplaymode() { return inPlayMode; }
 	private:
@@ -179,6 +190,7 @@ namespace Copium
 		float performanceCounter = 0;
 		bool displayPerformance = false;
 		bool inPlayMode = false;
+		std::string configFilePath = "Data\\config.json";
 	};
 }
 #endif // !COPIUM_CORE_H
