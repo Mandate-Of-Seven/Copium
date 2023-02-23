@@ -1,5 +1,5 @@
-[2023-02-24 01:49:35.030] [Error] [critical] 
-Caused By:	mClass == nullptr
-Info:		MONO CLASS NOT LOADED
-Source:		C:\Users\matth\Documents\GitHub\GAM-200\Engine\core-engine\src\Scripting\scripting-system.cpp (Line: 295)
+[2023-02-24 04:35:14.583] [Error] [critical] 
+Caused By:	layerCount + 1 > maxLayers
+Info:		Maxed layers reached!
+Source:		C:\Users\FLESH\ECS\Copium\Engine\core-engine\src\Utilities\sorting-layers.cpp (Line: 34)
 

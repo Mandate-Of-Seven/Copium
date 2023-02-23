@@ -76,8 +76,6 @@ public:
 
     void erase(T& val)
     {
-        size_t denseIndex = &val - reinterpret_cast<T*>(data) ;
-        COPIUM_ASSERT(denseIndex >= size_, "Value is not an element of this array");
         //Find index first
         for (size_t i = 0; i < size_; ++i)
         {

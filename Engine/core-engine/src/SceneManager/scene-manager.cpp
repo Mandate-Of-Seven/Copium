@@ -777,7 +777,7 @@ namespace Copium
 		currSceneState = Scene::SceneState::play;
 		currentScene->set_state(Scene::SceneState::play);
 
-		SoundSystem::Instance()->StopAll();
+		//SoundSystem::Instance()->StopAll();
 
 		return true;
 	}
@@ -826,7 +826,7 @@ namespace Copium
 
 		currentScene->set_state(Scene::SceneState::edit);
 
-		SoundSystem::Instance()->StopAll();
+		//SoundSystem::Instance()->StopAll();
 
 		return true;
 	}

@@ -21,14 +21,6 @@ public class ShooterBehaviour: CopiumScript
 
 	void Update()
 	{
-		SceneManager.LoadScene("Demo");
-		if (scripto == null)
-			Console.WriteLine("SCRIPTO IS NULL");
-		else
-		{
-			Console.WriteLine("SCRIPTO EXISTS");
-			Console.WriteLine(scripto.gameObject.transform.position.x);
-		}
 		timer += Time.deltaTime;
 		if (timer > shootingInterval)
         {

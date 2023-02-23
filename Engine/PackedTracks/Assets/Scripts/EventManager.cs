@@ -19,14 +19,12 @@ public class EventManager: CopiumScript
     public int EventSequence = 0;
     public int LuckSequence = 0;
 
-    public GameObject CombatScreen;
-
     float timer = 0;
     float closeTime = 3;
 
     int InternalLuck = 0;
 
-    public Event_Intro Event_Intro;
+    public CrewMenu crewMenu;
 
     bool Event_01 = false;
     bool Event_02 = false;
@@ -47,16 +45,6 @@ public class EventManager: CopiumScript
     }
 	void Update()
     {
-        if (CombatScreen.activeSelf)
-        {
-            timer += Time.deltaTime;
-        }
-        if (timer > closeTime)
-        {
-            CombatScreen.SetActive(false);
-        }
-        //option01_btn = Option_01.GetComponent<Button>();
-        //option02_btn = Option_02.GetComponent<Button>();
         //next_btn = Next_Event.GetComponent<Button>();
         if (next_btn.state == ButtonState.OnClick && Next_Event.activeSelf)
         {
@@ -68,13 +56,6 @@ public class EventManager: CopiumScript
 
             //if (EventSequence == 6)
             //    GameManager.MainScreenCanvas.SetActive(false);
-        }
-
-        // This should check if the combat screen has been activated
-        if(EngagingCombat && !CombatScreen.activeSelf && EventSequence == 2)
-        {
-            EngagingCombat = false;
-            EventSequence++;
         }
 
         CheckCurrentEvent();
@@ -294,9 +275,6 @@ public class EventManager: CopiumScript
                 InternalLuck = 0;
 
             LuckSequence = 1;
-
-            CombatScreen.SetActive(true);
-            EngagingCombat = true;
         }
         else if (!choice)
         {
