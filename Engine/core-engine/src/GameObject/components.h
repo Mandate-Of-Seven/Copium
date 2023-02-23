@@ -26,7 +26,7 @@ namespace Copium
 
 	enum class ComponentType : int      // Types of Components
 	{
-		Animator,
+		Animator = (int)FieldType::Component,
 		AudioSource,
 		BoxCollider2D,
 		Button,
@@ -221,7 +221,6 @@ namespace Copium
 		Math::Vec3 position{};
 		Math::Vec3 rotation{};
 		Math::Vec3 scale{1,1,1};
-		UUID pid{0};
 		GameObject& gameObject;
 		/***************************************************************************/
 		/*!
@@ -400,7 +399,7 @@ namespace Copium
 		/**************************************************************************/
 		void play_sound()
 		{
-			//soundSystem.Play(this->alias, overLap, loop, loopCount);
+
 		}
 		/***************************************************************************/
 		/*!
@@ -516,7 +515,8 @@ namespace Copium
 
 
 		Script(GameObject& _gameObj, const Script& rhs, UUID _uuid = UUID()) :
-			Component(_gameObj, _uuid), name{ rhs.name }, fieldDataReferences{ rhs.fieldDataReferences }{}
+			Component(_gameObj, _uuid), name{ rhs.name }, fieldDataReferences{ rhs.fieldDataReferences }, 
+			fieldComponentReferences{ rhs.fieldComponentReferences }, fieldGameObjReferences{ rhs.fieldGameObjReferences }{}
 
 		Script& operator=(const Script& rhs)
 		{
@@ -578,40 +578,6 @@ namespace Copium
 			name = _name;
 			instantiate();
 		}
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Gets a field from a C# field using its name
-		\param name
-			Name of the field
-		\param buffer
-			Buffer to store the values, needs to be type casted
-		\return
-			False if operation failed, true if it was successful
-		*/
-		/*******************************************************************************/
-		void GetFieldValue(const std::string& fieldName, char* outBuffer)
-		{
-			//MyEventSystem->publish(new ScriptGetFieldEvent(*this, fieldName.c_str(), (void*)outBuffer));
-		}
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Sets a field from a C# field using its name
-		\param name
-			Name of the field
-		\param value
-			Value to write into C# memory space
-		\return
-			False if operation failed, true if it was successful
-		*/
-		/*******************************************************************************/
-		void SetFieldValue(const std::string& _name, const char* value)
-		{
-			//MyEventSystem->publish(new ScriptSetFieldEvent(*this, _name.c_str(), (void*)value));
-		}
 		void instantiate()
 		{
 			//MyEventSystem->publish(new ReflectComponentEvent(*this));
@@ -621,8 +587,6 @@ namespace Copium
 		std::unordered_map<std::string, GameObject*> fieldGameObjReferences;
 		std::unordered_map<std::string, Component*> fieldComponentReferences;
 		FieldMap fieldDataReferences;
-		static std::pair<const std::string, Field>* editedField;
-		static bool isAddingReference;
 	};
 	
 	using ButtonCallback = void (*)();
@@ -699,7 +663,7 @@ namespace Copium
 			Component(_gameObj, _uuid), callbackName{ rhs.callbackName },
 			bounds{ rhs.bounds }, normalColor{ rhs.normalColor }, 
 			hoverColor{ rhs.hoverColor }, clickedColor{ rhs.clickedColor },
-			fadeDuration{ rhs.fadeDuration}
+			fadeDuration{ rhs.fadeDuration}, targetGraphic{rhs.targetGraphic}
 		{}
 
 		Button& operator=(const Button& rhs);
@@ -712,7 +676,6 @@ namespace Copium
 		glm::fvec4 clickedColor;
 		IUIComponent* targetGraphic;
 		ButtonState previousState{ ButtonState::None };
-		UUID graphicID;
 		glm::fvec4 previousColor;
 		float timer{ 0 };
 		float fadeDuration{ 0.1f };
@@ -870,7 +833,7 @@ namespace Copium
 	RegisterComponent(Image);
 	RegisterComponent(Text);
 	RegisterComponent(Button);
-	using ComponentTypes = TemplatePack<BoxCollider2D, Rigidbody2D, SpriteRenderer, Animator,Camera, SortingGroup, AudioSource, Script, Image, Text, Button>;
+	using ComponentTypes = TemplatePack<SortingGroup, SpriteRenderer,BoxCollider2D, Rigidbody2D, Animator,Camera, AudioSource, Image, Text, Button, Script>;
 	using ComponentsArrays = decltype(ComponentGroup(ComponentTypes()));
 	using ComponentsPtrArrays = decltype(ComponentPtrGroup(ComponentTypes()));
 

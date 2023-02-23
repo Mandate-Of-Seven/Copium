@@ -114,7 +114,9 @@ public:
         {
             if (reinterpret_cast<T*>(data + indexes[i])  == &val)
             {
+                size_t index = indexes[i];
                 std::remove(indexes.begin(), indexes.begin()+size_, i);
+                indexes[size_ - 1] = index;
                 --size_;
                 return;
             }
@@ -124,7 +126,22 @@ public:
 
     void erase(const Iterator& iter)
     {
+        COPIUM_ASSERT(size_ == 0, "Can't erase from empty array");
+        PRINT("BEFORE:");
+        for (int i = 0; i < size_; ++i)
+        {
+            std::cout << indexes[i] << " ";
+        }
+        std::cout << std::endl;
+        size_t index = indexes[iter.sparseIndex];
         std::remove(indexes.begin(), indexes.begin() + size_, iter.sparseIndex);
+        indexes[size_-1] = index;
+        PRINT("AFTER:");
+        for (int i = 0; i < size_; ++i)
+        {
+            std::cout << indexes[i] << " ";
+        }
+        std::cout << std::endl;
         --size_;
     }
 

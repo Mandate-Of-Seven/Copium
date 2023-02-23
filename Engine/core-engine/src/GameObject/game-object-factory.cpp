@@ -84,17 +84,45 @@ namespace Copium
 			{
 				T& component = scene.componentArrays.GetArray<T>().emplace_back(gameObj, *pCopy, pCopy->uuid);
 				gameObj.AddComponent(&component);
+				MyEventSystem->publish(new ReflectComponentEvent(component));
 				return component;
 			}
 			else
 			{
 				T& component = scene.componentArrays.GetArray<T>().emplace_back(gameObj, *pCopy);
 				gameObj.AddComponent(&component);
+				MyEventSystem->publish(new ReflectComponentEvent(component));
 				return component;
 			}
 		}
 		T& component = scene.componentArrays.GetArray<T>().emplace_back(gameObj);
 		gameObj.AddComponent(&component);
+		MyEventSystem->publish(new ReflectComponentEvent(component));
+		return component;
+	}
+
+	Script& GameObjectFactory::AddComponent(GameObject& gameObj, Scene& scene, const char* scriptName , Script* pCopy, bool copyID)
+	{
+		if (pCopy)
+		{
+			if (copyID)
+			{
+				Script& component = scene.componentArrays.GetArray<Script>().emplace_back(gameObj, *pCopy, pCopy->uuid);
+				gameObj.AddComponent(&component);
+				MyEventSystem->publish(new ReflectComponentEvent(component));
+				return component;
+			}
+			else
+			{
+				Script& component = scene.componentArrays.GetArray<Script>().emplace_back(gameObj, *pCopy);
+				gameObj.AddComponent(&component);
+				MyEventSystem->publish(new ReflectComponentEvent(component));
+				return component;
+			}
+		}
+		Script& component = scene.componentArrays.GetArray<Script>().emplace_back(gameObj, UUID(), scriptName);
+		gameObj.AddComponent(&component);
+		MyEventSystem->publish(new ReflectComponentEvent(component));
 		return component;
 	}
 
@@ -160,20 +188,20 @@ namespace Copium
 			if (count)
 				tmp.name += '(' + std::to_string(count) + ')';
 			CloneComponents(tmp,_src,scene,copyID);
-			for (Transform* pChild : _src.transform.children)
-			{
-				Instantiate(pChild->gameObject, scene, copyID).transform.SetParent(&tmp.transform);
-			}
+			//for (Transform* pChild : _src.transform.children)
+			//{
+			//	Instantiate(pChild->gameObject, scene, copyID).transform.SetParent(&tmp.transform);
+			//}
 			return tmp;
 		}
 		GameObject& tmp = scene.gameObjects.emplace_back(_src);
 		if (count)
 			tmp.name += '(' + std::to_string(count) + ')';
 		CloneComponents(tmp, _src, scene, copyID);
-		for (Transform* pChild : _src.transform.children)
-		{
-			Instantiate(pChild->gameObject, scene, copyID).transform.SetParent(&tmp.transform);
-		}
+		//for (Transform* pChild : _src.transform.children)
+		//{
+		//	Instantiate(pChild->gameObject, scene, copyID).transform.SetParent(&tmp.transform);
+		//}
 		return tmp;
 	}
 

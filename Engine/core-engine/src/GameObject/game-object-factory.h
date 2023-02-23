@@ -82,6 +82,8 @@ namespace Copium {
 		template <typename T>
 		T& AddComponent(GameObject& gameObject, Scene& scene,T* pCopy = nullptr, bool copyID = false);
 
+		Script& AddComponent(GameObject& gameObj, Scene& scene, const char* scriptName, Script* pCopy = nullptr, bool copyID = false);
+
 		/*******************************************************************************
 		/*!
 		*

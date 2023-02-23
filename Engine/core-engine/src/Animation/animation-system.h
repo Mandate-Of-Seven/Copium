@@ -79,13 +79,6 @@ namespace Copium
         */
         /**************************************************************************/
         void PlayAllAnimation();
-
-
-        void CallbackSceneOpened(SceneOpenedEvent * _src);
-
-
-    private:
-        Scene* currScene;
 	};
 }
 

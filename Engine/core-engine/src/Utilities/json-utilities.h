@@ -71,6 +71,7 @@ namespace Copium
 	template <typename T>
 	bool Deserialize(T& _data, rapidjson::Value& _value, const std::string& _key)
 	{
+		static_assert(true);
 		return false;
 	}
 

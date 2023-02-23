@@ -77,6 +77,202 @@ namespace Copium
 		MyEventSystem->subscribe(this, &SceneManager::CallbackGameObjectInstantiate);
 	}
 
+	void SceneManager::DeserializeLink()
+	{
+		for (GameObject& go : currentScene->gameObjects)
+		{
+			// Target Graphic
+			if (go.HasComponent<Button>())
+			{
+				Button* button = go.GetComponent<Button>();
+				UUID uuid{ (uint64_t)button->targetGraphic };
+				button->targetGraphic = reinterpret_cast<IUIComponent*>(FindComponentByID(uuid));
+			}
+
+			for (Script* pScript : go.GetComponents<Script>())
+			{
+				for (auto& pair : pScript->fieldDataReferences)
+				{
+					const std::string& fieldName{ pair.first };
+					Field& field{ pair.second };
+					if (field.fType == FieldType::GameObject)
+					{
+						UUID uuid{ (uint64_t)pScript->fieldGameObjReferences[fieldName] };
+						if (uuid == 0)
+							continue;
+						pScript->fieldGameObjReferences[fieldName] = MySceneManager.FindGameObjectByID(uuid);
+					}
+					else if (field.fType >= FieldType::Component)
+					{
+						UUID uuid{ (uint64_t)pScript->fieldComponentReferences[fieldName] };
+						if (uuid == 0)
+							continue;
+						Component* component = MySceneManager.FindComponentByID(uuid);
+						switch ((ComponentType)field.fType)
+						{
+						case(ComponentType::Animator):
+						{
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Animator*)component));
+							break;
+						}
+						case(ComponentType::AudioSource):
+						{
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (AudioSource*)component));
+							break;
+						}
+						case(ComponentType::BoxCollider2D):
+						{
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (BoxCollider2D*)component));
+							break;
+						}
+						case(ComponentType::Button):
+						{
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Button*)component));
+							break;
+						}
+						case(ComponentType::Camera):
+						{
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Camera*)component));
+							break;
+						}
+						case(ComponentType::Image):
+						{
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Image*)component));
+							break;
+						}
+						case(ComponentType::Rigidbody2D):
+						{
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Rigidbody2D*)component));
+							break;
+						}
+						case(ComponentType::SpriteRenderer):
+						{
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (SpriteRenderer*)component));
+							break;
+						}
+						case(ComponentType::Script):
+						{
+							//Different scripts
+							if (((Script*)component)->Name() != field.typeName)
+								continue;
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Script*)component));
+							break;
+						}
+						case(ComponentType::Text):
+						{
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Text*)component));
+							break;
+						}
+						case(ComponentType::SortingGroup):
+						{
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (SortingGroup*)component));
+							break;
+						}
+						}
+						pScript->fieldComponentReferences[fieldName] = component;
+					}
+				}
+			}
+
+		}
+	}
+
+	void SceneManager::PreviewLink()
+	{
+		for (GameObject& go : currentScene->gameObjects)
+		{
+			// Target Graphic
+			for (Button* pButton : go.GetComponents<Button>())
+			{
+				if (pButton->targetGraphic)
+					pButton->targetGraphic = reinterpret_cast<IUIComponent*>(FindComponentByID(pButton->targetGraphic->uuid));
+			}
+
+			for (Script* pScript : go.GetComponents<Script>())
+			{
+				for (auto& pair : pScript->fieldGameObjReferences)
+				{
+					if (pair.second)
+						pair.second = FindGameObjectByID(pair.second->uuid);
+				}
+
+				for (auto& pair : pScript->fieldComponentReferences)
+				{
+					if (!pair.second)
+						continue;
+					pair.second = FindComponentByID(pair.second->uuid);
+					std::string fieldName{ pair.first };
+					Field& field = pScript->fieldDataReferences[pair.first];
+					Component* component = pair.second;
+					switch ((ComponentType)field.fType)
+					{
+					case(ComponentType::Animator):
+					{
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Animator*)component));
+						break;
+					}
+					case(ComponentType::AudioSource):
+					{
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (AudioSource*)component));
+						break;
+					}
+					case(ComponentType::BoxCollider2D):
+					{
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (BoxCollider2D*)component));
+						break;
+					}
+					case(ComponentType::Button):
+					{
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Button*)component));
+						break;
+					}
+					case(ComponentType::Camera):
+					{
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Camera*)component));
+						break;
+					}
+					case(ComponentType::Image):
+					{
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Image*)component));
+						break;
+					}
+					case(ComponentType::Rigidbody2D):
+					{
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Rigidbody2D*)component));
+						break;
+					}
+					case(ComponentType::SpriteRenderer):
+					{
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (SpriteRenderer*)component));
+						break;
+					}
+					case(ComponentType::Script):
+					{
+						std::string scriptName{};
+						COPIUM_ASSERT(scriptName.empty(), "Couldn't get script name");
+						//Different scripts
+						if (((Script*)component)->Name() != field.typeName)
+							continue;
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Script*)component));
+						break;
+					}
+					case(ComponentType::Text):
+					{
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Text*)component));
+						break;
+					}
+					case(ComponentType::SortingGroup):
+					{
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (SortingGroup*)component));
+						break;
+					}
+					}
+					pScript->fieldComponentReferences[fieldName] = component;
+				}
+			}
+		}
+	}
+
 	template <typename T, typename... Ts>
 	struct CleanerStruct
 	{
@@ -209,7 +405,7 @@ namespace Copium
 			std::cout << "Scene name:" << currentScene->name << std::endl;
 		}
 
-		MyEventSystem->publish(new SceneChangingEvent());
+		MyEventSystem->publish(new SceneChangingEvent(*currentScene));
 		//MyEventSystem->publish(
 		//	new SceneOpenedEvent(
 		//		currentScene->get_name().c_str(),
@@ -265,12 +461,15 @@ namespace Copium
 			}
 
 			// Linkages
+			DeserializeLink();
 			for (GameObject& go : currentScene->gameObjects)
 			{
 				// Transform and Parent
-				if (go.transform.pid.GetUUID())
+				if (go.transform.parent)
 				{
-					GameObject* p = MySceneManager.FindGameObjectByID(go.transform.pid);
+					UUID uuid{ (uint64_t)go.transform.parent };
+					go.transform.parent = nullptr;
+					GameObject* p = MySceneManager.FindGameObjectByID(uuid);
 					if (p)
 						go.transform.SetParent(&p->transform);
 
@@ -343,13 +542,7 @@ namespace Copium
 					}
 				}
 
-				// Target Graphic
-				if (go.HasComponent<Button>())
-				{
-					Button* button = go.GetComponent<Button>();
-					if (button->graphicID)
-						button->targetGraphic = reinterpret_cast<IUIComponent*>(FindComponentByID(button->graphicID));
-				}
+
 
 				// Image
 				if (go.HasComponent<Image>())
@@ -376,38 +569,6 @@ namespace Copium
 						if (!reference)
 							image->sprite.spriteID = 0;
 					}
-				}
-
-				if (go.HasComponent<Script>())
-				{
-					Script* script = go.GetComponent<Script>();
-					if (!script->fieldDataReferences.empty())
-						for (auto it = script->fieldDataReferences.begin(); it != script->fieldDataReferences.end(); ++it)
-						{
-							const std::string& _name{ it->first };
-							Field& field = it->second;
-							FieldType fType = field.fType;
-
-							switch (fType)
-							{
-							case FieldType::Component:
-							{
-								uint64_t id{ field.Get<uint64_t>() };
-								Component* pComponent = FindComponentByID(id);
-								if (pComponent)
-									script->fieldComponentReferences[_name] = pComponent;
-								break;
-							}
-							case FieldType::GameObject:
-							{
-								uint64_t id{ field.Get<uint64_t>() };
-								GameObject* pGameObject = FindGameObjectByID(id);
-								if (pGameObject)
-									script->fieldGameObjReferences[_name] = pGameObject;
-								break;
-							}
-							}
-						}
 				}
 
 			}
@@ -494,17 +655,9 @@ namespace Copium
 				break;
 		}
 
+		PreviewLink();
 		for (GameObject& go : currentScene->gameObjects)
 		{
-			// Transform and Parent
-			if (go.transform.pid.GetUUID())
-			{
-				GameObject* p = MySceneManager.FindGameObjectByID(go.transform.pid);
-				if (p)
-					go.transform.SetParent(&p->transform);
-
-			}
-
 			// Replacement
 			if (go.HasComponent<SortingGroup>())
 			{
@@ -512,47 +665,6 @@ namespace Copium
 				MyEditorSystem.getLayers()->SortLayers()->ReplaceGameObject(sg->sortingLayer, go);
 
 			}
-
-			// Target Graphic
-			if (go.HasComponent<Button>())
-			{
-				Button* button = go.GetComponent<Button>();
-				if (button->graphicID)
-					button->targetGraphic = reinterpret_cast<IUIComponent*>(FindComponentByID(button->graphicID));
-			}
-
-			if (go.HasComponent<Script>())
-			{
-				Script* script = go.GetComponent<Script>();
-				if (!script->fieldDataReferences.empty())
-					for (auto it = script->fieldDataReferences.begin(); it != script->fieldDataReferences.end(); ++it)
-					{
-						const std::string& _name{ it->first };
-						Field& field = it->second;
-						FieldType fType = field.fType;
-
-						switch (fType)
-						{
-						case FieldType::Component:
-						{
-							uint64_t id{ field.Get<uint64_t>() };
-							Component* pComponent = FindComponentByID(id);
-							if (pComponent)
-								script->fieldComponentReferences[_name] = pComponent;
-							break;
-						}
-						case FieldType::GameObject:
-						{
-							uint64_t id{ field.Get<uint64_t>() };
-							GameObject* pGameObject = FindGameObjectByID(id);
-							if (pGameObject)
-								script->fieldGameObjReferences[_name] = pGameObject;
-							break;
-						}
-						}
-					}
-			}
-
 		}
 
 		currSceneState = Scene::SceneState::play;
@@ -729,20 +841,6 @@ namespace Copium
 			MyGOF.Instantiate(gameObj,*currentScene, true);
 		}
 
-
-		//ZACH: COMPONENT LINKING
-		//for (size_t goIndex{ 0 }; goIndex < storageScene->get_gameobjcount(); ++goIndex)
-		//{
-		//	GameObject* currGameObj = currentScene->gameObjects[goIndex];
-		//	GameObject* storedGameObj = storageScene->gameObjects[goIndex];
-		//	currGameObj->transform.previewLink(&storedGameObj->transform);
-		//	//std::cout << "Name comparisons: " << currGameObj->name << '|' << storedGameObj->name << std::endl;
-		//	for (size_t compIndex{ 0 }; compIndex < currGameObj->components.size(); ++compIndex)
-		//	{
-		//		currGameObj->components[compIndex]->previewLink(storedGameObj->components[compIndex]);
-		//	}
-		//}
-
 		// MATT: Sorting Layer Replacement HERE
 
 	}
@@ -752,17 +850,14 @@ namespace Copium
 	{
 		if constexpr (std::is_same<T,Script>())
 		{
-			T& component = currentScene->componentArrays.GetArray<T>().emplace_back(pEvent->gameObject,UUID(),pEvent->scriptName);
-			pEvent->gameObject.AddComponent(&component);
+			
+			T& component = MyGOF.AddComponent(pEvent->gameObject, *currentScene, pEvent->scriptName, nullptr, false);
 			pEvent->componentContainer = &component;
-			MyEventSystem->publish(new ReflectComponentEvent(component));
 		}
 		else
 		{
-			T& component = currentScene->componentArrays.GetArray<T>().emplace_back(pEvent->gameObject);
-			pEvent->gameObject.AddComponent(&component);
+			T& component = MyGOF.AddComponent<T>(pEvent->gameObject, *currentScene,nullptr, false);
 			pEvent->componentContainer = &component;
-			MyEventSystem->publish(new ReflectComponentEvent(component));
 		}
 	}
 

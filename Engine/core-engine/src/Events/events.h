@@ -52,12 +52,7 @@ namespace Copium
 
 	struct SceneChangingEvent : IEvent
 	{
-		SceneChangingEvent() {}
-	};
-
-	struct SceneOpenedEvent : IEvent
-	{
-		SceneOpenedEvent(Scene& _scene) : scene{_scene}{}
+		SceneChangingEvent(Scene& _scene) : scene{ _scene } {}
 		Scene& scene;
 	};
 
@@ -82,20 +77,22 @@ namespace Copium
 	struct ComponentAddEvent : IEvent
 	{
 		static_assert(!std::is_same<T, Script>());
-		ComponentAddEvent(GameObject& _gameObject, T*& _componentContainer) :
-			gameObject{ _gameObject }, componentContainer{ _componentContainer }{}
+		ComponentAddEvent(GameObject& _gameObject, T*& _componentContainer, UUID _uuid = UUID()) :
+			gameObject{ _gameObject }, componentContainer{ _componentContainer }, uuid{_uuid} {}
 		GameObject& gameObject;
 		T*& componentContainer;
+		UUID uuid;
 	};
 
 	template <>
 	struct ComponentAddEvent<Script> : IEvent
 	{
-		ComponentAddEvent(GameObject& _gameObject, Script*& _componentContainer, const char* _scriptName) :
-			gameObject{ _gameObject }, componentContainer{ _componentContainer }, scriptName{ _scriptName }{}
+		ComponentAddEvent(GameObject& _gameObject, Script*& _componentContainer, const char* _scriptName, UUID _uuid = UUID()) :
+			gameObject{ _gameObject }, componentContainer{ _componentContainer }, scriptName{ _scriptName }, uuid{ _uuid }{}
 		GameObject& gameObject;
 		Script*& componentContainer;
 		const char* scriptName;
+		UUID uuid;
 	};
 
 	template <typename T>
@@ -207,6 +204,12 @@ namespace Copium
 	{
 		ScriptDestroyedEvent(Script& _script) :script{ _script } {}
 		Script& script;
+	};
+
+	struct ScriptGetNamesEvent : public IEvent
+	{
+		ScriptGetNamesEvent(std::vector<const char*>& _names) :names{ _names }{}
+		std::vector<const char*>& names;
 	};
 
 }

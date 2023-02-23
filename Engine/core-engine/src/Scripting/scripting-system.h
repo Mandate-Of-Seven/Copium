@@ -312,8 +312,6 @@ namespace Copium
 
 		CompilingState compilingState{ CompilingState::Wait };
 
-	private:
-
 		/**************************************************************************/
 		/*!
 			\brief
@@ -422,7 +420,7 @@ namespace Copium
 			void
 		*/
 		/*******************************************************************************/
-		void CallbackSceneOpened(SceneOpenedEvent* pEvent);
+		void CallbackSceneChanging(SceneChangingEvent* pEvent);
 		/*******************************************************************************
 		/*!
 		*
@@ -524,6 +522,20 @@ namespace Copium
 		*/
 		/*******************************************************************************/
 		void CallbackStartPreview(StartPreviewEvent* pEvent);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Callback function when preview is started
+
+		\param pEvent
+			pointer to the relevant event
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		void CallbackScriptGetNames(ScriptGetNamesEvent* pEvent);
 
 
 		template<typename T, typename... Ts>
@@ -603,5 +615,6 @@ namespace Copium
 		SetFieldReference<T>(mScript, mClassField, pEvent->script.fieldDataReferences[pEvent->fieldName], pEvent->reference);
 	}
 
+	
 }
 #endif // !SCRIPTING_SYSTEM_H

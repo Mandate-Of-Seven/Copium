@@ -75,8 +75,6 @@ namespace Copium
 	}
 
 	char Script::buffer[128];
-	std::pair<const std::string, Field>* Script::editedField;
-	bool Script::isAddingReference{ nullptr };
 
 	void Animator::Update(double _dt)
 	{
@@ -169,7 +167,6 @@ namespace Copium
 	
 	SortingGroup::SortingGroup(GameObject& _gameObj, UUID _uuid) :Component(_gameObj, _uuid)
 	{
-
 	}
 
 	Text::Text(GameObject& _gameObj, UUID _uuid) : IUIComponent(_gameObj, _uuid), fSize{ 1.f }, wrapper{ 0.f }, content{ "New Text" }, fontName{"corbel"}
