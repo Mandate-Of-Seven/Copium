@@ -24,6 +24,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <Events/events-system.h>
 #include <GameObject/components.h>
 #include <Utilities/easing.h>
+#include "Editor/editor-system.h"
 
 namespace Copium
 {
@@ -161,12 +162,53 @@ namespace Copium
 				//	return;
 		}
 
+		// Button behaviour for non layered game objects
+		for (int i{ MySceneManager.get_current_scene()->gameObjects.size() - 1}; i >= 0; --i)
+		{
+			GameObject& go = MySceneManager.get_current_scene()->gameObjects[i];
+			if (!go.IsActive() || go.HasComponent<SortingGroup>())
+				continue;
+			if (!go.HasComponent<Button>())
+				continue;
+
+			Button* button = go.GetComponent<Button>();
+			if (!button->enabled)
+				continue;
+
+			ButtonBehavior(*button);
+		}
+		// Update button behaviour for layered game objects
+		// Update from back to front within layer
+		for (int i{ 0 }; i < MyEditorSystem.getLayers()->SortLayers()->GetLayerCount(); ++i)
+		{
+
+			Layer& l = MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers()[i];
+			for (int j{ l.gameObjects.size() }; j >= 0; --j)
+			{
+				GameObject* go = l.gameObjects[j];
+				if (!go->IsActive() || !go->HasComponent<Button>())
+					continue;
+
+				Button* button = go->GetComponent<Button>();
+				if (!button->enabled)
+					continue;
+
+				ButtonBehavior(*button);
+			}
+
+		}
+
 		for (Button& button : pScene->componentArrays.GetArray<Button>())
 		{
 			if (!button.enabled)
 				continue;
 			if (!button.gameObj.IsActive())
 				continue;
+			if (button.gameObj.HasComponent<SortingGroup>())
+				continue;
+
+
+
 			ButtonBehavior(button);
 		}
 		if (pHoveredBtn && (!pHoveredBtn->gameObj.IsActive() || !pHoveredBtn->enabled))
