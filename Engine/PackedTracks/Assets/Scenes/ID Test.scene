@@ -63,13 +63,6 @@
                     "speed": 0.5,
                     "yes": "hello",
                     "yes2": "hello"
-                },
-                {
-                    "UID": 14245497924919296558,
-                    "Type": "Script",
-                    "TypeID": 23,
-                    "Name": "GameManager",
-                    "isPaused": false
                 }
             ]
         },
