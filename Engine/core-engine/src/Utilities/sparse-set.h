@@ -56,6 +56,16 @@ public:
 
     SparseSet();
 
+
+    ~SparseSet()
+    {
+        for (T& element: *this)
+        {
+            element.~T();
+        }
+        PRINT("SPARSE SET DECONSTRUCTOR ");
+    }
+
     template <typename... Args>
     T& emplace_back(Args&&... args)
     {
@@ -63,10 +73,6 @@ public:
         ++size_;
         return back;
     }
-
-    size_t AddFromDenseIndex(size_t);
-
-    void Delete(size_t indexToDelete);
 
     void erase(T& val)
     {
@@ -78,6 +84,8 @@ public:
             if (reinterpret_cast<T*>(data + indexes[i])  == &val)
             {
                 size_t index = indexes[i];
+
+                reinterpret_cast<T*>(data)[index].~T();
                 std::remove(indexes.begin(), indexes.begin()+size_, i);
                 indexes[size_ - 1] = index;
                 --size_;
@@ -91,6 +99,7 @@ public:
     {
         COPIUM_ASSERT(size_ == 0, "Can't erase from empty array");
         size_t index = indexes[iter.sparseIndex];
+        reinterpret_cast<T*>(data)[index].~T();
         std::remove(indexes.begin(), indexes.begin() + size_, iter.sparseIndex);
         indexes[size_-1] = index;
         --size_;
@@ -184,49 +193,7 @@ SparseSet<T, N>::SparseSet()
     {
         indexes[i] = i;
     }
-}
-
-template <typename T, size_t N>
-size_t SparseSet<T, N>::AddFromDenseIndex(size_t denseIndex)
-{
-    for (size_t i = 0; i < size_; ++i)
-    {
-        if (indexes[i] == denseIndex)
-            return i;
-    }
-    ++size_;
-    size_t* index{};
-    for (size_t& i : indexes)
-    {
-        if (i == denseIndex)
-        {
-            index = &i;
-            break;
-        }
-    }
-    size_t tmp = indexes[size_ - 1];
-    indexes[size_ - 1] = denseIndex;
-    *index = tmp;
-    data[indexes[size_ - 1]] = T();
-    //Return sparse index, aka position of pooled object
-    return size_ - 1;
-}
-
-template <typename T, size_t N>
-void SparseSet<T, N>::Delete(size_t indexToDelete)
-{
-    for (size_t i = 0; i < size_; ++i)
-    {
-        size_t index = indexes[i];
-        if (index == indexToDelete)
-        {
-            size_t tmp = index;
-            indexes[i] = indexes[size_ - 1];
-            indexes[size_ - 1] = tmp;
-            --size_;
-            return;
-        }
-    }
+    PRINT("SPARSE SET CONSTRUCTED");
 }
 
 template <typename T, size_t N>

@@ -182,7 +182,7 @@ void cleanup()
 /**************************************************************************/
 void quitEngine(GLFWwindow* window)
 {
-    change_enginestate(esQuit);
+    MyEventSystem->publish(new Copium::QuitEngineEvent());
 }
 
 /***************************************************************************/
