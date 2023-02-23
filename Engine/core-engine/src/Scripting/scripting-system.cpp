@@ -447,14 +447,21 @@ namespace Copium
 	{
 		if (mObj && mMethod && mAppDomain)
 		{
-			MonoObject* exception = NULL;
-			MonoObject* obj = mono_runtime_invoke(mMethod, mObj, params, &exception);
-			if (exception)
+			try
 			{
-				const char* message = mono_string_to_utf8(mono_object_to_string(exception, NULL));
-				MyEventSystem->publish(new EditorConsoleLogEvent(message));
+				MonoObject* exception = NULL;
+				MonoObject* obj = mono_runtime_invoke(mMethod, mObj, params, &exception);
+				if (exception)
+				{
+					const char* message = mono_string_to_utf8(mono_object_to_string(exception, NULL));
+					MyEventSystem->publish(new EditorConsoleLogEvent(message));
+				}
+				return obj;
 			}
-			return obj;
+			catch (...)
+			{
+
+			}
 		}
 		return nullptr;
 	}

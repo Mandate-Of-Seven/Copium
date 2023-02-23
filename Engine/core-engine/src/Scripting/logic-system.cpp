@@ -171,10 +171,10 @@ namespace Copium
 			//if (button.gameObj.HasComponent<SortingGroup>())
 			//	continue;
 			ButtonBehavior(button);
-			if (pHoveredBtn == &button)
-			{
-				return;
-			}
+			//if (pHoveredBtn == &button)
+			//{
+			//	return;
+			//}
 		}
 		if (pHoveredBtn && (!pHoveredBtn->gameObj.IsActive() || !pHoveredBtn->enabled))
 		{

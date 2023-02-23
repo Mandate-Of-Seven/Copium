@@ -213,7 +213,7 @@
                     "UID": 9574495531817611677,
                     "Type": "Button",
                     "TypeID": 18,
-                    "Graphic ID": 0,
+                    "Graphic ID": 2943484019154431606,
                     "BoundingBox": {
                         "Min": {
                             "X": 0.0,
@@ -283,7 +283,7 @@
                     "UID": 10374969775865868739,
                     "Type": "Button",
                     "TypeID": 18,
-                    "Graphic ID": 0,
+                    "Graphic ID": 2513997128856041643,
                     "BoundingBox": {
                         "Min": {
                             "X": 0.0,

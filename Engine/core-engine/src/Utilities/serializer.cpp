@@ -244,6 +244,7 @@ namespace Copium
 		_value.AddMember("BoundingBox", bb, _doc.GetAllocator());
 
 		Copium::SerializeBasic(_data.callbackName, _value, _doc, "Callback");
+		Copium::SerializeBasic(_data.fadeDuration, _value, _doc, "FadeDuration");
 
 		Copium::SerializeBasic(_data.clickedColor.r, _value, _doc, "clickedR");
 		Copium::SerializeBasic(_data.clickedColor.g, _value, _doc, "clickedG");
@@ -764,6 +765,7 @@ namespace Copium
 		Deserialize(_data.bounds, "BoundingBox", _value);
 
 		Copium::Deserialize(_data.callbackName, _value, "Callback");
+		Copium::Deserialize(_data.fadeDuration, _value, "FadeDuration");
 
 		Copium::Deserialize(_data.clickedColor.r, _value, "clickedR");
 		Copium::Deserialize(_data.clickedColor.g, _value, "clickedG");

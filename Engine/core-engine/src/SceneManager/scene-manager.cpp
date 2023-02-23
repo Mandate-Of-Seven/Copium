@@ -469,11 +469,6 @@ namespace Copium
 			CleanUpScene(*currentScene);
 		}
 		//if theres a scene to load
-		if (!sceneFile.empty())
-		{
-			//load_scene(sceneFile);
-			//sceneFile.clear();
-		}
 	}
 	void SceneManager::exit()
 	{
@@ -788,7 +783,7 @@ namespace Copium
 		currSceneState = Scene::SceneState::play;
 		currentScene->set_state(Scene::SceneState::play);
 
-		//SoundSystem::Instance()->StopAll();
+		SoundSystem::Instance()->StopAll();
 
 		return true;
 	}
@@ -837,7 +832,7 @@ namespace Copium
 
 		currentScene->set_state(Scene::SceneState::edit);
 
-		//SoundSystem::Instance()->StopAll();
+		SoundSystem::Instance()->StopAll();
 
 		return true;
 	}

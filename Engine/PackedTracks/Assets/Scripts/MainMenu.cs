@@ -16,7 +16,7 @@ public class MainMenu: CopiumScript
     {
         if(StartGameButton.state == ButtonState.OnClick)
         {
-            
+            SceneManager.LoadScene("Demo");
         }
 
         if (QuitGameButton.state == ButtonState.OnClick)

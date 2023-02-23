@@ -119,6 +119,7 @@ namespace Copium
 		EditorLayers* getLayers() { return &layers; }
 
 		GameObject* pSelectedGameObject{};
+		std::string sceneChangeName{};
 	private:
 		
 

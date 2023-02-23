@@ -25,6 +25,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <Animation/animation-system.h>
 #include <GameObject/components.h>
 #include <GameObject/game-object-factory.h>
+#include <Editor/editor-system.h>
 
 #include "mono/metadata/object.h"
 #include "mono/metadata/reflection.h"
@@ -577,8 +578,8 @@ namespace Copium
 				continue;
 			if (pathRef.filename().string() == name)
 			{
-				//PRINT("LOADING " << name);
-				MySceneManager.sceneFile = pathRef.filename().string();
+				PRINT("LOADING " << pathRef.string());
+				MyEditorSystem.sceneChangeName = pathRef.string();
 				return;
 			}
 		}

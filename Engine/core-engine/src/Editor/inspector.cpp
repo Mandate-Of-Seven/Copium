@@ -950,7 +950,8 @@ namespace Copium
             Display("Bounds", btn.bounds);
             DisplayColor("Normal Color", btn.normalColor);
             DisplayColor("Hover Color", btn.hoverColor);
-            DisplayColor("Clicked Color", btn.clickedColor); 
+            DisplayColor("Clicked Color", btn.clickedColor);
+            Display("Bounds", btn.fadeDuration);
         }
 
         template <>

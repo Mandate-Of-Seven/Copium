@@ -380,7 +380,11 @@ namespace Copium
 				}
 			}
 
-
+			if (!sceneChangeName.empty())
+			{
+				MySceneManager.load_scene(sceneChangeName);
+				sceneChangeName.clear();
+			}
 
             //Call all the editor layers updates here
 			
