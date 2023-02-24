@@ -617,7 +617,7 @@ namespace Copium
 							case ComponentType::Text:
 							{
 								Text* tmp = nullptr;
-								MyEventSystem->publish(new ComponentAddEvent(_data, tmp, uuid));
+								MyEventSystem->publish(new ComponentAddEvent<Text>(_data, tmp, false, uuid));
 								Deserialize(*tmp, "", component);
 								break;
 							}

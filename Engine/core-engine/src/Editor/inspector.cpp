@@ -706,7 +706,7 @@ namespace Copium
                     if (filter.PassFilter(name) && ImGui::Button(name, buttonSize))
                     {
                         T* component;
-                        MyEventSystem->publish(new ComponentAddEvent{ gameObj,component,true });
+                        MyEventSystem->publish(new ComponentAddEvent<Text>{ gameObj,component,true });
                         return true;
                     }
                 }

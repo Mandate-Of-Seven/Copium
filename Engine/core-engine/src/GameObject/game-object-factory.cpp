@@ -82,10 +82,25 @@ namespace Copium
 		{
 			T& component = scene.componentArrays.GetArray<T>().emplace_back(gameObj, *pCopy , uuid);
 			gameObj.AddComponent(&component);
-			//MyEventSystem->publish(new ReflectComponentEvent(component));
+			MyEventSystem->publish(new ReflectComponentEvent(component));
 			return component;
 		}
 		T& component = scene.componentArrays.GetArray<T>().emplace_back(gameObj, uuid);
+		gameObj.AddComponent(&component);
+		MyEventSystem->publish(new ReflectComponentEvent(component));
+		return component;
+	}
+
+	Text& GameObjectFactory::AddComponent(GameObject& gameObj, Scene& scene, bool inspector, UUID uuid, Text* pCopy)
+	{
+		if (pCopy)
+		{
+			Text& component = scene.componentArrays.GetArray<Text>().emplace_back(gameObj, *pCopy, uuid);
+			gameObj.AddComponent(&component);
+			MyEventSystem->publish(new ReflectComponentEvent(component));
+			return component;
+		}
+		Text& component = scene.componentArrays.GetArray<Text>().emplace_back(gameObj, uuid, inspector);
 		gameObj.AddComponent(&component);
 		MyEventSystem->publish(new ReflectComponentEvent(component));
 		return component;

@@ -85,6 +85,19 @@ namespace Copium
 	};
 
 	template <>
+	struct ComponentAddEvent<Text> : IEvent
+	{
+		ComponentAddEvent(GameObject& _gameObject, Text*& _componentContainer, bool _inspector, UUID _uuid = UUID()) :
+			gameObject{ _gameObject }, componentContainer{ _componentContainer }, inspector{ _inspector }, uuid{ _uuid }
+		{
+		}
+		GameObject& gameObject;
+		Text*& componentContainer;
+		bool inspector;
+		UUID uuid;
+	};
+
+	template <>
 	struct ComponentAddEvent<Script> : IEvent
 	{
 		ComponentAddEvent(GameObject& _gameObject, Script*& _componentContainer, const char* _scriptName, UUID _uuid = UUID()) :
