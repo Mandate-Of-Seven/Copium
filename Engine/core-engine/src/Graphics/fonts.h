@@ -46,32 +46,6 @@ namespace Copium
 		/***************************************************************************/
 		/*!
 		\brief
-			Setup the vertex array object of the fonts
-		*/
-		/***************************************************************************/
-		void setup_font_vao();
-
-		/***************************************************************************/
-		/*!
-		\brief
-			Draws text onto the screen
-		\param _text
-			The text to load onto the screen
-		\param _position
-			The position of the text
-		\param _color
-			The color of the text
-		\param _scale
-			The size of the text
-		\param _fontID
-			The font to use
-		*/
-		/***************************************************************************/
-		void draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, GLfloat _scale, const float& _wrapper, BaseCamera* _camera);
-
-		/***************************************************************************/
-		/*!
-		\brief
 			Exits the font system
 		\param _text
 			The content to draw
@@ -111,9 +85,6 @@ namespace Copium
 		void SetName(const std::string& _name) { name = _name; }
 		const std::string& GetName() { return name; }
 
-		const GLuint& get_VAO() { return fontVertexArrayID; }
-		const GLuint& get_VBO() { return fontVertexBufferID; }
-
 		/***************************************************************************/
 		/*!
 		\brief
@@ -126,8 +97,6 @@ namespace Copium
 		std::string name;
 		static std::unordered_map<std::string, Font*> mapNameFonts;
 		std::map<char, Character> characters;
-		GLuint fontVertexArrayID = 0; // Handle to Font Vertex Array Object
-		GLuint fontVertexBufferID = 0; // Handle to Font Vertex Buffer Object
 	};
 }
 #endif // !FONTS_H
