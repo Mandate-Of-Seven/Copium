@@ -1,5 +1,5 @@
-[2023-02-24 07:37:39.602] [Error] [critical] 
+[2023-02-24 08:06:02.261] [Error] [critical] 
 Caused By:	!mClassField
-Info:		FIELD prepareCanvasCOULD NOT BE FOUND IN SCRIPT CrewMenu
-Source:		C:\Users\FLESH\ECS\Copium\Engine\core-engine\src\Scripting\scripting-system.h (Line: 614)
+Info:		FIELD eventManagerCOULD NOT BE FOUND IN SCRIPT Event_02
+Source:		C:\Users\prawn\Documents\GitHub\GAM-200\Engine\core-engine\src\Scripting\scripting-system.h (Line: 614)
 

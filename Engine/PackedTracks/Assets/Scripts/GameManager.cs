@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class GameManager: CopiumScript
 {
+    public EventManager EventManager;
+
 	public GameObject TrainCanvas;
     public GameObject PauseCanvas;
 
@@ -34,6 +36,8 @@ public class GameManager: CopiumScript
     public int distanceLeft = 200;
 
     public float distanceInterval = 1.0f;
+    float foodTimer = 0.0f;
+    float hungerTimer = 0.0f;
     float timer = 0.0f;
 
     int state = 0;
@@ -65,33 +69,57 @@ public class GameManager: CopiumScript
         {
             ManualPopUpBtn.gameObject.SetActive(false);
         }
+
         if(LeverNear.state == ButtonState.OnClick)
         {
             LeverFar.gameObject.SetActive(true);
             LeverNear.gameObject.SetActive(false);
         }
         //Stop travlling
-        if(LeverFar.state == ButtonState.OnClick)
+        else if(LeverFar.state == ButtonState.OnClick || distanceLeft == 0)
         {
             timer = 0.0f;
             LeverFar.gameObject.SetActive(false);
             LeverNear.gameObject.SetActive(true);
         }
 
-        if (LeverFar.gameObject.activeSelf)
+        if (LeverFar.gameObject.activeSelf && distanceLeft > 0)
         {
-            if (timer >= 1.0f)
+            if (timer >= 0.2f)
             {
                 distanceLeft -= 1;
                 if (distanceLeft%50 == 0)
                 {
-                    Console.WriteLine("Trigger Event");
+                    EventManager.UpdateEventSequence();
                 }
                 timer = 0.0f;
             }
+
+            if(foodTimer >= 4.0f && crewMenuScript.food != 0)
+            {
+                crewMenuScript.food -= 1;
+                foodTimer = 0.0f;
+            }
+
+            foodTimer += Time.deltaTime;
             timer += Time.deltaTime;
         }
         tracker.text =  distanceLeft.ToString() + "KM";
+
+        if (crewMenuScript.food == 0)
+        {
+            if(hungerTimer >= 1.0f)
+            {
+                crewMenuScript.hunger1 -= 1;
+                crewMenuScript.hunger2 -= 1;
+                crewMenuScript.hunger3 -= 1;
+                crewMenuScript.hunger4 -= 1;
+                hungerTimer = 0.0f;
+            }
+
+            hungerTimer += Time.deltaTime;
+        }
+
 
         if (Input.GetKeyDown(KeyCode.P))
         {

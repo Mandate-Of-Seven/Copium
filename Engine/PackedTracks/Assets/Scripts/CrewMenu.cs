@@ -25,6 +25,8 @@ public class CrewMenu: CopiumScript
     public int mental1,mental2,mental3,mental4 = 5;
     public int hunger1,hunger2,hunger3,hunger4 = 5;
 
+    float health1T,health2T,health3T,health4T = 0.0f;
+
     void Start()
 	{
         updateTexts();
@@ -86,11 +88,11 @@ public class CrewMenu: CopiumScript
         {
             string statusText = "Preparing: ";
             if (select1)
-                statusText += "Bronson ";
-            if (select2)
-                statusText += "Chuck ";
-            if (select3)
                 statusText += "Harris ";
+            if (select2)
+                statusText += "Bronson ";
+            if (select3)
+                statusText += "Chuck ";
             if (select4)
                 statusText += "Danton ";
             if (status == null)
@@ -104,9 +106,12 @@ public class CrewMenu: CopiumScript
         }
         else if (deployed)
         {
+            generateEvents();
             deployed = false;
         }
-        //updateTexts();
+
+        UpdateHealth();
+        updateTexts();
     }
 
     void updateTexts()
@@ -116,65 +121,107 @@ public class CrewMenu: CopiumScript
         foodText.text = "Food: " +food;
     }
 
+    void UpdateHealth()
+    {
+        if (hunger1 <= 0 && health1 != 0 )
+        {
+            if(health1T >= 1.0f)
+            {
+                health1 -= 1;
+                health1T = 0.0f;
+            }
+            health1T += Time.deltaTime;
+        }
+
+        if (hunger2 <= 0 && health2 != 0 )
+        {
+            if (health2T >= 1.0f)
+            {
+                health2 -= 1;
+                health2T = 0.0f;
+            }
+            health2T += Time.deltaTime;
+        }
+
+        if (hunger3 <= 0 && health3 != 0)
+        {
+            if (health3T >= 1.0f)
+            {
+                health3 -= 1;
+                health3T = 0.0f;
+            }
+            health3T += Time.deltaTime;
+        }
+
+        if (hunger4 <= 0 && health4 != 0)
+        {
+            if (health4T >= 1.0f)
+            {
+                health4 -= 1;
+                health4T = 0.0f;
+            }
+            health4T += Time.deltaTime;
+        }
+    }
+
     void generateEvents()
     {
         float chance = RNG.Range(0,1);
         
         //prepareCanvas.SetActive(true);      
-        //updateValues(chance);
+        updateValues(chance);
     }
 
 
+    void updateValues(float chance)
+    {
+        //show event screen
+        //depending on chance, change text that appears
+        if (chance >= 0 && chance < 0.25)
+        {
+            status.text = "Horrible event, lose 1 of every resource";
+            fuel -= 1;
+            food -= 1;
+            heat -= 1;
+        }
+        else if (chance >= 0.25 && chance < 0.50)
+        {
+            status.text = "Found more fuel, but required to use more food \nto return.\n\nGain 1 fuel, lose 1 food";
+            fuel += 1;
+            food -= 1;
+        }
+        else if (chance >= 0.50 && chance < 0.75)
+        {
+            status.text = "Found more food, but the bad weather requires \nmore heat to be consumed.\n\n Gain 1 food, lose 1 heat";
+            food += 1;
+            heat -= 1;
+        }
+        else if (chance >= 0.75 && chance < 0.95)
+        {
+            status.text = "Gained more resources for heat, but something about \nlosing fuel.\n\n Gain 1 heat, lose 1 fuel";
+            fuel -= 1;
+            heat += 1;
+        }
+        else if (chance >= 0.95)
+        {
+            status.text = "Good event, gain 2 of every resource.";
+            fuel += 2;
+            food += 2;
+            heat += 2;
+        }
 
-    // void updateValues(float chance)
-    // {
-    //     //show event screen
-    //     //depending on chance, change text that appears
-    //     if (chance >=0 && chance <0.25)
-    //     {
-    //         prepareText.text = "Horrible event, lose 1 of every resource";
-    //         fuel -= 1;
-    //         food -= 1;
-    //         heat -=1;
-    //     }
-    //     else if (chance >= 0.25 && chance <0.50)
-    //     {
-    //         prepareText.text = "Found more fuel, but required to use more food \nto return.\n\nGain 1 fuel, lose 1 food";
-    //         fuel +=1;
-    //         food -=1;
-    //     }
-    //     else if (chance >= 0.50 && chance < 0.75)
-    //     {
-    //         prepareText.text = "Found more food, but the bad weather requires \nmore heat to be consumed.\n\n Gain 1 food, lose 1 heat";
-    //         food +=1;
-    //         heat -=1;
-    //     }
-    //     else if(chance >= 0.75 && chance <0.95)
-    //     {
-    //         prepareText.text = "Gained more resources for heat, but something about \nlosing fuel.\n\n Gain 1 heat, lose 1 fuel";
-    //         fuel -=1;
-    //         heat +=1;
-    //     }
-    //     else if (chance >=0.95)
-    //     {
-    //         prepareText.text = "Good event, gain 2 of every resource.";
-    //         fuel +=2;
-    //         food +=2;
-    //         heat +=2;
-    //     }
+        if (fuel < 0)
+            fuel = 0;
 
-    //     if (fuel < 0)
-    //     fuel = 0;
+        if (food < 0)
+            food = 0;
 
-    //     if (food < 0)
-    //     food = 0;
+        if (heat < 0)
+            heat = 0;
 
-    //     if (heat < 0)
-    //     heat = 0;
+        //hide crewscreen
+        //gameObject.SetActive(false);
+    }
 
-    //     //hide crewscreen
-    //     gameObject.SetActive(false);
-    // }
 
-   
 }
