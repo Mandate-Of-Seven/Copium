@@ -47,6 +47,10 @@ namespace Copium
 			{
 				if (MyInputSystem.is_mousebutton_pressed(0))
 				{
+					if (pHoveredBtn)
+					{
+						pHoveredBtn = nullptr;
+					}
 					pHoveredBtn = &btn;
 					if (btn.state == ButtonState::OnClick || btn.state == ButtonState::OnHeld)
 						return ButtonState::OnHeld;
@@ -59,6 +63,7 @@ namespace Copium
 		{
 			if (!MyInputSystem.is_mousebutton_pressed(0))
 			{
+				pHoveredBtn->state = ButtonState::None;
 				pHoveredBtn = nullptr;
 				return ButtonState::OnRelease;
 			}

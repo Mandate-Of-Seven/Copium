@@ -24,6 +24,8 @@ public class GameManager: CopiumScript
     public Button CrewTabBtn;
 
     public CrewMenu crewMenuScript;
+    
+    public Button CloseReportBtn;
 
     public Text tracker;
 
@@ -46,6 +48,10 @@ public class GameManager: CopiumScript
         if(ReportScreenBtn.state == ButtonState.OnClick)
         {
             ReportTab.SetActive(true);
+        }
+        if(CloseReportBtn.state == ButtonState.OnClick)
+        {
+            ReportTab.SetActive(false);
         }
         if(CrewTabBtn.state == ButtonState.OnClick)
         {
