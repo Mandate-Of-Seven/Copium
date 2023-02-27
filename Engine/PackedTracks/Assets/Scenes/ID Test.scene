@@ -351,6 +351,50 @@
                     "a": 1.0
                 }
             ]
+        },
+        {
+            "UID": 2999050531150213895,
+            "Name": "New GameObject",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 0,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 5.7858476638793945,
+                        "Y": 0.20047986507415771,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "UID": 6149164819650262934,
+                    "Type": "Animator",
+                    "TypeID": 15,
+                    "Loop": true,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "BreathCold_112_8_14.png",
+                            "Sprite ID": 6682737124262333403,
+                            "Time Delay": 0.10000000149011612,
+                            "FrameCount": 112,
+                            "Rows": 14,
+                            "Columns": 8
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }
