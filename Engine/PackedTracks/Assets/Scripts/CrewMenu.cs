@@ -21,11 +21,30 @@ public class CrewMenu: CopiumScript
     bool preparing = false;
     bool deployed = false;
 
-    public int health1,health2,health3,health4 = 10;
-    public int mental1,mental2,mental3,mental4 = 5;
-    public int hunger1,hunger2,hunger3,hunger4 = 5;
+    public struct Person
+    {
+        public Person(string _name)
+        {
+            name = _name;
+            health = 10;
+            mental = 5;
+            hunger = 5;
+            timer = 0.0f;
+        }
+        public string name;
+        public int health;
+        public int mental;
+        public int hunger;
+        public float timer;
+    }
 
-    float health1T,health2T,health3T,health4T = 0.0f;
+    public Person[] crew = new Person[4] 
+    {
+        new Person("Bronson"),
+        new Person("Chuck"),
+        new Person("Danton"),
+        new Person("Harris")
+    };
 
     void Start()
 	{
@@ -44,7 +63,7 @@ public class CrewMenu: CopiumScript
             return;
        }
        
-       if (prepareButton.state == ButtonState.OnClick)
+/*       if (prepareButton.state == ButtonState.OnClick)
        {
             select1 = select2 = select3 = select4 = false;
             preparing = !preparing;
@@ -109,7 +128,7 @@ public class CrewMenu: CopiumScript
             generateEvents();
             deployed = false;
         }
-
+*/
         UpdateHealth();
         updateTexts();
     }
@@ -123,7 +142,19 @@ public class CrewMenu: CopiumScript
 
     void UpdateHealth()
     {
-        if (hunger1 <= 0 && health1 != 0 )
+        for (int i = 0; i < crew.Length; ++i)
+        {
+            if (crew[i].hunger <= 0 && crew[i].health != 0)
+            {
+                if (crew[i].timer >= 1.0f)
+                {
+                    crew[i].health -= 1;
+                    //crew[i].mental = 
+                }
+            }
+        }
+        //Reimplementing into structs
+/*        if (hunger1 <= 0 && health1 != 0 )
         {
             if(health1T >= 1.0f)
             {
@@ -161,7 +192,7 @@ public class CrewMenu: CopiumScript
                 health4T = 0.0f;
             }
             health4T += Time.deltaTime;
-        }
+        }*/
     }
 
     void generateEvents()

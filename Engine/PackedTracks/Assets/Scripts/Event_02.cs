@@ -83,7 +83,7 @@ public class Event_02: CopiumScript
                     "get off the train and ride off. ";
 
                 EventManager.crewMenu.fuel = EventManager.crewMenu.food = 0;
-                EventManager.crewMenu.mental1 = EventManager.crewMenu.mental2 = EventManager.crewMenu.mental3 = EventManager.crewMenu.mental4 = 5;
+                //EventManager.crewMenu.mental1 = EventManager.crewMenu.mental2 = EventManager.crewMenu.mental3 = EventManager.crewMenu.mental4 = 5;
 
             }
         }
@@ -95,7 +95,7 @@ public class Event_02: CopiumScript
                     "to successfully fend them off, but without any consequence, Bronson while protecting Chuck " +
                     "took a bullet to the stomach, rendering him critically injured";
 
-                EventManager.crewMenu.health2 = EventManager.crewMenu.health3 = 1;
+                //EventManager.crewMenu.health2 = EventManager.crewMenu.health3 = 1;
             }
             else if (choice == 2)
             {
@@ -104,7 +104,7 @@ public class Event_02: CopiumScript
                     " right into Chuck's skull, after it was all over, the crew can only see a wrecked cabin " +
                     "with Chuck and the raiders bodies lying there lifelessly.";
 
-                EventManager.crewMenu.health3 = 0;
+                //EventManager.crewMenu.health3 = 0;
             }
             else if (choice == 3)
             {
@@ -114,7 +114,7 @@ public class Event_02: CopiumScript
 
                 EventManager.crewMenu.fuel -= 10;
                 EventManager.crewMenu.food -= 10;
-                EventManager.crewMenu.mental1 = EventManager.crewMenu.mental2 = EventManager.crewMenu.mental3 = EventManager.crewMenu.mental4 = 5;
+                //EventManager.crewMenu.mental1 = EventManager.crewMenu.mental2 = EventManager.crewMenu.mental3 = EventManager.crewMenu.mental4 = 5;
 
             }
         }

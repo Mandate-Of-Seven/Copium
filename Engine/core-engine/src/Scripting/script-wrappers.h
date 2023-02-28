@@ -478,7 +478,6 @@ namespace Copium
 		if (component == nullptr)
 			return;
 		char* monoStr = mono_string_to_utf8(str);
-		PRINT("COMPONENT FOUND! : " << monoStr);
 		strcpy(reinterpret_cast<Text*>(component)->content, monoStr);
 		mono_free(monoStr);
 	}
@@ -500,7 +499,11 @@ namespace Copium
 	{
 		GameObject* gameObj = sceneManager.FindGameObjectByID(gameObjID);
 		if (gameObj == nullptr)
+		{
 			return 0;
+		}
+		if (gameObj->GetComponent<Button>()->state == ButtonState::OnClick)
+			PRINT(gameObj->name << " " << (int)gameObj->GetComponent<Button>()->state);
 		return (char)gameObj->GetComponent<Button>()->state;
 	}
 
