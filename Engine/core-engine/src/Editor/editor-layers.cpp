@@ -56,7 +56,6 @@ namespace Copium
 
             for (int i = 0; i < sortingLayers.GetSortingLayers().size(); i++)
             {
-
                 ImGuiSelectableFlags flags = ImGuiSelectableFlags_AllowItemOverlap;
                 char* name = sortingLayers.GetSortingLayers()[i].name.data();
                 int id = sortingLayers.GetSortingLayers()[i].layerID + 1;
@@ -84,6 +83,7 @@ namespace Copium
                 label = "##" + std::to_string(id * 100);
                 ImGui::PushItemWidth(-FLT_MIN);
                 ImGui::InputText(label.c_str(), name, (size_t) sortingLayers.GetCharLength(), textFlags);
+                sortingLayers.GetSortingLayers()[i].name = name;
             }
 
             ImGui::Unindent();

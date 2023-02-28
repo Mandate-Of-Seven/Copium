@@ -144,42 +144,66 @@ namespace Copium
 		{
 			// Colliders
 			Scene* pScene{ MySceneManager.get_current_scene() };
-			if (pScene)
+			if (pScene && MyEditorSystem.pSelectedGameObject)
 			{
+				
 				glm::vec4 color = { 1.f, 1.f, 1.f, 0.4f };
 				color = { 0.3f, 1.f, 0.3f, 1.f };
-				for (BoxCollider2D& collider : pScene->componentArrays.GetArray<BoxCollider2D>())
-				{
-					if (!collider.enabled || !collider.gameObj.IsActive())
-						continue;
-					Transform& transform = collider.gameObj.transform;
-					AABB bounds = collider.bounds.GetRelativeBounds(transform.GetWorldPosition(), transform.GetWorldScale());
-					glm::vec3 pos0_1 = { bounds.min.to_glm(), 0.f };
-					glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y, 0.f };
-					glm::vec3 pos2_1 = { bounds.max.to_glm(), 0.f };
-					glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y, 0.f };
 
-					renderer.draw_line(pos0_1, pos1_1, color);
-					renderer.draw_line(pos1_1, pos2_1, color);
-					renderer.draw_line(pos2_1, pos3_1, color);
-					renderer.draw_line(pos3_1, pos0_1, color);
+				if (MyEditorSystem.pSelectedGameObject->HasComponent<BoxCollider2D>())
+				{
+					BoxCollider2D& collider = *MyEditorSystem.pSelectedGameObject->GetComponent<BoxCollider2D>();
+
+					if (collider.enabled && collider.gameObj.IsActive())
+					{
+						Transform& t = collider.gameObj.transform;
+
+						glm::vec3 updatedPos = t.position.glmVec3;
+						glm::vec3 updatedScale = t.scale.glmVec3;
+						float updatedRot = t.rotation.z;
+
+						if (t.HasParent())
+							UpdateTransform(t, updatedPos, updatedRot, updatedScale);
+
+						AABB bounds = collider.bounds.GetRelativeBounds(updatedPos, updatedScale);
+						glm::vec3 pos0_1 = { bounds.min.to_glm(), 0.f };
+						glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y, 0.f };
+						glm::vec3 pos2_1 = { bounds.max.to_glm(), 0.f };
+						glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y, 0.f };
+
+						renderer.draw_line(pos0_1, pos1_1, color);
+						renderer.draw_line(pos1_1, pos2_1, color);
+						renderer.draw_line(pos2_1, pos3_1, color);
+						renderer.draw_line(pos3_1, pos0_1, color);
+					}
 				}
 
-				for (Button& button : pScene->componentArrays.GetArray<Button>())
+				if (MyEditorSystem.pSelectedGameObject->HasComponent<Button>())
 				{
-					if (!button.enabled || !button.gameObj.IsActive())
-						continue;
-					Transform& transform = button.gameObj.transform;
-					AABB bounds = button.bounds.GetRelativeBounds(transform.GetWorldPosition(), transform.GetWorldScale());
-					glm::vec3 pos0_1 = { bounds.min.to_glm(),0.f };
-					glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y,0.f };
-					glm::vec3 pos2_1 = { bounds.max.to_glm(),0.f };
-					glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y,0.f };
+					Button& button = *MyEditorSystem.pSelectedGameObject->GetComponent<Button>();
 
-					renderer.draw_line(pos0_1, pos1_1, color);
-					renderer.draw_line(pos1_1, pos2_1, color);
-					renderer.draw_line(pos2_1, pos3_1, color);
-					renderer.draw_line(pos3_1, pos0_1, color);
+					if (button.enabled && button.gameObj.IsActive())
+					{
+						Transform& t = button.gameObj.transform;
+						
+						glm::vec3 updatedPos = t.position.glmVec3;
+						glm::vec3 updatedScale = t.scale.glmVec3;
+						float updatedRot = t.rotation.z;
+
+						if (t.HasParent())
+							UpdateTransform(t, updatedPos, updatedRot, updatedScale);
+
+						AABB bounds = button.bounds.GetRelativeBounds(updatedPos, updatedScale);
+						glm::vec3 pos0_1 = { bounds.min.to_glm(),0.f };
+						glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y,0.f };
+						glm::vec3 pos2_1 = { bounds.max.to_glm(),0.f };
+						glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y,0.f };
+
+						renderer.draw_line(pos0_1, pos1_1, color);
+						renderer.draw_line(pos1_1, pos2_1, color);
+						renderer.draw_line(pos2_1, pos3_1, color);
+						renderer.draw_line(pos3_1, pos0_1, color);
+					}
 				}
 			}
 		}
@@ -684,7 +708,6 @@ namespace Copium
 		Scene* pScene{ MySceneManager.get_current_scene() };
 		if (pScene)
 		{
-
 			for (BoxCollider2D& boxCol: pScene->componentArrays.GetArray<BoxCollider2D>())
 			{
 				GameObject& gameObject{ boxCol.gameObj};
@@ -693,7 +716,15 @@ namespace Copium
 					// If the object isnt within the frustum
 					!camera->withinFrustum(transform.GetWorldPosition(), transform.GetWorldScale()))
 					continue;
-				AABB bounds = boxCol.bounds.GetRelativeBounds(transform.GetWorldPosition(),transform.GetWorldScale());
+
+				glm::vec3 updatedPos = transform.position.glmVec3;
+				glm::vec3 updatedScale = transform.scale.glmVec3;
+				float updatedRot = transform.rotation.z;
+
+				if (transform.HasParent())
+					UpdateTransform(transform, updatedPos, updatedRot, updatedScale);
+
+				AABB bounds = boxCol.bounds.GetRelativeBounds(updatedPos, updatedScale);
 				glm::vec3 pos0_1 = { bounds.min.to_glm(), 0.f };
 				glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y, 0.f };
 				glm::vec3 pos2_1 = { bounds.max.to_glm() , 0.f };
@@ -712,44 +743,22 @@ namespace Copium
 					// If the object isnt within the frustum
 					!camera->withinFrustum(t.GetWorldPosition(), t.GetWorldScale()))
 					continue;
-				glm::vec3 position = t.position;
-				glm::vec2 size(t.scale.x, t.scale.y);
-				float rotation = t.rotation.z;
-
-				glm::mat4 translate = {
-					glm::vec4(1.f, 0.f, 0.f, 0.f),
-					glm::vec4(0.f, 1.f, 0.f, 0.f),
-					glm::vec4(position.x, position.y, 1.f, 0.f),
-					glm::vec4(0.f, 0.f, 0.f, 1.f)
-				};
-
-				float rad = glm::radians(rotation);
-
-				glm::mat4 rotate = {
-					glm::vec4(cos(rad), sin(rad), 0.f, 0.f),
-					glm::vec4(-sin(rad), cos(rad), 0.f, 0.f),
-					glm::vec4(0.f, 0.f, 1.f, 0.f),
-					glm::vec4(0.f, 0.f, 0.f, 1.f)
-				};
-
-				glm::mat4 transform = translate * rotate;
 
 				color = { 0.3f, 1.f, 0.3f, 1.f };
 
-				glm::vec4 pos0 = transform * glm::vec4(-size.x / 2, -size.y / 2, 1.f, 1.f);
-				glm::vec4 pos1 = transform * glm::vec4(size.x / 2, -size.y / 2, 1.f, 1.f);
-				glm::vec4 pos2 = transform * glm::vec4(size.x / 2, size.y / 2, 1.f, 1.f);
-				glm::vec4 pos3 = transform * glm::vec4(-size.x / 2, size.y / 2, 1.f, 1.f);
+				glm::vec3 updatedPos = t.position.glmVec3;
+				glm::vec3 updatedScale = t.scale.glmVec3;
+				float updatedRot = t.rotation.z;
 
-				float minX = fminf(pos0.x, fminf(pos1.x, fminf(pos2.x, pos3.x)));
-				float minY = fminf(pos0.y, fminf(pos1.y, fminf(pos2.y, pos3.y)));
-				float maxX = fmaxf(pos0.x, fmaxf(pos1.x, fmaxf(pos2.x, pos3.x)));
-				float maxY = fmaxf(pos0.y, fmaxf(pos1.y, fmaxf(pos2.y, pos3.y)));
+				if (t.HasParent())
+					UpdateTransform(t, updatedPos, updatedRot, updatedScale);
 
-				glm::vec3 pos0_1 = { minX, minY, 0.f };
-				glm::vec3 pos1_1 = { maxX, minY, 0.f };
-				glm::vec3 pos2_1 = { maxX, maxY, 0.f };
-				glm::vec3 pos3_1 = { minX, maxY, 0.f };
+				AABB bounds = button.bounds.GetRelativeBounds(updatedPos, updatedScale);
+				glm::vec3 pos0_1 = { bounds.min.to_glm(), 0.f };
+				glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y, 0.f };
+				glm::vec3 pos2_1 = { bounds.max.to_glm() , 0.f };
+				glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y, 0.f };
+
 				renderer.draw_line(pos0_1, pos1_1, color);
 				renderer.draw_line(pos1_1, pos2_1, color);
 				renderer.draw_line(pos2_1, pos3_1, color);
