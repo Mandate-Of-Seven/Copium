@@ -148,66 +148,61 @@ namespace Copium
 		GameObjectsPtrArray pGameObjs; // Possible selectable gameobjects
 		Camera& gameCamera{pScene->componentArrays.GetArray<Camera>()[0]};
 		glm::vec2 mousePosition = glm::vec3(gameCamera.get_game_ndc(), 0.f);
-		//for (GameObject& gameObject : pScene->gameObjects)
-		//{
-		//	if (!gameObject.IsActive())
-		//		continue;
-		//	Transform& t = gameObject.transform;
-		//	Math::Vec3 worldPos{ t.GetWorldPosition() };
-		//	Math::Vec3 worldScale{ t.GetWorldScale() };
+		for (GameObject& gameObject : pScene->gameObjects)
+		{
+			if (!gameObject.IsActive())
+				continue;
+			Transform& t = gameObject.transform;
+			Math::Vec3 worldPos{ t.GetWorldPosition() };
+			Math::Vec3 worldScale{ t.GetWorldScale() };
 
-		//	glm::vec2 objPosition = { worldPos.x, worldPos.y };
+			glm::vec2 objPosition = { worldPos.x, worldPos.y };
 
-		//	// Not Within bounds
-		//	if (glm::distance(objPosition, mousePosition)
-		//		> glm::length(gameCamera.get_dimension()))
-		//		continue;
+			// Not Within bounds // NEED A BETTER CHECK THAT INCLUDES THE BOUNDS
+			//if (glm::distance(objPosition, mousePosition)
+			//	> glm::length(gameCamera.get_dimension()))
+			//	continue;
+			AABB bounds{};
+			Button* button = gameObject.GetComponent<Button>();
+			Image* image = gameObject.GetComponent<Image>();
 
-		//	glm::vec2 min, max;
-		//	float tempX = 0.f, tempY = 0.f;
+			if (!button && !image)
+				continue;
 
-		//	if (gameObject.HasComponent<Button>())
-		//	{
-		//		Button* button = gameObject.GetComponent<Button>();
+			if (button)
+			{
 
-		//		if (!button->enabled)
-		//			continue;
-		//		//button->bounds.GetRelativeBounds(gameObject.transform.GetWorldPosition(), gameObject.transform.GetWorldScale());
-		//		//min = bound.min;
-		//		//max = bound.max;
-		//	}
+				if (!button->enabled)
+					continue;
+				bounds = button->bounds;
+			}
 
-		//	if (gameObject.HasComponent<Image>())
-		//	{
-		//		Image* image = gameObject.GetComponent<Image>();
+			if (image)
+			{
 
-		//		if (!image->enabled)
-		//			continue;
-		//		Texture* texture = image->sprite.refTexture;
+				if (!image->enabled)
+					continue;
+				Texture* texture = image->sprite.refTexture;
 
-		//		if (texture != nullptr)
-		//		{
-		//			//tempX = tempScale.x * texture->get_pixel_width();
-		//			//tempY = tempScale.y * texture->get_pixel_height();
-
-		//			min = glm::vec2(objPosition.x - tempX * 0.5f, objPosition.y - tempY * 0.5f);
-		//			max = glm::vec2(objPosition.x + tempX * 0.5f, objPosition.y + tempY * 0.5f);
-		//		}
-
-		//	}
-		//	// Check AABB
-		//	if (mousePosition.x > min.x && mousePosition.x < max.x)
-		//	{
-		//		if (mousePosition.y > min.y && mousePosition.y < max.y)
-		//		{
-		//			pGameObjs.push_back(&gameObject);
-		//		}
-		//	}
-		//}
+				if (texture != nullptr)
+				{
+					//tempX = tempScale.x * texture->get_pixel_width();
+					//tempY = tempScale.y * texture->get_pixel_height();
+					bounds.max = { texture->get_pixel_height() / 2.f, texture->get_pixel_width() / 2.f };
+					bounds.min = { -texture->get_pixel_height() / 2.f, -texture->get_pixel_width() / 2.f };
+				}
+			}
+			
+			// Check AABB
+			if (static_collision_pointrect(mousePosition,bounds.GetRelativeBounds(worldPos,worldScale)))
+				pGameObjs.push_back(&gameObject);
+		}
 
 
 		if (pGameObjs.empty())
+		{
 			return nullptr;
+		}
 		// Ensure that the container is not empty
 		// Sort base on depth value
 		// If there is no selected gameobject
@@ -221,7 +216,9 @@ namespace Copium
 			Button* button = pGameObject->GetComponent<Button>();
 			SpriteRenderer* sr = pGameObject->GetComponent<SpriteRenderer>();
 			SortingGroup * sg = pGameObject->GetComponent<SortingGroup>();
-			SortingGroup * selectedSg{ pGameObject->GetComponent<SortingGroup>() };
+			if (!selectedGameObject)
+				selectedGameObject = pGameObject;
+			SortingGroup * selectedSg{ selectedGameObject->GetComponent<SortingGroup>() };
 			if ((sr && sr->enabled) || (button && button->enabled))
 			{
 				//Selected has no SG but new one has
@@ -267,25 +264,25 @@ namespace Copium
 
 
 		GameObject* selected = GetSelectedGameObject();
-		if (selected)
-		{
-			PRINT("SELECTED " << selected->name);
-		}
 
+		Button* prevHover = pHoveredBtn;
 		for (Button& button : pScene->componentArrays.GetArray<Button>())
 		{
-			if (!button.gameObj.IsActive() && !button.enabled)
+			if (!button.gameObj.IsActive() || !button.enabled)
 			{
 				button.state = ButtonState::None;
+				continue;
 			}
 			if (&button.gameObj == selected)
 			{
 				PRINT("HOVERING " << button.gameObj.name);
 				button.state = GetButtonState(button);
+				break;
 				//Selected button state
 			}
 			ButtonBehavior(button);
 		}
+
 
 		for (Script& script : pScene->componentArrays.GetArray<Script>())
 		{
