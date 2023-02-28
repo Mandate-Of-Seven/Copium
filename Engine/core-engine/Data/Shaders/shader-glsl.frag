@@ -17,6 +17,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 layout (location=0) in vec4 vInterpColor;
 layout (location=1) in vec2 vTextureCoordinate;
 layout (location=2) in float vTextureIndex;
+layout (location=3) in float vEntityType;
 
 layout (location=0) out vec4 fFragColor;
 
@@ -56,10 +57,17 @@ uniform sampler2D uTexture1[32];
 void main()
 {
 	int index = int(vTextureIndex);
+	int type = int(vEntityType);
 
-	fFragColor = texture(uTexture1[index], vTextureCoordinate) * vInterpColor;
-	
-
+	if(type == 0)
+	{
+		fFragColor = texture(uTexture1[index], vTextureCoordinate) * vInterpColor;
+	}
+	else if(type == 1)
+	{
+		vec4 sampled = vec4(1.0, 1.0, 1.0, texture(uTexture1[index], vTextureCoordinate).r);
+		fFragColor = sampled * vInterpColor;
+	}
 //	switch (index)
 //	{
 //		case 1:

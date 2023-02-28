@@ -30,8 +30,7 @@ namespace Copium
 	{
 		GLuint whiteTexture = 0;
 		int textureCount = 0;
-		std::unordered_map<GLuint, std::pair<GLuint,GLuint>> textureIDs;
-		std::unordered_map<GLuint, GLuint> fontIDs;
+		std::unordered_map<GLuint, GLuint> textureIDs;
 	}
 
 	void Renderer::init(BaseCamera* _camera)
@@ -47,9 +46,6 @@ namespace Copium
 
 		// Setup Circle Vertex Array Object
 		setup_circle_vao();
-
-		// Setup Text Vertex Array Object
-		setup_text_vao();
 
 		//GLuint& texture = graphics->get_white_texture();
 		GLuint& texture = whiteTexture;
@@ -102,7 +98,7 @@ namespace Copium
 		glVertexArrayAttribBinding(quadVertexArrayID, 3, 0);
 
 		glEnableVertexArrayAttrib(quadVertexArrayID, 4);
-		glVertexArrayAttribFormat(quadVertexArrayID, 4, 1, GL_INT, GL_FALSE, offsetof(QuadVertex, entityID));
+		glVertexArrayAttribFormat(quadVertexArrayID, 4, 1, GL_FLOAT, GL_FALSE, offsetof(QuadVertex, type));
 		glVertexArrayAttribBinding(quadVertexArrayID, 4, 0);
 
 		// Element Buffer Object
@@ -206,52 +202,14 @@ namespace Copium
 		glLineWidth(1.f);
 	}
 
-	void Renderer::setup_text_vao()
-	{
-		textBuffer = new TextVertex[maxTextVertexCount];
-
-		// Vertex Array Object
-		glCreateVertexArrays(1, &textVertexArrayID);
-
-		// Text Buffer Object
-		glCreateBuffers(1, &textVertexBufferID);
-		glNamedBufferStorage(textVertexBufferID, maxTextVertexCount * sizeof(TextVertex), nullptr, GL_DYNAMIC_STORAGE_BIT);
-
-		glEnableVertexArrayAttrib(textVertexArrayID, 0);
-		glVertexArrayAttribFormat(textVertexArrayID, 0, 3, GL_FLOAT, GL_FALSE, offsetof(TextVertex, pos));
-		glVertexArrayAttribBinding(textVertexArrayID, 0, 3);
-
-		glEnableVertexArrayAttrib(textVertexArrayID, 1);
-		glVertexArrayAttribFormat(textVertexArrayID, 1, 4, GL_FLOAT, GL_FALSE, offsetof(TextVertex, color));
-		glVertexArrayAttribBinding(textVertexArrayID, 1, 3);
-
-		glEnableVertexArrayAttrib(textVertexArrayID, 2);
-		glVertexArrayAttribFormat(textVertexArrayID, 2, 2, GL_FLOAT, GL_FALSE, offsetof(TextVertex, textCoord));
-		glVertexArrayAttribBinding(textVertexArrayID, 2, 3);
-
-		glEnableVertexArrayAttrib(textVertexArrayID, 3);
-		glVertexArrayAttribFormat(textVertexArrayID, 3, 1, GL_FLOAT, GL_FALSE, offsetof(TextVertex, fontID));
-		glVertexArrayAttribBinding(textVertexArrayID, 3, 3);
-
-		// Setup default text texture coordinates
-		textTextCoord[0] = { 0.f, 0.f };
-		textTextCoord[1] = { 0.f, 1.f };
-		textTextCoord[2] = { 1.f, 1.f };
-		textTextCoord[3] = { 0.f, 0.f };
-		textTextCoord[4] = { 1.f, 1.f };
-		textTextCoord[5] = { 1.f, 0.f };
-	}
-
 	void Renderer::shutdown()
 	{
 		glDeleteVertexArrays(1, &quadVertexArrayID);
 		glDeleteVertexArrays(1, &lineVertexArrayID);
 		glDeleteVertexArrays(1, &circleVertexArrayID);
-		glDeleteVertexArrays(1, &textVertexArrayID);
 		glDeleteBuffers(1, &quadVertexBufferID);
 		glDeleteBuffers(1, &lineVertexBufferID);
 		glDeleteBuffers(1, &circleVertexBufferID);
-		glDeleteBuffers(1, &textVertexBufferID);
 		glDeleteBuffers(1, &quadIndexBufferID);
 		glDeleteBuffers(1, &circleIndexBufferID);
 		glDeleteTextures(1, &graphics->get_white_texture());
@@ -259,7 +217,6 @@ namespace Copium
 		delete[] quadBuffer;
 		delete[] lineBuffer;
 		delete[] circleBuffer;
-		delete[] textBuffer;
 	}
 
 	void Renderer::begin_batch()
@@ -276,11 +233,7 @@ namespace Copium
 		circleIndexCount = 0;
 		circleBufferPtr = circleBuffer;
 
-		textVertexCount = 0;
-		textBufferPtr = textBuffer;
-
 		textureCount = 0;
-		fontIDs.clear();
 		textureIDs.clear();
 	}
 
@@ -318,7 +271,7 @@ namespace Copium
 			// End of matrix assignment
 
 			for (auto map : textureIDs)
-				glBindTextureUnit(map.second.first, map.second.second);
+				glBindTextureUnit(map.second, map.first);
 
 			glDrawElements(GL_TRIANGLES, quadIndexCount, GL_UNSIGNED_SHORT, NULL);
 			drawCount++;
@@ -373,41 +326,6 @@ namespace Copium
 			glBindVertexArray(0);
 			graphics->get_shader_program()[LINE_SHADER].UnUse();
 		}
-
-		if (textVertexCount)
-		{
-			// Alpha blending for transparent objects
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-			graphics->get_shader_program()[TEXT_SHADER].Use();
-			glBindVertexArray(textVertexArrayID);
-
-			// Bean: Matrix assignment to be placed somewhere else
-			GLuint uProjection = glGetUniformLocation(
-				graphics->get_shader_program()[TEXT_SHADER].GetHandle(), "uViewProjection");
-
-			glm::mat4 projection = camera->get_view_proj_matrix();
-			glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
-
-			// End of matrix assignment
-
-			// Bind texture unit
-			for (auto map : fontIDs)
-				glBindTextureUnit(map.second, map.first);
-			
-			// Cannot just bind texture because there is multiple textures in this one draw
-			// Requires an array of textures and reference from there
-			//glBindTexture(GL_TEXTURE_2D, ch.textureID);
-
-			// Draws the entire text out
-			glDrawArrays(GL_TRIANGLES, 0, textVertexCount);
-			drawCount++;
-
-			glBindVertexArray(0);
-			graphics->get_shader_program()[TEXT_SHADER].UnUse();
-			glDisable(GL_BLEND);
-		}
 	}
 
 	void Renderer::end_batch()
@@ -441,16 +359,6 @@ namespace Copium
 			glVertexArrayElementBuffer(circleVertexArrayID, circleIndexBufferID);
 			glBindVertexArray(0);
 		}
-
-		if (textVertexCount)
-		{
-			glBindVertexArray(textVertexArrayID);
-			GLsizeiptr size = (GLuint*)textBufferPtr - (GLuint*)textBuffer;
-			glNamedBufferSubData(textVertexBufferID, 0, sizeof(float) * size, textBuffer);
-			glVertexArrayVertexBuffer(textVertexArrayID, 3, textVertexBufferID, 0, sizeof(TextVertex));
-			glBindVertexArray(0);
-		}
-
 	}
 
 	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const glm::vec4& _color)
@@ -591,9 +499,9 @@ namespace Copium
 		}
 
 		// Map texture unit to the texture object id
-		auto it = textureIDs.find(textureIndex);
+		auto it = textureIDs.find(whiteTexture);
 		if (it == textureIDs.end())
-			textureIDs.emplace(std::make_pair(textureIndex, std::make_pair(textureCount++, graphics->get_texture_slots()[textureIndex])));
+			textureIDs.emplace(std::make_pair(whiteTexture,textureCount++));
 
 
 		for (GLint i = 0; i < 4; i++)
@@ -601,8 +509,8 @@ namespace Copium
 			quadBufferPtr->pos = _transform * quadVertexPosition[i];
 			quadBufferPtr->textCoord = quadTextCoord[i];
 			quadBufferPtr->color = _color;
-			quadBufferPtr->texID = textureIDs[textureIndex].first;
-			quadBuffer->entityID = quadCount;
+			quadBufferPtr->texID = textureIDs[whiteTexture];
+			quadBuffer->type = (float)ENTITY_TYPE::QUAD;
 			quadBufferPtr++;
 		}
 
@@ -649,17 +557,17 @@ namespace Copium
 		}
 
 		// Map texture unit to the texture object id
-		auto it = textureIDs.find(textureIndex);
+		unsigned int key = graphics->get_texture_slots()[textureIndex];
+		auto it = textureIDs.find(key);
 		if (it == textureIDs.end())
-			textureIDs.emplace(std::make_pair(textureIndex, std::make_pair(textureCount++, graphics->get_texture_slots()[textureIndex])));
-
+			textureIDs.emplace(std::make_pair(key, textureCount++));
 
 		for (GLint i = 0; i < 4; i++)
 		{
 			quadBufferPtr->pos = _transform * quadVertexPosition[i];
 			quadBufferPtr->textCoord = quadTextCoord[i];
 			quadBufferPtr->color = color;
-			quadBufferPtr->texID = textureIDs[textureIndex].first;
+			quadBufferPtr->texID = textureIDs[key];
 			quadBufferPtr++;
 		}
 
@@ -707,9 +615,10 @@ namespace Copium
 		}
 
 		// Map texture unit to the texture object id
-		auto it = textureIDs.find(textureIndex);
+		unsigned int key = graphics->get_texture_slots()[textureIndex];
+		auto it = textureIDs.find(key);
 		if(it == textureIDs.end())
-			textureIDs.emplace(std::make_pair(textureIndex, std::make_pair(textureCount++,graphics->get_texture_slots()[textureIndex])));
+			textureIDs.emplace(std::make_pair(key, textureCount++));
 
 		for (GLint i = 0; i < 4; i++)
 		{
@@ -731,7 +640,8 @@ namespace Copium
 				mixedColor.b = layeredColor.b * layeredColor.a / mixedColor.a + color.b * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.00
 				quadBufferPtr->color = mixedColor;
 			}
-			quadBufferPtr->texID = textureIDs[textureIndex].first;
+			quadBufferPtr->texID = textureIDs[key];
+			quadBufferPtr->type = (float)ENTITY_TYPE::QUAD;
 			quadBufferPtr++;
 		}
 
@@ -788,10 +698,10 @@ namespace Copium
 		}
 
 		// Map texture unit to the texture object id
-		auto it = textureIDs.find(textureIndex);
+		unsigned int key = graphics->get_texture_slots()[textureIndex];
+		auto it = textureIDs.find(key);
 		if (it == textureIDs.end())
-			textureIDs.emplace(std::make_pair(textureIndex, std::make_pair(textureCount++, graphics->get_texture_slots()[textureIndex])));
-
+			textureIDs.emplace(std::make_pair(key, textureCount++));
 
 		float xStep = (1.0f / (float)_spritesheet.columns);
 		float yStep = (1.0f / (float)_spritesheet.rows);
@@ -811,7 +721,8 @@ namespace Copium
 			quadBufferPtr->pos = _transform * quadVertexPosition[i];
 			quadBufferPtr->textCoord = spriteTextCoord[i];
 			quadBufferPtr->color = color;
-			quadBufferPtr->texID = textureIDs[textureIndex].first;
+			quadBufferPtr->texID = textureIDs[key];
+			quadBufferPtr->type = (float)ENTITY_TYPE::QUAD;
 			quadBufferPtr++;
 		}
 
@@ -919,7 +830,7 @@ namespace Copium
 
 	void Renderer::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float& _scale, const float& _wrapper, Font* _font)
 	{
-		if (textVertexCount >= maxTextCount)
+		if (quadIndexCount >= maxIndexCount)
 		{
 			end_batch();
 			flush();
@@ -930,20 +841,18 @@ namespace Copium
 		float y = _position.y;
 		float z = _position.z;
 
-		glm::vec2 fontTextCoord[6] = {
-			glm::vec2(0.f, 0.f),
-			glm::vec2(0.f, 1.f),
-			glm::vec2(1.f, 1.f),
-			glm::vec2(0.f, 0.f),
-			glm::vec2(1.f, 1.f),
-			glm::vec2(1.f, 0.f)
-		};
-
 		int newLine = 0;
 		float xpos = 0.f, ypos = 0.f;
 		const float scaler = 0.01f;
 
 		std::map<char, Character> characters = _font->get_characters();
+
+		glm::vec2 fontTextCoord[4] = {
+			glm::vec2(0.f, 1.f),
+			glm::vec2(1.f, 1.f),
+			glm::vec2(1.f, 0.f),
+			glm::vec2(0.f, 0.f)
+		};
 
 		for (char c : _text)
 		{
@@ -968,7 +877,7 @@ namespace Copium
 			float w = ch.size.x * (_scale * scaler);
 			float h = ch.size.y * (_scale * scaler);
 
-			if (fontIDs.size() > 31 || textureCount > 31)
+			if (textureIDs.size() > 31 || textureCount > 31)
 			{
 				end_batch();
 				flush();
@@ -976,127 +885,31 @@ namespace Copium
 			}
 
 			// Map texture unit to the texture object id
-			auto it = fontIDs.find(ch.textureID);
-			if (it == fontIDs.end())
-				fontIDs.emplace(std::make_pair(ch.textureID, textureCount++));
+			auto it = textureIDs.find(ch.textureID);
+			if (it == textureIDs.end())
+				textureIDs.emplace(std::make_pair(ch.textureID, textureCount++));
 
 			// Update VBO for each character
-			glm::vec3 textVertexPosition[6] = {
-				glm::vec3(xpos, ypos + h, 0.f),
+			glm::vec3 textVertexPosition[4] = {
 				glm::vec3(xpos, ypos, 0.f),
 				glm::vec3(xpos + w, ypos, 0.f),
-				glm::vec3(xpos, ypos + h, 0.f),
-				glm::vec3(xpos + w, ypos, 0.f),
-				glm::vec3(xpos + w, ypos + h, 0.f)
+				glm::vec3(xpos + w, ypos + h, 0.f),
+				glm::vec3(xpos, ypos + h, 0.f)
 			};
 
-			for (GLint i = 0; i < 6; i++)
+			for (GLint i = 0; i < 4; i++)
 			{
-				textBufferPtr->pos = textVertexPosition[i];
-				textBufferPtr->textCoord = fontTextCoord[i];
-				textBufferPtr->color = _color;
-				textBufferPtr->fontID = fontIDs[ch.textureID];
-				textBufferPtr++;
+				quadBufferPtr->pos = textVertexPosition[i];
+				quadBufferPtr->textCoord = fontTextCoord[i];
+				quadBufferPtr->color = _color;
+				quadBufferPtr->texID = textureIDs[ch.textureID];
+				quadBufferPtr->type = (float)ENTITY_TYPE::TEXT;
+				quadBufferPtr++;
 			}
 
 			x += (ch.advance >> 6) * (_scale * scaler); // Bitshift by 6 to get value in pixels
-			textVertexCount += 6;
+			quadIndexCount += 6;
 		}
-
-		textCount++;
-	}
-
-	void Renderer::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float _scale, Font* _font)
-	{
-		if (textVertexCount >= maxTextCount)
-		{
-			end_batch();
-			flush();
-			begin_batch();
-		}
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		graphics->get_shader_program()[TEXT_SHADER].Use();
-
-		GLuint uProjection = glGetUniformLocation(
-			graphics->get_shader_program()[TEXT_SHADER].GetHandle(), "uViewProjection");
-
-		glm::mat4 projection = camera->get_view_proj_matrix();
-		glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindVertexArray(_font->get_VAO());
-
-		float x = _position.x;
-		float y = _position.y;
-		float z = _position.z;
-
-		glm::vec2 fontTextCoord[6] = {
-			glm::vec2(0.f, 0.f),
-			glm::vec2(0.f, 1.f),
-			glm::vec2(1.f, 1.f),
-			glm::vec2(0.f, 0.f),
-			glm::vec2(1.f, 1.f),
-			glm::vec2(1.f, 0.f)
-		};
-
-		int newLine = 0;
-		float xpos = 0.f, ypos = 0.f;
-		const float scaler = 0.01f;
-
-		std::map<char, Character> characters = _font->get_characters();
-
-		for (char c : _text)
-		{
-			Character ch = characters[c];
-
-			// If it is a newline
-			if (c == '\n')
-			{
-				newLine++;
-				x = _position.x;
-				continue;
-			}
-
-			xpos = x + ch.bearing.x * (_scale * scaler);
-			ypos = y - (ch.size.y - ch.bearing.y) * (_scale * scaler) - newLine * (_scale * 2.5f);
-
-			float w = ch.size.x * (_scale * scaler);
-			float h = ch.size.y * (_scale * scaler);
-
-			// Update VBO for each character
-			TextVertex vertices[6];
-			vertices[0].pos = glm::vec3(xpos, ypos + h, z);
-			vertices[1].pos = glm::vec3(xpos, ypos, z);
-			vertices[2].pos = glm::vec3(xpos + w, ypos, z);
-			vertices[3].pos = glm::vec3(xpos, ypos + h, z);
-			vertices[4].pos = glm::vec3(xpos + w, ypos, z);
-			vertices[5].pos = glm::vec3(xpos + w, ypos + h, z);
-
-			for (int i = 0; i < 6; i++)
-			{
-				vertices[i].color = _color;
-				vertices[i].textCoord = fontTextCoord[i];
-			}
-
-			// Render glyph texture over quad
-			glBindTexture(GL_TEXTURE_2D, ch.textureID);
-
-			// Update content of VBO memory
-			glNamedBufferSubData(_font->get_VBO(), 0, sizeof(vertices), vertices);
-			glVertexArrayVertexBuffer(_font->get_VAO(), 2, _font->get_VBO(), 0, sizeof(TextVertex));
-
-			glDrawArrays(GL_TRIANGLES, 0, 6);
-
-			x += (ch.advance >> 6) * (_scale * scaler); // Bitshift by 6 to get value in pixels
-		}
-		glBindVertexArray(0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		graphics->get_shader_program()[TEXT_SHADER].UnUse();
-
-		glDisable(GL_BLEND);
 
 		textCount++;
 	}
