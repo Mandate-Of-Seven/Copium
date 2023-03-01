@@ -76,15 +76,15 @@ public class EventManager: CopiumScript
                 break;
             case 1:
                 bool healthy = false;
-                if (crewMenu.health1 != 0)
-                    healthy = true;
+                // if (crewMenu.health1 != 0)
+                //     healthy = true;
 
                 event01.Event(healthy);
                 break;
             case 2:
                 bool alive = false;
-                if (crewMenu.health2 != 0 && crewMenu.health3 != 0)
-                    alive = true;
+                // if (crewMenu.health2 != 0 && crewMenu.health3 != 0)
+                //     alive = true;
 
                 event02.Event(alive);
                 break;

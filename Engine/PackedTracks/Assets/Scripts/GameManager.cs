@@ -14,8 +14,10 @@ public class GameManager: CopiumScript
     public GameObject CrewTab;
     public GameObject ReportTab;
 
-    public Button LeverFar;
-    public Button LeverNear;
+    public Button LeverBtn;
+    public GameObject LeverNear;
+    public GameObject LeverFar;
+    bool move = false;
 
     public Button ReportScreenBtn;
     public Button ManualBtn;
@@ -49,41 +51,37 @@ public class GameManager: CopiumScript
     }
 	void Update()
     {   
-        if(ReportScreenBtn.state == ButtonState.OnClick)
+        if(ReportScreenBtn.state == ButtonState.OnRelease)
         {
             ReportTab.SetActive(true);
         }
-        if(CloseReportBtn.state == ButtonState.OnClick)
+        if(CloseReportBtn.state == ButtonState.OnRelease)
         {
             ReportTab.SetActive(false);
         }
-        if(CrewTabBtn.state == ButtonState.OnClick)
+        if(CrewTabBtn.state == ButtonState.OnRelease)
         {
             CrewTab.SetActive(true);
         }
-        if(ManualBtn.state == ButtonState.OnClick)
+        if(ManualBtn.state == ButtonState.OnRelease)
         {
             ManualPopUp.SetActive(true);
         }
-        if(ManualPopUpBtn.state == ButtonState.OnClick)
+        if(ManualPopUpBtn.state == ButtonState.OnRelease)
         {
             ManualPopUpBtn.gameObject.SetActive(false);
         }
 
-        if(LeverNear.state == ButtonState.OnClick)
+        if(LeverBtn.state == ButtonState.OnClick)
         {
-            LeverFar.gameObject.SetActive(true);
-            LeverNear.gameObject.SetActive(false);
+            move = !move;
+            Console.WriteLine("Clicked on lever");
+            LeverFar.SetActive(move);
+            LeverNear.SetActive(!move);
         }
         //Stop travlling
-        else if(LeverFar.state == ButtonState.OnClick || distanceLeft == 0)
-        {
-            timer = 0.0f;
-            LeverFar.gameObject.SetActive(false);
-            LeverNear.gameObject.SetActive(true);
-        }
 
-        if (LeverFar.gameObject.activeSelf && distanceLeft > 0)
+        if (move && distanceLeft > 0)
         {
             if (timer >= 0.2f)
             {
@@ -110,10 +108,10 @@ public class GameManager: CopiumScript
         {
             if(hungerTimer >= 1.0f)
             {
-                crewMenuScript.hunger1 -= 1;
-                crewMenuScript.hunger2 -= 1;
-                crewMenuScript.hunger3 -= 1;
-                crewMenuScript.hunger4 -= 1;
+                // crewMenuScript.hunger1 -= 1;
+                // crewMenuScript.hunger2 -= 1;
+                // crewMenuScript.hunger3 -= 1;
+                // crewMenuScript.hunger4 -= 1;
                 hungerTimer = 0.0f;
             }
 

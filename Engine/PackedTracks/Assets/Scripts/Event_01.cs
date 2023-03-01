@@ -67,7 +67,7 @@ public class Event_01: CopiumScript
                     " there is only so much they can do. Althought successful in putting out the fires, but" +
                     " at a cost. Seem like all the crew has either suffered third or fourth degree burn. ";
 
-                eventManager.crewMenu.health1 = eventManager.crewMenu.health2 = eventManager.crewMenu.health3 = eventManager.crewMenu.health4 = 1;
+                //eventManager.crewMenu.health1 = eventManager.crewMenu.health2 = eventManager.crewMenu.health3 = eventManager.crewMenu.health4 = 1;
                 eventManager.crewMenu.food = 5;
             }
             else if (choice == 2)
@@ -87,14 +87,14 @@ public class Event_01: CopiumScript
                     "the food supply. By the time the crew put out and salvage the remaining supplies all was remaining " +
                     "of Harris was his charred corpse frozen in a state where he tried to reach for help. ";
 
-                eventManager.crewMenu.health1 = 0;
+                //eventManager.crewMenu.health1 = 0;
             }
             else if (choice == 2)
             {
                 eventManager.Body.text = "The crew scrambled to put out the fire on Harris, when Harris life was out of " +
                     "danger, the food supplies had all burnt up.";
 
-                eventManager.crewMenu.health1 = 1;
+                //eventManager.crewMenu.health1 = 1;
                 eventManager.crewMenu.food = 0;
             }
         }

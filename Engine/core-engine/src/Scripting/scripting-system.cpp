@@ -327,6 +327,8 @@ namespace Copium
 			const char* name = mono_metadata_string_heap(mAssemblyImage, cols[MONO_TYPEDEF_NAME]);
 			const char* name_space = mono_metadata_string_heap(mAssemblyImage, cols[MONO_TYPEDEF_NAMESPACE]);
 			_class = mono_class_from_name(mAssemblyImage, name_space, name);
+			if (!_class)
+				continue;
 			if (mono_class_get_parent(_class) == mCopiumScript)
 			{
 				scriptClassMap[name] = ScriptClass{ name,_class };

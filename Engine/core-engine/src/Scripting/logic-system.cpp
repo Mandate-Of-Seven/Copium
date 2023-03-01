@@ -25,6 +25,8 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <GameObject/components.h>
 #include <Utilities/easing.h>
 #include "Editor/editor-system.h"
+#include <Graphics/graphics-system.h>
+#include "glm/gtc/matrix_transform.hpp"
 
 namespace Copium
 {
@@ -43,21 +45,18 @@ namespace Copium
 		Transform& transform{ btn.gameObj.transform };
 		if (pHoveredBtn == nullptr)
 		{
-			if (static_collision_pointrect(scenePos, btn.bounds.GetRelativeBounds(transform.GetWorldPosition(),transform.GetWorldScale())))
+			if (MyInputSystem.is_mousebutton_pressed(0))
 			{
-				if (MyInputSystem.is_mousebutton_pressed(0))
-				{
-					if (pHoveredBtn)
-					{
-						pHoveredBtn = nullptr;
-					}
-					pHoveredBtn = &btn;
-					if (btn.state == ButtonState::OnClick || btn.state == ButtonState::OnHeld)
-						return ButtonState::OnHeld;
-					return ButtonState::OnClick;
-				}
-				return ButtonState::OnHover;
+				pHoveredBtn = &btn;
+				if (btn.state == ButtonState::OnClick || btn.state == ButtonState::OnHeld)
+					return ButtonState::OnHeld;
+				return ButtonState::OnClick;
 			}
+			else if (btn.state == ButtonState::OnClick || btn.state == ButtonState::OnHeld)
+			{
+				return ButtonState::OnRelease;
+			}
+			return ButtonState::OnHover;
 		}
 		else if (pHoveredBtn == &btn)
 		{
@@ -76,7 +75,6 @@ namespace Copium
 
 	void ButtonBehavior(Button& btn)
 	{
-		btn.state = GetButtonState(btn);
 		if (btn.previousState != btn.state)
 		{
 			btn.timer = 0;
@@ -84,6 +82,7 @@ namespace Copium
 			if (btn.targetGraphic)
 				btn.previousColor = btn.targetGraphic->layeredColor;
 		}
+
 		switch (btn.state)
 		{
 		case ButtonState::OnClick:
@@ -102,7 +101,7 @@ namespace Copium
 		}
 		case ButtonState::OnHover:
 		{
-			PRINT("UI: Hover " << btn.gameObj.name);
+			//PRINT("UI: Hover " << btn.gameObj.name);
 			if (btn.targetGraphic)
 			{
 				btn.targetGraphic->layeredColor = Linear(btn.previousColor, btn.hoverColor, btn.timer / btn.fadeDuration);
@@ -136,52 +135,119 @@ namespace Copium
 			btn.timer = btn.fadeDuration;
 	}
 
-	void HoverFrontButton()
+	GameObject* GetSelectedGameObject()
 	{
-		// Update button behaviour for layered game objects
-		// Update from back to front within layer
+		static GameObject* selectedGameObject{nullptr};
+		selectedGameObject = nullptr;
 		Scene* pScene = sceneManager.get_current_scene();
 		if (!pScene)
-			return;
-		std::vector<Layer>& sortingLayers{ MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers() };
-		if (!sortingLayers.empty())
-			for (size_t i{ sortingLayers.size() - 1}; i != 0; --i)
+			return nullptr;
+		if (pScene->componentArrays.GetArray<Camera>().empty())
+			return nullptr;
+
+		GameObjectsPtrArray pGameObjs; // Possible selectable gameobjects
+		Camera& gameCamera{pScene->componentArrays.GetArray<Camera>()[0]};
+		glm::vec2 mousePosition = glm::vec3(gameCamera.get_game_ndc(), 0.f);
+		for (GameObject& gameObject : pScene->gameObjects)
+		{
+			if (!gameObject.IsActive())
+				continue;
+			Transform& t = gameObject.transform;
+			Math::Vec3 worldPos{ t.GetWorldPosition() };
+			Math::Vec3 worldScale{ t.GetWorldScale() };
+
+			glm::vec2 objPosition = { worldPos.x, worldPos.y };
+
+			// Not Within bounds // NEED A BETTER CHECK THAT INCLUDES THE BOUNDS
+			//if (glm::distance(objPosition, mousePosition)
+			//	> glm::length(gameCamera.get_dimension()))
+			//	continue;
+			AABB bounds{};
+			Button* button = gameObject.GetComponent<Button>();
+			Image* image = gameObject.GetComponent<Image>();
+
+			if (!button && !image)
+				continue;
+
+			if (button)
 			{
-				Layer& l = sortingLayers[i];
-				for (size_t j{ l.gameObjects.size() - 1 }; j != 0; --j)
-				{
-					GameObject* go = l.gameObjects[j];
-					if (!go)
-						continue;
-					if (!go->IsActive() || !go->HasComponent<Button>())
-						continue;
-					Button* button = go->GetComponent<Button>();
-					if (!button->enabled)
-						continue;
-					ButtonBehavior(*button);
-				}
+
+				if (!button->enabled)
+					continue;
+				bounds = button->bounds;
 			}
 
-		for (Button& button : pScene->componentArrays.GetArray<Button>())
-		{
-			if (!button.enabled)
-				continue;
-			if (!button.gameObj.IsActive())
-				continue;
-			if (button.gameObj.HasComponent<SortingGroup>())
-				continue;
-			ButtonBehavior(button);
-			if (pHoveredBtn == &button)
+			if (image)
 			{
-				return;
+
+				if (!image->enabled)
+					continue;
+				Texture* texture = image->sprite.refTexture;
+
+				if (texture != nullptr)
+				{
+					//tempX = tempScale.x * texture->get_pixel_width();
+					//tempY = tempScale.y * texture->get_pixel_height();
+					bounds.max = { texture->get_pixel_height() / 2.f, texture->get_pixel_width() / 2.f };
+					bounds.min = { -texture->get_pixel_height() / 2.f, -texture->get_pixel_width() / 2.f };
+				}
+			}
+			
+			// Check AABB
+			if (static_collision_pointrect(mousePosition,bounds.GetRelativeBounds(worldPos,worldScale)))
+				pGameObjs.push_back(&gameObject);
+		}
+
+
+		if (pGameObjs.empty())
+		{
+			return nullptr;
+		}
+		// Ensure that the container is not empty
+		// Sort base on depth value
+		// If there is no selected gameobject
+		// Update button behaviour for layered game objects
+		// Update from back to front within layer
+		std::vector<Layer>& sortingLayers{ MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers() };
+		//Iterate through list of possible gameObjects
+
+		for (GameObject* pGameObject : pGameObjs)
+		{
+			Button* button = pGameObject->GetComponent<Button>();
+			SpriteRenderer* sr = pGameObject->GetComponent<SpriteRenderer>();
+			SortingGroup * sg = pGameObject->GetComponent<SortingGroup>();
+			if (!selectedGameObject)
+				selectedGameObject = pGameObject;
+			SortingGroup * selectedSg{ selectedGameObject->GetComponent<SortingGroup>() };
+			if ((sr && sr->enabled) || (button && button->enabled))
+			{
+				//Selected has no SG but new one has
+				if (!selectedSg && sg)
+				{
+					selectedGameObject = pGameObject;
+					continue;
+				}
+				//Object is on a higher layer
+				else if (sg && selectedSg)
+				{
+					if (sg->sortingLayer > selectedSg->sortingLayer)
+					{
+						selectedGameObject = pGameObject;
+						continue;
+					}
+					else if (sg->orderInLayer > selectedSg->orderInLayer)
+					{
+						selectedGameObject = pGameObject;
+						continue;
+					}
+				}
+				//Object is in same layer
+				//No conditions met, skip this gameObject
 			}
 		}
-		if (pHoveredBtn && (!pHoveredBtn->gameObj.IsActive() || !pHoveredBtn->enabled))
-		{
-			pHoveredBtn->state = ButtonState::None;
-			pHoveredBtn = nullptr;
-		}
+		return selectedGameObject;
 	}
+
 
 	void LogicSystem::init()
 	{
@@ -195,6 +261,28 @@ namespace Copium
 		Scene* pScene = sceneManager.get_current_scene();
 		if (pScene == nullptr)
 			return;
+
+
+		GameObject* selected = GetSelectedGameObject();
+
+		Button* prevHover = pHoveredBtn;
+		for (Button& button : pScene->componentArrays.GetArray<Button>())
+		{
+			if (!button.gameObj.IsActive() || !button.enabled)
+			{
+				button.state = ButtonState::None;
+				continue;
+			}
+			if (&button.gameObj == selected)
+			{
+				PRINT("HOVERING " << button.gameObj.name);
+				button.state = GetButtonState(button);
+				break;
+				//Selected button state
+			}
+			ButtonBehavior(button);
+		}
+
 
 		for (Script& script : pScene->componentArrays.GetArray<Script>())
 		{
@@ -215,7 +303,6 @@ namespace Copium
 		}
 
 
-		HoverFrontButton();
 	}
 
 	void LogicSystem::exit()

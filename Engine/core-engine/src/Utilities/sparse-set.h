@@ -46,12 +46,53 @@ public:
         }
     };
 
+    class ReverseIterator
+    {
+        SparseSet<T, N>& arr;
+        int sparseIndex;
+        friend class SparseSet;
+    public:
+        ReverseIterator(size_t _sparseIndex, SparseSet<T, N>& _arr) : sparseIndex(_sparseIndex), arr{ _arr } {}
+
+        T& operator*() const
+        {
+            return arr[sparseIndex];
+        }
+
+        ReverseIterator operator++() {
+            --sparseIndex;
+            return *this;
+        }
+
+        ReverseIterator operator++(int) {
+            ReverseIterator tmp(*this);
+            operator++();
+            return tmp;
+        }
+
+        bool operator==(const ReverseIterator& other) const {
+            return sparseIndex == other.sparseIndex;
+        }
+
+        bool operator!=(const ReverseIterator& other) const {
+            return sparseIndex != other.sparseIndex;
+        }
+    };
+
     Iterator begin() {
         return Iterator(0,*this);
     }
 
     Iterator end() {
         return Iterator(size_,*this);
+    }
+
+    ReverseIterator rbegin() {
+        return ReverseIterator(size_ - 1, *this);
+    }
+
+    ReverseIterator rend() {
+        return ReverseIterator(-1, *this);
     }
 
     SparseSet();
@@ -84,7 +125,8 @@ public:
                 size_t index = indexes[i];
 
                 reinterpret_cast<T*>(data)[index].~T();
-                std::remove(indexes.begin(), indexes.begin()+size_, i);
+
+                std::remove(indexes.begin(), indexes.begin()+size_, index);
                 indexes[size_ - 1] = index;
                 --size_;
                 return;
@@ -98,7 +140,18 @@ public:
         COPIUM_ASSERT(size_ == 0, "Can't erase from empty array");
         size_t index = indexes[iter.sparseIndex];
         reinterpret_cast<T*>(data)[index].~T();
-        std::remove(indexes.begin(), indexes.begin() + size_, iter.sparseIndex);
+        PRINT("BEFORE:");
+        for (size_t j = 0; j < size_; ++j)
+        {
+            std::cout << indexes[j] << " ";
+        }
+        std::remove(indexes.begin(), indexes.begin() + size_, index);
+        PRINT("AFTER:");
+        for (size_t j = 0; j < size_; ++j)
+        {
+            std::cout << indexes[j] << " ";
+        }
+        PRINT("");
         indexes[size_-1] = index;
         --size_;
     }
