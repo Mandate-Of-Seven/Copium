@@ -643,6 +643,22 @@ namespace Copium
 		animationSystem.PlayAllAnimation();
 	}
 
+	static void GetSpriteRendererColor(UUID ID, glm::vec4* color)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return;
+		*color = gameObj->GetComponent<SpriteRenderer>()->sprite.color;
+	}
+
+	static void SetSpriteRendererColor(UUID ID, glm::vec4* color)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return;
+		gameObj->GetComponent<SpriteRenderer>()->sprite.color = *color;
+	}
+
 	/*******************************************************************************
 	/*!
 	\brief
@@ -680,6 +696,8 @@ namespace Copium
 		Register(GetComponentEnabled);
 		Register(SetComponentEnabled);
 		Register(GetFPS);
+		Register(GetSpriteRendererColor);
+		Register(SetSpriteRendererColor);
 	}
 }
 #endif // !SCRIPT_WRAPPERS_H

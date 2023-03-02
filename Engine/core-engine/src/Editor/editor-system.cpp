@@ -271,7 +271,7 @@ namespace Copium
 						if (pSelectedGameObject)
 							selectedID = pSelectedGameObject->uuid;
 						if (MySceneManager.endPreview())
-						{
+						{						
 							pSelectedGameObject = MySceneManager.FindGameObjectByID(selectedID);
 							MyMessageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
 						}

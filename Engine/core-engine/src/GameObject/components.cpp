@@ -197,4 +197,8 @@ namespace Copium
 			MySoundSystem.Play(alias, MySoundSystem.channelDefault, overLap, loop, loopCount);
 		}
 	}
+	void AudioSource::stop_sound()
+	{
+		MySoundSystem.Stop(this->alias);
+	}
 }

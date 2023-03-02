@@ -75,11 +75,11 @@ public class EventManager: CopiumScript
                 eventIntro.Event();
                 break;
             case 1:
-                bool healthy = false;
+                bool harrisDead = false;
                 // if (crewMenu.health1 != 0)
                 //     healthy = true;
 
-                event01.Event(healthy);
+                event01.Event(harrisDead);
                 break;
             case 2:
                 bool alive = false;
@@ -89,7 +89,9 @@ public class EventManager: CopiumScript
                 event02.Event(alive);
                 break;
             case 3:
-                //event03.Event(false);
+                bool chuckAndHarrisAlive = true;
+
+                event03.Event(chuckAndHarrisAlive);
                 break;
             case 4:
                 //Event04();
@@ -154,6 +156,7 @@ public class EventManager: CopiumScript
 
         if(next_btn.state == ButtonState.OnClick)
         {
+            UpdateEventSequence();
             ShowingResolution = false;
             Next_Event.SetActive(false);
         }

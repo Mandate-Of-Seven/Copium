@@ -3,7 +3,7 @@ using System;
 
 public class Event_03: CopiumScript
 {
-    public EventManager eventManager;
+    public EventManager EventManager;
 
     int resolutionTextNum = 0;
 
@@ -16,40 +16,79 @@ public class Event_03: CopiumScript
 
 	}
 
-	public void Event(bool harrisDead)
+	public void Event(bool chuckAndHarrisAlive)
 	{
-        if (eventManager.Option_03.activeSelf)
-        {
-            eventManager.Option_03.SetActive(false);
-        }
-
-        if (!eventManager.Option_01.activeSelf && !eventManager.Option_02.activeSelf)
-        {
-            eventManager.Option_01.SetActive(true);
-            eventManager.Option_02.SetActive(true);
-        }
-
-        if (harrisDead)
+        if (chuckAndHarrisAlive)
 		{
-            eventManager.Body.text = "Deep in the middle of the night an explosion went off in Main " +
-                "engine room and huge flames burst out into the food storage room. The flames engulfing " +
-                "the train woke the crew up.";
+            EventManager.Option_01.SetActive(true);
+            EventManager.Option_02.SetActive(true);
+            EventManager.Option_03.SetActive(true);
 
-			eventManager.Option_01_Text.text = "Attempt to put out the fire";
-			eventManager.Option_02_Text.text = "Detach main engine room and food storage room from the train";
+            EventManager.Body.text = "On a daily patrol, Chuck noticed a faint consistant bleeping sound coming from " +
+                "engine room 2. After investigating, Chuck found a bomb hiding underneath the reactor for " +
+                "the backup engine. From the looks of it removing it will prove quite " +
+                "difficult as it might set off the explosion. Chuck gathered the "+
+                "remaining crew members to decide how to proceed with the current situation.";
 
+            EventManager.Option_01_Text.text = "Cover the bomb up to reduce damage";
+			EventManager.Option_02_Text.text = "Attempt to diffuse the bomb ";
+            EventManager.Option_03_Text.text = "Salvage parts from the back up engine to build a makeshift reactor and cut off engine room 2 from the train [requires Harris to be alive]";
+
+            resolutionTextNum = 1;
         }
 		else
 		{
-            eventManager.Body.text = "Out of nowhere a loud explosion was heard from the engine room. " +
-                "Huge flames engulfed engine room 1. The flame spread so quickly that it have reached " +
-                "the food supply room. Cries of Harris can be heard throughout the train as he runs out the " +
-                "engine room begging for help. The crew stood in horror as both Harris and the food supplies" +
-                " was burning right infront of them.";
+            EventManager.Option_01.SetActive(true);
+            EventManager.Option_02.SetActive(true);
 
-            eventManager.Option_01_Text.text = "Salvage and save remaining food";
-            eventManager.Option_02_Text.text = "Save Harris";
+            EventManager.Body.text = "While attempting to keep Bronson, Chuck and Harris health stable, another explosion " +
+                                     "went off in the depths of the train. Danton could not tell what was going on but the " +
+                                     "train without any power came to a stop.";
+
+            EventManager.Option_01_Text.text = "Send Danton out to find supplies";
+            EventManager.Option_02_Text.text = "Save Harris";
+
+            resolutionTextNum = 2;
+        }
+    }
+
+    public void Result(int choice)
+    {
+        if (resolutionTextNum == 1)
+        {
+            if (choice == 1)
+            {
+                EventManager.Body.text = "The find what ever they can in attempt to try and reduce explosion and the damage caused, ... ";
+
+                EventManager.EventSequence = -1;
+            }
+            else if (choice == 2)
+            {
+                EventManager.Body.text = "... ";
+
+                
+
+            }
+            else if (choice == 3)
+            {
+                EventManager.Body.text = "... ";
+
+                
+            }
+        }
+        else if (resolutionTextNum == 2)
+        {
+            if (choice == 1)
+            {
+                EventManager.Body.text = "There were many days, if not weeks, with no word about Danton's whereabouts. Bronson, " +
+                                         "Chuck, and Harris have all died from their wounds and the cold; I have run out of everything " +
+                                         "I need to survive, including food, fuel, and water; and I'm afraid I won't be able to return " +
+                                         "home alive this time. I wish you were still around, mom";
+
+                EventManager.EventSequence = -1;
+            }
 
         }
+
     }
 }

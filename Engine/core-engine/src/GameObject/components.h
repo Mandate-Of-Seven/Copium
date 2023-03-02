@@ -412,10 +412,7 @@ namespace Copium
 			Stops the audio file inside the audio source if its playing
 		*/
 		/**************************************************************************/
-		void stop_sound()
-		{
-			//soundSystem.Stop(this->alias);
-		}
+		void stop_sound();
 		void stop_all_sound()
 		{
 			//soundSystem.StopAll();

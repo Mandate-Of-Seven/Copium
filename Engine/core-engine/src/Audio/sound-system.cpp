@@ -23,11 +23,12 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 namespace
 {
 	Copium::InputSystem& inputSystem{ *Copium::InputSystem::Instance() };
+	Copium::SceneManager& sm{ *Copium::SceneManager::Instance() };
 }
 
 namespace Copium
 {
-	ComponentsArray<AudioSource>* pAudioSourcesArray{nullptr};
+
 
 // Initialize sound system
 void SoundSystem::init()
@@ -125,9 +126,7 @@ void SoundSystem::Stop(std::string alias)
 
 void SoundSystem::StopAll()
 {
-	if (!pAudioSourcesArray)
-		COPIUM_ASSERT(1, "TRYING TO STOP AUDIO WITH NO SCENE LOADED!");
-	for (AudioSource& audioSource : *pAudioSourcesArray)
+	for (AudioSource& audioSource : sm.get_current_scene()->componentArrays.GetArray<AudioSource>())
 	{
 		audioSource.stop_sound();
 	}
