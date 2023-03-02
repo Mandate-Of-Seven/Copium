@@ -127,7 +127,7 @@ public:
     {
         size_t tmp{ indexes[sparseIndex1] };
         indexes[sparseIndex1] = indexes[sparseIndex2];
-        indexes[sparseIndex2] = indexes[sparseIndex1];
+        indexes[sparseIndex2] = tmp;
     }
 
     void swap(T& lhs, T& rhs)
