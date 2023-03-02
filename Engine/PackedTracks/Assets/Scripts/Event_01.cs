@@ -68,7 +68,7 @@ public class Event_01: CopiumScript
                     " at a cost. Seem like all the crew has either suffered third or fourth degree burn. ";
 
                 //eventManager.crewMenu.health1 = eventManager.crewMenu.health2 = eventManager.crewMenu.health3 = eventManager.crewMenu.health4 = 1;
-                eventManager.crewMenu.food = 5;
+                eventManager.crewMenu.supplies = 5;
             }
             else if (choice == 2)
             {
@@ -76,7 +76,7 @@ public class Event_01: CopiumScript
                     "the crew cut away the burning train segments. Luckily the train is still able to continue " +
                     "due to a backup generator.";
 
-                eventManager.crewMenu.food = 0;
+                eventManager.crewMenu.supplies = 0;
             }
         }
         else if(resolutionTextNum == 2)
@@ -95,7 +95,7 @@ public class Event_01: CopiumScript
                     "danger, the food supplies had all burnt up.";
 
                 //eventManager.crewMenu.health1 = 1;
-                eventManager.crewMenu.food = 0;
+                eventManager.crewMenu.supplies = 0;
             }
         }
 

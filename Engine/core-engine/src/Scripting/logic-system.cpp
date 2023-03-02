@@ -153,8 +153,42 @@ namespace Copium
 			if (!gameObject.IsActive())
 				continue;
 			Transform& t = gameObject.transform;
-			Math::Vec3 worldPos{ t.GetWorldPosition() };
-			Math::Vec3 worldScale{ t.GetWorldScale() };
+			Math::Vec3 worldPos{ t.position };
+			Math::Vec3 worldScale{ t.scale };
+
+			if (t.HasParent())
+			{
+				Transform* tempObj = t.parent;
+				while (tempObj)
+				{
+					glm::vec3 tempPos = tempObj->position.glmVec3;
+					glm::mat4 pTranslate = glm::translate(glm::mat4(1.f), tempPos);
+
+					float rot = glm::radians(tempObj->rotation.z);
+					glm::mat4 pRotate = {
+					glm::vec4(cos(rot), sin(rot), 0.f, 0.f),
+					glm::vec4(-sin(rot), cos(rot), 0.f, 0.f),
+					glm::vec4(0.f, 0.f, 1.f, 0.f),
+					glm::vec4(0.f, 0.f, 0.f, 1.f)
+					};
+
+					glm::vec3 size = tempObj->scale.glmVec3;
+					glm::mat4 pScale = {
+						glm::vec4(size.x, 0.f, 0.f, 0.f),
+						glm::vec4(0.f, size.y, 0.f, 0.f),
+						glm::vec4(0.f, 0.f, 1.f, 0.f),
+						glm::vec4(0.f, 0.f, 0.f, 1.f)
+					};
+
+					glm::mat4 pTransform = pTranslate * pRotate * pScale;
+
+					worldPos.glmVec3 = glm::vec3(pTransform * glm::vec4(worldPos.glmVec3, 1.f));
+
+					worldScale.glmVec3 *= tempObj->scale.glmVec3;
+
+					tempObj = tempObj->parent;
+				}
+			}
 
 			glm::vec2 objPosition = { worldPos.x, worldPos.y };
 
@@ -194,7 +228,9 @@ namespace Copium
 			}
 			
 			// Check AABB
-			if (static_collision_pointrect(mousePosition,bounds.GetRelativeBounds(worldPos,worldScale)))
+			AABB bound = bounds.GetRelativeBounds(worldPos, worldScale);
+			PRINT("Bounds: " << bound.min.x << " " << bound.max.x << " " << bound.min.y << " " << bound.max.y);
+			if (static_collision_pointrect(mousePosition, bound))
 				pGameObjs.push_back(&gameObject);
 		}
 

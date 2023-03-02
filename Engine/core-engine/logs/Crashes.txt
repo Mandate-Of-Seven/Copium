@@ -1,5 +1,5 @@
-[2023-02-24 09:32:00.027] [Error] [critical] 
-Caused By:	true
-Info:		Value is not an element of this array
-Source:		C:\Users\FLESH\Desktop\Copium\Engine\core-engine\src\Utilities\sparse-set.h (Line: 93)
+[2023-03-02 19:32:16.018] [Error] [critical] 
+Caused By:	mAppDomain == nullptr
+Info:		MONO APP DOMAIN NOT LOADED
+Source:		C:\Users\prawn\Documents\GitHub\GAM-200\Engine\core-engine\src\Scripting\scripting-system.cpp (Line: 295)
 

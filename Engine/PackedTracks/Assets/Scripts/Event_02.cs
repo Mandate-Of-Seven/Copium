@@ -82,7 +82,7 @@ public class Event_02: CopiumScript
                     "they took our guns and forced the crew members to entertain them before they proceed to " +
                     "get off the train and ride off. ";
 
-                EventManager.crewMenu.fuel = EventManager.crewMenu.food = 0;
+                EventManager.crewMenu.supplies = 0;
                 //EventManager.crewMenu.mental1 = EventManager.crewMenu.mental2 = EventManager.crewMenu.mental3 = EventManager.crewMenu.mental4 = 5;
 
             }
@@ -112,8 +112,7 @@ public class Event_02: CopiumScript
                     "they took our guns and forced the crew members to entertain them before they proceed to " +
                     "get off the train and ride off.";
 
-                EventManager.crewMenu.fuel -= 10;
-                EventManager.crewMenu.food -= 10;
+                EventManager.crewMenu.supplies -= 10;
                 //EventManager.crewMenu.mental1 = EventManager.crewMenu.mental2 = EventManager.crewMenu.mental3 = EventManager.crewMenu.mental4 = 5;
 
             }

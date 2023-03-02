@@ -92,6 +92,7 @@
       <Link>Time.cs</Link>
     </Compile>
     <Compile Include="Assets\Scripts\AudioManager.cs" />
+    <Compile Include="Assets\Scripts\Crew.cs" />
     <Compile Include="Assets\Scripts\CrewMenu.cs" />
     <Compile Include="Assets\Scripts\Event_02.cs" />
     <Compile Include="Assets\Scripts\Event_03.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Assets\Scripts\CombatMovement.cs" />
     <Compile Include="Assets\Scripts\MainMenu.cs" />
     <Compile Include="Assets\Scripts\Bullet.cs" />
+    <Compile Include="Assets\Scripts\Prepare.cs" />
     <Compile Include="Assets\Scripts\ScreensManager.cs" />
     <Compile Include="Assets\Scripts\ShooterBehaviour.cs" />
     <Compile Include="Assets\Scripts\Story.cs" />

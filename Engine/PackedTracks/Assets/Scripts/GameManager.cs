@@ -93,9 +93,9 @@ public class GameManager: CopiumScript
                 timer = 0.0f;
             }
 
-            if(foodTimer >= 4.0f && crewMenuScript.food != 0)
+            if(foodTimer >= 4.0f && crewMenuScript.supplies != 0)
             {
-                crewMenuScript.food -= 1;
+                crewMenuScript.supplies -= 1;
                 foodTimer = 0.0f;
             }
 
@@ -104,7 +104,7 @@ public class GameManager: CopiumScript
         }
         tracker.text =  distanceLeft.ToString() + "KM";
 
-        if (crewMenuScript.food == 0)
+        if (crewMenuScript.supplies == 0)
         {
             if(hungerTimer >= 1.0f)
             {
