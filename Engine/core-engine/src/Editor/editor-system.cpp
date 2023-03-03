@@ -53,7 +53,7 @@ namespace Copium
 		io.ConfigWindowsMoveFromTitleBarOnly = true;
 
 		// Global Font Size
-		io.FontGlobalScale = 0.6f;
+		io.FontGlobalScale = 0.5f;
 		
 		ImGui::StyleColorsDark();
 

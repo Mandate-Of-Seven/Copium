@@ -36,25 +36,31 @@ public class CrewMenu: CopiumScript
         }
     }
 
-    public Person[] crew = new Person[4]
-    {
-        new Person("Harris"),
-        new Person("Bronson"),
-        new Person("Chuck"),
-        new Person("Danton")
-    };
+    public Person[] crew = new Person[4];
 
     void Start()
 	{
+        crew[0].name = "Harris";
+        crew[1].name = "Bronson";
+        crew[2].name = "Chuck";
+        crew[3].name = "Danton";
         
-	}
+        for (int i = 0; i < 4; i++)
+        {
+            crew[i].health = 15;
+            crew[i].mental = 15;
+            crew[i].hunger = 10;
+            crew[i].timer = 0.0f;
+        }
+    }
 	void Update()
 	{
+        Console.WriteLine("Hello this is crew: " + crew.Length);
         //if prepare button is pressed
         //show what event happened
         //update values based on event that happened
         //have condition for when certain values hit 0??
-       
+
         if (closeCrewButton.state == ButtonState.OnClick)
         {
             gameObject.SetActive(false);
