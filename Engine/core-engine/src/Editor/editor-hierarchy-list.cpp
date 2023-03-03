@@ -65,21 +65,6 @@ namespace Copium
 				{
 					Copium::GameObject* temp{};
 					MyEventSystem->publish(new GameObjectInstantiateEvent(temp));
-					//if (temp)
-					//{
-					//	std::shared_ptr<Copium::GameObject>* sptr = MySceneManager.find_gameobject_sptr(temp);
-					//	if (sptr)
-					//	{
-					//		Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::GameObjectCommand(*MySceneManager.find_gameobject_sptr(temp), true);
-					//		Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
-					//		tempUndo->printCommand();
-					//	}
-
-					//}
-					//else
-					//{
-					//	std::cout << "Error creating game object\n";
-					//}
 
 				}
 				if (ImGui::MenuItem("Delete Selected GameObject", nullptr))
@@ -256,65 +241,63 @@ namespace Copium
 			baseFlags |= ImGuiTreeNodeFlags_Selected;
 		}
 
-		nodeOpen = ImGui::TreeNodeEx(_go.name.c_str(), baseFlags);
-/*
-		if (is->is_key_held(GLFW_KEY_LEFT_SHIFT))
+
+
+		if (isRenaming && renamer == &_go)
 		{
-			if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
+			//PRINT("bloop");
+			ImGui::SetItemAllowOverlap();
+			static char buffer[256];
+
+			strcpy(buffer, _go.name.c_str());
+			if (ImGui::InputText("##gameObjName", buffer, 256))
 			{
-				if (!_go.transform.HasParent())
-				{
-					//std::cout << "ID of selected Game Object: " << _selected << std::endl;
-					int n_next = (ImGui::GetMouseDragDelta(0).y < 0.f ? -1 : 1);
-					if (n_next > 0)
-						PRINT("Move up\n");
-					else
-						PRINT("Move down\n");
-
-					n_next += _index;
-					if (n_next >= 0 && n_next < _vector.size())
-					{
-						PRINT("there will be movement\n");
-						GameObject* temp = _vector[n_next];
-						size_t idx1{0}, idx2{0};
-						for (size_t i{ 0 }; i < currentScene->get_gameobjcount(); ++i)
-						{
-							if (temp == currentScene->gameObjectects[i])
-							{
-								idx1 = i;
-								break;
-							}
-						}
-
-						for (size_t i{ 0 }; i < currentScene->get_gameobjcount(); ++i)
-						{
-							if (&_go == currentScene->gameObjectects[i])
-							{
-								idx2 = i;
-								break;
-							}
-						}
-
-						currentScene->gameObjectects[idx1] = currentScene->gameObjectects[idx2];
-						currentScene->gameObjectects[idx2] = temp;
-			
-						ImGui::ResetMouseDragDelta();
-					}
-
-
-
-				}
-
+				PRINT("bleep");
 			}
-		}*/			
+
+			_go.name = buffer;
+
+			if (is->is_key_pressed(GLFW_KEY_ENTER))
+			{
+				isRenaming = false;
+				renamer = nullptr;
+			}
+
+			if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !ImGui::IsItemHovered())
+			{
+				isRenaming = false;
+				renamer = nullptr;
+			}
+
+
+			ImGui::SameLine();
+
+		}
+
+		// Hide original 
+		if (isRenaming && renamer == &_go)
+		{
+			nodeOpen = ImGui::TreeNodeEx("", baseFlags);
+			if (MyEditorSystem.pSelectedGameObject == &_go)
+				baseFlags &= ~(ImGuiTreeNodeFlags_Selected);
+		}
+		else
+			nodeOpen = ImGui::TreeNodeEx(_go.name.c_str(), baseFlags);
+
+
+
 		if (ImGui::BeginDragDropSource())
 		{
 			static void* container;
 			container = &_go;
 			ImGui::SetDragDropPayload("GameObject", &container, sizeof(void*));
 			ImGui::EndDragDropSource();
-
-			//std::cout << "ID of selected Game Object: " << _selected << std::endl;
+		}
+		else if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+		{
+			PRINT("double clicked on a game object");
+			isRenaming = true;
+			renamer = &_go;
 		}
 		else if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 		{
@@ -351,16 +334,6 @@ namespace Copium
 		}		
 		if (nodeOpen)
 		{
-			//for (const auto& pComponent : _go.components)
-			//{
-			//	if (ImGui::BeginDragDropSource())
-			//	{
-			//		static void* container;
-			//		container = pComponent;
-			//		ImGui::SetDragDropPayload(pComponent->Name().c_str(), &container, sizeof(void*));
-			//		ImGui::EndDragDropSource();
-			//	}
-			//}
 
 			if (res != 1 && !ImGui::IsItemToggledOpen())
 			{
@@ -404,73 +377,7 @@ namespace Copium
 		}
 
 		nodeOpen = ImGui::TreeNodeEx(_go.name.c_str(), baseFlags);
-/*
-		//if (is->is_key_held(GLFW_KEY_LEFT_SHIFT))
-		//{
-		//	//PRINT("Holding shift");		
-		//	// Handle any reordering
-		//	if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
-		//	{
-		//		PRINT("Selected GameObject's Index:" << _index);
-		//			//std::cout << "ID of selected Game Object: " << _selected << std::endl;
-		//			int n_next = (ImGui::GetMouseDragDelta(0).y < 0.f ? -1 : 1);
-		//			bool increment;
-		//			if (n_next < 0)
-		//			{
-		//				increment = false;
-		//				PRINT("neg");
-		//			}
-		//			else
-		//			{
-		//				increment = true;
-		//				PRINT("pos");
-		//			}
-		//			n_next += _index;
-		//			PRINT("n_next:" << n_next);
-		//			PRINT("Generation size:" << _list.size());
-		//			if (n_next >= 0 && n_next < _list.size())
-		//			{		
-		//				PRINT("test");
-		//				Transform* tmp = &_go.transform;
-		//				std::list<Transform*>::iterator iter1, iter2;
-		//				iter1 = _list.begin();
-		//				for (int i{ 0 }; i < _list.size(); ++i)
-		//				{
-		//					if (*iter1 == tmp)
-		//					{
-		//						PRINT("Found it");
-		//						break;
-		//					}
-		//					++iter1;
-		//				}
-		//				iter2 = iter1;
-		//				if (increment)
-		//				{
-		//					PRINT("increment");
-		//					++iter2;
-		//				}
-		//				else
-		//				{
-		//					PRINT("decrement");
-		//					--iter2;
-		//				}
-		//			
-		//				if (iter2 != _list.end())
-		//				{
-		//					PRINT("Swapping " << (*iter1)->gameObject.name << " and " << (*iter2)->gameObject.name);
-		//					//*iter1 = *iter2;
-		//					//*iter2 = tmp;
-		//					std::swap(*iter1, *iter2);
-		//				}
-		//			
-		//				ImGui::ResetMouseDragDelta();
-		//			}
-		//
-		//	}
-		//}
-		//else
-		//{
-		*/
+
 
 		if (ImGui::BeginDragDropSource())
 		{
@@ -483,7 +390,11 @@ namespace Copium
 		}
 
 		// Handle mouse clicks on item
-		if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
+		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+		{
+			PRINT("double clicked on a game object");
+		}
+		else if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 		{
 			std::cout << _go.name << " is selected\n";
 			isSelected = true;
@@ -605,7 +516,6 @@ namespace Copium
 
 
 	}
-
 	void EditorHierarchyList::ShiftDown()
 	{
 		if (!MyEditorSystem.pSelectedGameObject)
@@ -984,6 +894,7 @@ namespace Copium
 					}
 				}
 			}
+			PRINT("pos:" << pos << '|' << "dest:" << dest);
 			pScene->gameObjects.swap(pos, dest);
 		}
 	}
