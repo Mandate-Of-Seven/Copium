@@ -691,7 +691,7 @@
         {
             "UID": 13016513725544699197,
             "Name": "ReportScreen",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "PID": 0,
@@ -837,7 +837,7 @@
                     "UID": 3481733135209103907,
                     "Type": "Button",
                     "TypeID": 18,
-                    "Graphic ID": 0,
+                    "Graphic ID": 17020740883290784095,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.30000001192092896,
@@ -3055,8 +3055,7 @@
                     "UID": 4950976245312507192,
                     "Type": "Script",
                     "TypeID": 23,
-                    "Name": "Event_03",
-                    "eventManager": 9174652001346769036
+                    "Name": "Event_03"
                 }
             ]
         },

@@ -95,6 +95,7 @@
     <Compile Include="Assets\Scripts\CrewMenu.cs" />
     <Compile Include="Assets\Scripts\Event_02.cs" />
     <Compile Include="Assets\Scripts\Event_03.cs" />
+    <Compile Include="Assets\Scripts\Fade.cs" />
     <Compile Include="Assets\Scripts\FPS.cs" />
     <Compile Include="Assets\Scripts\ButtonCalls.cs" />
     <Compile Include="Assets\Scripts\CombatManager.cs" />

@@ -128,6 +128,7 @@ public class EventManager: CopiumScript
         {
             choice = 0;
         }
+        
     }
 
     void ShowResolution()
@@ -156,9 +157,11 @@ public class EventManager: CopiumScript
 
         if(next_btn.state == ButtonState.OnClick)
         {
+            Console.WriteLine("Test");
             UpdateEventSequence();
             ShowingResolution = false;
             Next_Event.SetActive(false);
         }
+        
     }
 }

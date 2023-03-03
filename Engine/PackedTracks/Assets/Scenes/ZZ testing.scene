@@ -1,15 +1,19 @@
 {
     "Name": "NewScene",
-    "Unused GIDs": [],
-    "Unused CIDs": [],
+    "Layers": [
+        {
+            "Name": "Default",
+            "ID": 0
+        }
+    ],
     "GameObjects": [
         {
-            "ID": 1,
+            "UID": 1,
             "Name": "Camera",
+            "Active": true,
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 1,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -28,7 +32,9 @@
                     }
                 },
                 {
+                    "UID": 6934564570338124392,
                     "Type": "Camera",
+                    "TypeID": 19,
                     "Color": {
                         "X": 0.27799999713897705,
                         "Y": 0.27799999713897705,
@@ -44,12 +50,12 @@
             ]
         },
         {
-            "ID": 2,
+            "UID": 2,
             "Name": "Background train interior",
+            "Active": true,
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 3,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -62,32 +68,43 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 2.4000000953674316,
-                        "Y": 2.4000000953674316,
+                        "X": 3.0,
+                        "Y": 3.0,
                         "Z": 1.0
                     }
                 },
                 {
-                    "ID": 4,
+                    "UID": 6899793668046993887,
                     "Type": "SpriteRenderer",
-                    "Sprite ID": 7,
-                    "Sprite Name": "BG-01.png",
+                    "TypeID": 22,
+                    "Sprite ID": 4874611181005233622,
+                    "Sprite Name": "Panel_02.png",
                     "Color": {
                         "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
-                        "W": 1.0
+                        "Y": 0.9998999834060669,
+                        "Z": 0.9998999834060669,
+                        "W": -0.029999999329447746
                     }
+                },
+                {
+                    "UID": 8472841890183597421,
+                    "Type": "Script",
+                    "TypeID": 23,
+                    "Name": "Fade",
+                    "amount": 3.0,
+                    "fadeIn": false,
+                    "fadeVal": 0.0,
+                    "shouldFade": false
                 }
             ]
         },
         {
-            "ID": 5,
+            "UID": 5,
             "Name": "Snowstorm effect",
+            "Active": true,
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 5,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -106,28 +123,32 @@
                     }
                 },
                 {
-                    "ID": 10,
+                    "UID": 12366120160729259420,
                     "Type": "Animator",
+                    "TypeID": 15,
                     "Loop": true,
+                    "Rev": false,
                     "Count": 1,
                     "Animations": [
                         {
                             "Name": "spritesheet (1).png",
                             "Sprite ID": 4,
                             "Time Delay": 0.05000000074505806,
-                            "FrameCount": 19
+                            "FrameCount": 19,
+                            "Rows": 1,
+                            "Columns": 1
                         }
                     ]
                 }
             ]
         },
         {
-            "ID": 3,
+            "UID": 3,
             "Name": "Background tracks moving",
+            "Active": true,
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 7,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -146,28 +167,32 @@
                     }
                 },
                 {
-                    "ID": 6,
+                    "UID": 3697771282995860175,
                     "Type": "Animator",
+                    "TypeID": 15,
                     "Loop": true,
+                    "Rev": false,
                     "Count": 1,
                     "Animations": [
                         {
                             "Name": "spritesheet.png",
                             "Sprite ID": 5,
-                            "Time Delay": 0.029999999329447746,
-                            "FrameCount": 4
+                            "Time Delay": 0.029999999329447743,
+                            "FrameCount": 4,
+                            "Rows": 1,
+                            "Columns": 1
                         }
                     ]
                 }
             ]
         },
         {
-            "ID": 4,
+            "UID": 4,
             "Name": "Background road moving",
+            "Active": true,
             "Components": [
                 {
                     "PID": 0,
-                    "ID": 9,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -186,16 +211,20 @@
                     }
                 },
                 {
-                    "ID": 8,
+                    "UID": 783023213820499297,
                     "Type": "Animator",
+                    "TypeID": 15,
                     "Loop": true,
+                    "Rev": false,
                     "Count": 1,
                     "Animations": [
                         {
                             "Name": "Road spritesheet.png",
                             "Sprite ID": 2,
                             "Time Delay": 0.03999999910593033,
-                            "FrameCount": 9
+                            "FrameCount": 9,
+                            "Rows": 1,
+                            "Columns": 1
                         }
                     ]
                 }

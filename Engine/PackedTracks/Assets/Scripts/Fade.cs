@@ -6,8 +6,9 @@ public class Fade: CopiumScript
 	public bool shouldFade;
 	public bool fadeIn = true;
 	public float amount= 1.0f;
+	public int maxFade = 150;
 	public float fadeVal = 0.0f;
-
+	
     void Start()
 	{
 		shouldFade = true;
@@ -16,7 +17,7 @@ public class Fade: CopiumScript
 	{
         if(shouldFade)
 		{
-			if(fadeVal>100)
+			if(fadeVal>maxFade)
 			{
 				fadeIn = false;
 			}
@@ -33,10 +34,10 @@ public class Fade: CopiumScript
 			}
 			else
 			{
-				fadeVal-=amount;
+				fadeVal-= amount;
 			}
 			Color temp = gameObject.GetComponent<SpriteRenderer>().color;
-			temp.a = fadeVal;
+			temp.a = fadeVal/100;
 			gameObject.GetComponent<SpriteRenderer>().color = temp;
 
         }

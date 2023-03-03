@@ -656,6 +656,7 @@ namespace Copium
 		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
 		if (gameObj == nullptr)
 			return;
+		std::cout << color->a <<"\n";
 		gameObj->GetComponent<SpriteRenderer>()->sprite.color = *color;
 	}
 
