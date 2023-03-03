@@ -174,6 +174,11 @@ namespace Copium
 		Copium::SerializeBasic(_data.color.z, color, _doc, "Z");
 		Copium::SerializeBasic(_data.color.w, color, _doc, "W");
 		_value.AddMember("Color", color, _doc.GetAllocator());
+
+		rapidjson::Value flip(rapidjson::kObjectType);
+		Copium::SerializeBasic(_data.flip.x, flip, _doc, "X");
+		Copium::SerializeBasic(_data.flip.y, flip, _doc, "Y");
+		_value.AddMember("Flip", flip, _doc.GetAllocator());
 	}
 
 	template<>
@@ -749,6 +754,13 @@ namespace Copium
 			Copium::Deserialize(_data.color.w, color, "W");
 		}
 
+		if (_value.HasMember("Flip"))
+		{
+			rapidjson::Value flip(rapidjson::kObjectType);
+			flip = _value["Flip"].GetObj();
+			Copium::Deserialize(_data.flip.x, flip, "X");
+			Copium::Deserialize(_data.flip.y, flip, "Y");
+		}
 
 	}
 	template<>

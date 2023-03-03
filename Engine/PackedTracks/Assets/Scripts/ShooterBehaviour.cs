@@ -33,15 +33,15 @@ public class ShooterBehaviour: CopiumScript
 			timer = 0f;
         }
 		//Look for enemies
-		Vector3 pos = transform.position;
-		if (enemy)
-        {
-			pos.x -= 0.025f;
-        }
-		else
-		{
-			pos.x += 0.025f;
-		}
-		transform.position = pos;
+		//Vector3 pos = transform.position;
+		//if (enemy)
+  //      {
+		//	pos.x -= 0.025f;
+  //      }
+		//else
+		//{
+		//	pos.x += 0.025f;
+		//}
+		//transform.position = pos;
 	}
 }

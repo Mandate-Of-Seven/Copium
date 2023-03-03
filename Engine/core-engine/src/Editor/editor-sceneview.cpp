@@ -178,17 +178,6 @@ namespace Copium
 				max = glm::vec2(objPosition.x + tempScale.x * 0.5f, objPosition.y + tempScale.y * 0.5f);
 				float tempX = 0.f, tempY = 0.f;
 
-				if (gameObject.HasComponent<Button>())
-				{
-					Button* button = gameObject.GetComponent<Button>();
-
-					if (!button->enabled)
-						continue;
-					bound = button->bounds.GetRelativeBounds(gameObject.transform.GetWorldPosition(), gameObject.transform.GetWorldScale());
-					min = bound.min;
-					max = bound.max;
-				}
-
 				if (gameObject.HasComponent<SpriteRenderer>())
 				{
 					SpriteRenderer* spriteRenderer = gameObject.GetComponent<SpriteRenderer>();

@@ -798,6 +798,14 @@ namespace Copium
             //spriteRenderer.sprite.set_name()
             Display("Sprite", spriteRenderer.sprite.refTexture);
             DisplayColor("Color", spriteRenderer.sprite.color);
+
+            ImGui::TableNextColumn();
+            ImGui::Text("Flip");
+            ImGui::TableNextColumn();
+            ImGui::Checkbox("X", &spriteRenderer.sprite.flip.x);
+            ImGui::SameLine(0.f, 16.f);
+            ImGui::Checkbox("Y", &spriteRenderer.sprite.flip.y);
+
             if (spriteRenderer.sprite.refTexture)
             {
                 std::string filePath = spriteRenderer.sprite.refTexture->get_file_path();
@@ -847,6 +855,13 @@ namespace Copium
         {
             Display("Image", image.sprite.refTexture);
             DisplayColor("Color", image.sprite.color);
+
+            ImGui::TableNextColumn();
+            ImGui::Text("Flip");
+            ImGui::TableNextColumn();
+            ImGui::Checkbox("X", &image.sprite.flip.x);
+            ImGui::SameLine(0.f, 16.f);
+            ImGui::Checkbox("Y", &image.sprite.flip.y);
 
             //Update sprite data
             if (image.sprite.refTexture)

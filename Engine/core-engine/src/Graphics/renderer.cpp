@@ -620,10 +620,16 @@ namespace Copium
 		if(it == textureIDs.end())
 			textureIDs.emplace(std::make_pair(key, textureCount++));
 
+		glm::vec2 flip{1.f};
+		if (_sprite.flip.x)
+			flip.x = -1.f;
+		if(_sprite.flip.y)
+			flip.y = -1.f;
+
 		for (GLint i = 0; i < 4; i++)
 		{
 			quadBufferPtr->pos = _transform * quadVertexPosition[i];
-			quadBufferPtr->textCoord = quadTextCoord[i];
+			quadBufferPtr->textCoord = quadTextCoord[i] * flip;
 
 			if (!tint)
 				quadBufferPtr->color = _sprite.color;

@@ -147,14 +147,48 @@ namespace Copium
 
 		GameObjectsPtrArray pGameObjs; // Possible selectable gameobjects
 		Camera& gameCamera{pScene->componentArrays.GetArray<Camera>()[0]};
-		glm::vec2 mousePosition = glm::vec3(gameCamera.get_game_ndc(), 0.f);
+		glm::vec2 mousePosition = gameCamera.get_game_ndc();
 		for (GameObject& gameObject : pScene->gameObjects)
 		{
 			if (!gameObject.IsActive())
 				continue;
 			Transform& t = gameObject.transform;
-			Math::Vec3 worldPos{ t.GetWorldPosition() };
-			Math::Vec3 worldScale{ t.GetWorldScale() };
+			Math::Vec3 worldPos{ t.position };
+			Math::Vec3 worldScale{ t.scale };
+
+			if (t.HasParent())
+			{
+				Transform* tempObj = t.parent;
+				while (tempObj)
+				{
+					glm::vec3 tempPos = tempObj->position.glmVec3;
+					glm::mat4 pTranslate = glm::translate(glm::mat4(1.f), tempPos);
+
+					float rot = glm::radians(tempObj->rotation.z);
+					glm::mat4 pRotate = {
+					glm::vec4(cos(rot), sin(rot), 0.f, 0.f),
+					glm::vec4(-sin(rot), cos(rot), 0.f, 0.f),
+					glm::vec4(0.f, 0.f, 1.f, 0.f),
+					glm::vec4(0.f, 0.f, 0.f, 1.f)
+					};
+
+					glm::vec3 size = tempObj->scale.glmVec3;
+					glm::mat4 pScale = {
+						glm::vec4(size.x, 0.f, 0.f, 0.f),
+						glm::vec4(0.f, size.y, 0.f, 0.f),
+						glm::vec4(0.f, 0.f, 1.f, 0.f),
+						glm::vec4(0.f, 0.f, 0.f, 1.f)
+					};
+
+					glm::mat4 pTransform = pTranslate * pRotate * pScale;
+
+					worldPos.glmVec3 = glm::vec3(pTransform * glm::vec4(worldPos.glmVec3, 1.f));
+
+					worldScale.glmVec3 *= tempObj->scale.glmVec3;
+
+					tempObj = tempObj->parent;
+				}
+			}
 
 			glm::vec2 objPosition = { worldPos.x, worldPos.y };
 
@@ -166,18 +200,17 @@ namespace Copium
 			Button* button = gameObject.GetComponent<Button>();
 			Image* image = gameObject.GetComponent<Image>();
 
-			if (!button && !image)
+			if (!button)
 				continue;
 
 			if (button)
 			{
-
 				if (!button->enabled)
 					continue;
 				bounds = button->bounds;
 			}
 
-			if (image)
+			/*if (image)
 			{
 
 				if (!image->enabled)
@@ -186,15 +219,16 @@ namespace Copium
 
 				if (texture != nullptr)
 				{
-					//tempX = tempScale.x * texture->get_pixel_width();
-					//tempY = tempScale.y * texture->get_pixel_height();
-					bounds.max = { texture->get_pixel_height() / 2.f, texture->get_pixel_width() / 2.f };
-					bounds.min = { -texture->get_pixel_height() / 2.f, -texture->get_pixel_width() / 2.f };
+					float tempX = texture->get_pixel_width();
+					float tempY = texture->get_pixel_height();
+					bounds.max = { tempX * 0.5f,tempY * 0.5f };
+					bounds.min = { -tempX * 0.5f, -tempY * 0.5f };
 				}
-			}
+			}*/
 			
 			// Check AABB
-			if (static_collision_pointrect(mousePosition,bounds.GetRelativeBounds(worldPos,worldScale)))
+			AABB bound = bounds.GetRelativeBounds(worldPos, worldScale);
+			if (static_collision_pointrect(mousePosition, bound))
 				pGameObjs.push_back(&gameObject);
 		}
 
@@ -264,6 +298,10 @@ namespace Copium
 
 
 		GameObject* selected = GetSelectedGameObject();
+		/*if(selected)
+			PRINT("Selecting " << selected->name);
+		else
+			PRINT("None Selected");*/
 
 		Button* prevHover = pHoveredBtn;
 		for (Button& button : pScene->componentArrays.GetArray<Button>())
@@ -275,7 +313,6 @@ namespace Copium
 			}
 			if (&button.gameObj == selected)
 			{
-				PRINT("HOVERING " << button.gameObj.name);
 				button.state = GetButtonState(button);
 				break;
 				//Selected button state
