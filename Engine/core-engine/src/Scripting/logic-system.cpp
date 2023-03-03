@@ -147,7 +147,7 @@ namespace Copium
 
 		GameObjectsPtrArray pGameObjs; // Possible selectable gameobjects
 		Camera& gameCamera{pScene->componentArrays.GetArray<Camera>()[0]};
-		glm::vec2 mousePosition = glm::vec3(gameCamera.get_game_ndc(), 0.f);
+		glm::vec2 mousePosition = gameCamera.get_game_ndc();
 		for (GameObject& gameObject : pScene->gameObjects)
 		{
 			if (!gameObject.IsActive())
@@ -200,18 +200,17 @@ namespace Copium
 			Button* button = gameObject.GetComponent<Button>();
 			Image* image = gameObject.GetComponent<Image>();
 
-			if (!button && !image)
+			if (!button)
 				continue;
 
 			if (button)
 			{
-
 				if (!button->enabled)
 					continue;
 				bounds = button->bounds;
 			}
 
-			if (image)
+			/*if (image)
 			{
 
 				if (!image->enabled)
@@ -220,16 +219,15 @@ namespace Copium
 
 				if (texture != nullptr)
 				{
-					//tempX = tempScale.x * texture->get_pixel_width();
-					//tempY = tempScale.y * texture->get_pixel_height();
-					bounds.max = { texture->get_pixel_height() / 2.f, texture->get_pixel_width() / 2.f };
-					bounds.min = { -texture->get_pixel_height() / 2.f, -texture->get_pixel_width() / 2.f };
+					float tempX = texture->get_pixel_width();
+					float tempY = texture->get_pixel_height();
+					bounds.max = { tempX * 0.5f,tempY * 0.5f };
+					bounds.min = { -tempX * 0.5f, -tempY * 0.5f };
 				}
-			}
+			}*/
 			
 			// Check AABB
 			AABB bound = bounds.GetRelativeBounds(worldPos, worldScale);
-			PRINT("Bounds: " << bound.min.x << " " << bound.max.x << " " << bound.min.y << " " << bound.max.y);
 			if (static_collision_pointrect(mousePosition, bound))
 				pGameObjs.push_back(&gameObject);
 		}
@@ -300,6 +298,10 @@ namespace Copium
 
 
 		GameObject* selected = GetSelectedGameObject();
+		/*if(selected)
+			PRINT("Selecting " << selected->name);
+		else
+			PRINT("None Selected");*/
 
 		Button* prevHover = pHoveredBtn;
 		for (Button& button : pScene->componentArrays.GetArray<Button>())
@@ -311,7 +313,6 @@ namespace Copium
 			}
 			if (&button.gameObj == selected)
 			{
-				PRINT("HOVERING " << button.gameObj.name);
 				button.state = GetButtonState(button);
 				break;
 				//Selected button state

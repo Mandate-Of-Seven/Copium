@@ -1349,7 +1349,8 @@
                     "ManualBtn": 6900690266592182984,
                     "PauseQuitBtn": 4561109446918292296,
                     "ReportScreenBtn": 12993210835278376820,
-                    "tracker": 14370462799058784128
+                    "tracker": 14370462799058784128,
+                    "crewMenuScript": 15964808941009667406
                 }
             ]
         },
@@ -1740,16 +1741,16 @@
             ]
         },
         {
-            "UID": 11932787380016220031,
-            "Name": "Lever Near",
+            "UID": 15976625565460260100,
+            "Name": "Distance Counter",
             "Active": true,
             "Components": [
                 {
                     "PID": 6642123175702952797,
                     "Type": "Transform",
                     "Pos": {
-                        "X": -4.353150844573975,
-                        "Y": -3.937562942504883,
+                        "X": -4.413158416748047,
+                        "Y": 1.0240553617477417,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -1758,26 +1759,24 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 2.950000047683716,
+                        "X": 3.0,
                         "Y": 2.5,
                         "Z": 1.0
                     }
                 },
                 {
-                    "UID": 922145806467897125,
+                    "UID": 17584698608166053773,
                     "Type": "SortingGroup",
                     "TypeID": 26,
                     "SortingLayer": 4,
-                    "OrderInLayer": 11
+                    "OrderInLayer": 19
                 },
                 {
-                    "UID": 11073973010564739848,
-                    "Type": "Image",
-                    "TypeID": 20,
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Sprite ID": 11017450176436698126,
-                    "Sprite Name": "Lever-Near.png",
+                    "UID": 16529788374252327164,
+                    "Type": "SpriteRenderer",
+                    "TypeID": 22,
+                    "Sprite ID": 3677095133234306114,
+                    "Sprite Name": "distancecounter.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
@@ -1998,16 +1997,16 @@
             ]
         },
         {
-            "UID": 15976625565460260100,
-            "Name": "Distance Counter",
+            "UID": 11932787380016220031,
+            "Name": "Lever Near",
             "Active": true,
             "Components": [
                 {
                     "PID": 6642123175702952797,
                     "Type": "Transform",
                     "Pos": {
-                        "X": -4.413158416748047,
-                        "Y": 1.0240553617477417,
+                        "X": -4.353150844573975,
+                        "Y": -3.937562942504883,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -2016,24 +2015,26 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 3.0,
+                        "X": 2.950000047683716,
                         "Y": 2.5,
                         "Z": 1.0
                     }
                 },
                 {
-                    "UID": 17584698608166053773,
+                    "UID": 922145806467897125,
                     "Type": "SortingGroup",
                     "TypeID": 26,
                     "SortingLayer": 4,
-                    "OrderInLayer": 19
+                    "OrderInLayer": 11
                 },
                 {
-                    "UID": 16529788374252327164,
-                    "Type": "SpriteRenderer",
-                    "TypeID": 22,
-                    "Sprite ID": 3677095133234306114,
-                    "Sprite Name": "distancecounter.png",
+                    "UID": 11073973010564739848,
+                    "Type": "Image",
+                    "TypeID": 20,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 11017450176436698126,
+                    "Sprite Name": "Lever-Near.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
@@ -2225,29 +2226,10 @@
                     "OrderInLayer": 3
                 },
                 {
-                    "UID": 11591128637323650362,
-                    "Type": "Image",
-                    "TypeID": 20,
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Sprite ID": 5464368652596582388,
-                    "Sprite Name": "M_Screen_Hightlight.png",
-                    "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
-                        "W": 1.0
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
-                },
-                {
                     "UID": 16353603840496979169,
                     "Type": "Button",
                     "TypeID": 18,
-                    "Graphic ID": 11591128637323650362,
+                    "Graphic ID": 0,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.75,
@@ -2307,29 +2289,10 @@
                     "OrderInLayer": 3
                 },
                 {
-                    "UID": 16310555837058783735,
-                    "Type": "Image",
-                    "TypeID": 20,
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Sprite ID": 5464368652596582388,
-                    "Sprite Name": "M_Screen_Hightlight.png",
-                    "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
-                        "W": 1.0
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
-                },
-                {
                     "UID": 11922229487746416082,
                     "Type": "Button",
                     "TypeID": 18,
-                    "Graphic ID": 16310555837058783735,
+                    "Graphic ID": 0,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.75,
@@ -2389,29 +2352,10 @@
                     "OrderInLayer": 3
                 },
                 {
-                    "UID": 1407356531166481715,
-                    "Type": "Image",
-                    "TypeID": 20,
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Sprite ID": 5464368652596582388,
-                    "Sprite Name": "M_Screen_Hightlight.png",
-                    "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
-                        "W": 1.0
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
-                },
-                {
                     "UID": 10608726559841916369,
                     "Type": "Button",
                     "TypeID": 18,
-                    "Graphic ID": 1407356531166481715,
+                    "Graphic ID": 0,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.75,
@@ -2515,29 +2459,10 @@
                     "OrderInLayer": 3
                 },
                 {
-                    "UID": 13870815316590353175,
-                    "Type": "Image",
-                    "TypeID": 20,
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Sprite ID": 5464368652596582388,
-                    "Sprite Name": "M_Screen_Hightlight.png",
-                    "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
-                        "W": 1.0
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
-                },
-                {
                     "UID": 12554093253685761835,
                     "Type": "Button",
                     "TypeID": 18,
-                    "Graphic ID": 13870815316590353175,
+                    "Graphic ID": 0,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.75,
