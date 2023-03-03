@@ -28,6 +28,15 @@ namespace CopiumEngine
         internal extern static void PauseAllAnimation();
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void PlayAllAnimation();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void PlayAnimation(ulong ID);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void PauseAnimation(ulong ID);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetAnimationSpeed(ulong ID,double timeDelay);
         #endregion
 
         #region COMPONENT

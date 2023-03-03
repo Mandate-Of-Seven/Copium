@@ -656,8 +656,31 @@ namespace Copium
 		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
 		if (gameObj == nullptr)
 			return;
-		std::cout << color->a <<"\n";
 		gameObj->GetComponent<SpriteRenderer>()->sprite.color = *color;
+	}
+
+	static void PlayAnimation(UUID ID)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return;
+		gameObj->GetComponent<Animator>()->PlayAnimation();
+	}
+
+	static void PauseAnimation(UUID ID)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return;
+		gameObj->GetComponent<Animator>()->PauseAnimation();
+	}
+
+	static void SetAnimationSpeed(UUID ID,double timeDelay)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return;
+		gameObj->GetComponent<Animator>()->animations[0].timeDelay = timeDelay;
 	}
 
 	/*******************************************************************************
@@ -699,6 +722,9 @@ namespace Copium
 		Register(GetFPS);
 		Register(GetSpriteRendererColor);
 		Register(SetSpriteRendererColor);
+		Register(PlayAnimation);
+		Register(PauseAnimation);
+		Register(SetAnimationSpeed);
 	}
 }
 #endif // !SCRIPT_WRAPPERS_H
