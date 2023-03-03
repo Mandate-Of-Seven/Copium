@@ -11,11 +11,11 @@
         },
         {
             "Name": "Train",
-            "ID": 4
+            "ID": 2
         },
         {
             "Name": "UI",
-            "ID": 2
+            "ID": 4
         },
         {
             "Name": "Crew Panel",
@@ -142,7 +142,7 @@
                     "UID": 15357410749412755010,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 4,
+                    "SortingLayer": 2,
                     "OrderInLayer": 1
                 },
                 {
@@ -218,7 +218,7 @@
                     "UID": 1796699605472573208,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 4,
+                    "SortingLayer": 2,
                     "OrderInLayer": 3
                 },
                 {
@@ -270,7 +270,7 @@
                     "UID": 10826443951868816330,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 4,
+                    "SortingLayer": 2,
                     "OrderInLayer": 3
                 },
                 {
@@ -948,7 +948,7 @@
                     "UID": 8291616701364993106,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 4,
+                    "SortingLayer": 2,
                     "OrderInLayer": 2
                 },
                 {
@@ -1030,7 +1030,7 @@
                     "UID": 11046908653754542550,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 4,
+                    "SortingLayer": 2,
                     "OrderInLayer": 2
                 },
                 {
@@ -1110,7 +1110,7 @@
                     "UID": 7526088237681184109,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 4,
+                    "SortingLayer": 2,
                     "OrderInLayer": 2
                 },
                 {
@@ -1530,7 +1530,7 @@
                     "UID": 1325802091515525317,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 2,
+                    "SortingLayer": 4,
                     "OrderInLayer": 28
                 },
                 {
@@ -1994,7 +1994,7 @@
                     "UID": 922145806467897125,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 4,
+                    "SortingLayer": 2,
                     "OrderInLayer": 11
                 },
                 {
@@ -2098,9 +2098,11 @@
                     "OrderInLayer": 0
                 },
                 {
-                    "UID": 17175164730542023705,
-                    "Type": "SpriteRenderer",
-                    "TypeID": 22,
+                    "UID": 12630905651561460938,
+                    "Type": "Image",
+                    "TypeID": 20,
+                    "H_Align": 1,
+                    "V_Align": 1,
                     "Sprite ID": 5004021854892568636,
                     "Sprite Name": "Text_Panel_BG.png",
                     "Color": {
@@ -2908,7 +2910,7 @@
                     "UID": 738256038672110254,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 4,
+                    "SortingLayer": 2,
                     "OrderInLayer": 11
                 },
                 {
@@ -3140,7 +3142,7 @@
                     "UID": 11161947812392987788,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 2,
+                    "SortingLayer": 4,
                     "OrderInLayer": 85
                 },
                 {
