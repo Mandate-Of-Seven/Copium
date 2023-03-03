@@ -828,10 +828,13 @@ namespace Copium
 		if (mAssemblyImage == nullptr)
 		{
 			//Wait if it is still compiling
-			while (compilingState == CompilingState::Compiling) {};
+			while (compilingState == CompilingState::Compiling) {
+				PRINT("COMPILING!!");
+			};
 			//If it finished compiling and needs to swap
 			if (compilingState == CompilingState::SwapAssembly)
 			{
+				PRINT("SWAP ASSEMBLY!!");
 				//Swap dll and set back to wait for compiling
 				swapDll();
 				compilingState = CompilingState::Wait;

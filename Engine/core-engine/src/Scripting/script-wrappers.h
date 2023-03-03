@@ -336,10 +336,9 @@ namespace Copium
 	static void SetActive(UUID _ID, bool _active)
 	{
 		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID.GetUUID());
-		PRINT(_ID.GetUUID());
+		PRINT("SetActive: " << gameObj->name << " " << _active);
 		if (gameObj == nullptr)
 		{
-			PRINT("no");
 			return;
 		}
 		gameObj->SetActive(_active);

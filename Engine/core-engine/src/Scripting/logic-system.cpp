@@ -39,24 +39,30 @@ namespace Copium
 		Button* pHoveredBtn{ nullptr };
 	}
 
-	ButtonState GetButtonState(Button& btn)
+	ButtonState GetButtonState(Button& btn, GameObject* selectedGameObject)
 	{
+		if (btn.state == ButtonState::None && selectedGameObject != &btn.gameObj)
+			return ButtonState::None;
 		glm::vec2 scenePos = MySceneManager.mainCamera->get_game_ndc();
 		Transform& transform{ btn.gameObj.transform };
+
 		if (pHoveredBtn == nullptr)
 		{
-			if (MyInputSystem.is_mousebutton_pressed(0))
+			if (static_collision_pointrect(scenePos, btn.bounds.GetRelativeBounds(transform.GetWorldPosition(), transform.GetWorldScale())))
 			{
-				pHoveredBtn = &btn;
-				if (btn.state == ButtonState::OnClick || btn.state == ButtonState::OnHeld)
-					return ButtonState::OnHeld;
-				return ButtonState::OnClick;
+				if (MyInputSystem.is_mousebutton_pressed(0))
+				{
+					if (pHoveredBtn)
+					{
+						pHoveredBtn = nullptr;
+					}
+					pHoveredBtn = &btn;
+					if (btn.state == ButtonState::OnClick || btn.state == ButtonState::OnHeld)
+						return ButtonState::OnHeld;
+					return ButtonState::OnClick;
+				}
+				return ButtonState::OnHover;
 			}
-			else if (btn.state == ButtonState::OnClick || btn.state == ButtonState::OnHeld)
-			{
-				return ButtonState::OnRelease;
-			}
-			return ButtonState::OnHover;
 		}
 		else if (pHoveredBtn == &btn)
 		{
@@ -147,7 +153,7 @@ namespace Copium
 
 		GameObjectsPtrArray pGameObjs; // Possible selectable gameobjects
 		Camera& gameCamera{pScene->componentArrays.GetArray<Camera>()[0]};
-		glm::vec2 mousePosition = glm::vec3(gameCamera.get_game_ndc(), 0.f);
+		glm::vec2 mousePosition = gameCamera.get_game_ndc();
 		for (GameObject& gameObject : pScene->gameObjects)
 		{
 			if (!gameObject.IsActive())
@@ -166,7 +172,7 @@ namespace Copium
 			Button* button = gameObject.GetComponent<Button>();
 			Image* image = gameObject.GetComponent<Image>();
 
-			if (!button && !image)
+			if (!button)
 				continue;
 
 			if (button)
@@ -177,21 +183,21 @@ namespace Copium
 				bounds = button->bounds;
 			}
 
-			if (image)
-			{
+			//if (image)
+			//{
 
-				if (!image->enabled)
-					continue;
-				Texture* texture = image->sprite.refTexture;
+			//	if (!image->enabled)
+			//		continue;
+			//	Texture* texture = image->sprite.refTexture;
 
-				if (texture != nullptr)
-				{
-					//tempX = tempScale.x * texture->get_pixel_width();
-					//tempY = tempScale.y * texture->get_pixel_height();
-					bounds.max = { texture->get_pixel_height() / 2.f, texture->get_pixel_width() / 2.f };
-					bounds.min = { -texture->get_pixel_height() / 2.f, -texture->get_pixel_width() / 2.f };
-				}
-			}
+			//	if (texture != nullptr)
+			//	{
+			//		//tempX = tempScale.x * texture->get_pixel_width();
+			//		//tempY = tempScale.y * texture->get_pixel_height();
+			//		bounds.max = { texture->get_pixel_width() / 2.f,texture->get_pixel_height() / 2.f};
+			//		bounds.min = { -texture->get_pixel_width() / 2.f , -texture->get_pixel_height() / 2.f};
+			//	}
+			//}
 			
 			// Check AABB
 			if (static_collision_pointrect(mousePosition,bounds.GetRelativeBounds(worldPos,worldScale)))
@@ -263,27 +269,6 @@ namespace Copium
 			return;
 
 
-		GameObject* selected = GetSelectedGameObject();
-
-		Button* prevHover = pHoveredBtn;
-		for (Button& button : pScene->componentArrays.GetArray<Button>())
-		{
-			if (!button.gameObj.IsActive() || !button.enabled)
-			{
-				button.state = ButtonState::None;
-				continue;
-			}
-			if (&button.gameObj == selected)
-			{
-				PRINT("HOVERING " << button.gameObj.name);
-				button.state = GetButtonState(button);
-				break;
-				//Selected button state
-			}
-			ButtonBehavior(button);
-		}
-
-
 		for (Script& script : pScene->componentArrays.GetArray<Script>())
 		{
 			if (!script.enabled)
@@ -299,10 +284,25 @@ namespace Copium
 				//	MyEventSystem->publish(new ScriptInvokeMethodEvent(*pScript,"FixedUpdate"));
 				//}
 				//if (pScene != sceneManager.get_current_scene())
-				//	return;
+				//	return
 		}
 
+		GameObject* selected = GetSelectedGameObject();
 
+		if (selected)
+			PRINT( "Selected: " << selected->name);
+		for (Button& button : pScene->componentArrays.GetArray<Button>())
+		{
+			if (!button.enabled || !button.gameObj.IsActive())
+			{
+				button.state = ButtonState::None;
+				if (&button == pHoveredBtn)
+					pHoveredBtn = nullptr;
+				continue;
+			}
+			button.state = GetButtonState(button,selected);
+			ButtonBehavior(button);
+		}
 	}
 
 	void LogicSystem::exit()
