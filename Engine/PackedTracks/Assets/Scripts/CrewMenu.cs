@@ -1,5 +1,6 @@
 using CopiumEngine;
 using System;
+using System.Linq;
 
 public class CrewMenu: CopiumScript
 {
@@ -14,13 +15,17 @@ public class CrewMenu: CopiumScript
     public int supplies;
 
     public Crew harris, bronson, chuck, danton;
-    bool harrisSelected, bronsonSelected, chuckSelected, dantonSelected = false;
 
     public bool preparing = false;
     public bool deployed = false;
 
     public struct Person
     {
+        public string name;
+        public int health;
+        public int mental;
+        public int hunger;
+        public float timer;
         public Person(string _name)
         {
             name = _name;
@@ -29,14 +34,9 @@ public class CrewMenu: CopiumScript
             hunger = 10;
             timer = 0.0f;
         }
-        public string name;
-        public int health;
-        public int mental;
-        public int hunger;
-        public float timer;
     }
 
-    public Person[] crew = new Person[4] 
+    public Person[] crew = new Person[4]
     {
         new Person("Harris"),
         new Person("Bronson"),
@@ -79,7 +79,7 @@ public class CrewMenu: CopiumScript
         suppliesText.text = "Supplies: " + supplies;
 
         if (preparing)
-            titleText.text = "Preparing";
+            titleText.text = "Selecting Members";
         else
             titleText.text = "Crew Members";
     }
