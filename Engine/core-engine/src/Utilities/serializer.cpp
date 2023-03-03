@@ -949,7 +949,7 @@ namespace Copium
 			}
 			case FieldType::GameObject:
 			{
-				PRINT("GAMEOBJECT!");
+				//PRINT("GAMEOBJECT!");
 				Copium::Deserialize((uint64_t&)_data.fieldGameObjReferences[_name], _value, _name);
 				continue;
 				break;
@@ -959,14 +959,14 @@ namespace Copium
 				break;
 			default:
 			{
-				PRINT("COMPONENT!");
+				//PRINT("COMPONENT!");
 				Copium::Deserialize((uint64_t&)_data.fieldComponentReferences[_name], _value, _name);
-				PRINT("COMPONENT!" << (uint64_t&)_data.fieldComponentReferences[_name]);
+				//PRINT("COMPONENT!" << (uint64_t&)_data.fieldComponentReferences[_name]);
 				continue;
 				break;
 			}
 			}
-			PRINT("FIELDTYPE: " << (int)fType);
+			//PRINT("FIELDTYPE: " << (int)fType);
 			MyEventSystem->publish(new ScriptSetFieldEvent(_data, _name.c_str(), _data.buffer));
 		}
 

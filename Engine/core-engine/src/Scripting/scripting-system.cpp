@@ -106,8 +106,10 @@ namespace Copium::Utils
 				auto it{ NAME_TO_CTYPE.find(componentName) };
 				if (it == NAME_TO_CTYPE.end())
 				{
-					//PRINT(componentName << " is a script");
-					return (FieldType)ComponentType::Script;
+					if (mono_class_get_parent(mono_class_from_mono_type(monoType)) == mCopiumScript)
+						return (FieldType)ComponentType::Script;
+					//PRINT(typeName << "is none type");
+					return (FieldType)ComponentType::None;
 				}
 				//PRINT(componentName << " is a component");
 				return (FieldType)it->second;
@@ -115,8 +117,10 @@ namespace Copium::Utils
 			typeName = mono_class_get_name(mono_class_get_parent(mono_class_from_mono_type(monoType)));
 			if (typeName == "CopiumScript")
 			{
+				//PRINT(typeName << " is a script because of typename");
 				return (FieldType)ComponentType::Script;
 			}
+			//PRINT(typeName << "is none type");
 			return FieldType::None;
 		}
 		return it->second;
@@ -149,7 +153,7 @@ namespace Copium
 			{
 				MonoType* type = mono_field_get_type(field);
 				FieldType fieldType = Utils::monoTypeToFieldType(type);
-				//PRINT(mono_type_get_name(type));
+				//PRINT(mono_type_get_name(type) << (int)fieldType);
 				if (fieldType != FieldType::None)
 				{
 					mFields[fieldName] = field;
@@ -173,7 +177,7 @@ namespace Copium
 						fieldType = (*it).second;
 					}
 
-					PRINT("COMPONENT TYPE: " << fieldName);
+					//PRINT("COMPONENT TYPE: " << fieldName);
 					mFields[fieldName] = field;
 				}
 			}
@@ -299,6 +303,8 @@ namespace Copium
 			
 		MonoObject* tmp = mono_object_new(mAppDomain, mClass);
 		mono_runtime_object_init(tmp);
+		if (strcmp(mono_class_get_name(mClass),"CrewMenu") == 0)
+			PRINT(mono_class_get_name(mClass) << " initialized!");
 		return tmp;
 	}
 
@@ -577,6 +583,7 @@ namespace Copium
 
 	void ScriptingSystem::GetFieldValue(MonoObject* instance, MonoClassField* mClassFiend ,Field& field, void* container)
 	{
+		PRINT("set field val: " << mono_field_get_name(mClassFiend));
 		if (field.fType == FieldType::String)
 		{
 			MonoString* mono_string = sS.createMonoString("");
@@ -594,6 +601,7 @@ namespace Copium
 		//THIS FUNCTION ONLY WORKS FOR BASIC TYPES
 		field = value;
 		//If its a string, its a C# string so create one
+		PRINT("set field ref: " << mono_field_get_name(mClassFiend));
 		if (field.fType == FieldType::String)
 		{
 			MonoString* mono_string = sS.createMonoString(reinterpret_cast<const char*>(value));
@@ -609,6 +617,7 @@ namespace Copium
 	{
 		//When you set a reference, you need to create a MonoObject of it first
 
+		PRINT("set field ref: " << mono_field_get_name(mClassFiend));
 		//ZACH: If setting to nullptr, no point checking
 		if (reference == nullptr)
 		{
@@ -652,7 +661,7 @@ namespace Copium
 		auto pairIt = mComponents[mCurrentScene].find(component.uuid);
 		if (pairIt == mComponents[mCurrentScene].end())
 		{
-			PRINT(GetComponentType<T>::name);
+			//PRINT(GetComponentType<T>::name);
 			ScriptClass& scriptClass = scriptClassMap[GetComponentType<T>::name];
 			UUID cid{ component.uuid };
 			UUID gid{ component.gameObj.uuid };
@@ -674,7 +683,7 @@ namespace Copium
 		auto pairIt = mComponents[mCurrentScene].find(component.uuid);
 		if (pairIt == mComponents[mCurrentScene].end())
 		{
-			PRINT(component.Name());
+			//PRINT(component.Name());
 			ScriptClass& scriptClass = scriptClassMap[component.Name()];
 			UUID cid{ component.uuid };
 			UUID gid{ component.gameObj.uuid };
@@ -695,7 +704,7 @@ namespace Copium
 				FieldType fieldType = Utils::monoTypeToFieldType(type);
 				const char* fieldName = pair.first.c_str();
 				std::string typeName = mono_type_get_name(type);
-				PRINT(typeName << " " << (int)fieldType);
+				//PRINT(typeName << " " << (int)fieldType);
 				auto nameField{ script.fieldDataReferences.find(fieldName) };
 				int alignment{};
 				int fieldSize = mono_type_size(type, &alignment);

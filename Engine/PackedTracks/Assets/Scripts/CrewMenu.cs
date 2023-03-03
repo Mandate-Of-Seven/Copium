@@ -18,49 +18,86 @@ public class CrewMenu: CopiumScript
 
     public bool preparing = false;
     public bool deployed = false;
-
     public struct Person
     {
-        public string name;
-        public int health;
-        public int mental;
-        public int hunger;
-        public float timer;
-        public Person(string _name)
+        string _name;
+        int _health;
+        int _mental;
+        int _hunger;
+        float _timer;
+
+        public string name
         {
-            name = _name;
-            health = 15;
-            mental = 15;
-            hunger = 10;
-            timer = 0.0f;
+            get { Console.WriteLine("getting health"); return _name; }
+            set { Console.WriteLine("setting health"); _name = value; }
+        }
+
+        public int health
+        {
+            get { return _health; }
+            set { _health = value; }
+        }
+
+        public int mental
+        {
+            get { return _mental; }
+            set { _mental = value; }
+        }
+
+        public int hunger
+        {
+            get { return _hunger; }
+            set { _hunger = value; }
+        }
+
+        public float timer
+        {
+            get { return _timer; }
+            set { _timer = value; }
+        }
+        public Person(string new_name)
+        {
+            _name = new_name;
+            _health = 15;
+            _mental = 15;
+            _hunger = 10;
+            _timer = 0.0f;
+            Console.WriteLine("CONSTRUCTED PERSON!: " + _name + _health);
         }
     }
 
-    public Person[] crew = new Person[4];
+    public Person[] crew = new Person[4]
+    {
+        new Person("Harris"),
+        new Person("Bronson"),
+        new Person("Chuck"),
+        new Person("Danton")
+    };
 
     void Start()
 	{
-        crew[0].name = "Harris";
-        crew[1].name = "Bronson";
-        crew[2].name = "Chuck";
-        crew[3].name = "Danton";
+        // crew[0].name = "Harris";
+        // crew[1].name = "Bronson";
+        // crew[2].name = "Chuck";
+        // crew[3].name = "Danton";
         
-        for (int i = 0; i < 4; i++)
-        {
-            crew[i].health = 15;
-            crew[i].mental = 15;
-            crew[i].hunger = 10;
-            crew[i].timer = 0.0f;
-        }
+        // for (int i = 0; i < 4; i++)
+        // {
+        //     crew[i].health = 15;
+        //     crew[i].mental = 15;
+        //     crew[i].hunger = 10;
+        //     crew[i].timer = 0.0f;
+        // }
     }
 	void Update()
 	{
-        Console.WriteLine("Hello this is crew: " + crew.Length);
+        //Console.WriteLine("Hello this is crew: " + crew[0].name);
         //if prepare button is pressed
         //show what event happened
         //update values based on event that happened
         //have condition for when certain values hit 0??
 
+        //Console.WriteLine("CREW MENU UPDATE");
         if (closeCrewButton.state == ButtonState.OnClick)
         {
             gameObject.SetActive(false);

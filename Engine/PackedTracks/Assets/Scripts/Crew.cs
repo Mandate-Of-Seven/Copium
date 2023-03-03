@@ -48,10 +48,10 @@ public class Crew : CopiumScript
 
     void UpdateStats()
     {
-        Console.WriteLine(person.name);
-        health = person.health;
-        mental = person.mental;
-        hunger = person.hunger;
+        // Console.WriteLine(person.name);
+        // health = person.health;
+        // mental = person.mental;
+        // hunger = person.hunger;
 
         if (person.health > 10)
             healthT.text = "Healthy";

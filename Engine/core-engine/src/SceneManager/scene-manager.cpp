@@ -691,6 +691,14 @@ namespace Copium
 
 		ifs.close();
 
+		for (GameObject& gameObj : currentScene->gameObjects)
+		{
+			mainCamera = gameObj.GetComponent<Camera>();
+			if (mainCamera)
+				break;
+		}
+
+		MyEventSystem->publish(new SceneLinkedEvent(*currentScene));
 		MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_SCENE_DESERIALIZED);
 
 		return true;
@@ -778,6 +786,7 @@ namespace Copium
 		currentScene->set_state(Scene::SceneState::play);
 
 		SoundSystem::Instance()->StopAll();
+
 
 		return true;
 	}
