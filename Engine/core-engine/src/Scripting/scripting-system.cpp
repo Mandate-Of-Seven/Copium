@@ -108,8 +108,8 @@ namespace Copium::Utils
 				{
 					if (mono_class_get_parent(mono_class_from_mono_type(monoType)) == mCopiumScript)
 						return (FieldType)ComponentType::Script;
-					//PRINT(typeName << "is none type");
-					return (FieldType)ComponentType::None;
+					PRINT(typeName << "is none type");
+					return FieldType::None;
 				}
 				//PRINT(componentName << " is a component");
 				return (FieldType)it->second;
@@ -120,7 +120,7 @@ namespace Copium::Utils
 				//PRINT(typeName << " is a script because of typename");
 				return (FieldType)ComponentType::Script;
 			}
-			//PRINT(typeName << "is none type");
+			PRINT(typeName << "is none type");
 			return FieldType::None;
 		}
 		return it->second;
@@ -160,25 +160,26 @@ namespace Copium
 				}
 				else
 				{
-					static std::string typeName;
-					typeName = mono_type_get_name(type);
-					fieldType = FieldType::Component;
-					//C# List
-					//if (typeName.find_first_of("System.Collections.Generic.List<") == 0)
+					PRINT("NONE: " << mono_type_get_name(type));
+					//static std::string typeName;
+					//typeName = mono_type_get_name(type);
+					//fieldType = FieldType::Component;
+					////C# List
+					////if (typeName.find_first_of("System.Collections.Generic.List<") == 0)
+					////{
+					////	typeName = typeName.substr(32);
+					////	typeName.pop_back();
+					////}
+
+					//auto it = fieldTypeMap.find(typeName);
+					////Type that is in the fieldTypeMap
+					//if (it != fieldTypeMap.end())
 					//{
-					//	typeName = typeName.substr(32);
-					//	typeName.pop_back();
+					//	fieldType = (*it).second;
 					//}
 
-					auto it = fieldTypeMap.find(typeName);
-					//Type that is in the fieldTypeMap
-					if (it != fieldTypeMap.end())
-					{
-						fieldType = (*it).second;
-					}
-
-					//PRINT("COMPONENT TYPE: " << fieldName);
-					mFields[fieldName] = field;
+					////PRINT("COMPONENT TYPE: " << fieldName);
+					//mFields[fieldName] = field;
 				}
 			}
 		}
@@ -583,7 +584,7 @@ namespace Copium
 
 	void ScriptingSystem::GetFieldValue(MonoObject* instance, MonoClassField* mClassFiend ,Field& field, void* container)
 	{
-		PRINT("set field val: " << mono_field_get_name(mClassFiend));
+		PRINT("Get field value: " << mono_field_get_name(mClassFiend));
 		if (field.fType == FieldType::String)
 		{
 			MonoString* mono_string = sS.createMonoString("");
@@ -601,7 +602,7 @@ namespace Copium
 		//THIS FUNCTION ONLY WORKS FOR BASIC TYPES
 		field = value;
 		//If its a string, its a C# string so create one
-		PRINT("set field ref: " << mono_field_get_name(mClassFiend));
+		PRINT("Set field value: " << mono_field_get_name(mClassFiend));
 		if (field.fType == FieldType::String)
 		{
 			MonoString* mono_string = sS.createMonoString(reinterpret_cast<const char*>(value));

@@ -966,7 +966,7 @@ namespace Copium
 				break;
 			}
 			}
-			//PRINT("FIELDTYPE: " << (int)fType);
+			PRINT("FIELD: " << _name);
 			MyEventSystem->publish(new ScriptSetFieldEvent(_data, _name.c_str(), _data.buffer));
 		}
 

@@ -91,13 +91,12 @@ public class CrewMenu: CopiumScript
     }
 	void Update()
 	{
-        //Console.WriteLine("Hello this is crew: " + crew[0].name);
+        Console.WriteLine("Hello this is crew: " + crew.Length);
         //if prepare button is pressed
         //show what event happened
         //update values based on event that happened
         //have condition for when certain values hit 0??
 
-        //Console.WriteLine("CREW MENU UPDATE");
         if (closeCrewButton.state == ButtonState.OnClick)
         {
             gameObject.SetActive(false);
