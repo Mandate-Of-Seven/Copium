@@ -291,36 +291,6 @@
                         "X": false,
                         "Y": false
                     }
-                },
-                {
-                    "UID": 7295259738988975477,
-                    "Type": "Button",
-                    "TypeID": 18,
-                    "Graphic ID": 0,
-                    "BoundingBox": {
-                        "Min": {
-                            "X": 0.0,
-                            "Y": 0.0
-                        },
-                        "Max": {
-                            "X": 0.0,
-                            "Y": 0.0
-                        }
-                    },
-                    "Callback": "OpenGameObject",
-                    "FadeDuration": 0.10000000149011612,
-                    "clickedR": 0.5,
-                    "clickedG": 0.5,
-                    "clickedB": 0.5,
-                    "clickedA": 0.5,
-                    "hoveredR": 0.5,
-                    "hoveredG": 1.0,
-                    "hoveredB": 1.0,
-                    "hoveredA": 0.5,
-                    "normalR": 1.0,
-                    "normalG": 1.0,
-                    "normalB": 1.0,
-                    "normalA": 0.5
                 }
             ]
         },
@@ -1349,8 +1319,8 @@
                     "ManualBtn": 6900690266592182984,
                     "PauseQuitBtn": 4561109446918292296,
                     "ReportScreenBtn": 12993210835278376820,
-                    "tracker": 14370462799058784128,
-                    "crewMenuScript": 15964808941009667406
+                    "crewMenuScript": 15964808941009667406,
+                    "tracker": 14370462799058784128
                 }
             ]
         },

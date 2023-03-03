@@ -28,6 +28,11 @@ public class Crew : CopiumScript
                 selected = !selected;
             showDeployed.SetActive(selected);
         }
+        else
+        {
+            selected = false;
+            showDeployed.SetActive(false);
+        }
 
         if (crewMenu.deployed)
         {
