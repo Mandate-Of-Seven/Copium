@@ -241,11 +241,14 @@ namespace Copium
 		/*******************************************************************************/
 		void Reorder(GameObject* _go);
 
+		GameObject* renamer;
+
 	private:
 		bool isHierarchyOpen{true};
 		bool isParenting{false};
 		bool isPopUpOpen{false};
 		bool isHierarchyPopUpOpen{ false };
+		bool isRenaming{ false };
 	};
 }
 

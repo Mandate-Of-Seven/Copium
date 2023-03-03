@@ -18,7 +18,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 namespace Copium
 {
 	Animation::Animation() : currentFrameIndex{ 0 }, timer{ 0 }, frameCount{ 0 }, timeDelay{ 0.0f },
-							columnIndex{0}, rowIndex{0}, columns{1}, rows{1}, status{AnimationStatus::idle}, loop{false}
+							columnIndex{0}, rowIndex{0}, columns{1}, rows{1}, status{AnimationStatus::idle}, loop{true}
 	{
 		spriteSheet.columns = columns;
 		spriteSheet.rows = rows;

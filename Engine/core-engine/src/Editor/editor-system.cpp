@@ -29,7 +29,7 @@ namespace Copium
 	namespace
 	{
 		// Our state
-		bool show_demo_window = false;
+		bool show_demo_window = true;
 		ThreadSystem& threadSystem{ *ThreadSystem::Instance() };
 		bool tempMode = true;
 	}
@@ -161,6 +161,8 @@ namespace Copium
 			//top menu bar
 			if (ImGui::BeginMenuBar())
 			{
+
+				// File Dropdown
 				if (ImGui::BeginMenu("File"))
 				{
 					// Disabling fullscreen would allow the window to be moved to the front of other windows, 
@@ -251,6 +253,7 @@ namespace Copium
 					ImGui::EndMenu();
 				}
 
+				// Preview Options
 				if (ImGui::BeginMenu("Preview"))
 				{
 					if (ImGui::MenuItem("Play Scene"))
@@ -279,6 +282,17 @@ namespace Copium
 
 					ImGui::EndMenu();
 				}
+
+				// Preview Button
+				//ImTextureID playBtnID;
+				//ImVec2 size = ImVec2(32.0f, 32.0f);                         // Size of the image we want to make visible
+				//ImVec2 uv0 = ImVec2(0.0f, 0.0f);                            // UV coordinates for lower-left
+				////ImVec2 uv1 = ImVec2(32.0f / playBtnID, 32.0f / my_tex_h);    // UV coordinates for (32,32) in our texture
+				//ImVec4 bg_col = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);             // Black background
+				//ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);           // No tint
+
+				//if (ImGui::ImageButton("", playBtnID, size, uv0, uv1, bg_col, tint_col))
+
 
 				//if your IMGUI window can be closed,you should make the bool inline in the header and include it here to be able to reopen it
 				if (ImGui::BeginMenu("Windows"))
