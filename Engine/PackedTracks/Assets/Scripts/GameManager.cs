@@ -69,6 +69,7 @@ public class GameManager: CopiumScript
         }
         if(ManualPopUpBtn.state == ButtonState.OnRelease)
         {
+            Console.WriteLine("Manual pop up false");
             ManualPopUpBtn.gameObject.SetActive(false);
         }
 

@@ -14,9 +14,7 @@ public class AudioManager: CopiumScript
 
     void Start()
 	{
-		Console.WriteLine("HELLO FROM C#");
 		// audioManager = gameObject.GetComponent<AudioManager>();
-		Console.WriteLine("HELLO FROM C#");
         //MainMenuStartBtn = MainMenuStartGameObject.GetComponent<Button>();
         /*        if (state == 0)
 				{
@@ -36,7 +34,8 @@ public class AudioManager: CopiumScript
 
         bgmTrain.Play();
         ambTrain.Play();
-    }
+		Console.WriteLine("AUDIO PLAYED");
+	}
 	void Update()
 	{
         

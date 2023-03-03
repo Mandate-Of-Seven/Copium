@@ -37,13 +37,13 @@ namespace Copium
 		{
 			Math::Vec3 parentRot = _parent->rotation;
 			Math::Vec3 parentScale = _parent->scale;
-			_position = _parent->position + parentRot * (_position * parentScale);
+			_position += _parent->position + parentRot * (_position * parentScale);
 			_rotation += parentRot;
 			_scale *= parentScale;
 			_parent = _parent->parent;
 		}
 
-		return position;
+		return _position;
 	}
 	Math::Vec3 Transform::GetWorldRotation() const
 	{

@@ -127,7 +127,7 @@ namespace Copium
 					continue;
 
 				Transform& t = gameObject.transform;
-				glm::vec2 mousePosition = glm::vec3(camera.get_ndc(), 0.f);
+				glm::vec2 mousePosition = camera.get_ndc();
 				glm::vec3 tempPos = t.position;
 				glm::vec3 tempScale = t.scale;
 
