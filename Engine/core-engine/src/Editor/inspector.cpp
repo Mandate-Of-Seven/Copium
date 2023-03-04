@@ -687,6 +687,15 @@ namespace Copium
                             return true;
                         }
                     }
+                    std::string name = filter.InputBuf;
+                    name += " [New Script]";
+                    if (ImGui::Button(name.c_str(), buttonSize))
+                    {
+                        T* component;
+                        MyEventSystem->publish(new ScriptNewEvent{ filter.InputBuf });
+                        MyEventSystem->publish(new ComponentAddEvent<Script>{ gameObj,component,filter.InputBuf });
+                        return true;
+                    }
                     scriptNames.clear();
                 }
                 else if constexpr (std::is_same<SortingGroup, T>())

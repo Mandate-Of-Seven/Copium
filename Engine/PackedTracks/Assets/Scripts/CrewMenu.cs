@@ -14,7 +14,10 @@ public class CrewMenu: CopiumScript
 
     public int supplies;
 
-    public Crew harris, bronson, chuck, danton;
+    public Crew harris;
+    public Crew bronson;
+    public Crew chuck;
+    public Crew danton;
 
     public bool preparing = false;
     public bool deployed = false;

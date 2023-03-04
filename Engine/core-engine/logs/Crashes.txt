@@ -1,5 +1,5 @@
-[2023-03-03 21:21:21.074] [Error] [critical] 
-Caused By:	layerCount + 1 > maxLayers
-Info:		Maxed layers reached!
-Source:		C:\Users\FLESH\ECS\Copium\Engine\core-engine\src\Utilities\sorting-layers.cpp (Line: 34)
+[2023-03-04 15:21:26.667] [Error] [critical] 
+Caused By:	!mClassField
+Info:		FIELD bronson COULD NOT BE FOUND IN SCRIPT CrewMenu
+Source:		C:\Users\FLESH\ECS\Copium\Engine\core-engine\src\Scripting\scripting-system.h (Line: 616)
 
