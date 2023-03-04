@@ -140,6 +140,12 @@ namespace Copium
 		int type;
 	};
 
+	struct FileAccessEvent : IEvent
+	{
+		FileAccessEvent(const char* _name) : name{_name}{}
+		const char* name;
+	};
+
 	struct SetSelectedFileEvent : IEvent
 	{
 		SetSelectedFileEvent(File* _file) : file{ _file } {};
@@ -173,6 +179,12 @@ namespace Copium
 		void** params;
 		size_t paramCount;
 		void** returnVal;
+	};
+
+	struct ScriptNewEvent : IEvent
+	{
+		ScriptNewEvent(const char* _name) : name{ _name } {}
+		const char* name;
 	};
 
 	struct ScriptSetFieldEvent : IEvent

@@ -103,23 +103,19 @@ namespace Copium::Utils
 			if (typeName.find_first_of("CopiumEngine.") == 0)
 			{
 				std::string componentName = typeName.substr(typeName.find_last_of('.') + 1);
+
+				if (mono_class_get_parent(mono_class_from_mono_type(monoType)) == mCopiumScript)
+					return (FieldType)ComponentType::Script;
 				auto it{ NAME_TO_CTYPE.find(componentName) };
 				if (it == NAME_TO_CTYPE.end())
 				{
-					if (mono_class_get_parent(mono_class_from_mono_type(monoType)) == mCopiumScript)
-						return (FieldType)ComponentType::Script;
-					PRINT(typeName << "is none type");
 					return FieldType::None;
 				}
 				//PRINT(componentName << " is a component");
 				return (FieldType)it->second;
 			}
-			typeName = mono_class_get_name(mono_class_get_parent(mono_class_from_mono_type(monoType)));
-			if (typeName == "CopiumScript")
-			{
-				//PRINT(typeName << " is a script because of typename");
+			if (mono_class_get_parent(mono_class_from_mono_type(monoType)) == mCopiumScript)
 				return (FieldType)ComponentType::Script;
-			}
 			PRINT(typeName << "is none type");
 			return FieldType::None;
 		}
@@ -148,6 +144,7 @@ namespace Copium
 		while (MonoClassField* field = mono_class_get_fields(mClass, &iterator))
 		{
 			std::string fieldName = mono_field_get_name(field);
+			PRINT("\tField: " << fieldName);
 			uint32_t flags = mono_field_get_flags(field);
 			if (flags & FIELD_ATTRIBUTE_PUBLIC)
 			{
@@ -160,7 +157,7 @@ namespace Copium
 				}
 				else
 				{
-					PRINT("NONE: " << mono_type_get_name(type));
+					PRINT("\tField: " << fieldName << "is NONE:" << mono_type_get_name(type));
 					//static std::string typeName;
 					//typeName = mono_type_get_name(type);
 					//fieldType = FieldType::Component;
@@ -204,9 +201,10 @@ namespace Copium
 		return scriptableObjectClassMap;
 	}
 
-	void ScriptingSystem::addEmptyScript(const std::string& _name)
+	std::string ScriptingSystem::addEmptyScript(const std::string& _name)
 	{
-		std::ofstream file(Paths::assetPath + "\\Scripts\\" + _name + ".cs");
+		std::string filePath{ Paths::assetPath + "\\Scripts\\" + _name + ".cs" };
+		std::ofstream file(filePath);
 		file << "using CopiumEngine;\n";
 		file << "using System;\n\n";
 		file << "public class " << _name << ": CopiumScript\n{\n";
@@ -214,6 +212,7 @@ namespace Copium
 		file << "\tvoid Update()\n\t{\n\n\t}\n";
 		file << "}\n";
 		file.close();
+		return filePath;
 	}
 
 	MonoType* ScriptingSystem::getMonoTypeFromName(std::string& name)
@@ -273,6 +272,7 @@ namespace Copium
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptSetField);
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetField);
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetNames);
+		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptNew);
 		SubscribeComponentBasedCallbacks(ComponentTypes());
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptSetFieldReference<GameObject>);
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackStartPreview);
@@ -295,12 +295,8 @@ namespace Copium
 
 	MonoObject* ScriptingSystem::instantiateClass(MonoClass* mClass)
 	{
-		if (mAppDomain == nullptr || mClass == nullptr)
-		{
-			COPIUM_ASSERT(mAppDomain == nullptr, "MONO APP DOMAIN NOT LOADED");
-			COPIUM_ASSERT(mClass == nullptr, "MONO CLASS NOT LOADED");
-			return nullptr;
-		}
+		COPIUM_ASSERT(mAppDomain == nullptr, "MONO APP DOMAIN NOT LOADED");
+		COPIUM_ASSERT(mClass == nullptr, "MONO CLASS NOT LOADED");
 			
 		MonoObject* tmp = mono_object_new(mAppDomain, mClass);
 		mono_runtime_object_init(tmp);
@@ -316,9 +312,6 @@ namespace Copium
 
 	void ScriptingSystem::updateScriptClasses()
 	{
-		using nameToClassIt = std::unordered_map<std::string, ScriptClass>::iterator;
-		nameToClassIt it = scriptClassMap.begin();
-		//static std::vector<nameToClassIt> keyMask;
 		scriptClassMap.clear();
 
 		const MonoTableInfo* table_info = mono_image_get_table_info(mAssemblyImage, MONO_TABLE_TYPEDEF);
@@ -338,6 +331,7 @@ namespace Copium
 				continue;
 			if (mono_class_get_parent(_class) == mCopiumScript)
 			{
+				PRINT("SCRIPT: " << name);
 				scriptClassMap[name] = ScriptClass{ name,_class };
 				reflectionMap[mono_class_get_type(_class)] = ComponentType::Script;
 			}
@@ -347,6 +341,7 @@ namespace Copium
 			}
 			else if (mono_class_get_parent(_class) == mono_class_from_name(mAssemblyImage, name_space, "Component"))
 			{
+				PRINT("COMPONENT: " << name);
 				if (_class == mCopiumScript)
 					continue;
 				scriptClassMap[name] = ScriptClass{ name,_class };
@@ -584,7 +579,7 @@ namespace Copium
 
 	void ScriptingSystem::GetFieldValue(MonoObject* instance, MonoClassField* mClassFiend ,Field& field, void* container)
 	{
-		PRINT("Get field value: " << mono_field_get_name(mClassFiend));
+		//PRINT("Get field value: " << mono_field_get_name(mClassFiend));
 		if (field.fType == FieldType::String)
 		{
 			MonoString* mono_string = sS.createMonoString("");
@@ -602,7 +597,7 @@ namespace Copium
 		//THIS FUNCTION ONLY WORKS FOR BASIC TYPES
 		field = value;
 		//If its a string, its a C# string so create one
-		PRINT("Set field value: " << mono_field_get_name(mClassFiend));
+		//PRINT("Set field value: " << mono_field_get_name(mClassFiend));
 		if (field.fType == FieldType::String)
 		{
 			MonoString* mono_string = sS.createMonoString(reinterpret_cast<const char*>(value));
@@ -618,7 +613,7 @@ namespace Copium
 	{
 		//When you set a reference, you need to create a MonoObject of it first
 
-		PRINT("set field ref: " << mono_field_get_name(mClassFiend));
+		//PRINT("set field ref: " << mono_field_get_name(mClassFiend));
 		//ZACH: If setting to nullptr, no point checking
 		if (reference == nullptr)
 		{
@@ -685,6 +680,8 @@ namespace Copium
 		if (pairIt == mComponents[mCurrentScene].end())
 		{
 			//PRINT(component.Name());
+			if (scriptClassMap.find(component.Name()) == scriptClassMap.end())
+				return nullptr;
 			ScriptClass& scriptClass = scriptClassMap[component.Name()];
 			UUID cid{ component.uuid };
 			UUID gid{ component.gameObj.uuid };
@@ -944,5 +941,12 @@ namespace Copium
 			if ((int)NAME_TO_CTYPE[pair.first] == 0)
 				pEvent->names.push_back(pair.first.c_str());
 		}
+	}
+
+
+	void ScriptingSystem::CallbackScriptNew(ScriptNewEvent* pEvent)
+	{
+		std::string filePath = addEmptyScript(pEvent->name);
+		MyEventSystem->publish(new FileAccessEvent(filePath.c_str()));
 	}
 }

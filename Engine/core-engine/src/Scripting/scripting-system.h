@@ -204,7 +204,7 @@ namespace Copium
 				Name of the new script
 		*/
 		/**************************************************************************/
-		void addEmptyScript(const std::string& _name);
+		std::string addEmptyScript(const std::string& _name);
 
 
 		/**************************************************************************/
@@ -478,6 +478,8 @@ namespace Copium
 		template<typename T>
 		void CallbackScriptSetFieldReference(ScriptSetFieldReferenceEvent<T>* pEvent);
 
+		void CallbackScriptNew(ScriptNewEvent* pEvent);
+
 		/*******************************************************************************
 		/*!
 		*
@@ -611,7 +613,7 @@ namespace Copium
 		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
 		ScriptClass& scriptClass{ scriptClassMap[pEvent->script.name] };
 		MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };
-		COPIUM_ASSERT(!mClassField, std::string("FIELD ") + pEvent->fieldName + "COULD NOT BE FOUND IN SCRIPT " + pEvent->script.name);
+		COPIUM_ASSERT(!mClassField, std::string("FIELD ") + pEvent->fieldName + " COULD NOT BE FOUND IN SCRIPT " + pEvent->script.name);
 		SetFieldReference<T>(mScript, mClassField,pEvent->reference);
 	}
 

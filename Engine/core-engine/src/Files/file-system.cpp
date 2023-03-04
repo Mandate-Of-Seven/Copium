@@ -37,6 +37,7 @@ namespace Copium
 		MyEventSystem->subscribe(this, &FileSystem::CallbackSetSelectedFile);
 		MyEventSystem->subscribe(this, &FileSystem::CallbackSetSelectedDirectory);
 		MyEventSystem->subscribe(this, &FileSystem::CallbackDeleteFromBrowser);
+		MyEventSystem->subscribe(this, &FileSystem::CallbackFileAccess);
 		
 		// Instance ID of assets directory is always preset to a default ID
 		generate_directories(&assetsDirectory, Paths::assetPath);
@@ -675,5 +676,12 @@ namespace Copium
 	void FileSystem::CallbackDeleteFromBrowser(DeleteFromBrowserEvent* pEvent)
 	{
 		delete_from_browser();
+	}
+
+
+	void FileSystem::CallbackFileAccess(FileAccessEvent* pEvent)
+	{
+		PRINT("Opening file: " << pEvent->name << "...");
+		ShellExecuteA(NULL, "open", pEvent->name, NULL, NULL, SW_SHOWNORMAL);
 	}
 }

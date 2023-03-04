@@ -323,6 +323,26 @@ namespace Copium
 		gameObj->transform.scale = *scale;
 	}
 
+	static void GetRotation(UUID _ID, Math::Vec3* rotation)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
+		if (gameObj == nullptr)
+		{
+			return;
+		}
+		gameObj->transform.rotation = *rotation;
+	}
+
+	static void SetRotation(UUID _ID, Math::Vec3* rotation)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
+		if (gameObj == nullptr)
+		{
+			return;
+		}
+		gameObj->transform.rotation = *rotation;
+	}
+
 	/*******************************************************************************
 	/*!
 	\brief
@@ -674,12 +694,32 @@ namespace Copium
 		gameObj->GetComponent<Animator>()->PauseAnimation();
 	}
 
-	static void SetAnimationSpeed(UUID ID,double timeDelay)
+	static void SetAnimatorDelay(UUID componentID, float timeDelay)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
-		if (gameObj == nullptr)
+		Scene* pScene = sceneManager.get_current_scene();
+		if (!pScene)
 			return;
-		gameObj->GetComponent<Animator>()->animations[0].timeDelay = timeDelay;
+		for (Animator& animator : pScene->componentArrays.GetArray<Animator>())
+		{
+			if (animator.uuid == componentID)
+			{
+				animator.animations[0].timeDelay = timeDelay;
+			}
+		}
+	}
+
+	static float GetAnimatorDelay(UUID componentID)
+	{
+		Scene* pScene = sceneManager.get_current_scene();
+		if (!pScene)
+			return 0;
+		for (Animator& animator : pScene->componentArrays.GetArray<Animator>())
+		{
+			if (animator.uuid == componentID)
+			{
+				return animator.animations[0].timeDelay;
+			}
+		}
 	}
 
 	/*******************************************************************************
@@ -701,6 +741,8 @@ namespace Copium
 		Register(RigidbodySetVelocity);
 		Register(SetLocalScale);
 		Register(GetLocalScale);
+		Register(GetRotation);
+		Register(SetRotation);
 		Register(GetDeltaTime);
 		Register(SetActive);
 		Register(GetActive);
@@ -723,7 +765,8 @@ namespace Copium
 		Register(SetSpriteRendererColor);
 		Register(PlayAnimation);
 		Register(PauseAnimation);
-		Register(SetAnimationSpeed);
+		Register(SetAnimatorDelay);
+		Register(GetAnimatorDelay);
 	}
 }
 #endif // !SCRIPT_WRAPPERS_H

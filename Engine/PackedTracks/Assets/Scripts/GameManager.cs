@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class GameManager: CopiumScript
 {
     public EventManager EventManager;
+    public AudioManager audioManager;
 
 	public GameObject TrainCanvas;
     public GameObject PauseCanvas;
@@ -13,12 +14,6 @@ public class GameManager: CopiumScript
 
     public GameObject CrewTab;
     public GameObject ReportTab;
-
-    public Button LeverBtn;
-    public GameObject LeverNear;
-    public GameObject LeverFar;
-    public GameObject trackEffect;
-    bool move = false;
 
     public Button ReportScreenBtn;
     public Button ManualBtn;
@@ -34,9 +29,13 @@ public class GameManager: CopiumScript
 
     public Text tracker;
 
+    public TrainManager trainManager;
+    public CrewMenu crewMenuScripet;
+    public int hello = 10;
+
     bool isReportScreenOn = false;
     public bool isPaused = false;
-    public int distanceLeft = 200;
+    public float distanceLeft = 200;
 
     public float distanceInterval = 1.0f;
     float foodTimer = 0.0f;
@@ -54,48 +53,36 @@ public class GameManager: CopiumScript
     {
         if (ReportScreenBtn.state == ButtonState.OnRelease)
         {
+            audioManager.clickSFX.Play();
             ReportTab.SetActive(true);
         }
         if(CloseReportBtn.state == ButtonState.OnRelease)
         {
+            audioManager.clickSFX.Play();
             ReportTab.SetActive(false);
         }
         if(CrewTabBtn.state == ButtonState.OnRelease)
         {
+            audioManager.clickSFX.Play();
             CrewTab.SetActive(true);
         }
         if(ManualBtn.state == ButtonState.OnRelease)
         {
+            audioManager.paperSFX.Play();
             ManualPopUp.SetActive(true);
         }
         if(ManualPopUpBtn.state == ButtonState.OnRelease)
         {
-            Console.WriteLine("Manual pop up false");
+            audioManager.paperSFX.Play();
             ManualPopUpBtn.gameObject.SetActive(false);
-        }
-
-        if(LeverBtn.state == ButtonState.OnClick)
-        {
-            move = !move;
-            Console.WriteLine("Clicked on lever");
-            LeverFar.SetActive(move);
-            LeverNear.SetActive(!move);
-            if (move)
-            {
-                InternalCalls.PlayAnimation(trackEffect.ID);
-            }
-            else
-            {
-                InternalCalls.PauseAnimation(trackEffect.ID);
-            }
         }
         //Stop travlling
 
-        if (move && distanceLeft > 0)
+        if (trainManager.currentSpeed >= 0 && distanceLeft > 0)
         {
             if (timer >= 0.2f)
             {
-                distanceLeft -= 1;
+                distanceLeft -= trainManager.currentSpeed/3.0f;
                 if (distanceLeft%50 == 0)
                 {
                     EventManager.UpdateEventSequence();
@@ -112,7 +99,7 @@ public class GameManager: CopiumScript
             foodTimer += Time.deltaTime;
             timer += Time.deltaTime;
         }
-        tracker.text =  distanceLeft.ToString() + "KM";
+        tracker.text =  ((int)distanceLeft).ToString() + "KM";
 
         if (crewMenuScript.supplies == 0)
         {

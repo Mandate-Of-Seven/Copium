@@ -41,8 +41,13 @@ namespace Copium
 
 	ButtonState GetButtonState(Button& btn, GameObject* selectedGameObject)
 	{
-		if (btn.state == ButtonState::None && selectedGameObject != &btn.gameObj)
-			return ButtonState::None;
+		if (selectedGameObject != &btn.gameObj)
+		{
+			if (btn.state == ButtonState::None || btn.state == ButtonState::OnRelease)
+			{
+				return ButtonState::None;
+			}
+		}
 		glm::vec2 scenePos = MySceneManager.mainCamera->get_game_ndc();
 		Transform& transform{ btn.gameObj.transform };
 
@@ -209,36 +214,37 @@ namespace Copium
 			Button* button = gameObject.GetComponent<Button>();
 			Image* image = gameObject.GetComponent<Image>();
 
-			if (!button)
-				continue;
-
 			if (button)
 			{
 				if (!button->enabled)
 					continue;
 				bounds = button->bounds;
+				AABB bound = bounds.GetRelativeBounds(worldPos, worldScale);
+				if (static_collision_pointrect(mousePosition, bound))
+				{
+					pGameObjs.push_back(&gameObject);
+					continue;
+				}
 			}
 
-			//if (image)
-			//{
-
-			//	if (!image->enabled)
-			//		continue;
-			//	Texture* texture = image->sprite.refTexture;
-
-			//	if (texture != nullptr)
-			//	{
-			//		//tempX = tempScale.x * texture->get_pixel_width();
-			//		//tempY = tempScale.y * texture->get_pixel_height();
-			//		bounds.max = { texture->get_pixel_width() / 2.f,texture->get_pixel_height() / 2.f};
-			//		bounds.min = { -texture->get_pixel_width() / 2.f , -texture->get_pixel_height() / 2.f};
-			//	}
-			//}
+			if (image)
+			{
+				if (!image->enabled)
+					continue;
+				Texture* texture = image->sprite.refTexture;
+				if (texture != nullptr)
+				{
+					//tempX = tempScale.x * texture->get_pixel_width();
+					//tempY = tempScale.y * texture->get_pixel_height();
+					bounds.max = { texture->get_pixel_width() / 2.f,texture->get_pixel_height() / 2.f};
+					bounds.min = { -texture->get_pixel_width() / 2.f , -texture->get_pixel_height() / 2.f};
+				}
+				AABB bound = bounds.GetRelativeBounds(worldPos, worldScale);
+				if (static_collision_pointrect(mousePosition, bound))
+					pGameObjs.push_back(&gameObject);
+			}
 			
 			// Check AABB
-			AABB bound = bounds.GetRelativeBounds(worldPos, worldScale);
-			if (static_collision_pointrect(mousePosition, bound))
-				pGameObjs.push_back(&gameObject);
 		}
 
 
@@ -256,37 +262,35 @@ namespace Copium
 
 		for (GameObject* pGameObject : pGameObjs)
 		{
-			Button* button = pGameObject->GetComponent<Button>();
-			SpriteRenderer* sr = pGameObject->GetComponent<SpriteRenderer>();
-			SortingGroup * sg = pGameObject->GetComponent<SortingGroup>();
 			if (!selectedGameObject)
-				selectedGameObject = pGameObject;
-			SortingGroup * selectedSg{ selectedGameObject->GetComponent<SortingGroup>() };
-			if ((sr && sr->enabled) || (button && button->enabled))
 			{
-				//Selected has no SG but new one has
-				if (!selectedSg && sg)
+				selectedGameObject = pGameObject;
+				continue;
+			}
+			SortingGroup* sg = pGameObject->GetComponent<SortingGroup>();
+			SortingGroup * selectedSg{ selectedGameObject->GetComponent<SortingGroup>() };
+			//Selected has no SG but new one has
+			if (!selectedSg && sg)
+			{
+				selectedGameObject = pGameObject;
+				continue;
+			}
+			//Object is on a higher layer
+			else if (sg && selectedSg)
+			{
+				if (sg->sortingLayer > selectedSg->sortingLayer)
 				{
 					selectedGameObject = pGameObject;
 					continue;
 				}
-				//Object is on a higher layer
-				else if (sg && selectedSg)
+				else if (sg->sortingLayer == selectedSg->sortingLayer && sg->orderInLayer > selectedSg->orderInLayer)
 				{
-					if (sg->sortingLayer > selectedSg->sortingLayer)
-					{
-						selectedGameObject = pGameObject;
-						continue;
-					}
-					else if (sg->orderInLayer > selectedSg->orderInLayer)
-					{
-						selectedGameObject = pGameObject;
-						continue;
-					}
+					selectedGameObject = pGameObject;
+					continue;
 				}
-				//Object is in same layer
-				//No conditions met, skip this gameObject
 			}
+			//Object is in same layer
+			//No conditions met, skip this gameObject
 		}
 		return selectedGameObject;
 	}
@@ -327,7 +331,8 @@ namespace Copium
 
 		GameObject* selected = GetSelectedGameObject();
 
-
+		if (selected)
+			PRINT(selected->name);
 		for (Button& button : pScene->componentArrays.GetArray<Button>())
 		{
 			if (!button.enabled || !button.gameObj.IsActive())

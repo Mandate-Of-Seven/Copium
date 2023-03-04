@@ -11,11 +11,11 @@
         },
         {
             "Name": "Train",
-            "ID": 4
+            "ID": 2
         },
         {
             "Name": "UI",
-            "ID": 2
+            "ID": 4
         },
         {
             "Name": "Crew Panel",
@@ -84,7 +84,9 @@
                     "Name": "AudioManager",
                     "state": 0,
                     "ambTrain": 10395333414142043547,
-                    "bgmTrain": 15478641588138346794
+                    "bgmTrain": 15478641588138346794,
+                    "clickSFX": 13910441155437091901,
+                    "paperSFX": 269989258829263303
                 }
             ]
         },
@@ -142,7 +144,7 @@
                     "UID": 15357410749412755010,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 4,
+                    "SortingLayer": 2,
                     "OrderInLayer": 1
                 },
                 {
@@ -175,7 +177,7 @@
                     "Pos": {
                         "X": 0.0,
                         "Y": 0.0,
-                        "Z": -10.0
+                        "Z": 0.0
                     },
                     "Rot": {
                         "X": 0.0,
@@ -187,6 +189,29 @@
                         "Y": 1.0,
                         "Z": 1.0
                     }
+                },
+                {
+                    "UID": 5971899813001945745,
+                    "Type": "Script",
+                    "TypeID": 23,
+                    "Name": "TrainManager",
+                    "acceleration": 0.30000001192092896,
+                    "currentSpeed": 0.0,
+                    "deceleration": 0.30000001192092896,
+                    "maxSpeed": 1.0,
+                    "shakePosition": 1.0,
+                    "shakeRotation": 1.0,
+                    "snowMaxDelay": 0.029999999329447746,
+                    "snowMinDelay": 0.004999999888241291,
+                    "tracksMaxDelay": 0.10000000149011612,
+                    "tracksMinDelay": 0.029999999329447746,
+                    "zoomOutScale": 0.9750000238418579,
+                    "trainCanvas": 6642123175702952797,
+                    "trainLeverActivated": 382440811066528667,
+                    "trainLeverDeactivated": 11932787380016220031,
+                    "snowAnimator": 11135358241762452116,
+                    "tracksAnimator": 180502757048782684,
+                    "trainLeverBtn": 4614359461674577161
                 }
             ]
         },
@@ -218,7 +243,7 @@
                     "UID": 1796699605472573208,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 4,
+                    "SortingLayer": 2,
                     "OrderInLayer": 3
                 },
                 {
@@ -270,7 +295,7 @@
                     "UID": 10826443951868816330,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 4,
+                    "SortingLayer": 2,
                     "OrderInLayer": 3
                 },
                 {
@@ -326,15 +351,17 @@
                     "OrderInLayer": 5
                 },
                 {
-                    "UID": 3852157845266022312,
-                    "Type": "SpriteRenderer",
-                    "TypeID": 22,
+                    "UID": 14538375441493010368,
+                    "Type": "Image",
+                    "TypeID": 20,
+                    "H_Align": 1,
+                    "V_Align": 1,
                     "Sprite ID": 5004021854892568636,
                     "Sprite Name": "Text_Panel_BG.png",
                     "Color": {
                         "X": 1.0,
-                        "Y": 0.9998999834060669,
-                        "Z": 0.9998999834060669,
+                        "Y": 1.0,
+                        "Z": 1.0,
                         "W": 1.0
                     },
                     "Flip": {
@@ -948,8 +975,14 @@
                     "UID": 8291616701364993106,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 4,
+                    "SortingLayer": 2,
                     "OrderInLayer": 2
+                },
+                {
+                    "UID": 269989258829263303,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "SFX_PaperFlip"
                 },
                 {
                     "UID": 5462036042885148207,
@@ -1030,7 +1063,7 @@
                     "UID": 11046908653754542550,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 4,
+                    "SortingLayer": 2,
                     "OrderInLayer": 2
                 },
                 {
@@ -1049,6 +1082,12 @@
                         "X": false,
                         "Y": false
                     }
+                },
+                {
+                    "UID": 13910441155437091901,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "SFX_ButtonClick"
                 },
                 {
                     "UID": 12993210835278376820,
@@ -1110,7 +1149,7 @@
                     "UID": 7526088237681184109,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 4,
+                    "SortingLayer": 2,
                     "OrderInLayer": 2
                 },
                 {
@@ -1301,28 +1340,26 @@
                     "TypeID": 23,
                     "Name": "GameManager",
                     "distanceInterval": 1.0,
-                    "distanceLeft": 120,
+                    "distanceLeft": 120.0,
+                    "hello": 10,
                     "isPaused": false,
-                    "snowEffect": 12962962280028128638,
                     "CrewTab": 15240074584306495293,
-                    "LeverFar": 382440811066528667,
-                    "TrainCanvas": 6642123175702952797,
-                    "trackEffect": 4749018423548755724,
-                    "LeverNear": 11932787380016220031,
                     "ManualPopUp": 18214688194793872927,
                     "PauseCanvas": 1722160444903115838,
                     "ReportTab": 13016513725544699197,
+                    "TrainCanvas": 6642123175702952797,
                     "CloseReportBtn": 16687394728350152029,
+                    "ReportScreenBtn": 12993210835278376820,
                     "CrewTabBtn": 12776843167246884328,
                     "EventManager": 9174652001346769036,
                     "PauseResumeBtn": 7338901696821162260,
                     "ManualPopUpBtn": 6064000762752960818,
-                    "LeverBtn": 4614359461674577161,
                     "ManualBtn": 6900690266592182984,
                     "PauseQuitBtn": 4561109446918292296,
-                    "ReportScreenBtn": 12993210835278376820,
+                    "audioManager": 7036692997401670936,
                     "crewMenuScript": 15964808941009667406,
-                    "tracker": 14370462799058784128
+                    "tracker": 14370462799058784128,
+                    "trainManager": 5971899813001945745
                 }
             ]
         },
@@ -1362,13 +1399,12 @@
                     "Option_03": 5570186180457882344,
                     "event02": 10706611040384253947,
                     "Body": 12572218162819699758,
-                    "Option_03_Text": 13403652513609016947,
-                    "GameManager": 9083562319934391338,
                     "event01": 5825931776462821864,
                     "Option_01_Text": 9429179763734142775,
+                    "eventIntro": 2208040376229193824,
                     "Option_02_Text": 9054607302164775899,
-                    "event03": 4950976245312507192,
-                    "eventIntro": 2208040376229193824
+                    "Option_03_Text": 13403652513609016947,
+                    "event03": 4950976245312507192
                 }
             ]
         },
@@ -1532,7 +1568,7 @@
                     "UID": 1325802091515525317,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 2,
+                    "SortingLayer": 4,
                     "OrderInLayer": 28
                 },
                 {
@@ -1996,7 +2032,7 @@
                     "UID": 922145806467897125,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 4,
+                    "SortingLayer": 2,
                     "OrderInLayer": 11
                 },
                 {
@@ -2100,9 +2136,11 @@
                     "OrderInLayer": 0
                 },
                 {
-                    "UID": 17175164730542023705,
-                    "Type": "SpriteRenderer",
-                    "TypeID": 22,
+                    "UID": 12630905651561460938,
+                    "Type": "Image",
+                    "TypeID": 20,
+                    "H_Align": 1,
+                    "V_Align": 1,
                     "Sprite ID": 5004021854892568636,
                     "Sprite Name": "Text_Panel_BG.png",
                     "Color": {
@@ -2910,7 +2948,7 @@
                     "UID": 738256038672110254,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 4,
+                    "SortingLayer": 2,
                     "OrderInLayer": 11
                 },
                 {
@@ -3142,7 +3180,7 @@
                     "UID": 11161947812392987788,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 2,
+                    "SortingLayer": 4,
                     "OrderInLayer": 85
                 },
                 {
@@ -3219,6 +3257,13 @@
                         "Y": 1.0,
                         "Z": 1.0
                     }
+                },
+                {
+                    "UID": 2740739315397016980,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 2,
+                    "OrderInLayer": 12
                 },
                 {
                     "UID": 4614359461674577161,

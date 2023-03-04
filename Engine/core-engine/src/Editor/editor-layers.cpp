@@ -68,6 +68,7 @@ namespace Copium
                     {
                         sortingLayers.SwapLayers(i, next);
 
+
                         ImGui::ResetMouseDragDelta();
                     }
                 }

@@ -69,8 +69,7 @@ namespace Copium
 		}
 		else
 		{
-			PRINT("Opening file: " << filePath.filename().string() << "...");
-			ShellExecuteA(NULL, "open", filePath.relative_path().string().c_str(), NULL, NULL, SW_SHOWNORMAL);
+			MyEventSystem->publish(new FileAccessEvent(filePath.string().c_str()));
 		}
 
 		/*switch (fileType.fileType)
