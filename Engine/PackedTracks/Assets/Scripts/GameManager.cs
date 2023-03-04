@@ -73,7 +73,7 @@ public class GameManager: CopiumScript
             ManualPopUpBtn.gameObject.SetActive(false);
         }
 
-        if(LeverBtn.state == ButtonState.OnClick)
+        if(LeverBtn.state == ButtonState.OnRelease)
         {
             move = !move;
             Console.WriteLine("Clicked on lever");
