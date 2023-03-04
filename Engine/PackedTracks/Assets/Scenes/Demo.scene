@@ -78,18 +78,6 @@
                     "Alias": "BGM_Train"
                 },
                 {
-                    "UID": 8784609602196048839,
-                    "Type": "AudioSource",
-                    "TypeID": 16,
-                    "Alias": "SFX_ButtonClick"
-                },
-                {
-                    "UID": 16896441245836448699,
-                    "Type": "AudioSource",
-                    "TypeID": 16,
-                    "Alias": "SFX_PaperFlip"
-                },
-                {
                     "UID": 7036692997401670936,
                     "Type": "Script",
                     "TypeID": 23,
@@ -97,8 +85,8 @@
                     "state": 0,
                     "ambTrain": 10395333414142043547,
                     "bgmTrain": 15478641588138346794,
-                    "clickSFX": 8784609602196048839,
-                    "paperSFX": 16896441245836448699
+                    "clickSFX": 13910441155437091901,
+                    "paperSFX": 269989258829263303
                 }
             ]
         },
@@ -991,6 +979,12 @@
                     "OrderInLayer": 2
                 },
                 {
+                    "UID": 269989258829263303,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "SFX_PaperFlip"
+                },
+                {
                     "UID": 5462036042885148207,
                     "Type": "Image",
                     "TypeID": 20,
@@ -1088,6 +1082,12 @@
                         "X": false,
                         "Y": false
                     }
+                },
+                {
+                    "UID": 13910441155437091901,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "SFX_ButtonClick"
                 },
                 {
                     "UID": 12993210835278376820,
@@ -1356,10 +1356,10 @@
                     "ManualPopUpBtn": 6064000762752960818,
                     "ManualBtn": 6900690266592182984,
                     "PauseQuitBtn": 4561109446918292296,
+                    "audioManager": 7036692997401670936,
                     "crewMenuScript": 15964808941009667406,
                     "tracker": 14370462799058784128,
-                    "trainManager": 5971899813001945745,
-                    "audioManager": 7036692997401670936
+                    "trainManager": 5971899813001945745
                 }
             ]
         },
