@@ -21,7 +21,10 @@ public class Test: CopiumScript
             Console.WriteLine("Pause");
             InternalCalls.PauseAnimation(gameObject.ID);
         }
-        temp += 0.001;
-        InternalCalls.SetAnimationSpeed(gameObject.ID, temp);
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            temp += 0.001;
+            InternalCalls.SetAnimationSpeed(gameObject.ID, temp);
+        }
     }
 }
