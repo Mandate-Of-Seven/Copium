@@ -1037,6 +1037,13 @@ namespace Copium
                 Display("Time Delay", animator.animations[i].timeDelay);
                 Display("Sprite", animator.animations[i].spriteSheet.texture);
 
+                ImGui::TableNextColumn();
+                ImGui::Text("Flip");
+                ImGui::TableNextColumn();
+                ImGui::Checkbox("X", &animator.animations[i].spriteSheet.flip.x);
+                ImGui::SameLine(0.f, 16.f);
+                ImGui::Checkbox("Y", &animator.animations[i].spriteSheet.flip.y);
+
                 // Update sprite data
                 if (animator.animations[i].spriteSheet.texture)
                 {

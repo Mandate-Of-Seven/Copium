@@ -715,6 +715,12 @@ namespace Copium
 			begin_batch();
 		}
 
+		glm::vec2 flip{ 1.f };
+		if (_spritesheet.flip.x)
+			flip.x = -1.f;
+		if (_spritesheet.flip.y)
+			flip.y = -1.f;
+
 		// Map texture unit to the texture object id
 		unsigned int key = graphics->get_texture_slots()[textureIndex];
 		auto it = textureIDs.find(key);
@@ -725,7 +731,7 @@ namespace Copium
 		float yStep = (1.0f / (float)_spritesheet.rows);
 		float xOffset = colOffset * xStep;
 		float yOffset = rowOffset * yStep;
-		//PRINT("Y step:" << yStep);
+		//PRINT("	Animation Steps:" << xStep << " " << yStep);
 		glm::vec2 spriteTextCoord[4] =
 		{
 			glm::vec2(xOffset, yOffset),
@@ -737,7 +743,8 @@ namespace Copium
 		for (GLint i = 0; i < 4; i++)
 		{
 			quadBufferPtr->pos = _transform * quadVertexPosition[i];
-			quadBufferPtr->textCoord = spriteTextCoord[i];
+			quadBufferPtr->textCoord = spriteTextCoord[i] * flip;
+			//PRINT("		Animation offsets:" << spriteTextCoord[i].x << " " << spriteTextCoord[i].y);
 			quadBufferPtr->color = color;
 			quadBufferPtr->texID = textureIDs[key];
 			quadBufferPtr->type = (float)ENTITY_TYPE::QUAD;

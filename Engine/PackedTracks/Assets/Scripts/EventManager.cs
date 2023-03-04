@@ -45,14 +45,13 @@ public class EventManager: CopiumScript
 
 	void Update()
     {
-        //Console.WriteLine("EVENT MANAGER UPDATE");
         if (!ShowingResolution && ShowingMainEvent)
             CheckCurrentEvent();
 
-        if(!ShowingResolution)
+        if (!ShowingResolution)
             SelectChoice();
 
-        if(ShowingResolution)
+        if (ShowingResolution)
             ShowResolution();
 
         if (Input.GetKeyDown(KeyCode.Enter))
@@ -61,6 +60,10 @@ public class EventManager: CopiumScript
 
     public void UpdateEventSequence()
     {
+        if (ShowingMainEvent)
+            return;
+
+        ShowingResolution = false;
         EventSequence++;
         ShowingMainEvent = true;
     }
@@ -74,6 +77,7 @@ public class EventManager: CopiumScript
                 Body.text = "Ending~";
                 break;
             case 0:
+                ShowingMainEvent = false;
                 eventIntro.Event();
                 break;
             case 1:
@@ -84,15 +88,13 @@ public class EventManager: CopiumScript
                 event01.Event(harrisDead);
                 break;
             case 2:
-                bool alive = false;
+                bool alive = true;
                 // if (crewMenu.health2 != 0 && crewMenu.health3 != 0)
                 //     alive = true;
-
                 event02.Event(alive);
                 break;
             case 3:
                 bool chuckAndHarrisAlive = true;
-
                 event03.Event(chuckAndHarrisAlive);
                 break;
             case 4:
@@ -152,18 +154,20 @@ public class EventManager: CopiumScript
             case 2:
                 event02.Result(choice);
                 break;
+            case 3:
+                event03.Result(choice);
+                break;
         }
 
-        if (!Next_Event.activeSelf)
-            Next_Event.SetActive(true);
+        //if (!Next_Event.activeSelf)
+        //    Next_Event.SetActive(true);
 
-        if(next_btn.state == ButtonState.OnClick)
-        {
-            Console.WriteLine("Test");
-            UpdateEventSequence();
-            ShowingResolution = false;
-            Next_Event.SetActive(false);
-        }
+        //if(next_btn.state == ButtonState.OnClick)
+        //{
+        //    Console.WriteLine("Test");
+        //    ShowingResolution = false;
+        //    Next_Event.SetActive(false);
+        //}
         
     }
 }

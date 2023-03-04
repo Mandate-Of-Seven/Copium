@@ -24,14 +24,11 @@ public class GameManager: CopiumScript
     public Button CrewTabBtn;
 
     public CrewMenu crewMenuScript;
+    public TrainManager trainManager;
     
     public Button CloseReportBtn;
 
     public Text tracker;
-
-    public TrainManager trainManager;
-    public CrewMenu crewMenuScripet;
-    public int hello = 10;
 
     bool isReportScreenOn = false;
     public bool isPaused = false;
@@ -76,21 +73,21 @@ public class GameManager: CopiumScript
             audioManager.paperSFX.Play();
             ManualPopUpBtn.gameObject.SetActive(false);
         }
-        //Stop travlling
+        //Stop travelling
 
-        if (trainManager.currentSpeed >= 0 && distanceLeft > 0)
+        if (trainManager.currentSpeed > 0 && distanceLeft > 0)
         {
             if (timer >= 0.2f)
             {
                 distanceLeft -= trainManager.currentSpeed/3.0f;
-                if (distanceLeft%50 == 0)
+                if (distanceLeft%50 < 1.0f)
                 {
                     EventManager.UpdateEventSequence();
                 }
                 timer = 0.0f;
             }
 
-            if(foodTimer >= 4.0f && crewMenuScript.supplies != 0)
+            if(foodTimer >= 10.0f && crewMenuScript.supplies != 0)
             {
                 crewMenuScript.supplies -= 1;
                 foodTimer = 0.0f;
@@ -100,20 +97,6 @@ public class GameManager: CopiumScript
             timer += Time.deltaTime;
         }
         tracker.text =  ((int)distanceLeft).ToString() + "KM";
-
-        if (crewMenuScript.supplies == 0)
-        {
-            if(hungerTimer >= 1.0f)
-            {
-                // crewMenuScript.hunger1 -= 1;
-                // crewMenuScript.hunger2 -= 1;
-                // crewMenuScript.hunger3 -= 1;
-                // crewMenuScript.hunger4 -= 1;
-                hungerTimer = 0.0f;
-            }
-
-            hungerTimer += Time.deltaTime;
-        }
 
 
         if (Input.GetKeyDown(KeyCode.P))

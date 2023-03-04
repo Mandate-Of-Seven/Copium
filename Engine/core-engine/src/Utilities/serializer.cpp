@@ -64,6 +64,11 @@ namespace Copium
 		Copium::SerializeBasic(_data.spriteSheet.rows, _value, _doc, "Rows");
 		Copium::SerializeBasic(_data.spriteSheet.columns, _value, _doc, "Columns");
 
+		rapidjson::Value flip(rapidjson::kObjectType);
+		Copium::SerializeBasic(_data.spriteSheet.flip.x, flip, _doc, "X");
+		Copium::SerializeBasic(_data.spriteSheet.flip.y, flip, _doc, "Y");
+		_value.AddMember("Flip", flip, _doc.GetAllocator());
+
 	}
 	template<>
 	void Serializer::Serialize<Animator>(Animator& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
@@ -674,6 +679,15 @@ namespace Copium
 				Copium::Deserialize(anim.frameCount, a, "FrameCount");
 				Copium::Deserialize(anim.spriteSheet.rows, a, "Rows");
 				Copium::Deserialize(anim.spriteSheet.columns, a, "Columns");
+
+				if (a.HasMember("Flip"))
+				{
+					rapidjson::Value flip(rapidjson::kObjectType);
+					flip = a["Flip"].GetObj();
+					Copium::Deserialize(anim.spriteSheet.flip.x, flip, "X");
+					Copium::Deserialize(anim.spriteSheet.flip.y, flip, "Y");
+				}
+
 				anim.loop = _data.loop;
 				++i;
 			}

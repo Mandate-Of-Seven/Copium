@@ -25,7 +25,7 @@ public class Event_02: CopiumScript
                 EventManager.Option_03.SetActive(false);
             }
 
-            if (!EventManager.Option_01.activeSelf && !EventManager.Option_02.activeSelf)
+            if (!EventManager.Option_01.activeSelf || !EventManager.Option_02.activeSelf)
             {
                 EventManager.Option_01.SetActive(true);
                 EventManager.Option_02.SetActive(true);
@@ -43,7 +43,7 @@ public class Event_02: CopiumScript
         }
 		else
 		{
-            if (!EventManager.Option_01.activeSelf && !EventManager.Option_02.activeSelf && !EventManager.Option_03.activeSelf)
+            if (!EventManager.Option_01.activeSelf || !EventManager.Option_02.activeSelf || !EventManager.Option_03.activeSelf)
             {
                 EventManager.Option_01.SetActive(true);
                 EventManager.Option_02.SetActive(true);

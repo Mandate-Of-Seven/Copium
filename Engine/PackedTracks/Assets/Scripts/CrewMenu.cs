@@ -12,6 +12,8 @@ public class CrewMenu: CopiumScript
 
     public Button closeCrewButton;
 
+    public Fade fader;
+
     public int supplies;
 
     public Crew harris;
@@ -79,22 +81,10 @@ public class CrewMenu: CopiumScript
 
     void Start()
 	{
-        // crew[0].name = "Harris";
-        // crew[1].name = "Bronson";
-        // crew[2].name = "Chuck";
-        // crew[3].name = "Danton";
         
-        // for (int i = 0; i < 4; i++)
-        // {
-        //     crew[i].health = 15;
-        //     crew[i].mental = 15;
-        //     crew[i].hunger = 10;
-        //     crew[i].timer = 0.0f;
-        // }
     }
 	void Update()
 	{
-        Console.WriteLine("Hello this is crew: " + crew.Length);
         //if prepare button is pressed
         //show what event happened
         //update values based on event that happened
@@ -113,6 +103,10 @@ public class CrewMenu: CopiumScript
         {
             deployed = true;
             preparing = false;
+            fader.fadeIn = true;
+            fader.shouldFade = true;
+
+            GenerateEvents();
         }
        
         //UpdateHealth();
@@ -147,7 +141,6 @@ public class CrewMenu: CopiumScript
     {
         float chance = RNG.Range(0,1);
         
-        //prepareCanvas.SetActive(true);      
         UpdateValues(chance);
     }
 
@@ -199,7 +192,8 @@ public class CrewMenu: CopiumScript
         //    heat = 0;
 
         //hide crewscreen
-        //gameObject.SetActive(false);
+        deployed = false;
+        gameObject.SetActive(false);
     }
 
 

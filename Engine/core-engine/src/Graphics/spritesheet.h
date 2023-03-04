@@ -39,6 +39,7 @@ namespace Copium
 		Texture* texture;
 		uint64_t spriteID;
 		std::string name;
+		glm::bvec2 flip{ 0 };
 		int columns, rows;
 	};
 }

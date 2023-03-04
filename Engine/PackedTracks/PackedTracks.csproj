@@ -115,6 +115,7 @@
     <Compile Include="Assets\Scripts\StoryObject.cs" />
     <Compile Include="Assets\Scripts\Test.cs" />
     <Compile Include="Assets\Scripts\TrainButtons.cs" />
+    <Compile Include="Assets\Scripts\TrainManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
