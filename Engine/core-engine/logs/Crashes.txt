@@ -1,5 +1,5 @@
-[2023-03-04 15:21:26.667] [Error] [critical] 
+[2023-03-04 20:10:43.109] [Error] [critical] 
 Caused By:	!mClassField
-Info:		FIELD bronson COULD NOT BE FOUND IN SCRIPT CrewMenu
+Info:		FIELD clickAudio COULD NOT BE FOUND IN SCRIPT GameManager
 Source:		C:\Users\FLESH\ECS\Copium\Engine\core-engine\src\Scripting\scripting-system.h (Line: 616)
 

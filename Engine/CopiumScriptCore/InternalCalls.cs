@@ -36,7 +36,9 @@ namespace CopiumEngine
         internal extern static void PauseAnimation(ulong ID);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetAnimationSpeed(ulong ID,double timeDelay);
+        internal extern static void SetAnimatorDelay(ulong ID,float timeDelay);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static float GetAnimatorDelay(ulong ID);
         #endregion
 
         #region COMPONENT
@@ -89,6 +91,11 @@ namespace CopiumEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetTranslation(ulong ID, ref Vector3 translation);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void GetRotation(ulong ID, out Vector3 translation);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetRotation(ulong ID, ref Vector3 translation);
         #endregion
 
         #region RIGIDBODY2D

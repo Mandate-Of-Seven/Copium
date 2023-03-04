@@ -6,7 +6,8 @@ public class AudioManager: CopiumScript
 	public AudioSource ambTrain;
 	public AudioSource bgmMainMenu;
 	public AudioSource bgmTrain;
-	//public AudioManager audioManager;
+	public AudioSource clickSFX;
+	public AudioSource paperSFX;
 	public int state = 0;
 
     public GameObject MainMenuStartGameObject;

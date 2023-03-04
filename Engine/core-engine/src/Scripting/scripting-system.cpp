@@ -114,6 +114,8 @@ namespace Copium::Utils
 				//PRINT(componentName << " is a component");
 				return (FieldType)it->second;
 			}
+			if (mono_class_get_parent(mono_class_from_mono_type(monoType)) == mCopiumScript)
+				return (FieldType)ComponentType::Script;
 			PRINT(typeName << "is none type");
 			return FieldType::None;
 		}

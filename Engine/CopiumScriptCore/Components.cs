@@ -104,7 +104,18 @@ namespace CopiumEngine
             }
         }
 
-        public Vector3 rotation { get; internal set; }
+        public Vector3 localRotation 
+        {
+            get
+            {
+                InternalCalls.GetRotation(gameObject.ID, out Vector3 vec3);
+                return vec3;
+            }
+            set
+            {
+                InternalCalls.SetRotation(gameObject.ID, ref value);
+            }
+        }
     }
 
     public class Rigidbody2D : Component
@@ -201,6 +212,27 @@ namespace CopiumEngine
 
     public class Animator : Component
     {
+        public float delay
+        {
+            get
+            {
+                return InternalCalls.GetAnimatorDelay(ID);
+            }
+            set
+            {
+                InternalCalls.SetAnimatorDelay(ID,value);
+            }
+        }
 
+        public bool play
+        {
+            set
+            {
+                if (value)
+                    InternalCalls.PlayAnimation(gameObject.ID);
+                else
+                    InternalCalls.PauseAnimation(gameObject.ID);
+            }
+        }
     }
 }

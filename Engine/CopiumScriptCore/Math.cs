@@ -111,6 +111,10 @@ namespace CopiumEngine
                 return max;
             return value;
         }
+        public static float Lerp(float a, float b, float t)
+        {
+            return a + (b - a) * t;
+        }
 
         static public float SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime, float maxSpeed = Infinity, float deltaTime = 0)
         {
