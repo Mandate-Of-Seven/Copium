@@ -638,12 +638,12 @@ namespace Copium
 				glm::fvec4 mixedColor{ 0 };
 				glm::fvec4 color{ _sprite.color };
 				glm::fvec4 layeredColor{ *tint };
-				mixedColor.a = 1 - (1 - layeredColor.a) * (1 - color.a); // 0.75
+				mixedColor.a = 1 - (1 - layeredColor.a) * (1 - color.a);
 				if (mixedColor.a < 0.01f)
 					return;
-				mixedColor.r = layeredColor.r * layeredColor.a / mixedColor.a + color.r * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.67
-				mixedColor.g = layeredColor.g * layeredColor.a / mixedColor.a + color.g * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.33
-				mixedColor.b = layeredColor.b * layeredColor.a / mixedColor.a + color.b * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.00
+				mixedColor.r = layeredColor.r * layeredColor.a / mixedColor.a + color.r * color.a * (1 - layeredColor.a) / mixedColor.a;
+				mixedColor.g = layeredColor.g * layeredColor.a / mixedColor.a + color.g * color.a * (1 - layeredColor.a) / mixedColor.a;
+				mixedColor.b = layeredColor.b * layeredColor.a / mixedColor.a + color.b * color.a * (1 - layeredColor.a) / mixedColor.a;
 				quadBufferPtr->color = mixedColor;
 			}
 			quadBufferPtr->texID = textureIDs[key];
@@ -834,7 +834,7 @@ namespace Copium
 		//graphics->get_shader_program()[LINE_SHADER].UnUse();
 	}
 
-	void Renderer::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float& _scale, const float& _wrapper, Font* _font)
+	void Renderer::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float& _scale, const float& _wrapper, Font* _font, const glm::fvec4* tintColor)
 	{
 		if (quadIndexCount >= maxIndexCount)
 		{
@@ -907,7 +907,21 @@ namespace Copium
 			{
 				quadBufferPtr->pos = textVertexPosition[i];
 				quadBufferPtr->textCoord = fontTextCoord[i];
-				quadBufferPtr->color = _color;
+				if (!tintColor)
+					quadBufferPtr->color = _color;
+				else
+				{
+					glm::fvec4 mixedColor{ 0 };
+					glm::fvec4 color{ _color };
+					glm::fvec4 layeredColor{ *tintColor };
+					mixedColor.a = 1 - (1 - layeredColor.a) * (1 - color.a);
+					if (mixedColor.a < 0.01f)
+						return;
+					mixedColor.r = layeredColor.r * layeredColor.a / mixedColor.a + color.r * color.a * (1 - layeredColor.a) / mixedColor.a;
+					mixedColor.g = layeredColor.g * layeredColor.a / mixedColor.a + color.g * color.a * (1 - layeredColor.a) / mixedColor.a;
+					mixedColor.b = layeredColor.b * layeredColor.a / mixedColor.a + color.b * color.a * (1 - layeredColor.a) / mixedColor.a;
+					quadBufferPtr->color = mixedColor;
+				}
 				quadBufferPtr->texID = textureIDs[ch.textureID];
 				quadBufferPtr->type = (float)ENTITY_TYPE::TEXT;
 				quadBufferPtr++;

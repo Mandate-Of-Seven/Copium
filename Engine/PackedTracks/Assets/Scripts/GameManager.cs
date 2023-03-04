@@ -17,6 +17,7 @@ public class GameManager: CopiumScript
     public Button LeverBtn;
     public GameObject LeverNear;
     public GameObject LeverFar;
+    public GameObject trackEffect;
     bool move = false;
 
     public Button ReportScreenBtn;
@@ -50,8 +51,8 @@ public class GameManager: CopiumScript
         //UpdateCanvases();
     }
 	void Update()
-    {   
-        if(ReportScreenBtn.state == ButtonState.OnRelease)
+    {
+        if (ReportScreenBtn.state == ButtonState.OnRelease)
         {
             ReportTab.SetActive(true);
         }
@@ -78,6 +79,14 @@ public class GameManager: CopiumScript
             Console.WriteLine("Clicked on lever");
             LeverFar.SetActive(move);
             LeverNear.SetActive(!move);
+            if (move)
+            {
+                InternalCalls.PlayAnimation(trackEffect.ID);
+            }
+            else
+            {
+                InternalCalls.PauseAnimation(trackEffect.ID);
+            }
         }
         //Stop travlling
 

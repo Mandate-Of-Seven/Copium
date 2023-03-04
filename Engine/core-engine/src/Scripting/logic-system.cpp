@@ -53,8 +53,11 @@ namespace Copium
 
 		if (pHoveredBtn == nullptr)
 		{
+			//PRINT("GETTING BUTTON STATE");
+			//PRINT(scenePos.x << " , " << scenePos.y);
 			if (static_collision_pointrect(scenePos, btn.bounds.GetRelativeBounds(transform.GetWorldPosition(), transform.GetWorldScale())))
 			{
+				//PRINT("COLLIDED");
 				if (MyInputSystem.is_mousebutton_pressed(0))
 				{
 					if (pHoveredBtn)
@@ -297,6 +300,7 @@ namespace Copium
 	{
 		messageSystem.subscribe(MESSAGE_TYPE::MT_START_PREVIEW,this);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
+		MyEventSystem->subscribe(this, &LogicSystem::CallbackSceneLinked);
 		systemFlags |= FLAG_RUN_ON_PLAY;
 	}
 
@@ -327,8 +331,7 @@ namespace Copium
 
 		GameObject* selected = GetSelectedGameObject();
 
-		if (selected)
-			PRINT( "Selected: " << selected->name);
+
 		for (Button& button : pScene->componentArrays.GetArray<Button>())
 		{
 			if (!button.enabled || !button.gameObj.IsActive())
@@ -345,6 +348,26 @@ namespace Copium
 
 	void LogicSystem::exit()
 	{
+	}
+
+	void LogicSystem::CallbackSceneLinked(SceneLinkedEvent* pEvent)
+	{
+		pHoveredBtn = nullptr;
+		//MT_START_PREVIEW
+		if (!inPlayMode)
+			return;
+		PRINT("CALLED START AGAIN!");
+		Scene& scene = pEvent->scene;
+		for (Script& script : scene.componentArrays.GetArray<Script>())
+		{
+			MyEventSystem->publish(new ScriptInvokeMethodEvent(script, "Awake"));
+		}
+
+		for (Script& script : scene.componentArrays.GetArray<Script>())
+		{
+			MyEventSystem->publish(new ScriptInvokeMethodEvent(script, "Start"));
+		}
+		timeElasped = MyFrameRateController.getDt();
 	}
 
 	void LogicSystem::handleMessage(MESSAGE_TYPE mType)

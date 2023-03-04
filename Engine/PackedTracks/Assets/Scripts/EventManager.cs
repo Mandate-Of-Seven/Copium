@@ -35,6 +35,7 @@ public class EventManager: CopiumScript
 
     void Start()
 	{
+        Console.WriteLine("EVENT MANAGER START");
         EventSequence = 0;
         option01_btn = Option_01.GetComponent<Button>();
         option02_btn = Option_02.GetComponent<Button>();
@@ -44,7 +45,8 @@ public class EventManager: CopiumScript
 
 	void Update()
     {
-        if(!ShowingResolution && ShowingMainEvent)
+        //Console.WriteLine("EVENT MANAGER UPDATE");
+        if (!ShowingResolution && ShowingMainEvent)
             CheckCurrentEvent();
 
         if(!ShowingResolution)

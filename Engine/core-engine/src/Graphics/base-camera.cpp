@@ -170,6 +170,7 @@ namespace Copium
 		}
 
 		mouseToNDC *= orthographicSize;
+		//PRINT("ORTHO SIZE: " << orthographicSize);
 		glm::vec2 worldNDC = { mouseToNDC.x + viewer.x, mouseToNDC.y + viewer.y };
 		//PRINT("~: " << worldNDC.x << ", " << worldNDC.y);
 		return worldNDC;

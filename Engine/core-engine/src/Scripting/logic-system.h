@@ -62,6 +62,7 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		void handleMessage(MESSAGE_TYPE mType);
+		void CallbackSceneLinked(SceneLinkedEvent* IEvent);
 	};
 }
 
