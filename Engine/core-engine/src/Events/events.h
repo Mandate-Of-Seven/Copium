@@ -56,6 +56,12 @@ namespace Copium
 		Scene& scene;
 	};
 
+	struct SceneLinkedEvent : IEvent
+	{
+		SceneLinkedEvent(Scene& _scene) : scene{ _scene } {}
+		Scene& scene;
+	};
+
 	struct GameObjectInstantiateEvent : IEvent
 	{
 		GameObjectInstantiateEvent(GameObject*& _instanceContainer, GameObject* _pOriginal = nullptr) : 

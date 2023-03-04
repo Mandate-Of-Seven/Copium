@@ -308,7 +308,7 @@ namespace Copium
 					if (!camera->withinFrustum(updatedPos, updatedScale))
 						continue;
 
-					renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr);
+					renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr, &image.layeredColor);
 				}
 				else
 				{
@@ -316,7 +316,7 @@ namespace Copium
 					if (!camera->withinFrustum(t.position, t.scale))
 						continue;
 
-					renderer.draw_quad(t.position, size, rotation, sr);
+					renderer.draw_quad(t.position, size, rotation, sr, &image.layeredColor);
 				}
 			}
 			for (Animator& animator: pScene->componentArrays.GetArray<Animator>())
@@ -411,7 +411,7 @@ namespace Copium
 						break;
 					}
 
-					renderer.draw_text(text.content, updatedPos, text.get_color(), scale, text.wrapper, text.font);
+					renderer.draw_text(text.content, updatedPos, text.get_color(), scale, text.wrapper, text.font, &text.layeredColor);
 				}
 				else
 				{
@@ -434,7 +434,7 @@ namespace Copium
 						break;
 					}
 
-					renderer.draw_text(text.content, pos, text.get_color(), scale, text.wrapper, text.font);
+					renderer.draw_text(text.content, pos, text.get_color(), scale, text.wrapper, text.font, &text.layeredColor);
 				}
 			}
 			++count;
@@ -516,7 +516,7 @@ namespace Copium
 							if (!camera->withinFrustum(updatedPos, updatedScale))
 								continue;
 
-							renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr);
+							renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr,&image.layeredColor);
 						}
 						else
 						{
@@ -524,7 +524,7 @@ namespace Copium
 							if (!camera->withinFrustum(t.position, t.scale))
 								continue;
 
-							renderer.draw_quad(t.position, size, rotation, sr);
+							renderer.draw_quad(t.position, size, rotation, sr, &image.layeredColor);
 						}
 					}
 
@@ -610,7 +610,7 @@ namespace Copium
 								break;
 							}
 
-							renderer.draw_text(text.content, updatedPos, text.get_color(), scale, text.wrapper, text.font);
+							renderer.draw_text(text.content, updatedPos, text.get_color(), scale, text.wrapper, text.font,&text.layeredColor);
 						}
 						else
 						{
@@ -633,7 +633,7 @@ namespace Copium
 								break;
 							}
 
-							renderer.draw_text(text.content, pos, text.get_color(), scale, text.wrapper, text.font);
+							renderer.draw_text(text.content, pos, text.get_color(), scale, text.wrapper, text.font, &text.layeredColor);
 						}
 					}
 

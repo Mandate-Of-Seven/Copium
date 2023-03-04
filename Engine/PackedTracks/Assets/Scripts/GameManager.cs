@@ -51,8 +51,8 @@ public class GameManager: CopiumScript
         //UpdateCanvases();
     }
 	void Update()
-    {   
-        if(ReportScreenBtn.state == ButtonState.OnRelease)
+    {
+        if (ReportScreenBtn.state == ButtonState.OnRelease)
         {
             ReportTab.SetActive(true);
         }

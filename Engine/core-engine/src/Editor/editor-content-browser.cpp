@@ -30,7 +30,7 @@ namespace Copium
 
 
 		const float padding = 16.f;
-		const float thumbnailSize = 128.f;
+		const float thumbnailSize = 96.f;
 		float imageAR = 1.f, framePadding = 3.f;
 		float cellSize = thumbnailSize + padding;
 
