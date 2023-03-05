@@ -692,6 +692,7 @@ namespace Copium
 		GLuint colOffset = _offsetID % _spritesheet.columns;
 
 		//PRINT("Row offset:" << rowOffset);
+		
 		// Change texture index only if ID retrieved is more than 0 (0 is white texture)
 		if (textureIndex == 0.f && _spritesheet.spriteID != 0)
 		{
@@ -729,8 +730,8 @@ namespace Copium
 
 		float xStep = (1.0f / (float)_spritesheet.columns);
 		float yStep = (1.0f / (float)_spritesheet.rows);
-		float xOffset = colOffset * xStep;
-		float yOffset = rowOffset * yStep;
+		float xOffset = (colOffset * xStep) > 1.0f ? 1.0f : (colOffset * xStep);
+		float yOffset = (rowOffset * yStep) > 1.0f ? 1.0f : (rowOffset * yStep);
 		//PRINT("	Animation Steps:" << xStep << " " << yStep);
 		glm::vec2 spriteTextCoord[4] =
 		{

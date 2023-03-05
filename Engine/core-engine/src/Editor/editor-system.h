@@ -120,10 +120,16 @@ namespace Copium
 
 		GameObject* pSelectedGameObject{};
 		std::string sceneChangeName{};
+
+
+		std::vector<Texture> buttons;
+
 	private:
 		
 
 	private:
+		void PreviewButton();
+		bool previewFlag = false;
 		bool enableEditor = true;
 
 		EditorSceneView sceneView;

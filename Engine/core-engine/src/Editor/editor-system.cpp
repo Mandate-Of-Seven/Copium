@@ -72,6 +72,11 @@ namespace Copium
 		layers.init();
 		// Initialize a new editor camera
 		camera.init((float) sceneView.get_width(), (float) sceneView.get_height());
+
+
+		buttons.push_back(Texture("Data/Resource/PreviewButton.png"));
+		buttons.push_back(Texture("Data/Resource/StopButton.png"));
+		previewFlag = false;
 	}
 
 	void EditorSystem::update()
@@ -283,17 +288,6 @@ namespace Copium
 					ImGui::EndMenu();
 				}
 
-				// Preview Button
-				//ImTextureID playBtnID;
-				//ImVec2 size = ImVec2(32.0f, 32.0f);                         // Size of the image we want to make visible
-				//ImVec2 uv0 = ImVec2(0.0f, 0.0f);                            // UV coordinates for lower-left
-				////ImVec2 uv1 = ImVec2(32.0f / playBtnID, 32.0f / my_tex_h);    // UV coordinates for (32,32) in our texture
-				//ImVec4 bg_col = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);             // Black background
-				//ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);           // No tint
-
-				//if (ImGui::ImageButton("", playBtnID, size, uv0, uv1, bg_col, tint_col))
-
-
 				//if your IMGUI window can be closed,you should make the bool inline in the header and include it here to be able to reopen it
 				if (ImGui::BeginMenu("Windows"))
 				{
@@ -316,6 +310,7 @@ namespace Copium
 
 					ImGui::EndMenu();
 				}
+
 
 				ImGui::EndMenuBar();
 			}
@@ -401,7 +396,7 @@ namespace Copium
 			}
 
             //Call all the editor layers updates here
-			
+			PreviewButton();
 			colorTheme.update();
 			hierarchyList.update();
 			layers.update();
@@ -532,5 +527,66 @@ namespace Copium
 	UndoRedo::CommandManager* EditorSystem::get_commandmanager()
 	{
 		return &commandManager;
+	}
+
+	void EditorSystem::PreviewButton()
+	{
+		int i{ 0 };
+		if (previewFlag && MySceneManager.get_current_scene())
+		{
+			i = 1;
+		}
+
+
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 4));
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
+
+
+		// Preview Button
+		ImTextureID previewBtn = (ImTextureID)(size_t)buttons[i].get_object_id();
+		ImVec4 bg_col = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);             // Black background
+		ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);           // No tint
+		ImVec2 sz = { (float)buttons[i].get_width() / 10, (float)buttons[i].get_height() / 10 };
+		ImGui::SetNextWindowSize({ (float)buttons[i].get_pixel_width() / 10, (float)buttons[i].get_pixel_height()/10});
+		ImGui::Begin("Preview Toolbar", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+		ImGui::PushID(1);
+
+		ImGui::SameLine(ImGui::GetWindowContentRegionMax().x * 0.5f - sz.x * 0.5f);
+		if (ImGui::ImageButton("", previewBtn, sz, {0,1}, {1,0}, bg_col, tint_col))
+		{
+			previewFlag = previewFlag ? false : true;
+
+			if (MySceneManager.get_current_scene())
+			{
+				if (MySceneManager.GetSceneState() == Scene::SceneState::play)
+				{
+					UUID selectedID{};
+					if (pSelectedGameObject)
+						selectedID = pSelectedGameObject->uuid;
+					if (MySceneManager.endPreview())
+					{
+						pSelectedGameObject = MySceneManager.FindGameObjectByID(selectedID);
+						MyMessageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
+					}
+				}
+				else if (MySceneManager.GetSceneState() == Scene::SceneState::edit)
+				{
+					UUID selectedID{};
+					if (pSelectedGameObject)
+						selectedID = pSelectedGameObject->uuid;
+					if (MySceneManager.startPreview())
+					{
+						pSelectedGameObject = MySceneManager.FindGameObjectByID(selectedID);
+						MyMessageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
+					}
+				}
+
+			}
+
+		}
+		ImGui::PopStyleVar(2);
+		ImGui::PopID();
+		ImGui::End();
 	}
 }
