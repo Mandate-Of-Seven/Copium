@@ -96,6 +96,9 @@ namespace CopiumEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetRotation(ulong ID, ref Vector3 translation);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetParent(ulong newParentID, ulong childID);
         #endregion
 
         #region RIGIDBODY2D
@@ -119,6 +122,15 @@ namespace CopiumEngine
 
         #endregion
 
+        #region IMAGE
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetImageColor(ulong ID, out Color color);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetImageColor(ulong ID, ref Color color);
+
+        #endregion
+
         #region SCENE
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void LoadScene(string sceneName);
@@ -127,7 +139,15 @@ namespace CopiumEngine
         #region AUDIO_SOURCE
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void AudioSourcePlay(ulong ID);
-        #endregion
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void AudioSourceStop(ulong ID);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void AudioSourceSetVolume(ulong ID, float volume);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern float AudioSourceGetVolume(ulong ID);
+        #endregion	
 
         #region UI
         [MethodImpl(MethodImplOptions.InternalCall)]

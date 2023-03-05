@@ -713,14 +713,6 @@ namespace Copium
 			IUIComponent(_gameObj, rhs ,_uuid), fontName{ rhs.fontName }, font{ rhs.font },
 			fSize{rhs.fSize},wrapper{rhs.wrapper}
 		{strcpy(content, rhs.content); }
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Called by graphics to display this
-		*/
-		/*******************************************************************************/
-		void render(BaseCamera* _camera);
 
 		std::string fontName;
 		Font* font;

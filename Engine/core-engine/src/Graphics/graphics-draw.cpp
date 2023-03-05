@@ -381,7 +381,6 @@ namespace Copium
 					scale = t.scale.y * 0.1f;
 
 				scale *= text.fSize;
-				glm::vec2 dimensions{ text.font->getDimensions(text.content, scale, text.wrapper) };
 
 				if (t.HasParent())
 				{
@@ -391,7 +390,8 @@ namespace Copium
 					UpdateTransform(t, updatedPos, updatedRot, updatedScale);
 
 					float updatedSize = updatedScale.x * text.fSize * 0.1f;
-
+					float updatedWrapper = updatedScale.x * text.wrapper;
+					glm::vec2 dimensions{ text.font->getDimensions(text.content, updatedSize, updatedWrapper) };
 					switch (text.get_hAlign())
 					{
 					case HorizontalAlignment::Right:
@@ -411,10 +411,11 @@ namespace Copium
 						break;
 					}
 
-					renderer.draw_text(text.content, updatedPos, text.get_color(), scale, text.wrapper, text.font, &text.layeredColor);
+					renderer.draw_text(text.content, updatedPos, text.get_color(), updatedSize, updatedWrapper, text.font, &text.layeredColor);
 				}
 				else
 				{
+					glm::vec2 dimensions{ text.font->getDimensions(text.content, scale, text.wrapper) };
 					switch (text.get_hAlign())
 					{
 					case HorizontalAlignment::Center:
@@ -580,7 +581,6 @@ namespace Copium
 							scale = t.scale.y * 0.1f;
 
 						scale *= text.fSize;
-						glm::vec2 dimensions{ text.font->getDimensions(text.content, scale, text.wrapper) };
 
 						if (t.HasParent())
 						{
@@ -590,6 +590,8 @@ namespace Copium
 							UpdateTransform(t, updatedPos, updatedRot, updatedScale);
 
 							float updatedSize = updatedScale.x * text.fSize * 0.1f;
+							float updatedWrapper = updatedScale.x * text.wrapper;
+							glm::vec2 dimensions{ text.font->getDimensions(text.content, updatedSize, updatedWrapper) };
 
 							switch (text.get_hAlign())
 							{
@@ -610,10 +612,11 @@ namespace Copium
 								break;
 							}
 
-							renderer.draw_text(text.content, updatedPos, text.get_color(), scale, text.wrapper, text.font,&text.layeredColor);
+							renderer.draw_text(text.content, updatedPos, text.get_color(), updatedSize, updatedWrapper, text.font,&text.layeredColor);
 						}
 						else
 						{
+							glm::vec2 dimensions{ text.font->getDimensions(text.content, scale, text.wrapper) };
 							switch (text.get_hAlign())
 							{
 							case HorizontalAlignment::Center:

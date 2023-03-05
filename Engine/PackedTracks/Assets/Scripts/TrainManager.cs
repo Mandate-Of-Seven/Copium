@@ -9,6 +9,7 @@ public class TrainManager: CopiumScript
 	public float deceleration = 0.0f;
 	public Animator snowAnimator;
 	public Animator tracksAnimator;
+	public AudioManager audioManager;
 
 	public Button trainLeverBtn;
 	public GameObject trainLeverActivated;
@@ -32,41 +33,41 @@ public class TrainManager: CopiumScript
 	private float targetTracksDelay;
 
 	public float zoomOutScale;
+	public float zoomInScale;
 
 	void Start()
 	{
 		targetSnowDelay = snowMaxDelay;
 		targetTracksDelay = tracksMaxDelay;
 	}
+
 	void Update()
 	{
 		if (trainLeverBtn.state == ButtonState.OnClick)
-            FlickLever();
-
-        if (accelerate)
 		{
-			if (currentSpeed < maxSpeed)
-			{
-				currentSpeed += acceleration* Time.deltaTime;
-			}
+			FlickLever();
 		}
-		else
+		if (accelerate && currentSpeed < maxSpeed)
 		{
-			if (currentSpeed > 0.0f)
-			{
-				currentSpeed -= deceleration * Time.deltaTime;
-			}
+			currentSpeed += acceleration* Time.deltaTime;
+		}
+		else if (currentSpeed > 0.0f)
+		{
+			currentSpeed -= deceleration * Time.deltaTime;
 		}
 
 		float ratio = (currentSpeed/maxSpeed);
 
+		
 
-		if (ratio <= 0.1f)
+		if (!accelerate && ratio <= 0.2f)
 		{
+			audioManager.accelerateSFX.Stop();
+			audioManager.deccelerateSFX.Stop();
 			tracksAnimator.play = false;
-			targetScale = new Vector3(1,1,1);
 			targetPosition = new Vector3(0,0,0);
 			targetRotation = new Vector3(0,0,0);
+			targetScale = new Vector3(1,1,1);
 		}
 		else if (!accelerate && ratio <= 0.4f)
 		{
@@ -75,6 +76,7 @@ public class TrainManager: CopiumScript
 			targetPosition = new Vector3(shakePosX,shakePosY,0);
 			float shakeRot = RNG.Range(-shakeRotation,shakeRotation);
 			targetRotation = new Vector3(0,0,shakeRot);
+			targetScale = new Vector3(1,1,1);
 		}
 		else
 		{
@@ -82,14 +84,6 @@ public class TrainManager: CopiumScript
 			float shakePosY = RNG.Range(-shakePosition,shakePosition);
 			float shakePosX = RNG.Range(-shakePosition,shakePosition);
 			tracksAnimator.play = true;
-			if (accelerate)
-			{
-				targetScale = new Vector3(zoomOutScale,zoomOutScale,1);
-			}
-			else 
-			{
-				targetScale = new Vector3(1,1,1);
-			}
 			targetPosition = new Vector3(shakePosX,shakePosY,0);
 			targetRotation = new Vector3(0,0,shakeRot);
 		}
@@ -98,8 +92,16 @@ public class TrainManager: CopiumScript
 			Mathf.Lerp(tracksAnimator.delay,targetTracksDelay,timeStep);
 		snowAnimator.delay = 
 			Mathf.Lerp(snowAnimator.delay,targetSnowDelay,timeStep);
-		trainCanvas.transform.localScale = 
-			Vector3.Lerp(trainCanvas.transform.localScale,targetScale,timeStep);
+		if (ratio <= 0.1f)
+		{
+			trainCanvas.transform.localScale = 
+				Vector3.Lerp(trainCanvas.transform.localScale,targetScale,Time.deltaTime * 2.0f);
+		}
+		else
+		{
+			trainCanvas.transform.localScale = 
+				Vector3.Lerp(trainCanvas.transform.localScale,targetScale,timeStep);
+		}
 		trainCanvas.transform.localRotation = 
 			Vector3.Lerp(Vector3.zero,targetRotation,timeStep);
 		trainCanvas.transform.localPosition = 
@@ -111,15 +113,34 @@ public class TrainManager: CopiumScript
         accelerate = !accelerate;
         trainLeverActivated.SetActive(accelerate);
         trainLeverDeactivated.SetActive(!accelerate);
+        audioManager.accelerateSFX.Stop();
+        audioManager.leverSFX.Stop();
+        audioManager.leverSFX.Play();
         if (accelerate)
         {
-            targetSnowDelay = snowMinDelay;
-            targetTracksDelay = tracksMinDelay;
+			StartTrain();
         }
         else
         {
-            targetSnowDelay = snowMaxDelay;
-            targetTracksDelay = tracksMaxDelay;
+			StopTrain();
         }
     }
+
+	void StartTrain()
+	{
+		audioManager.deccelerateSFX.Stop();
+		audioManager.accelerateSFX.Play();
+		targetSnowDelay = snowMinDelay;
+		targetTracksDelay = tracksMinDelay;
+		targetScale = new Vector3(zoomOutScale,zoomOutScale,1);
+	}
+
+	void StopTrain()
+	{
+		audioManager.accelerateSFX.Stop();
+		audioManager.deccelerateSFX.Play();
+		targetSnowDelay = snowMaxDelay;
+		targetTracksDelay = tracksMaxDelay;
+		targetScale = new Vector3(zoomInScale,zoomInScale,1);
+	}
 }

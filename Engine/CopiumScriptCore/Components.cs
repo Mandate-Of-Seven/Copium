@@ -116,6 +116,17 @@ namespace CopiumEngine
                 InternalCalls.SetRotation(gameObject.ID, ref value);
             }
         }
+
+        public Transform parent
+        {
+            set
+            {
+                if (value == null)
+                    InternalCalls.SetParent(0, gameObject.ID);
+                else
+                    InternalCalls.SetParent(value.gameObject.ID, gameObject.ID);
+            }
+        }
     }
 
     public class Rigidbody2D : Component
@@ -190,6 +201,8 @@ namespace CopiumEngine
                 InternalCalls.SetTextString(gameObject.ID, ID, value);
             }
         }
+
+
     }
 
     public class AudioSource : Component
@@ -198,11 +211,38 @@ namespace CopiumEngine
         {
             InternalCalls.AudioSourcePlay(gameObject.ID);
         }
+        public void Stop()
+        {
+            InternalCalls.AudioSourceStop(gameObject.ID);
+        }
+
+        public float volume
+        {
+            get
+            {
+                return InternalCalls.AudioSourceGetVolume(gameObject.ID);
+            }
+            set
+            {
+                InternalCalls.AudioSourceSetVolume(gameObject.ID,value);
+            }
+        }
     }
 
     public class Image : Component
     {
-
+        public Color color
+        {
+            get
+            {
+                InternalCalls.GetImageColor(gameObject.ID, out Color color);
+                return color;
+            }
+            set
+            {
+                InternalCalls.SetImageColor(gameObject.ID, ref value);
+            }
+        }
     }
 
     public class SortingGroup : Component
