@@ -26,6 +26,9 @@ public class TrainManager: CopiumScript
 	public float shakeRotation;
 	public float shakePosition;
 
+	float initialSnowScale;
+	public float targetSnowScale;
+
 	private Vector3 targetRotation = new Vector3(0,0,0);
 	private Vector3 targetPosition = new Vector3(0,0,0);
 	private Vector3 targetScale = new Vector3(1,1,1);
@@ -39,6 +42,7 @@ public class TrainManager: CopiumScript
 	{
 		targetSnowDelay = snowMaxDelay;
 		targetTracksDelay = tracksMaxDelay;
+		initialSnowScale = snowAnimator.gameObject.transform.localScale.y;
 	}
 
 	void Update()
@@ -96,11 +100,21 @@ public class TrainManager: CopiumScript
 		{
 			trainCanvas.transform.localScale = 
 				Vector3.Lerp(trainCanvas.transform.localScale,targetScale,Time.deltaTime * 2.0f);
+			Vector3 snowScale = snowAnimator.gameObject.transform.localScale;
+			Vector3 newSnowScale = snowScale;
+			newSnowScale.y = initialSnowScale;
+			snowAnimator.gameObject.transform.localScale = 
+				Vector3.Lerp(snowScale,newSnowScale,Time.deltaTime * 2.0f);
 		}
 		else
 		{
 			trainCanvas.transform.localScale = 
 				Vector3.Lerp(trainCanvas.transform.localScale,targetScale,timeStep);
+			Vector3 snowScale = snowAnimator.gameObject.transform.localScale;
+			Vector3 newSnowScale = snowScale;
+			newSnowScale.y = targetSnowScale;
+			snowAnimator.gameObject.transform.localScale = 
+				Vector3.Lerp(snowScale,newSnowScale,timeStep);
 		}
 		trainCanvas.transform.localRotation = 
 			Vector3.Lerp(Vector3.zero,targetRotation,timeStep);

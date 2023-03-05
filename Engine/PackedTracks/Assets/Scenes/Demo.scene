@@ -218,7 +218,7 @@
                     "Type": "SortingGroup",
                     "TypeID": 26,
                     "SortingLayer": 4,
-                    "OrderInLayer": 99
+                    "OrderInLayer": 77
                 },
                 {
                     "UID": 15187707562833248342,
@@ -243,7 +243,7 @@
                     "UID": 5292179977163357335,
                     "Type": "Button",
                     "TypeID": 18,
-                    "Graphic ID": 0,
+                    "Graphic ID": 9273258979768755902,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.44999998807907104,
@@ -256,18 +256,18 @@
                     },
                     "Callback": "",
                     "FadeDuration": 0.10000000149011612,
-                    "clickedR": 0.5,
-                    "clickedG": 0.5,
-                    "clickedB": 0.5,
-                    "clickedA": 0.5,
-                    "hoveredR": 0.5,
+                    "clickedR": 1.0,
+                    "clickedG": 0.9882352948188782,
+                    "clickedB": 0.3921568691730499,
+                    "clickedA": 0.25882354378700256,
+                    "hoveredR": 0.729411780834198,
                     "hoveredG": 1.0,
-                    "hoveredB": 1.0,
-                    "hoveredA": 0.5,
+                    "hoveredB": 0.4627451002597809,
+                    "hoveredA": 0.25882354378700256,
                     "normalR": 1.0,
                     "normalG": 1.0,
                     "normalB": 1.0,
-                    "normalA": 0.5
+                    "normalA": 0.0
                 },
                 {
                     "UID": 17799020031390293334,
@@ -308,7 +308,7 @@
                     "Type": "SortingGroup",
                     "TypeID": 26,
                     "SortingLayer": 4,
-                    "OrderInLayer": 81
+                    "OrderInLayer": 77
                 },
                 {
                     "UID": 18001664217615177344,
@@ -346,18 +346,18 @@
                     },
                     "Callback": "",
                     "FadeDuration": 0.10000000149011612,
-                    "clickedR": 0.5,
-                    "clickedG": 0.5,
-                    "clickedB": 0.5,
-                    "clickedA": 0.5,
-                    "hoveredR": 0.5,
+                    "clickedR": 1.0,
+                    "clickedG": 0.9882352948188782,
+                    "clickedB": 0.3921568691730499,
+                    "clickedA": 0.25882354378700256,
+                    "hoveredR": 0.729411780834198,
                     "hoveredG": 1.0,
-                    "hoveredB": 1.0,
-                    "hoveredA": 0.5,
+                    "hoveredB": 0.4627451002597809,
+                    "hoveredA": 0.25882354378700256,
                     "normalR": 1.0,
                     "normalG": 1.0,
                     "normalB": 1.0,
-                    "normalA": 0.5
+                    "normalA": 0.0
                 },
                 {
                     "UID": 1160051457909621972,
@@ -820,6 +820,7 @@
                     "shakeRotation": 1.0,
                     "snowMaxDelay": 0.029999999329447746,
                     "snowMinDelay": 0.004999999888241291,
+                    "targetSnowScale": 45.0,
                     "tracksMaxDelay": 0.10000000149011612,
                     "tracksMinDelay": 0.0,
                     "zoomInScale": 1.100000023841858,
@@ -854,7 +855,7 @@
                     },
                     "Scale": {
                         "X": 135.0,
-                        "Y": 60.0,
+                        "Y": 160.0,
                         "Z": 1.0
                     }
                 },
@@ -876,7 +877,7 @@
                         {
                             "Name": "Snow_SpriteSheet_155_5x31.png",
                             "Sprite ID": 8966109942037627320,
-                            "Time Delay": 0.009999999776482582,
+                            "Time Delay": 0.029999999329447746,
                             "FrameCount": 155,
                             "Rows": 31,
                             "Columns": 5,
@@ -1137,6 +1138,7 @@
                     "Name": "GameManager",
                     "distanceInterval": 1.0,
                     "distanceLeft": 200.0,
+                    "gameEnd": false,
                     "isPaused": false,
                     "CrewTab": 15240074584306495293,
                     "ManualPopUp": 18214688194793872927,
@@ -1331,7 +1333,7 @@
                     "Type": "SortingGroup",
                     "TypeID": 26,
                     "SortingLayer": 4,
-                    "OrderInLayer": 28
+                    "OrderInLayer": 80
                 },
                 {
                     "UID": 5710180822141942154,
@@ -2712,7 +2714,7 @@
                     "Type": "SortingGroup",
                     "TypeID": 26,
                     "SortingLayer": 4,
-                    "OrderInLayer": 85
+                    "OrderInLayer": 78
                 },
                 {
                     "UID": 13502632409766253498,
@@ -5474,7 +5476,7 @@
                     "Type": "SortingGroup",
                     "TypeID": 26,
                     "SortingLayer": 4,
-                    "OrderInLayer": 99
+                    "OrderInLayer": 77
                 },
                 {
                     "UID": 9273258979768755902,
@@ -5485,10 +5487,10 @@
                     "Sprite ID": 0,
                     "Sprite Name": "empty",
                     "Color": {
-                        "X": 0.0,
+                        "X": 0.5176470875740051,
                         "Y": 1.0,
-                        "Z": 0.0313725508749485,
-                        "W": 0.26274511218070984
+                        "Z": 0.4941176474094391,
+                        "W": 0.18039216101169586
                     },
                     "Flip": {
                         "X": false,
@@ -5526,7 +5528,7 @@
                     "Type": "SortingGroup",
                     "TypeID": 26,
                     "SortingLayer": 4,
-                    "OrderInLayer": 46
+                    "OrderInLayer": 74
                 },
                 {
                     "UID": 4094976967666461283,
@@ -5537,10 +5539,10 @@
                     "Sprite ID": 0,
                     "Sprite Name": "empty",
                     "Color": {
-                        "X": 0.0,
+                        "X": 0.5176470875740051,
                         "Y": 1.0,
-                        "Z": 0.0313725508749485,
-                        "W": 0.26274511218070984
+                        "Z": 0.4941176474094391,
+                        "W": 0.18039216101169586
                     },
                     "Flip": {
                         "X": false,
