@@ -38,6 +38,8 @@ public class TrainManager: CopiumScript
 	public float zoomOutScale;
 	public float zoomInScale;
 
+	float targetAmbienceVolume = 0.0f;
+
 	void Start()
 	{
 		targetSnowDelay = snowMaxDelay;
@@ -96,8 +98,9 @@ public class TrainManager: CopiumScript
 			Mathf.Lerp(tracksAnimator.delay,targetTracksDelay,timeStep);
 		snowAnimator.delay = 
 			Mathf.Lerp(snowAnimator.delay,targetSnowDelay,timeStep);
-		if (ratio <= 0.1f)
+		if (!accelerate && ratio <= 0.1f)
 		{
+        	audioManager.leverEngagedSFX.Stop();
 			trainCanvas.transform.localScale = 
 				Vector3.Lerp(trainCanvas.transform.localScale,targetScale,Time.deltaTime * 2.0f);
 			Vector3 snowScale = snowAnimator.gameObject.transform.localScale;
@@ -116,6 +119,8 @@ public class TrainManager: CopiumScript
 			snowAnimator.gameObject.transform.localScale = 
 				Vector3.Lerp(snowScale,newSnowScale,timeStep);
 		}
+		audioManager.ambTrain.volume = 
+			Mathf.Lerp(audioManager.ambTrain.volume,targetAmbienceVolume,timeStep);
 		trainCanvas.transform.localRotation = 
 			Vector3.Lerp(Vector3.zero,targetRotation,timeStep);
 		trainCanvas.transform.localPosition = 
@@ -130,18 +135,22 @@ public class TrainManager: CopiumScript
         audioManager.accelerateSFX.Stop();
         audioManager.leverSFX.Stop();
         audioManager.leverSFX.Play();
+        audioManager.leverEngagedSFX.Play();
         if (accelerate)
         {
 			StartTrain();
+			targetAmbienceVolume = 1.0f;
         }
         else
         {
 			StopTrain();
+			targetAmbienceVolume = 0.0f;
         }
     }
 
 	void StartTrain()
 	{
+        audioManager.ambTrain.Play();
 		audioManager.deccelerateSFX.Stop();
 		audioManager.accelerateSFX.Play();
 		targetSnowDelay = snowMinDelay;

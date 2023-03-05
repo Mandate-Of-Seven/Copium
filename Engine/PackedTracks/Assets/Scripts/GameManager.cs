@@ -12,18 +12,16 @@ public class GameManager: CopiumScript
 
     public GameObject ManualPopUp;
 
-    public GameObject CrewTab;
-
     public Button ManualBtn;
     public Button ManualPopUpBtn;
 
     public Button PauseResumeBtn;
     public Button PauseQuitBtn;
-    public Button CrewTabBtn;
 
     public CrewMenu crewMenuScript;
     public TrainManager trainManager;
     public ReportScreenManager reportScreenManager;
+    public CrewStatusManager crewStatusManager;
 
     public Text tracker;
 
@@ -116,11 +114,6 @@ public class GameManager: CopiumScript
 
     void ButtonInputs()
     {
-        if (CrewTabBtn.state == ButtonState.OnRelease)
-        {
-            audioManager.clickSFX.Play();
-            CrewTab.SetActive(true);
-        }
         if (ManualBtn.state == ButtonState.OnRelease)
         {
             audioManager.paperSFX.Play();

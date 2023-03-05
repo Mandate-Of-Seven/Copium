@@ -109,7 +109,9 @@
                     "clickSFX": 11240736860491117710,
                     "deccelerateSFX": 11048904636908595310,
                     "leverSFX": 10219544415510482568,
-                    "paperSFX": 16863530532877669399
+                    "paperSFX": 16863530532877669399,
+                    "hoverSFX": 17747488176716717098,
+                    "leverEngagedSFX": 13165669678142242702
                 }
             ]
         },
@@ -218,7 +220,7 @@
                     "Type": "SortingGroup",
                     "TypeID": 26,
                     "SortingLayer": 4,
-                    "OrderInLayer": 77
+                    "OrderInLayer": 78
                 },
                 {
                     "UID": 15187707562833248342,
@@ -307,7 +309,7 @@
                     "UID": 10826443951868816330,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 4,
+                    "SortingLayer": 9,
                     "OrderInLayer": 77
                 },
                 {
@@ -333,7 +335,7 @@
                     "UID": 12240638081067445947,
                     "Type": "Button",
                     "TypeID": 18,
-                    "Graphic ID": 0,
+                    "Graphic ID": 4094976967666461283,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.4099999964237213,
@@ -877,7 +879,7 @@
                         {
                             "Name": "Snow_SpriteSheet_155_5x31.png",
                             "Sprite ID": 8966109942037627320,
-                            "Time Delay": 0.029999999329447746,
+                            "Time Delay": 0.029999999329447743,
                             "FrameCount": 155,
                             "Rows": 31,
                             "Columns": 5,
@@ -1140,13 +1142,12 @@
                     "distanceLeft": 200.0,
                     "gameEnd": false,
                     "isPaused": false,
-                    "CrewTab": 15240074584306495293,
                     "ManualPopUp": 18214688194793872927,
                     "PauseCanvas": 1722160444903115838,
                     "TrainCanvas": 6642123175702952797,
-                    "CrewTabBtn": 12240638081067445947,
                     "EventManager": 9174652001346769036,
                     "PauseResumeBtn": 7338901696821162260,
+                    "crewStatusManager": 13021923965944002219,
                     "ManualPopUpBtn": 6064000762752960818,
                     "ManualBtn": 6900690266592182984,
                     "PauseQuitBtn": 4561109446918292296,
@@ -1168,6 +1169,20 @@
                     "CloseReportBtn": 16441970958217380161,
                     "ReportScreenBtn": 5292179977163357335,
                     "alert": 15187707562833248342,
+                    "audioManager": 11261402425968020089
+                },
+                {
+                    "UID": 13021923965944002219,
+                    "Type": "Script",
+                    "TypeID": 23,
+                    "Name": "CrewStatusManager",
+                    "isCrewStatusOn": false,
+                    "transitionSpeed": 20.0,
+                    "CrewStatusTab": 16417030282428028087,
+                    "parent": 6642123175702952797,
+                    "CloseCrewStatusBtn": 7467968725349133689,
+                    "CrewStatusBtn": 12240638081067445947,
+                    "alert": 18001664217615177344,
                     "audioManager": 11261402425968020089
                 }
             ]
@@ -1332,7 +1347,7 @@
                     "UID": 1325802091515525317,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 4,
+                    "SortingLayer": 9,
                     "OrderInLayer": 80
                 },
                 {
@@ -4953,14 +4968,14 @@
         {
             "UID": 15240074584306495293,
             "Name": "Crew Status Canvas",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
-                    "PID": 0,
+                    "PID": 16417030282428028087,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
+                        "X": 0.8034090995788574,
+                        "Y": 0.2185521125793457,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -4969,8 +4984,8 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
+                        "X": 0.15000000596046448,
+                        "Y": 0.15000000596046448,
                         "Z": 1.0
                     }
                 },
@@ -4985,13 +5000,12 @@
                     "supplies": 10,
                     "bronson": 6194986179725401096,
                     "chuck": 17821819373689235206,
-                    "harris": 11462693708151468748,
-                    "closeCrewButton": 7467968725349133689,
+                    "suppliesText": 2987481935980349814,
                     "danton": 5847528407074455355,
                     "deployButton": 5395796591469370865,
                     "fader": 11311745147968865628,
+                    "harris": 11462693708151468748,
                     "prepareButton": 1694010125661307522,
-                    "suppliesText": 2987481935980349814,
                     "titleText": 11591166883693418428
                 }
             ]
@@ -5527,7 +5541,7 @@
                     "UID": 10774155288327482557,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 4,
+                    "SortingLayer": 9,
                     "OrderInLayer": 74
                 },
                 {
@@ -6198,6 +6212,104 @@
                         "X": false,
                         "Y": false
                     }
+                }
+            ]
+        },
+        {
+            "UID": 16417030282428028087,
+            "Name": "CrewStatusPivot",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 6642123175702952797,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -5.2724199295043945,
+                        "Y": -1.4866286516189575,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 3954043032654482544,
+            "Name": "SFX_ButtonHover",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "UID": 17747488176716717098,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "SFX_ButtonHover",
+                    "Loop": false,
+                    "Overlap": true,
+                    "Volume": 0.10000000149011612,
+                    "Channel": "SFX"
+                }
+            ]
+        },
+        {
+            "UID": 11837720954788964367,
+            "Name": "SFX_LeverEngaged",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "UID": 13165669678142242702,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "SFX_LeverEngaged",
+                    "Loop": false,
+                    "Overlap": true,
+                    "Volume": 0.5,
+                    "Channel": "SFX"
                 }
             ]
         }

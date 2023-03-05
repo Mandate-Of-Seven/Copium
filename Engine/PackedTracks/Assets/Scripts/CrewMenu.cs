@@ -10,8 +10,6 @@ public class CrewMenu: CopiumScript
     public Button prepareButton;
     public Button deployButton;
 
-    public Button closeCrewButton;
-
     public Fade fader;
 
     public int supplies;
@@ -113,12 +111,6 @@ public class CrewMenu: CopiumScript
         //show what event happened
         //update values based on event that happened
         //have condition for when certain values hit 0??
-
-        if (closeCrewButton.state == ButtonState.OnClick)
-        {
-            gameObject.SetActive(false);
-            return;
-        }
 
         if (prepareButton.state == ButtonState.OnClick)
             preparing = !preparing;

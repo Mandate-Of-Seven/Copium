@@ -14,6 +14,9 @@ public class ReportScreenManager: CopiumScript
 
     Vector3 reportScreenTargetScale = new Vector3(4.0f,4.0f,0);
 
+    bool closeHover = false;
+	bool openHover = false;
+
 	public GameObject parent;
 	
 	public float transitionSpeed = 5.0f;
@@ -24,7 +27,12 @@ public class ReportScreenManager: CopiumScript
 	}
 	void Update()
 	{
-        if (ReportScreenBtn.state == ButtonState.OnRelease)
+        if (!openHover && ReportScreenBtn.state == ButtonState.OnHover)
+        {
+            openHover = true;
+            audioManager.hoverSFX.Play();
+        }
+        else if (ReportScreenBtn.state == ButtonState.OnRelease)
         {
 			alert.enabled = false;
             isReportScreenOn = true;
@@ -32,12 +40,26 @@ public class ReportScreenManager: CopiumScript
 			ReportScreenBtn.gameObject.SetActive(false);
 			ReportTab.transform.parent = null;
         }
+        else if (ReportScreenBtn.state == ButtonState.None)
+        {
+            openHover = false;
+        }
+
+        if (!closeHover && CloseReportBtn.state == ButtonState.OnHover)
+        {
+            closeHover = true;
+            audioManager.hoverSFX.Play();
+        }
 		else if(CloseReportBtn.state == ButtonState.OnRelease)
         {
             isReportScreenOn = false;
             audioManager.clickSFX.Play();
 			ReportScreenBtn.gameObject.SetActive(true);
 			ReportTab.transform.parent = parent.transform;
+        }        
+        else if (CloseReportBtn.state == ButtonState.None)
+        {
+            closeHover = false;
         }
 
 		

@@ -11,13 +11,14 @@ public class AudioManager: CopiumScript
 	public AudioSource leverSFX;
 	public AudioSource accelerateSFX;
 	public AudioSource deccelerateSFX;
+	public AudioSource leverEngagedSFX;
+	public AudioSource hoverSFX;
 	public int state = 0;
 
     void Start()
 	{
         state = 1;
         bgmTrain.Play();
-        ambTrain.Play();
 	}
 	void Update()
 	{
