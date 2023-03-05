@@ -341,7 +341,7 @@ namespace Copium
                 buttonSize.y *= (float)BUTTON_HEIGHT;
                 static const char* name = GetComponentType<T>::name;
                 PRINT(name);
-                if (ImGui::Button(name, buttonSize))
+                if (filter.PassFilter(name) && ImGui::Button(name, buttonSize))
                 {
                     T* component;
                     MyEventSystem->publish(new ComponentAddEvent{ gameObj,component });

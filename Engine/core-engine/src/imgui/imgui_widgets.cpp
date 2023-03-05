@@ -5278,7 +5278,7 @@ bool ImGui::ColorPicker4(const char* label, float col[4], ImGuiColorEditFlags fl
             ImVec2 current_off = g.IO.MousePos - wheel_center;
             float initial_dist2 = ImLengthSqr(initial_off);
             if (initial_dist2 >= (wheel_r_inner - 1) * (wheel_r_inner - 1) && initial_dist2 <= (wheel_r_outer + 1) * (wheel_r_outer + 1))
-            {
+            {  
                 // Interactive with Hue wheel
                 H = ImAtan2(current_off.y, current_off.x) / IM_PI * 0.5f;
                 if (H < 0.0f)
