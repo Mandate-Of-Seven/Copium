@@ -41,22 +41,30 @@ public class GameManager: CopiumScript
 
     int state = 0;
 
+    Vector3 reportScreenTargetScale = new Vector3(4.0f,4.0f,0);
+
     void Start()
 	{
         isReportScreenOn = false;
         //UpdateCanvases();
     }
+
+    void OpenReportScreen()
+    {
+        audioManager.clickSFX.Play();
+    }
+
 	void Update()
     {
         if (ReportScreenBtn.state == ButtonState.OnRelease)
         {
+            isReportScreenOn = true;
             audioManager.clickSFX.Play();
-            ReportTab.SetActive(true);
         }
         if(CloseReportBtn.state == ButtonState.OnRelease)
         {
+            isReportScreenOn = false;
             audioManager.clickSFX.Play();
-            ReportTab.SetActive(false);
         }
         if(CrewTabBtn.state == ButtonState.OnRelease)
         {
@@ -73,6 +81,17 @@ public class GameManager: CopiumScript
             audioManager.paperSFX.Play();
             ManualPopUpBtn.gameObject.SetActive(false);
         }
+
+        if (isReportScreenOn)
+        {
+            ReportTab.transform.localScale = Vector3.Lerp(ReportTab.transform.localScale,reportScreenTargetScale,Time.deltaTime);
+        }
+        else
+        {
+            ReportTab.transform.localScale = Vector3.Lerp(ReportTab.transform.localScale,Vector3.one,Time.deltaTime);
+        }
+
+
         //Stop travelling
 
         if (trainManager.currentSpeed > 0 && distanceLeft > 0)

@@ -52,6 +52,7 @@ namespace CopiumEngine
 
         public float z;
         public static Vector3 zero => new Vector3(0.0f);
+        public static Vector3 one => new Vector3(1.0f);
         public Vector3(float scalar)
         {
             vec2.x = scalar; vec2.y = scalar; z = scalar;

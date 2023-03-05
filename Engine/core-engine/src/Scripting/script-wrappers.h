@@ -180,6 +180,21 @@ namespace Copium
 	/*******************************************************************************
 	/*!
 	\brief
+		Gets the delta time from the engine
+	\return
+		Delta time
+	*/
+	/*******************************************************************************/
+	static void SetParent(UUID newParentID, UUID childID)
+	{
+		GameObject* child = sceneManager.FindGameObjectByID(childID);
+		GameObject* parent = sceneManager.FindGameObjectByID(newParentID);
+		child->transform.SetParent(&parent->transform);
+	}
+
+	/*******************************************************************************
+	/*!
+	\brief
 		Sets the velocity of a rigidbody
 	\param _ID
 		GameObject of ID with a rigidbody
@@ -634,6 +649,30 @@ namespace Copium
 		gameObj->GetComponent<AudioSource>()->play_sound();
 	}
 
+	static void AudioSourceStop(UUID ID)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return;
+		gameObj->GetComponent<AudioSource>()->stop_sound();
+	}
+
+	static void AudioSourceSetVolume(UUID ID, float volume)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return;
+		gameObj->GetComponent<AudioSource>()->volume = volume;
+	}
+
+	static float AudioSourceGetVolume(UUID ID)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return 0;
+		return gameObj->GetComponent<AudioSource>()->volume;
+	}
+
 	/*******************************************************************************
 	/*!
 	\brief
@@ -676,6 +715,22 @@ namespace Copium
 		if (gameObj == nullptr)
 			return;
 		gameObj->GetComponent<SpriteRenderer>()->sprite.color = *color;
+	}
+
+	static void GetImageColor(UUID ID, glm::vec4* color)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return;
+		*color = gameObj->GetComponent<Image>()->sprite.color;
+	}
+
+	static void SetImageColor(UUID ID, glm::vec4* color)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return;
+		gameObj->GetComponent<Image>()->sprite.color = *color;
 	}
 
 	static void PlayAnimation(UUID ID)
@@ -756,13 +811,19 @@ namespace Copium
 		Register(GetButtonState);
 		Register(AddComponent);
 		Register(AudioSourcePlay);
+		Register(AudioSourceStop);
+		Register(AudioSourceSetVolume);
+		Register(AudioSourceGetVolume);
 		Register(PauseAllAnimation);
 		Register(PlayAllAnimation);
 		Register(GetComponentEnabled);
 		Register(SetComponentEnabled);
+		Register(SetParent);
 		Register(GetFPS);
 		Register(GetSpriteRendererColor);
 		Register(SetSpriteRendererColor);
+		Register(GetImageColor);
+		Register(SetImageColor);
 		Register(PlayAnimation);
 		Register(PauseAnimation);
 		Register(SetAnimatorDelay);
