@@ -45,13 +45,11 @@ namespace Copium
 
 		AABB GetRelativeBounds(const Math::Vec3& pos,const Math::Vec3& size)
 		{
-			float x = (max.x - min.x) * size.x;
-			float y = (max.y - min.y) * size.y;
 			AABB tmp{ *this };
-			tmp.max.x *= x;
-			tmp.min.x *= x;
-			tmp.max.y *= y;
-			tmp.min.y *= y;
+			tmp.max.x *= size.x;
+			tmp.min.x *= size.x;
+			tmp.max.y *= size.y;
+			tmp.min.y *= size.y;
 			tmp.max.x += pos.x;
 			tmp.min.x += pos.x;
 			tmp.max.y += pos.y;

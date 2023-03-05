@@ -216,7 +216,12 @@ namespace Copium
 				}
 				AABB bound = bounds.GetRelativeBounds(worldPos, worldScale);
 				if (static_collision_pointrect(mousePosition, bound))
+				{
+
+					PRINT("X: " << bounds.min.x << " , Y: " << bounds.min.y);
+					//PRINT("Y: " << bound.max.y << " , " << bound.min.y);
 					pGameObjs.push_back(&gameObject);
+				}
 			}
 			
 			// Check AABB
@@ -306,8 +311,8 @@ namespace Copium
 
 		GameObject* selected = GetSelectedGameObject();
 
-		//if (selected)
-		//	PRINT(selected->name);
+		if (selected)
+			PRINT(selected->name);
 		for (Button& button : pScene->componentArrays.GetArray<Button>())
 		{
 			if (!button.enabled || !button.gameObj.IsActive())

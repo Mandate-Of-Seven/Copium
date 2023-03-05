@@ -15,7 +15,7 @@ public class CrewStatusManager: CopiumScript
 
 	public Image alert;
 
-    Vector3 crewStatusTargetScale = new Vector3(6.5f,6.5f,0);
+    Vector3 crewStatusTargetScale = new Vector3(5f,5f,0);
 
 	public GameObject parent;
 	
@@ -57,7 +57,7 @@ public class CrewStatusManager: CopiumScript
 			CrewStatusBtn.gameObject.SetActive(true);
 			CrewStatusTab.transform.parent = parent.transform;
         }
-		else if (CrewStatusBtn.state == ButtonState.None)
+		else if (CloseCrewStatusBtn.state == ButtonState.None)
 		{
 			closeHover = false;
 		}
