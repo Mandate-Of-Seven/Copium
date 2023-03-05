@@ -13,9 +13,7 @@ public class GameManager: CopiumScript
     public GameObject ManualPopUp;
 
     public GameObject CrewTab;
-    public GameObject ReportTab;
 
-    public Button ReportScreenBtn;
     public Button ManualBtn;
     public Button ManualPopUpBtn;
 
@@ -25,8 +23,7 @@ public class GameManager: CopiumScript
 
     public CrewMenu crewMenuScript;
     public TrainManager trainManager;
-    
-    public Button CloseReportBtn;
+    public ReportScreenManager reportScreenManager;
 
     public Text tracker;
 
@@ -42,8 +39,6 @@ public class GameManager: CopiumScript
     bool gameEnd = false;
     bool isReportScreenOn = false;
 
-    Vector3 reportScreenTargetScale = new Vector3(4.0f,4.0f,0);
-
     void Start()
 	{
         //UpdateCanvases();
@@ -56,17 +51,21 @@ public class GameManager: CopiumScript
 
 	void Update()
     {
-        ButtonInputs();
-
-        if (isReportScreenOn)
+        if(CrewTabBtn.state == ButtonState.OnRelease)
         {
-            ReportTab.transform.localScale = Vector3.Lerp(ReportTab.transform.localScale,reportScreenTargetScale,Time.deltaTime);
+            audioManager.clickSFX.Play();
+            CrewTab.SetActive(true);
         }
-        else
+        if(ManualBtn.state == ButtonState.OnRelease)
         {
-            ReportTab.transform.localScale = Vector3.Lerp(ReportTab.transform.localScale,Vector3.one,Time.deltaTime);
+            audioManager.paperSFX.Play();
+            ManualPopUp.SetActive(true);
         }
-
+        if(ManualPopUpBtn.state == ButtonState.OnRelease)
+        {
+            audioManager.paperSFX.Play();
+            ManualPopUpBtn.gameObject.SetActive(false);
+        }
 
         //Stop travelling
 

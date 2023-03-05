@@ -156,7 +156,7 @@ namespace CopiumEngine
         public static extern bool GetUIInteractable();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern char GetButtonState(ulong gameObjID);
+        public static extern char GetButtonState(ulong buttonID);
 
         #endregion
 

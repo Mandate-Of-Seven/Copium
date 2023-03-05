@@ -1,0 +1,53 @@
+using CopiumEngine;
+using System;
+
+public class ReportScreenManager: CopiumScript
+{
+    public bool isReportScreenOn = false;
+	public AudioManager audioManager;
+    
+    public Button CloseReportBtn;
+	public Button ReportScreenBtn;
+    public GameObject ReportTab;
+
+	public Image alert;
+
+    Vector3 reportScreenTargetScale = new Vector3(4.0f,4.0f,0);
+
+	public GameObject parent;
+	
+	public float transitionSpeed = 5.0f;
+
+	void Start()
+	{
+
+	}
+	void Update()
+	{
+        if (ReportScreenBtn.state == ButtonState.OnRelease)
+        {
+			alert.enabled = false;
+            isReportScreenOn = true;
+            audioManager.clickSFX.Play();
+			ReportScreenBtn.gameObject.SetActive(false);
+			ReportTab.transform.parent = null;
+        }
+		else if(CloseReportBtn.state == ButtonState.OnRelease)
+        {
+            isReportScreenOn = false;
+            audioManager.clickSFX.Play();
+			ReportScreenBtn.gameObject.SetActive(true);
+			ReportTab.transform.parent = parent.transform;
+        }
+
+		
+        if (isReportScreenOn)
+        {
+            ReportTab.transform.localScale = Vector3.Lerp(ReportTab.transform.localScale,reportScreenTargetScale,Time.deltaTime * transitionSpeed);
+        }
+        else
+        {
+            ReportTab.transform.localScale = Vector3.Lerp(ReportTab.transform.localScale,Vector3.one,Time.deltaTime * transitionSpeed);
+        }
+	}
+}

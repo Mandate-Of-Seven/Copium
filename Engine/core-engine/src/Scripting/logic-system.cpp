@@ -54,9 +54,11 @@ namespace Copium
 		if (pHoveredBtn == nullptr)
 		{
 			//PRINT("GETTING BUTTON STATE");
-			AABB relativeBound = btn.bounds.GetRelativeBounds(transform.GetWorldPosition(), transform.GetWorldScale());
-			//PRINT("	Relative bounds: " << relativeBound.min.y << " , " << relativeBound.max.y);
-			if (static_collision_pointrect(scenePos, relativeBound))
+			//PRINT(scenePos.x << " , " << scenePos.y);
+			AABB relativeBounds = btn.bounds.GetRelativeBounds(transform.GetWorldPosition(), transform.GetWorldScale());
+			//PRINT("X: " << relativeBounds.max.x << " , " << relativeBounds.min.x);
+			//PRINT("Y: " << relativeBounds.max.y << " , " << relativeBounds.min.y);
+			if (static_collision_pointrect(scenePos, relativeBounds))
 			{
 				//PRINT("COLLIDED");
 				if (MyInputSystem.is_mousebutton_pressed(0))
@@ -115,10 +117,10 @@ namespace Copium
 			if (btn.targetGraphic)
 			{
 				btn.targetGraphic->layeredColor = Linear(btn.previousColor, btn.hoverColor, btn.timer / btn.fadeDuration);
-				/*PRINT("R " << btn.targetGraphic->layeredColor.r);
-				PRINT("G " << btn.targetGraphic->layeredColor.g);
-				PRINT("B " << btn.targetGraphic->layeredColor.b);
-				PRINT("A " << btn.targetGraphic->layeredColor.a);*/
+				//PRINT("R " << btn.targetGraphic->layeredColor.r);
+				//PRINT("G " << btn.targetGraphic->layeredColor.g);
+				//PRINT("B " << btn.targetGraphic->layeredColor.b);
+				//PRINT("A " << btn.targetGraphic->layeredColor.a);
 			}
 			break;
 		}
@@ -171,44 +173,10 @@ namespace Copium
 			if (!gameObject.IsActive())
 				continue;
 			Transform& t = gameObject.transform;
-			Math::Vec3 worldPos{ t.position };
-			Math::Vec3 worldScale{ t.scale };
+			Math::Vec3 worldPos{ t.GetWorldPosition()};
+			Math::Vec3 worldScale{ t.GetWorldScale() };
 
-			if (t.HasParent())
-			{
-				Transform* tempObj = t.parent;
-				while (tempObj)
-				{
-					glm::vec3 tempPos = tempObj->position.glmVec3;
-					glm::mat4 pTranslate = glm::translate(glm::mat4(1.f), tempPos);
-
-					float rot = glm::radians(tempObj->rotation.z);
-					glm::mat4 pRotate = {
-					glm::vec4(cos(rot), sin(rot), 0.f, 0.f),
-					glm::vec4(-sin(rot), cos(rot), 0.f, 0.f),
-					glm::vec4(0.f, 0.f, 1.f, 0.f),
-					glm::vec4(0.f, 0.f, 0.f, 1.f)
-					};
-
-					glm::vec3 size = tempObj->scale.glmVec3;
-					glm::mat4 pScale = {
-						glm::vec4(size.x, 0.f, 0.f, 0.f),
-						glm::vec4(0.f, size.y, 0.f, 0.f),
-						glm::vec4(0.f, 0.f, 1.f, 0.f),
-						glm::vec4(0.f, 0.f, 0.f, 1.f)
-					};
-
-					glm::mat4 pTransform = pTranslate * pRotate * pScale;
-
-					worldPos.glmVec3 = glm::vec3(pTransform * glm::vec4(worldPos.glmVec3, 1.f));
-
-					worldScale.glmVec3 *= tempObj->scale.glmVec3;
-
-					tempObj = tempObj->parent;
-				}
-			}
-
-			glm::vec2 objPosition = { worldPos.x, worldPos.y };
+			//glm::vec2 objPosition = { worldPos.x, worldPos.y };
 
 			// Not Within bounds // NEED A BETTER CHECK THAT INCLUDES THE BOUNDS
 			//if (glm::distance(objPosition, mousePosition)
@@ -226,6 +194,9 @@ namespace Copium
 				AABB bound = bounds.GetRelativeBounds(worldPos, worldScale);
 				if (static_collision_pointrect(mousePosition, bound))
 				{
+					//PRINT(mousePosition.x << " , " << mousePosition.y);
+					//PRINT("X: " << bound.max.x << " , " << bound.min.x);
+					//PRINT("Y: " << bound.max.y << " , " << bound.min.y);
 					pGameObjs.push_back(&gameObject);
 					continue;
 				}
