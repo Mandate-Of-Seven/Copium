@@ -202,6 +202,18 @@ namespace CopiumEngine
             }
         }
 
+        public Color color
+        {
+            get
+            {
+                InternalCalls.GetTextColor(ID, out Color color);
+                return color;
+            }
+            set
+            {
+                InternalCalls.SetTextColor(ID, ref value);
+            }
+        }
 
     }
 
