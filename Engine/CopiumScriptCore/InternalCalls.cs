@@ -177,6 +177,12 @@ namespace CopiumEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetTextString(ulong gameObjID, ulong compID,string str);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetTextColor(ulong ID, out Color color);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetTextColor(ulong ID, ref Color color);
         #endregion
 
         [MethodImpl(MethodImplOptions.InternalCall)]

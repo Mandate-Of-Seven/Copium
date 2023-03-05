@@ -703,6 +703,36 @@ namespace Copium
 		animationSystem.PlayAllAnimation();
 	}
 
+	static void GetTextColor(UUID ID, glm::vec4* color)
+	{
+		Scene* pScene = sceneManager.get_current_scene();
+		if (!pScene)
+			return;
+		for (Text& text : pScene->componentArrays.GetArray<Text>())
+		{
+			if (text.uuid == ID)
+			{
+				color = &text.color;
+				return;
+			}
+		}
+	}
+
+	static void SetTextColor(UUID ID, glm::vec4* color)
+	{
+		Scene* pScene = sceneManager.get_current_scene();
+		if (!pScene)
+			return;
+		for (Text& text : pScene->componentArrays.GetArray<Text>())
+		{
+			if (text.uuid == ID)
+			{
+				text.color = *color;
+				return;
+			}
+		}
+	}
+
 	static void GetSpriteRendererColor(UUID ID, glm::vec4* color)
 	{
 		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
@@ -826,6 +856,8 @@ namespace Copium
 		Register(SetSpriteRendererColor);
 		Register(GetImageColor);
 		Register(SetImageColor);
+		Register(GetTextColor);
+		Register(SetTextColor);
 		Register(PlayAnimation);
 		Register(PauseAnimation);
 		Register(SetAnimatorDelay);
