@@ -376,7 +376,46 @@ namespace Copium
 			baseFlags |= ImGuiTreeNodeFlags_Selected;
 		}
 
-		nodeOpen = ImGui::TreeNodeEx(_go.name.c_str(), baseFlags);
+		if (isRenaming && renamer == &_go)
+		{
+			//PRINT("bloop");
+			ImGui::SetItemAllowOverlap();
+			static char buffer[256];
+
+			strcpy(buffer, _go.name.c_str());
+			if (ImGui::InputText("##gameObjName", buffer, 256))
+			{
+				PRINT("bleep");
+			}
+
+			_go.name = buffer;
+
+			if (is->is_key_pressed(GLFW_KEY_ENTER))
+			{
+				isRenaming = false;
+				renamer = nullptr;
+			}
+
+			if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !ImGui::IsItemHovered())
+			{
+				isRenaming = false;
+				renamer = nullptr;
+			}
+
+
+			ImGui::SameLine();
+
+		}
+
+		// Hide original 
+		if (isRenaming && renamer == &_go)
+		{
+			nodeOpen = ImGui::TreeNodeEx("", baseFlags);
+			if (MyEditorSystem.pSelectedGameObject == &_go)
+				baseFlags &= ~(ImGuiTreeNodeFlags_Selected);
+		}
+		else
+			nodeOpen = ImGui::TreeNodeEx(_go.name.c_str(), baseFlags);
 
 
 		if (ImGui::BeginDragDropSource())
@@ -393,6 +432,8 @@ namespace Copium
 		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 		{
 			PRINT("double clicked on a game object");
+			isRenaming = true;
+			renamer = &_go;
 		}
 		else if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 		{
