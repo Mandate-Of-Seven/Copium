@@ -31,19 +31,15 @@ public class EventManager: CopiumScript
     bool SelectingChoice = true;
     bool ShowingMainEvent = true;
 
-    Button option01_btn;
-    Button option02_btn;
-    Button option03_btn;
-    Button next_btn;
+    public Button option01_btn;
+    public Button option02_btn;
+    public Button option03_btn;
+    public Button next_btn;
 
     void Start()
 	{
         Console.WriteLine("EVENT MANAGER START");
         EventSequence = 0;
-        option01_btn = Option_01.GetComponent<Button>();
-        option02_btn = Option_02.GetComponent<Button>();
-        option03_btn = Option_03.GetComponent<Button>();
-        next_btn = Next_Event.GetComponent<Button>();
     }
 
 	void Update()
@@ -138,8 +134,10 @@ public class EventManager: CopiumScript
         if (Next_Event.activeSelf)
             Next_Event.SetActive(false);
 
+            Console.WriteLine("OPTION 1 BABEYYY" + option01_btn.state);
         if (option01_btn.state == ButtonState.OnClick)
         {
+            Console.WriteLine("OPTION 1 BABEYYY");
             ShowingResolution = true;
             SelectingChoice = false;
             choice = 1;

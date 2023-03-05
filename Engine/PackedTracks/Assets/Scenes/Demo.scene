@@ -1223,9 +1223,9 @@
                     "PauseQuitBtn": 4561109446918292296,
                     "crewMenuScript": 15964808941009667406,
                     "audioManager": 11261402425968020089,
+                    "reportScreenManager": 10310073297153690428,
                     "tracker": 14370462799058784128,
-                    "trainManager": 5971899813001945745,
-                    "reportScreenManager": 10310073297153690428
+                    "trainManager": 5971899813001945745
                 },
                 {
                     "UID": 10310073297153690428,
@@ -1238,8 +1238,8 @@
                     "parent": 6642123175702952797,
                     "CloseReportBtn": 16441970958217380161,
                     "ReportScreenBtn": 5292179977163357335,
-                    "audioManager": 11261402425968020089,
-                    "alert": 15187707562833248342
+                    "alert": 15187707562833248342,
+                    "audioManager": 11261402425968020089
                 }
             ]
         },
@@ -1688,7 +1688,11 @@
                     "Option_02_Text": 9054607302164775899,
                     "crewMenu": 15964808941009667406,
                     "event03": 4950976245312507192,
-                    "eventIntro": 2208040376229193824
+                    "eventIntro": 2208040376229193824,
+                    "next_btn": 3481733135209103907,
+                    "option01_btn": 14633390078747120407,
+                    "option02_btn": 11677831846571942442,
+                    "option03_btn": 14295175011401209530
                 }
             ]
         },
@@ -2923,9 +2927,6 @@
                     "TypeID": 23,
                     "Name": "Crew",
                     "crewIndex": 0,
-                    "health": 15,
-                    "hunger": 10,
-                    "mental": 15,
                     "selected": false,
                     "showDeployed": 9756751390989245779,
                     "selectBtn": 9926051608867562759,
@@ -3348,9 +3349,6 @@
                     "TypeID": 23,
                     "Name": "Crew",
                     "crewIndex": 1,
-                    "health": 15,
-                    "hunger": 10,
-                    "mental": 15,
                     "selected": false,
                     "showDeployed": 9262969936457091480,
                     "selectBtn": 17866842037438150124,
@@ -3773,9 +3771,6 @@
                     "TypeID": 23,
                     "Name": "Crew",
                     "crewIndex": 2,
-                    "health": 15,
-                    "hunger": 10,
-                    "mental": 15,
                     "selected": false,
                     "showDeployed": 8838780582100844525,
                     "selectBtn": 17063943092143246497,
@@ -4198,9 +4193,6 @@
                     "TypeID": 23,
                     "Name": "Crew",
                     "crewIndex": 3,
-                    "health": 15,
-                    "hunger": 10,
-                    "mental": 15,
                     "selected": false,
                     "showDeployed": 7448713263112095043,
                     "selectBtn": 1358613318985155049,
