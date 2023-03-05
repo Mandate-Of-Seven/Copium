@@ -177,24 +177,24 @@ namespace Copium
 	{
 		if (channel == "Default")
 		{
-			MySoundSystem.Play(alias, MySoundSystem.channelDefault, overLap, loop, loopCount);
+			MySoundSystem.Play(alias, MySoundSystem.channelDefault, overLap, loop);
 		}
 		else if (channel == "BGM")
 		{
-			MySoundSystem.Play(alias, MySoundSystem.channelBGM, overLap, loop, loopCount);
+			MySoundSystem.Play(alias, MySoundSystem.channelBGM, overLap, loop);
 		}
 		else if (channel == "SFX")
 		{
-			MySoundSystem.Play(alias, MySoundSystem.channelSFX, overLap, loop, loopCount);
+			MySoundSystem.Play(alias, MySoundSystem.channelSFX, overLap, loop);
 		}
 		else if (channel == "Voice")
 		{
-			MySoundSystem.Play(alias, MySoundSystem.channelVoice, overLap, loop, loopCount);
+			MySoundSystem.Play(alias, MySoundSystem.channelVoice, overLap, loop);
 		}
 		else if (true)
 		{
 			PRINT("No channel detected, Playing on default");
-			MySoundSystem.Play(alias, MySoundSystem.channelDefault, overLap, loop, loopCount);
+			MySoundSystem.Play(alias, MySoundSystem.channelDefault, overLap, loop);
 		}
 	}
 	void AudioSource::stop_sound()
