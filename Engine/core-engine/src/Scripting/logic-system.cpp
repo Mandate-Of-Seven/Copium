@@ -54,8 +54,9 @@ namespace Copium
 		if (pHoveredBtn == nullptr)
 		{
 			//PRINT("GETTING BUTTON STATE");
-			//PRINT(scenePos.x << " , " << scenePos.y);
-			if (static_collision_pointrect(scenePos, btn.bounds.GetRelativeBounds(transform.GetWorldPosition(), transform.GetWorldScale())))
+			AABB relativeBound = btn.bounds.GetRelativeBounds(transform.GetWorldPosition(), transform.GetWorldScale());
+			//PRINT("	Relative bounds: " << relativeBound.min.y << " , " << relativeBound.max.y);
+			if (static_collision_pointrect(scenePos, relativeBound))
 			{
 				//PRINT("COLLIDED");
 				if (MyInputSystem.is_mousebutton_pressed(0))
@@ -110,14 +111,14 @@ namespace Copium
 		}
 		case ButtonState::OnHover:
 		{
-			PRINT("UI: Hover " << btn.gameObj.name);
+			//PRINT("UI: Hover " << btn.gameObj.name);
 			if (btn.targetGraphic)
 			{
 				btn.targetGraphic->layeredColor = Linear(btn.previousColor, btn.hoverColor, btn.timer / btn.fadeDuration);
-				PRINT("R " << btn.targetGraphic->layeredColor.r);
+				/*PRINT("R " << btn.targetGraphic->layeredColor.r);
 				PRINT("G " << btn.targetGraphic->layeredColor.g);
 				PRINT("B " << btn.targetGraphic->layeredColor.b);
-				PRINT("A " << btn.targetGraphic->layeredColor.a);
+				PRINT("A " << btn.targetGraphic->layeredColor.a);*/
 			}
 			break;
 		}

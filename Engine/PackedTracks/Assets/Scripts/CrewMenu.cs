@@ -4,7 +4,7 @@ using System.Linq;
 
 public class CrewMenu: CopiumScript
 {
-	public Text suppliesText;
+    public Text suppliesText;
     public Text titleText;
 
     public Button prepareButton;
@@ -23,9 +23,26 @@ public class CrewMenu: CopiumScript
 
     public bool preparing = false;
     public bool deployed = false;
+
+    float timer = 0.0f;
+
+    float healthInterval = 1.0f; // The interval in seconds in which the crew members lose health
+    float hungerInterval = 1.0f; // The interval in seconds in which the crew members get hungry
+
+    public bool storageComparment = true; // For the food storage
+
+    public enum STAT_TYPES
+    {
+        ALIVE,
+        HEALTH,
+        MENTAL,
+        HUNGER,
+    }
+
     public struct Person
     {
         string _name;
+        bool _alive;
         int _health;
         int _mental;
         int _hunger;
@@ -35,6 +52,12 @@ public class CrewMenu: CopiumScript
         {
             get { Console.WriteLine("getting health"); return _name; }
             set { Console.WriteLine("setting health"); _name = value; }
+        }
+
+        public bool alive
+        {
+            get { return _alive; }
+            set { _alive = value; }
         }
 
         public int health
@@ -63,6 +86,7 @@ public class CrewMenu: CopiumScript
         public Person(string new_name)
         {
             _name = new_name;
+            _alive = true;
             _health = 15;
             _mental = 15;
             _hunger = 10;
@@ -109,8 +133,77 @@ public class CrewMenu: CopiumScript
             GenerateEvents();
         }
        
-        //UpdateHealth();
         UpdateTexts();
+    }
+
+    public void UpdateAllStats()
+    {
+        CheckSupplies();
+        CheckCrewHealth();
+        CheckCrewStatus();
+    }
+
+    public bool CheckAllCrewAlive()
+    {
+        for (int i = 0; i < crew.Length; i++)
+        {
+            if (crew[i].alive)
+                return true;
+        }
+
+        return false;
+    }
+
+    void CheckCrewStatus()
+    {
+        for (int i = 0; i < crew.Length; ++i)
+        {
+            if (!crew[i].alive)
+            {
+                crew[i].health = 0;
+                crew[i].mental = 0;
+                crew[i].hunger = 0;
+            }
+        }
+    }
+
+    void CheckSupplies()
+    {
+        if(supplies == 0)
+        {
+            if (timer >= hungerInterval)
+            {
+                for (int i = 0; i < crew.Length; i++)
+                {
+                    if (crew[i].hunger > 0)
+                        crew[i].hunger -= 1;
+                }
+
+                timer = 0.0f;
+            }
+
+            timer += Time.deltaTime;
+        }
+    }
+
+    void CheckCrewHealth()
+    {
+        for (int i = 0; i < crew.Length; i++)
+        {
+            if (crew[i].hunger <= 0)
+            {
+                if(crew[i].timer >= healthInterval)
+                {
+                    crew[i].health -= 1;
+                    crew[i].timer = 0.0f;
+                }
+
+                crew[i].timer += Time.deltaTime;
+            }
+
+            if (crew[i].health <= 0)
+                crew[i].alive = false;
+        }
     }
 
     void UpdateTexts()
@@ -123,17 +216,97 @@ public class CrewMenu: CopiumScript
             titleText.text = "Crew Members";
     }
 
-    void UpdateHealth()
+    public void SetSupplies(int amount)
     {
-        for (int i = 0; i < crew.Length; ++i)
+        // Bean: Visually show the supply reducing
+
+        if (!storageComparment)
+            return;
+
+        supplies = amount;
+    }
+
+    public void ChangeSupplies(int amount)
+    {
+        // Bean: Visually show the supply reducing
+
+        if (!storageComparment)
+            return;
+
+        supplies += amount;
+
+        if (supplies < 0)
+            supplies = 0;
+    }
+
+    public void SetAllCrew(STAT_TYPES types, int amount)
+    {
+        for (int i = 0; i < crew.Length; i++)
         {
-            if (crew[i].hunger <= 0 && crew[i].health >= 0)
+            switch (types)
             {
-                if (crew[i].timer >= 1.0f)
-                {
-                    crew[i].health -= 1;
-                }
+                case STAT_TYPES.ALIVE:
+                    crew[i].alive = (amount > 0) ? true : false;
+                    break;
+                case STAT_TYPES.HEALTH:
+                    if(crew[i].health > amount)
+                        crew[i].health = amount;
+                    break;
+                case STAT_TYPES.MENTAL:
+                    if (crew[i].mental > amount)
+                        crew[i].mental = amount;
+                    break;
+                case STAT_TYPES.HUNGER:
+                    if (crew[i].hunger > amount)
+                        crew[i].hunger = amount;
+                    break;
             }
+        }
+    }
+
+    public void ChangeAllCrew(STAT_TYPES types, int amount)
+    {
+        for (int i = 0; i < crew.Length; i++)
+        {
+            switch (types)
+            {
+                case STAT_TYPES.HEALTH:
+                    if (crew[i].health > 0)
+                        crew[i].health += amount;
+                    break;
+                case STAT_TYPES.MENTAL:
+                    if (crew[i].mental > 0)
+                        crew[i].mental += amount;
+                    break;
+                case STAT_TYPES.HUNGER:
+                    crew[i].hunger += amount;
+
+                    if (crew[i].hunger > 10)
+                        crew[i].hunger = 10;
+                    break;
+            }
+        }
+    }
+
+    public void SetCrew(STAT_TYPES types, int index, int amount)
+    {
+        switch (types)
+        {
+            case STAT_TYPES.ALIVE:
+                crew[index].alive = (amount > 0) ? true : false;
+                break;
+            case STAT_TYPES.HEALTH:
+                if (crew[index].health > amount)
+                    crew[index].health = amount;
+                break;
+            case STAT_TYPES.MENTAL:
+                if (crew[index].mental > amount)
+                    crew[index].mental = amount;
+                break;
+            case STAT_TYPES.HUNGER:
+                if (crew[index].hunger > amount)
+                    crew[index].hunger = amount;
+                break;
         }
     }
 

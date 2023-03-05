@@ -321,7 +321,7 @@
                     "UID": 2372002183375432552,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 2,
+                    "SortingLayer": 4,
                     "OrderInLayer": 5
                 },
                 {
@@ -451,7 +451,7 @@
                     "UID": 11144692489550199077,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 2,
+                    "SortingLayer": 4,
                     "OrderInLayer": 50
                 },
                 {
@@ -533,8 +533,8 @@
                     "UID": 15549730272018182448,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 2,
-                    "OrderInLayer": 45
+                    "SortingLayer": 4,
+                    "OrderInLayer": 50
                 },
                 {
                     "UID": 13832550333129584847,
@@ -615,8 +615,8 @@
                     "UID": 12489444320253396590,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 2,
-                    "OrderInLayer": 40
+                    "SortingLayer": 4,
+                    "OrderInLayer": 51
                 },
                 {
                     "UID": 9429179763734142775,
@@ -663,8 +663,8 @@
                     "UID": 6686579691656999209,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 2,
-                    "OrderInLayer": 100
+                    "SortingLayer": 4,
+                    "OrderInLayer": 60
                 },
                 {
                     "UID": 12572218162819699758,
@@ -815,8 +815,8 @@
                     "UID": 2052408574386183635,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 2,
-                    "OrderInLayer": 67
+                    "SortingLayer": 4,
+                    "OrderInLayer": 60
                 },
                 {
                     "UID": 1739794482925361841,
@@ -1760,6 +1760,7 @@
                     "Option_03_Text": 13403652513609016947,
                     "GameManager": 9083562319934391338,
                     "event01": 5825931776462821864,
+                    "eventEnding": 14981615411562928849,
                     "Option_01_Text": 9429179763734142775,
                     "Option_02_Text": 9054607302164775899,
                     "crewMenu": 15964808941009667406,
@@ -2441,8 +2442,8 @@
                     "UID": 7395518888493123554,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 2,
-                    "OrderInLayer": 41
+                    "SortingLayer": 4,
+                    "OrderInLayer": 51
                 },
                 {
                     "UID": 9054607302164775899,
@@ -2489,8 +2490,8 @@
                     "UID": 4742349471731007050,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 2,
-                    "OrderInLayer": 44
+                    "SortingLayer": 4,
+                    "OrderInLayer": 50
                 },
                 {
                     "UID": 1575142776119795903,
@@ -2571,8 +2572,8 @@
                     "UID": 8686734342043534681,
                     "Type": "SortingGroup",
                     "TypeID": 26,
-                    "SortingLayer": 2,
-                    "OrderInLayer": 56
+                    "SortingLayer": 4,
+                    "OrderInLayer": 51
                 },
                 {
                     "UID": 13403652513609016947,
@@ -2672,7 +2673,7 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "Event_01",
-                    "eventManager": 9174652001346769036
+                    "EventManager": 9174652001346769036
                 }
             ]
         },
@@ -5132,6 +5133,7 @@
                     "Name": "CrewMenu",
                     "deployed": false,
                     "preparing": false,
+                    "storageComparment": true,
                     "supplies": 10,
                     "bronson": 6194986179725401096,
                     "chuck": 17821819373689235206,
@@ -5561,6 +5563,39 @@
                     "Overlap": true,
                     "Volume": 1.0,
                     "Channel": "SFX"
+                }
+            ]
+        },
+        {
+            "UID": 10041434792632058091,
+            "Name": "Ending",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 11033010850512695424,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "UID": 14981615411562928849,
+                    "Type": "Script",
+                    "TypeID": 23,
+                    "Name": "Event_Ending",
+                    "EventManager": 9174652001346769036
                 }
             ]
         }

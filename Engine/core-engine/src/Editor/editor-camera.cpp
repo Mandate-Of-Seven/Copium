@@ -92,12 +92,13 @@ namespace Copium
 	{
 		EditorSceneView* sceneView = EditorSystem::Instance()->get_scene_view();
 		glm::vec2 scenePos = sceneView->get_position();
+		scenePos.y += 22.f; // Offset from the tab
 		glm::vec2 sceneDim = sceneView->get_dimension();
 		Math::Vec2 mousePos = MyInputSystem.get_mouseposition();
 		//PRINT("Mouse position: " << mousePos.x << " " << mousePos.y);
 		glm::vec2 centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
 		glm::vec2 mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
-		glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
+		glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 };
 		mouseToNDC *= orthographicSize;
 		glm::vec2 worldNDC = { mouseToNDC.x + viewer.x, mouseToNDC.y + viewer.y };
 		return worldNDC;

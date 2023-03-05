@@ -27,10 +27,10 @@ public class GameManager: CopiumScript
     public TrainManager trainManager;
     
     public Button CloseReportBtn;
+    public bool reportScreenOpen = false;
 
     public Text tracker;
 
-    bool isReportScreenOn = false;
     public bool isPaused = false;
     public float distanceLeft = 200;
 
@@ -39,22 +39,24 @@ public class GameManager: CopiumScript
     float hungerTimer = 0.0f;
     float timer = 0.0f;
 
-    int state = 0;
+    bool updateEvent = false;
+    bool gameEnd = false;
 
     void Start()
 	{
-        isReportScreenOn = false;
         //UpdateCanvases();
     }
 	void Update()
     {
         if (ReportScreenBtn.state == ButtonState.OnRelease)
         {
+            reportScreenOpen = true;
             audioManager.clickSFX.Play();
             ReportTab.SetActive(true);
         }
         if(CloseReportBtn.state == ButtonState.OnRelease)
         {
+            reportScreenOpen = false;
             audioManager.clickSFX.Play();
             ReportTab.SetActive(false);
         }
@@ -73,31 +75,58 @@ public class GameManager: CopiumScript
             audioManager.paperSFX.Play();
             ManualPopUpBtn.gameObject.SetActive(false);
         }
-        //Stop travelling
-
+        
         if (trainManager.currentSpeed > 0 && distanceLeft > 0)
         {
-            if (timer >= 0.2f)
+            if (timer >= distanceInterval)
             {
                 distanceLeft -= trainManager.currentSpeed/3.0f;
-                if (distanceLeft%50 < 1.0f)
+                if (distanceLeft % 50 < 1.0f && !updateEvent)
                 {
+                    updateEvent = true;
                     EventManager.UpdateEventSequence();
                 }
+                else if(distanceLeft % 50 > 1.0f)
+                    updateEvent = false;
+
+                // Close to the next event and has yet to select a choice
+                if (distanceLeft % 50 < 5.0f && EventManager.EventSequence > 0 && !updateEvent) 
+                    EventManager.SelectDefaultChoice();
+
                 timer = 0.0f;
             }
-
-            if(foodTimer >= 10.0f && crewMenuScript.supplies != 0)
-            {
-                crewMenuScript.supplies -= 1;
-                foodTimer = 0.0f;
-            }
-
-            foodTimer += Time.deltaTime;
+            
             timer += Time.deltaTime;
         }
         tracker.text =  ((int)distanceLeft).ToString() + "KM";
 
+        // Reducing supplies for crew to consume
+        if(trainManager.currentSpeed > 0 && distanceLeft < 200.0f)
+        {
+            if (foodTimer >= 5.0f && crewMenuScript.supplies != 0)
+            {
+                crewMenuScript.ChangeSupplies(-1);
+                crewMenuScript.ChangeAllCrew(CrewMenu.STAT_TYPES.HUNGER, 1);
+
+                foodTimer = 0.0f;
+            }
+            foodTimer += Time.deltaTime;
+        }
+
+        // Game ends
+        if(EventManager.EventSequence == -2 && !gameEnd)
+        {
+            gameEnd = true;
+            trainManager.FlickLever();
+            distanceLeft = 0.0f;
+        }
+        else if (distanceLeft <= 0.99f && !gameEnd)
+        {
+            gameEnd = true;
+            trainManager.FlickLever();
+            EventManager.EventSequence = -1;
+            EventManager.OverideEvent();
+        }
 
         if (Input.GetKeyDown(KeyCode.P))
         {

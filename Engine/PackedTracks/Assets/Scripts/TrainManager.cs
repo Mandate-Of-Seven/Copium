@@ -41,22 +41,9 @@ public class TrainManager: CopiumScript
 	void Update()
 	{
 		if (trainLeverBtn.state == ButtonState.OnClick)
-		{
-			accelerate = !accelerate;
-			trainLeverActivated.SetActive(accelerate);
-			trainLeverDeactivated.SetActive(!accelerate);
-			if (accelerate)
-			{
-				targetSnowDelay = snowMinDelay;
-				targetTracksDelay = tracksMinDelay;
-			}
-			else
-			{
-				targetSnowDelay = snowMaxDelay;
-				targetTracksDelay = tracksMaxDelay;
-			}
-		}
-		if (accelerate)
+            FlickLever();
+
+        if (accelerate)
 		{
 			if (currentSpeed < maxSpeed)
 			{
@@ -118,4 +105,21 @@ public class TrainManager: CopiumScript
 		trainCanvas.transform.localPosition = 
 			Vector3.Lerp(Vector3.zero,targetPosition,timeStep);
 	}
+
+	public void FlickLever()
+	{
+        accelerate = !accelerate;
+        trainLeverActivated.SetActive(accelerate);
+        trainLeverDeactivated.SetActive(!accelerate);
+        if (accelerate)
+        {
+            targetSnowDelay = snowMinDelay;
+            targetTracksDelay = tracksMinDelay;
+        }
+        else
+        {
+            targetSnowDelay = snowMaxDelay;
+            targetTracksDelay = tracksMaxDelay;
+        }
+    }
 }

@@ -12,10 +12,6 @@ public class Crew : CopiumScript
     public Button selectBtn;
     public bool selected = false;
 
-    public int health = 0;
-    public int mental = 0;
-    public int hunger = 0;
-
     public int crewIndex;
     CrewMenu.Person person;
 
@@ -50,10 +46,8 @@ public class Crew : CopiumScript
 
     void UpdateStats()
     {
+        person = crewMenu.crew[crewIndex];
         // Console.WriteLine(person.name);
-        // health = person.health;
-        // mental = person.mental;
-        // hunger = person.hunger;
 
         if (person.health > 10)
             healthT.text = "Healthy";
@@ -73,9 +67,7 @@ public class Crew : CopiumScript
         else
             mentalT.text = "Suicidal";
 
-        if (person.hunger > 9)
-            hungerT.text = "Full";
-        else if (person.hunger > 5)
+        if (person.hunger > 5)
             hungerT.text = "Satisfied";
         else if (person.hunger > 0)
             hungerT.text = "Hungry";

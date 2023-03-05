@@ -1,5 +1,6 @@
 using CopiumEngine;
 using System;
+using System.Runtime.InteropServices;
 using System.Runtime.Remoting.Channels;
 
 public class EventManager: CopiumScript
@@ -9,6 +10,7 @@ public class EventManager: CopiumScript
     public Event_01 event01;
     public Event_02 event02;
     public Event_03 event03;
+    public Event_Ending eventEnding;
     public CrewMenu crewMenu;
 
     public GameObject Option_01;
@@ -26,6 +28,7 @@ public class EventManager: CopiumScript
     int choice = 0;
 
     bool ShowingResolution = false;
+    bool SelectingChoice = true;
     bool ShowingMainEvent = true;
 
     Button option01_btn;
@@ -45,52 +48,64 @@ public class EventManager: CopiumScript
 
 	void Update()
     {
+        if (!crewMenu.CheckAllCrewAlive())
+        {
+            EventSequence = -2;
+            OverideEvent();
+        }
+
         if (!ShowingResolution && ShowingMainEvent)
             CheckCurrentEvent();
 
-        if (!ShowingResolution)
+        if (!ShowingResolution && SelectingChoice)
             SelectChoice();
 
-        if (ShowingResolution)
+        if (ShowingResolution && !SelectingChoice)
             ShowResolution();
 
         if (Input.GetKeyDown(KeyCode.Enter))
             UpdateEventSequence();
+
+        crewMenu.UpdateAllStats();
+    }
+
+    public void OverideEvent()
+    {
+        ShowingResolution = false;
+        SelectingChoice = true;
+        ShowingMainEvent = true;
     }
 
     public void UpdateEventSequence()
     {
-        if (ShowingMainEvent)
+        if (ShowingMainEvent && SelectingChoice)
             return;
 
-        ShowingResolution = false;
         EventSequence++;
-        ShowingMainEvent = true;
+        OverideEvent();
     }
 
     void CheckCurrentEvent()
     {
-        // Update eventsequence after every button click
         switch (EventSequence)
         {
+            case -2:
+                eventEnding.Ending(true); // All dead
+                break;
             case -1:
-                Body.text = "Ending~";
+                eventEnding.Ending(false); // Not all dead
                 break;
             case 0:
                 ShowingMainEvent = false;
                 eventIntro.Event();
                 break;
             case 1:
-                bool harrisDead = false;
-                // if (crewMenu.health1 != 0)
-                //     healthy = true;
-
-                event01.Event(harrisDead);
+                event01.Event(crewMenu.crew[0].alive);
                 break;
             case 2:
                 bool alive = true;
-                // if (crewMenu.health2 != 0 && crewMenu.health3 != 0)
-                //     alive = true;
+                if (crewMenu.crew[1].alive && crewMenu.crew[2].alive)
+                    alive = true;
                 event02.Event(alive);
                 break;
             case 3:
@@ -100,12 +115,22 @@ public class EventManager: CopiumScript
             case 4:
                 //Event04();
                 break;
-            case 5:
-                //Event05();
-                break;
             default:
                 break;
         }
+    }
+
+    public void SelectDefaultChoice()
+    {
+        if (!SelectingChoice)
+            return;
+
+        if (Next_Event.activeSelf)
+            Next_Event.SetActive(false);
+
+        ShowingResolution = true;
+        SelectingChoice = false;
+        choice = 1;
     }
 
     void SelectChoice()
@@ -116,16 +141,19 @@ public class EventManager: CopiumScript
         if (option01_btn.state == ButtonState.OnClick)
         {
             ShowingResolution = true;
+            SelectingChoice = false;
             choice = 1;
         }
         else if(option02_btn.state == ButtonState.OnClick)
         {
             ShowingResolution = true;
+            SelectingChoice = false;
             choice = 2;
         }
         else if(option03_btn.state == ButtonState.OnClick)
         {
             ShowingResolution = true;
+            SelectingChoice = false;
             choice = 3;
         }
         else
@@ -168,6 +196,6 @@ public class EventManager: CopiumScript
         //    ShowingResolution = false;
         //    Next_Event.SetActive(false);
         //}
-        
+        ShowingResolution = false;
     }
 }
