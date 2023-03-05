@@ -3,11 +3,13 @@
 #include <GameObject/components.h>
 #include <Editor/editor-system.h>
 #include <Graphics/fonts.h>
+#include "glm/gtc/matrix_transform.hpp"
 
 namespace Copium
 {
 	void Transform::SetParent(Transform* _parent)
 	{
+		//Set Parent;
 		//Previously had a parent
 		if (parent)
 			parent->children.remove(this);
@@ -17,17 +19,11 @@ namespace Copium
 			_parent->children.push_back(this);
 	}
 
-	Transform& Transform::operator=(const Transform& rhs)
+	Transform::Transform(GameObject& _gameObject, const Transform& rhs) : gameObject{_gameObject}
 	{
-		parent = rhs.parent;
 		position = rhs.position;
 		rotation = rhs.rotation;
 		scale = rhs.scale;
-		for (Transform* pTransform : rhs.children)
-		{
-			//Create Child GameObject
-		}
-		return *this;
 	}
 
 	Math::Vec3 Transform::GetWorldPosition() const
@@ -41,13 +37,13 @@ namespace Copium
 		{
 			Math::Vec3 parentRot = _parent->rotation;
 			Math::Vec3 parentScale = _parent->scale;
-			_position = _parent->position + parentRot * (_position * parentScale);
+			_position += _parent->position + parentRot * (_position * parentScale);
 			_rotation += parentRot;
 			_scale *= parentScale;
 			_parent = _parent->parent;
 		}
 
-		return position;
+		return _position;
 	}
 	Math::Vec3 Transform::GetWorldRotation() const
 	{
@@ -74,8 +70,6 @@ namespace Copium
 	}
 
 	char Script::buffer[128];
-	std::pair<const std::string, Field>* Script::editedField;
-	bool Script::isAddingReference{ nullptr };
 
 	void Animator::Update(double _dt)
 	{
@@ -168,59 +162,43 @@ namespace Copium
 	
 	SortingGroup::SortingGroup(GameObject& _gameObj, UUID _uuid) :Component(_gameObj, _uuid)
 	{
-
 	}
 
-	Text::Text(GameObject& _gameObj, UUID _uuid) : IUIComponent(_gameObj, _uuid), fSize{ 1.f }, wrapper{ 0.f }, content{ "New Text" }, fontName{"corbel"}
+	Text::Text(GameObject& _gameObj, UUID _uuid, bool _inspector) : IUIComponent(_gameObj, _uuid), fSize{ 1.f }, wrapper{ 0.f }, content{ "New Text" }
 	{
-		font = Font::getFont(fontName);
+		if (_inspector)
+		{
+			fontName = "corbel";
+			font = Font::getFont(fontName);
+		}
 	}
 
-	void Text::render(BaseCamera* _camera)
+	void AudioSource::play_sound()
 	{
-		if (!font)
-			return;
-		Transform& trans{ gameObj.transform };
-		Math::Vec3 globalPos{ trans.GetWorldPosition()};
-		Math::Vec3 globalScale{trans.GetWorldScale()};
-		float scale = globalScale.x * 0.1f;
-		if (scale > globalScale.y * 0.1f)
-			scale = globalScale.y * 0.1f;
-		scale *= fSize;
-
-		glm::fvec4 mixedColor{ 0 };
-		mixedColor.a = 1 - (1 - layeredColor.a) * (1 - color.a); // 0.75
-		if (mixedColor.a < 0.01f)
-			return;
-		mixedColor.r = layeredColor.r * layeredColor.a / mixedColor.a + color.r * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.67
-		mixedColor.g = layeredColor.g * layeredColor.a / mixedColor.a + color.g * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.33
-		mixedColor.b = layeredColor.b * layeredColor.a / mixedColor.a + color.b * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.00
-
-		/*PRINT("Color: " << color.r << " " << color.g << " " << color.b << " " << color.a);
-		PRINT("Mixed Color: " << mixedColor.r << " " << mixedColor.g << " " << mixedColor.b << " " << mixedColor.a);
-		*/
-
-		glm::vec2 dimensions{ font->getDimensions(content, scale, wrapper) };
-
-		switch (hAlignment)
+		if (channel == "Default")
 		{
-		case HorizontalAlignment::Center:
-			globalPos.x -= dimensions.x / 2.f;
-			break;
-		case HorizontalAlignment::Right:
-			globalPos.x -= dimensions.x;
-			break;
+			MySoundSystem.Play(alias, MySoundSystem.channelDefault, overLap, loop);
 		}
-		switch (vAlignment)
+		else if (channel == "BGM")
 		{
-		case VerticalAlignment::Top:
-			globalPos.y -= dimensions.y;
-			break;
-		case VerticalAlignment::Center:
-			globalPos.y -= dimensions.y / 2.f;
-			break;
+			MySoundSystem.Play(alias, MySoundSystem.channelBGM, overLap, loop);
 		}
-
-		font->draw_text(content, globalPos, mixedColor, scale, wrapper, _camera);
+		else if (channel == "SFX")
+		{
+			MySoundSystem.Play(alias, MySoundSystem.channelSFX, overLap, loop);
+		}
+		else if (channel == "Voice")
+		{
+			MySoundSystem.Play(alias, MySoundSystem.channelVoice, overLap, loop);
+		}
+		else if (true)
+		{
+			PRINT("No channel detected, Playing on default");
+			MySoundSystem.Play(alias, MySoundSystem.channelDefault, overLap, loop);
+		}
+	}
+	void AudioSource::stop_sound()
+	{
+		MySoundSystem.Stop(this->alias);
 	}
 }

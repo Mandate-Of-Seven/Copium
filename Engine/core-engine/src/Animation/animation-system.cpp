@@ -32,8 +32,6 @@ namespace Copium
 	void AnimationSystem::init()
 	{
 		systemFlags |= FLAG_RUN_ON_PLAY | FLAG_RUN_ON_EDITOR;
-		//MyEventSystem->subscribe(this, &CallbackSceneOpened);
-		currScene = nullptr;
 		
 	}
 	void AnimationSystem::update()
@@ -85,12 +83,6 @@ namespace Copium
 		{
 			animator.PlayAnimation();
 		}
-	}
-
-	void AnimationSystem::CallbackSceneOpened(SceneOpenedEvent* _src)
-	{
-		PRINT("Scene Pointer Updated!!!");
-		currScene = &_src->scene;
 	}
 
 }

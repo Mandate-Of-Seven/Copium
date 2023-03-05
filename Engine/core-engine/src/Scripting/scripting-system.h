@@ -17,7 +17,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #define SCRIPTING_SYSTEM_H
 
 #include "CopiumCore\system-interface.h"
-#include "Messaging\message-system.h"
 #include "Files\file-system.h"
 #include <Scripting/scriptable-object.h>
 #include <Events/events.h>
@@ -64,9 +63,7 @@ namespace Copium
 	{
 		Compiling,
 		SwapAssembly,
-		Deserializing,
 		Wait,
-		Previewing,
 	};
 
 	struct ScriptClass
@@ -88,7 +85,7 @@ namespace Copium
 
 	};
 
-	CLASS_SYSTEM(ScriptingSystem), IReceiver
+	CLASS_SYSTEM(ScriptingSystem)
 	{
 	public:
 		/**************************************************************************/
@@ -123,18 +120,6 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		void exit();
-
-		/**************************************************************************/
-		/*!
-			\brief
-				Gets the shared pointer of a ScriptClass from its name
-			\param _name
-				Name of ScriptClass to get
-			\return
-				Shared pointer to a ScriptClass
-		*/
-		/**************************************************************************/
-		ScriptClass& GetScriptClass(const std::string & _name);
 
 		/**************************************************************************/
 		/*!
@@ -188,18 +173,6 @@ namespace Copium
 		/**************************************************************************/
 		MonoObject* invoke(MonoObject * mObj, MonoMethod * mMethod, void** params = nullptr);
 
-		/**************************************************************************/
-		/*!
-			\brief
-				Listens to MT_REFLECT_CS_GAMEOBJECT to know when to tell scripts
-				to create their version of a gameObject
-			\param mType
-				Message type, used if this listens to two or more messages
-		*/
-		/**************************************************************************/
-		void handleMessage(MESSAGE_TYPE mType);
-
-
 
 		/**************************************************************************/
 		/*!
@@ -231,7 +204,7 @@ namespace Copium
 				Name of the new script
 		*/
 		/**************************************************************************/
-		void addEmptyScript(const std::string& _name);
+		std::string addEmptyScript(const std::string& _name);
 
 
 		/**************************************************************************/
@@ -322,9 +295,6 @@ namespace Copium
 		/**************************************************************************/
 		bool isScript(const std::string& name);
 
-		CompilingState compilingState{ CompilingState::Wait };
-
-	private:
 
 		/**************************************************************************/
 		/*!
@@ -407,55 +377,6 @@ namespace Copium
 		/*!
 		*
 		\brief
-			Create a reference to the specified object in c#
-
-		\param object
-			reference to the object
-
-		\return
-			id of the component/gameobject]
-			if reference fails, returns -1
-		*/
-		/*******************************************************************************/
-		template<typename T>
-		size_t CreateReference(T& object) { static_assert(true); };
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Create a reference to the specified game object in c#
-
-		\param object
-			reference to the game object
-
-		\return
-			id of the gameobject
-			if reference fails, returns -1
-		*/
-		/*******************************************************************************/
-		template<>
-		size_t CreateReference<GameObject>(GameObject& object);
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Create a reference to the specified component in c#
-
-		\param object
-			reference to the component
-
-		\return
-			id of the component
-			if reference fails, returns -1
-		*/
-		/*******************************************************************************/
-		template<>
-		size_t CreateReference<Component>(Component& object);
-
-		/*******************************************************************************
-		/*!
-		*
-		\brief
 			Sets a field from a C# field using its name
 		\param name
 			Name of the field
@@ -466,6 +387,9 @@ namespace Copium
 		*/
 		/*******************************************************************************/
 		void SetFieldValue(MonoObject* instance, MonoClassField* mClassFiend, Field& field, const void* value);
+
+		template<typename T>
+		void SetFieldReference(MonoObject* instance, MonoClassField* mClassFiend, T* reference);
 
 		/*******************************************************************************
 		/*!
@@ -480,7 +404,7 @@ namespace Copium
 			void
 		*/
 		/*******************************************************************************/
-		void CallbackSceneOpened(SceneOpenedEvent* pEvent);
+		void CallbackSceneChanging(SceneChangingEvent* pEvent);
 		/*******************************************************************************
 		/*!
 		*
@@ -494,7 +418,8 @@ namespace Copium
 			void
 		*/
 		/*******************************************************************************/
-		void CallbackReflectComponent(ReflectComponentEvent* pEvent);
+		template <typename T>
+		void CallbackReflectComponent(ReflectComponentEvent<T>* pEvent);
 		/*******************************************************************************
 		/*!
 		*
@@ -552,6 +477,9 @@ namespace Copium
 		/*******************************************************************************/
 		template<typename T>
 		void CallbackScriptSetFieldReference(ScriptSetFieldReferenceEvent<T>* pEvent);
+
+		void CallbackScriptNew(ScriptNewEvent* pEvent);
+
 		/*******************************************************************************
 		/*!
 		*
@@ -580,6 +508,38 @@ namespace Copium
 		*/
 		/*******************************************************************************/
 		void CallbackStartPreview(StartPreviewEvent* pEvent);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Callback function when preview is started
+
+		\param pEvent
+			pointer to the relevant event
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		void CallbackStopPreview(StopPreviewEvent* pEvent);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Callback function when preview is started
+
+		\param pEvent
+			pointer to the relevant event
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
+		void CallbackScriptGetNames(ScriptGetNamesEvent* pEvent);
+
+
+		template<typename T, typename... Ts>
+		void SubscribeComponentBasedCallbacks(TemplatePack<T, Ts...> pack);
 
 		/*******************************************************************************
 		/*!
@@ -594,7 +554,7 @@ namespace Copium
 			ptr to the c# instance
 		*/
 		/*******************************************************************************/
-		MonoObject* ReflectGameObject(UUID id);
+		MonoObject* ReflectGameObject(GameObject& gameObject);
 		/*******************************************************************************
 		/*!
 		*
@@ -629,6 +589,8 @@ namespace Copium
 		std::unordered_map<std::string, MonoObject*> scenes;
 		MonoObject* mCurrentScene;
 		MonoObject* mPreviousScene;
+		CompilingState compilingState{ CompilingState::Wait };
+		bool inPlayMode{false};
 	};
 
 	/*******************************************************************************
@@ -649,19 +611,12 @@ namespace Copium
 	{
 		MonoObject* mScript = mComponents[mCurrentScene][pEvent->script.uuid];
 		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
-		ScriptClass& scriptClass{ GetScriptClass(pEvent->script.name) };
+		ScriptClass& scriptClass{ scriptClassMap[pEvent->script.name] };
 		MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };
-		COPIUM_ASSERT(!mClassField, std::string("FIELD ") + pEvent->fieldName + "COULD NOT BE FOUND IN SCRIPT " + pEvent->script.name);
-		size_t result = (size_t)(-1);
-		if (pEvent->reference == nullptr)
-		{
-			//REMOVE REFERENCE
-			SetFieldValue(mScript, mClassField, pEvent->script.fieldDataReferences[pEvent->fieldName], &result);
-			return;
-		}
-		result = CreateReference(*pEvent->reference);
-		//SET REFERENCE
-		SetFieldValue(mScript, mClassField, pEvent->script.fieldDataReferences[pEvent->fieldName], &result);
+		COPIUM_ASSERT(!mClassField, std::string("FIELD ") + pEvent->fieldName + " COULD NOT BE FOUND IN SCRIPT " + pEvent->script.name);
+		SetFieldReference<T>(mScript, mClassField,pEvent->reference);
 	}
+
+	
 }
 #endif // !SCRIPTING_SYSTEM_H

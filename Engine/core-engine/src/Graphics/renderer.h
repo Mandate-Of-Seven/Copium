@@ -13,7 +13,7 @@
 	sprite or particle system (if any). Renderers can be disabled to make objects
 	invisble (see enabled).
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #ifndef RENDERER_H
 #define RENDERER_H
@@ -38,7 +38,6 @@ namespace Copium
 	static const GLuint circleVertices = 36;
 	static const GLuint maxCircleIndexCount = maxCircleCount * (circleVertices + 1);
 	static const GLuint maxCircleVertexCount = maxCircleCount * circleVertices;
-	static const GLuint maxTextVertexCount = maxTextCount * 4;
 	static const GLuint maxTextures = 256;
 
 	// Forward declare
@@ -95,14 +94,6 @@ namespace Copium
 		*/
 		/***************************************************************************/
 		void setup_circle_vao();
-
-		/***************************************************************************/
-		/*!
-		\brief
-			Setup the text's vertex array object along with its data
-		*/
-		/***************************************************************************/
-		void setup_text_vao();
 
 		/***************************************************************************/
 		/*!
@@ -275,11 +266,22 @@ namespace Copium
 			The color of the text
 		\param _scale
 			The size of the text
+		\param _wrapper
+			Wraps the text to the next line
 		\param _font
 			The font to draw
 		*/
 		/***************************************************************************/
-		void draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float _scale, Font* _font);
+		void draw_text
+		(
+			const std::string& _text,
+			const glm::vec3& _position,
+			const glm::vec4& _color,
+			const float& _scale, 
+			const float& _wrapper, 
+			Font* _font,
+			const glm::fvec4* tintColor = nullptr
+		);
 
 		// Accessing Properties
 
@@ -330,7 +332,6 @@ namespace Copium
 		GLuint quadVertexArrayID = 0;	// Handle to Quad Vertex Array Object
 		GLuint lineVertexArrayID = 0;	// Handle to Line Vertex Array Object
 		GLuint circleVertexArrayID = 0; // Handle to Circle Vertex Array Object
-		GLuint textVertexArrayID = 0;	// Handle to Text Vertex Array Object
 
 		GLuint quadVertexBufferID = 0;	// Handle to Quad Vertex Buffer Object
 		GLuint quadIndexBufferID = 0;	// Handle to Quad Index Buffer
@@ -343,9 +344,6 @@ namespace Copium
 		GLuint circleIndexBufferID = 0;	// Handle to Circle Index Buffer
 		GLuint circleIndexCount = 0;	// Number of elements in the Circle object
 
-		GLuint textVertexBufferID = 0;	// Handle to Text Vertex Buffer Object
-		GLuint textVertexCount = 0;		// Number of elements in the Text object
-
 		QuadVertex* quadBuffer = nullptr;
 		QuadVertex* quadBufferPtr = nullptr;
 
@@ -357,13 +355,9 @@ namespace Copium
 		CircleVertex* circleBufferPtr = nullptr;
 		GLfloat circleWidth = 1.f;
 
-		TextVertex* textBuffer = nullptr;
-		TextVertex* textBufferPtr = nullptr;
-
 		glm::vec4 quadVertexPosition[4];
 		glm::vec2 quadTextCoord[4];
 		glm::vec4 circleVertexPosition[circleVertices];
-		glm::vec2 textTextCoord[6];
 
 		GraphicsSystem* graphics = nullptr; // A pointer to the instance of graphics system
 		BaseCamera* camera = nullptr;		// A pointer to the camera that holds this renderer class

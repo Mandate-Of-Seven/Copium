@@ -80,7 +80,11 @@ namespace Copium {
 		GameObject& Instantiate(rapidjson::Value& _value, Scene& scene);
 
 		template <typename T>
-		T& AddComponent(GameObject& gameObject, Scene& scene,T* pCopy = nullptr, bool copyID = false);
+		T& AddComponent(GameObject& gameObject, Scene& scene, UUID uuid = UUID(),T* pCopy = nullptr);
+
+		Text& AddComponent(GameObject& gameObj, Scene& scene, bool inspector, UUID uuid = UUID() , Text* pCopy = nullptr);
+		
+		Script& AddComponent(GameObject& gameObj, Scene& scene, const char* scriptName, UUID uuid = UUID() , Script* pCopy = nullptr);
 
 		/*******************************************************************************
 		/*!
@@ -111,7 +115,7 @@ namespace Copium {
 				}
 				++it;
 			}
-
+			int i{ 0 };
 			auto sceneIt = scene.componentArrays.GetArray<T>().begin();
 			auto sceneEnd = scene.componentArrays.GetArray<T>().end();
 			while (sceneIt != sceneEnd)
@@ -123,6 +127,7 @@ namespace Copium {
 					break;
 				}
 				++sceneIt;
+				PRINT(i);
 			}
 		}
 
@@ -231,7 +236,7 @@ namespace Copium {
 
 		*/
 		/*******************************************************************************/
-		GameObject* create_child(GameObject& _parent);
+		GameObject& InstantiateChild(GameObject& _parent, Scene& _scene);
 
 
 	private:

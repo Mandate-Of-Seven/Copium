@@ -52,6 +52,7 @@ namespace CopiumEngine
 
         public float z;
         public static Vector3 zero => new Vector3(0.0f);
+        public static Vector3 one => new Vector3(1.0f);
         public Vector3(float scalar)
         {
             vec2.x = scalar; vec2.y = scalar; z = scalar;
@@ -110,6 +111,10 @@ namespace CopiumEngine
             if (value > max)
                 return max;
             return value;
+        }
+        public static float Lerp(float a, float b, float t)
+        {
+            return a + (b - a) * t;
         }
 
         static public float SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime, float maxSpeed = Infinity, float deltaTime = 0)

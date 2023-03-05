@@ -13,6 +13,8 @@
 #include <Graphics/sprite.h>
 #include <Scripting/script-fields.h>
 #include <vector>
+#include <map>
+
 #define RegisterComponent(Type) template <> struct GetComponentType<Type>{static constexpr size_t e{ (size_t)ComponentType::Type }; static constexpr const char* name = #Type;}
 
 namespace Copium
@@ -20,10 +22,11 @@ namespace Copium
 	class GameObject;
 	class UUID;
 	class Font;
+	using FieldMap = std::map<std::string, Field>;
 
 	enum class ComponentType : int      // Types of Components
 	{
-		Animator,
+		Animator = (int)FieldType::Component,
 		AudioSource,
 		BoxCollider2D,
 		Button,
@@ -65,6 +68,8 @@ namespace Copium
 	{
 	public:
 		Component() = delete;
+		~Component() {};
+
 		bool enabled{ true };
 		UUID uuid;
 		GameObject& gameObj;
@@ -117,7 +122,10 @@ namespace Copium
 			{
 				return others.FindByUUID(_uuid);
 			}
-			return nullptr;
+			else
+			{
+				return nullptr;
+			}
 		}
 	};
 
@@ -218,7 +226,6 @@ namespace Copium
 		Math::Vec3 position{};
 		Math::Vec3 rotation{};
 		Math::Vec3 scale{1,1,1};
-		UUID pid{0};
 		GameObject& gameObject;
 		/***************************************************************************/
 		/*!
@@ -227,8 +234,11 @@ namespace Copium
 			parent to nullptr
 		*/
 		/**************************************************************************/
-		Transform(GameObject& _gameObject) : gameObject{_gameObject} {}
-		Transform& operator=(const Transform& rhs);
+		Transform(GameObject& _gameObject) : gameObject{ _gameObject }, parent{ nullptr } {}
+		Transform(GameObject& _gameObject, const Transform& rhs);
+		~Transform() 
+		{
+		}
 		Math::Vec3 GetWorldPosition() const;
 		Math::Vec3 GetWorldRotation() const;
 		Math::Vec3 GetWorldScale() const;
@@ -364,9 +374,12 @@ namespace Copium
 	{
 	public:
 		std::string alias;
-		bool overLap = false;
+		bool overLap = true;
 		bool loop = false;
 		int loopCount{ 0 };
+		std::string channel;
+		float volume = 1.0f;
+		const char* channelName[4] = { "Default", "BGM", "SFX", "Voice" };
 		/***************************************************************************/
 		/*!
 		\brief
@@ -385,27 +398,23 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		AudioSource(GameObject& _gameObj, const AudioSource& rhs, UUID _uuid = UUID()) :
-			Component(_gameObj, _uuid), alias{ rhs.alias }{}
+			Component(_gameObj, _uuid), alias{ rhs.alias }, loop{ rhs.loop }, channel{rhs.channel},
+			overLap{rhs.overLap}, volume{rhs.volume}
+		{}
 		/***************************************************************************/
 		/*!
 		\brief
 			Plays the audio file inside the audio source
 		*/
 		/**************************************************************************/
-		void play_sound()
-		{
-			//soundSystem.Play(this->alias, overLap, loop, loopCount);
-		}
+		void play_sound();
 		/***************************************************************************/
 		/*!
 		\brief
 			Stops the audio file inside the audio source if its playing
 		*/
 		/**************************************************************************/
-		void stop_sound()
-		{
-			//soundSystem.Stop(this->alias);
-		}
+		void stop_sound();
 		void stop_all_sound()
 		{
 			//soundSystem.StopAll();
@@ -462,6 +471,11 @@ namespace Copium
 		{
 			BaseCamera::init(1280.f, 720.f, CameraType::GAME, true);
 		}
+
+		~Camera()
+		{
+			BaseCamera::exit();
+		}
 	};
 
 	class Rigidbody2D : public Component
@@ -505,14 +519,13 @@ namespace Copium
 				Owner of this
 		*/
 		/**************************************************************************/
-		Script(GameObject& _gameObj, UUID _uuid = UUID()):Component(_gameObj, _uuid), name{}
-		{
-			//MyEventSystem->publish(new ScriptCreatedEvent(*this));
-		}
+		Script(GameObject& _gameObj, UUID _uuid = UUID(), const std::string& _name = "New Script") :Component(_gameObj, _uuid), name{ _name }
+		{}
 
 
 		Script(GameObject& _gameObj, const Script& rhs, UUID _uuid = UUID()) :
-			Component(_gameObj, _uuid), name{ rhs.name }, fieldDataReferences{ rhs.fieldDataReferences }{}
+			Component(_gameObj, _uuid), name{ rhs.name }, fieldDataReferences{ rhs.fieldDataReferences }, 
+			fieldComponentReferences{ rhs.fieldComponentReferences }, fieldGameObjReferences{ rhs.fieldGameObjReferences }{}
 
 		Script& operator=(const Script& rhs)
 		{
@@ -574,40 +587,6 @@ namespace Copium
 			name = _name;
 			instantiate();
 		}
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Gets a field from a C# field using its name
-		\param name
-			Name of the field
-		\param buffer
-			Buffer to store the values, needs to be type casted
-		\return
-			False if operation failed, true if it was successful
-		*/
-		/*******************************************************************************/
-		void GetFieldValue(const std::string& fieldName, char* outBuffer)
-		{
-			//MyEventSystem->publish(new ScriptGetFieldEvent(*this, fieldName.c_str(), (void*)outBuffer));
-		}
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Sets a field from a C# field using its name
-		\param name
-			Name of the field
-		\param value
-			Value to write into C# memory space
-		\return
-			False if operation failed, true if it was successful
-		*/
-		/*******************************************************************************/
-		void SetFieldValue(const std::string& _name, const char* value)
-		{
-			//MyEventSystem->publish(new ScriptSetFieldEvent(*this, _name.c_str(), (void*)value));
-		}
 		void instantiate()
 		{
 			//MyEventSystem->publish(new ReflectComponentEvent(*this));
@@ -616,9 +595,7 @@ namespace Copium
 		std::string name;
 		std::unordered_map<std::string, GameObject*> fieldGameObjReferences;
 		std::unordered_map<std::string, Component*> fieldComponentReferences;
-		std::unordered_map<std::string, Field> fieldDataReferences;
-		static std::pair<const std::string, Field>* editedField;
-		static bool isAddingReference;
+		FieldMap fieldDataReferences;
 	};
 	
 	using ButtonCallback = void (*)();
@@ -695,8 +672,12 @@ namespace Copium
 			Component(_gameObj, _uuid), callbackName{ rhs.callbackName },
 			bounds{ rhs.bounds }, normalColor{ rhs.normalColor }, 
 			hoverColor{ rhs.hoverColor }, clickedColor{ rhs.clickedColor },
-			fadeDuration{ rhs.fadeDuration}
-		{}
+			fadeDuration{ rhs.fadeDuration}, targetGraphic{rhs.targetGraphic}
+		{
+			PRINT(size_t(rhs.uuid));
+			PRINT(_uuid.GetUUID());
+			PRINT("BUTTON COPY CONSTRUCTED!");
+		}
 
 		Button& operator=(const Button& rhs);
 
@@ -708,7 +689,6 @@ namespace Copium
 		glm::fvec4 clickedColor;
 		IUIComponent* targetGraphic;
 		ButtonState previousState{ ButtonState::None };
-		UUID graphicID;
 		glm::fvec4 previousColor;
 		float timer{ 0 };
 		float fadeDuration{ 0.1f };
@@ -727,115 +707,13 @@ namespace Copium
 				Owner of this
 		*/
 		/**************************************************************************/
-		Text(GameObject& _gameObj, UUID _uuid = UUID());
+		Text(GameObject& _gameObj, UUID _uuid = UUID(), bool _inspector = false);
 
 		Text(GameObject& _gameObj, const Text& rhs, UUID _uuid = UUID()) :
 			IUIComponent(_gameObj, rhs ,_uuid), fontName{ rhs.fontName }, font{ rhs.font },
 			fSize{rhs.fSize},wrapper{rhs.wrapper}
 		{strcpy(content, rhs.content); }
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Called by graphics to display this
-		*/
-		/*******************************************************************************/
-		void render(BaseCamera* _camera);
 
-		//void render(BaseCamera* _camera)
-		//{
-		//	if (!font)
-		//		return;
-		//	Transform& trans{ gameObj.transform };
-		//	Math::Vec3 pos{ trans.position };
-		//	float scale = trans.scale.x * 0.1f;
-		//	if (scale > trans.scale.y)
-		//		scale = trans.scale.y;
-		//	scale *= fSize;
-		//	glm::fvec4 mixedColor{ 0 };
-		//	mixedColor.a = 1 - (1 - layeredColor.a) * (1 - color.a); // 0.75
-		//	if (mixedColor.a < 0.01f)
-		//		return;
-		//	mixedColor.r = layeredColor.r * layeredColor.a / mixedColor.a + color.r * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.67
-		//	mixedColor.g = layeredColor.g * layeredColor.a / mixedColor.a + color.g * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.33
-		//	mixedColor.b = layeredColor.b * layeredColor.a / mixedColor.a + color.b * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.00
-		//	/*PRINT("Color: " << color.r << " " << color.g << " " << color.b << " " << color.a);
-		//	PRINT("Mixed Color: " << mixedColor.r << " " << mixedColor.g << " " << mixedColor.b << " " << mixedColor.a);
-		//	*/
-		//	if (gameObj.transform.HasParent())
-		//	{
-		//		glm::vec3 updatedPos = gameObj.transform.position;
-		//		glm::vec3 updatedScale = gameObj.transform.scale;
-		//		Transform* tempObj = trans.parent;
-		//		while (tempObj)
-		//		{
-		//			glm::vec3 tempPos = tempObj->position.glmVec3;
-		//			glm::mat4 translate = glm::translate(glm::mat4(1.f), tempPos);
-		//			float rot = glm::radians(tempObj->rotation.z);
-		//			glm::mat4 lRotate = {
-		//			glm::vec4(cos(rot), sin(rot), 0.f, 0.f),
-		//			glm::vec4(-sin(rot), cos(rot), 0.f, 0.f),
-		//			glm::vec4(0.f, 0.f, 1.f, 0.f),
-		//			glm::vec4(0.f, 0.f, 0.f, 1.f)
-		//			};
-		//			glm::vec3 size = tempObj->scale.glmVec3;
-		//			glm::mat4 lScale = {
-		//				glm::vec4(size.x, 0.f, 0.f, 0.f),
-		//				glm::vec4(0.f, size.y, 0.f, 0.f),
-		//				glm::vec4(0.f, 0.f, 1.f, 0.f),
-		//				glm::vec4(0.f, 0.f, 0.f, 1.f)
-		//			};
-		//			glm::mat4 transform = translate * lRotate * lScale;
-		//			updatedPos = glm::vec3(transform * glm::vec4(updatedPos, 1.f));
-		//			updatedScale *= tempObj->scale.glmVec3;
-		//			tempObj = tempObj->parent;
-		//		}
-		//		float updatedSize = updatedScale.x * fSize * 0.1f;
-		//		glm::vec2 dimensions{ font->getDimensions(content, updatedSize, wrapper) };
-		//		switch (hAlignment)
-		//		{
-		//		case HorizontalAlignment::Center:
-		//			updatedPos.x -= dimensions.x / 2.f;
-		//			break;
-		//		case HorizontalAlignment::Right:
-		//			updatedPos.x -= dimensions.x;
-		//			break;
-		//		}
-		//		switch (vAlignment)
-		//		{
-		//		case VerticalAlignment::Top:
-		//			updatedPos.y -= dimensions.y;
-		//			break;
-		//		case VerticalAlignment::Center:
-		//			updatedPos.y -= dimensions.y / 2.f;
-		//			break;
-		//		}
-		//		font->draw_text(content, updatedPos, mixedColor, updatedSize, wrapper, _camera);
-		//	}
-		//	else
-		//	{
-		//		glm::vec2 dimensions{ font->getDimensions(content, scale, wrapper) };
-		//		switch (hAlignment)
-		//		{
-		//		case HorizontalAlignment::Center:
-		//			pos.x -= dimensions.x / 2.f;
-		//			break;
-		//		case HorizontalAlignment::Right:
-		//			pos.x -= dimensions.x;
-		//			break;
-		//		}
-		//		switch (vAlignment)
-		//		{
-		//		case VerticalAlignment::Top:
-		//			pos.y -= dimensions.y;
-		//			break;
-		//		case VerticalAlignment::Center:
-		//			pos.y -= dimensions.y / 2.f;
-		//			break;
-		//		}
-		//		font->draw_text(content, pos, mixedColor, scale, wrapper, _camera);
-		//	}
-		//}
 		std::string fontName;
 		Font* font;
 		float fSize;
@@ -960,7 +838,7 @@ namespace Copium
 	RegisterComponent(Image);
 	RegisterComponent(Text);
 	RegisterComponent(Button);
-	using ComponentTypes = TemplatePack<BoxCollider2D, Rigidbody2D, SpriteRenderer, Animator,Camera, SortingGroup, AudioSource, Script, Image, Text, Button>;
+	using ComponentTypes = TemplatePack<SortingGroup, SpriteRenderer,BoxCollider2D, Rigidbody2D, Animator,Camera, AudioSource, Image, Text, Button, Script>;
 	using ComponentsArrays = decltype(ComponentGroup(ComponentTypes()));
 	using ComponentsPtrArrays = decltype(ComponentPtrGroup(ComponentTypes()));
 

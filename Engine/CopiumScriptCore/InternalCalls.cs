@@ -28,6 +28,17 @@ namespace CopiumEngine
         internal extern static void PauseAllAnimation();
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void PlayAllAnimation();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void PlayAnimation(ulong ID);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void PauseAnimation(ulong ID);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetAnimatorDelay(ulong ID,float timeDelay);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static float GetAnimatorDelay(ulong ID);
         #endregion
 
         #region COMPONENT
@@ -36,6 +47,10 @@ namespace CopiumEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetComponentEnabled(ulong gameObjID, ulong compId, bool enabled);
+
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static ulong GetComponent(ulong gameObjID, Type componentType);
         #endregion
 
         #region GAMEOBJECT
@@ -76,6 +91,14 @@ namespace CopiumEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetTranslation(ulong ID, ref Vector3 translation);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void GetRotation(ulong ID, out Vector3 translation);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetRotation(ulong ID, ref Vector3 translation);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetParent(ulong newParentID, ulong childID);
         #endregion
 
         #region RIGIDBODY2D
@@ -99,11 +122,32 @@ namespace CopiumEngine
 
         #endregion
 
+        #region IMAGE
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetImageColor(ulong ID, out Color color);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetImageColor(ulong ID, ref Color color);
+
+        #endregion
+
+        #region SCENE
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void LoadScene(string sceneName);
+        #endregion
 
         #region AUDIO_SOURCE
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void AudioSourcePlay(ulong ID);
-        #endregion
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void AudioSourceStop(ulong ID);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void AudioSourceSetVolume(ulong ID, float volume);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern float AudioSourceGetVolume(ulong ID);
+        #endregion	
 
         #region UI
         [MethodImpl(MethodImplOptions.InternalCall)]

@@ -19,6 +19,13 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 namespace Copium
 {
+	enum ENTITY_TYPE : int
+	{
+		QUAD,
+		TEXT,
+		NUM_TYPES
+	};
+
 	// A Vertex contains information about a vertex that is used for rendering
 	struct QuadVertex
 	{
@@ -26,7 +33,7 @@ namespace Copium
 		glm::vec4 color;	// Color of vertex
 		glm::vec2 textCoord;// Texture coordinate of vertex
 		float texID;		// Texture index
-		int entityID;		// Index of the entity
+		float type;			// Type of the entity
 	};
 
 	struct LineVertex
@@ -39,14 +46,6 @@ namespace Copium
 	{
 		glm::vec3 pos;
 		glm::vec4 color;
-	};
-
-	struct TextVertex
-	{
-		glm::vec3 pos;		// Position of vertex
-		glm::vec4 color;	// Color of vertex
-		glm::vec2 textCoord;// Texture coordinate of vertex
-		//float fontID;		// Font index
 	};
 
 }

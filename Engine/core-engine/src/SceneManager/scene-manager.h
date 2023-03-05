@@ -139,6 +139,8 @@ namespace Copium {
 		/*******************************************************************************/
 		bool save_scene(const std::string& _filepath);
 
+		bool save_scene(const std::string& _filepath, const std::string& _filename, bool _modifyname = false);
+
 		/*******************************************************************************
 		/*!
 		*
@@ -246,7 +248,10 @@ namespace Copium {
 			reference to the vector of scenes
 		*/
 		/*******************************************************************************/
-		std::vector<Scene*>& GetSceneVector() { return scenes; }
+		//std::vector<Scene*>& GetSceneVector() { return scenes; }
+
+		void DeserializeLink();
+		void PreviewLink();
 		/*******************************************************************************
 		/*!
 		*
@@ -278,19 +283,25 @@ namespace Copium {
 			}
 		}
 
+		template <typename T>
+		bool DelinkComponent(T*& container);
+
+		void DelinkDeleted();
+
 		Camera* mainCamera{nullptr};
+		std::string sceneFile{};
 
 	private:
 		void CallbackQuitEngine(QuitEngineEvent* pEvent);
-
+		void CallbackChildInstantiate(ChildInstantiateEvent* pEvent);
+		void CallbackGameObjectInstantiate(GameObjectInstantiateEvent* pEvent);
+		void CallbackGameObjectDestroy(GameObjectDestroyEvent* pEvent);
 	private:
 		Scene* currentScene;	// Pointer to the current scene
 		Scene* storageScene;	// Scene Pointer that acts as buffer for preview scene
 		rapidjson::Document document;
 		std::string sceneFilePath;
 		Scene::SceneState currSceneState{ Scene::SceneState::edit };
-		std::vector<Scene*> scenes;
-
 	};
 
 	/*******************************************************************************

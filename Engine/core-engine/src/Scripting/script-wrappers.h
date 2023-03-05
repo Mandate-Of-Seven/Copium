@@ -25,6 +25,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <Animation/animation-system.h>
 #include <GameObject/components.h>
 #include <GameObject/game-object-factory.h>
+#include <Editor/editor-system.h>
 
 #include "mono/metadata/object.h"
 #include "mono/metadata/reflection.h"
@@ -179,6 +180,21 @@ namespace Copium
 	/*******************************************************************************
 	/*!
 	\brief
+		Gets the delta time from the engine
+	\return
+		Delta time
+	*/
+	/*******************************************************************************/
+	static void SetParent(UUID newParentID, UUID childID)
+	{
+		GameObject* child = sceneManager.FindGameObjectByID(childID);
+		GameObject* parent = sceneManager.FindGameObjectByID(newParentID);
+		child->transform.SetParent(&parent->transform);
+	}
+
+	/*******************************************************************************
+	/*!
+	\brief
 		Sets the velocity of a rigidbody
 	\param _ID
 		GameObject of ID with a rigidbody
@@ -243,16 +259,25 @@ namespace Copium
 	/*******************************************************************************/
 	static bool HasComponent(UUID UUID, MonoReflectionType* componentType)
 	{
-		return false;
-		//GameObject* gameObj = sceneManager.FindGameObjectByID(UUID);
-		//if (gameObj == nullptr)
-		//{
-		//	PRINT("CANT FIND GAMEOBJECT");
-		//	return false;
-		//}
-		//MonoType* managedType = mono_reflection_type_get_type(componentType);
-		//ComponentType cType = s_EntityHasComponentFuncs[mono_type_get_name(managedType)];
-		//return gameObj->HasComponent(cType);
+		GameObject* gameObj = sceneManager.FindGameObjectByID(UUID);
+		if (gameObj == nullptr)
+		{
+			PRINT("CANT FIND GAMEOBJECT");
+			return false;
+		}
+		MonoType* managedType = mono_reflection_type_get_type(componentType);
+		mono_class_from_mono_type(managedType);
+		const auto& pair = MyScriptingSystem.reflectionMap.find(managedType);
+		if (pair != MyScriptingSystem.reflectionMap.end())
+		{
+
+		}
+		else
+		{
+
+		}
+		ComponentType cType = MyScriptingSystem.reflectionMap[managedType];
+		return gameObj->HasComponent(cType);
 	}
 
 	static UUID AddComponent(UUID UUID, MonoReflectionType* componentType)
@@ -313,6 +338,26 @@ namespace Copium
 		gameObj->transform.scale = *scale;
 	}
 
+	static void GetRotation(UUID _ID, Math::Vec3* rotation)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
+		if (gameObj == nullptr)
+		{
+			return;
+		}
+		gameObj->transform.rotation = *rotation;
+	}
+
+	static void SetRotation(UUID _ID, Math::Vec3* rotation)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
+		if (gameObj == nullptr)
+		{
+			return;
+		}
+		gameObj->transform.rotation = *rotation;
+	}
+
 	/*******************************************************************************
 	/*!
 	\brief
@@ -325,7 +370,8 @@ namespace Copium
 	/*******************************************************************************/
 	static void SetActive(UUID _ID, bool _active)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
+		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID.GetUUID());
+		//PRINT("SetActive: " << gameObj->name << " " << _active);
 		if (gameObj == nullptr)
 		{
 			return;
@@ -466,7 +512,6 @@ namespace Copium
 		if (component == nullptr)
 			return;
 		char* monoStr = mono_string_to_utf8(str);
-		PRINT("COMPONENT FOUND! : " << monoStr);
 		strcpy(reinterpret_cast<Text*>(component)->content, monoStr);
 		mono_free(monoStr);
 	}
@@ -488,7 +533,11 @@ namespace Copium
 	{
 		GameObject* gameObj = sceneManager.FindGameObjectByID(gameObjID);
 		if (gameObj == nullptr)
+		{
 			return 0;
+		}
+		if (gameObj->GetComponent<Button>()->state == ButtonState::OnClick)
+			PRINT(gameObj->name << " " << (int)gameObj->GetComponent<Button>()->state);
 		return (char)gameObj->GetComponent<Button>()->state;
 	}
 
@@ -544,6 +593,36 @@ namespace Copium
 		MyGOF.Destroy(ID,MySceneManager.get_current_scene()->gameObjects);
 	}
 
+	/*******************************************************************************
+	/*!
+	\brief
+		Destroys a gameobject by ID
+	\param ID
+		GameObject ID of the gameObject to delete
+	*/
+	/*******************************************************************************/
+	static void LoadScene(MonoString* str)
+	{
+		static std::string name{};
+		char* monoStr = mono_string_to_utf8(str);
+		name = monoStr;
+		name += ".scene";
+		namespace fs = std::filesystem;
+		for (const fs::directory_entry& p : fs::recursive_directory_iterator(Paths::projectPath))
+		{
+			const fs::path& pathRef{ p.path() };
+			if (pathRef.extension() != ".scene")
+				continue;
+			if (pathRef.filename().string() == name)
+			{
+				PRINT("LOADING " << pathRef.string());
+				MyEditorSystem.sceneChangeName = pathRef.string();
+				return;
+			}
+		}
+		PRINT("NO SCENE WITH THE NAME COULD BE FOUND");
+	}
+
 
 	static float GetFPS()
 	{
@@ -568,6 +647,30 @@ namespace Copium
 		if (gameObj == nullptr)
 			return;
 		gameObj->GetComponent<AudioSource>()->play_sound();
+	}
+
+	static void AudioSourceStop(UUID ID)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return;
+		gameObj->GetComponent<AudioSource>()->stop_sound();
+	}
+
+	static void AudioSourceSetVolume(UUID ID, float volume)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return;
+		gameObj->GetComponent<AudioSource>()->volume = volume;
+	}
+
+	static float AudioSourceGetVolume(UUID ID)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return 0;
+		return gameObj->GetComponent<AudioSource>()->volume;
 	}
 
 	/*******************************************************************************
@@ -598,6 +701,82 @@ namespace Copium
 		animationSystem.PlayAllAnimation();
 	}
 
+	static void GetSpriteRendererColor(UUID ID, glm::vec4* color)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return;
+		*color = gameObj->GetComponent<SpriteRenderer>()->sprite.color;
+	}
+
+	static void SetSpriteRendererColor(UUID ID, glm::vec4* color)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return;
+		gameObj->GetComponent<SpriteRenderer>()->sprite.color = *color;
+	}
+
+	static void GetImageColor(UUID ID, glm::vec4* color)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return;
+		*color = gameObj->GetComponent<Image>()->sprite.color;
+	}
+
+	static void SetImageColor(UUID ID, glm::vec4* color)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return;
+		gameObj->GetComponent<Image>()->sprite.color = *color;
+	}
+
+	static void PlayAnimation(UUID ID)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return;
+		gameObj->GetComponent<Animator>()->PlayAnimation();
+	}
+
+	static void PauseAnimation(UUID ID)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return;
+		gameObj->GetComponent<Animator>()->PauseAnimation();
+	}
+
+	static void SetAnimatorDelay(UUID componentID, float timeDelay)
+	{
+		Scene* pScene = sceneManager.get_current_scene();
+		if (!pScene)
+			return;
+		for (Animator& animator : pScene->componentArrays.GetArray<Animator>())
+		{
+			if (animator.uuid == componentID)
+			{
+				animator.animations[0].timeDelay = timeDelay;
+			}
+		}
+	}
+
+	static float GetAnimatorDelay(UUID componentID)
+	{
+		Scene* pScene = sceneManager.get_current_scene();
+		if (!pScene)
+			return 0;
+		for (Animator& animator : pScene->componentArrays.GetArray<Animator>())
+		{
+			if (animator.uuid == componentID)
+			{
+				return animator.animations[0].timeDelay;
+			}
+		}
+	}
+
 	/*******************************************************************************
 	/*!
 	\brief
@@ -617,11 +796,14 @@ namespace Copium
 		Register(RigidbodySetVelocity);
 		Register(SetLocalScale);
 		Register(GetLocalScale);
+		Register(GetRotation);
+		Register(SetRotation);
 		Register(GetDeltaTime);
 		Register(SetActive);
 		Register(GetActive);
 		Register(GetTextString);
 		Register(SetTextString);
+		Register(LoadScene);
 		Register(CloneGameObject);
 		Register(InstantiateGameObject);
 		Register(DestroyGameObject);
@@ -629,11 +811,23 @@ namespace Copium
 		Register(GetButtonState);
 		Register(AddComponent);
 		Register(AudioSourcePlay);
+		Register(AudioSourceStop);
+		Register(AudioSourceSetVolume);
+		Register(AudioSourceGetVolume);
 		Register(PauseAllAnimation);
 		Register(PlayAllAnimation);
 		Register(GetComponentEnabled);
 		Register(SetComponentEnabled);
+		Register(SetParent);
 		Register(GetFPS);
+		Register(GetSpriteRendererColor);
+		Register(SetSpriteRendererColor);
+		Register(GetImageColor);
+		Register(SetImageColor);
+		Register(PlayAnimation);
+		Register(PauseAnimation);
+		Register(SetAnimatorDelay);
+		Register(GetAnimatorDelay);
 	}
 }
 #endif // !SCRIPT_WRAPPERS_H

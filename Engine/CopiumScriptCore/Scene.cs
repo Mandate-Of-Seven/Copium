@@ -4,11 +4,18 @@ using System;
 
 namespace CopiumEngine
 {
+    public static class SceneManager
+    {
+        public static void LoadScene(string sceneName)
+        {
+            InternalCalls.LoadScene(sceneName);
+        }
+   
+    }
     public class Scene
     {
         List<GameObject> gameObjects = new List<GameObject>();
         List<Component> components = new List<Component>();
-        List<CopiumScript> scripts = new List<CopiumScript>();
 
         GameObject ReflectGameObject(ulong id)
         {
@@ -30,5 +37,7 @@ namespace CopiumEngine
             component.Initialize(ReflectGameObject(GameObjectID), ComponentID);
             components.Add(component);
         }
+
+        static Scene CurrentScene;
     }
 }

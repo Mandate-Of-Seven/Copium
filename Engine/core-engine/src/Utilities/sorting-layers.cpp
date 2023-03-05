@@ -35,7 +35,7 @@ namespace Copium
 		
 		Layer layer{ _name, (unsigned int)layerCount, std::vector<GameObject*>(maxObjects) };
 		sortingLayers.push_back(layer);
-		layerCount++;
+		layerCount = sortingLayers.size();
 
 		return &sortingLayers.back();
 	}
@@ -182,61 +182,67 @@ namespace Copium
 
 	void SortingLayers::AddGameObject(const std::string& _name, GameObject& _gameObject)
 	{
-		for (int i = 0; i < sortingLayers.size(); i++)
+		// Check if the gameobject already exist in the layer
+		if (DoesGameObjectExist(_gameObject))
+			return;
+
+		for (Layer& layer : sortingLayers)
 		{
-			if (!sortingLayers[i].name.compare(_name))
+			if (layer.name.compare(_name))
+				continue;
+				
+			for (GameObject*& gameObject : layer.gameObjects)
 			{
-				for (int j = 0; j < sortingLayers[i].gameObjects.size(); j++)
-				{
-					if (sortingLayers[i].gameObjects[j] == nullptr)
-					{
-						sortingLayers[i].gameObjects[j] = &_gameObject;
-						break;
-					}
-				}
+				if (gameObject)
+					continue;
+
+				//PRINT("	Added " << _gameObject.name << " to " << layer.name);
+				gameObject = &_gameObject;
+				break;
 			}
 		}
 	}
 
 	void SortingLayers::AddGameObject(const unsigned int& _layerID, GameObject& _gameObject)
 	{
-		for (int i = 0; i < sortingLayers.size(); i++)
+		// Check if the gameobject already exist in the layer
+		if (DoesGameObjectExist(_gameObject))
+			return;
+		
+		for (Layer& layer : sortingLayers)
 		{
-			if (sortingLayers[i].layerID == _layerID)
+			if (layer.layerID != _layerID)
+				continue;
+
+			for (GameObject*& gameObject : layer.gameObjects)
 			{
-				for (int j = 0; j < sortingLayers[i].gameObjects.size(); j++)
-				{
-					if (sortingLayers[i].gameObjects[j] == nullptr)
-					{
-						PRINT("added");
-						sortingLayers[i].gameObjects[j] = &_gameObject;
-						break;
-					}
-				}
+				if (gameObject)
+					continue;
+
+				//PRINT("	Added " << _gameObject.name << " to " << layer.name);
+				gameObject = &_gameObject;
+				break;
 			}
 		}
 	}
 
 	void SortingLayers::ReplaceGameObject(const unsigned int& _layerID, GameObject& _gameObject)
 	{
-		for (int i = 0; i < sortingLayers.size(); i++)
+		for (Layer& layer : sortingLayers)
 		{
-			if (sortingLayers[i].layerID == _layerID)
+			if (layer.layerID != _layerID)
+				continue;
+
+			for (GameObject*& gameObject : layer.gameObjects)
 			{
-				for (int j = 0; j < sortingLayers[i].gameObjects.size(); j++)
+				if (!gameObject)
+					continue;
+
+				if (gameObject->uuid == _gameObject.uuid)
 				{
-					if (!sortingLayers[i].gameObjects[j])
-						continue;
-					if (sortingLayers[i].gameObjects[j]->uuid == _gameObject.uuid)
-					{
-						for (int k = 0; k < sortingLayers[i].gameObjects.size(); k++)
-						{
-							if(sortingLayers[i].gameObjects[k])
-								PRINT("Name: " << sortingLayers[i].gameObjects[k]->name);
-						}
-						sortingLayers[i].gameObjects[j] = &_gameObject;
-						break;
-					}
+					//PRINT("Replaced " << gameObject->name);
+					gameObject = &_gameObject;
+					break;
 				}
 			}
 		}
@@ -244,17 +250,21 @@ namespace Copium
 
 	void SortingLayers::RemoveGameObject(const std::string& _name, GameObject& _gameObject)
 	{
-		for (int i = 0; i < sortingLayers.size(); i++)
+		for (Layer& layer : sortingLayers)
 		{
-			if (!sortingLayers[i].name.compare(_name))
+			if (layer.name.compare(_name))
+				continue;
+
+			for (GameObject*& gameObject : layer.gameObjects)
 			{
-				for (int j = 0; j < sortingLayers[i].gameObjects.size(); j++)
+				if (!gameObject)
+					continue;
+
+				if (gameObject->uuid == _gameObject.uuid)
 				{
-					if (sortingLayers[i].gameObjects[j]->uuid == _gameObject.uuid)
-					{
-						sortingLayers[i].gameObjects[j] = nullptr;
-						break;
-					}
+					//PRINT("Replaced " << gameObject->name);
+					gameObject = nullptr;
+					break;
 				}
 			}
 		}
@@ -262,32 +272,122 @@ namespace Copium
 
 	void SortingLayers::RemoveGameObject(const unsigned int& _layerID, GameObject& _gameObject)
 	{
-		for (int i = 0; i < sortingLayers.size(); i++)
+		for (Layer& layer : sortingLayers)
 		{
-			if (sortingLayers[i].layerID == _layerID)
+			if (layer.layerID != _layerID)
+				continue;
+			
+			//PRINT("Attempt to remove an object from " << layer.name);
+
+			for (GameObject*& gameObject : layer.gameObjects)
 			{
-				for (int j = 0; j < sortingLayers[i].gameObjects.size(); j++)
+				if (!gameObject)
+					continue;
+
+				if (gameObject->uuid == _gameObject.uuid)
 				{
-					if (!sortingLayers[i].gameObjects[j])
-						continue;
-					if (sortingLayers[i].gameObjects[j]->uuid == _gameObject.uuid)
-					{
-						sortingLayers[i].gameObjects[j] = nullptr;
-						break;
-					}
+					//PRINT("Replaced " << gameObject->name);
+					gameObject = nullptr;
+					break;
 				}
 			}
 		}
 	}
 
-	void SortingLayers::ClearAllLayer()
+	bool SortingLayers::DoesGameObjectExist(const std::string& _name, const GameObject& _gameObject)
 	{
-		for (int i = 0; i < sortingLayers.size(); i++)
+		Layer* layer = GetLayer(_name);
+
+		// Layer does not exist, thus not in layer
+		if (!layer)
+			return false;
+
+		for (GameObject* gameObject : layer->gameObjects)
 		{
-			for (int j = 0; j < sortingLayers[i].gameObjects.size(); j++)
+			if (!gameObject)
+				continue;
+
+			// It exist in this layer
+			if (gameObject->uuid == _gameObject.uuid)
+				return true;
+		}
+
+		return false;
+	}
+
+	bool SortingLayers::DoesGameObjectExist(const unsigned int& _layerID, const GameObject& _gameObject)
+	{
+		Layer* layer = GetLayer(_layerID);
+
+		// Layer does not exist, thus not in layer
+		if (!layer)
+			return false;
+
+		for (GameObject* gameObject : layer->gameObjects)
+		{
+			if (!gameObject)
+				continue;
+
+			// It exist in this layer
+			if (gameObject->uuid == _gameObject.uuid)
+				return true;
+		}
+
+		return false;
+	}
+
+	bool SortingLayers::DoesGameObjectExist(const GameObject& _gameObject)
+	{
+		for (Layer& layer : sortingLayers)
+		{
+			for (GameObject* gameObject : layer.gameObjects)
 			{
-				sortingLayers[i].gameObjects[j] = nullptr;
+				if (!gameObject)
+					continue;
+
+				// It exist in this layer
+				if (gameObject->uuid == _gameObject.uuid)
+					return true;
 			}
 		}
+
+		return false;
+	}
+
+	void SortingLayers::ClearAllLayer(const bool& _clear)
+	{
+		if (_clear)
+			for (Layer& layer : sortingLayers)
+				layer.gameObjects.clear();
+		else if (!_clear)
+			for (Layer& layer : sortingLayers)
+				for (GameObject*& gameObject : layer.gameObjects)
+					gameObject = nullptr;
+	}
+
+	Layer* SortingLayers::GetLayer(const std::string& _name)
+	{
+		for (Layer& layer : sortingLayers)
+		{
+			if (layer.name.compare(_name))
+				continue;
+
+			return &layer;
+		}
+
+		return nullptr;
+	}
+
+	Layer* SortingLayers::GetLayer(const int& _layerID)
+	{
+		for (Layer& layer : sortingLayers)
+		{
+			if (layer.layerID != _layerID)
+				continue;
+
+			return &layer;
+		}
+		
+		return nullptr;
 	}
 }

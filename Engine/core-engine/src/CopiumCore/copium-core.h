@@ -16,31 +16,14 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #define COPIUM_CORE_H
 
 #include "CopiumCore/system-interface.h"
-#include "Windows/windows-system.h"
-#include "Windows/windows-input.h"
-#include "Messaging/message-system.h"
-#include "Files/assets-system.h"
-#include "Editor/editor-system.h"
-#include "Scripting/scripting-system.h"
-#include "Physics/physics-system.h"
-#include "Graphics/graphics-system.h"
-#include "Utilities/thread-system.h"
-//#include "SceneManager/scene-manager.h"
-//#include "Debugging/logging-system.h"
-#include "Audio/sound-system.h"
-#include <Files/file-system.h>
-#include "Scripting/logic-system.h"
-#include <Debugging/frame-rate-controller.h>
-#include "Animation/animation-system.h"
-//#include "string.h"
-#include <Events/events-system.h>
+#include <Events/events.h>
+
 
 namespace Copium
 {
-	CLASS_SYSTEM(CopiumCore) //, public IReceiver
+	CLASS_SYSTEM(CopiumCore)
 	{
 	public:
-		CopiumCore() {}
 
 		/**************************************************************************/
 		/*!
@@ -48,43 +31,7 @@ namespace Copium
 			Initializes all the systems that are Instantiated under vector systems
 		*/
 		/**************************************************************************/
-		void init()
-		{
-			MessageSystem* pMessageSystem = MessageSystem::Instance();
-			systems =
-			{
-				//Put in sequence of calls
-				MyEventSystem,
-				WindowsSystem::Instance(),
-				pMessageSystem,
-				LoggingSystem::Instance(),
-				SoundSystem::Instance(),
-				FileSystem::Instance(),
-				AssetsSystem::Instance(),
-				SceneManager::Instance(),
-				ScriptingSystem::Instance(),
-				InputSystem::Instance(),
-				EditorSystem::Instance(),
-				LogicSystem::Instance(),
-				PhysicsSystem::Instance(),
-				GraphicsSystem::Instance(),
-				ThreadSystem::Instance(),
-				AnimationSystem::Instance()
-			};
-			for (ISystem* pSystem : systems)
-			{
-				pSystem->init();
-				//std::cout << typeid(*pSystem).name() << ": init!\n";
-			}
-
-			//pMessageSystem->subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
-			//pMessageSystem->subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
-			//pMessageSystem->subscribe(MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW, this);
-			//while (MyScriptingSystem.compilingState == CompilingState::Compiling);
-			//MySceneManager.load_scene(Paths::assetPath+"\\Scenes\\Demo.scene");
-			//MySceneManager.load_scene("C:\\Users\\FLESH\\Desktop\\Copium\\Engine\\x64\\PackedTracks\\Assets\\Scenes\\Demo.scene");
-			
-		}
+		void init();
 
 		/**************************************************************************/
 		/*!
@@ -101,19 +48,19 @@ namespace Copium
 			{
 				if (pSystem->systemFlags & FLAG_RUN_ON_PLAY && inPlayMode)
 				{
-					double startTime = glfwGetTime();
+					//double startTime = glfwGetTime();
 					pSystem->update();
 					//std::cout << typeid(*pSystem).name() << ": update!\n";
-					pSystem->updateTime = glfwGetTime() - startTime;
-					totalUpdateTime += pSystem->updateTime;
+					//pSystem->updateTime = glfwGetTime() - startTime;
+					//totalUpdateTime += pSystem->updateTime;
 				}
 				else if (pSystem->systemFlags & FLAG_RUN_ON_EDITOR && !inPlayMode)
 				{
-					double startTime = glfwGetTime();
+					//double startTime = glfwGetTime();
 					pSystem->update();
 					//std::cout << typeid(*pSystem).name() << ": update!\n";
-					pSystem->updateTime = glfwGetTime() - startTime;
-					totalUpdateTime += pSystem->updateTime;
+					//pSystem->updateTime = glfwGetTime() - startTime;
+					//totalUpdateTime += pSystem->updateTime;
 					continue;
 				}
 			}
@@ -141,7 +88,7 @@ namespace Copium
 				}
 				else
 				{
-					performanceCounter += (float)MyFrameRateController.getDt();
+					//performanceCounter += (float)MyFrameRateController.getDt();
 				}
 			}
 		}
@@ -183,6 +130,11 @@ namespace Copium
 		//		}
 		//	}
 		//}
+
+
+		void CallbackStartPreview(StartPreviewEvent* pEvent);
+
+		void CallbackStopPreview(StopPreviewEvent* pEvent);
 
 		bool get_inplaymode() { return inPlayMode; }
 	private:

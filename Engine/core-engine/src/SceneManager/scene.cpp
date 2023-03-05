@@ -48,29 +48,9 @@ void Scene::draw_scene()
 }
 
 std::string Scene::get_filename() const {return filename;}
-GameObject* Scene::add_gameobject(GameObject* _gameObj) 
-{
-	std::shared_ptr<GameObject> sptr(_gameObj, [](GameObject* _go) {
-		std::cout << "shared_ptr dtor\n";
-		if (_go)
-		{
-			delete _go;
-			_go = nullptr;
-		}
-	});
-	gameObjects.push_back(*_gameObj);
-	gameObjectSPTRS.push_back(sptr);
-	std::cout << "SPTR reference count:" << sptr.use_count() << std::endl;
-	return _gameObj;
-}
 
 void Scene::set_name(const std::string& _name) { name = _name; }
 std::string Scene::get_name() const{ return name; }
-void Scene::inspector_view()
-{
-
-}
-
 //M3
 Scene::SceneState Scene::get_state() const { return currSceneState; }
 void Scene::set_state(SceneState _newState) { currSceneState = _newState; }

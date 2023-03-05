@@ -31,15 +31,15 @@ namespace Copium
 		// Our state
 		bool show_demo_window = false;
 		ThreadSystem& threadSystem{ *ThreadSystem::Instance() };
-		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 		bool tempMode = true;
 	}
 
 	void EditorSystem::init()
 	{
-		messageSystem.subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
-		messageSystem.subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
+		MyMessageSystem.subscribe(MESSAGE_TYPE::MT_START_PREVIEW, this);
+		MyMessageSystem.subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
 		MyEventSystem->subscribe(this, &EditorSystem::CallbackSceneChanging);
+		MyEventSystem->subscribe(this, &EditorSystem::CallbackEditorConsoleLog);
 		systemFlags |= FLAG_RUN_ON_EDITOR | FLAG_RUN_ON_PLAY;
 
 		//PRINT("FLAGS: " << systemFlags);
@@ -53,7 +53,7 @@ namespace Copium
 		io.ConfigWindowsMoveFromTitleBarOnly = true;
 
 		// Global Font Size
-		io.FontGlobalScale = 0.6f;
+		io.FontGlobalScale = 0.5f;
 		
 		ImGui::StyleColorsDark();
 
@@ -61,10 +61,8 @@ namespace Copium
 		ImGui_ImplOpenGL3_Init("#version 330");
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		ImGui::GetIO().ConfigDockingWithShift = true;
-		//Window::Inspector::init();
-		//Window::EditorConsole::init();
-		//Window::ColorTheme::init();
 
+		Window::EditorConsole::init();
 		sceneView.init();
 		game.init();
 		contentBrowser.init();
@@ -91,10 +89,10 @@ namespace Copium
 		{
 			enableEditor = tempMode;
 			playMode(enableEditor);
-			if (MySceneManager.startPreview())
+			/*if (MySceneManager.startPreview())
 			{
-				messageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
-			}
+				MyMessageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
+			}*/
 		}
 
 		// Start the Dear ImGui frame
@@ -163,6 +161,8 @@ namespace Copium
 			//top menu bar
 			if (ImGui::BeginMenuBar())
 			{
+
+				// File Dropdown
 				if (ImGui::BeginMenu("File"))
 				{
 					// Disabling fullscreen would allow the window to be moved to the front of other windows, 
@@ -205,7 +205,10 @@ namespace Copium
 							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
 							std::cout << filepath << std::endl;
-							MySceneManager.save_scene(filepath);
+
+							size_t pos = filepath.find_last_of("/\\") + 1;
+							std::string sceneName = filepath.substr(pos);
+							MySceneManager.save_scene(filepath, sceneName, true);
 						}
 						else 
 						{
@@ -223,7 +226,9 @@ namespace Copium
 							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
 							std::cout << filepath << std::endl;
-							MySceneManager.save_scene(filepath);
+							size_t pos = filepath.find_last_of("/\\") + 1;
+							std::string sceneName = filepath.substr(pos);
+							MySceneManager.save_scene(filepath, sceneName);
 						}
 						else
 						{
@@ -248,6 +253,7 @@ namespace Copium
 					ImGui::EndMenu();
 				}
 
+				// Preview Options
 				if (ImGui::BeginMenu("Preview"))
 				{
 					if (ImGui::MenuItem("Play Scene"))
@@ -259,7 +265,7 @@ namespace Copium
 						if (MySceneManager.startPreview())
 						{
 							pSelectedGameObject = MySceneManager.FindGameObjectByID(selectedID);
-							messageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
+							MyMessageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
 						}
 					}
 					if (ImGui::MenuItem("Stop Scene"))
@@ -268,14 +274,25 @@ namespace Copium
 						if (pSelectedGameObject)
 							selectedID = pSelectedGameObject->uuid;
 						if (MySceneManager.endPreview())
-						{
+						{						
 							pSelectedGameObject = MySceneManager.FindGameObjectByID(selectedID);
-							messageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
+							MyMessageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
 						}
 					}
 
 					ImGui::EndMenu();
 				}
+
+				// Preview Button
+				//ImTextureID playBtnID;
+				//ImVec2 size = ImVec2(32.0f, 32.0f);                         // Size of the image we want to make visible
+				//ImVec2 uv0 = ImVec2(0.0f, 0.0f);                            // UV coordinates for lower-left
+				////ImVec2 uv1 = ImVec2(32.0f / playBtnID, 32.0f / my_tex_h);    // UV coordinates for (32,32) in our texture
+				//ImVec4 bg_col = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);             // Black background
+				//ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);           // No tint
+
+				//if (ImGui::ImageButton("", playBtnID, size, uv0, uv1, bg_col, tint_col))
+
 
 				//if your IMGUI window can be closed,you should make the bool inline in the header and include it here to be able to reopen it
 				if (ImGui::BeginMenu("Windows"))
@@ -345,7 +362,9 @@ namespace Copium
 							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
 							std::cout << filepath << std::endl;
-							MySceneManager.save_scene(filepath);
+							size_t pos = filepath.find_last_of("/\\") + 1;
+							std::string sceneName = filepath.substr(pos);
+							MySceneManager.save_scene(filepath, sceneName);
 						}
 						else
 						{
@@ -361,7 +380,9 @@ namespace Copium
 							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
 							std::cout << filepath << std::endl;
-							MySceneManager.save_scene(filepath);
+							size_t pos = filepath.find_last_of("/\\") + 1;
+							std::string sceneName = filepath.substr(pos);
+							MySceneManager.save_scene(filepath, sceneName, true);
 						}
 						else
 						{
@@ -373,7 +394,11 @@ namespace Copium
 				}
 			}
 
-
+			if (!sceneChangeName.empty())
+			{
+				MySceneManager.load_scene(sceneChangeName);
+				sceneChangeName.clear();
+			}
 
             //Call all the editor layers updates here
 			
@@ -381,8 +406,7 @@ namespace Copium
 			hierarchyList.update();
 			layers.update();
 			inspector.update();
-			//Window::EditorConsole::update();
-			//Window::Hierarchy::update();
+			Window::EditorConsole::update();
 			game.update();
 			sceneView.update();
 			contentBrowser.update();
@@ -460,13 +484,20 @@ namespace Copium
 		else if (_mType == MESSAGE_TYPE::MT_STOP_PREVIEW)
 		{
 			//tempMode = true;
+			Scene* scene = MySceneManager.get_current_scene();
+			if (scene && !scene->componentArrays.GetArray<Camera>().empty())
+				for (Camera& camera : scene->componentArrays.GetArray<Camera>())
+				{
+					// Bean: Reset all the framebuffers for now, next time only need to reset active main camera
+					camera.get_framebuffer()->init();
+				}
 		}
 	}
 
 	void EditorSystem::imguiConsoleAddLog(std::string value)
 	{
 		std::cout << value << "\n";
-		//Window::EditorConsole::editorLog.add_logEntry(value);
+		Window::EditorConsole::editorLog.add_logEntry(value);
 	}
 
 	void EditorSystem::playMode(bool _enabled)
@@ -486,6 +517,11 @@ namespace Copium
 		}
 		else if(_enabled)
 			camera.get_framebuffer()->init();
+	}
+
+	void EditorSystem::CallbackEditorConsoleLog(EditorConsoleLogEvent* pEvent)
+	{
+		imguiConsoleAddLog(pEvent->message);
 	}
 
 	void EditorSystem::CallbackSceneChanging(SceneChangingEvent* pEvent)

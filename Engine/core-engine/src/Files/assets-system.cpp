@@ -66,7 +66,7 @@ namespace Copium
 
 	void AssetsSystem::update()
 	{
-
+		
 	}
 	
 	void AssetsSystem::exit()
@@ -88,6 +88,7 @@ namespace Copium
 			break;
 
 		case FILE_TYPE::FONT:
+			LoadFont(_file);
 			break;
 
 		case FILE_TYPE::SCENE:
@@ -124,6 +125,7 @@ namespace Copium
 			break;
 
 		case FILE_TYPE::FONT:
+			//UnloadFont(_file);
 			break;
 
 		case FILE_TYPE::SCENE:
@@ -153,10 +155,17 @@ namespace Copium
 		PRINT("LOADING TEXTURES");
 		// Load Textures (.png)
 		LoadAllTextures(MyFileSystem.get_file_references()[FILE_TYPE::SPRITE]);
+#if defined(DEBUG) | defined(_DEBUG)
+		PRINT("TEXTURES LOADED: " << textures.size());
+#endif
 
 		PRINT("LOADING SHADERS");
 		// Load Shaders (.vert & .frag)
 		LoadAllShaders(MyFileSystem.get_filepath_in_directory(Paths::dataPath.c_str(), ".vert", ".frag"));
+
+		PRINT("LOADING FontS");
+		// Load Fonts (.ttf)
+		LoadAllFont(MyFileSystem.get_file_references()[FILE_TYPE::FONT]);
 
 		PRINT("LOADING AUDIO");
 		// Load Audio (.wav)
@@ -174,7 +183,9 @@ namespace Copium
 
 	void AssetsSystem::LoadTexture(File* _file)
 	{
+#if defined(DEBUG) | defined(_DEBUG)
 		PRINT("LOADING TEXTURE: " << _file->filePath.string());
+#endif
 		Texture texture(_file->filePath.string());
 		texture.set_id(_file->get_id());
 		textures.push_back(texture);
@@ -197,6 +208,23 @@ namespace Copium
 		textures.shrink_to_fit();
 	}
 
+	void AssetsSystem::LoadAllFont(std::list<File*>& _files)
+	{
+		for (File* file : _files)
+		{
+			// Store the font
+			LoadFont(file);
+		}
+	}
+
+	void AssetsSystem::LoadFont(File* _file)
+	{
+#if defined(DEBUG) | defined(_DEBUG)
+		PRINT("LOADING FONT   : " << _file->filePath.string());
+#endif
+		Font::getFont(_file->filePath.string(), true);
+	}
+
 	void AssetsSystem::LoadAllAudio(std::list<std::string>& _path)
 	{
 		for (std::string path : _path)
@@ -211,7 +239,7 @@ namespace Copium
 		}
 	}
 
-	void load_audio(File* _file)
+	void AssetsSystem::LoadAudio(File* _file)
 	{
 		if (_file->filePath.extension() ==".wav")
 		{
@@ -226,7 +254,7 @@ namespace Copium
 			std::cout << _file->get_name() << " is not a .wav file!\n";
 		}
 	}
-	void unload_audio(File* _file)
+	void AssetsSystem::UnloadAudio(File* _file)
 	{
 		if (_file->filePath.extension() == ".wav")
 		{
@@ -306,7 +334,10 @@ namespace Copium
 			uint64_t uuid;
 
 			// File path
-			readMetaFile >> str >> str >> filePath;
+			std::getline(readMetaFile, filePath);
+
+			size_t pos = filePath.find_first_of('.');
+			filePath = filePath.substr(pos);
 
 			// UUID
 			readMetaFile >> str >> uuid;
@@ -366,7 +397,7 @@ namespace Copium
 		uint64_t pathID = std::hash<std::string>{}(_file->filePath.string());
 		metaData[pathID].filePath = _file->filePath.string();
 		_outputFile << "File Path: " << metaData[pathID].filePath << "\n";
-		//_outputFile << "uuid: " << metaData[pathID].uuid << "\n";
+		_outputFile << "uuid: " << (uint64_t)metaData[pathID].uuid << "\n";
 
 		// Hidden meta headers
 		std::string str = _file->get_file_type().stringType; // Check Format Importer

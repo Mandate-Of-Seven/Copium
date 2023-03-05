@@ -104,7 +104,29 @@ namespace CopiumEngine
             }
         }
 
-        public Vector3 rotation { get; internal set; }
+        public Vector3 localRotation 
+        {
+            get
+            {
+                InternalCalls.GetRotation(gameObject.ID, out Vector3 vec3);
+                return vec3;
+            }
+            set
+            {
+                InternalCalls.SetRotation(gameObject.ID, ref value);
+            }
+        }
+
+        public Transform parent
+        {
+            set
+            {
+                if (value == null)
+                    InternalCalls.SetParent(0, gameObject.ID);
+                else
+                    InternalCalls.SetParent(value.gameObject.ID, gameObject.ID);
+            }
+        }
     }
 
     public class Rigidbody2D : Component
@@ -148,7 +170,7 @@ namespace CopiumEngine
         }
     }
 
-    public class Collider2D : Component
+    public class BoxCollider2D : Component
     {
     }
 
@@ -179,6 +201,8 @@ namespace CopiumEngine
                 InternalCalls.SetTextString(gameObject.ID, ID, value);
             }
         }
+
+
     }
 
     public class AudioSource : Component
@@ -187,15 +211,68 @@ namespace CopiumEngine
         {
             InternalCalls.AudioSourcePlay(gameObject.ID);
         }
+        public void Stop()
+        {
+            InternalCalls.AudioSourceStop(gameObject.ID);
+        }
+
+        public float volume
+        {
+            get
+            {
+                return InternalCalls.AudioSourceGetVolume(gameObject.ID);
+            }
+            set
+            {
+                InternalCalls.AudioSourceSetVolume(gameObject.ID,value);
+            }
+        }
     }
 
     public class Image : Component
     {
-
+        public Color color
+        {
+            get
+            {
+                InternalCalls.GetImageColor(gameObject.ID, out Color color);
+                return color;
+            }
+            set
+            {
+                InternalCalls.SetImageColor(gameObject.ID, ref value);
+            }
+        }
     }
 
     public class SortingGroup : Component
     {
 
+    }
+
+    public class Animator : Component
+    {
+        public float delay
+        {
+            get
+            {
+                return InternalCalls.GetAnimatorDelay(ID);
+            }
+            set
+            {
+                InternalCalls.SetAnimatorDelay(ID,value);
+            }
+        }
+
+        public bool play
+        {
+            set
+            {
+                if (value)
+                    InternalCalls.PlayAnimation(gameObject.ID);
+                else
+                    InternalCalls.PauseAnimation(gameObject.ID);
+            }
+        }
     }
 }

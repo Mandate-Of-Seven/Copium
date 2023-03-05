@@ -76,25 +76,48 @@ namespace Copium
 
 
 	template <typename T>
-	T& GameObjectFactory::AddComponent(GameObject& gameObj, Scene& scene, T* pCopy, bool copyID)
+	T& GameObjectFactory::AddComponent(GameObject& gameObj, Scene& scene, UUID uuid,T* pCopy)
 	{
 		if (pCopy)
 		{
-			if (copyID)
-			{
-				T& component = scene.componentArrays.GetArray<T>().emplace_back(gameObj, *pCopy, pCopy->uuid);
-				gameObj.AddComponent(&component);
-				return component;
-			}
-			else
-			{
-				T& component = scene.componentArrays.GetArray<T>().emplace_back(gameObj, *pCopy);
-				gameObj.AddComponent(&component);
-				return component;
-			}
+			T& component = scene.componentArrays.GetArray<T>().emplace_back(gameObj, *pCopy , uuid);
+			gameObj.AddComponent(&component);
+			MyEventSystem->publish(new ReflectComponentEvent(component));
+			return component;
 		}
-		T& component = scene.componentArrays.GetArray<T>().emplace_back(gameObj);
+		T& component = scene.componentArrays.GetArray<T>().emplace_back(gameObj, uuid);
 		gameObj.AddComponent(&component);
+		MyEventSystem->publish(new ReflectComponentEvent(component));
+		return component;
+	}
+
+	Text& GameObjectFactory::AddComponent(GameObject& gameObj, Scene& scene, bool inspector, UUID uuid, Text* pCopy)
+	{
+		if (pCopy)
+		{
+			Text& component = scene.componentArrays.GetArray<Text>().emplace_back(gameObj, *pCopy, uuid);
+			gameObj.AddComponent(&component);
+			MyEventSystem->publish(new ReflectComponentEvent(component));
+			return component;
+		}
+		Text& component = scene.componentArrays.GetArray<Text>().emplace_back(gameObj, uuid, inspector);
+		gameObj.AddComponent(&component);
+		MyEventSystem->publish(new ReflectComponentEvent(component));
+		return component;
+	}
+
+	Script& GameObjectFactory::AddComponent(GameObject& gameObj, Scene& scene, const char* scriptName , UUID uuid ,Script* pCopy)
+	{
+		if (pCopy)
+		{
+			Script& component = scene.componentArrays.GetArray<Script>().emplace_back(gameObj, *pCopy, uuid);
+			gameObj.AddComponent(&component);
+			MyEventSystem->publish(new ReflectComponentEvent(component));
+			return component;
+		}
+		Script& component = scene.componentArrays.GetArray<Script>().emplace_back(gameObj, uuid, scriptName);
+		gameObj.AddComponent(&component);
+		MyEventSystem->publish(new ReflectComponentEvent(component));
 		return component;
 	}
 
@@ -127,9 +150,21 @@ namespace Copium
 		template <typename T1, typename... T1s>
 		void CloneComponents()
 		{
-			for (T1* pComponent : src.GetComponents<T1>())
+			//ASSIGN THE SAME UUID AS THE ORIGINAL COPY
+			if (copyID)
 			{
-				MyGOF.AddComponent(dest, scene, pComponent, copyID);
+				for (T1* pComponent : src.GetComponents<T1>())
+				{
+					MyGOF.AddComponent(dest, scene, pComponent->uuid, pComponent);
+				}
+			}
+			//GENERATE NEW UUID FOR CLONED COMPONENTS
+			else
+			{
+				for (T1* pComponent : src.GetComponents<T1>())
+				{
+					MyGOF.AddComponent(dest, scene, UUID(), pComponent);
+				}
 			}
 			if constexpr (sizeof...(T1s) != 0)
 			{
@@ -160,9 +195,11 @@ namespace Copium
 			if (count)
 				tmp.name += '(' + std::to_string(count) + ')';
 			CloneComponents(tmp,_src,scene,copyID);
+			size_t childCount = 0;
 			for (Transform* pChild : _src.transform.children)
 			{
 				Instantiate(pChild->gameObject, scene, copyID).transform.SetParent(&tmp.transform);
+				++childCount;
 			}
 			return tmp;
 		}
@@ -192,10 +229,8 @@ namespace Copium
 
 	void GameObjectFactory::Destroy(GameObject& _go, GameObjectsArray& gameObjectArray)
 	{
-		_go.transform.SetParent(nullptr);
 		for (Transform* pTransform : _go.transform.children)
 		{
-			pTransform->SetParent(nullptr);
 			Destroy(pTransform->gameObject, gameObjectArray);
 		}
 		gameObjectArray.erase(_go);
@@ -225,129 +260,17 @@ namespace Copium
 		}
 	}
 
-	//GameObject* GameObjectFactory::build_archetype(rapidjson::Value& _value)
-	//{
-	//	Scene* currScene = sceneManager.get_current_scene();
-	//	if (!currScene)
-	//		return nullptr;
-
-	//	GameObject* go = new GameObject(0);
-
-	//	if (!go)
-	//		return nullptr;
-
-	//	if (!go->deserialize(_value))
-	//	{
-	//		delete go;
-	//		return nullptr;
-	//	}
-
-	//	if (_value.HasMember("Components"))
-	//	{
-	//		rapidjson::Value& compArr = _value["Components"].GetArray();
-	//		for (rapidjson::Value::ValueIterator iter = compArr.Begin(); iter != compArr.End(); ++iter)
-	//		{
-
-	//			rapidjson::Value& component = *iter;
-	//			if (component.HasMember("ComponentType"))
-	//			{
-	//				ComponentType componentType = (ComponentType)component["ComponentType"].GetInt();
-	//				if (componentType == ComponentType::Transform)
-	//					go->transform.deserialize(component);
-	//				else
-	//				{
-	//					Component* tmp = AddComponent(*go, componentType);
-	//					if (tmp)
-	//						tmp->deserialize(component);
-	//				}
-	//			}
-	//		}
-	//	}
-	//	// Deserialize children (if any)
-	//	if (_value.HasMember("Children")) {
-	//		rapidjson::Value& childArr = _value["Children"].GetArray();
-	//		for (rapidjson::Value::ValueIterator iter = childArr.Begin(); iter != childArr.End(); ++iter)
-	//		{
-	//			GameObject* cgo = instantiate(*iter);
-	//			go->transform.SetParent(&cgo->transform);
-	//		}
-	//	}
-
-	//	//std::cout << "No. of children:" << childCount << std::endl;
-	//	return go;
-	//}
-	//bool GameObjectFactory::register_archetypes(const std::filesystem::path& _directoryPath)
-	//{
-	//	std::cout << "Registration of Archetypes Begin----\n";
-	//	std::filesystem::directory_entry dir(_directoryPath);
-
-	//	// Iterate through the Archetypes folder and create a game object for each archetype file
-	//	for (const auto& dir_entry : std::filesystem::directory_iterator{ dir })
-	//	{
-	//		std::ifstream ifs(dir_entry.path());
-	//		if (!ifs)
-	//			continue;
-	//		rapidjson::IStreamWrapper isw(ifs);
-	//		rapidjson::Document doc;
-	//		doc.ParseStream(isw);
-	//		GameObject* tmp = build_archetype(doc);
-	//		if (tmp)
-	//		{
-	//			std::cout << "Registering " << doc["Archetype"].GetString() << std::endl;
-	//			archetypes.emplace(doc["Archetype"].GetString(), tmp);
-	//		}
-
-	//		ifs.close();
-	//	}
-	//	std::cout << "Registration of Archetypes End----\n";
-	//	return true;
-	//}
-	//void GameObjectFactory::clear_archetypes()
-	//{
-	//	for (std::map<std::string, GameObject*>::iterator iter = archetypes.begin(); iter != archetypes.end(); ++iter)
-	//	{
-	//		if ((*iter).second != nullptr) {
-	//			delete (*iter).second;
-	//			(*iter).second = nullptr;
-	//		}
-	//	}
-	//}
-
 	std::map<std::string, GameObject*>& GameObjectFactory::get_archetype_map()
 	{
 		return archetypes;
 	}
 
-	GameObject* GameObjectFactory::create_child(GameObject& _parent)
+	GameObject& GameObjectFactory::InstantiateChild(GameObject& _parent, Scene& _scene)
 	{
-		//Scene* currScene = sceneManager.get_current_scene();
-		//GameObject* newChild = new GameObject();
-		//newChild->transform.SetParent(&_parent.transform);
-		//currScene->add_gameobject(newChild);
-		//auto it = currScene->gameObjects.begin();
-		//for (auto pGameObject : currScene->gameObjects)
-		//{
-		//	if (pGameObject->id == _parent.id)
-		//	{
-		//		currScene->gameObjects.insert(it + 1, newChild);
-		//		_parent.transform.SetParent(&newChild->transform);
-		//		return newChild;
-		//	}
-		//	++it;
-		//}
-		
-		//for (auto iter = currScene->gameObjects.begin(); iter != currScene->gameObjects.end(); ++iter)
-		//{
-		//	if ((*iter)->id == _parent.id)
-		//	{
-		//		//currScene->gameObjects.insert(iter + 1, newChild);
-		//		currScene->add_gameobject(newChild);
-		//		newChild->transform.SetParent(&_parent.transform);
-		//		return newChild;
-		//	}
-		//}
+		GameObject& child = _scene.gameObjects.emplace_back();
+		child.transform.SetParent(&_parent.transform);
 
-		return nullptr;
+		return child;
 
 	}
 

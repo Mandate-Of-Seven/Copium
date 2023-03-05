@@ -10,13 +10,14 @@
 \brief
 	This file contains the fragment shader of the application.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #version 450 core
 
 layout (location=0) in vec4 vInterpColor;
 layout (location=1) in vec2 vTextureCoordinate;
 layout (location=2) in float vTextureIndex;
+layout (location=3) in float vEntityType;
 
 layout (location=0) out vec4 fFragColor;
 
@@ -56,18 +57,17 @@ uniform sampler2D uTexture1[32];
 void main()
 {
 	int index = int(vTextureIndex);
-	if(index > 0)
+	int type = int(vEntityType);
+
+	if(type == 0)
 	{
 		fFragColor = texture(uTexture1[index], vTextureCoordinate) * vInterpColor;
-		if(fFragColor.a < 0.1)
-			discard;
 	}
-	else
+	else if(type == 1)
 	{
-		fFragColor = vInterpColor;
+		vec4 sampled = vec4(1.0, 1.0, 1.0, texture(uTexture1[index], vTextureCoordinate).r);
+		fFragColor = sampled * vInterpColor;
 	}
-	
-
 //	switch (index)
 //	{
 //		case 1:

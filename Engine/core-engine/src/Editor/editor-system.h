@@ -119,6 +119,7 @@ namespace Copium
 		EditorLayers* getLayers() { return &layers; }
 
 		GameObject* pSelectedGameObject{};
+		std::string sceneChangeName{};
 	private:
 		
 
@@ -136,6 +137,7 @@ namespace Copium
 		UndoRedo::CommandManager commandManager; //for undo and redo
 
 		void CallbackSceneChanging(SceneChangingEvent* pEvent);
+		void CallbackEditorConsoleLog(EditorConsoleLogEvent* pEvent);
 	};
 }
 #endif // !EDITOR_SYSTEM_H

@@ -183,13 +183,22 @@ namespace Copium
 		/***************************************************************************/
 		void RemoveGameObject(const unsigned int& _layerID, GameObject& _gameObject);
 
+		bool DoesGameObjectExist(const std::string& _name, const GameObject& _gameObject);
+		bool DoesGameObjectExist(const unsigned int& _layerID, const GameObject& _gameObject);
+		bool DoesGameObjectExist(const GameObject& _gameObject);
+
 		/***************************************************************************/
 		/*!
 		\brief
 			Remove all gameobjects in all layers
+		\param _clear
+			Empty the layers
 		*/
 		/***************************************************************************/
-		void ClearAllLayer();
+		void ClearAllLayer(const bool& _clear = false);
+
+		Layer* GetLayer(const int& _layerID);
+		Layer* GetLayer(const std::string& _name);
 
 		const int& GetLayerCount() const { return layerCount; }
 		const int& GetCharLength() const { return maxCharLength; }

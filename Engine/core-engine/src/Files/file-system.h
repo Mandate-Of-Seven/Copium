@@ -103,14 +103,6 @@ namespace Copium
 		/*******************************************************************************
 		/*!
 		\brief
-			Initializes all file types that was retrieve from the configuration files
-		*/
-		/*******************************************************************************/
-		void init_file_types();
-
-		/*******************************************************************************
-		/*!
-		\brief
 			Accept dropped file from external folders into the content browser and pass
 			the information into this function to generate a file
 		\param _pathCount
@@ -249,6 +241,8 @@ namespace Copium
 		void set_selected_directory(Directory* _directory) { selectedDirectory = _directory; }
 
 		void delete_from_browser();
+
+		void CallbackFileAccess(FileAccessEvent* pEvent);
 
 		/*******************************************************************************
 		/*!

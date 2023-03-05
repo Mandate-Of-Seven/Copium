@@ -4,73 +4,118 @@ using System.Collections.Generic;
 
 public class GameManager: CopiumScript
 {
-    public GameObject MainMenuCanvas;
+    public EventManager EventManager;
+    public AudioManager audioManager;
+
 	public GameObject TrainCanvas;
-	public GameObject MainScreenCanvas;
-	public GameObject CombatCanvas;
     public GameObject PauseCanvas;
 
     public GameObject ManualPopUp;
-    
 
-    public GameObject MainMenuStartGameObject;
-    public GameObject MainMenuQuitGameObject;
-    Button MainMenuStartBtn;
-    Button MainMenuQuitBtn;
-
-    public GameObject ReportTab;
-    public GameObject MessageTab;
     public GameObject CrewTab;
+    public GameObject ReportTab;
 
-    public GameObject ReportScreenGameObject;
     public Button ReportScreenBtn;
-    public Button CombatScreenBtn;
-    public Button OtherScreenBtn;
     public Button ManualBtn;
+    public Button ManualPopUpBtn;
+
     public Button PauseResumeBtn;
     public Button PauseQuitBtn;
-
-    public Button ReportTabBtn;
-    public Button MessageTabBtn;
     public Button CrewTabBtn;
+
+    public CrewMenu crewMenuScript;
+    public TrainManager trainManager;
+    
+    public Button CloseReportBtn;
+
+    public Text tracker;
 
     bool isReportScreenOn = false;
     public bool isPaused = false;
+    public float distanceLeft = 200;
+
+    public float distanceInterval = 1.0f;
+    float foodTimer = 0.0f;
+    float hungerTimer = 0.0f;
+    float timer = 0.0f;
+
     int state = 0;
+
+    Vector3 reportScreenTargetScale = new Vector3(4.0f,4.0f,0);
 
     void Start()
 	{
         isReportScreenOn = false;
-        PauseCanvas.SetActive(false);
-        Console.WriteLine("CRASH1");
-        UpdateCanvases();
-
-        Console.WriteLine("CRASH2");
-        ReportScreenBtn = ReportScreenGameObject.GetComponent<Button>();
-        Console.WriteLine("CRASH3");
-        MainMenuStartBtn = MainMenuStartGameObject.GetComponent<Button>();
-        Console.WriteLine("CRASH4");
-        MainMenuQuitBtn = MainMenuQuitGameObject.GetComponent<Button>();
+        //UpdateCanvases();
     }
+
+    void OpenReportScreen()
+    {
+        audioManager.clickSFX.Play();
+    }
+
 	void Update()
     {
-        if (MainMenuStartBtn.state == ButtonState.OnClick)
+        if (ReportScreenBtn.state == ButtonState.OnRelease)
         {
-            state = 1;
-            UpdateCanvases();
+            isReportScreenOn = true;
+            audioManager.clickSFX.Play();
         }
-
-        if (MainMenuQuitBtn.state == ButtonState.OnClick)
+        if(CloseReportBtn.state == ButtonState.OnRelease)
         {
-            Application.Quit();
+            isReportScreenOn = false;
+            audioManager.clickSFX.Play();
         }
-
-        if(ManualBtn.state == ButtonState.OnClick)
+        if(CrewTabBtn.state == ButtonState.OnRelease)
         {
+            audioManager.clickSFX.Play();
+            CrewTab.SetActive(true);
+        }
+        if(ManualBtn.state == ButtonState.OnRelease)
+        {
+            audioManager.paperSFX.Play();
             ManualPopUp.SetActive(true);
-            ReportScreenGameObject.SetActive(false);
+        }
+        if(ManualPopUpBtn.state == ButtonState.OnRelease)
+        {
+            audioManager.paperSFX.Play();
+            ManualPopUpBtn.gameObject.SetActive(false);
         }
 
+        if (isReportScreenOn)
+        {
+            ReportTab.transform.localScale = Vector3.Lerp(ReportTab.transform.localScale,reportScreenTargetScale,Time.deltaTime);
+        }
+        else
+        {
+            ReportTab.transform.localScale = Vector3.Lerp(ReportTab.transform.localScale,Vector3.one,Time.deltaTime);
+        }
+
+
+        //Stop travelling
+
+        if (trainManager.currentSpeed > 0 && distanceLeft > 0)
+        {
+            if (timer >= 0.2f)
+            {
+                distanceLeft -= trainManager.currentSpeed/3.0f;
+                if (distanceLeft%50 < 1.0f)
+                {
+                    EventManager.UpdateEventSequence();
+                }
+                timer = 0.0f;
+            }
+
+            if(foodTimer >= 10.0f && crewMenuScript.supplies != 0)
+            {
+                crewMenuScript.supplies -= 1;
+                foodTimer = 0.0f;
+            }
+
+            foodTimer += Time.deltaTime;
+            timer += Time.deltaTime;
+        }
+        tracker.text =  ((int)distanceLeft).ToString() + "KM";
 
 
         if (Input.GetKeyDown(KeyCode.P))
@@ -89,38 +134,13 @@ public class GameManager: CopiumScript
 
         if (!isPaused)
         {
-            if (!ReportScreenGameObject.activeSelf && !ManualPopUp.activeSelf)
-                ReportScreenGameObject.SetActive(true);
-
-            if (ReportScreenBtn.state == ButtonState.OnClick)
-            {
-                isReportScreenOn = true;
-                UpdateCanvases();
-                ManualBtn.gameObject.SetActive(false);
-            }
-
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                if (ManualPopUp.activeSelf)
-                    ManualPopUp.SetActive(false);
-                else if (isReportScreenOn)
-                {
-                    isReportScreenOn = false;
-                    UpdateCanvases();
-                    ManualBtn.gameObject.SetActive(true);
-                }
-            }
-
-            if (isReportScreenOn)
-            {
-                UpdateTabs();
+                isPaused = true;
             }
         }
         else
         {
-            if(ReportScreenGameObject.activeSelf)
-                ReportScreenGameObject.SetActive(false);
-
             if (PauseResumeBtn.state == ButtonState.OnClick)
             {
                 isPaused = false;
@@ -137,71 +157,6 @@ public class GameManager: CopiumScript
         if (Input.GetKey(KeyCode.P))
         {
             Application.Quit();
-        }
-    }
-
-    void UpdateTabs()
-    {
-        if (ReportTabBtn.state == ButtonState.OnClick)
-        {
-            ReportTab.SetActive(true);
-            MessageTab.SetActive(false);
-            CrewTab.SetActive(false);
-        }
-        else if(MessageTabBtn.state == ButtonState.OnClick)
-        {
-            ReportTab.SetActive(false);
-            MessageTab.SetActive(true);
-            CrewTab.SetActive(false);
-        }
-        else if (CrewTabBtn.state == ButtonState.OnClick)
-        {
-            ReportTab.SetActive(false);
-            MessageTab.SetActive(false);
-            CrewTab.SetActive(true);
-        }
-    }
-
-    void UpdateCanvases()
-    {
-        if (state == 0)
-        {
-            if (!MainMenuCanvas.activeSelf)
-                MainMenuCanvas.SetActive(true);
-
-            if (TrainCanvas.activeSelf)
-                TrainCanvas.SetActive(false);
-
-            if (MainScreenCanvas.activeSelf)
-                MainScreenCanvas.SetActive(false);
-
-            if (CombatCanvas.activeSelf)
-                CombatCanvas.SetActive(false);
-        }
-        else if (isReportScreenOn)
-        {
-            if(!MainScreenCanvas.activeSelf)
-                MainScreenCanvas.SetActive(true);
-
-            if (CombatCanvas.activeSelf)
-                CombatCanvas.SetActive(false);
-        }
-        else if (state == 1)
-        {
-            if (MainMenuCanvas.activeSelf)
-                MainMenuCanvas.SetActive(false);
-
-            if (!TrainCanvas.activeSelf)
-                TrainCanvas.SetActive(true);
-
-            if (ManualPopUp.activeSelf)
-                ManualPopUp.SetActive(false);
-
-            if (MainScreenCanvas.activeSelf)
-                MainScreenCanvas.SetActive(false);
-
-            if (CombatCanvas.activeSelf)
-                CombatCanvas.SetActive(false);
         }
     }
 }

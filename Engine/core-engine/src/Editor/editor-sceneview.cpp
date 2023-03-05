@@ -127,7 +127,7 @@ namespace Copium
 					continue;
 
 				Transform& t = gameObject.transform;
-				glm::vec2 mousePosition = glm::vec3(camera.get_ndc(), 0.f);
+				glm::vec2 mousePosition = camera.get_ndc();
 				glm::vec3 tempPos = t.position;
 				glm::vec3 tempScale = t.scale;
 
@@ -176,61 +176,46 @@ namespace Copium
 					
 				min = glm::vec2(objPosition.x - tempScale.x * 0.5f, objPosition.y - tempScale.y * 0.5f);
 				max = glm::vec2(objPosition.x + tempScale.x * 0.5f, objPosition.y + tempScale.y * 0.5f);
+				float tempX = 0.f, tempY = 0.f;
 
-				for (Button* button : gameObject.GetComponents<Button>())
+				if (gameObject.HasComponent<SpriteRenderer>())
 				{
-					if (!button->enabled)
-						continue;
-					bound = button->bounds.GetRelativeBounds(gameObject.transform.GetWorldPosition(), gameObject.transform.GetWorldScale());
-					min = bound.min;
-					max = bound.max;
-				}
-				for (SpriteRenderer* spriteRenderer : gameObject.GetComponents<SpriteRenderer>())
-				{
+					SpriteRenderer* spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+
 					if (!spriteRenderer->enabled)
 						continue;
 
 					Texture* texture = spriteRenderer->sprite.refTexture;
-					float tempX = 0.f, tempY = 0.f;
+					
 					if (texture != nullptr)
 					{
-						int width = (int)texture->get_width();
-						int height = (int)texture->get_height();
-						float multiplier = width / (float)WindowsSystem::Instance()->get_window_width();
-						tempX = tempScale.x * (width / (float)height) * multiplier * 0.5f;
-						if(width == height)
-							tempY = tempScale.y * (width / (float)height) * multiplier * 0.5f;
-						else
-							tempY = tempScale.y * multiplier * 0.5f;
+						tempX = tempScale.x * texture->get_pixel_width();
+						tempY = tempScale.y * texture->get_pixel_height();
+						
+						min = glm::vec2(objPosition.x - tempX * 0.5f, objPosition.y - tempY * 0.5f);
+						max = glm::vec2(objPosition.x + tempX * 0.5f, objPosition.y + tempY * 0.5f);
 					}
-					else
-						break;
-					min = glm::vec2(objPosition.x - tempX, objPosition.y - tempY);
-					max = glm::vec2(objPosition.x + tempX, objPosition.y + tempY);
 				}
-				for (Image* image : gameObject.GetComponents<Image>())
+
+				if (gameObject.HasComponent<Image>())
 				{
+					Image* image = gameObject.GetComponent<Image>();
+
 					if (!image->enabled)
 						continue;
 					Texture* texture = image->sprite.refTexture;
-					float tempX = 0.f, tempY = 0.f;
+
 					if (texture != nullptr)
 					{
-						int width = (int)texture->get_width();
-						int height = (int)texture->get_height();
-						float multiplier = width / (float)WindowsSystem::Instance()->get_window_width();
-						tempX = tempScale.x * (width / (float)height) * multiplier * 0.5f;
-						if (width == height)
-							tempY = tempScale.y * (width / (float)height) * multiplier * 0.5f;
-						else
-							tempY = tempScale.y * multiplier * 0.5f;
-					}
-					else
-						break;
+						tempX = tempScale.x * texture->get_pixel_width();
+						tempY = tempScale.y * texture->get_pixel_height();
 
-					min = glm::vec2(objPosition.x - tempX, objPosition.y - tempY);
-					max = glm::vec2(objPosition.x + tempX, objPosition.y + tempY);
+						min = glm::vec2(objPosition.x - tempX * 0.5f, objPosition.y - tempY * 0.5f);
+						max = glm::vec2(objPosition.x + tempX * 0.5f, objPosition.y + tempY * 0.5f);
+					}
+
 				}
+
 				//for (Animator* animator : gameObject.GetComponents<Animator>())
 				//{
 				//	if (!animator->enabled)
@@ -356,8 +341,16 @@ namespace Copium
 			ImGuizmo::SetOrthographic(true);
 			ImGuizmo::SetDrawlist();
 
-			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, (float) sceneWidth, (float)sceneHeight + 50.f);
-			const glm::mat4 camProj = camera.get_projection();
+			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, (float)sceneWidth, (float)sceneHeight + 50.f);
+			//glm::mat4 camProj = camera.get_projection();
+
+			// Offset the zl for bottom and top because of the scene view window bar height of 50.f
+			float ar = camera.GetAspect();
+			float nearClip = camera.GetNearClip();
+			float farClip = camera.GetFarClip(); 
+			float zl = camera.get_zoom();
+			float x = (sceneHeight + 50.f) / (float)sceneHeight;
+			glm::mat4 camProj = glm::ortho(-ar * zl, ar * zl, -zl * x, zl * x, nearClip, farClip);
 			glm::mat4 camView = camera.get_view_matrix();
 
 			glm::mat4 translate = glm::translate(glm::mat4(1.f), pos);

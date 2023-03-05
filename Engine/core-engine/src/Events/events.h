@@ -52,12 +52,13 @@ namespace Copium
 
 	struct SceneChangingEvent : IEvent
 	{
-		SceneChangingEvent() {}
+		SceneChangingEvent(Scene& _scene) : scene{ _scene } {}
+		Scene& scene;
 	};
 
-	struct SceneOpenedEvent : IEvent
+	struct SceneLinkedEvent : IEvent
 	{
-		SceneOpenedEvent(Scene& _scene) : scene{_scene}{}
+		SceneLinkedEvent(Scene& _scene) : scene{ _scene } {}
 		Scene& scene;
 	};
 
@@ -69,13 +70,48 @@ namespace Copium
 		GameObject* pOriginal;
 	};
 
+	struct ChildInstantiateEvent : IEvent
+	{
+		ChildInstantiateEvent(GameObject*& _instanceContainer, GameObject* _parent = nullptr) :
+			instanceContainer{ _instanceContainer }, parent{ _parent }{}
+
+		GameObject*& instanceContainer;
+		GameObject* parent;
+	};
+
 	template <typename T>
 	struct ComponentAddEvent : IEvent
 	{
-		ComponentAddEvent(GameObject& _gameObject, T*& _componentContainer) :
-			gameObject{ _gameObject }, componentContainer{ _componentContainer }{}
+		static_assert(!std::is_same<T, Script>());
+		ComponentAddEvent(GameObject& _gameObject, T*& _componentContainer, UUID _uuid = UUID()) :
+			gameObject{ _gameObject }, componentContainer{ _componentContainer }, uuid{_uuid} {}
 		GameObject& gameObject;
 		T*& componentContainer;
+		UUID uuid;
+	};
+
+	template <>
+	struct ComponentAddEvent<Text> : IEvent
+	{
+		ComponentAddEvent(GameObject& _gameObject, Text*& _componentContainer, bool _inspector, UUID _uuid = UUID()) :
+			gameObject{ _gameObject }, componentContainer{ _componentContainer }, inspector{ _inspector }, uuid{ _uuid }
+		{
+		}
+		GameObject& gameObject;
+		Text*& componentContainer;
+		bool inspector;
+		UUID uuid;
+	};
+
+	template <>
+	struct ComponentAddEvent<Script> : IEvent
+	{
+		ComponentAddEvent(GameObject& _gameObject, Script*& _componentContainer, const char* _scriptName, UUID _uuid = UUID()) :
+			gameObject{ _gameObject }, componentContainer{ _componentContainer }, scriptName{ _scriptName }, uuid{ _uuid }{}
+		GameObject& gameObject;
+		Script*& componentContainer;
+		const char* scriptName;
+		UUID uuid;
 	};
 
 	template <typename T>
@@ -104,6 +140,12 @@ namespace Copium
 		int type;
 	};
 
+	struct FileAccessEvent : IEvent
+	{
+		FileAccessEvent(const char* _name) : name{_name}{}
+		const char* name;
+	};
+
 	struct SetSelectedFileEvent : IEvent
 	{
 		SetSelectedFileEvent(File* _file) : file{ _file } {};
@@ -120,11 +162,12 @@ namespace Copium
 	{
 		DeleteFromBrowserEvent() {};
 	};
-	
+
+	template <typename T>
 	struct ReflectComponentEvent : IEvent
 	{
-		ReflectComponentEvent(Component& _component): component{_component}{}
-		Component& component;
+		ReflectComponentEvent(T& _component): component{_component}{}
+		T& component;
 	};
 
 	struct ScriptInvokeMethodEvent : IEvent
@@ -136,6 +179,12 @@ namespace Copium
 		void** params;
 		size_t paramCount;
 		void** returnVal;
+	};
+
+	struct ScriptNewEvent : IEvent
+	{
+		ScriptNewEvent(const char* _name) : name{ _name } {}
+		const char* name;
 	};
 
 	struct ScriptSetFieldEvent : IEvent
@@ -186,6 +235,12 @@ namespace Copium
 	{
 		ScriptDestroyedEvent(Script& _script) :script{ _script } {}
 		Script& script;
+	};
+
+	struct ScriptGetNamesEvent : public IEvent
+	{
+		ScriptGetNamesEvent(std::vector<const char*>& _names) :names{ _names }{}
+		std::vector<const char*>& names;
 	};
 
 }

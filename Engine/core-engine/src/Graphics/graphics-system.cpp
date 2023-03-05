@@ -28,14 +28,13 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 // Bean: remove this after NewManagerInstance is moved
 #include "SceneManager/scene-manager.h"
 #include <GameObject/components.h>
+#include "GameObject/game-object-factory.h"
 
 namespace Copium
 {
 	
 	namespace
 	{
-		InputSystem& inputSystem{ *InputSystem::Instance() };
-
 		// Temporary global variables
 		GLfloat rotate = 0.f;
 		bool massSpawn = false;
@@ -57,7 +56,7 @@ namespace Copium
 
 		// Bind textures to quad fragment shader
 		shaderProgram[QUAD_SHADER].Use();
-		GLuint loc1 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture1");
+		GLuint loc = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture1");
 		/*GLuint loc2 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture2");
 		GLuint loc3 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture3");
 		GLuint loc4 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture4");
@@ -94,7 +93,7 @@ namespace Copium
 		GLuint loc32 = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uTexture32");*/
 		GLint samplers[maxTextures]{};
 
-		for (GLuint i = 1; i < maxTextures; i++)
+		for (GLuint i = 0; i < maxTextures; i++)
 			samplers[i] = i;
 
 		/*glUniform1i(loc1, samplers[1]);
@@ -129,14 +128,14 @@ namespace Copium
 		glUniform1i(loc30, samplers[30]);
 		glUniform1i(loc31, samplers[31]);
 		glUniform1i(loc32, samplers[32]);*/
-		glUniform1iv(loc1, maxTextures, samplers);
+		glUniform1iv(loc, maxTextures, samplers);
 		shaderProgram[QUAD_SHADER].UnUse();
 
 		// Bind fonts to text fragment shader
-		/*shaderProgram[TEXT_SHADER].Use();
+		shaderProgram[TEXT_SHADER].Use();
 		loc = glGetUniformLocation(shaderProgram[TEXT_SHADER].GetHandle(), "uFont");
 		glUniform1iv(loc, maxTextures, samplers);
-		shaderProgram[TEXT_SHADER].UnUse();*/
+		shaderProgram[TEXT_SHADER].UnUse();
 
 		// Parse all textures loaded into the engine into the graphics
 		// Bean: Seems like i dont need to parse the textures during startup because the 
@@ -144,9 +143,7 @@ namespace Copium
 		//		 to improve runtime rendering(no spikes)
 		parse_textures();
 
-		// Bean: Checking for archetypes, to be removed once we found a better implementation
-		loaded = true;
-		//cameras.pop_front();
+		//loaded = true;
 	}
 
 	void GraphicsSystem::update()
@@ -156,74 +153,81 @@ namespace Copium
 		glClearColor(1.f, 1.f, 1.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		//if (inputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && inputSystem.is_key_pressed(GLFW_KEY_C) && inputSystem.is_key_pressed(GLFW_KEY_S))
-		//{
-		//	massSpawn = !massSpawn;
-		//}
+		if (MyInputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && MyInputSystem.is_key_pressed(GLFW_KEY_C) && MyInputSystem.is_key_pressed(GLFW_KEY_S))
+		{
+			massSpawn = !massSpawn;
+		}
 
-		//if (inputSystem.is_key_held(GLFW_KEY_C) && inputSystem.is_key_pressed(GLFW_KEY_V))
-		//{
-		//	SceneManager* sm = SceneManager::Instance();
-		//	Scene* scene = sm->get_current_scene();
-		//	if (scene != nullptr)
-		//	{
-		//		for (size_t i = 0; i < 10; i++)
-		//		{
-		//			GameObject* go = MyGOF.instantiate();
-		//			SpriteRenderer& rc = go->AddComponent<SpriteRenderer>();
-		//			//go->addComponent(ComponentType::Rigidbody);
+		if (MyInputSystem.is_key_held(GLFW_KEY_C) && MyInputSystem.is_key_pressed(GLFW_KEY_V))
+		{
+			SceneManager* sm = SceneManager::Instance();
+			Scene* scene = sm->get_current_scene();
+			if (scene != nullptr)
+			{
+				int numSprites = (int)(MyAssetSystem.GetTextures().size() - 1);
+				for (size_t i = 0; i < numSprites; i++)
+				{
+					GameObject* go = nullptr;
+					MyEventSystem->publish(new GameObjectInstantiateEvent(go));
+					SpriteRenderer* rc = nullptr;
+					MyEventSystem->publish(new ComponentAddEvent<SpriteRenderer>(*go, rc));
 
-		//			float x = rand() % 2000 * 0.1f - 100.f;
-		//			float y = rand() % 2000 * 0.1f - 100.f;
+					float x = rand() % 500 * 0.1f - 25.f;
+					float y = rand() % 500 * 0.1f - 25.f;
 
-		//			go->transform.position = { x, y, 0.f };
-		//			
-		//			int numSprites = (int)(AssetsSystem::Instance()->get_textures().size() - 1);
-		//			rc.spriteID=(rand() % numSprites + 1);
-
-		//			unsigned int id = (unsigned int)rc.spriteID;
-		//			if (id != 0)
-		//			{
-		//				rc.refTexture = AssetsSystem::Instance()->get_texture(id - 1);
-		//				std::string str = AssetsSystem::Instance()->get_texture(id - 1)->get_file_path();
-		//				//size_t pos = str.find_last_of('\\');
-		//				//std::string spriteName = str.substr(pos + 1, str.length() - pos);
-		//			}
-		//		}
-		//	}
-		//}
+					go->transform.position = { x, y, 0.f };
+					go->transform.scale = { 5.f, 5.f, 1.f };
+					
+					rc->sprite.spriteID = i;
+					unsigned int id = (unsigned int)rc->sprite.spriteID;
+					if (id != 0)
+					{
+						rc->sprite.refTexture = MyAssetSystem.GetTexture(id - 1);
+						std::string str = MyAssetSystem.GetTexture(id - 1)->get_file_path();
+						size_t pos = str.find_last_of('\\');
+						std::string spriteName = str.substr(pos + 1, str.length() - pos);
+						rc->sprite.sprite_name = spriteName;
+					}
+				}
+			}
+		}
 
 		// Mass spawning
-		//if (massSpawn)
-		//{
-		//	SceneManager* sm = SceneManager::Instance();
-		//	Scene* scene = sm->get_current_scene();
-		//	if (scene != nullptr)
-		//	{
-		//		for (size_t i = 0; i < 10; i++)
-		//		{
-		//			GameObject* go = MyGOF.instantiate();
-		//			SpriteRenderer& rc = go->AddComponent<SpriteRenderer>();
-		//			//go->addComponent(ComponentType::Rigidbody);
+		if (massSpawn)
+		{
+			SceneManager* sm = SceneManager::Instance();
+			Scene* scene = sm->get_current_scene();
+			if (scene != nullptr)
+			{
+				for (size_t i = 0; i < 10; i++)
+				{
+					GameObject* go = nullptr;
+					MyEventSystem->publish(new GameObjectInstantiateEvent(go));
+					SpriteRenderer* rc = nullptr;
+					MyEventSystem->publish(new ComponentAddEvent<SpriteRenderer>(*go, rc));
 
-		//			float x = rand() % 2000 * 0.1f - 100.f;
-		//			float y = rand() % 2000 * 0.1f - 100.f;
+					float x = rand() % 2000 * 0.1f - 100.f;
+					float y = rand() % 2000 * 0.1f - 100.f;
 
-		//			go->transform.position = { x, y, 0.f };
-		//			int numSprites = (int)(AssetsSystem::Instance()->get_textures().size() - 1);
-		//			rc.spriteID = rand() % numSprites + 1;
-		//			unsigned int id = (unsigned int)rc.spriteID;
-		//			if (id != 0)
-		//			{
-		//				rc.refTexture = AssetsSystem::Instance()->get_texture(id - 1);
-		//				//std::string str = AssetsSystem::Instance()->get_texture(id - 1)->get_file_path();
-		//				//size_t pos = str.find_last_of('\\');
-		//				//std::string spriteName = str.substr(pos + 1, str.length() - pos);
-		//				//rc.get_sprite_renderer().set_name(spriteName);
-		//			}
-		//		}
-		//	}
-		//}
+					float sx = rand() % 4 + 1.f;
+					float sy = rand() % 4 + 1.f;
+
+					go->transform.position = { x, y, 0.f };
+					go->transform.scale = { sx, sy, 1.f };
+					int numSprites = (int)(MyAssetSystem.GetTextures().size() - 1);
+					rc->sprite.spriteID = rand() % numSprites + 1;
+					unsigned int id = (unsigned int) rc->sprite.spriteID;
+					if (id != 0)
+					{
+						rc->sprite.refTexture = MyAssetSystem.GetTexture(id - 1);
+						std::string str = MyAssetSystem.GetTexture(id - 1)->get_file_path();
+						size_t pos = str.find_last_of('\\');
+						std::string spriteName = str.substr(pos + 1, str.length() - pos);
+						rc->sprite.sprite_name = spriteName;
+					}
+				}
+			}
+		}
 
 		/*PRINT("Mouse position: " << mousePos.x << ", " << mousePos.y);
 		PRINT("Centre position: " << centreOfScene.x << ", " << centreOfScene.y);
@@ -272,25 +276,23 @@ namespace Copium
 	// parse all textures into the game
 	void GraphicsSystem::parse_textures()
 	{
-		AssetsSystem* assets = AssetsSystem::Instance();
 		// Check for texture slots
 		COPIUM_ASSERT(textureSlotIndex == maxTextures, "Max textures reached! Replace old textures!!");
 
 		// Assign the slot to the texture
 		textureSlotIndex = 1;
-		for (GLuint i = 0; i < assets->GetTextures().size(); i++)
+		for (GLuint i = 0; i < MyAssetSystem.GetTextures().size(); i++)
 		{
-			textureSlots[textureSlotIndex++] = assets->GetTextures()[i].get_object_id();
+			textureSlots[textureSlotIndex++] = MyAssetSystem.GetTextures()[i].get_object_id();
 		}
 	}
 
 	void GraphicsSystem::batch_render()
 	{
-		//if (pCamerasArray)
-		//	for (Camera& camera : *pCamerasArray)
-		//	{
-		//		PRINT("UPDATING CAMERA");
-		//		camera.update();
-		//	}
+		// Updating all in-game cameras
+		Scene* scene = MySceneManager.get_current_scene();
+		if (scene && !scene->componentArrays.GetArray<Camera>().empty())
+			for (Camera& camera : scene->componentArrays.GetArray<Camera>())
+				camera.update();
 	}
 }
