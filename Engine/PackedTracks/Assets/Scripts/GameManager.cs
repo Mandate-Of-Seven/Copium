@@ -40,6 +40,7 @@ public class GameManager: CopiumScript
 
     bool updateEvent = false;
     bool gameEnd = false;
+    bool isReportScreenOn = false;
 
     Vector3 reportScreenTargetScale = new Vector3(4.0f,4.0f,0);
 
@@ -55,31 +56,7 @@ public class GameManager: CopiumScript
 
 	void Update()
     {
-        if (ReportScreenBtn.state == ButtonState.OnRelease)
-        {
-            isReportScreenOn = true;
-            audioManager.clickSFX.Play();
-        }
-        if(CloseReportBtn.state == ButtonState.OnRelease)
-        {
-            isReportScreenOn = false;
-            audioManager.clickSFX.Play();
-        }
-        if(CrewTabBtn.state == ButtonState.OnRelease)
-        {
-            audioManager.clickSFX.Play();
-            CrewTab.SetActive(true);
-        }
-        if(ManualBtn.state == ButtonState.OnRelease)
-        {
-            audioManager.paperSFX.Play();
-            ManualPopUp.SetActive(true);
-        }
-        if(ManualPopUpBtn.state == ButtonState.OnRelease)
-        {
-            audioManager.paperSFX.Play();
-            ManualPopUpBtn.gameObject.SetActive(false);
-        }
+        ButtonInputs();
 
         if (isReportScreenOn)
         {
@@ -145,6 +122,40 @@ public class GameManager: CopiumScript
             EventManager.OverideEvent();
         }
 
+        KeyInputs();
+    }
+
+    void ButtonInputs()
+    {
+        if (ReportScreenBtn.state == ButtonState.OnRelease)
+        {
+            isReportScreenOn = true;
+            audioManager.clickSFX.Play();
+        }
+        if (CloseReportBtn.state == ButtonState.OnRelease)
+        {
+            isReportScreenOn = false;
+            audioManager.clickSFX.Play();
+        }
+        if (CrewTabBtn.state == ButtonState.OnRelease)
+        {
+            audioManager.clickSFX.Play();
+            CrewTab.SetActive(true);
+        }
+        if (ManualBtn.state == ButtonState.OnRelease)
+        {
+            audioManager.paperSFX.Play();
+            ManualPopUp.SetActive(true);
+        }
+        if (ManualPopUpBtn.state == ButtonState.OnRelease)
+        {
+            audioManager.paperSFX.Play();
+            ManualPopUpBtn.gameObject.SetActive(false);
+        }
+    }
+
+    void KeyInputs()
+    {
         if (Input.GetKeyDown(KeyCode.P))
         {
             isPaused = !isPaused;

@@ -537,22 +537,31 @@ namespace Copium
 			i = 1;
 		}
 
-
-
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 4));
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 2));
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
-
 
 		// Preview Button
 		ImTextureID previewBtn = (ImTextureID)(size_t)buttons[i].get_object_id();
-		ImVec4 bg_col = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);             // Black background
+		ImVec4 bg_col = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);             // Black background
 		ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);           // No tint
-		ImVec2 sz = { (float)buttons[i].get_width() / 10, (float)buttons[i].get_height() / 10 };
-		ImGui::SetNextWindowSize({ (float)buttons[i].get_pixel_width() / 10, (float)buttons[i].get_pixel_height()/10});
-		ImGui::Begin("Preview Toolbar", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-		ImGui::PushID(1);
+		
+		ImVec2 sz = { 20.f, 20.f };
 
-		ImGui::SameLine(ImGui::GetWindowContentRegionMax().x * 0.5f - sz.x * 0.5f);
+		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoNav;
+
+		ImGui::Begin("Preview Toolbar", nullptr, windowFlags);
+		ImGui::PushID(10000);
+
+		if (ImGui::IsWindowDocked())
+		{
+			ImGuiDockNode* node = ImGui::GetWindowDockNode();
+			ImGuiDockNodeFlags dockFlags = ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoResize 
+				| ImGuiDockNodeFlags_NoDockingOverMe | ImGuiDockNodeFlags_NoDockingSplitMe;
+			node->LocalFlags |= dockFlags;
+		}
+
+		ImGui::SameLine(ImGui::GetWindowContentRegionMax().x * 0.5f - sz.x * 0.5f - 2.f);
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
 		if (ImGui::ImageButton("", previewBtn, sz, {0,1}, {1,0}, bg_col, tint_col))
 		{
 			previewFlag = previewFlag ? false : true;
@@ -585,6 +594,7 @@ namespace Copium
 			}
 
 		}
+		ImGui::PopStyleColor();
 		ImGui::PopStyleVar(2);
 		ImGui::PopID();
 		ImGui::End();
