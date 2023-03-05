@@ -76,7 +76,7 @@ namespace Copium
 
 		buttons.push_back(Texture("Data/Resource/PreviewButton.png"));
 		buttons.push_back(Texture("Data/Resource/StopButton.png"));
-
+		previewFlag = false;
 	}
 
 	void EditorSystem::update()
@@ -532,8 +532,11 @@ namespace Copium
 	void EditorSystem::PreviewButton()
 	{
 		int i{ 0 };
-		if (previewFlag)
+		if (previewFlag && MySceneManager.get_current_scene())
+		{
 			i = 1;
+		}
+
 
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 4));
@@ -557,9 +560,28 @@ namespace Copium
 			if (MySceneManager.get_current_scene())
 			{
 				if (MySceneManager.GetSceneState() == Scene::SceneState::play)
-					MySceneManager.endPreview();
+				{
+					UUID selectedID{};
+					if (pSelectedGameObject)
+						selectedID = pSelectedGameObject->uuid;
+					if (MySceneManager.endPreview())
+					{
+						pSelectedGameObject = MySceneManager.FindGameObjectByID(selectedID);
+						MyMessageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
+					}
+				}
 				else if (MySceneManager.GetSceneState() == Scene::SceneState::edit)
-					MySceneManager.startPreview();
+				{
+					UUID selectedID{};
+					if (pSelectedGameObject)
+						selectedID = pSelectedGameObject->uuid;
+					if (MySceneManager.startPreview())
+					{
+						pSelectedGameObject = MySceneManager.FindGameObjectByID(selectedID);
+						MyMessageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
+					}
+				}
+
 			}
 
 		}

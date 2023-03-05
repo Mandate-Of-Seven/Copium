@@ -651,9 +651,14 @@ namespace Copium
 				PRINT("Cloning game object");
 				if (MyEditorSystem.pSelectedGameObject)
 				{
-					std::cout << "Clone\n";
+
 					GameObject* tmp{};
 					MyEventSystem->publish(new GameObjectInstantiateEvent(tmp, MyEditorSystem.pSelectedGameObject));
+
+					uint64_t u = MyEditorSystem.pSelectedGameObject->uuid;
+					PRINT(u);
+					PRINT(tmp->uuid.ConstGetUUID());
+
 				}
 				else
 				{
@@ -662,7 +667,8 @@ namespace Copium
 
 				isPopUpOpen = false;
 			}
-			//if (ImGui::MenuItem("Add a kid"))
+
+			/*//if (ImGui::MenuItem("Add a kid"))
 			//{
 			//	PRINT("Plus one mouth to feed");
 			//	if (MySceneManager.get_selected_gameobject())
@@ -672,7 +678,7 @@ namespace Copium
 
 			//	isPopUpOpen = false;
 			//}
-			/*
+
 			//if (ImGui::MenuItem("Delete"))
 			//{
 			//	PRINT("die bitch");
@@ -703,6 +709,7 @@ namespace Copium
 			//	
 			//	isPopUpOpen = false;
 			//}*/
+			
 			ImGui::EndPopup();
 		}
 		else
