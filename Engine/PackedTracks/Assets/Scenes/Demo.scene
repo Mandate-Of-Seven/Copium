@@ -70,29 +70,12 @@
                         "Near": 0.029999999329447746,
                         "Far": 500.0
                     }
-                },
-                {
-                    "UID": 15478641588138346794,
-                    "Type": "AudioSource",
-                    "TypeID": 16,
-                    "Alias": "BGM_Train"
-                },
-                {
-                    "UID": 7036692997401670936,
-                    "Type": "Script",
-                    "TypeID": 23,
-                    "Name": "AudioManager",
-                    "state": 0,
-                    "ambTrain": 10395333414142043547,
-                    "bgmTrain": 15478641588138346794,
-                    "clickSFX": 13910441155437091901,
-                    "paperSFX": 269989258829263303
                 }
             ]
         },
         {
-            "UID": 17600260081740642465,
-            "Name": "Effects",
+            "UID": 13817389451647567202,
+            "Name": "AudioManager",
             "Active": true,
             "Components": [
                 {
@@ -113,6 +96,20 @@
                         "Y": 1.0,
                         "Z": 1.0
                     }
+                },
+                {
+                    "UID": 11261402425968020089,
+                    "Type": "Script",
+                    "TypeID": 23,
+                    "Name": "AudioManager",
+                    "state": 0,
+                    "accelerateSFX": 12349765490904732829,
+                    "ambTrain": 16495768407680055626,
+                    "bgmTrain": 9375891007183145069,
+                    "clickSFX": 11240736860491117710,
+                    "deccelerateSFX": 11048904636908595310,
+                    "leverSFX": 10219544415510482568,
+                    "paperSFX": 16863530532877669399
                 }
             ]
         },
@@ -167,8 +164,8 @@
             ]
         },
         {
-            "UID": 6642123175702952797,
-            "Name": "Train Canvas",
+            "UID": 17600260081740642465,
+            "Name": "Effects",
             "Active": true,
             "Components": [
                 {
@@ -189,29 +186,6 @@
                         "Y": 1.0,
                         "Z": 1.0
                     }
-                },
-                {
-                    "UID": 5971899813001945745,
-                    "Type": "Script",
-                    "TypeID": 23,
-                    "Name": "TrainManager",
-                    "acceleration": 0.30000001192092896,
-                    "currentSpeed": 0.0,
-                    "deceleration": 0.30000001192092896,
-                    "maxSpeed": 1.0,
-                    "shakePosition": 1.0,
-                    "shakeRotation": 1.0,
-                    "snowMaxDelay": 0.029999999329447746,
-                    "snowMinDelay": 0.004999999888241291,
-                    "tracksMaxDelay": 0.10000000149011612,
-                    "tracksMinDelay": 0.029999999329447746,
-                    "zoomOutScale": 0.9750000238418579,
-                    "trainCanvas": 6642123175702952797,
-                    "trainLeverActivated": 382440811066528667,
-                    "trainLeverDeactivated": 11932787380016220031,
-                    "snowAnimator": 11135358241762452116,
-                    "tracksAnimator": 180502757048782684,
-                    "trainLeverBtn": 4614359461674577161
                 }
             ]
         },
@@ -710,9 +684,9 @@
             ]
         },
         {
-            "UID": 13016513725544699197,
-            "Name": "ReportScreen",
-            "Active": false,
+            "UID": 6642123175702952797,
+            "Name": "Train Canvas",
+            "Active": true,
             "Components": [
                 {
                     "PID": 0,
@@ -720,7 +694,7 @@
                     "Pos": {
                         "X": 0.0,
                         "Y": 0.0,
-                        "Z": -8.0
+                        "Z": 0.0
                     },
                     "Rot": {
                         "X": 0.0,
@@ -732,6 +706,29 @@
                         "Y": 1.0,
                         "Z": 1.0
                     }
+                },
+                {
+                    "UID": 5971899813001945745,
+                    "Type": "Script",
+                    "TypeID": 23,
+                    "Name": "TrainManager",
+                    "acceleration": 0.30000001192092896,
+                    "currentSpeed": 0.0,
+                    "deceleration": 0.30000001192092896,
+                    "maxSpeed": 1.0,
+                    "shakePosition": 1.0,
+                    "shakeRotation": 1.0,
+                    "snowMaxDelay": 0.029999999329447746,
+                    "snowMinDelay": 0.004999999888241291,
+                    "tracksMaxDelay": 0.10000000149011612,
+                    "tracksMinDelay": 0.029999999329447746,
+                    "zoomOutScale": 0.9750000238418579,
+                    "trainCanvas": 6642123175702952797,
+                    "trainLeverActivated": 382440811066528667,
+                    "trainLeverDeactivated": 11932787380016220031,
+                    "snowAnimator": 11135358241762452116,
+                    "tracksAnimator": 180502757048782684,
+                    "trainLeverBtn": 4614359461674577161
                 }
             ]
         },
@@ -926,12 +923,6 @@
                     "OrderInLayer": 2
                 },
                 {
-                    "UID": 269989258829263303,
-                    "Type": "AudioSource",
-                    "TypeID": 16,
-                    "Alias": "SFX_PaperFlip"
-                },
-                {
                     "UID": 5462036042885148207,
                     "Type": "Image",
                     "TypeID": 20,
@@ -1029,12 +1020,6 @@
                         "X": false,
                         "Y": false
                     }
-                },
-                {
-                    "UID": 13910441155437091901,
-                    "Type": "AudioSource",
-                    "TypeID": 16,
-                    "Alias": "SFX_ButtonClick"
                 },
                 {
                     "UID": 12993210835278376820,
@@ -1199,8 +1184,8 @@
             ]
         },
         {
-            "UID": 1722160444903115838,
-            "Name": "Pause Canvas",
+            "UID": 13016513725544699197,
+            "Name": "ReportScreen",
             "Active": false,
             "Components": [
                 {
@@ -1209,7 +1194,7 @@
                     "Pos": {
                         "X": 0.0,
                         "Y": 0.0,
-                        "Z": 1.0
+                        "Z": -8.0
                     },
                     "Rot": {
                         "X": 0.0,
@@ -1258,6 +1243,32 @@
             ]
         },
         {
+            "UID": 1722160444903115838,
+            "Name": "Pause Canvas",
+            "Active": false,
+            "Components": [
+                {
+                    "PID": 0,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 1.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
             "UID": 18149848984709464093,
             "Name": "Game Manager",
             "Active": true,
@@ -1294,7 +1305,7 @@
                     "PauseCanvas": 1722160444903115838,
                     "ReportTab": 13016513725544699197,
                     "TrainCanvas": 6642123175702952797,
-                    "CloseReportBtn": 16687394728350152029,
+                    "CloseReportBtn": 16441970958217380161,
                     "ReportScreenBtn": 12993210835278376820,
                     "CrewTabBtn": 12776843167246884328,
                     "EventManager": 9174652001346769036,
@@ -1302,57 +1313,10 @@
                     "ManualPopUpBtn": 6064000762752960818,
                     "ManualBtn": 6900690266592182984,
                     "PauseQuitBtn": 4561109446918292296,
-                    "audioManager": 7036692997401670936,
+                    "audioManager": 11261402425968020089,
                     "crewMenuScript": 15964808941009667406,
                     "tracker": 14370462799058784128,
                     "trainManager": 5971899813001945745
-                }
-            ]
-        },
-        {
-            "UID": 11033010850512695424,
-            "Name": "Event Manager",
-            "Active": true,
-            "Components": [
-                {
-                    "PID": 0,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                },
-                {
-                    "UID": 9174652001346769036,
-                    "Type": "Script",
-                    "TypeID": 23,
-                    "Name": "EventManager",
-                    "EventSequence": 0,
-                    "Next_Event": 6643851363947857141,
-                    "Option_01": 9580382767776116236,
-                    "Option_02": 10025263737657599060,
-                    "Option_03": 5570186180457882344,
-                    "event02": 10706611040384253947,
-                    "Body": 12572218162819699758,
-                    "Option_03_Text": 13403652513609016947,
-                    "GameManager": 9083562319934391338,
-                    "event01": 5825931776462821864,
-                    "Option_01_Text": 9429179763734142775,
-                    "Option_02_Text": 9054607302164775899,
-                    "crewMenu": 15964808941009667406,
-                    "event03": 4950976245312507192,
-                    "eventIntro": 2208040376229193824
                 }
             ]
         },
@@ -1622,12 +1586,6 @@
                             }
                         }
                     ]
-                },
-                {
-                    "UID": 10395333414142043547,
-                    "Type": "AudioSource",
-                    "TypeID": 16,
-                    "Alias": "Amb_TrainInterior"
                 }
             ]
         },
@@ -1764,9 +1722,9 @@
             ]
         },
         {
-            "UID": 14798790232049524929,
-            "Name": "Environment",
-            "Active": false,
+            "UID": 11033010850512695424,
+            "Name": "Event Manager",
+            "Active": true,
             "Components": [
                 {
                     "PID": 0,
@@ -1786,6 +1744,27 @@
                         "Y": 1.0,
                         "Z": 1.0
                     }
+                },
+                {
+                    "UID": 9174652001346769036,
+                    "Type": "Script",
+                    "TypeID": 23,
+                    "Name": "EventManager",
+                    "EventSequence": 0,
+                    "Next_Event": 6643851363947857141,
+                    "Option_01": 9580382767776116236,
+                    "Option_02": 10025263737657599060,
+                    "Option_03": 5570186180457882344,
+                    "event02": 10706611040384253947,
+                    "Body": 12572218162819699758,
+                    "Option_03_Text": 13403652513609016947,
+                    "GameManager": 9083562319934391338,
+                    "event01": 5825931776462821864,
+                    "Option_01_Text": 9429179763734142775,
+                    "Option_02_Text": 9054607302164775899,
+                    "crewMenu": 15964808941009667406,
+                    "event03": 4950976245312507192,
+                    "eventIntro": 2208040376229193824
                 }
             ]
         },
@@ -2167,8 +2146,8 @@
             ]
         },
         {
-            "UID": 15240074584306495293,
-            "Name": "Crew Status Canvas",
+            "UID": 14798790232049524929,
+            "Name": "Environment",
             "Active": false,
             "Components": [
                 {
@@ -2189,25 +2168,6 @@
                         "Y": 1.0,
                         "Z": 1.0
                     }
-                },
-                {
-                    "UID": 15964808941009667406,
-                    "Type": "Script",
-                    "TypeID": 23,
-                    "Name": "CrewMenu",
-                    "deployed": false,
-                    "preparing": false,
-                    "supplies": 10,
-                    "bronson": 6194986179725401096,
-                    "chuck": 17821819373689235206,
-                    "harris": 11462693708151468748,
-                    "closeCrewButton": 7467968725349133689,
-                    "danton": 5847528407074455355,
-                    "deployButton": 5395796591469370865,
-                    "fader": 11311745147968865628,
-                    "prepareButton": 1694010125661307522,
-                    "suppliesText": 2987481935980349814,
-                    "titleText": 11591166883693418428
                 }
             ]
         },
@@ -2915,18 +2875,18 @@
                     }
                 },
                 {
-                    "UID": 16687394728350152029,
+                    "UID": 16441970958217380161,
                     "Type": "Button",
                     "TypeID": 18,
                     "Graphic ID": 13502632409766253498,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.15000000596046448,
-                            "Y": -0.14000000059604645
+                            "Y": -0.15000000596046448
                         },
                         "Max": {
-                            "X": 0.14000000059604645,
-                            "Y": 0.12999999523162842
+                            "X": 0.15000000596046448,
+                            "Y": 0.15000000596046448
                         }
                     },
                     "Callback": "",
@@ -5142,9 +5102,9 @@
             ]
         },
         {
-            "UID": 9744275707767486290,
-            "Name": "Fader",
-            "Active": true,
+            "UID": 15240074584306495293,
+            "Name": "Crew Status Canvas",
+            "Active": false,
             "Components": [
                 {
                     "PID": 0,
@@ -5160,45 +5120,29 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 19.0,
-                        "Y": 10.800000190734863,
+                        "X": 1.0,
+                        "Y": 1.0,
                         "Z": 1.0
                     }
                 },
                 {
-                    "UID": 9827489906016500932,
-                    "Type": "SortingGroup",
-                    "TypeID": 26,
-                    "SortingLayer": 10,
-                    "OrderInLayer": 0
-                },
-                {
-                    "UID": 5304304328136153644,
-                    "Type": "SpriteRenderer",
-                    "TypeID": 22,
-                    "Sprite ID": 0,
-                    "Sprite Name": "empty",
-                    "Color": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0,
-                        "W": 0.0
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
-                },
-                {
-                    "UID": 11311745147968865628,
+                    "UID": 15964808941009667406,
                     "Type": "Script",
                     "TypeID": 23,
-                    "Name": "Fade",
-                    "amount": 1.5,
-                    "fadeIn": true,
-                    "fadeVal": 0.0,
-                    "maxFade": 125,
-                    "shouldFade": false
+                    "Name": "CrewMenu",
+                    "deployed": false,
+                    "preparing": false,
+                    "supplies": 10,
+                    "bronson": 6194986179725401096,
+                    "chuck": 17821819373689235206,
+                    "harris": 11462693708151468748,
+                    "closeCrewButton": 7467968725349133689,
+                    "danton": 5847528407074455355,
+                    "deployButton": 5395796591469370865,
+                    "fader": 11311745147968865628,
+                    "prepareButton": 1694010125661307522,
+                    "suppliesText": 2987481935980349814,
+                    "titleText": 11591166883693418428
                 }
             ]
         },
@@ -5304,6 +5248,319 @@
                         "X": false,
                         "Y": false
                     }
+                }
+            ]
+        },
+        {
+            "UID": 9744275707767486290,
+            "Name": "Fader",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 0,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 19.0,
+                        "Y": 10.800000190734863,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "UID": 9827489906016500932,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 10,
+                    "OrderInLayer": 0
+                },
+                {
+                    "UID": 5304304328136153644,
+                    "Type": "SpriteRenderer",
+                    "TypeID": 22,
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
+                    "Color": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0,
+                        "W": 0.0
+                    },
+                    "Flip": {
+                        "X": false,
+                        "Y": false
+                    }
+                },
+                {
+                    "UID": 11311745147968865628,
+                    "Type": "Script",
+                    "TypeID": 23,
+                    "Name": "Fade",
+                    "amount": 1.5,
+                    "fadeIn": true,
+                    "fadeVal": 0.0,
+                    "maxFade": 125,
+                    "shouldFade": false
+                }
+            ]
+        },
+        {
+            "UID": 7375627475233552103,
+            "Name": "SFX_PaperFlip",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "UID": 16863530532877669399,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "SFX_PaperFlip",
+                    "Loop": false,
+                    "Overlap": true,
+                    "Volume": 1.0,
+                    "Channel": "SFX"
+                }
+            ]
+        },
+        {
+            "UID": 13555509314920455227,
+            "Name": "SFX_ButtonClick",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "UID": 11240736860491117710,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "SFX_ButtonClick",
+                    "Loop": false,
+                    "Overlap": true,
+                    "Volume": 1.0,
+                    "Channel": "SFX"
+                }
+            ]
+        },
+        {
+            "UID": 10885405984954653041,
+            "Name": "BGM",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "UID": 9375891007183145069,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "BGM_Train",
+                    "Loop": true,
+                    "Overlap": true,
+                    "Volume": 1.0,
+                    "Channel": "BGM"
+                }
+            ]
+        },
+        {
+            "UID": 14015870748321873143,
+            "Name": "AMB_Train",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "UID": 16495768407680055626,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "Amb_TrainInterior",
+                    "Loop": true,
+                    "Overlap": true,
+                    "Volume": 1.0,
+                    "Channel": "SFX"
+                }
+            ]
+        },
+        {
+            "UID": 14430375350259753712,
+            "Name": "SFX_Lever",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "UID": 10219544415510482568,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "SFX_LeverPull",
+                    "Loop": false,
+                    "Overlap": true,
+                    "Volume": 1.0,
+                    "Channel": "SFX"
+                }
+            ]
+        },
+        {
+            "UID": 11912709915346146024,
+            "Name": "SFX_Accelerate",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "UID": 12349765490904732829,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "SFX_TrainSpeedUp",
+                    "Loop": false,
+                    "Overlap": true,
+                    "Volume": 1.0,
+                    "Channel": "SFX"
+                }
+            ]
+        },
+        {
+            "UID": 12907401968112419870,
+            "Name": "SFX_Deccelerate",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "UID": 11048904636908595310,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "SFX_TrainBraking",
+                    "Loop": false,
+                    "Overlap": true,
+                    "Volume": 1.0,
+                    "Channel": "SFX"
                 }
             ]
         }

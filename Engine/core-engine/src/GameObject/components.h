@@ -374,7 +374,7 @@ namespace Copium
 	{
 	public:
 		std::string alias;
-		bool overLap = false;
+		bool overLap = true;
 		bool loop = false;
 		int loopCount{ 0 };
 		std::string channel;
@@ -398,7 +398,9 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		AudioSource(GameObject& _gameObj, const AudioSource& rhs, UUID _uuid = UUID()) :
-			Component(_gameObj, _uuid), alias{ rhs.alias }{}
+			Component(_gameObj, _uuid), alias{ rhs.alias }, loop{ rhs.loop }, channel{rhs.channel},
+			overLap{rhs.overLap}, volume{rhs.volume}
+		{}
 		/***************************************************************************/
 		/*!
 		\brief

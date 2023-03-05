@@ -190,7 +190,10 @@ namespace Copium
 	void Serializer::Serialize<AudioSource>(AudioSource& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
 		Copium::SerializeBasic(_data.alias, _value, _doc, "Alias");
-
+		Copium::SerializeBasic(_data.loop, _value, _doc, "Loop");
+		Copium::SerializeBasic(_data.overLap, _value, _doc, "Overlap");
+		Copium::SerializeBasic(_data.volume, _value, _doc, "Volume");
+		Copium::SerializeBasic(_data.channel, _value, _doc, "Channel");
 	}
 
 	template<>
@@ -513,6 +516,10 @@ namespace Copium
 		std::string tmp;
 		Copium::Deserialize(tmp, _value, "Alias");
 		_data.set_alias(tmp);
+		Copium::Deserialize(_data.loop, _value, "Loop");
+		Copium::Deserialize(_data.overLap, _value,"Overlap");
+		Copium::Deserialize(_data.volume, _value, "Volume");
+		Copium::Deserialize(_data.channel, _value, "Channel");
 	}
 
 
