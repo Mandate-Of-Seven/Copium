@@ -101,35 +101,38 @@ namespace Copium
 		{
 		case ButtonState::OnClick:
 		{
-			PRINT("UI: Clicked " << btn.gameObj.name);
+			//PRINT("UI: Clicked " << btn.gameObj.name);
 			if (btn.targetGraphic)
 			{
 				btn.targetGraphic->layeredColor = Linear(btn.previousColor, btn.clickedColor, btn.timer / btn.fadeDuration);
-			}
-			Script* script = btn.gameObj.GetComponent<Script>();
-			if (script)
-			{
-				MyEventSystem->publish(new ScriptInvokeMethodEvent(*script, btn.callbackName, nullptr, 0));
 			}
 			break;
 		}
 		case ButtonState::OnHover:
 		{
-			//PRINT("UI: Hover " << btn.gameObj.name);
+			PRINT("UI: Hover " << btn.gameObj.name);
 			if (btn.targetGraphic)
 			{
 				btn.targetGraphic->layeredColor = Linear(btn.previousColor, btn.hoverColor, btn.timer / btn.fadeDuration);
+				PRINT("R " << btn.targetGraphic->layeredColor.r);
+				PRINT("G " << btn.targetGraphic->layeredColor.g);
+				PRINT("B " << btn.targetGraphic->layeredColor.b);
+				PRINT("A " << btn.targetGraphic->layeredColor.a);
 			}
 			break;
 		}
 		case ButtonState::OnHeld:
 		{
-			PRINT("UI: Held " << btn.gameObj.name);
+			//PRINT("UI: Held " << btn.gameObj.name);
+			if (btn.targetGraphic)
+			{
+				btn.targetGraphic->layeredColor = Linear(btn.previousColor, btn.clickedColor, btn.timer / btn.fadeDuration);
+			}
 			break;
 		}
 		case ButtonState::OnRelease:
 		{
-			PRINT("UI: Released " << btn.gameObj.name);
+			//PRINT("UI: Released " << btn.gameObj.name);
 			break;
 		}
 		default:
@@ -331,8 +334,8 @@ namespace Copium
 
 		GameObject* selected = GetSelectedGameObject();
 
-		if (selected)
-			PRINT(selected->name);
+		//if (selected)
+		//	PRINT(selected->name);
 		for (Button& button : pScene->componentArrays.GetArray<Button>())
 		{
 			if (!button.enabled || !button.gameObj.IsActive())
@@ -357,7 +360,7 @@ namespace Copium
 		//MT_START_PREVIEW
 		if (!inPlayMode)
 			return;
-		PRINT("CALLED START AGAIN!");
+		//PRINT("CALLED START AGAIN!");
 		Scene& scene = pEvent->scene;
 		for (Script& script : scene.componentArrays.GetArray<Script>())
 		{
