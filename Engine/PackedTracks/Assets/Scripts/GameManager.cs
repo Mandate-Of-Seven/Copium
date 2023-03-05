@@ -51,24 +51,9 @@ public class GameManager: CopiumScript
 
 	void Update()
     {
-        if(CrewTabBtn.state == ButtonState.OnRelease)
-        {
-            audioManager.clickSFX.Play();
-            CrewTab.SetActive(true);
-        }
-        if(ManualBtn.state == ButtonState.OnRelease)
-        {
-            audioManager.paperSFX.Play();
-            ManualPopUp.SetActive(true);
-        }
-        if(ManualPopUpBtn.state == ButtonState.OnRelease)
-        {
-            audioManager.paperSFX.Play();
-            ManualPopUpBtn.gameObject.SetActive(false);
-        }
+        ButtonInputs();
 
         //Stop travelling
-
         if (trainManager.currentSpeed > 0 && distanceLeft > 0)
         {
             if (timer >= distanceInterval)
@@ -126,16 +111,6 @@ public class GameManager: CopiumScript
 
     void ButtonInputs()
     {
-        if (ReportScreenBtn.state == ButtonState.OnRelease)
-        {
-            isReportScreenOn = true;
-            audioManager.clickSFX.Play();
-        }
-        if (CloseReportBtn.state == ButtonState.OnRelease)
-        {
-            isReportScreenOn = false;
-            audioManager.clickSFX.Play();
-        }
         if (CrewTabBtn.state == ButtonState.OnRelease)
         {
             audioManager.clickSFX.Play();
