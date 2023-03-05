@@ -77,7 +77,7 @@ namespace Copium
 				to set for FMOD loop count
 			*/
 			/**************************************************************************/
-		void Play(std::string alias, FMOD::Channel * channel, bool overLap = false, bool loop = false, int loopCount = -1);
+		void Play(std::string alias, FMOD::Channel * channel, bool overLap = true, bool loop = false, int loopCount = -1);
 
 		/***************************************************************************/
 			/*!
