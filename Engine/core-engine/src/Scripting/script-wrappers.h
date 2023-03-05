@@ -189,7 +189,10 @@ namespace Copium
 	{
 		GameObject* child = sceneManager.FindGameObjectByID(childID);
 		GameObject* parent = sceneManager.FindGameObjectByID(newParentID);
-		child->transform.SetParent(&parent->transform);
+		if (parent)
+			child->transform.SetParent(&parent->transform);
+		else
+			child->transform.SetParent(nullptr);
 	}
 
 	/*******************************************************************************
@@ -529,16 +532,15 @@ namespace Copium
 
 	*/
 	/*******************************************************************************/
-	static char GetButtonState(UUID gameObjID)
+	static char GetButtonState(UUID buttonID)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(gameObjID);
-		if (gameObj == nullptr)
+		Scene* pScene = sceneManager.get_current_scene();
+		for (Button& button : pScene->componentArrays.GetArray<Button>())
 		{
-			return 0;
+			if (button.uuid == buttonID)
+				return (char)button.state;
 		}
-		if (gameObj->GetComponent<Button>()->state == ButtonState::OnClick)
-			PRINT(gameObj->name << " " << (int)gameObj->GetComponent<Button>()->state);
-		return (char)gameObj->GetComponent<Button>()->state;
+		return 0;
 	}
 
 	/*******************************************************************************

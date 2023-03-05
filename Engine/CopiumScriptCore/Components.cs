@@ -178,7 +178,7 @@ namespace CopiumEngine
     {
         public ButtonState state
         {
-            get { return (ButtonState)InternalCalls.GetButtonState(gameObject.ID); }
+            get { return (ButtonState)InternalCalls.GetButtonState(ID); }
         }
         public bool interactable
         {

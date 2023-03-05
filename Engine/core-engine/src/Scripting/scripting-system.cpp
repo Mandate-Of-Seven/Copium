@@ -116,7 +116,7 @@ namespace Copium::Utils
 			}
 			if (mono_class_get_parent(mono_class_from_mono_type(monoType)) == mCopiumScript)
 				return (FieldType)ComponentType::Script;
-			PRINT(typeName << "is none type");
+			//PRINT(typeName << "is none type");
 			return FieldType::None;
 		}
 		return it->second;
@@ -144,7 +144,7 @@ namespace Copium
 		while (MonoClassField* field = mono_class_get_fields(mClass, &iterator))
 		{
 			std::string fieldName = mono_field_get_name(field);
-			PRINT("\tField: " << fieldName);
+			//PRINT("\tField: " << fieldName);
 			uint32_t flags = mono_field_get_flags(field);
 			if (flags & FIELD_ATTRIBUTE_PUBLIC)
 			{
@@ -157,7 +157,7 @@ namespace Copium
 				}
 				else
 				{
-					PRINT("\tField: " << fieldName << "is NONE:" << mono_type_get_name(type));
+					//PRINT("\tField: " << fieldName << "is NONE:" << mono_type_get_name(type));
 					//static std::string typeName;
 					//typeName = mono_type_get_name(type);
 					//fieldType = FieldType::Component;
@@ -300,8 +300,6 @@ namespace Copium
 			
 		MonoObject* tmp = mono_object_new(mAppDomain, mClass);
 		mono_runtime_object_init(tmp);
-		if (strcmp(mono_class_get_name(mClass),"CrewMenu") == 0)
-			PRINT(mono_class_get_name(mClass) << " initialized!");
 		return tmp;
 	}
 
@@ -331,7 +329,7 @@ namespace Copium
 				continue;
 			if (mono_class_get_parent(_class) == mCopiumScript)
 			{
-				PRINT("SCRIPT: " << name);
+				//PRINT("SCRIPT: " << name);
 				scriptClassMap[name] = ScriptClass{ name,_class };
 				reflectionMap[mono_class_get_type(_class)] = ComponentType::Script;
 			}
@@ -341,7 +339,7 @@ namespace Copium
 			}
 			else if (mono_class_get_parent(_class) == mono_class_from_name(mAssemblyImage, name_space, "Component"))
 			{
-				PRINT("COMPONENT: " << name);
+				//PRINT("COMPONENT: " << name);
 				if (_class == mCopiumScript)
 					continue;
 				scriptClassMap[name] = ScriptClass{ name,_class };

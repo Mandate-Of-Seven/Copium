@@ -35,16 +35,37 @@ namespace Copium
 		Transform* _parent = parent;
 		while (_parent)
 		{
-			Math::Vec3 parentRot = _parent->rotation;
-			Math::Vec3 parentScale = _parent->scale;
-			_position += _parent->position + parentRot * (_position * parentScale);
-			_rotation += parentRot;
-			_scale *= parentScale;
+			glm::vec3 tempPos = _parent->position.glmVec3;
+			glm::mat4 pTranslate = glm::translate(glm::mat4(1.f), tempPos);
+
+			float rot = glm::radians(_parent->rotation.z);
+			glm::mat4 pRotate = {
+			glm::vec4(cos(rot), sin(rot), 0.f, 0.f),
+			glm::vec4(-sin(rot), cos(rot), 0.f, 0.f),
+			glm::vec4(0.f, 0.f, 1.f, 0.f),
+			glm::vec4(0.f, 0.f, 0.f, 1.f)
+			};
+
+			glm::vec3 size = _parent->scale.glmVec3;
+			glm::mat4 pScale = {
+				glm::vec4(size.x, 0.f, 0.f, 0.f),
+				glm::vec4(0.f, size.y, 0.f, 0.f),
+				glm::vec4(0.f, 0.f, 1.f, 0.f),
+				glm::vec4(0.f, 0.f, 0.f, 1.f)
+			};
+
+			glm::mat4 pTransform = pTranslate * pRotate * pScale;
+			
+
+			_position.glmVec3 = glm::vec3(pTransform * glm::vec4(_position.glmVec3, 1.f));
+
+			_scale *= _parent->scale;
+
 			_parent = _parent->parent;
 		}
-
 		return _position;
 	}
+
 	Math::Vec3 Transform::GetWorldRotation() const
 	{
 		Math::Vec3 _rotation = rotation;
