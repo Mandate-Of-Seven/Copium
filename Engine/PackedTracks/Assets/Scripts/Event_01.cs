@@ -20,16 +20,9 @@ public class Event_01: CopiumScript
 
 	public void Event(bool requirement)
 	{
-        if (EventManager.Option_03.activeSelf)
-        {
-            EventManager.Option_03.SetActive(false);
-        }
-
-        if (!EventManager.Option_01.activeSelf || !EventManager.Option_02.activeSelf)
-        {
-            EventManager.Option_01.SetActive(true);
-            EventManager.Option_02.SetActive(true);
-        }
+        EventManager.Option_01.Enable();
+        EventManager.Option_02.Enable();
+        EventManager.Option_03.Disable();
 
         // Harris is Dead
         if (requirement)
@@ -38,11 +31,12 @@ public class Event_01: CopiumScript
                 "to spread to the supply storage area. The raging fire that quickly engulfed the train roused the crew.";
 
             // Indicate crew injured and losing of supplies
-			EventManager.Option_01_Text.text = "Attempt to put out the fire";
+			EventManager.Option_01.txt.text = "Attempt to put out the fire";
+            EventManager.Option_01.ShowIcons(true, false, false, true);
 
             // Indicate lost of compartment
-			EventManager.Option_02_Text.text = "Detach main engine room and supply storage room from the train";
-
+            EventManager.Option_02.txt.text = "Detach main engine room and supply storage room from the train";
+            EventManager.Option_02.ShowIcons(false, false, false, true);
 
             resolutionTextNum = 1;
         }
@@ -54,10 +48,14 @@ public class Event_01: CopiumScript
                 "as he sprints out of the engine room. The team watched in shock as Harris and their supplies caught fire.";
 
             // Indicate harris dies injured and save remaining supplies
-            EventManager.Option_01_Text.text = "Salvage and save remaining supplies";
+            EventManager.Option_01.txt.text = "Salvage and save remaining supplies";
+            EventManager.Option_01.ShowIcons(true, false, false, true);
+
 
             // Indicate harris injure and lose all supplies
-            EventManager.Option_02_Text.text = "Save Harris";
+            EventManager.Option_02.txt.text = "Save Harris";
+            EventManager.Option_02.ShowIcons(true, false, false, true);
+
 
             resolutionTextNum = 2;
         }

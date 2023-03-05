@@ -63,7 +63,7 @@ public class Event_Ending: CopiumScript
         {
             // Screen fade and audio narration
             cm.fader.shouldFade = true;
-            EventManager.Body.text = "";
+            EventManager.Body.text = "All crew members are dead";
         }
         else if(choice == 2) // 2 or 3 alive
         {

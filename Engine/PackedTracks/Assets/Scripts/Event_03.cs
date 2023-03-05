@@ -17,13 +17,13 @@ public class Event_03: CopiumScript
 
 	}
 
-	public void Event(bool requirement)
+	public void Event(int requirement)
 	{
-        if (requirement) // Chuck alive & not critically injured
+        if (requirement == 1) // Chuck alive & not critically injured
         {
-            EventManager.Option_01.SetActive(true);
-            EventManager.Option_02.SetActive(true);
-            EventManager.Option_03.SetActive(true);
+            EventManager.Option_01.Enable();
+            EventManager.Option_02.Enable();
+            EventManager.Option_03.Enable();
 
             EventManager.Body.text = "While on routine patrol, Chuck heard a faint, steady bleeping emanating from engine room 2. " +
                 "Chuck discovered a bomb concealed under the backup engine's reactor after looking for it there. It seems that " +
@@ -31,32 +31,63 @@ public class Event_03: CopiumScript
                 "remaining crew members to discuss next steps.";
 
             // Indicate Chuck, Danton critically injured
-            EventManager.Option_01_Text.text = "Cover the bomb up to reduce damage";
+            EventManager.Option_01.txt.text = "Cover the bomb up to reduce damage";
+            EventManager.Option_01.ShowIcons(true);
 
             // Indicate Chuck dies
-            EventManager.Option_02_Text.text = "Attempt to diffuse the bomb, Let Chuck do it";
+            EventManager.Option_02.txt.text = "Attempt to diffuse the bomb, Let Chuck do it";
+            EventManager.Option_01.ShowAllIcons();
 
-            // Indicate Food will be 0 for rest of the game, will take 2x as long to reach the end
+            // Indicate supplies will be 0 for rest of the game, will take 2x as long to reach the end
             if (!cm.crew[0].alive)
-                EventManager.Option_03.GetComponent<Button>().enabled = false;
-            EventManager.Option_03_Text.text = "Salvage parts from the back up engine to build a makeshift reactor and cut off engine room 2 from the train [requires Harris to be alive]";
+                EventManager.Option_03.btn.enabled = false;
+            EventManager.Option_03.txt.text = "Salvage parts from the back up engine to build a makeshift reactor and cut off engine room 2 from the train [requires Harris to be alive]";
+            EventManager.Option_03.ShowIcons(false, false, false, true);
 
             resolutionTextNum = 1;
         }
-        else // Bronson, Chuck and Harris Critially injured + Danton alive
+        else if(requirement == 2) // Bronson, Chuck and Harris Critially injured + Danton alive
         {
-            EventManager.Option_01.SetActive(true);
-            EventManager.Option_02.SetActive(false);
-            EventManager.Option_03.SetActive(false);
+            EventManager.Option_01.Enable();
+            EventManager.Option_02.Disable();
+            EventManager.Option_03.Disable();
 
             EventManager.Body.text = "While attempting to keep Bronson, Chuck and Harris health stable, another explosion " +
                                      "went off in the depths of the train. Danton could not tell what was going on but the " +
                                      "train without any power came to a stop.";
 
             // Indicate GG Game Over
-            EventManager.Option_01_Text.text = "Send Danton out to find supplies";
+            EventManager.Option_01.txt.text = "Send Danton out to find supplies";
+            EventManager.Option_01.ShowAllIcons();
 
             resolutionTextNum = 2;
+        }
+        else
+        {
+            EventManager.Option_01.Enable();
+            EventManager.Option_02.Enable();
+            EventManager.Option_03.Enable();
+
+            EventManager.Body.text = "Out of nowhere the an explosion came from the back up engine room, flames quickly engulf " +
+                "the back of the train and is quickly spreading, ";
+
+            // Indicate lost of engine
+            EventManager.Option_01.txt.text = "Watch the flame destroy the engine";
+            EventManager.Option_01.ShowIcons(false, true, false, true);
+
+            // Indicate Crew lose health
+            if (cm.supplies <= 0)
+                EventManager.Option_02.btn.enabled = false;
+            EventManager.Option_02.txt.text = "Put out the flames and attempt to save the engine";
+            EventManager.Option_02.ShowIcons(true);
+
+            // Indicate supplies lost
+            if (cm.supplies <= 0)
+                EventManager.Option_03.btn.enabled = false;
+            EventManager.Option_03.txt.text = "Build new simple engine to power the train";
+            EventManager.Option_03.ShowIcons(false, false, false, true);
+
+            resolutionTextNum = 3;
         }
     }
 
@@ -102,11 +133,36 @@ public class Event_03: CopiumScript
                                          "I need to survive, including food, fuel, and water; and I'm afraid I won't be able to return " +
                                          "home alive this time. I wish you were still around, mom";
 
-                EventManager.EventSequence = -1;
+                EventManager.EventSequence = -3;
                 EventManager.OverideEvent();
             }
 
         }
+        else if(resolutionTextNum == 3)
+        {
+            if(choice == 1)
+            {
+                EventManager.Body.text = "As you and your crew watch the engine burst into flames, the train started slowing down. " +
+                    "Lights in the train started dimming out... \n\nThe train became silent...";
 
+                EventManager.EventSequence = -3;
+                EventManager.OverideEvent();
+            }
+            else if (choice == 2)
+            {
+                EventManager.Body.text = "The crew scrammble to put out the fire before it could spread any further. Though it seems " +
+                    "that engine could continue running, the crew suffered minor burns on them and require medical attention.";
+
+                cm.ChangeAllCrew(CrewMenu.STAT_TYPES.HEALTH, -1);
+            }
+            else if (choice == 3)
+            {
+                EventManager.Body.text = "The crew exhuasted the supplies to assemble a simple makeshift engine which does serve it's " +
+                    "purpose. However you notice that the train has started moving much slower in comparison";
+
+                cm.SetSupplies(0);
+                EventManager.GameManager.distanceInterval *= 2;
+            }
+        }
     }
 }

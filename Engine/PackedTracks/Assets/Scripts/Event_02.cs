@@ -21,38 +21,30 @@ public class Event_02: CopiumScript
 	{
         if (!requirement)
 		{
-            if (EventManager.Option_03.activeSelf)
-            {
-                EventManager.Option_03.SetActive(false);
-            }
-
-            if (!EventManager.Option_01.activeSelf || !EventManager.Option_02.activeSelf)
-            {
-                EventManager.Option_01.SetActive(true);
-                EventManager.Option_02.SetActive(true);
-            }
+            EventManager.Option_01.Enable();
+            EventManager.Option_02.Enable();
+            EventManager.Option_03.Disable();
 
             EventManager.Body.text = "From out of nowhere a group of 3 mysterious individuals boarded " +
                 "and the crew cabin. They began shooting up the place demanding fuel and supplies. But " +
                 "with out limited supplies, giving more of what we have can endanger everyone on board.";
 
             // Indicate GG GAME OVER
-			EventManager.Option_01_Text.text = "Attempt to fend off the raiders";
+			EventManager.Option_01.txt.text = "Attempt to fend off the raiders";
+            EventManager.Option_01.ShowAllIcons();
 
             // Indicate lost all supplies all crew mentally shaken
-            EventManager.Option_02_Text.text = "Give all your supplies";
+            EventManager.Option_02.txt.text = "Give all your supplies";
+            EventManager.Option_02.ShowIcons(false, true, false, true);
 
             resolutionTextNum = 1;
 
         }
         else // Chuck and bronson alive
         {
-            if (!EventManager.Option_01.activeSelf || !EventManager.Option_02.activeSelf || !EventManager.Option_03.activeSelf)
-            {
-                EventManager.Option_01.SetActive(true);
-                EventManager.Option_02.SetActive(true);
-                EventManager.Option_03.SetActive(true);
-            }
+            EventManager.Option_01.Enable();
+            EventManager.Option_02.Enable();
+            EventManager.Option_03.Enable();
 
             EventManager.Body.text = "A mysterious vehicles was seen appoarching the train, 3 mysterious " +
                 "individuals proceeded to board through the crew cabin. Chuck taken by surprise and is " +
@@ -60,13 +52,17 @@ public class Event_02: CopiumScript
                 "Chuck will be killed.";
 
             // Indicate Bronson and Chuck critically injured 
-            EventManager.Option_01_Text.text = "Save Chuck";
+            EventManager.Option_01.txt.text = "Save Chuck";
+            EventManager.Option_01.ShowIcons(true);
 
             // Indicate Chuck dies
-            EventManager.Option_02_Text.text = "Let Chuck die and take out raiders";
+            EventManager.Option_02.txt.text = "Let Chuck die and take out raiders";
+            EventManager.Option_02.ShowIcons(true);
+
 
             // Indicate - 10 supplies Chuck survives(All crew members mental state shaken)
-            EventManager.Option_03_Text.text = "Give up supplies";
+            EventManager.Option_03.txt.text = "Give up supplies";
+            EventManager.Option_03.ShowIcons(false, true, false, true);
 
             resolutionTextNum = 2;
 
@@ -82,7 +78,7 @@ public class Event_02: CopiumScript
                 EventManager.Body.text = "Player Narration (Record Voice, radio like sound): \n\n" +
                     "This mission was a set up!\n\nWe where sent out to die!\n\nNo... NO, Please!";
 
-                EventManager.EventSequence = -1;
+                EventManager.EventSequence = -3;
                 EventManager.OverideEvent();
             }
             else if (choice == 2)

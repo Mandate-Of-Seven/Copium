@@ -36,8 +36,7 @@ public class GameManager: CopiumScript
     float timer = 0.0f;
 
     bool updateEvent = false;
-    bool gameEnd = false;
-    bool isReportScreenOn = false;
+    public bool gameEnd = false;
 
     void Start()
 	{
@@ -97,6 +96,12 @@ public class GameManager: CopiumScript
             gameEnd = true;
             trainManager.FlickLever();
             distanceLeft = 0.0f;
+        }
+        else if (EventManager.EventSequence == -3 && !gameEnd)
+        {
+            gameEnd = true;
+            crewMenuScript.fader.shouldFade = true;
+            trainManager.FlickLever();
         }
         else if (distanceLeft <= 0.99f && !gameEnd)
         {

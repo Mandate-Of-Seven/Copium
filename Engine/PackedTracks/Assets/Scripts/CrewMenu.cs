@@ -26,8 +26,8 @@ public class CrewMenu: CopiumScript
 
     float timer = 0.0f;
 
-    float healthInterval = 1.0f; // The interval in seconds in which the crew members lose health
-    float hungerInterval = 1.0f; // The interval in seconds in which the crew members get hungry
+    float healthInterval = 5.0f; // The interval in seconds in which the crew members lose health
+    float hungerInterval = 4.0f; // The interval in seconds in which the crew members get hungry
 
     public bool storageComparment = true; // For the food storage
 

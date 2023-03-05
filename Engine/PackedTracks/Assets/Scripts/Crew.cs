@@ -68,7 +68,7 @@ public class Crew : CopiumScript
             mentalT.text = "Suicidal";
 
         if (person.hunger > 5)
-            hungerT.text = "Satisfied";
+            hungerT.text = "Full";
         else if (person.hunger > 0)
             hungerT.text = "Hungry";
         else
