@@ -58,7 +58,9 @@ public class Event_03: CopiumScript
         {
             if (choice == 1)
             {
-                EventManager.Body.text = "The find what ever they can in attempt to try and reduce explosion and the damage caused, ... ";
+                EventManager.Body.text = "As a precaution against the bomb's detonation, they use anything they " +
+                    "can find to cover it. Fortunately, the engine kept running, but Chuck and Danton are in " +
+                    "severe condition after being hit by bomb shrapnel.";
 
                 EventManager.EventSequence = -1;
             }

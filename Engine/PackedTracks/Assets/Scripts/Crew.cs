@@ -1,10 +1,10 @@
 using CopiumEngine;
 using System;
+using System.Collections.Generic;
 
 public class Crew : CopiumScript
 {
     public CrewMenu crewMenu;
-
     public GameObject showDeployed;
     
     public Text healthT, mentalT, hungerT;
@@ -27,12 +27,14 @@ public class Crew : CopiumScript
     {
         if (crewMenu.preparing)
         {
+            selectBtn.enabled = true;
             if (selectBtn.state == ButtonState.OnClick)
                 selected = !selected;
             showDeployed.SetActive(selected);
         }
         else
         {
+            selectBtn.enabled = false;
             selected = false;
             showDeployed.SetActive(false);
         }

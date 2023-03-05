@@ -24,7 +24,7 @@ public class Event_01: CopiumScript
             eventManager.Option_03.SetActive(false);
         }
 
-        if (!eventManager.Option_01.activeSelf && !eventManager.Option_02.activeSelf)
+        if (!eventManager.Option_01.activeSelf || !eventManager.Option_02.activeSelf)
         {
             eventManager.Option_01.SetActive(true);
             eventManager.Option_02.SetActive(true);

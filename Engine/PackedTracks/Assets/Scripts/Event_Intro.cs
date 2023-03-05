@@ -16,12 +16,15 @@ public class Event_Intro: CopiumScript
 
 	public void Event()
 	{
-        if (EventManager.Option_01.activeSelf && EventManager.Option_02.activeSelf && EventManager.Option_03.activeSelf)
+        if (EventManager.Option_01.activeSelf || EventManager.Option_02.activeSelf || EventManager.Option_03.activeSelf)
         {
             EventManager.Option_01.SetActive(false);
             EventManager.Option_02.SetActive(false);
             EventManager.Option_03.SetActive(false);
         }
+
+        if(EventManager.Next_Event.activeSelf)
+            EventManager.Next_Event.SetActive(false);
 
         EventManager.Body.text = "Welcome conductor, I am AI your digital assistance for this mission. " +
             "I have a message from Captain Bob.\n\n\"Good day volunteer, \n\nYou are likely here due " +

@@ -531,7 +531,7 @@ namespace Copium
 
 		GLfloat textureIndex = 0.f;
 
-		for (GLuint i = 1; i < graphics->get_texture_slot_index(); i++)
+		for (GLuint i = 0; i < graphics->get_texture_slot_index(); i++)
 		{
 			if (graphics->get_texture_slots()[i] == _textureID)
 			{
@@ -543,6 +543,10 @@ namespace Copium
 		// Change texture index only if ID retrieved is more than 0 (0 is white texture)
 		if (textureIndex == 0.f && _textureID != 0)
 		{
+			// Reset the current texture index if it hits max textures
+			if (graphics->get_texture_slot_index() + 1 == maxTextures)
+				graphics->set_texture_slot_index(0);
+
 			// Add new texture into the texture slot
 			textureIndex = (GLfloat)graphics->get_texture_slot_index();
 			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _textureID;
@@ -586,7 +590,7 @@ namespace Copium
 
 		GLfloat textureIndex = 0.f;
 
-		for (GLuint i = 1; i < graphics->get_texture_slot_index(); i++)
+		for (GLuint i = 0; i < graphics->get_texture_slot_index(); i++)
 		{
 			if (!_sprite.refTexture)
 				break;
@@ -601,6 +605,10 @@ namespace Copium
 		// Change texture index only if ID retrieved is more than 0 (0 is white texture)
 		if (textureIndex == 0.f && _sprite.spriteID != 0)
 		{
+			// Reset the current texture index if it hits max textures
+			if (graphics->get_texture_slot_index() + 1 == maxTextures)
+				graphics->set_texture_slot_index(0);
+
 			// Add new texture into the texture slot
 			textureIndex = (GLfloat)graphics->get_texture_slot_index();
 			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _sprite.refTexture->get_object_id();
@@ -668,7 +676,7 @@ namespace Copium
 
 		GLfloat textureIndex = 0.f;
 
-		for (GLuint i = 1; i < graphics->get_texture_slot_index(); i++)
+		for (GLuint i = 0; i < graphics->get_texture_slot_index(); i++)
 		{
 			if (graphics->get_texture_slots()[i] == _spritesheet.texture->get_object_id())
 			{
@@ -687,6 +695,10 @@ namespace Copium
 		// Change texture index only if ID retrieved is more than 0 (0 is white texture)
 		if (textureIndex == 0.f && _spritesheet.spriteID != 0)
 		{
+			// Reset the current texture index if it hits max textures
+			if (graphics->get_texture_slot_index() + 1 == maxTextures)
+				graphics->set_texture_slot_index(0);
+
 			// Add new texture into the texture slot
 			textureIndex = (GLfloat)graphics->get_texture_slot_index();
 			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _spritesheet.texture->get_object_id();
@@ -703,6 +715,12 @@ namespace Copium
 			begin_batch();
 		}
 
+		glm::vec2 flip{ 1.f };
+		if (_spritesheet.flip.x)
+			flip.x = -1.f;
+		if (_spritesheet.flip.y)
+			flip.y = -1.f;
+
 		// Map texture unit to the texture object id
 		unsigned int key = graphics->get_texture_slots()[textureIndex];
 		auto it = textureIDs.find(key);
@@ -713,7 +731,7 @@ namespace Copium
 		float yStep = (1.0f / (float)_spritesheet.rows);
 		float xOffset = colOffset * xStep;
 		float yOffset = rowOffset * yStep;
-		//PRINT("Y step:" << yStep);
+		//PRINT("	Animation Steps:" << xStep << " " << yStep);
 		glm::vec2 spriteTextCoord[4] =
 		{
 			glm::vec2(xOffset, yOffset),
@@ -725,7 +743,8 @@ namespace Copium
 		for (GLint i = 0; i < 4; i++)
 		{
 			quadBufferPtr->pos = _transform * quadVertexPosition[i];
-			quadBufferPtr->textCoord = spriteTextCoord[i];
+			quadBufferPtr->textCoord = spriteTextCoord[i] * flip;
+			//PRINT("		Animation offsets:" << spriteTextCoord[i].x << " " << spriteTextCoord[i].y);
 			quadBufferPtr->color = color;
 			quadBufferPtr->texID = textureIDs[key];
 			quadBufferPtr->type = (float)ENTITY_TYPE::QUAD;
