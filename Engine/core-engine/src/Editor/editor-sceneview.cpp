@@ -56,23 +56,30 @@ namespace Copium
 		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoCollapse;
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
 
+		Scene* scene = nullptr;
+
 		// Begin Scene View
-		ImGui::Begin("Scene View", 0, windowFlags);
+		if (ImGui::Begin("Scene View", 0, windowFlags))
+		{
+			windowFocused = ImGui::IsWindowFocused();
+			windowHovered = ImGui::IsWindowHovered();
+			scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
 
-		windowFocused = ImGui::IsWindowFocused();
-		windowHovered = ImGui::IsWindowHovered();
-		scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
-		
-		unsigned int textureID = camera.get_framebuffer()->get_color_attachment_id();
-		ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
-		resize_sceneview(*((glm::vec2*) &viewportEditorSize));
-		ImGui::Image((void*) (size_t) textureID, ImVec2{ (float)sceneWidth, (float)sceneHeight }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
-		
-		// Gizmos
-		Scene* scene = MySceneManager.get_current_scene();
-		update_gizmos();
+			unsigned int textureID = camera.get_framebuffer()->get_color_attachment_id();
+			ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
+			resize_sceneview(*((glm::vec2*)&viewportEditorSize));
+			ImGui::Image((void*)(size_t)textureID, ImVec2{ (float)sceneWidth, (float)sceneHeight }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
 
+			// Gizmos
+			scene = MySceneManager.get_current_scene();
+			update_gizmos();
+
+			// Editor Camera
+			camera.update();
+
+		}
 		ImGui::End();
+		
 		ImGui::PopStyleVar();
 		// End Scene View
 

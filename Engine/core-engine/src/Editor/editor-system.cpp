@@ -106,7 +106,6 @@ namespace Copium
 		ImGui::NewFrame();
 		ImGuizmo::BeginFrame();
 
-
 		//Dockspace
 		if(enableEditor)
 		{
@@ -406,20 +405,9 @@ namespace Copium
 			sceneView.update();
 			contentBrowser.update();
 			
-
 			// demo update
 			if (show_demo_window)
 				ImGui::ShowDemoWindow(&show_demo_window);
-
-			// Game Camera
-			Scene* scene = MySceneManager.get_current_scene();
-			if (scene && !scene->componentArrays.GetArray<Camera>().empty())
-			{
-				scene->componentArrays.GetArray<Camera>()[0].update();
-			}
-
-			// Editor Camera
-			camera.update();
 
             ImGui::End();
 		}
@@ -506,7 +494,7 @@ namespace Copium
 			Scene* scene = MySceneManager.get_current_scene();
 			if (scene && !scene->componentArrays.GetArray<Camera>().empty())
 			{
-				scene->componentArrays.GetArray<Camera>()[0].on_resize(dimension.x, dimension.y);
+				game.resize_game(dimension);
 				glViewport(0, 0, (GLsizei)dimension.x, (GLsizei)dimension.y);
 			}
 		}

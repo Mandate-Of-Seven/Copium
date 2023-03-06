@@ -95,6 +95,7 @@
     <Compile Include="Assets\Scripts\BlinkingEffect.cs" />
     <Compile Include="Assets\Scripts\Crew.cs" />
     <Compile Include="Assets\Scripts\CrewMenu.cs" />
+    <Compile Include="Assets\Scripts\CrewStatusManager.cs" />
     <Compile Include="Assets\Scripts\Event_02.cs" />
     <Compile Include="Assets\Scripts\Event_03.cs" />
     <Compile Include="Assets\Scripts\Event_04.cs" />

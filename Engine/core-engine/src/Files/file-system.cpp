@@ -93,7 +93,14 @@ namespace Copium
 	void FileSystem::update()
 	{
 		//BEAN: CHANGE TO CHECK EVERY FEW SECONDS
-		check_directory_count(&assetsDirectory);
+		static double timer = 0; 
+		timer += MyFrameRateController.getFixedDt();
+
+		if (timer >= 0.5)
+		{
+			check_directory_count(&assetsDirectory);
+			timer = 0.0;
+		}
 	}
 
 	void FileSystem::exit()

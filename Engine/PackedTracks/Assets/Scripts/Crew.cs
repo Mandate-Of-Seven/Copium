@@ -11,6 +11,7 @@ public class Crew : CopiumScript
 
     public Button selectBtn;
     public bool selected = false;
+    public bool isDeployed = false;
 
     public int crewIndex;
     CrewMenu.Person person;
@@ -25,7 +26,10 @@ public class Crew : CopiumScript
         {
             selectBtn.enabled = true;
             if (selectBtn.state == ButtonState.OnClick)
+            {
                 selected = !selected;
+                isDeployed = selected;
+            }
             showDeployed.SetActive(selected);
         }
         else

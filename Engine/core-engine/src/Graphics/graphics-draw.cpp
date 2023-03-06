@@ -369,10 +369,6 @@ namespace Copium
 				if (text.gameObj.HasComponent<SortingGroup>())
 					continue;
 
-				// If the object isnt within the frustum
-				if (!camera->withinFrustum(text.gameObj.transform.position, text.gameObj.transform.scale))
-					continue;
-
 				Transform& t = text.gameObj.transform;
 
 				Math::Vec3 pos{ t.position };
@@ -411,6 +407,14 @@ namespace Copium
 						break;
 					}
 
+					// If the object isnt within the frustum
+					if (!camera->withinFrustum(updatedPos, updatedScale))
+						continue;
+
+					// If text is too small to even read
+					if (updatedSize < 0.03f && updatedSize > -0.03f)
+						continue;
+
 					renderer.draw_text(text.content, updatedPos, text.get_color(), updatedSize, updatedWrapper, text.font, &text.layeredColor);
 				}
 				else
@@ -435,6 +439,10 @@ namespace Copium
 						break;
 					}
 
+					// If the object isnt within the frustum
+					if (!camera->withinFrustum(pos, { scale, scale, 1.f }))
+						continue;
+
 					renderer.draw_text(text.content, pos, text.get_color(), scale, text.wrapper, text.font, &text.layeredColor);
 				}
 			}
@@ -455,11 +463,6 @@ namespace Copium
 				{
 					if (!go || !go->IsActive())
 						continue;
-
-					// If the object isnt within the frustum
-					if (!camera->withinFrustum(go->transform.position, go->transform.scale))
-						continue;
-
 
 					if (go->HasComponent<SpriteRenderer>())
 					{
@@ -612,6 +615,14 @@ namespace Copium
 								break;
 							}
 
+							// If the object isnt within the frustum
+							if (!camera->withinFrustum(updatedPos, updatedScale))
+								continue;
+
+							// If text is too small to even read
+							if (updatedSize < 0.03f && updatedSize > -0.03f)
+								continue;
+
 							renderer.draw_text(text.content, updatedPos, text.get_color(), updatedSize, updatedWrapper, text.font,&text.layeredColor);
 						}
 						else
@@ -636,6 +647,10 @@ namespace Copium
 								break;
 							}
 
+							// If the object isnt within the frustum
+							if (!camera->withinFrustum(pos, {scale, scale, 1.f}))
+								continue;
+
 							renderer.draw_text(text.content, pos, text.get_color(), scale, text.wrapper, text.font, &text.layeredColor);
 						}
 					}
@@ -646,49 +661,6 @@ namespace Copium
 				renderer.flush();
 			}
 		}
-
-		// Only For Text
-		if (pScene != nullptr)
-		{
-			//for (Text& text : pScene->componentArrays.GetArray<Text>())
-			//{
-			//	GameObject& gameObject{ text.gameObj };
-			//	if (!text.enabled || !gameObject.IsActive())
-			//		continue;
-
-			//	// If the object isnt within the frustum
-			//	if (!camera->withinFrustum(gameObject.transform.GetWorldPosition(), gameObject.transform.GetWorldScale()))
-			//		continue;
-			//	text.render(camera);
-			//}
-
-			//for (Layer& layer : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
-			//{
-			//	// Only For Text
-			//	for (GameObject* go : layer.gameObjects)
-			//	{
-			//		if (go == nullptr || !go->IsActive())
-			//			continue;
-
-			//		// If the object isnt within the frustum
-			//		if (!camera->withinFrustum(go->transform.position, go->transform.scale))
-			//			continue;
-
-			//		if (go->HasComponent<Text>())
-			//		{
-			//			Text& text = *go->GetComponent<Text>();
-			//			if (!text.enabled || !text.gameObj.IsActive())
-			//				continue;
-
-			//			Transform& t = text.gameObj.transform;
-			//			text.render(camera);
-			//		}
-			//	}
-			//}
-
-		}
-
-		
 	}
 
 	void Draw::debug()

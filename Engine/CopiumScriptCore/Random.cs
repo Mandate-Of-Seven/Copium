@@ -26,5 +26,11 @@ namespace CopiumEngine
         {
             return (float)((max - min) * rnd.NextDouble() + min);
         }
+
+        //inclusive of min and max
+        public static int RandInt(int min, int max)
+        {
+            return rnd.Next(min, max + 1);
+        }
     }
 }

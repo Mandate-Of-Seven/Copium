@@ -42,7 +42,9 @@ namespace Copium {
 	public:
 
 		GameObject* FindGameObjectByID(UUID _id);
-		Component* FindComponentByID(UUID _id);
+
+		template <typename T>
+		T* FindComponentByID(UUID _id);
 		/*******************************************************************************
 		/*!
 		*
@@ -290,6 +292,8 @@ namespace Copium {
 
 		Camera* mainCamera{nullptr};
 		std::string sceneFile{};
+
+		bool inPlayMode = false;
 
 	private:
 		void CallbackQuitEngine(QuitEngineEvent* pEvent);
