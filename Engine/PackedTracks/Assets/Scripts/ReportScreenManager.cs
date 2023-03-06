@@ -12,6 +12,8 @@ public class ReportScreenManager: CopiumScript
 
 	public Image alert;
 
+    public ResultManager resultManager;
+
     Vector3 reportScreenTargetScale = new Vector3(4.0f,4.0f,0);
 
     bool closeHover = false;
@@ -39,6 +41,7 @@ public class ReportScreenManager: CopiumScript
             audioManager.clickSFX.Play();
 			ReportScreenBtn.gameObject.SetActive(false);
 			ReportTab.transform.parent = null;
+            resultManager.Disable();
         }
         else if (ReportScreenBtn.state == ButtonState.None)
         {
@@ -56,6 +59,7 @@ public class ReportScreenManager: CopiumScript
             audioManager.clickSFX.Play();
 			ReportScreenBtn.gameObject.SetActive(true);
 			ReportTab.transform.parent = parent.transform;
+            resultManager.Enable();
         }        
         else if (CloseReportBtn.state == ButtonState.None)
         {
