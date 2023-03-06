@@ -127,7 +127,7 @@ public class Prepare : CopiumScript
         }
 
         currentCrewmate = crewmate;
-        eventNum = RNG.RandInt(1,10);
+        eventNum = RNG.RandInt(1,14);
 
         switch (eventNum)
         {
@@ -202,6 +202,33 @@ public class Prepare : CopiumScript
                                     "there might be some fuel that was left in the vehicle's tanks.";
                 prepareOption1.gameObject.SetActive(true);
                 prepareOption1.text = "Siphon the fuel";
+                break;
+            case 11:
+                prepareBody.text = "Due to poor visibility and the icy conditions, " + crewmate.name +
+                    " accidentally tripped and lost the supplies he was carrying on him.";
+                prepareOption1.gameObject.SetActive(true);
+                prepareOption1.text = "Continue";
+                break;
+            case 12:
+                prepareBody.text = "While exploring a shallow cave near the train a frost quake occured, disorientating " + crewmate.name +
+                    " causing him to fall and hit his head on the walls, suffering minor brain damage.";
+                prepareOption1.gameObject.SetActive(true);
+                prepareOption1.text = "Continue";
+                break;
+            case 13:
+                prepareBody.text = "While " + crewmate.name + " was walking across a frozen river, he did not notice a patch of " +
+                                   "thin ice and fell into the river, in a desperate attempt to get out and back to the train," +
+                                    crewmate.name+" lost his supplies he was carrying with him.";
+                prepareOption1.gameObject.SetActive(true);
+                prepareOption1.text = "Continue";
+                break;
+            case 14:
+                prepareBody.text = "While searching for resources " + crewmate.name + " chanced acrossed 2 Syberian wolves, they seem hungry and " +
+                                   "desperate for food and were ready to attack";
+                prepareOption1.gameObject.SetActive(true);
+                prepareOption2.gameObject.SetActive(true);
+                prepareOption1.text = "Feed the wolves [must have 3 supplies]";
+                prepareOption2.text = "Kill the attacking wolves";
                 break;
             default:
                 break;
@@ -303,28 +330,63 @@ public class Prepare : CopiumScript
                 if (choice == 1)
                 {
                     crewManager.supplies += 3;
-                    currentCrewmate.resultText = currentCrewmate.name + " caught some fish";
+                    currentCrewmate.resultText = currentCrewmate.name + " caught some fish.";
                 }
                 break;
             case 8:
                 if (choice == 1)
                 {
                     crewManager.supplies += 2;
-                    currentCrewmate.resultText = currentCrewmate.name + " found some firewood";
+                    currentCrewmate.resultText = currentCrewmate.name + " found some firewood.";
                 }
                 break;
             case 9:
                 if (choice == 1)
                 {
                     crewManager.supplies += 2;
-                    currentCrewmate.resultText = currentCrewmate.name + " found some mushrooms";
+                    currentCrewmate.resultText = currentCrewmate.name + " found some mushrooms.";
                 }
                 break;
             case 10:
                 if (choice == 1)
                 {
                     crewManager.supplies += 2;
-                    currentCrewmate.resultText = currentCrewmate.name + " siphoned some fuel from some abandoned vehicles";
+                    currentCrewmate.resultText = currentCrewmate.name + " siphoned some fuel from some abandoned vehicles.";
+                }
+                break;
+            case 11:
+                if (choice == 1)
+                {
+                    crewManager.supplies -= 2;
+                    currentCrewmate.resultText = currentCrewmate.name + " tripped and lost some supplies.";
+                }
+                break;
+            case 12:
+                if (choice == 1)
+                {
+                    currentCrewmate.health -= 5;
+                    currentCrewmate.resultText = currentCrewmate.name + " fall and hit his head which resulted in minor damages";
+                }
+                break;
+            case 13:
+                if (choice == 1)
+                {
+                    crewManager.supplies -= 1;
+                    currentCrewmate.resultText = currentCrewmate.name + " lost some supplies";
+                }
+                break;
+            case 14:
+                if (choice == 1)
+                {
+                    crewManager.supplies -= 3;
+                    currentCrewmate.resultText = currentCrewmate.name + " gave out their rations to the hungry wolves, it seems like the wolves have taken a " +
+                                                "liking to the crew and have started following them around.";
+                }
+                else if (choice == 2)
+                {
+                    crewManager.supplies += 2;
+                    currentCrewmate.resultText = "The wolves jumped at " + currentCrewmate.name + ", attacking and trying to bite him. " +
+                                                 currentCrewmate.name + " seeing no option killed both wolves and proceeded to skin and gather their meat for food.";
                 }
                 break;
             default:
