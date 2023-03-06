@@ -4,6 +4,30 @@
         {
             "Name": "Default",
             "ID": 0
+        },
+        {
+            "Name": "Effects",
+            "ID": 1
+        },
+        {
+            "Name": "Train",
+            "ID": 2
+        },
+        {
+            "Name": "UI",
+            "ID": 4
+        },
+        {
+            "Name": "Crew Panel",
+            "ID": 9
+        },
+        {
+            "Name": "Transition",
+            "ID": 10
+        },
+        {
+            "Name": "PauseMenu",
+            "ID": 13
         }
     ],
     "GameObjects": [
@@ -86,7 +110,11 @@
                     "UID": 11946350663462438741,
                     "Type": "AudioSource",
                     "TypeID": 16,
-                    "Alias": "BGM _Menu"
+                    "Alias": "BGM _Menu",
+                    "Loop": false,
+                    "Overlap": true,
+                    "Volume": 1.0,
+                    "Channel": ""
                 }
             ]
         },
@@ -125,6 +153,10 @@
                         "Y": 1.0,
                         "Z": 1.0,
                         "W": 1.0
+                    },
+                    "Flip": {
+                        "X": false,
+                        "Y": false
                     }
                 }
             ]
@@ -225,6 +257,7 @@
                         }
                     },
                     "Callback": "",
+                    "FadeDuration": 0.10000000149011612,
                     "clickedR": 0.5,
                     "clickedG": 0.5,
                     "clickedB": 0.5,
@@ -295,6 +328,7 @@
                         }
                     },
                     "Callback": "",
+                    "FadeDuration": 0.10000000149011612,
                     "clickedR": 0.5,
                     "clickedG": 0.5,
                     "clickedB": 0.5,

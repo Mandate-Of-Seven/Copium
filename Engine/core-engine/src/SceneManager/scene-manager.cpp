@@ -23,15 +23,12 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 ****/
 #include <pch.h>
 #include "SceneManager/scene-manager.h"
-//#include "Graphics/graphics-system.h"
-//#include "Windows/windows-system.h"
 #include "Editor/editor-system.h"
 #include <rapidjson/istreamwrapper.h>
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/prettywriter.h>
 #include <GameObject/game-object-factory.h>
 #include <SceneManager/state-manager.h>
-//#include <Audio/sound-system.h>
 #include <Events/events-system.h>
 
 #include "Utilities/json-utilities.h"
@@ -508,7 +505,9 @@ namespace Copium
 		}
 		currentScene = new NormalScene(_filepath);
 
-		sceneFilePath = _filepath;
+		//Not preview mode
+		if (!inPlayMode)
+			sceneFilePath = _filepath;
 
 		std::ifstream ifs(_filepath);
 		if (!ifs)
@@ -788,6 +787,7 @@ namespace Copium
 
 		SoundSystem::Instance()->StopAll();
 
+		inPlayMode = true;
 
 		return true;
 	}
@@ -838,6 +838,7 @@ namespace Copium
 
 		SoundSystem::Instance()->StopAll();
 
+		inPlayMode = false;
 		return true;
 	}
 

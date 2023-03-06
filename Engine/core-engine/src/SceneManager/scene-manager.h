@@ -291,6 +291,8 @@ namespace Copium {
 		Camera* mainCamera{nullptr};
 		std::string sceneFile{};
 
+		bool inPlayMode = false;
+
 	private:
 		void CallbackQuitEngine(QuitEngineEvent* pEvent);
 		void CallbackChildInstantiate(ChildInstantiateEvent* pEvent);
