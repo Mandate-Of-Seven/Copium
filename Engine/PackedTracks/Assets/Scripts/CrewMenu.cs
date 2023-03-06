@@ -7,8 +7,12 @@ public class CrewMenu: CopiumScript
     public Text suppliesText;
     public Text titleText;
 
+    string titleString;
+
     public Button prepareButton;
     public Button deployButton;
+
+    public CrewStatusManager crewStatusManager; 
 
     public Fade fader;
 
@@ -103,7 +107,7 @@ public class CrewMenu: CopiumScript
 
     void Start()
 	{
-        
+        titleString = titleText.text;
     }
 	void Update()
 	{
@@ -205,7 +209,7 @@ public class CrewMenu: CopiumScript
         if (preparing)
             titleText.text = "Selecting Members";
         else
-            titleText.text = "Crew Members";
+            titleText.text = titleString;
     }
 
     public void SetSupplies(int amount)
@@ -357,8 +361,8 @@ public class CrewMenu: CopiumScript
         //    heat = 0;
 
         //hide crewscreen
+        crewStatusManager.ClosePanel();
         deployed = false;
-        gameObject.SetActive(false);
     }
 
 

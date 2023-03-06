@@ -58,6 +58,8 @@ public class GameManager: CopiumScript
                 distanceLeft -= trainManager.currentSpeed/3.0f;
                 if (distanceLeft % 50 < 1.0f && !updateEvent)
                 {
+                    reportScreenManager.alert.enabled = true;
+                    crewStatusManager.alert.enabled = true;
                     updateEvent = true;
                     EventManager.UpdateEventSequence();
                 }
