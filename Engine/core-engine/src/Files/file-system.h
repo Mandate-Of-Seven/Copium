@@ -242,6 +242,8 @@ namespace Copium
 
 		void delete_from_browser();
 
+		void CallbackFileAccess(FileAccessEvent* pEvent);
+
 		/*******************************************************************************
 		/*!
 		*

@@ -5,120 +5,129 @@ using System.Collections.Generic;
 public class GameManager: CopiumScript
 {
     public EventManager EventManager;
+    public AudioManager audioManager;
 
 	public GameObject TrainCanvas;
     public GameObject PauseCanvas;
 
     public GameObject ManualPopUp;
 
-    public GameObject CrewTab;
-    public GameObject ReportTab;
-
-    public Button LeverBtn;
-    public GameObject LeverNear;
-    public GameObject LeverFar;
-    bool move = false;
-
-    public Button ReportScreenBtn;
     public Button ManualBtn;
     public Button ManualPopUpBtn;
 
     public Button PauseResumeBtn;
     public Button PauseQuitBtn;
-    public Button CrewTabBtn;
 
     public CrewMenu crewMenuScript;
-    
-    public Button CloseReportBtn;
+    public TrainManager trainManager;
+    public ReportScreenManager reportScreenManager;
+    public CrewStatusManager crewStatusManager;
 
     public Text tracker;
 
-    bool isReportScreenOn = false;
     public bool isPaused = false;
-    public int distanceLeft = 200;
+    public float distanceLeft = 200;
 
     public float distanceInterval = 1.0f;
     float foodTimer = 0.0f;
     float hungerTimer = 0.0f;
     float timer = 0.0f;
 
-    int state = 0;
+    bool updateEvent = false;
+    public bool gameEnd = false;
 
     void Start()
 	{
-        isReportScreenOn = false;
         //UpdateCanvases();
     }
+
+    void OpenReportScreen()
+    {
+        audioManager.clickSFX.Play();
+    }
+
 	void Update()
-    {   
-        if(ReportScreenBtn.state == ButtonState.OnRelease)
-        {
-            ReportTab.SetActive(true);
-        }
-        if(CloseReportBtn.state == ButtonState.OnRelease)
-        {
-            ReportTab.SetActive(false);
-        }
-        if(CrewTabBtn.state == ButtonState.OnRelease)
-        {
-            CrewTab.SetActive(true);
-        }
-        if(ManualBtn.state == ButtonState.OnRelease)
-        {
-            ManualPopUp.SetActive(true);
-        }
-        if(ManualPopUpBtn.state == ButtonState.OnRelease)
-        {
-            ManualPopUpBtn.gameObject.SetActive(false);
-        }
+    {
+        ButtonInputs();
 
-        if(LeverBtn.state == ButtonState.OnClick)
+        //Stop travelling
+        if (trainManager.currentSpeed > 0 && distanceLeft > 0)
         {
-            move = !move;
-            Console.WriteLine("Clicked on lever");
-            LeverFar.SetActive(move);
-            LeverNear.SetActive(!move);
-        }
-        //Stop travlling
-
-        if (move && distanceLeft > 0)
-        {
-            if (timer >= 0.2f)
+            if (timer >= distanceInterval)
             {
-                distanceLeft -= 1;
-                if (distanceLeft%50 == 0)
+                distanceLeft -= trainManager.currentSpeed/3.0f;
+                if (distanceLeft % 50 < 1.0f && !updateEvent)
                 {
+                    updateEvent = true;
                     EventManager.UpdateEventSequence();
                 }
+                else if(distanceLeft % 50 > 1.0f)
+                    updateEvent = false;
+
+                // Close to the next event and has yet to select a choice
+                if (distanceLeft % 50 < 5.0f && EventManager.EventSequence > 0 && !updateEvent) 
+                    EventManager.SelectDefaultChoice();
+
                 timer = 0.0f;
             }
-
-            if(foodTimer >= 4.0f && crewMenuScript.supplies != 0)
-            {
-                crewMenuScript.supplies -= 1;
-                foodTimer = 0.0f;
-            }
-
-            foodTimer += Time.deltaTime;
+            
             timer += Time.deltaTime;
         }
-        tracker.text =  distanceLeft.ToString() + "KM";
+        tracker.text =  ((int)distanceLeft).ToString() + "KM";
 
-        if (crewMenuScript.supplies == 0)
+        // Reducing supplies for crew to consume
+        if(trainManager.currentSpeed > 0 && distanceLeft < 200.0f)
         {
-            if(hungerTimer >= 1.0f)
+            if (foodTimer >= 5.0f && crewMenuScript.supplies != 0)
             {
-                // crewMenuScript.hunger1 -= 1;
-                // crewMenuScript.hunger2 -= 1;
-                // crewMenuScript.hunger3 -= 1;
-                // crewMenuScript.hunger4 -= 1;
-                hungerTimer = 0.0f;
-            }
+                crewMenuScript.ChangeSupplies(-1);
+                crewMenuScript.ChangeAllCrew(CrewMenu.STAT_TYPES.HUNGER, 1);
 
-            hungerTimer += Time.deltaTime;
+                foodTimer = 0.0f;
+            }
+            foodTimer += Time.deltaTime;
         }
 
+        // Game ends
+        if(EventManager.EventSequence == -2 && !gameEnd)
+        {
+            gameEnd = true;
+            trainManager.FlickLever();
+            distanceLeft = 0.0f;
+        }
+        else if (EventManager.EventSequence == -3 && !gameEnd)
+        {
+            gameEnd = true;
+            crewMenuScript.fader.shouldFade = true;
+            trainManager.FlickLever();
+        }
+        else if (distanceLeft <= 0.99f && !gameEnd)
+        {
+            gameEnd = true;
+            trainManager.FlickLever();
+            EventManager.EventSequence = -1;
+            EventManager.OverideEvent();
+        }
 
+        KeyInputs();
+    }
+
+    void ButtonInputs()
+    {
+        if (ManualBtn.state == ButtonState.OnRelease)
+        {
+            audioManager.paperSFX.Play();
+            ManualPopUp.SetActive(true);
+        }
+        if (ManualPopUpBtn.state == ButtonState.OnRelease)
+        {
+            audioManager.paperSFX.Play();
+            ManualPopUpBtn.gameObject.SetActive(false);
+        }
+    }
+
+    void KeyInputs()
+    {
         if (Input.GetKeyDown(KeyCode.P))
         {
             isPaused = !isPaused;

@@ -64,6 +64,11 @@ namespace Copium
 		Copium::SerializeBasic(_data.spriteSheet.rows, _value, _doc, "Rows");
 		Copium::SerializeBasic(_data.spriteSheet.columns, _value, _doc, "Columns");
 
+		rapidjson::Value flip(rapidjson::kObjectType);
+		Copium::SerializeBasic(_data.spriteSheet.flip.x, flip, _doc, "X");
+		Copium::SerializeBasic(_data.spriteSheet.flip.y, flip, _doc, "Y");
+		_value.AddMember("Flip", flip, _doc.GetAllocator());
+
 	}
 	template<>
 	void Serializer::Serialize<Animator>(Animator& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
@@ -185,7 +190,10 @@ namespace Copium
 	void Serializer::Serialize<AudioSource>(AudioSource& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
 		Copium::SerializeBasic(_data.alias, _value, _doc, "Alias");
-
+		Copium::SerializeBasic(_data.loop, _value, _doc, "Loop");
+		Copium::SerializeBasic(_data.overLap, _value, _doc, "Overlap");
+		Copium::SerializeBasic(_data.volume, _value, _doc, "Volume");
+		Copium::SerializeBasic(_data.channel, _value, _doc, "Channel");
 	}
 
 	template<>
@@ -508,6 +516,10 @@ namespace Copium
 		std::string tmp;
 		Copium::Deserialize(tmp, _value, "Alias");
 		_data.set_alias(tmp);
+		Copium::Deserialize(_data.loop, _value, "Loop");
+		Copium::Deserialize(_data.overLap, _value,"Overlap");
+		Copium::Deserialize(_data.volume, _value, "Volume");
+		Copium::Deserialize(_data.channel, _value, "Channel");
 	}
 
 
@@ -674,6 +686,15 @@ namespace Copium
 				Copium::Deserialize(anim.frameCount, a, "FrameCount");
 				Copium::Deserialize(anim.spriteSheet.rows, a, "Rows");
 				Copium::Deserialize(anim.spriteSheet.columns, a, "Columns");
+
+				if (a.HasMember("Flip"))
+				{
+					rapidjson::Value flip(rapidjson::kObjectType);
+					flip = a["Flip"].GetObj();
+					Copium::Deserialize(anim.spriteSheet.flip.x, flip, "X");
+					Copium::Deserialize(anim.spriteSheet.flip.y, flip, "Y");
+				}
+
 				anim.loop = _data.loop;
 				++i;
 			}
@@ -949,7 +970,7 @@ namespace Copium
 			}
 			case FieldType::GameObject:
 			{
-				PRINT("GAMEOBJECT!");
+				//PRINT("GAMEOBJECT!");
 				Copium::Deserialize((uint64_t&)_data.fieldGameObjReferences[_name], _value, _name);
 				continue;
 				break;
@@ -959,14 +980,14 @@ namespace Copium
 				break;
 			default:
 			{
-				PRINT("COMPONENT!");
+				//PRINT("COMPONENT!");
 				Copium::Deserialize((uint64_t&)_data.fieldComponentReferences[_name], _value, _name);
-				PRINT("COMPONENT!" << (uint64_t&)_data.fieldComponentReferences[_name]);
+				//PRINT("COMPONENT!" << (uint64_t&)_data.fieldComponentReferences[_name]);
 				continue;
 				break;
 			}
 			}
-			PRINT("FIELDTYPE: " << (int)fType);
+			PRINT("FIELD: " << _name);
 			MyEventSystem->publish(new ScriptSetFieldEvent(_data, _name.c_str(), _data.buffer));
 		}
 

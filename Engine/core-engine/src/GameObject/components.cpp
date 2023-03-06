@@ -35,16 +35,37 @@ namespace Copium
 		Transform* _parent = parent;
 		while (_parent)
 		{
-			Math::Vec3 parentRot = _parent->rotation;
-			Math::Vec3 parentScale = _parent->scale;
-			_position += _parent->position + parentRot * (_position * parentScale);
-			_rotation += parentRot;
-			_scale *= parentScale;
+			glm::vec3 tempPos = _parent->position.glmVec3;
+			glm::mat4 pTranslate = glm::translate(glm::mat4(1.f), tempPos);
+
+			float rot = glm::radians(_parent->rotation.z);
+			glm::mat4 pRotate = {
+			glm::vec4(cos(rot), sin(rot), 0.f, 0.f),
+			glm::vec4(-sin(rot), cos(rot), 0.f, 0.f),
+			glm::vec4(0.f, 0.f, 1.f, 0.f),
+			glm::vec4(0.f, 0.f, 0.f, 1.f)
+			};
+
+			glm::vec3 size = _parent->scale.glmVec3;
+			glm::mat4 pScale = {
+				glm::vec4(size.x, 0.f, 0.f, 0.f),
+				glm::vec4(0.f, size.y, 0.f, 0.f),
+				glm::vec4(0.f, 0.f, 1.f, 0.f),
+				glm::vec4(0.f, 0.f, 0.f, 1.f)
+			};
+
+			glm::mat4 pTransform = pTranslate * pRotate * pScale;
+			
+
+			_position.glmVec3 = glm::vec3(pTransform * glm::vec4(_position.glmVec3, 1.f));
+
+			_scale *= _parent->scale;
+
 			_parent = _parent->parent;
 		}
-
 		return _position;
 	}
+
 	Math::Vec3 Transform::GetWorldRotation() const
 	{
 		Math::Vec3 _rotation = rotation;
@@ -177,24 +198,24 @@ namespace Copium
 	{
 		if (channel == "Default")
 		{
-			MySoundSystem.Play(alias, MySoundSystem.channelDefault, overLap, loop, loopCount);
+			MySoundSystem.Play(alias, MySoundSystem.channelDefault, overLap, loop);
 		}
 		else if (channel == "BGM")
 		{
-			MySoundSystem.Play(alias, MySoundSystem.channelBGM, overLap, loop, loopCount);
+			MySoundSystem.Play(alias, MySoundSystem.channelBGM, overLap, loop);
 		}
 		else if (channel == "SFX")
 		{
-			MySoundSystem.Play(alias, MySoundSystem.channelSFX, overLap, loop, loopCount);
+			MySoundSystem.Play(alias, MySoundSystem.channelSFX, overLap, loop);
 		}
 		else if (channel == "Voice")
 		{
-			MySoundSystem.Play(alias, MySoundSystem.channelVoice, overLap, loop, loopCount);
+			MySoundSystem.Play(alias, MySoundSystem.channelVoice, overLap, loop);
 		}
 		else if (true)
 		{
 			PRINT("No channel detected, Playing on default");
-			MySoundSystem.Play(alias, MySoundSystem.channelDefault, overLap, loop, loopCount);
+			MySoundSystem.Play(alias, MySoundSystem.channelDefault, overLap, loop);
 		}
 	}
 	void AudioSource::stop_sound()

@@ -687,6 +687,15 @@ namespace Copium
                             return true;
                         }
                     }
+                    std::string name = filter.InputBuf;
+                    name += " [New Script]";
+                    if (ImGui::Button(name.c_str(), buttonSize))
+                    {
+                        T* component;
+                        MyEventSystem->publish(new ScriptNewEvent{ filter.InputBuf });
+                        MyEventSystem->publish(new ComponentAddEvent<Script>{ gameObj,component,filter.InputBuf });
+                        return true;
+                    }
                     scriptNames.clear();
                 }
                 else if constexpr (std::is_same<SortingGroup, T>())
@@ -1027,6 +1036,13 @@ namespace Copium
                 Display("Rows", animator.animations[i].spriteSheet.rows);
                 Display("Time Delay", animator.animations[i].timeDelay);
                 Display("Sprite", animator.animations[i].spriteSheet.texture);
+
+                ImGui::TableNextColumn();
+                ImGui::Text("Flip");
+                ImGui::TableNextColumn();
+                ImGui::Checkbox("X", &animator.animations[i].spriteSheet.flip.x);
+                ImGui::SameLine(0.f, 16.f);
+                ImGui::Checkbox("Y", &animator.animations[i].spriteSheet.flip.y);
 
                 // Update sprite data
                 if (animator.animations[i].spriteSheet.texture)

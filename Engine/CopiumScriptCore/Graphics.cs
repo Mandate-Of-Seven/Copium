@@ -5,7 +5,7 @@ namespace CopiumEngine
 {
     public struct Color
     {
-        private float r, g, b;
+        public float r, g, b;
         public float a;
         public Color(float _r,float _g, float _b, float _a = 1f)
         {

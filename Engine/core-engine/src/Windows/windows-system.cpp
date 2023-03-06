@@ -135,6 +135,8 @@ namespace Copium
             << " | Resolution: " << windowWidth << " by " << windowHeight;
         glfwSetWindowTitle(window, sstr.str().c_str());
 
+        //std::cout << "FPS: " << MyFrameRateController.getFPS() << "\n";
+
         glfwSwapBuffers(window);
     }
 

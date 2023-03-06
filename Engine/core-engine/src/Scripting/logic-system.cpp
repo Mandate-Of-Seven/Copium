@@ -53,8 +53,14 @@ namespace Copium
 
 		if (pHoveredBtn == nullptr)
 		{
-			if (static_collision_pointrect(scenePos, btn.bounds.GetRelativeBounds(transform.GetWorldPosition(), transform.GetWorldScale())))
+			//PRINT("GETTING BUTTON STATE");
+			//PRINT(scenePos.x << " , " << scenePos.y);
+			AABB relativeBounds = btn.bounds.GetRelativeBounds(transform.GetWorldPosition(), transform.GetWorldScale());
+			//PRINT("X: " << relativeBounds.max.x << " , " << relativeBounds.min.x);
+			//PRINT("Y: " << relativeBounds.max.y << " , " << relativeBounds.min.y);
+			if (static_collision_pointrect(scenePos, relativeBounds))
 			{
+				//PRINT("COLLIDED");
 				if (MyInputSystem.is_mousebutton_pressed(0))
 				{
 					if (pHoveredBtn)
@@ -98,15 +104,10 @@ namespace Copium
 		{
 		case ButtonState::OnClick:
 		{
-			PRINT("UI: Clicked " << btn.gameObj.name);
+			//PRINT("UI: Clicked " << btn.gameObj.name);
 			if (btn.targetGraphic)
 			{
 				btn.targetGraphic->layeredColor = Linear(btn.previousColor, btn.clickedColor, btn.timer / btn.fadeDuration);
-			}
-			Script* script = btn.gameObj.GetComponent<Script>();
-			if (script)
-			{
-				MyEventSystem->publish(new ScriptInvokeMethodEvent(*script, btn.callbackName, nullptr, 0));
 			}
 			break;
 		}
@@ -116,17 +117,25 @@ namespace Copium
 			if (btn.targetGraphic)
 			{
 				btn.targetGraphic->layeredColor = Linear(btn.previousColor, btn.hoverColor, btn.timer / btn.fadeDuration);
+				//PRINT("R " << btn.targetGraphic->layeredColor.r);
+				//PRINT("G " << btn.targetGraphic->layeredColor.g);
+				//PRINT("B " << btn.targetGraphic->layeredColor.b);
+				//PRINT("A " << btn.targetGraphic->layeredColor.a);
 			}
 			break;
 		}
 		case ButtonState::OnHeld:
 		{
-			PRINT("UI: Held " << btn.gameObj.name);
+			//PRINT("UI: Held " << btn.gameObj.name);
+			if (btn.targetGraphic)
+			{
+				btn.targetGraphic->layeredColor = Linear(btn.previousColor, btn.clickedColor, btn.timer / btn.fadeDuration);
+			}
 			break;
 		}
 		case ButtonState::OnRelease:
 		{
-			PRINT("UI: Released " << btn.gameObj.name);
+			//PRINT("UI: Released " << btn.gameObj.name);
 			break;
 		}
 		default:
@@ -164,44 +173,10 @@ namespace Copium
 			if (!gameObject.IsActive())
 				continue;
 			Transform& t = gameObject.transform;
-			Math::Vec3 worldPos{ t.position };
-			Math::Vec3 worldScale{ t.scale };
+			Math::Vec3 worldPos{ t.GetWorldPosition()};
+			Math::Vec3 worldScale{ t.GetWorldScale() };
 
-			if (t.HasParent())
-			{
-				Transform* tempObj = t.parent;
-				while (tempObj)
-				{
-					glm::vec3 tempPos = tempObj->position.glmVec3;
-					glm::mat4 pTranslate = glm::translate(glm::mat4(1.f), tempPos);
-
-					float rot = glm::radians(tempObj->rotation.z);
-					glm::mat4 pRotate = {
-					glm::vec4(cos(rot), sin(rot), 0.f, 0.f),
-					glm::vec4(-sin(rot), cos(rot), 0.f, 0.f),
-					glm::vec4(0.f, 0.f, 1.f, 0.f),
-					glm::vec4(0.f, 0.f, 0.f, 1.f)
-					};
-
-					glm::vec3 size = tempObj->scale.glmVec3;
-					glm::mat4 pScale = {
-						glm::vec4(size.x, 0.f, 0.f, 0.f),
-						glm::vec4(0.f, size.y, 0.f, 0.f),
-						glm::vec4(0.f, 0.f, 1.f, 0.f),
-						glm::vec4(0.f, 0.f, 0.f, 1.f)
-					};
-
-					glm::mat4 pTransform = pTranslate * pRotate * pScale;
-
-					worldPos.glmVec3 = glm::vec3(pTransform * glm::vec4(worldPos.glmVec3, 1.f));
-
-					worldScale.glmVec3 *= tempObj->scale.glmVec3;
-
-					tempObj = tempObj->parent;
-				}
-			}
-
-			glm::vec2 objPosition = { worldPos.x, worldPos.y };
+			//glm::vec2 objPosition = { worldPos.x, worldPos.y };
 
 			// Not Within bounds // NEED A BETTER CHECK THAT INCLUDES THE BOUNDS
 			//if (glm::distance(objPosition, mousePosition)
@@ -219,6 +194,9 @@ namespace Copium
 				AABB bound = bounds.GetRelativeBounds(worldPos, worldScale);
 				if (static_collision_pointrect(mousePosition, bound))
 				{
+					//PRINT(mousePosition.x << " , " << mousePosition.y);
+					//PRINT("X: " << bound.max.x << " , " << bound.min.x);
+					//PRINT("Y: " << bound.max.y << " , " << bound.min.y);
 					pGameObjs.push_back(&gameObject);
 					continue;
 				}
@@ -238,7 +216,12 @@ namespace Copium
 				}
 				AABB bound = bounds.GetRelativeBounds(worldPos, worldScale);
 				if (static_collision_pointrect(mousePosition, bound))
+				{
+
+					PRINT("X: " << bounds.min.x << " , Y: " << bounds.min.y);
+					//PRINT("Y: " << bound.max.y << " , " << bound.min.y);
 					pGameObjs.push_back(&gameObject);
+				}
 			}
 			
 			// Check AABB
@@ -297,6 +280,7 @@ namespace Copium
 	{
 		messageSystem.subscribe(MESSAGE_TYPE::MT_START_PREVIEW,this);
 		messageSystem.subscribe(MESSAGE_TYPE::MT_STOP_PREVIEW, this);
+		MyEventSystem->subscribe(this, &LogicSystem::CallbackSceneLinked);
 		systemFlags |= FLAG_RUN_ON_PLAY;
 	}
 
@@ -328,7 +312,7 @@ namespace Copium
 		GameObject* selected = GetSelectedGameObject();
 
 		if (selected)
-			PRINT( "Selected: " << selected->name);
+			PRINT(selected->name);
 		for (Button& button : pScene->componentArrays.GetArray<Button>())
 		{
 			if (!button.enabled || !button.gameObj.IsActive())
@@ -345,6 +329,26 @@ namespace Copium
 
 	void LogicSystem::exit()
 	{
+	}
+
+	void LogicSystem::CallbackSceneLinked(SceneLinkedEvent* pEvent)
+	{
+		pHoveredBtn = nullptr;
+		//MT_START_PREVIEW
+		if (!inPlayMode)
+			return;
+		//PRINT("CALLED START AGAIN!");
+		Scene& scene = pEvent->scene;
+		for (Script& script : scene.componentArrays.GetArray<Script>())
+		{
+			MyEventSystem->publish(new ScriptInvokeMethodEvent(script, "Awake"));
+		}
+
+		for (Script& script : scene.componentArrays.GetArray<Script>())
+		{
+			MyEventSystem->publish(new ScriptInvokeMethodEvent(script, "Start"));
+		}
+		timeElasped = MyFrameRateController.getDt();
 	}
 
 	void LogicSystem::handleMessage(MESSAGE_TYPE mType)

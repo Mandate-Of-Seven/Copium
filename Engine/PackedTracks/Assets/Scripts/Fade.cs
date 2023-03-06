@@ -11,7 +11,7 @@ public class Fade: CopiumScript
 	
     void Start()
 	{
-		shouldFade = true;
+		
     }
 	void Update()
 	{

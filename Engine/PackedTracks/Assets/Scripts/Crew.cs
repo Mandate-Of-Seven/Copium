@@ -1,10 +1,10 @@
 using CopiumEngine;
 using System;
+using System.Collections.Generic;
 
 public class Crew : CopiumScript
 {
     public CrewMenu crewMenu;
-
     public GameObject showDeployed;
     
     public Text healthT, mentalT, hungerT;
@@ -12,24 +12,25 @@ public class Crew : CopiumScript
     public Button selectBtn;
     public bool selected = false;
 
-    public int health = 15;
-    public int mental = 15;
-    public int hunger = 10;
+    public int crewIndex;
+    CrewMenu.Person person;
 
     void Start()
     {
-        
+        person = crewMenu.crew[crewIndex];
     }
     void Update()
     {
-        if(crewMenu.preparing)
+        if (crewMenu.preparing)
         {
+            selectBtn.enabled = true;
             if (selectBtn.state == ButtonState.OnClick)
                 selected = !selected;
             showDeployed.SetActive(selected);
         }
         else
         {
+            selectBtn.enabled = false;
             selected = false;
             showDeployed.SetActive(false);
         }
@@ -45,29 +46,30 @@ public class Crew : CopiumScript
 
     void UpdateStats()
     {
-        if(health > 10)
+        person = crewMenu.crew[crewIndex];
+        // Console.WriteLine(person.name);
+
+        if (person.health > 10)
             healthT.text = "Healthy";
-        else if(health > 5)
+        else if(person.health > 5)
             healthT.text = "Injured";
-        else if (health > 0)
+        else if (person.health > 0)
             healthT.text = "Critical";
         else
             healthT.text = "Dead";
 
-        if (mental > 10)
-            mentalT.text = "Sound";
-        else if (mental > 5)
-            mentalT.text = "Shaken";
-        else if (mental > 0)
-            mentalT.text = "Deranged";
+        if (person.mental > 10)
+            mentalT.text = "Calm";
+        else if (person.mental > 5)
+            mentalT.text = "Irrational";
+        else if (person.mental > 0)
+            mentalT.text = "Insane";
         else
-            mentalT.text = "Gone";
+            mentalT.text = "Suicidal";
 
-        if (hunger > 9)
+        if (person.hunger > 5)
             hungerT.text = "Full";
-        else if (hunger > 5)
-            hungerT.text = "Satisfied";
-        else if (hunger > 0)
+        else if (person.hunger > 0)
             hungerT.text = "Hungry";
         else
             hungerT.text = "Famished";

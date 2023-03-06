@@ -1,5 +1,6 @@
 using CopiumEngine;
 using System;
+using System.Runtime.InteropServices;
 using System.Runtime.Remoting.Channels;
 
 public class EventManager: CopiumScript
@@ -9,119 +10,145 @@ public class EventManager: CopiumScript
     public Event_01 event01;
     public Event_02 event02;
     public Event_03 event03;
+    public Event_Ending eventEnding;
     public CrewMenu crewMenu;
 
-    public GameObject Option_01;
-    public GameObject Option_02;
-    public GameObject Option_03;
-    public GameObject Next_Event;
+    public Option Option_01;
+    public Option Option_02;
+    public Option Option_03;
 
     public Text Body;
-
-    public Text Option_01_Text;
-    public Text Option_02_Text;
-    public Text Option_03_Text;
 
     public int EventSequence = 0;
     int choice = 0;
 
     bool ShowingResolution = false;
+    bool SelectingChoice = true;
     bool ShowingMainEvent = true;
-
-    Button option01_btn;
-    Button option02_btn;
-    Button option03_btn;
-    Button next_btn;
 
     void Start()
 	{
+        Console.WriteLine("EVENT MANAGER START");
         EventSequence = 0;
-        option01_btn = Option_01.GetComponent<Button>();
-        option02_btn = Option_02.GetComponent<Button>();
-        option03_btn = Option_03.GetComponent<Button>();
-        next_btn = Next_Event.GetComponent<Button>();
     }
 
 	void Update()
     {
-        if(!ShowingResolution && ShowingMainEvent)
+        if (GameManager.gameEnd)
+            return;
+
+        if (!crewMenu.CheckAllCrewAlive())
+        {
+            EventSequence = -2;
+            OverideEvent();
+        }
+
+        if (!ShowingResolution && ShowingMainEvent)
             CheckCurrentEvent();
 
-        if(!ShowingResolution)
+        if (!ShowingResolution && SelectingChoice)
             SelectChoice();
 
-        if(ShowingResolution)
+        if (ShowingResolution && !SelectingChoice)
             ShowResolution();
 
         if (Input.GetKeyDown(KeyCode.Enter))
             UpdateEventSequence();
+
+        crewMenu.UpdateAllStats();
+    }
+
+    public void OverideEvent()
+    {
+        ShowingResolution = false;
+        SelectingChoice = true;
+        ShowingMainEvent = true;
     }
 
     public void UpdateEventSequence()
     {
+        if (ShowingMainEvent && SelectingChoice)
+            return;
+
         EventSequence++;
-        ShowingMainEvent = true;
+        OverideEvent();
     }
 
     void CheckCurrentEvent()
     {
-        // Update eventsequence after every button click
         switch (EventSequence)
         {
+            case -3:
+                // Mid-game ending
+                
+                break;
+            case -2:
+                eventEnding.Ending(true); // All dead
+                break;
             case -1:
-                Body.text = "Ending~";
+                eventEnding.Ending(false); // Not all dead
                 break;
             case 0:
+                ShowingMainEvent = false;
                 eventIntro.Event();
                 break;
             case 1:
-                bool harrisDead = false;
-                // if (crewMenu.health1 != 0)
-                //     healthy = true;
-
-                event01.Event(harrisDead);
+                event01.Event(crewMenu.crew[0].alive);
                 break;
             case 2:
-                bool alive = false;
-                // if (crewMenu.health2 != 0 && crewMenu.health3 != 0)
-                //     alive = true;
-
+                bool alive = true;
+                if (crewMenu.crew[1].alive && crewMenu.crew[2].alive)
+                    alive = true;
                 event02.Event(alive);
                 break;
             case 3:
-                bool chuckAndHarrisAlive = true;
-
-                event03.Event(chuckAndHarrisAlive);
+                int requirement = 0;
+                if (crewMenu.crew[0].alive && crewMenu.crew[2].alive 
+                    && crewMenu.crew[2].health > 5)
+                    requirement = 1;
+                else if(crewMenu.crew[0].health < 5 && crewMenu.crew[1].health < 5 
+                    && crewMenu.crew[2].health < 5 && crewMenu.crew[0].alive 
+                    && crewMenu.crew[1].alive && crewMenu.crew[2].alive 
+                    && crewMenu.crew[3].alive)
+                    requirement = 2;
+                event03.Event(requirement);
                 break;
             case 4:
                 //Event04();
-                break;
-            case 5:
-                //Event05();
                 break;
             default:
                 break;
         }
     }
 
+    public void SelectDefaultChoice()
+    {
+        if (!SelectingChoice)
+            return;
+
+        ShowingResolution = true;
+        SelectingChoice = false;
+        choice = 1;
+    }
+
     void SelectChoice()
     {
-        if (Next_Event.activeSelf)
-            Next_Event.SetActive(false);
-
-        if (option01_btn.state == ButtonState.OnClick)
+        if (Option_01.btn.state == ButtonState.OnClick)
         {
             ShowingResolution = true;
+            SelectingChoice = false;
             choice = 1;
         }
-        else if(option02_btn.state == ButtonState.OnClick)
+        else if(Option_02.btn.state == ButtonState.OnClick)
         {
             ShowingResolution = true;
+            SelectingChoice = false;
             choice = 2;
         }
-        else if(option03_btn.state == ButtonState.OnClick)
+        else if(Option_03.btn.state == ButtonState.OnClick)
         {
             ShowingResolution = true;
+            SelectingChoice = false;
             choice = 3;
         }
         else
@@ -135,12 +162,9 @@ public class EventManager: CopiumScript
     {
         ShowingMainEvent = false;
 
-        if (Option_01.activeSelf || Option_02.activeSelf || Option_03.activeSelf)
-        {
-            Option_01.SetActive(false);
-            Option_02.SetActive(false);
-            Option_03.SetActive(false);
-        }
+        Option_01.ResetOption();
+        Option_02.ResetOption();
+        Option_03.ResetOption();
 
         switch (EventSequence)
         {
@@ -150,18 +174,11 @@ public class EventManager: CopiumScript
             case 2:
                 event02.Result(choice);
                 break;
+            case 3:
+                event03.Result(choice);
+                break;
         }
 
-        if (!Next_Event.activeSelf)
-            Next_Event.SetActive(true);
-
-        if(next_btn.state == ButtonState.OnClick)
-        {
-            Console.WriteLine("Test");
-            UpdateEventSequence();
-            ShowingResolution = false;
-            Next_Event.SetActive(false);
-        }
-        
+        ShowingResolution = false;
     }
 }

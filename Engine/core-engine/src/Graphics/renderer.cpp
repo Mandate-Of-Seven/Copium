@@ -543,6 +543,10 @@ namespace Copium
 		// Change texture index only if ID retrieved is more than 0 (0 is white texture)
 		if (textureIndex == 0.f && _textureID != 0)
 		{
+			// Reset the current texture index if it hits max textures
+			if (graphics->get_texture_slot_index() + 1 == maxTextures)
+				graphics->set_texture_slot_index(1);
+
 			// Add new texture into the texture slot
 			textureIndex = (GLfloat)graphics->get_texture_slot_index();
 			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _textureID;
@@ -601,6 +605,10 @@ namespace Copium
 		// Change texture index only if ID retrieved is more than 0 (0 is white texture)
 		if (textureIndex == 0.f && _sprite.spriteID != 0)
 		{
+			// Reset the current texture index if it hits max textures
+			if (graphics->get_texture_slot_index() + 1 == maxTextures)
+				graphics->set_texture_slot_index(1);
+
 			// Add new texture into the texture slot
 			textureIndex = (GLfloat)graphics->get_texture_slot_index();
 			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _sprite.refTexture->get_object_id();
@@ -638,12 +646,12 @@ namespace Copium
 				glm::fvec4 mixedColor{ 0 };
 				glm::fvec4 color{ _sprite.color };
 				glm::fvec4 layeredColor{ *tint };
-				mixedColor.a = 1 - (1 - layeredColor.a) * (1 - color.a); // 0.75
+				mixedColor.a = 1 - (1 - layeredColor.a) * (1 - color.a);
 				if (mixedColor.a < 0.01f)
 					return;
-				mixedColor.r = layeredColor.r * layeredColor.a / mixedColor.a + color.r * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.67
-				mixedColor.g = layeredColor.g * layeredColor.a / mixedColor.a + color.g * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.33
-				mixedColor.b = layeredColor.b * layeredColor.a / mixedColor.a + color.b * color.a * (1 - layeredColor.a) / mixedColor.a; // 0.00
+				mixedColor.r = layeredColor.r * layeredColor.a / mixedColor.a + color.r * color.a * (1 - layeredColor.a) / mixedColor.a;
+				mixedColor.g = layeredColor.g * layeredColor.a / mixedColor.a + color.g * color.a * (1 - layeredColor.a) / mixedColor.a;
+				mixedColor.b = layeredColor.b * layeredColor.a / mixedColor.a + color.b * color.a * (1 - layeredColor.a) / mixedColor.a;
 				quadBufferPtr->color = mixedColor;
 			}
 			quadBufferPtr->texID = textureIDs[key];
@@ -684,9 +692,14 @@ namespace Copium
 		GLuint colOffset = _offsetID % _spritesheet.columns;
 
 		//PRINT("Row offset:" << rowOffset);
+		
 		// Change texture index only if ID retrieved is more than 0 (0 is white texture)
 		if (textureIndex == 0.f && _spritesheet.spriteID != 0)
 		{
+			// Reset the current texture index if it hits max textures
+			if (graphics->get_texture_slot_index() + 1 == maxTextures)
+				graphics->set_texture_slot_index(1);
+
 			// Add new texture into the texture slot
 			textureIndex = (GLfloat)graphics->get_texture_slot_index();
 			graphics->get_texture_slots()[graphics->get_texture_slot_index()] = _spritesheet.texture->get_object_id();
@@ -703,6 +716,12 @@ namespace Copium
 			begin_batch();
 		}
 
+		glm::vec2 flip{ 1.f };
+		if (_spritesheet.flip.x)
+			flip.x = -1.f;
+		if (_spritesheet.flip.y)
+			flip.y = -1.f;
+
 		// Map texture unit to the texture object id
 		unsigned int key = graphics->get_texture_slots()[textureIndex];
 		auto it = textureIDs.find(key);
@@ -711,9 +730,9 @@ namespace Copium
 
 		float xStep = (1.0f / (float)_spritesheet.columns);
 		float yStep = (1.0f / (float)_spritesheet.rows);
-		float xOffset = colOffset * xStep;
-		float yOffset = rowOffset * yStep;
-		//PRINT("Y step:" << yStep);
+		float xOffset = (colOffset * xStep) > 1.0f ? 1.0f : (colOffset * xStep);
+		float yOffset = (rowOffset * yStep) > 1.0f ? 1.0f : (rowOffset * yStep);
+		//PRINT("	Animation Steps:" << xStep << " " << yStep);
 		glm::vec2 spriteTextCoord[4] =
 		{
 			glm::vec2(xOffset, yOffset),
@@ -725,7 +744,8 @@ namespace Copium
 		for (GLint i = 0; i < 4; i++)
 		{
 			quadBufferPtr->pos = _transform * quadVertexPosition[i];
-			quadBufferPtr->textCoord = spriteTextCoord[i];
+			quadBufferPtr->textCoord = spriteTextCoord[i] * flip;
+			//PRINT("		Animation offsets:" << spriteTextCoord[i].x << " " << spriteTextCoord[i].y);
 			quadBufferPtr->color = color;
 			quadBufferPtr->texID = textureIDs[key];
 			quadBufferPtr->type = (float)ENTITY_TYPE::QUAD;
@@ -834,7 +854,7 @@ namespace Copium
 		//graphics->get_shader_program()[LINE_SHADER].UnUse();
 	}
 
-	void Renderer::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float& _scale, const float& _wrapper, Font* _font)
+	void Renderer::draw_text(const std::string& _text, const glm::vec3& _position, const glm::vec4& _color, const float& _scale, const float& _wrapper, Font* _font, const glm::fvec4* tintColor)
 	{
 		if (quadIndexCount >= maxIndexCount)
 		{
@@ -907,7 +927,21 @@ namespace Copium
 			{
 				quadBufferPtr->pos = textVertexPosition[i];
 				quadBufferPtr->textCoord = fontTextCoord[i];
-				quadBufferPtr->color = _color;
+				if (!tintColor)
+					quadBufferPtr->color = _color;
+				else
+				{
+					glm::fvec4 mixedColor{ 0 };
+					glm::fvec4 color{ _color };
+					glm::fvec4 layeredColor{ *tintColor };
+					mixedColor.a = 1 - (1 - layeredColor.a) * (1 - color.a);
+					if (mixedColor.a < 0.01f)
+						return;
+					mixedColor.r = layeredColor.r * layeredColor.a / mixedColor.a + color.r * color.a * (1 - layeredColor.a) / mixedColor.a;
+					mixedColor.g = layeredColor.g * layeredColor.a / mixedColor.a + color.g * color.a * (1 - layeredColor.a) / mixedColor.a;
+					mixedColor.b = layeredColor.b * layeredColor.a / mixedColor.a + color.b * color.a * (1 - layeredColor.a) / mixedColor.a;
+					quadBufferPtr->color = mixedColor;
+				}
 				quadBufferPtr->texID = textureIDs[ch.textureID];
 				quadBufferPtr->type = (float)ENTITY_TYPE::TEXT;
 				quadBufferPtr++;

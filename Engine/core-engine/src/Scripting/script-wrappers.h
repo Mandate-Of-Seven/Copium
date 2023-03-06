@@ -180,6 +180,24 @@ namespace Copium
 	/*******************************************************************************
 	/*!
 	\brief
+		Gets the delta time from the engine
+	\return
+		Delta time
+	*/
+	/*******************************************************************************/
+	static void SetParent(UUID newParentID, UUID childID)
+	{
+		GameObject* child = sceneManager.FindGameObjectByID(childID);
+		GameObject* parent = sceneManager.FindGameObjectByID(newParentID);
+		if (parent)
+			child->transform.SetParent(&parent->transform);
+		else
+			child->transform.SetParent(nullptr);
+	}
+
+	/*******************************************************************************
+	/*!
+	\brief
 		Sets the velocity of a rigidbody
 	\param _ID
 		GameObject of ID with a rigidbody
@@ -321,6 +339,26 @@ namespace Copium
 			return;
 		}
 		gameObj->transform.scale = *scale;
+	}
+
+	static void GetRotation(UUID _ID, Math::Vec3* rotation)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
+		if (gameObj == nullptr)
+		{
+			return;
+		}
+		gameObj->transform.rotation = *rotation;
+	}
+
+	static void SetRotation(UUID _ID, Math::Vec3* rotation)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
+		if (gameObj == nullptr)
+		{
+			return;
+		}
+		gameObj->transform.rotation = *rotation;
 	}
 
 	/*******************************************************************************
@@ -494,16 +532,15 @@ namespace Copium
 
 	*/
 	/*******************************************************************************/
-	static char GetButtonState(UUID gameObjID)
+	static char GetButtonState(UUID buttonID)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(gameObjID);
-		if (gameObj == nullptr)
+		Scene* pScene = sceneManager.get_current_scene();
+		for (Button& button : pScene->componentArrays.GetArray<Button>())
 		{
-			return 0;
+			if (button.uuid == buttonID)
+				return (char)button.state;
 		}
-		if (gameObj->GetComponent<Button>()->state == ButtonState::OnClick)
-			PRINT(gameObj->name << " " << (int)gameObj->GetComponent<Button>()->state);
-		return (char)gameObj->GetComponent<Button>()->state;
+		return 0;
 	}
 
 	/*******************************************************************************
@@ -614,6 +651,30 @@ namespace Copium
 		gameObj->GetComponent<AudioSource>()->play_sound();
 	}
 
+	static void AudioSourceStop(UUID ID)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return;
+		gameObj->GetComponent<AudioSource>()->stop_sound();
+	}
+
+	static void AudioSourceSetVolume(UUID ID, float volume)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return;
+		gameObj->GetComponent<AudioSource>()->volume = volume;
+	}
+
+	static float AudioSourceGetVolume(UUID ID)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return 0;
+		return gameObj->GetComponent<AudioSource>()->volume;
+	}
+
 	/*******************************************************************************
 	/*!
 	\brief
@@ -642,6 +703,36 @@ namespace Copium
 		animationSystem.PlayAllAnimation();
 	}
 
+	static void GetTextColor(UUID ID, glm::vec4* color)
+	{
+		Scene* pScene = sceneManager.get_current_scene();
+		if (!pScene)
+			return;
+		for (Text& text : pScene->componentArrays.GetArray<Text>())
+		{
+			if (text.uuid == ID)
+			{
+				color = &text.color;
+				return;
+			}
+		}
+	}
+
+	static void SetTextColor(UUID ID, glm::vec4* color)
+	{
+		Scene* pScene = sceneManager.get_current_scene();
+		if (!pScene)
+			return;
+		for (Text& text : pScene->componentArrays.GetArray<Text>())
+		{
+			if (text.uuid == ID)
+			{
+				text.color = *color;
+				return;
+			}
+		}
+	}
+
 	static void GetSpriteRendererColor(UUID ID, glm::vec4* color)
 	{
 		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
@@ -656,6 +747,22 @@ namespace Copium
 		if (gameObj == nullptr)
 			return;
 		gameObj->GetComponent<SpriteRenderer>()->sprite.color = *color;
+	}
+
+	static void GetImageColor(UUID ID, glm::vec4* color)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return;
+		*color = gameObj->GetComponent<Image>()->sprite.color;
+	}
+
+	static void SetImageColor(UUID ID, glm::vec4* color)
+	{
+		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
+		if (gameObj == nullptr)
+			return;
+		gameObj->GetComponent<Image>()->sprite.color = *color;
 	}
 
 	static void PlayAnimation(UUID ID)
@@ -674,12 +781,32 @@ namespace Copium
 		gameObj->GetComponent<Animator>()->PauseAnimation();
 	}
 
-	static void SetAnimationSpeed(UUID ID,double timeDelay)
+	static void SetAnimatorDelay(UUID componentID, float timeDelay)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
-		if (gameObj == nullptr)
+		Scene* pScene = sceneManager.get_current_scene();
+		if (!pScene)
 			return;
-		gameObj->GetComponent<Animator>()->animations[0].timeDelay = timeDelay;
+		for (Animator& animator : pScene->componentArrays.GetArray<Animator>())
+		{
+			if (animator.uuid == componentID)
+			{
+				animator.animations[0].timeDelay = timeDelay;
+			}
+		}
+	}
+
+	static float GetAnimatorDelay(UUID componentID)
+	{
+		Scene* pScene = sceneManager.get_current_scene();
+		if (!pScene)
+			return 0;
+		for (Animator& animator : pScene->componentArrays.GetArray<Animator>())
+		{
+			if (animator.uuid == componentID)
+			{
+				return animator.animations[0].timeDelay;
+			}
+		}
 	}
 
 	/*******************************************************************************
@@ -701,6 +828,8 @@ namespace Copium
 		Register(RigidbodySetVelocity);
 		Register(SetLocalScale);
 		Register(GetLocalScale);
+		Register(GetRotation);
+		Register(SetRotation);
 		Register(GetDeltaTime);
 		Register(SetActive);
 		Register(GetActive);
@@ -714,16 +843,25 @@ namespace Copium
 		Register(GetButtonState);
 		Register(AddComponent);
 		Register(AudioSourcePlay);
+		Register(AudioSourceStop);
+		Register(AudioSourceSetVolume);
+		Register(AudioSourceGetVolume);
 		Register(PauseAllAnimation);
 		Register(PlayAllAnimation);
 		Register(GetComponentEnabled);
 		Register(SetComponentEnabled);
+		Register(SetParent);
 		Register(GetFPS);
 		Register(GetSpriteRendererColor);
 		Register(SetSpriteRendererColor);
+		Register(GetImageColor);
+		Register(SetImageColor);
+		Register(GetTextColor);
+		Register(SetTextColor);
 		Register(PlayAnimation);
 		Register(PauseAnimation);
-		Register(SetAnimationSpeed);
+		Register(SetAnimatorDelay);
+		Register(GetAnimatorDelay);
 	}
 }
 #endif // !SCRIPT_WRAPPERS_H

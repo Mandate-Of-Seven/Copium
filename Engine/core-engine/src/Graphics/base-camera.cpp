@@ -150,6 +150,7 @@ namespace Copium
 
 		glm::vec2 scenePos = gameView->get_position();
 		scenePos.x += gameView->get_indent();
+		scenePos.y += 22.f; // Offset from the tab
 		glm::vec2 sceneDim = gameView->get_dimension();
 		if (!MyEditorSystem.is_enabled())
 		{
@@ -157,12 +158,12 @@ namespace Copium
 			sceneDim = glm::vec2(MyWindowSystem.get_window_width(), MyWindowSystem.get_window_height());
 		}
 
-		//PRINT("Scene Dimension: " << scenePos.x << " " << scenePos.y);
+		//PRINT("Scene Position: " << scenePos.x << " " << scenePos.y);
 		Math::Vec2 mousePos = MyInputSystem.get_mouseposition();
 		//PRINT("Mouse position : " << mousePos.x << " " << mousePos.y);
 		glm::vec2 centreOfScene = { scenePos.x + sceneDim.x / 2, scenePos.y + sceneDim.y / 2 };
 		glm::vec2 mouseScenePos = { mousePos.x - centreOfScene.x, centreOfScene.y - mousePos.y };
-		glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2 + 0.1f };
+		glm::vec2 mouseToNDC = { mouseScenePos.x / sceneDim.y * 2, mouseScenePos.y / sceneDim.y * 2};
 
 		if (!MyEditorSystem.is_enabled())
 		{
@@ -170,6 +171,7 @@ namespace Copium
 		}
 
 		mouseToNDC *= orthographicSize;
+		//PRINT("ORTHO SIZE: " << orthographicSize);
 		glm::vec2 worldNDC = { mouseToNDC.x + viewer.x, mouseToNDC.y + viewer.y };
 		//PRINT("~: " << worldNDC.x << ", " << worldNDC.y);
 		return worldNDC;
