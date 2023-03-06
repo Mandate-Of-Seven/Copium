@@ -118,7 +118,8 @@
                     "deccelerateSFX": 11048904636908595310,
                     "hoverSFX": 17747488176716717098,
                     "leverSFX": 10219544415510482568,
-                    "paperSFX": 16863530532877669399
+                    "paperSFX": 16863530532877669399,
+                    "ending3bVO": 2090025714383355506
                 }
             ]
         },
@@ -5221,6 +5222,8 @@
                     "preparing": false,
                     "storageComparment": true,
                     "supplies": 10,
+                    "prepareButton": 1694010125661307522,
+                    "audioManager": 11261402425968020089,
                     "bronson": 6194986179725401096,
                     "chuck": 17821819373689235206,
                     "crewStatusManager": 13021923965944002219,
@@ -5228,8 +5231,6 @@
                     "deployButton": 5395796591469370865,
                     "fader": 11311745147968865628,
                     "harris": 11462693708151468748,
-                    "audioManager": 11261402425968020089,
-                    "prepareButton": 1694010125661307522,
                     "prepareManager": 5967388857219597172,
                     "resultManager": 12715761732489693216,
                     "suppliesText": 2987481935980349814,
@@ -8168,6 +8169,43 @@
                     "Overlap": true,
                     "Volume": 1.0,
                     "Channel": ""
+                }
+            ]
+        },
+        {
+            "UID": 2846601777084698408,
+            "Name": "VO_Ending3B",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 2090025714383355506,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "Ending3b",
+                    "Loop": false,
+                    "Overlap": true,
+                    "Volume": 1.0,
+                    "Channel": "Voice"
                 }
             ]
         }

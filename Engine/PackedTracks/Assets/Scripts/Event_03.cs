@@ -129,6 +129,7 @@ public class Event_03: CopiumScript
         {
             if (choice == 1)
             {
+                cm.audioManager.ending3bVO.Play();
                 EventManager.Body.text = "There were many days, if not weeks, with no word about Danton's whereabouts. Bronson, " +
                                          "Chuck, and Harris have all died from their wounds and the cold; I have run out of everything " +
                                          "I need to survive, including food, fuel, and water; and I'm afraid I won't be able to return " +
