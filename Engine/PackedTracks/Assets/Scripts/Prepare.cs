@@ -74,12 +74,6 @@ public class Prepare : CopiumScript
         {
             resultText.text = crewManager.crew[3].resultText;
         }
-
-        if (closeButton.state == ButtonState.OnClick)
-        {
-            prepareFinal.SetActive(false);
-            prepareCanvas.SetActive(false);
-        }
     }
 
     
@@ -87,9 +81,9 @@ public class Prepare : CopiumScript
     public void GenerateEvents(CrewMenu.Person crewmate)
     {
         currentCrewmate.resultText = "";
-
         prepareCanvas.SetActive(true);
         prepareChoices.SetActive(true);
+        prepareFinal.SetActive(false);
         prepareOption1.gameObject.SetActive(false);
         prepareOption2.gameObject.SetActive(false);
 
@@ -452,8 +446,5 @@ public class Prepare : CopiumScript
         {
             dantonButton.gameObject.SetActive(true);
         }
-
-
-
     }
 }

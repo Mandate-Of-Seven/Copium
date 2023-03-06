@@ -13,6 +13,7 @@ public class CrewMenu: CopiumScript
     public Button deployButton;
 
     public CrewStatusManager crewStatusManager; 
+    public ResultManager resultManager; 
 
     public Fade fader;
 
@@ -28,8 +29,8 @@ public class CrewMenu: CopiumScript
 
     float timer = 0.0f;
 
-    float healthInterval = 5.0f; // The interval in seconds in which the crew members lose health
-    float hungerInterval = 4.0f; // The interval in seconds in which the crew members get hungry
+    float healthInterval = 0.1f; // The interval in seconds in which the crew members lose health
+    float hungerInterval = 0.1f; // The interval in seconds in which the crew members get hungry
 
     public bool storageComparment = true; // For the food storage
 
@@ -105,8 +106,7 @@ public class CrewMenu: CopiumScript
             _mental = 15;
             _hunger = 10;
             _timer = 0.0f;
-            Console.WriteLine("CONSTRUCTED PERSON!: " + _name + _health);
-            _resultText = "1";
+            _resultText = _name + " is just chilling in the back";
         }
     }
 
@@ -334,7 +334,8 @@ public class CrewMenu: CopiumScript
     //generate a random event for each deployed
     public void StartPrepare()
     {
-
+        crewStatusManager.ClosePanel();
+        resultManager.OpenPanel();
         if (harris.isDeployed)
         {
             prepareManager.GenerateEvents(crew[0]);

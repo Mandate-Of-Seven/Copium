@@ -737,8 +737,11 @@ namespace Copium
 				break;
 		}
 
+
+		SoundSystem::Instance()->StopAll();
 		MyEventSystem->publish(new SceneLinkedEvent(*currentScene));
 		MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_SCENE_DESERIALIZED);
+
 		return true;
 
 	}

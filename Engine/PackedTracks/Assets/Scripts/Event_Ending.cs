@@ -57,7 +57,7 @@ public class Event_Ending: CopiumScript
         }
     }
 
-    void Result(int choice)
+    public void Result(int choice)
     {
         if(choice == 1) // All dead
         {
