@@ -90,7 +90,10 @@ public class Prepare : CopiumScript
 
         prepareCanvas.SetActive(true);
         prepareChoices.SetActive(true);
-        makeChoice= true;
+        prepareOption1.gameObject.SetActive(false);
+        prepareOption2.gameObject.SetActive(false);
+
+        makeChoice = true;
         switch (crewmate.name)
         {
             case "Harris":
@@ -124,7 +127,7 @@ public class Prepare : CopiumScript
         }
 
         currentCrewmate = crewmate;
-        eventNum = RNG.RandInt(1,2);
+        eventNum = RNG.RandInt(1,10);
 
         switch (eventNum)
         {
@@ -145,6 +148,60 @@ public class Prepare : CopiumScript
                 prepareOption2.gameObject.SetActive(true);
                 prepareOption1.text = "Run!";
                 prepareOption2.text = "Fight it off!";
+                break;
+
+            case 3:
+                prepareBody.text = "The search went poorly, in the poor icy conditions and limited visibility, " +
+                                    crewmate.name+" seems to have gotten lost as he could not be seen returning to the meet up point. ";
+                prepareOption1.gameObject.SetActive(true);
+                prepareOption2.gameObject.SetActive(true);
+                prepareOption1.text = "Search for " + crewmate.name;
+                prepareOption2.text = "Wait a bit longer and hope for " + crewmate.name +" to return";
+                break;
+            case 4:
+                prepareBody.text = "A abandoned town was spotted not far from the train, there might be some supplies left in the town, " +
+                                   "but there might be scavenges there as well trying to get the last of its resources";
+                prepareOption1.gameObject.SetActive(true);
+                prepareOption2.gameObject.SetActive(true);
+                prepareOption1.text = "Explore the town";
+                prepareOption2.text = "Too dangerous, leave the town alone";
+                break;
+            case 5:
+                prepareBody.text = "While searching for resources "+crewmate.name
+                                    + " found a man in poor condition and seems to be passed out, he does not look like he " +
+                                    "will survive any longer out in the cold.";
+                prepareOption1.gameObject.SetActive(true);
+                prepareOption2.gameObject.SetActive(true);
+                prepareOption1.text = "Kill the man and take his meat for food";
+                prepareOption2.text = "Take the man's belongings and supplies";
+                break;
+            case 6:
+                prepareBody.text = crewmate.name + "Manage to caught sight of of a injured deer together with her fawn.";
+                prepareOption1.gameObject.SetActive(true);
+                prepareOption2.gameObject.SetActive(true);
+                prepareOption1.text = "Kill the deer for food";
+                prepareOption2.text = "Leave the deer alone";
+                break;
+            case 7:
+                prepareBody.text = "Not too far from the train "+ crewmate.name + "found a flowing river, the river might contain some fish inside.";
+                prepareOption1.gameObject.SetActive(true);
+                prepareOption1.text = "Go fishing";
+                break;
+            case 8:
+                prepareBody.text = "In the thick snow, " + crewmate.name + " miraculously found some firewood covered underneath a tarp.";
+                prepareOption1.gameObject.SetActive(true);
+                prepareOption1.text = "Continue";
+                break;
+            case 9:
+                prepareBody.text = crewmate.name + " was trying to find some supplies when he saw a bunch of edible mushrooms growing on a rotting wood.";
+                prepareOption1.gameObject.SetActive(true);
+                prepareOption1.text = "Continue";
+                break;
+            case 10:
+                prepareBody.text = crewmate.name + " manage to spot a old road from a far and there seem to be a few abandoned vehicles on it, " +
+                                    "there might be some fuel that was left in the vehicle's tanks.";
+                prepareOption1.gameObject.SetActive(true);
+                prepareOption1.text = "Siphon the fuel";
                 break;
             default:
                 break;
@@ -180,6 +237,94 @@ public class Prepare : CopiumScript
                     currentCrewmate.health-=5;
                     currentCrewmate.resultText = currentCrewmate.name + " becomes injured but manages to kill the polar bear, " +
                                                    "and gain some valuable food.";
+                }
+                break;
+            case 3:
+                if (choice == 1)
+                {
+                    crewManager.supplies -= 3;
+                    currentCrewmate.resultText = "After hours of search, " + currentCrewmate.name + " was found in poor condition, " +
+                                                 "but he was safely brought back to the train.";
+                }
+                else if (choice == 2)
+                {
+                    crewManager.supplies += 10;
+                    currentCrewmate.health = 4;//critical injure
+                    currentCrewmate.resultText = "Just as hope seem all lost for " + currentCrewmate.name+
+                                                " to make it back, he stumbles out from the bushes grasping a few cans of soup. " +
+                                                currentCrewmate.name + " seems to be in bad condition and his extremities have succumbed to frostbite.";
+                }
+                break;
+            case 4:
+                if (choice == 1)
+                {
+                    crewManager.supplies += 3;
+                    currentCrewmate.health = 4;//critical injure
+                    currentCrewmate.resultText = "While scavanging through the abandoned town, " +
+                                                 currentCrewmate.name + " saw some canned food and bottles of water lying in a building. " +
+                                                 "When he went to pick it up, he bumped into another scavanger, which promptly stabbed " +
+                                                 currentCrewmate.name + " in the abdomen. "+currentCrewmate.name+" grabbed a metal pipe on the " +
+                                                 "floor and swung the other guy's head, knocking him unconsious, before hurring off with the supplies.";
+                }
+                else if (choice == 2)
+                {
+                    currentCrewmate.resultText = "As the crew is leaving, they saw a group of armed scavengers running around the area, " +
+                                                 "Bullet sounds could be heard in the distance.";
+                }
+                break;
+            case 5:
+                if (choice == 1)
+                {
+                    crewManager.supplies += 5;
+                    currentCrewmate.resultText = currentCrewmate.name + " said his prayers before putting his knife to the man's throat, killing him. " +
+                                                 currentCrewmate.name+" then took the man's supplies and skined him, cutting him up for meat to be consumed.";
+                }
+                else if (choice == 2)
+                {
+                    crewManager.supplies += 2;
+                    currentCrewmate.resultText = currentCrewmate.name +" knocks the man unconsious and proceeds to take his supplies and left him in the " +
+                                                 "snow before returning to the train.";
+                }
+                break;
+            case 6:
+                if (choice == 1)
+                {
+                    crewManager.supplies += 3;
+                    currentCrewmate.resultText = currentCrewmate.name + " Took aim and shot at the deer, killing it in an instant, the confused fawn could only stand and stare as " +
+                                                 currentCrewmate.name + "  skinned and carved the deer for its meet and fur.";
+                }
+                else if (choice == 2)
+                {
+                    currentCrewmate.resultText = "As "+ currentCrewmate.name + "walked away, a large polar bear jumped out of the surrounding bushes " +
+                                                 "killing both the deer and her fawn in an instant.";
+                }
+                break;
+            case 7:
+                if (choice == 1)
+                {
+                    crewManager.supplies += 3;
+                    currentCrewmate.resultText = currentCrewmate.name + " caught some fish";
+                }
+                break;
+            case 8:
+                if (choice == 1)
+                {
+                    crewManager.supplies += 2;
+                    currentCrewmate.resultText = currentCrewmate.name + " found some firewood";
+                }
+                break;
+            case 9:
+                if (choice == 1)
+                {
+                    crewManager.supplies += 2;
+                    currentCrewmate.resultText = currentCrewmate.name + " found some mushrooms";
+                }
+                break;
+            case 10:
+                if (choice == 1)
+                {
+                    crewManager.supplies += 2;
+                    currentCrewmate.resultText = currentCrewmate.name + " siphoned some fuel from some abandoned vehicles";
                 }
                 break;
             default:
