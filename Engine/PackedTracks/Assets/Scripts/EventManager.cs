@@ -26,6 +26,8 @@ public class EventManager: CopiumScript
     bool SelectingChoice = true;
     bool ShowingMainEvent = true;
 
+    float timer = 0.0f;
+
     void Start()
 	{
         Console.WriteLine("EVENT MANAGER START");
@@ -35,7 +37,15 @@ public class EventManager: CopiumScript
 	void Update()
     {
         if (GameManager.gameEnd)
+        {
+            if(timer > 3.0f)
+            {
+                ShowEnding();
+            }
+
+            timer += Time.deltaTime;
             return;
+        }
 
         if (!crewMenu.CheckAllCrewAlive())
         {
@@ -161,7 +171,6 @@ public class EventManager: CopiumScript
     void ShowResolution()
     {
         ShowingMainEvent = false;
-
         Option_01.ResetOption();
         Option_02.ResetOption();
         Option_03.ResetOption();
@@ -180,5 +189,34 @@ public class EventManager: CopiumScript
         }
 
         ShowingResolution = false;
+    }
+
+    void ShowEnding()
+    {
+        CheckCurrentEvent();
+        Option_01.ResetOption();
+        Option_02.ResetOption();
+        Option_03.ResetOption();
+
+        Option_01.Enable();
+        Option_02.Enable();
+        Option_03.Enable();
+
+        Option_01.txt.text = "Restart Game";
+        Option_02.txt.text = "Back to Main Menu";
+        Option_03.txt.text = "Quit Game";
+
+        if (Option_01.btn.state == ButtonState.OnClick)
+        {
+            SceneManager.LoadScene("Demo");
+        }
+        else if (Option_02.btn.state == ButtonState.OnClick)
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
+        else if (Option_03.btn.state == ButtonState.OnClick)
+        {
+            Application.Quit();
+        }
     }
 }

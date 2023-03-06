@@ -55,6 +55,10 @@ public class GameManager: CopiumScript
             return;
 
         ButtonInputs();
+
+        // Game ends
+        CheckForGameEndCondition();
+
         // Cant deploy if the train is moving
         if (trainManager.currentSpeed > 0)
         {
@@ -106,19 +110,27 @@ public class GameManager: CopiumScript
             }
             foodTimer += Time.deltaTime;
         }
+    }
 
-        // Game ends
-        if(EventManager.EventSequence == -2 && !gameEnd)
+    void CheckForGameEndCondition()
+    {
+        if (EventManager.EventSequence == -2 && !gameEnd)
         {
             gameEnd = true;
-            trainManager.FlickLever();
+            if (trainManager.trainLeverActivated.gameObject.activeSelf)
+                trainManager.FlickLever();
             distanceLeft = 0.0f;
+            crewStatusManager.ClosePanel();
+            reportScreenManager.OpenPanel();
         }
         else if (EventManager.EventSequence == -3 && !gameEnd)
         {
             gameEnd = true;
             crewMenuScript.fader.shouldFade = true;
-            trainManager.FlickLever();
+            if (trainManager.trainLeverActivated.gameObject.activeSelf)
+                trainManager.FlickLever();
+            crewStatusManager.ClosePanel();
+            reportScreenManager.OpenPanel();
         }
         else if (distanceLeft <= 0.99f && !gameEnd)
         {
@@ -126,6 +138,8 @@ public class GameManager: CopiumScript
             trainManager.FlickLever();
             EventManager.EventSequence = -1;
             EventManager.OverideEvent();
+            crewStatusManager.ClosePanel();
+            reportScreenManager.OpenPanel();
         }
     }
 
