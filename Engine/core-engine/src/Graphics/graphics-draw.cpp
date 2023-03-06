@@ -411,6 +411,10 @@ namespace Copium
 					if (!camera->withinFrustum(updatedPos, updatedScale))
 						continue;
 
+					// If text is too small to even read
+					if (updatedSize < 0.03f && updatedSize > -0.03f)
+						continue;
+
 					renderer.draw_text(text.content, updatedPos, text.get_color(), updatedSize, updatedWrapper, text.font, &text.layeredColor);
 				}
 				else
@@ -613,6 +617,10 @@ namespace Copium
 
 							// If the object isnt within the frustum
 							if (!camera->withinFrustum(updatedPos, updatedScale))
+								continue;
+
+							// If text is too small to even read
+							if (updatedSize < 0.03f && updatedSize > -0.03f)
 								continue;
 
 							renderer.draw_text(text.content, updatedPos, text.get_color(), updatedSize, updatedWrapper, text.font,&text.layeredColor);
