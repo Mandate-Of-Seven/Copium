@@ -53,14 +53,18 @@ namespace Copium
 		}
 		return nullptr;
 	}
-	Component* SceneManager::FindComponentByID(UUID _id)
+
+	template <typename T>
+	T* SceneManager::FindComponentByID(UUID _id)
 	{
-
-
 		if (!currentScene)
 			return nullptr;
-
-		return currentScene->componentArrays.FindByUUID(_id);
+		for (T& component : currentScene->componentArrays.GetArray<T>())
+		{
+			if (component.uuid == _id)
+				return &component;
+		}
+		return nullptr;
 	}
 
 	void SceneManager::init()
@@ -83,7 +87,10 @@ namespace Copium
 			{
 				Button* button = go.GetComponent<Button>();
 				UUID uuid{ (uint64_t)button->targetGraphic };
-				button->targetGraphic = reinterpret_cast<IUIComponent*>(FindComponentByID(uuid));
+				Component* component = FindComponentByID<Text>(uuid);
+				if (!component)
+					component = FindComponentByID<Image>(uuid);
+				button->targetGraphic = reinterpret_cast<IUIComponent*>(component);
 			}
 
 			for (Script* pScript : go.GetComponents<Script>())
@@ -106,66 +113,86 @@ namespace Copium
 						UUID uuid{ (uint64_t)pScript->fieldComponentReferences[fieldName] };
 						if (uuid == 0)
 							continue;
-						Component* component = FindComponentByID(uuid);
-						pScript->fieldComponentReferences[fieldName] = component;
 						switch ((ComponentType)field.fType)
 						{
 						case(ComponentType::Animator):
 						{
-							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Animator*)component));
+							Animator* component = FindComponentByID<Animator>(uuid);
+							pScript->fieldComponentReferences[fieldName] = component;
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), component));
 							break;
 						}
 						case(ComponentType::AudioSource):
 						{
-							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (AudioSource*)component));
+							AudioSource* component = FindComponentByID<AudioSource>(uuid);
+							pScript->fieldComponentReferences[fieldName] = component;
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), component));
 							break;
 						}
 						case(ComponentType::BoxCollider2D):
 						{
-							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (BoxCollider2D*)component));
+							BoxCollider2D* component = FindComponentByID<BoxCollider2D>(uuid);
+							pScript->fieldComponentReferences[fieldName] = component;
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), component));
 							break;
 						}
 						case(ComponentType::Button):
 						{
-							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Button*)component));
+							Button* component = FindComponentByID<Button>(uuid);
+							pScript->fieldComponentReferences[fieldName] = component;
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), component));
 							break;
 						}
 						case(ComponentType::Camera):
 						{
-							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Camera*)component));
+							Camera* component = FindComponentByID<Camera>(uuid);
+							pScript->fieldComponentReferences[fieldName] = component;
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), component));
 							break;
 						}
 						case(ComponentType::Image):
 						{
-							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Image*)component));
+							Image* component = FindComponentByID<Image>(uuid);
+							pScript->fieldComponentReferences[fieldName] = component;
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), component));
 							break;
 						}
 						case(ComponentType::Rigidbody2D):
 						{
-							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Rigidbody2D*)component));
+							Rigidbody2D* component = FindComponentByID<Rigidbody2D>(uuid);
+							pScript->fieldComponentReferences[fieldName] = component;
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), component));
 							break;
 						}
 						case(ComponentType::SpriteRenderer):
 						{
-							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (SpriteRenderer*)component));
+							SpriteRenderer* component = FindComponentByID<SpriteRenderer>(uuid);
+							pScript->fieldComponentReferences[fieldName] = component;
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), component));
 							break;
 						}
 						case(ComponentType::Script):
 						{
+							Script* component = FindComponentByID<Script>(uuid);
 							//Different scripts
 							if (component && ((Script*)component)->Name() != field.typeName)
 								continue;
-							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Script*)component));
+							pScript->fieldComponentReferences[fieldName] = component;
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), component));
 							break;
 						}
 						case(ComponentType::Text):
 						{
-							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Text*)component));
+							Text* component = FindComponentByID<Text>(uuid);
+							pScript->fieldComponentReferences[fieldName] = component;
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), component));
 							break;
 						}
 						case(ComponentType::SortingGroup):
 						{
-							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (SortingGroup*)component));
+							SortingGroup* component = FindComponentByID<SortingGroup>(uuid);
+							pScript->fieldComponentReferences[fieldName] = component;
+							MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), component));
 							break;
 						}
 						}
@@ -185,8 +212,10 @@ namespace Copium
 			{
 				if (pButton->targetGraphic)
 				{
-					pButton->targetGraphic = reinterpret_cast<IUIComponent*>(FindComponentByID(pButton->targetGraphic->uuid));
-					PRINT(pButton->targetGraphic->uuid.GetUUID());
+					Component* component = FindComponentByID<Text>(pButton->targetGraphic->uuid);
+					if (!component)
+						component = FindComponentByID<Image>(pButton->targetGraphic->uuid);
+					pButton->targetGraphic = reinterpret_cast<IUIComponent*>(component);
 				}
 
 			}
@@ -203,73 +232,84 @@ namespace Copium
 				{
 					if (!pair.second)
 						continue;
-					pair.second = FindComponentByID(pair.second->uuid);
 					std::string fieldName{ pair.first };
 					Field& field = pScript->fieldDataReferences[pair.first];
-					Component* component = pair.second;
+					Component* component = nullptr;
 					switch ((ComponentType)field.fType)
 					{
 					case(ComponentType::Animator):
 					{
+						component = FindComponentByID<Animator>(pair.second->uuid);
 						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Animator*)component));
 						break;
 					}
 					case(ComponentType::AudioSource):
 					{
+						component = FindComponentByID<AudioSource>(pair.second->uuid);
 						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (AudioSource*)component));
 						break;
 					}
 					case(ComponentType::BoxCollider2D):
 					{
+						component = FindComponentByID<BoxCollider2D>(pair.second->uuid);
 						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (BoxCollider2D*)component));
 						break;
 					}
 					case(ComponentType::Button):
 					{
+						component = FindComponentByID<Button>(pair.second->uuid);
 						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Button*)component));
 						break;
 					}
 					case(ComponentType::Camera):
 					{
+						component = FindComponentByID<Camera>(pair.second->uuid);
 						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Camera*)component));
 						break;
 					}
 					case(ComponentType::Image):
 					{
+						component = FindComponentByID<Image>(pair.second->uuid);
 						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Image*)component));
 						break;
 					}
 					case(ComponentType::Rigidbody2D):
 					{
+						component = FindComponentByID<Rigidbody2D>(pair.second->uuid);
 						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Rigidbody2D*)component));
 						break;
 					}
 					case(ComponentType::SpriteRenderer):
 					{
+						component = FindComponentByID<SpriteRenderer>(pair.second->uuid);
 						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (SpriteRenderer*)component));
 						break;
 					}
 					case(ComponentType::Script):
 					{
 						//Different scripts
-						if (((Script*)component)->Name() != field.typeName)
+						component = FindComponentByID<Script>(pair.second->uuid);
+						if (component && ((Script*)component)->Name() != field.typeName)
 							continue;
 						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Script*)component));
 						break;
 					}
 					case(ComponentType::Text):
 					{
+						component = FindComponentByID<Text>(pair.second->uuid);
 						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Text*)component));
 						break;
 					}
 					case(ComponentType::SortingGroup):
 					{
+						component = FindComponentByID<SortingGroup>(pair.second->uuid);
 						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (SortingGroup*)component));
 						break;
 					}
 					}
 					pScript->fieldComponentReferences[fieldName] = component;
 				}
+
 			}
 		}
 	}
@@ -1095,8 +1135,10 @@ namespace Copium
 			{
 				if (pButton->targetGraphic)
 				{
-					pButton->targetGraphic = reinterpret_cast<IUIComponent*>(FindComponentByID(pButton->targetGraphic->uuid));
-					PRINT(pButton->targetGraphic->uuid.GetUUID());
+					Component* component = FindComponentByID<Text>(pButton->targetGraphic->uuid);
+					if (!component)
+						component = FindComponentByID<Image>(pButton->targetGraphic->uuid);
+					pButton->targetGraphic = reinterpret_cast<IUIComponent*>(component);
 				}
 
 			}
@@ -1112,72 +1154,91 @@ namespace Copium
 				{
 					if (!pair.second)
 						continue;
-					pair.second = FindComponentByID(pair.second->uuid);
 					std::string fieldName{ pair.first };
 					Field& field = pScript->fieldDataReferences[pair.first];
-					Component* component = pair.second;
 					switch ((ComponentType)field.fType)
 					{
 					case(ComponentType::Animator):
 					{
-						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Animator*)component));
+						pair.second = FindComponentByID<Animator>(pair.second->uuid);
+						pScript->fieldComponentReferences[fieldName] = pair.second;
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Animator*)pair.second));
 						break;
 					}
 					case(ComponentType::AudioSource):
 					{
-						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (AudioSource*)component));
+						pair.second = FindComponentByID<AudioSource>(pair.second->uuid);
+						pScript->fieldComponentReferences[fieldName] = pair.second;
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (AudioSource*)pair.second));
 						break;
 					}
 					case(ComponentType::BoxCollider2D):
 					{
-						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (BoxCollider2D*)component));
+						pair.second = FindComponentByID<BoxCollider2D>(pair.second->uuid);
+						pScript->fieldComponentReferences[fieldName] = pair.second;
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (BoxCollider2D*)pair.second));
 						break;
 					}
 					case(ComponentType::Button):
 					{
-						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Button*)component));
+						pair.second = FindComponentByID<Button>(pair.second->uuid);
+						pScript->fieldComponentReferences[fieldName] = pair.second;
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Button*)pair.second));
 						break;
 					}
 					case(ComponentType::Camera):
 					{
-						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Camera*)component));
+						pair.second = FindComponentByID<Camera>(pair.second->uuid);
+						pScript->fieldComponentReferences[fieldName] = pair.second;
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Camera*)pair.second));
 						break;
 					}
 					case(ComponentType::Image):
 					{
-						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Image*)component));
+						pair.second = FindComponentByID<Image>(pair.second->uuid);
+						pScript->fieldComponentReferences[fieldName] = pair.second;
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Image*)pair.second));
 						break;
 					}
 					case(ComponentType::Rigidbody2D):
 					{
-						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Rigidbody2D*)component));
+						pair.second = FindComponentByID<Rigidbody2D>(pair.second->uuid);
+						pScript->fieldComponentReferences[fieldName] = pair.second;
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Rigidbody2D*)pair.second));
 						break;
 					}
 					case(ComponentType::SpriteRenderer):
 					{
-						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (SpriteRenderer*)component));
+						pair.second = FindComponentByID<SpriteRenderer>(pair.second->uuid);
+						pScript->fieldComponentReferences[fieldName] = pair.second;
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (SpriteRenderer*)pair.second));
 						break;
 					}
 					case(ComponentType::Script):
 					{
+						pair.second = FindComponentByID<Script>(pair.second->uuid);
+						pScript->fieldComponentReferences[fieldName] = pair.second;
 						//Different scripts
-						if (((Script*)component)->Name() != field.typeName)
+						if (((Script*)pair.second)->Name() != field.typeName)
 							continue;
-						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Script*)component));
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Script*)pair.second));
 						break;
 					}
 					case(ComponentType::Text):
 					{
-						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Text*)component));
+						pair.second = FindComponentByID<Text>(pair.second->uuid);
+						pScript->fieldComponentReferences[fieldName] = pair.second;
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (Text*)pair.second));
 						break;
 					}
 					case(ComponentType::SortingGroup):
 					{
-						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (SortingGroup*)component));
+						pair.second = FindComponentByID<SortingGroup>(pair.second->uuid);
+						pScript->fieldComponentReferences[fieldName] = pair.second;
+						MyEventSystem->publish(new ScriptSetFieldReferenceEvent(*pScript, fieldName.c_str(), (SortingGroup*)pair.second));
 						break;
 					}
 					}
-					pScript->fieldComponentReferences[fieldName] = component;
 				}
 			}
 			if (go.HasComponent<SortingGroup>())

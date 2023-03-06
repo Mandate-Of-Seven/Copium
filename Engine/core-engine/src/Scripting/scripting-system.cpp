@@ -329,7 +329,6 @@ namespace Copium
 				continue;
 			if (mono_class_get_parent(_class) == mCopiumScript)
 			{
-				//PRINT("SCRIPT: " << name);
 				scriptClassMap[name] = ScriptClass{ name,_class };
 				reflectionMap[mono_class_get_type(_class)] = ComponentType::Script;
 			}
@@ -339,7 +338,6 @@ namespace Copium
 			}
 			else if (mono_class_get_parent(_class) == mono_class_from_name(mAssemblyImage, name_space, "Component"))
 			{
-				//PRINT("COMPONENT: " << name);
 				if (_class == mCopiumScript)
 					continue;
 				scriptClassMap[name] = ScriptClass{ name,_class };
