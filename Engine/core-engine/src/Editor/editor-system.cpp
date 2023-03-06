@@ -494,7 +494,7 @@ namespace Copium
 			Scene* scene = MySceneManager.get_current_scene();
 			if (scene && !scene->componentArrays.GetArray<Camera>().empty())
 			{
-				scene->componentArrays.GetArray<Camera>()[0].on_resize(dimension.x, dimension.y);
+				game.resize_game(dimension);
 				glViewport(0, 0, (GLsizei)dimension.x, (GLsizei)dimension.y);
 			}
 		}
