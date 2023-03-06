@@ -38,6 +38,14 @@ public class Prepare : CopiumScript
     public int eventNum;
     public int choice;
 
+    bool harrisHover = false;
+    bool bronsonHover =false;
+    bool chuckHover = false;
+    bool dantonHover = false;
+
+    bool option1Hover = false;
+    bool option2Hover = false;
+
     void Start()
     {
 
@@ -46,33 +54,116 @@ public class Prepare : CopiumScript
     {
         if (makeChoice)
         {
-            if (prepareButton1.state == ButtonState.OnClick)
+            if (prepareButton1.state == ButtonState.OnHover)
             {
+                if (!option1Hover)
+                {
+                    option1Hover = true;
+                    crewManager.audioManager.hoverSFX.Play();
+                }
+            }
+            else if (prepareButton1.state == ButtonState.OnClick)
+            {
+                crewManager.audioManager.clickSFX.Play();
                 choice = 1;
                 GenerateResults();
             }
+            else if (prepareButton1.state == ButtonState.None)
+            {
+                option1Hover = false;
+            }
+
+            if (prepareButton2.state == ButtonState.OnHover)
+            {                
+                if (!option2Hover)
+                {
+                    option2Hover = true;
+                    crewManager.audioManager.hoverSFX.Play();
+                }
+            }
             else if (prepareButton2.state == ButtonState.OnClick)
             {
+                crewManager.audioManager.clickSFX.Play();
                 choice = 2;
                 GenerateResults();
             }
+            else if (prepareButton2.state == ButtonState.None)
+            {
+                option2Hover = false;
+            }
         }
 
-        if (harrisButton.state == ButtonState.OnClick)
+        if (harrisButton.state == ButtonState.OnHover)
         {
+            if (!harrisHover)
+            {
+                harrisHover = true;
+                crewManager.audioManager.hoverSFX.Play();
+            }
+        }
+        else if (harrisButton.state == ButtonState.OnClick)
+        {
+            crewManager.audioManager.clickSFX.Play();
             resultText.text = crewManager.crew[0].resultText;
+        }
+        else if (harrisButton.state == ButtonState.None)
+        {
+            harrisHover = false;
+        }
+        
+        if (bronsonButton.state == ButtonState.OnHover)
+        {
+            if (!bronsonHover)
+            {
+                bronsonHover = true;
+                crewManager.audioManager.hoverSFX.Play();
+            }
         }
         else if (bronsonButton.state == ButtonState.OnClick)
         {
+            crewManager.audioManager.clickSFX.Play();
             resultText.text = crewManager.crew[1].resultText;
+        }
+        else if (bronsonButton.state == ButtonState.None)
+        {
+            bronsonHover = false;
+        }
+
+
+        if (chuckButton.state == ButtonState.OnHover)
+        {
+            if (!chuckHover)
+            {
+                chuckHover = true;
+                crewManager.audioManager.hoverSFX.Play();
+            }
         }
         else if (chuckButton.state == ButtonState.OnClick)
         {
+            crewManager.audioManager.clickSFX.Play();
             resultText.text = crewManager.crew[2].resultText;
+        }
+        else if (chuckButton.state == ButtonState.None)
+        {
+            chuckHover = false;
+        }
+
+        if (dantonButton.state == ButtonState.OnHover)
+        {
+            if (!dantonHover)
+            {
+                dantonHover = true;
+                crewManager.audioManager.hoverSFX.Play();
+            }
         }
         else if (dantonButton.state == ButtonState.OnClick)
         {
+            crewManager.audioManager.clickSFX.Play();
             resultText.text = crewManager.crew[3].resultText;
+        }
+        else if (dantonButton.state == ButtonState.None)
+        {
+            dantonHover = false;
         }
     }
 

@@ -44,6 +44,8 @@ public class TrainManager: CopiumScript
 
 	float targetAmbienceVolume = 0.0f;
 
+	bool onHover = false;
+
 	void Start()
 	{
 		targetSnowDelay = snowMaxDelay;
@@ -56,6 +58,11 @@ public class TrainManager: CopiumScript
 
 		if (trainLeverBtn.state == ButtonState.OnHover)
 		{
+			if (!onHover)
+			{
+				audioManager.hoverSFX.Play();
+				onHover = true;
+			}
 			Color leverCurrentColor = Color.Lerp(leverHoverColor, trainLeverActivated.color, Time.deltaTime * levelTransSpeed);
 			trainLeverActivated.color = leverCurrentColor;
 			trainLeverDeactivated.color = leverCurrentColor;
@@ -66,6 +73,10 @@ public class TrainManager: CopiumScript
 		}
 		else
 		{
+			if (trainLeverBtn.state == ButtonState.None)
+			{
+				onHover = false;
+			}
 			Color leverCurrentColor = Color.Lerp(trainLeverActivated.color, Color.white, Time.deltaTime * levelTransSpeed);
 			trainLeverActivated.color = leverCurrentColor;
 			trainLeverDeactivated.color = leverCurrentColor;
@@ -127,7 +138,7 @@ public class TrainManager: CopiumScript
 			snowAnimator.gameObject.transform.localScale = 
 				Vector3.Lerp(snowScale,newSnowScale,Time.deltaTime * 2.0f);
 		}
-		else
+		else 
 		{
 			trainCanvas.transform.localScale = 
 				Vector3.Lerp(trainCanvas.transform.localScale,targetScale,timeStep);
@@ -137,12 +148,15 @@ public class TrainManager: CopiumScript
 			snowAnimator.gameObject.transform.localScale = 
 				Vector3.Lerp(snowScale,newSnowScale,timeStep);
 		}
-		audioManager.ambTrain.volume = 
-			Mathf.Lerp(audioManager.ambTrain.volume,targetAmbienceVolume,timeStep);
-		trainCanvas.transform.localRotation = 
-			Vector3.Lerp(Vector3.zero,targetRotation,timeStep);
-		trainCanvas.transform.localPosition = 
-			Vector3.Lerp(Vector3.zero,targetPosition,timeStep);
+		if (ratio >= 0.3f)
+		{
+			audioManager.ambTrain.volume = 
+				Mathf.Lerp(audioManager.ambTrain.volume,targetAmbienceVolume,timeStep);
+			trainCanvas.transform.localRotation = 
+				Vector3.Lerp(Vector3.zero,targetRotation,timeStep);
+			trainCanvas.transform.localPosition = 
+				Vector3.Lerp(Vector3.zero,targetPosition,timeStep);
+		}
 	}
 
 	public void FlickLever()
