@@ -43,6 +43,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 //DEBUGGING
 #include "Debugging/logging-system.h"
+#include "Debugging/frame-rate-controller.h"
 
 void print(){}
 

@@ -143,6 +143,7 @@ namespace Copium
 		//		 to improve runtime rendering(no spikes)
 		parse_textures();
 
+		uProjection = glGetUniformLocation(shaderProgram[QUAD_SHADER].GetHandle(), "uViewProjection");
 		//loaded = true;
 	}
 

@@ -358,7 +358,6 @@ public class CrewMenu: CopiumScript
 
         //hide crewscreen
         deployed = false;
-        gameObject.SetActive(false);
     }
 
 
