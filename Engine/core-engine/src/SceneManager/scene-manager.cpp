@@ -438,8 +438,9 @@ namespace Copium
 
 			for (GameObject* gameobj : scene.gameObjectsForDeletion)
 			{
+
 				PRINT("DESTROYING " << gameobj->name);
-				MyGOF.Destroy(*gameobj, scene.gameObjects);
+				MyGOF.Destroy(*gameobj, scene.gameObjects, true);
 
 			}
 			scene.gameObjectsForDeletion.clear();
@@ -1217,6 +1218,7 @@ namespace Copium
 
 	void SceneManager::CallbackGameObjectDestroy(GameObjectDestroyEvent* pEvent)
 	{
+		PRINT("mark for deletion");
 		COPIUM_ASSERT(currentScene == nullptr, "No scene is loaded, where did you get this gameObject from?");
 		CleanGameObject(pEvent->gameObject, *currentScene);
 		currentScene->gameObjectsForDeletion.push_back(&pEvent->gameObject);
