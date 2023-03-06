@@ -13,6 +13,7 @@ public class CrewMenu: CopiumScript
     public Button deployButton;
 
     public CrewStatusManager crewStatusManager; 
+    public ResultManager resultManager; 
 
     public Fade fader;
 
@@ -105,8 +106,7 @@ public class CrewMenu: CopiumScript
             _mental = 15;
             _hunger = 10;
             _timer = 0.0f;
-            Console.WriteLine("CONSTRUCTED PERSON!: " + _name + _health);
-            _resultText = "1";
+            _resultText = _name + " is just chilling in the back";
         }
     }
 
@@ -334,7 +334,8 @@ public class CrewMenu: CopiumScript
     //generate a random event for each deployed
     public void StartPrepare()
     {
-
+        crewStatusManager.ClosePanel();
+        resultManager.OpenPanel();
         if (harris.isDeployed)
         {
             prepareManager.GenerateEvents(crew[0]);

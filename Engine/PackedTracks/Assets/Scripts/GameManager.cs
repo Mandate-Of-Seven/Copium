@@ -22,6 +22,7 @@ public class GameManager: CopiumScript
     public TrainManager trainManager;
     public ReportScreenManager reportScreenManager;
     public CrewStatusManager crewStatusManager;
+    public ResultManager resultManager;
 
     public Text tracker;
 

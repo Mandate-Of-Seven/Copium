@@ -57,10 +57,6 @@ public class TrainManager: CopiumScript
 		if (trainLeverBtn.state == ButtonState.OnHover)
 		{
 			Color leverCurrentColor = Color.Lerp(leverHoverColor, trainLeverActivated.color, Time.deltaTime * levelTransSpeed);
-			//Console.WriteLine("R: " + leverCurrentColor.r);
-			//Console.WriteLine("G: " + leverCurrentColor.g);
-			//Console.WriteLine("B: " + leverCurrentColor.b);
-			//Console.WriteLine("A: " + leverCurrentColor.a);
 			trainLeverActivated.color = leverCurrentColor;
 			trainLeverDeactivated.color = leverCurrentColor;
 		}
@@ -98,6 +94,7 @@ public class TrainManager: CopiumScript
 		}
 		else if (!accelerate && ratio <= 0.4f)
 		{
+			audioManager.ambTrain.Stop();
 			float shakePosX = RNG.Range(-shakePosition,shakePosition);
 			float shakePosY = RNG.Range(0,shakePosition*2);
 			targetPosition = new Vector3(shakePosX,shakePosY,0);
@@ -170,7 +167,8 @@ public class TrainManager: CopiumScript
     }
 
 	void StartTrain()
-	{
+	{       
+		audioManager.ambTrain.Stop();
         audioManager.ambTrain.Play();
 		audioManager.deccelerateSFX.Stop();
 		audioManager.accelerateSFX.Play();
