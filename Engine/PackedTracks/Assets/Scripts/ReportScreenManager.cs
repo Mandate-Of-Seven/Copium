@@ -36,12 +36,8 @@ public class ReportScreenManager: CopiumScript
         }
         else if (ReportScreenBtn.state == ButtonState.OnRelease)
         {
-			alert.enabled = false;
-            isReportScreenOn = true;
             audioManager.clickSFX.Play();
-			ReportScreenBtn.gameObject.SetActive(false);
-			ReportTab.transform.parent = null;
-            resultManager.Disable();
+            OpenPanel();
         }
         else if (ReportScreenBtn.state == ButtonState.None)
         {
@@ -55,11 +51,8 @@ public class ReportScreenManager: CopiumScript
         }
 		else if(CloseReportBtn.state == ButtonState.OnRelease)
         {
-            isReportScreenOn = false;
             audioManager.clickSFX.Play();
-			ReportScreenBtn.gameObject.SetActive(true);
-			ReportTab.transform.parent = parent.transform;
-            resultManager.Enable();
+            ClosePanel();
         }        
         else if (CloseReportBtn.state == ButtonState.None)
         {
@@ -76,4 +69,19 @@ public class ReportScreenManager: CopiumScript
             ReportTab.transform.localScale = Vector3.Lerp(ReportTab.transform.localScale,Vector3.one,Time.deltaTime * transitionSpeed);
         }
 	}
+
+    public void OpenPanel()
+    {
+        alert.enabled = false;
+        isReportScreenOn = true;
+        ReportScreenBtn.gameObject.SetActive(false);
+        ReportTab.transform.parent = null;
+    }
+
+    public void ClosePanel()
+    {
+        isReportScreenOn = false;
+        ReportScreenBtn.gameObject.SetActive(true);
+        ReportTab.transform.parent = parent.transform;
+    }
 }

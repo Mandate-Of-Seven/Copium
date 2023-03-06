@@ -740,6 +740,8 @@ namespace Copium
 		MyEventSystem->publish(new SceneLinkedEvent(*currentScene));
 		MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_SCENE_DESERIALIZED);
 
+		SoundSystem::Instance()->StopAll();
+
 		return true;
 
 	}

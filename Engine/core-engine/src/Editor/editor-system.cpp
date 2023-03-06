@@ -100,6 +100,12 @@ namespace Copium
 			}*/
 		}
 
+		if (!sceneChangeName.empty())
+		{
+			MySceneManager.load_scene(sceneChangeName);
+			sceneChangeName.clear();
+		}
+
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -386,12 +392,6 @@ namespace Copium
 
 
 				}
-			}
-
-			if (!sceneChangeName.empty())
-			{
-				MySceneManager.load_scene(sceneChangeName);
-				sceneChangeName.clear();
 			}
 
             //Call all the editor layers updates here
