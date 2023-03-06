@@ -337,7 +337,7 @@ namespace Copium
 		//MT_START_PREVIEW
 		if (!inPlayMode)
 			return;
-		//PRINT("CALLED START AGAIN!");
+		PRINT("CALLED START AGAIN!");
 		Scene& scene = pEvent->scene;
 		for (Script& script : scene.componentArrays.GetArray<Script>())
 		{
