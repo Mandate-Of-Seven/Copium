@@ -72,6 +72,7 @@ public class ReportScreenManager: CopiumScript
 
     public void OpenPanel()
     {
+        resultManager.Disable();
         alert.enabled = false;
         isReportScreenOn = true;
         ReportScreenBtn.gameObject.SetActive(false);
@@ -80,6 +81,7 @@ public class ReportScreenManager: CopiumScript
 
     public void ClosePanel()
     {
+        resultManager.Enable();
         isReportScreenOn = false;
         ReportScreenBtn.gameObject.SetActive(true);
         ReportTab.transform.parent = parent.transform;
