@@ -1,5 +1,5 @@
-[2023-03-05 17:36:43.780] [Error] [critical] 
+[2023-03-06 23:58:57.845] [Error] [critical] 
 Caused By:	!mClassField
-Info:		FIELD healthCOULD NOT BE FOUND IN SCRIPT Crew
-Source:		C:\Users\prawn\Documents\GitHub\GAM-200\Engine\core-engine\src\Scripting\scripting-system.cpp (Line: 890)
+Info:		FIELD audio COULD NOT BE FOUND IN SCRIPT MainMenu
+Source:		C:\Users\Admin\Desktop\Mandate of Seven engine\Copium\Engine\core-engine\src\Scripting\scripting-system.h (Line: 616)
 
