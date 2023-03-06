@@ -13,6 +13,7 @@ public class HowtoPlayMenu: CopiumScript
     void Start()
 	{
 		prevButtonObject.SetActive(false);
+        text.text = "train cockpit info goes here";
 	}
 
 
@@ -23,13 +24,13 @@ public class HowtoPlayMenu: CopiumScript
             switch (page)
             {
                 case 1:
-                text.text = "page 2";
+                text.text = "Events go here";
                 prevButtonObject.SetActive(true);
                 page = 2;
                 break;
 
                 case 2:
-                text.text = "page 3";
+                text.text = "Stuff about the crew panel goes here";
                 page = 3;
                 break;
 
