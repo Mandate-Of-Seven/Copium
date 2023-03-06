@@ -511,12 +511,19 @@ namespace Copium
 	/*******************************************************************************/
 	static void SetTextString(UUID gameObjID, UUID compID, MonoString* str)
 	{
-		Component* component = sceneManager.FindComponentByID(compID);
-		if (component == nullptr)
+		Scene* pScene = sceneManager.get_current_scene();
+		if (!pScene)
 			return;
-		char* monoStr = mono_string_to_utf8(str);
-		strcpy(reinterpret_cast<Text*>(component)->content, monoStr);
-		mono_free(monoStr);
+		for (Text& text : pScene->componentArrays.GetArray<Text>())
+		{
+			if (text.uuid == compID)
+			{
+				char* monoStr = mono_string_to_utf8(str);
+				strcpy(text.content, monoStr);
+				mono_free(monoStr);
+				return;
+			}
+		}
 	}
 
 	/*******************************************************************************
