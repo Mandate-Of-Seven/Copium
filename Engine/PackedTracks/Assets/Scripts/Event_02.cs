@@ -31,6 +31,7 @@ public class Event_02: CopiumScript
 
             // Indicate GG GAME OVER
 			EventManager.Option_01.txt.text = "Attempt to fend off the raiders";
+            EventManager.Option_01.txt.color = Color.red;
             EventManager.Option_01.ShowAllIcons();
 
             // Indicate lost all supplies all crew mentally shaken

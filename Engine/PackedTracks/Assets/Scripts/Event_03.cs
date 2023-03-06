@@ -58,6 +58,7 @@ public class Event_03: CopiumScript
 
             // Indicate GG Game Over
             EventManager.Option_01.txt.text = "Send Danton out to find supplies";
+            EventManager.Option_01.txt.color = Color.red;
             EventManager.Option_01.ShowAllIcons();
 
             resolutionTextNum = 2;

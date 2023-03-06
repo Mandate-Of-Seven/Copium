@@ -32,6 +32,7 @@ public class GameManager: CopiumScript
     float foodTimer = 0.0f;
     float hungerTimer = 0.0f;
     float timer = 0.0f;
+    float distancePerEvent = 10.0f;
 
     bool updateEvent = false;
     public bool gameEnd = false;
@@ -48,8 +49,12 @@ public class GameManager: CopiumScript
 
 	void Update()
     {
-        ButtonInputs();
+        KeyInputs();
 
+        if (isPaused)
+            return;
+
+        ButtonInputs();
         // Cant deploy if the train is moving
         if (trainManager.currentSpeed > 0)
         {
@@ -68,18 +73,18 @@ public class GameManager: CopiumScript
             if (timer >= distanceInterval)
             {
                 distanceLeft -= trainManager.currentSpeed/3.0f;
-                if (distanceLeft % 50 < 1.0f && !updateEvent)
+                if (distanceLeft % distancePerEvent < 1.0f && !updateEvent)
                 {
                     reportScreenManager.alert.enabled = true;
                     crewStatusManager.alert.enabled = true;
                     updateEvent = true;
                     EventManager.UpdateEventSequence();
                 }
-                else if(distanceLeft % 50 > 1.0f)
+                else if(distanceLeft % distancePerEvent > 1.0f)
                     updateEvent = false;
 
                 // Close to the next event and has yet to select a choice
-                if (distanceLeft % 50 < 5.0f && EventManager.EventSequence > 0 && !updateEvent) 
+                if (distanceLeft % distancePerEvent < 5.0f && EventManager.EventSequence > 0 && !updateEvent) 
                     EventManager.SelectDefaultChoice();
 
                 timer = 0.0f;
@@ -122,8 +127,6 @@ public class GameManager: CopiumScript
             EventManager.EventSequence = -1;
             EventManager.OverideEvent();
         }
-
-        KeyInputs();
     }
 
     void ButtonInputs()
@@ -142,20 +145,6 @@ public class GameManager: CopiumScript
 
     void KeyInputs()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            isPaused = !isPaused;
-            PauseCanvas.SetActive(isPaused);
-            if (isPaused)
-            {
-                InternalCalls.PauseAllAnimation();
-            }
-            else
-            {
-                InternalCalls.PlayAllAnimation();
-            }
-        }
-
         if (!isPaused)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -178,9 +167,18 @@ public class GameManager: CopiumScript
             }
         }
 
-        if (Input.GetKey(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.P))
         {
-            Application.Quit();
+            isPaused = !isPaused;
+            PauseCanvas.SetActive(isPaused);
+            if (isPaused)
+            {
+                InternalCalls.PauseAllAnimation();
+            }
+            else
+            {
+                InternalCalls.PlayAllAnimation();
+            }
         }
     }
 }
