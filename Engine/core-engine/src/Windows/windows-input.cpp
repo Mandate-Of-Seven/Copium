@@ -155,6 +155,9 @@ double InputSystem::get_mousescroll()
 
 void InputSystem::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+    if (key < 0)
+        return;
+
     (void)mods, scancode, window; // Bean: to prevent warning, remove later
     if (action == GLFW_PRESS)
     {

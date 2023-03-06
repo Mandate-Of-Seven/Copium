@@ -45,27 +45,36 @@ namespace Copium
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
 
 		// Begin Game View
-		ImGui::Begin("Game", 0, windowFlags);
-		windowFocused = ImGui::IsWindowFocused();
-		windowHovered = ImGui::IsWindowHovered();
-		scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
-		
-		unsigned int textureID = 0;
-		Scene* currScene{ MySceneManager.get_current_scene()};
-		if (currScene && !currScene->componentArrays.GetArray<Camera>().empty())
+		if (ImGui::Begin("Game", 0, windowFlags))
 		{
-			gameCamera = &*currScene->componentArrays.GetArray<Camera>().begin();
-			gameCamera->SetCameraPosition(gameCamera->gameObj.transform.position);
-			textureID = gameCamera->get_framebuffer()->get_color_attachment_id();
+			windowFocused = ImGui::IsWindowFocused();
+			windowHovered = ImGui::IsWindowHovered();
+			scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
+
+			unsigned int textureID = 0;
+			Scene* currScene{ MySceneManager.get_current_scene() };
+			if (currScene && !currScene->componentArrays.GetArray<Camera>().empty())
+			{
+				gameCamera = &*currScene->componentArrays.GetArray<Camera>().begin();
+				gameCamera->SetCameraPosition(gameCamera->gameObj.transform.position);
+				textureID = gameCamera->get_framebuffer()->get_color_attachment_id();
+			}
+
+			ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
+			resize_game(*((glm::vec2*)&viewportEditorSize));
+			indent = (viewportEditorSize.x - sceneWidth) * 0.5f;
+			if (indent > 0)
+				ImGui::Indent(indent);
+			ImGui::Image((void*)(size_t)textureID, ImVec2{ (float)sceneWidth, (float)sceneHeight }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
+
+			// Game Camera
+			Scene* scene = MySceneManager.get_current_scene();
+			if (scene && !scene->componentArrays.GetArray<Camera>().empty())
+			{
+				scene->componentArrays.GetArray<Camera>()[0].update();
+			}
 		}
-
-		ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
-		resize_game(*((glm::vec2*) &viewportEditorSize));
-		indent = (viewportEditorSize.x - sceneWidth) * 0.5f;
-		if(indent > 0)
-			ImGui::Indent(indent);
-		ImGui::Image((void*) (size_t) textureID, ImVec2{ (float) sceneWidth, (float) sceneHeight }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
-
+		
 		ImGui::End();
 		ImGui::PopStyleVar();
 		// End Game View

@@ -249,8 +249,7 @@ namespace Copium
 			glBindVertexArray(quadVertexArrayID);
 
 			// Bean: Matrix assignment to be placed somewhere else
-			GLuint uProjection = glGetUniformLocation(
-				graphics->get_shader_program()[QUAD_SHADER].GetHandle(), "uViewProjection");
+			GLuint uProjection = graphics->GetProjection();
 			/*GLuint uTransform = glGetUniformLocation(
 				graphics->get_shader_program()[QUAD_SHADER].GetHandle(), "uTransform");*/
 			glm::mat4 projection = camera->get_view_proj_matrix();
@@ -871,7 +870,7 @@ namespace Copium
 		float xpos = 0.f, ypos = 0.f;
 		const float scaler = 0.01f;
 
-		std::map<char, Character> characters = _font->get_characters();
+		const std::map<char, Character>& characters = _font->get_characters();
 
 		glm::vec2 fontTextCoord[4] = {
 			glm::vec2(0.f, 1.f),
@@ -882,7 +881,7 @@ namespace Copium
 
 		for (char c : _text)
 		{
-			Character ch = characters[c];
+			const Character& ch = characters.at(c);
 
 			// If it is a newline
 			if (c == '\n')
@@ -911,7 +910,7 @@ namespace Copium
 			}
 
 			// Map texture unit to the texture object id
-			auto it = textureIDs.find(ch.textureID);
+			const auto it = textureIDs.find(ch.textureID);
 			if (it == textureIDs.end())
 				textureIDs.emplace(std::make_pair(ch.textureID, textureCount++));
 
@@ -942,7 +941,7 @@ namespace Copium
 					mixedColor.b = layeredColor.b * layeredColor.a / mixedColor.a + color.b * color.a * (1 - layeredColor.a) / mixedColor.a;
 					quadBufferPtr->color = mixedColor;
 				}
-				quadBufferPtr->texID = textureIDs[ch.textureID];
+				quadBufferPtr->texID = textureIDs.at(ch.textureID);
 				quadBufferPtr->type = (float)ENTITY_TYPE::TEXT;
 				quadBufferPtr++;
 			}

@@ -448,7 +448,6 @@ namespace Copium
 
 	using CleanUpSceneStruct = decltype(CleanerStruct(ComponentTypes()));
 
-
 	void CleanUpScene(Scene& scene)
 	{
 		CleanUpSceneStruct cleanUp(scene);
@@ -463,6 +462,7 @@ namespace Copium
 		}
 		//if theres a scene to load
 	}
+	
 	void SceneManager::exit()
 	{
 		if (currSceneState == Scene::SceneState::play)
@@ -704,8 +704,8 @@ namespace Copium
 
 	}
 
-
 	Scene* SceneManager::get_current_scene(){ return currentScene; }
+	
 	void SceneManager::set_current_scene(Scene* _src) { currentScene = _src; }
 
 	std::shared_ptr<GameObject>& SceneManager::get_selected_gameobject_sptr()
@@ -720,6 +720,7 @@ namespace Copium
 		
 		return currentScene->gameObjectSPTRS[0];
 	}
+	
 	std::shared_ptr<GameObject>* SceneManager::find_gameobject_sptr(GameObject* _go)
 	{
 		for (size_t i{ 0 }; i < currentScene->gameObjectSPTRS.size(); ++i)
@@ -859,6 +860,7 @@ namespace Copium
 		//std::cout << "Time taken: " << glfwGetTime() - startTime << std::endl;
 		return true;
 	}
+	
 	bool SceneManager::save_scene(const std::string& _filepath)
 	{
 		//if(!currentScene)
@@ -929,6 +931,7 @@ namespace Copium
 		Serializer::WriteToFile(sb, doc, ofs);
 		return true;
 	}
+	
 	bool SceneManager::save_scene(const std::string& _filepath, const std::string& _filename, bool _modifyname)
 	{
 		std::string fp(_filepath);
@@ -1034,7 +1037,6 @@ namespace Copium
 		currentScene->componentsForDeletion.GetArray<T>().push_back(&pEvent->component);
 	}
 
-
 	void create_rapidjson_string(rapidjson::Document& _doc, rapidjson::Value& _value, const std::string& _str)
 	{
 		rapidjson::SizeType sz = static_cast<rapidjson::SizeType>(_str.size());
@@ -1043,6 +1045,7 @@ namespace Copium
 
 	// M3
 	std::string& SceneManager::get_scenefilepath() { return sceneFilePath; }
+	
 	bool SceneManager::create_scene()
 	{
 		// If there is a scene loaded, 
@@ -1060,15 +1063,13 @@ namespace Copium
 
 		return true;
 	}
+	
 	Scene* SceneManager::get_storage_scene() { return storageScene; }
 
 	void SceneManager::CallbackQuitEngine(QuitEngineEvent* pEvent)
 	{
 		quit_engine();
 	}
-
-
-
 
 	void SceneManager::CallbackChildInstantiate(ChildInstantiateEvent* pEvent)
 	{

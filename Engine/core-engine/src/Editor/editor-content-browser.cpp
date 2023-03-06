@@ -212,8 +212,11 @@ namespace Copium
 						break;
 
 					case FILE_TYPE::SPRITE:
+						// Bean: Hash the file path then compare
 						texturePath = MyAssetSystem.GetTexture(i)->get_file_path();
-						if (!file.filePath.string().compare(texturePath))
+						static unsigned int hashTexturePath = std::hash<std::string>{}(texturePath);
+						static unsigned int hashFilePath = std::hash<std::string>{}(file.filePath.string());
+						if (hashTexturePath == hashFilePath)
 						{
 							Texture* temp = MyAssetSystem.GetTexture(i);
 							objectID = temp->get_object_id();
