@@ -38,6 +38,8 @@ public class GameManager: CopiumScript
     bool updateEvent = false;
     public bool gameEnd = false;
 
+    bool manualHover = false;
+
     void Start()
 	{
         //UpdateCanvases();
@@ -69,7 +71,8 @@ public class GameManager: CopiumScript
         else
         {
             crewMenuScript.prepareButton.gameObject.SetActive(true);
-            crewMenuScript.deployButton.gameObject.SetActive(true);
+            //Set true in crew menu when prepare is pressed
+            //crewMenuScript.deployButton.gameObject.SetActive(true);
         }
 
         //Stop travelling
@@ -146,15 +149,47 @@ public class GameManager: CopiumScript
 
     void ButtonInputs()
     {
-        if (ManualBtn.state == ButtonState.OnRelease)
+        if (!ManualPopUpBtn.gameObject.activeSelf)
         {
-            audioManager.paperSFX.Play();
-            ManualPopUp.SetActive(true);
+            if (ManualBtn.state == ButtonState.OnHover)
+            {
+                if (!manualHover)
+                {
+                    manualHover = true;
+                    audioManager.hoverSFX.Play();
+                }
+            }
+            else if (ManualBtn.state == ButtonState.OnRelease)
+            {
+                audioManager.paperSFX.Play();
+                ManualPopUp.SetActive(true);
+                manualHover = true;
+            }
+            else if (ManualBtn.state == ButtonState.None)
+            {
+                manualHover = false;
+            }
         }
-        if (ManualPopUpBtn.state == ButtonState.OnRelease)
+        else
         {
-            audioManager.paperSFX.Play();
-            ManualPopUpBtn.gameObject.SetActive(false);
+            if (ManualPopUpBtn.state == ButtonState.OnHover)
+            {
+                if (!manualHover)
+                {
+                    manualHover = true;
+                    audioManager.hoverSFX.Play();
+                }
+            }
+            else if (ManualPopUpBtn.state == ButtonState.OnRelease)
+            {
+                audioManager.paperSFX.Play();
+                ManualPopUpBtn.gameObject.SetActive(false);
+                manualHover = true;
+            }
+            else if (ManualPopUpBtn.state == ButtonState.None)
+            {
+                manualHover = false;
+            }
         }
     }
 

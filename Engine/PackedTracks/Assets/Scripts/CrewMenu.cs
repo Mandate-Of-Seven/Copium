@@ -15,6 +15,8 @@ public class CrewMenu: CopiumScript
     public CrewStatusManager crewStatusManager; 
     public ResultManager resultManager; 
 
+    public AudioManager audioManager;
+
     public Fade fader;
 
     public int supplies;
@@ -23,6 +25,10 @@ public class CrewMenu: CopiumScript
     public Crew bronson;
     public Crew chuck;
     public Crew danton;
+
+    
+    bool prepareHover = false;
+    bool deployHover = false;
 
     public bool preparing = false;
     public bool deployed = false;
@@ -128,29 +134,59 @@ public class CrewMenu: CopiumScript
         //show what event happened
         //update values based on event that happened
         //have condition for when certain values hit 0??
-
-        if (prepareButton.state == ButtonState.OnClick)
+        if (prepareButton.state == ButtonState.OnHover)
+        {
+            if (!prepareHover)
+            {
+                prepareHover = true;
+                audioManager.hoverSFX.Play();
+            }
+        }
+        else if (prepareButton.state == ButtonState.OnClick)
         {
             preparing = !preparing;
+            Console.WriteLine("CLICKED ON PREPARE");
+            deployButton.gameObject.SetActive(true);
             hDeploy = harris.isDeployed;
             bDeploy = bronson.isDeployed;
             cDeploy = chuck.isDeployed;
             dDeploy = danton.isDeployed;
+            audioManager.clickSFX.Play();
+        }
+        else if (prepareButton.state == ButtonState.None)
+        {
+            prepareHover = false;
         }
 
-        if (deployButton.state == ButtonState.OnClick && preparing)
+        if (preparing)
         {
-            deployed = true;
-            preparing = false;
-            //fader.fadeIn = true;
-            //fader.shouldFade = true;
-
-            hDeploy = harris.isDeployed;
-            bDeploy = bronson.isDeployed;
-            cDeploy = chuck.isDeployed;
-            dDeploy = danton.isDeployed;
-
-            StartPrepare();
+            if (deployButton.state == ButtonState.OnHover)
+            {
+                if (!deployHover)
+                {
+                    deployHover = true;
+                    audioManager.hoverSFX.Play();
+                }
+            }
+            else if (deployButton.state == ButtonState.OnClick)
+            {
+                deployed = true;
+                preparing = false;
+                //fader.fadeIn = true;
+                //fader.shouldFade = true;
+                audioManager.clickSFX.Play();
+                hDeploy = harris.isDeployed;
+                bDeploy = bronson.isDeployed;
+                cDeploy = chuck.isDeployed;
+                dDeploy = danton.isDeployed;
+                deployButton.gameObject.SetActive(false);
+                deployHover = false;
+                StartPrepare();
+            }
+            else if (deployButton.state == ButtonState.None)
+            {
+                deployHover = false;
+            }
         }
        
         UpdateTexts();

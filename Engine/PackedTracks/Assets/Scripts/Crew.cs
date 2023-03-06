@@ -16,6 +16,8 @@ public class Crew : CopiumScript
     public int crewIndex;
     CrewMenu.Person person;
 
+    bool onHover = false;
+
     void Start()
     {
         person = crewMenu.crew[crewIndex];
@@ -25,10 +27,23 @@ public class Crew : CopiumScript
         if (crewMenu.preparing)
         {
             selectBtn.enabled = true;
-            if (selectBtn.state == ButtonState.OnClick)
+            if (selectBtn.state == ButtonState.OnHover)
             {
+                if (!onHover)
+                {
+                    crewMenu.audioManager.hoverSFX.Play();
+                    onHover = true;
+                }
+            }
+            else if (selectBtn.state == ButtonState.OnClick)
+            {
+                crewMenu.audioManager.clickSFX.Play();
                 selected = !selected;
                 isDeployed = selected;
+            }
+            else if (selectBtn.state == ButtonState.None)
+            {
+                onHover = false;
             }
             showDeployed.SetActive(selected);
         }

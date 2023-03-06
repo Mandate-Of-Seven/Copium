@@ -6,6 +6,19 @@ public class Event_01: CopiumScript
 {
     public EventManager EventManager;
     CrewMenu cm;
+    public EyesClosingEffect eyesClosingEffect;
+    public CameraShakeEffect cameraShakeEffect;
+    public ExplosionEffect explosionEffect;
+    public TrainManager trainManager;
+    bool effectTriggered = false;
+    float timerElasped = 0f;
+    public float shakeTime = 7f;
+    public float eyesTime = 4f;
+
+    //state 1 -> play sound, flash bang
+    //state 2 -> shake
+    //state 3 -> close eyes
+    int state = 1;
 
     int resolutionTextNum = 0;
 
@@ -20,6 +33,43 @@ public class Event_01: CopiumScript
 
 	public void Event(bool requirement)
 	{
+        if (!effectTriggered)
+        {
+            trainManager.FlickLever();
+            cameraShakeEffect.Trigger();
+            explosionEffect.Trigger();
+            effectTriggered = true;
+        }
+        if (state == 1)
+        {
+            if (timerElasped < shakeTime)
+            {
+                timerElasped+=Time.deltaTime;
+            }
+            else
+            {
+                eyesClosingEffect.Trigger();
+                timerElasped = 0;
+                ++state;
+            }
+            return;
+        }
+        else if (state == 2)
+        {
+            if (timerElasped < eyesTime)
+            {
+                timerElasped+=Time.deltaTime;
+            }
+            else
+            {
+                timerElasped = 0;
+                ++state;
+            }
+            return;
+        }
+
+        //After effect then display
+
         EventManager.Option_01.Enable();
         EventManager.Option_02.Enable();
         EventManager.Option_03.Disable();

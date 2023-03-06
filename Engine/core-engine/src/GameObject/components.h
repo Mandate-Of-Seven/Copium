@@ -640,7 +640,7 @@ namespace Copium
 		IUIComponent(GameObject& _gameObj, const IUIComponent& rhs,UUID _uuid = UUID()) : 
 			hAlignment{rhs.hAlignment},vAlignment{rhs.vAlignment},offset{rhs.offset},color{rhs.color},
 			layeredColor{rhs.layeredColor}, Component(_gameObj, _uuid)
-		{}
+		{enabled = rhs.enabled; }
 	};
 	class Button final : public Component
 	{
