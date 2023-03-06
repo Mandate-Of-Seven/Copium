@@ -7,8 +7,12 @@ public class CrewMenu: CopiumScript
     public Text suppliesText;
     public Text titleText;
 
+    string titleString;
+
     public Button prepareButton;
     public Button deployButton;
+
+    public CrewStatusManager crewStatusManager; 
 
     public Fade fader;
 
@@ -29,6 +33,10 @@ public class CrewMenu: CopiumScript
 
     public bool storageComparment = true; // For the food storage
 
+    //to record who deploys
+    public Prepare prepareManager;
+    public bool hDeploy, bDeploy, cDeploy, dDeploy;
+
     public enum STAT_TYPES
     {
         ALIVE,
@@ -45,6 +53,7 @@ public class CrewMenu: CopiumScript
         int _mental;
         int _hunger;
         float _timer;
+        string _resultText;
 
         public string name
         {
@@ -81,6 +90,13 @@ public class CrewMenu: CopiumScript
             get { return _timer; }
             set { _timer = value; }
         }
+
+        public string resultText
+        {
+            get { return _resultText; }
+            set { _resultText = value; }
+        }
+
         public Person(string new_name)
         {
             _name = new_name;
@@ -90,6 +106,7 @@ public class CrewMenu: CopiumScript
             _hunger = 10;
             _timer = 0.0f;
             Console.WriteLine("CONSTRUCTED PERSON!: " + _name + _health);
+            _resultText = "1";
         }
     }
 
@@ -103,7 +120,7 @@ public class CrewMenu: CopiumScript
 
     void Start()
 	{
-        
+        titleString = titleText.text;
     }
 	void Update()
 	{
@@ -113,7 +130,13 @@ public class CrewMenu: CopiumScript
         //have condition for when certain values hit 0??
 
         if (prepareButton.state == ButtonState.OnClick)
+        {
             preparing = !preparing;
+            hDeploy = harris.isDeployed;
+            bDeploy = bronson.isDeployed;
+            cDeploy = chuck.isDeployed;
+            dDeploy = danton.isDeployed;
+        }
 
         if (deployButton.state == ButtonState.OnClick && preparing)
         {
@@ -122,7 +145,12 @@ public class CrewMenu: CopiumScript
             fader.fadeIn = true;
             fader.shouldFade = true;
 
-            GenerateEvents();
+            hDeploy = harris.isDeployed;
+            bDeploy = bronson.isDeployed;
+            cDeploy = chuck.isDeployed;
+            dDeploy = danton.isDeployed;
+
+            StartPrepare();
         }
        
         UpdateTexts();
@@ -205,7 +233,7 @@ public class CrewMenu: CopiumScript
         if (preparing)
             titleText.text = "Selecting Members";
         else
-            titleText.text = "Crew Members";
+            titleText.text = titleString;
     }
 
     public void SetSupplies(int amount)
@@ -302,63 +330,30 @@ public class CrewMenu: CopiumScript
         }
     }
 
-    void GenerateEvents()
+
+    //generate a random event for each deployed
+    public void StartPrepare()
     {
-        float chance = RNG.Range(0,1);
-        
-        UpdateValues(chance);
-    }
 
-
-    void UpdateValues(float chance)
-    {
-        //show event screen
-        //depending on chance, change text that appears
-        //if (chance >= 0 && chance < 0.25)
-        //{
-        //    status.text = "Horrible event, lose 1 of every resource";
-        //    fuel -= 1;
-        //    food -= 1;
-        //    heat -= 1;
-        //}
-        //else if (chance >= 0.25 && chance < 0.50)
-        //{
-        //    status.text = "Found more fuel, but required to use more food \nto return.\n\nGain 1 fuel, lose 1 food";
-        //    fuel += 1;
-        //    food -= 1;
-        //}
-        //else if (chance >= 0.50 && chance < 0.75)
-        //{
-        //    status.text = "Found more food, but the bad weather requires \nmore heat to be consumed.\n\n Gain 1 food, lose 1 heat";
-        //    food += 1;
-        //    heat -= 1;
-        //}
-        //else if (chance >= 0.75 && chance < 0.95)
-        //{
-        //    status.text = "Gained more resources for heat, but something about \nlosing fuel.\n\n Gain 1 heat, lose 1 fuel";
-        //    fuel -= 1;
-        //    heat += 1;
-        //}
-        //else if (chance >= 0.95)
-        //{
-        //    status.text = "Good event, gain 2 of every resource.";
-        //    fuel += 2;
-        //    food += 2;
-        //    heat += 2;
-        //}
-
-        //if (fuel < 0)
-        //    fuel = 0;
-
-        //if (food < 0)
-        //    food = 0;
-
-        //if (heat < 0)
-        //    heat = 0;
+        if (harris.isDeployed)
+        {
+            prepareManager.GenerateEvents(crew[0]);
+        }
+        else if (bronson.isDeployed)
+        {
+            prepareManager.GenerateEvents(crew[1]);
+        }
+        else if (chuck.isDeployed)
+        {
+            prepareManager.GenerateEvents(crew[2]);
+        }
+        else if (danton.isDeployed)
+        {
+            prepareManager.GenerateEvents(crew[3]);
+        }
 
         //hide crewscreen
         deployed = false;
     }
-
 
 }

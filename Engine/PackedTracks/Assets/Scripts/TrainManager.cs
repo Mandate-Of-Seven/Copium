@@ -12,10 +12,14 @@ public class TrainManager: CopiumScript
 	public AudioManager audioManager;
 
 	public Button trainLeverBtn;
-	public GameObject trainLeverActivated;
-	public GameObject trainLeverDeactivated;
+	public Image trainLeverActivated;
+	public Image trainLeverDeactivated;
 	public GameObject trainCanvas;
-	
+	public float levelTransSpeed = 2.0f;
+	Color leverHoverColor = new Color(0.5f,1f,0.5f,1f);
+
+
+
 	bool accelerate = false;
 	
 	public float snowMaxDelay = 0.1f;
@@ -49,9 +53,26 @@ public class TrainManager: CopiumScript
 
 	void Update()
 	{
-		if (trainLeverBtn.state == ButtonState.OnClick)
+
+		if (trainLeverBtn.state == ButtonState.OnHover)
+		{
+			Color leverCurrentColor = Color.Lerp(leverHoverColor, trainLeverActivated.color, Time.deltaTime * levelTransSpeed);
+			Console.WriteLine("R: " + leverCurrentColor.r);
+			Console.WriteLine("G: " + leverCurrentColor.g);
+			Console.WriteLine("B: " + leverCurrentColor.b);
+			Console.WriteLine("A: " + leverCurrentColor.a);
+			trainLeverActivated.color = leverCurrentColor;
+			trainLeverDeactivated.color = leverCurrentColor;
+		}
+		else if (trainLeverBtn.state == ButtonState.OnClick)
 		{
 			FlickLever();
+		}
+		else
+		{
+			Color leverCurrentColor = Color.Lerp(trainLeverActivated.color, Color.white, Time.deltaTime * levelTransSpeed);
+			trainLeverActivated.color = leverCurrentColor;
+			trainLeverDeactivated.color = leverCurrentColor;
 		}
 		if (accelerate && currentSpeed < maxSpeed)
 		{
@@ -130,8 +151,8 @@ public class TrainManager: CopiumScript
 	public void FlickLever()
 	{
         accelerate = !accelerate;
-        trainLeverActivated.SetActive(accelerate);
-        trainLeverDeactivated.SetActive(!accelerate);
+        trainLeverActivated.gameObject.SetActive(accelerate);
+        trainLeverDeactivated.gameObject.SetActive(!accelerate);
         audioManager.accelerateSFX.Stop();
         audioManager.leverSFX.Stop();
         audioManager.leverSFX.Play();
