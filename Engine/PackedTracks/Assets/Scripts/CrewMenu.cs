@@ -142,8 +142,8 @@ public class CrewMenu: CopiumScript
         {
             deployed = true;
             preparing = false;
-            fader.fadeIn = true;
-            fader.shouldFade = true;
+            //fader.fadeIn = true;
+            //fader.shouldFade = true;
 
             hDeploy = harris.isDeployed;
             bDeploy = bronson.isDeployed;

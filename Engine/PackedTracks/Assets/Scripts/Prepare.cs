@@ -66,11 +66,11 @@ public class Prepare : CopiumScript
         {
             resultText.text = crewManager.crew[1].resultText;
         }
-        else if (chuckButton.state== ButtonState.OnClick)
+        else if (chuckButton.state == ButtonState.OnClick)
         {
             resultText.text = crewManager.crew[2].resultText;
         }
-        else if (dantonButton.state== ButtonState.OnClick)
+        else if (dantonButton.state == ButtonState.OnClick)
         {
             resultText.text = crewManager.crew[3].resultText;
         }
@@ -86,6 +86,8 @@ public class Prepare : CopiumScript
 
     public void GenerateEvents(CrewMenu.Person crewmate)
     {
+        currentCrewmate.resultText = "";
+
         prepareCanvas.SetActive(true);
         prepareChoices.SetActive(true);
         makeChoice= true;
@@ -127,7 +129,7 @@ public class Prepare : CopiumScript
         switch (eventNum)
         {
             case 1:
-                prepareBody.text = "[" + crewmate.name + "] stumbled across a mysterious igloo, knowing that it is near impossible to " +
+                prepareBody.text = crewmate.name + " stumbled across a mysterious igloo, knowing that it is near impossible to " +
                                    "live in these harsh conditions, igloos are a rare sight.";
                 prepareOption1.gameObject.SetActive(true);
                 prepareOption2.gameObject.SetActive(true);
@@ -137,8 +139,8 @@ public class Prepare : CopiumScript
             
 
             case 2:
-                prepareBody.text = "While scavanging through the icy waste land, [" + crewmate.name + "] encountered a polar bear, the polar " +
-                                    "bear bear its fangs at [" + crewmate.name + "]. It looks hungry and ready to attack.";
+                prepareBody.text = "While scavanging through the icy waste land, " + crewmate.name + " encountered a polar bear, the polar " +
+                                    "bear bear its fangs at " + crewmate.name + ". It looks hungry and ready to attack.";
                 prepareOption1.gameObject.SetActive(true);
                 prepareOption2.gameObject.SetActive(true);
                 prepareOption1.text = "Run!";
@@ -158,25 +160,25 @@ public class Prepare : CopiumScript
                 {
                     crewManager.supplies += 5;
                     currentCrewmate.resultText = "Upon entering the igloo was the sight of a well preserved human corpse. " +
-                                                 "Luckily there was still some dried frozen meat, ["+ currentCrewmate.name +"]" +
+                                                 "Luckily there was still some dried frozen meat, " + currentCrewmate.name +
                                                  " took the meat and went their way.";
                 }
                 else if (choice == 2)
                 {
-                    currentCrewmate.resultText = "Knowing that it might be a trap, [" + currentCrewmate.name  +
-                                                 "] decided to leave the igloo alone and head back to the train.";
+                    currentCrewmate.resultText = "Knowing that it might be a trap, " + currentCrewmate.name  +
+                                                 " decided to leave the igloo alone and head back to the train.";
                 }
                 break;
             case 2:
                 if (choice == 1)
                 {
-                    currentCrewmate.resultText = "[" + currentCrewmate.name + "]bolted away from the polar bear back to the train. ";
+                    currentCrewmate.resultText = currentCrewmate.name + " bolted away from the polar bear back to the train. ";
                 }
                 else if (choice == 2)
                 {
                     crewManager.supplies += 10;
                     currentCrewmate.health-=5;
-                    currentCrewmate.resultText = "[" + currentCrewmate.name + "]becomes injured but manages to kill the polar bear, " +
+                    currentCrewmate.resultText = currentCrewmate.name + " becomes injured but manages to kill the polar bear, " +
                                                    "and gain some valuable food.";
                 }
                 break;
@@ -216,6 +218,8 @@ public class Prepare : CopiumScript
 
     public void showFinal()
     {
+        if(!prepareFinal.activeSelf)
+            resultText.text = "Click on a character icon to get more details on what they encountered.";
         prepareCanvas.SetActive(true);
         prepareChoices.SetActive(false);
         prepareFinal.SetActive(true);

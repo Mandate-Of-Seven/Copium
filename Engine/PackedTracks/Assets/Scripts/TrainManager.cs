@@ -57,10 +57,10 @@ public class TrainManager: CopiumScript
 		if (trainLeverBtn.state == ButtonState.OnHover)
 		{
 			Color leverCurrentColor = Color.Lerp(leverHoverColor, trainLeverActivated.color, Time.deltaTime * levelTransSpeed);
-			Console.WriteLine("R: " + leverCurrentColor.r);
-			Console.WriteLine("G: " + leverCurrentColor.g);
-			Console.WriteLine("B: " + leverCurrentColor.b);
-			Console.WriteLine("A: " + leverCurrentColor.a);
+			//Console.WriteLine("R: " + leverCurrentColor.r);
+			//Console.WriteLine("G: " + leverCurrentColor.g);
+			//Console.WriteLine("B: " + leverCurrentColor.b);
+			//Console.WriteLine("A: " + leverCurrentColor.a);
 			trainLeverActivated.color = leverCurrentColor;
 			trainLeverDeactivated.color = leverCurrentColor;
 		}
