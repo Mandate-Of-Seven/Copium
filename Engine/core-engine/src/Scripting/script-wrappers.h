@@ -418,10 +418,77 @@ namespace Copium
 		whether the component is enabled
 	*/
 	/*******************************************************************************/
-	static bool GetComponentEnabled(UUID gid, UUID cid)
+	static bool GetComponentEnabled(UUID cid, MonoReflectionType* componentType)
 	{
-		Component* component = sceneManager.FindComponentByID(cid);
-		return component->enabled;
+		auto pair = scriptingSystem.reflectionMap.find(mono_reflection_type_get_type(componentType));
+		if (pair == scriptingSystem.reflectionMap.end())
+		{
+			return false;
+		}
+		ComponentType cType = pair->second;
+		Component* component{ nullptr };
+		switch (cType)
+		{
+		case(ComponentType::Animator):
+		{
+			component = sceneManager.FindComponentByID<Animator>(cid);
+			break;
+		}
+		case(ComponentType::AudioSource):
+		{
+			component = sceneManager.FindComponentByID<AudioSource>(cid);
+			break;
+		}
+		case(ComponentType::BoxCollider2D):
+		{
+			component = sceneManager.FindComponentByID<BoxCollider2D>(cid);
+			break;
+		}
+		case(ComponentType::Button):
+		{
+			component = sceneManager.FindComponentByID<Button>(cid);
+			break;
+		}
+		case(ComponentType::Camera):
+		{
+			component = sceneManager.FindComponentByID<Camera>(cid);
+			break;
+		}
+		case(ComponentType::Image):
+		{
+			component = sceneManager.FindComponentByID<Image>(cid);
+			break;
+		}
+		case(ComponentType::Rigidbody2D):
+		{
+			component = sceneManager.FindComponentByID<Rigidbody2D>(cid);
+			break;
+		}
+		case(ComponentType::SpriteRenderer):
+		{
+			component = sceneManager.FindComponentByID<SpriteRenderer>(cid);
+			break;
+		}
+		case(ComponentType::Script):
+		{
+			//Different scripts
+			component = sceneManager.FindComponentByID<Script>(cid);
+			break;
+		}
+		case(ComponentType::Text):
+		{
+			component = sceneManager.FindComponentByID<Text>(cid);
+			break;
+		}
+		case(ComponentType::SortingGroup):
+		{
+			component = sceneManager.FindComponentByID<SortingGroup>(cid);
+			break;
+		}
+		}
+		if (component)
+			return component->enabled;
+		return false;
 	}
 
 	/*******************************************************************************
@@ -442,9 +509,74 @@ namespace Copium
 		void
 	*/
 	/*******************************************************************************/
-	static void SetComponentEnabled(UUID gid, UUID cid, bool val)
+	static void SetComponentEnabled(UUID cid, bool val, MonoReflectionType* componentType)
 	{
-		Component* component = sceneManager.FindComponentByID(cid);
+		auto pair = scriptingSystem.reflectionMap.find(mono_reflection_type_get_type(componentType));
+		if (pair == scriptingSystem.reflectionMap.end())
+		{
+			return;
+		}
+		ComponentType cType = pair->second;
+		Component* component{ nullptr };
+		switch (cType)
+		{
+		case(ComponentType::Animator):
+		{
+			component = sceneManager.FindComponentByID<Animator>(cid);
+			break;
+		}
+		case(ComponentType::AudioSource):
+		{
+			component = sceneManager.FindComponentByID<AudioSource>(cid);
+			break;
+		}
+		case(ComponentType::BoxCollider2D):
+		{
+			component = sceneManager.FindComponentByID<BoxCollider2D>(cid);
+			break;
+		}
+		case(ComponentType::Button):
+		{
+			component = sceneManager.FindComponentByID<Button>(cid);
+			break;
+		}
+		case(ComponentType::Camera):
+		{
+			component = sceneManager.FindComponentByID<Camera>(cid);
+			break;
+		}
+		case(ComponentType::Image):
+		{
+			component = sceneManager.FindComponentByID<Image>(cid);
+			break;
+		}
+		case(ComponentType::Rigidbody2D):
+		{
+			component = sceneManager.FindComponentByID<Rigidbody2D>(cid);
+			break;
+		}
+		case(ComponentType::SpriteRenderer):
+		{
+			component = sceneManager.FindComponentByID<SpriteRenderer>(cid);
+			break;
+		}
+		case(ComponentType::Script):
+		{
+			//Different scripts
+			component = sceneManager.FindComponentByID<Script>(cid);
+			break;
+		}
+		case(ComponentType::Text):
+		{
+			component = sceneManager.FindComponentByID<Text>(cid);
+			break;
+		}
+		case(ComponentType::SortingGroup):
+		{
+			component = sceneManager.FindComponentByID<SortingGroup>(cid);
+			break;
+		}
+		}
 		if (component)
 			component->enabled = val;
 	}
@@ -511,12 +643,19 @@ namespace Copium
 	/*******************************************************************************/
 	static void SetTextString(UUID gameObjID, UUID compID, MonoString* str)
 	{
-		Component* component = sceneManager.FindComponentByID(compID);
-		if (component == nullptr)
+		Scene* pScene = sceneManager.get_current_scene();
+		if (!pScene)
 			return;
-		char* monoStr = mono_string_to_utf8(str);
-		strcpy(reinterpret_cast<Text*>(component)->content, monoStr);
-		mono_free(monoStr);
+		for (Text& text : pScene->componentArrays.GetArray<Text>())
+		{
+			if (text.uuid == compID)
+			{
+				char* monoStr = mono_string_to_utf8(str);
+				strcpy(text.content, monoStr);
+				mono_free(monoStr);
+				return;
+			}
+		}
 	}
 
 	/*******************************************************************************

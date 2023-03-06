@@ -42,7 +42,9 @@ namespace Copium {
 	public:
 
 		GameObject* FindGameObjectByID(UUID _id);
-		Component* FindComponentByID(UUID _id);
+
+		template <typename T>
+		T* FindComponentByID(UUID _id);
 		/*******************************************************************************
 		/*!
 		*

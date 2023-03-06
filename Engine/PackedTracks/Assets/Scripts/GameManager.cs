@@ -50,6 +50,18 @@ public class GameManager: CopiumScript
     {
         ButtonInputs();
 
+        // Cant deploy if the train is moving
+        if (trainManager.currentSpeed > 0)
+        {
+            crewMenuScript.prepareButton.gameObject.SetActive(false);
+            crewMenuScript.deployButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            crewMenuScript.prepareButton.gameObject.SetActive(true);
+            crewMenuScript.deployButton.gameObject.SetActive(true);
+        }
+
         //Stop travelling
         if (trainManager.currentSpeed > 0 && distanceLeft > 0)
         {

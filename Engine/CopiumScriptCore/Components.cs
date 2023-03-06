@@ -46,11 +46,13 @@ namespace CopiumEngine
         {
             get
             {
-                return InternalCalls.GetComponentEnabled(gameObject.ID, ID);
+                Type componentType = GetType();
+                return InternalCalls.GetComponentEnabled(ID, componentType);
             }
             set
             {
-                InternalCalls.SetComponentEnabled(gameObject.ID,ID,value);
+                Type componentType = GetType();
+                InternalCalls.SetComponentEnabled(ID,value, componentType);
             }
         }
 

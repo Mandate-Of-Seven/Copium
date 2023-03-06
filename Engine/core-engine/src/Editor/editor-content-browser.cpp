@@ -188,51 +188,49 @@ namespace Copium
 
 				// Get the image icon
 				unsigned int objectID = icons[1].get_object_id();
-				for (unsigned int i = 0; i < MyAssetSystem.GetTextures().size(); i++)
+
+				std::string texturePath, filePath;
+				switch (file.get_file_type().fileType)
 				{
-					std::string texturePath;
-					switch (file.get_file_type().fileType)
+				case FILE_TYPE::AUDIO:
+					break;
+
+				case FILE_TYPE::FONT:
+					break;
+
+				case FILE_TYPE::SCENE:
+					objectID = icons[2].get_object_id();
+					imageAR = 1.f;
+					framePadding = 3.f;
+					break;
+
+				case FILE_TYPE::SCRIPT:
+					break;
+
+				case FILE_TYPE::SHADER:
+					break;
+
+				case FILE_TYPE::SPRITE:
+					for (auto& texture : MyAssetSystem.GetTextures())
 					{
-					case FILE_TYPE::AUDIO:
-						break;
-
-					case FILE_TYPE::FONT:
-						break;
-
-					case FILE_TYPE::SCENE:
-						objectID = icons[2].get_object_id();
-						imageAR = 1.f;
-						framePadding = 3.f;
-						break;
-
-					case FILE_TYPE::SCRIPT:
-						break;
-
-					case FILE_TYPE::SHADER:
-						break;
-
-					case FILE_TYPE::SPRITE:
-						// Bean: Hash the file path then compare
-						texturePath = MyAssetSystem.GetTexture(i)->get_file_path();
-						static unsigned int hashTexturePath = std::hash<std::string>{}(texturePath);
-						static unsigned int hashFilePath = std::hash<std::string>{}(file.filePath.string());
-						if (hashTexturePath == hashFilePath)
+						texturePath = texture.get_file_path();
+						if (!file.filePath.string().compare(texturePath))
 						{
-							Texture* temp = MyAssetSystem.GetTexture(i);
-							objectID = temp->get_object_id();
-							float asRatio = temp->get_width() / (float)temp->get_height();
+							objectID = texture.get_object_id();
+							float asRatio = texture.get_width() / (float)texture.get_height();
 							imageAR = thumbnailSize / ((asRatio > 0.98f && asRatio < 1.f) ? 1.f : asRatio);
 							imageAR /= thumbnailSize;
 							framePadding = (thumbnailSize - thumbnailSize * imageAR) * 0.5f + 3.f;
+							break;
 						}
-						break;
-
-					case FILE_TYPE::TEXT:
-						objectID = icons[1].get_object_id();
-						imageAR = 1.f;
-						framePadding = 3.f;
-						break;
 					}
+					break;
+
+				case FILE_TYPE::TEXT:
+					objectID = icons[1].get_object_id();
+					imageAR = 1.f;
+					framePadding = 3.f;
+					break;
 				}
 
 				ImTextureID icon = (ImTextureID)(size_t)objectID;
