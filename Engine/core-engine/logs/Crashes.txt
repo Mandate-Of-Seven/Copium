@@ -1,5 +1,5 @@
-[2023-03-07 13:36:55.471] [Error] [critical] 
-Caused By:	!mClassField
-Info:		FIELD helloCOULD NOT BE FOUND IN SCRIPT AudioManager
-Source:		C:\Users\FLESH\Desktop\Copium\Engine\core-engine\src\Scripting\scripting-system.cpp (Line: 902)
+[2023-03-07 16:50:00.105] [Error] [critical] 
+Caused By:	mAppDomain == nullptr
+Info:		MONO APP DOMAIN NOT LOADED
+Source:		C:\Users\FLESH\Desktop\Copium\Engine\core-engine\src\Scripting\scripting-system.cpp (Line: 301)
 

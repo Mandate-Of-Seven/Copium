@@ -479,7 +479,6 @@ namespace Copium
 
 	void EditorSystem::imguiConsoleAddLog(std::string value)
 	{
-		std::cout << value << "\n";
 		Window::EditorConsole::editorLog.add_logEntry(value);
 	}
 

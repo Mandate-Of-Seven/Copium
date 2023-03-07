@@ -38,7 +38,7 @@ void SoundSystem::init()
 	soundSystem->init(128, FMOD_INIT_NORMAL, NULL);
 	CheckVersion();
 	CheckDrivers();
-	std::cout << "Sound init was called" << std::endl;
+	PRINT("Sound init was called");
 }
 
 void SoundSystem::update()
