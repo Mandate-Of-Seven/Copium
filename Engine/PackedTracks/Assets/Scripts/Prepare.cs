@@ -243,9 +243,9 @@ public class Prepare : CopiumScript
                 if (choice == 1)
                 {
                     crewManager.supplies += 5;
-                    currentCrewmate.resultText = "Upon entering the igloo was the sight of a well preserved human corpse. " +
+                    currentCrewmate.resultText = "Upon entering the igloo, " + currentCrewmate.name + " sees a well preserved human corpse. " +
                                                  "Luckily there was still some dried frozen meat, " + currentCrewmate.name +
-                                                 " took the meat and went their way.";
+                                                 " took the meat and left the igloo.";
                 }
                 else if (choice == 2)
                 {
@@ -256,13 +256,13 @@ public class Prepare : CopiumScript
             case 2:
                 if (choice == 1)
                 {
-                    currentCrewmate.resultText = currentCrewmate.name + " bolted away from the polar bear back to the train. ";
+                    currentCrewmate.resultText = currentCrewmate.name + " bolted away from the polar bear back to safe confines of the train. ";
                 }
                 else if (choice == 2)
                 {
                     crewManager.supplies += 10;
                     currentCrewmate.health-=5;
-                    currentCrewmate.resultText = currentCrewmate.name + " becomes injured but manages to kill the polar bear, " +
+                    currentCrewmate.resultText = currentCrewmate.name + " suffered some injuries but managed to kill the polar bear, " +
                                                    "and gain some valuable food.";
                 }
                 break;
@@ -270,14 +270,14 @@ public class Prepare : CopiumScript
                 if (choice == 1)
                 {
                     crewManager.supplies -= 3;
-                    currentCrewmate.resultText = "After hours of search, " + currentCrewmate.name + " was found in poor condition, " +
-                                                 "but he was safely brought back to the train.";
+                    currentCrewmate.resultText = "After hours of searching, " + currentCrewmate.name + " was found alive but worse for wear, " +
+                                                 "he was safely brought back to the train.";
                 }
                 else if (choice == 2)
                 {
                     crewManager.supplies += 10;
                     currentCrewmate.health = 4;//critical injure
-                    currentCrewmate.resultText = "Just as hope seem all lost for " + currentCrewmate.name+
+                    currentCrewmate.resultText = "Just as hope seemed all lost for " + currentCrewmate.name +
                                                 " to make it back, he stumbles out from the bushes grasping a few cans of soup. " +
                                                 currentCrewmate.name + " seems to be in bad condition and his extremities have succumbed to frostbite.";
                 }
@@ -289,13 +289,13 @@ public class Prepare : CopiumScript
                     currentCrewmate.health = 4;//critical injure
                     currentCrewmate.resultText = "While scavanging through the abandoned town, " +
                                                  currentCrewmate.name + " saw some canned food and bottles of water lying in a building. " +
-                                                 "When he went to pick it up, he bumped into another scavanger, which promptly stabbed " +
+                                                 "When he went to pick it up, he bumped into another scavenger, who promptly stabbed " +
                                                  currentCrewmate.name + " in the abdomen. "+currentCrewmate.name+" grabbed a metal pipe on the " +
-                                                 "floor and swung the other guy's head, knocking him unconsious, before hurring off with the supplies.";
+                                                 "floor and swung at the scavengers's head, knocking him unconscious, before hurrying off with the supplies.";
                 }
                 else if (choice == 2)
                 {
-                    currentCrewmate.resultText = "As the crew is leaving, they saw a group of armed scavengers running around the area, " +
+                    currentCrewmate.resultText = "As the crew was leaving, they notice a group of armed scavengers running around the area, " +
                                                  "Bullet sounds could be heard in the distance.";
                 }
                 break;
@@ -304,12 +304,12 @@ public class Prepare : CopiumScript
                 {
                     crewManager.supplies += 5;
                     currentCrewmate.resultText = currentCrewmate.name + " said his prayers before putting his knife to the man's throat, killing him. " +
-                                                 currentCrewmate.name+" then took the man's supplies and skined him, cutting him up for meat to be consumed.";
+                                                 currentCrewmate.name+" then took the man's supplies and skinned him, cutting him up for meat to be consumed.";
                 }
                 else if (choice == 2)
                 {
                     crewManager.supplies += 2;
-                    currentCrewmate.resultText = currentCrewmate.name +" knocks the man unconsious and proceeds to take his supplies and left him in the " +
+                    currentCrewmate.resultText = currentCrewmate.name +" knocks the man unconscious, proceeds to take his supplies and left him in the " +
                                                  "snow before returning to the train.";
                 }
                 break;
@@ -317,12 +317,12 @@ public class Prepare : CopiumScript
                 if (choice == 1)
                 {
                     crewManager.supplies += 3;
-                    currentCrewmate.resultText = currentCrewmate.name + " Took aim and shot at the deer, killing it in an instant, the confused fawn could only stand and stare as " +
-                                                 currentCrewmate.name + "  skinned and carved the deer for its meet and fur.";
+                    currentCrewmate.resultText = currentCrewmate.name + " took aim and shot at the deer, killing it in an instant, its confused fawn could only stand and stare as " +
+                                                 currentCrewmate.name + "  skinned and carved the deer for its meat and fur.";
                 }
                 else if (choice == 2)
                 {
-                    currentCrewmate.resultText = "As "+ currentCrewmate.name + "walked away, a large polar bear jumped out of the surrounding bushes " +
+                    currentCrewmate.resultText = "As "+ currentCrewmate.name + " walked away, a large polar bear jumped out of the surrounding bushes " +
                                                  "killing both the deer and her fawn in an instant.";
                 }
                 break;
@@ -365,7 +365,7 @@ public class Prepare : CopiumScript
                 if (choice == 1)
                 {
                     currentCrewmate.health -= 5;
-                    currentCrewmate.resultText = currentCrewmate.name + " fall and hit his head which resulted in minor damages";
+                    currentCrewmate.resultText = currentCrewmate.name + " fell and hit his head which resulted in minor injuries";
                 }
                 break;
             case 13:
@@ -379,14 +379,14 @@ public class Prepare : CopiumScript
                 if (choice == 1)
                 {
                     crewManager.supplies -= 3;
-                    currentCrewmate.resultText = currentCrewmate.name + " gave out their rations to the hungry wolves, it seems like the wolves have taken a " +
+                    currentCrewmate.resultText = currentCrewmate.name + " gave their rations to the hungry wolves, it seems like the wolves have taken a " +
                                                 "liking to the crew and have started following them around.";
                 }
                 else if (choice == 2)
                 {
                     crewManager.supplies += 2;
                     currentCrewmate.resultText = "The wolves jumped at " + currentCrewmate.name + ", attacking and trying to bite him. " +
-                                                 currentCrewmate.name + " seeing no option killed both wolves and proceeded to skin and gather their meat for food.";
+                                                 currentCrewmate.name + " seeing no other option, killed both wolves and proceeded to skin and gather their meat for food.";
                 }
                 break;
             default:
