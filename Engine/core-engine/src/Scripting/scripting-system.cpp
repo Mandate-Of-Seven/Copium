@@ -692,6 +692,13 @@ namespace Copium
 			mComponents[mCurrentScene].emplace(cid, mComponent);
 			//Check fields, dont remove fields, but change them if their type is different
 
+			std::list<std::string> validFieldNames{};
+
+			for (auto& pair : component.fieldDataReferences)
+			{
+				validFieldNames.push_back(pair.first);
+			}
+
 			//PRINT("Creating: " << component.Name() << " of id: " << component.uuid);
 			Script& script{ *reinterpret_cast<Script*>(&component) };
 			for (auto& pair : scriptClass.mFields)
@@ -715,6 +722,7 @@ namespace Copium
 					fieldSize = TEXT_BUFFER_SIZE;
 				}
 
+
 				//Field has not been created onto script yet
 				if (nameField == script.fieldDataReferences.end())
 				{
@@ -737,6 +745,7 @@ namespace Copium
 				//Field exists
 				else
 				{
+					validFieldNames.remove(fieldName);
 					Field& field = nameField->second;
 					//If the field type is not the same
 					if (field.fType != fieldType)
@@ -822,6 +831,20 @@ namespace Copium
 					//CHECK TYPENAME
 					//else if (field.typeName)
 				}
+			}
+			for (auto& name : validFieldNames)
+			{
+				FieldType fType = script.fieldDataReferences[name].fType;
+				if (fType == FieldType::GameObject)
+				{
+					component.fieldGameObjReferences.erase(name);
+				}
+				else if (fType >= FieldType::Component)
+				{
+					component.fieldComponentReferences.erase(name);
+				}
+				component.fieldDataReferences.erase(name);
+				//PRINT("INVALID FIELD: " << name);
 			}
 			return mComponent;
 		}
