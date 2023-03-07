@@ -103,7 +103,7 @@ public class GameManager: CopiumScript
         tracker.text =  ((int)distanceLeft).ToString() + "KM";
 
         // Reducing supplies for crew to consume
-        if(trainManager.currentSpeed > 0 && distanceLeft < 200.0f)
+        if(trainManager.currentSpeed > 1.0f && distanceLeft < 200.0f)
         {
             if (foodTimer >= 5.0f && crewMenuScript.supplies != 0)
             {

@@ -13,6 +13,7 @@ public class CrewMenu: CopiumScript
     public Button deployButton;
 
     public CrewStatusManager crewStatusManager; 
+    public ReportScreenManager reportScreenManager; 
     public ResultManager resultManager; 
 
     public AudioManager audioManager;
@@ -181,6 +182,7 @@ public class CrewMenu: CopiumScript
                 dDeploy = danton.isDeployed;
                 deployButton.gameObject.SetActive(false);
                 deployHover = false;
+                
                 StartPrepare();
             }
             else if (deployButton.state == ButtonState.None)
@@ -371,6 +373,7 @@ public class CrewMenu: CopiumScript
     public void StartPrepare()
     {
         crewStatusManager.ClosePanel();
+        reportScreenManager.ClosePanel();
         resultManager.OpenPanel();
         if (harris.isDeployed)
         {

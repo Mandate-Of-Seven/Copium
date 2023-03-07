@@ -31,7 +31,7 @@ namespace Copium
 		// Our state
 		bool show_demo_window = false;
 		ThreadSystem& threadSystem{ *ThreadSystem::Instance() };
-		bool tempMode = false;
+		bool tempMode = true;
 	}
 
 	void EditorSystem::init()
