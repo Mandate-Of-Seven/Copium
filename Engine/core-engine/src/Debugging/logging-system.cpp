@@ -34,7 +34,7 @@ namespace Copium
         consoleLogger = std::make_shared<spdlog::logger>("Copium Engine", sink_list.begin(), sink_list.end());
 
         COPIUM_ASSERT(!consoleLogger,"Console Logger was not created properly");
-        std::cout << "Logging init was called" << std::endl;
+        PRINT("Logging init was called");
     }
 
     void LoggingSystem::update()

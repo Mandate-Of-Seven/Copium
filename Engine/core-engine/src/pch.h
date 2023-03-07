@@ -54,6 +54,12 @@ void print(T val, Ts... others)
     print(others);
 }
 
-#define PRINT(str) std::cout << str << std::endl
+
+
+#if defined(DEBUG) | defined(_DEBUG)
+    #define PRINT(str) std::cout << str << std::endl
+#else
+    #define PRINT(str)
+#endif
 
 #endif // !PCH_H
