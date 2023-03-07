@@ -97,7 +97,7 @@ namespace Copium {
 			Note: the game object must exist in the current scene.
 		*/
 		/*******************************************************************************/
-		void Destroy(GameObject& _go, GameObjectsArray& gameObjectArray);
+		void Destroy(GameObject& _go, GameObjectsArray& gameObjectArray, bool flag);
 
 
 		template <typename T>

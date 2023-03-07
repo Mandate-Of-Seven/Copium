@@ -227,13 +227,24 @@ namespace Copium
 		return go;
 	}
 
-	void GameObjectFactory::Destroy(GameObject& _go, GameObjectsArray& gameObjectArray)
+	void GameObjectFactory::Destroy(GameObject& _go, GameObjectsArray& gameObjectArray, bool flag)
 	{
+		PRINT("No of game objects before: " << gameObjectArray.size());
 		for (Transform* pTransform : _go.transform.children)
 		{
-			Destroy(pTransform->gameObject, gameObjectArray);
+			Destroy(pTransform->gameObject, gameObjectArray, false);
 		}
 		gameObjectArray.erase(_go);
+
+		if (flag && _go.transform.HasParent())
+		{
+			GameObject& parent = _go.transform.parent->gameObject;
+
+			parent.transform.children.remove(&_go.transform);
+		}
+
+		PRINT("No of game objects after: " << gameObjectArray.size());
+
 	}
 
 
@@ -251,7 +262,7 @@ namespace Copium
 				for (Transform* pTransform : gameObject.transform.children)
 				{
 					pTransform->SetParent(nullptr);
-					Destroy(pTransform->gameObject, gameObjectArray);
+					Destroy(pTransform->gameObject, gameObjectArray, false);
 
 				}
 				return;
