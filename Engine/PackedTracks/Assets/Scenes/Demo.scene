@@ -915,7 +915,7 @@
                         {
                             "Name": "Snow_SpriteSheet_155_5x31.png",
                             "Sprite ID": 8966109942037627320,
-                            "Time Delay": 0.029999999329447746,
+                            "Time Delay": 0.029999999329447743,
                             "FrameCount": 155,
                             "Rows": 31,
                             "Columns": 5,
@@ -5238,10 +5238,10 @@
                     "fader": 11311745147968865628,
                     "harris": 11462693708151468748,
                     "prepareManager": 5967388857219597172,
+                    "reportScreenManager": 10310073297153690428,
                     "resultManager": 12715761732489693216,
                     "suppliesText": 2987481935980349814,
-                    "titleText": 11591166883693418428,
-                    "reportScreenManager": 10310073297153690428
+                    "titleText": 11591166883693418428
                 }
             ]
         },
@@ -6350,8 +6350,8 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 0.10000000149011612,
-                        "Y": 0.10000000149011612,
+                        "X": 0.25,
+                        "Y": 0.25,
                         "Z": 1.0
                     }
                 },
@@ -6370,8 +6370,8 @@
                     "TypeID": 20,
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Sprite ID": 13823898965315863520,
-                    "Sprite Name": "onigiri.png",
+                    "Sprite ID": 4682861623453333922,
+                    "Sprite Name": "supply_icon.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
@@ -6404,8 +6404,8 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 0.10000000149011612,
-                        "Y": 0.10000000149011612,
+                        "X": 0.25,
+                        "Y": 0.25,
                         "Z": 1.0
                     }
                 },
@@ -6424,8 +6424,8 @@
                     "TypeID": 20,
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Sprite ID": 13823898965315863520,
-                    "Sprite Name": "onigiri.png",
+                    "Sprite ID": 4682861623453333922,
+                    "Sprite Name": "supply_icon.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
@@ -6458,8 +6458,8 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 0.10000000149011612,
-                        "Y": 0.10000000149011612,
+                        "X": 0.25,
+                        "Y": 0.25,
                         "Z": 1.0
                     }
                 },
@@ -6478,8 +6478,8 @@
                     "TypeID": 20,
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Sprite ID": 13823898965315863520,
-                    "Sprite Name": "onigiri.png",
+                    "Sprite ID": 4682861623453333922,
+                    "Sprite Name": "supply_icon.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
