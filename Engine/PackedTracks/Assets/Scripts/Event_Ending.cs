@@ -98,7 +98,7 @@ public class Event_Ending: CopiumScript
         else if (choice == 7) // All alive
         {
             // Audio narration
-            EventManager.Body.text = "Its strange, the city it seems so small. The guards they are looking at us funny. " +
+            EventManager.Body.text = "Its strange, the city... it seems so small. The guards they are looking at us funny. " +
                 "Did we come to the wrong place?";
         }
     }

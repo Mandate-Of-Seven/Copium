@@ -16,6 +16,8 @@ public class Crew : CopiumScript
     public int crewIndex;
     CrewMenu.Person person;
 
+    public Image sprite;
+
     bool onHover = false;
 
     void Start()
@@ -92,5 +94,15 @@ public class Crew : CopiumScript
             hungerT.text = "Hungry";
         else
             hungerT.text = "Famished";
+
+        Color tmp = Color.white;
+        float x = ((float)person.health/15.0f);
+        Console.WriteLine(x);
+        tmp.r = x;
+        tmp.g = x;
+        tmp.b = x;
+
+        sprite.color = tmp;
+        
     }
 }
