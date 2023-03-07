@@ -81,8 +81,8 @@ public class CrewStatusManager: CopiumScript
     }
     public void ClosePanel()
 	{
-		resultManager.Enable();
 		isCrewStatusOn = false;
+		resultManager.Enable();
 		CrewStatusBtn.gameObject.SetActive(true);
 		CrewStatusTab.transform.parent = parent.transform;
 	}

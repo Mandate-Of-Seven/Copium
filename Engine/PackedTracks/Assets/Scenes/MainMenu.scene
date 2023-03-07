@@ -60,6 +60,7 @@
                     }
                 },
                 {
+                    "enabled": true,
                     "UID": 2907170898425309190,
                     "Type": "Script",
                     "TypeID": 23,
@@ -102,6 +103,7 @@
                     }
                 },
                 {
+                    "enabled": true,
                     "UID": 11903732952440356507,
                     "Type": "Camera",
                     "TypeID": 19,
@@ -118,6 +120,7 @@
                     }
                 },
                 {
+                    "enabled": true,
                     "UID": 11946350663462438741,
                     "Type": "AudioSource",
                     "TypeID": 16,
@@ -154,6 +157,7 @@
                     }
                 },
                 {
+                    "enabled": true,
                     "UID": 15399499544417858404,
                     "Type": "SpriteRenderer",
                     "TypeID": 22,
@@ -197,6 +201,7 @@
                     }
                 },
                 {
+                    "enabled": true,
                     "UID": 5428689890793291387,
                     "Type": "SortingGroup",
                     "TypeID": 26,
@@ -204,6 +209,7 @@
                     "OrderInLayer": 2
                 },
                 {
+                    "enabled": true,
                     "UID": 2943484019154431606,
                     "Type": "Text",
                     "TypeID": 25,
@@ -219,6 +225,7 @@
                     "a": 1.0
                 },
                 {
+                    "enabled": true,
                     "UID": 9574495531817611677,
                     "Type": "Button",
                     "TypeID": 18,
@@ -275,6 +282,7 @@
                     }
                 },
                 {
+                    "enabled": true,
                     "UID": 8275161030871527957,
                     "Type": "SortingGroup",
                     "TypeID": 26,
@@ -282,6 +290,7 @@
                     "OrderInLayer": 2
                 },
                 {
+                    "enabled": true,
                     "UID": 2190059232834580982,
                     "Type": "Text",
                     "TypeID": 25,
@@ -297,6 +306,7 @@
                     "a": 1.0
                 },
                 {
+                    "enabled": true,
                     "UID": 5039283911341612943,
                     "Type": "Button",
                     "TypeID": 18,
@@ -379,6 +389,7 @@
                     }
                 },
                 {
+                    "enabled": true,
                     "UID": 10598037399685782859,
                     "Type": "AudioSource",
                     "TypeID": 16,
@@ -415,6 +426,7 @@
                     }
                 },
                 {
+                    "enabled": true,
                     "UID": 6905617242824353984,
                     "Type": "AudioSource",
                     "TypeID": 16,
@@ -451,6 +463,7 @@
                     }
                 },
                 {
+                    "enabled": true,
                     "UID": 16280378391848286004,
                     "Type": "AudioSource",
                     "TypeID": 16,
@@ -487,6 +500,7 @@
                     }
                 },
                 {
+                    "enabled": true,
                     "UID": 10035484193996619564,
                     "Type": "SortingGroup",
                     "TypeID": 26,
@@ -494,6 +508,7 @@
                     "OrderInLayer": 2
                 },
                 {
+                    "enabled": true,
                     "UID": 11615977506879173647,
                     "Type": "Text",
                     "TypeID": 25,
@@ -509,6 +524,7 @@
                     "a": 1.0
                 },
                 {
+                    "enabled": true,
                     "UID": 10325187647895316192,
                     "Type": "Button",
                     "TypeID": 18,
@@ -565,6 +581,7 @@
                     }
                 },
                 {
+                    "enabled": true,
                     "UID": 12785371994614757464,
                     "Type": "SortingGroup",
                     "TypeID": 26,
@@ -572,11 +589,12 @@
                     "OrderInLayer": 3
                 },
                 {
+                    "enabled": true,
                     "UID": 12729168595926129355,
                     "Type": "SpriteRenderer",
                     "TypeID": 22,
-                    "Sprite ID": 3126186308900751837,
-                    "Sprite Name": "arrow.png",
+                    "Sprite ID": 18071404720344132741,
+                    "Sprite Name": "Arrow.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
@@ -693,6 +711,7 @@
                     }
                 },
                 {
+                    "enabled": true,
                     "UID": 10655789642564520487,
                     "Type": "SortingGroup",
                     "TypeID": 26,
@@ -700,6 +719,7 @@
                     "OrderInLayer": 1
                 },
                 {
+                    "enabled": true,
                     "UID": 6739285384412222730,
                     "Type": "Image",
                     "TypeID": 20,
@@ -745,6 +765,7 @@
                     }
                 },
                 {
+                    "enabled": true,
                     "UID": 11013853351754683444,
                     "Type": "Image",
                     "TypeID": 20,
@@ -790,6 +811,7 @@
                     }
                 },
                 {
+                    "enabled": true,
                     "UID": 3194105413180220755,
                     "Type": "SortingGroup",
                     "TypeID": 26,
@@ -797,6 +819,7 @@
                     "OrderInLayer": 1
                 },
                 {
+                    "enabled": true,
                     "UID": 2483004611359443285,
                     "Type": "Image",
                     "TypeID": 20,
@@ -842,6 +865,7 @@
                     }
                 },
                 {
+                    "enabled": true,
                     "UID": 5669311018877501415,
                     "Type": "SortingGroup",
                     "TypeID": 26,
@@ -849,6 +873,7 @@
                     "OrderInLayer": 0
                 },
                 {
+                    "enabled": true,
                     "UID": 15611296962663942834,
                     "Type": "Image",
                     "TypeID": 20,
