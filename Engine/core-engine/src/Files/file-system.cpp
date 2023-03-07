@@ -568,23 +568,28 @@ namespace Copium
 
 	void FileSystem::delete_from_browser()
 	{
+		PRINT("Attemp to delete object...");
 		if (selectedFile != nullptr)
 		{
 			MyEventSystem->publish(new FileAssetEvent(selectedFile, 2));
-			//std::cout << "Deleting: " << selectedFile->filePath.filename() << " With result: " << DeleteFile(selectedFile->c_str()) << std::endl;
-
+			std::cout << "Deleting: " << selectedFile->filePath.filename() << " With result: " << DeleteFile(selectedFile->filePath.c_str()) << std::endl;
+			remove_file_reference(selectedFile);
+			selectedFile = nullptr;
 		}
 		else if (selectedDirectory != nullptr)
 		{
-			fs::path tmp = "../PackedTracks/Assets/" + selectedDirectory->get_name();
+			fs::path tmp = selectedDirectory->path();
 			if (std::filesystem::remove_all(tmp))
 			{
+				update_directories(selectedDirectory->get_parent_directory());
 				std::cout << "Delete complete\n";
 			}
 			else
 			{
 				std::cout << "Delete failed, could not find folder at: " << tmp << std::endl;
 			}
+
+			selectedDirectory = nullptr;
 		}
 	}
 
@@ -684,7 +689,6 @@ namespace Copium
 	{
 		delete_from_browser();
 	}
-
 
 	void FileSystem::CallbackFileAccess(FileAccessEvent* pEvent)
 	{
