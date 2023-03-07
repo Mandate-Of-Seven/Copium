@@ -93,6 +93,7 @@
     </Compile>
     <Compile Include="Assets\Scripts\AudioManager.cs" />
     <Compile Include="Assets\Scripts\BlinkingEffect.cs" />
+    <Compile Include="Assets\Scripts\CameraShakeEffect.cs" />
     <Compile Include="Assets\Scripts\Crew.cs" />
     <Compile Include="Assets\Scripts\CrewMenu.cs" />
     <Compile Include="Assets\Scripts\CrewStatusManager.cs" />
@@ -100,6 +101,8 @@
     <Compile Include="Assets\Scripts\Event_03.cs" />
     <Compile Include="Assets\Scripts\Event_04.cs" />
     <Compile Include="Assets\Scripts\Event_Ending.cs" />
+    <Compile Include="Assets\Scripts\ExplosionEffect.cs" />
+    <Compile Include="Assets\Scripts\EyesClosingEffect.cs" />
     <Compile Include="Assets\Scripts\Fade.cs" />
     <Compile Include="Assets\Scripts\FPS.cs" />
     <Compile Include="Assets\Scripts\ButtonCalls.cs" />
@@ -108,6 +111,7 @@
     <Compile Include="Assets\Scripts\Event_01.cs" />
     <Compile Include="Assets\Scripts\Event_Intro.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\HowtoPlayMenu.cs" />
     <Compile Include="Assets\Scripts\Introduction.cs" />
     <Compile Include="Assets\Scripts\CombatMovement.cs" />
     <Compile Include="Assets\Scripts\MainMenu.cs" />
@@ -115,6 +119,7 @@
     <Compile Include="Assets\Scripts\Option.cs" />
     <Compile Include="Assets\Scripts\Prepare.cs" />
     <Compile Include="Assets\Scripts\ReportScreenManager.cs" />
+    <Compile Include="Assets\Scripts\ResultManager.cs" />
     <Compile Include="Assets\Scripts\ScreensManager.cs" />
     <Compile Include="Assets\Scripts\ShooterBehaviour.cs" />
     <Compile Include="Assets\Scripts\Story.cs" />

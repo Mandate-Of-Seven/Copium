@@ -462,11 +462,11 @@ namespace Copium
 	{
 		if (_mType == MESSAGE_TYPE::MT_START_PREVIEW)
 		{
-			//tempMode = false;
+			previewFlag = true;
 		}
 		else if (_mType == MESSAGE_TYPE::MT_STOP_PREVIEW)
 		{
-			//tempMode = true;
+			previewFlag = false;
 			Scene* scene = MySceneManager.get_current_scene();
 			if (scene && !scene->componentArrays.GetArray<Camera>().empty())
 				for (Camera& camera : scene->componentArrays.GetArray<Camera>())
