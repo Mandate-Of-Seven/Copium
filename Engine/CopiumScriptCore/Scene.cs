@@ -14,6 +14,7 @@ namespace CopiumEngine
     }
     public class Scene
     {
+
         List<GameObject> gameObjects = new List<GameObject>();
         List<Component> components = new List<Component>();
 
@@ -38,6 +39,5 @@ namespace CopiumEngine
             components.Add(component);
         }
 
-        static Scene CurrentScene;
     }
 }

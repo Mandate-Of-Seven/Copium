@@ -1,5 +1,5 @@
-[2023-03-07 00:31:54.005] [Error] [critical] 
+[2023-03-07 13:36:55.471] [Error] [critical] 
 Caused By:	!mClassField
-Info:		FIELD resultManager COULD NOT BE FOUND IN SCRIPT TrainManager
-Source:		C:\Users\FLESH\ECS\Copium\Engine\core-engine\src\Scripting\scripting-system.h (Line: 616)
+Info:		FIELD helloCOULD NOT BE FOUND IN SCRIPT AudioManager
+Source:		C:\Users\FLESH\Desktop\Copium\Engine\core-engine\src\Scripting\scripting-system.cpp (Line: 902)
 

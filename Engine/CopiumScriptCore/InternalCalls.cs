@@ -48,9 +48,6 @@ namespace CopiumEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetComponentEnabled(ulong compId, bool enabled, Type componentType);
 
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static ulong GetComponent(ulong gameObjID, Type componentType);
         #endregion
 
         #region GAMEOBJECT
@@ -74,6 +71,9 @@ namespace CopiumEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static ulong AddComponent(ulong gameObjID, Type componentType);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static Component GetComponent(ulong gameObjID, Type componentType);
 
         #endregion
 
