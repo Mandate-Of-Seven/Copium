@@ -572,7 +572,7 @@ namespace Copium
 		if (selectedFile != nullptr)
 		{
 			MyEventSystem->publish(new FileAssetEvent(selectedFile, 2));
-			std::cout << "Deleting: " << selectedFile->filePath.filename() << " With result: " << DeleteFile(selectedFile->filePath.c_str()) << std::endl;
+			PRINT("Deleting: " << selectedFile->filePath.filename() << " With result: " << DeleteFile(selectedFile->filePath.c_str()));
 			remove_file_reference(selectedFile);
 			selectedFile = nullptr;
 		}
@@ -582,11 +582,11 @@ namespace Copium
 			if (std::filesystem::remove_all(tmp))
 			{
 				update_directories(selectedDirectory->get_parent_directory());
-				std::cout << "Delete complete\n";
+				PRINT("Delete complete");
 			}
 			else
 			{
-				std::cout << "Delete failed, could not find folder at: " << tmp << std::endl;
+				PRINT("Delete failed, could not find folder at: " << tmp);
 			}
 
 			selectedDirectory = nullptr;
@@ -608,7 +608,6 @@ namespace Copium
 			else if (!entry.is_directory() && !entry.path().extension().generic_string().compare(_extension)) 
 			{
 				assetsPath.push_back(entry.path().generic_string());
-				//std::cout << "Path name: " << entry.path().string() << "\n";
 			}
 
 		}
@@ -635,7 +634,6 @@ namespace Copium
 				if (extension1 || extension2)
 				{
 					assetsPath.push_back(entry.path().generic_string());
-					//std::cout << "Path name: " << entry.path().string() << "\n";
 				}
 			}
 		}

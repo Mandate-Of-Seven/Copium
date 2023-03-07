@@ -88,10 +88,7 @@ namespace Copium
 
 		FT_Done_Face(face);
 		FT_Done_FreeType(ft);
-
-#if defined(DEBUG) | defined(_DEBUG)
 		PRINT("FONT " << _name << " LOADED...");
-#endif
 	}
 
 	Font* Font::getFont(const std::string& _name, bool _hasPath)

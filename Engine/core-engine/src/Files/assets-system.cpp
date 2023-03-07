@@ -229,11 +229,9 @@ namespace Copium
 	{
 		for (std::string path : _path)
 		{
-			//std::cout << "Audio: " << path << "\n";
 			size_t lastSlash = path.find_last_of("/");
 			std::string temp = path.substr(lastSlash + 1);
 			size_t lastDot = temp.find_last_of(".");
-			//std::cout << "Alias: " << temp.substr(0, lastDot) << "\n";
 			MySoundSystem.CreateSound(path, temp.substr(0, lastDot));
 			MySoundSystem.SetVolume(temp.substr(0, lastDot), 1.0f);
 		}
@@ -243,7 +241,6 @@ namespace Copium
 	{
 		if (_file->filePath.extension() ==".wav")
 		{
-			//std::cout << _file->name << " "<<_file->filename();
 			std::string temp = _file->filePath.filename().string();
 			size_t lastDot = temp.find_last_of(".");
 			MySoundSystem.CreateSound(_file->filePath.filename().string(), temp.substr(0,lastDot));
@@ -251,7 +248,7 @@ namespace Copium
 		}
 		else
 		{
-			std::cout << _file->get_name() << " is not a .wav file!\n";
+			PRINT(_file->get_name() << " is not a .wav file!");
 		}
 	}
 	void AssetsSystem::UnloadAudio(File* _file)
@@ -266,14 +263,14 @@ namespace Copium
 				if ((*iter).first == targetAlias)
 				{
 					MySoundSystem.soundList.erase(iter);
-					std::cout << "Unloading audio file: " << targetAlias << " from sound list\n";
+					PRINT("Unloading audio file: " << targetAlias << " from sound list");
 					break;
 				}
 			}
 		}
 		else
 		{
-			std::cout << _file->get_name() << " is not a .wav file!\n";
+			PRINT(_file->get_name() << " is not a .wav file!");
 		}
 	}
 

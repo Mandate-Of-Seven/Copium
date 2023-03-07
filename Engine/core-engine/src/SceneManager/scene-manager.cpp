@@ -532,7 +532,7 @@ namespace Copium
 
 	bool SceneManager::load_scene(const std::string& _filepath)
 	{
-		std::cout << "loading " << _filepath << std::endl;
+		PRINT("loading " << _filepath);
 
 		if (_filepath.find(".scene") == std::string::npos)
 		{
@@ -564,7 +564,7 @@ namespace Copium
 		if (document.HasMember("Name"))
 		{
 			currentScene->set_name(document["Name"].GetString());
-			std::cout << "Scene name:" << currentScene->name << std::endl;
+			PRINT("Scene name:" << currentScene->name);
 		}
 
 		MyEventSystem->publish(new SceneChangingEvent(*currentScene));
@@ -846,7 +846,7 @@ namespace Copium
 		}
 
 
-		std::cout << "stop preview\n";
+		PRINT("Stop preview");
 		currSceneState = Scene::SceneState::edit;
 
 
@@ -895,12 +895,12 @@ namespace Copium
 		}
 
 		//double startTime = glfwGetTime();
-		std::cout << "saving scene...\n";
+		PRINT("Saving scene...");
 		if (!save_scene(sceneFilePath))
 			return false;
 
-		std::cout << "save complete\n";
-		//std::cout << "Time taken: " << glfwGetTime() - startTime << std::endl;
+		PRINT("Save complete");
+		//PRINT("Time taken: " << glfwGetTime() - startTime);
 		return true;
 	}
 	
@@ -1093,7 +1093,7 @@ namespace Copium
 	{
 		// If there is a scene loaded, 
 		if (currentScene) {
-			std::cout << "Destroying Current Scene!\n";
+			PRINT("Destroying Current Scene!");
 			delete currentScene;
 			currentScene = nullptr;
 			sceneFilePath.clear();
@@ -1122,7 +1122,7 @@ namespace Copium
 
 	void SceneManager::CallbackGameObjectInstantiate(GameObjectInstantiateEvent* pEvent)
 	{
-		PRINT("callback for gameobject instantiate called");
+		PRINT("Callback for gameobject instantiate called");
 		if (!pEvent->pOriginal)
 		{
 			GameObject& go = MyGOF.Instantiate(*currentScene);

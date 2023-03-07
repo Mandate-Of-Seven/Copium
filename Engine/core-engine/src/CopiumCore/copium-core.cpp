@@ -48,7 +48,7 @@ namespace Copium
 		for (ISystem* pSystem : systems)
 		{
 			pSystem->init();
-			//std::cout << typeid(*pSystem).name() << ": init!\n";
+			//PRINT(typeid(*pSystem).name() << ": init!");
 		}
 
 		MyEventSystem->subscribe(this, &CopiumCore::CallbackStartPreview);

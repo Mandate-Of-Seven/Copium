@@ -50,7 +50,7 @@ namespace Copium
 				{
 					//double startTime = glfwGetTime();
 					pSystem->update();
-					//std::cout << typeid(*pSystem).name() << ": update!\n";
+					//PRINT(typeid(*pSystem).name() << ": update!");
 					//pSystem->updateTime = glfwGetTime() - startTime;
 					//totalUpdateTime += pSystem->updateTime;
 				}
@@ -58,7 +58,7 @@ namespace Copium
 				{
 					//double startTime = glfwGetTime();
 					pSystem->update();
-					//std::cout << typeid(*pSystem).name() << ": update!\n";
+					//PRINT(typeid(*pSystem).name() << ": update!");
 					//pSystem->updateTime = glfwGetTime() - startTime;
 					//totalUpdateTime += pSystem->updateTime;
 					continue;
@@ -69,21 +69,21 @@ namespace Copium
 			{
 				if (performanceCounter >= 0.05f)
 				{
-					//std::cout<<"Start\n";
+					//PRINT("Start");
 					std::string temp = "\n";
 					for (ISystem* pSystem : systems)
 					{
 						pSystem->updateTimePercent = (pSystem->updateTime <= 0) ? 0 : ((pSystem->updateTime / totalUpdateTime) * 100);
-						//std::cout<< pSystem->updateTime << "\n";
+						//PRINT(pSystem->updateTime);
 						temp += typeid(*pSystem).name();
 						temp += ": ";
 						temp += std::to_string(pSystem->updateTimePercent);
 						temp += "%%\n\n";
-						std::cout << typeid(*pSystem).name() << ": " << pSystem->updateTimePercent << "%\n";
+						PRINT(typeid(*pSystem).name() << ": " << pSystem->updateTimePercent << "%");
 					}
-					//std::cout << temp;
+					//PRINT(temp);
 					//Window::EditorConsole::editorLog.set_performancetext(temp);
-					//std::cout << "End\n\n";
+					//PRINT("End\n");
 					performanceCounter = 0;
 				}
 				else
