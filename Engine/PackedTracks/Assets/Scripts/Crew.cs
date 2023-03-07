@@ -97,7 +97,7 @@ public class Crew : CopiumScript
 
         Color tmp = Color.white;
         float x = ((float)person.health/15.0f);
-        Console.WriteLine(x);
+        //Console.WriteLine(x);
         tmp.r = x;
         tmp.g = x;
         tmp.b = x;

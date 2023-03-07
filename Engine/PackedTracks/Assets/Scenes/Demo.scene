@@ -104,6 +104,17 @@
                 },
                 {
                     "enabled": true,
+                    "UID": 2073622082484573327,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "GunShotsTest3",
+                    "Loop": false,
+                    "Overlap": true,
+                    "Volume": 1.0,
+                    "Channel": ""
+                },
+                {
+                    "enabled": true,
                     "UID": 11261402425968020089,
                     "Type": "Script",
                     "TypeID": 23,
