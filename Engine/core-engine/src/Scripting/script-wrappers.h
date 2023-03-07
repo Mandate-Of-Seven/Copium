@@ -803,7 +803,9 @@ namespace Copium
 		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
 		if (gameObj == nullptr)
 			return;
-		gameObj->GetComponent<AudioSource>()->volume = volume;
+		AudioSource* audioSource = gameObj->GetComponent<AudioSource>();
+		audioSource->volume = volume;
+		SoundSystem::Instance()->soundList[audioSource->alias].first->setVolume(audioSource->volume);
 	}
 
 	static float AudioSourceGetVolume(UUID ID)
