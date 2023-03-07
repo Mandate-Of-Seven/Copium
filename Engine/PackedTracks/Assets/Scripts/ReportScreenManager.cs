@@ -81,8 +81,8 @@ public class ReportScreenManager: CopiumScript
 
     public void ClosePanel()
     {
-        resultManager.Enable();
         isReportScreenOn = false;
+        resultManager.Enable();
         ReportScreenBtn.gameObject.SetActive(true);
         ReportTab.transform.parent = parent.transform;
     }

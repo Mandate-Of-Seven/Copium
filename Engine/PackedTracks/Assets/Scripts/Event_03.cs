@@ -72,8 +72,9 @@ public class Event_03: CopiumScript
             EventManager.Body.text = "Out of nowhere the an explosion came from the back up engine room, flames quickly engulf " +
                 "the back of the train and is quickly spreading, ";
 
-            // Indicate lost of engine
+            // Indicate GG Game Over
             EventManager.Option_01.txt.text = "Watch the flame destroy the engine";
+            EventManager.Option_01.txt.color = Color.red;
             EventManager.Option_01.ShowIcons(false, true, false, true);
 
             // Indicate Crew lose health

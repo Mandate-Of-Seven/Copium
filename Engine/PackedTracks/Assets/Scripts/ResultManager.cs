@@ -5,6 +5,10 @@ public class ResultManager: CopiumScript
 {
 	public bool isResultOn = false;
 	public AudioManager audioManager;
+
+    public GameObject manualPanel;
+    public CrewStatusManager crewStatus;
+    public ReportScreenManager reportScreen;
     
     public Button CloseResultBtn;
 	public Button ResultBtn;
@@ -25,6 +29,7 @@ public class ResultManager: CopiumScript
 	}
 	void Update()
 	{
+
         if (!openHover && ResultBtn.state == ButtonState.OnHover)
         {
             openHover = true;
@@ -83,6 +88,16 @@ public class ResultManager: CopiumScript
 
 	public void Enable()
 	{
+        if (reportScreen.isReportScreenOn)
+        {
+            Console.WriteLine("WHERE UR REPORT");
+            return;
+        }
+        if (crewStatus.isCrewStatusOn)
+        {
+            Console.WriteLine("WHERE UR CREW");
+            return;
+        }
 		ResultTab.SetActive(true);
 		ResultBtn.gameObject.SetActive(true);
 	}
