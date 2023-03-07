@@ -55,7 +55,7 @@ namespace Copium
 		MyEventSystem->subscribe(this, &CopiumCore::CallbackStopPreview);
 		//pMessageSystem->subscribe(MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW, this);
 		//while (MyScriptingSystem.compilingState == CompilingState::Compiling);
-		//MySceneManager.load_scene(Paths::assetPath+"\\Scenes\\Demo.scene");
+		MySceneManager.load_scene(Paths::assetPath+"\\Scenes\\MainMenu.scene");
 		//MySceneManager.load_scene("C:\\Users\\FLESH\\Desktop\\Copium\\Engine\\x64\\PackedTracks\\Assets\\Scenes\\Demo.scene");
 
 	}

@@ -31,7 +31,7 @@ namespace Copium
 		// Our state
 		bool show_demo_window = false;
 		ThreadSystem& threadSystem{ *ThreadSystem::Instance() };
-		bool tempMode = true;
+		bool tempMode = false;
 	}
 
 	void EditorSystem::init()
@@ -94,10 +94,10 @@ namespace Copium
 		{
 			enableEditor = tempMode;
 			playMode(enableEditor);
-			/*if (MySceneManager.startPreview())
+			if (MySceneManager.startPreview())
 			{
 				MyMessageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
-			}*/
+			}
 		}
 
 		if (!sceneChangeName.empty())
