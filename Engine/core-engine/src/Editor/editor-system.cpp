@@ -192,16 +192,16 @@ namespace Copium
 						threadSystem.returnMutex(MutexType::FileSystem);
 						if (!filepath.empty())
 						{
-							std::cout << filepath << std::endl;
+							PRINT(filepath);
 
 							if (MySceneManager.load_scene(filepath))
-								std::cout << "loading success\n";
+								PRINT("loading success");
 							else
-								std::cout << "loading fail\n";
+								PRINT("loading fail");
 						}
 						else
 						{
-							std::cout << "file failed to open\n";
+							PRINT("file failed to open");
 						}
 
 					}
@@ -214,7 +214,7 @@ namespace Copium
 							while (!threadSystem.acquireMutex(MutexType::FileSystem));
 							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
-							std::cout << filepath << std::endl;
+							PRINT(filepath);
 
 							size_t pos = filepath.find_last_of("/\\") + 1;
 							std::string sceneName = filepath.substr(pos);
@@ -235,7 +235,7 @@ namespace Copium
 							while (!threadSystem.acquireMutex(MutexType::FileSystem));
 							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
-							std::cout << filepath << std::endl;
+							PRINT(filepath);
 							size_t pos = filepath.find_last_of("/\\") + 1;
 							std::string sceneName = filepath.substr(pos);
 							MySceneManager.save_scene(filepath, sceneName);
@@ -256,7 +256,7 @@ namespace Copium
 						}
 						//exit game engine
 						MyEventSystem->publish(new QuitEngineEvent);
-						std::cout << "Copium has been huffed, Engine shutting down" << std::endl;
+						PRINT("Copium has been huffed, Engine shutting down");
 
 					}
 
@@ -336,18 +336,18 @@ namespace Copium
 					threadSystem.returnMutex(MutexType::FileSystem);
 					if (!filepath.empty())
 					{
-						std::cout << filepath << std::endl;
+						PRINT(filepath);
 
 
 						if (MySceneManager.load_scene(filepath))
-							std::cout << "loading success\n";
+							PRINT("loading success");
 						else
-							std::cout << "loading fail\n";
+							PRINT("loading fail");
 
 					}
 					else
 					{
-						std::cout << "file failed to open\n";
+						PRINT("file failed to open");
 					}
 				}
 				else if (MyInputSystem.is_key_pressed(GLFW_KEY_S))
@@ -361,7 +361,7 @@ namespace Copium
 							while (!threadSystem.acquireMutex(MutexType::FileSystem));
 							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
-							std::cout << filepath << std::endl;
+							PRINT(filepath);
 							size_t pos = filepath.find_last_of("/\\") + 1;
 							std::string sceneName = filepath.substr(pos);
 							MySceneManager.save_scene(filepath, sceneName);
@@ -379,7 +379,7 @@ namespace Copium
 							while (!threadSystem.acquireMutex(MutexType::FileSystem));
 							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
-							std::cout << filepath << std::endl;
+							PRINT(filepath);
 							size_t pos = filepath.find_last_of("/\\") + 1;
 							std::string sceneName = filepath.substr(pos);
 							MySceneManager.save_scene(filepath, sceneName, true);
@@ -437,7 +437,7 @@ namespace Copium
 		inspector.exit();
 		layers.exit();
 
-		std::cout << "Before deleting, Undo stack: " << commandManager.undoStack.size() << ", Redo stack:" << commandManager.redoStack.size()<<"\n";
+		PRINT("Before deleting, Undo stack: " << commandManager.undoStack.size() << ", Redo stack:" << commandManager.redoStack.size());
 		while (commandManager.undoStack.size() > 0)
 		{
 			UndoRedo::Command* temp = get_commandmanager()->undoStack.top();
@@ -453,7 +453,7 @@ namespace Copium
 			get_commandmanager()->redoStack.pop();
 			
 		}
-		std::cout << "After deleting, Undo stack: " << commandManager.undoStack.size() << ", Redo stack:" << commandManager.redoStack.size() << "\n";
+		PRINT("After deleting, Undo stack: " << commandManager.undoStack.size() << ", Redo stack:" << commandManager.redoStack.size());
 		
 		camera.exit();
 	}

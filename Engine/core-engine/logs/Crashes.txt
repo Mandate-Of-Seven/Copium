@@ -1,5 +1,5 @@
-[2023-03-07 16:50:00.105] [Error] [critical] 
+[2023-03-07 17:53:23.157] [Error] [critical] 
 Caused By:	mAppDomain == nullptr
 Info:		MONO APP DOMAIN NOT LOADED
-Source:		C:\Users\FLESH\Desktop\Copium\Engine\core-engine\src\Scripting\scripting-system.cpp (Line: 301)
+Source:		C:\Users\prawn\Documents\GitHub\GAM-200\Engine\core-engine\src\Scripting\scripting-system.cpp (Line: 301)
 

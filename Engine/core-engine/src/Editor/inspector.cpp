@@ -331,7 +331,7 @@ namespace Copium
             }
             if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
             {
-                std::cout << "double clicked on game object reference field\n";
+                PRINT("double clicked on game object reference field");
                 isAddingReference = true;
                 pEditedContainer = reinterpret_cast<void**>(&container);
 
@@ -1093,7 +1093,7 @@ namespace Copium
 
                         if (MySoundSystem.soundList.find(audioSource.alias) == MySoundSystem.soundList.end())//if its true it means file doesnt exist yet
                         {
-                            std::cout << "New sound file detected: " << str << " / Alias (" << audioSource.alias << ")\n";
+                            PRINT("New sound file detected: " << str << " / Alias (" << audioSource.alias << ")");
                             SoundSystem::Instance()->CreateSound(str, audioSource.alias);
                         }
                         else
@@ -1103,7 +1103,7 @@ namespace Copium
                     }
                     else
                     {
-                        std::cout << "Wrong file type\n";
+                        PRINT("Wrong file type");
                         Window::EditorConsole::editorLog.add_logEntry("AudioSource only accepts the.wav file format");
                         Window::EditorConsole::editorLog.bring_to_front();
                     }
@@ -1167,7 +1167,7 @@ namespace Copium
             {
                 if (audioSource.alias.size())
                 {
-                    std::cout << "Stopping all audio\n";
+                    PRINT("Stopping all audio");
                     MySoundSystem.StopAll();
                 }
             }
