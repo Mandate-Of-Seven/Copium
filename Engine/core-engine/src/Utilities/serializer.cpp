@@ -2,6 +2,7 @@
 #include <Events/events-system.h>
 #include "serializer.h"
 #include "Files/assets-system.h"
+#include "Audio/sound-system.h"
 namespace Copium
 {	
 	// Serialization --------------------------------------------
@@ -521,6 +522,7 @@ namespace Copium
 		Copium::Deserialize(_data.overLap, _value,"Overlap");
 		Copium::Deserialize(_data.volume, _value, "Volume");
 		Copium::Deserialize(_data.channel, _value, "Channel");
+		SoundSystem::Instance()->soundList[_data.alias].first->setVolume(_data.volume);
 	}
 
 
