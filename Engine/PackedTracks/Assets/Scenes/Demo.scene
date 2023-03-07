@@ -915,7 +915,7 @@
                         {
                             "Name": "Snow_SpriteSheet_155_5x31.png",
                             "Sprite ID": 8966109942037627320,
-                            "Time Delay": 0.029999999329447743,
+                            "Time Delay": 0.029999999329447746,
                             "FrameCount": 155,
                             "Rows": 31,
                             "Columns": 5,
@@ -5240,7 +5240,8 @@
                     "prepareManager": 5967388857219597172,
                     "resultManager": 12715761732489693216,
                     "suppliesText": 2987481935980349814,
-                    "titleText": 11591166883693418428
+                    "titleText": 11591166883693418428,
+                    "reportScreenManager": 10310073297153690428
                 }
             ]
         },
