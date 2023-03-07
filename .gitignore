@@ -10,3 +10,5 @@
 *.iobj
 *.ipdb
 *.pch
+x64/
+*.pch
