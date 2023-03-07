@@ -1,14 +1,14 @@
 Microsoft (R) Visual C# Compiler version 3.9.0-6.21160.10 (59eedc33)
 Copyright (C) Microsoft Corporation. All rights reserved.
 
+C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\ShooterBehaviour.cs(10,19): warning CS0169: The field 'ShooterBehaviour.target' is never used
 C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\ShooterBehaviour.cs(17,13): warning CS0169: The field 'ShooterBehaviour.newBullet' is never used
 C:\Users\FLESH\Desktop\Copium\Engine\CopiumScriptCore\Scene.cs(41,22): warning CS0169: The field 'Scene.CurrentScene' is never used
-C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\ShooterBehaviour.cs(10,19): warning CS0169: The field 'ShooterBehaviour.target' is never used
-C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\Event_Ending.cs(9,9): warning CS0414: The field 'Event_Ending.resolutionTextNum' is assigned but its value is never used
-C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\GameManager.cs(34,11): warning CS0414: The field 'GameManager.hungerTimer' is assigned but its value is never used
 C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\Event_04.cs(9,9): warning CS0414: The field 'Event_04.resolutionTextNum' is assigned but its value is never used
 C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\Test.cs(6,12): warning CS0414: The field 'Test.temp' is assigned but its value is never used
+C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\Bullet.cs(10,11): warning CS0414: The field 'Bullet.timer' is assigned but its value is never used
 C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\StoryObject.cs(5,9): warning CS0414: The field 'StoryObject.hello' is assigned but its value is never used
 C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\ShooterBehaviour.cs(11,8): warning CS0414: The field 'ShooterBehaviour.baseHealth' is assigned but its value is never used
-C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\Bullet.cs(10,11): warning CS0414: The field 'Bullet.timer' is assigned but its value is never used
 C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\ShooterBehaviour.cs(12,8): warning CS0414: The field 'ShooterBehaviour.yess' is assigned but its value is never used
+C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\Event_Ending.cs(9,9): warning CS0414: The field 'Event_Ending.resolutionTextNum' is assigned but its value is never used
+C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\GameManager.cs(34,11): warning CS0414: The field 'GameManager.hungerTimer' is assigned but its value is never used
