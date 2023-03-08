@@ -35,6 +35,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <mono/jit/jit.h>
 #include <mono/metadata/debug-helpers.h>
 #include <mono/metadata/exception.h>
+#include <mutex>
 
 #define SECONDS_TO_RECOMPILE 5
 namespace
@@ -225,6 +226,7 @@ namespace Copium
 		ThreadSystem& tSys = *ThreadSystem::Instance();
 		while (!tSys.Quit())
 		{
+			compilingStateReadable.lock();
 			while (compilingState != CompilingState::Wait);
 			compilingState = CompilingState::Compiling;
 			//Critical section
@@ -551,6 +553,7 @@ namespace Copium
 				startCompiling = true;
 				Utils::compileDll();
 				compilingState = CompilingState::SwapAssembly;
+				compilingStateReadable.unlock();
 			}
 		}
 		if (!startCompiling)
@@ -857,6 +860,7 @@ namespace Copium
 		if (mAssemblyImage == nullptr)
 		{
 			//Wait if it is still compiling
+			compilingStateReadable.lock();
 			while (compilingState == CompilingState::Compiling) {
 				PRINT("COMPILING!!");
 			};
@@ -868,6 +872,7 @@ namespace Copium
 				swapDll();
 				compilingState = CompilingState::Wait;
 			}
+			compilingStateReadable.unlock();
 		}
 
 		mGameObjects.clear();

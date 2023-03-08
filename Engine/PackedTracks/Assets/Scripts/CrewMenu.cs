@@ -27,7 +27,13 @@ public class CrewMenu: CopiumScript
     public Crew chuck;
     public Crew danton;
 
-    
+    bool moving = false;
+
+    Color originalButtonColor;
+
+    Image prepareBtnImage;
+
+
     bool prepareHover = false;
     bool deployHover = false;
 
@@ -127,6 +133,8 @@ public class CrewMenu: CopiumScript
 
     void Start()
 	{
+        prepareBtnImage = prepareButton.GetComponent<Image>();
+        originalButtonColor = prepareBtnImage.color;
         titleString = titleText.text;
     }
 	void Update()
@@ -137,11 +145,7 @@ public class CrewMenu: CopiumScript
         //have condition for when certain values hit 0??
         if (prepareButton.state == ButtonState.OnHover)
         {
-            if (!prepareHover)
-            {
-                prepareHover = true;
-                audioManager.hoverSFX.Play();
-            }
+            audioManager.hoverSFX.Play();
         }
         else if (prepareButton.state == ButtonState.OnClick)
         {
@@ -396,4 +400,19 @@ public class CrewMenu: CopiumScript
         deployed = false;
     }
 
+    public void ToggleClickable()
+    {
+        Console.WriteLine("TOGGLED!");
+        moving = !moving;
+        if (moving)
+        {
+            prepareButton.enabled = false;
+            prepareBtnImage.color = Color.red;
+        }
+        else
+        {
+            prepareButton.enabled = true;
+            prepareBtnImage.color = originalButtonColor;
+        }
+    }
 }

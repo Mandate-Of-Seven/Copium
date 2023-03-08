@@ -589,6 +589,7 @@ namespace Copium
 		std::unordered_map<std::string, MonoObject*> scenes;
 		MonoObject* mCurrentScene;
 		MonoObject* mPreviousScene;
+		std::mutex compilingStateReadable;
 		CompilingState compilingState{ CompilingState::Wait };
 		bool inPlayMode{false};
 	};

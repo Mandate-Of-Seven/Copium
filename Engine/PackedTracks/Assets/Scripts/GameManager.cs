@@ -38,6 +38,8 @@ public class GameManager: CopiumScript
     bool updateEvent = false;
     public bool gameEnd = false;
 
+    bool moving = false;
+
     bool manualHover = false;
 
     void Start()
@@ -63,16 +65,9 @@ public class GameManager: CopiumScript
         CheckForGameEndCondition();
 
         // Cant deploy if the train is moving
-        if (trainManager.currentSpeed > 0)
+        if ((moving && trainManager.currentSpeed <= 0.01f) || (!moving && trainManager.currentSpeed > 0.01f))
         {
-            crewMenuScript.prepareButton.gameObject.SetActive(false);
-            crewMenuScript.deployButton.gameObject.SetActive(false);
-        }
-        else
-        {
-            crewMenuScript.prepareButton.gameObject.SetActive(true);
-            //Set true in crew menu when prepare is pressed
-            //crewMenuScript.deployButton.gameObject.SetActive(true);
+            ToggleMoving();
         }
 
         //Stop travelling
@@ -230,5 +225,11 @@ public class GameManager: CopiumScript
                 InternalCalls.PlayAllAnimation();
             }
         }
+    }
+
+    public void ToggleMoving()
+    {
+        moving = !moving;
+        crewMenuScript.ToggleClickable();
     }
 }
