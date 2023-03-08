@@ -10,11 +10,6 @@ public class GameManager: CopiumScript
 	public GameObject TrainCanvas;
     public GameObject PauseCanvas;
 
-    public GameObject ManualPopUp;
-
-    public Button ManualBtn;
-    public Button ManualPopUpBtn;
-
     public Button PauseResumeBtn;
     public Button PauseQuitBtn;
 
@@ -40,8 +35,6 @@ public class GameManager: CopiumScript
 
     bool moving = false;
 
-    bool manualHover = false;
-
     void Start()
 	{
         //UpdateCanvases();
@@ -58,8 +51,6 @@ public class GameManager: CopiumScript
 
         if (isPaused)
             return;
-
-        ButtonInputs();
 
         // Game ends
         CheckForGameEndCondition();
@@ -139,52 +130,6 @@ public class GameManager: CopiumScript
             EventManager.OverideEvent();
             crewStatusManager.ClosePanel();
             reportScreenManager.OpenPanel();
-        }
-    }
-
-    void ButtonInputs()
-    {
-        if (!ManualPopUpBtn.gameObject.activeSelf)
-        {
-            if (ManualBtn.state == ButtonState.OnHover)
-            {
-                if (!manualHover)
-                {
-                    manualHover = true;
-                    audioManager.hoverSFX.Play();
-                }
-            }
-            else if (ManualBtn.state == ButtonState.OnRelease)
-            {
-                audioManager.paperSFX.Play();
-                ManualPopUp.SetActive(true);
-                manualHover = true;
-            }
-            else if (ManualBtn.state == ButtonState.None)
-            {
-                manualHover = false;
-            }
-        }
-        else
-        {
-            if (ManualPopUpBtn.state == ButtonState.OnHover)
-            {
-                if (!manualHover)
-                {
-                    manualHover = true;
-                    audioManager.hoverSFX.Play();
-                }
-            }
-            else if (ManualPopUpBtn.state == ButtonState.OnRelease)
-            {
-                audioManager.paperSFX.Play();
-                ManualPopUpBtn.gameObject.SetActive(false);
-                manualHover = true;
-            }
-            else if (ManualPopUpBtn.state == ButtonState.None)
-            {
-                manualHover = false;
-            }
         }
     }
 

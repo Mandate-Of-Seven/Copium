@@ -16,11 +16,13 @@ public class TrainManager: CopiumScript
 	public Image trainLeverDeactivated;
 	public GameObject trainCanvas;
 	public float levelTransSpeed = 2.0f;
-	Color leverHoverColor = new Color(0.5f,1f,0.5f,1f);
+	Color leverHoverColor = new Color(0.6f,0.6f,0.6f,1f);
 
+    public Button ManualPopUpBtn;
+    public Button ManualBtn;
+	bool manualHover = false;
 
-
-	bool accelerate = false;
+    bool accelerate = false;
 	
 	public float snowMaxDelay = 0.1f;
 	public float tracksMaxDelay = 0.1f;
@@ -55,32 +57,11 @@ public class TrainManager: CopiumScript
 
 	void Update()
 	{
+		ToggleManual();
 
-		if (trainLeverBtn.state == ButtonState.OnHover)
-		{
-			if (!onHover)
-			{
-				audioManager.hoverSFX.Play();
-				onHover = true;
-			}
-			Color leverCurrentColor = Color.Lerp(leverHoverColor, trainLeverActivated.color, Time.deltaTime * levelTransSpeed);
-			trainLeverActivated.color = leverCurrentColor;
-			trainLeverDeactivated.color = leverCurrentColor;
-		}
-		else if (trainLeverBtn.state == ButtonState.OnClick)
-		{
-			FlickLever();
-		}
-		else
-		{
-			if (trainLeverBtn.state == ButtonState.None)
-			{
-				onHover = false;
-			}
-			Color leverCurrentColor = Color.Lerp(trainLeverActivated.color, Color.white, Time.deltaTime * levelTransSpeed);
-			trainLeverActivated.color = leverCurrentColor;
-			trainLeverDeactivated.color = leverCurrentColor;
-		}
+		ToggleLever();
+		
+		// Speed of train
 		if (accelerate && currentSpeed < maxSpeed)
 		{
 			currentSpeed += acceleration* Time.deltaTime;
@@ -159,6 +140,33 @@ public class TrainManager: CopiumScript
 		}
 	}
 
+	void ToggleLever()
+	{
+        if (trainLeverBtn.state == ButtonState.OnHover)
+        {
+            if (!onHover)
+            {
+                audioManager.hoverSFX.Play();
+                onHover = true;
+            }
+            Color leverCurrentColor = Color.Lerp(trainLeverActivated.color, Color.white, Time.deltaTime * levelTransSpeed);
+            trainLeverActivated.color = leverCurrentColor;
+            trainLeverDeactivated.color = leverCurrentColor;
+        }
+        else if (trainLeverBtn.state == ButtonState.OnClick)
+        {
+            FlickLever();
+        }
+        else 
+        {
+            if (trainLeverBtn.state == ButtonState.None)
+                onHover = false;
+            Color leverCurrentColor = Color.Lerp(trainLeverActivated.color, leverHoverColor, Time.deltaTime * levelTransSpeed);
+            trainLeverActivated.color = leverCurrentColor;
+            trainLeverDeactivated.color = leverCurrentColor;
+        }
+    }
+
 	public void FlickLever()
 	{
         accelerate = !accelerate;
@@ -199,4 +207,51 @@ public class TrainManager: CopiumScript
 		targetTracksDelay = tracksMaxDelay;
 		targetScale = new Vector3(zoomInScale,zoomInScale,1);
 	}
+
+	// Toggle the manual to open or close
+    void ToggleManual()
+    {
+        if (!ManualPopUpBtn.gameObject.activeSelf) // When manual is not open
+        {
+            if (ManualBtn.state == ButtonState.OnHover)
+            {
+                if (!manualHover)
+                {
+                    manualHover = true;
+                    audioManager.hoverSFX.Play();
+                }
+            }
+            else if (ManualBtn.state == ButtonState.OnRelease)
+            {
+                audioManager.paperSFX.Play();
+                ManualPopUpBtn.gameObject.SetActive(true);
+                manualHover = true;
+            }
+            else if (ManualBtn.state == ButtonState.None)
+            {
+                manualHover = false;
+            }
+        }
+        else
+        {
+            if (ManualPopUpBtn.state == ButtonState.OnHover)
+            {
+                if (!manualHover)
+                {
+                    manualHover = true;
+                    audioManager.hoverSFX.Play();
+                }
+            }
+            else if (ManualPopUpBtn.state == ButtonState.OnRelease)
+            {
+                audioManager.paperSFX.Play();
+                ManualPopUpBtn.gameObject.SetActive(false);
+                manualHover = true;
+            }
+            else if (ManualPopUpBtn.state == ButtonState.None)
+            {
+                manualHover = false;
+            }
+        }
+    }
 }

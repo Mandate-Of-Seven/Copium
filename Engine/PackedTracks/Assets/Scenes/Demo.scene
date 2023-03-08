@@ -877,7 +877,9 @@
                     "snowAnimator": 11135358241762452116,
                     "tracksAnimator": 180502757048782684,
                     "trainLeverActivated": 5369727754100667835,
-                    "trainLeverBtn": 4614359461674577161
+                    "trainLeverBtn": 4614359461674577161,
+                    "ManualPopUpBtn": 6064000762752960818,
+                    "ManualBtn": 6900690266592182984
                 }
             ]
         },
@@ -1008,18 +1010,18 @@
                     },
                     "Callback": "",
                     "FadeDuration": 0.10000000149011612,
-                    "clickedR": 0.5,
-                    "clickedG": 0.5,
-                    "clickedB": 0.5,
-                    "clickedA": 0.5,
-                    "hoveredR": 0.6039215922355652,
+                    "clickedR": 0.250980406999588,
+                    "clickedG": 0.250980406999588,
+                    "clickedB": 0.250980406999588,
+                    "clickedA": 0.501960813999176,
+                    "hoveredR": 1.0,
                     "hoveredG": 1.0,
-                    "hoveredB": 0.0,
-                    "hoveredA": 1.0,
-                    "normalR": 1.0,
-                    "normalG": 1.0,
-                    "normalB": 1.0,
-                    "normalA": 0.5
+                    "hoveredB": 1.0,
+                    "hoveredA": 0.501960813999176,
+                    "normalR": 0.6000000238418579,
+                    "normalG": 0.6000000238418579,
+                    "normalB": 0.6000000238418579,
+                    "normalA": 0.501960813999176
                 }
             ]
         },
@@ -1195,18 +1197,15 @@
                     "distanceLeft": 40.0,
                     "gameEnd": false,
                     "isPaused": false,
-                    "ManualPopUp": 18214688194793872927,
                     "PauseCanvas": 1722160444903115838,
                     "TrainCanvas": 6642123175702952797,
+                    "reportScreenManager": 10310073297153690428,
                     "EventManager": 9174652001346769036,
                     "PauseResumeBtn": 7338901696821162260,
-                    "crewStatusManager": 13021923965944002219,
-                    "ManualPopUpBtn": 6064000762752960818,
-                    "ManualBtn": 6900690266592182984,
                     "PauseQuitBtn": 4561109446918292296,
                     "crewMenuScript": 15964808941009667406,
                     "audioManager": 11261402425968020089,
-                    "reportScreenManager": 10310073297153690428,
+                    "crewStatusManager": 13021923965944002219,
                     "resultManager": 12715761732489693216,
                     "tracker": 14370462799058784128,
                     "trainManager": 5971899813001945745
@@ -1460,12 +1459,12 @@
                     "Graphic ID": 5710180822141942154,
                     "BoundingBox": {
                         "Min": {
-                            "X": -0.5,
-                            "Y": -0.6499999761581421
+                            "X": -0.550000011920929,
+                            "Y": -0.550000011920929
                         },
                         "Max": {
-                            "X": 0.5,
-                            "Y": 0.30000001192092896
+                            "X": 0.5600000023841858,
+                            "Y": 0.25
                         }
                     },
                     "Callback": "",
@@ -1474,14 +1473,14 @@
                     "clickedG": 0.5,
                     "clickedB": 0.5,
                     "clickedA": 0.5,
-                    "hoveredR": 0.5,
+                    "hoveredR": 1.0,
                     "hoveredG": 1.0,
                     "hoveredB": 1.0,
-                    "hoveredA": 0.5,
-                    "normalR": 1.0,
-                    "normalG": 1.0,
-                    "normalB": 1.0,
-                    "normalA": 0.5
+                    "hoveredA": 0.501960813999176,
+                    "normalR": 0.6000000238418579,
+                    "normalG": 0.6000000238418579,
+                    "normalB": 0.6000000238418579,
+                    "normalA": 0.501960813999176
                 }
             ]
         },
@@ -1947,9 +1946,9 @@
                     "Sprite ID": 11017450176436698126,
                     "Sprite Name": "Lever-Near.png",
                     "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
+                        "X": 0.6000000238418579,
+                        "Y": 0.6000000238418579,
+                        "Z": 0.6000000238418579,
                         "W": 1.0
                     },
                     "Flip": {
@@ -2635,9 +2634,9 @@
                     "Sprite ID": 15483480037754075650,
                     "Sprite Name": "Lever-Far.png",
                     "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
+                        "X": 0.6000000238418579,
+                        "Y": 0.6000000238418579,
+                        "Z": 0.6000000238418579,
                         "W": 1.0
                     },
                     "Flip": {
@@ -2979,10 +2978,10 @@
                     "clickedG": 0.5,
                     "clickedB": 0.5,
                     "clickedA": 0.5,
-                    "hoveredR": 0.5,
-                    "hoveredG": 1.0,
-                    "hoveredB": 1.0,
-                    "hoveredA": 0.5,
+                    "hoveredR": 0.7529411911964417,
+                    "hoveredG": 0.7529411911964417,
+                    "hoveredB": 0.7529411911964417,
+                    "hoveredA": 0.501960813999176,
                     "normalR": 1.0,
                     "normalG": 1.0,
                     "normalB": 1.0,
