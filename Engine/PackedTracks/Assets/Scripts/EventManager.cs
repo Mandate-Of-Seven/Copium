@@ -30,7 +30,6 @@ public class EventManager: CopiumScript
 
     void Start()
 	{
-        Console.WriteLine("EVENT MANAGER START");
         EventSequence = 0;
     }
 

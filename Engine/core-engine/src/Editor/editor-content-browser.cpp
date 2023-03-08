@@ -43,13 +43,7 @@ namespace Copium
 	{
 		currentDirectory = &MyFileSystem.get_asset_directory();
 
-		Texture directoryIcon("Data/Resource/DirectoryIcon.png");
-		Texture fileIcon("Data/Resource/FileIcon.png");
-		Texture engineLogo("Data/Resource/CopiumLogo.png");
-		 
-		icons.push_back(directoryIcon);
-		icons.push_back(fileIcon);
-		icons.push_back(engineLogo);
+		icons = MyAssetSystem.GetResources();
 	}
 
 	void EditorContentBrowser::update()
@@ -153,7 +147,7 @@ namespace Copium
 				ImGui::PushID(fileName.c_str());
 				ImGui::BeginGroup();
 
-				ImTextureID icon = (ImTextureID)(size_t)icons[0].get_object_id();
+				ImTextureID icon = (ImTextureID)(size_t)icons[1].get_object_id();
 				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
 				//ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.f, 0.f));
 				ImGui::ImageButtonEx(dirEntry->get_id(), icon, { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 }, transparent, white);
@@ -187,7 +181,7 @@ namespace Copium
 				ImGui::BeginGroup();
 
 				// Get the image icon
-				unsigned int objectID = icons[1].get_object_id();
+				unsigned int objectID = icons[2].get_object_id();
 
 				std::string texturePath, filePath;
 				switch (file.get_file_type().fileType)
@@ -199,7 +193,7 @@ namespace Copium
 					break;
 
 				case FILE_TYPE::SCENE:
-					objectID = icons[2].get_object_id();
+					objectID = icons[0].get_object_id();
 					imageAR = 1.f;
 					framePadding = 3.f;
 					break;
@@ -227,7 +221,7 @@ namespace Copium
 					break;
 
 				case FILE_TYPE::TEXT:
-					objectID = icons[1].get_object_id();
+					objectID = icons[2].get_object_id();
 					imageAR = 1.f;
 					framePadding = 3.f;
 					break;
