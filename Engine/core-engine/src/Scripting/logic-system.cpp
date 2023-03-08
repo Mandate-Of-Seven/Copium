@@ -68,6 +68,8 @@ namespace Copium
 						pHoveredBtn = nullptr;
 					}
 					pHoveredBtn = &btn;
+
+					PRINT("HOVERED: " << pHoveredBtn->gameObj.name << " , SELECTED " << selectedGameObject->name);
 					if (btn.state == ButtonState::OnClick || btn.state == ButtonState::OnHeld)
 						return ButtonState::OnHeld;
 					return ButtonState::OnClick;
@@ -77,6 +79,7 @@ namespace Copium
 		}
 		else if (pHoveredBtn == &btn)
 		{
+			PRINT("HOVERED");
 			if (!MyInputSystem.is_mousebutton_pressed(0))
 			{
 				pHoveredBtn->state = ButtonState::None;

@@ -13,6 +13,7 @@ public class AudioManager: CopiumScript
 	public AudioSource leverEngagedSFX;
 	public AudioSource hoverSFX;
 	public AudioSource explosionSFX;
+	public AudioSource failedSFX;
 	public AudioSource ending3bVO;
 
     void Start()

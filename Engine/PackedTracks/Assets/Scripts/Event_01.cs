@@ -62,6 +62,7 @@ public class Event_01: CopiumScript
             }
             else
             {
+                cm.prepareButton.gameObject.SetActive(true);
                 timerElasped = 0;
                 ++state;
             }

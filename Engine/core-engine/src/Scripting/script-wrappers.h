@@ -933,7 +933,7 @@ namespace Copium
 		{
 			if (text.uuid == ID)
 			{
-				color = &text.color;
+				*color = text.color;
 				return;
 			}
 		}

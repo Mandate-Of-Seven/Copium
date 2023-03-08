@@ -27,14 +27,6 @@ public class CrewMenu: CopiumScript
     public Crew chuck;
     public Crew danton;
 
-    bool moving = false;
-
-    Color originalButtonColor;
-
-    Image prepareBtnImage;
-
-
-    bool prepareHover = false;
     bool deployHover = false;
 
     public bool preparing = false;
@@ -131,27 +123,23 @@ public class CrewMenu: CopiumScript
         new Person("Danton")
     };
 
+    ButtonWrapper prepareBtnWrapper;
+
     void Start()
 	{
-        prepareBtnImage = prepareButton.GetComponent<Image>();
-        originalButtonColor = prepareBtnImage.color;
+        prepareBtnWrapper = new ButtonWrapper(prepareButton,audioManager);
+        prepareBtnWrapper.SetText(prepareButton.GetComponent<Text>());
+        prepareBtnWrapper.SetImage(prepareButton.GetComponent<Image>());
         titleString = titleText.text;
     }
+
 	void Update()
 	{
         //if prepare button is pressed
         //show what event happened
         //update values based on event that happened
         //have condition for when certain values hit 0??
-        if (prepareButton.state == ButtonState.OnHover)
-        {
-            if (!prepareHover)
-            {
-                prepareHover = true;
-                audioManager.hoverSFX.Play();
-            }
-        }
-        else if (prepareButton.state == ButtonState.OnClick)
+        if (prepareBtnWrapper.GetState() == ButtonState.OnClick)
         {
             preparing = !preparing;
             deployButton.gameObject.SetActive(true);
@@ -159,11 +147,6 @@ public class CrewMenu: CopiumScript
             bDeploy = bronson.isDeployed;
             cDeploy = chuck.isDeployed;
             dDeploy = danton.isDeployed;
-            audioManager.clickSFX.Play();
-        }
-        else if (prepareButton.state == ButtonState.None)
-        {
-            prepareHover = false;
         }
 
         if (preparing)
@@ -405,17 +388,6 @@ public class CrewMenu: CopiumScript
 
     public void ToggleClickable()
     {
-        Console.WriteLine("TOGGLED! " + moving);
-        moving = !moving;
-        if (moving)
-        {
-            prepareButton.enabled = false;
-            prepareBtnImage.color = new Color(0,0,0,0);
-        }
-        else
-        {
-            prepareButton.enabled = true;
-            prepareBtnImage.color = originalButtonColor;
-        }
+        prepareBtnWrapper.ToggleInteractable();
     }
 }

@@ -37,7 +37,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <mono/metadata/exception.h>
 #include <mutex>
 
-#define SECONDS_TO_RECOMPILE 5
+#define SECONDS_TO_RECOMPILE 1
 namespace
 {
 	Copium::MessageSystem* messageSystem{ Copium::MessageSystem::Instance() };

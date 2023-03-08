@@ -129,7 +129,8 @@
                     "ending3bVO": 2090025714383355506,
                     "leverEngagedSFX": 13165669678142242702,
                     "leverSFX": 10219544415510482568,
-                    "paperSFX": 16863530532877669399
+                    "paperSFX": 16863530532877669399,
+                    "failedSFX": 17176667212650767161
                 }
             ]
         },
@@ -8281,6 +8282,43 @@
                     "TypeID": 23,
                     "Name": "FPS",
                     "textBox": 1804138248803709399
+                }
+            ]
+        },
+        {
+            "UID": 12100058480323836995,
+            "Name": "SFX_Failed",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 17176667212650767161,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "SFX_Failed",
+                    "Loop": false,
+                    "Overlap": true,
+                    "Volume": 0.5,
+                    "Channel": "SFX"
                 }
             ]
         }
