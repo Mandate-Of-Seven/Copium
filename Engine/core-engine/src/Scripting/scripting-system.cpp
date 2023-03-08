@@ -557,7 +557,10 @@ namespace Copium
 			}
 		}
 		if (!startCompiling)
+		{
 			compilingState = CompilingState::Wait;
+			compilingStateReadable.unlock();
+		}
 	}
 
 	bool ScriptingSystem::scriptIsLoaded(const std::filesystem::path& filePath)
