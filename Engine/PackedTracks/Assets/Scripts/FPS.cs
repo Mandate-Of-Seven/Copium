@@ -11,6 +11,10 @@ public class FPS: CopiumScript
 	void Update()
 	{
         string fps = "FPS: " + Application.GetFPS().ToString();
+        if (Input.GetKeyDown(KeyCode.GraveAccent))
+        {
+            textBox.enabled = !textBox.enabled;
+        }
         textBox.text = fps;
     }
 }
