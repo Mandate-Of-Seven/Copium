@@ -65,7 +65,7 @@ public class GameManager: CopiumScript
         CheckForGameEndCondition();
 
         // Cant deploy if the train is moving
-        if ((moving && trainManager.currentSpeed <= 0.01f) || (!moving && trainManager.currentSpeed > 0.01f))
+        if ((moving && trainManager.currentSpeed <= 0f) || (!moving && trainManager.currentSpeed > 0f))
         {
             ToggleMoving();
         }

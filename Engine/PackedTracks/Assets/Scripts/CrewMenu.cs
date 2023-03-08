@@ -145,12 +145,15 @@ public class CrewMenu: CopiumScript
         //have condition for when certain values hit 0??
         if (prepareButton.state == ButtonState.OnHover)
         {
-            audioManager.hoverSFX.Play();
+            if (!prepareHover)
+            {
+                prepareHover = true;
+                audioManager.hoverSFX.Play();
+            }
         }
         else if (prepareButton.state == ButtonState.OnClick)
         {
             preparing = !preparing;
-            Console.WriteLine("CLICKED ON PREPARE");
             deployButton.gameObject.SetActive(true);
             hDeploy = harris.isDeployed;
             bDeploy = bronson.isDeployed;
@@ -402,12 +405,12 @@ public class CrewMenu: CopiumScript
 
     public void ToggleClickable()
     {
-        Console.WriteLine("TOGGLED!");
+        Console.WriteLine("TOGGLED! " + moving);
         moving = !moving;
         if (moving)
         {
             prepareButton.enabled = false;
-            prepareBtnImage.color = Color.red;
+            prepareBtnImage.color = new Color(0,0,0,0);
         }
         else
         {
