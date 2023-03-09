@@ -11,8 +11,14 @@ public class HowtoPlayMenu: CopiumScript
 
     public GameObject MainPage;
     public GameObject Page2;
+    public GameObject Page3;
+    public GameObject Page4;
     public GameObject NextPage;
     public GameObject PrevPage;
+    public GameObject NextPage2;
+    public GameObject PrevPage3;
+    public GameObject NextPage3;
+    public GameObject PrevPage4;
 
 
     int page = 1;
@@ -62,6 +68,43 @@ public class HowtoPlayMenu: CopiumScript
         {
             PrevPage.SetActive(false);
         }
+
+        if (NextButton.state == ButtonState.OnHover && page == 2)
+        {
+            NextPage2.SetActive(true);
+        }
+        else
+        {
+            NextPage2.SetActive(false);
+        }
+
+        if (PrevButton.state == ButtonState.OnHover && page == 3)
+        {
+            PrevPage3.SetActive(true);
+        }
+        else
+        {
+            PrevPage3.SetActive(false);
+        }
+
+        if (NextButton.state == ButtonState.OnHover && page == 3)
+        {
+            NextPage3.SetActive(true);
+        }
+        else
+        {
+            NextPage3.SetActive(false);
+        }
+
+        if (PrevButton.state == ButtonState.OnHover && page == 4)
+        {
+            PrevPage4.SetActive(true);
+        }
+        else
+        {
+            PrevPage4.SetActive(false);
+        }
+
     }
 
     void ShowPage(int _page)
@@ -70,36 +113,30 @@ public class HowtoPlayMenu: CopiumScript
         {
             MainPage.SetActive(true);
             Page2.SetActive(false);
-            text.text = "Use the mouse to interact with objects in the train cockpit\n " +
-                     "An alert will be shown if a new event has occured.\n " +
-                     "In the cockpit, there is a meter to show how far you are\n " +
-                     "from the destination.";
-                     prevButtonObject.SetActive(false);
+            prevButtonObject.SetActive(false);
         }
 
         if (page == 2)
         {
             Page2.SetActive(true);
             MainPage.SetActive(false);
-            text.text = "Every few kilometers, there will be an event that happens.\n " +
-                             "You can go to the event menu from the middle screen in the \n" +
-                             "cockpit to make a decision for the event. Your choices can\n" +
-                             "have an impact on your journey to your destination.\n";
-                prevButtonObject.SetActive(true);
+            Page3.SetActive(false);
+            prevButtonObject.SetActive(true);
         }
 
-        //if (page == 3)
-        //{
-        //     text.text = "The left panel will show the status of your crew. There are\n"+
-        //                     "three attributes of your crew members to take note of, and\n"  +
-        //                     "their condition can determine whether they live or die.\n\n" +
-        //                     "In addition, you can send your crew out to explore for supplies.\n" +
-        //                     "When exploring, a random event can occur to them, which will\n" +
-        //                     "impact their status.";
-        //}
         if (page == 3)
         {
-              SceneManager.LoadScene("MainMenu");
+
+            Page3.SetActive(true);
+            Page2.SetActive(false);
+            Page4.SetActive(false);
+
+            //SceneManager.LoadScene("MainMenu");
+        }
+        if (page == 4)
+        {
+            Page4.SetActive(true);
+            Page3.SetActive(false);
         }
 
     }
