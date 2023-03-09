@@ -138,7 +138,7 @@ public class Event_03: CopiumScript
                                          "home alive this time. I wish you were still around, mom";
 
                 EventManager.EventSequence = -3;
-                EventManager.OverideEvent();
+                EventManager.OverrideEvent();
             }
 
         }
@@ -150,7 +150,7 @@ public class Event_03: CopiumScript
                     "Lights in the train start dimming out... \n\nThe train becomes silent...";
 
                 EventManager.EventSequence = -3;
-                EventManager.OverideEvent();
+                EventManager.OverrideEvent();
             }
             else if (choice == 2)
             {

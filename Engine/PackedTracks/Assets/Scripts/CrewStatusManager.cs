@@ -5,7 +5,6 @@ public class CrewStatusManager: CopiumScript
 {
 	public bool isCrewStatusOn = false;
 	public AudioManager audioManager;
-	public ResultManager resultManager;
     
     public Button CloseCrewStatusBtn;
 	public Button CrewStatusBtn;
@@ -58,6 +57,9 @@ public class CrewStatusManager: CopiumScript
 
     public void OpenPanel()
     {
+		if (isCrewStatusOn)
+			return;
+
         alert.enabled = false;
         isCrewStatusOn = true;
         CrewStatusBtn.gameObject.SetActive(false);

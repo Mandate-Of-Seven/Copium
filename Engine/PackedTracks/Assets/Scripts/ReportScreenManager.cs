@@ -12,8 +12,6 @@ public class ReportScreenManager: CopiumScript
 
 	public Image alert;
 
-    public ResultManager resultManager;
-
     Vector3 reportScreenTargetScale = new Vector3(4.0f,4.0f,0);
 
     bool closeHover = false;
@@ -27,8 +25,12 @@ public class ReportScreenManager: CopiumScript
 	{
 
 	}
-	void Update()
-	{
+    void Update()
+    {
+
+    }
+    public void UpdateCanvas()
+    {
         if (!openHover && ReportScreenBtn.state == ButtonState.OnHover)
         {
             openHover = true;
@@ -72,7 +74,9 @@ public class ReportScreenManager: CopiumScript
 
     public void OpenPanel()
     {
-        resultManager.Disable();
+        if (isReportScreenOn)
+            return;
+
         alert.enabled = false;
         isReportScreenOn = true;
         ReportScreenBtn.gameObject.SetActive(false);
@@ -81,8 +85,10 @@ public class ReportScreenManager: CopiumScript
 
     public void ClosePanel()
     {
+        if (!isReportScreenOn)
+            return;
+
         isReportScreenOn = false;
-        resultManager.Enable();
         ReportScreenBtn.gameObject.SetActive(true);
         ReportTab.transform.parent = parent.transform;
     }

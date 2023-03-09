@@ -18,6 +18,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Windows/windows-system.h"
 #include "Windows/windows-input.h"
 #include "Editor/editor-system.h"
+#include "Files/assets-system.h"
 #include "Utilities/thread-system.h"
 #include "Events/events-system.h"
 #include <SceneManager/scene-manager.h>
@@ -74,8 +75,7 @@ namespace Copium
 		camera.init((float) sceneView.get_width(), (float) sceneView.get_height());
 
 
-		buttons.push_back(Texture("Data/Resource/PreviewButton.png"));
-		buttons.push_back(Texture("Data/Resource/StopButton.png"));
+		buttons = MyAssetSystem.GetResources();
 		previewFlag = false;
 	}
 
@@ -518,10 +518,10 @@ namespace Copium
 
 	void EditorSystem::PreviewButton()
 	{
-		int i{ 0 };
+		int i{ 3 };
 		if (previewFlag && MySceneManager.get_current_scene())
 		{
-			i = 1;
+			i = 4;
 		}
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 2));

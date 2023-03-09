@@ -15,6 +15,14 @@ public class AudioManager: CopiumScript
 	public AudioSource explosionSFX;
 	public AudioSource failedSFX;
 	public AudioSource ending3bVO;
+    public AudioSource ending2aVO;
+    public AudioSource endingHarrisVO;
+    public AudioSource endingBronsonVO;
+    public AudioSource endingChuckVO;
+    public AudioSource endingDantonVO;
+    public AudioSource endingGenericVO;
+    public AudioSource endingAllDiedVO;
+
 
     void Start()
 	{
