@@ -65,19 +65,19 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "MainMenu",
+                    "QuitMenu": 17703464283577508947,
                     "arrow": 14740811381248593851,
                     "arrowLocStart": 17512400889890032766,
                     "arrowLocHTP": 12254678004224990400,
                     "arrowLocQuit": 18013940853338204233,
-                    "QuitMenu": 17703464283577508947,
                     "HowtoPlayButton": 5039283911341612943,
+                    "NoButton": 7665753240810419715,
                     "QuitGameButton": 10325187647895316192,
                     "StartGameButton": 9574495531817611677,
-                    "YesButton": 6285799972325835689,
                     "bgm_MainMenu": 10598037399685782859,
+                    "YesButton": 6285799972325835689,
                     "sfx_ButtonClick": 16280378391848286004,
-                    "sfx_ButtonHover": 6905617242824353984,
-                    "NoButton": 7665753240810419715
+                    "sfx_ButtonHover": 6905617242824353984
                 }
             ]
         },
@@ -596,7 +596,7 @@
                     "UID": 12729168595926129355,
                     "Type": "SpriteRenderer",
                     "TypeID": 22,
-                    "Sprite ID": 18071404720344132741,
+                    "Sprite ID": 9588604566561187799,
                     "Sprite Name": "Arrow.png",
                     "Color": {
                         "X": 1.0,
