@@ -10,6 +10,9 @@ public class ResultManager : CopiumScript
     public Button ResultBtn;
     public GameObject ResultTab;
 
+    public CrewStatusManager crewStatusManager;
+    public ReportScreenManager reportScreenManager;
+
     Vector3 resultTargetScale = new Vector3(5.8f, 5.8f, 0);
 
     bool closeHover = false;
@@ -26,7 +29,7 @@ public class ResultManager : CopiumScript
 
     void Update()
     {
-
+        UpdateCanvas();
     }
     public void UpdateCanvas()
     {
@@ -101,6 +104,8 @@ public class ResultManager : CopiumScript
 
     public void Enable()
     {
+        if (reportScreenManager.isReportScreenOn || crewStatusManager.isCrewStatusOn)
+            return;
         ResultTab.SetActive(true);
         ResultBtn.gameObject.SetActive(true);
     }
