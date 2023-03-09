@@ -230,6 +230,6 @@ public class GameManager: CopiumScript
     public void ToggleMoving()
     {
         moving = !moving;
-        crewMenuScript.ToggleClickable();
+        crewMenuScript.SetClickable(!moving);
     }
 }

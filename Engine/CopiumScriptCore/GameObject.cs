@@ -49,7 +49,6 @@ namespace CopiumEngine
         //COME BACK AND OPTIMISE THIS BECAUSE ITS CREATING A NEW COMPONENT EVERYTIME
         public T GetComponent<T>() where T : Component, new()
         {
-            Console.WriteLine("Getting component C# HELL");
             return InternalCalls.GetComponent(ID, typeof(T)) as T;
         }
 

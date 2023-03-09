@@ -10,6 +10,7 @@ public class Crew : CopiumScript
     public Text healthT, mentalT, hungerT;
 
     public Button selectBtn;
+    public ButtonWrapper selectBtnWrapper;
     public bool selected = false;
     public bool isDeployed = false;
 
@@ -18,48 +19,21 @@ public class Crew : CopiumScript
 
     public Image sprite;
 
-    bool onHover = false;
-
     void Start()
     {
         person = crewMenu.crew[crewIndex];
+        selectBtnWrapper = new ButtonWrapper(selectBtn,crewMenu.audioManager);
+        selectBtnWrapper.SetImage(sprite);
+        Disable();
     }
     void Update()
     {
-        if (crewMenu.preparing)
+        if (selectBtnWrapper.GetState() == ButtonState.OnClick)
         {
-            selectBtn.enabled = true;
-            if (selectBtn.state == ButtonState.OnHover)
-            {
-                if (!onHover)
-                {
-                    crewMenu.audioManager.hoverSFX.Play();
-                    onHover = true;
-                }
-            }
-            else if (selectBtn.state == ButtonState.OnClick)
-            {
-                crewMenu.audioManager.clickSFX.Play();
-                selected = !selected;
-                isDeployed = selected;
-            }
-            else if (selectBtn.state == ButtonState.None)
-            {
-                onHover = false;
-            }
-            showDeployed.SetActive(selected);
-        }
-        else
-        {
-            selectBtn.enabled = false;
-            selected = false;
-            showDeployed.SetActive(false);
-        }
-
-        if (crewMenu.deployed)
-        {
-            selected = false;
-            showDeployed.SetActive(selected);
+            if (selected)
+                Deselect();
+            else
+                Select();
         }
 
         UpdateStats();
@@ -97,12 +71,36 @@ public class Crew : CopiumScript
 
         Color tmp = Color.white;
         float x = ((float)person.health/15.0f);
-        //Console.WriteLine(x);
         tmp.r = x;
         tmp.g = x;
         tmp.b = x;
 
         sprite.color = tmp;
         
+    }
+
+    public void Disable()
+    {
+        Deselect();
+        selectBtnWrapper.SetInteractable(false);
+    }
+
+    public void Enable()
+    {
+        selectBtnWrapper.SetInteractable(true);
+    }
+
+    public void Deselect()
+    {
+        selected = false;
+        isDeployed = selected;
+        showDeployed.SetActive(selected);
+    }
+
+    public void Select()
+    {
+        selected = true;
+        isDeployed = selected;
+        showDeployed.SetActive(selected);
     }
 }

@@ -9,58 +9,42 @@ public class CrewStatusManager: CopiumScript
     
     public Button CloseCrewStatusBtn;
 	public Button CrewStatusBtn;
-    public GameObject CrewStatusTab;
 
-	bool closeHover = false;
-	bool openHover = false;
+
+    ButtonWrapper CloseCrewStatusBtnWrapper;
+	ButtonWrapper CrewStatusBtnWrapper;
+
+    public GameObject CrewStatusTab;
 
 	public Image alert;
 
     Vector3 crewStatusTargetScale = new Vector3(5f,5f,0);
 
 	public GameObject parent;
+	public CrewMenu crewMenu;
 	
 	public float transitionSpeed = 5.0f;
 
 	void Start()
 	{
-
+		CloseCrewStatusBtnWrapper = new ButtonWrapper(CloseCrewStatusBtn,audioManager);
+		CloseCrewStatusBtnWrapper.SetImage(CloseCrewStatusBtn.GetComponent<Image>());
+		CrewStatusBtnWrapper = new ButtonWrapper(CrewStatusBtn,audioManager);
+		CrewStatusBtnWrapper.SetImage(CrewStatusBtn.GetComponent<Image>());
 	}
 	void Update()
 	{   
-		if (!openHover && CrewStatusBtn.state == ButtonState.OnHover)
-        {
-			openHover = true;
-			audioManager.hoverSFX.Play();
-        }
-		else if (CrewStatusBtn.state == ButtonState.OnRelease)
+		if (CrewStatusBtnWrapper.GetState() == ButtonState.OnRelease)
         {
 			resultManager.Disable();
 			alert.enabled = false;
             isCrewStatusOn = true;
-            audioManager.clickSFX.Play();
             OpenPanel();
         }
-		else if (CrewStatusBtn.state == ButtonState.None)
-		{
-			openHover = false;
-		}
-
-		if(!closeHover && CloseCrewStatusBtn.state == ButtonState.OnHover)
+		if(CloseCrewStatusBtnWrapper.GetState() == ButtonState.OnRelease)
         {
-			closeHover = true;
-			audioManager.hoverSFX.Play();
-        }
-		else if(CloseCrewStatusBtn.state == ButtonState.OnRelease)
-        {
-            audioManager.clickSFX.Play();
             ClosePanel();
         }
-		else if (CloseCrewStatusBtn.state == ButtonState.None)
-		{
-			closeHover = false;
-		}
-
 		
         if (isCrewStatusOn)
         {
@@ -78,9 +62,12 @@ public class CrewStatusManager: CopiumScript
         isCrewStatusOn = true;
         CrewStatusBtn.gameObject.SetActive(false);
         CrewStatusTab.transform.parent = null;
+		
     }
     public void ClosePanel()
 	{
+		//Prevent the crew buttons from being pressed
+		crewMenu.SetPrepare(false);
 		isCrewStatusOn = false;
 		resultManager.Enable();
 		CrewStatusBtn.gameObject.SetActive(true);

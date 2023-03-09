@@ -15,6 +15,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #ifndef COPIUM_CORE_H
 #define COPIUM_CORE_H
 
+#include <glew-2.2.0/include/GL/glew.h>
+#include <GLFW/glfw3.h>
 #include "CopiumCore/system-interface.h"
 #include <Events/events.h>
 
@@ -56,7 +58,8 @@ namespace Copium
 				}
 				else if (pSystem->systemFlags & FLAG_RUN_ON_EDITOR && !inPlayMode)
 				{
-					//double startTime = glfwGetTime();
+					glfwGetTime();
+					//double startTime = 
 					pSystem->update();
 					//PRINT(typeid(*pSystem).name() << ": update!");
 					//pSystem->updateTime = glfwGetTime() - startTime;

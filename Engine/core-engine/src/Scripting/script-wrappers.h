@@ -1030,6 +1030,14 @@ namespace Copium
 		}
 	}
 
+
+	static void Log(MonoString* message)
+	{
+		char* str = mono_string_to_utf8(message);
+		MyEventSystem->publish(new EditorConsoleLogEvent(str));
+		mono_free(str);
+	}
+
 	/*******************************************************************************
 	/*!
 	\brief
@@ -1074,6 +1082,7 @@ namespace Copium
 		Register(SetComponentEnabled);
 		Register(SetParent);
 		Register(GetFPS);
+		Register(Log);
 		Register(GetSpriteRendererColor);
 		Register(SetSpriteRendererColor);
 		Register(GetImageColor);

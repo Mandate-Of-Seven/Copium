@@ -26,7 +26,12 @@ public class Prepare : CopiumScript
     public Button bronsonButton;
     public Button chuckButton;
     public Button dantonButton;
+    ButtonWrapper harrisBtnWrapper;
+    ButtonWrapper bronsonBtnWrapper;
+    ButtonWrapper chuckBtnWrapper;
+    ButtonWrapper dantonBtnWrapper;
     public Text resultText;
+    
 
     public GameObject prepareChoices;
     public GameObject prepareFinal;
@@ -38,31 +43,25 @@ public class Prepare : CopiumScript
     public int eventNum;
     public int choice;
 
-    bool harrisHover = false;
-    bool bronsonHover =false;
-    bool chuckHover = false;
-    bool dantonHover = false;
-
     bool option1Hover = false;
     bool option2Hover = false;
 
     void Start()
     {
-
+        harrisBtnWrapper = new ButtonWrapper(harrisButton,crewManager.audioManager);
+        harrisBtnWrapper.SetImage(harrisButton.GetComponent<Image>());
+        bronsonBtnWrapper = new ButtonWrapper(bronsonButton,crewManager.audioManager);
+        bronsonBtnWrapper.SetImage(bronsonButton.GetComponent<Image>());
+        chuckBtnWrapper = new ButtonWrapper(chuckButton,crewManager.audioManager);
+        chuckBtnWrapper.SetImage(chuckButton.GetComponent<Image>());
+        dantonBtnWrapper = new ButtonWrapper(dantonButton,crewManager.audioManager);
+        dantonBtnWrapper.SetImage(dantonButton.GetComponent<Image>());
     }
     void Update()
     {
         if (makeChoice)
         {
-            if (prepareButton1.state == ButtonState.OnHover)
-            {
-                if (!option1Hover)
-                {
-                    option1Hover = true;
-                    crewManager.audioManager.hoverSFX.Play();
-                }
-            }
-            else if (prepareButton1.state == ButtonState.OnClick)
+            if (prepareButton1.state == ButtonState.OnClick)
             {
                 crewManager.audioManager.clickSFX.Play();
                 choice = 1;
@@ -93,77 +92,21 @@ public class Prepare : CopiumScript
             }
         }
 
-        if (harrisButton.state == ButtonState.OnHover)
+        if (harrisBtnWrapper.GetState() == ButtonState.OnClick)
         {
-            if (!harrisHover)
-            {
-                harrisHover = true;
-                crewManager.audioManager.hoverSFX.Play();
-            }
-        }
-        else if (harrisButton.state == ButtonState.OnClick)
-        {
-            crewManager.audioManager.clickSFX.Play();
             resultText.text = crewManager.crew[0].resultText;
         }
-        else if (harrisButton.state == ButtonState.None)
+        else if (bronsonBtnWrapper.GetState() == ButtonState.OnClick)
         {
-            harrisHover = false;
-        }
-        
-        if (bronsonButton.state == ButtonState.OnHover)
-        {
-            if (!bronsonHover)
-            {
-                bronsonHover = true;
-                crewManager.audioManager.hoverSFX.Play();
-            }
-        }
-        else if (bronsonButton.state == ButtonState.OnClick)
-        {
-            crewManager.audioManager.clickSFX.Play();
             resultText.text = crewManager.crew[1].resultText;
         }
-        else if (bronsonButton.state == ButtonState.None)
+        else if (chuckBtnWrapper.GetState() == ButtonState.OnClick)
         {
-            bronsonHover = false;
-        }
-
-
-        if (chuckButton.state == ButtonState.OnHover)
-        {
-            if (!chuckHover)
-            {
-                chuckHover = true;
-                crewManager.audioManager.hoverSFX.Play();
-            }
-        }
-        else if (chuckButton.state == ButtonState.OnClick)
-        {
-            crewManager.audioManager.clickSFX.Play();
             resultText.text = crewManager.crew[2].resultText;
         }
-        else if (chuckButton.state == ButtonState.None)
+        else if (dantonBtnWrapper.GetState() == ButtonState.OnClick)
         {
-            chuckHover = false;
-        }
-
-        if (dantonButton.state == ButtonState.OnHover)
-        {
-            if (!dantonHover)
-            {
-                dantonHover = true;
-                crewManager.audioManager.hoverSFX.Play();
-            }
-        }
-        else if (dantonButton.state == ButtonState.OnClick)
-        {
-            crewManager.audioManager.clickSFX.Play();
             resultText.text = crewManager.crew[3].resultText;
-        }
-        else if (dantonButton.state == ButtonState.None)
-        {
-            dantonHover = false;
         }
     }
 

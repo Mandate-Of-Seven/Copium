@@ -193,5 +193,8 @@ namespace CopiumEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern float GetFPS();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void Log(string message);
     }
 }

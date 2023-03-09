@@ -12,8 +12,8 @@ public class Event_01: CopiumScript
     public TrainManager trainManager;
     bool effectTriggered = false;
     float timerElasped = 0f;
-    public float shakeTime = 7f;
-    public float eyesTime = 4f;
+    public float shakeTime = 5f;
+    public float eyesTime = 2f;
 
     //state 1 -> play sound, flash bang
     //state 2 -> shake
@@ -35,7 +35,8 @@ public class Event_01: CopiumScript
 	{
         if (!effectTriggered)
         {
-            trainManager.FlickLever();
+            if (trainManager.IsAccelerating())
+                trainManager.FlickLever();
             cameraShakeEffect.Trigger();
             explosionEffect.Trigger();
             effectTriggered = true;

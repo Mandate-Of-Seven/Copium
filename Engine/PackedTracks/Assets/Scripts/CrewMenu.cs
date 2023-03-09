@@ -11,6 +11,8 @@ public class CrewMenu: CopiumScript
 
     public Button prepareButton;
     public Button deployButton;
+    ButtonWrapper prepareBtnWrapper;
+    ButtonWrapper deployBtnWrapper;
 
     public CrewStatusManager crewStatusManager; 
     public ReportScreenManager reportScreenManager; 
@@ -27,10 +29,7 @@ public class CrewMenu: CopiumScript
     public Crew chuck;
     public Crew danton;
 
-    bool deployHover = false;
-
     public bool preparing = false;
-    public bool deployed = false;
 
     float timer = 0.0f;
 
@@ -123,13 +122,15 @@ public class CrewMenu: CopiumScript
         new Person("Danton")
     };
 
-    ButtonWrapper prepareBtnWrapper;
-
     void Start()
 	{
         prepareBtnWrapper = new ButtonWrapper(prepareButton,audioManager);
         prepareBtnWrapper.SetText(prepareButton.GetComponent<Text>());
         prepareBtnWrapper.SetImage(prepareButton.GetComponent<Image>());
+        deployBtnWrapper = new ButtonWrapper(deployButton,audioManager);
+        deployBtnWrapper.SetText(deployButton.GetComponent<Text>());
+        deployBtnWrapper.SetImage(deployButton.GetComponent<Image>());
+        deployBtnWrapper.SetInteractable(false);
         titleString = titleText.text;
     }
 
@@ -141,8 +142,7 @@ public class CrewMenu: CopiumScript
         //have condition for when certain values hit 0??
         if (prepareBtnWrapper.GetState() == ButtonState.OnClick)
         {
-            preparing = !preparing;
-            deployButton.gameObject.SetActive(true);
+            SetPrepare(!preparing);
             hDeploy = harris.isDeployed;
             bDeploy = bronson.isDeployed;
             cDeploy = chuck.isDeployed;
@@ -151,33 +151,18 @@ public class CrewMenu: CopiumScript
 
         if (preparing)
         {
-            if (deployButton.state == ButtonState.OnHover)
+            bool selectedCrewForDeployment = harris.isDeployed || bronson.isDeployed || chuck.isDeployed || danton.isDeployed;
+            if (deployBtnWrapper.GetState() == ButtonState.OnClick)
             {
-                if (!deployHover)
-                {
-                    deployHover = true;
-                    audioManager.hoverSFX.Play();
-                }
-            }
-            else if (deployButton.state == ButtonState.OnClick)
-            {
-                deployed = true;
                 preparing = false;
                 //fader.fadeIn = true;
                 //fader.shouldFade = true;
-                audioManager.clickSFX.Play();
                 hDeploy = harris.isDeployed;
                 bDeploy = bronson.isDeployed;
                 cDeploy = chuck.isDeployed;
                 dDeploy = danton.isDeployed;
-                deployButton.gameObject.SetActive(false);
-                deployHover = false;
-                
+                deployBtnWrapper.SetInteractable(false);
                 StartPrepare();
-            }
-            else if (deployButton.state == ButtonState.None)
-            {
-                deployHover = false;
             }
         }
        
@@ -258,10 +243,6 @@ public class CrewMenu: CopiumScript
     {
         suppliesText.text = "Supplies: " + supplies;
 
-        if (preparing)
-            titleText.text = "Selecting Members";
-        else
-            titleText.text = titleString;
     }
 
     public void SetSupplies(int amount)
@@ -381,13 +362,34 @@ public class CrewMenu: CopiumScript
         {
             prepareManager.GenerateEvents(crew[3]);
         }
-
-        //hide crewscreen
-        deployed = false;
     }
 
-    public void ToggleClickable()
+    public void SetClickable(bool clickable)
     {
-        prepareBtnWrapper.ToggleInteractable();
+        prepareBtnWrapper.SetInteractable(clickable);
+    }
+
+    void SetPrepare(bool _preparing)
+    {
+        
+        preparing = _preparing;
+        if (preparing)
+            titleText.text = "Selecting Members";
+        else
+            titleText.text = titleString;
+        if (preparing)
+        {
+            harris.Enable();
+            chuck.Enable();
+            danton.Enable();
+            bronson.Enable();
+        }
+        else
+        {
+            harris.Disable();
+            chuck.Disable();
+            danton.Disable();
+            bronson.Disable();
+        }
     }
 }

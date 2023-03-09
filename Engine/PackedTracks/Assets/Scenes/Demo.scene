@@ -121,16 +121,16 @@
                     "Name": "AudioManager",
                     "explosionSFX": 12229284277379369868,
                     "accelerateSFX": 12349765490904732829,
+                    "failedSFX": 17176667212650767161,
                     "ambTrain": 16495768407680055626,
                     "bgmTrain": 9375891007183145069,
                     "clickSFX": 11240736860491117710,
                     "deccelerateSFX": 11048904636908595310,
-                    "hoverSFX": 17747488176716717098,
                     "ending3bVO": 2090025714383355506,
+                    "hoverSFX": 17747488176716717098,
                     "leverEngagedSFX": 13165669678142242702,
                     "leverSFX": 10219544415510482568,
-                    "paperSFX": 16863530532877669399,
-                    "failedSFX": 17176667212650767161
+                    "paperSFX": 16863530532877669399
                 }
             ]
         },
@@ -1242,7 +1242,8 @@
                     "CrewStatusBtn": 12240638081067445947,
                     "alert": 18001664217615177344,
                     "audioManager": 11261402425968020089,
-                    "resultManager": 12715761732489693216
+                    "resultManager": 12715761732489693216,
+                    "crewMenu": 15964808941009667406
                 },
                 {
                     "enabled": true,
@@ -2244,7 +2245,7 @@
         {
             "UID": 12470079746776250388,
             "Name": "Deploy Button",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "PID": 15240074584306495293,
@@ -2678,8 +2679,8 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "Event_01",
-                    "eyesTime": 2.0,
-                    "shakeTime": 7.0,
+                    "eyesTime": 1.5,
+                    "shakeTime": 6.0,
                     "EventManager": 9174652001346769036,
                     "explosionEffect": 16306536618395323763,
                     "cameraShakeEffect": 15847660200646285682,
@@ -7935,7 +7936,7 @@
                     "Name": "EyesClosingEffect",
                     "originalPosY": 8.0,
                     "targetPosY": 2.5,
-                    "timeTaken": 2.0,
+                    "timeTaken": 1.5,
                     "lowerLid": 10117709032708437010,
                     "upperLid": 5395999951988052350
                 }
@@ -8082,7 +8083,7 @@
                     "intensity": 1.0,
                     "interval": 0.10000000149011612,
                     "timeElasped": 0.0,
-                    "totalDuration": 7.0,
+                    "totalDuration": 5.0,
                     "trainCanvas": 6642123175702952797
                 }
             ]
@@ -8146,8 +8147,8 @@
                     "TypeID": 23,
                     "Name": "ExplosionEffect",
                     "breakpoint": 4.0,
-                    "duration": 8.5,
-                    "waitpoint": 8.5,
+                    "duration": 7.0,
+                    "waitpoint": 7.0,
                     "audioManager": 11261402425968020089,
                     "flashImage": 1671870374573829335
                 }

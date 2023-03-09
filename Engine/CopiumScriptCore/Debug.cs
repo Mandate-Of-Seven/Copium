@@ -28,7 +28,7 @@ namespace CopiumEngine
         /*******************************************************************************/
         public static void Log(string message)
         {
-            Console.WriteLine(message);
+            InternalCalls.Log(message);
         }
 
         /*******************************************************************************

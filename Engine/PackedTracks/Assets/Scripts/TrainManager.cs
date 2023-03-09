@@ -199,4 +199,9 @@ public class TrainManager: CopiumScript
 		targetTracksDelay = tracksMaxDelay;
 		targetScale = new Vector3(zoomInScale,zoomInScale,1);
 	}
+
+	public bool IsAccelerating()
+	{
+		return accelerate;
+	}
 }

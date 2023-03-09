@@ -44,16 +44,15 @@ public class ButtonWrapper
 		image = _image;
 		if (image != null)
 		{
-			Console.WriteLine("IMAGE ASSIGNED EXISTS");
 			imageOriginalColor = image.color;
 		}
-		else 
-			Console.WriteLine("IMAGE ASSIGNED WAS NULL");
 	}
 
-	public void ToggleInteractable()
+	public void SetInteractable(bool _interactable)
 	{
-		interactable = !interactable;
+		if (interactable == _interactable)
+			return;
+		interactable = _interactable;
 		if (interactable)
 		{
 			if (image != null)
