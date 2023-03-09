@@ -126,7 +126,7 @@ public:
 
                 reinterpret_cast<T*>(data)[index].~T();
 
-                std::remove(indexes.begin(), indexes.begin()+size_, index);
+                std::ignore = std::remove(indexes.begin(), indexes.begin()+size_, index);
                 indexes[size_ - 1] = index;
                 --size_;
                 return;
@@ -145,7 +145,7 @@ public:
         {
             std::cout << indexes[j] << " ";
         }
-        std::remove(indexes.begin(), indexes.begin() + size_, index);
+        std::ignore = std::remove(indexes.begin(), indexes.begin() + size_, index);
         indexes[size_ - 1] = index;
         PRINT("AFTER:");
         for (size_t j = 0; j < size_; ++j)

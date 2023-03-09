@@ -106,13 +106,13 @@ namespace Copium::Utils
 
 				if (mono_class_get_parent(mono_class_from_mono_type(monoType)) == mCopiumScript)
 					return (FieldType)ComponentType::Script;
-				auto it{ NAME_TO_CTYPE.find(componentName) };
-				if (it == NAME_TO_CTYPE.end())
+				auto iter{ NAME_TO_CTYPE.find(componentName) };
+				if (iter == NAME_TO_CTYPE.end())
 				{
 					return FieldType::None;
 				}
 				//PRINT(componentName << " is a component");
-				return (FieldType)it->second;
+				return (FieldType)iter->second;
 			}
 			if (mono_class_get_parent(mono_class_from_mono_type(monoType)) == mCopiumScript)
 				return (FieldType)ComponentType::Script;

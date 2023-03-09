@@ -38,6 +38,8 @@ namespace Copium
 
 	void Layering::AddGameObject(const int& _layer, const UUID& _id)
 	{
+		(void)_layer;
+		(void)_id;
 		//if (_layer < maxLayers)
 		//{
 		//	int tempLayer = 0;
@@ -64,6 +66,8 @@ namespace Copium
 
 	void Layering::RemoveGameObject(const int& _layer, const UUID& _id)
 	{
+		(void)_layer;
+		(void)_id;
 		//if (_layer < maxLayers)
 		//{
 		//	for (int i = 0; i < layers[_layer].size(); i++)
@@ -93,6 +97,7 @@ namespace Copium
 
 	int Layering::GetEmptySlot(const int& _layer)
 	{
+		(void)_layer;
 		//for (int i = 0; i < layers[_layer].size(); i++)
 		//{
 		//	if (layers[_layer][i] == -1)

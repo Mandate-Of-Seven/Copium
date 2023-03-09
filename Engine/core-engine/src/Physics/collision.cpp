@@ -154,7 +154,7 @@ namespace Copium
 			(point.y < aabb2.min.y) || (point.y > aabb2.max.y))
 		{
 			float tFirst = 0;
-			float tLast = dt;
+			float tLast = (float)dt;
 
 			//Object b is moving away from object a on the x axis
 			if (vel2.x < 0)

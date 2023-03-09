@@ -1,5 +1,5 @@
-[2023-03-05 17:36:43.780] [Error] [critical] 
-Caused By:	!mClassField
-Info:		FIELD healthCOULD NOT BE FOUND IN SCRIPT Crew
-Source:		C:\Users\prawn\Documents\GitHub\GAM-200\Engine\core-engine\src\Scripting\scripting-system.cpp (Line: 890)
+[2023-03-09 20:52:57.995] [Error] [critical] 
+Caused By:	FT_New_Face(ft, path.c_str(), 0, &face)
+Info:		Fail to load font
+Source:		C:\Users\matth\Documents\GitHub\GAM-200\Engine\core-engine\src\Graphics\fonts.cpp (Line: 51)
 

@@ -242,8 +242,8 @@ namespace Copium
 				if (ImGui::BeginDragDropSource())
 				{
 					std::string str = file.filePath.string();
-					const char* filePath = str.c_str();
-					ImGui::SetDragDropPayload("ContentBrowserItem", filePath, str.size() + 1);
+					const char* tmpfilePath = str.c_str();
+					ImGui::SetDragDropPayload("ContentBrowserItem", tmpfilePath, str.size() + 1);
 
 					ImGui::EndDragDropSource();
 				}

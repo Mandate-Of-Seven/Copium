@@ -1,4 +1,19 @@
+/*!***************************************************************************************
+\file			serializer.h
+\project
+\author			Matthew Lau
+\co-author		Zacharie Hong
 
+\par			Course: GAM200
+\par			Section:
+\date			27/09/2022
+
+\brief
+	This file holds the declarations of functions that are involved in de/serialization in Copium Engine.
+	Especially for complex types.
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 #ifndef SERIALIZER_H
 #define SERIALIZER_H
 
@@ -21,6 +36,24 @@
 namespace Copium::Serializer {
 
 
+	/***************************************************************************/
+	/*!
+	\brief
+		Base template function for serialization of a complex data type
+
+	\param _data
+		read-only reference to the variable whose data needs to be serialized
+
+	\param _key
+		the key for the value that will hold the serialized data
+
+	\param _value
+		reference to the rapidjson::Value that the wanted data is held in
+
+	\return
+		void
+	*/
+	/***************************************************************************/
 	template<typename T>
 	void Serialize(T& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
@@ -30,16 +63,101 @@ namespace Copium::Serializer {
 
 
 	// Math Types
+	/***************************************************************************/
+	/*!
+	\brief
+		Template specialization for serializing a Copium::Vec2
+
+	\param _data
+		read-only reference to the Copium::Vec2 whose data needs to be serialized
+
+	\param _key
+		the key for the value that will hold the serialized data
+
+	\param _value
+		reference to the rapidjson::Value will hold the data
+
+	\param _doc
+		reference to the rapidjson::Document that is being serialized to
+
+	\return
+		void
+	*/
+	/***************************************************************************/
 	template<>
 	void Serialize<Math::Vec2>(Math::Vec2& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc);		
+	/***************************************************************************/
+	/*!
+	\brief
+		Template specialization for serializing a Copium::Vec3
+
+	\param _data
+		read-only reference to the Copium::Vec3 whose data needs to be serialized
+
+	\param _key
+		the key for the value that will hold the serialized data
+
+	\param _value
+		reference to the rapidjson::Value will hold the data
+
+	\param _doc
+		reference to the rapidjson::Document that is being serialized to
+
+	\return
+		void
+	*/
+	/***************************************************************************/
 	template<>
 	void Serialize<Math::Vec3>(Math::Vec3& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc);
+	/***************************************************************************/
+	/*!
+	\brief
+		Template specialization for serializing a Copium::Vec4
+
+	\param _data
+		read-only reference to the Copium::Vec4 whose data needs to be serialized
+
+	\param _key
+		the key for the value that will hold the serialized data
+
+	\param _value
+		reference to the rapidjson::Value will hold the data
+
+	\param _doc
+		reference to the rapidjson::Document that is being serialized to
+
+	\return
+		void
+	*/
+	/***************************************************************************/
 	template<>
 	void Serialize<Math::Vec4>(Math::Vec4& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc);
 
 
 
 	// Components-----
+	/***************************************************************************/
+	/*!
+	\brief
+		Template specialization for serializing a component
+		Depending on the type of component to be serialized, the corresponding template specialization for serializing that component will be called.
+
+	\param _type
+		the type of component that is to be serialized
+
+	\param _co
+		ptr to the component that is to be serialized
+
+	\param _value
+		reference to the rapidjson::Value will hold the component data
+
+	\param _doc
+		reference to the rapidjson::Document that is being serialized to
+
+	\return
+		void
+	*/
+	/***************************************************************************/
 	void SerializeComponent(const ComponentType& _type, Component* _co, rapidjson::Value& _value, rapidjson::Document& _doc);
 	// Animator
 	template<>

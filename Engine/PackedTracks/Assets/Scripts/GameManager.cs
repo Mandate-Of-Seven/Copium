@@ -11,6 +11,10 @@ public class GameManager: CopiumScript
     public GameObject PauseCanvas;
 
     public GameObject ManualPopUp;
+    public GameObject MainPage;
+    public GameObject Page2;
+    public GameObject prevButtonObject;
+
 
     public Button ManualBtn;
     public Button ManualPopUpBtn;
@@ -133,11 +137,17 @@ public class GameManager: CopiumScript
             audioManager.paperSFX.Play();
             ManualPopUp.SetActive(true);
         }
-        if (ManualPopUpBtn.state == ButtonState.OnRelease)
+        if (ManualPopUpBtn.state == ButtonState.OnRelease && ManualPopUp.activeSelf)
         {
             audioManager.paperSFX.Play();
-            ManualPopUpBtn.gameObject.SetActive(false);
+            ManualPopUp.SetActive(false);
+
+            MainPage.SetActive(true);
+            Page2.SetActive(false);
+            prevButtonObject.SetActive(false);
         }
+
+
     }
 
     void KeyInputs()

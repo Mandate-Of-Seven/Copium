@@ -170,8 +170,10 @@ namespace Copium
 		normalColor = rhs.normalColor;
 		hoverColor = rhs.hoverColor;
 		clickedColor = rhs.clickedColor;
-		float timer{ 0 };
-		float fadeDuration{ 0.1f };
+		//float timer{ 0 };
+		timer = 0.f;
+		fadeDuration = rhs.fadeDuration;
+		//float fadeDuration{ 0.1f };
 		return *this;
 	}
 

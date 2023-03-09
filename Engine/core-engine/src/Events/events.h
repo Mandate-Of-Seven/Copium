@@ -243,5 +243,15 @@ namespace Copium
 		std::vector<const char*>& names;
 	};
 
+	struct ActivatePerformanceViewerEvent : public IEvent
+	{
+		ActivatePerformanceViewerEvent(std::string& _buffer) : textBuffer{_buffer}{}
+		std::string& textBuffer;
+	};
+
+	struct OffPerformanceViewerEvent : public IEvent
+	{
+		OffPerformanceViewerEvent(){}
+	};
 }
 #endif // !EVENTS_H

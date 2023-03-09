@@ -50,7 +50,7 @@ namespace Copium
 				if (rb.useGravity)
 				{
 					acceleration = (force + gravity) / rb.mass;
-					velocity += (acceleration * dt);
+					velocity += (acceleration * (float)dt);
 					//velocity *= 0.99f;
 					rb.acceleration = acceleration;
 					rb.velocity = velocity;
@@ -59,7 +59,7 @@ namespace Copium
 				else
 				{
 					acceleration = force / rb.mass;
-					velocity += (acceleration * dt);
+					velocity += (acceleration * (float)dt);
 					//velocity *= 0.99f;
 					rb.acceleration = acceleration;
 					rb.velocity = velocity;

@@ -767,7 +767,14 @@ namespace Copium
 
 	static float GetFPS()
 	{
-		return MyFrameRateController.getFPS();
+		float tmp{ 0.f };
+
+		if (MyFrameRateController.getFPS() > std::numeric_limits<float>::max())
+			tmp = std::numeric_limits<float>::max();
+		else
+			tmp = (float)MyFrameRateController.getFPS();
+
+		return tmp;
 	}
 
 	/*******************************************************************************
@@ -943,9 +950,11 @@ namespace Copium
 		{
 			if (animator.uuid == componentID)
 			{
-				return animator.animations[0].timeDelay;
+				return (float)animator.animations[0].timeDelay;
 			}
 		}
+
+		return 0;
 	}
 
 	/*******************************************************************************

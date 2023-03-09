@@ -237,7 +237,7 @@ namespace Copium
 		// If there is no selected gameobject
 		// Update button behaviour for layered game objects
 		// Update from back to front within layer
-		std::vector<Layer>& sortingLayers{ MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers() };
+		//std::vector<Layer>& sortingLayers{ MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers() };
 		//Iterate through list of possible gameObjects
 
 		for (GameObject* pGameObject : pGameObjs)

@@ -28,7 +28,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 namespace Copium
 {
 	// Global variables
-	static const GLuint maxQuadCount = 2000;	// Number of sprites per batch
+	static const GLuint maxQuadCount = 1000;	// Number of sprites per batch
 	static const GLuint maxLineCount = 1000;	// Number of lines per batch
 	static const GLuint maxCircleCount = 200;	// Number of circles per batch
 	static const GLuint maxVertexCount = maxQuadCount * 4;

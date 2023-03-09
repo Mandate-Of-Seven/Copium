@@ -547,7 +547,7 @@ namespace Copium
 			{
 				rapidjson::Value& component = *iter;
 
-				int type{ -1 };
+				//int type{ -1 };
 				std::string key;
 
 				UUID uuid{};
@@ -570,7 +570,6 @@ namespace Copium
 					else
 					{
 						PRINT("Deserializing " << key);
-						ComponentType cType;
 						switch (NAME_TO_CTYPE[key])
 						{
 							case ComponentType::Animator:
@@ -872,7 +871,7 @@ namespace Copium
 			}
 
 			FieldType fType = it->second.fType;
-			Field& field{ _data.fieldDataReferences[_name] };
+			//Field& field{ _data.fieldDataReferences[_name] };
 
 			switch (fType)
 			{
@@ -975,9 +974,6 @@ namespace Copium
 				continue;
 				break;
 			}
-
-			case (FieldType)ComponentType::None:
-				break;
 			default:
 			{
 				//PRINT("COMPONENT!");
@@ -996,7 +992,7 @@ namespace Copium
 
 	void Serializer::DeserializeComponent(ComponentType _type, Component* _data, rapidjson::Value& _value)
 	{
-		int type{ -1 };
+		//int type{ -1 };
 		//Copium::Deserialize(type, _value, "TypeID");
 
 
