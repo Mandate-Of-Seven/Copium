@@ -1,8 +1,11 @@
 using CopiumEngine;
 using System;
+using System.Security.AccessControl;
 
 public class TrainManager: CopiumScript
 {
+	public GameManager GameManager;
+
 	public float maxSpeed = 1.0f;
 	public float currentSpeed = 0.0f;
 	public float acceleration = 0.0f;
@@ -15,14 +18,15 @@ public class TrainManager: CopiumScript
 	public Image trainLeverActivated;
 	public Image trainLeverDeactivated;
 	public GameObject trainCanvas;
-	public float levelTransSpeed = 2.0f;
+    public float levelTransSpeed = 2.0f;
 	Color leverHoverColor = new Color(0.6f,0.6f,0.6f,1f);
 
+    public Text tracker;
     public Button ManualPopUpBtn;
     public Button ManualBtn;
+    public bool accelerate = false;
 	bool manualHover = false;
-
-    bool accelerate = false;
+	bool onHover = false;
 	
 	public float snowMaxDelay = 0.1f;
 	public float tracksMaxDelay = 0.1f;
@@ -46,7 +50,6 @@ public class TrainManager: CopiumScript
 
 	float targetAmbienceVolume = 0.0f;
 
-	bool onHover = false;
 
 	void Start()
 	{
@@ -57,7 +60,10 @@ public class TrainManager: CopiumScript
 
 	void Update()
 	{
-		ToggleManual();
+		if (GameManager.gameEnd)
+			return;
+
+        ToggleManual();
 
 		ToggleLever();
 		
@@ -138,7 +144,10 @@ public class TrainManager: CopiumScript
 			trainCanvas.transform.localPosition = 
 				Vector3.Lerp(Vector3.zero,targetPosition,timeStep);
 		}
-	}
+
+		// Update the distance tracker
+        tracker.text = ((int)GameManager.distanceLeft).ToString() + "KM";
+    }
 
 	void ToggleLever()
 	{
@@ -188,7 +197,31 @@ public class TrainManager: CopiumScript
         }
     }
 
-	void StartTrain()
+    public void FlickLever(bool _accelerate)
+    {
+		if (accelerate == _accelerate)
+			return;
+
+        accelerate = _accelerate;
+        trainLeverActivated.gameObject.SetActive(accelerate);
+        trainLeverDeactivated.gameObject.SetActive(!accelerate);
+        audioManager.accelerateSFX.Stop();
+        audioManager.leverSFX.Stop();
+        audioManager.leverSFX.Play();
+        audioManager.leverEngagedSFX.Play();
+        if (accelerate)
+        {
+            StartTrain();
+            targetAmbienceVolume = 1.0f;
+        }
+        else
+        {
+            StopTrain();
+            targetAmbienceVolume = 0.0f;
+        }
+    }
+
+    void StartTrain()
 	{       
 		audioManager.ambTrain.Stop();
         audioManager.ambTrain.Play();
