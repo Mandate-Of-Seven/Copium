@@ -9,6 +9,7 @@ public class CrewStatusManager: CopiumScript
     public Button CloseCrewStatusBtn;
 	public Button CrewStatusBtn;
     public GameObject CrewStatusTab;
+    public ResultManager resultManager;
 
 	bool closeHover = false;
 	bool openHover = false;
@@ -77,6 +78,7 @@ public class CrewStatusManager: CopiumScript
 		if (isCrewStatusOn)
 			return;
 
+        resultManager.Disable();
         alert.enabled = false;
         isCrewStatusOn = true;
         CrewStatusBtn.gameObject.SetActive(false);
@@ -88,7 +90,8 @@ public class CrewStatusManager: CopiumScript
             return;
 
         isCrewStatusOn = false;
-		CrewStatusBtn.gameObject.SetActive(true);
+        resultManager.Enable();
+        CrewStatusBtn.gameObject.SetActive(true);
 		CrewStatusTab.transform.parent = parent.transform;
 	}
 }

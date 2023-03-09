@@ -60,9 +60,6 @@ public class TrainManager: CopiumScript
 
 	void Update()
 	{
-		if (GameManager.gameEnd)
-			return;
-
         ToggleManual();
 
 		ToggleLever();
@@ -178,6 +175,9 @@ public class TrainManager: CopiumScript
 
 	public void FlickLever()
 	{
+		if (GameManager.gameEnd)
+			return;
+
         accelerate = !accelerate;
         trainLeverActivated.gameObject.SetActive(accelerate);
         trainLeverDeactivated.gameObject.SetActive(!accelerate);

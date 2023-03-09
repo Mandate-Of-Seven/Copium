@@ -44,12 +44,12 @@ public class GameManager: CopiumScript
         if (pauseMenu.isPaused)
             return;
 
+        // Toggle canvases
+        CanvasManager();
+
         // Game ends
         if (CheckForGameEndCondition())
             return;
-
-        // Toggle canvases
-        CanvasManager();
 
         // Cant deploy if the train is moving
         if ((moving && trainManager.currentSpeed <= 0f) || (!moving && trainManager.currentSpeed > 0f))
@@ -82,13 +82,6 @@ public class GameManager: CopiumScript
         reportScreenManager.UpdateCanvas();
         crewStatusManager.UpdateCanvas();
         resultManager.UpdateCanvas();
-
-        if (reportScreenManager.isReportScreenOn || crewStatusManager.isCrewStatusOn)
-            resultManager.Disable();
-        else if (resultManager.isResultOn)
-            resultManager.ResultBtn.gameObject.SetActive(false);
-        else if (!resultManager.isResultOn)
-            resultManager.Enable();
 
     }
 

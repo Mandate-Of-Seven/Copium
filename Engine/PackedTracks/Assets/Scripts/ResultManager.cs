@@ -79,6 +79,7 @@ public class ResultManager : CopiumScript
 
         isResultOn = true;
         ResultBtn.gameObject.SetActive(false);
+        ResultTab.SetActive(true);
         ResultTab.transform.parent = null;
     }
 
