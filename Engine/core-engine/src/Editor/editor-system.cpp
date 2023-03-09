@@ -30,7 +30,7 @@ namespace Copium
 	namespace
 	{
 		// Our state
-		bool show_demo_window = false;
+		bool show_demo_window = true;
 		ThreadSystem& threadSystem{ *ThreadSystem::Instance() };
 		bool tempMode = true;
 	}
@@ -71,6 +71,7 @@ namespace Copium
 		hierarchyList.init();
 		inspector.init();
 		layers.init();
+		performanceViewer.init();
 		// Initialize a new editor camera
 		camera.init((float) sceneView.get_width(), (float) sceneView.get_height());
 
@@ -404,6 +405,7 @@ namespace Copium
 			game.update();
 			sceneView.update();
 			contentBrowser.update();
+			performanceViewer.update();
 			
 			// demo update
 			if (show_demo_window)
@@ -436,6 +438,7 @@ namespace Copium
 		hierarchyList.exit();
 		inspector.exit();
 		layers.exit();
+		performanceViewer.exit();
 
 		PRINT("Before deleting, Undo stack: " << commandManager.undoStack.size() << ", Redo stack:" << commandManager.redoStack.size());
 		while (commandManager.undoStack.size() > 0)
@@ -469,10 +472,10 @@ namespace Copium
 			previewFlag = false;
 			Scene* scene = MySceneManager.get_current_scene();
 			if (scene && !scene->componentArrays.GetArray<Camera>().empty())
-				for (Camera& camera : scene->componentArrays.GetArray<Camera>())
+				for (Camera& cam : scene->componentArrays.GetArray<Camera>())
 				{
 					// Bean: Reset all the framebuffers for now, next time only need to reset active main camera
-					camera.get_framebuffer()->init();
+					cam.get_framebuffer()->init();
 				}
 		}
 	}

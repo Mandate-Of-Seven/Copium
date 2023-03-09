@@ -112,6 +112,7 @@
     <ClCompile Include="src\Editor\editor-game.cpp" />
     <ClCompile Include="src\Editor\editor-hierarchy-list.cpp" />
     <ClCompile Include="src\Editor\editor-layers.cpp" />
+    <ClCompile Include="src\Editor\editor-performance.cpp" />
     <ClCompile Include="src\Editor\editor-sceneview.cpp" />
     <ClCompile Include="src\Editor\editor-system.cpp" />
     <ClCompile Include="src\Editor\editor-undoredo.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="src\Editor\editor-game.h" />
     <ClInclude Include="src\Editor\editor-hierarchy-list.h" />
     <ClInclude Include="src\Editor\editor-layers.h" />
+    <ClInclude Include="src\Editor\editor-performance.h" />
     <ClInclude Include="src\Editor\editor-sceneview.h" />
     <ClInclude Include="src\Editor\editor-system.h" />
     <ClInclude Include="src\Editor\editor-undoredo.h" />

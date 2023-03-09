@@ -1,5 +1,5 @@
-[2023-03-09 18:56:37.560] [Error] [critical] 
-Caused By:	!mScript
-Info:		MONO OBJECT OF StringCiphererVFX NOT LOADED
-Source:		C:\Users\FLESH\ECS\Copium\Engine\core-engine\src\Scripting\scripting-system.cpp (Line: 900)
+[2023-03-09 20:52:57.995] [Error] [critical] 
+Caused By:	FT_New_Face(ft, path.c_str(), 0, &face)
+Info:		Fail to load font
+Source:		C:\Users\matth\Documents\GitHub\GAM-200\Engine\core-engine\src\Graphics\fonts.cpp (Line: 51)
 

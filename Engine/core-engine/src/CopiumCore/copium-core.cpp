@@ -53,7 +53,8 @@ namespace Copium
 
 		MyEventSystem->subscribe(this, &CopiumCore::CallbackStartPreview);
 		MyEventSystem->subscribe(this, &CopiumCore::CallbackStopPreview);
-		//pMessageSystem->subscribe(MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW, this);
+		MyEventSystem->subscribe(this, &CopiumCore::CallbackPerformanceView);
+		MyEventSystem->subscribe(this, &CopiumCore::CallbackOffPerformanceView);
 		//while (MyScriptingSystem.compilingState == CompilingState::Compiling);
 		//MySceneManager.load_scene(Paths::assetPath+"\\Scenes\\MainMenu.scene");
 		//MySceneManager.load_scene("C:\\Users\\FLESH\\Desktop\\Copium\\Engine\\x64\\PackedTracks\\Assets\\Scenes\\Demo.scene");
@@ -68,5 +69,20 @@ namespace Copium
 	void CopiumCore::CallbackStopPreview(StopPreviewEvent* pEvent)
 	{
 		inPlayMode = false;
+	}
+
+	void CopiumCore::CallbackPerformanceView(ActivatePerformanceViewerEvent* pEvent)
+	{
+		displayPerformance = true;
+		if(!displayPerformance)
+			performanceCounter = 2.5f;
+		pEvent->textBuffer = tmpBuffer;
+	}
+
+	void CopiumCore::CallbackOffPerformanceView(OffPerformanceViewerEvent* pEvent)
+	{
+		displayPerformance = false;
+		performanceCounter = 0.f;
+		tmpBuffer.clear();
 	}
 }

@@ -37,7 +37,8 @@ namespace Copium
         template <typename T>
         const char* GetTypeName() {
             #define FuncName std::string(__FUNCSIG__)
-            static std::string typeName = FuncName.substr(FuncName.find_last_of('::') + 1, FuncName.find_last_of('>') - FuncName.find_last_of("::") - 1);
+            size_t lastcolons = FuncName.find_last_of(">");
+            static std::string typeName = FuncName.substr(FuncName.find_last_of("::") + 1, lastcolons - FuncName.find_last_of("::") - 1);
             return typeName.c_str();
         }
 
@@ -178,7 +179,7 @@ namespace Copium
                     {
                         if constexpr (std::is_same<T, Script>())
                         {
-                            if (component.Name() != alternateName)
+                            if (!alternateName || component.Name() != alternateName)
                                 continue;
                         }
                         buttonName = component.gameObj.name;
@@ -1259,8 +1260,8 @@ namespace Copium
             std::vector<Layer>& sortingLayers = editorSortingLayer.GetSortingLayers();
             
             const char* previewItem =nullptr;
-            Layer& layer = *editorSortingLayer.GetLayer(sortingGroup.sortingLayer);
-            previewItem = layer.name.c_str();
+            Layer& currLayer = *editorSortingLayer.GetLayer(sortingGroup.sortingLayer);
+            previewItem = currLayer.name.c_str();
 
             if (!previewItem)
                 previewItem = "NULL";
@@ -1437,12 +1438,12 @@ namespace Copium
                         ImGui::EndDragDropSource();
                     }
                 }
-                ImGuiWindowFlags windowFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
+                ImGuiWindowFlags winFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
                     | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
                     | ImGuiTableFlags_PadOuterX;
                 ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 0));
                 ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 2));
-                if (ImGui::BeginTable("Component", 2, windowFlags))
+                if (ImGui::BeginTable("Component", 2, winFlags))
                 {
                     ImGui::Indent();
                     ImGui::TableSetupColumn("Text", 0, 0.4f);
@@ -1482,7 +1483,7 @@ namespace Copium
                 ComponentsPtrArray<T1>& components{gameObj.GetComponents<T1>()};
                 for (T1* component : components)
                 {
-                    ImGui::PushID(component->uuid);
+                    ImGui::PushID((int)component->uuid);
                     DisplayType("Enabled", component->enabled); ImGui::SameLine();
                     DisplayComponentHelper(*component);
  
@@ -1517,7 +1518,7 @@ namespace Copium
             ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);
             if (ImGui::BeginTable("Components", 1, tableFlags, ImVec2(0.f, ImGui::GetWindowSize().y * 0.8f)))
             {
-                ImGui::PushID(gameObject.uuid);
+                ImGui::PushID((int)gameObject.uuid);
                 DisplayComponents(gameObject);
                 ImGui::PopID();
                 ImGui::EndTable();
@@ -1526,8 +1527,6 @@ namespace Copium
             static const float buttonSizeY = ImGui::CalcTextSize("Add Component").y;
             ImVec2 buttonSize(ImGui::GetWindowSize().x, buttonSizeY * 2);;
             ImGui::SetCursorPosY(ImGui::GetWindowSize().y - buttonSize.y);
-
-            static bool isAddingComponent = false;
 
             if (ImGui::Button("Add Component", buttonSize)) {
                 isAddingComponent = true;

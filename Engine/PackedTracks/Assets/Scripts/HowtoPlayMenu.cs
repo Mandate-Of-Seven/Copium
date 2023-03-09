@@ -20,6 +20,7 @@ public class HowtoPlayMenu: CopiumScript
     public GameObject NextPage3;
     public GameObject PrevPage4;
 
+    public Button ExitButton;
 
     int page = 1;
 
@@ -131,16 +132,12 @@ public class HowtoPlayMenu: CopiumScript
             Page2.SetActive(false);
             Page4.SetActive(false);
 
-            
+            //SceneManager.LoadScene("MainMenu");
         }
         if (page == 4)
         {
             Page4.SetActive(true);
             Page3.SetActive(false);
-        }
-        if (page >4)
-        {
-        SceneManager.LoadScene("MainMenu");
         }
 
     }

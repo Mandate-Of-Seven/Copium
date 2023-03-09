@@ -485,7 +485,7 @@ namespace Copium
 			begin_batch();
 		}
 
-		GLfloat textureIndex = 0.f;
+		//GLfloat textureIndex = 0.f;
 
 		if (textureIDs.size() > 31 || textureCount > 31)
 		{
@@ -508,7 +508,7 @@ namespace Copium
 			quadBufferPtr->pos = _transform * quadVertexPosition[i];
 			quadBufferPtr->textCoord = quadTextCoord[i];
 			quadBufferPtr->color = _color;
-			quadBufferPtr->texID = textureIDs[whiteTexture];
+			quadBufferPtr->texID = (float)textureIDs[whiteTexture];
 			quadBuffer->type = (float)ENTITY_TYPE::QUAD;
 			quadBufferPtr++;
 		}
@@ -560,7 +560,7 @@ namespace Copium
 		}
 
 		// Map texture unit to the texture object id
-		unsigned int key = graphics->get_texture_slots()[textureIndex];
+		unsigned int key = graphics->get_texture_slots()[(int)textureIndex];
 		auto it = textureIDs.find(key);
 		if (it == textureIDs.end())
 			textureIDs.emplace(std::make_pair(key, textureCount++));
@@ -570,7 +570,7 @@ namespace Copium
 			quadBufferPtr->pos = _transform * quadVertexPosition[i];
 			quadBufferPtr->textCoord = quadTextCoord[i];
 			quadBufferPtr->color = color;
-			quadBufferPtr->texID = textureIDs[key];
+			quadBufferPtr->texID = (float)textureIDs[key];
 			quadBufferPtr++;
 		}
 
@@ -620,9 +620,8 @@ namespace Copium
 			flush();
 			begin_batch();
 		}
-
 		// Map texture unit to the texture object id
-		unsigned int key = graphics->get_texture_slots()[textureIndex];
+		unsigned int key = graphics->get_texture_slots()[(int)textureIndex];
 		auto it = textureIDs.find(key);
 		if(it == textureIDs.end())
 			textureIDs.emplace(std::make_pair(key, textureCount++));
@@ -653,7 +652,7 @@ namespace Copium
 				mixedColor.b = layeredColor.b * layeredColor.a / mixedColor.a + color.b * color.a * (1 - layeredColor.a) / mixedColor.a;
 				quadBufferPtr->color = mixedColor;
 			}
-			quadBufferPtr->texID = textureIDs[key];
+			quadBufferPtr->texID = (float)textureIDs[key];
 			quadBufferPtr->type = (float)ENTITY_TYPE::QUAD;
 			quadBufferPtr++;
 		}
@@ -722,7 +721,7 @@ namespace Copium
 			flip.y = -1.f;
 
 		// Map texture unit to the texture object id
-		unsigned int key = graphics->get_texture_slots()[textureIndex];
+		unsigned int key = graphics->get_texture_slots()[(int)textureIndex];
 		auto it = textureIDs.find(key);
 		if (it == textureIDs.end())
 			textureIDs.emplace(std::make_pair(key, textureCount++));
@@ -746,7 +745,7 @@ namespace Copium
 			quadBufferPtr->textCoord = spriteTextCoord[i] * flip;
 			//PRINT("		Animation offsets:" << spriteTextCoord[i].x << " " << spriteTextCoord[i].y);
 			quadBufferPtr->color = color;
-			quadBufferPtr->texID = textureIDs[key];
+			quadBufferPtr->texID = (float)textureIDs[key];
 			quadBufferPtr->type = (float)ENTITY_TYPE::QUAD;
 			quadBufferPtr++;
 		}
@@ -864,7 +863,7 @@ namespace Copium
 
 		float x = _position.x;
 		float y = _position.y;
-		float z = _position.z;
+		//float z = _position.z;
 
 		int newLine = 0;
 		float xpos = 0.f, ypos = 0.f;
@@ -941,7 +940,7 @@ namespace Copium
 					mixedColor.b = layeredColor.b * layeredColor.a / mixedColor.a + color.b * color.a * (1 - layeredColor.a) / mixedColor.a;
 					quadBufferPtr->color = mixedColor;
 				}
-				quadBufferPtr->texID = textureIDs.at(ch.textureID);
+				quadBufferPtr->texID = (float)textureIDs.at(ch.textureID);
 				quadBufferPtr->type = (float)ENTITY_TYPE::TEXT;
 				quadBufferPtr++;
 			}

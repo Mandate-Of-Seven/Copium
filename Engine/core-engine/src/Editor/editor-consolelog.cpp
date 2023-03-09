@@ -153,7 +153,7 @@ namespace Window
                 ImGui::LogToClipboard();
             }
 
-            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 10));
             const char* buf = editorLog.Buf.begin();
             const char* buf_end = editorLog.Buf.end();
             if (editorLog.Search.IsActive())
@@ -178,8 +178,8 @@ namespace Window
                 {
                     for (int line_no = clipper.DisplayStart; line_no < clipper.DisplayEnd; line_no++)
                     {
-                        const char* line_start = buf + editorLog.LineOffsets[line_no];
-                        const char* line_end = (line_no + 1 < editorLog.LineOffsets.Size) ? (buf + editorLog.LineOffsets[line_no + 1] - 1) : buf_end;
+                        const char* line_start = buf + editorLog.LineOffsets[editorLog.LineOffsets.size() - 1 - line_no];
+                        const char* line_end = (line_no - 1 >= 0) ? (buf + editorLog.LineOffsets[editorLog.LineOffsets.size() - line_no] - 1) : buf_end;
                         ImGui::TextUnformatted(line_start, line_end);
                     }
                 }
@@ -194,22 +194,22 @@ namespace Window
             ImGui::End();
             
 
-            ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
-            ImGui::SetNextWindowBgAlpha(0.35f);
+            //ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+            //ImGui::SetNextWindowBgAlpha(0.35f);
 
-            // Begin Performance Stats
-            ImGui::Begin("Performance Viewer", 0,windowFlags);
-            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 75);
-            if (ImGui::Button("Start Performance Viewer"))
-            {
-                messageSystem.dispatch(Copium::MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW);
-            }
-            
+            //// Begin Performance Stats
+            //ImGui::Begin("Performance Viewer", 0,windowFlags);
+            //ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 75);
+            //if (ImGui::Button("Start Performance Viewer"))
+            //{
+            //    messageSystem.dispatch(Copium::MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW);
+            //}
+            //
 
-            std::string buffer = Window::EditorConsole::editorLog.get_performancetext();
-            ImGui::Text(buffer.c_str());
-            // End Performance Stats
-            ImGui::End();
+            //std::string buffer = Window::EditorConsole::editorLog.get_performancetext();
+            //ImGui::Text(buffer.c_str());
+            //// End Performance Stats
+            //ImGui::End();
 		}
 	}
 }

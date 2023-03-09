@@ -455,7 +455,8 @@ namespace Copium
 		// Gameobjects with Sorting Layers
 		if (pScene)
 		{
-			int count = 0;
+			// For debugging purposes
+			// int count = 0;
 			for (Layer& layer : MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers())
 			{
 				renderer.begin_batch();
@@ -671,7 +672,7 @@ namespace Copium
 		glm::vec2 worldNDC{ 0 };
 		glm::vec2 scale = { 0.01f, 0.01f };
 		glm::vec2 cameraPos = MyEditorSystem.get_camera()->get_eye();
-		float zoom = MyEditorSystem.get_camera()->get_zoom();
+		//float zoom = MyEditorSystem.get_camera()->get_zoom();
 
 		//renderer.end_batch();
 		//renderer.flush();

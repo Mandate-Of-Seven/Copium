@@ -35,7 +35,7 @@ namespace Copium
 		
 		Layer layer{ _name, (unsigned int)layerCount, std::vector<GameObject*>(maxObjects) };
 		sortingLayers.push_back(layer);
-		layerCount = sortingLayers.size();
+		layerCount = (int)sortingLayers.size();
 
 		return &sortingLayers.back();
 	}
@@ -382,7 +382,7 @@ namespace Copium
 	{
 		for (Layer& layer : sortingLayers)
 		{
-			if (layer.layerID != _layerID)
+			if (layer.layerID != (unsigned int)_layerID)
 				continue;
 
 			return &layer;

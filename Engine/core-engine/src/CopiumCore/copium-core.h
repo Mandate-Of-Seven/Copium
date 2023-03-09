@@ -20,7 +20,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "CopiumCore/system-interface.h"
 #include <Events/events.h>
 
-
 namespace Copium
 {
 	CLASS_SYSTEM(CopiumCore)
@@ -50,48 +49,45 @@ namespace Copium
 			{
 				if (pSystem->systemFlags & FLAG_RUN_ON_PLAY && inPlayMode)
 				{
-					//double startTime = glfwGetTime();
+					double startTime = glfwGetTime();
 					pSystem->update();
-					//PRINT(typeid(*pSystem).name() << ": update!");
-					//pSystem->updateTime = glfwGetTime() - startTime;
-					//totalUpdateTime += pSystem->updateTime;
+					//std::cout << typeid(*pSystem).name() << ": update!\n";
+					pSystem->updateTime = glfwGetTime() - startTime;
+					totalUpdateTime += pSystem->updateTime;
 				}
 				else if (pSystem->systemFlags & FLAG_RUN_ON_EDITOR && !inPlayMode)
 				{
-					glfwGetTime();
-					//double startTime = 
+					double startTime = glfwGetTime();
 					pSystem->update();
-					//PRINT(typeid(*pSystem).name() << ": update!");
-					//pSystem->updateTime = glfwGetTime() - startTime;
-					//totalUpdateTime += pSystem->updateTime;
+					//std::cout << typeid(*pSystem).name() << ": update!\n";
+					pSystem->updateTime = glfwGetTime() - startTime;
+					totalUpdateTime += pSystem->updateTime;
 					continue;
 				}
 			}
 
 			if (displayPerformance)
 			{
-				if (performanceCounter >= 0.05f)
+				if (performanceCounter >= 2.5f)
 				{
-					//PRINT("Start");
-					std::string temp = "\n";
+					//std::cout<<"Start\n";
+					tmpBuffer.clear();
 					for (ISystem* pSystem : systems)
 					{
 						pSystem->updateTimePercent = (pSystem->updateTime <= 0) ? 0 : ((pSystem->updateTime / totalUpdateTime) * 100);
-						//PRINT(pSystem->updateTime);
-						temp += typeid(*pSystem).name();
-						temp += ": ";
-						temp += std::to_string(pSystem->updateTimePercent);
-						temp += "%%\n\n";
-						PRINT(typeid(*pSystem).name() << ": " << pSystem->updateTimePercent << "%");
+						//std::cout<< pSystem->updateTime << "\n";
+						tmpBuffer += "[";
+						tmpBuffer += typeid(*pSystem).name();
+						tmpBuffer += "]: ";
+						tmpBuffer += std::to_string(pSystem->updateTimePercent);
+						tmpBuffer += "%%\n";
+						//std::cout << typeid(*pSystem).name() << ": " << pSystem->updateTimePercent << "%\n";
 					}
-					//PRINT(temp);
-					//Window::EditorConsole::editorLog.set_performancetext(temp);
-					//PRINT("End\n");
 					performanceCounter = 0;
 				}
 				else
 				{
-					//performanceCounter += (float)MyFrameRateController.getDt();
+					performanceCounter += (float)MyFrameRateController.getDt();
 				}
 			}
 		}
@@ -111,33 +107,51 @@ namespace Copium
 			}
 		}
 
-		//void handleMessage(MESSAGE_TYPE mType)
-		//{
-		//	switch (mType)
-		//	{
-		//		case MESSAGE_TYPE::MT_START_PREVIEW:
-		//		{
-		//			inPlayMode = true;
-		//			break;
-		//		}
-		//		case MESSAGE_TYPE::MT_STOP_PREVIEW:
-		//		{
-		//			inPlayMode = false;
-		//			break;
-		//		}
-		//		case MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW:
-		//		{
-		//			displayPerformance = !displayPerformance;
-		//			performanceCounter = 0.05f;
-		//			break;
-		//		}
-		//	}
-		//}
+		void handleMessage(MESSAGE_TYPE mType)
+		{
+			switch (mType)
+			{
+				case MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW:
+				{
+					PRINT("bloop");
+					displayPerformance = !displayPerformance;
+					performanceCounter = 0.05f;
+					break;
+				}
+			}
+		}
 
 
 		void CallbackStartPreview(StartPreviewEvent* pEvent);
 
 		void CallbackStopPreview(StopPreviewEvent* pEvent);
+
+		/**************************************************************************/
+		/*!
+		  \brief
+			Callback function for when performance viewer is activated
+
+		  \param pEvent
+			ptr to the event that triggers this callback
+
+		  \return
+			void
+		*/
+		/**************************************************************************/
+		void CallbackPerformanceView(ActivatePerformanceViewerEvent* pEvent);
+		/**************************************************************************/
+		/*!
+		  \brief
+			Callback function for when performance viewer is turned off
+
+		  \param pEvent
+			ptr to the event that triggers this callback
+
+		  \return
+			void
+		*/
+		/**************************************************************************/
+		void CallbackOffPerformanceView(OffPerformanceViewerEvent* pEvent);
 
 		bool get_inplaymode() { return inPlayMode; }
 	private:
@@ -146,6 +160,7 @@ namespace Copium
 		bool displayPerformance = false;
 		bool inPlayMode = false;
 		std::string configFilePath = "Data\\config.json";
+		std::string tmpBuffer;
 	};
 }
 #endif // !COPIUM_CORE_H
