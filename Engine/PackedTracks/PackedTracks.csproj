@@ -93,6 +93,7 @@
     </Compile>
     <Compile Include="Assets\Scripts\AudioManager.cs" />
     <Compile Include="Assets\Scripts\BlinkingEffect.cs" />
+    <Compile Include="Assets\Scripts\ButtonWrapper.cs" />
     <Compile Include="Assets\Scripts\CameraShakeEffect.cs" />
     <Compile Include="Assets\Scripts\Crew.cs" />
     <Compile Include="Assets\Scripts\CrewMenu.cs" />

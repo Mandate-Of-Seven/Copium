@@ -138,7 +138,8 @@
                     "hoverSFX": 17747488176716717098,
                     "leverEngagedSFX": 13165669678142242702,
                     "leverSFX": 10219544415510482568,
-                    "paperSFX": 16863530532877669399
+                    "paperSFX": 16863530532877669399,
+                    "failedSFX": 17176667212650767161
                 }
             ]
         },
@@ -1708,7 +1709,8 @@
                     "CloseCrewStatusBtn": 7467968725349133689,
                     "CrewStatusBtn": 12240638081067445947,
                     "alert": 18001664217615177344,
-                    "audioManager": 11261402425968020089
+                    "audioManager": 11261402425968020089,
+                    "resultManager": 5868577602297294004
                 },
                 {
                     "enabled": true,
@@ -1723,7 +1725,8 @@
                     "CloseReportBtn": 16441970958217380161,
                     "ReportScreenBtn": 5292179977163357335,
                     "alert": 15187707562833248342,
-                    "audioManager": 11261402425968020089
+                    "audioManager": 11261402425968020089,
+                    "resultManager": 5868577602297294004
                 },
                 {
                     "enabled": true,
@@ -1876,7 +1879,7 @@
         {
             "UID": 16232360763330651275,
             "Name": "Manual Flip",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "PID": 17600260081740642465,

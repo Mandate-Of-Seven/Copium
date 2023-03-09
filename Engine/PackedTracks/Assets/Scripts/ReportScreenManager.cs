@@ -9,6 +9,7 @@ public class ReportScreenManager: CopiumScript
     public Button CloseReportBtn;
 	public Button ReportScreenBtn;
     public GameObject ReportTab;
+    public ResultManager resultManager;
 
 	public Image alert;
 
@@ -77,6 +78,7 @@ public class ReportScreenManager: CopiumScript
         if (isReportScreenOn)
             return;
 
+        resultManager.Disable();
         alert.enabled = false;
         isReportScreenOn = true;
         ReportScreenBtn.gameObject.SetActive(false);
@@ -89,6 +91,7 @@ public class ReportScreenManager: CopiumScript
             return;
 
         isReportScreenOn = false;
+        resultManager.Enable();
         ReportScreenBtn.gameObject.SetActive(true);
         ReportTab.transform.parent = parent.transform;
     }
