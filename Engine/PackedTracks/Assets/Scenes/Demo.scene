@@ -8653,7 +8653,7 @@
         {
             "UID": 15410177528861150721,
             "Name": "New GameObject",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "PID": 0,
