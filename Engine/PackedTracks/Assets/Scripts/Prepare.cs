@@ -38,7 +38,7 @@ public class Prepare : CopiumScript
     public GameObject prepareCanvas;
 
 
-    public CrewMenu.Person currentCrewmate;
+    public Person currentCrewmate;
     public bool makeChoice;
     public int eventNum;
     public int choice;
@@ -112,7 +112,7 @@ public class Prepare : CopiumScript
 
     
 
-    public void GenerateEvents(CrewMenu.Person crewmate)
+    public void GenerateEvents(Person crewmate)
     {
         currentCrewmate.resultText = "";
         prepareCanvas.SetActive(true);
