@@ -119,18 +119,25 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "AudioManager",
-                    "explosionSFX": 12229284277379369868,
                     "accelerateSFX": 12349765490904732829,
                     "ambTrain": 16495768407680055626,
+                    "endingChuckVO": 3418065422341924393,
                     "bgmTrain": 9375891007183145069,
                     "clickSFX": 11240736860491117710,
                     "deccelerateSFX": 11048904636908595310,
-                    "hoverSFX": 17747488176716717098,
+                    "endingAllDiedVO": 5168740783519127959,
+                    "endingGenericVO": 12110915872301913157,
                     "ending3bVO": 2090025714383355506,
+                    "ending2aVO": 566384452997084233,
+                    "endingBronsonVO": 3637985409097489349,
+                    "endingDantonVO": 7891194026526516512,
+                    "endingHarrisVO": 9569732444608153641,
+                    "explosionSFX": 12229284277379369868,
+                    "failedSFX": 17176667212650767161,
+                    "hoverSFX": 17747488176716717098,
                     "leverEngagedSFX": 13165669678142242702,
                     "leverSFX": 10219544415510482568,
-                    "paperSFX": 16863530532877669399,
-                    "failedSFX": 17176667212650767161
+                    "paperSFX": 16863530532877669399
                 }
             ]
         },
@@ -5253,20 +5260,20 @@
                     "preparing": false,
                     "storageComparment": true,
                     "supplies": 10,
-                    "audioManager": 11261402425968020089,
                     "prepareButton": 1694010125661307522,
+                    "audioManager": 11261402425968020089,
                     "bronson": 6194986179725401096,
                     "chuck": 17821819373689235206,
+                    "crewStatusManager": 10830490317094325076,
                     "danton": 5847528407074455355,
                     "deployButton": 5395796591469370865,
                     "fader": 11311745147968865628,
                     "harris": 11462693708151468748,
                     "prepareManager": 5967388857219597172,
-                    "suppliesText": 2987481935980349814,
-                    "titleText": 11591166883693418428,
-                    "crewStatusManager": 10830490317094325076,
                     "reportScreenManager": 6180648032434220981,
-                    "resultManager": 5868577602297294004
+                    "resultManager": 5868577602297294004,
+                    "suppliesText": 2987481935980349814,
+                    "titleText": 11591166883693418428
                 }
             ]
         },
@@ -8177,7 +8184,7 @@
                     "TypeID": 16,
                     "Alias": "Ending3b",
                     "Loop": false,
-                    "Overlap": true,
+                    "Overlap": false,
                     "Volume": 1.0,
                     "Channel": "Voice"
                 }
@@ -8376,6 +8383,265 @@
                     "Overlap": true,
                     "Volume": 0.5,
                     "Channel": "SFX"
+                }
+            ]
+        },
+        {
+            "UID": 13107091264634299524,
+            "Name": "VO_Ending2A",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 566384452997084233,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "Ending2a",
+                    "Loop": false,
+                    "Overlap": false,
+                    "Volume": 1.0,
+                    "Channel": "Voice"
+                }
+            ]
+        },
+        {
+            "UID": 11906786951692842016,
+            "Name": "VO_GenericEnding",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 12110915872301913157,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "GenericEnding",
+                    "Loop": false,
+                    "Overlap": false,
+                    "Volume": 1.0,
+                    "Channel": "Voice"
+                }
+            ]
+        },
+        {
+            "UID": 16229430060561268222,
+            "Name": "VO_HarrisEnding",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 9569732444608153641,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "HarrisEnding",
+                    "Loop": false,
+                    "Overlap": false,
+                    "Volume": 1.0,
+                    "Channel": "Voice"
+                }
+            ]
+        },
+        {
+            "UID": 15231925367510017828,
+            "Name": "VO_BronsonEnding",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 3637985409097489349,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "BronsonEnding",
+                    "Loop": false,
+                    "Overlap": false,
+                    "Volume": 1.0,
+                    "Channel": "Voice"
+                }
+            ]
+        },
+        {
+            "UID": 12133734395874375897,
+            "Name": "VO_ChuckEnding",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 3418065422341924393,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "ChuckEnding",
+                    "Loop": false,
+                    "Overlap": false,
+                    "Volume": 1.0,
+                    "Channel": "Voice"
+                }
+            ]
+        },
+        {
+            "UID": 5907737648165938980,
+            "Name": "VO_DantonEnding",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 7891194026526516512,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "DantonEnding",
+                    "Loop": false,
+                    "Overlap": false,
+                    "Volume": 1.0,
+                    "Channel": "Voice"
+                }
+            ]
+        },
+        {
+            "UID": 2210891743498397935,
+            "Name": "VO_AllDiedEnding",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 5168740783519127959,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "AllDiedEnding",
+                    "Loop": false,
+                    "Overlap": false,
+                    "Volume": 1.0,
+                    "Channel": "Voice"
                 }
             ]
         }
