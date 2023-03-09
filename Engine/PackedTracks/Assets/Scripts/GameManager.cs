@@ -51,8 +51,17 @@ public class GameManager: CopiumScript
         if (pauseMenu.isPaused)
             return;
 
+        if (Input.GetKeyDown(KeyCode.C))
+            crewMenuScript.SetCrew(CrewMenu.STAT_TYPES.ALIVE, 2, 0);
+
+        if (Input.GetKeyDown(KeyCode.B))
+            crewMenuScript.SetCrew(CrewMenu.STAT_TYPES.ALIVE, 1, 0);
+
+        if (Input.GetKeyDown(KeyCode.D))
+            crewMenuScript.SetCrew(CrewMenu.STAT_TYPES.ALIVE, 3, 0);
+
         // Toggle canvases
-        CanvasManager();
+        //CanvasManager();
 
         // Game ends
         if (CheckForGameEndCondition())
@@ -87,9 +96,8 @@ public class GameManager: CopiumScript
     void CanvasManager()
     {
         reportScreenManager.UpdateCanvas();
-        //crewStatusManager.UpdateCanvas();
+        crewStatusManager.UpdateCanvas();
         resultManager.UpdateCanvas();
-
     }
 
     public void ToggleMoving()

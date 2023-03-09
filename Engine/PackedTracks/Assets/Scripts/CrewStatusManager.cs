@@ -32,7 +32,13 @@ public class CrewStatusManager: CopiumScript
 		CrewStatusBtnWrapper = new ButtonWrapper(CrewStatusBtn,audioManager);
 		CrewStatusBtnWrapper.SetImage(CrewStatusBtn.GetComponent<Image>());
 	}
+
 	void Update()
+	{
+		UpdateCanvas();
+
+    }
+	public void UpdateCanvas()
 	{   
 		if (CrewStatusBtnWrapper.GetState() == ButtonState.OnRelease)
         {
@@ -60,7 +66,6 @@ public class CrewStatusManager: CopiumScript
 			return;
 
 		Debug.Log( "DISABLED!");
-        resultManager.Disable();
         alert.enabled = false;
         isCrewStatusOn = true;
         CrewStatusBtn.gameObject.SetActive(false);
@@ -71,8 +76,8 @@ public class CrewStatusManager: CopiumScript
 		//Prevent the crew buttons from being pressed
 		crewMenu.SetPrepare(false);
 		isCrewStatusOn = false;
-		resultManager.Enable();
-		CrewStatusBtn.gameObject.SetActive(true);
+        resultManager.Enable();
+        CrewStatusBtn.gameObject.SetActive(true);
 		CrewStatusTab.transform.parent = parent.transform;
 	}
 }

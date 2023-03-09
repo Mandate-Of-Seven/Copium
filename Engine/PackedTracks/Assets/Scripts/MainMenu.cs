@@ -9,7 +9,10 @@ public class MainMenu: CopiumScript
     public Button StartGameButton;
     public Button QuitGameButton;
     public Button HowtoPlayButton;
+    public Button YesButton;
+    public Button NoButton;
 
+    public GameObject QuitMenu;
     public GameObject arrowLocStart;
     public GameObject arrowLocHTP;
     public GameObject arrowLocQuit;
@@ -39,8 +42,20 @@ public class MainMenu: CopiumScript
 
         if (QuitGameButton.state == ButtonState.OnClick)
         {
+            QuitMenu.SetActive(true);
+
+           
+        } 
+        if (YesButton.state == ButtonState.OnClick)
+        {
             Application.Quit();
         }
+            
+        if (NoButton.state == ButtonState.OnClick)
+        {
+            QuitMenu.SetActive(false);
+        }
+
 
         if (StartGameButton.state == ButtonState.OnHover || HowtoPlayButton.state == ButtonState.OnHover || QuitGameButton.state == ButtonState.OnHover)
         {

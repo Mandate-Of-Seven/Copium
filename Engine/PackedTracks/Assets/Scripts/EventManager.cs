@@ -91,6 +91,7 @@ public class EventManager: CopiumScript
 
     void CheckCurrentEvent()
     {
+        //Console.WriteLine("Checking Current Event");
         switch (EventSequence)
         {
             case -3:
@@ -107,10 +108,10 @@ public class EventManager: CopiumScript
                 eventIntro.Event();
                 break;
             case 1:
-                event01.Event(crewMenu.crew[0].alive);
+                event01.Event(!crewMenu.crew[0].alive);
                 break;
             case 2:
-                bool alive = true;
+                bool alive = false;
                 if (crewMenu.crew[1].alive && crewMenu.crew[2].alive)
                     alive = true;
                 event02.Event(alive);
@@ -197,7 +198,6 @@ public class EventManager: CopiumScript
 
     void ShowEnding()
     {
-        CheckCurrentEvent();
         Option_01.ResetOption();
         Option_02.ResetOption();
         Option_03.ResetOption();

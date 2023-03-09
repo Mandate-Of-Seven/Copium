@@ -1738,9 +1738,11 @@
                     "transitionSpeed": 20.0,
                     "ResultTab": 12238112469176194745,
                     "parent": 6642123175702952797,
+                    "reportScreenManager": 6180648032434220981,
                     "CloseResultBtn": 826755621581371733,
                     "ResultBtn": 3790437057486001291,
-                    "audioManager": 11261402425968020089
+                    "audioManager": 11261402425968020089,
+                    "crewStatusManager": 10830490317094325076
                 }
             ]
         },

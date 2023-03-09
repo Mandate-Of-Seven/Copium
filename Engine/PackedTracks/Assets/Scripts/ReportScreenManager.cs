@@ -28,7 +28,7 @@ public class ReportScreenManager: CopiumScript
 	}
     void Update()
     {
-
+        UpdateCanvas();
     }
     public void UpdateCanvas()
     {
