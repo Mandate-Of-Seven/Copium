@@ -28,7 +28,7 @@ namespace CopiumEngine
         }
 
         //inclusive of min and max
-        public static int RandInt(int min, int max)
+        public static int Range(int min, int max)
         {
             return rnd.Next(min, max + 1);
         }

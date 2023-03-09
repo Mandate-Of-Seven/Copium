@@ -227,7 +227,7 @@ namespace Copium
 		while (!tSys.Quit())
 		{
 			compilingStateReadable.lock();
-			while (compilingState != CompilingState::Wait);
+			while (compilingState == CompilingState::SwapAssembly);
 			compilingState = CompilingState::Compiling;
 			//Critical section
 			while (!tSys.acquireMutex(MutexType::FileSystem));
@@ -286,6 +286,8 @@ namespace Copium
 
 	void ScriptingSystem::update()
 	{
+		//MyEventSystem->publish(new EditorConsoleLogEvent(std::string("STATE: " + std::to_string((int)compilingState))));
+		//MyEventSystem->publish(new EditorConsoleLogEvent(std::string("PLAYMODE: " + std::to_string(inPlayMode))));
 		if (compilingState == CompilingState::SwapAssembly && !inPlayMode)
 		{
 			swapDll();
@@ -412,7 +414,7 @@ namespace Copium
 
 	void ScriptingSystem::swapDll()
 	{
-		PRINT("SWAPPING DLL_____________________________________");
+		MyEventSystem->publish(new EditorConsoleLogEvent("SWAPPING DLL"));
 		registerScriptWrappers();
 		unloadAppDomain();
 		createAppDomain();
@@ -445,7 +447,7 @@ namespace Copium
 		COPIUM_ASSERT(!mScriptableObject, "Scene C# script could not be loaded");
 		messageSystem.dispatch(MESSAGE_TYPE::MT_CREATE_CS_GAMEOBJECT);
 		messageSystem.dispatch(MESSAGE_TYPE::MT_SCRIPTING_UPDATED);
-		PRINT("END SWAP DLL_____________________________________");
+		MyEventSystem->publish(new EditorConsoleLogEvent("END SWAP DLL"));
 	}
 
 	MonoObject* ScriptingSystem::invoke(MonoObject* mObj, MonoMethod* mMethod, void** params)
@@ -519,15 +521,6 @@ namespace Copium
 				++scriptFilesIt;
 			}
 		}
-		// Remove deleted scripts using mask
-		//for (File* scriptFile : maskScriptFiles)
-		//{
-		//	if (scriptFile != nullptr)
-		//	{
-		//		scriptFiles.remove(*scriptFile);
-		//	}
-		//}
-		//maskScriptFiles.clear();
 	}
 
 	MonoObject* ScriptingSystem::cloneInstance(MonoObject* _instance)
@@ -952,7 +945,6 @@ namespace Copium
 		mPreviousScene = mCurrentScene;
 		mCurrentScene = instantiateClass(klassScene);
 		ReflectAll();
-		PRINT("SCENE IN SCRIPTING SWAPPED!");
 	}
 
 	void ScriptingSystem::CallbackStopPreview(StopPreviewEvent* pEvent)
@@ -961,7 +953,6 @@ namespace Copium
 		mPreviousScene = mCurrentScene;
 		mCurrentScene = instantiateClass(klassScene);
 		ReflectAll();
-		PRINT("SCENE IN SCRIPTING SWAPPED!");
 	}
 
 	void ScriptingSystem::CallbackScriptGetNames(ScriptGetNamesEvent* pEvent)

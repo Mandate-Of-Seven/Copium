@@ -155,7 +155,7 @@ public class Prepare : CopiumScript
         }
 
         currentCrewmate = crewmate;
-        eventNum = RNG.RandInt(1,14);
+        eventNum = RNG.Range(1,14);
 
         switch (eventNum)
         {
