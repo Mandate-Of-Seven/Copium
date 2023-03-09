@@ -44,16 +44,17 @@ public class HowtoPlayMenu: CopiumScript
 
         }
 
-        if (NextButton.state == ButtonState.OnHover)
+        if (NextButton.state == ButtonState.OnHover && page == 1)
         {
             NextPage.SetActive(true);
+
         }
         else
         {
             NextPage.SetActive(false);
         }
 
-        if (PrevButton.state == ButtonState.OnHover)
+        if (PrevButton.state == ButtonState.OnHover && page == 2)
         {
             PrevPage.SetActive(true);
         }
