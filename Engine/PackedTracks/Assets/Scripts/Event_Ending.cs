@@ -17,14 +17,9 @@ public class Event_Ending: CopiumScript
 
     }
 
-    public void Ending(bool requirement)
+    public void Ending(int requirement)
     {
-        if(requirement) // All dead
-        {
-            resolutionTextNum = 1;
-            Result(1);
-        }
-        else // Some or all alive
+        if (requirement == 1)// Some alive or all alive
         {
             int numCrewAlive = 0;
             for (int i = 0; i < cm.crew.Length; i++)
@@ -43,7 +38,7 @@ public class Event_Ending: CopiumScript
                         choice += i;
                         break;
                     }
-                        
+
                 }
                 Result(choice);
             }
@@ -54,6 +49,15 @@ public class Event_Ending: CopiumScript
 
 
             resolutionTextNum = 2;
+        }
+        else if (requirement == 2) // All dead
+        {
+            resolutionTextNum = 1;
+            Result(1);
+        }
+        else if(requirement == 3) // Mid game ending
+        {
+            // Nothing for now
         }
     }
 

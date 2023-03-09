@@ -152,12 +152,14 @@ namespace Copium
 	void AssetsSystem::LoadAssets(Directory* _directory)
 	{
 		(void) _directory;
+		PRINT("LOADING RESOURCES");
+		std::list<std::string>& files = MyFileSystem.get_filepath_in_directory(Paths::resourcePath.c_str(), ".png");
+		LoadAllResources(files);
+
 		PRINT("LOADING TEXTURES");
 		// Load Textures (.png)
 		LoadAllTextures(MyFileSystem.get_file_references()[FILE_TYPE::SPRITE]);
-#if defined(DEBUG) | defined(_DEBUG)
 		PRINT("TEXTURES LOADED: " << textures.size());
-#endif
 
 		PRINT("LOADING SHADERS");
 		// Load Shaders (.vert & .frag)
@@ -172,6 +174,16 @@ namespace Copium
 		LoadAllAudio(MyFileSystem.get_filepath_in_directory(Paths::assetPath.c_str(), ".wav"));
 	}
 
+	void AssetsSystem::LoadAllResources(std::list<std::string>& _files)
+	{
+		for (std::string file : _files)
+		{
+			Texture texture(file);
+			texture.set_id(resources.size());
+			resources.push_back(texture);
+		}
+	}
+
 	void AssetsSystem::LoadAllTextures(std::list<File*>& _files)
 	{
 		for (File* file : _files)
@@ -183,9 +195,8 @@ namespace Copium
 
 	void AssetsSystem::LoadTexture(File* _file)
 	{
-#if defined(DEBUG) | defined(_DEBUG)
 		PRINT("LOADING TEXTURE: " << _file->filePath.string());
-#endif
+
 		Texture texture(_file->filePath.string());
 		texture.set_id(_file->get_id());
 		textures.push_back(texture);

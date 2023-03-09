@@ -1,8 +1,11 @@
 using CopiumEngine;
 using System;
+using System.Security.AccessControl;
 
 public class TrainManager: CopiumScript
 {
+	public GameManager GameManager;
+
 	public float maxSpeed = 1.0f;
 	public float currentSpeed = 0.0f;
 	public float acceleration = 0.0f;
@@ -15,12 +18,15 @@ public class TrainManager: CopiumScript
 	public Image trainLeverActivated;
 	public Image trainLeverDeactivated;
 	public GameObject trainCanvas;
-	public float levelTransSpeed = 2.0f;
-	Color leverHoverColor = new Color(0.5f,1f,0.5f,1f);
+    public float levelTransSpeed = 2.0f;
+	Color leverHoverColor = new Color(0.6f,0.6f,0.6f,1f);
 
-
-
-	bool accelerate = false;
+    public Text tracker;
+    public Button ManualPopUpBtn;
+    public Button ManualBtn;
+    public bool accelerate = false;
+	bool manualHover = false;
+	bool onHover = false;
 	
 	public float snowMaxDelay = 0.1f;
 	public float tracksMaxDelay = 0.1f;
@@ -44,7 +50,6 @@ public class TrainManager: CopiumScript
 
 	float targetAmbienceVolume = 0.0f;
 
-	bool onHover = false;
 
 	void Start()
 	{
@@ -55,32 +60,14 @@ public class TrainManager: CopiumScript
 
 	void Update()
 	{
+		if (GameManager.gameEnd)
+			return;
 
-		if (trainLeverBtn.state == ButtonState.OnHover)
-		{
-			if (!onHover)
-			{
-				audioManager.hoverSFX.Play();
-				onHover = true;
-			}
-			Color leverCurrentColor = Color.Lerp(leverHoverColor, trainLeverActivated.color, Time.deltaTime * levelTransSpeed);
-			trainLeverActivated.color = leverCurrentColor;
-			trainLeverDeactivated.color = leverCurrentColor;
-		}
-		else if (trainLeverBtn.state == ButtonState.OnClick)
-		{
-			FlickLever();
-		}
-		else
-		{
-			if (trainLeverBtn.state == ButtonState.None)
-			{
-				onHover = false;
-			}
-			Color leverCurrentColor = Color.Lerp(trainLeverActivated.color, Color.white, Time.deltaTime * levelTransSpeed);
-			trainLeverActivated.color = leverCurrentColor;
-			trainLeverDeactivated.color = leverCurrentColor;
-		}
+        ToggleManual();
+
+		ToggleLever();
+		
+		// Speed of train
 		if (accelerate && currentSpeed < maxSpeed)
 		{
 			currentSpeed += acceleration* Time.deltaTime;
@@ -157,7 +144,37 @@ public class TrainManager: CopiumScript
 			trainCanvas.transform.localPosition = 
 				Vector3.Lerp(Vector3.zero,targetPosition,timeStep);
 		}
-	}
+
+		// Update the distance tracker
+        tracker.text = ((int)GameManager.distanceLeft).ToString() + "KM";
+    }
+
+	void ToggleLever()
+	{
+        if (trainLeverBtn.state == ButtonState.OnHover)
+        {
+            if (!onHover)
+            {
+                audioManager.hoverSFX.Play();
+                onHover = true;
+            }
+            Color leverCurrentColor = Color.Lerp(trainLeverActivated.color, Color.white, Time.deltaTime * levelTransSpeed);
+            trainLeverActivated.color = leverCurrentColor;
+            trainLeverDeactivated.color = leverCurrentColor;
+        }
+        else if (trainLeverBtn.state == ButtonState.OnClick)
+        {
+            FlickLever();
+        }
+        else 
+        {
+            if (trainLeverBtn.state == ButtonState.None)
+                onHover = false;
+            Color leverCurrentColor = Color.Lerp(trainLeverActivated.color, leverHoverColor, Time.deltaTime * levelTransSpeed);
+            trainLeverActivated.color = leverCurrentColor;
+            trainLeverDeactivated.color = leverCurrentColor;
+        }
+    }
 
 	public void FlickLever()
 	{
@@ -180,7 +197,31 @@ public class TrainManager: CopiumScript
         }
     }
 
-	void StartTrain()
+    public void FlickLever(bool _accelerate)
+    {
+		if (accelerate == _accelerate)
+			return;
+
+        accelerate = _accelerate;
+        trainLeverActivated.gameObject.SetActive(accelerate);
+        trainLeverDeactivated.gameObject.SetActive(!accelerate);
+        audioManager.accelerateSFX.Stop();
+        audioManager.leverSFX.Stop();
+        audioManager.leverSFX.Play();
+        audioManager.leverEngagedSFX.Play();
+        if (accelerate)
+        {
+            StartTrain();
+            targetAmbienceVolume = 1.0f;
+        }
+        else
+        {
+            StopTrain();
+            targetAmbienceVolume = 0.0f;
+        }
+    }
+
+    void StartTrain()
 	{       
 		audioManager.ambTrain.Stop();
         audioManager.ambTrain.Play();
@@ -199,4 +240,51 @@ public class TrainManager: CopiumScript
 		targetTracksDelay = tracksMaxDelay;
 		targetScale = new Vector3(zoomInScale,zoomInScale,1);
 	}
+
+	// Toggle the manual to open or close
+    void ToggleManual()
+    {
+        if (!ManualPopUpBtn.gameObject.activeSelf) // When manual is not open
+        {
+            if (ManualBtn.state == ButtonState.OnHover)
+            {
+                if (!manualHover)
+                {
+                    manualHover = true;
+                    audioManager.hoverSFX.Play();
+                }
+            }
+            else if (ManualBtn.state == ButtonState.OnRelease)
+            {
+                audioManager.paperSFX.Play();
+                ManualPopUpBtn.gameObject.SetActive(true);
+                manualHover = true;
+            }
+            else if (ManualBtn.state == ButtonState.None)
+            {
+                manualHover = false;
+            }
+        }
+        else
+        {
+            if (ManualPopUpBtn.state == ButtonState.OnHover)
+            {
+                if (!manualHover)
+                {
+                    manualHover = true;
+                    audioManager.hoverSFX.Play();
+                }
+            }
+            else if (ManualPopUpBtn.state == ButtonState.OnRelease)
+            {
+                audioManager.paperSFX.Play();
+                ManualPopUpBtn.gameObject.SetActive(false);
+                manualHover = true;
+            }
+            else if (ManualPopUpBtn.state == ButtonState.None)
+            {
+                manualHover = false;
+            }
+        }
+    }
 }

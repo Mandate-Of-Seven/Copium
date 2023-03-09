@@ -80,7 +80,7 @@ public class Event_02: CopiumScript
                     "This mission was a set up!\n\nWe where sent out to die!\n\nNo... NO, Please!";
 
                 EventManager.EventSequence = -3;
-                EventManager.OverideEvent();
+                EventManager.OverrideEvent();
             }
             else if (choice == 2)
             {

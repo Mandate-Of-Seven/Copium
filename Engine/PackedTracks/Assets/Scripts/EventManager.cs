@@ -30,7 +30,6 @@ public class EventManager: CopiumScript
 
     void Start()
 	{
-        Console.WriteLine("EVENT MANAGER START");
         EventSequence = 0;
     }
 
@@ -47,10 +46,16 @@ public class EventManager: CopiumScript
             return;
         }
 
+        if(GameManager.distanceLeft < 0.99f)
+        {
+            EventSequence = -1;
+            OverrideEvent();
+        }    
+
         if (!crewMenu.CheckAllCrewAlive())
         {
             EventSequence = -2;
-            OverideEvent();
+            OverrideEvent();
         }
 
         if (!ShowingResolution && ShowingMainEvent)
@@ -68,7 +73,7 @@ public class EventManager: CopiumScript
         crewMenu.UpdateAllStats();
     }
 
-    public void OverideEvent()
+    public void OverrideEvent()
     {
         ShowingResolution = false;
         SelectingChoice = true;
@@ -81,7 +86,7 @@ public class EventManager: CopiumScript
             return;
 
         EventSequence++;
-        OverideEvent();
+        OverrideEvent();
     }
 
     void CheckCurrentEvent()
@@ -89,14 +94,13 @@ public class EventManager: CopiumScript
         switch (EventSequence)
         {
             case -3:
-                // Mid-game ending
-                
+                eventEnding.Ending(3); // Mid game endings
                 break;
             case -2:
-                eventEnding.Ending(true); // All dead
+                eventEnding.Ending(2); // All dead
                 break;
             case -1:
-                eventEnding.Ending(false); // Not all dead
+                eventEnding.Ending(1); // Not all dead or all alive
                 break;
             case 0:
                 ShowingMainEvent = false;

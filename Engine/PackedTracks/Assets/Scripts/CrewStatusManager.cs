@@ -5,7 +5,6 @@ public class CrewStatusManager: CopiumScript
 {
 	public bool isCrewStatusOn = false;
 	public AudioManager audioManager;
-	public ResultManager resultManager;
     
     public Button CloseCrewStatusBtn;
 	public Button CrewStatusBtn;
@@ -26,8 +25,12 @@ public class CrewStatusManager: CopiumScript
 	{
 
 	}
-	void Update()
-	{   
+    void Update()
+    {
+
+    }
+    public void UpdateCanvas()
+    {   
 		if (!openHover && CrewStatusBtn.state == ButtonState.OnHover)
         {
 			openHover = true;
@@ -35,9 +38,6 @@ public class CrewStatusManager: CopiumScript
         }
 		else if (CrewStatusBtn.state == ButtonState.OnRelease)
         {
-			resultManager.Disable();
-			alert.enabled = false;
-            isCrewStatusOn = true;
             audioManager.clickSFX.Play();
             OpenPanel();
         }
@@ -74,6 +74,9 @@ public class CrewStatusManager: CopiumScript
 
     public void OpenPanel()
     {
+		if (isCrewStatusOn)
+			return;
+
         alert.enabled = false;
         isCrewStatusOn = true;
         CrewStatusBtn.gameObject.SetActive(false);
@@ -81,8 +84,10 @@ public class CrewStatusManager: CopiumScript
     }
     public void ClosePanel()
 	{
-		isCrewStatusOn = false;
-		resultManager.Enable();
+        if (!isCrewStatusOn)
+            return;
+
+        isCrewStatusOn = false;
 		CrewStatusBtn.gameObject.SetActive(true);
 		CrewStatusTab.transform.parent = parent.transform;
 	}

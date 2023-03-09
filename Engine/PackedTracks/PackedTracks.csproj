@@ -117,6 +117,7 @@
     <Compile Include="Assets\Scripts\MainMenu.cs" />
     <Compile Include="Assets\Scripts\Bullet.cs" />
     <Compile Include="Assets\Scripts\Option.cs" />
+    <Compile Include="Assets\Scripts\PauseMenu.cs" />
     <Compile Include="Assets\Scripts\Prepare.cs" />
     <Compile Include="Assets\Scripts\ReportScreenManager.cs" />
     <Compile Include="Assets\Scripts\ResultManager.cs" />
