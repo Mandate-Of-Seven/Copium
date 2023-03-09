@@ -120,7 +120,6 @@
                     "TypeID": 23,
                     "Name": "AudioManager",
                     "accelerateSFX": 12349765490904732829,
-                    "failedSFX": 17176667212650767161,
                     "ambTrain": 16495768407680055626,
                     "endingChuckVO": 3418065422341924393,
                     "bgmTrain": 9375891007183145069,
@@ -138,8 +137,7 @@
                     "hoverSFX": 17747488176716717098,
                     "leverEngagedSFX": 13165669678142242702,
                     "leverSFX": 10219544415510482568,
-                    "paperSFX": 16863530532877669399,
-                    "failedSFX": 17176667212650767161
+                    "paperSFX": 16863530532877669399
                 }
             ]
         },
@@ -1710,6 +1708,7 @@
                     "CrewStatusBtn": 12240638081067445947,
                     "alert": 18001664217615177344,
                     "audioManager": 11261402425968020089,
+                    "crewMenu": 15964808941009667406,
                     "resultManager": 5868577602297294004
                 },
                 {
@@ -5259,7 +5258,6 @@
                     "bDeploy": false,
                     "cDeploy": false,
                     "dDeploy": false,
-                    "deployed": false,
                     "hDeploy": false,
                     "preparing": false,
                     "storageComparment": true,

@@ -149,21 +149,19 @@ public class CrewMenu: CopiumScript
             dDeploy = danton.isDeployed;
         }
 
-        if (preparing)
+        bool selectedCrewForDeployment = harris.isDeployed || bronson.isDeployed || chuck.isDeployed || danton.isDeployed;
+        deployBtnWrapper.SetInteractable(selectedCrewForDeployment);
+        if (deployBtnWrapper.GetState() == ButtonState.OnClick)
         {
-            bool selectedCrewForDeployment = harris.isDeployed || bronson.isDeployed || chuck.isDeployed || danton.isDeployed;
-            if (deployBtnWrapper.GetState() == ButtonState.OnClick)
-            {
-                preparing = false;
-                //fader.fadeIn = true;
-                //fader.shouldFade = true;
-                hDeploy = harris.isDeployed;
-                bDeploy = bronson.isDeployed;
-                cDeploy = chuck.isDeployed;
-                dDeploy = danton.isDeployed;
-                deployBtnWrapper.SetInteractable(false);
-                StartPrepare();
-            }
+            preparing = false;
+            //fader.fadeIn = true;
+            //fader.shouldFade = true;
+            hDeploy = harris.isDeployed;
+            bDeploy = bronson.isDeployed;
+            cDeploy = chuck.isDeployed;
+            dDeploy = danton.isDeployed;
+            deployBtnWrapper.SetInteractable(false);
+            StartPrepare();
         }
        
         UpdateTexts();
@@ -369,16 +367,12 @@ public class CrewMenu: CopiumScript
         prepareBtnWrapper.SetInteractable(clickable);
     }
 
-    void SetPrepare(bool _preparing)
+    public void SetPrepare(bool _preparing)
     {
-        
         preparing = _preparing;
         if (preparing)
-            titleText.text = "Selecting Members";
-        else
-            titleText.text = titleString;
-        if (preparing)
         {
+            titleText.text = "Selecting Members";
             harris.Enable();
             chuck.Enable();
             danton.Enable();
@@ -386,6 +380,7 @@ public class CrewMenu: CopiumScript
         }
         else
         {
+            titleText.text = titleString;
             harris.Disable();
             chuck.Disable();
             danton.Disable();

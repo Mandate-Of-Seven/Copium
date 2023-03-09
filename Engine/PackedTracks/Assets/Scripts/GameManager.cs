@@ -80,7 +80,7 @@ public class GameManager: CopiumScript
     void CanvasManager()
     {
         reportScreenManager.UpdateCanvas();
-        crewStatusManager.UpdateCanvas();
+        //crewStatusManager.UpdateCanvas();
         resultManager.UpdateCanvas();
 
     }
@@ -88,7 +88,7 @@ public class GameManager: CopiumScript
     public void ToggleMoving()
     {
         moving = !moving;
-        crewMenuScript.ToggleClickable();
+        crewMenuScript.SetClickable(!moving);
     }
 
     void MoveTrain()
