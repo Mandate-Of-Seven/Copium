@@ -60,6 +60,7 @@ public class GameManager: CopiumScript
 
 	void Update()
     {
+        ButtonInputs();
         //scrambleText.text = testScrambler.Scramble();
         if (pauseMenu.isPaused)
             return;
@@ -184,10 +185,10 @@ public class GameManager: CopiumScript
             gameEnd = true;
             trainManager.FlickLever();
             EventManager.EventSequence = -1;
-            EventManager.OverideEvent();
+            EventManager.OverrideEvent();
         }
 
-        KeyInputs();
+        //KeyInputs();
     }
 
     void ButtonInputs()
@@ -199,6 +200,7 @@ public class GameManager: CopiumScript
         }
         if (ManualPopUpBtn.state == ButtonState.OnRelease && ManualPopUp.activeSelf)
         {
+            Console.WriteLine("HELLO");
             audioManager.paperSFX.Play();
             ManualPopUp.SetActive(false);
 
@@ -206,51 +208,49 @@ public class GameManager: CopiumScript
             Page2.SetActive(false);
             prevButtonObject.SetActive(false);
         }
-
-
     }
 
-    void KeyInputs()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            isPaused = !isPaused;
-            PauseCanvas.SetActive(isPaused);
-            if (isPaused)
-            {
-                InternalCalls.PauseAllAnimation();
-            }
-            else
-            {
-                InternalCalls.PlayAllAnimation();
-            }
-        }
+    // void KeyInputs()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.P))
+    //     {
+    //         isPaused = !isPaused;
+    //         PauseCanvas.SetActive(isPaused);
+    //         if (isPaused)
+    //         {
+    //             InternalCalls.PauseAllAnimation();
+    //         }
+    //         else
+    //         {
+    //             InternalCalls.PlayAllAnimation();
+    //         }
+    //     }
 
-        if (!isPaused)
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                isPaused = true;
-            }
-        }
-        else
-        {
-            if (PauseResumeBtn.state == ButtonState.OnClick)
-            {
-                isPaused = false;
-                PauseCanvas.SetActive(false);
-                InternalCalls.PlayAllAnimation();
-            }
+    //     if (!isPaused)
+    //     {
+    //         if (Input.GetKeyDown(KeyCode.Escape))
+    //         {
+    //             isPaused = true;
+    //         }
+    //     }
+    //     else
+    //     {
+    //         if (PauseResumeBtn.state == ButtonState.OnClick)
+    //         {
+    //             isPaused = false;
+    //             PauseCanvas.SetActive(false);
+    //             InternalCalls.PlayAllAnimation();
+    //         }
 
-            if (PauseQuitBtn.state == ButtonState.OnClick)
-            {
-                Application.Quit();
-            }
-        }
+    //         if (PauseQuitBtn.state == ButtonState.OnClick)
+    //         {
+    //             Application.Quit();
+    //         }
+    //     }
 
-        if (Input.GetKey(KeyCode.P))
-        {
-            Application.Quit();
-        }
-    }
+    //     if (Input.GetKey(KeyCode.P))
+    //     {
+    //         Application.Quit();
+    //     }
+    // }
 }

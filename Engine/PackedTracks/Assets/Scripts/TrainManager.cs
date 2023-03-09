@@ -22,7 +22,6 @@ public class TrainManager: CopiumScript
 	Color leverHoverColor = new Color(0.6f,0.6f,0.6f,1f);
 
     public Text tracker;
-    public Button ManualPopUpBtn;
     public Button ManualBtn;
     public bool accelerate = false;
 	bool manualHover = false;
@@ -60,7 +59,7 @@ public class TrainManager: CopiumScript
 
 	void Update()
 	{
-        ToggleManual();
+        //ToggleManual();
 
 		ToggleLever();
 		
@@ -246,49 +245,49 @@ public class TrainManager: CopiumScript
 		return accelerate;
 	}
 	// Toggle the manual to open or close
-    void ToggleManual()
-    {
-        if (!ManualPopUpBtn.gameObject.activeSelf) // When manual is not open
-        {
-            if (ManualBtn.state == ButtonState.OnHover)
-            {
-                if (!manualHover)
-                {
-                    manualHover = true;
-                    audioManager.hoverSFX.Play();
-                }
-            }
-            else if (ManualBtn.state == ButtonState.OnRelease)
-            {
-                audioManager.paperSFX.Play();
-                ManualPopUpBtn.gameObject.SetActive(true);
-                manualHover = true;
-            }
-            else if (ManualBtn.state == ButtonState.None)
-            {
-                manualHover = false;
-            }
-        }
-        else
-        {
-            if (ManualPopUpBtn.state == ButtonState.OnHover)
-            {
-                if (!manualHover)
-                {
-                    manualHover = true;
-                    audioManager.hoverSFX.Play();
-                }
-            }
-            else if (ManualPopUpBtn.state == ButtonState.OnRelease)
-            {
-                audioManager.paperSFX.Play();
-                ManualPopUpBtn.gameObject.SetActive(false);
-                manualHover = true;
-            }
-            else if (ManualPopUpBtn.state == ButtonState.None)
-            {
-                manualHover = false;
-            }
-        }
-    }
+    // void ToggleManual()
+    // {
+    //     if (!ManualPopUpBtn.gameObject.activeSelf) // When manual is not open
+    //     {
+    //         if (ManualBtn.state == ButtonState.OnHover)
+    //         {
+    //             if (!manualHover)
+    //             {
+    //                 manualHover = true;
+    //                 audioManager.hoverSFX.Play();
+    //             }
+    //         }
+    //         else if (ManualBtn.state == ButtonState.OnRelease)
+    //         {
+    //             audioManager.paperSFX.Play();
+    //             ManualPopUpBtn.gameObject.SetActive(true);
+    //             manualHover = true;
+    //         }
+    //         else if (ManualBtn.state == ButtonState.None)
+    //         {
+    //             manualHover = false;
+    //         }
+    //     }
+    //     else
+    //     {
+    //         if (ManualPopUpBtn.state == ButtonState.OnHover)
+    //         {
+    //             if (!manualHover)
+    //             {
+    //                 manualHover = true;
+    //                 audioManager.hoverSFX.Play();
+    //             }
+    //         }
+    //         else if (ManualPopUpBtn.state == ButtonState.OnRelease)
+    //         {
+    //             audioManager.paperSFX.Play();
+    //             ManualPopUpBtn.gameObject.SetActive(false);
+    //             manualHover = true;
+    //         }
+    //         else if (ManualPopUpBtn.state == ButtonState.None)
+    //         {
+    //             manualHover = false;
+    //         }
+    //     }
+    // }
 }
