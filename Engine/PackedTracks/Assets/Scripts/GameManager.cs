@@ -29,9 +29,6 @@ public class GameManager: CopiumScript
     public ResultManager resultManager;
     public PauseMenu pauseMenu;
 
-    StringScramblerEffect testScrambler;
-    string testString = "";
-
     public float distanceLeft = 200;
 
     public float distanceInterval = 1.0f;
@@ -43,13 +40,10 @@ public class GameManager: CopiumScript
     bool updateEvent = false;
     public bool gameEnd = false;
 
-    public Text scrambleText;
-
     bool moving = false;
 
     void Start()
 	{
-        testScrambler = new StringScramblerEffect("beeey","heloeeeeee",2,3,0.1f);
         //UpdateCanvases();
     }
 
@@ -61,7 +55,6 @@ public class GameManager: CopiumScript
 	void Update()
     {
         ButtonInputs();
-        //scrambleText.text = testScrambler.Scramble();
         if (pauseMenu.isPaused)
             return;
 

@@ -30,6 +30,7 @@ public class CrewMenu: CopiumScript
     public Crew danton;
 
     public bool preparing = false;
+    public bool deploying = false;
 
     float timer = 0.0f;
 
@@ -42,76 +43,16 @@ public class CrewMenu: CopiumScript
     public Prepare prepareManager;
     public bool hDeploy, bDeploy, cDeploy, dDeploy;
 
+    public float timeElasped = 0;
+    public float transitionDuration = 2;
+
+
     public enum STAT_TYPES
     {
         ALIVE,
         HEALTH,
         MENTAL,
         HUNGER,
-    }
-
-    public struct Person
-    {
-        string _name;
-        bool _alive;
-        int _health;
-        int _mental;
-        int _hunger;
-        float _timer;
-        string _resultText;
-
-        public string name
-        {
-            get { Console.WriteLine("getting health"); return _name; }
-            set { Console.WriteLine("setting health"); _name = value; }
-        }
-
-        public bool alive
-        {
-            get { return _alive; }
-            set { _alive = value; }
-        }
-
-        public int health
-        {
-            get { return _health; }
-            set { _health = value; }
-        }
-
-        public int mental
-        {
-            get { return _mental; }
-            set { _mental = value; }
-        }
-
-        public int hunger
-        {
-            get { return _hunger; }
-            set { _hunger = value; }
-        }
-
-        public float timer
-        {
-            get { return _timer; }
-            set { _timer = value; }
-        }
-
-        public string resultText
-        {
-            get { return _resultText; }
-            set { _resultText = value; }
-        }
-
-        public Person(string new_name)
-        {
-            _name = new_name;
-            _alive = true;
-            _health = 15;
-            _mental = 15;
-            _hunger = 10;
-            _timer = 0.0f;
-            _resultText = _name + " is just chilling in the back";
-        }
     }
 
     public Person[] crew = new Person[4]
@@ -156,6 +97,7 @@ public class CrewMenu: CopiumScript
             preparing = false;
             //fader.fadeIn = true;
             //fader.shouldFade = true;
+            deploying = true;
             hDeploy = harris.isDeployed;
             bDeploy = bronson.isDeployed;
             cDeploy = chuck.isDeployed;
@@ -164,8 +106,33 @@ public class CrewMenu: CopiumScript
             StartPrepare();
         }
        
-        UpdateTexts();
+       if (crewStatusManager.isCrewStatusOn)
+       {
+            UpdateEffects();
+            timeElasped += Time.deltaTime;
+       }
     }
+
+    void UpdateEffects()
+    {
+        foreach (Person person in crew)
+        {
+            if (!person.healthScrambler.Done())
+            {
+                person.crewScript.healthT.text = person.healthScrambler.Scramble();
+            }
+            if (!person.mentalScrambler.Done())
+            {
+                person.crewScript.mentalT.text = person.mentalScrambler.Scramble();
+            }
+            if (!person.hungerScrambler.Done())
+            {
+                person.crewScript.hungerT.text = person.hungerScrambler.Scramble();
+            }
+            person.crewScript.sprite.color = Color.Lerp(Color.white,person.targetColor,timeElasped/transitionDuration);
+        }
+    }
+
 
     public void UpdateAllStats()
     {

@@ -72,16 +72,15 @@ public class StringScramblerEffect
 			iterIndex = 0;
 			if (index >= 0)
 			{
-				// if (index >= target.Length)
-				// {
-				// 	Debug.Log("REMOVING");
-				// 	initial.Remove(index,1);
-				// }
-				// else
-				// {
-				// }
+				if (index >= target.Length)
+				{
+					initial.Remove(index,1);
+				}
+				else
+				{
 					initial[index] = target[index];
 					++charIndex;
+				}
 				return;
 			}
 			else
@@ -93,14 +92,17 @@ public class StringScramblerEffect
 		{
 			if (charIndex + i < 0)
 				continue;
+
 			char ch = GetRandomChar();
-			if (initial.Length == charIndex+i && charIndex+i < target.Length - 1)
+			// If it hasnt reached target length add, if it exceeds its own length, add only if 
+			if (initial.Length == charIndex+i && (charIndex+i < target.Length))
 			{
 				initial.Append(ch);
-				Debug.Log("ADDING BACK");
 			}
 			else
 			{
+				if (charIndex+i == initial.Length)
+					break;
 				initial[charIndex+i] = ch;
 			}
 		}

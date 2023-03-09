@@ -73,8 +73,16 @@ public class CrewStatusManager: CopiumScript
     }
     public void ClosePanel()
 	{
+		crewMenu.timeElasped = 0;
 		//Prevent the crew buttons from being pressed
-		crewMenu.SetPrepare(false);
+		if (!crewMenu.deploying)
+		{
+			crewMenu.SetPrepare(false);
+		}
+		else
+		{
+			crewMenu.deploying = false;
+		}
 		isCrewStatusOn = false;
         resultManager.Enable();
         CrewStatusBtn.gameObject.SetActive(true);
