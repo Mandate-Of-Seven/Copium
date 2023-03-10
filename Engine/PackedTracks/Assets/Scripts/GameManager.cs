@@ -93,7 +93,7 @@ public class GameManager: CopiumScript
         {
             gameEnd = true;
             trainManager.FlickLever(false);
-            crewStatusManager.ClosePanel();
+            crewStatusManager.ClosePanel(false);
             reportScreenManager.OpenPanel();
         }
 
