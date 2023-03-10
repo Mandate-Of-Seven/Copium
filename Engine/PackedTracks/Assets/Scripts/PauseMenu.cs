@@ -9,11 +9,10 @@
 \date			10/03/2022
 
 \brief
-	This file contains the start and update of the pause menu/
+	This file contains the start and update of the pause menu
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
-using CopiumEngine;
 using CopiumEngine;
 using System;
 

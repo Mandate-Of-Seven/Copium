@@ -40,9 +40,6 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="..\CopiumScriptCore\Application.cs">
       <Link>Application.cs</Link>
     </Compile>

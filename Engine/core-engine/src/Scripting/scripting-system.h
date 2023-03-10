@@ -10,7 +10,7 @@
 \brief
 	This file holds the declaration of functions for scripting-system.cpp
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 #ifndef SCRIPTING_SYSTEM_H

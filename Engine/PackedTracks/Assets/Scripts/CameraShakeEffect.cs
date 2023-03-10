@@ -11,7 +11,7 @@
 	Contains the function definitions to pull off a camera shake of certain intensity
 	and duration
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 using CopiumEngine;

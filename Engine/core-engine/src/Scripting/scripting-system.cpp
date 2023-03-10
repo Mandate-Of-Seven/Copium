@@ -270,9 +270,9 @@ namespace Copium
 		registerScriptWrappers();
 		systemFlags |= FLAG_RUN_ON_EDITOR;
 		//ENABLE FOR EDITOR MODE
-		//ThreadSystem::Instance()->addThread(new std::thread(&ScriptingSystem::recompileThreadWork, this));
+		ThreadSystem::Instance()->addThread(new std::thread(&ScriptingSystem::recompileThreadWork, this));
 		//ENABLE FOR PLAY MODE
-		swapDll();
+		//swapDll();
 		MyEventSystem->subscribe(this,&ScriptingSystem::CallbackSceneChanging);
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptInvokeMethod);
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetMethodNames);
