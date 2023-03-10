@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			MainMenu.cs
+\project
+\author			Abdul Hadi
+\co-authors     Wu Zezheng
+
+\par			Course: GAM200
+\par			Section:
+\date			10/03/2022
+
+\brief
+	This file holds the start and update of the Main Menu screen.
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 using CopiumEngine;
 using System;
 
