@@ -3,8 +3,8 @@ Copium Editor Guide
 
 
 [Start-up]
-* When the Copium engine starts up, the Demo scene is loaded.
-* You can try loading another scene, double click Scene -> ID Test.scene in the content browser.
+* You can try loading a scene, double click Scene -> MainMenu.scene in the content browser to start playing the game
+* Alternatively, you can load the Demo.scene
 
 
 [Scene Saving/Loading]
