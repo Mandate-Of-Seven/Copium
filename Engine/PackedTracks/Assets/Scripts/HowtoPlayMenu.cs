@@ -25,6 +25,7 @@ public class HowtoPlayMenu: CopiumScript
     public Button PrevButton;
     public AudioSource sfx_pageflip;
     public GameObject prevButtonObject;
+    public GameManager gameManager;
 
     public GameObject MainPage;
     public GameObject Page2;
@@ -171,8 +172,11 @@ public class HowtoPlayMenu: CopiumScript
         }
         else
         {
+            page = 0;
             if (sceneChange)
                 SceneManager.LoadScene("MainMenu");
+            else
+                gameManager.CloseManual();
         }
 
     }

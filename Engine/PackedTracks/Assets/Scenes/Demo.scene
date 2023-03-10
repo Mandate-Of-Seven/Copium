@@ -1243,7 +1243,7 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "GameManager",
-                    "distanceInterval": 1.0,
+                    "distanceInterval": 0.5,
                     "distanceLeft": 40.0,
                     "gameEnd": false,
                     "prevButtonObject": 17641556590098438796,
@@ -8621,6 +8621,7 @@
                     "ExitButton": 17645054254989627834,
                     "PrevButton": 12237607519139519244,
                     "NextButton": 7604591314336230106,
+                    "gameManager": 9083562319934391338,
                     "text": 10064905332467150285
                 }
             ]
@@ -8688,7 +8689,7 @@
                     "PID": 13627107543471401800,
                     "Type": "Transform",
                     "Pos": {
-                        "X": -5.234613418579102,
+                        "X": -6.693370819091797,
                         "Y": -3.755753517150879,
                         "Z": 0.0
                     },
@@ -8698,8 +8699,8 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 7.919999599456787,
-                        "Y": 9.899999618530273,
+                        "X": 3.0,
+                        "Y": 3.0,
                         "Z": 1.0
                     }
                 },
@@ -8713,18 +8714,38 @@
                 },
                 {
                     "enabled": true,
+                    "UID": 6163786649013080646,
+                    "Type": "Image",
+                    "TypeID": 20,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 9588604566561187799,
+                    "Sprite Name": "Arrow.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 0.501960813999176
+                    },
+                    "Flip": {
+                        "X": true,
+                        "Y": false
+                    }
+                },
+                {
+                    "enabled": true,
                     "UID": 12237607519139519244,
                     "Type": "Button",
                     "TypeID": 18,
-                    "Graphic ID": 0,
+                    "Graphic ID": 6163786649013080646,
                     "BoundingBox": {
                         "Min": {
-                            "X": -0.1599999964237213,
-                            "Y": -0.07500000298023224
+                            "X": -0.17000000178813934,
+                            "Y": -0.15000000596046448
                         },
                         "Max": {
-                            "X": 0.1599999964237213,
-                            "Y": 0.07500000298023224
+                            "X": 0.17000000178813934,
+                            "Y": 0.15000000596046448
                         }
                     },
                     "Callback": "",
@@ -8733,14 +8754,14 @@
                     "clickedG": 0.5,
                     "clickedB": 0.5,
                     "clickedA": 0.5,
-                    "hoveredR": 0.5,
+                    "hoveredR": 1.0,
                     "hoveredG": 1.0,
                     "hoveredB": 1.0,
-                    "hoveredA": 0.5,
-                    "normalR": 1.0,
-                    "normalG": 1.0,
-                    "normalB": 1.0,
-                    "normalA": 0.5
+                    "hoveredA": 1.0,
+                    "normalR": 0.0,
+                    "normalG": 0.0,
+                    "normalB": 0.0,
+                    "normalA": 0.0
                 }
             ]
         },
@@ -8753,7 +8774,7 @@
                     "PID": 13627107543471401800,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 5.006833076477051,
+                        "X": 6.807000160217285,
                         "Y": -3.717686891555786,
                         "Z": 0.0
                     },
@@ -8763,8 +8784,8 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 8.0,
-                        "Y": 10.0,
+                        "X": 3.0,
+                        "Y": 3.0,
                         "Z": 1.0
                     }
                 },
@@ -8778,18 +8799,38 @@
                 },
                 {
                     "enabled": true,
+                    "UID": 12093937793403834929,
+                    "Type": "Image",
+                    "TypeID": 20,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 9588604566561187799,
+                    "Sprite Name": "Arrow.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 0.501960813999176
+                    },
+                    "Flip": {
+                        "X": false,
+                        "Y": false
+                    }
+                },
+                {
+                    "enabled": true,
                     "UID": 7604591314336230106,
                     "Type": "Button",
                     "TypeID": 18,
-                    "Graphic ID": 0,
+                    "Graphic ID": 12093937793403834929,
                     "BoundingBox": {
                         "Min": {
-                            "X": -0.1599999964237213,
-                            "Y": -0.07500000298023224
+                            "X": -0.17000000178813934,
+                            "Y": -0.15000000596046448
                         },
                         "Max": {
-                            "X": 0.1599999964237213,
-                            "Y": 0.07500000298023224
+                            "X": 0.17000000178813934,
+                            "Y": 0.15000000596046448
                         }
                     },
                     "Callback": "",
@@ -8798,14 +8839,14 @@
                     "clickedG": 0.5,
                     "clickedB": 0.5,
                     "clickedA": 0.5,
-                    "hoveredR": 0.5,
+                    "hoveredR": 1.0,
                     "hoveredG": 1.0,
                     "hoveredB": 1.0,
-                    "hoveredA": 0.5,
-                    "normalR": 1.0,
-                    "normalG": 1.0,
-                    "normalB": 1.0,
-                    "normalA": 0.5
+                    "hoveredA": 1.0,
+                    "normalR": 0.0,
+                    "normalG": 0.0,
+                    "normalB": 0.0,
+                    "normalA": 0.0
                 }
             ]
         },

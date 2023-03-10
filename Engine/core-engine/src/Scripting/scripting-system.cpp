@@ -14,7 +14,8 @@
 
 All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
-
+#pragma warning( disable : 26110 )
+#pragma warning( disable : 26111 )
 #include "pch.h"
 #include "Scripting/scripting-system.h"
 #include "Scripting/compiler.h"

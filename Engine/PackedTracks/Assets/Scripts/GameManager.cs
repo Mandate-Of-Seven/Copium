@@ -246,7 +246,7 @@ public class GameManager: CopiumScript
 		    Close the how to play manual. 
 	*/
 	/**************************************************************************/
-    void CloseManual()
+    public void CloseManual()
     {
         audioManager.fileCloseSFX.Play();
 
