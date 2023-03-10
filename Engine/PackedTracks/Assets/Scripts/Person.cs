@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			Person.cs
+\project
+\author			Sean Ngo
+\co-author		Zacharie Hong
+
+\par			Course: GAM250
+\par			Section:
+\date			10/03/2023
+
+\brief
+	Contains the data struct to store data for a crewmate
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 using CopiumEngine;
 using System;
 
@@ -39,19 +54,37 @@ using System;
 
 		public Color targetColor = Color.white;
 
-        public string name
+    /*******************************************************************************
+    /*!
+        \brief
+            Gets and sets name
+    */
+    /*******************************************************************************/
+    public string name
         {
             get {  return _name; }
             set {  _name = value; }
         }
 
-        public bool alive
+    /*******************************************************************************
+    /*!
+        \brief
+            Gets and sets alive state
+    */
+    /*******************************************************************************/
+    public bool alive
         {
             get { return _alive; }
             set { _alive = value; }
         }
 
-        public int health
+    /*******************************************************************************
+    /*!
+        \brief
+            Gets and sets health
+    */
+    /*******************************************************************************/
+    public int health
         {
             get { return _health; }
             set 
@@ -94,8 +127,13 @@ using System;
                  _health = value; 
             }
         }
-
-        public int mental
+    /*******************************************************************************
+    /*!
+        \brief
+            Gets and sets mental state
+    */
+    /*******************************************************************************/
+    public int mental
         {
             get { return _mental; }
             set 
@@ -136,8 +174,13 @@ using System;
                 
             }
         }
-
-        public int hunger
+    /*******************************************************************************
+    /*!
+        \brief
+            Gets and sets hunger state
+    */
+    /*******************************************************************************/
+    public int hunger
         {
             get { return _hunger; }
             set 
@@ -171,13 +214,25 @@ using System;
 			}
         }
 
-        public float timer
+    /*******************************************************************************
+    /*!
+        \brief
+            Gets and sets timer
+    */
+    /*******************************************************************************/
+    public float timer
         {
             get { return _timer; }
             set { _timer = value; }
         }
 
-        public string resultText
+    /*******************************************************************************
+    /*!
+        \brief
+            Gets and sets result text
+    */
+    /*******************************************************************************/
+    public string resultText
         {
             get { return _resultText; }
             set { _resultText = value; }
