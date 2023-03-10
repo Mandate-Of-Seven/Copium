@@ -81,12 +81,14 @@ public class CrewMenu: CopiumScript
 
     void Start()
 	{
-        prepareBtnWrapper = new ButtonWrapper(prepareButton,audioManager);
+        prepareBtnWrapper = new ButtonWrapper(prepareButton,audioManager,crewStatusManager.tooltip);
         prepareBtnWrapper.SetText(prepareButton.GetComponent<Text>());
         prepareBtnWrapper.SetImage(prepareButton.GetComponent<Image>());
-        deployBtnWrapper = new ButtonWrapper(deployButton,audioManager);
+        prepareBtnWrapper.failureText = "The train needs to be stopped first!";
+        deployBtnWrapper = new ButtonWrapper(deployButton,audioManager,crewStatusManager.tooltip);
         deployBtnWrapper.SetText(deployButton.GetComponent<Text>());
         deployBtnWrapper.SetImage(deployButton.GetComponent<Image>());
+        deployBtnWrapper.failureText = "You need to be preparing your crew members first!";
         deployBtnWrapper.SetInteractable(false);
         titleString = titleText.text;
     }

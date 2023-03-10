@@ -20,6 +20,8 @@ public class Prepare : CopiumScript
     public CrewMenu crewManager;
     public Button closeButton;
 
+    public TooltipBehaviour tooltip;
+
     public Text prepareBody;
     public Button prepareButton1;
     public Button prepareButton2;
@@ -62,13 +64,13 @@ public class Prepare : CopiumScript
 
     void Start()
     {
-        harrisBtnWrapper = new ButtonWrapper(harrisButton,crewManager.audioManager);
+        harrisBtnWrapper = new ButtonWrapper(harrisButton,crewManager.audioManager,tooltip);
         harrisBtnWrapper.SetImage(harrisButton.GetComponent<Image>());
-        bronsonBtnWrapper = new ButtonWrapper(bronsonButton,crewManager.audioManager);
+        bronsonBtnWrapper = new ButtonWrapper(bronsonButton,crewManager.audioManager,tooltip);
         bronsonBtnWrapper.SetImage(bronsonButton.GetComponent<Image>());
-        chuckBtnWrapper = new ButtonWrapper(chuckButton,crewManager.audioManager);
+        chuckBtnWrapper = new ButtonWrapper(chuckButton,crewManager.audioManager,tooltip);
         chuckBtnWrapper.SetImage(chuckButton.GetComponent<Image>());
-        dantonBtnWrapper = new ButtonWrapper(dantonButton,crewManager.audioManager);
+        dantonBtnWrapper = new ButtonWrapper(dantonButton,crewManager.audioManager,tooltip);
         dantonBtnWrapper.SetImage(dantonButton.GetComponent<Image>());
     }
     void Update()
