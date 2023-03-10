@@ -20,7 +20,7 @@ using System;
 		}
 
         string _name;
-        bool _alive;
+        bool _alive = true;
         int _health;
         int _mental;
         int _hunger;
@@ -68,7 +68,11 @@ using System;
 					else if (value > 0)
 						healthScrambler = CreateScrambler(healthString, "Critical");
 					else
-						healthScrambler = CreateScrambler(healthString, "Dead");
+                    {
+                        healthScrambler = CreateScrambler(healthString, "Dead");
+                        _alive = false;
+                    }
+						
                 }
                  _health = value; 
             }
@@ -79,7 +83,11 @@ using System;
             get { return _mental; }
             set 
             { 
-                if (_mental != value)
+                if (!_alive)
+                {
+                    mentalScrambler = CreateScrambler(mentalString, "Dead");   
+                }
+                else if (_mental != value)
                 {
                     if (value > 10)
                         mentalScrambler = CreateScrambler(mentalString, "Calm");
@@ -100,7 +108,11 @@ using System;
             get { return _hunger; }
             set 
 			{
-				if (_hunger != value)
+                if (!_alive)
+                {
+                    hungerScrambler = CreateScrambler(hungerString, "Dead");
+                }
+				else if (_hunger != value)
                 {
 					if (value > 5)
 						hungerScrambler = CreateScrambler(hungerString, "Full");

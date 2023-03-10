@@ -198,9 +198,6 @@ public class CrewMenu: CopiumScript
 
                 crew[i].timer += Time.deltaTime;
             }
-
-            if (crew[i].health <= 0)
-                crew[i].alive = false;
         }
     }
 
