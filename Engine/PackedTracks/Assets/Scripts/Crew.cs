@@ -29,7 +29,7 @@ public class Crew : CopiumScript
     }
     void Update()
     {
-        if (selectBtnWrapper.GetState() == ButtonState.OnClick)
+        if (selectBtnWrapper.GetState() == ButtonState.OnClick && person.alive)
         {
             if (selected)
                 Deselect();
