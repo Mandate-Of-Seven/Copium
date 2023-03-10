@@ -5,7 +5,7 @@
 
 \par			Course: GAM200
 \par			Section:
-\date			27/09/2022
+\date			10/03/2023
 
 \brief
 	This file holds the declaration of functions for scripting-system.cpp
@@ -477,7 +477,16 @@ namespace Copium
 		/*******************************************************************************/
 		template<typename T>
 		void CallbackScriptSetFieldReference(ScriptSetFieldReferenceEvent<T>* pEvent);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Callback when adding a new blank script to the project
 
+		\param pEvent
+			Pointer to event with script name
+		*/
+		/*******************************************************************************/
 		void CallbackScriptNew(ScriptNewEvent* pEvent);
 
 		/*******************************************************************************
@@ -537,7 +546,7 @@ namespace Copium
 		/*******************************************************************************/
 		void CallbackScriptGetNames(ScriptGetNamesEvent* pEvent);
 
-
+		//Event subscription helper
 		template<typename T, typename... Ts>
 		void SubscribeComponentBasedCallbacks(TemplatePack<T, Ts...> pack);
 
@@ -545,13 +554,13 @@ namespace Copium
 		/*!
 		*
 		\brief
-			Get the corresponding instance of the game object with the specified id in c#
+			Reflects GameObject into C#
 
-		\param id
-			the id of the game object whose instance is to be obtained
+		\param gameObject
+			Object to reflect
 
 		\return
-			ptr to the c# instance
+			Mono Instance of gameObject
 		*/
 		/*******************************************************************************/
 		MonoObject* ReflectGameObject(GameObject& gameObject);
@@ -559,13 +568,13 @@ namespace Copium
 		/*!
 		*
 		\brief
-			Get the corresponding instance of the component with the specified id in c#
+			Reflects component into C#
 
-		\param id
-			the id of the component whose instance is to be obtained
+		\param component
+			Object to reflect
 
 		\return
-			ptr to the c# instance
+			Mono Instance of gameObject
 		*/
 		/*******************************************************************************/
 		template <typename T>

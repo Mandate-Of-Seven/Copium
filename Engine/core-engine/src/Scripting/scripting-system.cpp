@@ -7,7 +7,7 @@
 
 \par			Course: GAM200
 \par			Section:
-\date			27/09/2022
+\date			10/03/2022
 
 \brief
 	This file contains the function definitions for the scripting system.
@@ -270,9 +270,9 @@ namespace Copium
 		registerScriptWrappers();
 		systemFlags |= FLAG_RUN_ON_EDITOR;
 		//ENABLE FOR EDITOR MODE
-		ThreadSystem::Instance()->addThread(new std::thread(&ScriptingSystem::recompileThreadWork, this));
+		//ThreadSystem::Instance()->addThread(new std::thread(&ScriptingSystem::recompileThreadWork, this));
 		//ENABLE FOR PLAY MODE
-		//swapDll();
+		swapDll();
 		MyEventSystem->subscribe(this,&ScriptingSystem::CallbackSceneChanging);
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptInvokeMethod);
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetMethodNames);

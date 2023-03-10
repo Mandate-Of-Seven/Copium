@@ -5,7 +5,7 @@
 
 \par			Course: GAM200
 \par			Section:
-\date			30/10/2022
+\date			10/03/2022
 
 \brief
 	This file helps register static functions be used as internal calls in C#
@@ -47,11 +47,6 @@ namespace Copium
 		ScriptingSystem& scriptingSystem{ *ScriptingSystem::Instance() };
 		AnimationSystem& animationSystem{ *AnimationSystem::Instance()};
 	}
-
-	//static bool GetKeyDown(int keyCode)
-	//{
-	//	return inputSystem.is_key_pressed(keyCode);
-	//}
 
 	/*******************************************************************************
 	/*!
@@ -140,12 +135,12 @@ namespace Copium
 
 	/*******************************************************************************
 	/*!
-	\brief
-		Adds force to a gameobject with a rigidbody component
-	\param _ID
-		ID of gameObject to look for
-	\param force
-		Force to add
+		\brief
+			Adds force to a gameobject with a rigidbody component
+		\param _ID
+			ID of gameObject to look for
+		\param force
+			Force to add
 	*/
 	/*******************************************************************************/
 	static void RigidbodyAddForce(UUID _ID, Math::Vec2* force)
@@ -158,13 +153,23 @@ namespace Copium
 		auto rb = gameObj->GetComponent<Rigidbody2D>();
 		if (rb == nullptr)
 		{
-			//LOG SOMETHING TO CONSOLE LIKE THIS OBJ HAS NOT RB
 			return;
 		}
 		rb->force += *force;
 	}
 
-
+	/*******************************************************************************
+	/*!
+		\brief
+			GetComponent for C#
+		\param gameObjID
+			ID of gameObject to look for component
+		\param componentType
+			Mono type of the gameObject to get
+		\return
+			MonoObject to be returned to the script asking for it
+	*/
+	/*******************************************************************************/
 	static MonoObject* GetComponent(UUID gameObjID, MonoReflectionType* componentType)
 	{
 		auto pair = scriptingSystem.reflectionMap.find(mono_reflection_type_get_type(componentType));
@@ -246,10 +251,10 @@ namespace Copium
 
 	/*******************************************************************************
 	/*!
-	\brief
-		Gets the delta time from the engine
-	\return
-		Delta time
+		\brief
+			Gets the delta time from the engine
+		\return
+			Delta time
 	*/
 	/*******************************************************************************/
 	static float GetDeltaTime()
@@ -259,10 +264,12 @@ namespace Copium
 
 	/*******************************************************************************
 	/*!
-	\brief
-		Gets the delta time from the engine
-	\return
-		Delta time
+		\brief
+			Sets the parent to a child by uuid
+		\param newParentID
+			UUID of parent gameobject
+		\param childID
+			UUID of child gameobject
 	*/
 	/*******************************************************************************/
 	static void SetParent(UUID newParentID, UUID childID)
@@ -363,6 +370,7 @@ namespace Copium
 		return gameObj->HasComponent(cType);
 	}
 
+	//To be implemented
 	static UUID AddComponent(UUID UUID, MonoReflectionType* componentType)
 	{
 		//GameObject* gameObj = sceneManager.FindGameObjectByID(UUID);
@@ -380,13 +388,11 @@ namespace Copium
 	/*******************************************************************************
 	/*!
 	\brief
-		Checks if a gameobject of given ID has a component
+		Gets local scale of a gameObject
 	\param _ID
-		GameObject of ID to check for component
-	\param componentType
-		Type of component
-	\return
-		True if gameobject of ID has component of type
+		GameObject of ID to get scale of
+	\param scale
+		Scale pointer to retrieve values
 	*/
 	/*******************************************************************************/
 	static void GetLocalScale(UUID _ID, Math::Vec3* scale)
@@ -402,13 +408,11 @@ namespace Copium
 	/*******************************************************************************
 	/*!
 	\brief
-		Checks if a gameobject of given ID has a component
+		Sets local scale of a gameObject
 	\param _ID
-		GameObject of ID to check for component
-	\param componentType
-		Type of component
-	\return
-		True if gameobject of ID has component of type
+		GameObject of ID to set scale
+	\param scale
+		Scale pointer to store values
 	*/
 	/*******************************************************************************/
 	static void SetLocalScale(UUID _ID, Math::Vec3* scale)
@@ -421,6 +425,16 @@ namespace Copium
 		gameObj->transform.scale = *scale;
 	}
 
+	/*******************************************************************************
+	/*!
+	\brief
+		Gets local rotation of a gameObject
+	\param _ID
+		GameObject of ID to get rotation
+	\param rotation
+		Rotation pointer to retrieve values
+	*/
+	/*******************************************************************************/
 	static void GetRotation(UUID _ID, Math::Vec3* rotation)
 	{
 		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
@@ -431,6 +445,16 @@ namespace Copium
 		gameObj->transform.rotation = *rotation;
 	}
 
+	/*******************************************************************************
+	/*!
+	\brief
+		Sets local rotation of a gameObject
+	\param _ID
+		GameObject of ID to set rotation
+	\param rotation
+		Rotation pointer to store values
+	*/
+	/*******************************************************************************/
 	static void SetRotation(UUID _ID, Math::Vec3* rotation)
 	{
 		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
@@ -486,13 +510,13 @@ namespace Copium
 	/*******************************************************************************
 	/*!
 	\brief
-		Get if component is enabled
-
-	\param gid
-		id of the game object to check
+		Check if component is enabled
 
 	\param cid
 		id of the component to check
+
+	\param componentType
+		Type of component
 
 	\return
 		whether the component is enabled
@@ -576,17 +600,14 @@ namespace Copium
 	\brief
 		Set the component's enabled value
 
-	\param gid
-		id of the game object to set
-
 	\param cid
 		id of the component to set
 
 	\param val
 		the value to set
 
-	\return
-		void
+	\param componentType
+		Type of component
 	*/
 	/*******************************************************************************/
 	static void SetComponentEnabled(UUID cid, bool val, MonoReflectionType* componentType)
@@ -817,9 +838,9 @@ namespace Copium
 	/*******************************************************************************
 	/*!
 	\brief
-		Destroys a gameobject by ID
-	\param ID
-		GameObject ID of the gameObject to delete
+		Loads a scene by name
+	\param str
+		Name of scene(filename)
 	*/
 	/*******************************************************************************/
 	static void LoadScene(MonoString* str)
@@ -844,7 +865,14 @@ namespace Copium
 		PRINT("NO SCENE WITH THE NAME COULD BE FOUND");
 	}
 
-
+	/*******************************************************************************
+	/*!
+		\brief
+			Gets the fps
+		\return
+			FPS count
+	*/
+	/*******************************************************************************/
 	static float GetFPS()
 	{
 		float tmp{ 0.f };
@@ -859,14 +887,11 @@ namespace Copium
 
 	/*******************************************************************************
 	/*!
-	\brief
-		Play sound
+		\brief
+			Play sound
 
-	\param ID
-		id of the game object that contains an audio source component
-
-	\return
-		void 
+		\param ID
+			id of the game object that contains an audio source component
 	*/
 	/*******************************************************************************/
 	static void AudioSourcePlay(UUID ID)
@@ -877,6 +902,15 @@ namespace Copium
 		gameObj->GetComponent<AudioSource>()->play_sound();
 	}
 
+	/*******************************************************************************
+	/*!
+		\brief
+			Stops an audio source
+
+		\param ID
+			id of the game object that contains an audio source component
+	*/
+	/*******************************************************************************/
 	static void AudioSourceStop(UUID ID)
 	{
 		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
@@ -885,6 +919,19 @@ namespace Copium
 		gameObj->GetComponent<AudioSource>()->stop_sound();
 	}
 
+
+	/*******************************************************************************
+	/*!
+		\brief
+			Sets volume of an audio source
+
+		\param ID
+			ID of audio source
+
+		\param volume
+			Volume to set
+	*/
+	/*******************************************************************************/
 	static void AudioSourceSetVolume(UUID ID, float volume)
 	{
 		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
@@ -895,6 +942,18 @@ namespace Copium
 		SoundSystem::Instance()->soundList[audioSource->alias].first->setVolume(audioSource->volume);
 	}
 
+	/*******************************************************************************
+	/*!
+		\brief
+			Gets volume of an audio source
+
+		\param ID
+			ID of audio source
+
+		\return 
+			Volume of audio source
+	*/
+	/*******************************************************************************/
 	static float AudioSourceGetVolume(UUID ID)
 	{
 		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
@@ -905,11 +964,8 @@ namespace Copium
 
 	/*******************************************************************************
 	/*!
-	\brief
-		Pause all animations
-
-	\return
-		void
+		\brief
+			Pause all animations
 	*/
 	/*******************************************************************************/
 	static void PauseAllAnimation()
@@ -919,11 +975,8 @@ namespace Copium
 
 	/*******************************************************************************
 	/*!
-	\brief
-		Play all animations
-
-	\return
-		void
+		\brief
+			Play all animations
 	*/
 	/*******************************************************************************/
 	static void PlayAllAnimation()
@@ -931,6 +984,18 @@ namespace Copium
 		animationSystem.PlayAllAnimation();
 	}
 
+	/*******************************************************************************
+	/*!
+		\brief
+			Gets color of text
+
+		\param ID
+			ID of text
+
+		\parama color
+			Pointer to store color into
+	*/
+	/*******************************************************************************/
 	static void GetTextColor(UUID ID, glm::vec4* color)
 	{
 		Scene* pScene = sceneManager.get_current_scene();
@@ -946,6 +1011,18 @@ namespace Copium
 		}
 	}
 
+	/*******************************************************************************
+	/*!
+		\brief
+			Sets color of text
+
+		\param ID
+			ID of text
+
+		\parama color
+			Pointer to retrieve color from
+	*/
+	/*******************************************************************************/
 	static void SetTextColor(UUID ID, glm::vec4* color)
 	{
 		Scene* pScene = sceneManager.get_current_scene();
@@ -961,6 +1038,18 @@ namespace Copium
 		}
 	}
 
+	/*******************************************************************************
+	/*!
+		\brief
+			Gets hover color of button
+
+		\param ID
+			ID of button
+
+		\parama color
+			Pointer to store color into
+	*/
+	/*******************************************************************************/
 	static void GetButtonHoverColor(UUID ID, glm::vec4* color)
 	{
 		Scene* pScene = sceneManager.get_current_scene();
@@ -976,6 +1065,18 @@ namespace Copium
 		}
 	}
 
+	/*******************************************************************************
+	/*!
+		\brief
+			Sets hover color of button
+
+		\param ID
+			ID of button
+
+		\parama color
+			Pointer to set color into
+	*/
+	/*******************************************************************************/
 	static void SetButtonHoverColor(UUID ID, glm::vec4* color)
 	{
 		Scene* pScene = sceneManager.get_current_scene();
@@ -991,6 +1092,18 @@ namespace Copium
 		}
 	}
 
+	/*******************************************************************************
+	/*!
+		\brief
+			Gets clicked color of button
+
+		\param ID
+			ID of button
+
+		\parama color
+			Pointer to get color from
+	*/
+	/*******************************************************************************/
 	static void GetButtonClickedColor(UUID ID, glm::vec4* color)
 	{
 		Scene* pScene = sceneManager.get_current_scene();
@@ -1006,6 +1119,18 @@ namespace Copium
 		}
 	}
 
+	/*******************************************************************************
+	/*!
+		\brief
+			Sets clicked color of button
+
+		\param ID
+			ID of button
+
+		\parama color
+			Pointer to set color into
+	*/
+	/*******************************************************************************/
 	static void SetButtonClickedColor(UUID ID, glm::vec4* color)
 	{
 		Scene* pScene = sceneManager.get_current_scene();
@@ -1022,7 +1147,18 @@ namespace Copium
 	}
 
 
+	/*******************************************************************************
+	/*!
+		\brief
+			Gets color of sprite renderer
 
+		\param ID
+			ID of sprite renderer
+
+		\parama color
+			Pointer to store color in
+	*/
+	/*******************************************************************************/
 	static void GetSpriteRendererColor(UUID ID, glm::vec4* color)
 	{
 		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
@@ -1031,6 +1167,18 @@ namespace Copium
 		*color = gameObj->GetComponent<SpriteRenderer>()->sprite.color;
 	}
 
+	/*******************************************************************************
+	/*!
+		\brief
+			Sets color of sprite renderer
+
+		\param ID
+			ID of sprite renderer
+
+		\parama color
+			Pointer to get color from
+	*/
+	/*******************************************************************************/
 	static void SetSpriteRendererColor(UUID ID, glm::vec4* color)
 	{
 		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
@@ -1039,6 +1187,19 @@ namespace Copium
 		gameObj->GetComponent<SpriteRenderer>()->sprite.color = *color;
 	}
 
+
+	/*******************************************************************************
+	/*!
+		\brief
+			Gets color of image
+
+		\param ID
+			ID of image
+
+		\parama color
+			Pointer to store color in
+	*/
+	/*******************************************************************************/
 	static void GetImageColor(UUID ID, glm::vec4* color)
 	{
 		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
@@ -1047,6 +1208,18 @@ namespace Copium
 		*color = gameObj->GetComponent<Image>()->sprite.color;
 	}
 
+	/*******************************************************************************
+	/*!
+		\brief
+			Sets color of image
+
+		\param ID
+			ID of image
+
+		\parama color
+			Pointer to get color from
+	*/
+	/*******************************************************************************/
 	static void SetImageColor(UUID ID, glm::vec4* color)
 	{
 		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
@@ -1055,6 +1228,15 @@ namespace Copium
 		gameObj->GetComponent<Image>()->sprite.color = *color;
 	}
 
+	/*******************************************************************************
+	/*!
+		\brief
+			Plays animation of a animator
+
+		\param ID
+			ID of gameObject with animator
+	*/
+	/*******************************************************************************/
 	static void PlayAnimation(UUID ID)
 	{
 		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
@@ -1063,6 +1245,15 @@ namespace Copium
 		gameObj->GetComponent<Animator>()->PlayAnimation();
 	}
 
+	/*******************************************************************************
+	/*!
+		\brief
+			Pauses animation of a animator
+
+		\param ID
+			ID of gameObject with animator
+	*/
+	/*******************************************************************************/
 	static void PauseAnimation(UUID ID)
 	{
 		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
@@ -1071,6 +1262,18 @@ namespace Copium
 		gameObj->GetComponent<Animator>()->PauseAnimation();
 	}
 
+	/*******************************************************************************
+	/*!
+		\brief
+			Sets animation delay of an animator
+
+		\param componentID
+			ID of animator
+
+		\param timeDelay
+			Amount of delay to set
+	*/
+	/*******************************************************************************/
 	static void SetAnimatorDelay(UUID componentID, float timeDelay)
 	{
 		Scene* pScene = sceneManager.get_current_scene();
@@ -1085,6 +1288,18 @@ namespace Copium
 		}
 	}
 
+	/*******************************************************************************
+	/*!
+		\brief
+			Gets animation delay of an animator
+
+		\param componentID
+			ID of animator
+
+		\return
+			Amount of delay
+	*/
+	/*******************************************************************************/
 	static float GetAnimatorDelay(UUID componentID)
 	{
 		Scene* pScene = sceneManager.get_current_scene();
@@ -1102,6 +1317,15 @@ namespace Copium
 	}
 
 
+	/*******************************************************************************
+	/*!
+		\brief
+			Logs a message to editor
+
+		\param message
+			Mono string with message to be converted to c string
+	*/
+	/*******************************************************************************/
 	static void Log(MonoString* message)
 	{
 		char* str = mono_string_to_utf8(message);
