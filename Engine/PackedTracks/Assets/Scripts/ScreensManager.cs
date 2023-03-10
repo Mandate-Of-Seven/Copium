@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			ScreensManager.cs
+\project
+\author			Shawn Tanary
+\co-author		Wisely
+
+\par			Course: GAM200
+\par			Section:
+\date			26/01/2023
+
+\brief
+	manages the screens
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 using System.Collections;
 using System.Collections.Generic;
 using CopiumEngine;
@@ -14,6 +29,12 @@ public class ScreensManager : CopiumScript
     public GameObject combatCanvas;
     public GameObject combatCanvasButton;
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Toggle story (deprecated)
+	*/
+	/**************************************************************************/
     public void ToggleStory()
     {
         screenCanvas.SetActive(!screenCanvas.activeSelf);
@@ -25,6 +46,12 @@ public class ScreensManager : CopiumScript
         Debug.Log("Clicked");
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Toggle Combat (deprecated)
+	*/
+	/**************************************************************************/
     public void ToggleCombat()
     {
         screenCanvas.SetActive(!screenCanvas.activeSelf);

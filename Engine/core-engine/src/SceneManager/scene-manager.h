@@ -41,8 +41,30 @@ namespace Copium {
 	{
 	public:
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Find a game object by its UUID.
+
+		\return
+			the gameobject with the specified UUID
+			if no game objects exists with the specified UUID, nullptr is returned
+		*/
+		/*******************************************************************************/
 		GameObject* FindGameObjectByID(UUID _id);
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Find a component by its UUID.
+
+		\return
+			the component with the specified UUID
+			if no component exists with the specified UUID, nullptr is returned
+		*/
+		/*******************************************************************************/
 		template <typename T>
 		T* FindComponentByID(UUID _id);
 		/*******************************************************************************
@@ -141,6 +163,27 @@ namespace Copium {
 		/*******************************************************************************/
 		bool save_scene(const std::string& _filepath);
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			save the current scene data into the file whose filepath is specified as a parameter
+
+		\param	_filepath
+			read-only reference to a string which contains the filepath of the file that the current scene data
+			is to be saved to
+
+		\param _filename
+			the filename of the scene file
+
+		\param
+			flag to check if the filename should be modified or not
+
+		\return
+			if success, return true
+			if there are errors, return false
+		*/
+		/*******************************************************************************/
 		bool save_scene(const std::string& _filepath, const std::string& _filename, bool _modifyname = false);
 
 		/*******************************************************************************
@@ -252,7 +295,29 @@ namespace Copium {
 		/*******************************************************************************/
 		//std::vector<Scene*>& GetSceneVector() { return scenes; }
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Perform linkages on all components that require it after deserialization.
+			This entails linking images to their sprites, script game object references to the game object etc..
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
 		void DeserializeLink();
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Perform linkages on all components that require it before starting the preview.
+			This entails linking images to their sprites, script game object references to the game object etc..
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
 		void PreviewLink();
 		/*******************************************************************************
 		/*!

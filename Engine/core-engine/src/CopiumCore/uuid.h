@@ -26,9 +26,53 @@ namespace Copium
 	{
 	public:
 		// Constructors generate the UUID
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Default constructor for UUID
+			Note: the uuid is generated on construction
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
 		UUID();
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Default copy constructor 
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
 		UUID(const UUID& _rhs) = default;
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Single argument constructor
+
+		\param _rhs
+			a uint64_t value which this UUID will take as its value
+
+		\return
+			void
+		*/
+		/*******************************************************************************/
 		UUID(uint64_t _rhs) : uuid{ _rhs } {}
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			uint64_t conversion
+
+		\return
+			this UUID as a uint64_t value
+		*/
+		/*******************************************************************************/
 		operator uint64_t() const { return uuid; }
 
 		/*******************************************************************************
@@ -63,8 +107,28 @@ namespace Copium
 		/*******************************************************************************/
 		void Serialize(rapidjson::Value& _val, rapidjson::Document& _doc, const std::string& _name = "UID");
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Get reference to this UUID
+
+		\return
+			reference to this UUID
+		*/
+		/*******************************************************************************/
 		uint64_t& GetUUID() { return uuid; }
 		
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Get this UUID value
+
+		\return
+			this UUID's value
+		*/
+		/*******************************************************************************/
 		uint64_t ConstGetUUID() { return uuid; }
 
 	private:

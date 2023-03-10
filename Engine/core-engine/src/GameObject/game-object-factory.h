@@ -147,40 +147,6 @@ namespace Copium {
 		/*!
 		*
 		\brief
-			Build an archetype and place it into the gameObjectCreators map
-
-		\param _value
-			reference to the rapidjson value which should contain the archetype game object
-
-		\return
-			if successful, return pointer to the newly created game object
-			if there were any errors in the process, return nullptr
-
-		*/
-		/*******************************************************************************/
-		//GameObject* build_archetype(rapidjson::Value& _value);
-
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Build a game object using an archetype registered to the GOF
-
-		\param _archetype
-			read-only reference to a string which contains the key of the archetype that is to be created
-
-		\return
-			if successful, return ptr to the newly created game object
-			if there were any errors in the process, return nullptr
-
-		*/
-		/*******************************************************************************/
-		//GameObject& Instantiate(const std::string& _archetype);
-
-		/*******************************************************************************
-		/*!
-		*
-		\brief
 			Iterates through the filepath that is specified and creates an archetype game object for each archetype json found in the folder.
 			Note: user must guarantee that the path provided is correct and that the files contain the correct format for a single game object
 

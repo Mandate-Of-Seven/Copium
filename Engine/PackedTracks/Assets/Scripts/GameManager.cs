@@ -1,3 +1,20 @@
+/*!***************************************************************************************
+\file			GameManager.cs
+\project
+\author			Zacharie Hong
+\co-author		Sean Ngo
+                Shawn Tanary
+                Matthew Lau
+
+\par			Course: GAM200
+\par			Section:
+\date			26/11/2022
+
+\brief
+	GameManager manages the game logic.
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 using CopiumEngine;
 using System;
 using System.Collections.Generic;
@@ -49,6 +66,12 @@ public class GameManager: CopiumScript
         //UpdateCanvases();
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Open the report screen
+	*/
+	/**************************************************************************/
     void OpenReportScreen()
     {
         audioManager.clickSFX.Play();
@@ -89,6 +112,15 @@ public class GameManager: CopiumScript
         SupplyCounter();
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Check for game end conditions and close neccessary panels
+
+        \return
+            gameEnd status
+	*/
+	/**************************************************************************/
     bool CheckForGameEndCondition()
     {
         if(!gameEnd && EventManager.EventSequence < 0)
@@ -102,6 +134,12 @@ public class GameManager: CopiumScript
         return gameEnd;
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Updates all the canvases
+	*/
+	/**************************************************************************/
     void CanvasManager()
     {
         reportScreenManager.UpdateCanvas();
@@ -109,12 +147,24 @@ public class GameManager: CopiumScript
         resultManager.UpdateCanvas();
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Toggle the moving status of the train
+	*/
+	/**************************************************************************/
     public void ToggleMoving()
     {
         moving = !moving;
         crewMenuScript.SetClickable(!moving);
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Move the train
+	*/
+	/**************************************************************************/
     void MoveTrain()
     {
         if (trainManager.accelerate && distanceLeft > 0)
@@ -148,6 +198,12 @@ public class GameManager: CopiumScript
         }
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Updates the supple counter
+	*/
+	/**************************************************************************/
     void SupplyCounter()
     {
         if (trainManager.accelerate && distanceLeft < 200.0f)
@@ -186,6 +242,12 @@ public class GameManager: CopiumScript
         //KeyInputs();
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Checks for button inputs and updates depending on the button inputs
+	*/
+	/**************************************************************************/
     void ButtonInputs()
     {
         if (ManualBtn.state == ButtonState.OnRelease)
@@ -201,6 +263,12 @@ public class GameManager: CopiumScript
         }
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Close the how to play manual. 
+	*/
+	/**************************************************************************/
     void CloseManual()
     {
         audioManager.fileCloseSFX.Play();

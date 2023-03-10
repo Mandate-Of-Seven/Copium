@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			ReportScreenManager.cs
+\project
+\author			Zacharie Hong
+\co-author		Sean Ngo
+
+\par			Course: GAM200
+\par			Section:
+\date			5/03/2023
+
+\brief
+	Manages the report screen
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 using CopiumEngine;
 using System;
 
@@ -30,6 +45,13 @@ public class ReportScreenManager: CopiumScript
     {
         UpdateCanvas();
     }
+
+    /**************************************************************************/
+	/*!
+	    \brief
+		    Update the canvases related to the report screen
+	*/
+	/**************************************************************************/
     public void UpdateCanvas()
     {
         if (!openHover && ReportScreenBtn.state == ButtonState.OnHover)
@@ -73,6 +95,12 @@ public class ReportScreenManager: CopiumScript
         }
 	}
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Open the report screen
+	*/
+	/**************************************************************************/
     public void OpenPanel()
     {
         if (isReportScreenOn)
@@ -85,6 +113,12 @@ public class ReportScreenManager: CopiumScript
         ReportTab.transform.parent = null;
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Close the report screen
+	*/
+	/**************************************************************************/
     public void ClosePanel()
     {
         if (!isReportScreenOn)

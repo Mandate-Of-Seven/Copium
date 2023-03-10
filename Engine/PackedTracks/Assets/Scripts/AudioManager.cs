@@ -1,3 +1,21 @@
+/*!***************************************************************************************
+\file			AudioManager.cs
+\project
+\author			Zacharie Hong
+\co-author		Sean Ngo
+                Shawn Tanary
+				Abdul Hadi
+                Matthew Lau
+
+\par			Course: GAM200
+\par			Section:
+\date			30/01/2023
+
+\brief
+	Managed all the audio sources in the scene
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 using CopiumEngine;
 using System;
 
