@@ -1,19 +1,17 @@
 /*!***************************************************************************************
 \file			EventManager.cs
 \project
-\author			Zacharie Hong
-\co-author		Sean Ngo
-                Shawn Tanary
+\author			Sean Ngo
 
 \par			Course: GAM200
 \par			Section:
-\date			30/01/2023
+\date			10/03/2023
 
 \brief
-	Manages the events
+	This script manages the events that occur in the game.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
-*****************************************************************************************/
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 using CopiumEngine;
 using System;
 using System.Runtime.InteropServices;
@@ -288,6 +286,7 @@ public class EventManager: CopiumScript
         }
     }
 
+    // Change the alert status based on the severity of the event
     void ChangeAlertStatus(int state)
     {
         if (!EnableChangeAlert)

@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			Event_03.cs
+\project
+\author			Sean Ngo
+
+\par			Course: GAM200
+\par			Section:
+\date			10/03/2023
+
+\brief
+	This script has event 3 of the game.
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 using CopiumEngine;
 using System;
 
@@ -17,7 +31,8 @@ public class Event_03: CopiumScript
 
 	}
 
-	public void Event(int requirement)
+    // Event to display onto the game
+    public void Event(int requirement)
 	{
         if (requirement == 1) // Chuck alive & not critically injured
         {
@@ -93,6 +108,7 @@ public class Event_03: CopiumScript
         }
     }
 
+    // The result after choosing a choice to display on to the game
     public void Result(int choice)
     {
         if (resolutionTextNum == 1)
