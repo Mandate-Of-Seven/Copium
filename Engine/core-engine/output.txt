@@ -3,8 +3,8 @@ Copyright (C) Microsoft Corporation. All rights reserved.
 
 C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\PauseMenu.cs(17,7): warning CS0105: The using directive for 'CopiumEngine' appeared previously in this namespace
 C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\Option.cs(12,11): warning CS0108: 'Option.enabled' hides inherited member 'Component.enabled'. Use the new keyword if hiding was intended.
-C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\GameManager.cs(35,11): warning CS0414: The field 'GameManager.hungerTimer' is assigned but its value is never used
+C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\Prepare.cs(62,10): warning CS0414: The field 'Prepare.option1Hover' is assigned but its value is never used
 C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\TrainManager.cs(27,7): warning CS0414: The field 'TrainManager.manualHover' is assigned but its value is never used
 C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\Event_04.cs(9,9): warning CS0414: The field 'Event_04.resolutionTextNum' is assigned but its value is never used
+C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\GameManager.cs(35,11): warning CS0414: The field 'GameManager.hungerTimer' is assigned but its value is never used
 C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\Event_Ending.cs(24,9): warning CS0414: The field 'Event_Ending.resolutionTextNum' is assigned but its value is never used
-C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\Prepare.cs(62,10): warning CS0414: The field 'Prepare.option1Hover' is assigned but its value is never used

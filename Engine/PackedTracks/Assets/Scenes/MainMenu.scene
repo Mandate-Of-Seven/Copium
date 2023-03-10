@@ -32,6 +32,10 @@
         {
             "Name": "PauseMenu",
             "ID": 13
+        },
+        {
+            "Name": "HowtoPlay",
+            "ID": 8
         }
     ],
     "GameObjects": [

@@ -542,6 +542,7 @@ namespace Copium
 
 		if (currentScene)
 		{
+			SoundSystem::Instance()->StopAll();
 			delete currentScene;
 		}
 		currentScene = new NormalScene(_filepath);
@@ -738,8 +739,6 @@ namespace Copium
 				break;
 		}
 
-		std::cout << "STOPPED" << std::endl;
-		SoundSystem::Instance()->StopAll();
 		MyEventSystem->publish(new SceneLinkedEvent(*currentScene));
 		MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_SCENE_DESERIALIZED);
 
@@ -844,7 +843,7 @@ namespace Copium
 			
 			return false;
 		}
-
+		SoundSystem::Instance()->StopAll();
 
 		PRINT("Stop preview");
 		currSceneState = Scene::SceneState::edit;
@@ -880,7 +879,7 @@ namespace Copium
 
 		currentScene->set_state(Scene::SceneState::edit);
 
-		SoundSystem::Instance()->StopAll();
+		
 
 		inPlayMode = false;
 		return true;
