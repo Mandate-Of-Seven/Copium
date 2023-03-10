@@ -71,7 +71,6 @@ namespace Copium
 				{
 					if (MyEditorSystem.pSelectedGameObject)
 					{
-						//std::cout << "Delete\n";
 						//Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::GameObjectCommand(MySceneManager.get_selected_gameobject_sptr(), false);
 						//Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
 						MyEventSystem->publish(new GameObjectDestroyEvent(*MyEditorSystem.pSelectedGameObject));
@@ -117,7 +116,6 @@ namespace Copium
 		{
 			if (MyEditorSystem.pSelectedGameObject)
 			{
-				std::cout << "Clone\n";
 				Copium::GameObject* temp{};
 				MyEventSystem->publish(new GameObjectInstantiateEvent(temp, MyEditorSystem.pSelectedGameObject));
 			}
@@ -130,7 +128,6 @@ namespace Copium
 		{
 			if (MyEditorSystem.pSelectedGameObject)
 			{
-				std::cout << "Delete\n";
 				Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::GameObjectCommand(MySceneManager.get_selected_gameobject_sptr(), false);
 				Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
 				MyEventSystem->publish(new GameObjectDestroyEvent(*MyEditorSystem.pSelectedGameObject));
@@ -301,14 +298,11 @@ namespace Copium
 		}
 		else if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 		{
-			PRINT("selected");
-			std::cout << _go.name << " is selected\n";
 			isSelected = true;
 			MyEditorSystem.pSelectedGameObject = &_go;
 		}
 		else if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
 		{
-			std::cout << _go.name << " is right clicked\n";
 			isSelected = true;
 			MyEditorSystem.pSelectedGameObject = &_go;
 
@@ -424,8 +418,6 @@ namespace Copium
 			container = &_go;
 			ImGui::SetDragDropPayload("GameObject", &container, sizeof(void*));
 			ImGui::EndDragDropSource();
-
-			//std::cout << "ID of selected Game Object: " << _selected << std::endl;
 		}
 
 		// Handle mouse clicks on item
@@ -437,14 +429,12 @@ namespace Copium
 		}
 		else if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 		{
-			std::cout << _go.name << " is selected\n";
 			isSelected = true;
 			MyEditorSystem.pSelectedGameObject = &_go;
 
 		}
 		else if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
 		{
-			std::cout << _go.name << " is right clicked\n";
 			isSelected = true;
 			MyEditorSystem.pSelectedGameObject = &_go;
 
@@ -496,12 +486,10 @@ namespace Copium
 
 		if (clicked == 1)
 		{
-			std::cout << "btn is clicked\n";
 			clicked = 0;
 
 			// Use Shawn's debug system
 			//if (!MyGOF.instantiate())
-			//	std::cout << "Error creating game object\n";
 
 
 		}
@@ -725,7 +713,6 @@ namespace Copium
 			//	PRINT("die bitch");
 			//	if (MyEditorSystem.pSelectedGameObject)
 			//	{
-			//		std::cout << "Delete\n";
 			//		Copium::UndoRedo::Command* tempUndo = new Copium::UndoRedo::GameObjectCommand(MySceneManager.get_selected_gameobject_sptr(), false);
 			//		Copium::EditorSystem::Instance()->get_commandmanager()->undoStack.push(tempUndo);
 			//		MyGOF.destroy(MySceneManager.get_selected_gameobject());
@@ -795,7 +782,7 @@ namespace Copium
 					//}
 					//else
 					//{
-					//	std::cout << "Error creating game object\n";
+					//	PRINT("Error creating game object");
 					//}
 				}
 
@@ -864,7 +851,7 @@ namespace Copium
 				std::swap(*pos, *dest);
 				for (std::list<Transform*>::iterator iter = pt->children.begin(); iter != pt->children.end(); ++iter)
 				{
-					std::cout << (*iter)->gameObject.name << std::endl;
+					PRINT((*iter)->gameObject.name);
 				}
 
 			}
@@ -878,7 +865,7 @@ namespace Copium
 				std::swap(*dest, *pos);
 				for (std::list<Transform*>::iterator iter = pt->children.begin(); iter != pt->children.end(); ++iter)
 				{
-					std::cout << (*iter)->gameObject.name << std::endl;
+					PRINT((*iter)->gameObject.name);
 				}
 			}
 

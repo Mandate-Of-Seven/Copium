@@ -35,8 +35,9 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <mono/jit/jit.h>
 #include <mono/metadata/debug-helpers.h>
 #include <mono/metadata/exception.h>
+#include <mutex>
 
-#define SECONDS_TO_RECOMPILE 5
+#define SECONDS_TO_RECOMPILE 1
 namespace
 {
 	Copium::MessageSystem* messageSystem{ Copium::MessageSystem::Instance() };
@@ -225,7 +226,8 @@ namespace Copium
 		ThreadSystem& tSys = *ThreadSystem::Instance();
 		while (!tSys.Quit())
 		{
-			while (compilingState != CompilingState::Wait);
+			compilingStateReadable.lock();
+			while (compilingState == CompilingState::SwapAssembly);
 			compilingState = CompilingState::Compiling;
 			//Critical section
 			while (!tSys.acquireMutex(MutexType::FileSystem));
@@ -265,7 +267,10 @@ namespace Copium
 		initMono();
 		registerScriptWrappers();
 		systemFlags |= FLAG_RUN_ON_EDITOR;
+		//ENABLE FOR EDITOR MODE
 		ThreadSystem::Instance()->addThread(new std::thread(&ScriptingSystem::recompileThreadWork, this));
+		//ENABLE FOR PLAY MODE
+		//swapDll();
 		MyEventSystem->subscribe(this,&ScriptingSystem::CallbackSceneChanging);
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptInvokeMethod);
 		MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetMethodNames);
@@ -281,6 +286,8 @@ namespace Copium
 
 	void ScriptingSystem::update()
 	{
+		//MyEventSystem->publish(new EditorConsoleLogEvent(std::string("STATE: " + std::to_string((int)compilingState))));
+		//MyEventSystem->publish(new EditorConsoleLogEvent(std::string("PLAYMODE: " + std::to_string(inPlayMode))));
 		if (compilingState == CompilingState::SwapAssembly && !inPlayMode)
 		{
 			swapDll();
@@ -407,7 +414,7 @@ namespace Copium
 
 	void ScriptingSystem::swapDll()
 	{
-		PRINT("SWAPPING DLL_____________________________________");
+		MyEventSystem->publish(new EditorConsoleLogEvent("SWAPPING DLL"));
 		registerScriptWrappers();
 		unloadAppDomain();
 		createAppDomain();
@@ -440,7 +447,7 @@ namespace Copium
 		COPIUM_ASSERT(!mScriptableObject, "Scene C# script could not be loaded");
 		messageSystem.dispatch(MESSAGE_TYPE::MT_CREATE_CS_GAMEOBJECT);
 		messageSystem.dispatch(MESSAGE_TYPE::MT_SCRIPTING_UPDATED);
-		PRINT("END SWAP DLL_____________________________________");
+		MyEventSystem->publish(new EditorConsoleLogEvent("END SWAP DLL"));
 	}
 
 	MonoObject* ScriptingSystem::invoke(MonoObject* mObj, MonoMethod* mMethod, void** params)
@@ -514,15 +521,6 @@ namespace Copium
 				++scriptFilesIt;
 			}
 		}
-		// Remove deleted scripts using mask
-		//for (File* scriptFile : maskScriptFiles)
-		//{
-		//	if (scriptFile != nullptr)
-		//	{
-		//		scriptFiles.remove(*scriptFile);
-		//	}
-		//}
-		//maskScriptFiles.clear();
 	}
 
 	MonoObject* ScriptingSystem::cloneInstance(MonoObject* _instance)
@@ -548,10 +546,14 @@ namespace Copium
 				startCompiling = true;
 				Utils::compileDll();
 				compilingState = CompilingState::SwapAssembly;
+				compilingStateReadable.unlock();
 			}
 		}
 		if (!startCompiling)
+		{
 			compilingState = CompilingState::Wait;
+			compilingStateReadable.unlock();
+		}
 	}
 
 	bool ScriptingSystem::scriptIsLoaded(const std::filesystem::path& filePath)
@@ -689,6 +691,13 @@ namespace Copium
 			mComponents[mCurrentScene].emplace(cid, mComponent);
 			//Check fields, dont remove fields, but change them if their type is different
 
+			std::list<std::string> validFieldNames{};
+
+			for (auto& pair : component.fieldDataReferences)
+			{
+				validFieldNames.push_back(pair.first);
+			}
+
 			//PRINT("Creating: " << component.Name() << " of id: " << component.uuid);
 			Script& script{ *reinterpret_cast<Script*>(&component) };
 			for (auto& pair : scriptClass.mFields)
@@ -712,6 +721,7 @@ namespace Copium
 					fieldSize = TEXT_BUFFER_SIZE;
 				}
 
+
 				//Field has not been created onto script yet
 				if (nameField == script.fieldDataReferences.end())
 				{
@@ -734,6 +744,7 @@ namespace Copium
 				//Field exists
 				else
 				{
+					validFieldNames.remove(fieldName);
 					Field& field = nameField->second;
 					//If the field type is not the same
 					if (field.fType != fieldType)
@@ -820,6 +831,20 @@ namespace Copium
 					//else if (field.typeName)
 				}
 			}
+			for (auto& name : validFieldNames)
+			{
+				FieldType fType = script.fieldDataReferences[name].fType;
+				if (fType == FieldType::GameObject)
+				{
+					component.fieldGameObjReferences.erase(name);
+				}
+				else if (fType >= FieldType::Component)
+				{
+					component.fieldComponentReferences.erase(name);
+				}
+				component.fieldDataReferences.erase(name);
+				//PRINT("INVALID FIELD: " << name);
+			}
 			return mComponent;
 		}
 		return (*pairIt).second;
@@ -831,6 +856,7 @@ namespace Copium
 		if (mAssemblyImage == nullptr)
 		{
 			//Wait if it is still compiling
+			compilingStateReadable.lock();
 			while (compilingState == CompilingState::Compiling) {
 				PRINT("COMPILING!!");
 			};
@@ -842,6 +868,7 @@ namespace Copium
 				swapDll();
 				compilingState = CompilingState::Wait;
 			}
+			compilingStateReadable.unlock();
 		}
 
 		mGameObjects.clear();
@@ -918,7 +945,6 @@ namespace Copium
 		mPreviousScene = mCurrentScene;
 		mCurrentScene = instantiateClass(klassScene);
 		ReflectAll();
-		PRINT("SCENE IN SCRIPTING SWAPPED!");
 	}
 
 	void ScriptingSystem::CallbackStopPreview(StopPreviewEvent* pEvent)
@@ -927,7 +953,6 @@ namespace Copium
 		mPreviousScene = mCurrentScene;
 		mCurrentScene = instantiateClass(klassScene);
 		ReflectAll();
-		PRINT("SCENE IN SCRIPTING SWAPPED!");
 	}
 
 	void ScriptingSystem::CallbackScriptGetNames(ScriptGetNamesEvent* pEvent)

@@ -11,8 +11,14 @@ public class CrewMenu: CopiumScript
 
     public Button prepareButton;
     public Button deployButton;
+    ButtonWrapper prepareBtnWrapper;
+    ButtonWrapper deployBtnWrapper;
 
     public CrewStatusManager crewStatusManager; 
+    public ReportScreenManager reportScreenManager; 
+    public ResultManager resultManager; 
+
+    public AudioManager audioManager;
 
     public Fade fader;
 
@@ -24,12 +30,12 @@ public class CrewMenu: CopiumScript
     public Crew danton;
 
     public bool preparing = false;
-    public bool deployed = false;
+    public bool deploying = false;
 
     float timer = 0.0f;
 
     float healthInterval = 5.0f; // The interval in seconds in which the crew members lose health
-    float hungerInterval = 4.0f; // The interval in seconds in which the crew members get hungry
+    float hungerInterval = 1.0f; // The interval in seconds in which the crew members get hungry
 
     public bool storageComparment = true; // For the food storage
 
@@ -37,77 +43,16 @@ public class CrewMenu: CopiumScript
     public Prepare prepareManager;
     public bool hDeploy, bDeploy, cDeploy, dDeploy;
 
+    public float timeElasped = 0;
+    public float transitionDuration = 2;
+
+
     public enum STAT_TYPES
     {
         ALIVE,
         HEALTH,
         MENTAL,
         HUNGER,
-    }
-
-    public struct Person
-    {
-        string _name;
-        bool _alive;
-        int _health;
-        int _mental;
-        int _hunger;
-        float _timer;
-        string _resultText;
-
-        public string name
-        {
-            get { Console.WriteLine("getting health"); return _name; }
-            set { Console.WriteLine("setting health"); _name = value; }
-        }
-
-        public bool alive
-        {
-            get { return _alive; }
-            set { _alive = value; }
-        }
-
-        public int health
-        {
-            get { return _health; }
-            set { _health = value; }
-        }
-
-        public int mental
-        {
-            get { return _mental; }
-            set { _mental = value; }
-        }
-
-        public int hunger
-        {
-            get { return _hunger; }
-            set { _hunger = value; }
-        }
-
-        public float timer
-        {
-            get { return _timer; }
-            set { _timer = value; }
-        }
-
-        public string resultText
-        {
-            get { return _resultText; }
-            set { _resultText = value; }
-        }
-
-        public Person(string new_name)
-        {
-            _name = new_name;
-            _alive = true;
-            _health = 15;
-            _mental = 15;
-            _hunger = 10;
-            _timer = 0.0f;
-            Console.WriteLine("CONSTRUCTED PERSON!: " + _name + _health);
-            _resultText = "1";
-        }
     }
 
     public Person[] crew = new Person[4]
@@ -120,41 +65,74 @@ public class CrewMenu: CopiumScript
 
     void Start()
 	{
+        prepareBtnWrapper = new ButtonWrapper(prepareButton,audioManager);
+        prepareBtnWrapper.SetText(prepareButton.GetComponent<Text>());
+        prepareBtnWrapper.SetImage(prepareButton.GetComponent<Image>());
+        deployBtnWrapper = new ButtonWrapper(deployButton,audioManager);
+        deployBtnWrapper.SetText(deployButton.GetComponent<Text>());
+        deployBtnWrapper.SetImage(deployButton.GetComponent<Image>());
+        deployBtnWrapper.SetInteractable(false);
         titleString = titleText.text;
     }
+
 	void Update()
 	{
         //if prepare button is pressed
         //show what event happened
         //update values based on event that happened
         //have condition for when certain values hit 0??
-
-        if (prepareButton.state == ButtonState.OnClick)
+        if (prepareBtnWrapper.GetState() == ButtonState.OnClick)
         {
-            preparing = !preparing;
+            SetPrepare(!preparing);
             hDeploy = harris.isDeployed;
             bDeploy = bronson.isDeployed;
             cDeploy = chuck.isDeployed;
             dDeploy = danton.isDeployed;
         }
 
-        if (deployButton.state == ButtonState.OnClick && preparing)
+        bool selectedCrewForDeployment = harris.isDeployed || bronson.isDeployed || chuck.isDeployed || danton.isDeployed;
+        deployBtnWrapper.SetInteractable(selectedCrewForDeployment);
+        if (deployBtnWrapper.GetState() == ButtonState.OnClick)
         {
-            deployed = true;
             preparing = false;
             //fader.fadeIn = true;
             //fader.shouldFade = true;
-
+            deploying = true;
             hDeploy = harris.isDeployed;
             bDeploy = bronson.isDeployed;
             cDeploy = chuck.isDeployed;
             dDeploy = danton.isDeployed;
-
+            deployBtnWrapper.SetInteractable(false);
             StartPrepare();
         }
        
-        UpdateTexts();
+       if (crewStatusManager.isCrewStatusOn)
+       {
+            UpdateEffects();
+            timeElasped += Time.deltaTime;
+       }
     }
+
+    void UpdateEffects()
+    {
+        foreach (Person person in crew)
+        {
+            if (!person.healthScrambler.Done())
+            {
+                person.crewScript.healthT.text = person.healthScrambler.Scramble();
+            }
+            if (!person.mentalScrambler.Done())
+            {
+                person.crewScript.mentalT.text = person.mentalScrambler.Scramble();
+            }
+            if (!person.hungerScrambler.Done())
+            {
+                person.crewScript.hungerT.text = person.hungerScrambler.Scramble();
+            }
+            person.crewScript.sprite.color = Color.Lerp(Color.white,person.targetColor,timeElasped/transitionDuration);
+        }
+    }
+
 
     public void UpdateAllStats()
     {
@@ -230,10 +208,6 @@ public class CrewMenu: CopiumScript
     {
         suppliesText.text = "Supplies: " + supplies;
 
-        if (preparing)
-            titleText.text = "Selecting Members";
-        else
-            titleText.text = titleString;
     }
 
     public void SetSupplies(int amount)
@@ -334,7 +308,9 @@ public class CrewMenu: CopiumScript
     //generate a random event for each deployed
     public void StartPrepare()
     {
-
+        crewStatusManager.ClosePanel();
+        reportScreenManager.ClosePanel();
+        resultManager.OpenPanel();
         if (harris.isDeployed)
         {
             prepareManager.GenerateEvents(crew[0]);
@@ -351,9 +327,31 @@ public class CrewMenu: CopiumScript
         {
             prepareManager.GenerateEvents(crew[3]);
         }
-
-        //hide crewscreen
-        deployed = false;
     }
 
+    public void SetClickable(bool clickable)
+    {
+        prepareBtnWrapper.SetInteractable(clickable);
+    }
+
+    public void SetPrepare(bool _preparing)
+    {
+        preparing = _preparing;
+        if (preparing)
+        {
+            titleText.text = "Selecting Members";
+            harris.Enable();
+            chuck.Enable();
+            danton.Enable();
+            bronson.Enable();
+        }
+        else
+        {
+            titleText.text = titleString;
+            harris.Disable();
+            chuck.Disable();
+            danton.Disable();
+            bronson.Disable();
+        }
+    }
 }

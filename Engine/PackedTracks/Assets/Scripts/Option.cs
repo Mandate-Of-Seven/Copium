@@ -37,6 +37,7 @@ public class Option: CopiumScript
         Disable();
         HideAllIcons();
         btn.enabled = true;
+        txt.color = Color.white;
     }
 
 	public void ShowAllIcons()

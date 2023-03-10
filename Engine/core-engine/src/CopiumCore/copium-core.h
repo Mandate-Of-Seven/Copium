@@ -17,7 +17,6 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include <glew-2.2.0/include/GL/glew.h>
 #include <GLFW/glfw3.h>
-
 #include "CopiumCore/system-interface.h"
 #include <Events/events.h>
 

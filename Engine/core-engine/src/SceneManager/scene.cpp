@@ -34,17 +34,13 @@ Scene::Scene(const std::string& _filepath) : filename(_filepath)
 }
 Scene::~Scene()
 {
-
-	std::cout << "game objects destroyed\n";
 }
 
 void Scene::update_scene() 
 {
-	std::cout << "scene updated by default\n";
 }
 void Scene::draw_scene() 
 {
-	std::cout << "scene drawn by default\n";
 }
 
 std::string Scene::get_filename() const {return filename;}

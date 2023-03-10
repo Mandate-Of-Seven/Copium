@@ -35,15 +35,16 @@ void SoundSystem::init()
 {
 	systemFlags |= FLAG_RUN_ON_PLAY;
 	FMOD::System_Create(&soundSystem);
-	soundSystem->init(50, FMOD_INIT_NORMAL, NULL);
+	soundSystem->init(128, FMOD_INIT_NORMAL, NULL);
 	CheckVersion();
 	CheckDrivers();
-	std::cout << "Sound init was called" << std::endl;
+	PRINT("Sound init was called");
 }
 
 void SoundSystem::update()
 {
-
+	soundSystem->update();
+	
 }
 
 void SoundSystem::exit()
@@ -90,7 +91,7 @@ void DeleteSound()
 void SoundSystem::Play(std::string alias, FMOD::Channel* channel, bool overLap, bool loop, int loopCount)
 {
 	FMOD::Sound *rSound(soundList[alias].second);
-	int numPlaying(0);
+	int numPlaying = 0;
 
 	// Check if overlapping sound
 	if (!overLap && soundList[alias].first)

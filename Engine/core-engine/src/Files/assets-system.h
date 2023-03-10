@@ -110,6 +110,16 @@ namespace Copium
 		/***************************************************************************/
 		/*!
 		\brief
+			Loads all resources into the engine
+		\param _path
+			The file path to load from
+		*/
+		/**************************************************************************/
+		void LoadAllResources(std::list<std::string>&_files);
+
+		/***************************************************************************/
+		/*!
+		\brief
 			Loads all textures into the engine
 		\param _path
 			The file path to load from
@@ -189,6 +199,8 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		void LoadAllShaders(std::list<std::string>& _path);
+
+		const std::vector<Texture>& GetResources() { return resources; }
 
 		const std::vector<Texture>& GetTextures() { return textures; }
 		Texture* GetTexture(unsigned int const& _index)
@@ -299,6 +311,7 @@ namespace Copium
 	private:
 		/* Assets Data ******************************************************************/
 		std::vector<Texture> textures;
+		std::vector<Texture> resources;
 		std::vector<Spritesheet> spritesheets;
 		std::vector<Animation> animations;
 		std::unordered_map<uint64_t, MetaID> metaData;

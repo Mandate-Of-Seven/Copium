@@ -48,7 +48,7 @@ namespace Copium
 		for (ISystem* pSystem : systems)
 		{
 			pSystem->init();
-			//std::cout << typeid(*pSystem).name() << ": init!\n";
+			//PRINT(typeid(*pSystem).name() << ": init!");
 		}
 
 		MyEventSystem->subscribe(this, &CopiumCore::CallbackStartPreview);
@@ -56,7 +56,7 @@ namespace Copium
 		MyEventSystem->subscribe(this, &CopiumCore::CallbackPerformanceView);
 		MyEventSystem->subscribe(this, &CopiumCore::CallbackOffPerformanceView);
 		//while (MyScriptingSystem.compilingState == CompilingState::Compiling);
-		//MySceneManager.load_scene(Paths::assetPath+"\\Scenes\\Demo.scene");
+		//MySceneManager.load_scene(Paths::assetPath+"\\Scenes\\MainMenu.scene");
 		//MySceneManager.load_scene("C:\\Users\\FLESH\\Desktop\\Copium\\Engine\\x64\\PackedTracks\\Assets\\Scenes\\Demo.scene");
 
 	}

@@ -24,7 +24,6 @@ namespace Copium
 {
     GameObject::~GameObject()
     {
-        std::cout << "GameObject destructed\n";
     }
 
 

@@ -164,6 +164,86 @@ namespace Copium
 		rb->force += *force;
 	}
 
+
+	static MonoObject* GetComponent(UUID gameObjID, MonoReflectionType* componentType)
+	{
+		auto pair = scriptingSystem.reflectionMap.find(mono_reflection_type_get_type(componentType));
+		if (pair == scriptingSystem.reflectionMap.end())
+		{
+			return nullptr;
+		}
+		ComponentType cType = pair->second;
+
+		GameObject* gameObject = MySceneManager.FindGameObjectByID(gameObjID);
+		if (!gameObject)
+			return nullptr;
+		Component* component{ nullptr };
+		switch (cType)
+		{
+		case(ComponentType::Animator):
+		{
+			component = gameObject->GetComponent<Animator>();
+			break;
+		}
+		case(ComponentType::AudioSource):
+		{
+			component = gameObject->GetComponent<AudioSource>();
+			break;
+		}
+		case(ComponentType::BoxCollider2D):
+		{
+			component = gameObject->GetComponent<BoxCollider2D>();
+			break;
+		}
+		case(ComponentType::Button):
+		{
+			component = gameObject->GetComponent<Button>();
+			break;
+		}
+		case(ComponentType::Camera):
+		{
+			component = gameObject->GetComponent<Camera>();
+			break;
+		}
+		case(ComponentType::Image):
+		{
+			component = gameObject->GetComponent<Image>();
+			break;
+		}
+		case(ComponentType::Rigidbody2D):
+		{
+			component = gameObject->GetComponent<Rigidbody2D>();
+			break;
+		}
+		case(ComponentType::SpriteRenderer):
+		{
+			component = gameObject->GetComponent<SpriteRenderer>();
+			break;
+		}
+		case(ComponentType::Script):
+		{
+			//Different scripts
+			component = gameObject->GetComponent<Script>();
+			break;
+		}
+		case(ComponentType::Text):
+		{
+			component = gameObject->GetComponent<Text>();
+			break;
+		}
+		case(ComponentType::SortingGroup):
+		{
+			component = gameObject->GetComponent<SortingGroup>();
+			break;
+		}
+		}
+		if (component)
+		{
+			return scriptingSystem.mComponents[scriptingSystem.mCurrentScene][component->uuid];
+		}
+		return nullptr;
+	}
+
 	/*******************************************************************************
 	/*!
 	\brief
@@ -810,7 +890,9 @@ namespace Copium
 		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
 		if (gameObj == nullptr)
 			return;
-		gameObj->GetComponent<AudioSource>()->volume = volume;
+		AudioSource* audioSource = gameObj->GetComponent<AudioSource>();
+		audioSource->volume = volume;
+		SoundSystem::Instance()->soundList[audioSource->alias].first->setVolume(audioSource->volume);
 	}
 
 	static float AudioSourceGetVolume(UUID ID)
@@ -858,7 +940,7 @@ namespace Copium
 		{
 			if (text.uuid == ID)
 			{
-				color = &text.color;
+				*color = text.color;
 				return;
 			}
 		}
@@ -957,6 +1039,14 @@ namespace Copium
 		return 0;
 	}
 
+
+	static void Log(MonoString* message)
+	{
+		char* str = mono_string_to_utf8(message);
+		MyEventSystem->publish(new EditorConsoleLogEvent(str));
+		mono_free(str);
+	}
+
 	/*******************************************************************************
 	/*!
 	\brief
@@ -990,6 +1080,7 @@ namespace Copium
 		Register(QuitGame);
 		Register(GetButtonState);
 		Register(AddComponent);
+		Register(GetComponent);
 		Register(AudioSourcePlay);
 		Register(AudioSourceStop);
 		Register(AudioSourceSetVolume);
@@ -1000,6 +1091,7 @@ namespace Copium
 		Register(SetComponentEnabled);
 		Register(SetParent);
 		Register(GetFPS);
+		Register(Log);
 		Register(GetSpriteRendererColor);
 		Register(SetSpriteRendererColor);
 		Register(GetImageColor);

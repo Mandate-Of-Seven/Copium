@@ -135,7 +135,7 @@ namespace Copium
             << " | Resolution: " << windowWidth << " by " << windowHeight;
         glfwSetWindowTitle(window, sstr.str().c_str());
 
-        //std::cout << "FPS: " << MyFrameRateController.getFPS() << "\n";
+        //PRINT("FPS: " << MyFrameRateController.getFPS());
 
         glfwSwapBuffers(window);
     }
@@ -223,7 +223,7 @@ namespace Copium
         std::ifstream ifs(_filename);
         if (!ifs)
         {
-            std::cout << "Error opening config json file!\n";
+            PRINT("Error opening config json file!");
             return false;
         }
         rapidjson::IStreamWrapper isw(ifs);
@@ -245,8 +245,7 @@ namespace Copium
         {
             return false;
         }
-        std::cout << "Loading from config...\n" << "Window Width:" << _w << '\n'
-            << "Window Height:" << _h << std::endl;
+        PRINT("Loading from config...\n" << "Window Width:" << _w << '\n' << "Window Height:" << _h);
         return true;
     }
 }

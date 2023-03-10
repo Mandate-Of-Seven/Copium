@@ -9,6 +9,7 @@ public class ReportScreenManager: CopiumScript
     public Button CloseReportBtn;
 	public Button ReportScreenBtn;
     public GameObject ReportTab;
+    public ResultManager resultManager;
 
 	public Image alert;
 
@@ -25,8 +26,12 @@ public class ReportScreenManager: CopiumScript
 	{
 
 	}
-	void Update()
-	{
+    void Update()
+    {
+        UpdateCanvas();
+    }
+    public void UpdateCanvas()
+    {
         if (!openHover && ReportScreenBtn.state == ButtonState.OnHover)
         {
             openHover = true;
@@ -34,11 +39,8 @@ public class ReportScreenManager: CopiumScript
         }
         else if (ReportScreenBtn.state == ButtonState.OnRelease)
         {
-			alert.enabled = false;
-            isReportScreenOn = true;
             audioManager.clickSFX.Play();
-			ReportScreenBtn.gameObject.SetActive(false);
-			ReportTab.transform.parent = null;
+            OpenPanel();
         }
         else if (ReportScreenBtn.state == ButtonState.None)
         {
@@ -52,10 +54,8 @@ public class ReportScreenManager: CopiumScript
         }
 		else if(CloseReportBtn.state == ButtonState.OnRelease)
         {
-            isReportScreenOn = false;
             audioManager.clickSFX.Play();
-			ReportScreenBtn.gameObject.SetActive(true);
-			ReportTab.transform.parent = parent.transform;
+            ClosePanel();
         }        
         else if (CloseReportBtn.state == ButtonState.None)
         {
@@ -72,4 +72,27 @@ public class ReportScreenManager: CopiumScript
             ReportTab.transform.localScale = Vector3.Lerp(ReportTab.transform.localScale,Vector3.one,Time.deltaTime * transitionSpeed);
         }
 	}
+
+    public void OpenPanel()
+    {
+        if (isReportScreenOn)
+            return;
+
+        resultManager.Disable();
+        alert.enabled = false;
+        isReportScreenOn = true;
+        ReportScreenBtn.gameObject.SetActive(false);
+        ReportTab.transform.parent = null;
+    }
+
+    public void ClosePanel()
+    {
+        if (!isReportScreenOn)
+            return;
+
+        isReportScreenOn = false;
+        resultManager.Enable();
+        ReportScreenBtn.gameObject.SetActive(true);
+        ReportTab.transform.parent = parent.transform;
+    }
 }

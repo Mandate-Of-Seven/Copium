@@ -58,6 +58,7 @@ public class Event_03: CopiumScript
 
             // Indicate GG Game Over
             EventManager.Option_01.txt.text = "Send Danton out to find supplies";
+            EventManager.Option_01.txt.color = Color.red;
             EventManager.Option_01.ShowAllIcons();
 
             resolutionTextNum = 2;
@@ -71,8 +72,9 @@ public class Event_03: CopiumScript
             EventManager.Body.text = "Out of nowhere an explosion ripped through the back up engine room, quickly engulfing " +
                 "the back of the train in flames";
 
-            // Indicate lost of engine
+            // Indicate GG Game Over
             EventManager.Option_01.txt.text = "Watch the flames destroy the engine";
+            EventManager.Option_01.txt.color = Color.red;
             EventManager.Option_01.ShowIcons(false, true, false, true);
 
             // Indicate Crew lose health
@@ -129,13 +131,14 @@ public class Event_03: CopiumScript
         {
             if (choice == 1)
             {
+                cm.audioManager.ending3bVO.Play();
                 EventManager.Body.text = "There were many days, if not weeks, with no word about Danton's whereabouts. Bronson, " +
                                          "Chuck, and Harris have all died from their wounds and the cold; I have run out of everything " +
                                          "I need to survive, including food, fuel, and water; and I'm afraid I won't be able to return " +
                                          "home alive this time. I wish you were still around, mom";
 
                 EventManager.EventSequence = -3;
-                EventManager.OverideEvent();
+                EventManager.OverrideEvent();
             }
 
         }
@@ -147,7 +150,7 @@ public class Event_03: CopiumScript
                     "Lights in the train start dimming out... \n\nThe train becomes silent...";
 
                 EventManager.EventSequence = -3;
-                EventManager.OverideEvent();
+                EventManager.OverrideEvent();
             }
             else if (choice == 2)
             {

@@ -412,7 +412,7 @@ namespace Copium
 						continue;
 
 					// If text is too small to even read
-					if (updatedSize < 0.03f && updatedSize > -0.03f)
+					if (updatedSize < 0.01f && updatedSize > -0.01f)
 						continue;
 
 					renderer.draw_text(text.content, updatedPos, text.get_color(), updatedSize, updatedWrapper, text.font, &text.layeredColor);
@@ -621,7 +621,7 @@ namespace Copium
 								continue;
 
 							// If text is too small to even read
-							if (updatedSize < 0.03f && updatedSize > -0.03f)
+							if (updatedSize < 0.01f && updatedSize > -0.01f)
 								continue;
 
 							renderer.draw_text(text.content, updatedPos, text.get_color(), updatedSize, updatedWrapper, text.font,&text.layeredColor);

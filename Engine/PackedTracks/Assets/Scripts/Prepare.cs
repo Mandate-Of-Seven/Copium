@@ -26,21 +26,36 @@ public class Prepare : CopiumScript
     public Button bronsonButton;
     public Button chuckButton;
     public Button dantonButton;
+    ButtonWrapper harrisBtnWrapper;
+    ButtonWrapper bronsonBtnWrapper;
+    ButtonWrapper chuckBtnWrapper;
+    ButtonWrapper dantonBtnWrapper;
     public Text resultText;
+    
 
     public GameObject prepareChoices;
     public GameObject prepareFinal;
     public GameObject prepareCanvas;
 
 
-    public CrewMenu.Person currentCrewmate;
+    public Person currentCrewmate;
     public bool makeChoice;
     public int eventNum;
     public int choice;
 
+    bool option1Hover = false;
+    bool option2Hover = false;
+
     void Start()
     {
-
+        harrisBtnWrapper = new ButtonWrapper(harrisButton,crewManager.audioManager);
+        harrisBtnWrapper.SetImage(harrisButton.GetComponent<Image>());
+        bronsonBtnWrapper = new ButtonWrapper(bronsonButton,crewManager.audioManager);
+        bronsonBtnWrapper.SetImage(bronsonButton.GetComponent<Image>());
+        chuckBtnWrapper = new ButtonWrapper(chuckButton,crewManager.audioManager);
+        chuckBtnWrapper.SetImage(chuckButton.GetComponent<Image>());
+        dantonBtnWrapper = new ButtonWrapper(dantonButton,crewManager.audioManager);
+        dantonBtnWrapper.SetImage(dantonButton.GetComponent<Image>());
     }
     void Update()
     {
@@ -48,48 +63,61 @@ public class Prepare : CopiumScript
         {
             if (prepareButton1.state == ButtonState.OnClick)
             {
+                crewManager.audioManager.clickSFX.Play();
                 choice = 1;
                 GenerateResults();
             }
+            else if (prepareButton1.state == ButtonState.None)
+            {
+                option1Hover = false;
+            }
+
+            if (prepareButton2.state == ButtonState.OnHover)
+            {                
+                if (!option2Hover)
+                {
+                    option2Hover = true;
+                    crewManager.audioManager.hoverSFX.Play();
+                }
+            }
             else if (prepareButton2.state == ButtonState.OnClick)
             {
+                crewManager.audioManager.clickSFX.Play();
                 choice = 2;
                 GenerateResults();
             }
+            else if (prepareButton2.state == ButtonState.None)
+            {
+                option2Hover = false;
+            }
         }
 
-        if (harrisButton.state == ButtonState.OnClick)
+        if (harrisBtnWrapper.GetState() == ButtonState.OnClick)
         {
             resultText.text = crewManager.crew[0].resultText;
         }
-        else if (bronsonButton.state == ButtonState.OnClick)
+        else if (bronsonBtnWrapper.GetState() == ButtonState.OnClick)
         {
             resultText.text = crewManager.crew[1].resultText;
         }
-        else if (chuckButton.state == ButtonState.OnClick)
+        else if (chuckBtnWrapper.GetState() == ButtonState.OnClick)
         {
             resultText.text = crewManager.crew[2].resultText;
         }
-        else if (dantonButton.state == ButtonState.OnClick)
+        else if (dantonBtnWrapper.GetState() == ButtonState.OnClick)
         {
             resultText.text = crewManager.crew[3].resultText;
-        }
-
-        if (closeButton.state == ButtonState.OnClick)
-        {
-            prepareFinal.SetActive(false);
-            prepareCanvas.SetActive(false);
         }
     }
 
     
 
-    public void GenerateEvents(CrewMenu.Person crewmate)
+    public void GenerateEvents(Person crewmate)
     {
         currentCrewmate.resultText = "";
-
         prepareCanvas.SetActive(true);
         prepareChoices.SetActive(true);
+        prepareFinal.SetActive(false);
         prepareOption1.gameObject.SetActive(false);
         prepareOption2.gameObject.SetActive(false);
 
@@ -127,7 +155,7 @@ public class Prepare : CopiumScript
         }
 
         currentCrewmate = crewmate;
-        eventNum = RNG.RandInt(1,14);
+        eventNum = RNG.Range(1,14);
 
         switch (eventNum)
         {
@@ -452,8 +480,5 @@ public class Prepare : CopiumScript
         {
             dantonButton.gameObject.SetActive(true);
         }
-
-
-
     }
 }

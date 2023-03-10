@@ -4,7 +4,6 @@ using System;
 public class AudioManager: CopiumScript
 {
 	public AudioSource ambTrain;
-	public AudioSource bgmMainMenu;
 	public AudioSource bgmTrain;
 	public AudioSource clickSFX;
 	public AudioSource paperSFX;
@@ -13,11 +12,20 @@ public class AudioManager: CopiumScript
 	public AudioSource deccelerateSFX;
 	public AudioSource leverEngagedSFX;
 	public AudioSource hoverSFX;
-	public int state = 0;
+	public AudioSource explosionSFX;
+	public AudioSource failedSFX;
+	public AudioSource ending3bVO;
+    public AudioSource ending2aVO;
+    public AudioSource endingHarrisVO;
+    public AudioSource endingBronsonVO;
+    public AudioSource endingChuckVO;
+    public AudioSource endingDantonVO;
+    public AudioSource endingGenericVO;
+    public AudioSource endingAllDiedVO;
+
 
     void Start()
 	{
-        state = 1;
         bgmTrain.Play();
 	}
 	void Update()

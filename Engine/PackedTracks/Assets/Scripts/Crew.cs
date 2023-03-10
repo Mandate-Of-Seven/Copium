@@ -10,83 +10,58 @@ public class Crew : CopiumScript
     public Text healthT, mentalT, hungerT;
 
     public Button selectBtn;
+    public ButtonWrapper selectBtnWrapper;
     public bool selected = false;
     public bool isDeployed = false;
 
     public int crewIndex;
-    CrewMenu.Person person;
+    Person person;
 
     public Image sprite;
 
     void Start()
     {
         person = crewMenu.crew[crewIndex];
+        person.crewScript = this;
+        selectBtnWrapper = new ButtonWrapper(selectBtn,crewMenu.audioManager);
+        selectBtnWrapper.SetImage(sprite);
+        Disable();
     }
     void Update()
     {
-        if (crewMenu.preparing)
+        if (selectBtnWrapper.GetState() == ButtonState.OnClick)
         {
-            selectBtn.enabled = true;
-            if (selectBtn.state == ButtonState.OnClick)
-            {
-                selected = !selected;
-                isDeployed = selected;
-            }
-            showDeployed.SetActive(selected);
+            if (selected)
+                Deselect();
+            else
+                Select();
         }
-        else
-        {
-            selectBtn.enabled = false;
-            selected = false;
-            showDeployed.SetActive(false);
-        }
-
-        if (crewMenu.deployed)
-        {
-            selected = false;
-            showDeployed.SetActive(selected);
-        }
-
-        UpdateStats();
     }
 
-    void UpdateStats()
+    //UPDATES AS IN IT UPDATES THE EFFECTS
+
+    public void Disable()
     {
-        person = crewMenu.crew[crewIndex];
-        // Console.WriteLine(person.name);
+        Deselect();
+        selectBtnWrapper.SetInteractable(false);
+    }
 
-        if (person.health > 10)
-            healthT.text = "Healthy";
-        else if(person.health > 5)
-            healthT.text = "Injured";
-        else if (person.health > 0)
-            healthT.text = "Critical";
-        else
-            healthT.text = "Dead";
+    public void Enable()
+    {
+        selectBtnWrapper.SetInteractable(true);
+    }
 
-        if (person.mental > 10)
-            mentalT.text = "Calm";
-        else if (person.mental > 5)
-            mentalT.text = "Irrational";
-        else if (person.mental > 0)
-            mentalT.text = "Insane";
-        else
-            mentalT.text = "Suicidal";
+    public void Deselect()
+    {
+        selected = false;
+        isDeployed = selected;
+        showDeployed.SetActive(selected);
+    }
 
-        if (person.hunger > 5)
-            hungerT.text = "Full";
-        else if (person.hunger > 0)
-            hungerT.text = "Hungry";
-        else
-            hungerT.text = "Famished";
-
-        Color tmp = Color.white;
-        float x = ((float)person.health/15.0f);
-        tmp.r = x;
-        tmp.g = x;
-        tmp.b = x;
-
-        sprite.color = tmp;
-        
+    public void Select()
+    {
+        selected = true;
+        isDeployed = selected;
+        showDeployed.SetActive(selected);
     }
 }

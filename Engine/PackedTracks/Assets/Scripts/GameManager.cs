@@ -28,19 +28,21 @@ public class GameManager: CopiumScript
     public TrainManager trainManager;
     public ReportScreenManager reportScreenManager;
     public CrewStatusManager crewStatusManager;
+    public ResultManager resultManager;
+    public PauseMenu pauseMenu;
 
-    public Text tracker;
-
-    public bool isPaused = false;
     public float distanceLeft = 200;
 
     public float distanceInterval = 1.0f;
     float foodTimer = 0.0f;
     float hungerTimer = 0.0f;
     float timer = 0.0f;
+    float distancePerEvent = 10.0f;
 
     bool updateEvent = false;
     public bool gameEnd = false;
+
+    bool moving = false;
 
     void Start()
 	{
@@ -55,48 +57,100 @@ public class GameManager: CopiumScript
 	void Update()
     {
         ButtonInputs();
+        if (pauseMenu.isPaused)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.C))
+            crewMenuScript.SetCrew(CrewMenu.STAT_TYPES.ALIVE, 2, 0);
+
+        if (Input.GetKeyDown(KeyCode.B))
+            crewMenuScript.SetCrew(CrewMenu.STAT_TYPES.ALIVE, 1, 0);
+
+        if (Input.GetKeyDown(KeyCode.D))
+            crewMenuScript.SetCrew(CrewMenu.STAT_TYPES.ALIVE, 3, 0);
+
+        // Toggle canvases
+        //CanvasManager();
+
+        // Game ends
+        if (CheckForGameEndCondition())
+            return;
 
         // Cant deploy if the train is moving
-        if (trainManager.currentSpeed > 0)
+        if ((moving && trainManager.currentSpeed <= 0f) || (!moving && trainManager.currentSpeed > 0f))
         {
-            crewMenuScript.prepareButton.gameObject.SetActive(false);
-            crewMenuScript.deployButton.gameObject.SetActive(false);
-        }
-        else
-        {
-            crewMenuScript.prepareButton.gameObject.SetActive(true);
-            crewMenuScript.deployButton.gameObject.SetActive(true);
+            ToggleMoving();
         }
 
-        //Stop travelling
-        if (trainManager.currentSpeed > 0 && distanceLeft > 0)
+        // When train is moving and can still travel
+        MoveTrain();
+
+        // Reducing supplies for crew to consume
+        SupplyCounter();
+    }
+
+    bool CheckForGameEndCondition()
+    {
+        if(!gameEnd && EventManager.EventSequence < 0)
         {
-            if (timer >= distanceInterval)
+            gameEnd = true;
+            trainManager.FlickLever(false);
+            crewStatusManager.ClosePanel();
+            reportScreenManager.OpenPanel();
+        }
+
+        return gameEnd;
+    }
+
+    void CanvasManager()
+    {
+        reportScreenManager.UpdateCanvas();
+        crewStatusManager.UpdateCanvas();
+        resultManager.UpdateCanvas();
+    }
+
+    public void ToggleMoving()
+    {
+        moving = !moving;
+        crewMenuScript.SetClickable(!moving);
+    }
+
+    void MoveTrain()
+    {
+        if (trainManager.accelerate && distanceLeft > 0)
+        {
+            if (timer >= distanceInterval) // Every few distance interval
             {
-                distanceLeft -= trainManager.currentSpeed/3.0f;
-                if (distanceLeft % 50 < 1.0f && !updateEvent)
+                distanceLeft -= trainManager.currentSpeed / 3.0f; // Reduce the distance left
+
+                // Only update event if distance per event is activated
+                if (distanceLeft % distancePerEvent < 1.0f && !updateEvent)
                 {
+                    // Show notifications (Visual & Audio)
                     reportScreenManager.alert.enabled = true;
                     crewStatusManager.alert.enabled = true;
-                    updateEvent = true;
+
+                    updateEvent = true; // Trigger only once
                     EventManager.UpdateEventSequence();
                 }
-                else if(distanceLeft % 50 > 1.0f)
+                // Right now if the distance left to the next event is reseted, we can update event again
+                else if (distanceLeft % distancePerEvent > 1.0f)
                     updateEvent = false;
 
-                // Close to the next event and has yet to select a choice
-                if (distanceLeft % 50 < 5.0f && EventManager.EventSequence > 0 && !updateEvent) 
+                // Close to the next event and has yet to select a choice, select default choice
+                if (distanceLeft % distancePerEvent < 5.0f && EventManager.EventSequence > 0 && !updateEvent)
                     EventManager.SelectDefaultChoice();
 
                 timer = 0.0f;
             }
-            
+
             timer += Time.deltaTime;
         }
-        tracker.text =  ((int)distanceLeft).ToString() + "KM";
+    }
 
-        // Reducing supplies for crew to consume
-        if(trainManager.currentSpeed > 0 && distanceLeft < 200.0f)
+    void SupplyCounter()
+    {
+        if (trainManager.accelerate && distanceLeft < 200.0f)
         {
             if (foodTimer >= 5.0f && crewMenuScript.supplies != 0)
             {
@@ -126,10 +180,10 @@ public class GameManager: CopiumScript
             gameEnd = true;
             trainManager.FlickLever();
             EventManager.EventSequence = -1;
-            EventManager.OverideEvent();
+            EventManager.OverrideEvent();
         }
 
-        KeyInputs();
+        //KeyInputs();
     }
 
     void ButtonInputs()
@@ -143,6 +197,7 @@ public class GameManager: CopiumScript
         }
         if (ManualPopUpBtn.state == ButtonState.OnRelease && ManualPopUp.activeSelf)
         {
+            Console.WriteLine("HELLO");
             audioManager.paperSFX.Play();
             ManualPopUp.SetActive(false);
 
@@ -152,51 +207,49 @@ public class GameManager: CopiumScript
             Page4.SetActive(false);
             prevButtonObject.SetActive(false);
         }
-
-
     }
 
-    void KeyInputs()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            isPaused = !isPaused;
-            PauseCanvas.SetActive(isPaused);
-            if (isPaused)
-            {
-                InternalCalls.PauseAllAnimation();
-            }
-            else
-            {
-                InternalCalls.PlayAllAnimation();
-            }
-        }
+    // void KeyInputs()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.P))
+    //     {
+    //         isPaused = !isPaused;
+    //         PauseCanvas.SetActive(isPaused);
+    //         if (isPaused)
+    //         {
+    //             InternalCalls.PauseAllAnimation();
+    //         }
+    //         else
+    //         {
+    //             InternalCalls.PlayAllAnimation();
+    //         }
+    //     }
 
-        if (!isPaused)
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                isPaused = true;
-            }
-        }
-        else
-        {
-            if (PauseResumeBtn.state == ButtonState.OnClick)
-            {
-                isPaused = false;
-                PauseCanvas.SetActive(false);
-                InternalCalls.PlayAllAnimation();
-            }
+    //     if (!isPaused)
+    //     {
+    //         if (Input.GetKeyDown(KeyCode.Escape))
+    //         {
+    //             isPaused = true;
+    //         }
+    //     }
+    //     else
+    //     {
+    //         if (PauseResumeBtn.state == ButtonState.OnClick)
+    //         {
+    //             isPaused = false;
+    //             PauseCanvas.SetActive(false);
+    //             InternalCalls.PlayAllAnimation();
+    //         }
 
-            if (PauseQuitBtn.state == ButtonState.OnClick)
-            {
-                Application.Quit();
-            }
-        }
+    //         if (PauseQuitBtn.state == ButtonState.OnClick)
+    //         {
+    //             Application.Quit();
+    //         }
+    //     }
 
-        if (Input.GetKey(KeyCode.P))
-        {
-            Application.Quit();
-        }
-    }
+    //     if (Input.GetKey(KeyCode.P))
+    //     {
+    //         Application.Quit();
+    //     }
+    // }
 }

@@ -18,6 +18,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Windows/windows-system.h"
 #include "Windows/windows-input.h"
 #include "Editor/editor-system.h"
+#include "Files/assets-system.h"
 #include "Utilities/thread-system.h"
 #include "Events/events-system.h"
 #include <SceneManager/scene-manager.h>
@@ -75,8 +76,7 @@ namespace Copium
 		camera.init((float) sceneView.get_width(), (float) sceneView.get_height());
 
 
-		buttons.push_back(Texture("Data/Resource/PreviewButton.png"));
-		buttons.push_back(Texture("Data/Resource/StopButton.png"));
+		buttons = MyAssetSystem.GetResources();
 		previewFlag = false;
 	}
 
@@ -95,10 +95,16 @@ namespace Copium
 		{
 			enableEditor = tempMode;
 			playMode(enableEditor);
-			/*if (MySceneManager.startPreview())
+			if (MySceneManager.startPreview())
 			{
 				MyMessageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
-			}*/
+			}
+		}
+
+		if (!sceneChangeName.empty())
+		{
+			MySceneManager.load_scene(sceneChangeName);
+			sceneChangeName.clear();
 		}
 
 		// Start the Dear ImGui frame
@@ -187,16 +193,16 @@ namespace Copium
 						threadSystem.returnMutex(MutexType::FileSystem);
 						if (!filepath.empty())
 						{
-							std::cout << filepath << std::endl;
+							PRINT(filepath);
 
 							if (MySceneManager.load_scene(filepath))
-								std::cout << "loading success\n";
+								PRINT("loading success");
 							else
-								std::cout << "loading fail\n";
+								PRINT("loading fail");
 						}
 						else
 						{
-							std::cout << "file failed to open\n";
+							PRINT("file failed to open");
 						}
 
 					}
@@ -209,7 +215,7 @@ namespace Copium
 							while (!threadSystem.acquireMutex(MutexType::FileSystem));
 							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
-							std::cout << filepath << std::endl;
+							PRINT(filepath);
 
 							size_t pos = filepath.find_last_of("/\\") + 1;
 							std::string sceneName = filepath.substr(pos);
@@ -230,7 +236,7 @@ namespace Copium
 							while (!threadSystem.acquireMutex(MutexType::FileSystem));
 							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
-							std::cout << filepath << std::endl;
+							PRINT(filepath);
 							size_t pos = filepath.find_last_of("/\\") + 1;
 							std::string sceneName = filepath.substr(pos);
 							MySceneManager.save_scene(filepath, sceneName);
@@ -251,7 +257,7 @@ namespace Copium
 						}
 						//exit game engine
 						MyEventSystem->publish(new QuitEngineEvent);
-						std::cout << "Copium has been huffed, Engine shutting down" << std::endl;
+						PRINT("Copium has been huffed, Engine shutting down");
 
 					}
 
@@ -331,18 +337,18 @@ namespace Copium
 					threadSystem.returnMutex(MutexType::FileSystem);
 					if (!filepath.empty())
 					{
-						std::cout << filepath << std::endl;
+						PRINT(filepath);
 
 
 						if (MySceneManager.load_scene(filepath))
-							std::cout << "loading success\n";
+							PRINT("loading success");
 						else
-							std::cout << "loading fail\n";
+							PRINT("loading fail");
 
 					}
 					else
 					{
-						std::cout << "file failed to open\n";
+						PRINT("file failed to open");
 					}
 				}
 				else if (MyInputSystem.is_key_pressed(GLFW_KEY_S))
@@ -356,7 +362,7 @@ namespace Copium
 							while (!threadSystem.acquireMutex(MutexType::FileSystem));
 							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
-							std::cout << filepath << std::endl;
+							PRINT(filepath);
 							size_t pos = filepath.find_last_of("/\\") + 1;
 							std::string sceneName = filepath.substr(pos);
 							MySceneManager.save_scene(filepath, sceneName);
@@ -374,7 +380,7 @@ namespace Copium
 							while (!threadSystem.acquireMutex(MutexType::FileSystem));
 							std::string filepath = FileDialogs::save_file("Copium Scene (*.scene)\0.scene\0");
 							threadSystem.returnMutex(MutexType::FileSystem);
-							std::cout << filepath << std::endl;
+							PRINT(filepath);
 							size_t pos = filepath.find_last_of("/\\") + 1;
 							std::string sceneName = filepath.substr(pos);
 							MySceneManager.save_scene(filepath, sceneName, true);
@@ -387,12 +393,6 @@ namespace Copium
 
 
 				}
-			}
-
-			if (!sceneChangeName.empty())
-			{
-				MySceneManager.load_scene(sceneChangeName);
-				sceneChangeName.clear();
 			}
 
             //Call all the editor layers updates here
@@ -440,7 +440,7 @@ namespace Copium
 		layers.exit();
 		performanceViewer.exit();
 
-		std::cout << "Before deleting, Undo stack: " << commandManager.undoStack.size() << ", Redo stack:" << commandManager.redoStack.size()<<"\n";
+		PRINT("Before deleting, Undo stack: " << commandManager.undoStack.size() << ", Redo stack:" << commandManager.redoStack.size());
 		while (commandManager.undoStack.size() > 0)
 		{
 			UndoRedo::Command* temp = get_commandmanager()->undoStack.top();
@@ -456,7 +456,7 @@ namespace Copium
 			get_commandmanager()->redoStack.pop();
 			
 		}
-		std::cout << "After deleting, Undo stack: " << commandManager.undoStack.size() << ", Redo stack:" << commandManager.redoStack.size() << "\n";
+		PRINT("After deleting, Undo stack: " << commandManager.undoStack.size() << ", Redo stack:" << commandManager.redoStack.size());
 		
 		camera.exit();
 	}
@@ -465,11 +465,11 @@ namespace Copium
 	{
 		if (_mType == MESSAGE_TYPE::MT_START_PREVIEW)
 		{
-			//tempMode = false;
+			previewFlag = true;
 		}
 		else if (_mType == MESSAGE_TYPE::MT_STOP_PREVIEW)
 		{
-			//tempMode = true;
+			previewFlag = false;
 			Scene* scene = MySceneManager.get_current_scene();
 			if (scene && !scene->componentArrays.GetArray<Camera>().empty())
 				for (Camera& cam : scene->componentArrays.GetArray<Camera>())
@@ -482,7 +482,6 @@ namespace Copium
 
 	void EditorSystem::imguiConsoleAddLog(std::string value)
 	{
-		std::cout << value << "\n";
 		Window::EditorConsole::editorLog.add_logEntry(value);
 	}
 
@@ -522,10 +521,10 @@ namespace Copium
 
 	void EditorSystem::PreviewButton()
 	{
-		int i{ 0 };
+		int i{ 3 };
 		if (previewFlag && MySceneManager.get_current_scene())
 		{
-			i = 1;
+			i = 4;
 		}
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 2));

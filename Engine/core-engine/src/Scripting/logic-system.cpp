@@ -37,13 +37,14 @@ namespace Copium
 		double timeElasped;
 		bool inPlayMode{ false };
 		Button* pHoveredBtn{ nullptr };
+		bool mouseHeld = false;
 	}
 
 	ButtonState GetButtonState(Button& btn, GameObject* selectedGameObject)
 	{
 		if (selectedGameObject != &btn.gameObj)
 		{
-			if (btn.state == ButtonState::None || btn.state == ButtonState::OnRelease)
+			if (btn.state == ButtonState::None || btn.state == ButtonState::OnRelease || btn.state == ButtonState::OnHover)
 			{
 				return ButtonState::None;
 			}
@@ -51,23 +52,30 @@ namespace Copium
 		glm::vec2 scenePos = MySceneManager.mainCamera->get_game_ndc();
 		Transform& transform{ btn.gameObj.transform };
 
-		if (pHoveredBtn == nullptr)
+		//if (MyInputSystem.is_mousebutton_pressed(0) && pHoveredBtn == nullptr)
+		//{
+		//	return ButtonState::None;
+		//}
+		//else
+		 if (pHoveredBtn == nullptr)
 		{
 			//PRINT("GETTING BUTTON STATE");
 			//PRINT(scenePos.x << " , " << scenePos.y);
 			AABB relativeBounds = btn.bounds.GetRelativeBounds(transform.GetWorldPosition(), transform.GetWorldScale());
 			//PRINT("X: " << relativeBounds.max.x << " , " << relativeBounds.min.x);
 			//PRINT("Y: " << relativeBounds.max.y << " , " << relativeBounds.min.y);
+
 			if (static_collision_pointrect(scenePos, relativeBounds))
 			{
 				//PRINT("COLLIDED");
-				if (MyInputSystem.is_mousebutton_pressed(0))
+				if (!mouseHeld && MyInputSystem.is_mousebutton_pressed(0))
 				{
 					if (pHoveredBtn)
 					{
 						pHoveredBtn = nullptr;
 					}
 					pHoveredBtn = &btn;
+					mouseHeld = true;
 					if (btn.state == ButtonState::OnClick || btn.state == ButtonState::OnHeld)
 						return ButtonState::OnHeld;
 					return ButtonState::OnClick;
@@ -79,9 +87,11 @@ namespace Copium
 		{
 			if (!MyInputSystem.is_mousebutton_pressed(0))
 			{
-				pHoveredBtn->state = ButtonState::None;
+				AABB relativeBounds = btn.bounds.GetRelativeBounds(transform.GetWorldPosition(), transform.GetWorldScale());
 				pHoveredBtn = nullptr;
-				return ButtonState::OnRelease;
+				if (static_collision_pointrect(scenePos, relativeBounds) && selectedGameObject == &btn.gameObj)
+					return ButtonState::OnRelease;
+				return ButtonState::None;
 			}
 			if (btn.state == ButtonState::OnClick || btn.state == ButtonState::OnHeld)
 				return ButtonState::OnHeld;
@@ -140,6 +150,7 @@ namespace Copium
 		}
 		default:
 		{
+			//PRINT("UI: NONE " << btn.gameObj.name);
 			if (btn.targetGraphic)
 			{
 				btn.targetGraphic->layeredColor = Linear(btn.previousColor, btn.normalColor, btn.timer / btn.fadeDuration);
@@ -311,8 +322,8 @@ namespace Copium
 
 		GameObject* selected = GetSelectedGameObject();
 
-		//if (selected)
-		//	PRINT(selected->name);
+		if (selected)
+			PRINT("SELECTED: " << selected->name);
 		for (Button& button : pScene->componentArrays.GetArray<Button>())
 		{
 			if (!button.enabled || !button.gameObj.IsActive())
@@ -325,6 +336,11 @@ namespace Copium
 			button.state = GetButtonState(button,selected);
 			ButtonBehavior(button);
 		}
+
+		if (!MyInputSystem.is_mousebutton_pressed(0))
+		{
+			mouseHeld = false;
+		}
 	}
 
 	void LogicSystem::exit()
@@ -333,12 +349,12 @@ namespace Copium
 
 	void LogicSystem::CallbackSceneLinked(SceneLinkedEvent* pEvent)
 	{
-		pHoveredBtn = nullptr;
 		//MT_START_PREVIEW
 		if (!inPlayMode)
 			return;
-		//PRINT("CALLED START AGAIN!");
+		PRINT("CALLED START AGAIN!");
 		Scene& scene = pEvent->scene;
+		pHoveredBtn = nullptr;
 		for (Script& script : scene.componentArrays.GetArray<Script>())
 		{
 			MyEventSystem->publish(new ScriptInvokeMethodEvent(script, "Awake"));
@@ -375,6 +391,5 @@ namespace Copium
 		{
 			inPlayMode = false;
 		}
-		pHoveredBtn = nullptr;
 	}
 }

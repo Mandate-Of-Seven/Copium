@@ -363,7 +363,6 @@ namespace Copium
 		const AABB& aabb2, const Math::Vec2& vel2)
 	{
 		Math::Vec2 vB = vel1 - vel2;
-		//std::cout << vB.x << " " << vB.y << std::endl;
 		float xEntry = 0.0f;
 		float xExit = 0.0f;
 		float yEntry = 0.0f;
@@ -452,6 +451,5 @@ namespace Copium
 			resolvePos = aabb1.max.x - aabb2.min.x;
 			position.x -= resolvePos;
 		}
-		//std::cout << resolvePos << std::endl;
 	}
 }

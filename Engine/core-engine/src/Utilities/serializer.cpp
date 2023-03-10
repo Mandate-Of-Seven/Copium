@@ -18,6 +18,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 #include <Events/events-system.h>
 #include "serializer.h"
 #include "Files/assets-system.h"
+#include "Audio/sound-system.h"
 namespace Copium
 {	
 	// Serialization --------------------------------------------
@@ -120,6 +121,7 @@ namespace Copium
 			for (T1* component : _data.GetComponents<T1>())
 			{
 				rapidjson::Value comp(rapidjson::kObjectType);
+				Copium::SerializeBasic(component->enabled, comp, _doc, "enabled");
 				Copium::SerializeBasic(component->uuid.GetUUID(), comp, _doc, "UID");
 				Copium::SerializeBasic(GetComponentType<T1>::name, comp, _doc, "Type");
 				Copium::SerializeBasic((int)GetComponentType<T1>::e, comp, _doc, "TypeID");
@@ -536,6 +538,7 @@ namespace Copium
 		Copium::Deserialize(_data.overLap, _value,"Overlap");
 		Copium::Deserialize(_data.volume, _value, "Volume");
 		Copium::Deserialize(_data.channel, _value, "Channel");
+		SoundSystem::Instance()->soundList[_data.alias].first->setVolume(_data.volume);
 	}
 
 
@@ -679,6 +682,7 @@ namespace Copium
 	{
 		Copium::Deserialize(_data.uuid.GetUUID(), _value, "UID");
 		Copium::Deserialize(_data.loop, _value, "Loop");
+		Copium::Deserialize(_data.enabled, _value, "enabled");
 		if (_data.loop)
 			PRINT("looping");
 		Copium::Deserialize(_data.reverse, _value, "Rev");
@@ -758,12 +762,14 @@ namespace Copium
 	template<>
 	void Serializer::Deserialize<BoxCollider2D>(BoxCollider2D& _data, const std::string& _key, rapidjson::Value& _value)
 	{
+		Copium::Deserialize(_data.enabled, _value, "enabled");
 		Copium::Deserialize(_data.uuid.GetUUID(), _value, "UID");
 		Deserialize(_data.bounds, "BoundingBox", _value);
 	}
 	template<>
 	void Serializer::Deserialize<Rigidbody2D>(Rigidbody2D& _data, const std::string& _key, rapidjson::Value& _value)
 	{
+		Copium::Deserialize(_data.enabled, _value, "enabled");
 		Copium::Deserialize(_data.uuid.GetUUID(), _value, "UID");
 		bool kinematic, grav;
 		Copium::Deserialize(grav, _value, "UseGravity");
@@ -802,6 +808,7 @@ namespace Copium
 	template<>
 	void Serializer::Deserialize<SpriteRenderer>(SpriteRenderer& _data, const std::string& _key, rapidjson::Value& _value)
 	{
+		Copium::Deserialize(_data.enabled, _value, "enabled");
 		Copium::Deserialize(_data.uuid.GetUUID(), _value, "UID");
 		Deserialize(_data.sprite, "", _value);
 	}
@@ -809,6 +816,7 @@ namespace Copium
 	template<>
 	void Serializer::Deserialize<Button>(Button& _data, const std::string& _key, rapidjson::Value& _value)
 	{
+		Copium::Deserialize(_data.enabled, _value, "enabled");
 		Copium::Deserialize(_data.uuid.GetUUID(), _value, "UID");
 		Copium::Deserialize((uint64_t&)_data.targetGraphic, _value, "Graphic ID");
 
@@ -835,6 +843,7 @@ namespace Copium
 	template<>
 	void Serializer::Deserialize<Text>(Text& _data, const std::string& _key, rapidjson::Value& _value)
 	{
+		Copium::Deserialize(_data.enabled, _value, "enabled");
 		Copium::Deserialize(_data.fontName, _value, "FontName");
 		_data.font = Font::getFont(_data.fontName);
 		int va, ha;
@@ -862,6 +871,7 @@ namespace Copium
 	template<>
 	void Serializer::Deserialize<Image>(Image& _data, const std::string& _key, rapidjson::Value& _value)
 	{
+		Copium::Deserialize(_data.enabled, _value, "enabled");
 		int ha, va;
 		Copium::Deserialize(ha, _value, "H_Align");
 		Copium::Deserialize(va, _value, "V_Align");
@@ -876,6 +886,7 @@ namespace Copium
 	template<>
 	void Serializer::Deserialize<Script>(Script& _data, const std::string& _key, rapidjson::Value& _value)
 	{
+		Copium::Deserialize(_data.enabled, _value, "enabled");
 		if (_data.fieldDataReferences.empty())
 			return;
 		for (auto it = _data.fieldDataReferences.begin(); it != _data.fieldDataReferences.end(); ++it)
