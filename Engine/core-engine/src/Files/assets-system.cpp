@@ -179,7 +179,7 @@ namespace Copium
 		for (std::string file : _files)
 		{
 			Texture texture(file);
-			texture.set_id(resources.size());
+			texture.set_id((unsigned int)resources.size());
 			resources.push_back(texture);
 		}
 	}

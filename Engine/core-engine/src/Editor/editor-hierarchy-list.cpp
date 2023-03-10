@@ -683,11 +683,6 @@ namespace Copium
 
 					GameObject* tmp{};
 					MyEventSystem->publish(new GameObjectInstantiateEvent(tmp, MyEditorSystem.pSelectedGameObject));
-
-					uint64_t u = MyEditorSystem.pSelectedGameObject->uuid;
-					PRINT(u);
-					PRINT(tmp->uuid.ConstGetUUID());
-
 				}
 				else
 				{
