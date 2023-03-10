@@ -16,7 +16,7 @@ public class GameManager: CopiumScript
     public GameObject Page3;
     public GameObject Page4;
     public GameObject prevButtonObject;
-
+    public HowtoPlayMenu htpmScript;
 
     public Button ManualBtn;
     public Button ManualPopUpBtn;
@@ -191,22 +191,28 @@ public class GameManager: CopiumScript
         if (ManualBtn.state == ButtonState.OnRelease)
         {
             audioManager.paperSFX.Play();
-            ManualPopUp.SetActive(true);
-            prevButtonObject.SetActive(true);
-            
+            ManualPopUp.SetActive(true);   
+            audioManager.fileOpenSFX.Play();
+
         }
         if (ManualPopUpBtn.state == ButtonState.OnRelease && ManualPopUp.activeSelf)
         {
-            Console.WriteLine("HELLO");
-            audioManager.paperSFX.Play();
-            ManualPopUp.SetActive(false);
-
-            MainPage.SetActive(true);
-            Page2.SetActive(false);
-            Page3.SetActive(false);
-            Page4.SetActive(false);
-            prevButtonObject.SetActive(false);
+            CloseManual();
         }
+    }
+
+    void CloseManual()
+    {
+        audioManager.fileCloseSFX.Play();
+
+        ManualPopUp.SetActive(false);
+        MainPage.SetActive(true);
+        Page2.SetActive(false);
+        Page3.SetActive(false);
+        Page4.SetActive(false);
+        prevButtonObject.SetActive(false);
+
+        htpmScript.page = 1;
     }
 
     // void KeyInputs()

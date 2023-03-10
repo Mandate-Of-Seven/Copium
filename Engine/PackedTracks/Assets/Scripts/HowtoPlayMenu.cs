@@ -22,7 +22,7 @@ public class HowtoPlayMenu: CopiumScript
 
     public Button ExitButton;
 
-    int page = 1;
+    public int page = 1;
 
     void Start()
 	{
@@ -36,6 +36,9 @@ public class HowtoPlayMenu: CopiumScript
 
     void Update()
     {
+
+
+        
         if (PrevButton.state == ButtonState.OnClick)
         {   
             sfx_pageflip.Play();
@@ -47,7 +50,7 @@ public class HowtoPlayMenu: CopiumScript
             sfx_pageflip.Play();
             page++;
             ShowPage(page);
-        
+            Console.WriteLine(page.ToString());
 
         }
 
@@ -110,6 +113,9 @@ public class HowtoPlayMenu: CopiumScript
 
     void ShowPage(int _page)
     {
+
+        Console.WriteLine("show page");
+
         if (page == 1)
         {
             MainPage.SetActive(true);
@@ -127,7 +133,7 @@ public class HowtoPlayMenu: CopiumScript
 
         if (page == 3)
         {
-
+            MainPage.SetActive(false);
             Page3.SetActive(true);
             Page2.SetActive(false);
             Page4.SetActive(false);
@@ -138,6 +144,8 @@ public class HowtoPlayMenu: CopiumScript
         {
             Page4.SetActive(true);
             Page3.SetActive(false);
+            Page2.SetActive(false);
+            MainPage.SetActive(false);
         }
 
     }
