@@ -1,3 +1,19 @@
+/*!***************************************************************************************
+\file			CrewMenu.cs
+\project
+\author			Sean Ngo
+
+\par			Course: GAM200
+\par			Section:
+\date			10/03/2023
+
+\brief
+	This script manages the crew menu where the player is able to deploy crew members
+    out to scavenge for resources. It also checks their statistics including their
+    health, mental and hunger stats.
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 using CopiumEngine;
 using System;
 using System.Linq;
@@ -116,6 +132,7 @@ public class CrewMenu: CopiumScript
         CheckCrewStatus();
     }
 
+    // Scramble text effect
     void UpdateEffects()
     {
         foreach (Person person in crew)
@@ -137,12 +154,14 @@ public class CrewMenu: CopiumScript
     }
 
 
+    // Update the stats of all the crew members
     public void UpdateAllStats()
     {
         CheckSupplies();
         CheckCrewHealth();
     }
 
+    // Check if all the crew members are alive
     public bool CheckAllCrewAlive()
     {
         for (int i = 0; i < crew.Length; i++)
@@ -153,7 +172,8 @@ public class CrewMenu: CopiumScript
 
         return false;
     }
-
+    
+    // Update the crew status if the individual crew is not alive
     void CheckCrewStatus()
     {
         for (int i = 0; i < crew.Length; ++i)
@@ -208,11 +228,13 @@ public class CrewMenu: CopiumScript
         }
     }
 
+    // Update the text that are related to the crew
     void UpdateTexts()
     {
         suppliesText.text = "Supplies: " + supplies;
     }
 
+    // Set the supply amount
     public void SetSupplies(int amount)
     {
         // Bean: Visually show the supply reducing
@@ -222,6 +244,8 @@ public class CrewMenu: CopiumScript
 
         supplies = amount;
     }
+
+    // Change the supply amount
 
     public void ChangeSupplies(int amount)
     {
@@ -236,6 +260,7 @@ public class CrewMenu: CopiumScript
             supplies = 0;
     }
 
+    // Set all crew members stats to be of certain amount
     public void SetAllCrew(STAT_TYPES types, int amount)
     {
         for (int i = 0; i < crew.Length; i++)
@@ -261,6 +286,7 @@ public class CrewMenu: CopiumScript
         }
     }
 
+    // Change all crew members stats by a certain amount
     public void ChangeAllCrew(STAT_TYPES types, int amount)
     {
         for (int i = 0; i < crew.Length; i++)
@@ -285,6 +311,7 @@ public class CrewMenu: CopiumScript
         }
     }
 
+    // Set individual crew specific stat to be of an amount
     public void SetCrew(STAT_TYPES types, int index, int amount)
     {
         switch (types)
@@ -308,7 +335,7 @@ public class CrewMenu: CopiumScript
     }
 
 
-    //generate a random event for each deployed
+    // Generate a random event for each deployed
     public void StartPrepare()
     {
         crewStatusManager.ClosePanel(true);
@@ -333,11 +360,13 @@ public class CrewMenu: CopiumScript
         }
     }
 
+    // Set whether the button is clickable
     public void SetClickable(bool clickable)
     {
         prepareBtnWrapper.SetInteractable(clickable);
     }
 
+    // Prepare the scavenging members to be deployed
     public void SetPrepare(bool _preparing)
     {
         preparing = _preparing;

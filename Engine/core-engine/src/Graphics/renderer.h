@@ -251,8 +251,32 @@ namespace Copium
 		/***************************************************************************/
 		void draw_line(const glm::vec3& _position0, const glm::vec3& _position1, const glm::vec4& _color);
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Draws a circle onto the game window
+		\param _position
+			The position of the circle
+		\param _radius
+			The size of the circle
+		\param _rotation
+			The rotation of the circle
+		\param _color
+			The color to render the circle
+		*/
+		/***************************************************************************/
 		void draw_circle(const glm::vec3& _position, const float& _radius, const float _rotation, const glm::vec4& _color);
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Draws a circle onto the game window
+		\param _transform
+			The transform of the circle
+		\param _color
+			The color to render the circle
+		*/
+		/***************************************************************************/
 		void draw_circle(const glm::mat4& _transform, const glm::vec4& _color);
 
 		/***************************************************************************/
@@ -269,6 +293,8 @@ namespace Copium
 			Wraps the text to the next line
 		\param _font
 			The font to draw
+		\param tintColor
+			The color to tint the text to
 		*/
 		/***************************************************************************/
 		void draw_text

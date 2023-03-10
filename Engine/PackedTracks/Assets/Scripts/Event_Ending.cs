@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			Event_Ending.cs
+\project
+\author			Sean Ngo
+
+\par			Course: GAM200
+\par			Section:
+\date			10/03/2023
+
+\brief
+	This script has the ending of the events in the game.
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 using CopiumEngine;
 using System;
 
@@ -17,6 +31,7 @@ public class Event_Ending: CopiumScript
 
     }
 
+    // Calculate which ending to display
     public void Ending(int requirement)
     {
         if (requirement == 1)// Some alive or all alive
@@ -61,6 +76,7 @@ public class Event_Ending: CopiumScript
         }
     }
 
+    // Display the results of the ending on to the game
     public void Result(int choice)
     {
         if(choice == 1) // All dead

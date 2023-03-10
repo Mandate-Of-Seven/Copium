@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			EventManager.cs
+\project
+\author			Sean Ngo
+
+\par			Course: GAM200
+\par			Section:
+\date			10/03/2023
+
+\brief
+	This script manages the events that occur in the game.
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 using CopiumEngine;
 using System;
 using System.Runtime.InteropServices;
@@ -75,6 +89,7 @@ public class EventManager: CopiumScript
             UpdateEventSequence();
     }
 
+    // Override the current event
     public void OverrideEvent()
     {
         ShowingResolution = false;
@@ -83,6 +98,7 @@ public class EventManager: CopiumScript
         EnableChangeAlert = true;
     }
 
+    // Update event sequence to proceed to the next
     public void UpdateEventSequence()
     {
         if (ShowingMainEvent && SelectingChoice)
@@ -92,6 +108,7 @@ public class EventManager: CopiumScript
         OverrideEvent();
     }
 
+    // Check the current event and display on the report screen
     void CheckCurrentEvent()
     {
         //Console.WriteLine("Checking Current Event");
@@ -142,6 +159,7 @@ public class EventManager: CopiumScript
         }
     }
 
+    // Select the default choice for the options
     public void SelectDefaultChoice()
     {
         if (!SelectingChoice)
@@ -152,6 +170,7 @@ public class EventManager: CopiumScript
         choice = 1;
     }
 
+    // Check for which choice did the player select
     void SelectChoice()
     {
         if (Option_01.btn.state == ButtonState.OnClick)
@@ -179,6 +198,7 @@ public class EventManager: CopiumScript
         
     }
 
+    // Show the results on the report screen
     void ShowResolution()
     {
         ShowingMainEvent = false;
@@ -202,6 +222,7 @@ public class EventManager: CopiumScript
         ShowingResolution = false;
     }
 
+    // Show the ending options that can be selected
     void ShowEnding()
     {
         Option_01.ResetOption();
@@ -230,6 +251,7 @@ public class EventManager: CopiumScript
         }
     }
 
+    // Change the alert status based on the severity of the event
     void ChangeAlertStatus(int state)
     {
         if (!EnableChangeAlert)
