@@ -24,6 +24,7 @@ public class Crew : CopiumScript
         person = crewMenu.crew[crewIndex];
         person.crewScript = this;
         selectBtnWrapper = new ButtonWrapper(selectBtn,crewMenu.audioManager);
+        selectBtnWrapper.useDisabled = false;
         selectBtnWrapper.SetImage(sprite);
         Disable();
     }

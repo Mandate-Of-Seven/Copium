@@ -7,6 +7,9 @@ public class Option: CopiumScript
     public Button btn;
 
 	public GameObject icon_01, icon_02, icon_03, icon_04;
+    Image image;
+    Color disabled = new Color(1.0f, 1.0f, 1.0f, 0.5f); 
+    Color enabled = new Color(1.0f, 1.0f, 1.0f, 1.0f); 
 
     void Start()
 	{
@@ -14,10 +17,13 @@ public class Option: CopiumScript
         icon_02.SetActive(false);
         icon_03.SetActive(false);
         icon_04.SetActive(false);
+        image = gameObject.GetComponent<Image>();
+        enabled = image.color;
 	}
 	void Update()
 	{
-
+        if (!btn.enabled)
+            image.color = disabled;
 	}
 
     public void Enable()
@@ -37,6 +43,7 @@ public class Option: CopiumScript
         Disable();
         HideAllIcons();
         btn.enabled = true;
+        image.color = enabled;
         txt.color = Color.white;
     }
 

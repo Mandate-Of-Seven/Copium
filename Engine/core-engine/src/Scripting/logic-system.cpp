@@ -322,8 +322,8 @@ namespace Copium
 
 		GameObject* selected = GetSelectedGameObject();
 
-		if (selected)
-			PRINT("SELECTED: " << selected->name);
+		/*if (selected)
+			PRINT("SELECTED: " << selected->name);*/
 		for (Button& button : pScene->componentArrays.GetArray<Button>())
 		{
 			if (!button.enabled || !button.gameObj.IsActive())
