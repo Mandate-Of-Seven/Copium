@@ -32,6 +32,9 @@ using System;
         public string healthString; 
         public string mentalString;
         public string hungerString; 
+        int healthState = -1;
+        int mentalState = -1;
+        int hungerState = -1;
 		public Crew crewScript;
 
 		public Color targetColor = Color.white;
@@ -62,13 +65,29 @@ using System;
 					tmp.b = x;
 					targetColor = tmp;
 					if (value > 10)
-						healthScrambler = CreateScrambler(healthString, "Healthy");
+                    {
+                        if (healthState != 0)
+						    healthScrambler = CreateScrambler(healthString, "Healthy");
+                        healthState = 0;
+                    }
 					else if(value > 5)
-						healthScrambler = CreateScrambler(healthString, "Injured");
+                    {
+                        if (healthState != 1)
+						    healthScrambler = CreateScrambler(healthString, "Injured");
+                        healthState = 1;
+                    }
 					else if (value > 0)
-						healthScrambler = CreateScrambler(healthString, "Critical");
+                    {
+                        if (healthState != 2)
+						    healthScrambler = CreateScrambler(healthString, "Critical");
+                        healthState = 2;
+                    }
 					else
-						healthScrambler = CreateScrambler(healthString, "Dead");
+                    {
+                        if (healthState != 3)
+						    healthScrambler = CreateScrambler(healthString, "Dead");
+                        healthState = 3;
+                    }
                 }
                  _health = value; 
             }
@@ -82,13 +101,30 @@ using System;
                 if (_mental != value)
                 {
                     if (value > 10)
-                        mentalScrambler = CreateScrambler(mentalString, "Calm");
+                    {
+                        if (mentalState != 0)
+                            mentalScrambler = CreateScrambler(mentalString, "Calm");
+                        mentalState =0;
+                    }
                     else if (value > 5)
-                        mentalScrambler = CreateScrambler(mentalString, "Irrational");
+                    {
+
+                        if (mentalState != 1)
+                            mentalScrambler = CreateScrambler(mentalString, "Irrational");
+                        mentalState = 1;
+                    }
                     else if (value > 0)
-                        mentalScrambler = CreateScrambler(mentalString, "Insane");
+                    {
+                        if (mentalState != 2)
+                            mentalScrambler = CreateScrambler(mentalString, "Insane");
+                        mentalState = 2;
+                    }
                     else
-                        mentalScrambler = CreateScrambler(mentalString, "Suicidal");
+                    {
+                        if (mentalState != 3)
+                            mentalScrambler = CreateScrambler(mentalString, "Suicidal");
+                        mentalState = 3;
+                    }
                 }
                 _mental = value; 
                 
@@ -103,11 +139,23 @@ using System;
 				if (_hunger != value)
                 {
 					if (value > 5)
-						hungerScrambler = CreateScrambler(hungerString, "Full");
+                    {
+                        if (hungerState != 0)
+						    hungerScrambler = CreateScrambler(hungerString, "Full");
+                        hungerState = 0;
+                    }
 					else if (value > 0)
-						hungerScrambler = CreateScrambler(hungerString, "Hungry");
+                    {
+                        if (hungerState != 1)
+						    hungerScrambler = CreateScrambler(hungerString, "Hungry");
+                        hungerState = 1;
+                    }
 					else
-						hungerScrambler = CreateScrambler(hungerString, "Famished");
+                    {
+                        if (hungerState != 2)
+						    hungerScrambler = CreateScrambler(hungerString, "Famished");
+                        hungerState = 2;
+                    }
 				}
 				 _hunger = value; 
 			}

@@ -129,7 +129,7 @@ public class CrewMenu: CopiumScript
             {
                 person.crewScript.hungerT.text = person.hungerScrambler.Scramble();
             }
-            person.crewScript.sprite.color = Color.Lerp(Color.white,person.targetColor,timeElasped/transitionDuration);
+            person.crewScript.sprite.color = Color.Lerp(person.crewScript.sprite.color,person.targetColor,Time.deltaTime);
         }
     }
 

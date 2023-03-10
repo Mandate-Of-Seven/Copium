@@ -3059,7 +3059,7 @@
                     "H_Align": 1,
                     "V_Align": 1,
                     "Sprite ID": 11254775589096647134,
-                    "Sprite Name": "Sus_dude.png",
+                    "Sprite Name": "crew_harris.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 0.9998999834060669,
@@ -3097,10 +3097,10 @@
                     "hoveredG": 1.0,
                     "hoveredB": 0.501960813999176,
                     "hoveredA": 1.0,
-                    "normalR": 1.0,
-                    "normalG": 1.0,
-                    "normalB": 1.0,
-                    "normalA": 1.0
+                    "normalR": 0.0,
+                    "normalG": 0.0,
+                    "normalB": 0.0,
+                    "normalA": 0.0
                 }
             ]
         },
@@ -3499,7 +3499,7 @@
                     "H_Align": 1,
                     "V_Align": 1,
                     "Sprite ID": 5493256253287093010,
-                    "Sprite Name": "Buff_dude.png",
+                    "Sprite Name": "crew_bronson.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
@@ -3537,10 +3537,10 @@
                     "hoveredG": 1.0,
                     "hoveredB": 0.501960813999176,
                     "hoveredA": 1.0,
-                    "normalR": 1.0,
-                    "normalG": 1.0,
-                    "normalB": 1.0,
-                    "normalA": 1.0
+                    "normalR": 0.0,
+                    "normalG": 0.0,
+                    "normalB": 0.0,
+                    "normalA": 0.0
                 }
             ]
         },
@@ -3939,7 +3939,7 @@
                     "H_Align": 1,
                     "V_Align": 1,
                     "Sprite ID": 17863984120512650492,
-                    "Sprite Name": "Smart_dude.png",
+                    "Sprite Name": "crew_chuck.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
@@ -3977,10 +3977,10 @@
                     "hoveredG": 1.0,
                     "hoveredB": 0.501960813999176,
                     "hoveredA": 1.0,
-                    "normalR": 1.0,
-                    "normalG": 1.0,
-                    "normalB": 1.0,
-                    "normalA": 1.0
+                    "normalR": 0.0,
+                    "normalG": 0.0,
+                    "normalB": 0.0,
+                    "normalA": 0.0
                 }
             ]
         },
@@ -4379,7 +4379,7 @@
                     "H_Align": 1,
                     "V_Align": 1,
                     "Sprite ID": 3362019979313682063,
-                    "Sprite Name": "Weak_dude.png",
+                    "Sprite Name": "crew_danton.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
@@ -4417,10 +4417,10 @@
                     "hoveredG": 1.0,
                     "hoveredB": 0.501960813999176,
                     "hoveredA": 1.0,
-                    "normalR": 1.0,
-                    "normalG": 1.0,
-                    "normalB": 1.0,
-                    "normalA": 1.0
+                    "normalR": 0.0,
+                    "normalG": 0.0,
+                    "normalB": 0.0,
+                    "normalA": 0.0
                 }
             ]
         },

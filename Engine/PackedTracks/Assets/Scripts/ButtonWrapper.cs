@@ -3,9 +3,10 @@ using System;
 
 public class ButtonWrapper
 {
-	static Color disabledImageColor = new Color(1f,0.2f,0.2f,1f);
-	static Color disabledTextColor = new Color(0.5f,0.2f,0.2f,1f);
+	public Color disabledImageColor = new Color(1f,0.2f,0.2f,1f);
+	public Color disabledTextColor = new Color(0.5f,0.2f,0.2f,1f);
 
+	public bool useDisabled = true;
 	Color imageOriginalColor;
 	Color textOriginalColor;
 
@@ -53,6 +54,8 @@ public class ButtonWrapper
 		if (interactable == _interactable)
 			return;
 		interactable = _interactable;
+		if (!useDisabled)
+			return;
 		if (interactable)
 		{
 			if (image != null)
