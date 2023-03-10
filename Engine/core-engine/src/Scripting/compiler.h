@@ -126,7 +126,8 @@ namespace Copium::Utils
 
 
 		}
-		MyEventSystem->publish(new EditorConsoleLogEvent(parsedBuffer));
+		MyEventSystem->publish(new EditorConsoleLogEvent(buffer));
+		//MyEventSystem->publish(new EditorConsoleLogEvent(parsedBuffer));
 		myfile.close();
 
 	}

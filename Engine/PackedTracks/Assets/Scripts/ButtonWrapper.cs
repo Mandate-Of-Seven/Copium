@@ -16,15 +16,18 @@ public class ButtonWrapper
 	Color buttonOriginalHoverColor;
 	Color buttonOriginalClickedColor;
 
+    TooltipBehaviour tooltip;
+
 	public string failureText;
 
-	public ButtonWrapper(Button _button, AudioManager _audioManager)
+	public ButtonWrapper(Button _button, AudioManager _audioManager, TooltipBehaviour _tooltip)
 	{
 	 	button = _button;
 		buttonOriginalHoverColor = button.hoverColor;
 		buttonOriginalClickedColor = button.clickedColor;
 		audioManager = _audioManager;
 		interactable = true;
+		tooltip = _tooltip;
 	}
 
 	AudioManager audioManager;
@@ -126,9 +129,12 @@ public class ButtonWrapper
 			if (!interactable)
 			{
 				if (failedSFX != null)
+				{
 					failedSFX.Play();
+				}
 				else
 					audioManager.failedSFX.Play();
+				tooltip.AddText(failureText);
 				return ButtonState.None;
 			}
 			if (clickedSFX != null)

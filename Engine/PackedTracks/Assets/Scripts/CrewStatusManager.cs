@@ -10,6 +10,8 @@ public class CrewStatusManager: CopiumScript
 	public Button CrewStatusBtn;
     public ResultManager resultManager;
 
+	public TooltipBehaviour tooltip;
+
 
     ButtonWrapper CloseCrewStatusBtnWrapper;
 	ButtonWrapper CrewStatusBtnWrapper;
@@ -27,9 +29,9 @@ public class CrewStatusManager: CopiumScript
 
 	void Start()
 	{
-		CloseCrewStatusBtnWrapper = new ButtonWrapper(CloseCrewStatusBtn,audioManager);
+		CloseCrewStatusBtnWrapper = new ButtonWrapper(CloseCrewStatusBtn,audioManager, tooltip);
 		CloseCrewStatusBtnWrapper.SetImage(CloseCrewStatusBtn.GetComponent<Image>());
-		CrewStatusBtnWrapper = new ButtonWrapper(CrewStatusBtn,audioManager);
+		CrewStatusBtnWrapper = new ButtonWrapper(CrewStatusBtn,audioManager,tooltip	);
 		CrewStatusBtnWrapper.SetImage(CrewStatusBtn.GetComponent<Image>());
 	}
 

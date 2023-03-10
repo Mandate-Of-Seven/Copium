@@ -23,9 +23,10 @@ public class Crew : CopiumScript
     {
         person = crewMenu.crew[crewIndex];
         person.crewScript = this;
-        selectBtnWrapper = new ButtonWrapper(selectBtn,crewMenu.audioManager);
+        selectBtnWrapper = new ButtonWrapper(selectBtn,crewMenu.audioManager,crewMenu.crewStatusManager.tooltip);
         selectBtnWrapper.useDisabled = false;
         selectBtnWrapper.SetImage(sprite);
+        selectBtnWrapper.failureText = "You need to be preparing your crew members first!";
         Disable();
     }
     void Update()
