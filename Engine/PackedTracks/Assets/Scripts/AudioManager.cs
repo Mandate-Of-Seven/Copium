@@ -7,6 +7,8 @@ public class AudioManager: CopiumScript
 	public AudioSource bgmTrain;
 	public AudioSource clickSFX;
 	public AudioSource paperSFX;
+	public AudioSource fileOpenSFX;
+	public AudioSource fileCloseSFX;
 	public AudioSource leverSFX;
 	public AudioSource accelerateSFX;
 	public AudioSource deccelerateSFX;
@@ -22,6 +24,7 @@ public class AudioManager: CopiumScript
     public AudioSource endingDantonVO;
     public AudioSource endingGenericVO;
     public AudioSource endingAllDiedVO;
+
 
 
     void Start()
