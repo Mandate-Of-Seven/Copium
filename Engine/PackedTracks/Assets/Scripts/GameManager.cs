@@ -13,6 +13,8 @@ public class GameManager: CopiumScript
     public GameObject ManualPopUp;
     public GameObject MainPage;
     public GameObject Page2;
+    public GameObject Page3;
+    public GameObject Page4;
     public GameObject prevButtonObject;
 
 
@@ -136,6 +138,8 @@ public class GameManager: CopiumScript
         {
             audioManager.paperSFX.Play();
             ManualPopUp.SetActive(true);
+            prevButtonObject.SetActive(true);
+            
         }
         if (ManualPopUpBtn.state == ButtonState.OnRelease && ManualPopUp.activeSelf)
         {
@@ -144,6 +148,8 @@ public class GameManager: CopiumScript
 
             MainPage.SetActive(true);
             Page2.SetActive(false);
+            Page3.SetActive(false);
+            Page4.SetActive(false);
             prevButtonObject.SetActive(false);
         }
 
