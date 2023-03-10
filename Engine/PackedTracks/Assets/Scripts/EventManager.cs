@@ -18,6 +18,9 @@ public class EventManager: CopiumScript
     public Option Option_03;
 
     public Text Body;
+    public Image alert;
+    Color danger = new Color(1.0f, 0.21f, 0.21f);
+    Color warning = new Color(1.0f, 1.0f, 0.21f);
 
     public int EventSequence = 0;
     int choice = 0;
@@ -25,6 +28,7 @@ public class EventManager: CopiumScript
     bool ShowingResolution = false;
     bool SelectingChoice = true;
     bool ShowingMainEvent = true;
+    bool EnableChangeAlert = false;
 
     float timer = 0.0f;
 
@@ -69,8 +73,6 @@ public class EventManager: CopiumScript
 
         if (Input.GetKeyDown(KeyCode.Enter))
             UpdateEventSequence();
-
-        crewMenu.UpdateAllStats();
     }
 
     public void OverrideEvent()
@@ -78,6 +80,7 @@ public class EventManager: CopiumScript
         ShowingResolution = false;
         SelectingChoice = true;
         ShowingMainEvent = true;
+        EnableChangeAlert = true;
     }
 
     public void UpdateEventSequence()
@@ -108,15 +111,18 @@ public class EventManager: CopiumScript
                 eventIntro.Event();
                 break;
             case 1:
+                ChangeAlertStatus(1);
                 event01.Event(!crewMenu.crew[0].alive);
                 break;
             case 2:
+                ChangeAlertStatus(2);
                 bool alive = false;
                 if (crewMenu.crew[1].alive && crewMenu.crew[2].alive)
                     alive = true;
                 event02.Event(alive);
                 break;
             case 3:
+                ChangeAlertStatus(1);
                 int requirement = 0;
                 if (crewMenu.crew[0].alive && crewMenu.crew[2].alive 
                     && crewMenu.crew[2].health > 5)
@@ -222,5 +228,18 @@ public class EventManager: CopiumScript
         {
             Application.Quit();
         }
+    }
+
+    void ChangeAlertStatus(int state)
+    {
+        if (!EnableChangeAlert)
+            return;
+
+        if(state == 1) // Warning
+            alert.color = warning;
+        else // Danger
+            alert.color = danger;
+
+        EnableChangeAlert = false;
     }
 }

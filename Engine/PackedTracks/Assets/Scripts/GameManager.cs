@@ -19,9 +19,6 @@ public class GameManager: CopiumScript
     public Button ManualBtn;
     public Button ManualPopUpBtn;
 
-    public Button PauseResumeBtn;
-    public Button PauseQuitBtn;
-
     public CrewMenu crewMenuScript;
     public TrainManager trainManager;
     public ReportScreenManager reportScreenManager;
@@ -85,6 +82,9 @@ public class GameManager: CopiumScript
 
         // Reducing supplies for crew to consume
         SupplyCounter();
+
+        if(trainManager.accelerate)
+            crewMenuScript.UpdateAllStats();
     }
 
     bool CheckForGameEndCondition()
@@ -159,29 +159,6 @@ public class GameManager: CopiumScript
             }
             foodTimer += Time.deltaTime;
         }
-
-        // Game ends
-        if(EventManager.EventSequence == -2 && !gameEnd)
-        {
-            gameEnd = true;
-            trainManager.FlickLever();
-            distanceLeft = 0.0f;
-        }
-        else if (EventManager.EventSequence == -3 && !gameEnd)
-        {
-            gameEnd = true;
-            crewMenuScript.fader.shouldFade = true;
-            trainManager.FlickLever();
-        }
-        else if (distanceLeft <= 0.99f && !gameEnd)
-        {
-            gameEnd = true;
-            trainManager.FlickLever();
-            EventManager.EventSequence = -1;
-            EventManager.OverrideEvent();
-        }
-
-        //KeyInputs();
     }
 
     void ButtonInputs()
