@@ -109,8 +109,11 @@ public class CrewMenu: CopiumScript
        if (crewStatusManager.isCrewStatusOn)
        {
             UpdateEffects();
+            UpdateTexts();
             timeElasped += Time.deltaTime;
        }
+
+        CheckCrewStatus();
     }
 
     void UpdateEffects()
@@ -138,7 +141,6 @@ public class CrewMenu: CopiumScript
     {
         CheckSupplies();
         CheckCrewHealth();
-        CheckCrewStatus();
     }
 
     public bool CheckAllCrewAlive()
@@ -165,6 +167,7 @@ public class CrewMenu: CopiumScript
         }
     }
 
+    // Reduce crew hunger if supplies is 0
     void CheckSupplies()
     {
         if(supplies == 0)
@@ -184,6 +187,7 @@ public class CrewMenu: CopiumScript
         }
     }
 
+    // Reduce health if hunger is 0
     void CheckCrewHealth()
     {
         for (int i = 0; i < crew.Length; i++)
@@ -207,7 +211,6 @@ public class CrewMenu: CopiumScript
     void UpdateTexts()
     {
         suppliesText.text = "Supplies: " + supplies;
-
     }
 
     public void SetSupplies(int amount)
