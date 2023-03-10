@@ -1,3 +1,19 @@
+/*!***************************************************************************************
+\file			EventManager.cs
+\project
+\author			Zacharie Hong
+\co-author		Sean Ngo
+                Shawn Tanary
+
+\par			Course: GAM200
+\par			Section:
+\date			30/01/2023
+
+\brief
+	Manages the events
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 using CopiumEngine;
 using System;
 using System.Runtime.InteropServices;
@@ -75,6 +91,12 @@ public class EventManager: CopiumScript
             UpdateEventSequence();
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Override event 
+	*/
+	/**************************************************************************/
     public void OverrideEvent()
     {
         ShowingResolution = false;
@@ -83,6 +105,12 @@ public class EventManager: CopiumScript
         EnableChangeAlert = true;
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Update the event sequence
+	*/
+	/**************************************************************************/
     public void UpdateEventSequence()
     {
         if (ShowingMainEvent && SelectingChoice)
@@ -92,6 +120,12 @@ public class EventManager: CopiumScript
         OverrideEvent();
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Check the current event
+	*/
+	/**************************************************************************/
     void CheckCurrentEvent()
     {
         //Console.WriteLine("Checking Current Event");
@@ -142,6 +176,12 @@ public class EventManager: CopiumScript
         }
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Select the default choice for the event
+	*/
+	/**************************************************************************/
     public void SelectDefaultChoice()
     {
         if (!SelectingChoice)
@@ -152,6 +192,12 @@ public class EventManager: CopiumScript
         choice = 1;
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Check which choice the player makes
+	*/
+	/**************************************************************************/
     void SelectChoice()
     {
         if (Option_01.btn.state == ButtonState.OnClick)
@@ -179,6 +225,12 @@ public class EventManager: CopiumScript
         
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Show the resolution of the event
+	*/
+	/**************************************************************************/
     void ShowResolution()
     {
         ShowingMainEvent = false;
@@ -202,6 +254,12 @@ public class EventManager: CopiumScript
         ShowingResolution = false;
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Show the ending that player has reached.
+	*/
+	/**************************************************************************/
     void ShowEnding()
     {
         Option_01.ResetOption();

@@ -1,15 +1,16 @@
 /*!***************************************************************************************
 \file			HowtoPlayMenu.cs
 \project
-\author			Wu Zezheng
-\co-authors     Abdul Hadi
+\author			Wu Ze Zheng
+\co-author		Abdul Hadi
+                Matthew Lau
 
 \par			Course: GAM200
 \par			Section:
-\date			10/03/2022
+\date			09/03/2023
 
 \brief
-	This file contains the start and update of the how to play menu.
+	Functionality for the HowtoPlay Menu
 
 All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/

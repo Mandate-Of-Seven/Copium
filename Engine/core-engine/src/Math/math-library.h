@@ -524,46 +524,52 @@ namespace Copium::Math
 		/*******************************************************************************/
 		Vec3 operator- () const;
 
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			* operator overload.
+			
+		\param	_rhs
+			read-only reference to the right side Vec3 operand
+
+		\return
+			the resultant Vec3
+		*/
+		/*******************************************************************************/
 		Vec3 operator* (const Vec3& _rhs);
 
 		// Comparison operators
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Compare this Vec3 with the specified Vec3
+
+		\param	_rhs
+			read-only reference to the right hand side operand of the comparison
+
+		\return
+			true if both Vec3s are equal
+			false if any of the values are different
+		*/
+		/*******************************************************************************/
 		bool operator==(const Vec3& _rhs);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Compare this Vec3 with the specified Vec3
+
+		\param	_rhs
+			read-only reference to the right hand side operand of the comparison
+
+		\return
+			true if this Vec3 is not equal to the specified Vec3
+			false if both are the same
+		*/
+		/*******************************************************************************/
 		bool operator!=(const Vec3& _rhs);
-
-		// De/serialization
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Deserialize this Vec3's data from the specified rapidjson Value
-
-		\param _value
-			reference to the rapidJson buffer to serialize to
-
-		\return
-			on success, return true
-			on failure, return false
-		*/
-		/*******************************************************************************/
-		//bool deserialize(rapidjson::Value& _value);
-		/*******************************************************************************
-		/*!
-		*
-		\brief
-			Serialize this Vec3's data to the specified rapidjson Value
-
-		\param _value
-			reference to the rapidJson value to serialize to
-
-		\param _doc
-			reference to the rapidJson Document associated with the save file
-
-		\return
-			on success, return true
-			on failure, return false
-		*/
-		/*******************************************************************************/
-		//bool serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
 
 		// Conversion operators
 		/*******************************************************************************
@@ -1336,6 +1342,23 @@ namespace Copium::Math
 	*/
 	/*******************************************************************************/
 	Matrix4x4 operator*(float _scalar, const Matrix4x4& _mtx);
+
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Perform matrix multiplication between Matrix4x4 and Vec4
+
+	\param _mat
+		the Matrix4x4 which is the Left Hand Operand
+
+	\param _vec4
+		the Vec4 which will be the Right Hand Operand
+
+	\return
+		the resultant Vec4
+	*/
+	/*******************************************************************************/
 	Vec4 operator*(const Matrix4x4& _mat, const Vec4& _vec4);
 
 	/*******************************************************************************

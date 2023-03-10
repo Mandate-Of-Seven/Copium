@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			TrainManager.cs
+\project
+\author			Zacharie Hong
+\co-author		Sean Ngo
+
+\par			Course: GAM200
+\par			Section:
+\date			04/03/2023
+
+\brief
+	Manages the train
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 using CopiumEngine;
 using System;
 using System.Security.AccessControl;
@@ -145,6 +160,12 @@ public class TrainManager: CopiumScript
         tracker.text = ((int)GameManager.distanceLeft).ToString() + "KM";
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Toggle the lever. 
+	*/
+	/**************************************************************************/
 	void ToggleLever()
 	{
         if (trainLeverBtn.state == ButtonState.OnHover)
@@ -172,6 +193,12 @@ public class TrainManager: CopiumScript
         }
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+			Toggle the lever and depending on the state of it, train stops/starts
+	*/
+	/**************************************************************************/
 	public void FlickLever()
 	{
 		if (GameManager.gameEnd)
@@ -196,6 +223,15 @@ public class TrainManager: CopiumScript
         }
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+			Toggle the lever and depending on the state of it, train stops/starts
+
+		\param _accelerate
+			flag to determine if train should accelerate or not
+	*/
+	/**************************************************************************/
     public void FlickLever(bool _accelerate)
     {
 		if (accelerate == _accelerate)
@@ -220,6 +256,12 @@ public class TrainManager: CopiumScript
         }
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+			Starts the train
+	*/
+	/**************************************************************************/
     void StartTrain()
 	{       
 		audioManager.ambTrain.Stop();
@@ -231,6 +273,12 @@ public class TrainManager: CopiumScript
 		targetScale = new Vector3(zoomOutScale,zoomOutScale,1);
 	}
 
+	/**************************************************************************/
+	/*!
+	    \brief
+			Stop the train
+	*/
+	/**************************************************************************/
 	void StopTrain()
 	{
 		audioManager.accelerateSFX.Stop();
@@ -240,6 +288,12 @@ public class TrainManager: CopiumScript
 		targetScale = new Vector3(zoomInScale,zoomInScale,1);
 	}
 
+	/**************************************************************************/
+	/*!
+	    \brief
+			Check if train is accelerating or not
+	*/
+	/**************************************************************************/
 	public bool IsAccelerating()
 	{
 		return accelerate;

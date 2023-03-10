@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			ResultManager.cs
+\project
+\author			Zacharie Hong
+\co-author		Sean Ngo
+
+\par			Course: GAM200
+\par			Section:
+\date			7/03/2023
+
+\brief
+	Results manager
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 using CopiumEngine;
 using System;
 
@@ -31,6 +46,13 @@ public class ResultManager : CopiumScript
     {
         UpdateCanvas();
     }
+
+    /**************************************************************************/
+	/*!
+	    \brief
+		    Updates all canvases related to results
+	*/
+	/**************************************************************************/
     public void UpdateCanvas()
     {
 
@@ -75,6 +97,12 @@ public class ResultManager : CopiumScript
         }
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Open the result panel 
+	*/
+	/**************************************************************************/
     public void OpenPanel()
     {
         if (isResultOn)
@@ -86,6 +114,12 @@ public class ResultManager : CopiumScript
         ResultTab.transform.parent = null;
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Close results panel
+	*/
+	/**************************************************************************/
     public void ClosePanel()
     {
         if (!isResultOn)
@@ -96,12 +130,24 @@ public class ResultManager : CopiumScript
         ResultTab.transform.parent = parent.transform;
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Disable the results panel
+	*/
+	/**************************************************************************/
     public void Disable()
     {
         ResultTab.SetActive(false);
         ResultBtn.gameObject.SetActive(false);
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Enable the results panel
+	*/
+	/**************************************************************************/
     public void Enable()
     {
         if (reportScreenManager.isReportScreenOn || crewStatusManager.isCrewStatusOn)
