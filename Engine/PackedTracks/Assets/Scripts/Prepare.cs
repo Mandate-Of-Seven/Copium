@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			Prepare.cs
+\project
+\author			Shawn Tanary
+
+\par			Course: GAM250
+\par			Section:
+\date			10/03/2023
+
+\brief
+    Contains the functions to display random events when sending crew out
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 using CopiumEngine;
 using System;
 
@@ -5,6 +19,8 @@ public class Prepare : CopiumScript
 {
     public CrewMenu crewManager;
     public Button closeButton;
+
+    public TooltipBehaviour tooltip;
 
     public Text prepareBody;
     public Button prepareButton1;
@@ -48,13 +64,13 @@ public class Prepare : CopiumScript
 
     void Start()
     {
-        harrisBtnWrapper = new ButtonWrapper(harrisButton,crewManager.audioManager);
+        harrisBtnWrapper = new ButtonWrapper(harrisButton,crewManager.audioManager,tooltip);
         harrisBtnWrapper.SetImage(harrisButton.GetComponent<Image>());
-        bronsonBtnWrapper = new ButtonWrapper(bronsonButton,crewManager.audioManager);
+        bronsonBtnWrapper = new ButtonWrapper(bronsonButton,crewManager.audioManager,tooltip);
         bronsonBtnWrapper.SetImage(bronsonButton.GetComponent<Image>());
-        chuckBtnWrapper = new ButtonWrapper(chuckButton,crewManager.audioManager);
+        chuckBtnWrapper = new ButtonWrapper(chuckButton,crewManager.audioManager,tooltip);
         chuckBtnWrapper.SetImage(chuckButton.GetComponent<Image>());
-        dantonBtnWrapper = new ButtonWrapper(dantonButton,crewManager.audioManager);
+        dantonBtnWrapper = new ButtonWrapper(dantonButton,crewManager.audioManager,tooltip);
         dantonBtnWrapper.SetImage(dantonButton.GetComponent<Image>());
     }
     void Update()
@@ -110,8 +126,13 @@ public class Prepare : CopiumScript
         }
     }
 
-    
 
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Generates a random event for the target crewmate
+	*/
+    /*******************************************************************************/
     public void GenerateEvents(Person crewmate)
     {
         currentCrewmate = crewmate;
@@ -265,6 +286,13 @@ public class Prepare : CopiumScript
         }
     }
 
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Gives the result text and sets the effects of the choices made for the
+            random event
+	*/
+    /*******************************************************************************/
     public void GenerateResults()
     {
         switch (eventNum)
@@ -457,6 +485,12 @@ public class Prepare : CopiumScript
         }
     }
 
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Displays the result text andlets you swap crewmates to see their results    
+	*/
+    /*******************************************************************************/
     public void showFinal()
     {
         if(!prepareFinal.activeSelf)

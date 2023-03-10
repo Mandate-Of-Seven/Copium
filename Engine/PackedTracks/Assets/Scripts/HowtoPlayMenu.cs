@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			HowtoPlayMenu.cs
+\project
+\author			Wu Zezheng
+\co-authors     Abdul Hadi
+
+\par			Course: GAM200
+\par			Section:
+\date			10/03/2022
+
+\brief
+	This file contains the start and update of the how to play menu.
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 using CopiumEngine;
 using System;
 using System.Runtime.Remoting.Messaging;
@@ -107,7 +122,14 @@ public class HowtoPlayMenu: CopiumScript
         }
 
     }
-
+    /***************************************************************************/
+    /*!
+    \brief       
+        Selects which page to show
+    \param _page
+        The page to show
+    */
+    /**************************************************************************/
     void ShowPage(int _page)
     {
         if (page == 1)

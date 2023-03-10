@@ -124,6 +124,19 @@ Gizmos
    * W key to show translate tool
    * E key to show scale tool
    * R key to show rotate tool
+
+
+[Editor Layers]
+Sorting Layer
+* There is a tab beside the inspector called Tags and Layers
+* Here, you can add sorting layers to the scene
+* This will determine which layer will be rendered first
+* The layers are sorted in ascending order
+* The top layer will be rendered first
+* To make use of this, a component known as the SortingGroup needs to be added to the Gameobject
+* Here you can, choose which layer will the object be in, as well as the order they are rendered.
+* This is for further layering inside each layer themselves.
+
 [Exit]
 * To exit the engine, go to the main menu bar and select File -> Exit.
 * Or click on the cross button at the top right of the window

@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			Person.cs
+\project
+\author			Sean Ngo
+\co-author		Zacharie Hong
+
+\par			Course: GAM250
+\par			Section:
+\date			10/03/2023
+
+\brief
+	Contains the data struct to store data for a crewmate
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 using CopiumEngine;
 using System;
 
@@ -20,7 +35,7 @@ using System;
 		}
 
         string _name;
-        bool _alive;
+        bool _alive = true;
         int _health;
         int _mental;
         int _hunger;
@@ -32,23 +47,44 @@ using System;
         public string healthString; 
         public string mentalString;
         public string hungerString; 
+        int healthState = -1;
+        int mentalState = -1;
+        int hungerState = -1;
 		public Crew crewScript;
 
 		public Color targetColor = Color.white;
 
-        public string name
+    /*******************************************************************************
+    /*!
+        \brief
+            Gets and sets name
+    */
+    /*******************************************************************************/
+    public string name
         {
             get {  return _name; }
             set {  _name = value; }
         }
 
-        public bool alive
+    /*******************************************************************************
+    /*!
+        \brief
+            Gets and sets alive state
+    */
+    /*******************************************************************************/
+    public bool alive
         {
             get { return _alive; }
             set { _alive = value; }
         }
 
-        public int health
+    /*******************************************************************************
+    /*!
+        \brief
+            Gets and sets health
+    */
+    /*******************************************************************************/
+    public int health
         {
             get { return _health; }
             set 
@@ -62,64 +98,141 @@ using System;
 					tmp.b = x;
 					targetColor = tmp;
 					if (value > 10)
-						healthScrambler = CreateScrambler(healthString, "Healthy");
+                    {
+                        if (healthState != 0)
+						    healthScrambler = CreateScrambler(healthString, "Healthy");
+                        healthState = 0;
+                    }
 					else if(value > 5)
-						healthScrambler = CreateScrambler(healthString, "Injured");
+                    {
+                        if (healthState != 1)
+						    healthScrambler = CreateScrambler(healthString, "Injured");
+                        healthState = 1;
+                    }
 					else if (value > 0)
-						healthScrambler = CreateScrambler(healthString, "Critical");
+                    {
+                        if (healthState != 2)
+						    healthScrambler = CreateScrambler(healthString, "Critical");
+                        healthState = 2;
+                    }
 					else
-						healthScrambler = CreateScrambler(healthString, "Dead");
+                    {    
+                        if (healthState != 3)
+                        healthScrambler = CreateScrambler(healthString, "Dead");
+                        _alive = false; 
+                        healthState = 3;
+                    }
+					
                 }
                  _health = value; 
             }
         }
-
-        public int mental
+    /*******************************************************************************
+    /*!
+        \brief
+            Gets and sets mental state
+    */
+    /*******************************************************************************/
+    public int mental
         {
             get { return _mental; }
             set 
             { 
-                if (_mental != value)
+                if (!_alive)
+                {
+                    mentalScrambler = CreateScrambler(mentalString, "Dead");   
+                }
+                else if (_mental != value)
                 {
                     if (value > 10)
-                        mentalScrambler = CreateScrambler(mentalString, "Calm");
+                    {
+                        if (mentalState != 0)
+                            mentalScrambler = CreateScrambler(mentalString, "Calm");
+                        mentalState =0;
+                    }
                     else if (value > 5)
-                        mentalScrambler = CreateScrambler(mentalString, "Irrational");
+                    {
+
+                        if (mentalState != 1)
+                            mentalScrambler = CreateScrambler(mentalString, "Irrational");
+                        mentalState = 1;
+                    }
                     else if (value > 0)
-                        mentalScrambler = CreateScrambler(mentalString, "Insane");
+                    {
+                        if (mentalState != 2)
+                            mentalScrambler = CreateScrambler(mentalString, "Insane");
+                        mentalState = 2;
+                    }
                     else
-                        mentalScrambler = CreateScrambler(mentalString, "Suicidal");
+                    {
+                        if (mentalState != 3)
+                            mentalScrambler = CreateScrambler(mentalString, "Suicidal");
+                        mentalState = 3;
+                    }
                 }
                 _mental = value; 
                 
             }
         }
-
-        public int hunger
+    /*******************************************************************************
+    /*!
+        \brief
+            Gets and sets hunger state
+    */
+    /*******************************************************************************/
+    public int hunger
         {
             get { return _hunger; }
             set 
 			{
-				if (_hunger != value)
+                if (!_alive)
+                {
+                    hungerScrambler = CreateScrambler(hungerString, "Dead");
+                }
+				else if (_hunger != value)
                 {
 					if (value > 5)
-						hungerScrambler = CreateScrambler(hungerString, "Full");
+                    {
+                        if (hungerState != 0)
+						    hungerScrambler = CreateScrambler(hungerString, "Full");
+                        hungerState = 0;
+                    }
 					else if (value > 0)
-						hungerScrambler = CreateScrambler(hungerString, "Hungry");
+                    {
+                        if (hungerState != 1)
+						    hungerScrambler = CreateScrambler(hungerString, "Hungry");
+                        hungerState = 1;
+                    }
 					else
-						hungerScrambler = CreateScrambler(hungerString, "Famished");
+                    {
+                        if (hungerState != 2)
+						    hungerScrambler = CreateScrambler(hungerString, "Famished");
+                        hungerState = 2;
+                    }
 				}
 				 _hunger = value; 
 			}
         }
 
-        public float timer
+    /*******************************************************************************
+    /*!
+        \brief
+            Gets and sets timer
+    */
+    /*******************************************************************************/
+    public float timer
         {
             get { return _timer; }
             set { _timer = value; }
         }
 
-        public string resultText
+    /*******************************************************************************
+    /*!
+        \brief
+            Gets and sets result text
+    */
+    /*******************************************************************************/
+    public string resultText
         {
             get { return _resultText; }
             set { _resultText = value; }

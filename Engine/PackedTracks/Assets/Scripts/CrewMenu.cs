@@ -2,18 +2,18 @@
 \file			CrewMenu.cs
 \project
 \author			Sean Ngo
+\co-author		Zacharie Hong
+\co-author		Shawn Tanary
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			10/03/2023
 
 \brief
-	This script manages the crew menu where the player is able to deploy crew members
-    out to scavenge for resources. It also checks their statistics including their
-    health, mental and hunger stats.
+	Contains functions needed for the crew menu of the left screen
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
-******************************************************************************************/
+*****************************************************************************************/
 using CopiumEngine;
 using System;
 using System.Linq;
@@ -81,12 +81,14 @@ public class CrewMenu: CopiumScript
 
     void Start()
 	{
-        prepareBtnWrapper = new ButtonWrapper(prepareButton,audioManager);
+        prepareBtnWrapper = new ButtonWrapper(prepareButton,audioManager,crewStatusManager.tooltip);
         prepareBtnWrapper.SetText(prepareButton.GetComponent<Text>());
         prepareBtnWrapper.SetImage(prepareButton.GetComponent<Image>());
-        deployBtnWrapper = new ButtonWrapper(deployButton,audioManager);
+        prepareBtnWrapper.failureText = "The train needs to be stopped first!";
+        deployBtnWrapper = new ButtonWrapper(deployButton,audioManager,crewStatusManager.tooltip);
         deployBtnWrapper.SetText(deployButton.GetComponent<Text>());
         deployBtnWrapper.SetImage(deployButton.GetComponent<Image>());
+        deployBtnWrapper.failureText = "You need to be preparing your crew members first!";
         deployBtnWrapper.SetInteractable(false);
         titleString = titleText.text;
     }
@@ -132,7 +134,13 @@ public class CrewMenu: CopiumScript
         CheckCrewStatus();
     }
 
-    // Scramble text effect
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Updates the text scramler effect for the different health,mental and 
+            hunger states
+	*/
+    /*******************************************************************************/
     void UpdateEffects()
     {
         foreach (Person person in crew)
@@ -149,19 +157,28 @@ public class CrewMenu: CopiumScript
             {
                 person.crewScript.hungerT.text = person.hungerScrambler.Scramble();
             }
-            person.crewScript.sprite.color = Color.Lerp(Color.white,person.targetColor,timeElasped/transitionDuration);
+            person.crewScript.sprite.color = Color.Lerp(person.crewScript.sprite.color,person.targetColor,Time.deltaTime);
         }
     }
 
-
-    // Update the stats of all the crew members
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Updates the stats of a crew member
+	*/
+    /*******************************************************************************/
     public void UpdateAllStats()
     {
         CheckSupplies();
         CheckCrewHealth();
     }
 
-    // Check if all the crew members are alive
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Checks if all the crew is alive
+	*/
+    /*******************************************************************************/
     public bool CheckAllCrewAlive()
     {
         for (int i = 0; i < crew.Length; i++)
@@ -172,8 +189,13 @@ public class CrewMenu: CopiumScript
 
         return false;
     }
-    
-    // Update the crew status if the individual crew is not alive
+
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Checks if the crew member is dead and set the values accordingly
+	*/
+    /*******************************************************************************/
     void CheckCrewStatus()
     {
         for (int i = 0; i < crew.Length; ++i)
@@ -187,7 +209,12 @@ public class CrewMenu: CopiumScript
         }
     }
 
-    // Reduce crew hunger if supplies is 0
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Reduce crew hunger if supplies is 0
+	*/
+    /*******************************************************************************/
     void CheckSupplies()
     {
         if(supplies == 0)
@@ -207,7 +234,12 @@ public class CrewMenu: CopiumScript
         }
     }
 
-    // Reduce health if hunger is 0
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Reduce health if hunger is 0
+	*/
+    /*******************************************************************************/
     void CheckCrewHealth()
     {
         for (int i = 0; i < crew.Length; i++)
@@ -222,19 +254,26 @@ public class CrewMenu: CopiumScript
 
                 crew[i].timer += Time.deltaTime;
             }
-
-            if (crew[i].health <= 0)
-                crew[i].alive = false;
         }
     }
 
-    // Update the text that are related to the crew
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Updates the supplies text
+	*/
+    /*******************************************************************************/
     void UpdateTexts()
     {
         suppliesText.text = "Supplies: " + supplies;
     }
 
-    // Set the supply amount
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Sets the supplies amount
+	*/
+    /*******************************************************************************/
     public void SetSupplies(int amount)
     {
         // Bean: Visually show the supply reducing
@@ -245,8 +284,12 @@ public class CrewMenu: CopiumScript
         supplies = amount;
     }
 
-    // Change the supply amount
-
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Changes the supplies amount
+	*/
+    /*******************************************************************************/
     public void ChangeSupplies(int amount)
     {
         // Bean: Visually show the supply reducing
@@ -260,7 +303,12 @@ public class CrewMenu: CopiumScript
             supplies = 0;
     }
 
-    // Set all crew members stats to be of certain amount
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Sets one stat of all the crewmates to an amount
+	*/
+    /*******************************************************************************/
     public void SetAllCrew(STAT_TYPES types, int amount)
     {
         for (int i = 0; i < crew.Length; i++)
@@ -286,7 +334,13 @@ public class CrewMenu: CopiumScript
         }
     }
 
-    // Change all crew members stats by a certain amount
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Changes one stat of all the crewmates to an amount if its still more 
+            than 0
+	*/
+    /*******************************************************************************/
     public void ChangeAllCrew(STAT_TYPES types, int amount)
     {
         for (int i = 0; i < crew.Length; i++)
@@ -311,7 +365,12 @@ public class CrewMenu: CopiumScript
         }
     }
 
-    // Set individual crew specific stat to be of an amount
+    /*******************************************************************************
+       /*!
+           \brief
+               Sets a certain crew members stat to an amount
+       */
+    /*******************************************************************************/
     public void SetCrew(STAT_TYPES types, int index, int amount)
     {
         switch (types)
@@ -334,13 +393,20 @@ public class CrewMenu: CopiumScript
         }
     }
 
-
-    // Generate a random event for each deployed
+    /*******************************************************************************
+    /*!
+           \brief
+               Generates a random event for each deployed crew member
+    */
+    /*******************************************************************************/
     public void StartPrepare()
     {
-        crewStatusManager.ClosePanel(true);
-        reportScreenManager.ClosePanel();
-        resultManager.OpenPanel();
+        if (!resultManager.isResultOn)
+        {
+            crewStatusManager.ClosePanel(true);
+            reportScreenManager.ClosePanel();
+            resultManager.OpenPanel();
+        }
 
         if (harris.isDeployed)
         {
@@ -360,13 +426,23 @@ public class CrewMenu: CopiumScript
         }
     }
 
-    // Set whether the button is clickable
+    /*******************************************************************************
+    /*!
+        \brief
+            Toggles wheter a button is clickable
+    */
+    /*******************************************************************************/
     public void SetClickable(bool clickable)
     {
         prepareBtnWrapper.SetInteractable(clickable);
     }
 
-    // Prepare the scavenging members to be deployed
+    /*******************************************************************************
+    /*!
+        \brief
+            Toggles whether or not you can select crew member to send out
+    */
+    /*******************************************************************************/
     public void SetPrepare(bool _preparing)
     {
         preparing = _preparing;

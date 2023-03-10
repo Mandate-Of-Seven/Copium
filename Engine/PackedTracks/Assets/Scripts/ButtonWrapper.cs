@@ -3,17 +3,31 @@ using System;
 
 public class ButtonWrapper
 {
-	static Color disabledImageColor = new Color(1f,0.2f,0.2f,1f);
-	static Color disabledTextColor = new Color(0.5f,0.2f,0.2f,1f);
+	public Color disabledImageColor = new Color(0.8f,0.0f,0.0f,1f);
+	public Color disabledTextColor = new Color(0.5f,0.2f,0.2f,1f);
 
+	public Color disabledHoverColor = new Color(0.5f,0.0f,0.0f,0.5f);
+	public Color disabledClickedColor = new Color(0.2f,0.0f,0.0f,0.5f);
+
+	public bool useDisabled = true;
+	public bool useHoverDisabled = true;
 	Color imageOriginalColor;
 	Color textOriginalColor;
+	Color buttonOriginalHoverColor;
+	Color buttonOriginalClickedColor;
 
-	public ButtonWrapper(Button _button, AudioManager _audioManager)
+    TooltipBehaviour tooltip;
+
+	public string failureText;
+
+	public ButtonWrapper(Button _button, AudioManager _audioManager, TooltipBehaviour _tooltip)
 	{
 	 	button = _button;
+		buttonOriginalHoverColor = button.hoverColor;
+		buttonOriginalClickedColor = button.clickedColor;
 		audioManager = _audioManager;
 		interactable = true;
+		tooltip = _tooltip;
 	}
 
 	AudioManager audioManager;
@@ -55,24 +69,40 @@ public class ButtonWrapper
 		interactable = _interactable;
 		if (interactable)
 		{
-			if (image != null)
+			if (useDisabled)
 			{
-				image.color = imageOriginalColor;
+				if (image != null)
+				{
+					image.color = imageOriginalColor;
+				}
+				if (text != null)
+				{
+					text.color = textOriginalColor;
+				}
 			}
-			if (text != null)
+			if (useHoverDisabled)
 			{
-				text.color = textOriginalColor;
+				button.hoverColor = buttonOriginalHoverColor;
+				button.clickedColor = buttonOriginalClickedColor;
 			}
 		}
 		else
 		{
-			if (image != null)
+			if (useDisabled)
 			{
-				image.color = disabledImageColor;
+				if (image != null)
+				{
+					image.color = disabledImageColor;
+				}
+				if (text != null)
+				{
+					text.color = disabledTextColor;
+				}
 			}
-			if (text != null)
+			if (useHoverDisabled)
 			{
-				text.color = disabledTextColor;
+				button.hoverColor = disabledHoverColor;
+				button.clickedColor = disabledClickedColor;
 			}
 		}
 	}
@@ -99,9 +129,12 @@ public class ButtonWrapper
 			if (!interactable)
 			{
 				if (failedSFX != null)
+				{
 					failedSFX.Play();
+				}
 				else
 					audioManager.failedSFX.Play();
+				tooltip.AddText(failureText);
 				return ButtonState.None;
 			}
 			if (clickedSFX != null)

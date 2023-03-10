@@ -182,11 +182,31 @@ namespace CopiumEngine
         {
             get { return (ButtonState)InternalCalls.GetButtonState(ID); }
         }
-        public bool interactable
+        public Color hoverColor
         {
-            get;
-            set;
+            get
+            {
+                InternalCalls.GetButtonHoverColor(ID, out Color color);
+                return color;
+            }
+            set
+            {
+                InternalCalls.SetButtonHoverColor(ID, ref value);
+            }
         }
+        public Color clickedColor
+        {
+            get
+            {
+                InternalCalls.GetButtonClickedColor(ID, out Color color);
+                return color;
+            }
+            set
+            {
+                InternalCalls.SetButtonClickedColor(ID, ref value);
+            }
+        }
+
     }
 
     public class Text : Component
