@@ -158,6 +158,17 @@ namespace CopiumEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern char GetButtonState(ulong buttonID);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetButtonHoverColor(ulong ID, out Color color);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetButtonHoverColor(ulong ID, ref Color color);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetButtonClickedColor(ulong ID, out Color color);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetButtonClickedColor(ulong ID, ref Color color);
         #endregion
 
         #region INPUT

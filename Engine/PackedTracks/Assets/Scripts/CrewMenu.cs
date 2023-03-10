@@ -308,9 +308,12 @@ public class CrewMenu: CopiumScript
     //generate a random event for each deployed
     public void StartPrepare()
     {
-        crewStatusManager.ClosePanel(true);
-        reportScreenManager.ClosePanel();
-        resultManager.OpenPanel();
+        if (!resultManager.isResultOn)
+        {
+            crewStatusManager.ClosePanel(true);
+            reportScreenManager.ClosePanel();
+            resultManager.OpenPanel();
+        }
 
         if (harris.isDeployed)
         {

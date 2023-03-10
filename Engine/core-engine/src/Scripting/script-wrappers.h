@@ -961,6 +961,68 @@ namespace Copium
 		}
 	}
 
+	static void GetButtonHoverColor(UUID ID, glm::vec4* color)
+	{
+		Scene* pScene = sceneManager.get_current_scene();
+		if (!pScene)
+			return;
+		for (Button& btn : pScene->componentArrays.GetArray<Button>())
+		{
+			if (btn.uuid == ID)
+			{
+				*color = btn.hoverColor;
+				return;
+			}
+		}
+	}
+
+	static void SetButtonHoverColor(UUID ID, glm::vec4* color)
+	{
+		Scene* pScene = sceneManager.get_current_scene();
+		if (!pScene)
+			return;
+		for (Button& btn : pScene->componentArrays.GetArray<Button>())
+		{
+			if (btn.uuid == ID)
+			{
+				btn.hoverColor = *color;
+				return;
+			}
+		}
+	}
+
+	static void GetButtonClickedColor(UUID ID, glm::vec4* color)
+	{
+		Scene* pScene = sceneManager.get_current_scene();
+		if (!pScene)
+			return;
+		for (Button& btn : pScene->componentArrays.GetArray<Button>())
+		{
+			if (btn.uuid == ID)
+			{
+				*color = btn.clickedColor;
+				return;
+			}
+		}
+	}
+
+	static void SetButtonClickedColor(UUID ID, glm::vec4* color)
+	{
+		Scene* pScene = sceneManager.get_current_scene();
+		if (!pScene)
+			return;
+		for (Button& btn : pScene->componentArrays.GetArray<Button>())
+		{
+			if (btn.uuid == ID)
+			{
+				btn.clickedColor = *color;
+				return;
+			}
+		}
+	}
+
+
+
 	static void GetSpriteRendererColor(UUID ID, glm::vec4* color)
 	{
 		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
@@ -1102,6 +1164,10 @@ namespace Copium
 		Register(PauseAnimation);
 		Register(SetAnimatorDelay);
 		Register(GetAnimatorDelay);
+		Register(GetButtonHoverColor);
+		Register(SetButtonHoverColor);
+		Register(GetButtonClickedColor);
+		Register(SetButtonClickedColor);
 	}
 }
 #endif // !SCRIPT_WRAPPERS_H
