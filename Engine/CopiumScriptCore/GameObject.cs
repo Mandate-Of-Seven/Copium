@@ -40,13 +40,14 @@ namespace CopiumEngine
             }
         }
 
+        //Checks if a gameObject has a component by calling back to c++
         public bool HasComponent<T>() where T : Component, new()
         {
             Type componentType = typeof(T);
             return InternalCalls.HasComponent(ID, componentType);
         }
 
-        //COME BACK AND OPTIMISE THIS BECAUSE ITS CREATING A NEW COMPONENT EVERYTIME
+        //Gets a component by calling back to c++
         public T GetComponent<T>() where T : Component, new()
         {
             return InternalCalls.GetComponent(ID, typeof(T)) as T;

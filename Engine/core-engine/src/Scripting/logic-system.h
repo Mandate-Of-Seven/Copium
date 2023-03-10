@@ -62,6 +62,13 @@ namespace Copium
 		*/
 		/**************************************************************************/
 		void handleMessage(MESSAGE_TYPE mType);
+
+		/**************************************************************************/
+		/*!
+			\brief
+				Callback to when the scene is linked, aka finished deserializing
+		*/
+		/**************************************************************************/
 		void CallbackSceneLinked(SceneLinkedEvent* IEvent);
 	};
 }

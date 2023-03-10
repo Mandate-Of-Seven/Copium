@@ -1,11 +1,12 @@
 /*!***************************************************************************************
 \file			collision.h		
 \project		
-\author			Abdul Hadi
+\author			Abdul Hadi (95%)
+				Zacharie Hong (5%)
 
 \par			Course: GAM200
 \par			Section: 
-\date			23/09/2022
+\date			10/03/2023
 
 \brief
 	This file contains the function declarations for a collision system. It has an AABB
@@ -43,6 +44,18 @@ namespace Copium
 
 		}
 
+		/**************************************************************************/
+		/*!
+			\brief
+				Transform AABB into world space by a position and scale
+			\param pos
+				Position of bounding box
+			\param size
+				Size of bounding box
+			\return
+				Relative bounding box
+		*/
+		/**************************************************************************/
 		AABB GetRelativeBounds(const Math::Vec3& pos,const Math::Vec3& size)
 		{
 			AABB tmp{ *this };

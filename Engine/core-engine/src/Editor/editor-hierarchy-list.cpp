@@ -915,7 +915,7 @@ namespace Copium
 			{
 				if (!pos)
 					return;
-				for (size_t i{ pos - 1 }; i >= 0; --i)
+				for (int i = (int)pos - 1; i >= 0; --i)
 				{
 					if (!pScene->gameObjects[i].transform.HasParent())
 					{

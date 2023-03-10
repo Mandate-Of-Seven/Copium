@@ -1,3 +1,19 @@
+/*!***************************************************************************************
+\file			TrainManager.cs
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			10/03/2023
+
+\brief
+	Manages a text component and can print a set amount of messages to it through 
+	appending a new line
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 using CopiumEngine;
 using System;
 

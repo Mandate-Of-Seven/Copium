@@ -2,16 +2,17 @@
 \file			TrainManager.cs
 \project
 \author			Zacharie Hong
-\co-author		Sean Ngo
 
 \par			Course: GAM200
 \par			Section:
 \date			04/03/2023
 
 \brief
-	Manages the train
+	Manages the train screen, which includes all canvases, and also plays sound effects, 
+	camera effects, visual effects when the train is moving to show a slowing down and 
+	speed up effect
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 using CopiumEngine;
 using System;

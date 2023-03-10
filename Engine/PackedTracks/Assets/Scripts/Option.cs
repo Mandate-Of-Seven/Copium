@@ -1,3 +1,19 @@
+/*!***************************************************************************************
+\file			HowtoPlayMenu.cs
+\project
+\author			Sean Ngo
+
+\par			Course: GAM200
+\par			Section:
+\date			10/03/2023
+
+\brief
+	Display options based on whether they are enabled or disabled along with 
+    different colors on the report screen
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 using CopiumEngine;
 using System;
 

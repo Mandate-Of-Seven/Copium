@@ -2,16 +2,16 @@
 \file			ReportScreenManager.cs
 \project
 \author			Zacharie Hong
-\co-author		Sean Ngo
 
 \par			Course: GAM200
 \par			Section:
 \date			5/03/2023
 
 \brief
-	Manages the report screen
+	Manages the report screen, and plays the effect of opening up the the screen along
+    with sound effects
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 using CopiumEngine;
 using System;

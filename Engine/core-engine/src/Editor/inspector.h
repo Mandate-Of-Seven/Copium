@@ -32,19 +32,65 @@ namespace Copium
 	class EditorInspector
 	{
 	public:
+		/***************************************************************************/
+		/*!
+			\brief
+				Initializes the inspector
+		*/
+		/**************************************************************************/
 		void init();
+		/***************************************************************************/
+		/*!
+			\brief
+				Updates the inspector
+		*/
+		/**************************************************************************/
 		void update();
+		/***************************************************************************/
+		/*!
+			\brief
+				Cleaning up of resources used by the inspector
+		*/
+		/**************************************************************************/
 		void exit();
-		void AlignforWidth(float width, float alignment = 0.5f);
 
+		/***************************************************************************/
+		/*!
+			\brief
+				Gets reference of boolean on whether inspector is focused
+			\return
+				Reference of bool on whether the window is focused
+		*/
+		/**************************************************************************/
 		bool& getFocused() { return isFocused; }
+		/***************************************************************************/
+		/*!
+			\brief
+				Gets reference of boolean on whether inspector is opened
+			\return
+				Reference of bool on whether the window is opened
+		*/
+		/**************************************************************************/
 		bool& status() { return isInspectorOpen; }
 	private:
 		bool isInspectorOpen;
 		bool isFocused;
 		UUID targetGameobjectName;
 
+		/***************************************************************************/
+		/*!
+			\brief
+				Callback when entering preview mode
+		*/
+		/**************************************************************************/
 		void CallbackStartPreview(StartPreviewEvent* pEvent);
+
+		/***************************************************************************/
+		/*!
+			\brief
+				Callback when exiting preview mode
+		*/
+		/**************************************************************************/
 		void CallbackStopPreview(StopPreviewEvent* pEvent);
 	};
 }

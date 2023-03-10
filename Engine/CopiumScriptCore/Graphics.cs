@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+****
+\file			Graphics.cs
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			10/03/2023
+
+\brief
+    Reflection for graphic types like colors
+
+All content ? 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 using System.Collections;
 using System.Collections.Generic;
 

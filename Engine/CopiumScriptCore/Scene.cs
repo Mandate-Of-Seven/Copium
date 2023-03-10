@@ -1,4 +1,19 @@
-﻿using System.Collections;
+﻿/*!***************************************************************************************
+\file			Scene.cs
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			10/03/2023
+
+\brief
+	Subscribes objects created from C++ into a C# scene
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
+using System.Collections;
 using System.Collections.Generic;
 using System;
 

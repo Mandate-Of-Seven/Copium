@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			ExplosionEffect.cs
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			10/3/2023
+
+\brief
+	This plays an explosion sound effect and plays a flashbang screen fade
+
+All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 using CopiumEngine;
 using System;
 

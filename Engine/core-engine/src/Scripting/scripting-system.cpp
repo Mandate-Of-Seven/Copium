@@ -12,7 +12,7 @@
 \brief
 	This file contains the function definitions for the scripting system.
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #pragma warning( disable : 26110 )
 #pragma warning( disable : 26111 )

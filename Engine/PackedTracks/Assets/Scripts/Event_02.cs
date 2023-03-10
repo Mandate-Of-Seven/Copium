@@ -1,7 +1,8 @@
 /*!***************************************************************************************
 \file			Event_02.cs
 \project
-\author			Sean Ngo
+\author			Sean Ngo (95%)
+                Zacharie Hong (5%)
 
 \par			Course: GAM200
 \par			Section:

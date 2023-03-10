@@ -1,3 +1,20 @@
+/*!***************************************************************************************
+\file			ButtonWrapper.cs
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			10/3/2023
+
+\brief
+	This file contains a wrapper struct to help play default sound effects that can
+	be overwritten. Also helps display to the tooltip and handles disabled effects and
+	behaviour
+
+All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 using CopiumEngine;
 using System;
 

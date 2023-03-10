@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			CrewStatusManager.cs
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM250
+\par			Section:
+\date			10/03/2023
+
+\brief
+	Handles feedback and opening of crew status panel
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 using CopiumEngine;
 using System;
 
@@ -40,6 +55,7 @@ public class CrewStatusManager: CopiumScript
 		UpdateCanvas();
 
     }
+
 	public void UpdateCanvas()
 	{   
 		if (CrewStatusBtnWrapper.GetState() == ButtonState.OnRelease)
