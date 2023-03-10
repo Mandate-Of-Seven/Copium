@@ -235,6 +235,7 @@ namespace Copium
 			tryRecompileDll();
 			tSys.returnMutex(MutexType::FileSystem);
 			//Critical section End
+			compilingStateReadable.unlock();
 			Sleep(SECONDS_TO_RECOMPILE * 1000);
 		}
 	}
@@ -558,13 +559,11 @@ namespace Copium
 				startCompiling = true;
 				Utils::compileDll();
 				compilingState = CompilingState::SwapAssembly;
-				compilingStateReadable.unlock();
 			}
 		}
 		if (!startCompiling)
 		{
 			compilingState = CompilingState::Wait;
-			compilingStateReadable.unlock();
 		}
 	}
 

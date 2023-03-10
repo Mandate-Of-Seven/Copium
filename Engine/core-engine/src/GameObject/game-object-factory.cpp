@@ -78,12 +78,8 @@ namespace Copium
 	template <typename T>
 	T& GameObjectFactory::AddComponent(GameObject& gameObj, Scene& scene, UUID uuid,T* pCopy)
 	{
-
-
 		if (pCopy)
 		{
-			PRINT("add component");
-
 			T& component = scene.componentArrays.GetArray<T>().emplace_back(gameObj, *pCopy , uuid);
 			gameObj.AddComponent(&component);
 			MyEventSystem->publish(new ReflectComponentEvent(component));
@@ -91,8 +87,6 @@ namespace Copium
 		}
 		T& component = scene.componentArrays.GetArray<T>().emplace_back(gameObj, uuid);
 		gameObj.AddComponent(&component);
-		if (typeid(component) == typeid(Animator))
-			PRINT("bleep");
 		MyEventSystem->publish(new ReflectComponentEvent(component));
 		return component;
 	}

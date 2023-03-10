@@ -513,12 +513,6 @@ namespace Copium
 
 		if (currentScene)
 		{
-
-			for (GameObject& go : currentScene->gameObjects)
-			{
-				PRINT(std::hex << &go);
-			}
-			PRINT("Scene Address:" << currentScene);
 			delete currentScene;
 			currentScene = nullptr;
 		}
