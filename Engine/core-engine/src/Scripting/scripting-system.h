@@ -590,6 +590,7 @@ namespace Copium
 		MonoObject* mCurrentScene;
 		MonoObject* mPreviousScene;
 		std::mutex compilingStateReadable;
+		std::vector<uint32_t> gcHandles;
 		CompilingState compilingState{ CompilingState::Wait };
 		bool inPlayMode{false};
 	};

@@ -297,6 +297,11 @@ namespace Copium
 
 	void ScriptingSystem::exit()
 	{
+		for (uint32_t hand : gcHandles)
+		{
+			mono_gchandle_free(hand);
+		}
+		gcHandles.clear();
 		shutdownMono();
 	}
 
@@ -306,6 +311,7 @@ namespace Copium
 		COPIUM_ASSERT(mClass == nullptr, "MONO CLASS NOT LOADED");
 			
 		MonoObject* tmp = mono_object_new(mAppDomain, mClass);
+		gcHandles.push_back(mono_gchandle_new(tmp,true));
 		mono_runtime_object_init(tmp);
 		return tmp;
 	}
@@ -415,6 +421,12 @@ namespace Copium
 	void ScriptingSystem::swapDll()
 	{
 		MyEventSystem->publish(new EditorConsoleLogEvent("SWAPPING DLL"));
+
+		for (uint32_t hand : gcHandles)
+		{
+			mono_gchandle_free(hand);
+		}
+		gcHandles.clear();
 		registerScriptWrappers();
 		unloadAppDomain();
 		createAppDomain();
@@ -870,7 +882,11 @@ namespace Copium
 			}
 			compilingStateReadable.unlock();
 		}
-
+		for (uint32_t hand : gcHandles)
+		{
+			mono_gchandle_free(hand);
+		}
+		gcHandles.clear();
 		mGameObjects.clear();
 		mComponents.clear();
 		PRINT("CREATING NEW SCENE!");
@@ -943,6 +959,11 @@ namespace Copium
 	{
 		inPlayMode = true;
 		mPreviousScene = mCurrentScene;
+		for (uint32_t hand : gcHandles)
+		{
+			mono_gchandle_free(hand);
+		}
+		gcHandles.clear();
 		mCurrentScene = instantiateClass(klassScene);
 		ReflectAll();
 	}
@@ -951,6 +972,11 @@ namespace Copium
 	{
 		inPlayMode = false;
 		mPreviousScene = mCurrentScene;
+		for (uint32_t hand : gcHandles)
+		{
+			mono_gchandle_free(hand);
+		}
+		gcHandles.clear();
 		mCurrentScene = instantiateClass(klassScene);
 		ReflectAll();
 	}

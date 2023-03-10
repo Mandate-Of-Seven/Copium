@@ -139,6 +139,7 @@
                     "endingHarrisVO": 9569732444608153641,
                     "explosionSFX": 12229284277379369868,
                     "failedSFX": 17176667212650767161,
+                    "gunfireSFX": 13147104160255255935,
                     "fileCloseSFX": 5484840067536943399,
                     "hoverSFX": 17747488176716717098,
                     "leverEngagedSFX": 13165669678142242702,
@@ -2719,7 +2720,10 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "Event_02",
-                    "EventManager": 9174652001346769036
+                    "waitTime": 9.0,
+                    "EventManager": 9174652001346769036,
+                    "cameraShakeEffect": 15847660200646285682,
+                    "trainManager": 5971899813001945745
                 }
             ]
         },
@@ -5489,7 +5493,7 @@
                     "Alias": "BGM_Train",
                     "Loop": true,
                     "Overlap": true,
-                    "Volume": 1.0,
+                    "Volume": 0.5,
                     "Channel": "BGM"
                 }
             ]
@@ -8623,7 +8627,7 @@
         {
             "UID": 8557988155811721864,
             "Name": "HowtoPlay Page1",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "PID": 13627107543471401800,
@@ -9002,7 +9006,7 @@
         {
             "UID": 6511380412293030938,
             "Name": "HowtoPlaypage2",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "PID": 13627107543471401800,
@@ -12372,6 +12376,95 @@
                     "Type": "AudioSource",
                     "TypeID": 16,
                     "Alias": "SFX_FileClose",
+                    "Loop": false,
+                    "Overlap": true,
+                    "Volume": 1.0,
+                    "Channel": ""
+                }
+            ]
+        },
+        {
+            "UID": 2770945187972509579,
+            "Name": "CCTV_Sprite",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 15240074584306495293,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 9.5,
+                        "Y": 9.5,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 234933461792481541,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 5,
+                    "OrderInLayer": 55
+                },
+                {
+                    "enabled": true,
+                    "UID": 12124854566829209956,
+                    "Type": "SpriteRenderer",
+                    "TypeID": 22,
+                    "Sprite ID": 17656573675242304005,
+                    "Sprite Name": "CCTV Cam effect-02.png",
+                    "Color": {
+                        "X": 0.5836588144302368,
+                        "Y": 1.0,
+                        "Z": 0.5513479113578796,
+                        "W": 1.0
+                    },
+                    "Flip": {
+                        "X": false,
+                        "Y": false
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 10749631748412761399,
+            "Name": "SFX_GunFire",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 13147104160255255935,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "SFX_Event2WithoutVO",
                     "Loop": false,
                     "Overlap": true,
                     "Volume": 1.0,

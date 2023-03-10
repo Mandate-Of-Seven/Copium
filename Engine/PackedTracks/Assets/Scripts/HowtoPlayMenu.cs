@@ -18,6 +18,7 @@ using System;
 using System.Runtime.Remoting.Messaging;
 public class HowtoPlayMenu: CopiumScript
 {
+    public bool sceneChange = false;
     public Text text;
     public Button NextButton;
     public Button PrevButton;
@@ -144,8 +145,7 @@ public class HowtoPlayMenu: CopiumScript
             Page2.SetActive(false);
             prevButtonObject.SetActive(false);
         }
-
-        if (page == 2)
+        else if (page == 2)
         {
             Page2.SetActive(true);
             MainPage.SetActive(false);
@@ -153,21 +153,25 @@ public class HowtoPlayMenu: CopiumScript
             prevButtonObject.SetActive(true);
         }
 
-        if (page == 3)
+        else if (page == 3)
         {
             MainPage.SetActive(false);
             Page3.SetActive(true);
             Page2.SetActive(false);
             Page4.SetActive(false);
 
-            //SceneManager.LoadScene("MainMenu");
         }
-        if (page == 4)
+        else if (page == 4)
         {
             Page4.SetActive(true);
             Page3.SetActive(false);
             Page2.SetActive(false);
             MainPage.SetActive(false);
+        }
+        else
+        {
+            if (sceneChange)
+                SceneManager.LoadScene("MainMenu");
         }
 
     }

@@ -12,7 +12,7 @@
 \brief
 	Contains functions needed for selecting and enabling crew members
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 using CopiumEngine;
 using System;
@@ -31,7 +31,7 @@ public class Crew : CopiumScript
     public bool isDeployed = false;
 
     public int crewIndex;
-    Person person;
+    public Person person;
 
     public Image sprite;
 
@@ -47,12 +47,16 @@ public class Crew : CopiumScript
     }
     void Update()
     {
-        if (selectBtnWrapper.GetState() == ButtonState.OnClick && person.alive)
+        if (selectBtnWrapper.GetState() == ButtonState.OnClick)
         {
             if (selected)
+            {
                 Deselect();
+            }
             else
+            {
                 Select();
+            }
         }
     }
 
@@ -78,7 +82,16 @@ public class Crew : CopiumScript
     /*******************************************************************************/
     public void Enable()
     {
-        selectBtnWrapper.SetInteractable(true);
+        Debug.Log("TRYING TO ENABLE");
+        if (person.alive)
+        {
+            selectBtnWrapper.SetInteractable(true);
+        }
+        else
+        {
+            //selectBtnWrapper.SetInteractable(false);
+            selectBtnWrapper.failureText = person.name + " is dead...";
+        }
     }
 
     /*******************************************************************************

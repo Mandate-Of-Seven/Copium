@@ -106,8 +106,6 @@
     <Compile Include="Assets\Scripts\EyesClosingEffect.cs" />
     <Compile Include="Assets\Scripts\Fade.cs" />
     <Compile Include="Assets\Scripts\FPS.cs" />
-    <Compile Include="Assets\Scripts\ButtonCalls.cs" />
-    <Compile Include="Assets\Scripts\CombatManager.cs" />
     <Compile Include="Assets\Scripts\EventManager.cs" />
     <Compile Include="Assets\Scripts\Event_01.cs" />
     <Compile Include="Assets\Scripts\Event_Intro.cs" />
@@ -123,14 +121,8 @@
     <Compile Include="Assets\Scripts\Prepare.cs" />
     <Compile Include="Assets\Scripts\ReportScreenManager.cs" />
     <Compile Include="Assets\Scripts\ResultManager.cs" />
-    <Compile Include="Assets\Scripts\ScreensManager.cs" />
-    <Compile Include="Assets\Scripts\ShooterBehaviour.cs" />
     <Compile Include="Assets\Scripts\Story.cs" />
-    <Compile Include="Assets\Scripts\StoryObject.cs" />
     <Compile Include="Assets\Scripts\StringCiphererVFX.cs" />
-    <Compile Include="Assets\Scripts\Test.cs" />
-    <Compile Include="Assets\Scripts\tex.cs" />
-    <Compile Include="Assets\Scripts\TrainButtons.cs" />
     <Compile Include="Assets\Scripts\TrainManager.cs" />
   </ItemGroup>
   <ItemGroup>

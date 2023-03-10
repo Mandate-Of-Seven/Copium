@@ -44,12 +44,14 @@ public class CrewStatusManager: CopiumScript
 	{   
 		if (CrewStatusBtnWrapper.GetState() == ButtonState.OnRelease)
         {
+			crewMenu.SetPrepare(false);
 			resultManager.Disable();
             OpenPanel();
         }
 		if(CloseCrewStatusBtnWrapper.GetState() == ButtonState.OnRelease)
-        {
-            ClosePanel(false);
+		{
+			crewMenu.deploying = false;
+			ClosePanel(false);
         }
 		
         if (isCrewStatusOn)
@@ -66,8 +68,6 @@ public class CrewStatusManager: CopiumScript
     {
 		if (isCrewStatusOn)
 			return;
-
-		Debug.Log( "DISABLED!");
         alert.enabled = false;
         isCrewStatusOn = true;
         CrewStatusBtn.gameObject.SetActive(false);
@@ -85,6 +85,7 @@ public class CrewStatusManager: CopiumScript
 		{
 			crewMenu.deploying = false;
 		}
+
 		isCrewStatusOn = false;
         resultManager.Enable();
         CrewStatusBtn.gameObject.SetActive(true);

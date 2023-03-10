@@ -10,7 +10,7 @@
 \brief
     Contains the functions to display random events when sending crew out
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 using CopiumEngine;
 using System;
@@ -499,26 +499,35 @@ public class Prepare : CopiumScript
         prepareChoices.SetActive(false);
         prepareFinal.SetActive(true);
 
-        harrisButton.gameObject.SetActive(false);
-        bronsonButton.gameObject.SetActive(false);
-        chuckButton.gameObject.SetActive(false);
-        dantonButton.gameObject.SetActive(false);
+        // harrisButton.gameObject.SetActive(false);
+        // bronsonButton.gameObject.SetActive(false);
+        // chuckButton.gameObject.SetActive(false);
+        // dantonButton.gameObject.SetActive(false);
 
-        if (crewManager.hDeploy)
+        if (!crewManager.hDeploy)
         {
-            harrisButton.gameObject.SetActive(true);
+            if(crewManager.harris.person.alive)
+                crewManager.harris.person.resultText = "Harris is just chilling in the back";
+            
+            //harrisButton.gameObject.SetActive(true);
         }
-        if (crewManager.bDeploy)
+        if (!crewManager.bDeploy)
         {
-            bronsonButton.gameObject.SetActive(true);
+            if(crewManager.bronson.person.alive)
+                crewManager.bronson.person.resultText = "Bronson is just chilling in the back";
+            //bronsonButton.gameObject.SetActive(true);
         }
-        if (crewManager.cDeploy)
+        if (!crewManager.cDeploy)
         {
-            chuckButton.gameObject.SetActive(true);
+            if(crewManager.chuck.person.alive)
+                crewManager.chuck.person.resultText = "Chuck is just chilling in the back";
+            //chuckButton.gameObject.SetActive(true);
         }
-        if (crewManager.dDeploy)
+        if (!crewManager.dDeploy)
         {
-            dantonButton.gameObject.SetActive(true);
+            if(crewManager.danton.person.alive)
+                crewManager.danton.person.resultText = "Danton is just chilling in the back";
+            //dantonButton.gameObject.SetActive(true);
         }
     }
 }

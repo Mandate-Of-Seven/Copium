@@ -35,6 +35,7 @@ public class Event_01: CopiumScript
 	{
         if (!effectTriggered)
         {
+            Debug.Log("ELASPED!");
             if (trainManager.IsAccelerating())
                 trainManager.FlickLever();
             cameraShakeEffect.Trigger();

@@ -506,6 +506,7 @@ namespace Copium
 
 	void EditorSystem::CallbackEditorConsoleLog(EditorConsoleLogEvent* pEvent)
 	{
+		PRINT(pEvent->message);
 		imguiConsoleAddLog(pEvent->message);
 	}
 

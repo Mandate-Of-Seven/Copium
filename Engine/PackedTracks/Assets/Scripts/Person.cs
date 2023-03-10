@@ -118,7 +118,9 @@ using System;
 					else
                     {    
                         if (healthState != 3)
-                        healthScrambler = CreateScrambler(healthString, "Dead");
+                            healthScrambler = CreateScrambler(healthString, "Dead");
+                        resultText = name + " is dead...";
+                        crewScript.selectBtnWrapper.failureText = name + " is dead...";
                         _alive = false; 
                         healthState = 3;
                     }
