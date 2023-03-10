@@ -114,14 +114,17 @@ public class Prepare : CopiumScript
 
     public void GenerateEvents(Person crewmate)
     {
+        currentCrewmate = crewmate;
         currentCrewmate.resultText = "";
         prepareCanvas.SetActive(true);
+        
         prepareChoices.SetActive(true);
         prepareFinal.SetActive(false);
+        
         prepareOption1.gameObject.SetActive(false);
         prepareOption2.gameObject.SetActive(false);
-
         makeChoice = true;
+        
         switch (crewmate.name)
         {
             case "Harris":
@@ -153,8 +156,7 @@ public class Prepare : CopiumScript
             default:
                 break;
         }
-
-        currentCrewmate = crewmate;
+        
         eventNum = RNG.Range(1,14);
 
         switch (eventNum)
@@ -426,18 +428,22 @@ public class Prepare : CopiumScript
         {
             case "Harris":
                 harris.isDeployed= false;
+                harris.Disable();
                 crewManager.crew[0] = currentCrewmate;
                 break;
             case "Bronson":
                 bronson.isDeployed = false;
+                bronson.Disable();
                 crewManager.crew[1] = currentCrewmate;
                 break;
             case "Chuck":
-               chuck.isDeployed= false;
+                chuck.isDeployed= false;
+                chuck.Disable();
                 crewManager.crew[2] = currentCrewmate;
                 break;
             case "Danton":
                danton.isDeployed= false;
+                danton.Disable();
                 crewManager.crew[3] = currentCrewmate;
                 break;
             default

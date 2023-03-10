@@ -47,7 +47,7 @@ public class CrewStatusManager: CopiumScript
         }
 		if(CloseCrewStatusBtnWrapper.GetState() == ButtonState.OnRelease)
         {
-            ClosePanel();
+            ClosePanel(false);
         }
 		
         if (isCrewStatusOn)
@@ -71,11 +71,11 @@ public class CrewStatusManager: CopiumScript
         CrewStatusBtn.gameObject.SetActive(false);
         CrewStatusTab.transform.parent = null;
     }
-    public void ClosePanel()
+    public void ClosePanel(bool prepared)
 	{
 		crewMenu.timeElasped = 0;
 		//Prevent the crew buttons from being pressed
-		if (!crewMenu.deploying)
+		if (!crewMenu.deploying && !prepared)
 		{
 			crewMenu.SetPrepare(false);
 		}
