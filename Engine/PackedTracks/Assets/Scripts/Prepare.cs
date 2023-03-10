@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			Prepare.cs
+\project
+\author			Shawn Tanary
+
+\par			Course: GAM250
+\par			Section:
+\date			10/03/2023
+
+\brief
+    Contains the functions to display random events when sending crew out
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 using CopiumEngine;
 using System;
 
@@ -112,8 +126,13 @@ public class Prepare : CopiumScript
         }
     }
 
-    
 
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Generates a random event for the target crewmate
+	*/
+    /*******************************************************************************/
     public void GenerateEvents(Person crewmate)
     {
         currentCrewmate = crewmate;
@@ -267,6 +286,13 @@ public class Prepare : CopiumScript
         }
     }
 
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Gives the result text and sets the effects of the choices made for the
+            random event
+	*/
+    /*******************************************************************************/
     public void GenerateResults()
     {
         switch (eventNum)
@@ -459,6 +485,12 @@ public class Prepare : CopiumScript
         }
     }
 
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Displays the result text andlets you swap crewmates to see their results    
+	*/
+    /*******************************************************************************/
     public void showFinal()
     {
         if(!prepareFinal.activeSelf)
