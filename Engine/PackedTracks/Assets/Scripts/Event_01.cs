@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			Event_01.cs
+\project
+\author			Sean Ngo (90%)
+                Zacharie Hong (10%)
+
+\par			Course: GAM200
+\par			Section:
+\date			10/03/2023
+
+\brief
+	This script has event 1 of the game.
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 using CopiumEngine;
 using System;
 using System.Reflection;
@@ -31,10 +46,12 @@ public class Event_01: CopiumScript
 
 	}
 
-	public void Event(bool requirement)
+    // Event to display onto the game
+    public void Event(bool requirement)
 	{
         if (!effectTriggered)
         {
+            Debug.Log("ELASPED!");
             if (trainManager.IsAccelerating())
                 trainManager.FlickLever();
             cameraShakeEffect.Trigger();
@@ -113,6 +130,7 @@ public class Event_01: CopiumScript
         }
     }
 
+    // The result after choosing a choice to display on to the game
     public void Result(int choice)
     {
         if(resolutionTextNum == 1)

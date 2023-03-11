@@ -1,4 +1,21 @@
+﻿/*!***************************************************************************************
+\file			components.h
+\project
+\author			Zacharie Hong (30%)
+				Sean Ngo (20%)
+				Shawn Tanary (20%)
+				Matthew Lau (20%)
+				Abdul Hadi (10%)
 
+\par			Course: GAM200
+\par			Section:
+\date			10/03/2023
+
+\brief
+	This file declares all types of components
+
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
@@ -41,7 +58,6 @@ namespace Copium
 		None
 	};
 
-	//REMOVE WHEN SERIALIZATION HAS SWITCHED TO USE ENUMS INSTEAD OF NAMES
 	static std::map<std::string,ComponentType> NAME_TO_CTYPE
 	{
 		{"Animator",ComponentType::Animator},
@@ -806,12 +822,14 @@ namespace Copium
 				Owner of this
 		*/
 		/**************************************************************************/
-		Image(GameObject& _gameObj, UUID _uuid = UUID()) : IUIComponent(_gameObj, _uuid){}
+		Image(GameObject& _gameObj, UUID _uuid = UUID()) : IUIComponent(_gameObj, _uuid) { PRINT("image constructed:" << sprite.sprite_name); }
 
 		Image(GameObject& _gameObj, const Image& rhs, UUID _uuid = UUID()) :
 			IUIComponent(_gameObj, rhs, _uuid), sprite{ rhs.sprite }{};
 
 		Image& operator=(const Image& rhs) { return *this; }
+
+		~Image() { PRINT("Image destructed"); }
 		/*******************************************************************************
 		/*!
 		*

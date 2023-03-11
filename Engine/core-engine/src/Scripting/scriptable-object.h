@@ -7,7 +7,7 @@
 
 \par			Course: GAM200
 \par			Section:
-\date			27/09/2022
+\date			27/02/2023
 
 \brief
 	This file contains the declarations of the ScriptableObject class.

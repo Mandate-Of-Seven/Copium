@@ -1,12 +1,33 @@
+/*!***************************************************************************************
+\file			Event_02.cs
+\project
+\author			Sean Ngo (95%)
+                Zacharie Hong (5%)
+
+\par			Course: GAM200
+\par			Section:
+\date			10/03/2023
+
+\brief
+	This script has event 2 of the game.
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 using CopiumEngine;
 using System;
 
 public class Event_02: CopiumScript
 {
     public EventManager EventManager;
+    public TrainManager trainManager;
+    bool effectTriggered = false;
+    public CameraShakeEffect cameraShakeEffect;
     CrewMenu cm;
+    float timerElasped = 0f;
 
+    int state = 1;
     int resolutionTextNum = 0;
+    public float waitTime = 3f;
 
     void Start()
 	{
@@ -17,8 +38,34 @@ public class Event_02: CopiumScript
 
 	}
 
-	public void Event(bool requirement)
+    // Event to display onto the game
+    public void Event(bool requirement)
 	{
+        if (!effectTriggered)
+        {
+            trainManager.audioManager.gunfireSFX.Play();
+            effectTriggered = true;
+        }
+        if (state == 1)
+        {
+            if (timerElasped < waitTime)
+            {
+                if (trainManager.IsAccelerating())
+                    trainManager.FlickLever();
+                Debug.Log("ELASPED!");
+                timerElasped+=Time.deltaTime;
+            }
+            else
+            {
+                timerElasped = 0;
+                cameraShakeEffect.intensity = 0.2f;
+                cameraShakeEffect.totalDuration = 2f;
+                cameraShakeEffect.Trigger();
+                ++state;
+            }
+            return;
+        }
+
         if (!requirement)
 		{
             EventManager.Option_01.Enable();
@@ -70,6 +117,7 @@ public class Event_02: CopiumScript
         }
     }
 
+    // The result after choosing a choice to display on to the game
     public void Result(int choice)
     {
         if (resolutionTextNum == 1)

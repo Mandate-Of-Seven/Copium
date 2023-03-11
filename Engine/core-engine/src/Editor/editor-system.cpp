@@ -30,7 +30,7 @@ namespace Copium
 	namespace
 	{
 		// Our state
-		bool show_demo_window = true;
+		bool show_demo_window = false;
 		ThreadSystem& threadSystem{ *ThreadSystem::Instance() };
 		bool tempMode = true;
 	}
@@ -506,6 +506,7 @@ namespace Copium
 
 	void EditorSystem::CallbackEditorConsoleLog(EditorConsoleLogEvent* pEvent)
 	{
+		PRINT(pEvent->message);
 		imguiConsoleAddLog(pEvent->message);
 	}
 

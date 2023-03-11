@@ -1,13 +1,31 @@
+/*!***************************************************************************************
+\file			HowtoPlayMenu.cs
+\project
+\author			Wu Ze Zheng
+\co-author		Abdul Hadi
+                Matthew Lau
+
+\par			Course: GAM200
+\par			Section:
+\date			09/03/2023
+
+\brief
+	Functionality for the HowtoPlay Menu
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 using CopiumEngine;
 using System;
 using System.Runtime.Remoting.Messaging;
 public class HowtoPlayMenu: CopiumScript
 {
+    public bool sceneChange = false;
     public Text text;
     public Button NextButton;
     public Button PrevButton;
     public AudioSource sfx_pageflip;
     public GameObject prevButtonObject;
+    public GameManager gameManager;
 
     public GameObject MainPage;
     public GameObject Page2;
@@ -22,7 +40,7 @@ public class HowtoPlayMenu: CopiumScript
 
     public Button ExitButton;
 
-    int page = 1;
+    public int page = 1;
 
     void Start()
 	{
@@ -36,6 +54,9 @@ public class HowtoPlayMenu: CopiumScript
 
     void Update()
     {
+
+
+        
         if (PrevButton.state == ButtonState.OnClick)
         {   
             sfx_pageflip.Play();
@@ -47,7 +68,7 @@ public class HowtoPlayMenu: CopiumScript
             sfx_pageflip.Play();
             page++;
             ShowPage(page);
-        
+            Console.WriteLine(page.ToString());
 
         }
 
@@ -107,17 +128,26 @@ public class HowtoPlayMenu: CopiumScript
         }
 
     }
-
+    /***************************************************************************/
+    /*!
+    \brief       
+        Selects which page to show
+    \param _page
+        The page to show
+    */
+    /**************************************************************************/
     void ShowPage(int _page)
     {
+
+        Console.WriteLine("show page");
+
         if (page == 1)
         {
             MainPage.SetActive(true);
             Page2.SetActive(false);
             prevButtonObject.SetActive(false);
         }
-
-        if (page == 2)
+        else if (page == 2)
         {
             Page2.SetActive(true);
             MainPage.SetActive(false);
@@ -125,19 +155,28 @@ public class HowtoPlayMenu: CopiumScript
             prevButtonObject.SetActive(true);
         }
 
-        if (page == 3)
+        else if (page == 3)
         {
-
+            MainPage.SetActive(false);
             Page3.SetActive(true);
             Page2.SetActive(false);
             Page4.SetActive(false);
 
-            //SceneManager.LoadScene("MainMenu");
         }
-        if (page == 4)
+        else if (page == 4)
         {
             Page4.SetActive(true);
             Page3.SetActive(false);
+            Page2.SetActive(false);
+            MainPage.SetActive(false);
+        }
+        else
+        {
+            page = 0;
+            if (sceneChange)
+                SceneManager.LoadScene("MainMenu");
+            else
+                gameManager.CloseManual();
         }
 
     }

@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			Prepare.cs
+\project
+\author			Shawn Tanary
+
+\par			Course: GAM250
+\par			Section:
+\date			10/03/2023
+
+\brief
+    Contains the functions to display random events when sending crew out
+
+All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 using CopiumEngine;
 using System;
 
@@ -5,6 +19,8 @@ public class Prepare : CopiumScript
 {
     public CrewMenu crewManager;
     public Button closeButton;
+
+    public TooltipBehaviour tooltip;
 
     public Text prepareBody;
     public Button prepareButton1;
@@ -48,13 +64,13 @@ public class Prepare : CopiumScript
 
     void Start()
     {
-        harrisBtnWrapper = new ButtonWrapper(harrisButton,crewManager.audioManager);
+        harrisBtnWrapper = new ButtonWrapper(harrisButton,crewManager.audioManager,tooltip);
         harrisBtnWrapper.SetImage(harrisButton.GetComponent<Image>());
-        bronsonBtnWrapper = new ButtonWrapper(bronsonButton,crewManager.audioManager);
+        bronsonBtnWrapper = new ButtonWrapper(bronsonButton,crewManager.audioManager,tooltip);
         bronsonBtnWrapper.SetImage(bronsonButton.GetComponent<Image>());
-        chuckBtnWrapper = new ButtonWrapper(chuckButton,crewManager.audioManager);
+        chuckBtnWrapper = new ButtonWrapper(chuckButton,crewManager.audioManager,tooltip);
         chuckBtnWrapper.SetImage(chuckButton.GetComponent<Image>());
-        dantonBtnWrapper = new ButtonWrapper(dantonButton,crewManager.audioManager);
+        dantonBtnWrapper = new ButtonWrapper(dantonButton,crewManager.audioManager,tooltip);
         dantonBtnWrapper.SetImage(dantonButton.GetComponent<Image>());
     }
     void Update()
@@ -110,18 +126,26 @@ public class Prepare : CopiumScript
         }
     }
 
-    
 
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Generates a random event for the target crewmate
+	*/
+    /*******************************************************************************/
     public void GenerateEvents(Person crewmate)
     {
+        currentCrewmate = crewmate;
         currentCrewmate.resultText = "";
         prepareCanvas.SetActive(true);
+        
         prepareChoices.SetActive(true);
         prepareFinal.SetActive(false);
+        
         prepareOption1.gameObject.SetActive(false);
         prepareOption2.gameObject.SetActive(false);
-
         makeChoice = true;
+        
         switch (crewmate.name)
         {
             case "Harris":
@@ -153,8 +177,7 @@ public class Prepare : CopiumScript
             default:
                 break;
         }
-
-        currentCrewmate = crewmate;
+        
         eventNum = RNG.Range(1,14);
 
         switch (eventNum)
@@ -263,6 +286,13 @@ public class Prepare : CopiumScript
         }
     }
 
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Gives the result text and sets the effects of the choices made for the
+            random event
+	*/
+    /*******************************************************************************/
     public void GenerateResults()
     {
         switch (eventNum)
@@ -426,18 +456,22 @@ public class Prepare : CopiumScript
         {
             case "Harris":
                 harris.isDeployed= false;
+                harris.Disable();
                 crewManager.crew[0] = currentCrewmate;
                 break;
             case "Bronson":
                 bronson.isDeployed = false;
+                bronson.Disable();
                 crewManager.crew[1] = currentCrewmate;
                 break;
             case "Chuck":
-               chuck.isDeployed= false;
+                chuck.isDeployed= false;
+                chuck.Disable();
                 crewManager.crew[2] = currentCrewmate;
                 break;
             case "Danton":
                danton.isDeployed= false;
+                danton.Disable();
                 crewManager.crew[3] = currentCrewmate;
                 break;
             default
@@ -451,6 +485,12 @@ public class Prepare : CopiumScript
         }
     }
 
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Displays the result text andlets you swap crewmates to see their results    
+	*/
+    /*******************************************************************************/
     public void showFinal()
     {
         if(!prepareFinal.activeSelf)
@@ -459,26 +499,35 @@ public class Prepare : CopiumScript
         prepareChoices.SetActive(false);
         prepareFinal.SetActive(true);
 
-        harrisButton.gameObject.SetActive(false);
-        bronsonButton.gameObject.SetActive(false);
-        chuckButton.gameObject.SetActive(false);
-        dantonButton.gameObject.SetActive(false);
+        // harrisButton.gameObject.SetActive(false);
+        // bronsonButton.gameObject.SetActive(false);
+        // chuckButton.gameObject.SetActive(false);
+        // dantonButton.gameObject.SetActive(false);
 
-        if (crewManager.hDeploy)
+        if (!crewManager.hDeploy)
         {
-            harrisButton.gameObject.SetActive(true);
+            if(crewManager.harris.person.alive)
+                crewManager.harris.person.resultText = "Harris is just chilling in the back";
+            
+            //harrisButton.gameObject.SetActive(true);
         }
-        if (crewManager.bDeploy)
+        if (!crewManager.bDeploy)
         {
-            bronsonButton.gameObject.SetActive(true);
+            if(crewManager.bronson.person.alive)
+                crewManager.bronson.person.resultText = "Bronson is just chilling in the back";
+            //bronsonButton.gameObject.SetActive(true);
         }
-        if (crewManager.cDeploy)
+        if (!crewManager.cDeploy)
         {
-            chuckButton.gameObject.SetActive(true);
+            if(crewManager.chuck.person.alive)
+                crewManager.chuck.person.resultText = "Chuck is just chilling in the back";
+            //chuckButton.gameObject.SetActive(true);
         }
-        if (crewManager.dDeploy)
+        if (!crewManager.dDeploy)
         {
-            dantonButton.gameObject.SetActive(true);
+            if(crewManager.danton.person.alive)
+                crewManager.danton.person.resultText = "Danton is just chilling in the back";
+            //dantonButton.gameObject.SetActive(true);
         }
     }
 }

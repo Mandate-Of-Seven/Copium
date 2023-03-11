@@ -28,53 +28,6 @@ namespace
 
 namespace Copium 
 {
-	//template <typename T>
-	//Component* Add(GameObject& gameObj)
-	//{
-	//	T component(gameObj);
-	//	T& newComponent = pComponentsArrays->GetArray<T>().push_back(component);
-	//	gameObj.AddComponent<T>(&newComponent);
-	//	return (Component*)&newComponent;
-	//}
-
-	//Component* AddComponent(GameObject& gameObj ,ComponentType componentType)
-	//{
-	//	switch (componentType)
-	//	{
-	//		switch (componentType)
-	//		{
-	//		case ComponentType::Animator:
-	//			return Add<Animator>(gameObj);
-	//		case ComponentType::BoxCollider2D:
-	//			return Add<BoxCollider2D>(gameObj);
-	//		case ComponentType::Camera:
-	//			return Add<Camera>(gameObj);
-	//		case ComponentType::Rigidbody2D:
-	//			return Add<Rigidbody2D>(gameObj);
-	//		case ComponentType::SpriteRenderer:
-	//			return Add<SpriteRenderer>(gameObj);
-	//		case ComponentType::Script:
-	//			return Add<Script>(gameObj);
-	//		case ComponentType::Button:
-	//			return Add<Button>(gameObj);
-	//		case ComponentType::Image:
-	//			return Add<Image>(gameObj);
-	//		case ComponentType::Text:
-	//			return Add<Text>(gameObj);
-	//		case ComponentType::AudioSource:
-	//			return Add<AudioSource>(gameObj);
-	//		case ComponentType::SortingGroup:
-	//			return Add<SortingGroup>(gameObj);
-	//		default:
-	//			COPIUM_ASSERT(true, "TRYING TO ADD INVALID COMPONENT TYPE");
-	//			break;
-	//		}
-	//	}
-	//	return nullptr;
-	//}
-
-
-
 	template <typename T>
 	T& GameObjectFactory::AddComponent(GameObject& gameObj, Scene& scene, UUID uuid,T* pCopy)
 	{

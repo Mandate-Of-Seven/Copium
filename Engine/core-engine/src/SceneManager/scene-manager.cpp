@@ -513,12 +513,6 @@ namespace Copium
 
 		if (currentScene)
 		{
-
-			for (GameObject& go : currentScene->gameObjects)
-			{
-				PRINT(std::hex << &go);
-			}
-			PRINT("Scene Address:" << currentScene);
 			delete currentScene;
 			currentScene = nullptr;
 		}
@@ -542,6 +536,7 @@ namespace Copium
 
 		if (currentScene)
 		{
+			SoundSystem::Instance()->StopAll();
 			delete currentScene;
 		}
 		currentScene = new NormalScene(_filepath);
@@ -738,8 +733,6 @@ namespace Copium
 				break;
 		}
 
-
-		SoundSystem::Instance()->StopAll();
 		MyEventSystem->publish(new SceneLinkedEvent(*currentScene));
 		MessageSystem::Instance()->dispatch(MESSAGE_TYPE::MT_SCENE_DESERIALIZED);
 
@@ -844,7 +837,7 @@ namespace Copium
 			
 			return false;
 		}
-
+		SoundSystem::Instance()->StopAll();
 
 		PRINT("Stop preview");
 		currSceneState = Scene::SceneState::edit;
@@ -880,7 +873,7 @@ namespace Copium
 
 		currentScene->set_state(Scene::SceneState::edit);
 
-		SoundSystem::Instance()->StopAll();
+		
 
 		inPlayMode = false;
 		return true;
@@ -1069,6 +1062,7 @@ namespace Copium
 		}
 		else
 		{
+			PRINT("bloop");
 			T& component = MyGOF.AddComponent<T>(pEvent->gameObject, *currentScene, pEvent->uuid,nullptr);
 			pEvent->componentContainer = &component;
 		}

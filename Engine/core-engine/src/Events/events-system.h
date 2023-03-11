@@ -1,5 +1,4 @@
 ﻿/*!***************************************************************************************
-****
 \file			events-system.h
 \project		GAM200
 \author			Zacharie Hong
@@ -15,8 +14,7 @@
     3. Event System
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
-******************************************************************************************
-****/
+******************************************************************************************/
 
 
 
@@ -109,7 +107,6 @@ namespace Copium
         /*******************************************************************************/
         void exit()
         {
-            PRINT("FREEING EVENTS");
             for (auto& keyPair : subscribers)
             {
                 auto it{ keyPair.second->begin() };

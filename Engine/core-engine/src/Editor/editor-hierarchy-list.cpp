@@ -683,11 +683,6 @@ namespace Copium
 
 					GameObject* tmp{};
 					MyEventSystem->publish(new GameObjectInstantiateEvent(tmp, MyEditorSystem.pSelectedGameObject));
-
-					uint64_t u = MyEditorSystem.pSelectedGameObject->uuid;
-					PRINT(u);
-					PRINT(tmp->uuid.ConstGetUUID());
-
 				}
 				else
 				{
@@ -920,7 +915,7 @@ namespace Copium
 			{
 				if (!pos)
 					return;
-				for (size_t i{ pos - 1 }; i >= 0; --i)
+				for (int i = (int)pos - 1; i >= 0; --i)
 				{
 					if (!pScene->gameObjects[i].transform.HasParent())
 					{

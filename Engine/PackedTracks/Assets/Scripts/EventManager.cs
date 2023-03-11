@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			EventManager.cs
+\project
+\author			Sean Ngo
+
+\par			Course: GAM200
+\par			Section:
+\date			10/03/2023
+
+\brief
+	This script manages the events that occur in the game.
+
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 using CopiumEngine;
 using System;
 using System.Runtime.InteropServices;
@@ -18,6 +32,9 @@ public class EventManager: CopiumScript
     public Option Option_03;
 
     public Text Body;
+    public Image alert;
+    Color danger = new Color(1.0f, 0.21f, 0.21f);
+    Color warning = new Color(1.0f, 1.0f, 0.21f);
 
     public int EventSequence = 0;
     int choice = 0;
@@ -25,6 +42,7 @@ public class EventManager: CopiumScript
     bool ShowingResolution = false;
     bool SelectingChoice = true;
     bool ShowingMainEvent = true;
+    bool EnableChangeAlert = false;
 
     float timer = 0.0f;
 
@@ -69,17 +87,28 @@ public class EventManager: CopiumScript
 
         if (Input.GetKeyDown(KeyCode.Enter))
             UpdateEventSequence();
-
-        crewMenu.UpdateAllStats();
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Override event 
+	*/
+	/**************************************************************************/
     public void OverrideEvent()
     {
         ShowingResolution = false;
         SelectingChoice = true;
         ShowingMainEvent = true;
+        EnableChangeAlert = true;
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Update the event sequence
+	*/
+	/**************************************************************************/
     public void UpdateEventSequence()
     {
         if (ShowingMainEvent && SelectingChoice)
@@ -89,6 +118,12 @@ public class EventManager: CopiumScript
         OverrideEvent();
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Check the current event
+	*/
+	/**************************************************************************/
     void CheckCurrentEvent()
     {
         //Console.WriteLine("Checking Current Event");
@@ -108,15 +143,18 @@ public class EventManager: CopiumScript
                 eventIntro.Event();
                 break;
             case 1:
+                ChangeAlertStatus(1);
                 event01.Event(!crewMenu.crew[0].alive);
                 break;
             case 2:
+                ChangeAlertStatus(2);
                 bool alive = false;
                 if (crewMenu.crew[1].alive && crewMenu.crew[2].alive)
                     alive = true;
                 event02.Event(alive);
                 break;
             case 3:
+                ChangeAlertStatus(1);
                 int requirement = 0;
                 if (crewMenu.crew[0].alive && crewMenu.crew[2].alive 
                     && crewMenu.crew[2].health > 5)
@@ -136,6 +174,12 @@ public class EventManager: CopiumScript
         }
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Select the default choice for the event
+	*/
+	/**************************************************************************/
     public void SelectDefaultChoice()
     {
         if (!SelectingChoice)
@@ -146,6 +190,12 @@ public class EventManager: CopiumScript
         choice = 1;
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Check which choice the player makes
+	*/
+	/**************************************************************************/
     void SelectChoice()
     {
         if (Option_01.btn.state == ButtonState.OnClick)
@@ -173,6 +223,12 @@ public class EventManager: CopiumScript
         
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Show the resolution of the event
+	*/
+	/**************************************************************************/
     void ShowResolution()
     {
         ShowingMainEvent = false;
@@ -196,6 +252,12 @@ public class EventManager: CopiumScript
         ShowingResolution = false;
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Show the ending that player has reached.
+	*/
+	/**************************************************************************/
     void ShowEnding()
     {
         Option_01.ResetOption();
@@ -222,5 +284,19 @@ public class EventManager: CopiumScript
         {
             Application.Quit();
         }
+    }
+
+    // Change the alert status based on the severity of the event
+    void ChangeAlertStatus(int state)
+    {
+        if (!EnableChangeAlert)
+            return;
+
+        if(state == 1) // Warning
+            alert.color = warning;
+        else // Danger
+            alert.color = danger;
+
+        EnableChangeAlert = false;
     }
 }

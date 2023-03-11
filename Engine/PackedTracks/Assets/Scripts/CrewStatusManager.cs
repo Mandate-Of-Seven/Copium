@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			CrewStatusManager.cs
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM250
+\par			Section:
+\date			10/03/2023
+
+\brief
+	Handles feedback and opening of crew status panel
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 using CopiumEngine;
 using System;
 
@@ -9,6 +24,8 @@ public class CrewStatusManager: CopiumScript
     public Button CloseCrewStatusBtn;
 	public Button CrewStatusBtn;
     public ResultManager resultManager;
+
+	public TooltipBehaviour tooltip;
 
 
     ButtonWrapper CloseCrewStatusBtnWrapper;
@@ -27,9 +44,9 @@ public class CrewStatusManager: CopiumScript
 
 	void Start()
 	{
-		CloseCrewStatusBtnWrapper = new ButtonWrapper(CloseCrewStatusBtn,audioManager);
+		CloseCrewStatusBtnWrapper = new ButtonWrapper(CloseCrewStatusBtn,audioManager, tooltip);
 		CloseCrewStatusBtnWrapper.SetImage(CloseCrewStatusBtn.GetComponent<Image>());
-		CrewStatusBtnWrapper = new ButtonWrapper(CrewStatusBtn,audioManager);
+		CrewStatusBtnWrapper = new ButtonWrapper(CrewStatusBtn,audioManager,tooltip	);
 		CrewStatusBtnWrapper.SetImage(CrewStatusBtn.GetComponent<Image>());
 	}
 
@@ -38,16 +55,19 @@ public class CrewStatusManager: CopiumScript
 		UpdateCanvas();
 
     }
+
 	public void UpdateCanvas()
 	{   
 		if (CrewStatusBtnWrapper.GetState() == ButtonState.OnRelease)
         {
+			crewMenu.SetPrepare(false);
 			resultManager.Disable();
             OpenPanel();
         }
 		if(CloseCrewStatusBtnWrapper.GetState() == ButtonState.OnRelease)
-        {
-            ClosePanel();
+		{
+			crewMenu.deploying = false;
+			ClosePanel(false);
         }
 		
         if (isCrewStatusOn)
@@ -64,18 +84,16 @@ public class CrewStatusManager: CopiumScript
     {
 		if (isCrewStatusOn)
 			return;
-
-		Debug.Log( "DISABLED!");
         alert.enabled = false;
         isCrewStatusOn = true;
         CrewStatusBtn.gameObject.SetActive(false);
         CrewStatusTab.transform.parent = null;
     }
-    public void ClosePanel()
+    public void ClosePanel(bool prepared)
 	{
 		crewMenu.timeElasped = 0;
 		//Prevent the crew buttons from being pressed
-		if (!crewMenu.deploying)
+		if (!crewMenu.deploying && !prepared)
 		{
 			crewMenu.SetPrepare(false);
 		}
@@ -83,6 +101,7 @@ public class CrewStatusManager: CopiumScript
 		{
 			crewMenu.deploying = false;
 		}
+
 		isCrewStatusOn = false;
         resultManager.Enable();
         CrewStatusBtn.gameObject.SetActive(true);

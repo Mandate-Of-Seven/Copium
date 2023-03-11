@@ -175,13 +175,13 @@ namespace Copium
 			}
 		}
 		
-		if (!_directory.get_files().empty())
-		{
-			for (auto& file : _directory.get_files())
-			{
-				PRINT(space << "  File: " << file.get_id() << " " << file.get_name());
-			}
-		}
+		//if (!_directory.get_files().empty())
+		//{
+		//	for (auto& file : _directory.get_files())
+		//	{
+		//		PRINT(space << "  File: " << file.get_id() << " " << file.get_name());
+		//	}
+		//}
 	}
 
 	void FileSystem::update_directories(Directory* _directory, bool _recursive)
@@ -368,11 +368,7 @@ namespace Copium
 		// Check if there is a change in the number of files
 		if (_directory->get_file_count() != 0 && _directory->get_file_count() != fileCount)
 		{
-			double start = glfwGetTime();
 			update_directories(_directory, false);
-			double end = glfwGetTime();
-
-			PRINT("File time taken to reload: " << end - start);
 		}
 
 		_directory->set_file_count(fileCount);

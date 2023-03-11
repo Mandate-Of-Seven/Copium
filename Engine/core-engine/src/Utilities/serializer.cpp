@@ -1,3 +1,19 @@
+/*!***************************************************************************************
+\file			serializer.cpp
+\project
+\author			Matthew Lau
+\co-author		Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			27/09/2022
+
+\brief
+	This file holds the definitions of functions that are involved in de/serialization in Copium Engine.
+	Especially for complex types.
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 #include "pch.h"
 #include <Events/events-system.h>
 #include "serializer.h"

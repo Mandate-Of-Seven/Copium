@@ -2,6 +2,7 @@
 \file			copium-core.h
 \project
 \author			Zacharie Hong
+\co-author		Matthew Lau
 
 \par			Course: GAM200
 \par			Section:

@@ -5,12 +5,12 @@
 
 \par			Course: GAM200
 \par			Section:
-\date			1/11/2022
+\date			10/03/2023
 
 \brief
 	This file encapsulates the InternalCalls of the Engine
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 using System;
@@ -158,6 +158,17 @@ namespace CopiumEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern char GetButtonState(ulong buttonID);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetButtonHoverColor(ulong ID, out Color color);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetButtonHoverColor(ulong ID, ref Color color);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetButtonClickedColor(ulong ID, out Color color);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetButtonClickedColor(ulong ID, ref Color color);
         #endregion
 
         #region INPUT

@@ -7,14 +7,15 @@
 
 \par			Course: GAM200
 \par			Section:
-\date			27/09/2022
+\date			10/03/2022
 
 \brief
 	This file contains the function definitions for the scripting system.
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
-
+#pragma warning( disable : 26110 )
+#pragma warning( disable : 26111 )
 #include "pch.h"
 #include "Scripting/scripting-system.h"
 #include "Scripting/compiler.h"
@@ -236,6 +237,7 @@ namespace Copium
 			tryRecompileDll();
 			tSys.returnMutex(MutexType::FileSystem);
 			//Critical section End
+			compilingStateReadable.unlock();
 			Sleep(SECONDS_TO_RECOMPILE * 1000);
 		}
 	}
@@ -298,6 +300,11 @@ namespace Copium
 
 	void ScriptingSystem::exit()
 	{
+		for (uint32_t hand : gcHandles)
+		{
+			mono_gchandle_free(hand);
+		}
+		gcHandles.clear();
 		shutdownMono();
 	}
 
@@ -307,6 +314,7 @@ namespace Copium
 		COPIUM_ASSERT(mClass == nullptr, "MONO CLASS NOT LOADED");
 			
 		MonoObject* tmp = mono_object_new(mAppDomain, mClass);
+		gcHandles.push_back(mono_gchandle_new(tmp,true));
 		mono_runtime_object_init(tmp);
 		return tmp;
 	}
@@ -416,6 +424,12 @@ namespace Copium
 	void ScriptingSystem::swapDll()
 	{
 		MyEventSystem->publish(new EditorConsoleLogEvent("SWAPPING DLL"));
+
+		for (uint32_t hand : gcHandles)
+		{
+			mono_gchandle_free(hand);
+		}
+		gcHandles.clear();
 		registerScriptWrappers();
 		unloadAppDomain();
 		createAppDomain();
@@ -547,13 +561,11 @@ namespace Copium
 				startCompiling = true;
 				Utils::compileDll();
 				compilingState = CompilingState::SwapAssembly;
-				compilingStateReadable.unlock();
 			}
 		}
 		if (!startCompiling)
 		{
 			compilingState = CompilingState::Wait;
-			compilingStateReadable.unlock();
 		}
 	}
 
@@ -875,7 +887,11 @@ namespace Copium
 			}
 			compilingStateReadable.unlock();
 		}
-
+		for (uint32_t hand : gcHandles)
+		{
+			mono_gchandle_free(hand);
+		}
+		gcHandles.clear();
 		mGameObjects.clear();
 		mComponents.clear();
 		PRINT("CREATING NEW SCENE!");
@@ -946,12 +962,22 @@ namespace Copium
 	void ScriptingSystem::CallbackStartPreview(StartPreviewEvent* pEvent)
 	{
 		inPlayMode = true;
+		for (uint32_t hand : gcHandles)
+		{
+			mono_gchandle_free(hand);
+		}
+		gcHandles.clear();
 		ReflectAll();
 	}
 
 	void ScriptingSystem::CallbackStopPreview(StopPreviewEvent* pEvent)
 	{
 		inPlayMode = false;
+		for (uint32_t hand : gcHandles)
+		{
+			mono_gchandle_free(hand);
+		}
+		gcHandles.clear();
 		ReflectAll();
 	}
 

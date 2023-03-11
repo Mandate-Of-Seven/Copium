@@ -12,3 +12,8 @@
 *.pch
 x64/
 *.pch
+Engine/PackedTracks/obj/Release/PackedTracks.csproj.CoreCompileInputs.cache
+Engine/PackedTracks/obj/Release/DesignTimeResolveAssemblyReferencesInput.cache
+Engine/core-engine/imgui.ini
+Engine/core-engine/scripts.dll
+Engine/core-engine/output.txt

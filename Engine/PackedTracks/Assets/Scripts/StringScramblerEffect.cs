@@ -1,3 +1,19 @@
+/*!***************************************************************************************
+\file			StringScramblerEffect.cs
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			10/03/2023
+
+\brief
+	Creates a encoded animated text effect by randomising each character, can be tweaked
+	by its constructor parameters.
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 using CopiumEngine;
 using System;
 using System.Reflection;

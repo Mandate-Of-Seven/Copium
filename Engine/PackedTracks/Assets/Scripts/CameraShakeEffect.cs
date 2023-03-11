@@ -1,3 +1,19 @@
+/*!***************************************************************************************
+\file			CameraShakeEffect.cs
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM250
+\par			Section:
+\date			10/03/2023
+
+\brief
+	Contains the function definitions to pull off a camera shake of certain intensity
+	and duration
+
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 using CopiumEngine;
 using System;
 

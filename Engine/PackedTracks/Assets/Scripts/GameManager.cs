@@ -1,3 +1,20 @@
+/*!***************************************************************************************
+\file			GameManager.cs
+\project
+\author			Zacharie Hong
+\co-author		Sean Ngo
+                Shawn Tanary
+                Matthew Lau
+
+\par			Course: GAM200
+\par			Section:
+\date			26/11/2022
+
+\brief
+	GameManager manages the game logic.
+
+All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 using CopiumEngine;
 using System;
 using System.Collections.Generic;
@@ -13,14 +30,13 @@ public class GameManager: CopiumScript
     public GameObject ManualPopUp;
     public GameObject MainPage;
     public GameObject Page2;
+    public GameObject Page3;
+    public GameObject Page4;
     public GameObject prevButtonObject;
-
+    public HowtoPlayMenu htpmScript;
 
     public Button ManualBtn;
     public Button ManualPopUpBtn;
-
-    public Button PauseResumeBtn;
-    public Button PauseQuitBtn;
 
     public CrewMenu crewMenuScript;
     public TrainManager trainManager;
@@ -47,6 +63,12 @@ public class GameManager: CopiumScript
         //UpdateCanvases();
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Open the report screen
+	*/
+	/**************************************************************************/
     void OpenReportScreen()
     {
         audioManager.clickSFX.Play();
@@ -85,21 +107,39 @@ public class GameManager: CopiumScript
 
         // Reducing supplies for crew to consume
         SupplyCounter();
+
+        if(trainManager.accelerate)
+            crewMenuScript.UpdateAllStats();
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Check for game end conditions and close neccessary panels
+
+        \return
+            gameEnd status
+	*/
+	/**************************************************************************/
     bool CheckForGameEndCondition()
     {
         if(!gameEnd && EventManager.EventSequence < 0)
         {
             gameEnd = true;
             trainManager.FlickLever(false);
-            crewStatusManager.ClosePanel();
+            crewStatusManager.ClosePanel(false);
             reportScreenManager.OpenPanel();
         }
 
         return gameEnd;
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Updates all the canvases
+	*/
+	/**************************************************************************/
     void CanvasManager()
     {
         reportScreenManager.UpdateCanvas();
@@ -107,12 +147,24 @@ public class GameManager: CopiumScript
         resultManager.UpdateCanvas();
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Toggle the moving status of the train
+	*/
+	/**************************************************************************/
     public void ToggleMoving()
     {
         moving = !moving;
         crewMenuScript.SetClickable(!moving);
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Move the train
+	*/
+	/**************************************************************************/
     void MoveTrain()
     {
         if (trainManager.accelerate && distanceLeft > 0)
@@ -146,6 +198,12 @@ public class GameManager: CopiumScript
         }
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Updates the supple counter
+	*/
+	/**************************************************************************/
     void SupplyCounter()
     {
         if (trainManager.accelerate && distanceLeft < 200.0f)
@@ -159,48 +217,47 @@ public class GameManager: CopiumScript
             }
             foodTimer += Time.deltaTime;
         }
-
-        // Game ends
-        if(EventManager.EventSequence == -2 && !gameEnd)
-        {
-            gameEnd = true;
-            trainManager.FlickLever();
-            distanceLeft = 0.0f;
-        }
-        else if (EventManager.EventSequence == -3 && !gameEnd)
-        {
-            gameEnd = true;
-            crewMenuScript.fader.shouldFade = true;
-            trainManager.FlickLever();
-        }
-        else if (distanceLeft <= 0.99f && !gameEnd)
-        {
-            gameEnd = true;
-            trainManager.FlickLever();
-            EventManager.EventSequence = -1;
-            EventManager.OverrideEvent();
-        }
-
-        //KeyInputs();
     }
 
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Checks for button inputs and updates depending on the button inputs
+	*/
+	/**************************************************************************/
     void ButtonInputs()
     {
         if (ManualBtn.state == ButtonState.OnRelease)
         {
             audioManager.paperSFX.Play();
-            ManualPopUp.SetActive(true);
+            ManualPopUp.SetActive(true);   
+            audioManager.fileOpenSFX.Play();
+
         }
         if (ManualPopUpBtn.state == ButtonState.OnRelease && ManualPopUp.activeSelf)
         {
-            Console.WriteLine("HELLO");
-            audioManager.paperSFX.Play();
-            ManualPopUp.SetActive(false);
-
-            MainPage.SetActive(true);
-            Page2.SetActive(false);
-            prevButtonObject.SetActive(false);
+            CloseManual();
         }
+    }
+
+	/**************************************************************************/
+	/*!
+	    \brief
+		    Close the how to play manual. 
+	*/
+	/**************************************************************************/
+    public void CloseManual()
+    {
+        audioManager.fileCloseSFX.Play();
+
+        ManualPopUp.SetActive(false);
+        MainPage.SetActive(true);
+        Page2.SetActive(false);
+        Page3.SetActive(false);
+        Page4.SetActive(false);
+        prevButtonObject.SetActive(false);
+
+        htpmScript.page = 1;
     }
 
     // void KeyInputs()

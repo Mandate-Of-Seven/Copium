@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			Event_Ending.cs
+\project
+\author			Shawn Tanary
+
+\par			Course: GAM250
+\par			Section:
+\date			10/03/2023
+
+\brief
+	Contains functions needed a fade in effect
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 using CopiumEngine;
 using System;
 

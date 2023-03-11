@@ -25,28 +25,150 @@ namespace Copium::Math {
 		Vec4(const Vec4& _src);
 
 		// Copy assignment operator overloads
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Copy assignment operator overload with another Vec4
+
+		\param _rhs
+			read-only reference to the Vec4 which is to be copied from
+
+		\return
+			reference to this Vec4
+		*/
+		/*******************************************************************************/
 		Vec4& operator=(const Vec4& _src);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Copy assignment operator overload with a glm::vec4
+
+		\param _rhs
+			read-only reference to the glm::vec4 which is to be copied from
+
+		\return
+			reference to this Vec4
+		*/
+		/*******************************************************************************/
 		Vec4& operator=(const glm::vec4& _src);
 
 		// Unary operator overload
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			- unary operator overload. Flips the sign on this Vec4
+
+		\return
+			a copy of this Vec4 but with signs flipped
+		*/
+		/*******************************************************************************/
 		Vec4 operator-() const;
 
 		// Compound assignment operator overloads
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Compound addition operator overload for Vec4s
+
+		\param _rhs
+			read-only reference to the Vec4 which is the right hand side operand of the operation
+
+		\return
+			reference to this Vec4
+		*/
+		/*******************************************************************************/
 		Vec4& operator+= (const Vec4& _src);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Compound subtraction operator overload for Vec4s
+
+		\param _rhs
+			read-only reference to the Vec4 which is the right hand side operand of the operation
+
+		\return
+			reference to this Vec4
+		*/
+		/*******************************************************************************/
 		Vec4& operator-= (const Vec4& _src);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Compound multiplication operator overload for Vec4s
+
+		\param _rhs
+			read-only reference to the Vec4 which is the right hand side operand of the operation
+
+		\return
+			reference to this Vec4
+		*/
+		/*******************************************************************************/
 		Vec4& operator*= (const Vec4& _src);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Compound division operator overload for Vec4s
+
+		\param _rhs
+			read-only reference to the Vec4 which is the right hand side operand of the operation
+
+		\return
+			reference to this Vec4
+		*/
+		/*******************************************************************************/
 		Vec4& operator/= (const Vec4& _src);
 
 		// Comparison operator overloads
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Comparison operator overload for Vec4s
+
+		\param _rhs
+			read-only reference to the Vec4 which is the right hand side operand of the comparison
+
+		\return
+			true if both Vec4s are the same
+			false if they are different
+		*/
+		/*******************************************************************************/
 		bool operator==(const Vec4& _rhs);
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			not equal to operator overload for Vec4s
+
+		\param _rhs
+			read-only reference to the Vec4 which is the right hand side operand of the comparison
+
+		\return
+			false if both Vec4s are the same
+			true if they are different
+		*/
+		/*******************************************************************************/
 		bool operator!=(const Vec4& _rhs);
 
 		// Conversions
-		operator glm::vec4();
+		/*******************************************************************************
+		/*!
+		*
+		\brief
+			Convert this Vec4 to a glm::vec4
 
-		// De/serialization
-		//bool Deserialize(rapidjson::Value& _value);
-		//bool Serialize(rapidjson::Value& _value, rapidjson::Document& _doc);
+		\return
+			return this Vec4 as a glm::vec4
+		*/
+		/*******************************************************************************/
+		operator glm::vec4();
 
 	};
 
@@ -235,6 +357,22 @@ namespace Copium::Math {
 	/*******************************************************************************/
 	float Vec4DotProduct(const Vec4& _v1, const Vec4& _v2);
 
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		<< operator overload to print a Vec4 to output
+
+	\param _os
+		reference to the output stream
+
+	\param _v
+		read-only reference to the Vec4 to be printed
+
+	\return
+		reference to the output stream
+	*/
+	/*******************************************************************************/
 	std::ostream& operator<<(std::ostream& _os, const Vec4& _v);
 
 }

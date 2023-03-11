@@ -2,6 +2,7 @@
 \file			events.h
 \project
 \author			Zacharie Hong
+				Sean Ngo
 
 \par			Course: GAM200
 \par			Section:

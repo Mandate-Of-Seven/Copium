@@ -5,13 +5,13 @@
 
 \par			Course: GAM200
 \par			Section:
-\date			17/07/2022
+\date			10/03/2023
 
 \brief
     Defines Window::Inspector namespace with ImGui functions for displaying and
     interacting with the window.
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 #include "pch.h"
@@ -1537,14 +1537,6 @@ namespace Copium
 
     }
 
-    void EditorInspector::AlignforWidth(float width, float alignment)
-    {
-        //ImGuiStyle& style = ImGui::GetStyle();
-        float avail = ImGui::GetContentRegionAvail().x;
-        float off = (avail - width) * alignment;
-        if (off > 0.0f)
-            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
-    }
     void EditorInspector::init()
     {
         isAddingComponent = false;

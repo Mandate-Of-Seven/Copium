@@ -1,3 +1,22 @@
+﻿/*!***************************************************************************************
+\file			components.h
+\project
+\author			Zacharie Hong (30%)
+				Sean Ngo (20%)
+				Shawn Tanary (20%)
+				Matthew Lau (20%)
+				Abdul Hadi (10%)
+
+\par			Course: GAM200
+\par			Section:
+\date			10/03/2023
+
+\brief
+	This file defines all types of components
+
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 #include <pch.h>
 #include <Events/events-system.h>
 #include <GameObject/components.h>
