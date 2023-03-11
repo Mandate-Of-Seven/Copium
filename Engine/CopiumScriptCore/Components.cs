@@ -38,6 +38,7 @@ namespace CopiumEngine
         public void Initialize (GameObject _gameObject, ulong _ID)
         {
             gameObject = _gameObject;
+            //Console.WriteLine("GAMEOBJECT ID:" + gameObject.ID.ToString());
             transform = gameObject.transform;
             ID = _ID;
         }

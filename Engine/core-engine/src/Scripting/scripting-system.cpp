@@ -46,6 +46,7 @@ namespace
 	MonoAssembly* mCoreAssembly{ nullptr };	//ASSEMBLY OF SCRIPTS.DLL
 	MonoImage* mAssemblyImage{ nullptr };	//LOADED IMAGE OF SCRIPTS.DLL
 	MonoClass* mGameObject{ nullptr };
+	MonoClass* mComponent{ nullptr };
 	MonoClass* mCopiumScript{ nullptr };
 	MonoClass* mCollision2D{ nullptr };
 	MonoClass* mScriptableObject{};
@@ -426,15 +427,14 @@ namespace Copium
 		mCopiumScript = mono_class_from_name(mAssemblyImage, "CopiumEngine", "CopiumScript");
 		mCollision2D = mono_class_from_name(mAssemblyImage, "CopiumEngine", "Collision2D");
 		mScriptableObject = mono_class_from_name(mAssemblyImage, "CopiumEngine", "ScriptableObject");
-		klassScene = mono_class_from_name(mAssemblyImage, "CopiumEngine", "Scene");
+		mComponent = mono_class_from_name(mAssemblyImage, "CopiumEngine", "Component");
 		updateScriptClasses();
 
 		/* For each row, get some of its values */
 		mComponents.clear();
 		mGameObjects.clear();
-		if (mCurrentScene)
+		if (MySceneManager.get_current_scene())
 		{
-			mCurrentScene = instantiateClass(klassScene);
 			ReflectAll();
 		}
 	
@@ -452,6 +452,7 @@ namespace Copium
 
 	MonoObject* ScriptingSystem::invoke(MonoObject* mObj, MonoMethod* mMethod, void** params)
 	{
+		COPIUM_ASSERT(mMethod==nullptr,"MONO METHOD WAS NULLPTR");
 		if (mObj && mMethod && mAppDomain)
 		{
 			try
@@ -637,14 +638,16 @@ namespace Copium
 
 	MonoObject* ScriptingSystem::ReflectGameObject(GameObject& gameObj)
 	{
-		auto pairIt = mGameObjects[mCurrentScene].find(gameObj.uuid);
-		if (pairIt == mGameObjects[mCurrentScene].end())
+		auto pairIt = mGameObjects.find(gameObj.uuid);
+		if (pairIt == mGameObjects.end())
 		{
 			void* param = &gameObj.uuid;
-			MonoMethod* reflectGameObject = mono_class_get_method_from_name(klassScene, "ReflectGameObject", 1);
-			MonoObject* mGameObj= invoke(mCurrentScene, reflectGameObject, &param);
-			mGameObjects[mCurrentScene].emplace(gameObj.uuid, mGameObj);
-			return mGameObj;
+			MonoMethod* reflectGameObject = mono_class_get_method_from_name(mGameObject, "Initialize", 1);
+			PRINT("C++: " << gameObj.uuid.GetUUID());
+			MonoObject* instance{instantiateClass(mGameObject)};
+			invoke(instance, reflectGameObject, &param);
+			mGameObjects.emplace(gameObj.uuid, instance);
+			return instance;
 		}
 		return (*pairIt).second;
 	}
@@ -652,21 +655,22 @@ namespace Copium
 	template <typename T>
 	MonoObject* ScriptingSystem::ReflectComponent(T& component)
 	{
-		auto pairIt = mComponents[mCurrentScene].find(component.uuid);
-		if (pairIt == mComponents[mCurrentScene].end())
+		auto pairIt = mComponents.find(component.uuid);
+		if (pairIt == mComponents.end())
 		{
 			//PRINT(GetComponentType<T>::name);
 			ScriptClass& scriptClass = scriptClassMap[GetComponentType<T>::name];
 			UUID cid{ component.uuid };
-			UUID gid{ component.gameObj.uuid };
-			MonoObject* mComponent = instantiateClass(scriptClass.mClass);
-			void* params[3] = { mComponent ,&cid,&gid };
-			MonoMethod* reflectComponent = mono_class_get_method_from_name(klassScene, "ReflectComponent", 3);
+			//PRINT("C++: " << component.gameObj.uuid.GetUUID());
+			MonoObject* gameObjectInstance{ReflectGameObject(component.gameObj)};
+			MonoObject* instance = instantiateClass(scriptClass.mClass);
+			void* params[2] = { gameObjectInstance,&cid};
+			MonoMethod* reflectComponent = mono_class_get_method_from_name(mComponent, "Initialize", 2);
 			COPIUM_ASSERT(!mComponent, "MonoObject was null");
-			invoke(mCurrentScene, reflectComponent, params);
-			mComponents[mCurrentScene].emplace(cid, mComponent);
+			invoke(instance, reflectComponent, params);
+			mComponents.emplace(cid, instance);
 			//Check fields, dont remove fields, but change them if their type is different
-			return mComponent;
+			return instance;
 		}
 		return (*pairIt).second;
 	}
@@ -674,21 +678,22 @@ namespace Copium
 	template <>
 	MonoObject* ScriptingSystem::ReflectComponent(Script& component)
 	{
-		auto pairIt = mComponents[mCurrentScene].find(component.uuid);
-		if (pairIt == mComponents[mCurrentScene].end())
+		auto pairIt = mComponents.find(component.uuid);
+		if (pairIt == mComponents.end())
 		{
 			//PRINT(component.Name());
 			if (scriptClassMap.find(component.Name()) == scriptClassMap.end())
 				return nullptr;
 			ScriptClass& scriptClass = scriptClassMap[component.Name()];
+			//PRINT("C++: " << component.gameObj.uuid.GetUUID());
 			UUID cid{ component.uuid };
-			UUID gid{ component.gameObj.uuid };
-			MonoObject* mComponent = instantiateClass(scriptClass.mClass);
-			void* params[3] = { mComponent ,&cid,&gid };
-			MonoMethod* reflectComponent = mono_class_get_method_from_name(klassScene, "ReflectComponent", 3);
+			MonoObject* gameObjectInstance{ ReflectGameObject(component.gameObj) };
+			MonoObject* instance = instantiateClass(scriptClass.mClass);
+			void* params[2] = { gameObjectInstance,&cid };
+			MonoMethod* reflectComponent = mono_class_get_method_from_name(mComponent, "Initialize", 2);
 			COPIUM_ASSERT(!mComponent, "MonoObject was null");
-			invoke(mCurrentScene, reflectComponent, params);
-			mComponents[mCurrentScene].emplace(cid, mComponent);
+			invoke(instance, reflectComponent, params);
+			mComponents.emplace(cid, instance);
 			//Check fields, dont remove fields, but change them if their type is different
 
 			std::list<std::string> validFieldNames{};
@@ -750,7 +755,7 @@ namespace Copium
 					if (field.fType != fieldType)
 					{
 						field.Resize(fieldSize);
-						mono_field_get_value(mComponent, mField, field.data);
+						mono_field_get_value(instance, mField, field.data);
 					}
 					//Field exists, setback the values first
 					else
@@ -824,7 +829,7 @@ namespace Copium
 						}
 						else
 						{
-							SetFieldValue(mComponent, mField, field,field.data);
+							SetFieldValue(instance, mField, field,field.data);
 						}
 					}
 					//CHECK TYPENAME
@@ -845,7 +850,7 @@ namespace Copium
 				component.fieldDataReferences.erase(name);
 				//PRINT("INVALID FIELD: " << name);
 			}
-			return mComponent;
+			return instance;
 		}
 		return (*pairIt).second;
 	}
@@ -874,7 +879,6 @@ namespace Copium
 		mGameObjects.clear();
 		mComponents.clear();
 		PRINT("CREATING NEW SCENE!");
-		mCurrentScene = instantiateClass(klassScene);
 		ReflectAll();
 	}
 
@@ -887,8 +891,8 @@ namespace Copium
 
 	void ScriptingSystem::CallbackScriptInvokeMethod(ScriptInvokeMethodEvent* pEvent)
 	{
-		auto it = mComponents[mCurrentScene].find(pEvent->script.uuid);
-		MonoObject* mScript = mComponents[mCurrentScene][pEvent->script.uuid];
+		auto it = mComponents.find(pEvent->script.uuid);
+		MonoObject* mScript = mComponents[pEvent->script.uuid];
 		//PRINT("Script Invoking " << pEvent->script.Name() << " " << pEvent->methodName << " ,ID: " << pEvent->script.uuid);
 		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
 		ScriptClass& scriptClass{ scriptClassMap[pEvent->script.name] };
@@ -905,7 +909,7 @@ namespace Copium
 
 	void ScriptingSystem::CallbackScriptGetField(ScriptGetFieldEvent* pEvent)
 	{
-		MonoObject* mScript = mComponents[mCurrentScene][pEvent->script.uuid];
+		MonoObject* mScript = mComponents[pEvent->script.uuid];
 		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
 		ScriptClass& scriptClass{ scriptClassMap[pEvent->script.name] };
 		//Reset fieldtype and buffer if the type was different
@@ -916,7 +920,7 @@ namespace Copium
 
 	void ScriptingSystem::CallbackScriptSetField(ScriptSetFieldEvent* pEvent)
 	{
-		MonoObject* mScript = mComponents[mCurrentScene][pEvent->script.uuid];
+		MonoObject* mScript = mComponents[pEvent->script.uuid];
 		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
 		ScriptClass& scriptClass{ scriptClassMap[pEvent->script.name] };
 		MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };
@@ -942,16 +946,12 @@ namespace Copium
 	void ScriptingSystem::CallbackStartPreview(StartPreviewEvent* pEvent)
 	{
 		inPlayMode = true;
-		mPreviousScene = mCurrentScene;
-		mCurrentScene = instantiateClass(klassScene);
 		ReflectAll();
 	}
 
 	void ScriptingSystem::CallbackStopPreview(StopPreviewEvent* pEvent)
 	{
 		inPlayMode = false;
-		mPreviousScene = mCurrentScene;
-		mCurrentScene = instantiateClass(klassScene);
 		ReflectAll();
 	}
 

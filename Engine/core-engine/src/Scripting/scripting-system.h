@@ -579,16 +579,11 @@ namespace Copium
 
 		std::unordered_map<std::string, ScriptClass> scriptClassMap;
 		std::unordered_map<std::string, ScriptClass> scriptableObjectClassMap;
-		std::unordered_map<MonoObject*, MonoGameObjects> mGameObjects;
-		std::unordered_map<MonoObject*, MonoComponents> mComponents;
+		MonoGameObjects mGameObjects;
+		MonoComponents mComponents;
 		std::unordered_map<MonoType*, ComponentType> reflectionMap;
 		std::list<File>& scriptFiles;
 		std::map<std::string, std::map<std::string,ScriptableObject>> scriptableObjects;
-
-		MonoClass* klassScene{};
-		std::unordered_map<std::string, MonoObject*> scenes;
-		MonoObject* mCurrentScene;
-		MonoObject* mPreviousScene;
 		std::mutex compilingStateReadable;
 		CompilingState compilingState{ CompilingState::Wait };
 		bool inPlayMode{false};
@@ -610,7 +605,7 @@ namespace Copium
 	template<typename T>
 	void ScriptingSystem::CallbackScriptSetFieldReference(ScriptSetFieldReferenceEvent<T>* pEvent)
 	{
-		MonoObject* mScript = mComponents[mCurrentScene][pEvent->script.uuid];
+		MonoObject* mScript = mComponents[pEvent->script.uuid];
 		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
 		ScriptClass& scriptClass{ scriptClassMap[pEvent->script.name] };
 		MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };

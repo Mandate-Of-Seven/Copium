@@ -239,7 +239,7 @@ namespace Copium
 		}
 		if (component)
 		{
-			return scriptingSystem.mComponents[scriptingSystem.mCurrentScene][component->uuid];
+			return scriptingSystem.mComponents[component->uuid];
 		}
 		return nullptr;
 	}

@@ -27,7 +27,7 @@ namespace CopiumEngine
         }
         public ulong ID;
         public Transform transform;
-        private void setID(ulong _ID)
+        private void Initialize(ulong _ID)
         {
             ID = _ID;
         }

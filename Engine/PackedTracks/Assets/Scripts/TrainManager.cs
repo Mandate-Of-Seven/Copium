@@ -17,7 +17,6 @@ public class TrainManager: CopiumScript
 	public Button trainLeverBtn;
 	public Image trainLeverActivated;
 	public Image trainLeverDeactivated;
-	public GameObject trainCanvas;
     public float levelTransSpeed = 2.0f;
 	Color leverHoverColor = new Color(0.6f,0.6f,0.6f,1f);
 
@@ -113,8 +112,8 @@ public class TrainManager: CopiumScript
 		if (!accelerate && ratio <= 0.1f)
 		{
         	audioManager.leverEngagedSFX.Stop();
-			trainCanvas.transform.localScale = 
-				Vector3.Lerp(trainCanvas.transform.localScale,targetScale,Time.deltaTime * 2.0f);
+			transform.localScale = 
+				Vector3.Lerp(transform.localScale,targetScale,Time.deltaTime * 2.0f);
 			Vector3 snowScale = snowAnimator.gameObject.transform.localScale;
 			Vector3 newSnowScale = snowScale;
 			newSnowScale.y = initialSnowScale;
@@ -123,8 +122,8 @@ public class TrainManager: CopiumScript
 		}
 		else 
 		{
-			trainCanvas.transform.localScale = 
-				Vector3.Lerp(trainCanvas.transform.localScale,targetScale,timeStep);
+			transform.localScale = 
+				Vector3.Lerp(transform.localScale,targetScale,timeStep);
 			Vector3 snowScale = snowAnimator.gameObject.transform.localScale;
 			Vector3 newSnowScale = snowScale;
 			newSnowScale.y = targetSnowScale;
@@ -135,9 +134,9 @@ public class TrainManager: CopiumScript
 		{
 			audioManager.ambTrain.volume = 
 				Mathf.Lerp(audioManager.ambTrain.volume,targetAmbienceVolume,timeStep);
-			trainCanvas.transform.localRotation = 
+			transform.localRotation = 
 				Vector3.Lerp(Vector3.zero,targetRotation,timeStep);
-			trainCanvas.transform.localPosition = 
+			transform.localPosition = 
 				Vector3.Lerp(Vector3.zero,targetPosition,timeStep);
 		}
 
