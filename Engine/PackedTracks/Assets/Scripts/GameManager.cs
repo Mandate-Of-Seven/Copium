@@ -58,8 +58,12 @@ public class GameManager: CopiumScript
 
     bool moving = false;
 
+    public Text testText;
+    public StringTypeWriterEffect effect;
+
     void Start()
 	{
+        effect = new StringTypeWriterEffect("", "Fire roared through the bifurcated city of Ankh-Morpork. Where it\n licked the Wizards’ Quarter it burned blue and green and was even\n laced with strange sparks of the eighth color, octarine; where its\n outriders found their way into the vats and oil stores all along\n Merchant Street it progressed in a series of blazing fountains and explosions; in the streets of the perfume blenders it burned with a\n sweetness; where it touched bundles of rare and dry herbs in the\n storerooms of the drugmasters it made men go mad and talk to God.", 0.05f);
         //UpdateCanvases();
     }
 
@@ -71,11 +75,13 @@ public class GameManager: CopiumScript
 	/**************************************************************************/
     void OpenReportScreen()
     {
+        
         audioManager.clickSFX.Play();
     }
 
 	void Update()
     {
+        testText.text = effect.Write();
         ButtonInputs();
         if (pauseMenu.isPaused)
             return;
