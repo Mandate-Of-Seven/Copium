@@ -110,6 +110,70 @@ namespace Copium
 
 		if (isParenting)
 			DisplayAdoptionWindow();
+		static char buffer[256];
+		ImGui::PushItemWidth(-1);
+		ImGui::InputText("##", buffer, 256);
+		
+		
+		//if something found in input
+		//open up popup window of all results that match
+		// if item in popup is selected
+		// go to that game object and close popup
+			if (pScene)
+			{
+				int count = 0;
+				int check = 0;
+				check = strcmp(buffer,"");
+				std::cout << check << std::endl;
+				if (check == 0)
+				{
+					
+				}
+				else
+					
+				{
+					ImGui::SetItemAllowOverlap();
+					if (ImGui::BeginListBox("##Objects", ImVec2(-FLT_MIN, 3.25 * ImGui::GetTextLineHeightWithSpacing())))
+					{
+						GameObjectsPtrArray foundItems{};
+						for (GameObject& gameObject : pScene->gameObjects)
+						{
+							
+							static char temp[256];
+							strcpy(temp, gameObject.name.c_str());
+							char* check;
+							for (auto& lowerBuffer : buffer)
+							{
+								lowerBuffer = tolower(lowerBuffer);
+							}
+							for (auto& lowerTemp : temp)
+							{
+								lowerTemp = tolower(lowerTemp);
+							}
+							check = strstr(temp, buffer);
+							if (check)
+							{
+								foundItems.push_back(&gameObject);
+								
+							}
+							
+
+						}
+						for (size_t i = 0; i < foundItems.size(); i++)
+						{
+							ImGui::Selectable(foundItems[i]->name.c_str());
+						}
+						ImGui::EndListBox();
+						ImGui::PopItemWidth();
+					}
+				}
+				std::cout << count << "\n";
+			}
+
+
+
+
+
 
 		//KeyBoard Shortcuts//
 		if (is->is_key_held(GLFW_KEY_LEFT_CONTROL) && is->is_key_pressed(GLFW_KEY_D))
