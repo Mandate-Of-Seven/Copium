@@ -119,56 +119,55 @@ namespace Copium
 		//open up popup window of all results that match
 		// if item in popup is selected
 		// go to that game object and close popup
-			if (pScene)
+		if (pScene)
+		{
+			int count = 0;
+			int check = 0;
+			check = strcmp(buffer,"");
+			if (check == 0)
 			{
-				int count = 0;
-				int check = 0;
-				check = strcmp(buffer,"");
-				std::cout << check << std::endl;
-				if (check == 0)
-				{
 					
-				}
-				else
-					
-				{
-					ImGui::SetItemAllowOverlap();
-					if (ImGui::BeginListBox("##Objects", ImVec2(-FLT_MIN, 3.25 * ImGui::GetTextLineHeightWithSpacing())))
-					{
-						GameObjectsPtrArray foundItems{};
-						for (GameObject& gameObject : pScene->gameObjects)
-						{
-							
-							static char temp[256];
-							strcpy(temp, gameObject.name.c_str());
-							char* check;
-							for (auto& lowerBuffer : buffer)
-							{
-								lowerBuffer = tolower(lowerBuffer);
-							}
-							for (auto& lowerTemp : temp)
-							{
-								lowerTemp = tolower(lowerTemp);
-							}
-							check = strstr(temp, buffer);
-							if (check)
-							{
-								foundItems.push_back(&gameObject);
-								
-							}
-							
-
-						}
-						for (size_t i = 0; i < foundItems.size(); i++)
-						{
-							ImGui::Selectable(foundItems[i]->name.c_str());
-						}
-						ImGui::EndListBox();
-						ImGui::PopItemWidth();
-					}
-				}
-				std::cout << count << "\n";
 			}
+			else
+			{
+				ImGui::SetItemAllowOverlap();
+				if (ImGui::BeginListBox("##Objects", ImVec2(-FLT_MIN, 3.25 * ImGui::GetTextLineHeightWithSpacing())))
+				{
+					GameObjectsPtrArray foundItems{};
+					for (GameObject& gameObject : pScene->gameObjects)
+					{
+							
+						static char temp[256];
+						strcpy(temp, gameObject.name.c_str());
+						char* check;
+						for (auto& lowerBuffer : buffer)
+						{
+							lowerBuffer = tolower(lowerBuffer);
+						}
+						for (auto& lowerTemp : temp)
+						{
+							lowerTemp = tolower(lowerTemp);
+						}
+						check = strstr(temp, buffer);
+						if (check)
+						{
+							foundItems.push_back(&gameObject);
+								
+						}
+
+					}
+					for (size_t i = 0; i < foundItems.size(); i++)
+					{
+						if (ImGui::Selectable(foundItems[i]->name.c_str()))
+						{
+							MyEditorSystem.pSelectedGameObject = foundItems[i];
+						}
+					}
+					ImGui::EndListBox();
+					ImGui::PopItemWidth();
+				}
+			}
+		}
 
 
 
