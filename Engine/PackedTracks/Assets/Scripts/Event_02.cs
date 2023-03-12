@@ -11,7 +11,7 @@
 \brief
 	This script has event 2 of the game.
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 using CopiumEngine;
 using System;
@@ -41,8 +41,10 @@ public class Event_02: CopiumScript
     // Event to display onto the game
     public void Event(bool requirement)
 	{
+        
         if (!effectTriggered)
         {
+            EventManager.Body.text = "The door on the back of the train opens...";
             trainManager.audioManager.gunfireSFX.Play();
             effectTriggered = true;
         }
@@ -62,6 +64,7 @@ public class Event_02: CopiumScript
                 cameraShakeEffect.totalDuration = 2f;
                 cameraShakeEffect.Trigger();
                 ++state;
+    
             }
             return;
         }

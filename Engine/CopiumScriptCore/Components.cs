@@ -38,7 +38,6 @@ namespace CopiumEngine
         public void Initialize (GameObject _gameObject, ulong _ID)
         {
             gameObject = _gameObject;
-            //Console.WriteLine("GAMEOBJECT ID:" + gameObject.ID.ToString());
             transform = gameObject.transform;
             ID = _ID;
         }
@@ -47,13 +46,12 @@ namespace CopiumEngine
         {
             get
             {
-                Type componentType = GetType();
-                return InternalCalls.GetComponentEnabled(ID, componentType);
+                return InternalCalls.GetComponentEnabled(ID);
             }
             set
             {
                 Type componentType = GetType();
-                InternalCalls.SetComponentEnabled(ID,value, componentType);
+                InternalCalls.SetComponentEnabled(ID,value);
             }
         }
 
@@ -138,18 +136,18 @@ namespace CopiumEngine
         {
             get
             {
-                InternalCalls.RigidbodyGetVelocity(gameObject.ID, out Vector2 vec2);
+                InternalCalls.RigidbodyGetVelocity(ID, out Vector2 vec2);
                 return vec2;
             }
             set
             {
-                InternalCalls.RigidbodySetVelocity(gameObject.ID, ref value);
+                InternalCalls.RigidbodySetVelocity(ID, ref value);
             }
         }
 
         public void AddForce(Vector2 force, ForceMode2D forceMode)
         {
-            InternalCalls.RigidbodyAddForce(gameObject.ID, ref force);
+            InternalCalls.RigidbodyAddForce(ID, ref force);
         }
     }
 
@@ -163,12 +161,12 @@ namespace CopiumEngine
         {
             get
             {
-                InternalCalls.GetSpriteRendererColor(gameObject.ID, out Color color);
+                InternalCalls.GetSpriteRendererColor(ID, out Color color);
                 return color;
             }
             set
             {
-                InternalCalls.SetSpriteRendererColor(gameObject.ID, ref value);
+                InternalCalls.SetSpriteRendererColor(ID, ref value);
             }
         }
     }
@@ -216,12 +214,12 @@ namespace CopiumEngine
         {
             get
             {
-                InternalCalls.GetTextString(gameObject.ID, ID,out string text);
+                InternalCalls.GetTextString(ID,out string text);
                 return text;
             }
             set
             {
-                InternalCalls.SetTextString(gameObject.ID, ID, value);
+                InternalCalls.SetTextString(ID, value);
             }
         }
 
@@ -244,22 +242,22 @@ namespace CopiumEngine
     {
         public void Play()
         {
-            InternalCalls.AudioSourcePlay(gameObject.ID);
+            InternalCalls.AudioSourcePlay(ID);
         }
         public void Stop()
         {
-            InternalCalls.AudioSourceStop(gameObject.ID);
+            InternalCalls.AudioSourceStop(ID);
         }
 
         public float volume
         {
             get
             {
-                return InternalCalls.AudioSourceGetVolume(gameObject.ID);
+                return InternalCalls.AudioSourceGetVolume(ID);
             }
             set
             {
-                InternalCalls.AudioSourceSetVolume(gameObject.ID,value);
+                InternalCalls.AudioSourceSetVolume(ID,value);
             }
         }
     }
@@ -270,12 +268,12 @@ namespace CopiumEngine
         {
             get
             {
-                InternalCalls.GetImageColor(gameObject.ID, out Color color);
+                InternalCalls.GetImageColor(ID, out Color color);
                 return color;
             }
             set
             {
-                InternalCalls.SetImageColor(gameObject.ID, ref value);
+                InternalCalls.SetImageColor(ID, ref value);
             }
         }
     }
@@ -304,9 +302,9 @@ namespace CopiumEngine
             set
             {
                 if (value)
-                    InternalCalls.PlayAnimation(gameObject.ID);
+                    InternalCalls.PlayAnimation(ID);
                 else
-                    InternalCalls.PauseAnimation(gameObject.ID);
+                    InternalCalls.PauseAnimation(ID);
             }
         }
     }

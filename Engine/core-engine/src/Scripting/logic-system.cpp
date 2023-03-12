@@ -168,80 +168,116 @@ namespace Copium
 
 	GameObject* GetSelectedGameObject()
 	{
-		static GameObject* selectedGameObject{nullptr};
-		selectedGameObject = nullptr;
+		GameObject* selectedGameObject{nullptr};
+		SortingGroup* selectedSg{nullptr};
 		Scene* pScene = sceneManager.get_current_scene();
 		if (!pScene)
 			return nullptr;
 		if (pScene->componentArrays.GetArray<Camera>().empty())
 			return nullptr;
 
-		GameObjectsPtrArray pGameObjs; // Possible selectable gameobjects
 		Camera& gameCamera{pScene->componentArrays.GetArray<Camera>()[0]};
 		glm::vec2 mousePosition = gameCamera.get_game_ndc();
-		for (GameObject& gameObject : pScene->gameObjects)
+		for (Image& image : pScene->componentArrays.GetArray<Image>())
 		{
-			if (!gameObject.IsActive())
+			GameObject& gameObject {image.gameObj};
+			if (!gameObject.IsActive() || !image.enabled)
+				continue;
+			Transform& t = gameObject.transform;
+			Math::Vec3 worldPos{ t.GetWorldPosition() };
+			Math::Vec3 worldScale{ t.GetWorldScale() };
+			Texture* texture = image.sprite.refTexture;
+			if (texture == nullptr)
+				continue;
+			Math::Vec2 max = {texture->get_pixel_width() / 2.f,texture->get_pixel_height() / 2.f};
+			Math::Vec2 min = { -texture->get_pixel_width() / 2.f , -texture->get_pixel_height() / 2.f };
+			AABB bound = AABB(min,max).GetRelativeBounds(worldPos, worldScale);
+			if (static_collision_pointrect(mousePosition, bound))
+			{ 
+				//If currently no selected Gameobject
+				if (!selectedGameObject)
+				{
+					selectedGameObject = &gameObject;
+					selectedSg = selectedGameObject->GetComponent<SortingGroup>();
+					continue;
+				}
+				//If somehow they are on the same object
+				if (selectedGameObject == &gameObject)
+					continue;
+				SortingGroup* sg = gameObject.GetComponent<SortingGroup>();
+				//If there is no sorting group, dont bother
+				if (!sg)
+					continue;
+				//If there is a sorting group but selectedSg has none, override
+				if (!selectedSg)
+				{
+					selectedGameObject = &gameObject;
+					selectedSg = sg;
+					continue;
+				}
+				//If current sorting layer is higher
+				if (sg->sortingLayer > selectedSg->sortingLayer)
+				{
+					selectedGameObject = &gameObject;
+					selectedSg = sg;
+					continue;
+				}
+				//If same layer but higher in order
+				else if (sg->sortingLayer == selectedSg->sortingLayer && sg->orderInLayer > selectedSg->orderInLayer)
+				{
+					selectedGameObject = &gameObject;
+					selectedSg = sg;
+					continue;
+				}
+			}
+		}
+		for (Button& button : pScene->componentArrays.GetArray<Button>())
+		{
+			GameObject& gameObject{ button.gameObj };
+			if (!gameObject.IsActive() || !button.enabled)
 				continue;
 			Transform& t = gameObject.transform;
 			Math::Vec3 worldPos{ t.GetWorldPosition()};
 			Math::Vec3 worldScale{ t.GetWorldScale() };
-
-			//glm::vec2 objPosition = { worldPos.x, worldPos.y };
-
-			// Not Within bounds // NEED A BETTER CHECK THAT INCLUDES THE BOUNDS
-			//if (glm::distance(objPosition, mousePosition)
-			//	> glm::length(gameCamera.get_dimension()))
-			//	continue;
-			AABB bounds{};
-			Button* button = gameObject.GetComponent<Button>();
-			Image* image = gameObject.GetComponent<Image>();
-
-			if (button)
+			AABB bound = button.bounds.GetRelativeBounds(worldPos, worldScale);
+			if (static_collision_pointrect(mousePosition, bound))
 			{
-				if (!button->enabled)
-					continue;
-				bounds = button->bounds;
-				AABB bound = bounds.GetRelativeBounds(worldPos, worldScale);
-				if (static_collision_pointrect(mousePosition, bound))
+				//If currently no selected Gameobject
+				if (!selectedGameObject)
 				{
-					//PRINT(mousePosition.x << " , " << mousePosition.y);
-					//PRINT("X: " << bound.max.x << " , " << bound.min.x);
-					//PRINT("Y: " << bound.max.y << " , " << bound.min.y);
-					pGameObjs.push_back(&gameObject);
+					selectedGameObject = &gameObject;
+					selectedSg = selectedGameObject->GetComponent<SortingGroup>();
+					continue;
+				}
+				//If somehow they are on the same object
+				if (selectedGameObject == &gameObject)
+					continue;
+				SortingGroup* sg = gameObject.GetComponent<SortingGroup>();
+				//If there is no sorting group, dont bother
+				if (!sg)
+					continue;
+				//If there is a sorting group but selectedSg has none, override
+				if (!selectedSg)
+				{
+					selectedGameObject = &gameObject;
+					selectedSg = sg;
+					continue;
+				}
+				//If current sorting layer is higher
+				if (sg->sortingLayer > selectedSg->sortingLayer)
+				{
+					selectedGameObject = &gameObject;
+					selectedSg = sg;
+					continue;
+				}
+				//If same layer but higher in order
+				else if (sg->sortingLayer == selectedSg->sortingLayer && sg->orderInLayer > selectedSg->orderInLayer)
+				{
+					selectedGameObject = &gameObject;
+					selectedSg = sg;
 					continue;
 				}
 			}
-
-			if (image)
-			{
-				if (!image->enabled)
-					continue;
-				Texture* texture = image->sprite.refTexture;
-				if (texture != nullptr)
-				{
-					//tempX = tempScale.x * texture->get_pixel_width();
-					//tempY = tempScale.y * texture->get_pixel_height();
-					bounds.max = { texture->get_pixel_width() / 2.f,texture->get_pixel_height() / 2.f};
-					bounds.min = { -texture->get_pixel_width() / 2.f , -texture->get_pixel_height() / 2.f};
-				}
-				AABB bound = bounds.GetRelativeBounds(worldPos, worldScale);
-				if (static_collision_pointrect(mousePosition, bound))
-				{
-
-					//PRINT("X: " << bounds.min.x << " , Y: " << bounds.min.y);
-					//PRINT("Y: " << bound.max.y << " , " << bound.min.y);
-					pGameObjs.push_back(&gameObject);
-				}
-			}
-			
-			// Check AABB
-		}
-
-
-		if (pGameObjs.empty())
-		{
-			return nullptr;
 		}
 		// Ensure that the container is not empty
 		// Sort base on depth value
@@ -250,39 +286,6 @@ namespace Copium
 		// Update from back to front within layer
 		//std::vector<Layer>& sortingLayers{ MyEditorSystem.getLayers()->SortLayers()->GetSortingLayers() };
 		//Iterate through list of possible gameObjects
-
-		for (GameObject* pGameObject : pGameObjs)
-		{
-			if (!selectedGameObject)
-			{
-				selectedGameObject = pGameObject;
-				continue;
-			}
-			SortingGroup* sg = pGameObject->GetComponent<SortingGroup>();
-			SortingGroup * selectedSg{ selectedGameObject->GetComponent<SortingGroup>() };
-			//Selected has no SG but new one has
-			if (!selectedSg && sg)
-			{
-				selectedGameObject = pGameObject;
-				continue;
-			}
-			//Object is on a higher layer
-			else if (sg && selectedSg)
-			{
-				if (sg->sortingLayer > selectedSg->sortingLayer)
-				{
-					selectedGameObject = pGameObject;
-					continue;
-				}
-				else if (sg->sortingLayer == selectedSg->sortingLayer && sg->orderInLayer > selectedSg->orderInLayer)
-				{
-					selectedGameObject = pGameObject;
-					continue;
-				}
-			}
-			//Object is in same layer
-			//No conditions met, skip this gameObject
-		}
 		return selectedGameObject;
 	}
 

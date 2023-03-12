@@ -1,5 +1,5 @@
-[2023-03-11 19:56:48.319] [Error] [critical] 
-Caused By:	mMethod==nullptr
-Info:		MONO METHOD WAS NULLPTR
-Source:		C:\Users\FLESH\ECS\Copium\Engine\core-engine\src\Scripting\scripting-system.cpp (Line: 455)
+[2023-03-12 09:32:38.855] [Error] [critical] 
+Caused By:	!mScript
+Info:		MONO OBJECT OF HowtoPlayMenu NOT LOADED
+Source:		C:\Users\FLESH\ECS\Copium\Engine\core-engine\src\Scripting\scripting-system.h (Line: 619)
 

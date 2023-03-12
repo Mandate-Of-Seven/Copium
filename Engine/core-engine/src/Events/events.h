@@ -171,6 +171,12 @@ namespace Copium
 		T& component;
 	};
 
+	struct ReflectGameObjectEvent : IEvent
+	{
+		ReflectGameObjectEvent(GameObject& _gameObject) : gameObject{ _gameObject } {}
+		GameObject& gameObject;
+	};
+
 	struct ScriptInvokeMethodEvent : IEvent
 	{
 		ScriptInvokeMethodEvent(Script& _script, const std::string& _methodName, void** _returnVal = nullptr, void** _params = nullptr, size_t _paramCount = 0) :

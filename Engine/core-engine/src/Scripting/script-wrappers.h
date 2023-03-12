@@ -103,14 +103,9 @@ namespace Copium
 		Stores the value of translation of the queried gameObj
 	*/
 	/*******************************************************************************/
-	static void GetTranslation(UUID _ID, Math::Vec3* translation)
+	static void GetTranslation(GameObject* pGameObject, Math::Vec3* translation)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
-		if (gameObj == nullptr)
-		{
-			return;
-		}
-		*translation = gameObj->transform.position;
+		*translation = pGameObject->transform.position;
 	}
 
 	/*******************************************************************************
@@ -123,14 +118,9 @@ namespace Copium
 		Value of Vec3 to set
 	*/
 	/*******************************************************************************/
-	static void SetTranslation(UUID _ID, Math::Vec3* val)
+	static void SetTranslation(GameObject* pGameObject, Math::Vec3* val)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
-		if (gameObj == nullptr)
-		{
-			return;
-		}
-		gameObj->transform.position = *val;
+		pGameObject->transform.position = *val;
 	}
 
 	/*******************************************************************************
@@ -143,19 +133,9 @@ namespace Copium
 			Force to add
 	*/
 	/*******************************************************************************/
-	static void RigidbodyAddForce(UUID _ID, Math::Vec2* force)
+	static void RigidbodyAddForce(Rigidbody2D* pRb, Math::Vec2* force)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
-		if (gameObj == nullptr)
-		{
-			return;
-		}
-		auto rb = gameObj->GetComponent<Rigidbody2D>();
-		if (rb == nullptr)
-		{
-			return;
-		}
-		rb->force += *force;
+		pRb->force += *force;
 	}
 
 	/*******************************************************************************
@@ -170,7 +150,7 @@ namespace Copium
 			MonoObject to be returned to the script asking for it
 	*/
 	/*******************************************************************************/
-	static MonoObject* GetComponent(UUID gameObjID, MonoReflectionType* componentType)
+	static MonoObject* GetComponent(GameObject* pGameObject, MonoReflectionType* componentType)
 	{
 		auto pair = scriptingSystem.reflectionMap.find(mono_reflection_type_get_type(componentType));
 		if (pair == scriptingSystem.reflectionMap.end())
@@ -179,66 +159,63 @@ namespace Copium
 		}
 		ComponentType cType = pair->second;
 
-		GameObject* gameObject = MySceneManager.FindGameObjectByID(gameObjID);
-		if (!gameObject)
-			return nullptr;
 		Component* component{ nullptr };
 		switch (cType)
 		{
 		case(ComponentType::Animator):
 		{
-			component = gameObject->GetComponent<Animator>();
+			component = pGameObject->GetComponent<Animator>();
 			break;
 		}
 		case(ComponentType::AudioSource):
 		{
-			component = gameObject->GetComponent<AudioSource>();
+			component = pGameObject->GetComponent<AudioSource>();
 			break;
 		}
 		case(ComponentType::BoxCollider2D):
 		{
-			component = gameObject->GetComponent<BoxCollider2D>();
+			component = pGameObject->GetComponent<BoxCollider2D>();
 			break;
 		}
 		case(ComponentType::Button):
 		{
-			component = gameObject->GetComponent<Button>();
+			component = pGameObject->GetComponent<Button>();
 			break;
 		}
 		case(ComponentType::Camera):
 		{
-			component = gameObject->GetComponent<Camera>();
+			component = pGameObject->GetComponent<Camera>();
 			break;
 		}
 		case(ComponentType::Image):
 		{
-			component = gameObject->GetComponent<Image>();
+			component = pGameObject->GetComponent<Image>();
 			break;
 		}
 		case(ComponentType::Rigidbody2D):
 		{
-			component = gameObject->GetComponent<Rigidbody2D>();
+			component = pGameObject->GetComponent<Rigidbody2D>();
 			break;
 		}
 		case(ComponentType::SpriteRenderer):
 		{
-			component = gameObject->GetComponent<SpriteRenderer>();
+			component = pGameObject->GetComponent<SpriteRenderer>();
 			break;
 		}
 		case(ComponentType::Script):
 		{
 			//Different scripts
-			component = gameObject->GetComponent<Script>();
+			component = pGameObject->GetComponent<Script>();
 			break;
 		}
 		case(ComponentType::Text):
 		{
-			component = gameObject->GetComponent<Text>();
+			component = pGameObject->GetComponent<Text>();
 			break;
 		}
 		case(ComponentType::SortingGroup):
 		{
-			component = gameObject->GetComponent<SortingGroup>();
+			component = pGameObject->GetComponent<SortingGroup>();
 			break;
 		}
 		}
@@ -272,10 +249,8 @@ namespace Copium
 			UUID of child gameobject
 	*/
 	/*******************************************************************************/
-	static void SetParent(UUID newParentID, UUID childID)
+	static void SetParent(GameObject* parent, GameObject* child)
 	{
-		GameObject* child = sceneManager.FindGameObjectByID(childID);
-		GameObject* parent = sceneManager.FindGameObjectByID(newParentID);
 		if (parent)
 			child->transform.SetParent(&parent->transform);
 		else
@@ -292,21 +267,9 @@ namespace Copium
 		Velocity to set rigidbody to
 	*/
 	/*******************************************************************************/
-	static void RigidbodySetVelocity(UUID _ID, Math::Vec2* velocity)
+	static void RigidbodySetVelocity(Rigidbody2D* pRb, Math::Vec2* velocity)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
-		if (gameObj == nullptr)
-		{
-			return;
-		}
-		auto rb = gameObj->GetComponent<Rigidbody2D>();
-		if (rb == nullptr)
-		{
-			//LOG SOMETHING TO CONSOLE LIKE THIS OBJ HAS NOT RB
-			return;
-		}
-		
-		rb->velocity=*velocity;
+		pRb->velocity=*velocity;
 	}
 
 	/*******************************************************************************
@@ -319,20 +282,9 @@ namespace Copium
 		Velocity to store rigidbody's velocity
 	*/
 	/*******************************************************************************/
-	static void RigidbodyGetVelocity(UUID _ID, Math::Vec2* velocity)
+	static void RigidbodyGetVelocity(Rigidbody2D* pRb, Math::Vec2* velocity)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
-		if (gameObj == nullptr)
-		{
-			return;
-		}
-		auto rb = gameObj->GetComponent<Rigidbody2D>();
-		if (rb == nullptr)
-		{
-			//LOG SOMETHING TO CONSOLE LIKE THIS OBJ HAS NOT RB
-			return;
-		}
-		*velocity = rb->velocity;
+		*velocity = pRb->velocity;
 	}
 
 	/*******************************************************************************
@@ -347,27 +299,17 @@ namespace Copium
 		True if gameobject of ID has component of type
 	*/
 	/*******************************************************************************/
-	static bool HasComponent(UUID UUID, MonoReflectionType* componentType)
+	static bool HasComponent(GameObject* pGameObj, MonoReflectionType* componentType)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(UUID);
-		if (gameObj == nullptr)
-		{
-			PRINT("CANT FIND GAMEOBJECT");
-			return false;
-		}
 		MonoType* managedType = mono_reflection_type_get_type(componentType);
 		mono_class_from_mono_type(managedType);
 		const auto& pair = MyScriptingSystem.reflectionMap.find(managedType);
-		if (pair != MyScriptingSystem.reflectionMap.end())
+		if (pair == MyScriptingSystem.reflectionMap.end())
 		{
-
+			return false;
 		}
-		else
-		{
-
-		}
-		ComponentType cType = MyScriptingSystem.reflectionMap[managedType];
-		return gameObj->HasComponent(cType);
+		ComponentType cType = pair->second;
+		return pGameObj->HasComponent(cType);
 	}
 
 	//To be implemented
@@ -395,14 +337,9 @@ namespace Copium
 		Scale pointer to retrieve values
 	*/
 	/*******************************************************************************/
-	static void GetLocalScale(UUID _ID, Math::Vec3* scale)
+	static void GetLocalScale(GameObject* pGameObj, Math::Vec3* scale)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
-		if (gameObj == nullptr)
-		{
-			return;
-		}
-		*scale = gameObj->transform.scale;
+		*scale = pGameObj->transform.scale;
 	}
 
 	/*******************************************************************************
@@ -415,14 +352,9 @@ namespace Copium
 		Scale pointer to store values
 	*/
 	/*******************************************************************************/
-	static void SetLocalScale(UUID _ID, Math::Vec3* scale)
+	static void SetLocalScale(GameObject* pGameObj, Math::Vec3* scale)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
-		if (gameObj == nullptr)
-		{
-			return;
-		}
-		gameObj->transform.scale = *scale;
+		pGameObj->transform.scale = *scale;
 	}
 
 	/*******************************************************************************
@@ -435,14 +367,9 @@ namespace Copium
 		Rotation pointer to retrieve values
 	*/
 	/*******************************************************************************/
-	static void GetRotation(UUID _ID, Math::Vec3* rotation)
+	static void GetRotation(GameObject* pGameObj, Math::Vec3* rotation)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
-		if (gameObj == nullptr)
-		{
-			return;
-		}
-		gameObj->transform.rotation = *rotation;
+		pGameObj->transform.rotation = *rotation;
 	}
 
 	/*******************************************************************************
@@ -455,14 +382,9 @@ namespace Copium
 		Rotation pointer to store values
 	*/
 	/*******************************************************************************/
-	static void SetRotation(UUID _ID, Math::Vec3* rotation)
+	static void SetRotation(GameObject* pGameObj, Math::Vec3* rotation)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
-		if (gameObj == nullptr)
-		{
-			return;
-		}
-		gameObj->transform.rotation = *rotation;
+		pGameObj->transform.rotation = *rotation;
 	}
 
 	/*******************************************************************************
@@ -475,15 +397,9 @@ namespace Copium
 		Bool to set active to
 	*/
 	/*******************************************************************************/
-	static void SetActive(UUID _ID, bool _active)
+	static void SetActive(GameObject* pGameObj, bool _active)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID.GetUUID());
-		//PRINT("SetActive: " << gameObj->name << " " << _active);
-		if (gameObj == nullptr)
-		{
-			return;
-		}
-		gameObj->SetActive(_active);
+		pGameObj->SetActive(_active);
 	}
 
 	/*******************************************************************************
@@ -496,14 +412,9 @@ namespace Copium
 		Bool to whether gameobject was active
 	*/
 	/*******************************************************************************/
-	static bool GetActive(UUID _ID)
+	static bool GetActive(GameObject* pGameObj)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(_ID);
-		if (gameObj == nullptr)
-		{
-			return false;
-		}
-		return gameObj->active;
+		return pGameObj->active;
 	}
 
 
@@ -522,77 +433,9 @@ namespace Copium
 		whether the component is enabled
 	*/
 	/*******************************************************************************/
-	static bool GetComponentEnabled(UUID cid, MonoReflectionType* componentType)
+	static bool GetComponentEnabled(Component* pComponent)
 	{
-		auto pair = scriptingSystem.reflectionMap.find(mono_reflection_type_get_type(componentType));
-		if (pair == scriptingSystem.reflectionMap.end())
-		{
-			return false;
-		}
-		ComponentType cType = pair->second;
-		Component* component{ nullptr };
-		switch (cType)
-		{
-		case(ComponentType::Animator):
-		{
-			component = sceneManager.FindComponentByID<Animator>(cid);
-			break;
-		}
-		case(ComponentType::AudioSource):
-		{
-			component = sceneManager.FindComponentByID<AudioSource>(cid);
-			break;
-		}
-		case(ComponentType::BoxCollider2D):
-		{
-			component = sceneManager.FindComponentByID<BoxCollider2D>(cid);
-			break;
-		}
-		case(ComponentType::Button):
-		{
-			component = sceneManager.FindComponentByID<Button>(cid);
-			break;
-		}
-		case(ComponentType::Camera):
-		{
-			component = sceneManager.FindComponentByID<Camera>(cid);
-			break;
-		}
-		case(ComponentType::Image):
-		{
-			component = sceneManager.FindComponentByID<Image>(cid);
-			break;
-		}
-		case(ComponentType::Rigidbody2D):
-		{
-			component = sceneManager.FindComponentByID<Rigidbody2D>(cid);
-			break;
-		}
-		case(ComponentType::SpriteRenderer):
-		{
-			component = sceneManager.FindComponentByID<SpriteRenderer>(cid);
-			break;
-		}
-		case(ComponentType::Script):
-		{
-			//Different scripts
-			component = sceneManager.FindComponentByID<Script>(cid);
-			break;
-		}
-		case(ComponentType::Text):
-		{
-			component = sceneManager.FindComponentByID<Text>(cid);
-			break;
-		}
-		case(ComponentType::SortingGroup):
-		{
-			component = sceneManager.FindComponentByID<SortingGroup>(cid);
-			break;
-		}
-		}
-		if (component)
-			return component->enabled;
-		return false;
+		return pComponent->enabled;
 	}
 
 	/*******************************************************************************
@@ -610,76 +453,9 @@ namespace Copium
 		Type of component
 	*/
 	/*******************************************************************************/
-	static void SetComponentEnabled(UUID cid, bool val, MonoReflectionType* componentType)
+	static void SetComponentEnabled(Component* pComponent, bool val)
 	{
-		auto pair = scriptingSystem.reflectionMap.find(mono_reflection_type_get_type(componentType));
-		if (pair == scriptingSystem.reflectionMap.end())
-		{
-			return;
-		}
-		ComponentType cType = pair->second;
-		Component* component{ nullptr };
-		switch (cType)
-		{
-		case(ComponentType::Animator):
-		{
-			component = sceneManager.FindComponentByID<Animator>(cid);
-			break;
-		}
-		case(ComponentType::AudioSource):
-		{
-			component = sceneManager.FindComponentByID<AudioSource>(cid);
-			break;
-		}
-		case(ComponentType::BoxCollider2D):
-		{
-			component = sceneManager.FindComponentByID<BoxCollider2D>(cid);
-			break;
-		}
-		case(ComponentType::Button):
-		{
-			component = sceneManager.FindComponentByID<Button>(cid);
-			break;
-		}
-		case(ComponentType::Camera):
-		{
-			component = sceneManager.FindComponentByID<Camera>(cid);
-			break;
-		}
-		case(ComponentType::Image):
-		{
-			component = sceneManager.FindComponentByID<Image>(cid);
-			break;
-		}
-		case(ComponentType::Rigidbody2D):
-		{
-			component = sceneManager.FindComponentByID<Rigidbody2D>(cid);
-			break;
-		}
-		case(ComponentType::SpriteRenderer):
-		{
-			component = sceneManager.FindComponentByID<SpriteRenderer>(cid);
-			break;
-		}
-		case(ComponentType::Script):
-		{
-			//Different scripts
-			component = sceneManager.FindComponentByID<Script>(cid);
-			break;
-		}
-		case(ComponentType::Text):
-		{
-			component = sceneManager.FindComponentByID<Text>(cid);
-			break;
-		}
-		case(ComponentType::SortingGroup):
-		{
-			component = sceneManager.FindComponentByID<SortingGroup>(cid);
-			break;
-		}
-		}
-		if (component)
-			component->enabled = val;
+		pComponent->enabled = val;
 	}
 
 
@@ -714,20 +490,9 @@ namespace Copium
 		String of text component to store
 	*/
 	/*******************************************************************************/
-	static void GetTextString(UUID gameObjID, UUID compID, MonoString*& str)
+	static void GetTextString(Text* pText, MonoString*& str)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(gameObjID);
-		if (gameObj == nullptr)
-			return;
-		for (Text* text : gameObj->GetComponents<Text>())
-		{
-			if (text->uuid == compID)
-			{
-				PRINT("GETTING " << text->content);
-				str = scriptingSystem.createMonoString(text->content);
-				return;
-			}
-		}
+		str = scriptingSystem.createMonoString(pText->content);
 	}
 
 	/*******************************************************************************
@@ -742,21 +507,11 @@ namespace Copium
 		String to set text component
 	*/
 	/*******************************************************************************/
-	static void SetTextString(UUID gameObjID, UUID compID, MonoString* str)
+	static void SetTextString(Text* pText, MonoString* str)
 	{
-		Scene* pScene = sceneManager.get_current_scene();
-		if (!pScene)
-			return;
-		for (Text& text : pScene->componentArrays.GetArray<Text>())
-		{
-			if (text.uuid == compID)
-			{
-				char* monoStr = mono_string_to_utf8(str);
-				strcpy(text.content, monoStr);
-				mono_free(monoStr);
-				return;
-			}
-		}
+		char* monoStr = mono_string_to_utf8(str);
+		strcpy(pText->content, monoStr);
+		mono_free(monoStr);
 	}
 
 	/*******************************************************************************
@@ -772,15 +527,9 @@ namespace Copium
 
 	*/
 	/*******************************************************************************/
-	static char GetButtonState(UUID buttonID)
+	static char GetButtonState(Button* pButton)
 	{
-		Scene* pScene = sceneManager.get_current_scene();
-		for (Button& button : pScene->componentArrays.GetArray<Button>())
-		{
-			if (button.uuid == buttonID)
-				return (char)button.state;
-		}
-		return 0;
+		return (char)pButton->state;
 	}
 
 	/*******************************************************************************
@@ -793,10 +542,9 @@ namespace Copium
 		GameObject ID of the cloned gameObject
 	*/
 	/*******************************************************************************/
-	static UUID CloneGameObject(UUID ID)
+	static UUID CloneGameObject(GameObject* pGameObject)
 	{
-		GameObject* toBeCloned = MySceneManager.FindGameObjectByID(ID);
-		if (toBeCloned)
+		if (pGameObject)
 		{
 			//GameObject* clone = MyGOF.(*toBeCloned);
 			//PRINT("CLONED OBJECT: " << clone->uuid);
@@ -814,12 +562,12 @@ namespace Copium
 		GameObject ID of the new gameObject
 	*/
 	/*******************************************************************************/
-	static UUID InstantiateGameObject()
+	static GameObject* InstantiateGameObject()
 	{
 		Scene* scene = MySceneManager.get_current_scene();
 		COPIUM_ASSERT(!scene, "SCENE NOT LOADED");
 		GameObject& clone = MyGOF.Instantiate(*scene);
-		return clone.uuid;
+		return &clone;
 	}
 
 	/*******************************************************************************
@@ -830,9 +578,9 @@ namespace Copium
 		GameObject ID of the gameObject to delete
 	*/
 	/*******************************************************************************/
-	static void DestroyGameObject(UUID ID)
+	static void DestroyGameObject(GameObject* pGameObject)
 	{
-		MyGOF.Destroy(ID,MySceneManager.get_current_scene()->gameObjects);
+		MyGOF.Destroy(*pGameObject,MySceneManager.get_current_scene()->gameObjects,true);
 	}
 
 	/*******************************************************************************
@@ -894,12 +642,9 @@ namespace Copium
 			id of the game object that contains an audio source component
 	*/
 	/*******************************************************************************/
-	static void AudioSourcePlay(UUID ID)
+	static void AudioSourcePlay(AudioSource* pAudioSource)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
-		if (gameObj == nullptr)
-			return;
-		gameObj->GetComponent<AudioSource>()->play_sound();
+		pAudioSource->play_sound();
 	}
 
 	/*******************************************************************************
@@ -911,12 +656,9 @@ namespace Copium
 			id of the game object that contains an audio source component
 	*/
 	/*******************************************************************************/
-	static void AudioSourceStop(UUID ID)
+	static void AudioSourceStop(AudioSource* pAudioSource)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
-		if (gameObj == nullptr)
-			return;
-		gameObj->GetComponent<AudioSource>()->stop_sound();
+		pAudioSource->stop_sound();
 	}
 
 
@@ -932,14 +674,10 @@ namespace Copium
 			Volume to set
 	*/
 	/*******************************************************************************/
-	static void AudioSourceSetVolume(UUID ID, float volume)
+	static void AudioSourceSetVolume(AudioSource* pAudioSource, float volume)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
-		if (gameObj == nullptr)
-			return;
-		AudioSource* audioSource = gameObj->GetComponent<AudioSource>();
-		audioSource->volume = volume;
-		SoundSystem::Instance()->soundList[audioSource->alias].first->setVolume(audioSource->volume);
+		pAudioSource->volume = volume;
+		SoundSystem::Instance()->soundList[pAudioSource->alias].first->setVolume(volume);
 	}
 
 	/*******************************************************************************
@@ -954,12 +692,9 @@ namespace Copium
 			Volume of audio source
 	*/
 	/*******************************************************************************/
-	static float AudioSourceGetVolume(UUID ID)
+	static float AudioSourceGetVolume(AudioSource* pAudioSource)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
-		if (gameObj == nullptr)
-			return 0;
-		return gameObj->GetComponent<AudioSource>()->volume;
+		return pAudioSource->volume;
 	}
 
 	/*******************************************************************************
@@ -996,19 +731,9 @@ namespace Copium
 			Pointer to store color into
 	*/
 	/*******************************************************************************/
-	static void GetTextColor(UUID ID, glm::vec4* color)
+	static void GetTextColor(Text* pText, glm::vec4* color)
 	{
-		Scene* pScene = sceneManager.get_current_scene();
-		if (!pScene)
-			return;
-		for (Text& text : pScene->componentArrays.GetArray<Text>())
-		{
-			if (text.uuid == ID)
-			{
-				*color = text.color;
-				return;
-			}
-		}
+		*color = pText->color;
 	}
 
 	/*******************************************************************************
@@ -1023,19 +748,9 @@ namespace Copium
 			Pointer to retrieve color from
 	*/
 	/*******************************************************************************/
-	static void SetTextColor(UUID ID, glm::vec4* color)
+	static void SetTextColor(Text* pText, glm::vec4* color)
 	{
-		Scene* pScene = sceneManager.get_current_scene();
-		if (!pScene)
-			return;
-		for (Text& text : pScene->componentArrays.GetArray<Text>())
-		{
-			if (text.uuid == ID)
-			{
-				text.color = *color;
-				return;
-			}
-		}
+		pText->color = *color;
 	}
 
 	/*******************************************************************************
@@ -1050,19 +765,9 @@ namespace Copium
 			Pointer to store color into
 	*/
 	/*******************************************************************************/
-	static void GetButtonHoverColor(UUID ID, glm::vec4* color)
+	static void GetButtonHoverColor(Button* pButton, glm::vec4* color)
 	{
-		Scene* pScene = sceneManager.get_current_scene();
-		if (!pScene)
-			return;
-		for (Button& btn : pScene->componentArrays.GetArray<Button>())
-		{
-			if (btn.uuid == ID)
-			{
-				*color = btn.hoverColor;
-				return;
-			}
-		}
+		*color = pButton->hoverColor;
 	}
 
 	/*******************************************************************************
@@ -1077,19 +782,9 @@ namespace Copium
 			Pointer to set color into
 	*/
 	/*******************************************************************************/
-	static void SetButtonHoverColor(UUID ID, glm::vec4* color)
+	static void SetButtonHoverColor(Button* pButton, glm::vec4* color)
 	{
-		Scene* pScene = sceneManager.get_current_scene();
-		if (!pScene)
-			return;
-		for (Button& btn : pScene->componentArrays.GetArray<Button>())
-		{
-			if (btn.uuid == ID)
-			{
-				btn.hoverColor = *color;
-				return;
-			}
-		}
+		pButton->hoverColor = *color;
 	}
 
 	/*******************************************************************************
@@ -1104,19 +799,9 @@ namespace Copium
 			Pointer to get color from
 	*/
 	/*******************************************************************************/
-	static void GetButtonClickedColor(UUID ID, glm::vec4* color)
+	static void GetButtonClickedColor(Button* pButton, glm::vec4* color)
 	{
-		Scene* pScene = sceneManager.get_current_scene();
-		if (!pScene)
-			return;
-		for (Button& btn : pScene->componentArrays.GetArray<Button>())
-		{
-			if (btn.uuid == ID)
-			{
-				*color = btn.clickedColor;
-				return;
-			}
-		}
+		*color = pButton->clickedColor;
 	}
 
 	/*******************************************************************************
@@ -1131,19 +816,9 @@ namespace Copium
 			Pointer to set color into
 	*/
 	/*******************************************************************************/
-	static void SetButtonClickedColor(UUID ID, glm::vec4* color)
+	static void SetButtonClickedColor(Button* pButton, glm::vec4* color)
 	{
-		Scene* pScene = sceneManager.get_current_scene();
-		if (!pScene)
-			return;
-		for (Button& btn : pScene->componentArrays.GetArray<Button>())
-		{
-			if (btn.uuid == ID)
-			{
-				btn.clickedColor = *color;
-				return;
-			}
-		}
+		pButton->clickedColor = *color;
 	}
 
 
@@ -1159,12 +834,9 @@ namespace Copium
 			Pointer to store color in
 	*/
 	/*******************************************************************************/
-	static void GetSpriteRendererColor(UUID ID, glm::vec4* color)
+	static void GetSpriteRendererColor(SpriteRenderer* pSpriteRenderer, glm::vec4* color)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
-		if (gameObj == nullptr)
-			return;
-		*color = gameObj->GetComponent<SpriteRenderer>()->sprite.color;
+		*color = pSpriteRenderer->sprite.color;
 	}
 
 	/*******************************************************************************
@@ -1179,12 +851,9 @@ namespace Copium
 			Pointer to get color from
 	*/
 	/*******************************************************************************/
-	static void SetSpriteRendererColor(UUID ID, glm::vec4* color)
+	static void SetSpriteRendererColor(SpriteRenderer* pSpriteRenderer, glm::vec4* color)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
-		if (gameObj == nullptr)
-			return;
-		gameObj->GetComponent<SpriteRenderer>()->sprite.color = *color;
+		pSpriteRenderer->sprite.color = *color;
 	}
 
 
@@ -1200,12 +869,9 @@ namespace Copium
 			Pointer to store color in
 	*/
 	/*******************************************************************************/
-	static void GetImageColor(UUID ID, glm::vec4* color)
+	static void GetImageColor(Image* pImage, glm::vec4* color)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
-		if (gameObj == nullptr)
-			return;
-		*color = gameObj->GetComponent<Image>()->sprite.color;
+		*color = pImage->sprite.color;
 	}
 
 	/*******************************************************************************
@@ -1220,12 +886,9 @@ namespace Copium
 			Pointer to get color from
 	*/
 	/*******************************************************************************/
-	static void SetImageColor(UUID ID, glm::vec4* color)
+	static void SetImageColor(Image* pImage, glm::vec4* color)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
-		if (gameObj == nullptr)
-			return;
-		gameObj->GetComponent<Image>()->sprite.color = *color;
+		pImage->sprite.color = *color;
 	}
 
 	/*******************************************************************************
@@ -1237,12 +900,9 @@ namespace Copium
 			ID of gameObject with animator
 	*/
 	/*******************************************************************************/
-	static void PlayAnimation(UUID ID)
+	static void PlayAnimation(Animator* pAnimator)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
-		if (gameObj == nullptr)
-			return;
-		gameObj->GetComponent<Animator>()->PlayAnimation();
+		pAnimator->PlayAnimation();
 	}
 
 	/*******************************************************************************
@@ -1254,12 +914,9 @@ namespace Copium
 			ID of gameObject with animator
 	*/
 	/*******************************************************************************/
-	static void PauseAnimation(UUID ID)
+	static void PauseAnimation(Animator* pAnimator)
 	{
-		GameObject* gameObj = sceneManager.FindGameObjectByID(ID);
-		if (gameObj == nullptr)
-			return;
-		gameObj->GetComponent<Animator>()->PauseAnimation();
+		pAnimator->PauseAnimation();
 	}
 
 	/*******************************************************************************
@@ -1274,18 +931,9 @@ namespace Copium
 			Amount of delay to set
 	*/
 	/*******************************************************************************/
-	static void SetAnimatorDelay(UUID componentID, float timeDelay)
+	static void SetAnimatorDelay(Animator* pAnimator, float timeDelay)
 	{
-		Scene* pScene = sceneManager.get_current_scene();
-		if (!pScene)
-			return;
-		for (Animator& animator : pScene->componentArrays.GetArray<Animator>())
-		{
-			if (animator.uuid == componentID)
-			{
-				animator.animations[0].timeDelay = timeDelay;
-			}
-		}
+		pAnimator->animations[0].timeDelay = timeDelay;
 	}
 
 	/*******************************************************************************
@@ -1300,20 +948,9 @@ namespace Copium
 			Amount of delay
 	*/
 	/*******************************************************************************/
-	static float GetAnimatorDelay(UUID componentID)
+	static float GetAnimatorDelay(Animator* pAnimator)
 	{
-		Scene* pScene = sceneManager.get_current_scene();
-		if (!pScene)
-			return 0;
-		for (Animator& animator : pScene->componentArrays.GetArray<Animator>())
-		{
-			if (animator.uuid == componentID)
-			{
-				return (float)animator.animations[0].timeDelay;
-			}
-		}
-
-		return 0;
+		return (float)pAnimator->animations[0].timeDelay;
 	}
 
 

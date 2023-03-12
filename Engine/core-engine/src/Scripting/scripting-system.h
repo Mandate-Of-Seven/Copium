@@ -546,6 +546,8 @@ namespace Copium
 		/*******************************************************************************/
 		void CallbackScriptGetNames(ScriptGetNamesEvent* pEvent);
 
+		void CallbackReflectGameObject(ReflectGameObjectEvent* pEvent);
+
 		//Event subscription helper
 		template<typename T, typename... Ts>
 		void SubscribeComponentBasedCallbacks(TemplatePack<T, Ts...> pack);
@@ -615,7 +617,7 @@ namespace Copium
 	template<typename T>
 	void ScriptingSystem::CallbackScriptSetFieldReference(ScriptSetFieldReferenceEvent<T>* pEvent)
 	{
-		MonoObject* mScript = mComponents[pEvent->script.uuid];
+		MonoObject* mScript = ReflectComponent(pEvent->script);
 		COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
 		ScriptClass& scriptClass{ scriptClassMap[pEvent->script.name] };
 		MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };

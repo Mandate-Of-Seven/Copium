@@ -43,10 +43,10 @@ namespace CopiumEngine
 
         #region COMPONENT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static bool GetComponentEnabled(ulong compId, Type componentType);
+        internal extern static bool GetComponentEnabled(ulong compId);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetComponentEnabled(ulong compId, bool enabled, Type componentType);
+        internal extern static void SetComponentEnabled(ulong compId, bool enabled);
 
         #endregion
 
@@ -184,10 +184,10 @@ namespace CopiumEngine
 
         #region TEXT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void GetTextString(ulong gameObjID, ulong compID,out string str);
+        internal extern static void GetTextString(ulong compID,out string str);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetTextString(ulong gameObjID, ulong compID,string str);
+        internal extern static void SetTextString(ulong compID,string str);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void GetTextColor(ulong ID, out Color color);
