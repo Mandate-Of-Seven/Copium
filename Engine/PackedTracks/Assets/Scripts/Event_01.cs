@@ -141,7 +141,7 @@ public class Event_01: CopiumScript
                     "their efforts were futile. The flames were extinguished, but only at great personal risk. It seems " +
                     "that most of the crew have suffered third to fourth degree burns.";
 
-                cm.SetAllCrew(CrewMenu.STAT_TYPES.HEALTH, 4);
+                cm.SetAllCrew(CrewMenu.STAT_TYPES.HEALTH, (int)Crew.HEALTH_STATE.CRITICAL);
                 cm.SetSupplies(5);
             }
             else if (choice == 2)
@@ -172,7 +172,7 @@ public class Event_01: CopiumScript
                                             "most of the supplies had been reduced to ash.";
 
                 cm.SetSupplies(0);
-                cm.SetCrew(CrewMenu.STAT_TYPES.HEALTH, 0, 4);
+                cm.SetCrew(CrewMenu.STAT_TYPES.HEALTH, 0, (int)Crew.HEALTH_STATE.CRITICAL);
             }
         }
 

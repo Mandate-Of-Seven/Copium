@@ -20,6 +20,30 @@ using System.Collections.Generic;
 
 public class Crew : CopiumScript
 {
+    public enum HEALTH_STATE
+    {
+        DEAD,
+        CRITICAL,
+        INJURED,
+        HEALTHY,
+        NONE = -1
+    }
+    public enum MENTAL_STATE
+    {
+        SUICIDAL,
+        INSANE,
+        IRRATIONAL,
+        CALM,
+        NONE = -1
+    }
+    public enum HUNGER_STATE
+    {
+        FAMISHED,
+        HUNGRY,
+        FULL,
+        NONE = -1
+    }
+
     public CrewMenu crewMenu;
     public GameObject showDeployed;
     

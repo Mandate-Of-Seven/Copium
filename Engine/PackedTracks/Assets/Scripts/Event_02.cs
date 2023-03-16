@@ -140,7 +140,7 @@ public class Event_02: CopiumScript
                     "allowed to disembark and ride away.";
 
                 cm.SetSupplies(0);
-                cm.SetAllCrew(CrewMenu.STAT_TYPES.MENTAL, 9);
+                cm.SetAllCrew(CrewMenu.STAT_TYPES.MENTAL, (int)Crew.MENTAL_STATE.IRRATIONAL);
             }
         }
         else if (resolutionTextNum == 2)
@@ -152,8 +152,8 @@ public class Event_02: CopiumScript
                     "this, Bronson effectively saved Chuck and disarmed the attackers. Bronson collapsed lying in critical " +
                     "condition.";
 
-                cm.SetCrew(CrewMenu.STAT_TYPES.HEALTH, 1, 4);
-                cm.SetCrew(CrewMenu.STAT_TYPES.HEALTH, 2, 4);
+                cm.SetCrew(CrewMenu.STAT_TYPES.HEALTH, 1, (int)Crew.HEALTH_STATE.CRITICAL);
+                cm.SetCrew(CrewMenu.STAT_TYPES.HEALTH, 2, (int)Crew.HEALTH_STATE.CRITICAL);
             }
             else if (choice == 2)
             {
@@ -172,7 +172,7 @@ public class Event_02: CopiumScript
 
 
                 cm.ChangeSupplies(-10);
-                cm.SetAllCrew(CrewMenu.STAT_TYPES.MENTAL, 9);
+                cm.SetAllCrew(CrewMenu.STAT_TYPES.MENTAL, (int)Crew.MENTAL_STATE.IRRATIONAL);
             }
         }
 
