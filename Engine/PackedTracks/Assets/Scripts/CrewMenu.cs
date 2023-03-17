@@ -51,7 +51,7 @@ public class CrewMenu: CopiumScript
     float timer = 0.0f;
 
     float healthInterval = 5.0f; // The interval in seconds in which the crew members lose health
-    float hungerInterval = 1.0f; // The interval in seconds in which the crew members get hungry
+    float hungerInterval = 5.0f; // The interval in seconds in which the crew members get hungry
 
     public bool storageComparment = true; // For the food storage
 
@@ -169,7 +169,6 @@ public class CrewMenu: CopiumScript
     /*******************************************************************************/
     public void UpdateAllStats()
     {
-        CheckSupplies();
         CheckCrewHealth();
     }
 
@@ -215,22 +214,27 @@ public class CrewMenu: CopiumScript
 		    Reduce crew hunger if supplies is 0
 	*/
     /*******************************************************************************/
-    void CheckSupplies()
+    public void UpdateHunger()
     {
         if(supplies == 0)
         {
-            if (timer >= hungerInterval)
+            //if (timer >= hungerInterval)
+            //{
+            //    for (int i = 0; i < crew.Length; i++)
+            //    {
+            //        if (crew[i].hunger > 0)
+            //            crew[i].hunger -= 1;
+            //    }
+
+            //    timer = 0.0f;
+            //}
+
+            //timer += Time.deltaTime;
+            for (int i = 0; i < crew.Length; i++)
             {
-                for (int i = 0; i < crew.Length; i++)
-                {
-                    if (crew[i].hunger > 0)
-                        crew[i].hunger -= 1;
-                }
-
-                timer = 0.0f;
+                if (crew[i].hunger > 0)
+                    crew[i].hunger -= 1;
             }
-
-            timer += Time.deltaTime;
         }
     }
 
@@ -295,7 +299,15 @@ public class CrewMenu: CopiumScript
         // Bean: Visually show the supply reducing
 
         if (!storageComparment)
+        {
+            supplies += amount;
+            if (supplies < 0)
+                supplies = 0;
+            else if (supplies > 5)
+                supplies = 5;
+
             return;
+        }
 
         supplies += amount;
 
@@ -319,16 +331,13 @@ public class CrewMenu: CopiumScript
                     crew[i].alive = (amount > 0) ? true : false;
                     break;
                 case STAT_TYPES.HEALTH:
-                    if(crew[i].health > amount)
-                        crew[i].health = amount;
+                    crew[i].health = amount;
                     break;
                 case STAT_TYPES.MENTAL:
-                    if (crew[i].mental > amount)
-                        crew[i].mental = amount;
+                    crew[i].mental = amount;
                     break;
                 case STAT_TYPES.HUNGER:
-                    if (crew[i].hunger > amount)
-                        crew[i].hunger = amount;
+                    crew[i].hunger = amount;
                     break;
             }
         }
@@ -350,16 +359,23 @@ public class CrewMenu: CopiumScript
                 case STAT_TYPES.HEALTH:
                     if (crew[i].health > 0)
                         crew[i].health += amount;
+
+                    if (crew[i].health > 3)
+                        crew[i].health = 3;
                     break;
                 case STAT_TYPES.MENTAL:
                     if (crew[i].mental > 0)
                         crew[i].mental += amount;
+
+                    if (crew[i].mental > 3)
+                        crew[i].mental = 3;
                     break;
                 case STAT_TYPES.HUNGER:
-                    crew[i].hunger += amount;
+                    if(crew[i].hunger > 0)
+                        crew[i].hunger += amount;
 
-                    if (crew[i].hunger > 10)
-                        crew[i].hunger = 10;
+                    if (crew[i].hunger > 3)
+                        crew[i].hunger = 3;
                     break;
             }
         }
@@ -379,16 +395,99 @@ public class CrewMenu: CopiumScript
                 crew[index].alive = (amount > 0) ? true : false;
                 break;
             case STAT_TYPES.HEALTH:
-                if (crew[index].health > amount)
-                    crew[index].health = amount;
+                crew[index].health = amount;
                 break;
             case STAT_TYPES.MENTAL:
-                if (crew[index].mental > amount)
-                    crew[index].mental = amount;
+                crew[index].mental = amount;
                 break;
             case STAT_TYPES.HUNGER:
-                if (crew[index].hunger > amount)
-                    crew[index].hunger = amount;
+                crew[index].hunger = amount;
+                break;
+        }
+    }
+
+    /*******************************************************************************
+       /*!
+           \brief
+               Sets a certain crew members stat to an amount
+       */
+    /*******************************************************************************/
+    public void SetCrew(STAT_TYPES types, string name, int amount)
+    {
+        switch (name)
+        {
+            case "Harris":
+                SetCrew(types, 0, amount);
+                break;
+            case "Bronson":
+                SetCrew(types, 1, amount);
+                break;
+            case "Chuck":
+                SetCrew(types, 2, amount);
+                break;
+            case "Danton":
+                SetCrew(types, 3, amount);
+                break;
+        }
+    }
+
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Changes one stat of a crewmate to an amount if its still more 
+            than 0
+	*/
+    /*******************************************************************************/
+    public void ChangeCrew(STAT_TYPES types, int index, int amount)
+    {
+        switch (types)
+        {
+            case STAT_TYPES.HEALTH:
+                if (crew[index].health > 0)
+                    crew[index].health += amount;
+
+                if (crew[index].health > 3)
+                    crew[index].health = 3;
+                break;
+            case STAT_TYPES.MENTAL:
+                if (crew[index].mental > 0)
+                    crew[index].mental += amount;
+
+                if (crew[index].mental > 3)
+                    crew[index].mental = 3;
+                break;
+            case STAT_TYPES.HUNGER:
+                if(crew[index].hunger > 0)
+                    crew[index].hunger += amount;
+
+                if (crew[index].hunger > 3)
+                    crew[index].hunger = 3;
+                break;
+        }
+    }
+
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Changes one stat of a crewmate to an amount if its still more 
+            than 0
+	*/
+    /*******************************************************************************/
+    public void ChangeCrew(STAT_TYPES types, string name, int amount)
+    {
+        switch (name)
+        {
+            case "Harris":
+                ChangeCrew(types, 0, amount);
+                break;
+            case "Bronson":
+                ChangeCrew(types, 1, amount);
+                break;
+            case "Chuck":
+                ChangeCrew(types, 2, amount);
+                break;
+            case "Danton":
+                ChangeCrew(types, 3, amount);
                 break;
         }
     }
@@ -410,18 +509,22 @@ public class CrewMenu: CopiumScript
 
         if (harris.isDeployed)
         {
+            ChangeCrew(STAT_TYPES.HUNGER, 0, -1);
             prepareManager.GenerateEvents(crew[0]);
         }
         else if (bronson.isDeployed)
         {
+            ChangeCrew(STAT_TYPES.HUNGER, 1, -1);
             prepareManager.GenerateEvents(crew[1]);
         }
         else if (chuck.isDeployed)
         {
+            ChangeCrew(STAT_TYPES.HUNGER, 2, -1);
             prepareManager.GenerateEvents(crew[2]);
         }
         else if (danton.isDeployed)
         {
+            ChangeCrew(STAT_TYPES.HUNGER, 3, -1);
             prepareManager.GenerateEvents(crew[3]);
         }
     }

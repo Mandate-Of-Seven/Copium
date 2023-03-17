@@ -54,6 +54,7 @@ public class GameManager: CopiumScript
     float distancePerEvent = 10.0f;
 
     bool updateEvent = false;
+    bool updateHunger = false;
     public bool gameEnd = false;
 
     bool moving = false;
@@ -197,6 +198,16 @@ public class GameManager: CopiumScript
                 if (distanceLeft % distancePerEvent < 5.0f && EventManager.EventSequence > 0 && !updateEvent)
                     EventManager.SelectDefaultChoice();
 
+                // Reduce hunger every few km
+                float remainder = distanceLeft % (distancePerEvent / 2.0f);
+                if (remainder < 1.0f && !updateHunger)
+                {
+                    updateHunger = true;
+                    crewMenuScript.UpdateHunger();
+                }
+                else if (remainder > 1.0f)
+                    updateHunger = false;
+
                 timer = 0.0f;
             }
 
@@ -265,48 +276,4 @@ public class GameManager: CopiumScript
 
         htpmScript.page = 1;
     }
-
-    // void KeyInputs()
-    // {
-    //     if (Input.GetKeyDown(KeyCode.P))
-    //     {
-    //         isPaused = !isPaused;
-    //         PauseCanvas.SetActive(isPaused);
-    //         if (isPaused)
-    //         {
-    //             InternalCalls.PauseAllAnimation();
-    //         }
-    //         else
-    //         {
-    //             InternalCalls.PlayAllAnimation();
-    //         }
-    //     }
-
-    //     if (!isPaused)
-    //     {
-    //         if (Input.GetKeyDown(KeyCode.Escape))
-    //         {
-    //             isPaused = true;
-    //         }
-    //     }
-    //     else
-    //     {
-    //         if (PauseResumeBtn.state == ButtonState.OnClick)
-    //         {
-    //             isPaused = false;
-    //             PauseCanvas.SetActive(false);
-    //             InternalCalls.PlayAllAnimation();
-    //         }
-
-    //         if (PauseQuitBtn.state == ButtonState.OnClick)
-    //         {
-    //             Application.Quit();
-    //         }
-    //     }
-
-    //     if (Input.GetKey(KeyCode.P))
-    //     {
-    //         Application.Quit();
-    //     }
-    // }
 }

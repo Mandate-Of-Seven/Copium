@@ -120,8 +120,8 @@ public class Event_03: CopiumScript
                     "As the dust settled, Chuck and Danton can be seen on the ground, it is evident that both are in critical condition." +
                     "Fortunately, the engine only suffered minor damage.";
 
-                cm.SetCrew(CrewMenu.STAT_TYPES.HEALTH, 2, 4);
-                cm.SetCrew(CrewMenu.STAT_TYPES.HEALTH, 3, 4);
+                cm.SetCrew(CrewMenu.STAT_TYPES.HEALTH, 2, (int)Crew.HEALTH_STATE.CRITICAL);
+                cm.SetCrew(CrewMenu.STAT_TYPES.HEALTH, 3, (int)Crew.HEALTH_STATE.CRITICAL);
             }
             else if (choice == 2)
             {
