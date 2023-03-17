@@ -12,7 +12,7 @@
 \brief
 	Contains functions needed for the crew menu of the left screen
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 using CopiumEngine;
 using System;
@@ -33,8 +33,6 @@ public class CrewMenu: CopiumScript
     public CrewStatusManager crewStatusManager; 
     public ReportScreenManager reportScreenManager; 
     public ResultManager resultManager; 
-
-    public AudioManager audioManager;
 
     public Fade fader;
 
@@ -81,11 +79,11 @@ public class CrewMenu: CopiumScript
 
     void Start()
 	{
-        prepareBtnWrapper = new ButtonWrapper(prepareButton,audioManager,crewStatusManager.tooltip);
+        prepareBtnWrapper = new ButtonWrapper(prepareButton);
         prepareBtnWrapper.SetText(prepareButton.GetComponent<Text>());
         prepareBtnWrapper.SetImage(prepareButton.GetComponent<Image>());
         prepareBtnWrapper.failureText = "The train needs to be stopped first!";
-        deployBtnWrapper = new ButtonWrapper(deployButton,audioManager,crewStatusManager.tooltip);
+        deployBtnWrapper = new ButtonWrapper(deployButton);
         deployBtnWrapper.SetText(deployButton.GetComponent<Text>());
         deployBtnWrapper.SetImage(deployButton.GetComponent<Image>());
         deployBtnWrapper.failureText = "You need to be preparing your crew members first!";

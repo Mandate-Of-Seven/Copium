@@ -20,8 +20,6 @@ public class Prepare : CopiumScript
     public CrewMenu crewManager;
     public Button closeButton;
 
-    public TooltipBehaviour tooltip;
-
     public Text prepareBody;
     public Button prepareButton1;
     public Button prepareButton2;
@@ -64,13 +62,13 @@ public class Prepare : CopiumScript
 
     void Start()
     {
-        harrisBtnWrapper = new ButtonWrapper(harrisButton,crewManager.audioManager,tooltip);
+        harrisBtnWrapper = new ButtonWrapper(harrisButton);
         harrisBtnWrapper.SetImage(harrisButton.GetComponent<Image>());
-        bronsonBtnWrapper = new ButtonWrapper(bronsonButton,crewManager.audioManager,tooltip);
+        bronsonBtnWrapper = new ButtonWrapper(bronsonButton);
         bronsonBtnWrapper.SetImage(bronsonButton.GetComponent<Image>());
-        chuckBtnWrapper = new ButtonWrapper(chuckButton,crewManager.audioManager,tooltip);
+        chuckBtnWrapper = new ButtonWrapper(chuckButton);
         chuckBtnWrapper.SetImage(chuckButton.GetComponent<Image>());
-        dantonBtnWrapper = new ButtonWrapper(dantonButton,crewManager.audioManager,tooltip);
+        dantonBtnWrapper = new ButtonWrapper(dantonButton);
         dantonBtnWrapper.SetImage(dantonButton.GetComponent<Image>());
     }
     void Update()
@@ -79,7 +77,7 @@ public class Prepare : CopiumScript
         {
             if (prepareButton1.state == ButtonState.OnClick)
             {
-                crewManager.audioManager.clickSFX.Play();
+                AudioManager.Instance.clickSFX.Play();
                 choice = 1;
                 GenerateResults();
             }
@@ -93,12 +91,12 @@ public class Prepare : CopiumScript
                 if (!option2Hover)
                 {
                     option2Hover = true;
-                    crewManager.audioManager.hoverSFX.Play();
+                    AudioManager.Instance.hoverSFX.Play();
                 }
             }
             else if (prepareButton2.state == ButtonState.OnClick)
             {
-                crewManager.audioManager.clickSFX.Play();
+                AudioManager.Instance.clickSFX.Play();
                 choice = 2;
                 GenerateResults();
             }

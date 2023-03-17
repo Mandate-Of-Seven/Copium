@@ -19,10 +19,13 @@ using System;
 public class ResultManager : CopiumScript
 {
     public bool isResultOn = false;
-    public AudioManager audioManager;
 
     public Button CloseResultBtn;
     public Button ResultBtn;
+    public ButtonWrapper closeBtnWrapper;
+    public ButtonWrapper resultBtnWrapper;
+
+    
     public GameObject ResultTab;
 
     public CrewStatusManager crewStatusManager;
@@ -39,7 +42,11 @@ public class ResultManager : CopiumScript
 
     void Start()
     {
-
+        closeBtnWrapper = new ButtonWrapper(CloseResultBtn);
+        closeBtnWrapper.SetImage(CloseResultBtn.GetComponent<Image>());
+        resultBtnWrapper = new ButtonWrapper(ResultBtn);
+        resultBtnWrapper.SetImage(ResultBtn.GetComponent<Image>());
+		resultBtnWrapper.failureText = Messages.Instance.ErrorMainEvent;
     }
 
     void Update()
@@ -56,34 +63,14 @@ public class ResultManager : CopiumScript
     public void UpdateCanvas()
     {
 
-        if (!openHover && ResultBtn.state == ButtonState.OnHover)
+        if (resultBtnWrapper.GetState() == ButtonState.OnClick)
         {
-            openHover = true;
-            audioManager.hoverSFX.Play();
-        }
-        else if (ResultBtn.state == ButtonState.OnRelease)
-        {
-            audioManager.clickSFX.Play();
             OpenPanel();
         }
-        else if (ResultBtn.state == ButtonState.None)
-        {
-            openHover = false;
-        }
 
-        if (!closeHover && CloseResultBtn.state == ButtonState.OnHover)
+        if (closeBtnWrapper.GetState() == ButtonState.OnRelease)
         {
-            closeHover = true;
-            audioManager.hoverSFX.Play();
-        }
-        else if (CloseResultBtn.state == ButtonState.OnRelease)
-        {
-            audioManager.clickSFX.Play();
             ClosePanel();
-        }
-        else if (CloseResultBtn.state == ButtonState.None)
-        {
-            closeHover = false;
         }
 
 
@@ -155,4 +142,10 @@ public class ResultManager : CopiumScript
         ResultTab.SetActive(true);
         ResultBtn.gameObject.SetActive(true);
     }
+
+    public void DisableInteractions()
+	{
+        ClosePanel();
+        resultBtnWrapper.SetInteractable(false);
+	}
 }

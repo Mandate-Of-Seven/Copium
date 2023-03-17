@@ -11,7 +11,7 @@
 	Manages a text component and can print a set amount of messages to it through 
 	appending a new line
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 using CopiumEngine;
@@ -19,9 +19,16 @@ using System;
 
 public class TooltipBehaviour: CopiumScript
 {
+	public static TooltipBehaviour Instance;
+
 	public Text content;
 	public int maxLines = 5;
 	public int lines = 0;
+
+	void Awake()
+	{
+		Instance = this;
+	}
 
 	void Start()
 	{
@@ -35,13 +42,11 @@ public class TooltipBehaviour: CopiumScript
 			content.text += "\n";
 		if (lines == maxLines)
 		{
-			Debug.Log("MAXLINES REACHED");
 			string buffer = content.text;
 			buffer = content.text.Substring(buffer.IndexOf("\n")+1);
 			content.text = buffer;
 			--lines;
 		}
-		Debug.Log("HARLO");
 		++lines;
 		Color color = content.color;
 		color.a = 1;

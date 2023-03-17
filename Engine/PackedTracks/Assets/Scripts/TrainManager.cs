@@ -28,9 +28,9 @@ public class TrainManager: CopiumScript
 	public float deceleration = 0.0f;
 	public Animator snowAnimator;
 	public Animator tracksAnimator;
-	public AudioManager audioManager;
 
 	public Button trainLeverBtn;
+	public ButtonWrapper leverBtnWrapper;
 	public Image trainLeverActivated;
 	public Image trainLeverDeactivated;
     public float levelTransSpeed = 2.0f;
@@ -64,12 +64,17 @@ public class TrainManager: CopiumScript
 
 	float targetAmbienceVolume = 0.0f;
 
+	public TooltipBehaviour tooltip;
+
 
 	void Start()
 	{
 		targetSnowDelay = snowMaxDelay;
 		targetTracksDelay = tracksMaxDelay;
 		initialSnowScale = snowAnimator.gameObject.transform.localScale.y;
+		leverBtnWrapper = new ButtonWrapper(trainLeverBtn);
+		leverBtnWrapper.SetImage(trainLeverDeactivated);
+		leverBtnWrapper.failureText = Messages.Instance.ErrorMainEvent;
 	}
 
 	void Update()
@@ -94,8 +99,8 @@ public class TrainManager: CopiumScript
 
 		if (!accelerate && ratio <= 0.2f)
 		{
-			audioManager.accelerateSFX.Stop();
-			audioManager.deccelerateSFX.Stop();
+			AudioManager.Instance.accelerateSFX.Stop();
+			AudioManager.Instance.deccelerateSFX.Stop();
 			tracksAnimator.play = false;
 			targetPosition = new Vector3(0,0,0);
 			targetRotation = new Vector3(0,0,0);
@@ -103,7 +108,7 @@ public class TrainManager: CopiumScript
 		}
 		else if (!accelerate && ratio <= 0.4f)
 		{
-			audioManager.ambTrain.Stop();
+			AudioManager.Instance.ambTrain.Stop();
 			float shakePosX = RNG.Range(-shakePosition,shakePosition);
 			float shakePosY = RNG.Range(0,shakePosition*2);
 			targetPosition = new Vector3(shakePosX,shakePosY,0);
@@ -127,7 +132,7 @@ public class TrainManager: CopiumScript
 			Mathf.Lerp(snowAnimator.delay,targetSnowDelay,timeStep);
 		if (!accelerate && ratio <= 0.1f)
 		{
-        	audioManager.leverEngagedSFX.Stop();
+        	AudioManager.Instance.leverEngagedSFX.Stop();
 			transform.localScale = 
 				Vector3.Lerp(transform.localScale,targetScale,Time.deltaTime * 2.0f);
 			Vector3 snowScale = snowAnimator.gameObject.transform.localScale;
@@ -148,8 +153,8 @@ public class TrainManager: CopiumScript
 		}
 		if (ratio >= 0.3f)
 		{
-			audioManager.ambTrain.volume = 
-				Mathf.Lerp(audioManager.ambTrain.volume,targetAmbienceVolume,timeStep);
+			AudioManager.Instance.ambTrain.volume = 
+				Mathf.Lerp(AudioManager.Instance.ambTrain.volume,targetAmbienceVolume,timeStep);
 			transform.localRotation = 
 				Vector3.Lerp(Vector3.zero,targetRotation,timeStep);
 			transform.localPosition = 
@@ -168,25 +173,19 @@ public class TrainManager: CopiumScript
 	/**************************************************************************/
 	void ToggleLever()
 	{
-        if (trainLeverBtn.state == ButtonState.OnHover)
+		ButtonState leverBtnState = leverBtnWrapper.GetState();
+        if (leverBtnState == ButtonState.OnHover)
         {
-            if (!onHover)
-            {
-                audioManager.hoverSFX.Play();
-                onHover = true;
-            }
             Color leverCurrentColor = Color.Lerp(trainLeverActivated.color, Color.white, Time.deltaTime * levelTransSpeed);
             trainLeverActivated.color = leverCurrentColor;
             trainLeverDeactivated.color = leverCurrentColor;
         }
-        else if (trainLeverBtn.state == ButtonState.OnClick)
+        else if (leverBtnState == ButtonState.OnClick)
         {
             FlickLever();
         }
         else 
         {
-            if (trainLeverBtn.state == ButtonState.None)
-                onHover = false;
             Color leverCurrentColor = Color.Lerp(trainLeverActivated.color, leverHoverColor, Time.deltaTime * levelTransSpeed);
             trainLeverActivated.color = leverCurrentColor;
             trainLeverDeactivated.color = leverCurrentColor;
@@ -207,10 +206,10 @@ public class TrainManager: CopiumScript
         accelerate = !accelerate;
         trainLeverActivated.gameObject.SetActive(accelerate);
         trainLeverDeactivated.gameObject.SetActive(!accelerate);
-        audioManager.accelerateSFX.Stop();
-        audioManager.leverSFX.Stop();
-        audioManager.leverSFX.Play();
-        audioManager.leverEngagedSFX.Play();
+        AudioManager.Instance.accelerateSFX.Stop();
+        AudioManager.Instance.leverSFX.Stop();
+        AudioManager.Instance.leverSFX.Play();
+        AudioManager.Instance.leverEngagedSFX.Play();
         if (accelerate)
         {
 			StartTrain();
@@ -240,10 +239,10 @@ public class TrainManager: CopiumScript
         accelerate = _accelerate;
         trainLeverActivated.gameObject.SetActive(accelerate);
         trainLeverDeactivated.gameObject.SetActive(!accelerate);
-        audioManager.accelerateSFX.Stop();
-        audioManager.leverSFX.Stop();
-        audioManager.leverSFX.Play();
-        audioManager.leverEngagedSFX.Play();
+        AudioManager.Instance.accelerateSFX.Stop();
+        AudioManager.Instance.leverSFX.Stop();
+        AudioManager.Instance.leverSFX.Play();
+        AudioManager.Instance.leverEngagedSFX.Play();
         if (accelerate)
         {
             StartTrain();
@@ -264,10 +263,10 @@ public class TrainManager: CopiumScript
 	/**************************************************************************/
     void StartTrain()
 	{       
-		audioManager.ambTrain.Stop();
-        audioManager.ambTrain.Play();
-		audioManager.deccelerateSFX.Stop();
-		audioManager.accelerateSFX.Play();
+		AudioManager.Instance.ambTrain.Stop();
+        AudioManager.Instance.ambTrain.Play();
+		AudioManager.Instance.deccelerateSFX.Stop();
+		AudioManager.Instance.accelerateSFX.Play();
 		targetSnowDelay = snowMinDelay;
 		targetTracksDelay = tracksMinDelay;
 		targetScale = new Vector3(zoomOutScale,zoomOutScale,1);
@@ -281,8 +280,8 @@ public class TrainManager: CopiumScript
 	/**************************************************************************/
 	void StopTrain()
 	{
-		audioManager.accelerateSFX.Stop();
-		audioManager.deccelerateSFX.Play();
+		AudioManager.Instance.accelerateSFX.Stop();
+		AudioManager.Instance.deccelerateSFX.Play();
 		targetSnowDelay = snowMaxDelay;
 		targetTracksDelay = tracksMaxDelay;
 		targetScale = new Vector3(zoomInScale,zoomInScale,1);
@@ -298,6 +297,20 @@ public class TrainManager: CopiumScript
 	{
 		return accelerate;
 	}
+
+	public void DisableInteractions()
+	{
+		if (accelerate)
+		{
+			FlickLever();
+		}
+		leverBtnWrapper.SetInteractable(false);
+	}
+
+	public void EnableInteractions()
+	{
+		leverBtnWrapper.SetInteractable(true);
+	}
 	// Toggle the manual to open or close
     // void ToggleManual()
     // {
@@ -308,12 +321,12 @@ public class TrainManager: CopiumScript
     //             if (!manualHover)
     //             {
     //                 manualHover = true;
-    //                 audioManager.hoverSFX.Play();
+    //                 AudioManager.Instance.hoverSFX.Play();
     //             }
     //         }
     //         else if (ManualBtn.state == ButtonState.OnRelease)
     //         {
-    //             audioManager.paperSFX.Play();
+    //             AudioManager.Instance.paperSFX.Play();
     //             ManualPopUpBtn.gameObject.SetActive(true);
     //             manualHover = true;
     //         }
@@ -329,12 +342,12 @@ public class TrainManager: CopiumScript
     //             if (!manualHover)
     //             {
     //                 manualHover = true;
-    //                 audioManager.hoverSFX.Play();
+    //                 AudioManager.Instance.hoverSFX.Play();
     //             }
     //         }
     //         else if (ManualPopUpBtn.state == ButtonState.OnRelease)
     //         {
-    //             audioManager.paperSFX.Play();
+    //             AudioManager.Instance.paperSFX.Play();
     //             ManualPopUpBtn.gameObject.SetActive(false);
     //             manualHover = true;
     //         }

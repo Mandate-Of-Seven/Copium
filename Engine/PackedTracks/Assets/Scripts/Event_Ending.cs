@@ -11,7 +11,7 @@
 \brief
 	Contains functions needed for the endings of the game
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 using CopiumEngine;
 using System;
@@ -94,42 +94,42 @@ public class Event_Ending: CopiumScript
         if(choice == 1) // All dead
         {
             // Screen fade and audio narration
-            cm.audioManager.endingAllDiedVO.Play();
+            AudioManager.Instance.endingAllDiedVO.Play();
             cm.fader.shouldFade = true;
             EventManager.Body.text = "All crew members are dead...";
         }
         else if(choice == 2) // 2 or 3 alive
         {
             // Audio narration
-            cm.audioManager.endingGenericVO.Play();
+            AudioManager.Instance.endingGenericVO.Play();
             EventManager.Body.text = "The city seems very tiny to me.\nFor what reason are they firing onto us?!\n" +
                 "They must be making an extreme effort to halt the train.\n\nOH NO!";
         }
         else if (choice == 3) // Harris alive
         {
             // Audio narration
-            cm.audioManager.endingHarrisVO.Play();
+            AudioManager.Instance.endingHarrisVO.Play();
             EventManager.Body.text = "Harris, while being disturbed by the event, seems positive and eager to go with the task\n" +
                 "I'll provide an update once we've reached the city.";
         }
         else if (choice == 4) // Bronson alive
         {
             // Audio narration
-            cm.audioManager.endingBronsonVO.Play();
+            AudioManager.Instance.endingBronsonVO.Play();
             EventManager.Body.text = "While it seems that the mission was successful, Bronson is having a hard time adjusting " +
                 "to the loss of the other members of the crew. \n\nBronson: \"ITS ALL UR FAULT!\"\n\nh....h...e....l......p...";
         }
         else if (choice == 5) // Chuck alive
         {
             // Audio narration
-            cm.audioManager.endingChuckVO.Play();
+            AudioManager.Instance.endingChuckVO.Play();
             EventManager.Body.text = "It seems that the operation was successful. The loss of the crew members doesn't appear to" +
                 " be affecting Chuck too much.\n\n\nChuck: \"Sorry cap, but the reward money is " + "all mine\"";
         }
         else if (choice == 6) // Danton alive
         {
             // Audio narration
-            cm.audioManager.endingDantonVO.Play();
+            AudioManager.Instance.endingDantonVO.Play();
             EventManager.Body.text = "It seems that the operation was successful. Is Danton doing well? I hope he is coping " +
                 "with the loss of the crew.";
         }

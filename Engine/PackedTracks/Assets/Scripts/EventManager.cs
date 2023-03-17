@@ -231,6 +231,7 @@ public class EventManager: CopiumScript
 	/**************************************************************************/
     void ShowResolution()
     {
+        
         ShowingMainEvent = false;
         Option_01.ResetOption();
         Option_02.ResetOption();

@@ -183,6 +183,7 @@ public class GameManager: CopiumScript
                 // Only update event if distance per event is activated
                 if (distanceLeft % distancePerEvent < 1.0f && !updateEvent)
                 {
+                    DisableInteractions();
                     // Show notifications (Visual & Audio)
                     reportScreenManager.alert.enabled = true;
                     crewStatusManager.alert.enabled = true;
@@ -275,5 +276,13 @@ public class GameManager: CopiumScript
         prevButtonObject.SetActive(false);
 
         htpmScript.page = 1;
+    }
+
+    public void DisableInteractions()
+    {
+        trainManager.DisableInteractions();
+        crewStatusManager.DisableInteractions();
+        resultManager.DisableInteractions();
+        reportScreenManager.DisableInteractions();
     }
 }

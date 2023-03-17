@@ -149,6 +149,8 @@ namespace Copium
 			std::string fieldName = mono_field_get_name(field);
 			//PRINT("\tField: " << fieldName);
 			uint32_t flags = mono_field_get_flags(field);
+			if (flags & FIELD_ATTRIBUTE_STATIC || flags & FIELD_ATTRIBUTE_NOT_SERIALIZED)
+				continue;
 			if (flags & FIELD_ATTRIBUTE_PUBLIC)
 			{
 				MonoType* type = mono_field_get_type(field);

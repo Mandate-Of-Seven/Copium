@@ -45,7 +45,7 @@ public class Event_02: CopiumScript
         if (!effectTriggered)
         {
             EventManager.Body.text = "The door on the back of the train opens...";
-            trainManager.audioManager.gunfireSFX.Play();
+            AudioManager.Instance.gunfireSFX.Play();
             effectTriggered = true;
         }
         if (state == 1)
@@ -127,7 +127,7 @@ public class Event_02: CopiumScript
         {
             if (choice == 1)
             {
-                cm.audioManager.ending2aVO.Play();
+                AudioManager.Instance.ending2aVO.Play();
                 EventManager.Body.text = "This mission was a set up!\n\nWe where sent out to die!\n\nNo... NO, Please!";
 
                 EventManager.EventSequence = -3;

@@ -33,21 +33,18 @@ public class ButtonWrapper
 	Color buttonOriginalHoverColor;
 	Color buttonOriginalClickedColor;
 
-    TooltipBehaviour tooltip;
+    
 
 	public string failureText;
 
-	public ButtonWrapper(Button _button, AudioManager _audioManager, TooltipBehaviour _tooltip)
+	public ButtonWrapper(Button _button)
 	{
 	 	button = _button;
 		buttonOriginalHoverColor = button.hoverColor;
 		buttonOriginalClickedColor = button.clickedColor;
-		audioManager = _audioManager;
 		interactable = true;
-		tooltip = _tooltip;
 	}
 
-	AudioManager audioManager;
 	Button button;
 	Image image;
 	Text text;
@@ -137,7 +134,7 @@ public class ButtonWrapper
 				}
 				else
 				{
-					audioManager.hoverSFX.Play();
+					AudioManager.Instance.hoverSFX.Play();
 				}
 			}
         }
@@ -150,8 +147,9 @@ public class ButtonWrapper
 					failedSFX.Play();
 				}
 				else
-					audioManager.failedSFX.Play();
-				tooltip.AddText(failureText);
+					AudioManager.Instance.failedSFX.Play();
+				if (failureText != null && failureText.Length != 0)
+					TooltipBehaviour.Instance.AddText(failureText);
 				return ButtonState.None;
 			}
 			if (clickedSFX != null)
@@ -160,7 +158,7 @@ public class ButtonWrapper
 			}
 			else
 			{
-				audioManager.clickSFX.Play();
+				AudioManager.Instance.clickSFX.Play();
 			}
         }
 		else if (button.state == ButtonState.OnRelease)

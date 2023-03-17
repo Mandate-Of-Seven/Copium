@@ -10,7 +10,7 @@
 \brief
 	Handles feedback and opening of crew status panel
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 using CopiumEngine;
@@ -19,14 +19,9 @@ using System;
 public class CrewStatusManager: CopiumScript
 {
 	public bool isCrewStatusOn = false;
-	public AudioManager audioManager;
-    
     public Button CloseCrewStatusBtn;
 	public Button CrewStatusBtn;
     public ResultManager resultManager;
-
-	public TooltipBehaviour tooltip;
-
 
     ButtonWrapper CloseCrewStatusBtnWrapper;
 	ButtonWrapper CrewStatusBtnWrapper;
@@ -44,10 +39,11 @@ public class CrewStatusManager: CopiumScript
 
 	void Start()
 	{
-		CloseCrewStatusBtnWrapper = new ButtonWrapper(CloseCrewStatusBtn,audioManager, tooltip);
+		CloseCrewStatusBtnWrapper = new ButtonWrapper(CloseCrewStatusBtn);
 		CloseCrewStatusBtnWrapper.SetImage(CloseCrewStatusBtn.GetComponent<Image>());
-		CrewStatusBtnWrapper = new ButtonWrapper(CrewStatusBtn,audioManager,tooltip	);
+		CrewStatusBtnWrapper = new ButtonWrapper(CrewStatusBtn);
 		CrewStatusBtnWrapper.SetImage(CrewStatusBtn.GetComponent<Image>());
+		CrewStatusBtnWrapper.failureText = Messages.Instance.ErrorMainEvent;
 	}
 
 	void Update()
@@ -89,6 +85,7 @@ public class CrewStatusManager: CopiumScript
         CrewStatusBtn.gameObject.SetActive(false);
         CrewStatusTab.transform.parent = null;
     }
+
     public void ClosePanel(bool prepared)
 	{
 		crewMenu.timeElasped = 0;
@@ -107,4 +104,12 @@ public class CrewStatusManager: CopiumScript
         CrewStatusBtn.gameObject.SetActive(true);
 		CrewStatusTab.transform.parent = parent.transform;
 	}
+
+	public void DisableInteractions()
+	{
+		ClosePanel(false);
+		CrewStatusBtnWrapper.SetInteractable(false);
+	}
+
+	
 }

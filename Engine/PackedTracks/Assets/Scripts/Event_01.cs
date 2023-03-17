@@ -11,7 +11,7 @@
 \brief
 	This script has event 1 of the game.
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 using CopiumEngine;
 using System;
@@ -25,6 +25,7 @@ public class Event_01: CopiumScript
     public CameraShakeEffect cameraShakeEffect;
     public ExplosionEffect explosionEffect;
     public TrainManager trainManager;
+    public StringTypeWriterEffect bodyTypeWriter;
     bool effectTriggered = false;
     float timerElasped = 0f;
     public float shakeTime = 5f;
@@ -51,14 +52,23 @@ public class Event_01: CopiumScript
 	{
         if (!effectTriggered)
         {
-            Debug.Log("ELASPED!");
+            bodyTypeWriter = new StringTypeWriterEffect("",Messages.Instance.PreEvent01,0.01f);
             if (trainManager.IsAccelerating())
                 trainManager.FlickLever();
-            cameraShakeEffect.Trigger();
-            explosionEffect.Trigger();
             effectTriggered = true;
         }
         if (state == 1)
+        {
+            EventManager.Body.text = bodyTypeWriter.Write();
+            if (bodyTypeWriter.Done())
+            {
+                cameraShakeEffect.Trigger();
+                explosionEffect.Trigger();
+                ++state;
+            }
+            return;
+        }
+        else if (state == 2)
         {
             if (timerElasped < shakeTime)
             {
@@ -72,7 +82,7 @@ public class Event_01: CopiumScript
             }
             return;
         }
-        else if (state == 2)
+        else if (state == 3)
         {
             if (timerElasped < eyesTime)
             {
