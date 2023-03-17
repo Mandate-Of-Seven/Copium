@@ -147,7 +147,6 @@ namespace Copium
 		while (MonoClassField* field = mono_class_get_fields(mClass, &iterator))
 		{
 			std::string fieldName = mono_field_get_name(field);
-			//PRINT("\tField: " << fieldName);
 			uint32_t flags = mono_field_get_flags(field);
 			if (flags & FIELD_ATTRIBUTE_STATIC || flags & FIELD_ATTRIBUTE_NOT_SERIALIZED)
 				continue;
@@ -159,29 +158,6 @@ namespace Copium
 				if (fieldType != FieldType::None)
 				{
 					mFields[fieldName] = field;
-				}
-				else
-				{
-					//PRINT("\tField: " << fieldName << "is NONE:" << mono_type_get_name(type));
-					//static std::string typeName;
-					//typeName = mono_type_get_name(type);
-					//fieldType = FieldType::Component;
-					////C# List
-					////if (typeName.find_first_of("System.Collections.Generic.List<") == 0)
-					////{
-					////	typeName = typeName.substr(32);
-					////	typeName.pop_back();
-					////}
-
-					//auto it = fieldTypeMap.find(typeName);
-					////Type that is in the fieldTypeMap
-					//if (it != fieldTypeMap.end())
-					//{
-					//	fieldType = (*it).second;
-					//}
-
-					////PRINT("COMPONENT TYPE: " << fieldName);
-					//mFields[fieldName] = field;
 				}
 			}
 		}

@@ -52,9 +52,7 @@ public class Event_01: CopiumScript
 	{
         if (!effectTriggered)
         {
-            bodyTypeWriter = new StringTypeWriterEffect("",Messages.Instance.PreEvent01,0.01f);
-            if (trainManager.IsAccelerating())
-                trainManager.FlickLever();
+            bodyTypeWriter = new StringTypeWriterEffect("",Messages.Instance.PreEvent01,0.05f);
             effectTriggered = true;
         }
         if (state == 1)
@@ -62,13 +60,26 @@ public class Event_01: CopiumScript
             EventManager.Body.text = bodyTypeWriter.Write();
             if (bodyTypeWriter.Done())
             {
-                cameraShakeEffect.Trigger();
                 explosionEffect.Trigger();
                 ++state;
             }
             return;
         }
         else if (state == 2)
+        {
+            if (timerElasped < 1f)
+            {
+                timerElasped+=Time.deltaTime;
+            }
+            else
+            {
+                timerElasped = 0;
+                cameraShakeEffect.Trigger();
+                ++state;
+            }
+            return;
+        }
+        else if (state == 3)
         {
             if (timerElasped < shakeTime)
             {
@@ -82,7 +93,7 @@ public class Event_01: CopiumScript
             }
             return;
         }
-        else if (state == 3)
+        else if (state == 4)
         {
             if (timerElasped < eyesTime)
             {

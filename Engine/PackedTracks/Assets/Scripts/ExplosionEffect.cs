@@ -51,15 +51,14 @@ public class ExplosionEffect: CopiumScript
 	{
 		if (!playing)
 			return;
-		float alpha = 1f; 
+		float alpha = 0f; 
 
 		if (timeElasped < breakpoint)
 		{
-			alpha = Mathf.Lerp(0,1,timeElasped/breakpoint);
 		}
 		else if (timeElasped < waitpoint)
 		{
-
+			alpha = Mathf.Lerp(0,1,timeElasped/waitpoint);
 		}
 		else if (timeElasped < duration)
 		{
