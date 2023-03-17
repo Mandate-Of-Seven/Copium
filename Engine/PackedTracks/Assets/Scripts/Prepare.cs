@@ -54,7 +54,7 @@ public class Prepare : CopiumScript
     public GameObject prepareCanvas;
 
 
-    public Person currentCrewmate;
+    public Person[] currentCrewmate;
     public bool makeChoice;
     public int eventNum;
     public int choice;
@@ -108,6 +108,7 @@ public class Prepare : CopiumScript
             }
         }
 
+        /*
         if (harrisBtnWrapper.GetState() == ButtonState.OnClick)
         {
             resultText.text = crewManager.crew[0].resultText;
@@ -124,6 +125,7 @@ public class Prepare : CopiumScript
         {
             resultText.text = crewManager.crew[3].resultText;
         }
+        */
     }
 
 
@@ -133,10 +135,9 @@ public class Prepare : CopiumScript
 		    Generates a random event for the target crewmate
 	*/
     /*******************************************************************************/
-    public void GenerateEvents(Person crewmate)
+    public void GenerateEvents(Person[] crewmate)
     {
         currentCrewmate = crewmate;
-        currentCrewmate.resultText = "";
         prepareCanvas.SetActive(true);
         
         prepareChoices.SetActive(true);
@@ -145,37 +146,34 @@ public class Prepare : CopiumScript
         prepareOption1.gameObject.SetActive(false);
         prepareOption2.gameObject.SetActive(false);
         makeChoice = true;
-        
-        switch (crewmate.name)
+
+        harrisPotrait.SetActive(false);
+        bronsonPotrait.SetActive(false);
+        chuckPotrait.SetActive(false);
+        dantonPotrait.SetActive(false);
+
+        for (int i = 0; i < crewmate.Length; i++)
         {
-            case "Harris":
-                Console.WriteLine("\n\n\nharris");
+            if (crewmate[i] == null)
+            {
+                break;
+            }
+            if (crewmate[i].name =="Harris")
+            {
                 harrisPotrait.SetActive(true);
-                bronsonPotrait.SetActive(false); 
-                chuckPotrait.SetActive(false); 
-                dantonPotrait.SetActive(false);
-                break;
-            case "Bronson":
-                Console.WriteLine("\n\n\n not harris");
-                harrisPotrait.SetActive(false);
+            }
+            else if (crewmate[i].name == "Bronson")
+            {
                 bronsonPotrait.SetActive(true);
-                chuckPotrait.SetActive(false);
-                dantonPotrait.SetActive(false);
-                break;
-            case "Chuck":
-                harrisPotrait.SetActive(false);
-                bronsonPotrait.SetActive(false);
+            }
+            else if (crewmate[i].name == "Chuck")
+            {
                 chuckPotrait.SetActive(true);
-                dantonPotrait.SetActive(false);
-                break;
-            case "Danton":
-                harrisPotrait.SetActive(false);
-                bronsonPotrait.SetActive(false);
-                chuckPotrait.SetActive(false);
+            }
+            else if (crewmate[i].name == "Danton")
+            {
                 dantonPotrait.SetActive(true);
-                break;
-            default:
-                break;
+            }
         }
         
         eventNum = RNG.Range(1,14);
@@ -183,7 +181,7 @@ public class Prepare : CopiumScript
         switch (eventNum)
         {
             case 1:
-                prepareBody.text = crewmate.name + " stumbled across a mysterious igloo, knowing that it is near impossible to " +
+                prepareBody.text = "The crew" + " stumbled across a mysterious igloo, knowing that it is near impossible to " +
                                    "live in these harsh conditions, igloos are a rare sight.";
                 prepareOption1.gameObject.SetActive(true);
                 prepareOption2.gameObject.SetActive(true);
@@ -193,8 +191,8 @@ public class Prepare : CopiumScript
             
 
             case 2:
-                prepareBody.text = "While scavanging through the icy waste land, " + crewmate.name + " encountered a polar bear, the polar " +
-                                    "bear bear its fangs at " + crewmate.name + ". It looks hungry and ready to attack.";
+                prepareBody.text = "While scavanging through the icy waste land, " + "the crew" + " encountered a polar bear, the polar " +
+                                    "bear bear its fangs at " + "the crew" + ". It looks hungry and ready to attack.";
                 prepareOption1.gameObject.SetActive(true);
                 prepareOption2.gameObject.SetActive(true);
                 prepareOption1.text = "Run!";
@@ -203,11 +201,11 @@ public class Prepare : CopiumScript
 
             case 3:
                 prepareBody.text = "The search went poorly, in the poor icy conditions and limited visibility, " +
-                                    crewmate.name+" seems to have gotten lost as he could not be seen returning to the meet up point. ";
+                                    "the crew"+" seems to have gotten lost as he could not be seen returning to the meet up point. ";
                 prepareOption1.gameObject.SetActive(true);
                 prepareOption2.gameObject.SetActive(true);
-                prepareOption1.text = "Search for " + crewmate.name;
-                prepareOption2.text = "Wait a bit longer and hope for " + crewmate.name +" to return";
+                prepareOption1.text = "Search for " + "the crew";
+                prepareOption2.text = "Wait a bit longer and hope for " + "the crew" +" to return";
                 break;
             case 4:
                 prepareBody.text = "A abandoned town was spotted not far from the train, there might be some supplies left in the town, " +
@@ -218,7 +216,7 @@ public class Prepare : CopiumScript
                 prepareOption2.text = "Too dangerous, leave the town alone";
                 break;
             case 5:
-                prepareBody.text = "While searching for resources "+crewmate.name
+                prepareBody.text = "While searching for resources "+"the crew"
                                     + " found a man in poor condition and seems to be passed out, he does not look like he " +
                                     "will survive any longer out in the cold.";
                 prepareOption1.gameObject.SetActive(true);
@@ -227,54 +225,54 @@ public class Prepare : CopiumScript
                 prepareOption2.text = "Take the man's belongings and supplies";
                 break;
             case 6:
-                prepareBody.text = crewmate.name + "Manage to caught sight of of a injured deer together with her fawn.";
+                prepareBody.text = "the crew" + "Manage to caught sight of of a injured deer together with her fawn.";
                 prepareOption1.gameObject.SetActive(true);
                 prepareOption2.gameObject.SetActive(true);
                 prepareOption1.text = "Kill the deer for food";
                 prepareOption2.text = "Leave the deer alone";
                 break;
             case 7:
-                prepareBody.text = "Not too far from the train "+ crewmate.name + "found a flowing river, the river might contain some fish inside.";
+                prepareBody.text = "Not too far from the train "+ "the crew" + "found a flowing river, the river might contain some fish inside.";
                 prepareOption1.gameObject.SetActive(true);
                 prepareOption1.text = "Go fishing";
                 break;
             case 8:
-                prepareBody.text = "In the thick snow, " + crewmate.name + " miraculously found some firewood covered underneath a tarp.";
+                prepareBody.text = "In the thick snow, " + "the crew" + " miraculously found some firewood covered underneath a tarp.";
                 prepareOption1.gameObject.SetActive(true);
                 prepareOption1.text = "Continue";
                 break;
             case 9:
-                prepareBody.text = crewmate.name + " was trying to find some supplies when he saw a bunch of edible mushrooms growing on a rotting wood.";
+                prepareBody.text = "the crew" + " was trying to find some supplies when he saw a bunch of edible mushrooms growing on a rotting wood.";
                 prepareOption1.gameObject.SetActive(true);
                 prepareOption1.text = "Continue";
                 break;
             case 10:
-                prepareBody.text = crewmate.name + " manage to spot a old road from a far and there seem to be a few abandoned vehicles on it, " +
+                prepareBody.text = "the crew" + " manage to spot a old road from a far and there seem to be a few abandoned vehicles on it, " +
                                     "there might be some fuel that was left in the vehicle's tanks.";
                 prepareOption1.gameObject.SetActive(true);
                 prepareOption1.text = "Siphon the fuel";
                 break;
             case 11:
-                prepareBody.text = "Due to poor visibility and the icy conditions, " + crewmate.name +
+                prepareBody.text = "Due to poor visibility and the icy conditions, " + "the crew" +
                     " accidentally tripped and lost the supplies he was carrying on him.";
                 prepareOption1.gameObject.SetActive(true);
                 prepareOption1.text = "Continue";
                 break;
             case 12:
-                prepareBody.text = "While exploring a shallow cave near the train a frost quake occured, disorientating " + crewmate.name +
+                prepareBody.text = "While exploring a shallow cave near the train a frost quake occured, disorientating " + "the crew" +
                     " causing him to fall and hit his head on the walls, suffering minor brain damage.";
                 prepareOption1.gameObject.SetActive(true);
                 prepareOption1.text = "Continue";
                 break;
             case 13:
-                prepareBody.text = "While " + crewmate.name + " was walking across a frozen river, he did not notice a patch of " +
+                prepareBody.text = "While " + "the crew" + " was walking across a frozen river, he did not notice a patch of " +
                                    "thin ice and fell into the river, in a desperate attempt to get out and back to the train," +
-                                    crewmate.name+" lost his supplies he was carrying with him.";
+                                    "the crew"+" lost his supplies he was carrying with him.";
                 prepareOption1.gameObject.SetActive(true);
                 prepareOption1.text = "Continue";
                 break;
             case 14:
-                prepareBody.text = "While searching for resources " + crewmate.name + " chanced acrossed 2 Syberian wolves, they seem hungry and " +
+                prepareBody.text = "While searching for resources " + "the crew" + " chanced acrossed 2 Syberian wolves, they seem hungry and " +
                                    "desperate for food and were ready to attack";
                 prepareOption1.gameObject.SetActive(true);
                 prepareOption2.gameObject.SetActive(true);
@@ -301,26 +299,26 @@ public class Prepare : CopiumScript
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(5);
-                    currentCrewmate.resultText = "Upon entering the igloo, " + currentCrewmate.name + " sees a well preserved human corpse. " +
-                                                 "Luckily there was still some dried frozen meat, " + currentCrewmate.name +
+                    currentCrewmate[0].resultText = "Upon entering the igloo, " + currentCrewmate[0].name + " sees a well preserved human corpse. " +
+                                                 "Luckily there was still some dried frozen meat, " + currentCrewmate[0].name +
                                                  " took the meat and left the igloo.";
                 }
                 else if (choice == 2)
                 {
-                    currentCrewmate.resultText = "Knowing that it might be a trap, " + currentCrewmate.name  +
+                    currentCrewmate[0].resultText = "Knowing that it might be a trap, " + currentCrewmate[0].name  +
                                                  " decided to leave the igloo alone and head back to the train.";
                 }
                 break;
             case 2:
                 if (choice == 1)
                 {
-                    currentCrewmate.resultText = currentCrewmate.name + " bolted away from the polar bear back to safe confines of the train. ";
+                    currentCrewmate[0].resultText = currentCrewmate[0].name + " bolted away from the polar bear back to safe confines of the train. ";
                 }
                 else if (choice == 2)
                 {
                     crewManager.ChangeSupplies(10);
-                    crewManager.ChangeCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate.name, -1);
-                    currentCrewmate.resultText = currentCrewmate.name + " suffered some injuries but managed to kill the polar bear, " +
+                    crewManager.ChangeCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate[0].name, -1);
+                    currentCrewmate[0].resultText = currentCrewmate[0].name + " suffered some injuries but managed to kill the polar bear, " +
                                                    "and gain some valuable food.";
                 }
                 break;
@@ -328,32 +326,32 @@ public class Prepare : CopiumScript
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(-3);
-                    currentCrewmate.resultText = "After hours of searching, " + currentCrewmate.name + " was found alive but worse for wear, " +
+                    currentCrewmate[0].resultText = "After hours of searching, " + currentCrewmate[0].name + " was found alive but worse for wear, " +
                                                  "he was safely brought back to the train.";
                 }
                 else if (choice == 2)
                 {
                     crewManager.ChangeSupplies(10);
-                    crewManager.SetCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate.name, 1);
-                    currentCrewmate.resultText = "Just as hope seemed all lost for " + currentCrewmate.name +
+                    crewManager.SetCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate[0].name, 1);
+                    currentCrewmate[0].resultText = "Just as hope seemed all lost for " + currentCrewmate[0].name +
                                                 " to make it back, he stumbles out from the bushes grasping a few cans of soup. " +
-                                                currentCrewmate.name + " seems to be in bad condition and his extremities have succumbed to frostbite.";
+                                                currentCrewmate[0].name + " seems to be in bad condition and his extremities have succumbed to frostbite.";
                 }
                 break;
             case 4:
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(3);
-                    crewManager.SetCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate.name, 1);
-                    currentCrewmate.resultText = "While scavanging through the abandoned town, " +
-                                                 currentCrewmate.name + " saw some canned food and bottles of water lying in a building. " +
+                    crewManager.SetCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate[0].name, 1);
+                    currentCrewmate[0].resultText = "While scavanging through the abandoned town, " +
+                                                 currentCrewmate[0].name + " saw some canned food and bottles of water lying in a building. " +
                                                  "When he went to pick it up, he bumped into another scavenger, who promptly stabbed " +
-                                                 currentCrewmate.name + " in the abdomen. "+currentCrewmate.name+" grabbed a metal pipe on the " +
+                                                 currentCrewmate[0].name + " in the abdomen. "+ currentCrewmate[0].name+" grabbed a metal pipe on the " +
                                                  "floor and swung at the scavengers's head, knocking him unconscious, before hurrying off with the supplies.";
                 }
                 else if (choice == 2)
                 {
-                    currentCrewmate.resultText = "As the crew was leaving, they notice a group of armed scavengers running around the area, " +
+                    currentCrewmate[0].resultText = "As the crew was leaving, they notice a group of armed scavengers running around the area, " +
                                                  "Bullet sounds could be heard in the distance.";
                 }
                 break;
@@ -361,13 +359,13 @@ public class Prepare : CopiumScript
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(5);
-                    currentCrewmate.resultText = currentCrewmate.name + " said his prayers before putting his knife to the man's throat, killing him. " +
-                                                 currentCrewmate.name+" then took the man's supplies and skinned him, cutting him up for meat to be consumed.";
+                    currentCrewmate[0].resultText = currentCrewmate[0].name + " said his prayers before putting his knife to the man's throat, killing him. " +
+                                                 currentCrewmate[0].name+" then took the man's supplies and skinned him, cutting him up for meat to be consumed.";
                 }
                 else if (choice == 2)
                 {
                     crewManager.ChangeSupplies(2);
-                    currentCrewmate.resultText = currentCrewmate.name +" knocks the man unconscious, proceeds to take his supplies and left him in the " +
+                    currentCrewmate[0].resultText = currentCrewmate[0].name +" knocks the man unconscious, proceeds to take his supplies and left him in the " +
                                                  "snow before returning to the train.";
                 }
                 break;
@@ -375,12 +373,12 @@ public class Prepare : CopiumScript
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(3);
-                    currentCrewmate.resultText = currentCrewmate.name + " took aim and shot at the deer, killing it in an instant, its confused fawn could only stand and stare as " +
-                                                 currentCrewmate.name + "  skinned and carved the deer for its meat and fur.";
+                    currentCrewmate[0].resultText = currentCrewmate[0].name + " took aim and shot at the deer, killing it in an instant, its confused fawn could only stand and stare as " +
+                                                 currentCrewmate[0].name + "  skinned and carved the deer for its meat and fur.";
                 }
                 else if (choice == 2)
                 {
-                    currentCrewmate.resultText = "As "+ currentCrewmate.name + " walked away, a large polar bear jumped out of the surrounding bushes " +
+                    currentCrewmate[0].resultText = "As "+ currentCrewmate[0].name + " walked away, a large polar bear jumped out of the surrounding bushes " +
                                                  "killing both the deer and her fawn in an instant.";
                 }
                 break;
@@ -388,63 +386,63 @@ public class Prepare : CopiumScript
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(3);
-                    currentCrewmate.resultText = currentCrewmate.name + " caught some fish.";
+                    currentCrewmate[0].resultText = currentCrewmate[0].name + " caught some fish.";
                 }
                 break;
             case 8:
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(2);
-                    currentCrewmate.resultText = currentCrewmate.name + " found some firewood.";
+                    currentCrewmate[0].resultText = currentCrewmate[0].name + " found some firewood.";
                 }
                 break;
             case 9:
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(2);
-                    currentCrewmate.resultText = currentCrewmate.name + " found some mushrooms.";
+                    currentCrewmate[0].resultText = currentCrewmate[0].name + " found some mushrooms.";
                 }
                 break;
             case 10:
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(2);
-                    currentCrewmate.resultText = currentCrewmate.name + " siphoned some fuel from some abandoned vehicles.";
+                    currentCrewmate[0].resultText = currentCrewmate[0].name + " siphoned some fuel from some abandoned vehicles.";
                 }
                 break;
             case 11:
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(-2);
-                    currentCrewmate.resultText = currentCrewmate.name + " tripped and lost some supplies.";
+                    currentCrewmate[0].resultText = currentCrewmate[0].name + " tripped and lost some supplies.";
                 }
                 break;
             case 12:
                 if (choice == 1)
                 {
-                    crewManager.ChangeCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate.name, -1);
-                    currentCrewmate.resultText = currentCrewmate.name + " fell and hit his head which resulted in minor injuries";
+                    crewManager.ChangeCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate[0].name, -1);
+                    currentCrewmate[0].resultText = currentCrewmate[0].name + " fell and hit his head which resulted in minor injuries";
                 }
                 break;
             case 13:
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(-1);
-                    currentCrewmate.resultText = currentCrewmate.name + " lost some supplies";
+                    currentCrewmate[0].resultText = currentCrewmate[0].name + " lost some supplies";
                 }
                 break;
             case 14:
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(-3);
-                    currentCrewmate.resultText = currentCrewmate.name + " gave their rations to the hungry wolves, it seems like the wolves have taken a " +
+                    currentCrewmate[0].resultText = currentCrewmate[0].name + " gave their rations to the hungry wolves, it seems like the wolves have taken a " +
                                                 "liking to the crew and have started following them around.";
                 }
                 else if (choice == 2)
                 {
                     crewManager.ChangeSupplies(2);
-                    currentCrewmate.resultText = "The wolves jumped at " + currentCrewmate.name + ", attacking and trying to bite him. " +
-                                                 currentCrewmate.name + " seeing no other option, killed both wolves and proceeded to skin and gather their meat for food.";
+                    currentCrewmate[0].resultText = "The wolves jumped at " + currentCrewmate[0].name + ", attacking and trying to bite him. " +
+                                                 currentCrewmate[0].name + " seeing no other option, killed both wolves and proceeded to skin and gather their meat for food.";
                 }
                 break;
             default:
@@ -452,32 +450,40 @@ public class Prepare : CopiumScript
         }
 
         choice = 0;
-        switch (currentCrewmate.name)
+        for (int i = 0; i < currentCrewmate.Length; i++)
         {
-            case "Harris":
-                harris.isDeployed= false;
-                harris.Disable();
-                crewManager.crew[0] = currentCrewmate;
+            if (currentCrewmate[i] == null)
+            {
                 break;
-            case "Bronson":
-                bronson.isDeployed = false;
-                bronson.Disable();
-                crewManager.crew[1] = currentCrewmate;
-                break;
-            case "Chuck":
-                chuck.isDeployed= false;
-                chuck.Disable();
-                crewManager.crew[2] = currentCrewmate;
-                break;
-            case "Danton":
-               danton.isDeployed= false;
-                danton.Disable();
-                crewManager.crew[3] = currentCrewmate;
-                break;
-            default
-                : break;
+            }
+            switch (currentCrewmate[i].name)
+            {
+                case "Harris":
+                    harris.isDeployed = false;
+                    harris.Disable();
+                    crewManager.crew[0] = currentCrewmate[i];
+                    break;
+                case "Bronson":
+                    bronson.isDeployed = false;
+                    bronson.Disable();
+                    crewManager.crew[1] = currentCrewmate[i];
+                    break;
+                case "Chuck":
+                    chuck.isDeployed = false;
+                    chuck.Disable();
+                    crewManager.crew[2] = currentCrewmate[i];
+                    break;
+                case "Danton":
+                    danton.isDeployed = false;
+                    danton.Disable();
+                    crewManager.crew[3] = currentCrewmate[i];
+                    break;
+                default
+                :
+                    break;
+            }
         }
-        crewManager.StartPrepare();
+        //crewManager.StartPrepare();
 
         if (!harris.isDeployed && !bronson.isDeployed && !chuck.isDeployed && !danton.isDeployed)
         {
@@ -499,11 +505,7 @@ public class Prepare : CopiumScript
         prepareChoices.SetActive(false);
         prepareFinal.SetActive(true);
 
-        // harrisButton.gameObject.SetActive(false);
-        // bronsonButton.gameObject.SetActive(false);
-        // chuckButton.gameObject.SetActive(false);
-        // dantonButton.gameObject.SetActive(false);
-
+        resultText.text = currentCrewmate[0].resultText;
         if (!crewManager.hDeploy)
         {
             if(crewManager.harris.person.alive)
