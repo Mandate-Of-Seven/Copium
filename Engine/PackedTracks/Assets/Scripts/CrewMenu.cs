@@ -295,6 +295,7 @@ public class CrewMenu: CopiumScript
     public void ChangeSupplies(int amount)
     {
         // Bean: Visually show the supply reducing
+        prepareManager.suppliesChangedAmount = amount;
 
         if (!storageComparment)
         {

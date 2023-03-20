@@ -57,5 +57,6 @@ namespace CopiumEngine
         static public Color red = new Color(1f, 0f, 0f, 1f);
         static public Color white = new Color(1f, 1f, 1f, 1f);
         static public Color gray = new Color(.5f, .5f, .5f, 1f);
+        static public Color green = new Color(0f, 1f, 0f, 1f);
     }
 }

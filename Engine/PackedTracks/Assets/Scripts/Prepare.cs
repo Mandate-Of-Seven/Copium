@@ -28,6 +28,9 @@ public class Prepare : CopiumScript
     public Text prepareOption1;
     public Text prepareOption2;
 
+    public Text suppliesChanged;
+    public int suppliesChangedAmount;
+
     public Crew harris;
     public Crew bronson;
     public Crew chuck;
@@ -52,6 +55,15 @@ public class Prepare : CopiumScript
     public GameObject prepareChoices;
     public GameObject prepareFinal;
     public GameObject prepareCanvas;
+
+    public GameObject HHarrow;
+    public GameObject HMarrow;
+    public GameObject BHarrow;
+    public GameObject BMarrow;
+    public GameObject CHarrow;
+    public GameObject CMarrow;
+    public GameObject DHarrow;
+    public GameObject DMarrow;
 
 
     public Person[] currentCrewmate;
@@ -293,32 +305,47 @@ public class Prepare : CopiumScript
     /*******************************************************************************/
     public void GenerateResults()
     {
+        HHarrow.SetActive(false);
+        HMarrow.SetActive(false);
+        BHarrow.SetActive(false);
+        BMarrow.SetActive(false);
+        CHarrow.SetActive(false);
+        CMarrow.SetActive(false);
+        DHarrow.SetActive(false);
+        DMarrow.SetActive(false);
+
+        int randomCrewmate = RNG.Range(0, currentCrewmate.Length - 1);
+        Console.WriteLine(randomCrewmate);
+
+
+        //always use currentCrewmate[0].resultText cause there has to be at least 1 deployed. The name can be currentCrewmate[randomCrewmate].name
         switch (eventNum)
         {
             case 1:
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(5);
-                    currentCrewmate[0].resultText = "Upon entering the igloo, " + currentCrewmate[0].name + " sees a well preserved human corpse. " +
-                                                 "Luckily there was still some dried frozen meat, " + currentCrewmate[0].name +
+                    currentCrewmate[0].resultText = "Upon entering the igloo, " + currentCrewmate[randomCrewmate].name + " sees a well preserved human corpse. " +
+                                                 "Luckily there was still some dried frozen meat, " + currentCrewmate[randomCrewmate].name +
                                                  " took the meat and left the igloo.";
                 }
                 else if (choice == 2)
                 {
-                    currentCrewmate[0].resultText = "Knowing that it might be a trap, " + currentCrewmate[0].name  +
+                    currentCrewmate[0].resultText = "Knowing that it might be a trap, " + currentCrewmate[randomCrewmate].name  +
                                                  " decided to leave the igloo alone and head back to the train.";
                 }
                 break;
             case 2:
                 if (choice == 1)
                 {
-                    currentCrewmate[0].resultText = currentCrewmate[0].name + " bolted away from the polar bear back to safe confines of the train. ";
+                    currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " bolted away from the polar bear back to safe confines of the train. ";
                 }
                 else if (choice == 2)
                 {
                     crewManager.ChangeSupplies(10);
-                    crewManager.ChangeCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate[0].name, -1);
-                    currentCrewmate[0].resultText = currentCrewmate[0].name + " suffered some injuries but managed to kill the polar bear, " +
+                    crewManager.ChangeCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate[randomCrewmate].name, -1);
+                    changeSummaryArrow(false,true, currentCrewmate[randomCrewmate]);
+                    currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " suffered some injuries but managed to kill the polar bear, " +
                                                    "and gain some valuable food.";
                 }
                 break;
@@ -326,27 +353,29 @@ public class Prepare : CopiumScript
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(-3);
-                    currentCrewmate[0].resultText = "After hours of searching, " + currentCrewmate[0].name + " was found alive but worse for wear, " +
+                    currentCrewmate[0].resultText = "After hours of searching, " + currentCrewmate[randomCrewmate].name + " was found alive but worse for wear, " +
                                                  "he was safely brought back to the train.";
                 }
                 else if (choice == 2)
                 {
                     crewManager.ChangeSupplies(10);
-                    crewManager.SetCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate[0].name, 1);
-                    currentCrewmate[0].resultText = "Just as hope seemed all lost for " + currentCrewmate[0].name +
+                    crewManager.SetCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate[randomCrewmate].name, 1);
+                    changeSummaryArrow(false, true, currentCrewmate[randomCrewmate]);
+                    currentCrewmate[0].resultText = "Just as hope seemed all lost for " + currentCrewmate[randomCrewmate].name +
                                                 " to make it back, he stumbles out from the bushes grasping a few cans of soup. " +
-                                                currentCrewmate[0].name + " seems to be in bad condition and his extremities have succumbed to frostbite.";
+                                                currentCrewmate[randomCrewmate].name + " seems to be in bad condition and his extremities have succumbed to frostbite.";
                 }
                 break;
             case 4:
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(3);
-                    crewManager.SetCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate[0].name, 1);
+                    crewManager.SetCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate[randomCrewmate].name, 1);
+                    changeSummaryArrow(false, true, currentCrewmate[randomCrewmate]);
                     currentCrewmate[0].resultText = "While scavanging through the abandoned town, " +
-                                                 currentCrewmate[0].name + " saw some canned food and bottles of water lying in a building. " +
+                                                 currentCrewmate[randomCrewmate].name + " saw some canned food and bottles of water lying in a building. " +
                                                  "When he went to pick it up, he bumped into another scavenger, who promptly stabbed " +
-                                                 currentCrewmate[0].name + " in the abdomen. "+ currentCrewmate[0].name+" grabbed a metal pipe on the " +
+                                                 currentCrewmate[randomCrewmate].name + " in the abdomen. "+ currentCrewmate[randomCrewmate].name+" grabbed a metal pipe on the " +
                                                  "floor and swung at the scavengers's head, knocking him unconscious, before hurrying off with the supplies.";
                 }
                 else if (choice == 2)
@@ -420,29 +449,30 @@ public class Prepare : CopiumScript
             case 12:
                 if (choice == 1)
                 {
-                    crewManager.ChangeCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate[0].name, -1);
-                    currentCrewmate[0].resultText = currentCrewmate[0].name + " fell and hit his head which resulted in minor injuries";
+                    crewManager.ChangeCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate[randomCrewmate].name, -1);
+                    changeSummaryArrow(false, true, currentCrewmate[randomCrewmate]);
+                    currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " fell and hit his head which resulted in minor injuries";
                 }
                 break;
             case 13:
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(-1);
-                    currentCrewmate[0].resultText = currentCrewmate[0].name + " lost some supplies";
+                    currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " lost some supplies";
                 }
                 break;
             case 14:
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(-3);
-                    currentCrewmate[0].resultText = currentCrewmate[0].name + " gave their rations to the hungry wolves, it seems like the wolves have taken a " +
+                    currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " gave their rations to the hungry wolves, it seems like the wolves have taken a " +
                                                 "liking to the crew and have started following them around.";
                 }
                 else if (choice == 2)
                 {
                     crewManager.ChangeSupplies(2);
-                    currentCrewmate[0].resultText = "The wolves jumped at " + currentCrewmate[0].name + ", attacking and trying to bite him. " +
-                                                 currentCrewmate[0].name + " seeing no other option, killed both wolves and proceeded to skin and gather their meat for food.";
+                    currentCrewmate[0].resultText = "The wolves jumped at " + currentCrewmate[randomCrewmate].name + ", attacking and trying to bite him. " +
+                                                 currentCrewmate[randomCrewmate].name + " seeing no other option, killed both wolves and proceeded to skin and gather their meat for food.";
                 }
                 break;
             default:
@@ -505,7 +535,14 @@ public class Prepare : CopiumScript
         prepareChoices.SetActive(false);
         prepareFinal.SetActive(true);
 
+        changeSuppliesText(suppliesChangedAmount);
+        harrisButton.gameObject.SetActive(false);
+        bronsonButton.gameObject.SetActive(false);
+        chuckButton.gameObject.SetActive(false);
+        dantonButton.gameObject.SetActive(false);
+
         resultText.text = currentCrewmate[0].resultText;
+        /*
         if (!crewManager.hDeploy)
         {
             if(crewManager.harris.person.alive)
@@ -531,5 +568,200 @@ public class Prepare : CopiumScript
                 crewManager.danton.person.resultText = "Danton is just chilling in the back";
             //dantonButton.gameObject.SetActive(true);
         }
+        */
+        if (crewManager.hDeploy)
+        {
+            harrisButton.gameObject.SetActive(true);
+        }
+        if (crewManager.bDeploy)
+        {
+            bronsonButton.gameObject.SetActive(true);
+        }
+        if (crewManager.cDeploy)
+        {
+            chuckButton.gameObject.SetActive(true);
+        }
+        if (crewManager.dDeploy)
+        {
+            dantonButton.gameObject.SetActive(true);
+        }
+    }
+
+
+    public void changeSuppliesText(int amount)
+    {
+        if (amount == 0)
+        {
+            suppliesChanged.color = Color.white;
+        }
+        else if (amount >0)
+        {
+            suppliesChanged.color = Color.green;
+        }
+        else if (amount<0)
+        {
+            suppliesChanged.color = Color.red;
+        }
+        suppliesChanged.text = amount.ToString();
+    }
+
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Rotates the summary arrows based on the params
+            
+        \param increased
+			Rotates the arrow up or down depending on increase
+		\param health
+			If Health is false change the mental instead
+        \param crew
+			Which crew member is affected
+	*/
+    /*******************************************************************************/
+    public void changeSummaryArrow(bool increased, bool health,Person crew)
+    {
+        Vector3 temp;
+        if (crew.name == "Harris")
+        {
+            
+            if (health)
+            {
+                HHarrow.SetActive(true);
+                if (increased)
+                {
+                    temp = HHarrow.transform.localRotation;
+                    temp.z = 90;
+                    HHarrow.transform.localRotation = temp;
+                }
+                else
+                {
+                    temp = HHarrow.transform.localRotation;
+                    temp.z = -90;
+                    HHarrow.transform.localRotation = temp;
+                }
+            }
+            else 
+            {
+                HMarrow.SetActive(true);
+                if (increased)
+                {
+                    temp = HMarrow.transform.localRotation;
+                    temp.z = 90;
+                    HMarrow.transform.localRotation = temp;
+                }
+                else
+                {
+                    temp = HMarrow.transform.localRotation;
+                    temp.z = -90;
+                    HMarrow.transform.localRotation = temp;
+                }
+            }
+        }
+        else if (crew.name == "Bronson")
+        {
+            if (health)
+            {
+                BHarrow.SetActive(true);
+                if (increased)
+                {
+                    temp = BHarrow.transform.localRotation;
+                    temp.z = 90;
+                    BHarrow.transform.localRotation = temp;
+                }
+                else
+                {
+                    temp = BHarrow.transform.localRotation;
+                    temp.z = -90;
+                    BHarrow.transform.localRotation = temp;
+                }
+            }
+            else
+            {
+                BMarrow.SetActive(true);
+                if (increased)
+                {
+                    temp = BMarrow.transform.localRotation;
+                    temp.z = 90;
+                    BMarrow.transform.localRotation = temp;
+                }
+                else
+                {
+                    temp = BMarrow.transform.localRotation;
+                    temp.z = -90;
+                    BMarrow.transform.localRotation = temp;
+                }
+            }
+        }
+        else if (crew.name == "Chuck")
+        {
+            if (health)
+            {
+                CHarrow.SetActive(true);
+                if (increased)
+                {
+                    temp = CHarrow.transform.localRotation;
+                    temp.z = 90;
+                    CHarrow.transform.localRotation = temp;
+                }
+                else
+                {
+                    temp = CHarrow.transform.localRotation;
+                    temp.z = -90;
+                    CHarrow.transform.localRotation = temp;
+                }
+            }
+            else
+            {
+                CMarrow.SetActive(true);
+                if (increased)
+                {
+                    temp = CMarrow.transform.localRotation;
+                    temp.z = 90;
+                    CMarrow.transform.localRotation = temp;
+                }
+                else
+                {
+                    temp = CMarrow.transform.localRotation;
+                    temp.z = -90;
+                    CMarrow.transform.localRotation = temp;
+                }
+            }
+        }
+        else if (crew.name == "Danton")
+        {
+            if (health)
+            {
+                DHarrow.SetActive(true);
+                if (increased)
+                {
+                    temp = DHarrow.transform.localRotation;
+                    temp.z = 90;
+                    DHarrow.transform.localRotation = temp;
+                }
+                else
+                {
+                    temp = DHarrow.transform.localRotation;
+                    temp.z = -90;
+                    DHarrow.transform.localRotation = temp;
+                }
+            }
+            else
+            {
+                DMarrow.SetActive(true);
+                if (increased)
+                {
+                    temp = DMarrow.transform.localRotation;
+                    temp.z = 90;
+                    DMarrow.transform.localRotation = temp;
+                }
+                else
+                {
+                    temp = DMarrow.transform.localRotation;
+                    temp.z = -90;
+                    DMarrow.transform.localRotation = temp;
+                }
+            }
+        }
+
     }
 }
