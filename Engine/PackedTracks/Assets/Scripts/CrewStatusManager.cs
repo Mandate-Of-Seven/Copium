@@ -10,7 +10,7 @@
 \brief
 	Handles feedback and opening of crew status panel
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 using CopiumEngine;
@@ -42,12 +42,51 @@ public class CrewStatusManager: CopiumScript
 	
 	public float transitionSpeed = 5.0f;
 
+
+	// Status Screen Stuff-----
+	public TrainManager trainManagerScript;
+	public bool isCabinOn = false;
+	public GameObject StatusScreen;
+	public Text statusScreenSuppliesText;
+
+	public GameObject exlowSupplies;
+	public GameObject lowSupplies;
+	public GameObject medSupplies;
+	public GameObject lotSupplies;
+
+	public int exlowThreshold; // 0 - low
+	public int lowThreshold; // low - med
+	public int medThreshold; // med - lot
+	public int lotThreshold; // lot - inf
+	int supplyState;
+
+	//Button Wrappers
+	public Button CloseStatusScreenBtn;
+	ButtonWrapper CloseStatusScreenBtnWrapper;
+
+	public GameObject cam;
+	public Button CabinBtn;
+	ButtonWrapper CabinBtnWrapper;
+	Vector3 cabinTargetPosition = new Vector3(18.15f, 0, 0);
+	//-----
+
 	void Start()
 	{
 		CloseCrewStatusBtnWrapper = new ButtonWrapper(CloseCrewStatusBtn,audioManager, tooltip);
 		CloseCrewStatusBtnWrapper.SetImage(CloseCrewStatusBtn.GetComponent<Image>());
 		CrewStatusBtnWrapper = new ButtonWrapper(CrewStatusBtn,audioManager,tooltip	);
 		CrewStatusBtnWrapper.SetImage(CrewStatusBtn.GetComponent<Image>());
+
+		CloseStatusScreenBtnWrapper = new ButtonWrapper(CloseStatusScreenBtn, audioManager, tooltip);
+		CloseStatusScreenBtnWrapper.SetImage(CloseStatusScreenBtn.GetComponent<Image>());
+
+		CabinBtnWrapper = new ButtonWrapper(CabinBtn, audioManager, tooltip);
+		CabinBtnWrapper.SetImage(CabinBtn.GetComponent<Image>());
+
+		// Cabin set false
+		//CrewStatusTab.SetActive(false);
+		supplyState = 1;
+
 	}
 
 	void Update()
@@ -62,22 +101,48 @@ public class CrewStatusManager: CopiumScript
         {
 			crewMenu.SetPrepare(false);
 			resultManager.Disable();
-            OpenPanel();
+            //OpenPanel();
+			OpenStatusPanel();
         }
-		if(CloseCrewStatusBtnWrapper.GetState() == ButtonState.OnRelease)
+		if(CloseStatusScreenBtnWrapper.GetState() == ButtonState.OnRelease && isCrewStatusOn)
 		{
 			crewMenu.deploying = false;
-			ClosePanel(false);
+			//ClosePanel(false);
+			CloseStatusPanel();
         }
 		
         if (isCrewStatusOn)
         {
-            CrewStatusTab.transform.localScale = Vector3.Lerp(CrewStatusTab.transform.localScale,crewStatusTargetScale,Time.deltaTime * transitionSpeed);
+            StatusScreen.transform.localScale = Vector3.Lerp(StatusScreen.transform.localScale,crewStatusTargetScale,Time.deltaTime * transitionSpeed);
+			UpdateStatusScreen();
+			// Check for Close Button Input
         }
         else
         {
-            CrewStatusTab.transform.localScale = Vector3.Lerp(CrewStatusTab.transform.localScale,Vector3.one,Time.deltaTime * transitionSpeed);
+            StatusScreen.transform.localScale = Vector3.Lerp(StatusScreen.transform.localScale,Vector3.one,Time.deltaTime * transitionSpeed);
         }
+
+		if(trainManagerScript.accelerate == false && CabinBtnWrapper.GetState() == ButtonState.OnRelease)
+		{
+			Console.WriteLine("go to cabin");
+			GoToCabin();
+		}
+		if(isCabinOn)
+		{
+			cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition, cabinTargetPosition, Time.deltaTime * transitionSpeed);
+		}else
+		{
+			cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition, Vector3.zero, Time.deltaTime * transitionSpeed);
+
+		}
+		if(CloseCrewStatusBtnWrapper.GetState() == ButtonState.OnRelease && isCabinOn)
+		{
+			crewMenu.deploying = false;
+			ReturnToCockpit(false);
+		}
+
+
+
 	}
 
     public void OpenPanel()
@@ -86,8 +151,10 @@ public class CrewStatusManager: CopiumScript
 			return;
         alert.enabled = false;
         isCrewStatusOn = true;
+		isCabinOn = true;
         CrewStatusBtn.gameObject.SetActive(false);
-        CrewStatusTab.transform.parent = null;
+        //CrewStatusTab.transform.parent = null;
+		CrewStatusTab.SetActive(true);
     }
     public void ClosePanel(bool prepared)
 	{
@@ -103,8 +170,111 @@ public class CrewStatusManager: CopiumScript
 		}
 
 		isCrewStatusOn = false;
+		isCabinOn = false;
         resultManager.Enable();
         CrewStatusBtn.gameObject.SetActive(true);
-		CrewStatusTab.transform.parent = parent.transform;
+		CrewStatusTab.SetActive(false);
+
+		//CrewStatusTab.transform.parent = parent.transform;
+	}
+
+	public void GoToCabin()
+	{
+		if(isCabinOn)
+			return;
+		//CrewStatusTab.SetActive(true);
+		isCabinOn = true;
+		crewMenu.SetPrepare(false);
+
+		// Switch to cabin view
+		//cam.transform.localPosition = new Vector3(18.15f, 0, 0);
+	}
+	public void ReturnToCockpit(bool prepared)
+	{
+		isCabinOn = false;
+		//cam.transform.localPosition = new Vector3(0,0,0);
+		crewMenu.timeElasped = 0;
+		//Prevent the crew buttons from being pressed
+		if (!crewMenu.deploying && !prepared)
+		{
+			crewMenu.SetPrepare(false);
+		}
+		else
+		{
+			crewMenu.deploying = false;
+		}
+		//CrewStatusTab.SetActive(false);
+	}
+	
+
+
+	public void OpenStatusPanel()
+	{
+		if(isCrewStatusOn)
+			return;
+		Console.WriteLine("status open");
+		isCrewStatusOn = true;
+		isCabinOn = false;
+		alert.enabled = false;
+		CrewStatusBtn.gameObject.SetActive(false);
+		StatusScreen.transform.parent = null;
+	}
+	public void CloseStatusPanel()
+	{
+		Console.WriteLine("close status panel");
+		isCrewStatusOn = false;
+		CrewStatusBtn.gameObject.SetActive(true);
+		alert.enabled = true;
+		StatusScreen.transform.parent = parent.transform;
+		
+	}
+	public void UpdateStatusScreen()
+	{
+		// Update Supplies Text
+		statusScreenSuppliesText.text = "Supplies: " + crewMenu.supplies;
+		if(crewMenu.supplies >= lotThreshold){
+			if(supplyState != 3)
+				ToggleSuppliesSprite(3);
+		}else if(crewMenu.supplies >= medThreshold){
+			if(supplyState != 2)
+				ToggleSuppliesSprite(2);
+		}else if(crewMenu.supplies >= lowThreshold){
+			if(supplyState != 1)
+				ToggleSuppliesSprite(1);
+		}else{
+			if(supplyState != 0)
+				ToggleSuppliesSprite(0);
+		}
+
+	}
+	public void ToggleSuppliesSprite(int state){
+		if(state == 0){
+			lotSupplies.SetActive(false);
+			medSupplies.SetActive(false);
+			lowSupplies.SetActive(false);
+			exlowSupplies.SetActive(true);
+			supplyState = state;
+		}else if(state == 1){
+			lotSupplies.SetActive(false);
+			medSupplies.SetActive(false);
+			lowSupplies.SetActive(true);
+			exlowSupplies.SetActive(false);
+			supplyState = state;
+
+		}else if(state == 2){
+			lotSupplies.SetActive(false);
+			medSupplies.SetActive(true);
+			lowSupplies.SetActive(false);
+			exlowSupplies.SetActive(false);
+			supplyState = state;
+
+		}else if(state == 3){
+			lotSupplies.SetActive(true);
+			medSupplies.SetActive(false);
+			lowSupplies.SetActive(false);
+			exlowSupplies.SetActive(false);
+			supplyState = state;
+
+		}
 	}
 }
