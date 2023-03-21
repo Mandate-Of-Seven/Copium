@@ -18,6 +18,8 @@ using System;
 
 public class ReportScreenManager: CopiumScript
 {
+    public static ReportScreenManager Instance;
+
     public bool isReportScreenOn = false;
 	public AudioManager audioManager;
     
@@ -41,6 +43,11 @@ public class ReportScreenManager: CopiumScript
 	
 	public float transitionSpeed = 5.0f;
 
+    void Awake()
+    {
+        Instance = this;
+    }
+
 	void Start()
 	{
         closeBtnWrapper = new ButtonWrapper(CloseReportBtn);
@@ -48,7 +55,7 @@ public class ReportScreenManager: CopiumScript
         reportBtnWrapper = new ButtonWrapper(ReportScreenBtn);
         reportBtnWrapper.SetImage(ReportScreenBtn.GetComponent<Image>());
         //Unable to close menu when main event is up
-		closeBtnWrapper.failureText = Messages.Instance.ErrorMainEvent;
+		closeBtnWrapper.failureText = Messages.ErrorMainEvent;
 	}
     void Update()
     {
@@ -68,7 +75,7 @@ public class ReportScreenManager: CopiumScript
             OpenPanel();
         }
 
-        if(closeBtnWrapper.GetState() == ButtonState.OnRelease)
+        if(closeBtnWrapper.GetState() == ButtonState.OnClick)
         {
             ClosePanel();
         }
@@ -123,4 +130,9 @@ public class ReportScreenManager: CopiumScript
         OpenPanel();
 		closeBtnWrapper.SetInteractable(false);
 	}
+
+    public void EnableInteractions()
+    {
+        closeBtnWrapper.SetInteractable(true);
+    }
 }

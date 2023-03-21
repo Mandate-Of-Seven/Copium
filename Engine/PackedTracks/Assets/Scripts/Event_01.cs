@@ -19,13 +19,9 @@ using System.Reflection;
 
 public class Event_01: CopiumScript
 {
-    public EventManager EventManager;
-    CrewMenu cm;
     public EyesClosingEffect eyesClosingEffect;
     public CameraShakeEffect cameraShakeEffect;
     public ExplosionEffect explosionEffect;
-    public TrainManager trainManager;
-    public StringTypeWriterEffect bodyTypeWriter;
     bool effectTriggered = false;
     float timerElasped = 0f;
     public float shakeTime = 5f;
@@ -38,27 +34,17 @@ public class Event_01: CopiumScript
 
     int resolutionTextNum = 0;
 
-	void Start()
-	{
-        cm = EventManager.crewMenu;
-	}
-	void Update()
-	{
-
-	}
-
     // Event to display onto the game
     public void Event(bool requirement)
 	{
         if (!effectTriggered)
         {
-            bodyTypeWriter = new StringTypeWriterEffect("",Messages.Instance.PreEvent01,0.05f);
+            EventManager.Instance.WriteToBody(Messages.Event01.preempt);
             effectTriggered = true;
         }
         if (state == 1)
         {
-            EventManager.Body.text = bodyTypeWriter.Write();
-            if (bodyTypeWriter.Done())
+            if (EventManager.Instance.IsFinishedWriting())
             {
                 explosionEffect.Trigger();
                 ++state;
@@ -101,53 +87,47 @@ public class Event_01: CopiumScript
             }
             else
             {
-                cm.prepareButton.gameObject.SetActive(true);
+                CrewMenu.Instance.prepareButton.gameObject.SetActive(true);
                 timerElasped = 0;
                 ++state;
+
+                if (requirement)
+                {
+                    // Indicate crew injured and losing of supplies
+                    EventManager.Instance.WriteToBody(Messages.Event01.HarrisDead.body);
+                    EventManager.Instance.Option_01.txt.text = Messages.Event01.HarrisDead.choice01;
+                    EventManager.Instance.Option_01.ShowIcons(true, false, false, true);
+
+                    // Indicate lost of compartment
+                    EventManager.Instance.Option_02.txt.text = Messages.Event01.HarrisDead.choice02;
+                    EventManager.Instance.Option_02.ShowIcons(false, false, false, true);
+
+                    resolutionTextNum = 1;
+                }
+                else
+                {
+                    // Indicate harris dies injured and save remaining supplies
+                    EventManager.Instance.WriteToBody(Messages.Event01.HarrisAlive.body);
+                    EventManager.Instance.Option_01.txt.text = Messages.Event01.HarrisAlive.choice01;
+                    EventManager.Instance.Option_01.ShowIcons(true, false, false, true);
+
+
+                    // Indicate harris injure and lose all supplies
+                    EventManager.Instance.Option_02.txt.text = Messages.Event01.HarrisAlive.choice02;
+                    EventManager.Instance.Option_02.ShowIcons(true, false, false, true);
+
+                    resolutionTextNum = 2;
+                }
             }
             return;
         }
 
         //After effect then display
-
-        EventManager.Option_01.Enable();
-        EventManager.Option_02.Enable();
-        EventManager.Option_03.Disable();
-
-        // Harris is Dead
-        if (requirement)
-		{
-            EventManager.Body.text = "In the dead of night, an explosion rocked the main engine room, causing massive flames " +
-                "to spread to the adjacent supply storage area. The raging fire that quickly engulfed the train roused the crew.";
-
-            // Indicate crew injured and losing of supplies
-			EventManager.Option_01.txt.text = "Attempt to put out the fire";
-            EventManager.Option_01.ShowIcons(true, false, false, true);
-
-            // Indicate lost of compartment
-            EventManager.Option_02.txt.text = "Detach the main engine room and supply storage room from the train";
-            EventManager.Option_02.ShowIcons(false, false, false, true);
-
-            resolutionTextNum = 1;
-        }
-		else
-		{
-            EventManager.Body.text = "Suddenly, a huge bang could be heard coming from the direction of the engine room. " +
-                "Massive flames enveloped the number one engine room. The speed with which the fire spread meant that it may " +
-                "already have reached the supply storage area. Harris' cries for assistance can be heard throughout the train " +
-                "as he sprints out of the engine room. The crew watched in horror as both Harris and their supplies caught fire.";
-
-            // Indicate harris dies injured and save remaining supplies
-            EventManager.Option_01.txt.text = "Salvage and save remaining supplies";
-            EventManager.Option_01.ShowIcons(true, false, false, true);
-
-
-            // Indicate harris injure and lose all supplies
-            EventManager.Option_02.txt.text = "Save Harris";
-            EventManager.Option_02.ShowIcons(true, false, false, true);
-
-
-            resolutionTextNum = 2;
+        if (EventManager.Instance.IsFinishedWriting())
+        {
+            EventManager.Instance.Option_01.Enable();
+            EventManager.Instance.Option_02.Enable();
+            EventManager.Instance.Option_03.Disable();
         }
     }
 
@@ -158,42 +138,34 @@ public class Event_01: CopiumScript
         {
             if (choice == 1)
             {
-                EventManager.Body.text = "The undermanned crew did their best to battle the blaze, but ultimately, " +
-                    "their efforts were futile. The flames were extinguished, but only at great personal risk. It seems " +
-                    "that most of the crew have suffered third to fourth degree burns.";
+                EventManager.Instance.WriteToBody(Messages.Event01.HarrisDead.result01);
 
-                cm.SetAllCrew(CrewMenu.STAT_TYPES.HEALTH, (int)Crew.HEALTH_STATE.CRITICAL);
-                cm.SetSupplies(5);
+                CrewMenu.Instance.SetAllCrew(CrewMenu.STAT_TYPES.HEALTH, (int)Crew.HEALTH_STATE.CRITICAL);
+                CrewMenu.Instance.SetSupplies(5);
             }
             else if (choice == 2)
             {
-                EventManager.Body.text = "In an effort to save themselves, the crew slashed away sections of the flaming " +
-                    "train as the fire raged rapidly and inexplicably. Thanks to a backup power source, the train was able " +
-                    "to keep going.";
+                EventManager.Instance.WriteToBody(Messages.Event01.HarrisDead.result02);
 
-                cm.SetSupplies(0);
-                cm.storageComparment = false;
+                CrewMenu.Instance.SetSupplies(0);
+                CrewMenu.Instance.storageComparment = false;
             }
         }
         else if(resolutionTextNum == 2)
         {
             if (choice == 1)
             {
-                EventManager.Body.text = "The crew ignored Harris' cries for help as they focused on putting out the fire on " +
-                    "the supplies. By the time the crew put out and salvaged the remaining supplies, all that remained " +
-                    "of Harris was his charred corpse, still reaching out for help. ";
+                EventManager.Instance.WriteToBody(Messages.Event01.HarrisAlive.result01);
 
-                int amount = cm.supplies - (int)RNG.Range(0, (cm.supplies / 2.0f));
-                cm.SetSupplies(amount);
-                cm.SetCrew(CrewMenu.STAT_TYPES.ALIVE, 0, 0);
+                int amount = CrewMenu.Instance.supplies - (int)RNG.Range(0, (CrewMenu.Instance.supplies / 2.0f));
+                CrewMenu.Instance.SetSupplies(amount);
+                CrewMenu.Instance.SetCrew(CrewMenu.STAT_TYPES.ALIVE, 0, 0);
             }
             else if (choice == 2)
             {
-                EventManager.Body.text = "The crew scrambled to put out the fire on Harris. Though they succeeded in saving Harris, " +
-                                            "most of the supplies had been reduced to ash.";
-
-                cm.SetSupplies(0);
-                cm.SetCrew(CrewMenu.STAT_TYPES.HEALTH, 0, (int)Crew.HEALTH_STATE.CRITICAL);
+                EventManager.Instance.WriteToBody(Messages.Event01.HarrisAlive.result02);
+                CrewMenu.Instance.SetSupplies(0);
+                CrewMenu.Instance.SetCrew(CrewMenu.STAT_TYPES.HEALTH, 0, (int)Crew.HEALTH_STATE.CRITICAL);
             }
         }
 

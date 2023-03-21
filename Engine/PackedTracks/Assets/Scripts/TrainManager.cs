@@ -20,7 +20,7 @@ using System.Security.AccessControl;
 
 public class TrainManager: CopiumScript
 {
-	public GameManager GameManager;
+	public static TrainManager Instance;
 
 	public float maxSpeed = 1.0f;
 	public float currentSpeed = 0.0f;
@@ -64,8 +64,10 @@ public class TrainManager: CopiumScript
 
 	float targetAmbienceVolume = 0.0f;
 
-	public TooltipBehaviour tooltip;
-
+	void Awake()
+    {
+		Instance = this;
+    }
 
 	void Start()
 	{
@@ -74,7 +76,7 @@ public class TrainManager: CopiumScript
 		initialSnowScale = snowAnimator.gameObject.transform.localScale.y;
 		leverBtnWrapper = new ButtonWrapper(trainLeverBtn);
 		leverBtnWrapper.SetImage(trainLeverDeactivated);
-		leverBtnWrapper.failureText = Messages.Instance.ErrorMainEvent;
+		leverBtnWrapper.failureText = Messages.ErrorMainEvent;
 	}
 
 	void Update()
@@ -162,7 +164,7 @@ public class TrainManager: CopiumScript
 		}
 
 		// Update the distance tracker
-        tracker.text = ((int)GameManager.distanceLeft).ToString() + "KM";
+        tracker.text = ((int)GameManager.Instance.distanceLeft).ToString() + "KM";
     }
 
 	/**************************************************************************/
@@ -200,7 +202,7 @@ public class TrainManager: CopiumScript
 	/**************************************************************************/
 	public void FlickLever()
 	{
-		if (GameManager.gameEnd)
+		if (GameManager.Instance.gameEnd)
 			return;
 
         accelerate = !accelerate;

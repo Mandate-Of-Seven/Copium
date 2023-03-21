@@ -40,10 +40,7 @@ public class Event_03: CopiumScript
             EventManager.Option_02.Enable();
             EventManager.Option_03.Enable();
 
-            EventManager.Body.text = "While on routine patrol, Chuck heard a faint beeping coming from engine room 2. " +
-                "He discovered a bomb concealed under the backup engine's reactor. It seems that " +
-                "removing it will be challenging, as doing so may set it off. Chuck called the" +
-                "remaining crew members to discuss next steps.";
+            EventManager.Body.text = Messages.Event03.ChuckHealthy.body;
 
             // Indicate Chuck, Danton critically injured
             EventManager.Option_01.txt.text = "Cover the bomb with sandbags to reduce damage";
@@ -140,7 +137,7 @@ public class Event_03: CopiumScript
 
                 cm.SetSupplies(0);
                 cm.storageComparment = false;
-                EventManager.GameManager.distanceInterval *= 2;
+                GameManager.Instance.distanceInterval *= 2;
             }
         }
         else if (resolutionTextNum == 2)
@@ -181,7 +178,7 @@ public class Event_03: CopiumScript
                     " It serves its purpose, but you notice that the train has started moving much slower.";
 
                 cm.SetSupplies(0);
-                EventManager.GameManager.distanceInterval *= 2;
+                GameManager.Instance.distanceInterval *= 2;
             }
         }
     }

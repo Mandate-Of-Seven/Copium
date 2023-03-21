@@ -19,7 +19,7 @@ using System.Runtime.Remoting.Channels;
 
 public class EventManager: CopiumScript
 {
-    public GameManager GameManager;
+    public static EventManager Instance;
     public Event_Intro eventIntro;
     public Event_01 event01;
     public Event_02 event02;
@@ -30,6 +30,13 @@ public class EventManager: CopiumScript
     public Option Option_01;
     public Option Option_02;
     public Option Option_03;
+
+    public float choiceDuration = 10f;
+    float choiceTimer = 0f;
+
+    public float textInterval = 0.1f;
+
+    public GameObject choiceSlider;
 
     public Text Body;
     public Image alert;
@@ -46,6 +53,25 @@ public class EventManager: CopiumScript
 
     float timer = 0.0f;
 
+    StringTypeWriterEffect bodyTypeWriter;
+
+    public void WriteToBody(string str)
+    {
+        bodyTypeWriter = new StringTypeWriterEffect(str,textInterval);
+    }
+
+    public bool IsFinishedWriting()
+    {
+        if (bodyTypeWriter == null)
+            return true;
+        return bodyTypeWriter.Done();
+    }
+
+    void Awake()
+    {
+        Instance = this;
+    }
+
     void Start()
 	{
         EventSequence = 0;
@@ -53,7 +79,7 @@ public class EventManager: CopiumScript
 
 	void Update()
     {
-        if (GameManager.gameEnd)
+        if (GameManager.Instance.gameEnd)
         {
             if(timer > 3.0f)
             {
@@ -64,11 +90,21 @@ public class EventManager: CopiumScript
             return;
         }
 
-        if(GameManager.distanceLeft < 0.99f)
+        if(GameManager.Instance.distanceLeft < 0.99f)
         {
             EventSequence = -1;
             OverrideEvent();
-        }    
+        }
+
+        //Skip body text
+        if (!IsFinishedWriting())
+        {
+            if (Input.GetMouseDown(1) && ReportScreenManager.Instance.isReportScreenOn)
+            {
+                bodyTypeWriter.Skip();
+            }
+            Body.text = bodyTypeWriter.Write();
+        }
 
         if (!crewMenu.CheckAllCrewAlive())
         {
@@ -77,16 +113,22 @@ public class EventManager: CopiumScript
         }
 
         if (!ShowingResolution && ShowingMainEvent)
+        {
             CheckCurrentEvent();
+        }
 
         if (!ShowingResolution && SelectingChoice)
+        {
             SelectChoice();
+        }
 
         if (ShowingResolution && !SelectingChoice)
             ShowResolution();
 
         if (Input.GetKeyDown(KeyCode.Enter))
+        {
             UpdateEventSequence();
+        }
     }
 
 	/**************************************************************************/
@@ -113,7 +155,7 @@ public class EventManager: CopiumScript
     {
         if (ShowingMainEvent && SelectingChoice)
             return;
-
+        choiceTimer = choiceDuration;
         EventSequence++;
         OverrideEvent();
     }
@@ -198,6 +240,14 @@ public class EventManager: CopiumScript
 	/**************************************************************************/
     void SelectChoice()
     {
+        choiceTimer -= Time.deltaTime;
+        if (choiceTimer < 0)
+            choiceTimer = 0;
+        float percentage = choiceTimer / choiceDuration;
+        Vector3 scale = choiceSlider.transform.localScale;
+        scale.x = percentage;
+        choiceSlider.transform.localScale = scale;
+
         if (Option_01.btn.state == ButtonState.OnClick)
         {
             ShowingResolution = true;
@@ -231,7 +281,7 @@ public class EventManager: CopiumScript
 	/**************************************************************************/
     void ShowResolution()
     {
-        
+        GameManager.Instance.EnableInteractions();
         ShowingMainEvent = false;
         Option_01.ResetOption();
         Option_02.ResetOption();

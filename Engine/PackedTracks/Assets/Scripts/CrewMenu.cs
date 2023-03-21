@@ -20,6 +20,8 @@ using System.Linq;
 
 public class CrewMenu: CopiumScript
 {
+    public static CrewMenu Instance;
+
     public Text suppliesText;
     public Text titleText;
 
@@ -76,6 +78,11 @@ public class CrewMenu: CopiumScript
         new Person("Chuck"),
         new Person("Danton")
     };
+
+    void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
 	{

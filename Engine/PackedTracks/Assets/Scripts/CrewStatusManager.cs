@@ -43,7 +43,7 @@ public class CrewStatusManager: CopiumScript
 		CloseCrewStatusBtnWrapper.SetImage(CloseCrewStatusBtn.GetComponent<Image>());
 		CrewStatusBtnWrapper = new ButtonWrapper(CrewStatusBtn);
 		CrewStatusBtnWrapper.SetImage(CrewStatusBtn.GetComponent<Image>());
-		CrewStatusBtnWrapper.failureText = Messages.Instance.ErrorMainEvent;
+		CrewStatusBtnWrapper.failureText = Messages.ErrorMainEvent;
 	}
 
 	void Update()
@@ -110,6 +110,9 @@ public class CrewStatusManager: CopiumScript
 		ClosePanel(false);
 		CrewStatusBtnWrapper.SetInteractable(false);
 	}
+	public void EnableInteractions()
+	{
+		CrewStatusBtnWrapper.SetInteractable(true);
+	}
 
-	
 }

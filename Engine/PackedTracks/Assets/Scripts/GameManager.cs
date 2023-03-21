@@ -21,8 +21,8 @@ using System.Collections.Generic;
 
 public class GameManager: CopiumScript
 {
+    public static GameManager Instance;
     public EventManager EventManager;
-    public AudioManager audioManager;
 
 	public GameObject TrainCanvas;
     public GameObject PauseCanvas;
@@ -59,30 +59,17 @@ public class GameManager: CopiumScript
 
     bool moving = false;
 
-    public Text testText;
-    public StringTypeWriterEffect effect;
-
+    void Awake()
+    {
+        Instance = this;
+    }
     void Start()
 	{
-        effect = new StringTypeWriterEffect("", "Fire roared through the bifurcated city of Ankh-Morpork. Where it\n licked the Wizards’ Quarter it burned blue and green and was even\n laced with strange sparks of the eighth color, octarine; where its\n outriders found their way into the vats and oil stores all along\n Merchant Street it progressed in a series of blazing fountains and explosions; in the streets of the perfume blenders it burned with a\n sweetness; where it touched bundles of rare and dry herbs in the\n storerooms of the drugmasters it made men go mad and talk to God.", 0.05f);
         //UpdateCanvases();
-    }
-
-	/**************************************************************************/
-	/*!
-	    \brief
-		    Open the report screen
-	*/
-	/**************************************************************************/
-    void OpenReportScreen()
-    {
-        
-        audioManager.clickSFX.Play();
     }
 
 	void Update()
     {
-        testText.text = effect.Write();
         ButtonInputs();
         if (pauseMenu.isPaused)
             return;
@@ -247,9 +234,9 @@ public class GameManager: CopiumScript
     {
         if (ManualBtn.state == ButtonState.OnRelease)
         {
-            audioManager.paperSFX.Play();
+            //audioManager.paperSFX.Play();
             ManualPopUp.SetActive(true);   
-            audioManager.fileOpenSFX.Play();
+            //audioManager.fileOpenSFX.Play();
 
         }
         if (ManualPopUpBtn.state == ButtonState.OnRelease && ManualPopUp.activeSelf)
@@ -266,7 +253,7 @@ public class GameManager: CopiumScript
 	/**************************************************************************/
     public void CloseManual()
     {
-        audioManager.fileCloseSFX.Play();
+        //audioManager.fileCloseSFX.Play();
 
         ManualPopUp.SetActive(false);
         MainPage.SetActive(true);
@@ -284,5 +271,13 @@ public class GameManager: CopiumScript
         crewStatusManager.DisableInteractions();
         resultManager.DisableInteractions();
         reportScreenManager.DisableInteractions();
+    }
+
+    public void EnableInteractions()
+    {
+        trainManager.EnableInteractions();
+        crewStatusManager.EnableInteractions();
+        resultManager.EnableInteractions();
+        reportScreenManager.EnableInteractions();
     }
 }

@@ -180,6 +180,9 @@ namespace CopiumEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool GetKeyUp(int keyCode);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool GetMouseDown(int mouseCode);
         #endregion
 
         #region TEXT

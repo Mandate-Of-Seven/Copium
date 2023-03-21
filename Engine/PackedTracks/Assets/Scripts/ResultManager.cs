@@ -46,7 +46,7 @@ public class ResultManager : CopiumScript
         closeBtnWrapper.SetImage(CloseResultBtn.GetComponent<Image>());
         resultBtnWrapper = new ButtonWrapper(ResultBtn);
         resultBtnWrapper.SetImage(ResultBtn.GetComponent<Image>());
-		resultBtnWrapper.failureText = Messages.Instance.ErrorMainEvent;
+		resultBtnWrapper.failureText = Messages.ErrorMainEvent;
     }
 
     void Update()
@@ -147,5 +147,10 @@ public class ResultManager : CopiumScript
 	{
         ClosePanel();
         resultBtnWrapper.SetInteractable(false);
-	}
+    }
+    public void EnableInteractions()
+    {
+        ClosePanel();
+        resultBtnWrapper.SetInteractable(true);
+    }
 }
