@@ -14,6 +14,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 *****************************************************************************************/
 using CopiumEngine;
 using System;
+using System.Linq;
 
 public class Prepare : CopiumScript
 {
@@ -313,10 +314,17 @@ public class Prepare : CopiumScript
         CMarrow.SetActive(false);
         DHarrow.SetActive(false);
         DMarrow.SetActive(false);
+        suppliesChangedAmount= 0;
 
-        int randomCrewmate = RNG.Range(0, currentCrewmate.Length - 1);
-        Console.WriteLine(randomCrewmate);
+        int max=0;
+        for (int i = 0; i < currentCrewmate.Length; i++,max++)
+        {
+            if (currentCrewmate[i]==null) { break;}
+        }
 
+        Console.WriteLine("Max"+max);
+        int randomCrewmate = RNG.Range(0, max-1);
+        Console.WriteLine("Random:"+randomCrewmate);
 
         //always use currentCrewmate[0].resultText cause there has to be at least 1 deployed. The name can be currentCrewmate[randomCrewmate].name
         switch (eventNum)
@@ -388,8 +396,8 @@ public class Prepare : CopiumScript
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(5);
-                    currentCrewmate[0].resultText = currentCrewmate[0].name + " said his prayers before putting his knife to the man's throat, killing him. " +
-                                                 currentCrewmate[0].name+" then took the man's supplies and skinned him, cutting him up for meat to be consumed.";
+                    currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " said his prayers before putting his knife to the man's throat, killing him. " +
+                                                 currentCrewmate[randomCrewmate].name+" then took the man's supplies and skinned him, cutting him up for meat to be consumed.";
                 }
                 else if (choice == 2)
                 {
@@ -402,12 +410,12 @@ public class Prepare : CopiumScript
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(3);
-                    currentCrewmate[0].resultText = currentCrewmate[0].name + " took aim and shot at the deer, killing it in an instant, its confused fawn could only stand and stare as " +
-                                                 currentCrewmate[0].name + "  skinned and carved the deer for its meat and fur.";
+                    currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " took aim and shot at the deer, killing it in an instant, its confused fawn could only stand and stare as " +
+                                                 currentCrewmate[randomCrewmate].name + "  skinned and carved the deer for its meat and fur.";
                 }
                 else if (choice == 2)
                 {
-                    currentCrewmate[0].resultText = "As "+ currentCrewmate[0].name + " walked away, a large polar bear jumped out of the surrounding bushes " +
+                    currentCrewmate[0].resultText = "As "+ currentCrewmate[randomCrewmate].name + " walked away, a large polar bear jumped out of the surrounding bushes " +
                                                  "killing both the deer and her fawn in an instant.";
                 }
                 break;
@@ -415,35 +423,35 @@ public class Prepare : CopiumScript
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(3);
-                    currentCrewmate[0].resultText = currentCrewmate[0].name + " caught some fish.";
+                    currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " caught some fish.";
                 }
                 break;
             case 8:
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(2);
-                    currentCrewmate[0].resultText = currentCrewmate[0].name + " found some firewood.";
+                    currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " found some firewood.";
                 }
                 break;
             case 9:
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(2);
-                    currentCrewmate[0].resultText = currentCrewmate[0].name + " found some mushrooms.";
+                    currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " found some mushrooms.";
                 }
                 break;
             case 10:
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(2);
-                    currentCrewmate[0].resultText = currentCrewmate[0].name + " siphoned some fuel from some abandoned vehicles.";
+                    currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " siphoned some fuel from some abandoned vehicles.";
                 }
                 break;
             case 11:
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(-2);
-                    currentCrewmate[0].resultText = currentCrewmate[0].name + " tripped and lost some supplies.";
+                    currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " tripped and lost some supplies.";
                 }
                 break;
             case 12:
