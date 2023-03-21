@@ -71,7 +71,7 @@ public static class Messages
 			public static string choice01 = "Attempt to fend off the raiders";
 			public static string choice02 = "Give all your supplies";
 			public static string result01 =
-				"This mission was a set up!\n\nWe where sent out to die!\n\nNo... NO, Please!";
+				"This mission was a set up!\n\nWe were sent out to die!\n\nNo... NO, Please!";
 			public static string result02 =
 			"The crew had no choice but to give up their hard-earned supplies to the attackers who had boarded their train." +
 			"They watched in disgust as the raiders took what they wanted, humiliating the crew in the process.\n\n" +

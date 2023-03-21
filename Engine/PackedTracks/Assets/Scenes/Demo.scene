@@ -2702,7 +2702,6 @@
                     "TypeID": 23,
                     "Name": "Event_02",
                     "waitTime": 9.0,
-                    "EventManager": 9174652001346769036,
                     "cameraShakeEffect": 15847660200646285682,
                     "trainManager": 5971899813001945745
                 }
