@@ -71,6 +71,7 @@ public class Prepare : CopiumScript
     public bool makeChoice;
     public int eventNum;
     public int choice;
+    public int numOfCrew = 0;
 
     bool option1Hover = false;
     bool option2Hover = false;
@@ -151,6 +152,11 @@ public class Prepare : CopiumScript
     public void GenerateEvents(Person[] crewmate)
     {
         currentCrewmate = crewmate;
+        numOfCrew = 0;
+        for (int i = 0; i < currentCrewmate.Length; i++, numOfCrew++)
+        {
+            if (currentCrewmate[i] == null) { break; }
+        }
         prepareCanvas.SetActive(true);
         
         prepareChoices.SetActive(true);
@@ -189,12 +195,21 @@ public class Prepare : CopiumScript
             }
         }
         
-        eventNum = RNG.Range(1,14);
+        eventNum = RNG.Range(1,1);
 
         switch (eventNum)
         {
             case 1:
-                prepareBody.text = "The crew" + " stumbled across a mysterious igloo, knowing that it is near impossible to " +
+                if (numOfCrew == 1)
+                {
+                    prepareBody.text = currentCrewmate[0].name;
+                }
+                else if (numOfCrew >1)
+                {
+                    prepareBody.text = "The Crew";
+                }
+
+                prepareBody.text += " stumbled across a mysterious igloo, knowing that it is near impossible to " +
                                    "live in these harsh conditions, igloos are a rare sight.";
                 prepareOption1.gameObject.SetActive(true);
                 prepareOption2.gameObject.SetActive(true);
@@ -316,15 +331,12 @@ public class Prepare : CopiumScript
         DMarrow.SetActive(false);
         suppliesChangedAmount= 0;
 
-        int max=0;
-        for (int i = 0; i < currentCrewmate.Length; i++,max++)
-        {
-            if (currentCrewmate[i]==null) { break;}
-        }
+        
+        //which random crewmate gets affected
+        int randomCrewmate = RNG.Range(0, numOfCrew - 1);
 
-        Console.WriteLine("Max"+max);
-        int randomCrewmate = RNG.Range(0, max-1);
-        Console.WriteLine("Random:"+randomCrewmate);
+        //roll chance for event choice successs / for choices check if choiceNum<=difficulty
+        int choiceNum = RNG.Range(1, 10);
 
         //always use currentCrewmate[0].resultText cause there has to be at least 1 deployed. The name can be currentCrewmate[randomCrewmate].name
         switch (eventNum)
@@ -332,10 +344,34 @@ public class Prepare : CopiumScript
             case 1:
                 if (choice == 1)
                 {
-                    crewManager.ChangeSupplies(5);
-                    currentCrewmate[0].resultText = "Upon entering the igloo, " + currentCrewmate[randomCrewmate].name + " sees a well preserved human corpse. " +
-                                                 "Luckily there was still some dried frozen meat, " + currentCrewmate[randomCrewmate].name +
-                                                 " took the meat and left the igloo.";
+                    if (numOfCrew == 1)
+                    {
+                        if (choiceNum <= 6)
+                        {
+                            crewManager.ChangeSupplies(5);
+                            currentCrewmate[0].resultText = "Upon entering the igloo, " + currentCrewmate[randomCrewmate].name + " sees a well preserved human corpse. " +
+                                                     "Luckily there was still some dried frozen meat, " + currentCrewmate[randomCrewmate].name +
+                                                     " took the meat and left the igloo.";
+                        }
+                        else
+                        {
+                            currentCrewmate[0].resultText = "Upon entering the igloo, it seems that the igloo was recently abandoned. Nothing of note can be salvaged.";
+                        }
+                    }
+                    else if (numOfCrew > 1)
+                    {
+                        if (choiceNum <= 8)
+                        {
+                            crewManager.ChangeSupplies(5);
+                            currentCrewmate[0].resultText = "Upon entering the igloo, " + currentCrewmate[randomCrewmate].name + " sees a well preserved human corpse. " +
+                                                     "Luckily there was still some dried frozen meat, " + currentCrewmate[randomCrewmate].name +
+                                                     " took the meat and left the igloo.";
+                        }
+                        else
+                        {
+                            currentCrewmate[0].resultText = "Upon entering the igloo, it seems that the igloo was recently abandoned. Nothing of note can be salvaged.";
+                        }
+                    }
                 }
                 else if (choice == 2)
                 {
