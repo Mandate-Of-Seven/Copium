@@ -19,6 +19,9 @@ using System.Reflection;
 
 public class Event_01: CopiumScript
 {
+    public EventManager EventManager;
+    CrewMenu cm;
+    StatusUpdate su;
     public EyesClosingEffect eyesClosingEffect;
     public CameraShakeEffect cameraShakeEffect;
     public ExplosionEffect explosionEffect;
@@ -33,6 +36,16 @@ public class Event_01: CopiumScript
     int state = 1;
 
     int resolutionTextNum = 0;
+
+	void Start()
+	{
+        cm = EventManager.crewMenu;
+        su = EventManager.statusUpdate;
+	}
+	void Update()
+	{
+
+	}
 
     // Event to display onto the game
     public void Event(bool requirement)

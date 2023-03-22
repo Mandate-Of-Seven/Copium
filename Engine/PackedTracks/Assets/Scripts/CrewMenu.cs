@@ -118,8 +118,6 @@ public class CrewMenu: CopiumScript
         if (deployBtnWrapper.GetState() == ButtonState.OnClick)
         {
             preparing = false;
-            //fader.fadeIn = true;
-            //fader.shouldFade = true;
             deploying = true;
             hDeploy = harris.isDeployed;
             bDeploy = bronson.isDeployed;
@@ -302,6 +300,7 @@ public class CrewMenu: CopiumScript
     public void ChangeSupplies(int amount)
     {
         // Bean: Visually show the supply reducing
+        prepareManager.suppliesChangedAmount = amount;
 
         if (!storageComparment)
         {
@@ -512,26 +511,35 @@ public class CrewMenu: CopiumScript
             resultManager.OpenPanel();
         }
 
+        int index = 0;
+        Person[] temp = new Person[4];
+
         if (harris.isDeployed)
         {
             ChangeCrew(STAT_TYPES.HUNGER, 0, -1);
-            prepareManager.GenerateEvents(crew[0]);
+            //prepareManager.GenerateEvents(crew[0]);
+            temp[index++] = crew[0];
         }
-        else if (bronson.isDeployed)
+        if (bronson.isDeployed)
         {
             ChangeCrew(STAT_TYPES.HUNGER, 1, -1);
-            prepareManager.GenerateEvents(crew[1]);
+            //prepareManager.GenerateEvents(crew[1]);
+            temp[index++] = crew[1];
         }
-        else if (chuck.isDeployed)
+        if (chuck.isDeployed)
         {
             ChangeCrew(STAT_TYPES.HUNGER, 2, -1);
-            prepareManager.GenerateEvents(crew[2]);
+            //prepareManager.GenerateEvents(crew[2]);
+            temp[index++] = crew[2];
         }
-        else if (danton.isDeployed)
+        if (danton.isDeployed)
         {
             ChangeCrew(STAT_TYPES.HUNGER, 3, -1);
-            prepareManager.GenerateEvents(crew[3]);
+            //prepareManager.GenerateEvents(crew[3]);
+            temp[index++] = crew[3];
         }
+
+        prepareManager.GenerateEvents(temp);
     }
 
     /*******************************************************************************

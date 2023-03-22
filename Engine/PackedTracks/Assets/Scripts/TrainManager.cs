@@ -22,7 +22,7 @@ public class TrainManager: CopiumScript
 {
 	public static TrainManager Instance;
 
-	public float maxSpeed = 1.0f;
+	public float maxSpeed = 100.0f;
 	public float currentSpeed = 0.0f;
 	public float acceleration = 0.0f;
 	public float deceleration = 0.0f;

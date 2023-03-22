@@ -19,12 +19,14 @@ public class Event_03: CopiumScript
 {
     public EventManager EventManager;
     CrewMenu cm;
+    StatusUpdate su;
 
     int resolutionTextNum = 0;
 
     void Start()
 	{
         cm = EventManager.crewMenu;
+        su = EventManager.statusUpdate;
     }
 	void Update()
 	{
@@ -44,17 +46,28 @@ public class Event_03: CopiumScript
 
             // Indicate Chuck, Danton critically injured
             EventManager.Option_01.txt.text = "Cover the bomb with sandbags to reduce damage";
-            EventManager.Option_01.ShowIcons(true);
 
             // Indicate Chuck dies
             EventManager.Option_02.txt.text = "Attempt to defuse the bomb, let Chuck do it";
-            EventManager.Option_01.ShowAllIcons();
 
             // Indicate supplies will be 0 for rest of the game, will take 2x as long to reach the end
             if (!cm.crew[0].alive)
                 EventManager.Option_03.btn.enabled = false;
             EventManager.Option_03.txt.text = "Salvage parts from the back up engine to build a makeshift reactor and cut off engine room 2 from the train [requires Harris to be alive]";
-            EventManager.Option_03.ShowIcons(false, false, false, true);
+
+            if (EventManager.Option_01.Hovered())
+            {
+                su.Danton(StatusUpdate.STATE.DECREASE, CrewMenu.STAT_TYPES.HEALTH);
+                su.Chuck(StatusUpdate.STATE.DECREASE, CrewMenu.STAT_TYPES.HEALTH);
+            }
+            else if (EventManager.Option_02.Hovered())
+            {
+                su.Chuck(StatusUpdate.STATE.UNKNOWN, CrewMenu.STAT_TYPES.HEALTH);
+            }
+            else if (EventManager.Option_03.Hovered())
+            {
+                su.Supplies(StatusUpdate.STATE.UNKNOWN);
+            }
 
             resolutionTextNum = 1;
         }
@@ -71,7 +84,6 @@ public class Event_03: CopiumScript
             // Indicate GG Game Over
             EventManager.Option_01.txt.text = "Send Danton out to find supplies";
             EventManager.Option_01.txt.color = Color.red;
-            EventManager.Option_01.ShowAllIcons();
 
             resolutionTextNum = 2;
         }
@@ -87,19 +99,25 @@ public class Event_03: CopiumScript
             // Indicate GG Game Over
             EventManager.Option_01.txt.text = "Watch the flames destroy the engine";
             EventManager.Option_01.txt.color = Color.red;
-            EventManager.Option_01.ShowIcons(false, true, false, true);
 
             // Indicate Crew lose health
             if (cm.supplies <= 0)
                 EventManager.Option_02.btn.enabled = false;
             EventManager.Option_02.txt.text = "Put out the fire and attempt to save the engine";
-            EventManager.Option_02.ShowIcons(true);
 
             // Indicate supplies lost
             if (cm.supplies <= 0)
                 EventManager.Option_03.btn.enabled = false;
             EventManager.Option_03.txt.text = "Build new simple engine to power the train";
-            EventManager.Option_03.ShowIcons(false, false, false, true);
+
+            if (EventManager.Option_02.Hovered())
+            {
+                su.AllCrew(StatusUpdate.STATE.DECREASE, CrewMenu.STAT_TYPES.HEALTH);
+            }
+            else if (EventManager.Option_03.Hovered())
+            {
+                su.Supplies(StatusUpdate.STATE.UNKNOWN);
+            }
 
             resolutionTextNum = 3;
         }

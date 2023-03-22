@@ -22,6 +22,7 @@ public class Event_02: CopiumScript
     bool effectTriggered = false;
     public CameraShakeEffect cameraShakeEffect;
     CrewMenu cm;
+    StatusUpdate su;
     float timerElasped = 0f;
 
     int state = 0;
@@ -30,7 +31,8 @@ public class Event_02: CopiumScript
 
     void Start()
 	{
-        cm = EventManager.Instance.crewMenu;
+        cm = EventManager.crewMenu;
+        su = EventManager.statusUpdate;
     }
 	void Update()
 	{
