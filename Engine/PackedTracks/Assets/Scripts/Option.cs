@@ -22,8 +22,6 @@ public class Option: CopiumScript
     public Text txt;
     public Button btn;
 
-    public AudioManager audioManager;
-    public TooltipBehaviour tooltip;
 	public StatusUpdate statusUpdate;
     Image image;
     Color disabled = new Color(1.0f, 1.0f, 1.0f, 0.5f); 
@@ -33,7 +31,7 @@ public class Option: CopiumScript
 
     void Start()
 	{
-        btnWrapper = new ButtonWrapper(btn, audioManager, tooltip);
+        btnWrapper = new ButtonWrapper(btn);
         btnWrapper.SetImage(btn.GetComponent<Image>());
 
         image = gameObject.GetComponent<Image>();

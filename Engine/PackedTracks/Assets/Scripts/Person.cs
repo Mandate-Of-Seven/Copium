@@ -16,7 +16,29 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 using CopiumEngine;
 using System;
 
-    
+public enum HEALTH_STATE
+{
+    DEAD,
+    CRITICAL,
+    INJURED,
+    HEALTHY,
+    NONE = -1
+}
+public enum MENTAL_STATE
+{
+    SUICIDAL,
+    INSANE,
+    IRRATIONAL,
+    CALM,
+    NONE = -1
+}
+public enum HUNGER_STATE
+{
+    FAMISHED,
+    HUNGRY,
+    FULL,
+    NONE = -1
+}
 public class Person
 {
 	public static int scramblingConcurrencies = 3;
@@ -35,21 +57,15 @@ public class Person
 	}
 
     string _name;
-    bool _alive = true;
-    int _health;
-    int _mental;
-    int _hunger;
+    HEALTH_STATE _health;
+    MENTAL_STATE _mental;
+    HUNGER_STATE _hunger;
     float _timer;
     string _resultText;
     public StringScramblerEffect healthScrambler;
     public StringScramblerEffect mentalScrambler;
     public StringScramblerEffect hungerScrambler;
-    public string healthString; 
-    public string mentalString;
-    public string hungerString; 
-    Crew.HEALTH_STATE healthState = Crew.HEALTH_STATE.NONE;
-    Crew.MENTAL_STATE mentalState = Crew.MENTAL_STATE.NONE;
-    Crew.HUNGER_STATE hungerState = Crew.HUNGER_STATE.NONE;
+
 	public Crew crewScript;
 
 	public Color targetColor = Color.white;
@@ -69,26 +85,16 @@ public class Person
     /*******************************************************************************
     /*!
         \brief
-            Gets and sets alive state
-    */
-    /*******************************************************************************/
-    public bool alive
-    {
-        get { return _alive; }
-        set { _alive = value; }
-    }
-
-    /*******************************************************************************
-    /*!
-        \brief
             Gets and sets health
     */
     /*******************************************************************************/
-    public int health
+    public HEALTH_STATE health
     {
         get { return _health; }
         set 
         {
+            if (value < 0)
+                value = 0;
             if (_health != value)
             {
 				Color tmp = Color.white;
@@ -97,36 +103,10 @@ public class Person
 				tmp.g = x;
 				tmp.b = x;
 				targetColor = tmp;
-				if (value > 2)
-                {
-                    if (healthState != Crew.HEALTH_STATE.HEALTHY)
-						healthScrambler = CreateScrambler(healthString, "Healthy");
-                    healthState = Crew.HEALTH_STATE.HEALTHY;
-                }
-				else if(value > 1)
-                {
-                    if (healthState != Crew.HEALTH_STATE.INJURED)
-						healthScrambler = CreateScrambler(healthString, "Injured");
-                    healthState = Crew.HEALTH_STATE.INJURED;
-                }
-				else if (value > 0)
-                {
-                    if (healthState != Crew.HEALTH_STATE.CRITICAL)
-						healthScrambler = CreateScrambler(healthString, "Critical");
-                    healthState = Crew.HEALTH_STATE.CRITICAL;
-                }
-				else
-                {    
-                    if (healthState != Crew.HEALTH_STATE.DEAD)
-                        healthScrambler = CreateScrambler(healthString, "Dead");
-                    resultText = name + " is dead...";
-                    crewScript.selectBtnWrapper.failureText = name + " is dead...";
-                    _alive = false; 
-                    healthState = Crew.HEALTH_STATE.DEAD;
-                }
-					
+
+                healthScrambler = CreateScrambler(_health.ToString(), value.ToString());
+                _health = value;
             }
-                _health = value; 
         }
     }
 
@@ -136,45 +116,28 @@ public class Person
             Gets and sets mental state
     */
     /*******************************************************************************/
-    public int mental
+    public MENTAL_STATE mental
     {
         get { return _mental; }
         set 
         { 
-            if (!_alive)
+            if (health == HEALTH_STATE.DEAD)
             {
-                mentalScrambler = CreateScrambler(mentalString, "Dead");   
-            }
-            else if (_mental != value)
-            {
-                if (value > 2)
-                {
-                    if (mentalState != Crew.MENTAL_STATE.CALM)
-                        mentalScrambler = CreateScrambler(mentalString, "Calm");
-                    mentalState = Crew.MENTAL_STATE.CALM;
-                }
-                else if (value > 1)
-                {
 
-                    if (mentalState != Crew.MENTAL_STATE.IRRATIONAL)
-                        mentalScrambler = CreateScrambler(mentalString, "Irrational");
-                    mentalState = Crew.MENTAL_STATE.IRRATIONAL;
-                }
-                else if (value > 0)
+                if (_mental != MENTAL_STATE.NONE)
                 {
-                    if (mentalState != Crew.MENTAL_STATE.INSANE)
-                        mentalScrambler = CreateScrambler(mentalString, "Insane");
-                    mentalState = Crew.MENTAL_STATE.INSANE;
+                    mentalScrambler = CreateScrambler(_mental.ToString(), "");
+                    _mental = MENTAL_STATE.NONE;
                 }
-                else
-                {
-                    if (mentalState != Crew.MENTAL_STATE.SUICIDAL)
-                        mentalScrambler = CreateScrambler(mentalString, "Suicidal");
-                    mentalState = Crew.MENTAL_STATE.SUICIDAL;
-                }
+                return;
             }
-            _mental = value; 
-                
+
+            if (_mental != value)
+            {
+                mentalScrambler = CreateScrambler(_mental.ToString(), value.ToString());
+                _mental = value;
+            }
+
         }
     }
 
@@ -184,37 +147,29 @@ public class Person
             Gets and sets hunger state
     */
     /*******************************************************************************/
-    public int hunger
+    public HUNGER_STATE hunger
     {
         get { return _hunger; }
         set 
 		{
-            if (!_alive)
+            if (health == HEALTH_STATE.DEAD)
             {
-                hungerScrambler = CreateScrambler(hungerString, "Dead");
+                if (_hunger != HUNGER_STATE.NONE)
+                {
+                    hungerScrambler = CreateScrambler(_hunger.ToString(), "");
+                    _hunger = HUNGER_STATE.NONE;
+                }
+                return;
             }
-			else if (_hunger != value)
+			
+            if (_hunger != value)
             {
-				if (value > 2)
-                {
-                    if (hungerState != Crew.HUNGER_STATE.FULL)
-						hungerScrambler = CreateScrambler(hungerString, "Full");
-                    hungerState = Crew.HUNGER_STATE.FULL;
-                }
-				else if (value > 1)
-                {
-                    if (hungerState != Crew.HUNGER_STATE.HUNGRY)
-						hungerScrambler = CreateScrambler(hungerString, "Hungry");
-                    hungerState = Crew.HUNGER_STATE.HUNGRY;
-                }
-				else
-                {
-                    if (hungerState != Crew.HUNGER_STATE.FAMISHED)
-						hungerScrambler = CreateScrambler(hungerString, "Famished");
-                    hungerState = Crew.HUNGER_STATE.FAMISHED;
-                }
-			}
-				_hunger = value; 
+                if(hungerScrambler != null)
+                    hungerScrambler = CreateScrambler(_hunger.ToString(), value.ToString());
+                else
+                    hungerScrambler = CreateScrambler("", value.ToString());
+                _hunger = value;
+            }
 		}
     }
 
@@ -245,10 +200,9 @@ public class Person
     public Person(string new_name)
     {
         _name = new_name;
-        _alive = true;
-        health = 3;
-        mental = 3;
-        hunger = 3;
+        health = HEALTH_STATE.HEALTHY;
+        mental = MENTAL_STATE.CALM;
+        hunger = HUNGER_STATE.FULL;
         _timer = 0.0f;
         _resultText = _name + " is just chilling in the back";
     }

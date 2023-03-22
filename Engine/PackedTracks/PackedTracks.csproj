@@ -96,9 +96,8 @@
     <Compile Include="Assets\Scripts\Crew.cs" />
     <Compile Include="Assets\Scripts\CrewMenu.cs" />
     <Compile Include="Assets\Scripts\CrewStatusManager.cs" />
-    <Compile Include="Assets\Scripts\EventManager.cs" />
+    <Compile Include="Assets\Scripts\Events.cs" />
     <Compile Include="Assets\Scripts\EventsManager.cs" />
-    <Compile Include="Assets\Scripts\Event01.cs" />
     <Compile Include="Assets\Scripts\Event_01.cs" />
     <Compile Include="Assets\Scripts\Event_02.cs" />
     <Compile Include="Assets\Scripts\Event_03.cs" />

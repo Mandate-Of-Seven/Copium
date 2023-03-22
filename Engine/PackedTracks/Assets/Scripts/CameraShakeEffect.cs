@@ -19,6 +19,8 @@ using System;
 
 public class CameraShakeEffect: CopiumScript
 {
+	public static CameraShakeEffect Instance;
+
 	public GameObject trainCanvas;
 	public float intensity;
 	public float timeElasped;
@@ -27,6 +29,11 @@ public class CameraShakeEffect: CopiumScript
 	float intervalTimer = 0;
 	bool playing = false;
 	Vector3 targetPos;
+
+	public void Awake()
+    {
+		Instance = this;
+    }
 
 	public void Trigger()
 	{

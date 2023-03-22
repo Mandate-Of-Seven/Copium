@@ -31,8 +31,6 @@ public class Event_02: CopiumScript
 
     void Start()
 	{
-        cm = EventManager.crewMenu;
-        su = EventManager.statusUpdate;
     }
 	void Update()
 	{
@@ -76,11 +74,9 @@ public class Event_02: CopiumScript
                     // Indicate GG GAME OVER
                     EventManager.Instance.Option_01.txt.text = Messages.Event02.ChuckDead.choice01;
                     EventManager.Instance.Option_01.txt.color = Color.red;
-                    EventManager.Instance.Option_01.ShowAllIcons();
 
                     // Indicate lost all supplies all crew mentally shaken
                     EventManager.Instance.Option_02.txt.text = Messages.Event02.ChuckDead.choice02;
-                    EventManager.Instance.Option_02.ShowIcons(false, true, false, true);
 
                     resolutionTextNum = 1;
 
@@ -91,16 +87,13 @@ public class Event_02: CopiumScript
 
                     // Indicate Bronson and Chuck critically injured 
                     EventManager.Instance.Option_01.txt.text = Messages.Event02.ChuckAlive.choice01;
-                    EventManager.Instance.Option_01.ShowIcons(true);
 
                     // Indicate Chuck dies
                     EventManager.Instance.Option_02.txt.text = Messages.Event02.ChuckAlive.choice02;
-                    EventManager.Instance.Option_02.ShowIcons(true);
 
 
                     // Indicate - 10 supplies Chuck survives(All crew members mental state shaken)
                     EventManager.Instance.Option_03.txt.text = Messages.Event02.ChuckAlive.choice03;
-                    EventManager.Instance.Option_03.ShowIcons(false, true, false, true);
 
                     resolutionTextNum = 2;
 

@@ -139,4 +139,32 @@ public class EventsManager : CopiumScript
     {
 
     }
+
+	void ShowEnding()
+	{
+		Option_01.ResetOption();
+		Option_02.ResetOption();
+		Option_03.ResetOption();
+
+		Option_01.Enable();
+		Option_02.Enable();
+		Option_03.Enable();
+
+		Option_01.txt.text = "Restart Game";
+		Option_02.txt.text = "Back to Main Menu";
+		Option_03.txt.text = "Quit Game";
+
+		if (Option_01.btn.state == ButtonState.OnClick)
+		{
+			SceneManager.LoadScene("Demo");
+		}
+		else if (Option_02.btn.state == ButtonState.OnClick)
+		{
+			SceneManager.LoadScene("MainMenu");
+		}
+		else if (Option_03.btn.state == ButtonState.OnClick)
+		{
+			Application.Quit();
+		}
+	}
 }

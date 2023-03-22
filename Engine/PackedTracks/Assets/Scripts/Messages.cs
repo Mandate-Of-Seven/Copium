@@ -21,7 +21,7 @@ public static class Messages
 			"traveling there. \n\nI wish you all the best and hope to receive good news.\n\nBest " +
 			"regards, \nCaptain Bob Jones\"\n\nEnd of transmission.";
 	}
-	public static class Event01
+	public static class Event_Explosion
     {
 		public static string preempt = "There is a faint smell of something burning in the air...";
 		public static class HarrisDead 

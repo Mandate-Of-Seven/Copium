@@ -22,7 +22,6 @@ using System.Collections.Generic;
 public class GameManager: CopiumScript
 {
     public static GameManager Instance;
-    public EventManager EventManager;
 
 	public GameObject TrainCanvas;
     public GameObject PauseCanvas;
@@ -58,6 +57,8 @@ public class GameManager: CopiumScript
     public bool gameEnd = false;
 
     bool moving = false;
+
+    public int eventSequence = 0;
 
     void Awake()
     {
@@ -117,7 +118,7 @@ public class GameManager: CopiumScript
 	/**************************************************************************/
     bool CheckForGameEndCondition()
     {
-        if(!gameEnd && EventManager.EventSequence < 0)
+        if(!gameEnd && eventSequence < 0)
         {
             gameEnd = true;
             trainManager.FlickLever(false);
@@ -176,15 +177,16 @@ public class GameManager: CopiumScript
                     crewStatusManager.alert.enabled = true;
 
                     updateEvent = true; // Trigger only once
-                    EventManager.UpdateEventSequence();
+                    //EventManager.UpdateEventSequence();
                 }
                 // Right now if the distance left to the next event is reseted, we can update event again
                 else if (distanceLeft % distancePerEvent > 1.0f)
                     updateEvent = false;
 
+                //ZACH: Handle this with your choice timer
                 // Close to the next event and has yet to select a choice, select default choice
-                if (distanceLeft % distancePerEvent < 5.0f && EventManager.EventSequence > 0 && !updateEvent)
-                    EventManager.SelectDefaultChoice();
+                //if (distanceLeft % distancePerEvent < 5.0f && EventManager.EventSequence > 0 && !updateEvent)
+                    //EventManager.SelectDefaultChoice();
 
                 // Reduce hunger every few km
                 float remainder = distanceLeft % (distancePerEvent / 2.0f);

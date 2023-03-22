@@ -17,11 +17,8 @@ using CopiumEngine;
 using System;
 using System.Reflection;
 
-public class Event_01: CopiumScript
+public class Event_01: Event
 {
-    public EventManager EventManager;
-    CrewMenu cm;
-    StatusUpdate su;
     public EyesClosingEffect eyesClosingEffect;
     public CameraShakeEffect cameraShakeEffect;
     public ExplosionEffect explosionEffect;
@@ -30,31 +27,13 @@ public class Event_01: CopiumScript
     public float shakeTime = 5f;
     public float eyesTime = 2f;
 
-    //state 1 -> play sound, flash bang
-    //state 2 -> shake
-    //state 3 -> close eyes
-    int state = 1;
-
-    int resolutionTextNum = 0;
-
-	void Start()
-	{
-        cm = EventManager.crewMenu;
-        su = EventManager.statusUpdate;
-	}
-	void Update()
-	{
-
-	}
-
     // Event to display onto the game
+
+    public override string body { get {retu} };
+   
+
     public void Event(bool requirement)
 	{
-        if (!effectTriggered)
-        {
-            EventManager.Instance.WriteToBody(Messages.Event01.preempt);
-            effectTriggered = true;
-        }
         if (state == 1)
         {
             if (EventManager.Instance.IsFinishedWriting())
@@ -109,11 +88,9 @@ public class Event_01: CopiumScript
                     // Indicate crew injured and losing of supplies
                     EventManager.Instance.WriteToBody(Messages.Event01.HarrisDead.body);
                     EventManager.Instance.Option_01.txt.text = Messages.Event01.HarrisDead.choice01;
-                    EventManager.Instance.Option_01.ShowIcons(true, false, false, true);
 
                     // Indicate lost of compartment
                     EventManager.Instance.Option_02.txt.text = Messages.Event01.HarrisDead.choice02;
-                    EventManager.Instance.Option_02.ShowIcons(false, false, false, true);
 
                     resolutionTextNum = 1;
                 }
@@ -122,12 +99,10 @@ public class Event_01: CopiumScript
                     // Indicate harris dies injured and save remaining supplies
                     EventManager.Instance.WriteToBody(Messages.Event01.HarrisAlive.body);
                     EventManager.Instance.Option_01.txt.text = Messages.Event01.HarrisAlive.choice01;
-                    EventManager.Instance.Option_01.ShowIcons(true, false, false, true);
 
 
                     // Indicate harris injure and lose all supplies
                     EventManager.Instance.Option_02.txt.text = Messages.Event01.HarrisAlive.choice02;
-                    EventManager.Instance.Option_02.ShowIcons(true, false, false, true);
 
                     resolutionTextNum = 2;
                 }
