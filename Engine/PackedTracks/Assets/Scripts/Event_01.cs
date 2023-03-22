@@ -21,6 +21,7 @@ public class Event_01: CopiumScript
 {
     public EventManager EventManager;
     CrewMenu cm;
+    StatusUpdate su;
     public EyesClosingEffect eyesClosingEffect;
     public CameraShakeEffect cameraShakeEffect;
     public ExplosionEffect explosionEffect;
@@ -40,6 +41,7 @@ public class Event_01: CopiumScript
 	void Start()
 	{
         cm = EventManager.crewMenu;
+        su = EventManager.statusUpdate;
 	}
 	void Update()
 	{
@@ -101,11 +103,19 @@ public class Event_01: CopiumScript
 
             // Indicate crew injured and losing of supplies
 			EventManager.Option_01.txt.text = "Attempt to put out the fire";
-            EventManager.Option_01.ShowIcons(true, false, false, true);
 
             // Indicate lost of compartment
             EventManager.Option_02.txt.text = "Detach the main engine room and supply storage room from the train";
-            EventManager.Option_02.ShowIcons(false, false, false, true);
+            
+            if (EventManager.Option_01.Hovered())
+            {
+                su.AllCrew(StatusUpdate.STATE.DECREASE, CrewMenu.STAT_TYPES.HEALTH);
+                su.Supplies(StatusUpdate.STATE.DECREASE);
+            }
+            else if (EventManager.Option_02.Hovered())
+            {
+                su.Supplies(StatusUpdate.STATE.UNKNOWN);
+            }
 
             resolutionTextNum = 1;
         }
@@ -118,12 +128,20 @@ public class Event_01: CopiumScript
 
             // Indicate harris dies injured and save remaining supplies
             EventManager.Option_01.txt.text = "Salvage and save remaining supplies";
-            EventManager.Option_01.ShowIcons(true, false, false, true);
-
 
             // Indicate harris injure and lose all supplies
             EventManager.Option_02.txt.text = "Save Harris";
-            EventManager.Option_02.ShowIcons(true, false, false, true);
+
+            if (EventManager.Option_01.Hovered())
+            {
+                su.Harris(StatusUpdate.STATE.UNKNOWN, CrewMenu.STAT_TYPES.HEALTH);
+                su.Supplies(StatusUpdate.STATE.DECREASE);
+            }
+            else if (EventManager.Option_02.Hovered())
+            {
+                su.Harris(StatusUpdate.STATE.DECREASE, CrewMenu.STAT_TYPES.HEALTH);
+                su.Supplies(StatusUpdate.STATE.UNKNOWN);
+            }
 
 
             resolutionTextNum = 2;

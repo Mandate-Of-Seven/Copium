@@ -22,17 +22,20 @@ public class Option: CopiumScript
     public Text txt;
     public Button btn;
 
-	public GameObject icon_01, icon_02, icon_03, icon_04;
+    public AudioManager audioManager;
+    public TooltipBehaviour tooltip;
+	public StatusUpdate statusUpdate;
     Image image;
     Color disabled = new Color(1.0f, 1.0f, 1.0f, 0.5f); 
-    Color enabled = new Color(1.0f, 1.0f, 1.0f, 1.0f); 
+    Color enabled = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+
+    public ButtonWrapper btnWrapper;
 
     void Start()
 	{
-		icon_01.SetActive(false);
-        icon_02.SetActive(false);
-        icon_03.SetActive(false);
-        icon_04.SetActive(false);
+        btnWrapper = new ButtonWrapper(btn, audioManager, tooltip);
+        btnWrapper.SetImage(btn.GetComponent<Image>());
+
         image = gameObject.GetComponent<Image>();
         enabled = image.color;
 	}
@@ -40,7 +43,14 @@ public class Option: CopiumScript
 	{
         if (!btn.enabled)
             image.color = disabled;
-	}
+    }
+
+    public bool Hovered()
+    {
+        if (btn.state == ButtonState.OnHover)
+            return true;
+        return false;
+    }
 
     public void Enable()
     {
@@ -57,55 +67,8 @@ public class Option: CopiumScript
     public void ResetOption()
     {
         Disable();
-        HideAllIcons();
         btn.enabled = true;
         image.color = enabled;
         txt.color = Color.white;
-    }
-
-	public void ShowAllIcons()
-	{
-        icon_01.SetActive(true);
-        icon_02.SetActive(true);
-        icon_03.SetActive(true);
-        icon_04.SetActive(true);
-    }
-
-    public void ShowIcons(bool health = false, bool mental = false, bool hunger = false, bool supplies = false)
-    {
-        if(health)
-            icon_01.SetActive(true);
-
-        if (mental)
-            icon_02.SetActive(true);
-
-        if (hunger)
-            icon_03.SetActive(true);
-
-        if (supplies)
-            icon_04.SetActive(true);
-    }
-
-    public void HideAllIcons()
-    {
-        icon_01.SetActive(false);
-        icon_02.SetActive(false);
-        icon_03.SetActive(false);
-        icon_04.SetActive(false);
-    }
-
-    public void HideIcons(bool health = false, bool mental = false, bool hunger = false, bool supplies = false)
-    {
-        if (health)
-            icon_01.SetActive(false);
-
-        if (mental)
-            icon_02.SetActive(false);
-
-        if (hunger)
-            icon_03.SetActive(false);
-
-        if (supplies)
-            icon_04.SetActive(false);
     }
 }

@@ -30,6 +30,7 @@ public class EventManager: CopiumScript
     public Option Option_01;
     public Option Option_02;
     public Option Option_03;
+    public StatusUpdate statusUpdate;
 
     public Text Body;
     public Image alert;
@@ -198,19 +199,29 @@ public class EventManager: CopiumScript
 	/**************************************************************************/
     void SelectChoice()
     {
-        if (Option_01.btn.state == ButtonState.OnClick)
+        if (Option_01.btn.state == ButtonState.OnHover || Option_02.btn.state == ButtonState.OnHover || Option_03.btn.state == ButtonState.OnHover)
+        {
+            statusUpdate.gameObject.SetActive(true);
+        }
+        else
+        {
+            statusUpdate.ResetAll();
+            statusUpdate.gameObject.SetActive(false);
+        }
+
+        if (Option_01.btnWrapper.GetState() == ButtonState.OnClick)
         {
             ShowingResolution = true;
             SelectingChoice = false;
             choice = 1;
         }
-        else if(Option_02.btn.state == ButtonState.OnClick)
+        else if(Option_02.btnWrapper.GetState() == ButtonState.OnClick)
         {
             ShowingResolution = true;
             SelectingChoice = false;
             choice = 2;
         }
-        else if(Option_03.btn.state == ButtonState.OnClick)
+        else if(Option_03.btnWrapper.GetState() == ButtonState.OnClick)
         {
             ShowingResolution = true;
             SelectingChoice = false;

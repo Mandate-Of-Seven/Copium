@@ -23,6 +23,7 @@ public class Event_02: CopiumScript
     bool effectTriggered = false;
     public CameraShakeEffect cameraShakeEffect;
     CrewMenu cm;
+    StatusUpdate su;
     float timerElasped = 0f;
 
     int state = 1;
@@ -32,6 +33,7 @@ public class Event_02: CopiumScript
     void Start()
 	{
         cm = EventManager.crewMenu;
+        su = EventManager.statusUpdate;
     }
 	void Update()
 	{
@@ -82,11 +84,15 @@ public class Event_02: CopiumScript
             // Indicate GG GAME OVER
 			EventManager.Option_01.txt.text = "Attempt to fend off the raiders";
             EventManager.Option_01.txt.color = Color.red;
-            EventManager.Option_01.ShowAllIcons();
 
             // Indicate lost all supplies all crew mentally shaken
             EventManager.Option_02.txt.text = "Give all your supplies";
-            EventManager.Option_02.ShowIcons(false, true, false, true);
+            
+            if(EventManager.Option_02.Hovered())
+            {
+                su.AllCrew(StatusUpdate.STATE.DECREASE, CrewMenu.STAT_TYPES.MENTAL);
+                su.Supplies(StatusUpdate.STATE.UNKNOWN);
+            }
 
             resolutionTextNum = 1;
 
@@ -104,16 +110,27 @@ public class Event_02: CopiumScript
 
             // Indicate Bronson and Chuck critically injured 
             EventManager.Option_01.txt.text = "Attempt to save Chuck";
-            EventManager.Option_01.ShowIcons(true);
 
             // Indicate Chuck dies
             EventManager.Option_02.txt.text = "Let Chuck die and take out raiders";
-            EventManager.Option_02.ShowIcons(true);
-
 
             // Indicate - 10 supplies Chuck survives(All crew members mental state shaken)
             EventManager.Option_03.txt.text = "Give up supplies";
-            EventManager.Option_03.ShowIcons(false, true, false, true);
+
+            if (EventManager.Option_01.Hovered())
+            {
+                su.Bronson(StatusUpdate.STATE.DECREASE, CrewMenu.STAT_TYPES.HEALTH);
+                su.Chuck(StatusUpdate.STATE.DECREASE, CrewMenu.STAT_TYPES.HEALTH);
+            }
+            else if (EventManager.Option_02.Hovered())
+            {
+                su.Chuck(StatusUpdate.STATE.UNKNOWN, CrewMenu.STAT_TYPES.HEALTH);
+            }
+            else if (EventManager.Option_03.Hovered())
+            {
+                su.AllCrew(StatusUpdate.STATE.DECREASE, CrewMenu.STAT_TYPES.MENTAL);
+                su.Supplies(StatusUpdate.STATE.UNKNOWN);
+            }
 
             resolutionTextNum = 2;
 
