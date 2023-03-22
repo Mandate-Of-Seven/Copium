@@ -240,13 +240,7 @@ public class EventManager: CopiumScript
 	/**************************************************************************/
     void SelectChoice()
     {
-        choiceTimer -= Time.deltaTime;
-        if (choiceTimer < 0)
-            choiceTimer = 0;
-        float percentage = choiceTimer / choiceDuration;
-        Vector3 scale = choiceSlider.transform.localScale;
-        scale.x = percentage;
-        choiceSlider.transform.localScale = scale;
+
 
         if (Option_01.btn.state == ButtonState.OnClick)
         {

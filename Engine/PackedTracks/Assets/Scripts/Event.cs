@@ -1,27 +1,17 @@
 ﻿using System;
 using CopiumEngine;
 
-public class Event
+public abstract class Event
 {
-	enum State
-    {
-		ForeShadowing,Triggered,Running
-    };
+	public virtual string body { get; }
+	public virtual string preempt { get; }
 
 	public Event()
     {
 		EventsManager.Instance.AddEvent(this);
     }
-
-	public void ForeShadow()
-    {
-
-    }
-
-	public void Update()
-    {
-		
-    }
+	public virtual bool OnTrigger() { return true; }
+	public virtual bool ForeShadow() { return true; }
 
 	public virtual bool isTriggered()
 	{
