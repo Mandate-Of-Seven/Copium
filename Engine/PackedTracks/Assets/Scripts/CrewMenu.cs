@@ -12,7 +12,7 @@
 \brief
 	Contains functions needed for the crew menu of the left screen
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 using CopiumEngine;
 using System;
@@ -120,13 +120,22 @@ public class CrewMenu: CopiumScript
             dDeploy = danton.isDeployed;
             deployBtnWrapper.SetInteractable(false);
             StartPrepare();
+
         }
        
        if (crewStatusManager.isCrewStatusOn)
        {
+            Console.WriteLine("status on");
             UpdateEffects();
+
+       }else if(crewStatusManager.isCabinOn)
+       {
+            //UpdateEffects();
+            Console.WriteLine("cabin on");
             UpdateTexts();
             timeElasped += Time.deltaTime;
+
+
        }
 
         CheckCrewStatus();
@@ -155,9 +164,16 @@ public class CrewMenu: CopiumScript
             {
                 person.crewScript.hungerT.text = person.hungerScrambler.Scramble();
             }
+
+
             person.crewScript.sprite.color = Color.Lerp(person.crewScript.sprite.color,person.targetColor,Time.deltaTime);
+
         }
     }
+    // void UpdateStatusScreenEffects()
+    // {
+
+    // }
 
     /*******************************************************************************
 	/*!
@@ -501,7 +517,7 @@ public class CrewMenu: CopiumScript
     {
         if (!resultManager.isResultOn)
         {
-            crewStatusManager.ClosePanel(true);
+            crewStatusManager.ReturnToCockpit(true);
             reportScreenManager.ClosePanel();
             resultManager.OpenPanel();
         }
