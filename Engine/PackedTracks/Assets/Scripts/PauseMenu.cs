@@ -34,20 +34,47 @@ public class PauseMenu: CopiumScript
     public bool isPaused = false;
     public bool returnToMenu = false;
     public bool quitGame = false;
+
+    public Fade fade;
+
+    private bool loadQuit = false;
+    private bool loadScene = false;
+
     void Start()
 	{
 
 	}
 	void Update()
 	{
-        if (!isPaused)
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            isPaused = !isPaused;
+            PauseCanvas.SetActive(isPaused);
+            if (isPaused)
             {
-                isPaused = true;
+                InternalCalls.PauseAllAnimation();
+            }
+            else
+            {
+                InternalCalls.PlayAllAnimation();
             }
         }
-        else
+
+        if (fade.FadeEnded())
+        {
+            if(loadQuit)
+            {
+                loadQuit = false;
+                Application.Quit();
+            }
+            else if(loadScene)
+            {
+                loadScene = false;
+                SceneManager.LoadScene("MainMenu");
+            }
+        }
+
+        if(isPaused)
         {
             if (PauseResumeBtn.state == ButtonState.OnClick)
             {
@@ -90,30 +117,13 @@ public class PauseMenu: CopiumScript
                 quitGame = false;
                 returnToMenu = false;
             }
-             if (PauseYesBtn.state == ButtonState.OnClick)
+            if (PauseYesBtn.state == ButtonState.OnClick)
             {
-               if (quitGame)
-               {
-                Application.Quit();
-               }
-               else if(returnToMenu)
-               {
-                SceneManager.LoadScene("MainMenu");
-               }
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            isPaused = !isPaused;
-            PauseCanvas.SetActive(isPaused);
-            if (isPaused)
-            {
-                InternalCalls.PauseAllAnimation();
-            }
-            else
-            {
-                InternalCalls.PlayAllAnimation();
+                fade.Start();
+                if (quitGame)
+                    loadQuit = true;
+                else if (returnToMenu)
+                    loadScene = true;
             }
         }
     }

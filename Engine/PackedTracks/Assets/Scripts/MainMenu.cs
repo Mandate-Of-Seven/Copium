@@ -34,8 +34,13 @@ public class MainMenu: CopiumScript
 
     public GameObject arrow;
 
+    public Fade fade;
+
     private bool hovering = false;
     private bool canPlayHoverSound = true;
+
+    private bool loadGame = false;
+    private bool loadHTP = false;
 
     void Start()
     {
@@ -47,11 +52,25 @@ public class MainMenu: CopiumScript
     {
         if(StartGameButton.state == ButtonState.OnClick)
         {
-            SceneManager.LoadScene("Demo");
+            fade.Start();
+            loadGame = true;
         }
 
         if(HowtoPlayButton.state == ButtonState.OnClick)
         {
+            fade.Start();
+            loadHTP = true;
+        }
+
+        if(loadGame && fade.FadeEnded())
+        {
+            loadGame = false;
+            SceneManager.LoadScene("Demo");
+        }
+
+        if(loadHTP && fade.FadeEnded())
+        {
+            loadHTP = false;
             SceneManager.LoadScene("HowToPlayNew");
         }
 
