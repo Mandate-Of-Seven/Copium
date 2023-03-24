@@ -128,4 +128,15 @@ namespace Copium
 		currentFrameIndex = 0;
 		rowIndex = columnIndex = 0;
 	}
+
+	void Animation::SetFrame(int _frame)
+	{
+		if (_frame < 0 || _frame >= frameCount)
+			return;
+
+		currentFrameIndex = _frame;
+		rowIndex = _frame / columns;
+		columnIndex = _frame % columns;
+
+	}
 }

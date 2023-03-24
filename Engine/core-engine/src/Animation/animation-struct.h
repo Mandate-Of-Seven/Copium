@@ -105,6 +105,8 @@ namespace Copium
 		/**************************************************************************/
 		void ResetFrame();
 
+		void SetFrame(int _frame);
+
 	};
 }
 

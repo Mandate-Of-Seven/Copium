@@ -953,6 +953,11 @@ namespace Copium
 		return (float)pAnimator->animations[0].timeDelay;
 	}
 
+	static void SetFrame(Animator* pAnimator, int frame)
+	{
+		pAnimator->GetCurrentAnimation()->SetFrame(frame);
+	}
+
 
 	/*******************************************************************************
 	/*!
@@ -1023,6 +1028,7 @@ namespace Copium
 		Register(SetTextColor);
 		Register(PlayAnimation);
 		Register(PauseAnimation);
+		Register(SetFrame);
 		Register(SetAnimatorDelay);
 		Register(GetAnimatorDelay);
 		Register(GetButtonHoverColor);
