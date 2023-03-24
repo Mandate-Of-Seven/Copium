@@ -45,13 +45,13 @@ public class GameManager: CopiumScript
     public ResultManager resultManager;
     public PauseMenu pauseMenu;
 
-    public float distanceLeft = 4000.0f;
+    public float distanceLeft = 400.0f;
 
     public float distanceInterval = 1.0f;
     float foodTimer = 0.0f;
     float hungerTimer = 0.0f;
     float timer = 0.0f;
-    float distancePerEvent = 1000.0f;
+    float distancePerEvent = 100.0f;
 
     bool updateEvent = false;
     bool updateHunger = false;

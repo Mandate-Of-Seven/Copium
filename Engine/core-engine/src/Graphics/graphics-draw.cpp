@@ -262,6 +262,8 @@ namespace Copium
 				glm::vec2 size(t.scale.x, t.scale.y);
 				float rotation = t.rotation.z;
 
+				Texture* texture = sr.refTexture;
+
 				if (t.HasParent())
 				{
 					glm::vec3 updatedPos = t.position.glmVec3;
@@ -269,14 +271,22 @@ namespace Copium
 					float updatedRot = t.rotation.z;
 					UpdateTransform(t, updatedPos, updatedRot, updatedScale);
 
+					glm::vec3 updatedScaleCam = { updatedScale.x, updatedScale.y, 1.f };
+					if (texture != nullptr)
+						updatedScaleCam = { updatedScale.x * texture->get_pixel_width(), updatedScale.y * texture->get_pixel_height(), 1.f };
+
 					// If the object isnt within the frustum
-					if (!camera->withinFrustum(updatedPos, updatedScale))
+					if (!camera->withinFrustum(updatedPos, updatedScaleCam))
 						continue;
 
 					renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr);
 				}
 				else
 				{
+					glm::vec3 updatedScale = { size.x, size.y, 1.f };
+					if (texture != nullptr)
+						updatedScale = { size.x * texture->get_pixel_width(), size.y * texture->get_pixel_height(), 1.f };
+
 					// If the object isnt within the frustum
 					if (!camera->withinFrustum(t.position, t.scale))
 						continue;
@@ -297,6 +307,8 @@ namespace Copium
 				glm::vec2 size(t.scale.x, t.scale.y);
 				float rotation = t.rotation.z;
 
+				Texture* texture = sr.refTexture;
+
 				if (t.HasParent())
 				{
 					glm::vec3 updatedPos = t.position.glmVec3;
@@ -304,16 +316,24 @@ namespace Copium
 					float updatedRot = t.rotation.z;
 					UpdateTransform(t, updatedPos, updatedRot, updatedScale);
 
+					glm::vec3 updatedScaleCam = { updatedScale.x, updatedScale.y, 1.f };
+					if (texture != nullptr)
+						updatedScaleCam = { updatedScale.x * texture->get_pixel_width(), updatedScale.y * texture->get_pixel_height(), 1.f };
+
 					// If the object isnt within the frustum
-					if (!camera->withinFrustum(updatedPos, updatedScale))
+					if (!camera->withinFrustum(updatedPos, updatedScaleCam))
 						continue;
 
 					renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr, &image.layeredColor);
 				}
 				else
 				{
+					glm::vec3 updatedScale = { size.x, size.y, 1.f };
+					if (texture != nullptr)
+						updatedScale = { size.x * texture->get_pixel_width(), size.y * texture->get_pixel_height(), 1.f };
+
 					// If the object isnt within the frustum
-					if (!camera->withinFrustum(t.position, t.scale))
+					if (!camera->withinFrustum(t.position, updatedScale))
 						continue;
 
 					renderer.draw_quad(t.position, size, rotation, sr, &image.layeredColor);
@@ -476,6 +496,8 @@ namespace Copium
 						glm::vec2 size(t.scale.x, t.scale.y);
 						float rotation = t.rotation.z;
 
+						Texture* texture = sr.refTexture;
+
 						if (t.HasParent())
 						{
 							glm::vec3 updatedPos = t.position.glmVec3;
@@ -483,16 +505,24 @@ namespace Copium
 							float updatedRot = t.rotation.z;
 							UpdateTransform(t, updatedPos, updatedRot, updatedScale);
 
+							glm::vec3 updatedScaleCam = { updatedScale.x, updatedScale.y, 1.f };
+							if (texture != nullptr)
+								updatedScaleCam = { updatedScale.x * texture->get_pixel_width(), updatedScale.y * texture->get_pixel_height(), 1.f };
+
 							// If the object isnt within the frustum
-							if (!camera->withinFrustum(updatedPos, updatedScale))
+							if (!camera->withinFrustum(updatedPos, updatedScaleCam))
 								continue;
 
 							renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr);
 						}
 						else
 						{
+							glm::vec3 updatedScale = { size.x, size.y, 1.f };
+							if (texture != nullptr)
+								updatedScale = { size.x * texture->get_pixel_width(), size.y * texture->get_pixel_height(), 1.f };
+
 							// If the object isnt within the frustum
-							if (!camera->withinFrustum(t.position, t.scale))
+							if (!camera->withinFrustum(t.position, updatedScale))
 								continue;
 
 							renderer.draw_quad(t.position, size, rotation, sr);
@@ -510,6 +540,8 @@ namespace Copium
 						glm::vec2 size(t.scale.x, t.scale.y);
 						float rotation = t.rotation.z;
 
+						Texture* texture = sr.refTexture;
+
 						if (t.HasParent())
 						{
 							glm::vec3 updatedPos = t.position.glmVec3;
@@ -517,16 +549,24 @@ namespace Copium
 							float updatedRot = t.rotation.z;
 							UpdateTransform(t, updatedPos, updatedRot, updatedScale);
 
+							glm::vec3 updatedScaleCam = { updatedScale.x, updatedScale.y, 1.f };
+							if (texture != nullptr)
+								updatedScaleCam = { updatedScale.x * texture->get_pixel_width(), updatedScale.y * texture->get_pixel_height(), 1.f };
+
 							// If the object isnt within the frustum
-							if (!camera->withinFrustum(updatedPos, updatedScale))
+							if (!camera->withinFrustum(updatedPos, updatedScaleCam))
 								continue;
 
 							renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, sr,&image.layeredColor);
 						}
 						else
 						{
+							glm::vec3 updatedScale = { size.x, size.y, 1.f };
+							if (texture != nullptr)
+								updatedScale = { size.x * texture->get_pixel_width(), size.y * texture->get_pixel_height(), 1.f };
+
 							// If the object isnt within the frustum
-							if (!camera->withinFrustum(t.position, t.scale))
+							if (!camera->withinFrustum(t.position, updatedScale))
 								continue;
 
 							renderer.draw_quad(t.position, size, rotation, sr, &image.layeredColor);
@@ -684,6 +724,86 @@ namespace Copium
 		Scene* pScene{ MySceneManager.get_current_scene() };
 		if (pScene)
 		{
+			color = { 0.1f, 0.1f, 1.0f, 1.f };
+			for (SpriteRenderer& sr : pScene->componentArrays.GetArray<SpriteRenderer>())
+			{
+				GameObject& gameObject{ sr.gameObj };
+				Transform& transform{ gameObject.transform };
+				if (!sr.enabled || !gameObject.IsActive() ||
+					// If the object isnt within the frustum
+					!camera->withinFrustum(transform.GetWorldPosition(), transform.GetWorldScale()))
+					continue;
+
+				glm::vec3 updatedPos = transform.position.glmVec3;
+				glm::vec3 updatedScale = transform.scale.glmVec3;
+				float updatedRot = transform.rotation.z;
+
+				if (transform.HasParent())
+					UpdateTransform(transform, updatedPos, updatedRot, updatedScale);
+
+				Texture* texture = sr.sprite.refTexture;
+				glm::vec2 min, max;
+				if (texture != nullptr)
+				{
+					float tempX = updatedScale.x * texture->get_pixel_width();
+					float tempY = updatedScale.y * texture->get_pixel_height();
+
+					min = glm::vec2(updatedPos.x - tempX * 0.5f, updatedPos.y - tempY * 0.5f);
+					max = glm::vec2(updatedPos.x + tempX * 0.5f, updatedPos.y + tempY * 0.5f);
+				}
+
+				AABB bounds(min, max);
+				glm::vec3 pos0_1 = { bounds.min.to_glm(), 0.f };
+				glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y, 0.f };
+				glm::vec3 pos2_1 = { bounds.max.to_glm() , 0.f };
+				glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y, 0.f };
+
+				renderer.draw_line(pos0_1, pos1_1, color);
+				renderer.draw_line(pos1_1, pos2_1, color);
+				renderer.draw_line(pos2_1, pos3_1, color);
+				renderer.draw_line(pos3_1, pos0_1, color);
+			}
+
+			for (Image& image : pScene->componentArrays.GetArray<Image>())
+			{
+				GameObject& gameObject{ image.gameObj };
+				Transform& transform{ gameObject.transform };
+				if (!image.enabled || !gameObject.IsActive() ||
+					// If the object isnt within the frustum
+					!camera->withinFrustum(transform.GetWorldPosition(), transform.GetWorldScale()))
+					continue;
+
+				glm::vec3 updatedPos = transform.position.glmVec3;
+				glm::vec3 updatedScale = transform.scale.glmVec3;
+				float updatedRot = transform.rotation.z;
+
+				if (transform.HasParent())
+					UpdateTransform(transform, updatedPos, updatedRot, updatedScale);
+
+				Texture* texture = image.sprite.refTexture;
+				glm::vec2 min, max;
+				if (texture != nullptr)
+				{
+					float tempX = updatedScale.x * texture->get_pixel_width();
+					float tempY = updatedScale.y * texture->get_pixel_height();
+
+					min = glm::vec2(updatedPos.x - tempX * 0.5f, updatedPos.y - tempY * 0.5f);
+					max = glm::vec2(updatedPos.x + tempX * 0.5f, updatedPos.y + tempY * 0.5f);
+				}
+
+				AABB bounds(min, max);
+				glm::vec3 pos0_1 = { bounds.min.to_glm(), 0.f };
+				glm::vec3 pos1_1 = { bounds.max.x, bounds.min.y, 0.f };
+				glm::vec3 pos2_1 = { bounds.max.to_glm() , 0.f };
+				glm::vec3 pos3_1 = { bounds.min.x, bounds.max.y, 0.f };
+
+				renderer.draw_line(pos0_1, pos1_1, color);
+				renderer.draw_line(pos1_1, pos2_1, color);
+				renderer.draw_line(pos2_1, pos3_1, color);
+				renderer.draw_line(pos3_1, pos0_1, color);
+			}
+
+			color = { 0.1f, 1.f, 0.1f, 1.f };
 			for (BoxCollider2D& boxCol: pScene->componentArrays.GetArray<BoxCollider2D>())
 			{
 				GameObject& gameObject{ boxCol.gameObj};

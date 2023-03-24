@@ -224,7 +224,8 @@ public class CrewStatusManager: CopiumScript
 		Console.WriteLine("close status panel");
 		isCrewStatusOn = false;
 		CrewStatusBtn.gameObject.SetActive(true);
-		alert.enabled = true;
+        resultManager.Enable();
+        alert.enabled = true;
 		StatusScreen.transform.parent = parent.transform;
 		
 	}
