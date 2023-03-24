@@ -49,7 +49,6 @@ public class GameManager: CopiumScript
 
     public float distanceInterval = 1.0f;
     float foodTimer = 0.0f;
-    float hungerTimer = 0.0f;
     float timer = 0.0f;
     float distancePerEvent = 100.0f;
 

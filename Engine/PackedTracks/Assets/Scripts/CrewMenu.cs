@@ -48,10 +48,9 @@ public class CrewMenu: CopiumScript
     public bool preparing = false;
     public bool deploying = false;
 
-    float timer = 0.0f;
+    //float timer = 0.0f;
 
     float healthInterval = 5.0f; // The interval in seconds in which the crew members lose health
-    float hungerInterval = 5.0f; // The interval in seconds in which the crew members get hungry
 
     public bool storageComparment = true; // For the food storage
 

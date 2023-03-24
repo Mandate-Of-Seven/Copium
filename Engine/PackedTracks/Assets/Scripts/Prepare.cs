@@ -99,7 +99,8 @@ public class Prepare : CopiumScript
             }
             else if (prepareButton1.state == ButtonState.None)
             {
-                option1Hover = false;
+                if(option1Hover)
+                    option1Hover = false;
             }
 
             if (prepareButton2.state == ButtonState.OnHover)

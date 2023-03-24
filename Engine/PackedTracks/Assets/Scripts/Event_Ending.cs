@@ -21,7 +21,7 @@ public class Event_Ending: CopiumScript
     public EventManager EventManager;
     CrewMenu cm;
 
-    int resolutionTextNum = 0;
+    //int resolutionTextNum = 0;
 
     void Start()
     {
@@ -69,11 +69,11 @@ public class Event_Ending: CopiumScript
                 Result(7);
 
 
-            resolutionTextNum = 2;
+            //resolutionTextNum = 2;
         }
         else if (requirement == 2) // All dead
         {
-            resolutionTextNum = 1;
+            //resolutionTextNum = 1;
             Result(1);
         }
         else if(requirement == 3) // Mid game ending

@@ -26,8 +26,8 @@ public class Option: CopiumScript
     public TooltipBehaviour tooltip;
 	public StatusUpdate statusUpdate;
     Image image;
-    Color disabled = new Color(1.0f, 1.0f, 1.0f, 0.5f); 
-    Color enabled = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+    Color colorDisabled = new Color(1.0f, 1.0f, 1.0f, 0.5f); 
+    Color colorEnabled = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
     public ButtonWrapper btnWrapper;
 
@@ -37,12 +37,12 @@ public class Option: CopiumScript
         btnWrapper.SetImage(btn.GetComponent<Image>());
 
         image = gameObject.GetComponent<Image>();
-        enabled = image.color;
+        colorEnabled = image.color;
 	}
 	void Update()
 	{
         if (!btn.enabled)
-            image.color = disabled;
+            image.color = colorDisabled;
     }
 
     public bool Hovered()
@@ -68,7 +68,7 @@ public class Option: CopiumScript
     {
         Disable();
         btn.enabled = true;
-        image.color = enabled;
+        image.color = colorEnabled;
         txt.color = Color.white;
     }
 }

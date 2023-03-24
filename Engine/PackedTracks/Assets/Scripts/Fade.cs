@@ -126,7 +126,7 @@ public class Fade: CopiumScript
         }
     }
 
-	float Lerp(float a, float b, float t)
+	public float Lerp(float a, float b, float t)
 	{
 		return a + (b - a) * t;
     }
