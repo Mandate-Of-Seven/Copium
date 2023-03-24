@@ -125,13 +125,11 @@ public class CrewMenu: CopiumScript
        
        if (crewStatusManager.isCrewStatusOn)
        {
-            Console.WriteLine("status on");
             UpdateEffects();
 
        }else if(crewStatusManager.isCabinOn)
        {
             //UpdateEffects();
-            Console.WriteLine("cabin on");
             UpdateTexts();
             timeElasped += Time.deltaTime;
 

@@ -697,7 +697,7 @@ namespace Copium
 			MonoObject* gameObjectInstance{ ReflectGameObject(component.gameObj) };
 			MonoObject* instance = instantiateClass(scriptClass.mClass);
 			void* params[2] = { gameObjectInstance,&address };
-			PRINT("C++ COMPONENT: " << (size_t)&component);
+			//PRINT("C++ COMPONENT: " << (size_t)&component);
 			MonoMethod* reflectComponent = mono_class_get_method_from_name(mComponent, "Initialize", 2);
 			COPIUM_ASSERT(!mComponent, "MonoObject was null");
 			invoke(instance, reflectComponent, params);

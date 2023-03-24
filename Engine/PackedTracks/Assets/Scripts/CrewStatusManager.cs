@@ -233,19 +233,21 @@ public class CrewStatusManager: CopiumScript
 	{
 		// Update Supplies Text
 		statusScreenSuppliesText.text = "Supplies: " + crewMenu.supplies;
-		if(crewMenu.supplies >= lotThreshold){
-			if(supplyState != 3)
-				ToggleSuppliesSprite(3);
-		}else if(crewMenu.supplies >= medThreshold){
-			if(supplyState != 2)
-				ToggleSuppliesSprite(2);
-		}else if(crewMenu.supplies >= lowThreshold){
-			if(supplyState != 1)
-				ToggleSuppliesSprite(1);
-		}else{
-			if(supplyState != 0)
-				ToggleSuppliesSprite(0);
-		}
+
+		// Bean: Temporary commented because images are not assigned
+		//if(crewMenu.supplies >= lotThreshold){
+		//	if(supplyState != 3)
+		//		ToggleSuppliesSprite(3);
+		//}else if(crewMenu.supplies >= medThreshold){
+		//	if(supplyState != 2)
+		//		ToggleSuppliesSprite(2);
+		//}else if(crewMenu.supplies >= lowThreshold){
+		//	if(supplyState != 1)
+		//		ToggleSuppliesSprite(1);
+		//}else{
+		//	if(supplyState != 0)
+		//		ToggleSuppliesSprite(0);
+		//}
 
 	}
 	public void ToggleSuppliesSprite(int state){

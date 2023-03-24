@@ -305,15 +305,11 @@ namespace Copium
 
 		if (isRenaming && renamer == &_go)
 		{
-			//PRINT("bloop");
 			ImGui::SetItemAllowOverlap();
 			static char buffer[256];
 
 			strcpy(buffer, _go.name.c_str());
-			if (ImGui::InputText("##gameObjName", buffer, 256))
-			{
-				PRINT("bleep");
-			}
+			ImGui::InputText("##gameObjName", buffer, 256);
 
 			_go.name = buffer;
 
@@ -435,15 +431,11 @@ namespace Copium
 
 		if (isRenaming && renamer == &_go)
 		{
-			//PRINT("bloop");
 			ImGui::SetItemAllowOverlap();
 			static char buffer[256];
 
 			strcpy(buffer, _go.name.c_str());
-			if (ImGui::InputText("##gameObjName", buffer, 256))
-			{
-				PRINT("bleep");
-			}
+			ImGui::InputText("##gameObjName", buffer, 256);
 
 			_go.name = buffer;
 

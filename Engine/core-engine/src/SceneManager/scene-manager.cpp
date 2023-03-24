@@ -1065,7 +1065,6 @@ namespace Copium
 		}
 		else
 		{
-			PRINT("bloop");
 			T& component = MyGOF.AddComponent<T>(pEvent->gameObject, *currentScene, pEvent->uuid,nullptr);
 			pEvent->componentContainer = &component;
 		}
