@@ -21,6 +21,8 @@ public class Option: CopiumScript
 {
     public Text txt;
     public Button btn;
+    [NonSerialized]
+    public Choice mappedChoice;
 
 	public StatusUpdate statusUpdate;
     Image image;

@@ -56,6 +56,8 @@ public class Person
 		);
 	}
 
+    public bool alive { get { return health == HEALTH_STATE.DEAD; } }
+
     string _name;
     HEALTH_STATE _health;
     MENTAL_STATE _mental;
@@ -65,8 +67,6 @@ public class Person
     public StringScramblerEffect healthScrambler;
     public StringScramblerEffect mentalScrambler;
     public StringScramblerEffect hungerScrambler;
-
-	public Crew crewScript;
 
 	public Color targetColor = Color.white;
 
@@ -104,7 +104,10 @@ public class Person
 				tmp.b = x;
 				targetColor = tmp;
 
-                healthScrambler = CreateScrambler(_health.ToString(), value.ToString());
+                if (healthScrambler != null)
+                    healthScrambler = CreateScrambler(_health.ToString(), value.ToString());
+                else
+                    healthScrambler = CreateScrambler("", value.ToString());
                 _health = value;
             }
         }
@@ -134,7 +137,10 @@ public class Person
 
             if (_mental != value)
             {
-                mentalScrambler = CreateScrambler(_mental.ToString(), value.ToString());
+                if (mentalScrambler != null)
+                    mentalScrambler = CreateScrambler(_mental.ToString(), value.ToString());
+                else
+                    mentalScrambler = CreateScrambler("", value.ToString());
                 _mental = value;
             }
 

@@ -98,12 +98,7 @@
     <Compile Include="Assets\Scripts\CrewStatusManager.cs" />
     <Compile Include="Assets\Scripts\Events.cs" />
     <Compile Include="Assets\Scripts\EventsManager.cs" />
-    <Compile Include="Assets\Scripts\Event_01.cs" />
-    <Compile Include="Assets\Scripts\Event_02.cs" />
-    <Compile Include="Assets\Scripts\Event_03.cs" />
-    <Compile Include="Assets\Scripts\Event_04.cs" />
     <Compile Include="Assets\Scripts\Event_Ending.cs" />
-    <Compile Include="Assets\Scripts\Event_Intro.cs" />
     <Compile Include="Assets\Scripts\ExplosionEffect.cs" />
     <Compile Include="Assets\Scripts\EyesClosingEffect.cs" />
     <Compile Include="Assets\Scripts\Fade.cs" />

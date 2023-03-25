@@ -2,21 +2,12 @@ using CopiumEngine;
 using System;
 using System.Collections.Generic;
 
-public struct Choice
-{
-	public string choiceText;
-	public string resultText;
-
-	public bool isValid()
-	{
-		return choiceText.Length > 0;
-	}
-}
 
 public class EventsManager : CopiumScript
 {
 	public static EventsManager Instance;
 	List<Event> events = new List<Event>();
+    [NonSerialized]
 	public Event currentEvent;
 
 	public Text bodyText;
@@ -47,6 +38,7 @@ public class EventsManager : CopiumScript
 	public void Start()
     {
 		RegisterEvents();
+		UpdateCurrentEvent();
     }
 
 	public void Update()
@@ -70,31 +62,73 @@ public class EventsManager : CopiumScript
 				if (bodyTypeWriter.Done() && currentEvent.ForeShadow())
 				{
 					++state;
-					choiceTimerObject.SetActive(true);
+					//choiceTimerObject.SetActive(true);
 					bodyTypeWriter = new StringTypeWriterEffect(currentEvent.body, textInterval);
+					if (currentEvent.choices[0].IsValid())
+					{
+						Option_01.Enable();
+						Option_01.mappedChoice = currentEvent.choices[0];
+
+					}
+					if (currentEvent.choices[1].IsValid())
+					{
+						Option_02.Enable();
+						Option_02.mappedChoice = currentEvent.choices[1];
+
+					}
+					if (currentEvent.choices[2].IsValid())
+					{
+						Option_03.Enable();
+						Option_03.mappedChoice = currentEvent.choices[2];
+					}
 				}
 				break;
 			}
 			case EventState.Run:
 			{
-				UpdateTimer();
+				//UpdateTimer();
 				if (bodyTypeWriter.Done())
 				{
-					choiceTimerObject.SetActive(false);
+					//choiceTimerObject.SetActive(false);
+					++state;
 					currentEvent = null;
 				}
 				break;
 			}
 		}
-    }
+
+		if (Option_01.btnWrapper.GetState() == ButtonState.OnClick)
+		{
+			SelectChoice(Option_01);
+		}
+		else if (Option_02.btnWrapper.GetState() == ButtonState.OnClick)
+		{
+			SelectChoice(Option_02);
+		} 
+		else if (Option_03.btnWrapper.GetState() == ButtonState.OnClick)
+		{
+			SelectChoice(Option_03);
+		}
+	}
+
+	public void SelectChoice(Option option)
+    {
+		bodyTypeWriter = new StringTypeWriterEffect(option.mappedChoice.resultText, textInterval);
+		Option_01.Disable();
+		Option_02.Disable();
+		Option_03.Disable();
+	}
 
 	public void UpdateCurrentEvent()
 	{
+		Debug.Log("UPDATE CURRENT EVENT");
 		List<Event> removableEvents = new List<Event>();
 		foreach (Event e in events)
 		{
 			if (e.isTriggered())
 			{
+
+				Debug.Log("EVENT TRIGGERED");
 				currentEvent = e;
 				EventStart();
 			}
@@ -137,8 +171,20 @@ public class EventsManager : CopiumScript
 
 	void RegisterEvents()
     {
+		//PUT ENDINGS HERE
 
-    }
+		//PUT GENERIC EVENTS HERE
+
+		//PUT SEQUENTIAL EVENTS FROM HERE ONWARDS
+		AddEvent(new Event_Intro());
+		AddEvent(new Event_Explosion_HarrisAlive());
+		AddEvent(new Event_Explosion_HarrisDead());
+		AddEvent(new Event_Intruders_ChuckAlive());
+		AddEvent(new Event_Intruders_ChuckDead());
+		AddEvent(new Event_Bomb_ChuckHealthy());
+		AddEvent(new Event_Bomb_CrewInjured());
+		AddEvent(new Event_Bomb_Default());
+	}
 
 	void ShowEnding()
 	{

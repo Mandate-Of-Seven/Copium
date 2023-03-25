@@ -76,13 +76,13 @@ public class GameManager: CopiumScript
             return;
 
         if (Input.GetKeyDown(KeyCode.C))
-            crewMenuScript.SetCrew(CrewMenu.STAT_TYPES.ALIVE, 2, 0);
+            crewMenuScript.SetStat("Chuck",HEALTH_STATE.DEAD);
 
         if (Input.GetKeyDown(KeyCode.B))
-            crewMenuScript.SetCrew(CrewMenu.STAT_TYPES.ALIVE, 1, 0);
+            crewMenuScript.SetStat("Bronson", HEALTH_STATE.DEAD);
 
         if (Input.GetKeyDown(KeyCode.D))
-            crewMenuScript.SetCrew(CrewMenu.STAT_TYPES.ALIVE, 3, 0);
+            crewMenuScript.SetStat("Danton", HEALTH_STATE.DEAD);
 
         // Toggle canvases
         //CanvasManager();
@@ -218,8 +218,7 @@ public class GameManager: CopiumScript
             if (foodTimer >= 5.0f && crewMenuScript.supplies != 0)
             {
                 crewMenuScript.ChangeSupplies(-1);
-                crewMenuScript.ChangeAllCrew(CrewMenu.STAT_TYPES.HUNGER, 1);
-
+                crewMenuScript.ChangeAllHunger(+1);
                 foodTimer = 0.0f;
             }
             foodTimer += Time.deltaTime;

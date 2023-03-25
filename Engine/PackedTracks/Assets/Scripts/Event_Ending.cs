@@ -18,7 +18,7 @@ using System;
 
 public class Event_Ending: CopiumScript
 {
-    public EventManager EventManager;
+    /*public EventManager EventManager;
     CrewMenu cm;
 
     int resolutionTextNum = 0;
@@ -32,12 +32,12 @@ public class Event_Ending: CopiumScript
 
     }
 
-    /*******************************************************************************
+    *//*******************************************************************************
     /*!
         \brief
             Calculates what ending the player should get
     */
-    /*******************************************************************************/
+    /*******************************************************************************//*
     public void Ending(int requirement)
     {
         if (requirement == 1)// Some alive or all alive
@@ -82,13 +82,13 @@ public class Event_Ending: CopiumScript
         }
     }
 
-    /*******************************************************************************
+    *//*******************************************************************************
     /*!
         \brief
             Displays the result of the ending as well as plays the corrisponding
             audio
     */
-    /*******************************************************************************/
+    /*******************************************************************************//*
     public void Result(int choice)
     {
         if(choice == 1) // All dead
@@ -139,5 +139,5 @@ public class Event_Ending: CopiumScript
             EventManager.Body.text = "Its strange, the city... it seems so small. The guards they are looking at us funny. " +
                 "Did we come to the wrong place?";
         }
-    }
+    }*/
 }

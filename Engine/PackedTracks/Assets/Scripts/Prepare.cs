@@ -385,7 +385,7 @@ public class Prepare : CopiumScript
                 else if (choice == 2)
                 {
                     crewManager.ChangeSupplies(10);
-                    crewManager.ChangeCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate[randomCrewmate].name, -1);
+                    crewManager.ChangeHealth(currentCrewmate[randomCrewmate].name, -1);
                     changeSummaryArrow(false,true, currentCrewmate[randomCrewmate]);
                     currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " suffered some injuries but managed to kill the polar bear, " +
                                                    "and gain some valuable food.";
@@ -401,7 +401,7 @@ public class Prepare : CopiumScript
                 else if (choice == 2)
                 {
                     crewManager.ChangeSupplies(10);
-                    crewManager.SetCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate[randomCrewmate].name, 1);
+                    crewManager.SetStat(currentCrewmate[randomCrewmate].name, HEALTH_STATE.CRITICAL);
                     changeSummaryArrow(false, true, currentCrewmate[randomCrewmate]);
                     currentCrewmate[0].resultText = "Just as hope seemed all lost for " + currentCrewmate[randomCrewmate].name +
                                                 " to make it back, he stumbles out from the bushes grasping a few cans of soup. " +
@@ -412,7 +412,7 @@ public class Prepare : CopiumScript
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(3);
-                    crewManager.SetCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate[randomCrewmate].name, 1);
+                    crewManager.SetStat(currentCrewmate[randomCrewmate].name, HEALTH_STATE.CRITICAL);
                     changeSummaryArrow(false, true, currentCrewmate[randomCrewmate]);
                     currentCrewmate[0].resultText = "While scavanging through the abandoned town, " +
                                                  currentCrewmate[randomCrewmate].name + " saw some canned food and bottles of water lying in a building. " +
@@ -491,7 +491,7 @@ public class Prepare : CopiumScript
             case 12:
                 if (choice == 1)
                 {
-                    crewManager.ChangeCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate[randomCrewmate].name, -1);
+                    crewManager.ChangeHealth(currentCrewmate[randomCrewmate].name, -1);
                     changeSummaryArrow(false, true, currentCrewmate[randomCrewmate]);
                     currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " fell and hit his head which resulted in minor injuries";
                 }
@@ -528,27 +528,28 @@ public class Prepare : CopiumScript
             {
                 break;
             }
-            switch (currentCrewmate[i].name)
+            string name = currentCrewmate[i].name;
+            switch (name)
             {
                 case "Harris":
                     harris.isDeployed = false;
                     harris.Disable();
-                    crewManager.crew[0] = currentCrewmate[i];
+                    crewManager.crewMembers[name] = currentCrewmate[i];
                     break;
                 case "Bronson":
                     bronson.isDeployed = false;
                     bronson.Disable();
-                    crewManager.crew[1] = currentCrewmate[i];
+                    crewManager.crewMembers[name] = currentCrewmate[i];
                     break;
                 case "Chuck":
                     chuck.isDeployed = false;
                     chuck.Disable();
-                    crewManager.crew[2] = currentCrewmate[i];
+                    crewManager.crewMembers[name] = currentCrewmate[i];
                     break;
                 case "Danton":
                     danton.isDeployed = false;
                     danton.Disable();
-                    crewManager.crew[3] = currentCrewmate[i];
+                    crewManager.crewMembers[name] = currentCrewmate[i];
                     break;
                 default
                 :

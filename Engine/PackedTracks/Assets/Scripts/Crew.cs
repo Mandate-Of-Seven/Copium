@@ -20,9 +20,6 @@ using System.Collections.Generic;
 
 public class Crew : CopiumScript
 {
-
-
-    public CrewMenu crewMenu;
     public GameObject showDeployed;
     
     public Text healthT, mentalT, hungerT;
@@ -32,15 +29,12 @@ public class Crew : CopiumScript
     public bool selected = false;
     public bool isDeployed = false;
 
-    public int crewIndex;
     public Person person;
 
     public Image sprite;
 
     void Start()
     {
-        person = crewMenu.crew[crewIndex];
-        person.crewScript = this;
         selectBtnWrapper = new ButtonWrapper(selectBtn);
         selectBtnWrapper.useDisabled = false;
         selectBtnWrapper.SetImage(sprite);
@@ -63,6 +57,22 @@ public class Crew : CopiumScript
     }
 
     //UPDATES AS IN IT UPDATES THE EFFECTS
+    public void UpdateEffects()
+    {
+        if (!person.healthScrambler.Done())
+        {
+            healthT.text = person.healthScrambler.Scramble();
+        }
+        if (!person.mentalScrambler.Done())
+        {
+            mentalT.text = person.mentalScrambler.Scramble();
+        }
+        if (!person.hungerScrambler.Done())
+        {
+            hungerT.text = person.hungerScrambler.Scramble();
+        }
+        sprite.color = Color.Lerp(sprite.color, person.targetColor, Time.deltaTime);
+    }
 
     /*******************************************************************************
 	/*!
