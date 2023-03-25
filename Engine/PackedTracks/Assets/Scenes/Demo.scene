@@ -887,6 +887,7 @@
                     "GameManager": 9083562319934391338,
                     "ManualBtn": 6900690266592182984,
                     "audioManager": 11261402425968020089,
+                    "crewMenu": 17897393853473601660,
                     "tracker": 14370462799058784128,
                     "snowAnimator": 11135358241762452116,
                     "tracksAnimator": 180502757048782684,
@@ -1240,7 +1241,7 @@
                     "TypeID": 23,
                     "Name": "GameManager",
                     "distanceInterval": 0.10000000149011612,
-                    "distanceLeft": 400.0,
+                    "distanceLeft": 200.0,
                     "gameEnd": false,
                     "prevButtonObject": 17641556590098438796,
                     "ManualPopUp": 13627107543471401800,
@@ -1680,6 +1681,7 @@
                     "alert": 18001664217615177344,
                     "audioManager": 11261402425968020089,
                     "crewMenu": 17897393853473601660,
+                    "supplySpriteSheet": 7500674397773566376,
                     "tooltip": 10041599466456538637
                 },
                 {
@@ -2180,10 +2182,10 @@
                     "Type": "SortingGroup",
                     "TypeID": 26,
                     "SortingLayer": 5,
-                    "OrderInLayer": 1
+                    "OrderInLayer": 2
                 },
                 {
-                    "enabled": true,
+                    "enabled": false,
                     "UID": 6895326089354809604,
                     "Type": "Image",
                     "TypeID": 20,
@@ -4132,7 +4134,7 @@
                     "Alias": "BGM_Train",
                     "Loop": true,
                     "Overlap": true,
-                    "Volume": 0.5,
+                    "Volume": 0.029999999329447746,
                     "Channel": "BGM"
                 }
             ]
@@ -14917,6 +14919,63 @@
                     "g": 1.0,
                     "b": 1.0,
                     "a": 1.0
+                }
+            ]
+        },
+        {
+            "UID": 11210082172349539183,
+            "Name": "SuppliesSprite",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 15261300105003515934,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.2449946403503418,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 7.500001907348633,
+                        "Y": 7.500001907348633,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 13405888602341380188,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 5,
+                    "OrderInLayer": 2
+                },
+                {
+                    "enabled": true,
+                    "UID": 7500674397773566376,
+                    "Type": "Animator",
+                    "TypeID": 15,
+                    "Loop": false,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "SupplyTest.png",
+                            "Sprite ID": 15346028907088226304,
+                            "Time Delay": 0.0,
+                            "FrameCount": 4,
+                            "Rows": 1,
+                            "Columns": 4,
+                            "Flip": {
+                                "X": false,
+                                "Y": false
+                            }
+                        }
+                    ]
                 }
             ]
         }

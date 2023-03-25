@@ -134,9 +134,12 @@ namespace Copium
 		if (_frame < 0 || _frame >= frameCount)
 			return;
 
+		PRINT("set frame");
 		currentFrameIndex = _frame;
-		rowIndex = _frame / columns;
-		columnIndex = _frame % columns;
+		rowIndex = _frame / spriteSheet.columns;
+		columnIndex = _frame % spriteSheet.columns;
+
+		PRINT("Row:" << rowIndex << ' ' << "Cols:" << columnIndex);
 
 	}
 }

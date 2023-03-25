@@ -221,6 +221,7 @@ public class GameManager: CopiumScript
         {
             if (foodTimer >= 5.0f && crewMenuScript.supplies != 0)
             {
+                Console.WriteLine("decrement supplies");
                 crewMenuScript.ChangeSupplies(-1);
                 crewMenuScript.ChangeAllCrew(CrewMenu.STAT_TYPES.HUNGER, 1);
 
