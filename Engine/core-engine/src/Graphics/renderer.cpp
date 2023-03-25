@@ -893,6 +893,7 @@ namespace Copium
 			{
 				newLine++;
 				x = _position.x;
+				continue;
 			}
 
 			xpos = x + ch.bearing.x * (_scale * scaler);

@@ -130,6 +130,7 @@ namespace Copium
 			{
 				newLine++;
 				x = 0.f;
+				continue;
 			}
 
 			Character& ch = characters[c];
