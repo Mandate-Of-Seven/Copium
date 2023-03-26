@@ -101,7 +101,7 @@ namespace Copium
 		}
 		
 		Font* pFont = new Font(_name, _hasPath);
-		mapNameFonts.emplace(std::make_pair(_name, pFont));
+		mapNameFonts.emplace(std::make_pair(pFont->name, pFont));
 		return pFont;
 	}
 

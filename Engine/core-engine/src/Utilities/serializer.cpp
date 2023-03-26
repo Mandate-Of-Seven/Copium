@@ -25,7 +25,7 @@ namespace Copium
 	template<>
 	void Serializer::Serialize<Math::Vec2>(Math::Vec2& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
-		PRINT("Serializing a Vector2");
+		//PRINT("Serializing a Vector2");
 		rapidjson::Value v2(rapidjson::kObjectType);
 
 		Copium::SerializeBasic(_data.x, v2, _doc, "X");
@@ -39,7 +39,7 @@ namespace Copium
 	template<>
 	void Serializer::Serialize<Math::Vec3>(Math::Vec3& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
-		PRINT("Serializing a Vector3");
+		//PRINT("Serializing a Vector3");
 
 		rapidjson::Value v3(rapidjson::kObjectType);
 
@@ -55,7 +55,7 @@ namespace Copium
 	template<>
 	void Serializer::Serialize<Math::Vec4>(Math::Vec4& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
-		PRINT("Serializing a Vector4");
+		//PRINT("Serializing a Vector4");
 
 		rapidjson::Value v4(rapidjson::kObjectType);
 
@@ -588,7 +588,7 @@ namespace Copium
 					}
 					else
 					{
-						PRINT("Deserializing " << key);
+						//PRINT("Deserializing " << key);
 						switch (NAME_TO_CTYPE[key])
 						{
 							case ComponentType::Animator:
@@ -683,8 +683,8 @@ namespace Copium
 		Copium::Deserialize(_data.uuid.GetUUID(), _value, "UID");
 		Copium::Deserialize(_data.loop, _value, "Loop");
 		Copium::Deserialize(_data.enabled, _value, "enabled");
-		if (_data.loop)
-			PRINT("looping");
+		//if (_data.loop)
+		//	PRINT("looping");
 		Copium::Deserialize(_data.reverse, _value, "Rev");
 
 		rapidjson::Value anims(rapidjson::kArrayType);
@@ -1010,7 +1010,7 @@ namespace Copium
 				break;
 			}
 			}
-			PRINT("FIELD: " << _name);
+			//PRINT("FIELD: " << _name);
 			MyEventSystem->publish(new ScriptSetFieldEvent(_data, _name.c_str(), _data.buffer));
 		}
 

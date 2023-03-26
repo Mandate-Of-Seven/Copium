@@ -39,6 +39,8 @@ namespace CopiumEngine
         internal extern static void SetAnimatorDelay(ulong ID,float timeDelay);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static float GetAnimatorDelay(ulong ID);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetFrame(int frame);
         #endregion
 
         #region COMPONENT

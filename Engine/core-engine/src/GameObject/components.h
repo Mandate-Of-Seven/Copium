@@ -822,14 +822,20 @@ namespace Copium
 				Owner of this
 		*/
 		/**************************************************************************/
-		Image(GameObject& _gameObj, UUID _uuid = UUID()) : IUIComponent(_gameObj, _uuid) { PRINT("image constructed:" << sprite.sprite_name); }
+		Image(GameObject& _gameObj, UUID _uuid = UUID()) : IUIComponent(_gameObj, _uuid) 
+		{ 
+			//PRINT("image constructed:" << sprite.sprite_name); 
+		}
 
 		Image(GameObject& _gameObj, const Image& rhs, UUID _uuid = UUID()) :
 			IUIComponent(_gameObj, rhs, _uuid), sprite{ rhs.sprite }{};
 
 		Image& operator=(const Image& rhs) { return *this; }
 
-		~Image() { PRINT("Image destructed"); }
+		~Image() 
+		{ 
+			//PRINT("Image destructed");
+		}
 		/*******************************************************************************
 		/*!
 		*

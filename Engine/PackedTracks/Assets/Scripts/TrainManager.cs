@@ -63,11 +63,13 @@ public class TrainManager: CopiumScript
 	public float zoomInScale;
 
 	float targetAmbienceVolume = 0.0f;
+	public GameObject cabinBtn;
 
 	void Awake()
     {
 		Instance = this;
     }
+
 
 	void Start()
 	{
@@ -272,6 +274,8 @@ public class TrainManager: CopiumScript
 		targetSnowDelay = snowMinDelay;
 		targetTracksDelay = tracksMinDelay;
 		targetScale = new Vector3(zoomOutScale,zoomOutScale,1);
+
+		cabinBtn.SetActive(false);
 	}
 
 	/**************************************************************************/
@@ -287,6 +291,8 @@ public class TrainManager: CopiumScript
 		targetSnowDelay = snowMaxDelay;
 		targetTracksDelay = tracksMaxDelay;
 		targetScale = new Vector3(zoomInScale,zoomInScale,1);
+
+		cabinBtn.SetActive(true);
 	}
 
 	/**************************************************************************/

@@ -33,7 +33,7 @@ namespace Copium
 	template <>
 	void SerializeBasic<bool>(const bool& _data, rapidjson::Value& _value, rapidjson::Document& _doc, const std::string& _key)
 	{
-		PRINT("Serializing a Bool");
+		//PRINT("Serializing a Bool");
 
 		rapidjson::Value key;
 		CreateJsonString(_key, key, _doc);
@@ -43,7 +43,7 @@ namespace Copium
 	template <>
 	void SerializeBasic<std::string>(const std::string& _data, rapidjson::Value& _value, rapidjson::Document& _doc, const std::string& _key)
 	{
-		PRINT("Serializing a String");
+		//PRINT("Serializing a String");
 
 		rapidjson::Value key;
 		CreateJsonString(_key, key, _doc);
@@ -56,7 +56,7 @@ namespace Copium
 	template <>
 	void SerializeBasic<C_String>(const C_String& _data, rapidjson::Value& _value, rapidjson::Document& _doc, const std::string& _key) 
 	{
-		PRINT("Serializing a C String");
+		//PRINT("Serializing a C String");
 
 		rapidjson::Value key;
 		CreateJsonString(_key, key, _doc);

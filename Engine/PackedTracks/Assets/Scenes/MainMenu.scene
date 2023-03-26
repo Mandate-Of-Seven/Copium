@@ -26,16 +26,16 @@
             "ID": 7
         },
         {
-            "Name": "Transition",
-            "ID": 10
-        },
-        {
             "Name": "PauseMenu",
             "ID": 13
         },
         {
             "Name": "HowtoPlay",
             "ID": 8
+        },
+        {
+            "Name": "Transition",
+            "ID": 10
         }
     ],
     "GameObjects": [
@@ -80,6 +80,7 @@
                     "StartGameButton": 9574495531817611677,
                     "bgm_MainMenu": 10598037399685782859,
                     "YesButton": 6285799972325835689,
+                    "fade": 12233238483807826978,
                     "sfx_ButtonClick": 16280378391848286004,
                     "sfx_ButtonHover": 6905617242824353984
                 }
@@ -572,8 +573,8 @@
                     "PID": 3460000146871474587,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
+                        "X": -7.5,
+                        "Y": -0.5,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -1232,6 +1233,74 @@
                     "normalG": 0.0117647061124444,
                     "normalB": 0.0,
                     "normalA": 0.501960813999176
+                }
+            ]
+        },
+        {
+            "UID": 4948722789543408066,
+            "Name": "Fader",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 0,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 18.0,
+                        "Y": 11.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 16541757808407780668,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 10,
+                    "OrderInLayer": 0
+                },
+                {
+                    "enabled": false,
+                    "UID": 647626125674567122,
+                    "Type": "SpriteRenderer",
+                    "TypeID": 22,
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
+                    "Color": {
+                        "X": 0.00009999999747378752,
+                        "Y": 0.00009998999303206801,
+                        "Z": 0.00009998999303206801,
+                        "W": 1.0
+                    },
+                    "Flip": {
+                        "X": false,
+                        "Y": false
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 12233238483807826978,
+                    "Type": "Script",
+                    "TypeID": 23,
+                    "Name": "Fade",
+                    "duration": 1.0,
+                    "end": 1.0,
+                    "fadeIn": false,
+                    "fadeVal": 0.0,
+                    "postFade": 0.5,
+                    "preFade": 0.5,
+                    "shouldFade": true,
+                    "start": 0.0,
+                    "sr": 647626125674567122
                 }
             ]
         }

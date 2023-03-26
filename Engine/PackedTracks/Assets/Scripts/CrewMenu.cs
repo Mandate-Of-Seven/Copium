@@ -135,13 +135,20 @@ public class CrewMenu: CopiumScript
             dDeploy = danton.isDeployed;
             deployBtnWrapper.SetInteractable(false);
             StartPrepare();
+
         }
        
        if (crewStatusManager.isCrewStatusOn)
        {
             UpdateEffects();
+
+       }else if(crewStatusManager.isCabinOn)
+       {
+            //UpdateEffects();
             UpdateTexts();
             timeElasped += Time.deltaTime;
+
+
        }
     }
 
@@ -159,6 +166,10 @@ public class CrewMenu: CopiumScript
         chuck.UpdateEffects();
         danton.UpdateEffects();
     }
+    // void UpdateStatusScreenEffects()
+    // {
+
+    // }
 
     /*******************************************************************************
 	/*!
@@ -306,7 +317,7 @@ public class CrewMenu: CopiumScript
     {
         if (!resultManager.isResultOn)
         {
-            crewStatusManager.ClosePanel(true);
+            crewStatusManager.ReturnToCockpit(true);
             reportScreenManager.ClosePanel();
             resultManager.OpenPanel();
         }

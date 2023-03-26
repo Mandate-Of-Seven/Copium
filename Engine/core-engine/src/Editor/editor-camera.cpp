@@ -130,8 +130,6 @@ namespace Copium
 
 			viewer = point;
 		}
-		else
-			ImGui::SetWindowFocus();
 
 		//PRINT("Camera Pos: " << focalPoint.x << " " << focalPoint.y);
 			 

@@ -38,9 +38,13 @@ public class HowtoPlayMenu: CopiumScript
     public GameObject NextPage3;
     public GameObject PrevPage4;
 
+    public Fade fade;
+
     public Button ExitButton;
 
     public int page = 1;
+
+    private bool loadScene = false;
 
     void Start()
 	{
@@ -54,9 +58,6 @@ public class HowtoPlayMenu: CopiumScript
 
     void Update()
     {
-
-
-        
         if (PrevButton.state == ButtonState.OnClick)
         {   
             sfx_pageflip.Play();
@@ -70,6 +71,12 @@ public class HowtoPlayMenu: CopiumScript
             ShowPage(page);
             Console.WriteLine(page.ToString());
 
+        }
+
+        if (loadScene && fade.FadeEnded())
+        {
+            loadScene = false;
+            SceneManager.LoadScene("MainMenu");
         }
 
         if (NextButton.state == ButtonState.OnHover && page == 1)
@@ -174,7 +181,10 @@ public class HowtoPlayMenu: CopiumScript
         {
             page = 0;
             if (sceneChange)
-                SceneManager.LoadScene("MainMenu");
+            {
+                fade.Start();
+                loadScene = true;
+            }
             else
                 gameManager.CloseManual();
         }

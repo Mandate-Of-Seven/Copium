@@ -114,7 +114,6 @@ namespace Copium
 			{
 				case MESSAGE_TYPE::MT_TOGGLE_PERFORMANCE_VIEW:
 				{
-					PRINT("bloop");
 					displayPerformance = !displayPerformance;
 					performanceCounter = 0.05f;
 					break;

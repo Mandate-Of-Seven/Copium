@@ -497,8 +497,8 @@ namespace Copium
 	/*******************************************************************************/
 	static void QuitGame()
 	{
-		if (sceneManager.endPreview())
-			messageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
+		//if (sceneManager.endPreview())
+		//	messageSystem.dispatch(MESSAGE_TYPE::MT_STOP_PREVIEW);
 		quit_engine();
 		#ifdef GAMEMODE
 		quit_engine();
@@ -983,6 +983,11 @@ namespace Copium
 		return (float)pAnimator->animations[0].timeDelay;
 	}
 
+	static void SetFrame(Animator* pAnimator, int frame)
+	{
+		pAnimator->GetCurrentAnimation()->SetFrame(frame);
+	}
+
 
 	/*******************************************************************************
 	/*!
@@ -1054,6 +1059,7 @@ namespace Copium
 		Register(SetTextColor);
 		Register(PlayAnimation);
 		Register(PauseAnimation);
+		Register(SetFrame);
 		Register(SetAnimatorDelay);
 		Register(GetAnimatorDelay);
 		Register(GetButtonHoverColor);
