@@ -307,5 +307,17 @@ namespace CopiumEngine
                     InternalCalls.PauseAnimation(ID);
             }
         }
+
+
+        public void setFrame(int _frame)
+        {
+
+            InternalCalls.SetFrame(ID, _frame);
+        }
+
+        public void stop()
+        {
+            InternalCalls.StopAnimation(ID);
+        }
     }
 }

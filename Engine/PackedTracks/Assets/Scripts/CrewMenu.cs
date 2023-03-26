@@ -36,6 +36,7 @@ public class CrewMenu: CopiumScript
     public CrewStatusManager crewStatusManager; 
     public ReportScreenManager reportScreenManager; 
     public ResultManager resultManager; 
+    public CabinInteractions interactionManager;
 
     public Fade fader;
 
@@ -48,6 +49,7 @@ public class CrewMenu: CopiumScript
 
     public bool preparing = false;
     public bool deploying = false;
+    public bool interacting = false; 
 
     float timer = 0.0f;
 
@@ -116,6 +118,7 @@ public class CrewMenu: CopiumScript
         //have condition for when certain values hit 0??
         if (prepareBtnWrapper.GetState() == ButtonState.OnClick)
         {
+            interactionManager.SetInteractBtnsActive(false);
             SetPrepare(!preparing);
             hDeploy = harris.isDeployed;
             bDeploy = bronson.isDeployed;

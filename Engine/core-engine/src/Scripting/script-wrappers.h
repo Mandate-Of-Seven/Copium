@@ -987,6 +987,10 @@ namespace Copium
 	{
 		pAnimator->GetCurrentAnimation()->SetFrame(frame);
 	}
+	static void StopAnimation(Animator* pAnimator)
+	{
+		pAnimator->PauseAnimation();
+	}
 
 
 	/*******************************************************************************
@@ -1046,6 +1050,7 @@ namespace Copium
 		Register(AudioSourceGetVolume);
 		Register(PauseAllAnimation);
 		Register(PlayAllAnimation);
+		Register(StopAnimation);
 		Register(GetComponentEnabled);
 		Register(SetComponentEnabled);
 		Register(SetParent);

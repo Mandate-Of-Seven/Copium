@@ -44,11 +44,9 @@ public class CrewStatusManager: CopiumScript
 	public GameObject StatusScreen;
 	public Text statusScreenSuppliesText;
 
-	public GameObject exlowSupplies;
-	public GameObject lowSupplies;
-	public GameObject medSupplies;
-	public GameObject lotSupplies;
 
+
+	public Animator supplySpriteSheet;
 	public int exlowThreshold; // 0 - low
 	public int lowThreshold; // low - med
 	public int medThreshold; // med - lot
@@ -79,6 +77,8 @@ public class CrewStatusManager: CopiumScript
 		// Cabin set false
 		//CrewStatusTab.SetActive(false);
 		supplyState = 1;
+		supplySpriteSheet.stop();
+		supplySpriteSheet.setFrame(1);
 
 	}
 
@@ -123,6 +123,7 @@ public class CrewStatusManager: CopiumScript
 		if(isCabinOn)
 		{
 			cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition, cabinTargetPosition, Time.deltaTime * transitionSpeed);
+			UpdateStatusScreen();
 		}else
 		{
 			cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition, Vector3.zero, Time.deltaTime * transitionSpeed);
@@ -223,56 +224,33 @@ public class CrewStatusManager: CopiumScript
 		StatusScreen.transform.parent = parent.transform;
 		
 	}
+
 	public void UpdateStatusScreen()
 	{
 		// Update Supplies Text
 		statusScreenSuppliesText.text = "Supplies: " + crewMenu.supplies;
 
 		// Bean: Temporary commented because images are not assigned
-		//if(crewMenu.supplies >= lotThreshold){
-		//	if(supplyState != 3)
-		//		ToggleSuppliesSprite(3);
-		//}else if(crewMenu.supplies >= medThreshold){
-		//	if(supplyState != 2)
-		//		ToggleSuppliesSprite(2);
-		//}else if(crewMenu.supplies >= lowThreshold){
-		//	if(supplyState != 1)
-		//		ToggleSuppliesSprite(1);
-		//}else{
-		//	if(supplyState != 0)
-		//		ToggleSuppliesSprite(0);
-		//}
+		// Update Supplies Sprite
+		if(crewMenu.supplies >= lotThreshold){
+			if(supplyState != 3)
+				ToggleSuppliesSprite(3);
+		}else if(crewMenu.supplies >= medThreshold){
+			if(supplyState != 2)
+				ToggleSuppliesSprite(2);
+		}else if(crewMenu.supplies >= lowThreshold){
+			if(supplyState != 1)
+				ToggleSuppliesSprite(1);
+		}else{
+			if(supplyState != 0)
+				ToggleSuppliesSprite(0);
+		}
 
 	}
 	public void ToggleSuppliesSprite(int state){
-		if(state == 0){
-			lotSupplies.SetActive(false);
-			medSupplies.SetActive(false);
-			lowSupplies.SetActive(false);
-			exlowSupplies.SetActive(true);
-			supplyState = state;
-		}else if(state == 1){
-			lotSupplies.SetActive(false);
-			medSupplies.SetActive(false);
-			lowSupplies.SetActive(true);
-			exlowSupplies.SetActive(false);
-			supplyState = state;
-
-		}else if(state == 2){
-			lotSupplies.SetActive(false);
-			medSupplies.SetActive(true);
-			lowSupplies.SetActive(false);
-			exlowSupplies.SetActive(false);
-			supplyState = state;
-
-		}else if(state == 3){
-			lotSupplies.SetActive(true);
-			medSupplies.SetActive(false);
-			lowSupplies.SetActive(false);
-			exlowSupplies.SetActive(false);
-			supplyState = state;
-
-		}
+		Console.WriteLine("bleep");
+		supplyState = state;
+		supplySpriteSheet.setFrame(state);
 	}
 
 	public void DisableInteractions()
