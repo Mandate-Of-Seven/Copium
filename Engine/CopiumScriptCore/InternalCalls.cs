@@ -40,8 +40,11 @@ namespace CopiumEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static float GetAnimatorDelay(ulong ID);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetFrame(int frame);
+        internal extern static void SetFrame(ulong ID, int frame);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void StopAnimation(ulong ID);
         #endregion
+
 
         #region COMPONENT
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -182,6 +185,9 @@ namespace CopiumEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool GetKeyUp(int keyCode);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool GetMouseDown(int mouseCode);
         #endregion
 
         #region TEXT

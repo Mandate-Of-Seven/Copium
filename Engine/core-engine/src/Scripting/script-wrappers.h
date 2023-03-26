@@ -81,6 +81,36 @@ namespace Copium
 	/*******************************************************************************
 	/*!
 	\brief
+		To be implemented
+
+	\param keyCode
+
+	\return
+
+	*/
+	/*******************************************************************************/
+	static bool GetMouseDown(int mouseCode)
+	{
+		bool static held = false;
+		bool pressed = inputSystem.is_mousebutton_pressed(mouseCode);
+		if (!pressed)
+		{
+			held = false;
+			return false;
+		}
+
+		if (!held)
+		{
+			held = true;
+			return true;
+		}
+
+		return false;
+	}
+
+	/*******************************************************************************
+	/*!
+	\brief
 		Checks if a key was held
 	\param keyCode
 		Keycode to listen to
@@ -957,6 +987,10 @@ namespace Copium
 	{
 		pAnimator->GetCurrentAnimation()->SetFrame(frame);
 	}
+	static void StopAnimation(Animator* pAnimator)
+	{
+		pAnimator->PauseAnimation();
+	}
 
 
 	/*******************************************************************************
@@ -986,6 +1020,7 @@ namespace Copium
 		Register(GetKey);
 		Register(GetKeyUp);
 		Register(GetKeyDown);
+		Register(GetMouseDown);
 		Register(GetTranslation);
 		Register(SetTranslation);
 		Register(HasComponent);
@@ -1015,6 +1050,7 @@ namespace Copium
 		Register(AudioSourceGetVolume);
 		Register(PauseAllAnimation);
 		Register(PlayAllAnimation);
+		Register(StopAnimation);
 		Register(GetComponentEnabled);
 		Register(SetComponentEnabled);
 		Register(SetParent);

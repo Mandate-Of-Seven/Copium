@@ -1,5 +1,5 @@
-[2023-03-12 09:32:38.855] [Error] [critical] 
+[2023-03-26 19:03:38.085] [Error] [critical] 
 Caused By:	!mScript
-Info:		MONO OBJECT OF HowtoPlayMenu NOT LOADED
-Source:		C:\Users\FLESH\ECS\Copium\Engine\core-engine\src\Scripting\scripting-system.h (Line: 619)
+Info:		MONO OBJECT OF EventsManager NOT LOADED
+Source:		C:\Users\FLESH\ECS\Copium\Engine\core-engine\src\Scripting\scripting-system.cpp (Line: 940)
 

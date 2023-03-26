@@ -15,10 +15,10 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 
 using CopiumEngine;
-using System;
 
 public class EyesClosingEffect: CopiumScript
 {
+	public static EyesClosingEffect Instance;
 
 	public float originalPosY = 8.0f;
 	public float targetPosY = 4.5f;
@@ -29,6 +29,11 @@ public class EyesClosingEffect: CopiumScript
 	bool playing = false;
 	bool open = false;
 
+	public void Awake()
+    {
+		Instance = this;
+
+	}
 	public void Trigger()
 	{
 		playing = true;
@@ -69,7 +74,6 @@ public class EyesClosingEffect: CopiumScript
 		}
 		else
 		{
-			Console.WriteLine("ORIGINAL POSITION BRO");
 			newY = Mathf.Lerp(upperPos.y,originalPosY,timeAccumulated/timeTaken);
 		}
 		upperPos.y = newY;

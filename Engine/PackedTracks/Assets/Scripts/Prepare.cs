@@ -21,8 +21,6 @@ public class Prepare : CopiumScript
     public CrewMenu crewManager;
     public Button closeButton;
 
-    public TooltipBehaviour tooltip;
-
     public Text prepareBody;
     public Button prepareButton1;
     public Button prepareButton2;
@@ -78,13 +76,13 @@ public class Prepare : CopiumScript
 
     void Start()
     {
-        harrisBtnWrapper = new ButtonWrapper(harrisButton,crewManager.audioManager,tooltip);
+        harrisBtnWrapper = new ButtonWrapper(harrisButton);
         harrisBtnWrapper.SetImage(harrisButton.GetComponent<Image>());
-        bronsonBtnWrapper = new ButtonWrapper(bronsonButton,crewManager.audioManager,tooltip);
+        bronsonBtnWrapper = new ButtonWrapper(bronsonButton);
         bronsonBtnWrapper.SetImage(bronsonButton.GetComponent<Image>());
-        chuckBtnWrapper = new ButtonWrapper(chuckButton,crewManager.audioManager,tooltip);
+        chuckBtnWrapper = new ButtonWrapper(chuckButton);
         chuckBtnWrapper.SetImage(chuckButton.GetComponent<Image>());
-        dantonBtnWrapper = new ButtonWrapper(dantonButton,crewManager.audioManager,tooltip);
+        dantonBtnWrapper = new ButtonWrapper(dantonButton);
         dantonBtnWrapper.SetImage(dantonButton.GetComponent<Image>());
     }
     void Update()
@@ -93,7 +91,7 @@ public class Prepare : CopiumScript
         {
             if (prepareButton1.state == ButtonState.OnClick)
             {
-                crewManager.audioManager.clickSFX.Play();
+                AudioManager.Instance.clickSFX.Play();
                 choice = 1;
                 GenerateResults();
             }
@@ -108,12 +106,12 @@ public class Prepare : CopiumScript
                 if (!option2Hover)
                 {
                     option2Hover = true;
-                    crewManager.audioManager.hoverSFX.Play();
+                    AudioManager.Instance.hoverSFX.Play();
                 }
             }
             else if (prepareButton2.state == ButtonState.OnClick)
             {
-                crewManager.audioManager.clickSFX.Play();
+                AudioManager.Instance.clickSFX.Play();
                 choice = 2;
                 GenerateResults();
             }
@@ -388,7 +386,7 @@ public class Prepare : CopiumScript
                 else if (choice == 2)
                 {
                     crewManager.ChangeSupplies(10);
-                    crewManager.ChangeCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate[randomCrewmate].name, -1);
+                    crewManager.ChangeHealth(currentCrewmate[randomCrewmate].name, -1);
                     changeSummaryArrow(false,true, currentCrewmate[randomCrewmate]);
                     currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " suffered some injuries but managed to kill the polar bear, " +
                                                    "and gain some valuable food.";
@@ -404,7 +402,7 @@ public class Prepare : CopiumScript
                 else if (choice == 2)
                 {
                     crewManager.ChangeSupplies(10);
-                    crewManager.SetCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate[randomCrewmate].name, 1);
+                    crewManager.SetStat(currentCrewmate[randomCrewmate].name, HEALTH_STATE.CRITICAL);
                     changeSummaryArrow(false, true, currentCrewmate[randomCrewmate]);
                     currentCrewmate[0].resultText = "Just as hope seemed all lost for " + currentCrewmate[randomCrewmate].name +
                                                 " to make it back, he stumbles out from the bushes grasping a few cans of soup. " +
@@ -415,7 +413,7 @@ public class Prepare : CopiumScript
                 if (choice == 1)
                 {
                     crewManager.ChangeSupplies(3);
-                    crewManager.SetCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate[randomCrewmate].name, 1);
+                    crewManager.SetStat(currentCrewmate[randomCrewmate].name, HEALTH_STATE.CRITICAL);
                     changeSummaryArrow(false, true, currentCrewmate[randomCrewmate]);
                     currentCrewmate[0].resultText = "While scavanging through the abandoned town, " +
                                                  currentCrewmate[randomCrewmate].name + " saw some canned food and bottles of water lying in a building. " +
@@ -494,7 +492,7 @@ public class Prepare : CopiumScript
             case 12:
                 if (choice == 1)
                 {
-                    crewManager.ChangeCrew(CrewMenu.STAT_TYPES.HEALTH, currentCrewmate[randomCrewmate].name, -1);
+                    crewManager.ChangeHealth(currentCrewmate[randomCrewmate].name, -1);
                     changeSummaryArrow(false, true, currentCrewmate[randomCrewmate]);
                     currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " fell and hit his head which resulted in minor injuries";
                 }
@@ -531,27 +529,28 @@ public class Prepare : CopiumScript
             {
                 break;
             }
-            switch (currentCrewmate[i].name)
+            string name = currentCrewmate[i].name;
+            switch (name)
             {
                 case "Harris":
                     harris.isDeployed = false;
                     harris.Disable();
-                    crewManager.crew[0] = currentCrewmate[i];
+                    crewManager.crewMembers[name] = currentCrewmate[i];
                     break;
                 case "Bronson":
                     bronson.isDeployed = false;
                     bronson.Disable();
-                    crewManager.crew[1] = currentCrewmate[i];
+                    crewManager.crewMembers[name] = currentCrewmate[i];
                     break;
                 case "Chuck":
                     chuck.isDeployed = false;
                     chuck.Disable();
-                    crewManager.crew[2] = currentCrewmate[i];
+                    crewManager.crewMembers[name] = currentCrewmate[i];
                     break;
                 case "Danton":
                     danton.isDeployed = false;
                     danton.Disable();
-                    crewManager.crew[3] = currentCrewmate[i];
+                    crewManager.crewMembers[name] = currentCrewmate[i];
                     break;
                 default
                 :

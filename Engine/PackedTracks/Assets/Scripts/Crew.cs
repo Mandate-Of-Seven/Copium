@@ -20,31 +20,6 @@ using System.Collections.Generic;
 
 public class Crew : CopiumScript
 {
-    public enum HEALTH_STATE
-    {
-        DEAD,
-        CRITICAL,
-        INJURED,
-        HEALTHY,
-        NONE = -1
-    }
-    public enum MENTAL_STATE
-    {
-        SUICIDAL,
-        INSANE,
-        IRRATIONAL,
-        CALM,
-        NONE = -1
-    }
-    public enum HUNGER_STATE
-    {
-        FAMISHED,
-        HUNGRY,
-        FULL,
-        NONE = -1
-    }
-
-    public CrewMenu crewMenu;
     public GameObject showDeployed;
     
     public Text healthT, mentalT, hungerT;
@@ -54,6 +29,11 @@ public class Crew : CopiumScript
     public bool selected = false;
     public bool isDeployed = false;
 
+    // Interaction Dialogue
+    public bool isInteracting = false;
+    public int dialogueIndex;
+    public int maxDialogueCount;
+
     public int crewIndex;
     public Person person;
 
@@ -61,9 +41,7 @@ public class Crew : CopiumScript
 
     void Start()
     {
-        person = crewMenu.crew[crewIndex];
-        person.crewScript = this;
-        selectBtnWrapper = new ButtonWrapper(selectBtn,crewMenu.audioManager,crewMenu.crewStatusManager.tooltip);
+        selectBtnWrapper = new ButtonWrapper(selectBtn);
         selectBtnWrapper.useDisabled = false;
         selectBtnWrapper.SetImage(sprite);
         selectBtnWrapper.failureText = "You need to be preparing your crew members first!";
@@ -85,6 +63,22 @@ public class Crew : CopiumScript
     }
 
     //UPDATES AS IN IT UPDATES THE EFFECTS
+    public void UpdateEffects()
+    {
+        if (!person.healthScrambler.Done())
+        {
+            healthT.text = person.healthScrambler.Scramble();
+        }
+        if (!person.mentalScrambler.Done())
+        {
+            mentalT.text = person.mentalScrambler.Scramble();
+        }
+        if (!person.hungerScrambler.Done())
+        {
+            hungerT.text = person.hungerScrambler.Scramble();
+        }
+        sprite.color = Color.Lerp(sprite.color, person.targetColor, Time.deltaTime);
+    }
 
     /*******************************************************************************
 	/*!

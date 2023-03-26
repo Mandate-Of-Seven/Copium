@@ -91,23 +91,23 @@
     <Compile Include="Assets\Scripts\AudioManager.cs" />
     <Compile Include="Assets\Scripts\BlinkingEffect.cs" />
     <Compile Include="Assets\Scripts\ButtonWrapper.cs" />
+    <Compile Include="Assets\Scripts\CabinInteractions.cs" />
     <Compile Include="Assets\Scripts\CameraShakeEffect.cs" />
+    <Compile Include="Assets\Scripts\Event.cs" />
     <Compile Include="Assets\Scripts\Crew.cs" />
     <Compile Include="Assets\Scripts\CrewMenu.cs" />
     <Compile Include="Assets\Scripts\CrewStatusManager.cs" />
-    <Compile Include="Assets\Scripts\Event_02.cs" />
-    <Compile Include="Assets\Scripts\Event_03.cs" />
+    <Compile Include="Assets\Scripts\Events.cs" />
+    <Compile Include="Assets\Scripts\EventsManager.cs" />
     <Compile Include="Assets\Scripts\Event_Ending.cs" />
     <Compile Include="Assets\Scripts\ExplosionEffect.cs" />
     <Compile Include="Assets\Scripts\EyesClosingEffect.cs" />
     <Compile Include="Assets\Scripts\Fade.cs" />
     <Compile Include="Assets\Scripts\FPS.cs" />
-    <Compile Include="Assets\Scripts\EventManager.cs" />
-    <Compile Include="Assets\Scripts\Event_01.cs" />
-    <Compile Include="Assets\Scripts\Event_Intro.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\HowtoPlayMenu.cs" />
     <Compile Include="Assets\Scripts\MainMenu.cs" />
+    <Compile Include="Assets\Scripts\Messages.cs" />
     <Compile Include="Assets\Scripts\Option.cs" />
     <Compile Include="Assets\Scripts\PauseMenu.cs" />
     <Compile Include="Assets\Scripts\Person.cs" />
@@ -116,6 +116,7 @@
     <Compile Include="Assets\Scripts\ResultManager.cs" />
     <Compile Include="Assets\Scripts\StatusUpdate.cs" />
     <Compile Include="Assets\Scripts\StringScramblerEffect.cs" />
+    <Compile Include="Assets\Scripts\StringTypeWriterEffect.cs" />
     <Compile Include="Assets\Scripts\Subtitles.cs" />
     <Compile Include="Assets\Scripts\TooltipBehaviour.cs" />
     <Compile Include="Assets\Scripts\TrainManager.cs" />
@@ -135,5 +136,6 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

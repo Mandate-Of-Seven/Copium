@@ -18,19 +18,24 @@ using System;
 
 public class ExplosionEffect: CopiumScript
 {
+	public static ExplosionEffect Instance;
 
 	public float duration = 10f;
 	public float waitpoint = 8f;
 	public float breakpoint = 7f;
-	public AudioManager audioManager;
 	public Image flashImage;
 	float timeElasped = 0f;
 	bool playing = false;
 
+	public void Awake()
+    {
+		Instance = this;
+    }
+
 	public void Trigger()
 	{
 		playing = true;
-		audioManager.explosionSFX.Play();
+		AudioManager.Instance.explosionSFX.Play();
 		flashImage.enabled = true;
 	}
 
@@ -51,15 +56,14 @@ public class ExplosionEffect: CopiumScript
 	{
 		if (!playing)
 			return;
-		float alpha = 1f; 
+		float alpha = 0f; 
 
 		if (timeElasped < breakpoint)
 		{
-			alpha = Mathf.Lerp(0,1,timeElasped/breakpoint);
 		}
 		else if (timeElasped < waitpoint)
 		{
-
+			alpha = Mathf.Lerp(0,1,timeElasped/waitpoint);
 		}
 		else if (timeElasped < duration)
 		{

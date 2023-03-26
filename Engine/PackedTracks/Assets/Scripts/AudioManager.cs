@@ -21,6 +21,9 @@ using System;
 
 public class AudioManager: CopiumScript
 {
+	//Singleton
+	public static AudioManager Instance;
+
 	public AudioSource ambTrain;
 	public AudioSource bgmTrain;
 	public AudioSource clickSFX;
@@ -44,12 +47,16 @@ public class AudioManager: CopiumScript
     public AudioSource endingGenericVO;
     public AudioSource endingAllDiedVO;
 
-
+	void Awake()
+	{
+		Instance = this;
+	}
 
     void Start()
 	{
         bgmTrain.Play();
 	}
+
 	void Update()
 	{
         

@@ -19,16 +19,6 @@ public class StatusUpdate: CopiumScript
 	public GameObject supplies;
 
     Color black = new Color(0.0f, 0.0f, 0.0f, 1.0f);
-
-	void Start()
-	{
-
-	}
-	void Update()
-	{
-
-	}
-
     public void ResetAll()
     {
         Harris(STATE.NEUTRAL, CrewMenu.STAT_TYPES.HEALTH);

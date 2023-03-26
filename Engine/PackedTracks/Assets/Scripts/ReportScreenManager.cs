@@ -18,11 +18,17 @@ using System;
 
 public class ReportScreenManager: CopiumScript
 {
+    public static ReportScreenManager Instance;
+
     public bool isReportScreenOn = false;
 	public AudioManager audioManager;
     
     public Button CloseReportBtn;
 	public Button ReportScreenBtn;
+    public ButtonWrapper closeBtnWrapper;
+    public ButtonWrapper reportBtnWrapper;
+
+    
     public GameObject ReportTab;
     public ResultManager resultManager;
 
@@ -37,9 +43,19 @@ public class ReportScreenManager: CopiumScript
 	
 	public float transitionSpeed = 5.0f;
 
+    void Awake()
+    {
+        Instance = this;
+    }
+
 	void Start()
 	{
-
+        closeBtnWrapper = new ButtonWrapper(CloseReportBtn);
+        closeBtnWrapper.SetImage(CloseReportBtn.GetComponent<Image>());
+        reportBtnWrapper = new ButtonWrapper(ReportScreenBtn);
+        reportBtnWrapper.SetImage(ReportScreenBtn.GetComponent<Image>());
+        //Unable to close menu when main event is up
+		closeBtnWrapper.failureText = Messages.ErrorMainEvent;
 	}
     void Update()
     {
@@ -54,36 +70,15 @@ public class ReportScreenManager: CopiumScript
 	/**************************************************************************/
     public void UpdateCanvas()
     {
-        if (!openHover && ReportScreenBtn.state == ButtonState.OnHover)
+        if (reportBtnWrapper.GetState() == ButtonState.OnRelease)
         {
-            openHover = true;
-            audioManager.hoverSFX.Play();
-        }
-        else if (ReportScreenBtn.state == ButtonState.OnRelease)
-        {
-            audioManager.clickSFX.Play();
             OpenPanel();
         }
-        else if (ReportScreenBtn.state == ButtonState.None)
-        {
-            openHover = false;
-        }
 
-        if (!closeHover && CloseReportBtn.state == ButtonState.OnHover)
+        if(closeBtnWrapper.GetState() == ButtonState.OnClick)
         {
-            closeHover = true;
-            audioManager.hoverSFX.Play();
-        }
-		else if(CloseReportBtn.state == ButtonState.OnRelease)
-        {
-            audioManager.clickSFX.Play();
             ClosePanel();
-        }        
-        else if (CloseReportBtn.state == ButtonState.None)
-        {
-            closeHover = false;
         }
-
 		
         if (isReportScreenOn)
         {
@@ -128,5 +123,16 @@ public class ReportScreenManager: CopiumScript
         resultManager.Enable();
         ReportScreenBtn.gameObject.SetActive(true);
         ReportTab.transform.parent = parent.transform;
+    }
+
+    public void DisableInteractions()
+	{
+        OpenPanel();
+		closeBtnWrapper.SetInteractable(false);
+	}
+
+    public void EnableInteractions()
+    {
+        closeBtnWrapper.SetInteractable(true);
     }
 }

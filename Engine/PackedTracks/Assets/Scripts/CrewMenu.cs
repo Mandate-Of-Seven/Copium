@@ -15,11 +15,14 @@
 All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 using CopiumEngine;
+using System.Collections.Generic;
 using System;
 using System.Linq;
 
 public class CrewMenu: CopiumScript
 {
+    public static CrewMenu Instance;
+
     public Text suppliesText;
     public Text titleText;
 
@@ -33,8 +36,7 @@ public class CrewMenu: CopiumScript
     public CrewStatusManager crewStatusManager; 
     public ReportScreenManager reportScreenManager; 
     public ResultManager resultManager; 
-
-    public AudioManager audioManager;
+    public CabinInteractions interactionManager;
 
     public Fade fader;
 
@@ -47,6 +49,7 @@ public class CrewMenu: CopiumScript
 
     public bool preparing = false;
     public bool deploying = false;
+    public bool interacting = false; 
 
     //float timer = 0.0f;
 
@@ -70,21 +73,35 @@ public class CrewMenu: CopiumScript
         HUNGER,
     }
 
-    public Person[] crew = new Person[4]
+    public void DetachStorageCompartment()
     {
-        new Person("Harris"),
-        new Person("Bronson"),
-        new Person("Chuck"),
-        new Person("Danton")
+        storageComparment = false;
+    }
+
+    public Dictionary<string, Person> crewMembers = new Dictionary<string, Person>()
+    {
+        { "Harris",new Person("Harris")},
+        { "Bronson", new Person("Bronson")},
+        { "Chuck", new Person("Chuck")},
+        { "Danton", new Person("Danton")}
     };
+
+    void Awake()
+    {
+        Instance = this;
+        harris.person = crewMembers["Harris"];
+        bronson.person = crewMembers["Bronson"];
+        chuck.person = crewMembers["Chuck"];
+        danton.person = crewMembers["Danton"];
+    }
 
     void Start()
 	{
-        prepareBtnWrapper = new ButtonWrapper(prepareButton,audioManager,crewStatusManager.tooltip);
+        prepareBtnWrapper = new ButtonWrapper(prepareButton);
         prepareBtnWrapper.SetText(prepareButton.GetComponent<Text>());
         prepareBtnWrapper.SetImage(prepareButton.GetComponent<Image>());
         prepareBtnWrapper.failureText = "The train needs to be stopped first!";
-        deployBtnWrapper = new ButtonWrapper(deployButton,audioManager,crewStatusManager.tooltip);
+        deployBtnWrapper = new ButtonWrapper(deployButton);
         deployBtnWrapper.SetText(deployButton.GetComponent<Text>());
         deployBtnWrapper.SetImage(deployButton.GetComponent<Image>());
         deployBtnWrapper.failureText = "You need to be preparing your crew members first!";
@@ -100,6 +117,7 @@ public class CrewMenu: CopiumScript
         //have condition for when certain values hit 0??
         if (prepareBtnWrapper.GetState() == ButtonState.OnClick)
         {
+            interactionManager.SetInteractBtnsActive(false);
             SetPrepare(!preparing);
             hDeploy = harris.isDeployed;
             bDeploy = bronson.isDeployed;
@@ -134,8 +152,6 @@ public class CrewMenu: CopiumScript
 
 
        }
-
-        CheckCrewStatus();
     }
 
     /*******************************************************************************
@@ -147,25 +163,10 @@ public class CrewMenu: CopiumScript
     /*******************************************************************************/
     void UpdateEffects()
     {
-        foreach (Person person in crew)
-        {
-            if (!person.healthScrambler.Done())
-            {
-                person.crewScript.healthT.text = person.healthScrambler.Scramble();
-            }
-            if (!person.mentalScrambler.Done())
-            {
-                person.crewScript.mentalT.text = person.mentalScrambler.Scramble();
-            }
-            if (!person.hungerScrambler.Done())
-            {
-                person.crewScript.hungerT.text = person.hungerScrambler.Scramble();
-            }
-
-
-            person.crewScript.sprite.color = Color.Lerp(person.crewScript.sprite.color,person.targetColor,Time.deltaTime);
-
-        }
+        harris.UpdateEffects();
+        bronson.UpdateEffects();
+        chuck.UpdateEffects();
+        danton.UpdateEffects();
     }
     // void UpdateStatusScreenEffects()
     // {
@@ -191,32 +192,13 @@ public class CrewMenu: CopiumScript
     /*******************************************************************************/
     public bool CheckAllCrewAlive()
     {
-        for (int i = 0; i < crew.Length; i++)
+        foreach (Person person in crewMembers.Values)
         {
-            if (crew[i].alive)
+            if (person.alive)
                 return true;
         }
 
         return false;
-    }
-
-    /*******************************************************************************
-	/*!
-	    \brief
-		    Checks if the crew member is dead and set the values accordingly
-	*/
-    /*******************************************************************************/
-    void CheckCrewStatus()
-    {
-        for (int i = 0; i < crew.Length; ++i)
-        {
-            if (!crew[i].alive)
-            {
-                crew[i].health = 0;
-                crew[i].mental = 0;
-                crew[i].hunger = 0;
-            }
-        }
     }
 
     /*******************************************************************************
@@ -233,18 +215,18 @@ public class CrewMenu: CopiumScript
             //{
             //    for (int i = 0; i < crew.Length; i++)
             //    {
-            //        if (crew[i].hunger > 0)
-            //            crew[i].hunger -= 1;
+            //        if (person.hunger > 0)
+            //            person.hunger -= 1;
             //    }
 
             //    timer = 0.0f;
             //}
 
             //timer += Time.deltaTime;
-            for (int i = 0; i < crew.Length; i++)
+            foreach (Person person in crewMembers.Values)
             {
-                if (crew[i].hunger > 0)
-                    crew[i].hunger -= 1;
+                if (person.hunger > 0)
+                    person.hunger -= 1;
             }
         }
     }
@@ -257,17 +239,17 @@ public class CrewMenu: CopiumScript
     /*******************************************************************************/
     void CheckCrewHealth()
     {
-        for (int i = 0; i < crew.Length; i++)
+        foreach (Person person in crewMembers.Values)
         {
-            if (crew[i].hunger <= 0)
+            if (person.hunger <= 0)
             {
-                if(crew[i].timer >= healthInterval)
+                if(person.timer >= healthInterval)
                 {
-                    crew[i].health -= 1;
-                    crew[i].timer = 0.0f;
+                    person.health -= 1;
+                    person.timer = 0.0f;
                 }
 
-                crew[i].timer += Time.deltaTime;
+                person.timer += Time.deltaTime;
             }
         }
     }
@@ -328,183 +310,6 @@ public class CrewMenu: CopiumScript
     }
 
     /*******************************************************************************
-	/*!
-	    \brief
-		    Sets one stat of all the crewmates to an amount
-	*/
-    /*******************************************************************************/
-    public void SetAllCrew(STAT_TYPES types, int amount)
-    {
-        for (int i = 0; i < crew.Length; i++)
-        {
-            switch (types)
-            {
-                case STAT_TYPES.ALIVE:
-                    crew[i].alive = (amount > 0) ? true : false;
-                    break;
-                case STAT_TYPES.HEALTH:
-                    crew[i].health = amount;
-                    break;
-                case STAT_TYPES.MENTAL:
-                    crew[i].mental = amount;
-                    break;
-                case STAT_TYPES.HUNGER:
-                    crew[i].hunger = amount;
-                    break;
-            }
-        }
-    }
-
-    /*******************************************************************************
-	/*!
-	    \brief
-		    Changes one stat of all the crewmates to an amount if its still more 
-            than 0
-	*/
-    /*******************************************************************************/
-    public void ChangeAllCrew(STAT_TYPES types, int amount)
-    {
-        for (int i = 0; i < crew.Length; i++)
-        {
-            switch (types)
-            {
-                case STAT_TYPES.HEALTH:
-                    if (crew[i].health > 0)
-                        crew[i].health += amount;
-
-                    if (crew[i].health > 3)
-                        crew[i].health = 3;
-                    break;
-                case STAT_TYPES.MENTAL:
-                    if (crew[i].mental > 0)
-                        crew[i].mental += amount;
-
-                    if (crew[i].mental > 3)
-                        crew[i].mental = 3;
-                    break;
-                case STAT_TYPES.HUNGER:
-                    if(crew[i].hunger > 0)
-                        crew[i].hunger += amount;
-
-                    if (crew[i].hunger > 3)
-                        crew[i].hunger = 3;
-                    break;
-            }
-        }
-    }
-
-    /*******************************************************************************
-       /*!
-           \brief
-               Sets a certain crew members stat to an amount
-       */
-    /*******************************************************************************/
-    public void SetCrew(STAT_TYPES types, int index, int amount)
-    {
-        switch (types)
-        {
-            case STAT_TYPES.ALIVE:
-                crew[index].alive = (amount > 0) ? true : false;
-                break;
-            case STAT_TYPES.HEALTH:
-                crew[index].health = amount;
-                break;
-            case STAT_TYPES.MENTAL:
-                crew[index].mental = amount;
-                break;
-            case STAT_TYPES.HUNGER:
-                crew[index].hunger = amount;
-                break;
-        }
-    }
-
-    /*******************************************************************************
-       /*!
-           \brief
-               Sets a certain crew members stat to an amount
-       */
-    /*******************************************************************************/
-    public void SetCrew(STAT_TYPES types, string name, int amount)
-    {
-        switch (name)
-        {
-            case "Harris":
-                SetCrew(types, 0, amount);
-                break;
-            case "Bronson":
-                SetCrew(types, 1, amount);
-                break;
-            case "Chuck":
-                SetCrew(types, 2, amount);
-                break;
-            case "Danton":
-                SetCrew(types, 3, amount);
-                break;
-        }
-    }
-
-    /*******************************************************************************
-	/*!
-	    \brief
-		    Changes one stat of a crewmate to an amount if its still more 
-            than 0
-	*/
-    /*******************************************************************************/
-    public void ChangeCrew(STAT_TYPES types, int index, int amount)
-    {
-        switch (types)
-        {
-            case STAT_TYPES.HEALTH:
-                if (crew[index].health > 0)
-                    crew[index].health += amount;
-
-                if (crew[index].health > 3)
-                    crew[index].health = 3;
-                break;
-            case STAT_TYPES.MENTAL:
-                if (crew[index].mental > 0)
-                    crew[index].mental += amount;
-
-                if (crew[index].mental > 3)
-                    crew[index].mental = 3;
-                break;
-            case STAT_TYPES.HUNGER:
-                if(crew[index].hunger > 0)
-                    crew[index].hunger += amount;
-
-                if (crew[index].hunger > 3)
-                    crew[index].hunger = 3;
-                break;
-        }
-    }
-
-    /*******************************************************************************
-	/*!
-	    \brief
-		    Changes one stat of a crewmate to an amount if its still more 
-            than 0
-	*/
-    /*******************************************************************************/
-    public void ChangeCrew(STAT_TYPES types, string name, int amount)
-    {
-        switch (name)
-        {
-            case "Harris":
-                ChangeCrew(types, 0, amount);
-                break;
-            case "Bronson":
-                ChangeCrew(types, 1, amount);
-                break;
-            case "Chuck":
-                ChangeCrew(types, 2, amount);
-                break;
-            case "Danton":
-                ChangeCrew(types, 3, amount);
-                break;
-        }
-    }
-
-    /*******************************************************************************
     /*!
            \brief
                Generates a random event for each deployed crew member
@@ -518,38 +323,112 @@ public class CrewMenu: CopiumScript
             reportScreenManager.ClosePanel();
             resultManager.OpenPanel();
         }
-
-        int index = 0;
-        Person[] temp = new Person[4];
-
+        Person[] deployedMembers = new Person[4];
         if (harris.isDeployed)
         {
-            ChangeCrew(STAT_TYPES.HUNGER, 0, -1);
+            crewMembers["Harris"].hunger -= 1;
             //prepareManager.GenerateEvents(crew[0]);
-            temp[index++] = crew[0];
+            deployedMembers[0] = crewMembers["Harris"];
         }
         if (bronson.isDeployed)
         {
-            ChangeCrew(STAT_TYPES.HUNGER, 1, -1);
+            crewMembers["Bronson"].hunger -= 1;
             //prepareManager.GenerateEvents(crew[1]);
-            temp[index++] = crew[1];
+            deployedMembers[1] = crewMembers["Bronson"];
         }
         if (chuck.isDeployed)
         {
-            ChangeCrew(STAT_TYPES.HUNGER, 2, -1);
+            crewMembers["Chuck"].hunger -= 1;
             //prepareManager.GenerateEvents(crew[2]);
-            temp[index++] = crew[2];
+            deployedMembers[2] = crewMembers["Chuck"];
         }
         if (danton.isDeployed)
         {
-            ChangeCrew(STAT_TYPES.HUNGER, 3, -1);
+            crewMembers["Danton"].hunger -= 1;
             //prepareManager.GenerateEvents(crew[3]);
-            temp[index++] = crew[3];
+            deployedMembers[3] = crewMembers["Danton"];
         }
 
-        prepareManager.GenerateEvents(temp);
+        prepareManager.GenerateEvents(deployedMembers);
     }
 
+    public void ChangeHealth(string name, int amount)
+    {
+        crewMembers[name].health += amount;
+    }
+
+    public void ChangeMental(string name, int amount)
+    {
+        crewMembers[name].mental += amount;
+    }
+
+    public void ChangeHunger(string name, int amount)
+    {
+        crewMembers[name].hunger += amount;
+    }
+
+    public void SetStat(string name, HEALTH_STATE amount)
+    {
+        crewMembers[name].health = amount;
+    }
+
+    public void SetStat(string name, MENTAL_STATE amount)
+    {
+        crewMembers[name].mental = amount;
+    }
+
+    public void SetStat(string name, HUNGER_STATE amount)
+    {
+        crewMembers[name].hunger = amount;
+    }
+
+    public void ChangeAllHealth(int amount)
+    {
+        foreach (Person person in crewMembers.Values)
+        {
+            person.health += amount;
+        }
+    }
+
+    public void ChangeAllMental(int amount)
+    {
+        foreach (Person person in crewMembers.Values)
+        {
+            person.mental += amount;
+        }
+    }
+
+    public void ChangeAllHunger(int amount)
+    {
+        foreach (Person person in crewMembers.Values)
+        {
+            person.hunger += amount;
+        }
+    }
+
+    public void SetAllStats(HEALTH_STATE amount)
+    {
+        foreach (Person person in crewMembers.Values)
+        {
+            person.health = amount;
+        }
+    }
+
+    public void SetAllStats(MENTAL_STATE amount)
+    {
+        foreach (Person person in crewMembers.Values)
+        {
+            person.mental = amount;
+        }
+    }
+
+    public void SetAllStats(HUNGER_STATE amount)
+    {
+        foreach (Person person in crewMembers.Values)
+        {
+            person.hunger = amount;
+        }
+    }
     /*******************************************************************************
     /*!
         \brief

@@ -41,11 +41,20 @@ public class StringScramblerEffect
 		iterIndex = 0;
 	}
 
+	public void Skip()
+    {
+		initial = target;
+    }
+
 	public bool Done()
 	{
 		return target == null || (target.ToString() == initial.ToString());
 	}
 
+	public string Current()
+    {
+		return initial.ToString();
+    }
 	char GetRandomChar()
 	{
 		int charType = RNG.Range(0,2);

@@ -187,11 +187,15 @@ namespace Copium
 			Math::Vec3 worldPos{ t.GetWorldPosition() };
 			Math::Vec3 worldScale{ t.GetWorldScale() };
 			Texture* texture = image.sprite.refTexture;
-			if (texture == nullptr)
-				continue;
-			Math::Vec2 max = {texture->get_pixel_width() / 2.f,texture->get_pixel_height() / 2.f};
-			Math::Vec2 min = { -texture->get_pixel_width() / 2.f , -texture->get_pixel_height() / 2.f };
-			AABB bound = AABB(min,max).GetRelativeBounds(worldPos, worldScale);
+			AABB bound{};
+			if (texture != nullptr)
+			{
+				Math::Vec2 max = { texture->get_pixel_width() / 2.f,texture->get_pixel_height() / 2.f };
+				Math::Vec2 min = { -texture->get_pixel_width() / 2.f , -texture->get_pixel_height() / 2.f };
+				bound = AABB(min, max);
+			}
+			bound = bound.GetRelativeBounds(worldPos, worldScale);
+			
 			if (static_collision_pointrect(mousePosition, bound))
 			{ 
 				//If currently no selected Gameobject

@@ -21,8 +21,7 @@ using System.Collections.Generic;
 
 public class GameManager: CopiumScript
 {
-    public EventManager EventManager;
-    public AudioManager audioManager;
+    public static GameManager Instance;
 
 	public GameObject TrainCanvas;
     public GameObject PauseCanvas;
@@ -58,20 +57,15 @@ public class GameManager: CopiumScript
 
     bool moving = false;
 
+    public int eventSequence = 0;
+
+    void Awake()
+    {
+        Instance = this;
+    }
     void Start()
 	{
         //UpdateCanvases();
-    }
-
-	/**************************************************************************/
-	/*!
-	    \brief
-		    Open the report screen
-	*/
-	/**************************************************************************/
-    void OpenReportScreen()
-    {
-        audioManager.clickSFX.Play();
     }
 
 	void Update()
@@ -81,13 +75,13 @@ public class GameManager: CopiumScript
             return;
 
         if (Input.GetKeyDown(KeyCode.C))
-            crewMenuScript.SetCrew(CrewMenu.STAT_TYPES.ALIVE, 2, 0);
+            crewMenuScript.SetStat("Chuck",HEALTH_STATE.DEAD);
 
         if (Input.GetKeyDown(KeyCode.B))
-            crewMenuScript.SetCrew(CrewMenu.STAT_TYPES.ALIVE, 1, 0);
+            crewMenuScript.SetStat("Bronson", HEALTH_STATE.DEAD);
 
         if (Input.GetKeyDown(KeyCode.D))
-            crewMenuScript.SetCrew(CrewMenu.STAT_TYPES.ALIVE, 3, 0);
+            crewMenuScript.SetStat("Danton", HEALTH_STATE.DEAD);
 
         // Toggle canvases
         //CanvasManager();
@@ -123,7 +117,7 @@ public class GameManager: CopiumScript
 	/**************************************************************************/
     bool CheckForGameEndCondition()
     {
-        if(!gameEnd && EventManager.EventSequence < 0)
+        if(!gameEnd && eventSequence < 0)
         {
             gameEnd = true;
             trainManager.FlickLever(false);
@@ -169,27 +163,29 @@ public class GameManager: CopiumScript
     {
         if (trainManager.currentSpeed > 0.1f && distanceLeft > 0)
         {
-            if (timer >= distanceInterval) // Every few distance interval
+            while (timer >= distanceInterval) // Every few distance interval
             {
                 distanceLeft -= trainManager.currentSpeed / 3.0f; // Reduce the distance left
 
                 // Only update event if distance per event is activated
                 if (distanceLeft % distancePerEvent < 1.0f && !updateEvent)
                 {
+                    DisableInteractions();
                     // Show notifications (Visual & Audio)
                     reportScreenManager.alert.enabled = true;
                     crewStatusManager.alert.enabled = true;
-
+                    eventSequence++;
                     updateEvent = true; // Trigger only once
-                    EventManager.UpdateEventSequence();
+                    EventsManager.Instance.UpdateCurrentEvent();
                 }
                 // Right now if the distance left to the next event is reseted, we can update event again
                 else if (distanceLeft % distancePerEvent > 1.0f)
                     updateEvent = false;
 
+                //ZACH: Handle this with your choice timer
                 // Close to the next event and has yet to select a choice, select default choice
-                if (distanceLeft % distancePerEvent < 5.0f && EventManager.EventSequence > 0 && !updateEvent)
-                    EventManager.SelectDefaultChoice();
+                //if (distanceLeft % distancePerEvent < 5.0f && EventManager.EventSequence > 0 && !updateEvent)
+                    //EventManager.SelectDefaultChoice();
 
                 // Reduce hunger every few km
                 float remainder = distanceLeft % (distancePerEvent / 2.0f);
@@ -201,7 +197,7 @@ public class GameManager: CopiumScript
                 else if (remainder > 1.0f)
                     updateHunger = false;
 
-                timer = 0.0f;
+                timer -= distanceInterval;
             }
 
             timer += Time.deltaTime;
@@ -220,9 +216,9 @@ public class GameManager: CopiumScript
         {
             if (foodTimer >= 5.0f && crewMenuScript.supplies != 0)
             {
+                Console.WriteLine("decrement supplies");
                 crewMenuScript.ChangeSupplies(-1);
-                crewMenuScript.ChangeAllCrew(CrewMenu.STAT_TYPES.HUNGER, 1);
-
+                crewMenuScript.ChangeAllHunger(+1);
                 foodTimer = 0.0f;
             }
             foodTimer += Time.deltaTime;
@@ -239,9 +235,9 @@ public class GameManager: CopiumScript
     {
         if (ManualBtn.state == ButtonState.OnRelease)
         {
-            audioManager.paperSFX.Play();
+            //audioManager.paperSFX.Play();
             ManualPopUp.SetActive(true);   
-            audioManager.fileOpenSFX.Play();
+            //audioManager.fileOpenSFX.Play();
 
         }
         if (ManualPopUpBtn.state == ButtonState.OnRelease && ManualPopUp.activeSelf)
@@ -258,7 +254,7 @@ public class GameManager: CopiumScript
 	/**************************************************************************/
     public void CloseManual()
     {
-        audioManager.fileCloseSFX.Play();
+        //audioManager.fileCloseSFX.Play();
 
         ManualPopUp.SetActive(false);
         MainPage.SetActive(true);
@@ -268,5 +264,21 @@ public class GameManager: CopiumScript
         prevButtonObject.SetActive(false);
 
         htpmScript.page = 1;
+    }
+
+    public void DisableInteractions()
+    {
+        trainManager.DisableInteractions();
+        crewStatusManager.DisableInteractions();
+        resultManager.DisableInteractions();
+        reportScreenManager.DisableInteractions();
+    }
+
+    public void EnableInteractions()
+    {
+        trainManager.EnableInteractions();
+        crewStatusManager.EnableInteractions();
+        resultManager.EnableInteractions();
+        reportScreenManager.EnableInteractions();
     }
 }

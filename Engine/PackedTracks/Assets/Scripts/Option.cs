@@ -21,9 +21,9 @@ public class Option: CopiumScript
 {
     public Text txt;
     public Button btn;
+    [NonSerialized]
+    public Choice mappedChoice;
 
-    public AudioManager audioManager;
-    public TooltipBehaviour tooltip;
 	public StatusUpdate statusUpdate;
     Image image;
     Color colorDisabled = new Color(1.0f, 1.0f, 1.0f, 0.5f); 
@@ -33,7 +33,7 @@ public class Option: CopiumScript
 
     void Start()
 	{
-        btnWrapper = new ButtonWrapper(btn, audioManager, tooltip);
+        btnWrapper = new ButtonWrapper(btn);
         btnWrapper.SetImage(btn.GetComponent<Image>());
 
         image = gameObject.GetComponent<Image>();
@@ -52,6 +52,11 @@ public class Option: CopiumScript
         return false;
     }
 
+    public void AssignChoice(Choice choice)
+    {
+        txt.text = choice.choiceText;
+        mappedChoice = choice;
+    }
     public void Enable()
     {
         if(!gameObject.activeSelf)
