@@ -54,6 +54,11 @@ public class Crew : CopiumScript
     public bool selected = false;
     public bool isDeployed = false;
 
+    // Interaction Dialogue
+    public bool isInteracting = false;
+    public int dialogueIndex;
+    public int maxDialogueCount;
+
     public int crewIndex;
     public Person person;
 
