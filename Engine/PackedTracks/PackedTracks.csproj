@@ -91,6 +91,7 @@
     <Compile Include="Assets\Scripts\AudioManager.cs" />
     <Compile Include="Assets\Scripts\BlinkingEffect.cs" />
     <Compile Include="Assets\Scripts\ButtonWrapper.cs" />
+    <Compile Include="Assets\Scripts\CabinInteractions.cs" />
     <Compile Include="Assets\Scripts\CameraShakeEffect.cs" />
     <Compile Include="Assets\Scripts\Event.cs" />
     <Compile Include="Assets\Scripts\Crew.cs" />

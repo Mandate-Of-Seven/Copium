@@ -36,19 +36,19 @@ public class CabinInteractions: CopiumScript
 
 	void Start()
 	{		
-		harrisInteractBtnWrapper = new ButtonWrapper(harrisInteractBtn,crewMenu.audioManager,crewMenu.crewStatusManager.tooltip);
+		harrisInteractBtnWrapper = new ButtonWrapper(harrisInteractBtn);
         harrisInteractBtnWrapper.SetText(harrisInteractBtn.GetComponent<Text>());
 
-		bronsonInteractBtnWrapper = new ButtonWrapper(bronsonInteractBtn,crewMenu.audioManager,crewMenu.crewStatusManager.tooltip);
+		bronsonInteractBtnWrapper = new ButtonWrapper(bronsonInteractBtn);
         bronsonInteractBtnWrapper.SetText(bronsonInteractBtn.GetComponent<Text>());
 
-		chuckInteractBtnWrapper = new ButtonWrapper(chuckInteractBtn,crewMenu.audioManager,crewMenu.crewStatusManager.tooltip);
+		chuckInteractBtnWrapper = new ButtonWrapper(chuckInteractBtn);
         chuckInteractBtnWrapper.SetText(chuckInteractBtn.GetComponent<Text>());
 
-		dantonInteractBtnWrapper = new ButtonWrapper(dantonInteractBtn,crewMenu.audioManager,crewMenu.crewStatusManager.tooltip);
+		dantonInteractBtnWrapper = new ButtonWrapper(dantonInteractBtn);
         dantonInteractBtnWrapper.SetText(dantonInteractBtn.GetComponent<Text>());
 
-		CloseDialogueBtnWrapper = new ButtonWrapper(CloseDialogueBtn,crewMenu.audioManager,crewMenu.crewStatusManager.tooltip);
+		CloseDialogueBtnWrapper = new ButtonWrapper(CloseDialogueBtn);
 
 		dialogueSprite.stop();
 	}

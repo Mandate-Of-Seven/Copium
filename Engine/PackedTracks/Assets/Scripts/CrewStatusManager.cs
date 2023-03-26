@@ -84,7 +84,6 @@ public class CrewStatusManager: CopiumScript
 
 	void Update()
 	{
-		Console.WriteLine("0");
 		UpdateCanvas();
 
     }
@@ -207,7 +206,6 @@ public class CrewStatusManager: CopiumScript
 	{
 		if(isCrewStatusOn)
 			return;
-		Console.WriteLine("status open");
 		isCrewStatusOn = true;
 		isCabinOn = false;
 		alert.enabled = false;
@@ -216,7 +214,6 @@ public class CrewStatusManager: CopiumScript
 	}
 	public void CloseStatusPanel()
 	{
-		Console.WriteLine("close status panel");
 		isCrewStatusOn = false;
 		CrewStatusBtn.gameObject.SetActive(true);
         resultManager.Enable();
