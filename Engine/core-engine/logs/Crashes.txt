@@ -1,5 +1,5 @@
-[2023-03-12 13:51:25.220] [Error] [critical] 
+[2023-03-26 16:36:11.392] [Error] [critical] 
 Caused By:	!mScript
-Info:		MONO OBJECT OF StringTypeWriterEffect NOT LOADED
-Source:		C:\Users\FLESH\ECS\Copium\Engine\core-engine\src\Scripting\scripting-system.cpp (Line: 908)
+Info:		MONO OBJECT OF Event_Intro NOT LOADED
+Source:		C:\Users\FLESH\ECS\Copium\Engine\core-engine\src\Scripting\scripting-system.cpp (Line: 940)
 

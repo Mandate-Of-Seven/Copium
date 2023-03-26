@@ -74,6 +74,8 @@ public class CrewStatusManager: CopiumScript
 		CrewStatusBtnWrapper.failureText = Messages.ErrorMainEvent;
 		CabinBtnWrapper = new ButtonWrapper(CabinBtn);
 		CabinBtnWrapper.SetImage(CabinBtn.GetComponent<Image>());
+		CloseStatusScreenBtnWrapper = new ButtonWrapper(CloseStatusScreenBtn);
+		CloseStatusScreenBtnWrapper.SetImage(CloseStatusScreenBtn.GetComponent<Image>());
 		// Cabin set false
 		//CrewStatusTab.SetActive(false);
 		supplyState = 1;
@@ -82,27 +84,31 @@ public class CrewStatusManager: CopiumScript
 
 	void Update()
 	{
+		Console.WriteLine("0");
 		UpdateCanvas();
 
     }
 
 	public void UpdateCanvas()
-	{   
+	{
+		Console.WriteLine("1");
 		if (CrewStatusBtnWrapper.GetState() == ButtonState.OnRelease)
         {
 			crewMenu.SetPrepare(false);
 			resultManager.Disable();
             //OpenPanel();
 			OpenStatusPanel();
-        }
-		if(CloseStatusScreenBtnWrapper.GetState() == ButtonState.OnRelease && isCrewStatusOn)
+		}
+		Console.WriteLine("2");
+		if (CloseStatusScreenBtnWrapper.GetState() == ButtonState.OnRelease && isCrewStatusOn)
 		{
 			crewMenu.deploying = false;
 			//ClosePanel(false);
 			CloseStatusPanel();
         }
-		
-        if (isCrewStatusOn)
+
+		Console.WriteLine("3");
+		if (isCrewStatusOn)
         {
             StatusScreen.transform.localScale = Vector3.Lerp(StatusScreen.transform.localScale,crewStatusTargetScale,Time.deltaTime * transitionSpeed);
 			UpdateStatusScreen();
@@ -113,7 +119,8 @@ public class CrewStatusManager: CopiumScript
             StatusScreen.transform.localScale = Vector3.Lerp(StatusScreen.transform.localScale,Vector3.one,Time.deltaTime * transitionSpeed);
         }
 
-		if(trainManagerScript.accelerate == false && CabinBtnWrapper.GetState() == ButtonState.OnRelease)
+		Console.WriteLine("4");
+		if (trainManagerScript.accelerate == false && CabinBtnWrapper.GetState() == ButtonState.OnRelease)
 		{
 			Console.WriteLine("go to cabin");
 			GoToCabin();

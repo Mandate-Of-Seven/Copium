@@ -549,7 +549,7 @@
         {
             "UID": 9580382767776116236,
             "Name": "Option 1",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "PID": 15073166646770035811,
@@ -635,8 +635,6 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "Option",
-                    "tooltip": 10041599466456538637,
-                    "audioManager": 11261402425968020089,
                     "txt": 9429179763734142775,
                     "btn": 14633390078747120407
                 }
@@ -645,7 +643,7 @@
         {
             "UID": 10025263737657599060,
             "Name": "Option 2",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "PID": 15073166646770035811,
@@ -731,8 +729,6 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "Option",
-                    "tooltip": 10041599466456538637,
-                    "audioManager": 11261402425968020089,
                     "txt": 9054607302164775899,
                     "btn": 11677831846571942442
                 }
@@ -884,15 +880,13 @@
                     "zoomInScale": 1.100000023841858,
                     "zoomOutScale": 0.9750000238418579,
                     "cabinBtn": 4501646764142820851,
-                    "GameManager": 9083562319934391338,
                     "ManualBtn": 6900690266592182984,
-                    "audioManager": 11261402425968020089,
+                    "trainLeverDeactivated": 11073973010564739848,
                     "tracker": 14370462799058784128,
                     "snowAnimator": 11135358241762452116,
                     "tracksAnimator": 180502757048782684,
                     "trainLeverActivated": 5369727754100667835,
-                    "trainLeverBtn": 4614359461674577161,
-                    "trainLeverDeactivated": 11073973010564739848
+                    "trainLeverBtn": 4614359461674577161
                 }
             ]
         },
@@ -1150,40 +1144,6 @@
             ]
         },
         {
-            "UID": 12889490517326974467,
-            "Name": "Introduction",
-            "Active": true,
-            "Components": [
-                {
-                    "PID": 11033010850512695424,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                },
-                {
-                    "enabled": true,
-                    "UID": 2208040376229193824,
-                    "Type": "Script",
-                    "TypeID": 23,
-                    "Name": "Event_Intro",
-                    "EventManager": 9174652001346769036
-                }
-            ]
-        },
-        {
             "UID": 1722160444903115838,
             "Name": "Pause Canvas",
             "Active": false,
@@ -1241,6 +1201,7 @@
                     "Name": "GameManager",
                     "distanceInterval": 0.10000000149011612,
                     "distanceLeft": 400.0,
+                    "eventSequence": 0,
                     "gameEnd": false,
                     "prevButtonObject": 17641556590098438796,
                     "ManualPopUp": 13627107543471401800,
@@ -1250,13 +1211,11 @@
                     "Page4": 7880086899027959037,
                     "PauseCanvas": 1722160444903115838,
                     "TrainCanvas": 6642123175702952797,
-                    "EventManager": 9174652001346769036,
                     "htpmScript": 15873072395746983378,
                     "crewStatusManager": 10830490317094325076,
                     "ManualPopUpBtn": 17645054254989627834,
                     "ManualBtn": 6900690266592182984,
                     "crewMenuScript": 17897393853473601660,
-                    "audioManager": 11261402425968020089,
                     "pauseMenu": 7662073999306630853,
                     "reportScreenManager": 6180648032434220981,
                     "resultManager": 5868577602297294004,
@@ -1673,14 +1632,12 @@
                     "CrewStatusBtn": 12240638081067445947,
                     "CabinBtn": 15383718040987380145,
                     "CloseCrewStatusBtn": 7467968725349133689,
-                    "statusScreenSuppliesText": 2987481935980349814,
                     "resultManager": 5868577602297294004,
+                    "statusScreenSuppliesText": 2987481935980349814,
                     "trainManagerScript": 5971899813001945745,
                     "CloseStatusScreenBtn": 16031829790091619796,
                     "alert": 18001664217615177344,
-                    "audioManager": 11261402425968020089,
-                    "crewMenu": 17897393853473601660,
-                    "tooltip": 10041599466456538637
+                    "crewMenu": 17897393853473601660
                 },
                 {
                     "enabled": true,
@@ -1711,7 +1668,6 @@
                     "reportScreenManager": 6180648032434220981,
                     "CloseResultBtn": 826755621581371733,
                     "ResultBtn": 3790437057486001291,
-                    "audioManager": 11261402425968020089,
                     "crewStatusManager": 10830490317094325076
                 }
             ]
@@ -2129,24 +2085,16 @@
                 },
                 {
                     "enabled": true,
-                    "UID": 9174652001346769036,
+                    "UID": 10430640082301464094,
                     "Type": "Script",
                     "TypeID": 23,
-                    "Name": "EventManager",
-                    "EventSequence": 0,
-                    "Body": 12572218162819699758,
+                    "Name": "EventsManager",
+                    "choiceDuration": 10.0,
+                    "textInterval": 0.009999999776482582,
+                    "bodyText": 12572218162819699758,
                     "Option_01": 16123610940333594665,
-                    "GameManager": 9083562319934391338,
                     "Option_02": 17265194362685150777,
-                    "Option_03": 7844471522467274371,
-                    "alert": 15187707562833248342,
-                    "crewMenu": 17897393853473601660,
-                    "event01": 5825931776462821864,
-                    "event02": 10706611040384253947,
-                    "event03": 4950976245312507192,
-                    "eventEnding": 14981615411562928849,
-                    "eventIntro": 2208040376229193824,
-                    "statusUpdate": 16419912296812816661
+                    "Option_03": 7844471522467274371
                 }
             ]
         },
@@ -2257,7 +2205,7 @@
         {
             "UID": 5570186180457882344,
             "Name": "Option 3",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "PID": 15073166646770035811,
@@ -2343,8 +2291,6 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "Option",
-                    "tooltip": 10041599466456538637,
-                    "audioManager": 11261402425968020089,
                     "txt": 13403652513609016947,
                     "btn": 14295175011401209530
                 }
@@ -2451,117 +2397,6 @@
                         "X": false,
                         "Y": false
                     }
-                }
-            ]
-        },
-        {
-            "UID": 11879202978880258883,
-            "Name": "Event 01",
-            "Active": true,
-            "Components": [
-                {
-                    "PID": 11033010850512695424,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                },
-                {
-                    "enabled": true,
-                    "UID": 5825931776462821864,
-                    "Type": "Script",
-                    "TypeID": 23,
-                    "Name": "Event_01",
-                    "eyesTime": 1.5,
-                    "shakeTime": 6.0,
-                    "EventManager": 9174652001346769036,
-                    "explosionEffect": 16306536618395323763,
-                    "cameraShakeEffect": 15847660200646285682,
-                    "eyesClosingEffect": 11339665007400436827,
-                    "trainManager": 5971899813001945745
-                }
-            ]
-        },
-        {
-            "UID": 3515923060718029410,
-            "Name": "Event 02",
-            "Active": true,
-            "Components": [
-                {
-                    "PID": 11033010850512695424,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                },
-                {
-                    "enabled": true,
-                    "UID": 10706611040384253947,
-                    "Type": "Script",
-                    "TypeID": 23,
-                    "Name": "Event_02",
-                    "waitTime": 9.0,
-                    "EventManager": 9174652001346769036,
-                    "cameraShakeEffect": 15847660200646285682,
-                    "trainManager": 5971899813001945745
-                }
-            ]
-        },
-        {
-            "UID": 2247846876306332433,
-            "Name": "Event 03",
-            "Active": true,
-            "Components": [
-                {
-                    "PID": 11033010850512695424,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                },
-                {
-                    "enabled": true,
-                    "UID": 4950976245312507192,
-                    "Type": "Script",
-                    "TypeID": 23,
-                    "Name": "Event_03",
-                    "EventManager": 9174652001346769036
                 }
             ]
         },
@@ -3089,14 +2924,12 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "Crew",
-                    "crewIndex": 0,
                     "isDeployed": false,
                     "selected": false,
                     "showDeployed": 9756751390989245779,
-                    "selectBtn": 8591880219862161732,
-                    "crewMenu": 17897393853473601660,
                     "healthT": 5304541777340483839,
                     "hungerT": 14766951576331013432,
+                    "selectBtn": 8591880219862161732,
                     "sprite": 18060063550003571417
                 }
             ]
@@ -3181,16 +3014,14 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "Crew",
-                    "crewIndex": 1,
                     "isDeployed": false,
                     "selected": false,
                     "showDeployed": 9262969936457091480,
-                    "selectBtn": 17866842037438150124,
-                    "crewMenu": 17897393853473601660,
                     "healthT": 10619030466278075317,
                     "hungerT": 6325563762340831896,
                     "sprite": 16957281722160538884,
-                    "mentalT": 11279763144566014201
+                    "mentalT": 11279763144566014201,
+                    "selectBtn": 17866842037438150124
                 }
             ]
         },
@@ -3874,8 +3705,6 @@
                     "supplies": 10,
                     "timeElasped": 0.0,
                     "transitionDuration": 2.0,
-                    "prepareButton": 17425008886966033150,
-                    "audioManager": 11261402425968020089,
                     "bronson": 7730477650993650158,
                     "chuck": 10697450015327120615,
                     "crewStatusManager": 10830490317094325076,
@@ -3883,6 +3712,7 @@
                     "deployButton": 3503404075389182297,
                     "fader": 11311745147968865628,
                     "harris": 15351396382966484407,
+                    "prepareButton": 17425008886966033150,
                     "prepareManager": 5967388857219597172,
                     "reportScreenManager": 6180648032434220981,
                     "resultManager": 5868577602297294004,
@@ -4282,40 +4112,6 @@
                     "Overlap": true,
                     "Volume": 1.0,
                     "Channel": "SFX"
-                }
-            ]
-        },
-        {
-            "UID": 10041434792632058091,
-            "Name": "Ending",
-            "Active": true,
-            "Components": [
-                {
-                    "PID": 11033010850512695424,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                },
-                {
-                    "enabled": true,
-                    "UID": 14981615411562928849,
-                    "Type": "Script",
-                    "TypeID": 23,
-                    "Name": "Event_Ending",
-                    "EventManager": 9174652001346769036
                 }
             ]
         },
@@ -6654,7 +6450,6 @@
                     "breakpoint": 4.0,
                     "duration": 7.0,
                     "waitpoint": 7.0,
-                    "audioManager": 11261402425968020089,
                     "flashImage": 1671870374573829335
                 }
             ]
@@ -11060,8 +10855,7 @@
                     "prepareButton2": 2974923908502949488,
                     "prepareOption1": 4758287676352754314,
                     "prepareOption2": 11418936534089393001,
-                    "resultText": 7144968500427476956,
-                    "tooltip": 10041599466456538637
+                    "resultText": 7144968500427476956
                 }
             ]
         },
@@ -13085,16 +12879,14 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "Crew",
-                    "crewIndex": 2,
                     "isDeployed": false,
                     "selected": false,
                     "showDeployed": 8838780582100844525,
-                    "selectBtn": 17063943092143246497,
-                    "crewMenu": 17897393853473601660,
                     "healthT": 213051639612899138,
                     "hungerT": 7519768102827191611,
                     "sprite": 9667874429526925349,
-                    "mentalT": 13693912786253569215
+                    "mentalT": 13693912786253569215,
+                    "selectBtn": 17063943092143246497
                 }
             ]
         },
@@ -13128,16 +12920,14 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "Crew",
-                    "crewIndex": 3,
                     "isDeployed": false,
                     "selected": false,
                     "showDeployed": 7448713263112095043,
-                    "selectBtn": 1358613318985155049,
-                    "crewMenu": 17897393853473601660,
                     "healthT": 425040735269848992,
                     "hungerT": 6698804851982178886,
                     "sprite": 5456584973574418364,
-                    "mentalT": 16951398089489278593
+                    "mentalT": 16951398089489278593,
+                    "selectBtn": 1358613318985155049
                 }
             ]
         },
