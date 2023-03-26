@@ -37,6 +37,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <mono/metadata/debug-helpers.h>
 #include <mono/metadata/exception.h>
 #include <mutex>
+#include <mono/metadata/environment.h>
 
 #define SECONDS_TO_RECOMPILE 1
 namespace
@@ -284,6 +285,7 @@ namespace Copium
 			mono_gchandle_free(hand);
 		}
 		gcHandles.clear();
+		unloadAppDomain();
 		shutdownMono();
 	}
 
@@ -364,6 +366,54 @@ namespace Copium
 	{
 		if (mAppDomain)
 		{
+			const MonoTableInfo* table_info = mono_image_get_table_info(mAssemblyImage, MONO_TABLE_TYPEDEF);
+			int rows = mono_table_info_get_rows(table_info);
+			for (int i = 0; i < rows; i++)
+			{
+				MonoClass* _class = nullptr;
+				uint32_t cols[MONO_TYPEDEF_SIZE];
+				mono_metadata_decode_row(table_info, i, cols, MONO_TYPEDEF_SIZE);
+				const char* name = mono_metadata_string_heap(mAssemblyImage, cols[MONO_TYPEDEF_NAME]);
+				const char* name_space = mono_metadata_string_heap(mAssemblyImage, cols[MONO_TYPEDEF_NAMESPACE]);
+				_class = mono_class_from_name(mAssemblyImage, name_space, name);
+				if (!_class)
+					continue;
+				MonoVTable* vTable = nullptr;
+				if (mono_class_get_parent(_class) == mCopiumScript)
+				{
+					vTable = mono_class_vtable(mAppDomain, _class);
+					scriptClassMap[name] = ScriptClass{ name,_class };
+					reflectionMap[mono_class_get_type(_class)] = ComponentType::Script;
+
+				}
+				else if (mono_class_get_parent(_class) == mScriptableObject)
+				{
+					vTable = mono_class_vtable(mAppDomain, _class);
+					scriptableObjectClassMap[name] = ScriptClass{ name,_class };
+				}
+				else if (mono_class_get_parent(_class) == mono_class_from_name(mAssemblyImage, name_space, "Component"))
+				{
+					if (_class == mCopiumScript)
+						continue;
+					vTable = mono_class_vtable(mAppDomain, _class);
+					scriptClassMap[name] = ScriptClass{ name,_class };
+					reflectionMap[mono_class_get_type(_class)] = NAME_TO_CTYPE[name];
+
+				}
+
+				if (!vTable)
+					continue;
+
+				void* fieldIterator = nullptr;
+				while (MonoClassField* field = mono_class_get_fields(_class, &fieldIterator))
+				{
+					uint32_t flags = mono_field_get_flags(field);
+					if (flags & FIELD_ATTRIBUTE_STATIC)
+					{
+						mono_field_static_set_value(vTable, field, nullptr);
+					}
+				}
+			}
 			mono_domain_set(mRootDomain, false);
 			mono_domain_unload(mAppDomain);
 			mAppDomain = nullptr;
@@ -403,16 +453,23 @@ namespace Copium
 	{
 		MyEventSystem->publish(new EditorConsoleLogEvent("SWAPPING DLL"));
 
+		PRINT("CLEARING HANDLES!");
 		for (uint32_t hand : gcHandles)
 		{
 			mono_gchandle_free(hand);
+
 		}
 		gcHandles.clear();
 		registerScriptWrappers();
-		unloadAppDomain();
-		createAppDomain();
+
+
+		PRINT("UNLOADING APP DOMAIN!");
 		mGameObjects.clear();
 		mComponents.clear();
+		unloadAppDomain();
+		PRINT("RECREATING APP DOMAIN!");
+		createAppDomain();
+		PRINT("LOADING ASSEMBLY!");
 		mCoreAssembly = Utils::loadAssembly(Paths::scriptsAssemblyPath);
 		mAssemblyImage = mono_assembly_get_image(mCoreAssembly);
 		mGameObject = mono_class_from_name(mAssemblyImage, "CopiumEngine", "GameObject");
@@ -421,12 +478,9 @@ namespace Copium
 		mScriptableObject = mono_class_from_name(mAssemblyImage, "CopiumEngine", "ScriptableObject");
 		mComponent = mono_class_from_name(mAssemblyImage, "CopiumEngine", "Component");
 		updateScriptClasses();
-
-		/* For each row, get some of its values */
-		mComponents.clear();
-		mGameObjects.clear();
 		if (MySceneManager.get_current_scene())
 		{
+			PRINT("REFLECTING!");
 			ReflectAll();
 		}
 	

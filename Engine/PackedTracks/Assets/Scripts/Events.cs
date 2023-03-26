@@ -1,6 +1,4 @@
 using CopiumEngine;
-using System;
-
 public class Event_Intro : Event
 {
 

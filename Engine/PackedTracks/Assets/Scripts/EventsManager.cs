@@ -42,9 +42,21 @@ public class EventsManager : CopiumScript
     }
 
 	public void Update()
-    {
+	{
 		if (currentEvent == null)
 			return;
+		if (Option_01.btnWrapper.GetState() == ButtonState.OnClick)
+		{
+			SelectChoice(Option_01);
+		}
+		else if (Option_02.btnWrapper.GetState() == ButtonState.OnClick)
+		{
+			SelectChoice(Option_02);
+		}
+		else if (Option_03.btnWrapper.GetState() == ButtonState.OnClick)
+		{
+			SelectChoice(Option_03);
+		}
 		if (!bodyTypeWriter.Done())
 		{
 			if (Input.GetMouseDown(1) && ReportScreenManager.Instance.isReportScreenOn)
@@ -67,19 +79,19 @@ public class EventsManager : CopiumScript
 					if (currentEvent.choices[0].IsValid())
 					{
 						Option_01.Enable();
-						Option_01.mappedChoice = currentEvent.choices[0];
+						Option_01.AssignChoice(currentEvent.choices[0]);
 
 					}
 					if (currentEvent.choices[1].IsValid())
 					{
 						Option_02.Enable();
-						Option_02.mappedChoice = currentEvent.choices[1];
+						Option_02.AssignChoice(currentEvent.choices[1]);
 
 					}
 					if (currentEvent.choices[2].IsValid())
 					{
 						Option_03.Enable();
-						Option_03.mappedChoice = currentEvent.choices[2];
+						Option_03.AssignChoice(currentEvent.choices[2]);
 					}
 				}
 				break;
@@ -91,23 +103,9 @@ public class EventsManager : CopiumScript
 				{
 					//choiceTimerObject.SetActive(false);
 					++state;
-					currentEvent = null;
 				}
 				break;
 			}
-		}
-
-		if (Option_01.btnWrapper.GetState() == ButtonState.OnClick)
-		{
-			SelectChoice(Option_01);
-		}
-		else if (Option_02.btnWrapper.GetState() == ButtonState.OnClick)
-		{
-			SelectChoice(Option_02);
-		} 
-		else if (Option_03.btnWrapper.GetState() == ButtonState.OnClick)
-		{
-			SelectChoice(Option_03);
 		}
 	}
 
@@ -117,18 +115,16 @@ public class EventsManager : CopiumScript
 		Option_01.Disable();
 		Option_02.Disable();
 		Option_03.Disable();
+		GameManager.Instance.EnableInteractions();
 	}
 
 	public void UpdateCurrentEvent()
 	{
-		Debug.Log("UPDATE CURRENT EVENT");
 		List<Event> removableEvents = new List<Event>();
 		foreach (Event e in events)
 		{
 			if (e.isTriggered())
 			{
-
-				Debug.Log("EVENT TRIGGERED");
 				currentEvent = e;
 				EventStart();
 			}

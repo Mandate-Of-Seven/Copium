@@ -56,7 +56,7 @@ public class Person
 		);
 	}
 
-    public bool alive { get { return health == HEALTH_STATE.DEAD; } }
+    public bool alive { get { return health != HEALTH_STATE.DEAD; } }
 
     string _name;
     HEALTH_STATE _health;

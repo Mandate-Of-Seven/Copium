@@ -52,6 +52,11 @@ public class Option: CopiumScript
         return false;
     }
 
+    public void AssignChoice(Choice choice)
+    {
+        txt.text = choice.choiceText;
+        mappedChoice = choice;
+    }
     public void Enable()
     {
         if(!gameObject.activeSelf)

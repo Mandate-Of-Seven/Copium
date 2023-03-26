@@ -164,7 +164,7 @@ public class GameManager: CopiumScript
     {
         if (trainManager.currentSpeed > 0.1f && distanceLeft > 0)
         {
-            if (timer >= distanceInterval) // Every few distance interval
+            while (timer >= distanceInterval) // Every few distance interval
             {
                 distanceLeft -= trainManager.currentSpeed / 3.0f; // Reduce the distance left
 
@@ -175,9 +175,9 @@ public class GameManager: CopiumScript
                     // Show notifications (Visual & Audio)
                     reportScreenManager.alert.enabled = true;
                     crewStatusManager.alert.enabled = true;
-
+                    eventSequence++;
                     updateEvent = true; // Trigger only once
-                    //EventManager.UpdateEventSequence();
+                    EventsManager.Instance.UpdateCurrentEvent();
                 }
                 // Right now if the distance left to the next event is reseted, we can update event again
                 else if (distanceLeft % distancePerEvent > 1.0f)
@@ -198,7 +198,7 @@ public class GameManager: CopiumScript
                 else if (remainder > 1.0f)
                     updateHunger = false;
 
-                timer = 0.0f;
+                timer -= distanceInterval;
             }
 
             timer += Time.deltaTime;

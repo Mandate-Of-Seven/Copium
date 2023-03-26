@@ -30,7 +30,7 @@ public static class Messages
 				"In the dead of night, an explosion rocked the main engine room, causing massive flames " +
 				"to spread to the adjacent supply storage area. The raging fire that quickly engulfed the train roused the crew.";
 			public const string choice01 = "Attempt to put out the fire";
-			public const string choice02 = "There is a faint smell of something burning in the air...";
+			public const string choice02 = "Detach the main engine room and supply storage room from the train";
 			public const string result01 = 
 				"The undermanned crew did their best to battle the blaze, but ultimately, " +
 				"their efforts were futile. The flames were extinguished, but only at great personal risk. It seems " +

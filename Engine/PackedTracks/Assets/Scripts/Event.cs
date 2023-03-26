@@ -102,7 +102,7 @@ public class Choice
 
 	public bool IsValid()
 	{
-		return choiceText.Length > 0;
+		return choiceText != null;
 	}
 }
 

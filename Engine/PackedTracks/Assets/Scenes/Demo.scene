@@ -1602,7 +1602,7 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "GameManager",
-                    "distanceInterval": 0.009999999776482582,
+                    "distanceInterval": 0.004999999888241291,
                     "distanceLeft": 4000.0,
                     "eventSequence": 0,
                     "gameEnd": false,
