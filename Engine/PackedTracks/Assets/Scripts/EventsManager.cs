@@ -66,46 +66,45 @@ public class EventsManager : CopiumScript
 			bodyText.text = bodyTypeWriter.Write();
 		}
 		//If finished running
-		switch (state)
+		if (state == EventState.ForeShadow)
 		{
-			case EventState.ForeShadow:
+			//Finished foreshadowing
+			if (bodyTypeWriter.Done() && currentEvent.ForeShadow())
 			{
-				//Finished foreshadowing
-				if (bodyTypeWriter.Done() && currentEvent.ForeShadow())
+				++state;
+				bodyTypeWriter = new StringTypeWriterEffect(currentEvent.body, textInterval);
+				if (currentEvent.choices[0].IsValid())
 				{
-					++state;
-					//choiceTimerObject.SetActive(true);
-					bodyTypeWriter = new StringTypeWriterEffect(currentEvent.body, textInterval);
-					if (currentEvent.choices[0].IsValid())
-					{
-						Option_01.Enable();
-						Option_01.AssignChoice(currentEvent.choices[0]);
+					Option_01.Enable();
+					choiceTimerObject.SetActive(true);
+					Option_01.AssignChoice(currentEvent.choices[0]);
 
-					}
-					if (currentEvent.choices[1].IsValid())
-					{
-						Option_02.Enable();
-						Option_02.AssignChoice(currentEvent.choices[1]);
-
-					}
-					if (currentEvent.choices[2].IsValid())
-					{
-						Option_03.Enable();
-						Option_03.AssignChoice(currentEvent.choices[2]);
-					}
 				}
-				break;
+				if (currentEvent.choices[1].IsValid())
+				{
+					Option_02.Enable();
+					Option_02.AssignChoice(currentEvent.choices[1]);
+
+				}
+				if (currentEvent.choices[2].IsValid())
+				{
+					Option_03.Enable();
+					Option_03.AssignChoice(currentEvent.choices[2]);
+				}
 			}
-			case EventState.Run:
+		}
+
+		if (state == EventState.Run)
+		{
+			if (bodyTypeWriter.Done())
 			{
-				//UpdateTimer();
-				if (bodyTypeWriter.Done())
-				{
-					//choiceTimerObject.SetActive(false);
-					++state;
-				}
-				break;
+				++state;
 			}
+		}
+
+		if (state >= EventState.Run && choiceTimerObject.activeSelf)
+		{
+			UpdateTimer();
 		}
 	}
 
@@ -115,7 +114,13 @@ public class EventsManager : CopiumScript
 		Option_01.Disable();
 		Option_02.Disable();
 		Option_03.Disable();
+		choiceTimerObject.SetActive(false);
 		GameManager.Instance.EnableInteractions();
+	}
+
+	public void SelectDefaultChoice()
+    {
+		SelectChoice(Option_01);
 	}
 
 	public void UpdateCurrentEvent()
@@ -151,7 +156,10 @@ public class EventsManager : CopiumScript
     {
 		choiceTimer -= Time.deltaTime;
 		if (choiceTimer < 0)
+		{
 			choiceTimer = 0;
+			SelectDefaultChoice();
+		}
 		float percentage = choiceTimer / choiceDuration;
 		Vector3 scale = choiceTimerObject.transform.localScale;
 		scale.x = percentage;

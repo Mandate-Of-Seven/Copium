@@ -91,7 +91,6 @@ public class CrewStatusManager: CopiumScript
 
 	public void UpdateCanvas()
 	{
-		Console.WriteLine("1");
 		if (CrewStatusBtnWrapper.GetState() == ButtonState.OnRelease)
         {
 			crewMenu.SetPrepare(false);
@@ -99,7 +98,6 @@ public class CrewStatusManager: CopiumScript
             //OpenPanel();
 			OpenStatusPanel();
 		}
-		Console.WriteLine("2");
 		if (CloseStatusScreenBtnWrapper.GetState() == ButtonState.OnRelease && isCrewStatusOn)
 		{
 			crewMenu.deploying = false;
@@ -107,7 +105,6 @@ public class CrewStatusManager: CopiumScript
 			CloseStatusPanel();
         }
 
-		Console.WriteLine("3");
 		if (isCrewStatusOn)
         {
             StatusScreen.transform.localScale = Vector3.Lerp(StatusScreen.transform.localScale,crewStatusTargetScale,Time.deltaTime * transitionSpeed);
@@ -119,10 +116,8 @@ public class CrewStatusManager: CopiumScript
             StatusScreen.transform.localScale = Vector3.Lerp(StatusScreen.transform.localScale,Vector3.one,Time.deltaTime * transitionSpeed);
         }
 
-		Console.WriteLine("4");
 		if (trainManagerScript.accelerate == false && CabinBtnWrapper.GetState() == ButtonState.OnRelease)
 		{
-			Console.WriteLine("go to cabin");
 			GoToCabin();
 		}
 		if(isCabinOn)
@@ -151,7 +146,7 @@ public class CrewStatusManager: CopiumScript
         isCrewStatusOn = true;
 		isCabinOn = true;
         CrewStatusBtn.gameObject.SetActive(false);
-        //CrewStatusTab.transform.parent = null;
+        CrewStatusTab.transform.parent = null;
 		CrewStatusTab.SetActive(true);
     }
 
@@ -174,7 +169,7 @@ public class CrewStatusManager: CopiumScript
         CrewStatusBtn.gameObject.SetActive(true);
 		CrewStatusTab.SetActive(false);
 
-		//CrewStatusTab.transform.parent = parent.transform;
+		CrewStatusTab.transform.parent = parent.transform;
 	}
 
 	public void GoToCabin()
