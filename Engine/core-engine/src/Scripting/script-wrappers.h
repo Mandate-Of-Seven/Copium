@@ -26,6 +26,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <GameObject/components.h>
 #include <GameObject/game-object-factory.h>
 #include <Editor/editor-system.h>
+#include <Audio/sound-system.h>
 
 #include "mono/metadata/object.h"
 #include "mono/metadata/reflection.h"
@@ -46,6 +47,7 @@ namespace Copium
 		MessageSystem& messageSystem{ *MessageSystem::Instance() };
 		ScriptingSystem& scriptingSystem{ *ScriptingSystem::Instance() };
 		AnimationSystem& animationSystem{ *AnimationSystem::Instance()};
+		SoundSystem& soundSystem{ *SoundSystem::Instance() };
 	}
 
 	/*******************************************************************************
@@ -677,6 +679,11 @@ namespace Copium
 		pAudioSource->play_sound();
 	}
 
+	static unsigned GetSoundLength(AudioSource* pAudioSource)
+	{
+		return soundSystem.GetSoundLength(pAudioSource->alias);
+	}
+
 	/*******************************************************************************
 	/*!
 		\brief
@@ -1009,6 +1016,8 @@ namespace Copium
 		mono_free(str);
 	}
 
+
+
 	/*******************************************************************************
 	/*!
 	\brief
@@ -1048,6 +1057,7 @@ namespace Copium
 		Register(AudioSourceStop);
 		Register(AudioSourceSetVolume);
 		Register(AudioSourceGetVolume);
+		Register(GetSoundLength);
 		Register(PauseAllAnimation);
 		Register(PlayAllAnimation);
 		Register(StopAnimation);

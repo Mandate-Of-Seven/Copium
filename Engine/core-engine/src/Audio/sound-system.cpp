@@ -155,6 +155,15 @@ void SoundSystem::Mute(bool status)
 	}
 }
 
+unsigned SoundSystem::GetSoundLength(std::string alias)
+{
+	unsigned temp;
+	FMOD::Sound* rSound(soundList[alias].second);
+	rSound->getLength(&temp, FMOD_TIMEUNIT_MS);
+	return temp/1000;// ms to sec
+}
+
+
 // Private Members
 void SoundSystem::CheckVersion()
 {

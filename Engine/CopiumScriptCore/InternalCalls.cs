@@ -152,6 +152,9 @@ namespace CopiumEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern float AudioSourceGetVolume(ulong ID);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern UInt32 GetSoundLength(ulong ID);
         #endregion	
 
         #region UI
