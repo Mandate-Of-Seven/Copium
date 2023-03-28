@@ -939,7 +939,7 @@
                         {
                             "Name": "Snow_SpriteSheet_155_5x31.png",
                             "Sprite ID": 8966109942037627320,
-                            "Time Delay": 0.029999999329447746,
+                            "Time Delay": 0.029999999329447743,
                             "FrameCount": 155,
                             "Rows": 31,
                             "Columns": 5,
@@ -1208,15 +1208,16 @@
                     "distanceLeft": 200.0,
                     "eventSequence": 0,
                     "gameEnd": false,
-                    "MainPage": 8557988155811721864,
-                    "prevButtonObject": 17641556590098438796,
-                    "ManualPopUp": 13627107543471401800,
-                    "Page2": 6511380412293030938,
                     "Page3": 7479187231825907418,
+                    "BackstoryPopUp": 15952155975634487811,
+                    "ManualPopUp": 13627107543471401800,
+                    "prevButtonObject": 17641556590098438796,
+                    "MainPage": 8557988155811721864,
+                    "Page2": 6511380412293030938,
                     "Page4": 7880086899027959037,
                     "PauseCanvas": 1722160444903115838,
                     "TrainCanvas": 6642123175702952797,
-                    "BackstoryPopUp": 15952155975634487811,
+                    "BackstoryBtn": 3089503959746599563,
                     "htpmScript": 15873072395746983378,
                     "crewStatusManager": 10830490317094325076,
                     "ManualPopUpBtn": 17645054254989627834,
@@ -1225,8 +1226,7 @@
                     "pauseMenu": 7662073999306630853,
                     "reportScreenManager": 6180648032434220981,
                     "resultManager": 5868577602297294004,
-                    "trainManager": 5971899813001945745,
-                    "BackstoryBtn": 3089503959746599563
+                    "trainManager": 5971899813001945745
                 }
             ]
         },
@@ -16061,8 +16061,12 @@
                     "Page3": 6742758525039533529,
                     "sfx_pageflip": 16863530532877669399,
                     "ExitButton": 13866426859041989898,
+                    "bronson": 6182178789917696231,
                     "PrevButton": 11296636408598356073,
-                    "NextButton": 10444853072535840516
+                    "NextButton": 10444853072535840516,
+                    "chuck": 17471923854421505654,
+                    "danton": 9280806063901533652,
+                    "harris": 15164841393826463532
                 }
             ]
         },
@@ -16312,8 +16316,8 @@
                     "PID": 7150034817238632200,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 0.5213606953620911,
-                        "Y": 0.608254611492157,
+                        "X": 0.6842315196990967,
+                        "Y": 0.4445531964302063,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -16337,15 +16341,15 @@
                 },
                 {
                     "enabled": true,
-                    "UID": 7108553838497141599,
+                    "UID": 11475248737683088158,
                     "Type": "SpriteRenderer",
                     "TypeID": 22,
-                    "Sprite ID": 13421732615435831700,
-                    "Sprite Name": "Muscles.png",
+                    "Sprite ID": 15777579622438397838,
+                    "Sprite Name": "circle.png",
                     "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
+                        "X": 0.00009999999747378752,
+                        "Y": 0.00009998999303206801,
+                        "Z": 0.00009998999303206801,
                         "W": 1.0
                     },
                     "Flip": {
@@ -16357,15 +16361,15 @@
         },
         {
             "UID": 5407977072435045954,
-            "Name": "border",
+            "Name": "bimage",
             "Active": true,
             "Components": [
                 {
-                    "PID": 4433420082261368350,
+                    "PID": 7150034817238632200,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
+                        "X": 0.668623685836792,
+                        "Y": 0.5153291821479797,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -16374,8 +16378,8 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
+                        "X": 1.7999999523162842,
+                        "Y": 1.7999999523162842,
                         "Z": 1.0
                     }
                 },
@@ -16385,25 +16389,30 @@
                     "Type": "SortingGroup",
                     "TypeID": 26,
                     "SortingLayer": 8,
-                    "OrderInLayer": 1
+                    "OrderInLayer": 3
                 },
                 {
                     "enabled": true,
-                    "UID": 5508673538059812190,
-                    "Type": "SpriteRenderer",
-                    "TypeID": 22,
-                    "Sprite ID": 0,
-                    "Sprite Name": "empty",
-                    "Color": {
-                        "X": 0.00009999999747378752,
-                        "Y": 0.00009998999303206801,
-                        "Z": 0.00009998999303206801,
-                        "W": 1.0
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
+                    "UID": 6182178789917696231,
+                    "Type": "Animator",
+                    "TypeID": 15,
+                    "Loop": true,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "CharacterHalfSS.png",
+                            "Sprite ID": 10773975946313926225,
+                            "Time Delay": 0.0,
+                            "FrameCount": 4,
+                            "Rows": 1,
+                            "Columns": 4,
+                            "Flip": {
+                                "X": false,
+                                "Y": false
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -16450,7 +16459,7 @@
                     "PID": 7150034817238632200,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 1.399999976158142,
+                        "X": 1.649999976158142,
                         "Y": 0.75,
                         "Z": 0.0
                     },
@@ -16686,8 +16695,8 @@
                     "PID": 5687911433499589338,
                     "Type": "Transform",
                     "Pos": {
-                        "X": -1.7183033227920532,
-                        "Y": 0.6079999804496765,
+                        "X": -1.4997776746749878,
+                        "Y": 0.44999998807907104,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -16714,32 +16723,12 @@
                     "UID": 13868981769945016581,
                     "Type": "SpriteRenderer",
                     "TypeID": 22,
-                    "Sprite ID": 0,
-                    "Sprite Name": "empty",
+                    "Sprite ID": 15777579622438397838,
+                    "Sprite Name": "circle.png",
                     "Color": {
                         "X": 0.00009999999747378752,
                         "Y": 0.00009998999303206801,
                         "Z": 0.00009998999303206801,
-                        "W": 1.0
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
-                },
-                {
-                    "enabled": true,
-                    "UID": 2400330341750365083,
-                    "Type": "Image",
-                    "TypeID": 20,
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Sprite ID": 17863984120512650492,
-                    "Sprite Name": "crew_chuck.png",
-                    "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
                         "W": 1.0
                     },
                     "Flip": {
@@ -16751,15 +16740,15 @@
         },
         {
             "UID": 7935848915909050314,
-            "Name": "border",
+            "Name": "cimage",
             "Active": true,
             "Components": [
                 {
-                    "PID": 4928989586104222161,
+                    "PID": 5687911433499589338,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
+                        "X": -1.418787956237793,
+                        "Y": 0.5077193379402161,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -16768,10 +16757,41 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
+                        "X": 1.7000001668930054,
+                        "Y": 1.7000001668930054,
                         "Z": 1.0
                     }
+                },
+                {
+                    "enabled": true,
+                    "UID": 11425080189187785645,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 8,
+                    "OrderInLayer": 2
+                },
+                {
+                    "enabled": true,
+                    "UID": 17471923854421505654,
+                    "Type": "Animator",
+                    "TypeID": 15,
+                    "Loop": true,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "CharacterHalfSS.png",
+                            "Sprite ID": 10773975946313926225,
+                            "Time Delay": 0.0,
+                            "FrameCount": 4,
+                            "Rows": 1,
+                            "Columns": 4,
+                            "Flip": {
+                                "X": false,
+                                "Y": false
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -16784,7 +16804,7 @@
                     "PID": 5687911433499589338,
                     "Type": "Transform",
                     "Pos": {
-                        "X": -1.0,
+                        "X": -0.5140247941017151,
                         "Y": 0.7500000596046448,
                         "Z": 0.0
                     },
@@ -16960,8 +16980,8 @@
                     "PID": 13503630109028362520,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 0.39351850748062134,
-                        "Y": 0.6080002188682556,
+                        "X": 0.6193379759788513,
+                        "Y": 0.4412916302680969,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -16988,32 +17008,12 @@
                     "UID": 14180301925028999864,
                     "Type": "SpriteRenderer",
                     "TypeID": 22,
-                    "Sprite ID": 0,
-                    "Sprite Name": "empty",
+                    "Sprite ID": 15777579622438397838,
+                    "Sprite Name": "circle.png",
                     "Color": {
                         "X": 0.00009999999747378752,
                         "Y": 0.00009998999303206801,
                         "Z": 0.00009998999303206801,
-                        "W": 1.0
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
-                },
-                {
-                    "enabled": true,
-                    "UID": 14033781038219430899,
-                    "Type": "Image",
-                    "TypeID": 20,
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Sprite ID": 2982011823619030627,
-                    "Sprite Name": "Medic.png",
-                    "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
                         "W": 1.0
                     },
                     "Flip": {
@@ -17032,7 +17032,7 @@
                     "PID": 13503630109028362520,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 1.1755880117416382,
+                        "X": 1.5,
                         "Y": 0.7500000596046448,
                         "Z": 0.0
                     },
@@ -17260,8 +17260,8 @@
                     "PID": 15146552465265375475,
                     "Type": "Transform",
                     "Pos": {
-                        "X": -1.718000054359436,
-                        "Y": 0.6080002188682556,
+                        "X": -1.5,
+                        "Y": 0.44999998807907104,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -17288,32 +17288,12 @@
                     "UID": 17990290544431970019,
                     "Type": "SpriteRenderer",
                     "TypeID": 22,
-                    "Sprite ID": 0,
-                    "Sprite Name": "empty",
+                    "Sprite ID": 15777579622438397838,
+                    "Sprite Name": "circle.png",
                     "Color": {
-                        "X": 0.00009999999747378752,
-                        "Y": 0.00009998999303206801,
-                        "Z": 0.00009998999303206801,
-                        "W": 1.0
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
-                },
-                {
-                    "enabled": true,
-                    "UID": 16190101974767949169,
-                    "Type": "Image",
-                    "TypeID": 20,
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Sprite ID": 6985570555934067165,
-                    "Sprite Name": "Engi.png",
-                    "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
+                        "X": 0.00009998999303206801,
+                        "Y": 0.00009999999747378752,
+                        "Z": 0.00009999155008699745,
                         "W": 1.0
                     },
                     "Flip": {
@@ -17332,7 +17312,7 @@
                     "PID": 15146552465265375475,
                     "Type": "Transform",
                     "Pos": {
-                        "X": -1.0,
+                        "X": -0.5139999985694885,
                         "Y": 0.75,
                         "Z": 0.0
                     },
@@ -17653,7 +17633,7 @@
                     "Type": "Transform",
                     "Pos": {
                         "X": 5.699999809265137,
-                        "Y": 4.199999809265137,
+                        "Y": 4.5,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -17725,6 +17705,120 @@
                     "normalG": 1.0,
                     "normalB": 1.0,
                     "normalA": 0.5
+                }
+            ]
+        },
+        {
+            "UID": 5319251028880775801,
+            "Name": "dimage",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13503630109028362520,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.5642526149749756,
+                        "Y": 0.4892367720603943,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.7000001668930054,
+                        "Y": 1.7000001668930054,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 7144768544114636671,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 8,
+                    "OrderInLayer": 2
+                },
+                {
+                    "enabled": true,
+                    "UID": 9280806063901533652,
+                    "Type": "Animator",
+                    "TypeID": 15,
+                    "Loop": true,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "CharacterHalfSS.png",
+                            "Sprite ID": 10773975946313926225,
+                            "Time Delay": 0.0,
+                            "FrameCount": 4,
+                            "Rows": 1,
+                            "Columns": 4,
+                            "Flip": {
+                                "X": false,
+                                "Y": false
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 4927385407623544413,
+            "Name": "himage",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 15146552465265375475,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -1.5068495273590088,
+                        "Y": 0.48706287145614624,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.7000001668930054,
+                        "Y": 1.7000001668930054,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 1769815694165981946,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 8,
+                    "OrderInLayer": 2
+                },
+                {
+                    "enabled": true,
+                    "UID": 15164841393826463532,
+                    "Type": "Animator",
+                    "TypeID": 15,
+                    "Loop": true,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "CharacterHalfSS.png",
+                            "Sprite ID": 10773975946313926225,
+                            "Time Delay": 0.0,
+                            "FrameCount": 4,
+                            "Rows": 1,
+                            "Columns": 4,
+                            "Flip": {
+                                "X": false,
+                                "Y": false
+                            }
+                        }
+                    ]
                 }
             ]
         }

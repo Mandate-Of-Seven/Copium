@@ -27,11 +27,20 @@ public class BackstoryMenu: CopiumScript
     public Button NextButton;
     public Button PrevButton;
     public Button ExitButton;
+
+    public Animator bronson;
+    public Animator chuck;
+    public Animator danton;
+    public Animator harris;
+
     public int page = 1;
 
     void Start()
 	{
-        
+        bronson.stop();
+        chuck.stop();
+        danton.stop();
+        harris.stop();
 	}
 
 
