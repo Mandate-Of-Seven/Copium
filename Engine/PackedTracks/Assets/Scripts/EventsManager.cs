@@ -176,6 +176,7 @@ public class EventsManager : CopiumScript
 	void RegisterEvents()
     {
 		//PUT ENDINGS HERE
+		AddEvent(new Event_Endings());
 
 		//PUT GENERIC EVENTS HERE
 

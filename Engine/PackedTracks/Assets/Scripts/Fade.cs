@@ -18,7 +18,9 @@ using System;
 
 public class Fade: CopiumScript
 {
-	public bool shouldFade;
+    public static Fade Instance;
+
+    public bool shouldFade;
 	public bool fadeIn = true;
 	public float end = 1.0f;
 	public float start = 0.0f;
@@ -35,6 +37,11 @@ public class Fade: CopiumScript
 	private float preposTimer = 0.0f;
 	private float timer = 0.0f;
 	
+    public void Awake()
+    {
+        Instance = this;
+    }
+
     void Start()
 	{
         sr = GetComponent<SpriteRenderer>();
@@ -101,7 +108,7 @@ public class Fade: CopiumScript
 
     public bool FadeEnded()
     {
-        return (!postFaded && preFaded);
+        return (postFaded && !preFaded);
     }
 
 	void FadeIn()

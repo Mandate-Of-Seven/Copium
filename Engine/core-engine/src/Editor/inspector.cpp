@@ -1033,6 +1033,7 @@ namespace Copium
                 ImGui::Text("Animation %d", i + 1);
                 ImGui::TableNextRow();
                 Display("Number of Frames", animator.animations[i].frameCount);
+                Display("Current Frame", animator.animations[i].currentFrameIndex);
                 Display("Columns", animator.animations[i].spriteSheet.columns);
                 Display("Rows", animator.animations[i].spriteSheet.rows);
                 Display("Time Delay", animator.animations[i].timeDelay);

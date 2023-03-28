@@ -21,7 +21,7 @@ using System.Collections.Generic;
 
 public class GameManager: CopiumScript
 {
-    public static GameManager Instance;
+    public static GameManager Instance = null;
 
 	public GameObject TrainCanvas;
     public GameObject PauseCanvas;
@@ -82,6 +82,9 @@ public class GameManager: CopiumScript
 
         if (Input.GetKeyDown(KeyCode.D))
             crewMenuScript.SetStat("Danton", HEALTH_STATE.DEAD);
+
+        if (Input.GetKeyDown(KeyCode.S))
+            SceneManager.LoadScene("Ending");
 
         // Toggle canvases
         //CanvasManager();

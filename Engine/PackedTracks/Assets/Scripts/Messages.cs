@@ -105,13 +105,6 @@ public static class Messages
 		}
 	}
 
-	public static class Ending_DantonMissing
-    {
-		public const string body = "There were many days, if not weeks, with no word about Danton's whereabouts. Bronson, " +
-                                         "Chuck, and Harris have all died from their wounds and the cold; I have run out of everything " +
-                                         "I need to survive, including food, fuel, and water; and I'm afraid I won't be able to return " +
-                                         "home alive this time. I wish you were still around, mom";
-    }
 	public static class Event_Bomb
 	{
 		public static string preempt = "As the train hurtled through the snow, a metallic clang was heard, coming from the back of the train.";
@@ -185,4 +178,17 @@ public static class Messages
 				" It serves its purpose, but you notice that the train has started moving much slower.";
 		}
 	}
+
+    public static class Ending_3B
+    {
+        public const string body = "There were many days, if not weeks, with no word about Danton's whereabouts. Bronson, " +
+                                         "Chuck, and Harris have all died from their wounds and the cold; I have run out of everything " +
+                                         "I need to survive, including food, fuel, and water; and I'm afraid I won't be able to return " +
+                                         "home alive this time. I wish you were still around, mom";
+    }
+
+    public static class Ending_2A
+    {
+        public const string body = "A trap was prepared for us on this expedition! We were all sent out to die. No... No!";
+    }
 }

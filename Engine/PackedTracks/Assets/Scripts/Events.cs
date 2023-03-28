@@ -402,3 +402,23 @@ public class Event_Bomb_Default : Event_Bomb
 }
 
 #endregion
+
+#region EVENT_ENDING
+
+public class Event_Endings : Event
+{
+    float duration = 4.0f;
+
+    public override bool ForeShadow()
+    {
+        Fade.Instance.duration = duration;
+        Fade.Instance.Start();
+
+        if (!Fade.Instance.FadeEnded())
+            return false;
+
+        return true;
+    }
+}
+
+#endregion
