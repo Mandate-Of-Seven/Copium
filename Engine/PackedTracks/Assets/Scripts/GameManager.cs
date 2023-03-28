@@ -223,8 +223,16 @@ public class GameManager: CopiumScript
             if (foodTimer >= 5.0f && crewMenuScript.supplies != 0)
             {
                 Console.WriteLine("decrement supplies");
-                crewMenuScript.ChangeSupplies(-1);
-                crewMenuScript.ChangeAllHunger(+1);
+                foreach (Person person in CrewMenu.Instance.crewMembers.Values)
+                {
+                    if (!person.alive)
+                        continue;
+                    if (person.hunger < HUNGER_STATE.FULL)
+                    {
+                        person.hunger += 1;
+                        crewMenuScript.ChangeSupplies(-1);
+                    }
+                }
                 foodTimer = 0.0f;
             }
             foodTimer += Time.deltaTime;

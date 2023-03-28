@@ -36,6 +36,10 @@
         {
             "Name": "Transition",
             "ID": 10
+        },
+        {
+            "Name": "Tutorial",
+            "ID": 9
         }
     ],
     "GameObjects": [
@@ -935,7 +939,7 @@
                         {
                             "Name": "Snow_SpriteSheet_155_5x31.png",
                             "Sprite ID": 8966109942037627320,
-                            "Time Delay": 0.029999999329447743,
+                            "Time Delay": 0.029999999329447746,
                             "FrameCount": 155,
                             "Rows": 31,
                             "Columns": 5,
@@ -1200,7 +1204,7 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "GameManager",
-                    "distanceInterval": 0.10000000149011612,
+                    "distanceInterval": 0.05000000074505806,
                     "distanceLeft": 200.0,
                     "eventSequence": 0,
                     "gameEnd": false,
@@ -15581,218 +15585,6 @@
             ]
         },
         {
-            "UID": 9348086873598050229,
-            "Name": "Bottom",
-            "Active": true,
-            "Components": [
-                {
-                    "PID": 5041915625760369714,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": -25.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 50.0,
-                        "Z": 1.0
-                    }
-                },
-                {
-                    "enabled": true,
-                    "UID": 15843329615821666376,
-                    "Type": "SortingGroup",
-                    "TypeID": 26,
-                    "SortingLayer": 9,
-                    "OrderInLayer": 0
-                },
-                {
-                    "enabled": true,
-                    "UID": 8965532830524897398,
-                    "Type": "Image",
-                    "TypeID": 20,
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Sprite ID": 0,
-                    "Sprite Name": "empty",
-                    "Color": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0,
-                        "W": 0.501960813999176
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 8211934423683605873,
-            "Name": "Top",
-            "Active": true,
-            "Components": [
-                {
-                    "PID": 13135390716286654061,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 25.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 50.0,
-                        "Z": 1.0
-                    }
-                },
-                {
-                    "enabled": true,
-                    "UID": 7933959665929933716,
-                    "Type": "SortingGroup",
-                    "TypeID": 26,
-                    "SortingLayer": 9,
-                    "OrderInLayer": 0
-                },
-                {
-                    "enabled": true,
-                    "UID": 15546424381420992110,
-                    "Type": "Image",
-                    "TypeID": 20,
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Sprite ID": 0,
-                    "Sprite Name": "empty",
-                    "Color": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0,
-                        "W": 0.501960813999176
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 9824118048913214261,
-            "Name": "LeftPivot",
-            "Active": true,
-            "Components": [
-                {
-                    "PID": 9801774730266619501,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 13135390716286654061,
-            "Name": "TopPivot",
-            "Active": true,
-            "Components": [
-                {
-                    "PID": 9801774730266619501,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 0.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 4193365536909812087,
-            "Name": "RightPivot",
-            "Active": true,
-            "Components": [
-                {
-                    "PID": 9801774730266619501,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 5041915625760369714,
-            "Name": "BottomPivot",
-            "Active": true,
-            "Components": [
-                {
-                    "PID": 9801774730266619501,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 0.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                }
-            ]
-        },
-        {
             "UID": 4363827861815865391,
             "Name": "ChoiceTimerPivot",
             "Active": false,
@@ -15906,10 +15698,330 @@
                         "X": 1.0,
                         "Y": 1.0
                     },
-                    "bottomPivot": 5041915625760369714,
-                    "leftPivot": 9824118048913214261,
-                    "rightPivot": 4193365536909812087,
-                    "topPivot": 13135390716286654061
+                    "bottomPivot": 14590506284881228805,
+                    "leftPivot": 78087200506033709,
+                    "rightPivot": 6529825633753759989,
+                    "topPivot": 11530791857907799594
+                }
+            ]
+        },
+        {
+            "UID": 11530791857907799594,
+            "Name": "TopPivot",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 9801774730266619501,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 0.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 14590506284881228805,
+            "Name": "BottomPivot",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 9801774730266619501,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 0.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 78087200506033709,
+            "Name": "LeftPivot",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 9801774730266619501,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 6529825633753759989,
+            "Name": "RightPivot",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 9801774730266619501,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1910296405779435505,
+            "Name": "Top",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 11530791857907799594,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 25.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 50.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 2796782488805423689,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 9,
+                    "OrderInLayer": 0
+                },
+                {
+                    "enabled": true,
+                    "UID": 662057850236599935,
+                    "Type": "Image",
+                    "TypeID": 20,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
+                    "Color": {
+                        "X": 0.00009999999747378752,
+                        "Y": 0.00009998999303206801,
+                        "Z": 0.00009998999303206801,
+                        "W": 0.501960813999176
+                    },
+                    "Flip": {
+                        "X": false,
+                        "Y": false
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 8946894820639178336,
+            "Name": "Bottom",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 14590506284881228805,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": -25.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 50.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 9887335930296917938,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 9,
+                    "OrderInLayer": 0
+                },
+                {
+                    "enabled": true,
+                    "UID": 2988014597224647763,
+                    "Type": "Image",
+                    "TypeID": 20,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
+                    "Color": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0,
+                        "W": 0.501960813999176
+                    },
+                    "Flip": {
+                        "X": false,
+                        "Y": false
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 13270746952454484702,
+            "Name": "Left",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 78087200506033709,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -25.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 50.0,
+                        "Y": 50.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 10270874379747037432,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 9,
+                    "OrderInLayer": 0
+                },
+                {
+                    "enabled": true,
+                    "UID": 6941545761652436913,
+                    "Type": "Image",
+                    "TypeID": 20,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
+                    "Color": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0,
+                        "W": 0.501960813999176
+                    },
+                    "Flip": {
+                        "X": false,
+                        "Y": false
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 6115521783699948628,
+            "Name": "Right",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 6529825633753759989,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 25.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 50.0,
+                        "Y": 50.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 11987940862724220761,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 9,
+                    "OrderInLayer": 0
+                },
+                {
+                    "enabled": true,
+                    "UID": 12514075972956505745,
+                    "Type": "Image",
+                    "TypeID": 20,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
+                    "Color": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0,
+                        "W": 0.501960813999176
+                    },
+                    "Flip": {
+                        "X": false,
+                        "Y": false
+                    }
                 }
             ]
         },

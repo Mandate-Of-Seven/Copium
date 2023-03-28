@@ -100,7 +100,6 @@ public class Crew : CopiumScript
     /*******************************************************************************/
     public void Enable()
     {
-        Debug.Log("TRYING TO ENABLE");
         if (person.alive)
         {
             selectBtnWrapper.SetInteractable(true);

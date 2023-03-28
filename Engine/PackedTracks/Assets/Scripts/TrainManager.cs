@@ -15,8 +15,6 @@
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 using CopiumEngine;
-using System;
-using System.Security.AccessControl;
 
 public class TrainManager: CopiumScript
 {
@@ -98,8 +96,6 @@ public class TrainManager: CopiumScript
 		}
 
 		float ratio = (currentSpeed/maxSpeed);
-
-		
 
 		if (!accelerate && ratio <= 0.2f)
 		{

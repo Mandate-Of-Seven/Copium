@@ -45,13 +45,28 @@ public class EventsManager : CopiumScript
 	{
 		if (currentEvent == null)
 			return;
-		if (Option_01.btnWrapper.GetState() == ButtonState.OnClick)
+
+		if (Option_01.Hovered())
+        {
+			HoverChoice(Option_01);
+
+		}
+		else if (Option_01.btnWrapper.GetState() == ButtonState.OnClick)
 		{
 			SelectChoice(Option_01);
+		}
+		else if (Option_02.Hovered())
+        {
+			HoverChoice(Option_02);
+
 		}
 		else if (Option_02.btnWrapper.GetState() == ButtonState.OnClick)
 		{
 			SelectChoice(Option_02);
+		}
+		else if (Option_03.Hovered())
+		{
+			HoverChoice(Option_03);
 		}
 		else if (Option_03.btnWrapper.GetState() == ButtonState.OnClick)
 		{
@@ -108,9 +123,25 @@ public class EventsManager : CopiumScript
 		}
 	}
 
+	public void HoverChoice(Option option)
+    {
+		StatusUpdate su = StatusUpdate.Instance;
+		Choice choice = option.mappedChoice;
+		CrewMenu.STAT_TYPES iter = CrewMenu.STAT_TYPES.HEALTH;
+		su.gameObject.SetActive(true);
+		while (iter <= CrewMenu.STAT_TYPES.HUNGER)
+		{
+			su.Harris(choice.GetStateChange("Harris", iter), iter);
+			su.Bronson(choice.GetStateChange("Bronson", iter), iter);
+			su.Danton(choice.GetStateChange("Danton", iter), iter);
+			su.Chuck(choice.GetStateChange("Chuck", iter), iter);
+			++iter;
+		}
+	}
 	public void SelectChoice(Option option)
     {
 		bodyTypeWriter = new StringTypeWriterEffect(option.mappedChoice.resultText, textInterval);
+		option.mappedChoice.ApplyEffects();
 		Option_01.Disable();
 		Option_02.Disable();
 		Option_03.Disable();
