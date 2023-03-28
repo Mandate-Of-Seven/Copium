@@ -114,6 +114,8 @@ namespace Copium
 			/**************************************************************************/
 		void Mute(bool status);
 
+		unsigned GetSoundLength(std::string alias);
+
 		//a map of all sounds created using CreateSound()
 		std::map<std::string, std::pair<FMOD::SoundGroup*, FMOD::Sound*>> soundList;
 

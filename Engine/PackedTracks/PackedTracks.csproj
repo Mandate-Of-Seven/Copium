@@ -89,6 +89,7 @@
       <Link>Time.cs</Link>
     </Compile>
     <Compile Include="Assets\Scripts\AudioManager.cs" />
+    <Compile Include="Assets\Scripts\BackstoryMenu.cs" />
     <Compile Include="Assets\Scripts\BlinkingEffect.cs" />
     <Compile Include="Assets\Scripts\ButtonWrapper.cs" />
     <Compile Include="Assets\Scripts\CabinInteractions.cs" />
