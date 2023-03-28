@@ -46,6 +46,8 @@ public class EventsManager : CopiumScript
 		if (currentEvent == null)
 			return;
 
+
+		StatusUpdate.Instance.gameObject.SetActive(false);
 		if (Option_01.Hovered())
         {
 			HoverChoice(Option_01);
@@ -88,12 +90,19 @@ public class EventsManager : CopiumScript
 			{
 				++state;
 				bodyTypeWriter = new StringTypeWriterEffect(currentEvent.body, textInterval);
+
+			}
+		}
+
+		if (state == EventState.Run)
+		{
+			if (bodyTypeWriter.Done())
+			{
 				if (currentEvent.choices[0].IsValid())
 				{
 					Option_01.Enable();
 					choiceTimerObject.SetActive(true);
 					Option_01.AssignChoice(currentEvent.choices[0]);
-
 				}
 				if (currentEvent.choices[1].IsValid())
 				{
@@ -106,18 +115,10 @@ public class EventsManager : CopiumScript
 					Option_03.Enable();
 					Option_03.AssignChoice(currentEvent.choices[2]);
 				}
-			}
-		}
-
-		if (state == EventState.Run)
-		{
-			if (bodyTypeWriter.Done())
-			{
 				++state;
 			}
 		}
-
-		if (state >= EventState.Run && choiceTimerObject.activeSelf)
+		if (state > EventState.Run && choiceTimerObject.activeSelf)
 		{
 			UpdateTimer();
 		}

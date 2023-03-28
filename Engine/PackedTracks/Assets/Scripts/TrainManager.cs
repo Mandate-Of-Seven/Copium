@@ -61,7 +61,6 @@ public class TrainManager: CopiumScript
 
 	float targetAmbienceVolume = 0.0f;
 	public GameObject cabinBtn;
-	public CrewMenu crewMenu;
 
 	void Awake()
     {
@@ -272,7 +271,7 @@ public class TrainManager: CopiumScript
 		targetScale = new Vector3(zoomOutScale,zoomOutScale,1);
 
 		//cabinBtn.SetActive(false);
-		crewMenu.SetClickable(false);
+		CrewMenu.Instance.SetClickable(false);
 	}
 
 	/**************************************************************************/
@@ -290,7 +289,7 @@ public class TrainManager: CopiumScript
 		targetScale = new Vector3(zoomInScale,zoomInScale,1);
 
 		//cabinBtn.SetActive(true);
-		crewMenu.SetClickable(true);
+		CrewMenu.Instance.SetClickable(true);
 	}
 
 	/**************************************************************************/

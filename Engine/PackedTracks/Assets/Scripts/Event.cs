@@ -94,7 +94,6 @@ public class Choice
     {
 		foreach (var effect in crewChanges)
 		{
-			Debug.Log("HARLO");
 			Stats stat = effect.Value;
 			string name = effect.Key;
 			if (stat.setHealth)

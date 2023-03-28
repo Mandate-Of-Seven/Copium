@@ -18,6 +18,7 @@ using System;
 
 public class CrewStatusManager: CopiumScript
 {
+	public static CrewStatusManager Instance;
 	public bool isCrewStatusOn = false;
     public Button CloseCrewStatusBtn;
 	public Button CrewStatusBtn;
@@ -33,7 +34,6 @@ public class CrewStatusManager: CopiumScript
     Vector3 crewStatusTargetScale = new Vector3(5f,5f,0);
 
 	public GameObject parent;
-	public CrewMenu crewMenu;
 	
 	public float transitionSpeed = 5.0f;
 
@@ -62,6 +62,11 @@ public class CrewStatusManager: CopiumScript
 	ButtonWrapper CabinBtnWrapper;
 	Vector3 cabinTargetPosition = new Vector3(18.15f, 0, 0);
 	//-----
+
+	void Awake()
+    {
+		Instance = this;
+	}
 
 	void Start()
 	{
@@ -92,14 +97,14 @@ public class CrewStatusManager: CopiumScript
 	{
 		if (CrewStatusBtnWrapper.GetState() == ButtonState.OnRelease)
         {
-			crewMenu.SetPrepare(false);
+			CrewMenu.Instance.SetPrepare(false);
 			resultManager.Disable();
             //OpenPanel();
 			OpenStatusPanel();
 		}
 		if (CloseStatusScreenBtnWrapper.GetState() == ButtonState.OnRelease && isCrewStatusOn)
 		{
-			crewMenu.deploying = false;
+			CrewMenu.Instance.deploying = false;
 			//ClosePanel(false);
 			CloseStatusPanel();
         }
@@ -130,7 +135,7 @@ public class CrewStatusManager: CopiumScript
 		}
 		if(CloseCrewStatusBtnWrapper.GetState() == ButtonState.OnRelease && isCabinOn)
 		{
-			crewMenu.deploying = false;
+			CrewMenu.Instance.deploying = false;
 			ReturnToCockpit(false);
 		}
 
@@ -152,15 +157,15 @@ public class CrewStatusManager: CopiumScript
 
     public void ClosePanel(bool prepared)
 	{
-		crewMenu.timeElasped = 0;
+		CrewMenu.Instance.timeElasped = 0;
 		//Prevent the crew buttons from being pressed
-		if (!crewMenu.deploying && !prepared)
+		if (!CrewMenu.Instance.deploying && !prepared)
 		{
-			crewMenu.SetPrepare(false);
+			CrewMenu.Instance.SetPrepare(false);
 		}
 		else
 		{
-			crewMenu.deploying = false;
+			CrewMenu.Instance.deploying = false;
 		}
 
 		isCrewStatusOn = false;
@@ -178,7 +183,7 @@ public class CrewStatusManager: CopiumScript
 			return;
 		//CrewStatusTab.SetActive(true);
 		isCabinOn = true;
-		crewMenu.SetPrepare(false);
+		CrewMenu.Instance.SetPrepare(false);
 
 		// Switch to cabin view
 		//cam.transform.localPosition = new Vector3(18.15f, 0, 0);
@@ -187,15 +192,15 @@ public class CrewStatusManager: CopiumScript
 	{
 		isCabinOn = false;
 		//cam.transform.localPosition = new Vector3(0,0,0);
-		crewMenu.timeElasped = 0;
+		CrewMenu.Instance.timeElasped = 0;
 		//Prevent the crew buttons from being pressed
-		if (!crewMenu.deploying && !prepared)
+		if (!CrewMenu.Instance.deploying && !prepared)
 		{
-			crewMenu.SetPrepare(false);
+			CrewMenu.Instance.SetPrepare(false);
 		}
 		else
 		{
-			crewMenu.deploying = false;
+			CrewMenu.Instance.deploying = false;
 		}
 		//CrewStatusTab.SetActive(false);
 	}
@@ -225,17 +230,17 @@ public class CrewStatusManager: CopiumScript
 	public void UpdateStatusScreen()
 	{
 		// Update Supplies Text
-		statusScreenSuppliesText.text = "Supplies: " + crewMenu.supplies;
+		statusScreenSuppliesText.text = "Supplies: " + CrewMenu.Instance.supplies;
 
 		// Bean: Temporary commented because images are not assigned
 		// Update Supplies Sprite
-		if(crewMenu.supplies >= lotThreshold){
+		if(CrewMenu.Instance.supplies >= lotThreshold){
 			if(supplyState != 3)
 				ToggleSuppliesSprite(3);
-		}else if(crewMenu.supplies >= medThreshold){
+		}else if(CrewMenu.Instance.supplies >= medThreshold){
 			if(supplyState != 2)
 				ToggleSuppliesSprite(2);
-		}else if(crewMenu.supplies >= lowThreshold){
+		}else if(CrewMenu.Instance.supplies >= lowThreshold){
 			if(supplyState != 1)
 				ToggleSuppliesSprite(1);
 		}else{
@@ -245,7 +250,6 @@ public class CrewStatusManager: CopiumScript
 
 	}
 	public void ToggleSuppliesSprite(int state){
-		Console.WriteLine("bleep");
 		supplyState = state;
 		supplySpriteSheet.setFrame(state);
 	}
@@ -253,6 +257,7 @@ public class CrewStatusManager: CopiumScript
 	public void DisableInteractions()
 	{
 		ClosePanel(false);
+		CloseStatusPanel();
 		CrewStatusBtnWrapper.SetInteractable(false);
 	}
 	public void EnableInteractions()
