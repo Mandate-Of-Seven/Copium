@@ -40,7 +40,6 @@ public class GameManager: CopiumScript
     public Button BackstoryBtn;
     public GameObject BackstoryPopUp;
 
-    public CrewMenu crewMenuScript;
     public TrainManager trainManager;
     public ReportScreenManager reportScreenManager;
     public CrewStatusManager crewStatusManager;
@@ -78,13 +77,13 @@ public class GameManager: CopiumScript
             return;
 
         if (Input.GetKeyDown(KeyCode.C))
-            crewMenuScript.SetStat("Chuck",HEALTH_STATE.DEAD);
+            CrewMenu.Instance.SetStat("Chuck",HEALTH_STATE.DEAD);
 
         if (Input.GetKeyDown(KeyCode.B))
-            crewMenuScript.SetStat("Bronson", HEALTH_STATE.DEAD);
+            CrewMenu.Instance.SetStat("Bronson", HEALTH_STATE.DEAD);
 
         if (Input.GetKeyDown(KeyCode.D))
-            crewMenuScript.SetStat("Danton", HEALTH_STATE.DEAD);
+            CrewMenu.Instance.SetStat("Danton", HEALTH_STATE.DEAD);
 
         if (Input.GetKeyDown(KeyCode.S))
             SceneManager.LoadScene("Ending");
@@ -109,7 +108,7 @@ public class GameManager: CopiumScript
         SupplyCounter();
 
         if(trainManager.accelerate)
-            crewMenuScript.UpdateAllStats();
+            CrewMenu.Instance.UpdateAllStats();
     }
 
 	/**************************************************************************/
@@ -156,7 +155,7 @@ public class GameManager: CopiumScript
     public void ToggleMoving()
     {
         moving = !moving;
-        crewMenuScript.SetClickable(!moving);
+        CrewMenu.Instance.SetClickable(!moving);
     }
 
 	/**************************************************************************/
@@ -198,7 +197,7 @@ public class GameManager: CopiumScript
                 if (remainder < 1.0f && !updateHunger)
                 {
                     updateHunger = true;
-                    crewMenuScript.UpdateHunger();
+                    CrewMenu.Instance.UpdateHunger();
                 }
                 else if (remainder > 1.0f)
                     updateHunger = false;
@@ -220,7 +219,7 @@ public class GameManager: CopiumScript
     {
         if (trainManager.accelerate && distanceLeft < 200.0f)
         {
-            if (foodTimer >= 5.0f && crewMenuScript.supplies != 0)
+            if (foodTimer >= 5.0f && CrewMenu.Instance.supplies != 0)
             {
                 Console.WriteLine("decrement supplies");
                 foreach (Person person in CrewMenu.Instance.crewMembers.Values)
@@ -230,7 +229,7 @@ public class GameManager: CopiumScript
                     if (person.hunger < HUNGER_STATE.FULL)
                     {
                         person.hunger += 1;
-                        crewMenuScript.ChangeSupplies(-1);
+                        CrewMenu.Instance.ChangeSupplies(-1);
                     }
                 }
                 foodTimer = 0.0f;
