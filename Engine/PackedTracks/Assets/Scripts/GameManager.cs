@@ -37,6 +37,9 @@ public class GameManager: CopiumScript
     public Button ManualBtn;
     public Button ManualPopUpBtn;
 
+    public Button BackstoryBtn;
+    public GameObject BackstoryPopUp;
+
     public CrewMenu crewMenuScript;
     public TrainManager trainManager;
     public ReportScreenManager reportScreenManager;
@@ -246,6 +249,11 @@ public class GameManager: CopiumScript
         if (ManualPopUpBtn.state == ButtonState.OnRelease && ManualPopUp.activeSelf)
         {
             CloseManual();
+        }
+
+        if (BackstoryBtn.state == ButtonState.OnRelease)
+        {
+            BackstoryPopUp.SetActive(true);
         }
     }
 

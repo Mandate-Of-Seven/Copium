@@ -1,15 +1,9 @@
 Microsoft (R) Visual C# Compiler version 3.9.0-6.21160.10 (59eedc33)
 Copyright (C) Microsoft Corporation. All rights reserved.
 
-D:\Digipen\Sem 2.1\GAM200 (Engine Project 3)\Engine\PackedTracks\Assets\Scripts\Option.cs(30,11): warning CS0108: 'Option.enabled' hides inherited member 'Component.enabled'. Use the new keyword if hiding was intended.
+D:\Digipen\Sem 2.1\GAM200 (Engine Project 3)\Engine\PackedTracks\Assets\Scripts\ResultManager.cs(37,10): warning CS0414: The field 'ResultManager.openHover' is assigned but its value is never used
 D:\Digipen\Sem 2.1\GAM200 (Engine Project 3)\Engine\PackedTracks\Assets\Scripts\ResultManager.cs(36,10): warning CS0414: The field 'ResultManager.closeHover' is assigned but its value is never used
 D:\Digipen\Sem 2.1\GAM200 (Engine Project 3)\Engine\PackedTracks\Assets\Scripts\ReportScreenManager.cs(40,7): warning CS0414: The field 'ReportScreenManager.openHover' is assigned but its value is never used
-D:\Digipen\Sem 2.1\GAM200 (Engine Project 3)\Engine\PackedTracks\Assets\Scripts\Event.cs(25,7): warning CS0414: The field 'Choice.setSupply' is assigned but its value is never used
+D:\Digipen\Sem 2.1\GAM200 (Engine Project 3)\Engine\PackedTracks\Assets\Scripts\TrainManager.cs(42,7): warning CS0414: The field 'TrainManager.onHover' is assigned but its value is never used
 D:\Digipen\Sem 2.1\GAM200 (Engine Project 3)\Engine\PackedTracks\Assets\Scripts\ReportScreenManager.cs(39,10): warning CS0414: The field 'ReportScreenManager.closeHover' is assigned but its value is never used
-D:\Digipen\Sem 2.1\GAM200 (Engine Project 3)\Engine\PackedTracks\Assets\Scripts\Prepare.cs(74,10): warning CS0414: The field 'Prepare.option1Hover' is assigned but its value is never used
-D:\Digipen\Sem 2.1\GAM200 (Engine Project 3)\Engine\PackedTracks\Assets\Scripts\GameManager.cs(51,11): warning CS0414: The field 'GameManager.hungerTimer' is assigned but its value is never used
-D:\Digipen\Sem 2.1\GAM200 (Engine Project 3)\Engine\PackedTracks\Assets\Scripts\ResultManager.cs(37,10): warning CS0414: The field 'ResultManager.openHover' is assigned but its value is never used
-D:\Digipen\Sem 2.1\GAM200 (Engine Project 3)\Engine\PackedTracks\Assets\Scripts\CrewMenu.cs(57,11): warning CS0414: The field 'CrewMenu.hungerInterval' is assigned but its value is never used
-D:\Digipen\Sem 2.1\GAM200 (Engine Project 3)\Engine\PackedTracks\Assets\Scripts\TrainManager.cs(43,7): warning CS0414: The field 'TrainManager.onHover' is assigned but its value is never used
-D:\Digipen\Sem 2.1\GAM200 (Engine Project 3)\Engine\PackedTracks\Assets\Scripts\CrewMenu.cs(54,11): warning CS0414: The field 'CrewMenu.timer' is assigned but its value is never used
-D:\Digipen\Sem 2.1\GAM200 (Engine Project 3)\Engine\PackedTracks\Assets\Scripts\TrainManager.cs(42,7): warning CS0414: The field 'TrainManager.manualHover' is assigned but its value is never used
+D:\Digipen\Sem 2.1\GAM200 (Engine Project 3)\Engine\PackedTracks\Assets\Scripts\Event.cs(25,7): warning CS0414: The field 'Choice.setSupply' is assigned but its value is never used
