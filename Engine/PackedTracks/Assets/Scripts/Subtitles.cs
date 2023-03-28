@@ -13,6 +13,7 @@ public class Subtitles: CopiumScript
 	private float fadeVal = 0.0f;
 	private float timer = 0.0f;
 	private float duration = 1.0f;
+    private float waitModifier = 0.0f;
 
     public bool shouldFade = false;
     public bool fadeIn = false;
@@ -21,6 +22,7 @@ public class Subtitles: CopiumScript
     private bool fadeInAndOut = false;
     private bool dontWait = false;
     private bool messageEnded = false;
+    private bool changeScene = false;
 
     public int ending = 0;  // Which ending to use
     private int maxChar = 100;
@@ -31,6 +33,7 @@ public class Subtitles: CopiumScript
 	void Start()
 	{
 		subtitles = GetComponent<Text>();
+        waitModifier = 0.03f;
         content = "";
 	}
 	void Update()
@@ -48,7 +51,18 @@ public class Subtitles: CopiumScript
             FadeInAndOut();
         }
 
-        if (fade.shouldFade || !fade.FadeEnded())
+        if (HasFadeEnded() && !changeScene && messageEnded && !fade.shouldFade) // Message ended
+        {
+            fade.preFade = 2.0f;
+            fade.Start(true);
+            changeScene = true;
+        }
+        else if (changeScene && fade.FadeEnded()) // Load next scene
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
+
+        if (fade.shouldFade || !fade.postFaded)
             return;
 
         if (GameManager.Instance != null && audio == null)
@@ -59,7 +73,7 @@ public class Subtitles: CopiumScript
             audio.Play();
         }
 
-        if (HasFadeEnded() && !messageEnded)
+        if (HasFadeEnded() && !messageEnded) // Change subtitles
         {
             FadeInAndOut();
             ChangingSubtitles();
@@ -75,23 +89,33 @@ public class Subtitles: CopiumScript
     {
         switch (ending)
         {
-            case 1:
+            case -1:
                 content = Messages.Ending_3B.body;
+                waitModifier = 0.03f;
                 audio = AudioManager.Instance.ending3bVO;
                 break;
-            case 0:
+            case -2:
                 content = Messages.Ending_2A.body;
+                waitModifier = 0.028f;
                 audio = AudioManager.Instance.ending2aVO;
+                break;
+            case -3:
+                content = Messages.Ending_AllDead.body;
+                waitModifier = 0.02f;
+                audio = AudioManager.Instance.endingAllDiedVO;
                 break;
         }
     }
 
     void ChangingSubtitles()
     {
+        if (content.Length == 0)
+            return;
+
         int index = content.IndexOfAny(punctuation);
 
         // If the punctuation is an ellipsis(...)
-        if (content[index + 1] == punctuation[0])
+        if (index + 1 < content.Length && content[index + 1] == punctuation[0])
             index = content.LastIndexOfAny(punctuation);
 
         if (index >= maxChar)
@@ -101,7 +125,7 @@ public class Subtitles: CopiumScript
             subtitles.text = temp.Substring(0, space + 1);
             content = content.Substring(space + 1);
         }
-        else if (index > 0)
+        else if (index > 0 && index < content.Length)
         {
             subtitles.text = content.Substring(0, index + 1);
             content = content.Substring(index + 1);
@@ -112,10 +136,10 @@ public class Subtitles: CopiumScript
             content = "";
         }
 
-        if (index == content.Length || index <= 0 || content.Length == 0)
+        if (index == content.Length || content.Length == 0)
             messageEnded = true;
 
-        wait = subtitles.text.Length * 0.03f;
+        wait = subtitles.text.Length * waitModifier;
     }
 
 	public void FadeOutAndIn(float _wait = 1.0f)
