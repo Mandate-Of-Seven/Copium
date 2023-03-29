@@ -179,7 +179,7 @@ public class CrewStatusManager: CopiumScript
 		//CrewStatusTab.SetActive(true);
 		isCabinOn = true;
 		crewMenu.SetPrepare(false);
-
+		AudioManager.Instance.autoDoorSFX.Play();
 		// Switch to cabin view
 		//cam.transform.localPosition = new Vector3(18.15f, 0, 0);
 	}
@@ -197,6 +197,8 @@ public class CrewStatusManager: CopiumScript
 		{
 			crewMenu.deploying = false;
 		}
+		AudioManager.Instance.autoDoorSFX.Play();
+
 		//CrewStatusTab.SetActive(false);
 	}
 	

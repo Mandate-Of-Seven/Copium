@@ -34,6 +34,7 @@ public class AudioManager: CopiumScript
 	public AudioSource accelerateSFX;
 	public AudioSource deccelerateSFX;
 	public AudioSource leverEngagedSFX;
+	public AudioSource autoDoorSFX;
 	public AudioSource hoverSFX;
 	public AudioSource gunfireSFX;
 	public AudioSource explosionSFX;
