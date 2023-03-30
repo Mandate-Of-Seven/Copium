@@ -33,7 +33,6 @@ public class CrewMenu: CopiumScript
     ButtonWrapper prepareBtnWrapper;
     ButtonWrapper deployBtnWrapper;
 
-    public CrewStatusManager crewStatusManager; 
     public ReportScreenManager reportScreenManager; 
     public ResultManager resultManager; 
     public CabinInteractions interactionManager;
@@ -93,6 +92,10 @@ public class CrewMenu: CopiumScript
         bronson.person = crewMembers["Bronson"];
         chuck.person = crewMembers["Chuck"];
         danton.person = crewMembers["Danton"];
+        if (titleText == null)
+        {
+            Debug.Log("TITLE TEXT IS NYLL!");
+        }
     }
 
     void Start()
@@ -139,18 +142,15 @@ public class CrewMenu: CopiumScript
             StartPrepare();
 
         }
-       
-       if (crewStatusManager.isCrewStatusOn)
+
+        if (CrewStatusManager.Instance.isCrewStatusOn)
        {
             UpdateEffects();
 
-       }else if(crewStatusManager.isCabinOn)
+       }else if(CrewStatusManager.Instance.isCabinOn)
        {
-            //UpdateEffects();
             UpdateTexts();
             timeElasped += Time.deltaTime;
-
-
        }
     }
 
@@ -163,6 +163,7 @@ public class CrewMenu: CopiumScript
     /*******************************************************************************/
     void UpdateEffects()
     {
+        Debug.Log("UPDATING EFFECTS");
         harris.UpdateEffects();
         bronson.UpdateEffects();
         chuck.UpdateEffects();
@@ -319,34 +320,35 @@ public class CrewMenu: CopiumScript
     {
         if (!resultManager.isResultOn)
         {
-            crewStatusManager.ReturnToCockpit(true);
+            CrewStatusManager.Instance.ReturnToCockpit(true);
             reportScreenManager.ClosePanel();
             resultManager.OpenPanel();
         }
         Person[] deployedMembers = new Person[4];
+        int i = 0;
         if (harris.isDeployed)
         {
             crewMembers["Harris"].hunger -= 1;
             //prepareManager.GenerateEvents(crew[0]);
-            deployedMembers[0] = crewMembers["Harris"];
+            deployedMembers[i++] = crewMembers["Harris"];
         }
         if (bronson.isDeployed)
         {
             crewMembers["Bronson"].hunger -= 1;
             //prepareManager.GenerateEvents(crew[1]);
-            deployedMembers[1] = crewMembers["Bronson"];
+            deployedMembers[i++] = crewMembers["Bronson"];
         }
         if (chuck.isDeployed)
         {
             crewMembers["Chuck"].hunger -= 1;
             //prepareManager.GenerateEvents(crew[2]);
-            deployedMembers[2] = crewMembers["Chuck"];
+            deployedMembers[i++] = crewMembers["Chuck"];
         }
         if (danton.isDeployed)
         {
             crewMembers["Danton"].hunger -= 1;
             //prepareManager.GenerateEvents(crew[3]);
-            deployedMembers[3] = crewMembers["Danton"];
+            deployedMembers[i++] = crewMembers["Danton"];
         }
 
         prepareManager.GenerateEvents(deployedMembers);
@@ -459,6 +461,10 @@ public class CrewMenu: CopiumScript
         }
         else
         {
+            if (titleText == null)
+                Debug.Log("TEXT IS NULL");
+            if (titleString == null)
+                Debug.Log("STRING IS NULL");
             titleText.text = titleString;
             harris.Disable();
             chuck.Disable();

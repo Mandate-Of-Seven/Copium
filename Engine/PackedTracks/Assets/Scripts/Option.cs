@@ -24,7 +24,6 @@ public class Option: CopiumScript
     [NonSerialized]
     public Choice mappedChoice;
 
-	public StatusUpdate statusUpdate;
     Image image;
     Color colorDisabled = new Color(1.0f, 1.0f, 1.0f, 0.5f); 
     Color colorEnabled = new Color(1.0f, 1.0f, 1.0f, 1.0f);

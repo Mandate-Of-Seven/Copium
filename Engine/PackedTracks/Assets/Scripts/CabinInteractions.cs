@@ -184,16 +184,12 @@ public class CabinInteractions: CopiumScript
 		SetInteractBtnsActive(true);
 
 	}
-
-
-
 	public void SetInteractBtnsInteractability(bool _flag){
 		harrisInteractBtnWrapper.SetInteractable(_flag);
 		bronsonInteractBtnWrapper.SetInteractable(_flag);
 		chuckInteractBtnWrapper.SetInteractable(_flag);
 		dantonInteractBtnWrapper.SetInteractable(_flag);
 	}
-
 	public void SetInteractBtnsActive(bool _flag){
 		harrisBtn.SetActive(_flag);
 		bronsonBtn.SetActive(_flag);

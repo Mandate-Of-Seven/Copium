@@ -18,8 +18,6 @@ public class Event_Explosion : Event
     int state = 0;
 
     // Event to display onto the game
-
-
     public override string preempt
     {
         get
@@ -126,7 +124,6 @@ public class Event_Explosion_HarrisAlive : Event_Explosion
         #region Choice1
         choices[0].choiceText = Messages.Event_Explosion.HarrisAlive.choice01;
         choices[0].resultText = Messages.Event_Explosion.HarrisAlive.result01;
-        choices[0].SetAllStats(HEALTH_STATE.CRITICAL);
         int amount = CrewMenu.Instance.supplies/2;
         choices[0].SetSupply(amount);
         choices[0].SetMemberStats("Harris",HEALTH_STATE.DEAD);
@@ -136,7 +133,6 @@ public class Event_Explosion_HarrisAlive : Event_Explosion
         choices[1].choiceText = Messages.Event_Explosion.HarrisAlive.choice02;
         choices[1].resultText = Messages.Event_Explosion.HarrisAlive.result02;
         choices[1].SetAllStats(HEALTH_STATE.CRITICAL);
-        choices[1].SetMemberStats("Harris", HEALTH_STATE.CRITICAL);
         choices[1].SetSupply(0);
         #endregion
     }

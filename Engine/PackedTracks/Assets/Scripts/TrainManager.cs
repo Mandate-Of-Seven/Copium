@@ -15,8 +15,6 @@
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 using CopiumEngine;
-using System;
-using System.Security.AccessControl;
 
 public class TrainManager: CopiumScript
 {
@@ -63,7 +61,6 @@ public class TrainManager: CopiumScript
 
 	float targetAmbienceVolume = 0.0f;
 	public GameObject cabinBtn;
-	public CrewMenu crewMenu;
 
 	void Awake()
     {
@@ -98,8 +95,6 @@ public class TrainManager: CopiumScript
 		}
 
 		float ratio = (currentSpeed/maxSpeed);
-
-		
 
 		if (!accelerate && ratio <= 0.2f)
 		{
@@ -276,7 +271,7 @@ public class TrainManager: CopiumScript
 		targetScale = new Vector3(zoomOutScale,zoomOutScale,1);
 
 		//cabinBtn.SetActive(false);
-		crewMenu.SetClickable(false);
+		CrewMenu.Instance.SetClickable(false);
 	}
 
 	/**************************************************************************/
@@ -294,7 +289,7 @@ public class TrainManager: CopiumScript
 		targetScale = new Vector3(zoomInScale,zoomInScale,1);
 
 		//cabinBtn.SetActive(true);
-		crewMenu.SetClickable(true);
+		CrewMenu.Instance.SetClickable(true);
 	}
 
 	/**************************************************************************/

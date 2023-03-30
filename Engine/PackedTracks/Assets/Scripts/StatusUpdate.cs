@@ -4,6 +4,7 @@ using System.Security.Permissions;
 
 public class StatusUpdate: CopiumScript
 {
+    public static StatusUpdate Instance;
 	public enum STATE
 	{
 		NEUTRAL,
@@ -17,6 +18,11 @@ public class StatusUpdate: CopiumScript
 	public GameObject cHealth, cMental, bHunger;
 	public GameObject dHealth, dMental, dHunger;
 	public GameObject supplies;
+
+    public void Awake()
+    {
+        Instance = this;
+    }
 
     Color black = new Color(0.0f, 0.0f, 0.0f, 1.0f);
     public void ResetAll()

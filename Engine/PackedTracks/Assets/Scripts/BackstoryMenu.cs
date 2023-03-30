@@ -19,19 +19,90 @@ using System;
 using System.Runtime.Remoting.Messaging;
 public class BackstoryMenu: CopiumScript
 {
-    public AudioSource audio;
+    public AudioSource sfx_pageflip;
+    public GameObject MainPage;
+    public GameObject Page2;
+    public GameObject Page3;
+
+    public Button NextButton;
+    public Button PrevButton;
+    public Button ExitButton;
+
+    public Animator bronson;
+    public Animator chuck;
+    public Animator danton;
+    public Animator harris;
+
+    public int page = 1;
 
     void Start()
 	{
-        Console.WriteLine(InternalCalls.GetSoundLength(audio.ID));
+        bronson.stop();
+        chuck.stop();
+        danton.stop();
+        harris.stop();
 	}
 
 
     void Update()
     {
-      
+        if (PrevButton.state == ButtonState.OnClick)
+        {
+            sfx_pageflip.Play();
+            page--;
+            ShowPage(page);
+        }
+        if (NextButton.state == ButtonState.OnClick)
+        {
+            sfx_pageflip.Play();
+            page++;
+            ShowPage(page);
+        }
+        if (ExitButton.state == ButtonState.OnClick)
+        {
+            gameObject.SetActive(false);
 
+        }
     }
 
+    void ShowPage(int _page)
+    {
 
+        if (page == 1)
+        {
+            MainPage.SetActive(true);
+            Page2.SetActive(false);
+            PrevButton.gameObject.SetActive(false);
+        }
+        else if (page == 2)
+        {
+            Page2.SetActive(true);
+            MainPage.SetActive(false);
+            Page3.SetActive(false);
+            PrevButton.gameObject.SetActive(true);
+            NextButton.gameObject.SetActive(true);
+        }
+
+        else if (page == 3)
+        {
+            MainPage.SetActive(false);
+            Page3.SetActive(true);
+            Page2.SetActive(false);
+            NextButton.gameObject.SetActive(false);
+
+        }
+        else
+        {
+            /*page = 0;
+            if (sceneChange)
+            {
+                fade.Start();
+                loadScene = true;
+            }
+            else
+                gameManager.CloseManual();*/
+            Console.WriteLine("No Page");
+        }
+
+    }
 }
