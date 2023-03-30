@@ -325,29 +325,30 @@ public class CrewMenu: CopiumScript
             resultManager.OpenPanel();
         }
         Person[] deployedMembers = new Person[4];
+        int i = 0;
         if (harris.isDeployed)
         {
             crewMembers["Harris"].hunger -= 1;
             //prepareManager.GenerateEvents(crew[0]);
-            deployedMembers[0] = crewMembers["Harris"];
+            deployedMembers[i++] = crewMembers["Harris"];
         }
         if (bronson.isDeployed)
         {
             crewMembers["Bronson"].hunger -= 1;
             //prepareManager.GenerateEvents(crew[1]);
-            deployedMembers[1] = crewMembers["Bronson"];
+            deployedMembers[i++] = crewMembers["Bronson"];
         }
         if (chuck.isDeployed)
         {
             crewMembers["Chuck"].hunger -= 1;
             //prepareManager.GenerateEvents(crew[2]);
-            deployedMembers[2] = crewMembers["Chuck"];
+            deployedMembers[i++] = crewMembers["Chuck"];
         }
         if (danton.isDeployed)
         {
             crewMembers["Danton"].hunger -= 1;
             //prepareManager.GenerateEvents(crew[3]);
-            deployedMembers[3] = crewMembers["Danton"];
+            deployedMembers[i++] = crewMembers["Danton"];
         }
 
         prepareManager.GenerateEvents(deployedMembers);

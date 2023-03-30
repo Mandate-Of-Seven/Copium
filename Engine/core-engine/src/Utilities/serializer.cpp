@@ -78,6 +78,7 @@ namespace Copium
 		Copium::SerializeBasic(_data.spriteSheet.spriteID, _value, _doc, "Sprite ID");
 		Copium::SerializeBasic(_data.timeDelay, _value, _doc, "Time Delay");
 		Copium::SerializeBasic(_data.frameCount, _value, _doc, "FrameCount");
+		Copium::SerializeBasic(_data.currentFrameIndex, _value, _doc, "Current Frame Index");
 		Copium::SerializeBasic(_data.spriteSheet.rows, _value, _doc, "Rows");
 		Copium::SerializeBasic(_data.spriteSheet.columns, _value, _doc, "Columns");
 
@@ -703,6 +704,7 @@ namespace Copium
 				Copium::Deserialize(anim.spriteSheet.spriteID, a, "Sprite ID");
 				Copium::Deserialize(anim.timeDelay, a, "Time Delay");
 				Copium::Deserialize(anim.frameCount, a, "FrameCount");
+				Copium::Deserialize(anim.currentFrameIndex,a,"Current Frame Index");
 				Copium::Deserialize(anim.spriteSheet.rows, a, "Rows");
 				Copium::Deserialize(anim.spriteSheet.columns, a, "Columns");
 
