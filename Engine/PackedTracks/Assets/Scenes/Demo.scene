@@ -1235,7 +1235,7 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "GameManager",
-                    "distanceInterval": 0.009999999776482582,
+                    "distanceInterval": 0.10000000149011612,
                     "distanceLeft": 400.0,
                     "eventSequence": 0,
                     "gameEnd": false,
@@ -1248,6 +1248,7 @@
                     "Page4": 7880086899027959037,
                     "PauseCanvas": 1722160444903115838,
                     "TrainCanvas": 6642123175702952797,
+                    "cityBuilding": 11302071767271898026,
                     "BackstoryBtn": 3089503959746599563,
                     "htpmScript": 15873072395746983378,
                     "crewStatusManager": 10830490317094325076,
@@ -3831,7 +3832,7 @@
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
-                        "Y": 2.815000057220459,
+                        "Y": 2.7699999809265137,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -3840,8 +3841,8 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 2.0,
-                        "Y": 2.0,
+                        "X": 4.0,
+                        "Y": 4.0,
                         "Z": 1.0
                     }
                 },
@@ -3858,8 +3859,8 @@
                     "UID": 17723347822673104415,
                     "Type": "SpriteRenderer",
                     "TypeID": 22,
-                    "Sprite ID": 0,
-                    "Sprite Name": "empty",
+                    "Sprite ID": 6032024544452431068,
+                    "Sprite Name": "Buildings.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
@@ -10884,8 +10885,8 @@
                     "prepareFinal": 6285211887336012985,
                     "bronson": 7730477650993650158,
                     "bronsonButton": 16493472610224367862,
-                    "crewManager": 13939291633639314673,
                     "chuckButton": 3082481809780813473,
+                    "crewManager": 13939291633639314673,
                     "chuck": 10697450015327120615,
                     "prepareButton1": 5012012842181654260,
                     "closeButton": 826755621581371733,
