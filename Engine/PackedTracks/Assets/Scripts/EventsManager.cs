@@ -21,6 +21,12 @@ public class EventsManager : CopiumScript
 	public Option Option_01;
 	public Option Option_02;
 	public Option Option_03;
+
+	public bool Done()
+    {
+		return bodyTypeWriter == null || bodyTypeWriter.Done();
+	}
+
 	public enum EventState
 	{
 		ForeShadow, Run
@@ -158,10 +164,12 @@ public class EventsManager : CopiumScript
 	public void UpdateCurrentEvent()
 	{
 		List<Event> removableEvents = new List<Event>();
+		bool triggered = false;
 		foreach (Event e in events)
 		{
-			if (e.isTriggered())
+			if (e.isTriggered() && !triggered)
 			{
+				triggered = true;
 				currentEvent = e;
 				EventStart();
 			}
@@ -207,8 +215,17 @@ public class EventsManager : CopiumScript
 
 	void RegisterEvents()
     {
-		//PUT ENDINGS HERE
-		AddEvent(new Event_Endings());
+        //PUT ENDINGS HERE
+        AddEvent(new Ending_3B());
+        AddEvent(new Ending_3C());
+        AddEvent(new Ending_2A());
+        AddEvent(new Ending_Generic());
+        AddEvent(new Ending_Harris());
+		AddEvent(new Ending_Bronson());
+		AddEvent(new Ending_Chuck());
+		AddEvent(new Ending_Danton());
+		AddEvent(new Ending_AllAlive());
+		AddEvent(new Ending_AllDead());
 
 		//PUT GENERIC EVENTS HERE
 
@@ -221,33 +238,5 @@ public class EventsManager : CopiumScript
 		AddEvent(new Event_Bomb_ChuckHealthy());
 		AddEvent(new Event_Bomb_CrewInjured());
 		AddEvent(new Event_Bomb_Default());
-	}
-
-	void ShowEnding()
-	{
-		Option_01.ResetOption();
-		Option_02.ResetOption();
-		Option_03.ResetOption();
-
-		Option_01.Enable();
-		Option_02.Enable();
-		Option_03.Enable();
-
-		Option_01.txt.text = "Restart Game";
-		Option_02.txt.text = "Back to Main Menu";
-		Option_03.txt.text = "Quit Game";
-
-		if (Option_01.btn.state == ButtonState.OnClick)
-		{
-			SceneManager.LoadScene("Demo");
-		}
-		else if (Option_02.btn.state == ButtonState.OnClick)
-		{
-			SceneManager.LoadScene("MainMenu");
-		}
-		else if (Option_03.btn.state == ButtonState.OnClick)
-		{
-			Application.Quit();
-		}
 	}
 }

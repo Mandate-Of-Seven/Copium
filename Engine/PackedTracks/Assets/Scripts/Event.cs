@@ -27,6 +27,9 @@ public class Choice
         {
 			if (crewChanges[name].setHealth)
 			{
+				if (crewChanges[name].health == HEALTH_STATE.DEAD)
+					return StatusUpdate.STATE.UNKNOWN;
+
 				int change = crewChanges[name].health - CrewMenu.Instance.crewMembers[name].health;
 				if (change > 0)
 					return StatusUpdate.STATE.INCREASE;
@@ -45,7 +48,10 @@ public class Choice
         {
 			if (crewChanges[name].setMental)
 			{
-				int change = crewChanges[name].mental - CrewMenu.Instance.crewMembers[name].mental;
+                if (crewChanges[name].mental == MENTAL_STATE.SUICIDAL)
+                    return StatusUpdate.STATE.UNKNOWN;
+
+                int change = crewChanges[name].mental - CrewMenu.Instance.crewMembers[name].mental;
 				if (change > 0)
 					return StatusUpdate.STATE.INCREASE;
 				else if (change < 0)
@@ -222,7 +228,19 @@ public abstract class Event
 		return true;
 	}
 
-	public Choice[] choices = new Choice[3]
+    public void EndingChoices()
+    {
+        choices[0].choiceText = "Restart Game";
+        choices[0].AddOtherEffects(delegate () { SceneManager.LoadScene("Demo"); });
+
+        choices[1].choiceText = "Back to Main Menu";
+        choices[1].AddOtherEffects(delegate () { SceneManager.LoadScene("MainMenu"); });
+
+        choices[2].choiceText = "Quit Game";
+        choices[2].AddOtherEffects(delegate () { Application.Quit(); });
+    }
+
+    public Choice[] choices = new Choice[3]
 	{
 		new Choice(),
 		new Choice(),

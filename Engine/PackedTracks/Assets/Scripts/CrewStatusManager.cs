@@ -64,6 +64,16 @@ public class CrewStatusManager: CopiumScript
 	Vector3 cabinTargetPosition = new Vector3(18.15f, 0, 0);
 	//-----
 
+	public GameObject crewStatusBackground;
+
+	public Vector3 crewStatusButtonScale = Vector3.one;
+	public Vector3 crewStatusBackgroundScale = Vector3.one;
+	public Vector3 crewStatusCloseButtonScale = Vector3.one;
+	public Vector3 crewStatusButtonTutTextPos = Vector3.zero;
+	public Vector3 crewStatusBackgroundTutTextPos = Vector3.zero;
+	public Vector3 crewStatusCloseButtonTutTextPos = Vector3.zero;
+
+
 	void Awake()
     {
 		Instance = this;
@@ -88,6 +98,54 @@ public class CrewStatusManager: CopiumScript
 		supplySpriteSheet.stop();
 		supplySpriteSheet.setFrame(1);
 
+		new TutorialComponent
+		(
+			"CrewStatusClose",
+			crewStatusCloseButtonScale,
+			CloseCrewStatusBtn.transform,
+			Messages.Tutorial.reportEnd,
+			crewStatusCloseButtonTutTextPos,
+			delegate ()
+			{
+				if (CloseCrewStatusBtnWrapper.GetState() == ButtonState.OnClick)
+				{
+					return true;
+				}
+				return false;
+			}
+		);
+
+		new TutorialComponent
+		(
+			"ReportDisplay",
+			reportBackgroundScale,
+			crewStatusBackground.transform,
+			Messages.Tutorial.reportDisplay,
+			reportBackgroundTutTextPos,
+			delegate ()
+			{
+				if (TutorialText.Instance.Done() && EventsManager.Instance.Done())
+					return true;
+				return false;
+			}
+		);
+
+		new TutorialComponent
+		(
+			"ReportButton",
+			reportButtonScale,
+			ReportScreenBtn.transform,
+			Messages.Tutorial.reportStart,
+			reportButtonTutTextPos,
+			delegate ()
+			{
+				if (reportBtnWrapper.GetState() == ButtonState.OnClick)
+				{
+					return true;
+				}
+				return false;
+			}
+		);
 	}
 
 	void Update()

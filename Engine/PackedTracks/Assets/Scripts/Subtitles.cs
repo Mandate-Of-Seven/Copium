@@ -100,17 +100,17 @@ public class Subtitles: CopiumScript
         switch (ending)
         {
             case -1:
-                content = Messages.Ending_3B.body;
+                content = Messages.Event_Ending.Ending_3B.body;
                 waitModifier = 0.03f;
                 audio = AudioManager.Instance.ending3bVO;
                 break;
             case -2:
-                content = Messages.Ending_2A.body;
+                content = Messages.Event_Ending.Ending_2A.body;
                 waitModifier = 0.028f;
                 audio = AudioManager.Instance.ending2aVO;
                 break;
             case -3:
-                content = Messages.Ending_AllDead.body;
+                content = Messages.Event_Ending.AllDead.body;
                 waitModifier = 0.02f;
                 audio = AudioManager.Instance.endingAllDiedVO;
                 break;

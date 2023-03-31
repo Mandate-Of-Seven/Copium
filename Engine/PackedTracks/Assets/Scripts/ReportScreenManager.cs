@@ -30,6 +30,7 @@ public class ReportScreenManager: CopiumScript
 
     
     public GameObject ReportTab;
+    public GameObject Background;
     public ResultManager resultManager;
 
 	public Image alert;
@@ -42,6 +43,13 @@ public class ReportScreenManager: CopiumScript
 	public GameObject parent;
 	
 	public float transitionSpeed = 5.0f;
+
+    public Vector3 reportButtonScale = Vector3.one;
+    public Vector3 reportBackgroundScale = Vector3.one;
+    public Vector3 reportCloseButtonScale = Vector3.one;
+    public Vector3 reportButtonTutTextPos = Vector3.zero;
+    public Vector3 reportBackgroundTutTextPos = Vector3.zero;
+    public Vector3 reportCloseButtonTutTextPos = Vector3.zero;
 
     void Awake()
     {
@@ -56,7 +64,56 @@ public class ReportScreenManager: CopiumScript
         reportBtnWrapper.SetImage(ReportScreenBtn.GetComponent<Image>());
         //Unable to close menu when main event is up
 		closeBtnWrapper.failureText = Messages.ErrorMainEvent;
-	}
+
+        new TutorialComponent
+        (
+            "ReportClose",
+            reportCloseButtonScale,
+            CloseReportBtn.transform,
+            Messages.Tutorial.reportEnd,
+            reportCloseButtonTutTextPos,
+            delegate ()
+            {
+                if (closeBtnWrapper.GetState() == ButtonState.OnClick)
+                {
+                    return true;
+                }
+                return false;
+            }
+        );
+
+        new TutorialComponent
+        (
+            "ReportDisplay",
+            reportBackgroundScale,
+            Background.transform,
+            Messages.Tutorial.reportDisplay,
+            reportBackgroundTutTextPos,
+            delegate ()
+            {
+                if (TutorialText.Instance.Done() && EventsManager.Instance.Done())
+                    return true;
+                return false;
+            }
+        );
+
+        new TutorialComponent
+        (
+            "ReportButton",
+            reportButtonScale,
+            ReportScreenBtn.transform,
+            Messages.Tutorial.reportStart,
+            reportButtonTutTextPos,
+            delegate ()
+            {
+                if (reportBtnWrapper.GetState() == ButtonState.OnClick)
+                {
+                    return true;
+                }
+                return false;
+            }
+        );
+    }
     void Update()
     {
         UpdateCanvas();

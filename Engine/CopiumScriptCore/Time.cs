@@ -23,6 +23,9 @@ namespace CopiumEngine
 {
     public static class Time
     {
-        public static float deltaTime{ get { return InternalCalls.GetDeltaTime(); } }
+        static float timeScale_ = 1f;
+        public static float deltaTime{ get { return InternalCalls.GetDeltaTime() * timeScale; } }
+        public static float rawDeltaTime { get { return InternalCalls.GetDeltaTime(); } }
+        public static float timeScale { get { return timeScale_; } set { timeScale_ = value; } }
     }
 }

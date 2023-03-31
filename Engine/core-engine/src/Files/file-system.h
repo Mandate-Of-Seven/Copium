@@ -291,6 +291,8 @@ namespace Copium
 		/*******************************************************************************/
 		std::list<File>& get_files_with_extension(const char* _extension);
 
+		void SetCurrentDir(Directory* _dir) { currentDirectory = _dir; }
+
 	private:
 		/*******************************************************************************
 		/*!

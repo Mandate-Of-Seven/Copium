@@ -69,6 +69,7 @@ public class GameManager: CopiumScript
     }
     void Start()
 	{
+        eventSequence = 0;
         //UpdateCanvases();
     }
 
@@ -78,17 +79,25 @@ public class GameManager: CopiumScript
         if (pauseMenu.isPaused)
             return;
 
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.D1))
+            CrewMenu.Instance.SetStat("Harris", HEALTH_STATE.DEAD);
+
+        if (Input.GetKeyDown(KeyCode.D2))
             CrewMenu.Instance.SetStat("Chuck",HEALTH_STATE.DEAD);
 
-        if (Input.GetKeyDown(KeyCode.B))
+        if (Input.GetKeyDown(KeyCode.D3))
             CrewMenu.Instance.SetStat("Bronson", HEALTH_STATE.DEAD);
 
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.D4))
             CrewMenu.Instance.SetStat("Danton", HEALTH_STATE.DEAD);
 
         if (Input.GetKeyDown(KeyCode.S))
             SceneManager.LoadScene("Ending");
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            distanceLeft = 50.0f;
+        }
 
         // Toggle canvases
         //CanvasManager();
@@ -96,6 +105,22 @@ public class GameManager: CopiumScript
         // Game ends
         if (CheckForGameEndCondition())
             return;
+
+        if (CrewMenu.Instance.CheckAllCrewDead() && eventSequence >= 0)
+            EventsManager.Instance.UpdateCurrentEvent();
+        else if (distanceLeft < 0.99f && eventSequence >= 0)
+        {
+            int numCrewAlive = 0;
+            foreach (Person person in CrewMenu.Instance.crewMembers.Values)
+            {
+                if (person.alive)
+                    numCrewAlive++;
+            }
+
+            eventSequence = (numCrewAlive == 2 || numCrewAlive == 3) ? -6 : -4;
+            EventsManager.Instance.UpdateCurrentEvent();
+        }
+
 
         // Cant deploy if the train is moving
         if ((moving && trainManager.currentSpeed <= 0f) || (!moving && trainManager.currentSpeed > 0f))
@@ -188,7 +213,7 @@ public class GameManager: CopiumScript
                 distanceLeft -= trainManager.currentSpeed / 3.0f; // Reduce the distance left
 
                 // Only update event if distance per event is activated
-                if (distanceLeft % distancePerEvent < 1.0f && !updateEvent)
+                if (distanceLeft > 1.0f && distanceLeft % distancePerEvent < 1.0f && !updateEvent)
                 {
                     DisableInteractions();
                     // Show notifications (Visual & Audio)

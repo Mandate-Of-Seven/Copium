@@ -101,6 +101,12 @@ namespace CopiumEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetTranslation(ulong ID, ref Vector3 translation);
 
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void GetGlobalScale(ulong ID, out Vector3 scale);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void GetGlobalPosition(ulong ID, out Vector3 translation);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void GetRotation(ulong ID, out Vector3 translation);
 
@@ -211,6 +217,9 @@ namespace CopiumEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetTextColor(ulong ID, ref Color color);
         #endregion
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetFullscreenMode(bool fullscreenMode);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetUICallback(string funcName);

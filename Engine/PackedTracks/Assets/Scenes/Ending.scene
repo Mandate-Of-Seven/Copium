@@ -283,13 +283,14 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "Subtitles",
+                    "blizzardTimer": 0.0,
+                    "changeBlizzard": 1.0,
                     "ending": 0,
                     "fadeIn": false,
                     "shouldFade": false,
+                    "blizzard": 11547063175088774281,
                     "fade": 7357753059199243101,
-                    "subtitles": 18225049530128791181,
-                    "audio": 12049341073205332732,
-                    "blizzard": 11547063175088774281
+                    "subtitles": 18225049530128791181
                 }
             ]
         },

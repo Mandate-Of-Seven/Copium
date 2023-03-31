@@ -161,9 +161,11 @@ namespace Copium
                 GLFWmonitor* currentMonitor = glfwGetPrimaryMonitor();
                 int width, height;
                 glfwGetMonitorWorkarea(currentMonitor, NULL, NULL, &width, &height);
+                int refreshRate = glfwGetVideoMode(currentMonitor)->refreshRate;
+                std::cout << refreshRate;
                 if (currentMonitor != nullptr)
                 {
-                    glfwSetWindowMonitor(window, currentMonitor, 0, 0, width, height, 0);
+                    glfwSetWindowMonitor(window, currentMonitor, 0, 0, width, height, refreshRate);
                 }
             }
             // Set to maximized

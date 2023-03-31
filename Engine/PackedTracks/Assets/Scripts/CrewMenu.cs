@@ -195,11 +195,28 @@ public class CrewMenu: CopiumScript
     {
         foreach (Person person in crewMembers.Values)
         {
-            if (person.alive)
-                return true;
+            if (!person.alive)
+                return false;
         }
 
-        return false;
+        return true;
+    }
+
+    /*******************************************************************************
+	/*!
+	    \brief
+		    Checks if all the crew are dead
+	*/
+    /*******************************************************************************/
+    public bool CheckAllCrewDead()
+    {
+        foreach (Person person in crewMembers.Values)
+        {
+            if (person.alive)
+                return false;
+        }
+
+        return true;
     }
 
     /*******************************************************************************

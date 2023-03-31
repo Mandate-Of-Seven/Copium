@@ -289,7 +289,10 @@ namespace Copium
 				for (Directory* dir : currentDirectory->get_child_directory())
 				{
 					if (dir->get_id() == ImGui::GetHoveredID())
+					{
 						currentDirectory = dir;
+						MyFileSystem.SetCurrentDir(dir);
+					}
 				}
 			}
 

@@ -1,4 +1,6 @@
 using CopiumEngine;
+using System;
+
 public class Event_Intro : Event
 {
 
@@ -221,8 +223,7 @@ public class Event_Intruders_ChuckDead : Event_Intruders
         choices[0].resultText = Messages.Event_Intruders.ChuckDead.result01;
         choices[0].AddOtherEffects(delegate()
         {
-            AudioManager.Instance.ending2aVO.Play();
-            GameManager.Instance.eventSequence = -3;
+            GameManager.Instance.eventSequence = -2;
             EventsManager.Instance.UpdateCurrentEvent();
         });
         
@@ -335,8 +336,7 @@ public class Event_Bomb_CrewInjured : Event_Bomb
         choices[0].resultText = Messages.Event_Bomb.CrewInjured.result01;
         choices[0].AddOtherEffects(delegate () 
         { 
-            AudioManager.Instance.ending3bVO.Play();
-            GameManager.Instance.eventSequence = -3;
+            GameManager.Instance.eventSequence = -1;
             EventsManager.Instance.UpdateCurrentEvent();
         });
         #endregion
@@ -357,7 +357,6 @@ public class Event_Bomb_CrewInjured : Event_Bomb
             GameManager.Instance.eventSequence == 3;
     }
 }
-
 public class Event_Bomb_Default : Event_Bomb
 {
     public override string body
@@ -377,7 +376,7 @@ public class Event_Bomb_Default : Event_Bomb
         choices[0].resultText = Messages.Event_Bomb.Default.result01;
         choices[0].AddOtherEffects(delegate ()
         {
-            GameManager.Instance.eventSequence = -3;
+            GameManager.Instance.eventSequence = -4;
         });
         #endregion
         #region Choice2
@@ -403,17 +402,198 @@ public class Event_Bomb_Default : Event_Bomb
 
 public class Event_Endings : Event
 {
-    float duration = 4.0f;
+    protected float duration = 4.0f;
 
+    public override bool isRemovable()
+    {
+        return false;
+    }
+}
+
+public class Ending_3B : Event_Endings
+{
     public override bool ForeShadow()
     {
         Fade.Instance.duration = duration;
-        Fade.Instance.Start();
+        if (!Fade.Instance.shouldFade)
+            Fade.Instance.Start();
 
         if (!Fade.Instance.FadeEnded())
             return false;
 
+        SceneManager.LoadScene("Ending");
         return true;
+    }
+
+    public override bool isTriggered()
+    {
+        return GameManager.Instance.eventSequence == -1;
+    }
+}
+
+public class Ending_3C : Event_Endings
+{
+    public override string body
+    {
+        get { return Messages.Event_Ending.Ending_3C.body; }
+    }
+
+    public override bool isTriggered()
+    {
+        return GameManager.Instance.eventSequence == -5;
+    }
+}
+
+public class Ending_2A : Event_Endings
+{
+    public override bool ForeShadow()
+    {
+        Fade.Instance.duration = duration;
+        if (!Fade.Instance.shouldFade)
+            Fade.Instance.Start();
+
+        if (!Fade.Instance.FadeEnded())
+            return false;
+
+        SceneManager.LoadScene("Ending");
+        return true;
+    }
+    public override bool isTriggered()
+    {
+        return GameManager.Instance.eventSequence == -2;
+    }
+}
+
+public class Ending_Generic : Event_Endings
+{
+    public Ending_Generic()
+    {
+        EndingChoices();
+    }
+
+    public override string body
+    {
+        get { return Messages.Event_Ending.Generic.body; }
+    }
+
+
+    public override bool isTriggered()
+    {
+        return GameManager.Instance.eventSequence == -6;
+    }
+}
+
+public class Ending_Harris : Event_Endings
+{
+    public Ending_Harris()
+    {
+        EndingChoices();
+    }
+    public override string body
+    {
+        get { return Messages.Event_Ending.Harris.body; }
+    }
+
+    public override bool isTriggered()
+    {
+        return CrewMenu.Instance.crewMembers["Harris"].alive && !CrewMenu.Instance.crewMembers["Bronson"].alive
+            && !CrewMenu.Instance.crewMembers["Danton"].alive && !CrewMenu.Instance.crewMembers["Chuck"].alive
+            && GameManager.Instance.eventSequence == -4;
+    }
+}
+
+public class Ending_Bronson : Event_Endings
+{
+    public Ending_Bronson()
+    {
+        EndingChoices();
+    }
+    public override string body
+    {
+        get { return Messages.Event_Ending.Bronson.body; }
+    }
+
+    public override bool isTriggered()
+    {
+        return !CrewMenu.Instance.crewMembers["Harris"].alive && CrewMenu.Instance.crewMembers["Bronson"].alive
+            && !CrewMenu.Instance.crewMembers["Danton"].alive && !CrewMenu.Instance.crewMembers["Chuck"].alive
+            && GameManager.Instance.eventSequence == -4;
+    }
+}
+
+public class Ending_Chuck : Event_Endings
+{
+    public Ending_Chuck()
+    {
+        EndingChoices();
+    }
+    public override string body
+    {
+        get { return Messages.Event_Ending.Chuck.body; }
+    }
+
+    public override bool isTriggered()
+    {
+        return !CrewMenu.Instance.crewMembers["Harris"].alive && !CrewMenu.Instance.crewMembers["Bronson"].alive 
+            && !CrewMenu.Instance.crewMembers["Danton"].alive && CrewMenu.Instance.crewMembers["Chuck"].alive 
+            && GameManager.Instance.eventSequence == -4;
+    }
+}
+
+public class Ending_Danton : Event_Endings
+{
+    public Ending_Danton()
+    {
+        EndingChoices();
+    }
+    public override string body
+    {
+        get { return Messages.Event_Ending.Danton.body; }
+    }
+
+    public override bool isTriggered()
+    {
+        return !CrewMenu.Instance.crewMembers["Harris"].alive && !CrewMenu.Instance.crewMembers["Bronson"].alive
+            && CrewMenu.Instance.crewMembers["Danton"].alive && !CrewMenu.Instance.crewMembers["Chuck"].alive
+            && GameManager.Instance.eventSequence == -4;
+    }
+}
+
+public class Ending_AllAlive : Event_Endings
+{
+    public Ending_AllAlive()
+    {
+        EndingChoices();
+    }
+    public override string body
+    {
+        get { return Messages.Event_Ending.AllAlive.body; }
+    }
+
+    public override bool isTriggered()
+    {
+        return CrewMenu.Instance.CheckAllCrewAlive() && GameManager.Instance.eventSequence == -4;
+    }
+}
+
+public class Ending_AllDead : Event_Endings
+{
+    public override bool ForeShadow()
+    {
+        GameManager.Instance.eventSequence = -3;
+        Fade.Instance.duration = duration;
+        if(!Fade.Instance.shouldFade)
+            Fade.Instance.Start();
+
+        if (!Fade.Instance.FadeEnded())
+            return false;
+
+        SceneManager.LoadScene("Ending");
+        return true;
+    }
+    public override bool isTriggered()
+    {
+        return CrewMenu.Instance.CheckAllCrewDead();
     }
 }
 

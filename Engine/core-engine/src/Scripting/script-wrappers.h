@@ -53,6 +53,19 @@ namespace Copium
 	/*******************************************************************************
 	/*!
 	\brief
+		Set window fullscreen mode
+	\param _fullscreen
+		If true, is fullscreen else false
+	*/
+	/*******************************************************************************/
+	static void SetFullscreenMode(bool _fullscreen)
+	{
+		MyWindowSystem.Fullscreen(_fullscreen, 1600, 900);
+	}
+
+	/*******************************************************************************
+	/*!
+	\brief
 		To be implemented
 
 	\param keyCode
@@ -372,6 +385,16 @@ namespace Copium
 	static void GetLocalScale(GameObject* pGameObj, Math::Vec3* scale)
 	{
 		*scale = pGameObj->transform.scale;
+	}
+
+	static void GetGlobalScale(GameObject* pGameObj, Math::Vec3* scale)
+	{
+		*scale = pGameObj->transform.GetWorldScale();
+	}
+
+	static void GetGlobalPosition(GameObject* pGameObj, Math::Vec3* scale)
+	{
+		*scale = pGameObj->transform.GetWorldPosition();
 	}
 
 	/*******************************************************************************
@@ -1060,12 +1083,15 @@ namespace Copium
 	/*******************************************************************************/
 	static void registerScriptWrappers()
 	{
+		Register(SetFullscreenMode);
 		Register(GetKey);
 		Register(GetKeyUp);
 		Register(GetKeyDown);
 		Register(GetMouseDown);
 		Register(GetTranslation);
 		Register(SetTranslation);
+		Register(GetGlobalPosition);
+		Register(GetGlobalScale);
 		Register(HasComponent);
 		Register(RigidbodyAddForce);
 		Register(RigidbodyGetVelocity);
