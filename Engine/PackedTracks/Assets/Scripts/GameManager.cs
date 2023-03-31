@@ -18,6 +18,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserv
 using CopiumEngine;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 
 public class GameManager: CopiumScript
 {
@@ -32,6 +33,7 @@ public class GameManager: CopiumScript
     public GameObject Page3;
     public GameObject Page4;
     public GameObject prevButtonObject;
+    public GameObject cityBuilding;
     public HowtoPlayMenu htpmScript;
 
     public Button ManualBtn;
@@ -101,6 +103,19 @@ public class GameManager: CopiumScript
             ToggleMoving();
         }
 
+        if(distanceLeft < 50.0f)
+        {
+            cityBuilding.SetActive(true);
+
+            float size = (1.0f - distanceLeft / 50.0f) * 4.0f;
+            Vector3 scale = new Vector3(size, size, 1.0f);
+            cityBuilding.transform.localScale = scale;
+
+            Vector3 pos = cityBuilding.transform.position;
+            pos.y = 1.75f + (1.0f - distanceLeft / 50.0f) * 1.0f;
+            cityBuilding.transform.position = pos;
+        }
+
         // When train is moving and can still travel
         MoveTrain();
 
@@ -126,7 +141,7 @@ public class GameManager: CopiumScript
         {
             gameEnd = true;
             trainManager.FlickLever(false);
-            crewStatusManager.ClosePanel(false);
+            crewStatusManager.ReturnToCockpit(false);
             reportScreenManager.OpenPanel();
         }
 

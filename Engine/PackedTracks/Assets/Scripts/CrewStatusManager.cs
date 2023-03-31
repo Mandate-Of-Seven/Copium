@@ -28,6 +28,7 @@ public class CrewStatusManager: CopiumScript
 	ButtonWrapper CrewStatusBtnWrapper;
 
     public GameObject CrewStatusTab;
+	public CabinInteractions cabinInteractions;
 
 	public Image alert;
 
@@ -72,11 +73,13 @@ public class CrewStatusManager: CopiumScript
 	{
 		CloseCrewStatusBtnWrapper = new ButtonWrapper(CloseCrewStatusBtn);
 		CloseCrewStatusBtnWrapper.SetImage(CloseCrewStatusBtn.GetComponent<Image>());
+		CloseCrewStatusBtnWrapper.clickedSFX = AudioManager.Instance.autoDoorSFX;
 		CrewStatusBtnWrapper = new ButtonWrapper(CrewStatusBtn);
 		CrewStatusBtnWrapper.SetImage(CrewStatusBtn.GetComponent<Image>());
 		CrewStatusBtnWrapper.failureText = Messages.ErrorMainEvent;
 		CabinBtnWrapper = new ButtonWrapper(CabinBtn);
 		CabinBtnWrapper.SetImage(CabinBtn.GetComponent<Image>());
+		CabinBtnWrapper.clickedSFX = AudioManager.Instance.autoDoorSFX;
 		CloseStatusScreenBtnWrapper = new ButtonWrapper(CloseStatusScreenBtn);
 		CloseStatusScreenBtnWrapper.SetImage(CloseStatusScreenBtn.GetComponent<Image>());
 		// Cabin set false
@@ -120,7 +123,7 @@ public class CrewStatusManager: CopiumScript
             StatusScreen.transform.localScale = Vector3.Lerp(StatusScreen.transform.localScale,Vector3.one,Time.deltaTime * transitionSpeed);
         }
 
-		if (trainManagerScript.accelerate == false && CabinBtnWrapper.GetState() == ButtonState.OnRelease)
+		if (CabinBtnWrapper.GetState() == ButtonState.OnRelease)
 		{
 			GoToCabin();
 		}
@@ -143,40 +146,6 @@ public class CrewStatusManager: CopiumScript
 
 	}
 
-    public void OpenPanel()
-    {
-		if (isCrewStatusOn)
-			return;
-        alert.enabled = false;
-        isCrewStatusOn = true;
-		isCabinOn = true;
-        CrewStatusBtn.gameObject.SetActive(false);
-        CrewStatusTab.transform.parent = null;
-		CrewStatusTab.SetActive(true);
-    }
-
-    public void ClosePanel(bool prepared)
-	{
-		CrewMenu.Instance.timeElasped = 0;
-		//Prevent the crew buttons from being pressed
-		if (!CrewMenu.Instance.deploying && !prepared)
-		{
-			CrewMenu.Instance.SetPrepare(false);
-		}
-		else
-		{
-			CrewMenu.Instance.deploying = false;
-		}
-
-		isCrewStatusOn = false;
-		isCabinOn = false;
-        resultManager.Enable();
-        CrewStatusBtn.gameObject.SetActive(true);
-		CrewStatusTab.SetActive(false);
-
-		CrewStatusTab.transform.parent = parent.transform;
-	}
-
 	public void GoToCabin()
 	{
 		if(isCabinOn)
@@ -185,6 +154,9 @@ public class CrewStatusManager: CopiumScript
 		isCabinOn = true;
 		CrewMenu.Instance.SetPrepare(false);
 
+		UpdateDeath();
+
+		//AudioManager.Instance.autoDoorSFX.Play();
 		// Switch to cabin view
 		//cam.transform.localPosition = new Vector3(18.15f, 0, 0);
 	}
@@ -202,6 +174,8 @@ public class CrewStatusManager: CopiumScript
 		{
 			CrewMenu.Instance.deploying = false;
 		}
+		//AudioManager.Instance.autoDoorSFX.Play();
+
 		//CrewStatusTab.SetActive(false);
 	}
 	
@@ -256,13 +230,43 @@ public class CrewStatusManager: CopiumScript
 
 	public void DisableInteractions()
 	{
-		ClosePanel(false);
-		CloseStatusPanel();
+		//ClosePanel(false);
+		ReturnToCockpit(false);
 		CrewStatusBtnWrapper.SetInteractable(false);
 	}
 	public void EnableInteractions()
 	{
 		CrewStatusBtnWrapper.SetInteractable(true);
+	}
+
+	public void UpdateDeath()
+	{
+		if(!CrewMenu.Instance.harris.person.alive)
+		{
+			cabinInteractions.harrisBtn.SetActive(false);
+			Console.WriteLine("harris is dead");
+
+		}
+
+		if(!CrewMenu.Instance.bronson.person.alive)
+		{
+			cabinInteractions.bronsonBtn.SetActive(false);
+
+		}	
+
+		if(!CrewMenu.Instance.chuck.person.alive)
+		{
+			cabinInteractions.chuckBtn.SetActive(false);
+
+		}
+
+		if(!CrewMenu.Instance.danton.person.alive)
+		{
+			cabinInteractions.dantonBtn.SetActive(false);
+
+		}
+
+
 	}
 
 }

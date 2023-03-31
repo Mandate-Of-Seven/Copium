@@ -46,6 +46,7 @@ namespace Copium
 		int frameCount, currentFrameIndex;
 		int rowIndex, columnIndex;
 		int columns, rows;
+		Math::Vec4 color;
 		AnimationStatus status;
 		bool loop;
 

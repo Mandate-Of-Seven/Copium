@@ -32,8 +32,8 @@ public class Fade: CopiumScript
 
 	public SpriteRenderer sr;
 
-	private bool preFaded = false;
-	private bool postFaded = false;
+	[NonSerialized] public bool preFaded = false;
+    [NonSerialized] public bool postFaded = false;
 	private float preposTimer = 0.0f;
 	private float timer = 0.0f;
 	
@@ -108,7 +108,7 @@ public class Fade: CopiumScript
 
     public bool FadeEnded()
     {
-        return (postFaded && !preFaded);
+        return (!postFaded && preFaded);
     }
 
 	void FadeIn()

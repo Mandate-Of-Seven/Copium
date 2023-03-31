@@ -23,6 +23,7 @@ public class Crew : CopiumScript
     public GameObject showDeployed;
     
     public Text healthT, mentalT, hungerT;
+    public Animator healthA, mentalA, hungerA;
 
     public Button selectBtn;
     public ButtonWrapper selectBtnWrapper;
@@ -60,6 +61,10 @@ public class Crew : CopiumScript
                 Select();
             }
         }
+
+        healthA.setFrame(3 - (int)person.health);
+        mentalA.setFrame(3 - (int)person.mental);
+        hungerA.setFrame(2 - (int)person.hunger);
     }
 
     //UPDATES AS IN IT UPDATES THE EFFECTS

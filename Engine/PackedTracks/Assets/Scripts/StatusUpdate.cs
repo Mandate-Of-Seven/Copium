@@ -13,18 +13,18 @@ public class StatusUpdate: CopiumScript
 		UNKNOWN
 	}
 
-	public GameObject hHealth, hMental, hHunger;
-	public GameObject bHealth, bMental, cHunger;
-	public GameObject cHealth, cMental, bHunger;
-	public GameObject dHealth, dMental, dHunger;
-	public GameObject supplies;
+	public Animator hHealth, hMental, hHunger;
+	public Animator bHealth, bMental, cHunger;
+	public Animator cHealth, cMental, bHunger;
+	public Animator dHealth, dMental, dHunger;
+	public Animator supplies;
+    Color black = new Color(0.0f, 0.0f, 0.0f, 1.0f);
 
     public void Awake()
     {
         Instance = this;
     }
 
-    Color black = new Color(0.0f, 0.0f, 0.0f, 1.0f);
     public void ResetAll()
     {
         Harris(STATE.NEUTRAL, CrewMenu.STAT_TYPES.HEALTH);
@@ -56,81 +56,62 @@ public class StatusUpdate: CopiumScript
 
 	public void Harris(STATE state, CrewMenu.STAT_TYPES stat_type)
 	{
-		Text health = hHealth.GetComponent<Text>();
-		Text mental = hMental.GetComponent<Text>();
-		Text hunger = hHunger.GetComponent<Text>();
-
-        CheckState(state, stat_type, health, mental, hunger);
+        CheckState(state, stat_type, hHealth, hMental, hHunger);
     }
 
     public void Bronson(STATE state, CrewMenu.STAT_TYPES stat_type)
     {
-        Text health = bHealth.GetComponent<Text>();
-        Text mental = bMental.GetComponent<Text>();
-        Text hunger = bHunger.GetComponent<Text>();
-
-        CheckState(state, stat_type, health, mental, hunger);
+        CheckState(state, stat_type, bHealth, bMental, bHunger);
     }
 
     public void Chuck(STATE state, CrewMenu.STAT_TYPES stat_type)
     {
-        Text health = cHealth.GetComponent<Text>();
-        Text mental = cMental.GetComponent<Text>();
-        Text hunger = cHunger.GetComponent<Text>();
-
-        CheckState(state, stat_type, health, mental, hunger);
+        CheckState(state, stat_type, cHealth, cMental, cHunger);
     }
 
     public void Danton(STATE state, CrewMenu.STAT_TYPES stat_type)
     {
-        Text health = dHealth.GetComponent<Text>();
-        Text mental = dMental.GetComponent<Text>();
-        Text hunger = dHunger.GetComponent<Text>();
-
-        CheckState(state, stat_type, health, mental, hunger);
+        CheckState(state, stat_type, dHealth, dMental, dHunger);
     }
 
     public void Supplies(STATE state)
 	{
-		Text txt = supplies.GetComponent<Text>();
-        UpdateText(state, txt);
+        UpdateState(state, supplies);
     }
 
-	void UpdateText(STATE state, Text txt)
+	void UpdateState(STATE state, Animator anim)
 	{
         switch (state)
         {
             case STATE.NEUTRAL:
-                txt.text = "-";
-                txt.color = Color.white;
+                anim.color = Color.white;
                 break;
             case STATE.INCREASE:
-                txt.text = "^";
-                txt.color = Color.green;
+                anim.color = Color.green;
                 break;
             case STATE.DECREASE:
-                txt.text = "V";
-                txt.color = Color.red;
+                anim.color = Color.red;
                 break;
             case STATE.UNKNOWN:
-                txt.text = "?";
-                txt.color = black;
+                anim.color = black;
                 break;
         }
+
+        anim.setFrame((int)state);
     }
 
-    void CheckState(STATE state, CrewMenu.STAT_TYPES stat_type, Text health, Text mental, Text hunger)
+    void CheckState(STATE state, CrewMenu.STAT_TYPES stat_type, Animator health, Animator mental, Animator hunger)
     {
         switch (stat_type)
         {
             case CrewMenu.STAT_TYPES.HEALTH:
-                UpdateText(state, health);
+                UpdateState(state, health);
                 break;
             case CrewMenu.STAT_TYPES.MENTAL:
-                UpdateText(state, mental);
+                UpdateState(state, mental);
                 break;
             case CrewMenu.STAT_TYPES.HUNGER:
-                UpdateText(state, hunger);
+                UpdateState(state, hunger);
                 break;
         }
     }
