@@ -50,7 +50,7 @@ public class Prepare : CopiumScript
     ButtonWrapper chuckBtnWrapper;
     ButtonWrapper dantonBtnWrapper;
     public Text resultText;
-    
+
 
     public GameObject prepareChoices;
     public GameObject prepareFinal;
@@ -100,12 +100,12 @@ public class Prepare : CopiumScript
             }
             else if (prepareButton1.state == ButtonState.None)
             {
-                if(option1Hover)
+                if (option1Hover)
                     option1Hover = false;
             }
 
             if (prepareButton2.state == ButtonState.OnHover)
-            {                
+            {
                 if (!option2Hover)
                 {
                     option2Hover = true;
@@ -160,10 +160,10 @@ public class Prepare : CopiumScript
             if (currentCrewmate[i] == null) { break; }
         }
         prepareCanvas.SetActive(true);
-        
+
         prepareChoices.SetActive(true);
         prepareFinal.SetActive(false);
-        
+
         prepareOption1.gameObject.SetActive(false);
         prepareOption2.gameObject.SetActive(false);
         makeChoice = true;
@@ -179,7 +179,7 @@ public class Prepare : CopiumScript
             {
                 break;
             }
-            if (crewmate[i].name =="Harris")
+            if (crewmate[i].name == "Harris")
             {
                 harrisPotrait.SetActive(true);
             }
@@ -199,7 +199,7 @@ public class Prepare : CopiumScript
 
     //if an event cant happen go to here
     Reroll:
-        eventNum = RNG.Range(1, 14);
+        eventNum = RNG.Range(1, 16);
         randomCrewmate = RNG.Range(0, numOfCrew - 1);
         string tempS = "";
         switch (eventNum)
@@ -209,7 +209,7 @@ public class Prepare : CopiumScript
                 {
                     tempS = currentCrewmate[randomCrewmate].name;
                 }
-                else if (numOfCrew >1)
+                else if (numOfCrew > 1)
                 {
                     tempS = "The crew";
                 }
@@ -221,7 +221,7 @@ public class Prepare : CopiumScript
                 prepareOption1.text = "Enter the igloo and look around";
                 prepareOption2.text = "Leave the igloo alone";
                 break;
-            
+
 
             case 2:
                 if (numOfCrew == 1)
@@ -268,7 +268,7 @@ public class Prepare : CopiumScript
                 {
                     tempS = "the crew";
                 }
-                prepareBody.text = "An abandoned town was spotted not far from the train by "+ tempS +
+                prepareBody.text = "An abandoned town was spotted not far from the train by " + tempS +
                                    ", there might be some supplies left in the town, but there may be scavengers there too.";
                 prepareOption1.gameObject.SetActive(true);
                 prepareOption2.gameObject.SetActive(true);
@@ -291,7 +291,7 @@ public class Prepare : CopiumScript
                 prepareOption2.text = "Leave the deer alone";
                 break;
             case 7:
-                if (numOfCrew<2)
+                if (numOfCrew < 2)
                 {
                     Console.WriteLine("Rerolled");
                     goto Reroll;
@@ -325,7 +325,7 @@ public class Prepare : CopiumScript
                 prepareOption1.text = "Siphon the fuel";
                 break;
             case 11:
-                prepareBody.text = "In a bid to get back to the train quicker, "+ currentCrewmate[randomCrewmate].name + " opted to walk across a frozen stream. While doing so, " +
+                prepareBody.text = "In a bid to get back to the train quicker, " + currentCrewmate[randomCrewmate].name + " opted to walk across a frozen stream. While doing so, " +
                                    "the ice beneath his feet gave way, plunging him into the icy waters. Thankfully, " +
                                    currentCrewmate[randomCrewmate].name + "was able to get ashore but was forced to let go of his bag of supplies, losing it to the depths of the stream.";
                 prepareOption1.gameObject.SetActive(true);
@@ -338,7 +338,7 @@ public class Prepare : CopiumScript
                 prepareOption1.text = "Ouch";
                 break;
             case 13:
-                prepareBody.text = currentCrewmate[randomCrewmate].name +" managed to find a first aid kit that is in usable condition buried under some rubble. " +
+                prepareBody.text = currentCrewmate[randomCrewmate].name + " managed to find a first aid kit that is in usable condition buried under some rubble. " +
                                    "He decided to use it to patch himself up.";
                 prepareOption1.gameObject.SetActive(true);
                 prepareOption1.text = "Continue";
@@ -348,6 +348,33 @@ public class Prepare : CopiumScript
                 prepareOption1.gameObject.SetActive(true);
                 prepareOption1.text = "Watch the bunnies";
                 break;
+            case 15:
+                prepareBody.text = "While searching for resources " + currentCrewmate[randomCrewmate].name + " chanced upon 2 Syberian wolves, they seem hungry and " +
+                                   "desperate for food.";
+                prepareOption1.gameObject.SetActive(true);
+                prepareOption2.gameObject.SetActive(true);
+                prepareOption1.text = "Feed the wolves [must have 4 supplies]";
+                prepareOption2.text = "Kill the attacking wolves";
+                break;
+            case 16:
+                if (numOfCrew < 2)
+                {
+                    Console.WriteLine("Rerolled");
+                    goto Reroll;
+                }
+                prepareBody.text = "The crew enters an abandoned shelter and notice a human body sprawled on the floor. " +
+                                   "They are shocked to find a giant fungus growing out of the body, as they attempt to get closer, they hear faint groaning. Upon closer " +
+                                   "inspection, the crew can tell that the person is still alive. Sickened by this grotesque sight, the crew hurriedly return to the train, " +
+                                   "visibly shaken by the experience.";
+                prepareOption1.gameObject.SetActive(true);
+                prepareOption1.text = "Continue";
+                break;
+            case 17:
+                prepareBody.text = "The crew find a rundown log cabin in the middle of the woods. They enter it and find a door leading to a basement cellar. The crew" +
+                                   " enter the cellar and find some bottles of wine in good condition which they happily take with them. It seems the alcohol has lifted" +
+                                   " the mood of the crew.";
+                break;
+
             default:
                 break;
         }
@@ -370,10 +397,10 @@ public class Prepare : CopiumScript
         CMarrow.SetActive(false);
         DHarrow.SetActive(false);
         DMarrow.SetActive(false);
-        suppliesChangedAmount= 0;
+        suppliesChangedAmount = 0;
 
-        
-        
+
+
 
         //roll chance for event choice successs / for choices check if choiceNum<=difficulty
         int choiceNum = RNG.Range(1, 10);
@@ -415,14 +442,14 @@ public class Prepare : CopiumScript
                 }
                 else if (choice == 2)
                 {
-                    currentCrewmate[0].resultText = "Knowing that it might be a trap, " + currentCrewmate[randomCrewmate].name  +
+                    currentCrewmate[0].resultText = "Knowing that it might be a trap, " + currentCrewmate[randomCrewmate].name +
                                                  " decided to leave the igloo alone and head back to the train.";
                 }
                 break;
             case 2:
                 if (choice == 1)
                 {
-                    if (numOfCrew==1) //if alone
+                    if (numOfCrew == 1) //if alone
                     {
                         if (choiceNum <= 8)
                         {
@@ -446,7 +473,7 @@ public class Prepare : CopiumScript
                             currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + "barely manages to escape, only suffering minor injuries.";
                         }
                     }
-                   
+
                 }
                 else if (choice == 2)
                 {
@@ -548,7 +575,7 @@ public class Prepare : CopiumScript
                     crewManager.ChangeMental(currentCrewmate[randomCrewmate].name, -1);
                     changeSummaryArrow(false, false, currentCrewmate[randomCrewmate]);
                     currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " said his prayers before putting his knife to the man's throat, killing him. " +
-                                                 currentCrewmate[randomCrewmate].name+" then took the man's supplies and skinned him, cutting him up for meat to be consumed.";
+                                                 currentCrewmate[randomCrewmate].name + " then took the man's supplies and skinned him, cutting him up for meat to be consumed.";
                 }
                 else if (choice == 2)
                 {
@@ -560,7 +587,7 @@ public class Prepare : CopiumScript
             case 6:
                 if (choice == 1)
                 {
-                    if (choiceNum<=7)
+                    if (choiceNum <= 7)
                     {
                         crewManager.ChangeSupplies(3);
                         currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " took aim and shot at the deer, killing it in an instant, its confused fawn could only stand and stare as " +
@@ -569,13 +596,13 @@ public class Prepare : CopiumScript
                     else
                     {
                         currentCrewmate[0].resultText = "As " + currentCrewmate[randomCrewmate].name + " took aim, the rustling of leaves could be heard. A large wolf leapt out of the bushes," +
-                                                        " and viciously attacked the deer. As the wolf devoured its prey, "+ currentCrewmate[randomCrewmate].name+ " carefully retreated, not " +
+                                                        " and viciously attacked the deer. As the wolf devoured its prey, " + currentCrewmate[randomCrewmate].name + " carefully retreated, not " +
                                                         "wanting to suffer the same fate as the deer.";
                     }
                 }
                 else if (choice == 2)
                 {
-                    if (choiceNum<=2)
+                    if (choiceNum <= 2)
                     {
                         crewManager.ChangeMental(currentCrewmate[randomCrewmate].name, -1);
                         changeSummaryArrow(false, false, currentCrewmate[randomCrewmate]);
@@ -622,8 +649,8 @@ public class Prepare : CopiumScript
                 }
                 else if (choice == 2)
                 {
-                    currentCrewmate[0].resultText = "Deciding that eating random mushrooms wasnt the most sensible thing to do, "+ currentCrewmate[randomCrewmate].name +
-                                                    "returned to the train. ";
+                    currentCrewmate[0].resultText = "Deciding that eating random mushrooms wasnt the most sensible thing to do, " + currentCrewmate[randomCrewmate].name +
+                                                    " returned to the train. ";
                 }
                 break;
             case 10:
@@ -661,7 +688,51 @@ public class Prepare : CopiumScript
                 {
                     crewManager.ChangeMental(currentCrewmate[randomCrewmate].name, 1);
                     changeSummaryArrow(true, false, currentCrewmate[randomCrewmate]);
-                    currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name+ "feels better after liesurely watching the rabbits.";
+                    currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " feels better after liesurely watching the rabbits.";
+                }
+                break;
+            case 15:
+                if (choice == 1)
+                {
+                    if (crewManager.supplies >= 4)
+                    {
+                        crewManager.ChangeSupplies(-4);
+                        crewManager.ChangeAllMental(1);
+                        changeAllSummaryArrow(true, false);
+                        currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " gave out some rations to the hungry wolves, it seems like " +
+                                                        "the wolves have taken a liking to the crew and have started following them around, allowing the crew to pet them.";
+                    }
+                    else
+                    {
+                        crewManager.ChangeHealth(currentCrewmate[randomCrewmate].name, -1);
+                        changeSummaryArrow(false, true, currentCrewmate[randomCrewmate]);
+                        currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " attempted to feed what little rations he had on hand to the hungry wolves, " +
+                                                        "but it seems they were unsatisfied with such a meager meal. The ungrateful beasts literally bit the hand that was " +
+                                                        "feeding them and ran away, leaving " + currentCrewmate[randomCrewmate].name + " bleeding.";
+                    }
+                }
+                else if (choice == 2)
+                {
+                    crewManager.ChangeSupplies(2);
+                    currentCrewmate[0].resultText = "The wolves jumped at " + currentCrewmate[randomCrewmate].name + ", attacking and trying to bite him. " +
+                                                    currentCrewmate[randomCrewmate].name + " seeing no option killed both wolves and proceeded to skin and gather " +
+                                                    "their meat for food.";
+                }
+                break;
+            case 16:
+                if (choice == 1)
+                {
+                    crewManager.ChangeAllMental(-1);
+                    changeAllSummaryArrow(false, false);
+                    currentCrewmate[0].resultText = "The entire crew was disturbed by the grotesque sight of that infected corpse.";
+                }
+                break;
+            case 17:
+                if (choice == 1)
+                {
+                    crewManager.ChangeAllMental(-1);
+                    changeAllSummaryArrow(false, false);
+                    currentCrewmate[0].resultText = "The entire crew was disturbed by the grotesque sight of that infected corpse.";
                 }
                 break;
             default:
@@ -719,7 +790,7 @@ public class Prepare : CopiumScript
     /*******************************************************************************/
     public void showFinal()
     {
-        if(!prepareFinal.activeSelf)
+        if (!prepareFinal.activeSelf)
             resultText.text = "Click on a character icon to get more details on what they encountered.";
         prepareCanvas.SetActive(true);
         prepareChoices.SetActive(false);
@@ -777,18 +848,17 @@ public class Prepare : CopiumScript
         }
     }
 
-
     public void changeSuppliesText(int amount)
     {
         if (amount == 0)
         {
             suppliesChanged.color = Color.white;
         }
-        else if (amount >0)
+        else if (amount > 0)
         {
             suppliesChanged.color = Color.green;
         }
-        else if (amount<0)
+        else if (amount < 0)
         {
             suppliesChanged.color = Color.red;
         }
@@ -808,12 +878,12 @@ public class Prepare : CopiumScript
 			Which crew member is affected
 	*/
     /*******************************************************************************/
-    public void changeSummaryArrow(bool increased, bool health,Person crew)
+    public void changeSummaryArrow(bool increased, bool health, Person crew)
     {
         Vector3 temp;
         if (crew.name == "Harris")
         {
-            
+
             if (health)
             {
                 HHarrow.SetActive(true);
@@ -830,7 +900,7 @@ public class Prepare : CopiumScript
                     HHarrow.transform.localRotation = temp;
                 }
             }
-            else 
+            else
             {
                 HMarrow.SetActive(true);
                 if (increased)
@@ -953,5 +1023,13 @@ public class Prepare : CopiumScript
             }
         }
 
+    }
+
+    public void changeAllSummaryArrow(bool increased, bool health)
+    {
+        changeSummaryArrow(increased, health, crewManager.bronson.person);
+        changeSummaryArrow(increased, health, crewManager.chuck.person);
+        changeSummaryArrow(increased, health, crewManager.danton.person);
+        changeSummaryArrow(increased, health, crewManager.harris.person);
     }
 }
