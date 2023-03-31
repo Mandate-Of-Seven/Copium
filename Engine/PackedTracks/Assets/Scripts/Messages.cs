@@ -6,6 +6,22 @@ public static class Messages
 	public static string ErrorTrainMoving = "";
 	public static string ErrorMainEvent = "You need to handle the event first!";
 
+	public static class Tutorial
+	{
+		public const string start = "Welcome aboard the Armageddon Arrow, let's show you around the train so you can get started on your job as the conductor";
+		public const string reportStart = "Looks like you got a new message, click on the highlighted screen to see it";
+		public const string reportDisplay = "All your messages can be seen here. You'll have to make decisions through this screen as well";
+		public const string reportEnd = "Looks like you're done here, click on the red cross to close any screens";
+		public const string crewStatusButton = "Lets take a look at our crew members vitals";
+		public const string crewStatusDisplay = "All of them seem to be healthy";
+		public const string crewStatusHealth = "This is the health of your crew member, if they die, they are gone forever...";
+		public const string crewStatusMental = "This is the mental state of your crew member, you'll never what they're gonna do if they become crazy...";
+		public const string crewStatusHunger = "This is the hunger of your crew member, it is automatically replenished when you have supplies to feed the crew." +
+												" If you can't afford to feed them once they're famished, they'll start dying of hunger"; 
+		public const string crewStatusSupplies = "This is how much supplies you have, can't feed anyone nor fix anything without these";
+		public const string crewStatusSupplies = "This is how much supplies you have, can't feed anyone nor fix anything without these";
+	}
+
 	public static class Event_Intro
     {
 		public const string body = 

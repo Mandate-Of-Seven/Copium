@@ -21,6 +21,12 @@ public class EventsManager : CopiumScript
 	public Option Option_01;
 	public Option Option_02;
 	public Option Option_03;
+
+	public bool Done()
+    {
+		return bodyTypeWriter == null || bodyTypeWriter.Done();
+	}
+
 	public enum EventState
 	{
 		ForeShadow, Run

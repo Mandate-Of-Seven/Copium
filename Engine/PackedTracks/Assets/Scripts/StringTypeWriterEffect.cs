@@ -59,7 +59,7 @@ public class StringTypeWriterEffect
 			intervalTimeElasped -= interval;
 		}
 		intervalTimeElasped += dt;
-		if (charIndex+1 == target.Length)
+		if (charIndex == target.Length)
         {
 			done = true;
         }
