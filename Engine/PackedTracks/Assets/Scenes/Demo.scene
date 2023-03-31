@@ -131,13 +131,14 @@
                     "ambTrain": 16495768407680055626,
                     "endingChuckVO": 3418065422341924393,
                     "bgmTrain": 9375891007183145069,
+                    "autoDoorSFX": 3729338863794641525,
                     "fileOpenSFX": 7206153751629463322,
                     "clickSFX": 11240736860491117710,
                     "deccelerateSFX": 11048904636908595310,
-                    "endingAllDiedVO": 5168740783519127959,
                     "endingGenericVO": 12110915872301913157,
                     "ending3bVO": 2090025714383355506,
                     "ending2aVO": 566384452997084233,
+                    "endingAllDiedVO": 5168740783519127959,
                     "endingBronsonVO": 3637985409097489349,
                     "endingDantonVO": 7891194026526516512,
                     "endingHarrisVO": 9569732444608153641,
@@ -1248,6 +1249,7 @@
                     "Page4": 7880086899027959037,
                     "PauseCanvas": 1722160444903115838,
                     "TrainCanvas": 6642123175702952797,
+                    "cityBuilding": 11302071767271898026,
                     "BackstoryBtn": 3089503959746599563,
                     "htpmScript": 15873072395746983378,
                     "crewStatusManager": 10830490317094325076,
@@ -1675,7 +1677,8 @@
                     "trainManagerScript": 5971899813001945745,
                     "CloseStatusScreenBtn": 16031829790091619796,
                     "alert": 18001664217615177344,
-                    "supplySpriteSheet": 7500674397773566376
+                    "supplySpriteSheet": 7500674397773566376,
+                    "cabinInteractions": 15405105423273306832
                 },
                 {
                     "enabled": true,
@@ -3752,7 +3755,7 @@
                     "Name": "CabinInteractions",
                     "dialoguePartnerIndex": -1,
                     "hovering": false,
-                    "writerInterval": 0.699999988079071,
+                    "writerInterval": 0.20000000298023224,
                     "dialogueBox": 405483104493658266,
                     "bronsonBtn": 14612441191994297243,
                     "bronsonIText": 13215108533996190401,
@@ -3768,6 +3771,7 @@
                     "chuckInteractBtn": 14939749861340917332,
                     "dantonInteractBtn": 5073176526599194828,
                     "dialogueSprite": 3581174941982169348,
+                    "dialogueText": 8814529302368711623,
                     "harrisInteractBtn": 15790711282353194141
                 }
             ]
@@ -10676,7 +10680,7 @@
             "Active": true,
             "Components": [
                 {
-                    "PID": 0,
+                    "PID": 17648900612414737673,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -13205,7 +13209,7 @@
             "Active": true,
             "Components": [
                 {
-                    "PID": 6642123175702952797,
+                    "PID": 0,
                     "Type": "Transform",
                     "Pos": {
                         "X": 8.655167579650879,
