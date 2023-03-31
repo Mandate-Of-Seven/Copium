@@ -1256,6 +1256,15 @@
                     "reportScreenManager": 6180648032434220981,
                     "resultManager": 5868577602297294004,
                     "trainManager": 5971899813001945745
+                },
+                {
+                    "enabled": true,
+                    "UID": 13622886761493638216,
+                    "Type": "Script",
+                    "TypeID": 23,
+                    "Name": "TutorialManager",
+                    "transitionTime": 1.0,
+                    "mask": 15540826228955357516
                 }
             ]
         },
@@ -15661,7 +15670,7 @@
         {
             "UID": 9801774730266619501,
             "Name": "InteractionBlock",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "PID": 0,

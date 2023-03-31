@@ -107,6 +107,7 @@
     <Compile Include="Assets\Scripts\FPS.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\HowtoPlayMenu.cs" />
+    <Compile Include="Assets\Scripts\InteractionMask.cs" />
     <Compile Include="Assets\Scripts\MainMenu.cs" />
     <Compile Include="Assets\Scripts\Messages.cs" />
     <Compile Include="Assets\Scripts\Option.cs" />
@@ -121,6 +122,8 @@
     <Compile Include="Assets\Scripts\Subtitles.cs" />
     <Compile Include="Assets\Scripts\TooltipBehaviour.cs" />
     <Compile Include="Assets\Scripts\TrainManager.cs" />
+    <Compile Include="Assets\Scripts\TutorialComponent.cs" />
+    <Compile Include="Assets\Scripts\TutorialManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">

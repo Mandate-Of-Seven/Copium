@@ -43,6 +43,10 @@ public class ReportScreenManager: CopiumScript
 	
 	public float transitionSpeed = 5.0f;
 
+
+    float tutorialDisplayPanelTimer = 0;
+    public float tutorialDisplayPanelDuration = 5;
+
     void Awake()
     {
         Instance = this;
@@ -56,7 +60,54 @@ public class ReportScreenManager: CopiumScript
         reportBtnWrapper.SetImage(ReportScreenBtn.GetComponent<Image>());
         //Unable to close menu when main event is up
 		closeBtnWrapper.failureText = Messages.ErrorMainEvent;
-	}
+
+        new TutorialComponent
+        (
+            "ReportClose",
+            CloseReportBtn.transform.worldScale,
+            CloseReportBtn.transform.worldPosition,
+
+            delegate ()
+            {
+                if (closeBtnWrapper.GetState() == ButtonState.OnClick)
+                {
+                    return true;
+                }
+                return false;
+            }
+        );
+
+        new TutorialComponent
+        (
+            "ReportDisplay",
+            reportScreenTargetScale,
+            ReportTab.transform.worldPosition,
+            
+            delegate ()
+            {
+                tutorialDisplayPanelTimer += Time.deltaTime;
+                if (tutorialDisplayPanelTimer >= tutorialDisplayPanelDuration)
+                    return true;
+                return false;
+            }
+        );
+
+        new TutorialComponent
+        (
+            "ReportButton",
+            ReportScreenBtn.transform.worldScale,
+            ReportScreenBtn.transform.worldPosition,
+
+            delegate ()
+            {
+                if (reportBtnWrapper.GetState() == ButtonState.OnClick)
+                {
+                    return true;
+                }
+                return false;
+            }
+        );
+    }
     void Update()
     {
         UpdateCanvas();

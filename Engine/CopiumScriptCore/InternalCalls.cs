@@ -96,6 +96,12 @@ namespace CopiumEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetTranslation(ulong ID, ref Vector3 translation);
 
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void GetGlobalScale(ulong ID, out Vector3 scale);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void GetGlobalPosition(ulong ID, out Vector3 translation);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void GetRotation(ulong ID, out Vector3 translation);
 

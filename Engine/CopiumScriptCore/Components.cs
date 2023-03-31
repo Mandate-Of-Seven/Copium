@@ -92,6 +92,24 @@ namespace CopiumEngine
             }
         }
 
+        public Vector3 worldPosition
+        {
+            get
+            {
+                InternalCalls.GetGlobalPosition(gameObject.ID, out Vector3 vec3);
+                return vec3;
+            }
+        }
+
+        public Vector3 worldScale
+        {
+            get
+            {
+                InternalCalls.GetGlobalScale(gameObject.ID, out Vector3 vec3);
+                return vec3;
+            }
+        }
+
         public Vector3 localPosition
         {
             get

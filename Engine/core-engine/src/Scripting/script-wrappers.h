@@ -374,6 +374,16 @@ namespace Copium
 		*scale = pGameObj->transform.scale;
 	}
 
+	static void GetGlobalScale(GameObject* pGameObj, Math::Vec3* scale)
+	{
+		*scale = pGameObj->transform.GetWorldScale();
+	}
+
+	static void GetGlobalPosition(GameObject* pGameObj, Math::Vec3* scale)
+	{
+		*scale = pGameObj->transform.GetWorldPosition();
+	}
+
 	/*******************************************************************************
 	/*!
 	\brief
@@ -1032,6 +1042,8 @@ namespace Copium
 		Register(GetMouseDown);
 		Register(GetTranslation);
 		Register(SetTranslation);
+		Register(GetGlobalPosition);
+		Register(GetGlobalScale);
 		Register(HasComponent);
 		Register(RigidbodyAddForce);
 		Register(RigidbodyGetVelocity);
