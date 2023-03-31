@@ -1183,7 +1183,7 @@
         {
             "UID": 1722160444903115838,
             "Name": "Pause Canvas",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "PID": 6135939618199443691,
@@ -1328,7 +1328,7 @@
         {
             "UID": 7234497426690459476,
             "Name": "P Resume",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "PID": 1722160444903115838,
@@ -1539,7 +1539,7 @@
         {
             "UID": 11998269805652527380,
             "Name": "P Quit Game",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "PID": 1722160444903115838,
@@ -6688,30 +6688,27 @@
                     "isPaused": false,
                     "quitGame": false,
                     "returnToMenu": false,
-                    "PauseNoGameObj": 10953026652968277125,
-                    "AudioTextGameObj": 12540564940333353024,
+                    "PauseTextGameObj": 18070040960074308868,
                     "PauseQuitGameObj": 11998269805652527380,
                     "PauseCanvas": 1722160444903115838,
-                    "PauseTextGameObj": 18070040960074308868,
-                    "PauseAudioOffGameObj": 2423402454008865197,
-                    "PauseAudioOnGameObj": 7535609869038902072,
                     "PauseMainMenuGameObj": 3662158169418415457,
-                    "PauseOptionsGameObj": 15960136425833911699,
                     "PauseResumeGameObj": 7234497426690459476,
-                    "PauseReturnGameObj": 13511451885530754905,
+                    "PauseNoGameObj": 10953026652968277125,
+                    "PauseOptionsGameObj": 15960136425833911699,
                     "PauseYesGameObj": 13070266030766280530,
+                    "VolumeSliderGameObj": 158774111629753938,
                     "PauseQuitBtn": 4561109446918292296,
                     "PauseAudioOffBtn": 9815249961253393154,
-                    "AudioText": 1194988665665342826,
                     "PauseAudioOnBtn": 7137434442497910767,
+                    "PauseReturnBtn": 2653580874094747035,
                     "PauseMainMenuBtn": 13422303936010423873,
                     "PauseText": 14776071900390892379,
                     "PauseResumeBtn": 7338901696821162260,
                     "PauseNoBtn": 3197166528652516471,
                     "PauseOptionsBtn": 10093259900366190193,
-                    "PauseReturnBtn": 2653580874094747035,
                     "PauseYesBtn": 5751452946916325514,
-                    "fade": 11311745147968865628
+                    "fade": 11311745147968865628,
+                    "VolumeBtn": 12903529283778841537
                 }
             ]
         },
@@ -10417,7 +10414,7 @@
         {
             "UID": 3662158169418415457,
             "Name": "P Main Menu",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "PID": 1722160444903115838,
@@ -18193,7 +18190,7 @@
         {
             "UID": 15960136425833911699,
             "Name": "P Options",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "PID": 1722160444903115838,
@@ -18294,10 +18291,10 @@
         {
             "UID": 12540564940333353024,
             "Name": "Audio Text",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
-                    "PID": 1722160444903115838,
+                    "PID": 7633468330355486046,
                     "Type": "Transform",
                     "Pos": {
                         "X": -3.5,
@@ -18344,10 +18341,10 @@
         {
             "UID": 7535609869038902072,
             "Name": "P Audio On",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
-                    "PID": 1722160444903115838,
+                    "PID": 7633468330355486046,
                     "Type": "Transform",
                     "Pos": {
                         "X": -1.149999976158142,
@@ -18445,10 +18442,10 @@
         {
             "UID": 2423402454008865197,
             "Name": "P Audio Off",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
-                    "PID": 1722160444903115838,
+                    "PID": 7633468330355486046,
                     "Type": "Transform",
                     "Pos": {
                         "X": 1.100000023841858,
@@ -18546,10 +18543,10 @@
         {
             "UID": 13511451885530754905,
             "Name": "P Return",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
-                    "PID": 1722160444903115838,
+                    "PID": 7633468330355486046,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -18647,10 +18644,10 @@
         {
             "UID": 8423039004387328560,
             "Name": "Volume Text",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
-                    "PID": 1722160444903115838,
+                    "PID": 7633468330355486046,
                     "Type": "Transform",
                     "Pos": {
                         "X": -3.5,
@@ -18697,10 +18694,10 @@
         {
             "UID": 4999986063536210773,
             "Name": "VolumeBar",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
-                    "PID": 1722160444903115838,
+                    "PID": 7633468330355486046,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -18731,10 +18728,10 @@
         {
             "UID": 6978608456313042638,
             "Name": "Fullscreen Text",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
-                    "PID": 1722160444903115838,
+                    "PID": 7633468330355486046,
                     "Type": "Transform",
                     "Pos": {
                         "X": -3.5,
@@ -18973,6 +18970,193 @@
                     "TypeID": 23,
                     "Name": "TutorialText",
                     "interval": 0.10000000149011612
+                }
+            ]
+        },
+        {
+            "UID": 7633468330355486046,
+            "Name": "Options Menu",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 1722160444903115838,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 17707518536613085771,
+            "Name": "Volume Bar",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 7633468330355486046,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 4.0,
+                        "Y": 0.699999988079071,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 12776249494392662386,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 13,
+                    "OrderInLayer": 69
+                },
+                {
+                    "enabled": true,
+                    "UID": 17550895363706168691,
+                    "Type": "SpriteRenderer",
+                    "TypeID": 22,
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
+                    "Color": {
+                        "X": 0.00009999999747378752,
+                        "Y": 0.00009998999303206801,
+                        "Z": 0.00009998999303206801,
+                        "W": 1.0
+                    },
+                    "Flip": {
+                        "X": false,
+                        "Y": false
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 12903529283778841537,
+                    "Type": "Button",
+                    "TypeID": 18,
+                    "Graphic ID": 0,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.5,
+                            "Y": -0.5
+                        },
+                        "Max": {
+                            "X": 0.5,
+                            "Y": 0.5
+                        }
+                    },
+                    "Callback": "",
+                    "FadeDuration": 0.10000000149011612,
+                    "clickedR": 0.5,
+                    "clickedG": 0.5,
+                    "clickedB": 0.5,
+                    "clickedA": 0.5,
+                    "hoveredR": 0.5,
+                    "hoveredG": 1.0,
+                    "hoveredB": 1.0,
+                    "hoveredA": 0.5,
+                    "normalR": 1.0,
+                    "normalG": 1.0,
+                    "normalB": 1.0,
+                    "normalA": 0.5
+                }
+            ]
+        },
+        {
+            "UID": 158774111629753938,
+            "Name": "VolumeSliderPivot",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 7633468330355486046,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 2911800971136719640,
+            "Name": "VolumeSlider",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 158774111629753938,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 4.0,
+                        "Y": 0.699999988079071,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 4152276703868447439,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 13,
+                    "OrderInLayer": 70
+                },
+                {
+                    "enabled": true,
+                    "UID": 10588004435392972973,
+                    "Type": "SpriteRenderer",
+                    "TypeID": 22,
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    },
+                    "Flip": {
+                        "X": false,
+                        "Y": false
+                    }
                 }
             ]
         }

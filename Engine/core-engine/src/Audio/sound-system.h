@@ -114,6 +114,8 @@ namespace Copium
 			/**************************************************************************/
 		void Mute(bool status);
 
+		void SetAllVolume(float volume);
+
 		unsigned GetSoundLength(std::string alias);
 
 		//a map of all sounds created using CreateSound()
@@ -121,7 +123,10 @@ namespace Copium
 
 		//the sound system playing all the audio
 		FMOD::System* soundSystem;
+		FMOD::SoundGroup* group;
+		FMOD::ChannelGroup* channelGroup;
 		FMOD::Channel* channelDefault, * channelBGM, * channelSFX, * channelVoice;
+		
 	private:
 
 		

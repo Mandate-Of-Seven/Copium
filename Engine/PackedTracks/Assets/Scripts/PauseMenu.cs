@@ -26,11 +26,9 @@ public class PauseMenu: CopiumScript
     public GameObject PauseMainMenuGameObj;
     public GameObject PauseQuitGameObj;
     public GameObject PauseTextGameObj;
-    public GameObject AudioTextGameObj;
     public GameObject PauseOptionsGameObj;
-    public GameObject PauseAudioOnGameObj;
-    public GameObject PauseAudioOffGameObj;
-    public GameObject PauseReturnGameObj;
+    public GameObject OptionsGameObj;
+    public GameObject VolumeSliderGameObj;
 
     //buttons
     public Button PauseMainMenuBtn;
@@ -41,10 +39,11 @@ public class PauseMenu: CopiumScript
     public Button PauseOptionsBtn;
     public Button PauseAudioOnBtn;
     public Button PauseAudioOffBtn;
+    public Button VolumeBtn;
     public Button PauseReturnBtn;
 
     //text
-    public Text AudioText;
+
     public Text PauseText;
     public bool isPaused = false;
     public bool returnToMenu = false;
@@ -112,10 +111,7 @@ public class PauseMenu: CopiumScript
             }
              if (PauseOptionsBtn.state == ButtonState.OnClick)
             {
-                AudioTextGameObj.SetActive(true);
-                PauseAudioOffGameObj.SetActive(true);
-                PauseAudioOnGameObj.SetActive(true);
-                PauseReturnGameObj.SetActive(true);
+                OptionsGameObj.SetActive(true);
                 PauseResumeGameObj.SetActive(false);
                 PauseMainMenuGameObj.SetActive(false);
                 PauseQuitGameObj.SetActive(false);
@@ -128,17 +124,21 @@ public class PauseMenu: CopiumScript
             {
                 
             }
+
+            if (VolumeBtn.state ==ButtonState.OnClick)
+            {
+                moveSlider(Input.GetMousePosition().x);
+                
+            }
+
             if (PauseReturnBtn.state == ButtonState.OnClick)
-                {
-                AudioTextGameObj.SetActive(false);
-                PauseAudioOffGameObj.SetActive(false);
-                PauseAudioOnGameObj.SetActive(false);
-                PauseReturnGameObj.SetActive(false);
+            {
+                OptionsGameObj.SetActive(false);
                 PauseResumeGameObj.SetActive(true);
                 PauseMainMenuGameObj.SetActive(true);
                 PauseQuitGameObj.SetActive(true);
                 PauseOptionsGameObj.SetActive(true);
-                }
+            }
             if (PauseQuitBtn.state == ButtonState.OnClick)
             {
                 PauseYesGameObj.SetActive(true);
@@ -173,5 +173,15 @@ public class PauseMenu: CopiumScript
                     loadScene = true;
             }
         }
+    }
+
+
+    public void moveSlider(float val)
+    {
+        float percentage = val / 100;
+        Console.WriteLine(percentage);
+        Vector3 scale = VolumeSliderGameObj.transform.localScale;
+        scale.x = percentage;
+        VolumeSliderGameObj.transform.localScale = scale;
     }
 }

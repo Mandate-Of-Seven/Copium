@@ -126,6 +126,22 @@ namespace Copium
 	/*******************************************************************************
 	/*!
 	\brief
+		To be implemented
+
+	\param keyCode
+
+	\return
+
+	*/
+	/*******************************************************************************/
+	static void GetMousePosition(Copium::Math::Vec2* pos)
+	{
+		*pos = inputSystem.get_mouseposition();
+	}
+
+	/*******************************************************************************
+	/*!
+	\brief
 		Checks if a key was held
 	\param keyCode
 		Keycode to listen to
@@ -721,6 +737,20 @@ namespace Copium
 		pAudioSource->stop_sound();
 	}
 
+	/*******************************************************************************
+	/*!
+		\brief
+			Sets all volume
+
+		\param volume
+			Target Volume
+	*/
+	/*******************************************************************************/
+	static void SetAllVolume(float volume)
+	{
+		soundSystem.SetAllVolume(volume);
+	}
+
 
 	/*******************************************************************************
 	/*!
@@ -1088,6 +1118,7 @@ namespace Copium
 		Register(GetKeyUp);
 		Register(GetKeyDown);
 		Register(GetMouseDown);
+		Register(GetMousePosition);
 		Register(GetTranslation);
 		Register(SetTranslation);
 		Register(GetGlobalPosition);
@@ -1117,6 +1148,7 @@ namespace Copium
 		Register(AudioSourceStop);
 		Register(AudioSourceSetVolume);
 		Register(AudioSourceGetVolume);
+		Register(SetAllVolume);
 		Register(GetSoundLength);
 		Register(PauseAllAnimation);
 		Register(PlayAllAnimation);

@@ -166,6 +166,9 @@ namespace CopiumEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern UInt32 GetSoundLength(ulong ID);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetAllVolume(float volume);
         #endregion	
 
         #region UI
@@ -202,6 +205,9 @@ namespace CopiumEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool GetMouseDown(int mouseCode);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetMousePosition(out Vector2 pos);
         #endregion
 
         #region TEXT

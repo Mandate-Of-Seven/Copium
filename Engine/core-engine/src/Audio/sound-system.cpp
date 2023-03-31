@@ -38,13 +38,29 @@ void SoundSystem::init()
 	soundSystem->init(128, FMOD_INIT_NORMAL, NULL);
 	CheckVersion();
 	CheckDrivers();
+
+	FMOD_RESULT result = soundSystem->createChannelGroup("channelGroup", &channelGroup);
+	if (result != FMOD_OK)
+	{
+		std::cout << result << "\n\n\n\n\n";
+	}
+
+	channelDefault->setChannelGroup(channelGroup);
+	channelBGM->setChannelGroup(channelGroup);
+	channelSFX->setChannelGroup(channelGroup);
+	channelVoice->setChannelGroup(channelGroup);
+
 	PRINT("Sound init was called");
 }
 
 void SoundSystem::update()
 {
 	soundSystem->update();
-	
+	if (inputSystem.is_key_pressed(GLFW_KEY_Z))
+	{
+		
+		SetAllVolume(0.1f);
+	}
 }
 
 void SoundSystem::exit()
@@ -113,7 +129,7 @@ void SoundSystem::Play(std::string alias, FMOD::Channel* channel, bool overLap, 
 		rSound->setMode(FMOD_LOOP_OFF);
 	}
 
-	soundSystem->playSound(rSound, nullptr, false, &channel);
+	soundSystem->playSound(rSound, channelGroup, false, &channel);
 }
 
 // Stop sound
@@ -153,6 +169,23 @@ void SoundSystem::Mute(bool status)
 	{
 		soundSystem->setOutput(FMOD_OUTPUTTYPE_AUTODETECT);
 	}
+}
+
+void SoundSystem::SetAllVolume(float volume)
+{
+	FMOD_RESULT result = channelGroup->setVolume(volume);
+	if (result!=FMOD_OK)
+	{
+		std::cout << "failed to set"  << result<<"\n";
+	}
+	float temp;
+	result = channelGroup->getVolume(&temp);
+	if (result != FMOD_OK)
+	{
+		std::cout << "failed to get" << result<<"\n";
+	}
+	std::cout << temp;
+	
 }
 
 unsigned SoundSystem::GetSoundLength(std::string alias)

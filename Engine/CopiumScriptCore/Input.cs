@@ -63,5 +63,11 @@ namespace CopiumEngine
         public static bool GetKeyUp(KeyCode keyCode) { return InternalCalls.GetKeyUp((int)keyCode); }
 
         public static bool GetMouseDown(int mouseCode) { return InternalCalls.GetMouseDown(mouseCode); }
+
+        public static Vector2 GetMousePosition() 
+        { 
+            InternalCalls.GetMousePosition(out Vector2 pos);
+            return pos;
+        }
     }
 }
