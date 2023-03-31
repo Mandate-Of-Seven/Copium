@@ -148,7 +148,8 @@
                     "hoverSFX": 17747488176716717098,
                     "leverEngagedSFX": 13165669678142242702,
                     "leverSFX": 10219544415510482568,
-                    "paperSFX": 16863530532877669399
+                    "paperSFX": 16863530532877669399,
+                    "autoDoorSFX": 3729338863794641525
                 }
             ]
         },
@@ -1248,6 +1249,7 @@
                     "Page4": 7880086899027959037,
                     "PauseCanvas": 1722160444903115838,
                     "TrainCanvas": 6642123175702952797,
+                    "cityBuilding": 11302071767271898026,
                     "BackstoryBtn": 3089503959746599563,
                     "htpmScript": 15873072395746983378,
                     "crewStatusManager": 10830490317094325076,
@@ -1672,6 +1674,7 @@
                     "CloseCrewStatusBtn": 7467968725349133689,
                     "resultManager": 5868577602297294004,
                     "statusScreenSuppliesText": 2987481935980349814,
+                    "cabinInteractions": 15405105423273306832,
                     "trainManagerScript": 5971899813001945745,
                     "CloseStatusScreenBtn": 16031829790091619796,
                     "alert": 18001664217615177344,
@@ -3768,6 +3771,7 @@
                     "chuckInteractBtn": 14939749861340917332,
                     "dantonInteractBtn": 5073176526599194828,
                     "dialogueSprite": 3581174941982169348,
+                    "dialogueText": 8814529302368711623,
                     "harrisInteractBtn": 15790711282353194141
                 }
             ]
