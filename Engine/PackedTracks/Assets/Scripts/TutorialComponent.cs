@@ -4,26 +4,34 @@ using System;
 public class TutorialComponent
 {
     public string text;
-    public Vector3 scaleTrans;
-    public Vector3 posTrans;
+    public Vector3 scale;
+    public Vector3 textPos;
+    public Transform posTrans;
 
     public delegate bool TriggerCondition();
 
+    [NonSerialized]
     public TriggerCondition triggerCondition;
 
     public TutorialComponent(
         string name,
-        Vector3 _scaleTrans,
-        Vector3 _posTrans,
-        TriggerCondition _triggerCondition )
+        Vector3 _scale,
+        Transform _posTrans,
+        string _text,
+        Vector3 _textPos,
+        TriggerCondition _triggerCondition
+        )
     {
+        text = _text;
         TutorialManager.Instance.tutorials.Add(name, this);
-        scaleTrans = _scaleTrans; posTrans = _posTrans;
+        scale = _scale; posTrans = _posTrans;
+        textPos = _textPos;
         triggerCondition = _triggerCondition;
     }
 
     public bool isFinished()
     {
+       
         return triggerCondition();
     }
 }

@@ -455,6 +455,18 @@ namespace Copium
 	void Serializer::Deserialize<Math::Vec3>(Math::Vec3& _data, const std::string& _key, rapidjson::Value& _value)
 	{
 		rapidjson::Value v3(rapidjson::kObjectType);
+		if (!_value.HasMember(_key.c_str()))
+		{
+			if (!Copium::Deserialize(_data.x, _value, "X"))
+				_data.x = 0.f;
+
+			if (!Copium::Deserialize(_data.y, _value, "Y"))
+				_data.y = 0.f;
+
+			if (!Copium::Deserialize(_data.z, _value, "Z"))
+				_data.z = 0.f;
+			return;
+		}
 		v3 = _value[_key.c_str()].GetObj();
 
 		if (!Copium::Deserialize(_data.x, v3, "X"))

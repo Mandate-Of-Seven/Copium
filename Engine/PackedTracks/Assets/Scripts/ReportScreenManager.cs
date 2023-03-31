@@ -30,6 +30,7 @@ public class ReportScreenManager: CopiumScript
 
     
     public GameObject ReportTab;
+    public GameObject Background;
     public ResultManager resultManager;
 
 	public Image alert;
@@ -43,9 +44,12 @@ public class ReportScreenManager: CopiumScript
 	
 	public float transitionSpeed = 5.0f;
 
-
-    float tutorialDisplayPanelTimer = 0;
-    public float tutorialDisplayPanelDuration = 5;
+    public Vector3 reportButtonScale = Vector3.one;
+    public Vector3 reportBackgroundScale = Vector3.one;
+    public Vector3 reportCloseButtonScale = Vector3.one;
+    public Vector3 reportButtonTutTextPos = Vector3.zero;
+    public Vector3 reportBackgroundTutTextPos = Vector3.zero;
+    public Vector3 reportCloseButtonTutTextPos = Vector3.zero;
 
     void Awake()
     {
@@ -64,9 +68,10 @@ public class ReportScreenManager: CopiumScript
         new TutorialComponent
         (
             "ReportClose",
-            CloseReportBtn.transform.worldScale,
-            CloseReportBtn.transform.worldPosition,
-
+            reportCloseButtonScale,
+            CloseReportBtn.transform,
+            Messages.Tutorial.reportEnd,
+            reportCloseButtonTutTextPos,
             delegate ()
             {
                 if (closeBtnWrapper.GetState() == ButtonState.OnClick)
@@ -80,13 +85,13 @@ public class ReportScreenManager: CopiumScript
         new TutorialComponent
         (
             "ReportDisplay",
-            reportScreenTargetScale,
-            ReportTab.transform.worldPosition,
-            
+            reportBackgroundScale,
+            Background.transform,
+            Messages.Tutorial.reportDisplay,
+            reportBackgroundTutTextPos,
             delegate ()
             {
-                tutorialDisplayPanelTimer += Time.deltaTime;
-                if (tutorialDisplayPanelTimer >= tutorialDisplayPanelDuration)
+                if (TutorialText.Instance.Done() && EventsManager.Instance.Done())
                     return true;
                 return false;
             }
@@ -95,9 +100,10 @@ public class ReportScreenManager: CopiumScript
         new TutorialComponent
         (
             "ReportButton",
-            ReportScreenBtn.transform.worldScale,
-            ReportScreenBtn.transform.worldPosition,
-
+            reportButtonScale,
+            ReportScreenBtn.transform,
+            Messages.Tutorial.reportStart,
+            reportButtonTutTextPos,
             delegate ()
             {
                 if (reportBtnWrapper.GetState() == ButtonState.OnClick)

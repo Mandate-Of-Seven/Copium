@@ -12,7 +12,7 @@ public class TutorialManager: CopiumScript
 	public InteractionMask mask;
 
 	public float transitionTime = 1f;
-	Vector3 originalPosition;
+	Vector3 originalPos;
 	Vector3 originalScale;
 	float transitionTimer = 0f;
 
@@ -36,24 +36,31 @@ public class TutorialManager: CopiumScript
 
 	void Start()
 	{
+		TutorialText.Instance.SetContent(Messages.Tutorial.reportStart);
 	}
 
 	void Update()
 	{
-		Debug.Log(sequence[sequenceIndex]);
 		TutorialComponent tutorial = tutorials[sequence[sequenceIndex]];
+		TutorialText.Instance.transform.position = tutorial.textPos;
 		if (tutorial.isFinished())
         {
-			originalPosition = tutorial.posTrans;
-			originalScale = tutorial.scaleTrans;
+			originalPos = tutorial.posTrans.worldPosition;
+			originalScale = tutorial.scale;
 			transitionTimer = 0f;
 			++sequenceIndex;
-        }
+			TutorialText.Instance.SetContent(tutorials[sequence[sequenceIndex]].text);
+		}
 		else if (transitionTimer < transitionTime)
         {
 			transitionTimer += Time.deltaTime;
-			mask.scale = Vector3.Lerp(originalScale,tutorial.scaleTrans,transitionTimer/transitionTime);
-			mask.transform.position = Vector3.Lerp(originalPosition, tutorial.posTrans, transitionTimer / transitionTime);
+			mask.scale = Vector3.Lerp(originalScale,tutorial.scale,transitionTimer/transitionTime);
+			mask.transform.position = Vector3.Lerp(originalPos, tutorial.posTrans.worldPosition, transitionTimer / transitionTime);
+		}
+		else
+		{
+			mask.scale = tutorial.scale;
+			mask.transform.position = tutorial.posTrans.worldPosition;
 		}
 	}
 }
