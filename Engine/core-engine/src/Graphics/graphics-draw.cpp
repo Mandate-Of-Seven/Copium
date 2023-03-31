@@ -370,7 +370,7 @@ namespace Copium
 					if (!camera->withinFrustum(updatedPos, updatedScale))
 						continue;
 
-					renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
+					renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount, anim->color);
 				}
 				else
 				{
@@ -378,7 +378,7 @@ namespace Copium
 					if (!camera->withinFrustum(t.position, t.scale))
 						continue;
 
-					renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
+					renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount, anim->color);
 				}
 			}
 			for (Text& text : pScene->componentArrays.GetArray<Text>())
@@ -599,7 +599,7 @@ namespace Copium
 							if (!camera->withinFrustum(updatedPos, updatedScale))
 								continue;
 
-							renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
+							renderer.draw_quad(updatedPos, { updatedScale.x, updatedScale.y }, updatedRot, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount, anim->color);
 						}
 						else
 						{
@@ -607,7 +607,7 @@ namespace Copium
 							if (!camera->withinFrustum(t.position, t.scale))
 								continue;
 
-							renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount);
+							renderer.draw_quad(t.position, size, t.rotation.z, anim->spriteSheet, anim->currentFrameIndex, anim->frameCount, anim->color);
 						}
 					}
 

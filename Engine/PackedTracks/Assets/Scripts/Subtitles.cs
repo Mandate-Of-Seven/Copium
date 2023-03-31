@@ -8,12 +8,16 @@ public class Subtitles: CopiumScript
 	public Text subtitles;
 	public Fade fade;
     public AudioSource audio;
+    public AudioSource blizzard;
 
     private float wait = 0.5f;
 	private float fadeVal = 0.0f;
 	private float timer = 0.0f;
 	private float duration = 1.0f;
     private float waitModifier = 0.0f;
+
+    public float changeBlizzard = 1.0f;
+    public float blizzardTimer = 0.0f;
 
     public bool shouldFade = false;
     public bool fadeIn = false;
@@ -23,6 +27,10 @@ public class Subtitles: CopiumScript
     private bool dontWait = false;
     private bool messageEnded = false;
     private bool changeScene = false;
+
+    private bool blizzardVolume = false;
+    private bool blizzardWait = false;
+    private bool blizzardSwap = false;
 
     public int ending = 0;  // Which ending to use
     private int maxChar = 100;
@@ -50,6 +58,8 @@ public class Subtitles: CopiumScript
         {
             FadeInAndOut();
         }
+
+        BlizzardLogic();
 
         if (HasFadeEnded() && !changeScene && messageEnded && !fade.shouldFade) // Message ended
         {
@@ -140,6 +150,50 @@ public class Subtitles: CopiumScript
             messageEnded = true;
 
         wait = subtitles.text.Length * waitModifier;
+    }
+
+    void BlizzardLogic()
+    {
+        if (blizzardTimer > changeBlizzard && !blizzardVolume && !blizzardWait)
+        {
+            changeBlizzard = RNG.Range(3.0f, 10.0f);
+            blizzardVolume = true;
+            blizzardSwap = !blizzardSwap;
+            blizzardTimer = 0.0f;
+        }
+
+        if (blizzardVolume)
+            blizzardVolume = UpdateBlizzard();
+
+        if (blizzardWait && blizzardTimer > changeBlizzard / 8.0f)
+        {
+            blizzardTimer = 0.0f;
+            blizzardWait = false;
+        }
+
+        blizzardTimer += Time.deltaTime;
+    }
+
+    bool UpdateBlizzard()
+    {
+        float time = blizzardTimer / changeBlizzard;
+        if (blizzardSwap)
+        {
+            blizzard.volume = fade.Lerp(0.25f, 0.8f, time);
+        }
+        else
+        {
+            blizzard.volume = fade.Lerp(0.8f, 0.25f, time);
+        }
+
+
+        if (time >= 1.0f)
+        {
+            blizzardWait = true;
+            return false;
+        }
+        else
+            return true;
     }
 
 	public void FadeOutAndIn(float _wait = 1.0f)

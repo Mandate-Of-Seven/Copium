@@ -206,6 +206,7 @@
                             "Sprite ID": 8966109942037627320,
                             "Time Delay": 0.05000000074505806,
                             "FrameCount": 155,
+                            "Current Frame Index": 0,
                             "Rows": 31,
                             "Columns": 5,
                             "Flip": {
@@ -214,6 +215,17 @@
                             }
                         }
                     ]
+                },
+                {
+                    "enabled": true,
+                    "UID": 11547063175088774281,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "BlizzardWind",
+                    "Loop": true,
+                    "Overlap": true,
+                    "Volume": 0.3199999928474426,
+                    "Channel": "SFX"
                 }
             ]
         },
@@ -275,7 +287,9 @@
                     "fadeIn": false,
                     "shouldFade": false,
                     "fade": 7357753059199243101,
-                    "subtitles": 18225049530128791181
+                    "subtitles": 18225049530128791181,
+                    "audio": 12049341073205332732,
+                    "blizzard": 11547063175088774281
                 }
             ]
         },
@@ -308,7 +322,7 @@
                     "UID": 12049341073205332732,
                     "Type": "AudioSource",
                     "TypeID": 16,
-                    "Alias": "Nightshift _BGM2_Loop_70bpm",
+                    "Alias": "BlizzardWind",
                     "Loop": false,
                     "Overlap": true,
                     "Volume": 0.25,
@@ -320,11 +334,11 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "AudioManager",
-                    "endingChuckVO": 17337801369414284935,
                     "bgmTrain": 12049341073205332732,
-                    "endingAllDiedVO": 7318203056586189342,
-                    "endingGenericVO": 13448467235533419896,
+                    "endingChuckVO": 17337801369414284935,
                     "ending3bVO": 4432784744819925947,
+                    "endingGenericVO": 13448467235533419896,
+                    "endingAllDiedVO": 7318203056586189342,
                     "ending2aVO": 8805097851487427146,
                     "endingBronsonVO": 16611311015136701721,
                     "endingDantonVO": 3296477315636820966,

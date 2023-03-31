@@ -893,7 +893,6 @@ namespace Copium
 		pSpriteRenderer->sprite.color = *color;
 	}
 
-
 	/*******************************************************************************
 	/*!
 		\brief
@@ -994,6 +993,41 @@ namespace Copium
 	{
 		pAnimator->GetCurrentAnimation()->SetFrame(frame);
 	}
+
+	/*******************************************************************************
+	/*!
+		\brief
+			Gets color of animation
+
+		\param pSpriteRenderer
+			Reference to animator
+
+		\parama color
+			Pointer to store color in
+	*/
+	/*******************************************************************************/
+	static void GetAnimationColor(Animator* pAnimator, glm::vec4* color)
+	{
+		*color = pAnimator->GetCurrentAnimation()->color;
+	}
+
+	/*******************************************************************************
+	/*!
+		\brief
+			Sets color of animation
+
+		\param pAnimator
+			Reference to the animator
+
+		\parama color
+			Pointer to get color from
+	*/
+	/*******************************************************************************/
+	static void SetAnimationColor(Animator* pAnimator, glm::vec4* color)
+	{
+		pAnimator->GetCurrentAnimation()->color = *color;
+	}
+
 	static void StopAnimation(Animator* pAnimator)
 	{
 		pAnimator->PauseAnimation();
@@ -1068,6 +1102,8 @@ namespace Copium
 		Register(Log);
 		Register(GetSpriteRendererColor);
 		Register(SetSpriteRendererColor);
+		Register(GetAnimationColor);
+		Register(SetAnimationColor);
 		Register(GetImageColor);
 		Register(SetImageColor);
 		Register(GetTextColor);

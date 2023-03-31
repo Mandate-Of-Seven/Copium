@@ -308,6 +308,19 @@ namespace CopiumEngine
             }
         }
 
+        public Color color
+        {
+            get
+            {
+                InternalCalls.GetAnimationColor(ID, out Color color);
+                return color;
+            }
+            set
+            {
+                InternalCalls.SetAnimationColor(ID, ref value);
+            }
+        }
+
 
         public void setFrame(int _frame)
         {

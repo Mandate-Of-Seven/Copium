@@ -43,8 +43,13 @@ namespace CopiumEngine
         internal extern static void SetFrame(ulong ID, int frame);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void StopAnimation(ulong ID);
-        #endregion
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetAnimationColor(ulong ID, out Color color);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetAnimationColor(ulong ID, ref Color color);
+        #endregion
 
         #region COMPONENT
         [MethodImpl(MethodImplOptions.InternalCall)]

@@ -22,6 +22,7 @@ namespace Copium
 	{
 		spriteSheet.columns = columns;
 		spriteSheet.rows = rows;
+		color = Math::Vec4(1.f, 1.f, 1.f, 1.f);
 
 	}
 	bool Animation::UpdateFrame(double _dt)

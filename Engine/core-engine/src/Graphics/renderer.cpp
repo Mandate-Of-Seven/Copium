@@ -439,7 +439,7 @@ namespace Copium
 		draw_quad(transform, _sprite, tintColor);
 	}
 
-	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Spritesheet& _spritesheet, GLuint _offsetID, int _frames)
+	void Renderer::draw_quad(const glm::vec3& _position, const glm::vec2& _scale, const float _rotation, const Spritesheet& _spritesheet, GLuint _offsetID, int _frames, const glm::vec4& _color)
 	{
 		glm::mat4 translate = glm::translate(glm::mat4(1.f), _position);
 
@@ -473,7 +473,7 @@ namespace Copium
 
 		//PRINT("Drawing spritesheet");
 
-		draw_quad(transform, _spritesheet, _offsetID, _frames);
+		draw_quad(transform, _spritesheet, _offsetID, _frames, _color);
 	}
 
 	void Renderer::draw_quad(const glm::mat4& _transform, const glm::vec4& _color)
@@ -661,7 +661,7 @@ namespace Copium
 		quadCount++;
 	}
 
-	void Renderer::draw_quad(const glm::mat4& _transform, const Spritesheet& _spritesheet, GLuint _offsetID, int _frames)
+	void Renderer::draw_quad(const glm::mat4& _transform, const Spritesheet& _spritesheet, GLuint _offsetID, int _frames, const glm::vec4& _color)
 	{
 		if (quadIndexCount >= maxIndexCount)
 		{
@@ -669,8 +669,6 @@ namespace Copium
 			flush();
 			begin_batch();
 		}
-
-		glm::vec4 color = { 1.f, 1.f, 1.f, 1.f };
 
 		GLfloat textureIndex = 0.f;
 
@@ -744,7 +742,7 @@ namespace Copium
 			quadBufferPtr->pos = _transform * quadVertexPosition[i];
 			quadBufferPtr->textCoord = spriteTextCoord[i] * flip;
 			//PRINT("		Animation offsets:" << spriteTextCoord[i].x << " " << spriteTextCoord[i].y);
-			quadBufferPtr->color = color;
+			quadBufferPtr->color = _color;
 			quadBufferPtr->texID = (float)textureIDs[key];
 			quadBufferPtr->type = (float)ENTITY_TYPE::QUAD;
 			quadBufferPtr++;
@@ -818,7 +816,6 @@ namespace Copium
 		circleIndexCount += circleVertices + 1;
 		circleCount++;
 
-		//// Update VBO for each circle
 		//CircleVertex vertices[circleVertices];
 
 		//for (GLint i = 0; i < circleVertices; i++)
