@@ -98,7 +98,7 @@ public class CrewStatusManager: CopiumScript
 		supplySpriteSheet.stop();
 		supplySpriteSheet.setFrame(1);
 
-		new TutorialComponent
+/*		new TutorialComponent
 		(
 			"CrewStatusClose",
 			crewStatusCloseButtonScale,
@@ -145,7 +145,7 @@ public class CrewStatusManager: CopiumScript
 				}
 				return false;
 			}
-		);
+		);*/
 	}
 
 	void Update()

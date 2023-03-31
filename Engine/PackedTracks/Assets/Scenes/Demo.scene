@@ -155,7 +155,7 @@
         },
         {
             "UID": 16243190110120876333,
-            "Name": "Audio Textqwer",
+            "Name": "TrainBackground",
             "Active": true,
             "Components": [
                 {
@@ -1266,7 +1266,7 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "TutorialManager",
-                    "transitionTime": 0.5,
+                    "transitionTime": 1.0,
                     "mask": 15540826228955357516
                 }
             ]
@@ -1667,6 +1667,36 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "CrewStatusManager",
+                    "crewStatusBackgroundScale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    },
+                    "crewStatusBackgroundTutTextPos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "crewStatusButtonScale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    },
+                    "crewStatusButtonTutTextPos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "crewStatusCloseButtonScale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    },
+                    "crewStatusCloseButtonTutTextPos": {
+                        "X": 5.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
                     "exlowThreshold": 0,
                     "isCabinOn": false,
                     "isCrewStatusOn": false,
@@ -1678,6 +1708,7 @@
                     "StatusScreen": 15159970389334835860,
                     "cam": 17648900612414737673,
                     "parent": 6642123175702952797,
+                    "crewStatusBackground": 11948856811499114110,
                     "CrewStatusBtn": 12240638081067445947,
                     "CabinBtn": 15383718040987380145,
                     "CloseCrewStatusBtn": 7467968725349133689,
@@ -1727,9 +1758,9 @@
                         "Z": 0.0
                     },
                     "transitionSpeed": 20.0,
-                    "parent": 6642123175702952797,
-                    "Background": 12983590837959087399,
                     "ReportTab": 5175432442001046265,
+                    "Background": 12983590837959087399,
+                    "parent": 6642123175702952797,
                     "CloseReportBtn": 16441970958217380161,
                     "ReportScreenBtn": 5292179977163357335,
                     "alert": 15187707562833248342,
@@ -18941,7 +18972,7 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "TutorialText",
-                    "interval": 0.05000000074505806
+                    "interval": 0.10000000149011612
                 }
             ]
         }

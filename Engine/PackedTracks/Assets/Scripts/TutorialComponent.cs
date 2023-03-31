@@ -23,6 +23,7 @@ public class TutorialComponent
         )
     {
         text = _text;
+        Console.WriteLine("RAN");
         TutorialManager.Instance.tutorials.Add(name, this);
         scale = _scale; posTrans = _posTrans;
         textPos = _textPos;

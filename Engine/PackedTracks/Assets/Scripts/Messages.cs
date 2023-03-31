@@ -19,7 +19,6 @@ public static class Messages
 		public const string crewStatusHunger = "This is the hunger of your crew member, it is automatically replenished when you have supplies to feed the crew." +
 												" If you can't afford to feed them once they're famished, they'll start dying of hunger"; 
 		public const string crewStatusSupplies = "This is how much supplies you have, can't feed anyone nor fix anything without these";
-		public const string crewStatusSupplies = "This is how much supplies you have, can't feed anyone nor fix anything without these";
 	}
 
 	public static class Event_Intro
