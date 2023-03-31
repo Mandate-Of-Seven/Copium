@@ -18,6 +18,7 @@ using System;
 
 public class PauseMenu: CopiumScript
 {
+    //gameObjects
     public GameObject PauseCanvas;
     public GameObject PauseYesGameObj;
     public GameObject PauseNoGameObj;
@@ -25,11 +26,25 @@ public class PauseMenu: CopiumScript
     public GameObject PauseMainMenuGameObj;
     public GameObject PauseQuitGameObj;
     public GameObject PauseTextGameObj;
+    public GameObject AudioTextGameObj;
+    public GameObject PauseOptionsGameObj;
+    public GameObject PauseAudioOnGameObj;
+    public GameObject PauseAudioOffGameObj;
+    public GameObject PauseReturnGameObj;
+
+    //buttons
     public Button PauseMainMenuBtn;
     public Button PauseResumeBtn;
     public Button PauseQuitBtn;
     public Button PauseYesBtn;
-    public Button PauseNoBtn;
+    public Button PauseNoBtn;    
+    public Button PauseOptionsBtn;
+    public Button PauseAudioOnBtn;
+    public Button PauseAudioOffBtn;
+    public Button PauseReturnBtn;
+
+    //text
+    public Text AudioText;
     public Text PauseText;
     public bool isPaused = false;
     public bool returnToMenu = false;
@@ -89,11 +104,41 @@ public class PauseMenu: CopiumScript
                 PauseNoGameObj.SetActive(true);
                 PauseResumeGameObj.SetActive(false);
                 PauseMainMenuGameObj.SetActive(false);
+                PauseOptionsGameObj.SetActive(false);
                 PauseQuitGameObj.SetActive(false);
                 PauseTextGameObj.SetActive(true);
                 PauseText.text = "Are you sure?";
                 returnToMenu = true;
             }
+             if (PauseOptionsBtn.state == ButtonState.OnClick)
+            {
+                AudioTextGameObj.SetActive(true);
+                PauseAudioOffGameObj.SetActive(true);
+                PauseAudioOnGameObj.SetActive(true);
+                PauseReturnGameObj.SetActive(true);
+                PauseResumeGameObj.SetActive(false);
+                PauseMainMenuGameObj.SetActive(false);
+                PauseQuitGameObj.SetActive(false);
+                PauseOptionsGameObj.SetActive(false);
+                
+
+            }
+
+            if (PauseAudioOffBtn.state == ButtonState.OnClick)
+            {
+                
+            }
+            if (PauseReturnBtn.state == ButtonState.OnClick)
+                {
+                AudioTextGameObj.SetActive(false);
+                PauseAudioOffGameObj.SetActive(false);
+                PauseAudioOnGameObj.SetActive(false);
+                PauseReturnGameObj.SetActive(false);
+                PauseResumeGameObj.SetActive(true);
+                PauseMainMenuGameObj.SetActive(true);
+                PauseQuitGameObj.SetActive(true);
+                PauseOptionsGameObj.SetActive(true);
+                }
             if (PauseQuitBtn.state == ButtonState.OnClick)
             {
                 PauseYesGameObj.SetActive(true);
@@ -101,6 +146,7 @@ public class PauseMenu: CopiumScript
                 PauseResumeGameObj.SetActive(false);
                 PauseMainMenuGameObj.SetActive(false);
                 PauseQuitGameObj.SetActive(false);
+                PauseOptionsGameObj.SetActive(false);
                 PauseTextGameObj.SetActive(true);
                 PauseText.text = "Are you sure?";
                 quitGame = true;
@@ -113,6 +159,7 @@ public class PauseMenu: CopiumScript
                 PauseResumeGameObj.SetActive(true);
                 PauseMainMenuGameObj.SetActive(true);
                 PauseQuitGameObj.SetActive(true);
+                PauseOptionsGameObj.SetActive(true);
                 PauseTextGameObj.SetActive(false);
                 quitGame = false;
                 returnToMenu = false;
