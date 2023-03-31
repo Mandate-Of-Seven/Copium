@@ -11,7 +11,7 @@
 \brief
 	Contains the data struct to store data for a crewmate
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 using CopiumEngine;
 using System;
@@ -170,6 +170,10 @@ public class Person
 			
             if (_hunger != value)
             {
+
+                if(value > HUNGER_STATE.FULL)
+                    value = HUNGER_STATE.FULL;
+
                 if(hungerScrambler != null)
                     hungerScrambler = CreateScrambler(_hunger.ToString(), value.ToString());
                 else

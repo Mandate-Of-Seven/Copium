@@ -27,6 +27,7 @@ public class CrewStatusManager: CopiumScript
 	ButtonWrapper CrewStatusBtnWrapper;
 
     public GameObject CrewStatusTab;
+	public CabinInteractions cabinInteractions;
 
 	public Image alert;
 
@@ -72,6 +73,7 @@ public class CrewStatusManager: CopiumScript
 		CrewStatusBtnWrapper.failureText = Messages.ErrorMainEvent;
 		CabinBtnWrapper = new ButtonWrapper(CabinBtn);
 		CabinBtnWrapper.SetImage(CabinBtn.GetComponent<Image>());
+		CabinBtnWrapper.clickedSFX = AudioManager.Instance.autoDoorSFX;
 		CloseStatusScreenBtnWrapper = new ButtonWrapper(CloseStatusScreenBtn);
 		CloseStatusScreenBtnWrapper.SetImage(CloseStatusScreenBtn.GetComponent<Image>());
 		// Cabin set false
@@ -115,7 +117,7 @@ public class CrewStatusManager: CopiumScript
             StatusScreen.transform.localScale = Vector3.Lerp(StatusScreen.transform.localScale,Vector3.one,Time.deltaTime * transitionSpeed);
         }
 
-		if (trainManagerScript.accelerate == false && CabinBtnWrapper.GetState() == ButtonState.OnRelease)
+		if (CabinBtnWrapper.GetState() == ButtonState.OnRelease)
 		{
 			GoToCabin();
 		}
@@ -138,39 +140,39 @@ public class CrewStatusManager: CopiumScript
 
 	}
 
-    public void OpenPanel()
-    {
-		if (isCrewStatusOn)
-			return;
-        alert.enabled = false;
-        isCrewStatusOn = true;
-		isCabinOn = true;
-        CrewStatusBtn.gameObject.SetActive(false);
-        CrewStatusTab.transform.parent = null;
-		CrewStatusTab.SetActive(true);
-    }
+    // public void OpenPanel()
+    // {
+	// 	if (isCrewStatusOn)
+	// 		return;
+    //     alert.enabled = false;
+    //     isCrewStatusOn = true;
+	// 	isCabinOn = true;
+    //     CrewStatusBtn.gameObject.SetActive(false);
+    //     CrewStatusTab.transform.parent = null;
+	// 	CrewStatusTab.SetActive(true);
+    // }
 
-    public void ClosePanel(bool prepared)
-	{
-		crewMenu.timeElasped = 0;
-		//Prevent the crew buttons from being pressed
-		if (!crewMenu.deploying && !prepared)
-		{
-			crewMenu.SetPrepare(false);
-		}
-		else
-		{
-			crewMenu.deploying = false;
-		}
+    // public void ClosePanel(bool prepared)
+	// {
+	// 	crewMenu.timeElasped = 0;
+	// 	//Prevent the crew buttons from being pressed
+	// 	if (!crewMenu.deploying && !prepared)
+	// 	{
+	// 		crewMenu.SetPrepare(false);
+	// 	}
+	// 	else
+	// 	{
+	// 		crewMenu.deploying = false;
+	// 	}
 
-		isCrewStatusOn = false;
-		isCabinOn = false;
-        resultManager.Enable();
-        CrewStatusBtn.gameObject.SetActive(true);
-		CrewStatusTab.SetActive(false);
+	// 	isCrewStatusOn = false;
+	// 	isCabinOn = false;
+    //     resultManager.Enable();
+    //     CrewStatusBtn.gameObject.SetActive(true);
+	// 	CrewStatusTab.SetActive(false);
 
-		CrewStatusTab.transform.parent = parent.transform;
-	}
+	// 	CrewStatusTab.transform.parent = parent.transform;
+	// }
 
 	public void GoToCabin()
 	{
@@ -179,7 +181,10 @@ public class CrewStatusManager: CopiumScript
 		//CrewStatusTab.SetActive(true);
 		isCabinOn = true;
 		crewMenu.SetPrepare(false);
-		AudioManager.Instance.autoDoorSFX.Play();
+
+		UpdateDeath();
+
+		//AudioManager.Instance.autoDoorSFX.Play();
 		// Switch to cabin view
 		//cam.transform.localPosition = new Vector3(18.15f, 0, 0);
 	}
@@ -197,7 +202,7 @@ public class CrewStatusManager: CopiumScript
 		{
 			crewMenu.deploying = false;
 		}
-		AudioManager.Instance.autoDoorSFX.Play();
+		//AudioManager.Instance.autoDoorSFX.Play();
 
 		//CrewStatusTab.SetActive(false);
 	}
@@ -254,12 +259,43 @@ public class CrewStatusManager: CopiumScript
 
 	public void DisableInteractions()
 	{
-		ClosePanel(false);
+		//ClosePanel(false);
+		ReturnToCockpit(false);
 		CrewStatusBtnWrapper.SetInteractable(false);
 	}
 	public void EnableInteractions()
 	{
 		CrewStatusBtnWrapper.SetInteractable(true);
+	}
+
+	public void UpdateDeath()
+	{
+		if(!crewMenu.harris.person.alive)
+		{
+			cabinInteractions.harrisBtn.SetActive(false);
+			Console.WriteLine("harris is dead");
+
+		}
+
+		if(!crewMenu.bronson.person.alive)
+		{
+			cabinInteractions.bronsonBtn.SetActive(false);
+
+		}	
+
+		if(!crewMenu.chuck.person.alive)
+		{
+			cabinInteractions.chuckBtn.SetActive(false);
+
+		}
+
+		if(!crewMenu.danton.person.alive)
+		{
+			cabinInteractions.dantonBtn.SetActive(false);
+
+		}
+
+
 	}
 
 }

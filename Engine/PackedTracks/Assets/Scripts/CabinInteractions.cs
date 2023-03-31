@@ -239,16 +239,30 @@ public class CabinInteractions: CopiumScript
 
 
 	public void SetInteractBtnsInteractability(bool _flag){
-		harrisInteractBtnWrapper.SetInteractable(_flag);
-		bronsonInteractBtnWrapper.SetInteractable(_flag);
-		chuckInteractBtnWrapper.SetInteractable(_flag);
-		dantonInteractBtnWrapper.SetInteractable(_flag);
+		if(crewMenu.harris.person.alive)
+			harrisInteractBtnWrapper.SetInteractable(_flag);
+
+		if(crewMenu.bronson.person.alive)
+			bronsonInteractBtnWrapper.SetInteractable(_flag);
+
+		if(crewMenu.chuck.person.alive)
+			chuckInteractBtnWrapper.SetInteractable(_flag);
+
+		if(crewMenu.danton.person.alive)
+			dantonInteractBtnWrapper.SetInteractable(_flag);
 	}
 	public void SetInteractBtnsActive(bool _flag){
-		harrisBtn.SetActive(_flag);
-		bronsonBtn.SetActive(_flag);
-		chuckBtn.SetActive(_flag);
-		dantonBtn.SetActive(_flag);
+		if(crewMenu.harris.person.alive)
+			harrisBtn.SetActive(_flag);
+
+		if(crewMenu.bronson.person.alive)
+			bronsonBtn.SetActive(_flag);
+
+		if(crewMenu.chuck.person.alive)
+			chuckBtn.SetActive(_flag);
+
+		if(crewMenu.danton.person.alive)
+			dantonBtn.SetActive(_flag);
 	}
 
 	int CheckLowStats(int _crewIdx)
@@ -386,25 +400,27 @@ public class CabinInteractions: CopiumScript
 			#region First
 			first.Lines[0] = "Hey Boss, the train engine is fascinating, the backup engine is simple but the main engine... whoever built it, I hope he's still around somewhere.";
 			first.Lines[1] = "Chuck and Bronson seem to be having a little debate over some personal issues, maybe you should check on them.";
-			first.Lines[2] = "The rations we were given are so little, but it should last us for a little while.";
+			first.Lines[2] = "They didn't give us much rations, but it should last us for a little while.";
 			first.count = 3;
 			#endregion
 			#region Second
-			second.Lines[0] = "Boss the supplies are running low, we should stop the train and see if we can salvage anything around the area.";
+			second.Lines[0] = "Hey Boss, we're running low on supplies. We should stop the train and salvage anything nearby.";
 			second.Lines[1] = "Yo Boss that fire got me good huh. Thanks for saving me. I gotta tell you Boss, that fire was no accident. Someone did something to the engine, trust me I can tell.";
-			second.Lines[2] = "Boss, the city we are going, we lost contact 4 months ago, don't you think the city is in some kind of trouble? ";
+			second.Lines[2] = "Boss, we haven't heard from that city in four months, don't you think the city is in some kind of trouble? ";
 			second.count = 3;
 			#endregion
 			#region Third
-			third.Lines[0] = "The tracks luckily it is still in tact, who knows how hard it would be to maintain them.";
-			third.count = 1;
+			third.Lines[0] = "Good thing those tracks are still intact, I doubt we'd be able to repair em with the equipment on hand.";
+			third.Lines[1] = "Man it's getting colder in here, the heating must be breaking down. I'll go take a look at it later.";
+			third.count = 2;
 			#endregion
 			#region Ending
-			ending.count = 0;
+			ending.Lines[0] = "Urghhh, it's so cold... I gotta... get warm somehow...";
+			ending.count = 1;
 			#endregion
 			#region Low
-			low.Lines[0] = "Hey Boss, although im injured but lemme know if you need anything.";
-			low.Lines[1] = "Boss, I think we should explore and find some supplies.";
+			low.Lines[0] = "Hey Boss, these injuries ain't too bad. Lemme know if ya need anything.";
+			low.Lines[1] = "Boss, we gotta go out and find some supplies.";
 			low.Lines[2] = "Heh, Hehehe... HAHAHAHAHA!";
 			low.count = 3;
 			#endregion
@@ -434,11 +450,11 @@ public class CabinInteractions: CopiumScript
 			#region Second
 			second.Lines[0] = "Thank goodness we have someone like Danton. He's been helping me with these small injuries. Truth be told, I'm not too sure what I'd do without him";
 			second.Lines[1] = "How did it happen? Why... Sorry Cap, I think I need some time to process what just happened.";
-			second.Lines[2] = "All my strength and I felt so powerless as the fire took everything...";
+			second.Lines[2] = "All my strength and yet I was powerless against the fire...";
 			second.count = 3;
 			#endregion
 			#region Third
-			third.Lines[0] = "What do you think happened to the train that went last 2 months ago, it was said they were lost and presumed dead.";
+			third.Lines[0] = "What do you think happened to the train that went to the city two months ago? Rumor has it that the train was lot and the crew were presumed dead.";
 			third.Lines[1] = "Did you hear what Chuck said? He said we should torture then kill the raiders. The world is already bad as it is why the unnecessary violence?";
 			third.count = 2;
 			#endregion
@@ -472,31 +488,32 @@ public class CabinInteractions: CopiumScript
 
 
 			#region First
-			first.Lines[0] = "Ahh Captain... do you know anything about Captain Bob? It seems he's relatively new to the city's defence force, it's nothing short of impressive that he's been able to climb the ranks in such a short amount of time. I should get to know him better...";
-			first.Lines[1] = "If you ask me Captain, Bronson can't be trusted. A soft man like him is simply not suited for such a mission, perhaps we should toss him out of the train...";
+			first.Lines[0] = "Hey Cap'n, do you know anything about Captain Bob? Seems like he just joined the city's defence force as a new officer not too long ago. Wonder how he got up to that position so fast?";
+			first.Lines[1] = "If you ask me Cap'n, Bronson can't be trusted. A soft man like him is simply not suited for such a mission, perhaps we should toss him out of the train...";
 			first.Lines[2] = "Have you ever wondered how the world ended up like this? Based on my research, it seems the clouds above our heads are manmade...";
 			first.count = 3;
 			#endregion
 			#region Second
-			second.Lines[0] = "Uhhhh. Cap'n by any chance we have other things to eat?";
-			second.Lines[1] = "Cap'n, doesn't seem like Harris was the one for the engine room explosion, that means someone in the workshop set it up before we left!";
-			second.Lines[2] = "How could this happen, I need to find out how the engine exploded.";
+			second.Lines[0] = "Uhhh Cap'n, just out of curiosity, is there anything else to eat?";
+			second.Lines[1] = "Hmm... It doesn't seem like Harris was behind the explosion. I'm guessing someone else may have planted a bomb of some kind.";
+			second.Lines[2] = "How could this have happened? Perhaps I should conduct my own investigation into this...";
 			second.count = 3;
 			#endregion
 			#region Third
-			third.Lines[0] = "The last train that went to the city, they got lost, lets hope this mission is in our favour.";
-			third.Lines[1] = "Hey Cap, those damn raiders, they really had no mercy. If it was me I would have made sure they will die a horrible death.";
-			third.count = 2;
+			third.Lines[0] = "I heard the last train that went to the city got lost, let's hope we don't end up like them.";
+			third.Lines[1] = "Hey Cap'n, those damn raiders, they really have no mercy. if I had the chance, I'd make sure they die a horrible death.";
+			third.Lines[2] = "My stomach... Urghhh, they got me good Cap'n.";
+			third.count = 3;
 			#endregion
 			#region Ending
 			ending.Lines[0] = "Cap'n, heres my theory, the city we are going to, it was taken over and our city is going to be taken over soon too.";
-			ending.Lines[1] = "I wonder, is the council still the same people.";
-			ending.Lines[2] = "We must not go to the city I think we should stop.";
+			ending.Lines[1] = "I wonder, does the council ever change its members?";
+			ending.Lines[2] = "We must not go to the city, I think we should stop.";
 			ending.count = 3;
 			#endregion
 			#region Low
-			low.Lines[0] = "Ah its Cap'n im ok, I just need some rest.";
-			low.Lines[1] = "Cap'n supplies are low, come on man lets get out there and find some supplies.";
+			low.Lines[0] = "Ah Cap'n, I'm ok, I just need some rest.";
+			low.Lines[1] = "Cap'n, supplies are low. Lets get out there and find some supplies, I'm getting hungry.";
 			low.Lines[2] = "Shut up, shut up, SHUT UP!";
 			low.count = 3;
 			#endregion
@@ -519,31 +536,31 @@ public class CabinInteractions: CopiumScript
 
 
 			#region First
-			first.Lines[0] = "This train does not seem safe to me";
-			first.Lines[1] = "I have faith in my abilities, can you believe it all it takes was 1 small mistake for them to send me here";
-			first.Lines[2] = "The snow do you think it will end one day?";
+			first.Lines[0] = "This train does not seem safe to me.";
+			first.Lines[1] = "I can't believe all it took was one mistake for them to exile me to this place";
+			first.Lines[2] = "The snow... do you think it will end one day?";
 			first.count = 3;
 			#endregion
 			#region Second
-			second.Lines[0] = "If there is one thing I realised, is that all it takes is 1 small mistake for the whole world to change the views on you. ";
-			second.Lines[1] = "The wow the fire it really got out of hand quickly.";
-			second.Lines[2] = "We must complete this mission. But at what cost?";
+			second.Lines[0] = "If there is one thing I realised, is that all it takes is one small mistake for others to start looking at you differently.";
+			second.Lines[1] = "I knew this train was dangerous... how did that fire get out of hand that quickly?";
+			second.Lines[2] = "I know we have to complete this mission. But at what cost?";
 			second.count = 3;
 			#endregion
 			#region Third
-			third.Lines[0] = "The raiders really shot up the place huh, if only they could be more gentle.";
-			third.Lines[1] = "The raiders previously, I think I recognise one of them, Im not too sure but I think I saw one coming into my old clinic before that incident happend";
+			third.Lines[0] = "Wow, they really did a number on the train huh... humanity really has degraded";
+			third.Lines[1] = "I think I recognised one of the raiders, I'm not a hundred percent certain but I think he came into my clinic complaining about a skin infection a few days before I was sent here.";
 			third.Lines[2] = "Don't you think its funny how with enough people protesting and rioting you can make the council do things they wouldn't normally do.";
 			third.count = 3;
 			#endregion
 			#region Ending
-			ending.Lines[0] = "Looks like these past few days really got to Bronson's head, maybe you should check up on him.";
-			ending.Lines[1] = "I can only do so much, without the right medical equipment I couldn't do much other than jus relieving the pain.";
+			ending.Lines[0] = "Hey Sir, these past few days have taken a toll on everyone. You might want to check up on Bronson, he looks a little worse for wear.";
+			ending.Lines[1] = "Sir, there's only so much I can do. Without the right medical equipment, the only thing I can do now is to help relieve the pain.";
 			ending.count = 2;
 			#endregion
 			#region Low
-			low.Lines[0] = "Ah, if im down who is there to look after the crew.";
-			low.Lines[1] = "We need more if you wan to survive.";
+			low.Lines[0] = "I'm...doing fine, Sir... the priority is the rest of the crew...";
+			low.Lines[1] = "Sir, we're running dangerously low on supplies. We're going to need more if we want to survive.";
 			low.Lines[2] = "No, its not me, its not me, its not me....";
 			low.count = 3;
 			#endregion
