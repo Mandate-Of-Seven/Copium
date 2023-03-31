@@ -141,7 +141,7 @@ public class GameManager: CopiumScript
         {
             gameEnd = true;
             trainManager.FlickLever(false);
-            crewStatusManager.ClosePanel(false);
+            crewStatusManager.ReturnToCockpit(false);
             reportScreenManager.OpenPanel();
         }
 
