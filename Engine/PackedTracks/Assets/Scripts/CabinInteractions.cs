@@ -582,7 +582,7 @@ public class CabinInteractions: CopiumScript
 
 		if(tmp <= 0)
 		{
-			int e = RNG.Range(0, 5);
+			int e = RNG.Range(0, 4);
 			if(e == 0)
 			{
 				writer = new StringTypeWriterEffect(d.EasterEgg(), writerInterval);
@@ -614,7 +614,7 @@ public class CabinInteractions: CopiumScript
 			}			
 		}else
 		{
-			int e = RNG.Range(0,10);
+			int e = RNG.Range(0,2);
 			if((e % 2) == 0)
 			{
 				writer = new StringTypeWriterEffect(d.GetLow(tmp), writerInterval);

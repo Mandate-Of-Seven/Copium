@@ -68,6 +68,7 @@ public class CrewStatusManager: CopiumScript
 	{
 		CloseCrewStatusBtnWrapper = new ButtonWrapper(CloseCrewStatusBtn);
 		CloseCrewStatusBtnWrapper.SetImage(CloseCrewStatusBtn.GetComponent<Image>());
+		CloseCrewStatusBtnWrapper.clickedSFX = AudioManager.Instance.autoDoorSFX;
 		CrewStatusBtnWrapper = new ButtonWrapper(CrewStatusBtn);
 		CrewStatusBtnWrapper.SetImage(CrewStatusBtn.GetComponent<Image>());
 		CrewStatusBtnWrapper.failureText = Messages.ErrorMainEvent;
@@ -139,40 +140,6 @@ public class CrewStatusManager: CopiumScript
 
 
 	}
-
-    // public void OpenPanel()
-    // {
-	// 	if (isCrewStatusOn)
-	// 		return;
-    //     alert.enabled = false;
-    //     isCrewStatusOn = true;
-	// 	isCabinOn = true;
-    //     CrewStatusBtn.gameObject.SetActive(false);
-    //     CrewStatusTab.transform.parent = null;
-	// 	CrewStatusTab.SetActive(true);
-    // }
-
-    // public void ClosePanel(bool prepared)
-	// {
-	// 	crewMenu.timeElasped = 0;
-	// 	//Prevent the crew buttons from being pressed
-	// 	if (!crewMenu.deploying && !prepared)
-	// 	{
-	// 		crewMenu.SetPrepare(false);
-	// 	}
-	// 	else
-	// 	{
-	// 		crewMenu.deploying = false;
-	// 	}
-
-	// 	isCrewStatusOn = false;
-	// 	isCabinOn = false;
-    //     resultManager.Enable();
-    //     CrewStatusBtn.gameObject.SetActive(true);
-	// 	CrewStatusTab.SetActive(false);
-
-	// 	CrewStatusTab.transform.parent = parent.transform;
-	// }
 
 	public void GoToCabin()
 	{
