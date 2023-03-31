@@ -56,7 +56,7 @@ namespace Copium
 			if (currScene && !currScene->componentArrays.GetArray<Camera>().empty())
 			{
 				gameCamera = &*currScene->componentArrays.GetArray<Camera>().begin();
-				gameCamera->SetCameraPosition(gameCamera->gameObj.transform.position);
+				//gameCamera->SetCameraPosition(gameCamera->gameObj.transform.position);
 				textureID = gameCamera->get_framebuffer()->get_color_attachment_id();
 			}
 

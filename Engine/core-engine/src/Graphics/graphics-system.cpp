@@ -294,6 +294,9 @@ namespace Copium
 		Scene* scene = MySceneManager.get_current_scene();
 		if (scene && !scene->componentArrays.GetArray<Camera>().empty())
 			for (Camera& camera : scene->componentArrays.GetArray<Camera>())
+			{
 				camera.update();
+				camera.SetCameraPosition(camera.gameObj.transform.position);
+			}
 	}
 }
