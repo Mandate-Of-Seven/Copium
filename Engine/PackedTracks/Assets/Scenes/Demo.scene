@@ -1183,7 +1183,7 @@
         {
             "UID": 1722160444903115838,
             "Name": "Pause Canvas",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "PID": 6135939618199443691,
@@ -1328,7 +1328,7 @@
         {
             "UID": 7234497426690459476,
             "Name": "P Resume",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "PID": 1722160444903115838,
@@ -1539,7 +1539,7 @@
         {
             "UID": 11998269805652527380,
             "Name": "P Quit Game",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "PID": 1722160444903115838,
@@ -6697,6 +6697,7 @@
                     "PauseOptionsGameObj": 15960136425833911699,
                     "PauseYesGameObj": 13070266030766280530,
                     "VolumeSliderGameObj": 158774111629753938,
+                    "OptionsGameObj": 7633468330355486046,
                     "PauseQuitBtn": 4561109446918292296,
                     "PauseAudioOffBtn": 9815249961253393154,
                     "PauseAudioOnBtn": 7137434442497910767,
@@ -6707,8 +6708,8 @@
                     "PauseNoBtn": 3197166528652516471,
                     "PauseOptionsBtn": 10093259900366190193,
                     "PauseYesBtn": 5751452946916325514,
-                    "fade": 11311745147968865628,
-                    "VolumeBtn": 12903529283778841537
+                    "VolumeBtn": 12903529283778841537,
+                    "fade": 11311745147968865628
                 }
             ]
         },
@@ -10414,7 +10415,7 @@
         {
             "UID": 3662158169418415457,
             "Name": "P Main Menu",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "PID": 1722160444903115838,
@@ -18190,7 +18191,7 @@
         {
             "UID": 15960136425833911699,
             "Name": "P Options",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "PID": 1722160444903115838,
@@ -18976,7 +18977,7 @@
         {
             "UID": 7633468330355486046,
             "Name": "Options Menu",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "PID": 1722160444903115838,
@@ -19091,7 +19092,7 @@
                     "PID": 7633468330355486046,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 0.0,
+                        "X": -2.0,
                         "Y": 0.0,
                         "Z": 0.0
                     },
@@ -19117,7 +19118,7 @@
                     "PID": 158774111629753938,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 0.0,
+                        "X": 2.0,
                         "Y": 0.0,
                         "Z": 0.0
                     },

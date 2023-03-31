@@ -169,6 +169,9 @@ namespace CopiumEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetAllVolume(float volume);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void AudioMute(bool mute);
         #endregion	
 
         #region UI
@@ -238,5 +241,8 @@ namespace CopiumEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void Log(string message);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetGameNDC(out Vector2 pos);
     }
 }

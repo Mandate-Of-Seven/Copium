@@ -120,15 +120,20 @@ public class PauseMenu: CopiumScript
 
             }
 
-            if (PauseAudioOffBtn.state == ButtonState.OnClick)
+            if (PauseAudioOnBtn.state == ButtonState.OnClick)
             {
-                
+                InternalCalls.AudioMute(false);
+            }
+            else if (PauseAudioOffBtn.state == ButtonState.OnClick)
+            {
+                InternalCalls.AudioMute(true);
             }
 
             if (VolumeBtn.state ==ButtonState.OnClick)
             {
-                moveSlider(Input.GetMousePosition().x);
-                
+                moveSlider(Input.GetGameNDC().x+2);
+                float percentage = (Input.GetGameNDC().x + 2)/4;
+                InternalCalls.SetAllVolume(percentage);
             }
 
             if (PauseReturnBtn.state == ButtonState.OnClick)
@@ -178,8 +183,7 @@ public class PauseMenu: CopiumScript
 
     public void moveSlider(float val)
     {
-        float percentage = val / 100;
-        Console.WriteLine(percentage);
+        float percentage = val / 4;
         Vector3 scale = VolumeSliderGameObj.transform.localScale;
         scale.x = percentage;
         VolumeSliderGameObj.transform.localScale = scale;

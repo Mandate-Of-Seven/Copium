@@ -413,6 +413,12 @@ namespace Copium
 		*scale = pGameObj->transform.GetWorldPosition();
 	}
 
+	static void GetGameNDC(glm::vec2* pos)
+	{
+		*pos = sceneManager.mainCamera->get_game_ndc();
+	}
+
+
 	/*******************************************************************************
 	/*!
 	\brief
@@ -749,6 +755,20 @@ namespace Copium
 	static void SetAllVolume(float volume)
 	{
 		soundSystem.SetAllVolume(volume);
+	}
+
+	/*******************************************************************************
+	/*!
+		\brief
+			Mutes or Unmutes all volume
+
+		\param mute
+			Target bool
+	*/
+	/*******************************************************************************/
+	static void AudioMute(bool mute)
+	{
+		soundSystem.Mute(mute);
 	}
 
 
@@ -1127,6 +1147,7 @@ namespace Copium
 		Register(RigidbodyAddForce);
 		Register(RigidbodyGetVelocity);
 		Register(RigidbodySetVelocity);
+		Register(GetGameNDC);
 		Register(SetLocalScale);
 		Register(GetLocalScale);
 		Register(GetRotation);
@@ -1149,6 +1170,7 @@ namespace Copium
 		Register(AudioSourceSetVolume);
 		Register(AudioSourceGetVolume);
 		Register(SetAllVolume);
+		Register(AudioMute);
 		Register(GetSoundLength);
 		Register(PauseAllAnimation);
 		Register(PlayAllAnimation);

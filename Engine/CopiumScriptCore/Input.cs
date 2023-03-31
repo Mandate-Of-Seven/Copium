@@ -69,5 +69,11 @@ namespace CopiumEngine
             InternalCalls.GetMousePosition(out Vector2 pos);
             return pos;
         }
+
+        public static Vector2 GetGameNDC()
+        {
+            InternalCalls.GetGameNDC(out Vector2 pos);
+            return pos;
+        }
     }
 }
