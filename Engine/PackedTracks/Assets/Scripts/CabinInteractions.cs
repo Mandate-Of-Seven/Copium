@@ -2,9 +2,6 @@ using CopiumEngine;
 using System;
 public class CabinInteractions: CopiumScript
 {
-
-	public GameManager gm;
-
 	public CrewMenu crewMenu;
 	public GameObject harrisIText;
 	public GameObject bronsonIText;
@@ -199,22 +196,22 @@ public class CabinInteractions: CopiumScript
 		{
 			case 0:
 			{
-				DisplayDialogue(gm.eventSequence, hd, crewIdx);
+				DisplayDialogue(GameManager.Instance.eventSequence, hd, crewIdx);
 				break;
 			}
 			case 1:
 			{
-				DisplayDialogue(gm.eventSequence, bd, crewIdx);
+				DisplayDialogue(GameManager.Instance.eventSequence, bd, crewIdx);
 				break;
 			}
 			case 2:
 			{
-				DisplayDialogue(gm.eventSequence, cd, crewIdx);
+				DisplayDialogue(GameManager.Instance.eventSequence, cd, crewIdx);
 				break;
 			}
 			case 3:
 			{
-				DisplayDialogue(gm.eventSequence, dd, crewIdx);
+				DisplayDialogue(GameManager.Instance.eventSequence, dd, crewIdx);
 				break;
 			}
 			default:

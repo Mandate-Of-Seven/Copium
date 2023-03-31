@@ -241,26 +241,26 @@ public class CrewStatusManager: CopiumScript
 
 	public void UpdateDeath()
 	{
-		if(!crewMenu.harris.person.alive)
+		if(!CrewMenu.Instance.harris.person.alive)
 		{
 			cabinInteractions.harrisBtn.SetActive(false);
 			Console.WriteLine("harris is dead");
 
 		}
 
-		if(!crewMenu.bronson.person.alive)
+		if(!CrewMenu.Instance.bronson.person.alive)
 		{
 			cabinInteractions.bronsonBtn.SetActive(false);
 
 		}	
 
-		if(!crewMenu.chuck.person.alive)
+		if(!CrewMenu.Instance.chuck.person.alive)
 		{
 			cabinInteractions.chuckBtn.SetActive(false);
 
 		}
 
-		if(!crewMenu.danton.person.alive)
+		if(!CrewMenu.Instance.danton.person.alive)
 		{
 			cabinInteractions.dantonBtn.SetActive(false);
 

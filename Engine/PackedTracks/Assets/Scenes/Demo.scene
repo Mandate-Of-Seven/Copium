@@ -131,14 +131,13 @@
                     "ambTrain": 16495768407680055626,
                     "endingChuckVO": 3418065422341924393,
                     "bgmTrain": 9375891007183145069,
-                    "autoDoorSFX": 3729338863794641525,
                     "fileOpenSFX": 7206153751629463322,
                     "clickSFX": 11240736860491117710,
                     "deccelerateSFX": 11048904636908595310,
+                    "endingAllDiedVO": 5168740783519127959,
                     "endingGenericVO": 12110915872301913157,
                     "ending3bVO": 2090025714383355506,
                     "ending2aVO": 566384452997084233,
-                    "endingAllDiedVO": 5168740783519127959,
                     "endingBronsonVO": 3637985409097489349,
                     "endingDantonVO": 7891194026526516512,
                     "endingHarrisVO": 9569732444608153641,
@@ -1249,7 +1248,6 @@
                     "Page4": 7880086899027959037,
                     "PauseCanvas": 1722160444903115838,
                     "TrainCanvas": 6642123175702952797,
-                    "cityBuilding": 11302071767271898026,
                     "BackstoryBtn": 3089503959746599563,
                     "htpmScript": 15873072395746983378,
                     "crewStatusManager": 10830490317094325076,
@@ -1672,9 +1670,8 @@
                     "CrewStatusBtn": 12240638081067445947,
                     "CabinBtn": 15383718040987380145,
                     "CloseCrewStatusBtn": 7467968725349133689,
-                    "statusScreenSuppliesText": 2987481935980349814,
                     "resultManager": 5868577602297294004,
-                    "cabinInteractions": 15405105423273306832,
+                    "statusScreenSuppliesText": 2987481935980349814,
                     "trainManagerScript": 5971899813001945745,
                     "CloseStatusScreenBtn": 16031829790091619796,
                     "alert": 18001664217615177344,
@@ -2974,14 +2971,14 @@
                     "maxDialogueCount": 0,
                     "selected": false,
                     "showDeployed": 9756751390989245779,
+                    "healthA": 8941905041157455968,
                     "healthT": 5304541777340483839,
+                    "hungerA": 13472293487959842811,
                     "hungerT": 14766951576331013432,
+                    "mentalA": 4803265416523350923,
                     "sprite": 18060063550003571417,
                     "mentalT": 15483113275495242933,
-                    "selectBtn": 8591880219862161732,
-                    "healthA": 8941905041157455968,
-                    "mentalA": 4803265416523350923,
-                    "hungerA": 13472293487959842811
+                    "selectBtn": 8591880219862161732
                 }
             ]
         },
@@ -3072,14 +3069,14 @@
                     "maxDialogueCount": 0,
                     "selected": false,
                     "showDeployed": 9262969936457091480,
+                    "healthA": 3435784494027225525,
                     "healthT": 10619030466278075317,
+                    "hungerA": 9057725542472739528,
                     "hungerT": 6325563762340831896,
+                    "mentalA": 10789966717028565737,
                     "sprite": 16957281722160538884,
                     "mentalT": 11279763144566014201,
-                    "selectBtn": 17866842037438150124,
-                    "healthA": 3435784494027225525,
-                    "mentalA": 10789966717028565737,
-                    "hungerA": 9057725542472739528
+                    "selectBtn": 17866842037438150124
                 }
             ]
         },
@@ -3755,7 +3752,7 @@
                     "Name": "CabinInteractions",
                     "dialoguePartnerIndex": -1,
                     "hovering": false,
-                    "writerInterval": 0.05000000074505806,
+                    "writerInterval": 0.699999988079071,
                     "dialogueBox": 405483104493658266,
                     "bronsonBtn": 14612441191994297243,
                     "bronsonIText": 13215108533996190401,
@@ -3771,8 +3768,6 @@
                     "chuckInteractBtn": 14939749861340917332,
                     "dantonInteractBtn": 5073176526599194828,
                     "dialogueSprite": 3581174941982169348,
-                    "dialogueText": 8814529302368711623,
-                    "gm": 9083562319934391338,
                     "harrisInteractBtn": 15790711282353194141
                 }
             ]
@@ -12991,14 +12986,14 @@
                     "maxDialogueCount": 0,
                     "selected": false,
                     "showDeployed": 8838780582100844525,
+                    "healthA": 13297966934763371184,
                     "healthT": 213051639612899138,
+                    "hungerA": 9481710008905510359,
                     "hungerT": 7519768102827191611,
+                    "mentalA": 12436297314474173324,
                     "sprite": 9667874429526925349,
                     "mentalT": 13693912786253569215,
-                    "selectBtn": 17063943092143246497,
-                    "healthA": 13297966934763371184,
-                    "hungerA": 9481710008905510359,
-                    "mentalA": 12436297314474173324
+                    "selectBtn": 17063943092143246497
                 }
             ]
         },
@@ -13039,14 +13034,14 @@
                     "maxDialogueCount": 0,
                     "selected": false,
                     "showDeployed": 7448713263112095043,
+                    "healthA": 2611374817017844852,
                     "healthT": 425040735269848992,
+                    "hungerA": 13554564502313746653,
                     "hungerT": 6698804851982178886,
+                    "mentalA": 9073926289306247470,
                     "sprite": 5456584973574418364,
                     "mentalT": 16951398089489278593,
-                    "selectBtn": 1358613318985155049,
-                    "healthA": 2611374817017844852,
-                    "mentalA": 9073926289306247470,
-                    "hungerA": 13554564502313746653
+                    "selectBtn": 1358613318985155049
                 }
             ]
         },

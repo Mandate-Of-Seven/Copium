@@ -64,7 +64,7 @@ public class Crew : CopiumScript
 
         healthA.setFrame(3 - (int)person.health);
         mentalA.setFrame(3 - (int)person.mental);
-        hungerA.setFrame(3 - (int)person.hunger);
+        hungerA.setFrame(2 - (int)person.hunger);
     }
 
     //UPDATES AS IN IT UPDATES THE EFFECTS
