@@ -53,6 +53,19 @@ namespace Copium
 	/*******************************************************************************
 	/*!
 	\brief
+		Set window fullscreen mode
+	\param _fullscreen
+		If true, is fullscreen else false
+	*/
+	/*******************************************************************************/
+	static void SetFullscreenMode(bool _fullscreen)
+	{
+		MyWindowSystem.Fullscreen(_fullscreen, 1600, 900);
+	}
+
+	/*******************************************************************************
+	/*!
+	\brief
 		To be implemented
 
 	\param keyCode
@@ -1060,6 +1073,7 @@ namespace Copium
 	/*******************************************************************************/
 	static void registerScriptWrappers()
 	{
+		Register(SetFullscreenMode);
 		Register(GetKey);
 		Register(GetKeyUp);
 		Register(GetKeyDown);

@@ -62,7 +62,7 @@ namespace Copium
 		{
 			fs::path currentDir = currentDirectory->path().string() + "\\";
 			fs::path pathName = currentDir.string() + path.filename().string();
-			//PRINT("  New path: " << pathName)
+			//PRINT("  New path: " << pathName);
 			
 			// Check for duplicate folder / file
 			if (fs::is_directory(path))
@@ -92,7 +92,6 @@ namespace Copium
 
 	void FileSystem::update()
 	{
-		//BEAN: CHANGE TO CHECK EVERY FEW SECONDS
 		static double timer = 0; 
 		timer += MyFrameRateController.getFixedDt();
 

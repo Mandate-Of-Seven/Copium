@@ -213,6 +213,9 @@ namespace CopiumEngine
         #endregion
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetFullscreenMode(bool fullscreenMode);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetUICallback(string funcName);
 
         [MethodImpl(MethodImplOptions.InternalCall)]

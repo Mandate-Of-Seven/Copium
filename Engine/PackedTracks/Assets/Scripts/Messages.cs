@@ -199,60 +199,69 @@ public static class Messages
 		}
 	}
 
-    public static class Ending_3B
-    {
-        public const string body = "There were many days, if not weeks, with no word about Danton's whereabouts. Bronson, " +
-                                         "Chuck, and Harris have all died from their wounds and the cold; I have run out of everything " +
-                                         "I need to survive, including food, fuel, and water; and I'm afraid I won't be able to return " +
-                                         "home alive this time. I wish you were still around, mom";
-    }
-
-    public static class Ending_2A
-    {
-        public const string body = "A trap was prepared for us on this expedition! We were all sent out to die. No... No!";
-    }
-
-    public static class Ending_Generic
-    {
-        public const string body = "The city seems very tiny to me. For what reason are they firing onto us?! They must be making an extreme " +
-										"effort to halt the train. OH NO!";
-    }
-
-    public static class Ending_Harris
-    {
-        public const string body = "Harris, while being disturbed by the event, seems positive and eager to go with the task" +
-										"I'll provide an update once we've reached the city.";
-    }
-
-    public static class Ending_Bronson
-    {
-        public const string body = "While it seems that the mission was successful, Bronson is having a hard time adjusting " +
-										"to the loss of the other members of the crew. Bronson: \"ITS ALL UR FAULT!\" h....h...e....l......p...";
-    }
-
-    public static class Ending_Chuck
-    {
-        public const string body = "It seems that the operation was successful. The loss of the crew members doesn't appear to" +
-										" be affecting Chuck too much. Chuck: \"Sorry cap, but the reward money is all mine\"";
-    }
-    public static class Ending_Danton
-    {
-        public const string body = "It seems that the operation was successful. Is Danton doing well? I hope he is coping " +
-										"with the loss of the crew.";
-    }
-
-    public static class Ending_AllAlive
-    {
-        public const string body = "Its strange, the city... it seems so small. The guards they are looking at us funny. " +
-										"Did we come to the wrong place?";
-    }
-
-	public static class Ending_AllDead
+    public static class Event_Ending
 	{
-		public const string body = "I'm getting off the train and walking to the city, where I have no idea what will happen to " +
-            "me but I'm determined to find out. Four great men gave their lives for this suicide mission, and if anyone is listening to this," +
-            " I ask that you remember them and the sacrifice they made so that I could make it this far. I'll bring their aspirations and " +
-            "dreams with me, and I'll meet you on the other side.";
+        public static class Ending_3B
+        {
+            public const string body = "There were many days, if not weeks, with no word about Danton's whereabouts. Bronson, " +
+                                             "Chuck, and Harris have all died from their wounds and the cold; I have run out of everything " +
+                                             "I need to survive, including food, fuel, and water; and I'm afraid I won't be able to return " +
+                                             "home alive this time. I wish you were still around, mom";
+        }
 
-    }
+        public static class Ending_3C
+        {
+            public const string body = "As you and your crew watch the engine burst into flames, the train started slowing down. Lights in " +
+											"the train started dimming out... \n\nThe train became silent...";
+        }
+
+        public static class Ending_2A
+        {
+            public const string body = "A trap was prepared for us on this expedition! We were all sent out to die. No... No!";
+        }
+
+        public static class Generic
+        {
+            public const string body = "The city seems very tiny to me. For what reason are they firing onto us?! They must be making an extreme " +
+                                            "effort to halt the train. OH NO!";
+        }
+
+        public static class Harris
+        {
+            public const string body = "Harris, while being disturbed by the event, seems positive and eager to go with the task" +
+                                            "I'll provide an update once we've reached the city.";
+        }
+
+        public static class Bronson
+        {
+            public const string body = "While it seems that the mission was successful, Bronson is having a hard time adjusting " +
+                                            "to the loss of the other members of the crew. Bronson: \"ITS ALL UR FAULT!\" h....h...e....l......p...";
+        }
+
+        public static class Chuck
+        {
+            public const string body = "It seems that the operation was successful. The loss of the crew members doesn't appear to" +
+                                            " be affecting Chuck too much. Chuck: \"Sorry cap, but the reward money is all mine\"";
+        }
+        public static class Danton
+        {
+            public const string body = "It seems that the operation was successful. Is Danton doing well? I hope he is coping " +
+                                            "with the loss of the crew.";
+        }
+
+        public static class AllAlive
+        {
+            public const string body = "Its strange, the city... it seems so small. The guards they are looking at us funny. " +
+                                            "Did we come to the wrong place?";
+        }
+
+        public static class AllDead
+        {
+            public const string body = "I'm getting off the train and walking to the city, where I have no idea what will happen to " +
+                "me but I'm determined to find out. Four great men gave their lives for this suicide mission, and if anyone is listening to this," +
+                " I ask that you remember them and the sacrifice they made so that I could make it this far. I'll bring their aspirations and " +
+                "dreams with me, and I'll meet you on the other side.";
+
+        }
+    }   
 }
