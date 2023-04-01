@@ -113,7 +113,7 @@ public class Crew : CopiumScript
         {
             selectBtnWrapper.failureText = person.name + " is dead...";
         }
-        else if (person.hunger != HUNGER_STATE.FAMISHED)
+        else if (person.hunger == HUNGER_STATE.FAMISHED)
         {
             selectBtnWrapper.failureText = person.name + " is too hungry...";
         }
