@@ -12,10 +12,41 @@ public class CreditsScript: CopiumScript
 
 	public GameObject mandateOfSeven;
 
+	public GameObject digipenStaff;
+
+	public GameObject specialThanks;
+
+	public GameObject softwareAndTools;
+
+	public GameObject digipenText;
+
+	public Image logosSIT;
+
+	public Image logosDigipen;
+
+	public GameObject logos;
+
+	public Fade fade;
+
 	private bool playNextText = true;
 
 	private bool mandateOfSevenReachSpot = false;
 
+	private bool digipenStaffReachSpot = false;
+
+	private bool specialThanksReachSpot = false;
+
+	private bool softwareAndToolsReachSpot = false;
+
+	private bool digipenTextReachSpot = false;
+
+	private bool logosReachSpot = false;
+
+	private bool sceneChange = false;
+
+	private bool loadScene = false;
+
+	private int playCount = 0;
 
 
 	void Start()
@@ -26,30 +57,207 @@ public class CreditsScript: CopiumScript
 	{
 		Vector3 posMOS = mandateOfSeven.transform.position;
 
-		if (posMOS.y < endPoint)
-		{
-			posMOS.y += speed * Time.deltaTime;
-			mandateOfSeven.transform.position = posMOS;
+		Vector3 posDS = digipenStaff.transform.position;
 
-			playNextText = false;
+		Vector3 posST = specialThanks.transform.position;
 
-		}
-		else if (posMOS.y > endPoint)
+		Vector3 posSU = softwareAndTools.transform.position;
+
+		Vector3 posDT = digipenText.transform.position;
+
+		Color colSIT = logosSIT.color;
+
+		Color colDigipen = logosDigipen.color;
+
+		if (playCount == 0)
         {
-			mandateOfSevenReachSpot = true;
-			if (mandateOfSevenReachSpot && !playNextText)
-            {
-				WaitTime -= Time.deltaTime;
-				if (WaitTime <= 0 && playNextText == false)
+			if (posMOS.y < endPoint)
+			{
+				posMOS.y += speed * Time.deltaTime;
+				mandateOfSeven.transform.position = posMOS;
+
+				playNextText = false;
+
+			}
+			else if (posMOS.y > endPoint)
+			{
+				mandateOfSevenReachSpot = true;
+				if (mandateOfSevenReachSpot && !playNextText)
 				{
-					mandateOfSeven.SetActive(false);
-					mandateOfSevenReachSpot = false;
-					playNextText = true;
-					WaitTime = 3f;
+					WaitTime -= Time.deltaTime;
+					if (WaitTime <= 0 && playNextText == false && mandateOfSevenReachSpot)
+					{
+						mandateOfSeven.SetActive(false);
+						//mandateOfSevenReachSpot = false;
+						playCount = 1;
+						playNextText = true;
+						WaitTime = 3f;
+					}
+				}
+
+			}
+		}
+		
+
+		if (playCount == 1)
+        {
+			if (posDS.y < endPoint)
+            {
+				if (playNextText = true && !digipenStaffReachSpot && mandateOfSevenReachSpot)
+				{
+					posDS.y += speed * Time.deltaTime;
+					digipenStaff.transform.position = posDS;
+
+					playNextText = false;
 				}
 			}
+			else if (posDS.y > endPoint)
+            {
+				digipenStaffReachSpot = true;
+				if (digipenStaffReachSpot && !playNextText && digipenStaffReachSpot)
+                {
+					WaitTime -= Time.deltaTime;
+					if (WaitTime <= 0 && playNextText == false )
+                    {
+						digipenStaff.SetActive(false);
+						playCount = 2;
+						playNextText = true;
+						
+						WaitTime = 3f;
+                    }
+                }
+            }
 			
+
         }
+
+		if (playCount == 2)
+        {
+			if (posST.y < 0.5f)
+            {
+				if (!specialThanksReachSpot && digipenStaffReachSpot)
+                {
+					posST.y += speed * Time.deltaTime;
+					specialThanks.transform.position = posST;
+
+					playNextText = false;
+                }
+            }
+			else if (posST.y > 0.5f)
+            {
+				specialThanksReachSpot = true;
+				if (specialThanksReachSpot && !playNextText)
+                {
+					WaitTime -= Time.deltaTime;
+					if (WaitTime <= 0 && !playNextText)
+                    {
+						specialThanks.SetActive(false);
+						playNextText = true;
+						playCount = 3;
+						WaitTime = 3f;
+                    }
+                }
+
+            }
+        }
+
+		if (playCount == 3)
+        {
+			if (posSU.y < 0.5f)
+            {
+				if (!softwareAndToolsReachSpot && specialThanksReachSpot)
+                {
+					posSU.y += speed * Time.deltaTime;
+					softwareAndTools.transform.position = posSU;
+
+					playNextText = false;
+                }
+
+            }
+			else if (posSU.y > 0.5f)
+            {
+				softwareAndToolsReachSpot = true; 
+				
+				if (softwareAndToolsReachSpot && !playNextText)
+                {
+					WaitTime -= Time.deltaTime;
+					if(WaitTime <= 0 && !playNextText)
+                    {
+						softwareAndTools.SetActive(false);
+						playNextText = true;
+						playCount = 4;
+						WaitTime = 3f;
+                    }
+				}
+				
+            }
+        }
+
+
+		if (playCount == 4)
+        {
+			if (posDT.y < endPoint)
+            {
+				if (!digipenTextReachSpot && softwareAndToolsReachSpot)
+                {
+					posDT.y += speed * Time.deltaTime;
+					digipenText.transform.position = posDT;
+
+					playNextText = false;
+                }
+            }
+			else if (posDT.y > endPoint)
+            {
+				digipenTextReachSpot = true;
+				if (digipenTextReachSpot && !playNextText)
+                {
+					WaitTime -= Time.deltaTime;
+					if (WaitTime <= 0 && !playNextText)
+                    {
+						digipenText.SetActive(false);
+						playNextText = true;
+						playCount = 5;
+						WaitTime = 10f;
+                    }
+				}
+            }
+        }
+
+		if (playCount == 5)
+        {
+			if (digipenTextReachSpot)
+            {
+				logos.SetActive(true);
+				colDigipen.a += Time.deltaTime;
+				colSIT.a += Time.deltaTime;
+
+				logosDigipen.color = colDigipen;
+				logosSIT.color = colSIT;
+
+				playNextText = false;
+				logosReachSpot = true;
+				WaitTime -= Time.deltaTime;
+				if (WaitTime <= 0 && logosReachSpot)
+                {
+					sceneChange = true;
+				}
+
+			}
+        }
+
+		if (sceneChange)
+        {
+			fade.Start();
+			loadScene = true;
+		}
+
+		if (loadScene && fade.FadeEnded())
+        {
+			loadScene = false;
+			SceneManager.LoadScene("MainMenu");
+		}
+
 	}
+
 
 }
