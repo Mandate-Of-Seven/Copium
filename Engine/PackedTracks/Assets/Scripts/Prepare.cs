@@ -41,6 +41,9 @@ public class Prepare : CopiumScript
     public GameObject chuckPotrait;
     public GameObject dantonPotrait;
 
+    public Animator health;
+    public Animator mental;
+
     public Button harrisButton;
     public Button bronsonButton;
     public Button chuckButton;
@@ -87,6 +90,9 @@ public class Prepare : CopiumScript
         chuckBtnWrapper.SetImage(chuckButton.GetComponent<Image>());
         dantonBtnWrapper = new ButtonWrapper(dantonButton);
         dantonBtnWrapper.SetImage(dantonButton.GetComponent<Image>());
+
+        health.stop();
+        mental.stop();
     }
     void Update()
     {

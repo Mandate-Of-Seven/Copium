@@ -36,10 +36,6 @@
         {
             "Name": "Transition",
             "ID": 10
-        },
-        {
-            "Name": "Tutorial",
-            "ID": 9
         }
     ],
     "GameObjects": [
@@ -155,7 +151,7 @@
         },
         {
             "UID": 16243190110120876333,
-            "Name": "TrainBackground",
+            "Name": "Train Background",
             "Active": true,
             "Components": [
                 {
@@ -2208,6 +2204,7 @@
                     "bodyText": 12572218162819699758,
                     "Option_01": 16123610940333594665,
                     "Option_02": 17265194362685150777,
+                    "mom": 218248517844135067,
                     "Option_03": 7844471522467274371
                 }
             ]
@@ -5278,7 +5275,7 @@
         },
         {
             "UID": 12951466181823484846,
-            "Name": "Heart Icon",
+            "Name": "prepareHeart Icon",
             "Active": true,
             "Components": [
                 {
@@ -5313,7 +5310,7 @@
                     "UID": 12517063968004599415,
                     "Type": "Animator",
                     "TypeID": 15,
-                    "Loop": true,
+                    "Loop": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -5336,7 +5333,7 @@
         },
         {
             "UID": 14801983525786543311,
-            "Name": "Mental Icon",
+            "Name": "prepareMental Icon",
             "Active": true,
             "Components": [
                 {
@@ -5371,7 +5368,7 @@
                     "UID": 4116896464841813217,
                     "Type": "Animator",
                     "TypeID": 15,
-                    "Loop": true,
+                    "Loop": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -6797,31 +6794,31 @@
                     "isPaused": false,
                     "quitGame": false,
                     "returnToMenu": false,
+                    "ManualPopUp": 13627107543471401800,
                     "PauseOptionsGameObj": 15960136425833911699,
                     "OptionsGameObj": 7633468330355486046,
-                    "PauseTextGameObj": 18070040960074308868,
                     "PauseQuitGameObj": 11998269805652527380,
+                    "PauseHowToPlayGameObj": 2667780682643225252,
                     "PauseCanvas": 1722160444903115838,
                     "PauseMainMenuGameObj": 3662158169418415457,
-                    "PauseResumeGameObj": 7234497426690459476,
                     "PauseNoGameObj": 10953026652968277125,
+                    "PauseResumeGameObj": 7234497426690459476,
+                    "PauseTextGameObj": 18070040960074308868,
                     "PauseYesGameObj": 13070266030766280530,
                     "VolumeSliderGameObj": 158774111629753938,
-                    "PauseHowToPlayGameObj": 2667780682643225252,
-                    "ManualPopUp": 13627107543471401800,
                     "PauseQuitBtn": 4561109446918292296,
+                    "PauseHowToPlayBtn": 7454464821256949962,
                     "PauseAudioOffBtn": 9815249961253393154,
                     "PauseAudioOnBtn": 7137434442497910767,
-                    "PauseReturnBtn": 2653580874094747035,
                     "PauseMainMenuBtn": 13422303936010423873,
                     "PauseText": 14776071900390892379,
                     "PauseResumeBtn": 7338901696821162260,
                     "PauseNoBtn": 3197166528652516471,
                     "PauseOptionsBtn": 10093259900366190193,
+                    "PauseReturnBtn": 2653580874094747035,
                     "PauseYesBtn": 5751452946916325514,
                     "VolumeBtn": 12903529283778841537,
-                    "fade": 11311745147968865628,
-                    "PauseHowToPlayBtn": 7454464821256949962
+                    "fade": 11311745147968865628
                 }
             ]
         },
@@ -11161,11 +11158,13 @@
                     "harris": 15351396382966484407,
                     "suppliesChanged": 6516584515277809790,
                     "harrisButton": 3066674797223769185,
+                    "mental": 4116896464841813217,
                     "prepareBody": 1002480817798706432,
                     "prepareButton2": 2974923908502949488,
                     "prepareOption1": 4758287676352754314,
                     "prepareOption2": 11418936534089393001,
-                    "resultText": 7144968500427476956
+                    "resultText": 7144968500427476956,
+                    "health": 12517063968004599415
                 }
             ]
         },
@@ -19371,6 +19370,308 @@
                         "Y": 1.0,
                         "Z": 1.0
                     }
+                }
+            ]
+        },
+        {
+            "UID": 7489415033928719172,
+            "Name": "Radio",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 6642123175702952797,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 4.089860439300537,
+                        "Y": 1.1395379304885864,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 2.0,
+                        "Y": 2.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 10744775823650613099,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 2,
+                    "OrderInLayer": 2
+                },
+                {
+                    "enabled": true,
+                    "UID": 8728924639932650057,
+                    "Type": "Image",
+                    "TypeID": 20,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 11767022090324270390,
+                    "Sprite Name": "RadioRecorderThingy.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    },
+                    "Flip": {
+                        "X": false,
+                        "Y": false
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 17331967953376553042,
+                    "Type": "Button",
+                    "TypeID": 18,
+                    "Graphic ID": 8728924639932650057,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -0.30000001192092896,
+                            "Y": -0.30000001192092896
+                        },
+                        "Max": {
+                            "X": 0.30000001192092896,
+                            "Y": 0.30000001192092896
+                        }
+                    },
+                    "Callback": "",
+                    "FadeDuration": 0.10000000149011612,
+                    "clickedR": 0.5,
+                    "clickedG": 0.5,
+                    "clickedB": 0.5,
+                    "clickedA": 0.5,
+                    "hoveredR": 0.5,
+                    "hoveredG": 1.0,
+                    "hoveredB": 1.0,
+                    "hoveredA": 0.5,
+                    "normalR": 1.0,
+                    "normalG": 1.0,
+                    "normalB": 1.0,
+                    "normalA": 0.5
+                },
+                {
+                    "enabled": true,
+                    "UID": 218248517844135067,
+                    "Type": "Script",
+                    "TypeID": 23,
+                    "Name": "Mom",
+                    "MsgAvail": true,
+                    "MsgCounter": 1,
+                    "MsgIconGameObj": 2493637380520175720,
+                    "RadioGameObj": 7489415033928719172,
+                    "MomMsg1": 4430606751538164949,
+                    "MomMsg2": 14713883173996288938,
+                    "gameManager": 9083562319934391338,
+                    "MomMsg3": 7181068414986853237,
+                    "MomMsg4": 14590401587912059914,
+                    "RadioBtn": 17331967953376553042
+                }
+            ]
+        },
+        {
+            "UID": 2493637380520175720,
+            "Name": "MsgIcon",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 7489415033928719172,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.013196706771850586,
+                        "Y": 0.07918095588684082,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 6817737773823852215,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 2,
+                    "OrderInLayer": 3
+                },
+                {
+                    "enabled": true,
+                    "UID": 3678053859208263459,
+                    "Type": "SpriteRenderer",
+                    "TypeID": 22,
+                    "Sprite ID": 14190339737245114700,
+                    "Sprite Name": "Alert 2.png",
+                    "Color": {
+                        "X": 0.0,
+                        "Y": 1.0,
+                        "Z": 0.04356646537780762,
+                        "W": 1.0
+                    },
+                    "Flip": {
+                        "X": false,
+                        "Y": false
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 5279746306302609664,
+            "Name": "VO_MomMsg1",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 4430606751538164949,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "Mom_Message_1",
+                    "Loop": false,
+                    "Overlap": true,
+                    "Volume": 1.0,
+                    "Channel": "Voice"
+                }
+            ]
+        },
+        {
+            "UID": 4142835637200106310,
+            "Name": "VO_MomMsg2",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 14713883173996288938,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "Mom_Message_2",
+                    "Loop": false,
+                    "Overlap": true,
+                    "Volume": 1.0,
+                    "Channel": "Voice"
+                }
+            ]
+        },
+        {
+            "UID": 12469915469668755800,
+            "Name": "VO_MomMsg3",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 7181068414986853237,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "Mom_Message_3",
+                    "Loop": false,
+                    "Overlap": true,
+                    "Volume": 1.0,
+                    "Channel": "Voice"
+                }
+            ]
+        },
+        {
+            "UID": 12445811607484940450,
+            "Name": "VO_MomMsg4",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 14590401587912059914,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "Mom_Message_4",
+                    "Loop": false,
+                    "Overlap": true,
+                    "Volume": 1.0,
+                    "Channel": "Voice"
                 }
             ]
         }

@@ -22,6 +22,8 @@ public class EventsManager : CopiumScript
 	public Option Option_02;
 	public Option Option_03;
 
+	public Mom mom;
+
 	public bool Done()
     {
 		return bodyTypeWriter == null || bodyTypeWriter.Done();
@@ -211,6 +213,7 @@ public class EventsManager : CopiumScript
 		choiceTimer = choiceDuration;
 		bodyTypeWriter = new StringTypeWriterEffect(currentEvent.preempt, textInterval);
 		state = EventState.ForeShadow;
+		mom.StopMsg();
 	}
 
 	void RegisterEvents()
