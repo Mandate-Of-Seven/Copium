@@ -240,6 +240,7 @@
                     "Name": "CreditsScript",
                     "WaitTime": 3.0,
                     "endPoint": 2.0999999046325684,
+                    "sceneChange": false,
                     "speed": 2.0,
                     "digipenStaff": 12773447379303270051,
                     "digipenText": 13573889162732732641,

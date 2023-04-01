@@ -42,7 +42,7 @@ public class CreditsScript: CopiumScript
 
 	private bool logosReachSpot = false;
 
-	private bool sceneChange = false;
+	public bool sceneChange = false;
 
 	private bool loadScene = false;
 
@@ -68,6 +68,18 @@ public class CreditsScript: CopiumScript
 		Color colSIT = logosSIT.color;
 
 		Color colDigipen = logosDigipen.color;
+
+		if (sceneChange)
+		{
+			fade.Start();
+			loadScene = true;
+		}
+
+		if (loadScene)
+		{
+			loadScene = false;
+			SceneManager.LoadScene("MainMenu");
+		}
 
 		if (playCount == 0)
         {
@@ -262,26 +274,22 @@ public class CreditsScript: CopiumScript
 					playNextText = false;
 					logosReachSpot = true;
 				}
-				else if (WaitTime < 0f && logosReachSpot)
-                {
-					digipenText.SetActive(false);
-					sceneChange = true;
-				}
+
 
 			}
-        }
 
-		if (sceneChange)
-        {
-			fade.Start();
-			loadScene = true;
+			if (WaitTime < 1f && logosReachSpot)
+			{
+				sceneChange = true;
+				digipenText.SetActive(false);
+			}
+
 		}
 
-		if (loadScene && fade.FadeEnded())
-        {
-			loadScene = false;
-			SceneManager.LoadScene("MainMenu");
-		}
+
+
+
+
 
 	}
 
