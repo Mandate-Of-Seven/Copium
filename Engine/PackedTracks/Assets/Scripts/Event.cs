@@ -13,7 +13,17 @@ public class Stats
 }
 public class Choice
 {
-	Dictionary<string, Stats> crewChanges = new Dictionary<string, Stats>()
+    int supply = 0;
+    bool setSupply = false;
+
+    public delegate void OtherEffects();
+
+    List<OtherEffects> otherEffects = new List<OtherEffects>();
+
+    public string choiceText;
+    public string resultText;
+
+    Dictionary<string, Stats> crewChanges = new Dictionary<string, Stats>()
 	{
 		{"Harris", new Stats()},
 		{"Bronson", new Stats()},
@@ -86,15 +96,28 @@ public class Choice
 		return StatusUpdate.STATE.NEUTRAL;
     }
 
-	int supply = 0;
-	bool setSupply = false;
+	public StatusUpdate.STATE GetSupplyChange()
+	{
+		if(setSupply)
+		{
+			if (supply == 0)
+				return StatusUpdate.STATE.UNKNOWN;
 
-	public delegate void OtherEffects();
-
-	List<OtherEffects> otherEffects = new List<OtherEffects>();
-
-	public string choiceText;
-	public string resultText;
+            int change = supply - CrewMenu.Instance.supplies;
+            if (change > 0)
+                return StatusUpdate.STATE.INCREASE;
+            else if (change < 0)
+                return StatusUpdate.STATE.DECREASE;
+        }
+		else
+		{
+            if (supply < 0)
+                return StatusUpdate.STATE.DECREASE;
+            else if (supply > 0)
+                return StatusUpdate.STATE.INCREASE;
+        }
+        return StatusUpdate.STATE.NEUTRAL;
+    }
 
 	public void ApplyEffects()
     {

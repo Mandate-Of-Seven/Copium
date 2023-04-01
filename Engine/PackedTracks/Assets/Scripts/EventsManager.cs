@@ -29,7 +29,7 @@ public class EventsManager : CopiumScript
 
 	public enum EventState
 	{
-		ForeShadow, Run
+		ForeShadow, Run, Choice, End
 	};
 
 	public EventState state = EventState.ForeShadow;
@@ -100,15 +100,21 @@ public class EventsManager : CopiumScript
 			}
 		}
 
-		if (state == EventState.Run)
+		// If the game ends set state to be end after the foreshadow
+		if (state == EventState.Run && GameManager.Instance.gameEnd)
+            state = EventState.End;
+
+        if (state == EventState.Run || state == EventState.End)
 		{
 			if (bodyTypeWriter.Done())
 			{
 				if (currentEvent.choices[0].IsValid())
 				{
 					Option_01.Enable();
-					choiceTimerObject.SetActive(true);
 					Option_01.AssignChoice(currentEvent.choices[0]);
+
+					if(state == EventState.Run)
+						choiceTimerObject.SetActive(true);
 				}
 				if (currentEvent.choices[1].IsValid())
 				{
@@ -121,17 +127,23 @@ public class EventsManager : CopiumScript
 					Option_03.Enable();
 					Option_03.AssignChoice(currentEvent.choices[2]);
 				}
-				++state;
+
+				if(state == EventState.Run)
+					++state;
 			}
 		}
-		if (state > EventState.Run && choiceTimerObject.activeSelf)
+
+		if (state == EventState.Choice && choiceTimerObject.activeSelf)
 		{
 			UpdateTimer();
 		}
-	}
+    }
 
 	public void HoverChoice(Option option)
     {
+		if (GameManager.Instance.gameEnd)
+			return;
+
 		StatusUpdate su = StatusUpdate.Instance;
 		Choice choice = option.mappedChoice;
 		CrewMenu.STAT_TYPES iter = CrewMenu.STAT_TYPES.HEALTH;
@@ -144,6 +156,8 @@ public class EventsManager : CopiumScript
 			su.Chuck(choice.GetStateChange("Chuck", iter), iter);
 			++iter;
 		}
+
+		su.Supplies(choice.GetSupplyChange());
 	}
 	public void SelectChoice(Option option)
     {
@@ -209,7 +223,7 @@ public class EventsManager : CopiumScript
 	public void EventStart()
     {
 		choiceTimer = choiceDuration;
-		bodyTypeWriter = new StringTypeWriterEffect(currentEvent.preempt, textInterval);
+        bodyTypeWriter = new StringTypeWriterEffect(currentEvent.preempt, textInterval);
 		state = EventState.ForeShadow;
 	}
 
