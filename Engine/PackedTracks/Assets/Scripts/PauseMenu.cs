@@ -20,6 +20,7 @@ public class PauseMenu: CopiumScript
 {
     //gameObjects
     public GameObject PauseCanvas;
+    public GameObject ManualPopUp;
     public GameObject PauseYesGameObj;
     public GameObject PauseNoGameObj;
     public GameObject PauseResumeGameObj;
@@ -29,6 +30,7 @@ public class PauseMenu: CopiumScript
     public GameObject PauseOptionsGameObj;
     public GameObject OptionsGameObj;
     public GameObject VolumeSliderGameObj;
+    public GameObject PauseHowToPlayGameObj;
 
     //buttons
     public Button PauseMainMenuBtn;
@@ -41,6 +43,7 @@ public class PauseMenu: CopiumScript
     public Button PauseAudioOffBtn;
     public Button VolumeBtn;
     public Button PauseReturnBtn;
+    public Button PauseHowToPlayBtn;
 
     //text
 
@@ -48,6 +51,7 @@ public class PauseMenu: CopiumScript
     public bool isPaused = false;
     public bool returnToMenu = false;
     public bool quitGame = false;
+    public bool isMuted = false;
 
     public Fade fade;
 
@@ -67,10 +71,21 @@ public class PauseMenu: CopiumScript
             if (isPaused)
             {
                 InternalCalls.PauseAllAnimation();
+                InternalCalls.AudioMute(true);
             }
             else
             {
+                OptionsGameObj.SetActive(false);
+                PauseResumeGameObj.SetActive(true);
+                PauseMainMenuGameObj.SetActive(true);
+                PauseQuitGameObj.SetActive(true);
+                PauseOptionsGameObj.SetActive(true);
+                PauseHowToPlayGameObj.SetActive(true);
                 InternalCalls.PlayAllAnimation();
+                if (!isMuted)
+                {
+                    InternalCalls.AudioMute(false);
+                }
             }
         }
 
@@ -95,6 +110,10 @@ public class PauseMenu: CopiumScript
                 isPaused = false;
                 PauseCanvas.SetActive(false);
                 InternalCalls.PlayAllAnimation();
+                if (!isMuted)
+                {
+                    InternalCalls.AudioMute(false);
+                }
             }
 
             if (PauseMainMenuBtn.state == ButtonState.OnClick)
@@ -116,17 +135,19 @@ public class PauseMenu: CopiumScript
                 PauseMainMenuGameObj.SetActive(false);
                 PauseQuitGameObj.SetActive(false);
                 PauseOptionsGameObj.SetActive(false);
-                
+                PauseHowToPlayGameObj.SetActive(false);
 
             }
 
             if (PauseAudioOnBtn.state == ButtonState.OnClick)
             {
-                InternalCalls.AudioMute(false);
+                //InternalCalls.AudioMute(false);
+                isMuted= false;
             }
             else if (PauseAudioOffBtn.state == ButtonState.OnClick)
             {
                 InternalCalls.AudioMute(true);
+                isMuted= true;
             }
 
             if (VolumeBtn.state ==ButtonState.OnClick)
@@ -143,6 +164,7 @@ public class PauseMenu: CopiumScript
                 PauseMainMenuGameObj.SetActive(true);
                 PauseQuitGameObj.SetActive(true);
                 PauseOptionsGameObj.SetActive(true);
+                PauseHowToPlayGameObj.SetActive(true);
             }
             if (PauseQuitBtn.state == ButtonState.OnClick)
             {
@@ -176,6 +198,19 @@ public class PauseMenu: CopiumScript
                     loadQuit = true;
                 else if (returnToMenu)
                     loadScene = true;
+            }
+
+            if (PauseHowToPlayBtn.state == ButtonState.OnClick)
+            {
+                ManualPopUp.SetActive(true);
+
+                isPaused= false;
+                PauseCanvas.SetActive(false);
+                InternalCalls.PlayAllAnimation();
+                if (!isMuted)
+                {
+                    InternalCalls.AudioMute(false);
+                }
             }
         }
     }
