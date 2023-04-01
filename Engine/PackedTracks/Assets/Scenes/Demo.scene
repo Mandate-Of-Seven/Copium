@@ -36,6 +36,10 @@
         {
             "Name": "Transition",
             "ID": 10
+        },
+        {
+            "Name": "Tutorial",
+            "ID": 9
         }
     ],
     "GameObjects": [
@@ -11158,13 +11162,13 @@
                     "harris": 15351396382966484407,
                     "suppliesChanged": 6516584515277809790,
                     "harrisButton": 3066674797223769185,
-                    "mental": 4116896464841813217,
+                    "health": 12517063968004599415,
                     "prepareBody": 1002480817798706432,
+                    "mental": 4116896464841813217,
                     "prepareButton2": 2974923908502949488,
                     "prepareOption1": 4758287676352754314,
                     "prepareOption2": 11418936534089393001,
-                    "resultText": 7144968500427476956,
-                    "health": 12517063968004599415
+                    "resultText": 7144968500427476956
                 }
             ]
         },
