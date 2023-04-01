@@ -1,8 +1,8 @@
 Microsoft (R) Visual C# Compiler version 3.9.0-6.21160.10 (59eedc33)
 Copyright (C) Microsoft Corporation. All rights reserved.
 
-C:\Users\Admin\Desktop\Mandate of Seven engine\Copium\Engine\PackedTracks\Assets\Scripts\ResultManager.cs(36,10): warning CS0414: The field 'ResultManager.closeHover' is assigned but its value is never used
 C:\Users\Admin\Desktop\Mandate of Seven engine\Copium\Engine\PackedTracks\Assets\Scripts\ResultManager.cs(37,10): warning CS0414: The field 'ResultManager.openHover' is assigned but its value is never used
-C:\Users\Admin\Desktop\Mandate of Seven engine\Copium\Engine\PackedTracks\Assets\Scripts\ReportScreenManager.cs(41,7): warning CS0414: The field 'ReportScreenManager.openHover' is assigned but its value is never used
-C:\Users\Admin\Desktop\Mandate of Seven engine\Copium\Engine\PackedTracks\Assets\Scripts\TrainManager.cs(40,7): warning CS0414: The field 'TrainManager.onHover' is assigned but its value is never used
 C:\Users\Admin\Desktop\Mandate of Seven engine\Copium\Engine\PackedTracks\Assets\Scripts\ReportScreenManager.cs(40,10): warning CS0414: The field 'ReportScreenManager.closeHover' is assigned but its value is never used
+C:\Users\Admin\Desktop\Mandate of Seven engine\Copium\Engine\PackedTracks\Assets\Scripts\ResultManager.cs(36,10): warning CS0414: The field 'ResultManager.closeHover' is assigned but its value is never used
+C:\Users\Admin\Desktop\Mandate of Seven engine\Copium\Engine\PackedTracks\Assets\Scripts\TrainManager.cs(40,7): warning CS0414: The field 'TrainManager.onHover' is assigned but its value is never used
+C:\Users\Admin\Desktop\Mandate of Seven engine\Copium\Engine\PackedTracks\Assets\Scripts\ReportScreenManager.cs(41,7): warning CS0414: The field 'ReportScreenManager.openHover' is assigned but its value is never used

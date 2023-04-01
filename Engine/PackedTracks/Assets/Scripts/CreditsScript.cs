@@ -82,25 +82,30 @@ public class CreditsScript: CopiumScript
 			else if (posMOS.y > endPoint)
 			{
 				mandateOfSevenReachSpot = true;
+
 				if (mandateOfSevenReachSpot && !playNextText)
 				{
 					WaitTime -= Time.deltaTime;
-					if (WaitTime <= 0 && playNextText == false && mandateOfSevenReachSpot)
+					if (WaitTime <= 0 && mandateOfSevenReachSpot)
 					{
-						mandateOfSeven.SetActive(false);
+						
+						
 						//mandateOfSevenReachSpot = false;
 						playCount = 1;
 						playNextText = true;
 						WaitTime = 3f;
 					}
+					
 				}
-
 			}
 		}
 		
 
 		if (playCount == 1)
         {
+			posMOS.y += speed * Time.deltaTime;
+			mandateOfSeven.transform.position = posMOS;
+
 			if (posDS.y < endPoint)
             {
 				if (playNextText = true && !digipenStaffReachSpot && mandateOfSevenReachSpot)
@@ -114,12 +119,14 @@ public class CreditsScript: CopiumScript
 			else if (posDS.y > endPoint)
             {
 				digipenStaffReachSpot = true;
+				mandateOfSeven.SetActive(false);
 				if (digipenStaffReachSpot && !playNextText && digipenStaffReachSpot)
                 {
 					WaitTime -= Time.deltaTime;
-					if (WaitTime <= 0 && playNextText == false )
+					if (WaitTime <= 0)
                     {
-						digipenStaff.SetActive(false);
+						
+						
 						playCount = 2;
 						playNextText = true;
 						
@@ -133,6 +140,8 @@ public class CreditsScript: CopiumScript
 
 		if (playCount == 2)
         {
+			posDS.y += speed * Time.deltaTime;
+			digipenStaff.transform.position = posDS;
 			if (posST.y < 0.5f)
             {
 				if (!specialThanksReachSpot && digipenStaffReachSpot)
@@ -146,12 +155,14 @@ public class CreditsScript: CopiumScript
 			else if (posST.y > 0.5f)
             {
 				specialThanksReachSpot = true;
+				digipenStaff.SetActive(false);
 				if (specialThanksReachSpot && !playNextText)
                 {
 					WaitTime -= Time.deltaTime;
-					if (WaitTime <= 0 && !playNextText)
+					if (WaitTime <= 0)
                     {
-						specialThanks.SetActive(false);
+						
+						
 						playNextText = true;
 						playCount = 3;
 						WaitTime = 3f;
@@ -163,6 +174,8 @@ public class CreditsScript: CopiumScript
 
 		if (playCount == 3)
         {
+			posST.y += speed * Time.deltaTime;
+			specialThanks.transform.position = posST;
 			if (posSU.y < 0.5f)
             {
 				if (!softwareAndToolsReachSpot && specialThanksReachSpot)
@@ -176,14 +189,15 @@ public class CreditsScript: CopiumScript
             }
 			else if (posSU.y > 0.5f)
             {
-				softwareAndToolsReachSpot = true; 
-				
+				softwareAndToolsReachSpot = true;
+				specialThanks.SetActive(false);
 				if (softwareAndToolsReachSpot && !playNextText)
                 {
 					WaitTime -= Time.deltaTime;
-					if(WaitTime <= 0 && !playNextText)
+					if(WaitTime <= 0)
                     {
-						softwareAndTools.SetActive(false);
+						
+						
 						playNextText = true;
 						playCount = 4;
 						WaitTime = 3f;
@@ -196,6 +210,8 @@ public class CreditsScript: CopiumScript
 
 		if (playCount == 4)
         {
+			posSU.y += speed * Time.deltaTime;
+			softwareAndTools.transform.position = posSU;
 			if (posDT.y < endPoint)
             {
 				if (!digipenTextReachSpot && softwareAndToolsReachSpot)
@@ -209,12 +225,14 @@ public class CreditsScript: CopiumScript
 			else if (posDT.y > endPoint)
             {
 				digipenTextReachSpot = true;
+				softwareAndTools.SetActive(false);
 				if (digipenTextReachSpot && !playNextText)
                 {
 					WaitTime -= Time.deltaTime;
-					if (WaitTime <= 0 && !playNextText)
+					if (WaitTime <= 0)
                     {
-						digipenText.SetActive(false);
+						
+						
 						playNextText = true;
 						playCount = 5;
 						WaitTime = 10f;
@@ -225,20 +243,28 @@ public class CreditsScript: CopiumScript
 
 		if (playCount == 5)
         {
+			posDT.y += speed * Time.deltaTime;
+			digipenText.transform.position = posDT;
 			if (digipenTextReachSpot)
             {
-				logos.SetActive(true);
-				colDigipen.a += Time.deltaTime;
-				colSIT.a += Time.deltaTime;
-
-				logosDigipen.color = colDigipen;
-				logosSIT.color = colSIT;
-
-				playNextText = false;
-				logosReachSpot = true;
+				
 				WaitTime -= Time.deltaTime;
-				if (WaitTime <= 0 && logosReachSpot)
+
+				if (WaitTime < 7f)
                 {
+					logos.SetActive(true);
+					colDigipen.a += Time.deltaTime;
+					colSIT.a += Time.deltaTime;
+
+					logosDigipen.color = colDigipen;
+					logosSIT.color = colSIT;
+
+					playNextText = false;
+					logosReachSpot = true;
+				}
+				else if (WaitTime < 0f && logosReachSpot)
+                {
+					digipenText.SetActive(false);
 					sceneChange = true;
 				}
 
