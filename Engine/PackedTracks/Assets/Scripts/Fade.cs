@@ -21,6 +21,7 @@ public class Fade: CopiumScript
     public static Fade Instance;
 
     public bool shouldFade;
+    public bool fadeInAndOut = false;
 	public bool fadeIn = true;
 	public float end = 1.0f;
 	public float start = 0.0f;
@@ -34,6 +35,7 @@ public class Fade: CopiumScript
 
 	[NonSerialized] public bool preFaded = false;
     [NonSerialized] public bool postFaded = false;
+    [NonSerialized] public bool hasFaded = false;
 	private float preposTimer = 0.0f;
 	private float timer = 0.0f;
 	
@@ -45,11 +47,11 @@ public class Fade: CopiumScript
     void Start()
 	{
         sr = GetComponent<SpriteRenderer>();
-		sr.enabled = false;
+        sr.enabled = false;
     }
 	void Update()
 	{
-        if(!shouldFade)
+        if (!shouldFade)
             return;
 
         if(!preFaded)
@@ -92,7 +94,17 @@ public class Fade: CopiumScript
             postFaded = true;
             preFaded = false;
             shouldFade = false;
-            sr.enabled = false;
+
+            if(!fadeInAndOut)
+            {
+                sr.enabled = false;
+                hasFaded = true;
+            }
+            else
+            {
+                Start(false);
+                fadeInAndOut = false;
+            }
         }
 
         preposTimer += Time.deltaTime;
@@ -100,9 +112,12 @@ public class Fade: CopiumScript
 
     public void Start(bool _fadeIn = true)
     {
+        if (shouldFade)
+            return;
+
         fadeIn = _fadeIn;
         shouldFade = true;
-        preFaded = postFaded = false;
+        preFaded = postFaded = hasFaded = false;
         timer = preposTimer = 0.0f;
     }
 

@@ -6,6 +6,7 @@ using System.Globalization;
 public class Subtitles: CopiumScript
 {
 	public Text subtitles;
+	public Text reason;
 	public Fade fade;
     public AudioSource audio;
     public AudioSource blizzard;
@@ -27,6 +28,7 @@ public class Subtitles: CopiumScript
     private bool dontWait = false;
     private bool messageEnded = false;
     private bool changeScene = false;
+    private bool hasAudioStarted = false;
 
     private bool blizzardVolume = false;
     private bool blizzardWait = false;
@@ -43,7 +45,13 @@ public class Subtitles: CopiumScript
 		subtitles = GetComponent<Text>();
         waitModifier = 0.03f;
         content = "";
-	}
+
+        if (GameManager.Instance != null && audio == null)
+        {
+            ending = GameManager.Instance.eventSequence;
+            SetContent();
+        }
+    }
 	void Update()
 	{
         if (Input.GetKeyDown(KeyCode.Space))
@@ -75,12 +83,11 @@ public class Subtitles: CopiumScript
         if (fade.shouldFade || !fade.postFaded)
             return;
 
-        if (GameManager.Instance != null && audio == null)
+        if(!hasAudioStarted)
         {
-            ending = GameManager.Instance.eventSequence;
-            SetContent();
-
-            audio.Play();
+            if(audio != null)
+                audio.Play();
+            hasAudioStarted = true;
         }
 
         if (HasFadeEnded() && !messageEnded) // Change subtitles
@@ -100,19 +107,30 @@ public class Subtitles: CopiumScript
         switch (ending)
         {
             case -1:
+                reason.text = Messages.Event_Ending.Ending_3B.reason;
                 content = Messages.Event_Ending.Ending_3B.body;
                 waitModifier = 0.03f;
                 audio = AudioManager.Instance.ending3bVO;
                 break;
             case -2:
+                reason.text = Messages.Event_Ending.Ending_2A.reason;
                 content = Messages.Event_Ending.Ending_2A.body;
                 waitModifier = 0.028f;
                 audio = AudioManager.Instance.ending2aVO;
                 break;
             case -3:
+                reason.text = Messages.Event_Ending.AllDead.reason;
                 content = Messages.Event_Ending.AllDead.body;
                 waitModifier = 0.02f;
                 audio = AudioManager.Instance.endingAllDiedVO;
+                break;
+            case -4:
+                break;
+            case -5:
+                reason.text = Messages.Event_Ending.Ending_3C.reason;
+                content = Messages.Event_Ending.Ending_3C.body;
+                waitModifier = 0.02f;
+                messageEnded = true;
                 break;
         }
     }

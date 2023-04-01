@@ -48,11 +48,11 @@ public class CrewMenu: CopiumScript
 
     public bool preparing = false;
     public bool deploying = false;
-    public bool interacting = false; 
+    public bool interacting = false;
 
     //float timer = 0.0f;
 
-    float healthInterval = 5.0f; // The interval in seconds in which the crew members lose health
+    float healthInterval = 6.0f; // The interval in seconds in which the crew members lose health
 
     public bool storageComparment = true; // For the food storage
 
@@ -144,14 +144,15 @@ public class CrewMenu: CopiumScript
         }
 
         if (CrewStatusManager.Instance.isCrewStatusOn)
-       {
+        {
             UpdateEffects();
 
-       }else if(CrewStatusManager.Instance.isCabinOn)
-       {
+        }
+        else if(CrewStatusManager.Instance.isCabinOn)
+        {
             UpdateTexts();
             timeElasped += Time.deltaTime;
-       }
+        }
     }
 
     /*******************************************************************************
@@ -227,25 +228,10 @@ public class CrewMenu: CopiumScript
     /*******************************************************************************/
     public void UpdateHunger()
     {
-        if(supplies == 0)
+        foreach (Person person in crewMembers.Values)
         {
-            //if (timer >= hungerInterval)
-            //{
-            //    for (int i = 0; i < crew.Length; i++)
-            //    {
-            //        if (person.hunger > 0)
-            //            person.hunger -= 1;
-            //    }
-
-            //    timer = 0.0f;
-            //}
-
-            //timer += Time.deltaTime;
-            foreach (Person person in crewMembers.Values)
-            {
-                if (person.hunger > 0)
-                    person.hunger -= 1;
-            }
+            if (person.hunger > 0)
+                person.hunger -= 1;
         }
     }
 
@@ -259,11 +245,26 @@ public class CrewMenu: CopiumScript
     {
         foreach (Person person in crewMembers.Values)
         {
+            if (!person.alive)
+                continue;
+
             if (person.hunger <= 0)
             {
                 if(person.timer >= healthInterval)
                 {
                     person.health -= 1;
+                    person.timer = 0.0f;
+                }
+
+                person.timer += Time.deltaTime;
+            }
+
+            if (person.hunger == HUNGER_STATE.FULL && person.mental == MENTAL_STATE.CALM && person.health != HEALTH_STATE.HEALTHY)
+            {
+                if(person.timer >= healthInterval / 2.0f)
+                {
+                    person.health += 1;
+                    person.hunger -= 1;
                     person.timer = 0.0f;
                 }
 
@@ -373,31 +374,58 @@ public class CrewMenu: CopiumScript
 
     public void ChangeHealth(string name, int amount)
     {
+        if (!crewMembers[name].alive)
+            return;
         crewMembers[name].health += amount;
+
+        if (crewMembers[name].health > HEALTH_STATE.HEALTHY)
+            crewMembers[name].health = HEALTH_STATE.HEALTHY;
+        else if (crewMembers[name].health < HEALTH_STATE.DEAD)
+            crewMembers[name].health = HEALTH_STATE.DEAD;
     }
 
     public void ChangeMental(string name, int amount)
     {
+        if (!crewMembers[name].alive)
+            return;
         crewMembers[name].mental += amount;
+
+        if (crewMembers[name].mental > MENTAL_STATE.CALM)
+            crewMembers[name].mental = MENTAL_STATE.CALM;
+        else if (crewMembers[name].mental < MENTAL_STATE.SUICIDAL)
+            crewMembers[name].mental = MENTAL_STATE.SUICIDAL;
     }
 
     public void ChangeHunger(string name, int amount)
     {
+        if (!crewMembers[name].alive)
+            return;
         crewMembers[name].hunger += amount;
+
+        if (crewMembers[name].hunger > HUNGER_STATE.FULL)
+            crewMembers[name].hunger = HUNGER_STATE.FULL;
+        else if (crewMembers[name].hunger < HUNGER_STATE.FAMISHED)
+            crewMembers[name].hunger = HUNGER_STATE.FAMISHED;
     }
 
     public void SetStat(string name, HEALTH_STATE amount)
     {
+        if (!crewMembers[name].alive)
+            return;
         crewMembers[name].health = amount;
     }
 
     public void SetStat(string name, MENTAL_STATE amount)
     {
+        if (!crewMembers[name].alive)
+            return;
         crewMembers[name].mental = amount;
     }
 
     public void SetStat(string name, HUNGER_STATE amount)
     {
+        if (!crewMembers[name].alive)
+            return;
         crewMembers[name].hunger = amount;
     }
 
@@ -405,7 +433,14 @@ public class CrewMenu: CopiumScript
     {
         foreach (Person person in crewMembers.Values)
         {
+            if (!person.alive)
+                continue;
             person.health += amount;
+
+            if (person.health > HEALTH_STATE.HEALTHY)
+                person.health = HEALTH_STATE.HEALTHY;
+            else if (person.health < HEALTH_STATE.DEAD)
+                person.health = HEALTH_STATE.DEAD;
         }
     }
 
@@ -413,7 +448,14 @@ public class CrewMenu: CopiumScript
     {
         foreach (Person person in crewMembers.Values)
         {
+            if (!person.alive)
+                continue;
             person.mental += amount;
+
+            if (person.mental > MENTAL_STATE.CALM)
+                person.mental = MENTAL_STATE.CALM;
+            else if (person.mental < MENTAL_STATE.SUICIDAL)
+                person.mental = MENTAL_STATE.SUICIDAL;
         }
     }
 
@@ -421,7 +463,14 @@ public class CrewMenu: CopiumScript
     {
         foreach (Person person in crewMembers.Values)
         {
+            if (!person.alive)
+                continue;
             person.hunger += amount;
+
+            if (person.hunger > HUNGER_STATE.FULL)
+                person.hunger = HUNGER_STATE.FULL;
+            else if (person.hunger < HUNGER_STATE.FAMISHED)
+                person.hunger = HUNGER_STATE.FAMISHED;
         }
     }
 
@@ -429,6 +478,8 @@ public class CrewMenu: CopiumScript
     {
         foreach (Person person in crewMembers.Values)
         {
+            if (!person.alive)
+                continue;
             person.health = amount;
         }
     }
@@ -437,6 +488,8 @@ public class CrewMenu: CopiumScript
     {
         foreach (Person person in crewMembers.Values)
         {
+            if (!person.alive)
+                continue;
             person.mental = amount;
         }
     }
@@ -445,6 +498,8 @@ public class CrewMenu: CopiumScript
     {
         foreach (Person person in crewMembers.Values)
         {
+            if (!person.alive)
+                continue;
             person.hunger = amount;
         }
     }

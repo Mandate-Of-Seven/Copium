@@ -129,27 +129,26 @@
                     "Name": "AudioManager",
                     "accelerateSFX": 12349765490904732829,
                     "ambTrain": 16495768407680055626,
+                    "endingAllAliveVO": 6456432980009824415,
                     "endingChuckVO": 3418065422341924393,
                     "bgmTrain": 9375891007183145069,
                     "autoDoorSFX": 3729338863794641525,
                     "fileOpenSFX": 7206153751629463322,
                     "clickSFX": 11240736860491117710,
                     "deccelerateSFX": 11048904636908595310,
-                    "endingGenericVO": 12110915872301913157,
-                    "ending3bVO": 2090025714383355506,
-                    "ending2aVO": 566384452997084233,
-                    "endingAllDiedVO": 5168740783519127959,
                     "endingBronsonVO": 3637985409097489349,
                     "endingDantonVO": 7891194026526516512,
+                    "endingGenericVO": 12110915872301913157,
                     "endingHarrisVO": 9569732444608153641,
                     "explosionSFX": 12229284277379369868,
                     "failedSFX": 17176667212650767161,
                     "gunfireSFX": 13147104160255255935,
                     "fileCloseSFX": 5484840067536943399,
                     "hoverSFX": 17747488176716717098,
-                    "leverEngagedSFX": 13165669678142242702,
                     "leverSFX": 10219544415510482568,
-                    "paperSFX": 16863530532877669399
+                    "paperSFX": 16863530532877669399,
+                    "leverEngagedSFX": 13165669678142242702,
+                    "explosionForEvent3SFX": 12229284277379369868
                 }
             ]
         },
@@ -1697,12 +1696,12 @@
                         "Y": 0.0,
                         "Z": 0.0
                     },
-                    "exlowThreshold": 0,
+                    "exlowThreshold": 1,
                     "isCabinOn": false,
                     "isCrewStatusOn": false,
-                    "lotThreshold": 30,
-                    "lowThreshold": 10,
-                    "medThreshold": 20,
+                    "lotThreshold": 20,
+                    "lowThreshold": 5,
+                    "medThreshold": 11,
                     "transitionSpeed": 20.0,
                     "CrewStatusTab": 16417030282428028087,
                     "StatusScreen": 15159970389334835860,
@@ -1713,7 +1712,6 @@
                     "CabinBtn": 15383718040987380145,
                     "CloseCrewStatusBtn": 7467968725349133689,
                     "resultManager": 5868577602297294004,
-                    "statusScreenSuppliesText": 2987481935980349814,
                     "cabinInteractions": 15405105423273306832,
                     "trainManagerScript": 5971899813001945745,
                     "CloseStatusScreenBtn": 16031829790091619796,
@@ -2202,8 +2200,8 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "EventsManager",
-                    "choiceDuration": 10.0,
-                    "textInterval": 0.009999999776482582,
+                    "choiceDuration": 20.0,
+                    "textInterval": 0.029999999329447746,
                     "choiceTimerObject": 4363827861815865391,
                     "bodyText": 12572218162819699758,
                     "Option_01": 16123610940333594665,
@@ -2235,34 +2233,6 @@
                         "X": 3.0,
                         "Y": 3.0,
                         "Z": 1.0
-                    }
-                },
-                {
-                    "enabled": true,
-                    "UID": 2503889469663135777,
-                    "Type": "SortingGroup",
-                    "TypeID": 26,
-                    "SortingLayer": 5,
-                    "OrderInLayer": 2
-                },
-                {
-                    "enabled": false,
-                    "UID": 6895326089354809604,
-                    "Type": "Image",
-                    "TypeID": 20,
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Sprite ID": 0,
-                    "Sprite Name": "SuppliesMed.png",
-                    "Color": {
-                        "X": 1.0,
-                        "Y": 0.9999351501464844,
-                        "Z": 0.9998999834060669,
-                        "W": 1.0
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
                     }
                 }
             ]
@@ -4525,8 +4495,8 @@
                     "PID": 12238112469176194745,
                     "Type": "Transform",
                     "Pos": {
-                        "X": -0.9061918258666992,
-                        "Y": 0.2135101556777954,
+                        "X": -1.149999976158142,
+                        "Y": 0.3140000104904175,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -4535,8 +4505,8 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 0.15680000185966492,
-                        "Y": 0.15680000185966492,
+                        "X": 0.14000000059604645,
+                        "Y": 0.14000000059604645,
                         "Z": 1.0
                     }
                 },
@@ -4569,8 +4539,8 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 14.0,
-                        "Y": 10.0,
+                        "X": 19.0,
+                        "Y": 14.300000190734863,
                         "Z": 1.0
                     }
                 },
@@ -4613,8 +4583,8 @@
                     "PID": 6285211887336012985,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 7.835945129394531,
-                        "Y": 4.239424705505371,
+                        "X": 10.34000015258789,
+                        "Y": 5.610000133514404,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -4623,8 +4593,8 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 14.99750804901123,
-                        "Y": 14.99750804901123,
+                        "X": 15.0,
+                        "Y": 15.0,
                         "Z": 1.0
                     }
                 },
@@ -6406,6 +6376,7 @@
                     "duration": 1.0,
                     "end": 1.0,
                     "fadeIn": false,
+                    "fadeInAndOut": false,
                     "fadeVal": 0.0,
                     "postFade": 0.5,
                     "preFade": 0.5,
@@ -6424,8 +6395,8 @@
                     "PID": 6642123175702952797,
                     "Type": "Transform",
                     "Pos": {
-                        "X": -5.516247272491455,
-                        "Y": -1.5588006973266602,
+                        "X": -5.515999794006348,
+                        "Y": -1.559999942779541,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -6728,43 +6699,6 @@
             ]
         },
         {
-            "UID": 2846601777084698408,
-            "Name": "VO_Ending3B",
-            "Active": true,
-            "Components": [
-                {
-                    "PID": 13817389451647567202,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                },
-                {
-                    "enabled": true,
-                    "UID": 2090025714383355506,
-                    "Type": "AudioSource",
-                    "TypeID": 16,
-                    "Alias": "Ending3b",
-                    "Loop": false,
-                    "Overlap": false,
-                    "Volume": 1.0,
-                    "Channel": "Voice"
-                }
-            ]
-        },
-        {
             "UID": 6135939618199443691,
             "Name": "Pause Manager",
             "Active": true,
@@ -6880,6 +6814,43 @@
             ]
         },
         {
+            "UID": 4732716464439530220,
+            "Name": "SFX_Explosion_Event_3",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 12229284277379369868,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "SFX_ExplosionMainEvent3",
+                    "Loop": false,
+                    "Overlap": true,
+                    "Volume": 1.0,
+                    "Channel": ""
+                }
+            ]
+        },
+        {
             "UID": 12100058480323836995,
             "Name": "SFX_Failed",
             "Active": true,
@@ -6913,43 +6884,6 @@
                     "Overlap": true,
                     "Volume": 0.5,
                     "Channel": "SFX"
-                }
-            ]
-        },
-        {
-            "UID": 13107091264634299524,
-            "Name": "VO_Ending2A",
-            "Active": true,
-            "Components": [
-                {
-                    "PID": 13817389451647567202,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                },
-                {
-                    "enabled": true,
-                    "UID": 566384452997084233,
-                    "Type": "AudioSource",
-                    "TypeID": 16,
-                    "Alias": "Ending2a",
-                    "Loop": false,
-                    "Overlap": false,
-                    "Volume": 1.0,
-                    "Channel": "Voice"
                 }
             ]
         },
@@ -7094,80 +7028,6 @@
                     "Type": "AudioSource",
                     "TypeID": 16,
                     "Alias": "ChuckEnding",
-                    "Loop": false,
-                    "Overlap": false,
-                    "Volume": 1.0,
-                    "Channel": "Voice"
-                }
-            ]
-        },
-        {
-            "UID": 5907737648165938980,
-            "Name": "VO_DantonEnding",
-            "Active": true,
-            "Components": [
-                {
-                    "PID": 13817389451647567202,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                },
-                {
-                    "enabled": true,
-                    "UID": 7891194026526516512,
-                    "Type": "AudioSource",
-                    "TypeID": 16,
-                    "Alias": "DantonEnding",
-                    "Loop": false,
-                    "Overlap": false,
-                    "Volume": 1.0,
-                    "Channel": "Voice"
-                }
-            ]
-        },
-        {
-            "UID": 2210891743498397935,
-            "Name": "VO_AllDiedEnding",
-            "Active": true,
-            "Components": [
-                {
-                    "PID": 13817389451647567202,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                },
-                {
-                    "enabled": true,
-                    "UID": 5168740783519127959,
-                    "Type": "AudioSource",
-                    "TypeID": 16,
-                    "Alias": "AllDiedEnding",
                     "Loop": false,
                     "Overlap": false,
                     "Volume": 1.0,
@@ -10990,6 +10850,80 @@
             ]
         },
         {
+            "UID": 5907737648165938980,
+            "Name": "VO_DantonEnding",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 7891194026526516512,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "DantonEnding",
+                    "Loop": false,
+                    "Overlap": false,
+                    "Volume": 1.0,
+                    "Channel": "Voice"
+                }
+            ]
+        },
+        {
+            "UID": 16304286959011793807,
+            "Name": "VO_AllAliveEnding",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 6456432980009824415,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "AllSurviveEnding",
+                    "Loop": false,
+                    "Overlap": true,
+                    "Volume": 1.0,
+                    "Channel": ""
+                }
+            ]
+        },
+        {
             "UID": 4765490452762889086,
             "Name": "SFX_FileOpen",
             "Active": true,
@@ -11027,80 +10961,6 @@
             ]
         },
         {
-            "UID": 4149441844941761685,
-            "Name": "SFX_FileClose",
-            "Active": true,
-            "Components": [
-                {
-                    "PID": 13817389451647567202,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                },
-                {
-                    "enabled": true,
-                    "UID": 5484840067536943399,
-                    "Type": "AudioSource",
-                    "TypeID": 16,
-                    "Alias": "SFX_FileClose",
-                    "Loop": false,
-                    "Overlap": true,
-                    "Volume": 1.0,
-                    "Channel": ""
-                }
-            ]
-        },
-        {
-            "UID": 10749631748412761399,
-            "Name": "SFX_GunFire",
-            "Active": true,
-            "Components": [
-                {
-                    "PID": 13817389451647567202,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
-                },
-                {
-                    "enabled": true,
-                    "UID": 13147104160255255935,
-                    "Type": "AudioSource",
-                    "TypeID": 16,
-                    "Alias": "SFX_Event2WithoutVO",
-                    "Loop": false,
-                    "Overlap": true,
-                    "Volume": 1.0,
-                    "Channel": ""
-                }
-            ]
-        },
-        {
             "UID": 12238112469176194745,
             "Name": "ResultScreenPivot",
             "Active": true,
@@ -11109,8 +10969,8 @@
                     "PID": 6642123175702952797,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 5.2799859046936035,
-                        "Y": -1.4487577676773071,
+                        "X": 5.53000020980835,
+                        "Y": -1.559999942779541,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -11182,7 +11042,7 @@
                     "Type": "Transform",
                     "Pos": {
                         "X": 1.0703251361846924,
-                        "Y": 0.31384968757629395,
+                        "Y": 0.3140000104904175,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -11257,8 +11117,8 @@
                     "PID": 207780682118979650,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 10.338812828063965,
-                        "Y": 5.608184814453125,
+                        "X": 10.34000015258789,
+                        "Y": 5.610000133514404,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -13165,8 +13025,8 @@
                     "PID": 207780682118979650,
                     "Type": "Transform",
                     "Pos": {
-                        "X": -0.00001169741153717041,
-                        "Y": -2.7567148208618164e-7,
+                        "X": 0.0,
+                        "Y": 0.0,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -13175,8 +13035,8 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 18.929325103759766,
-                        "Y": 14.37869644165039,
+                        "X": 19.0,
+                        "Y": 14.300000190734863,
                         "Z": 1.0
                     }
                 },
@@ -15220,8 +15080,8 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 7.500001907348633,
-                        "Y": 7.500001907348633,
+                        "X": 1.0,
+                        "Y": 1.0,
                         "Z": 1.0
                     }
                 },
@@ -15247,7 +15107,7 @@
                             "Sprite ID": 15346028907088226304,
                             "Time Delay": 0.0,
                             "FrameCount": 4,
-                            "Current Frame Index": 0,
+                            "Current Frame Index": 1,
                             "Rows": 1,
                             "Columns": 4,
                             "Flip": {
@@ -18318,8 +18178,8 @@
             ]
         },
         {
-            "UID": 12738001273923033327,
-            "Name": "SFX_AutoDoor",
+            "UID": 4149441844941761685,
+            "Name": "SFX_FileClose",
             "Active": true,
             "Components": [
                 {
@@ -18343,13 +18203,13 @@
                 },
                 {
                     "enabled": true,
-                    "UID": 3729338863794641525,
+                    "UID": 5484840067536943399,
                     "Type": "AudioSource",
                     "TypeID": 16,
-                    "Alias": "SFX_AutoDoorSliding",
+                    "Alias": "SFX_FileClose",
                     "Loop": false,
                     "Overlap": true,
-                    "Volume": 0.8999999761581421,
+                    "Volume": 1.0,
                     "Channel": ""
                 }
             ]
@@ -19676,6 +19536,80 @@
                     "Overlap": true,
                     "Volume": 1.0,
                     "Channel": "Voice"
+                }
+            ]
+        },
+        {
+            "UID": 10749631748412761399,
+            "Name": "SFX_GunFire",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 13147104160255255935,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "SFX_Event2WithoutVO",
+                    "Loop": false,
+                    "Overlap": true,
+                    "Volume": 1.0,
+                    "Channel": ""
+                }
+            ]
+        },
+        {
+            "UID": 12738001273923033327,
+            "Name": "SFX_AutoDoor",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13817389451647567202,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 3729338863794641525,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "SFX_AutoDoorSliding",
+                    "Loop": false,
+                    "Overlap": true,
+                    "Volume": 0.8999999761581421,
+                    "Channel": ""
                 }
             ]
         }

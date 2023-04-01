@@ -117,6 +117,7 @@
     <Compile Include="Assets\Scripts\Prepare.cs" />
     <Compile Include="Assets\Scripts\ReportScreenManager.cs" />
     <Compile Include="Assets\Scripts\ResultManager.cs" />
+    <Compile Include="Assets\Scripts\SplashScreen.cs" />
     <Compile Include="Assets\Scripts\StatusUpdate.cs" />
     <Compile Include="Assets\Scripts\StringScramblerEffect.cs" />
     <Compile Include="Assets\Scripts\StringTypeWriterEffect.cs" />

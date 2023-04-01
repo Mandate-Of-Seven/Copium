@@ -105,14 +105,17 @@ public class Crew : CopiumScript
     /*******************************************************************************/
     public void Enable()
     {
-        if (person.alive)
+        if (person.alive && person.hunger != HUNGER_STATE.FAMISHED)
         {
             selectBtnWrapper.SetInteractable(true);
         }
-        else
+        else if (!person.alive)
         {
-            //selectBtnWrapper.SetInteractable(false);
             selectBtnWrapper.failureText = person.name + " is dead...";
+        }
+        else if (person.hunger != HUNGER_STATE.FAMISHED)
+        {
+            selectBtnWrapper.failureText = person.name + " is too hungry...";
         }
     }
 

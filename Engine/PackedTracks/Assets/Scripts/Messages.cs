@@ -92,7 +92,7 @@ public static class Messages
 			public const string choice01 = "Attempt to fend off the raiders";
 			public const string choice02 = "Give all your supplies";
 			public const string result01 =
-				"This mission was a set up!\n\nWe were sent out to die!\n\nNo... NO, Please!";
+                "The crew attempted to repel the raiders...";
 			public const string result02 =
 			"The crew had no choice but to give up their hard-earned supplies to the attackers who had boarded their train." +
 			"They watched in disgust as the raiders took what they wanted, humiliating the crew in the process.\n\n" +
@@ -129,8 +129,8 @@ public static class Messages
 
 	public static class Event_Bomb
 	{
-		public static string preempt = "As the train hurtled through the snow, a metallic clang was heard, coming from the back of the train.";
-		public static class ChuckHealthy
+		public static string preempt = "A faint ticking noise emanated from the direction of the engine room...";
+		public static class ChuckHealthy_3A
 		{
 			public const string body =
 				"While on routine patrol, Chuck heard a faint, steady bleeping emanating from engine room 2. " +
@@ -160,7 +160,7 @@ public static class Messages
 				"Using whatever spare parts were available, Harris managed to keep the train running with his makeshift reactor." +
 				" The crew continue on their mission but there is no longer any supplies left on the train.";
 		}
-		public static class CrewInjured
+		public static class CrewInjured_3B
 		{
 			public const string body =
 				"As Danton scrambled to keep Bronson, Chuck, and Harris stable, the air was suddenly torn apart by a deafening explosion. " +
@@ -173,26 +173,12 @@ public static class Messages
                 "He could feel the weight of the situation bearing down on him, as the reality of their predicament sunk in.";
 
 			public const string choice01 = "Send Danton out to find supplies";
-			public const string choice02 = "Take out the raiders";
-			public const string choice03 = "Give up supplies";
 			public const string result01 =
-			"Bronson knew that he had to act fast if he wanted to save his friend Chuck. Despite the risks, he charged towards the attackers, determined to take them by surprise.\n\n" +
-			"As he rounded the corner, Bronson felt a sharp pain in his gut.He had been shot, but he refused to let that stop him. He pushed forward, tackling one of the attackers to the ground.\n\n" +
-			"The other attackers turned their guns on him, but Bronson didn't care. He was focused on buying enough time for the rest of the crew to arrive and rescue Chuck. He fought with all his might, using his strength to overpower the attackers.\n\n" +
-			"Finally, the rest of the crew arrived armed and subdued the attackers. Chuck was safe, and Bronson had proven himself to be a true hero.";
-			public const string result02 =
-			"As the crew prepared to retaliate against the attackers who had taken their friend Chuck hostage, they were met with a horrific sight. The attackers, sensing the crew's determination, coldly shot Chuck in the head, his body falling lifeless to the ground.\n\n" +
-			"The crew was left reeling, their hearts shattered by the brutal and sudden loss of their friend. In a violent shootout, they battled the attackers with all their might, their fury fueling them even as the sound of gunfire filled the air and blood stained the ground.\n\n" +
-			"In the end, the crew emerged victorious, but the cost of victory was steep.";
-			public const string result03 =
-			"The crew had no choice but to give up their hard-earned supplies to the attackers who had boarded their train." +
-			"They watched in disgust as the raiders took what they wanted, humiliating the crew in the process.\n\n" +
-			"The attackers sneered and laughed as they took everything they could carry, treating the crew with contempt and disdain." +
-			"They reveled in the crew's humiliation, taunting them and making them feel powerless.";
+			"Danton accepted the order and left without another word..."; // Bean: I suck so someone rephrase this pls
 		}
 
 		//Someone dead, someone other than danton that is not critically injured
-		public static class Default
+		public static class Default_3C
         {
 			public const string body =
 				"Without warning, a thunderous explosion erupted from the backup engine room, unleashing a raging inferno that engulfed the entire back section of the train. " +
@@ -218,6 +204,8 @@ public static class Messages
 	{
         public static class Ending_3B
         {
+            public const string reason = "Everyone perished or disappeared";
+
             public const string body = "There were many days, if not weeks, with no word about Danton's whereabouts. Bronson, " +
                                              "Chuck, and Harris have all died from their wounds and the cold; I have run out of everything " +
                                              "I need to survive, including food, fuel, and water; and I'm afraid I won't be able to return " +
@@ -226,12 +214,16 @@ public static class Messages
 
         public static class Ending_3C
         {
+			public const string reason = "The train ceased moving";
+
             public const string body = "As you and your crew watch the engine burst into flames, the train started slowing down. Lights in " +
 											"the train started dimming out... \n\nThe train became silent...";
         }
 
         public static class Ending_2A
         {
+            public const string reason = "The crew were unsuccessful in repelling the raiders";
+
             public const string body = "A trap was prepared for us on this expedition! We were all sent out to die. No... No!";
         }
 
@@ -266,12 +258,14 @@ public static class Messages
 
         public static class AllAlive
         {
-            public const string body = "Its strange, the city... it seems so small. The guards they are looking at us funny. " +
-                                            "Did we come to the wrong place?";
+            public const string body = "Its the city, I see it we are finally here. Something seems off, the city, the guards they are " +
+                "looking at us funny. They are not wearing the normal uniform, whats going on? Ohhhhh no.";
         }
 
         public static class AllDead
         {
+            public const string reason = "The entire crew has perished";
+
             public const string body = "I'm getting off the train and walking to the city, where I have no idea what will happen to " +
                 "me but I'm determined to find out. Four great men gave their lives for this suicide mission, and if anyone is listening to this," +
                 " I ask that you remember them and the sacrifice they made so that I could make it this far. I'll bring their aspirations and " +

@@ -31,7 +31,7 @@ public class ResultManager : CopiumScript
     public CrewStatusManager crewStatusManager;
     public ReportScreenManager reportScreenManager;
 
-    Vector3 resultTargetScale = new Vector3(5.8f, 5.8f, 0);
+    Vector3 resultTargetScale = new Vector3(5.0f, 5.0f, 0);
 
     bool closeHover = false;
     bool openHover = false;
