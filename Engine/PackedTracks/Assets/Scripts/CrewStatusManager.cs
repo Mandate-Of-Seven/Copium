@@ -205,7 +205,6 @@ public class CrewStatusManager: CopiumScript
 		CrewMenu.Instance.SetPrepare(false);
 
 		UpdateDeath();
-
 		//AudioManager.Instance.autoDoorSFX.Play();
 		// Switch to cabin view
 		//cam.transform.localPosition = new Vector3(18.15f, 0, 0);

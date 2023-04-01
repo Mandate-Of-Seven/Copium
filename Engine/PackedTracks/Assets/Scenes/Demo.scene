@@ -1716,7 +1716,8 @@
                     "trainManagerScript": 5971899813001945745,
                     "CloseStatusScreenBtn": 16031829790091619796,
                     "alert": 18001664217615177344,
-                    "supplySpriteSheet": 7500674397773566376
+                    "supplySpriteSheet": 7500674397773566376,
+                    "cabinInteractions": 15405105423273306832
                 },
                 {
                     "enabled": true,
@@ -10795,7 +10796,7 @@
             "Active": true,
             "Components": [
                 {
-                    "PID": 0,
+                    "PID": 17648900612414737673,
                     "Type": "Transform",
                     "Pos": {
                         "X": 0.0,
@@ -13326,7 +13327,7 @@
             "Active": true,
             "Components": [
                 {
-                    "PID": 6642123175702952797,
+                    "PID": 0,
                     "Type": "Transform",
                     "Pos": {
                         "X": 8.655167579650879,

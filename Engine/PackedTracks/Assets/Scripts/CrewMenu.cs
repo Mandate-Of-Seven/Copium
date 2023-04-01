@@ -120,7 +120,16 @@ public class CrewMenu: CopiumScript
         //have condition for when certain values hit 0??
         if (prepareBtnWrapper.GetState() == ButtonState.OnClick)
         {
-            interactionManager.SetInteractBtnsActive(false);
+
+            
+
+
+            if(preparing == true)
+                Console.WriteLine("true");
+            else
+                Console.WriteLine("false");
+
+            interactionManager.SetInteractBtnsActive(!preparing);
             SetPrepare(!preparing);
             hDeploy = harris.isDeployed;
             bDeploy = bronson.isDeployed;
@@ -530,6 +539,8 @@ public class CrewMenu: CopiumScript
             chuck.Enable();
             danton.Enable();
             bronson.Enable();
+            interactionManager.SetInteractBtnsActive(false);
+
         }
         else
         {
@@ -542,6 +553,8 @@ public class CrewMenu: CopiumScript
             chuck.Disable();
             danton.Disable();
             bronson.Disable();
+            interactionManager.SetInteractBtnsActive(true);
+
         }
     }
 }
