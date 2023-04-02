@@ -100,7 +100,8 @@ public class CrewStatusManager: CopiumScript
 		CrewStatusBtnWrapper.failureText = Messages.ErrorMainEvent;
 		CabinBtnWrapper = new ButtonWrapper(CabinBtn);
 		CabinBtnWrapper.SetImage(CabinBtn.GetComponent<Image>());
-		CabinBtnWrapper.clickedSFX = AudioManager.Instance.autoDoorSFX;
+		CabinBtnWrapper.failureText = Messages.ErrorMainEvent;
+        CabinBtnWrapper.clickedSFX = AudioManager.Instance.autoDoorSFX;
 		CloseStatusScreenBtnWrapper = new ButtonWrapper(CloseStatusScreenBtn);
 		CloseStatusScreenBtnWrapper.SetImage(CloseStatusScreenBtn.GetComponent<Image>());
 		// Cabin set false
@@ -293,11 +294,6 @@ public class CrewStatusManager: CopiumScript
 			ReturnToCockpit(false);
 		}
 
-
-
-
-
-
 		if(CrewMenu.Instance.supplies >= exlowThreshold && CrewMenu.Instance.supplies < lowThreshold)
 		{
 			if(!supplyLow)
@@ -365,9 +361,7 @@ public class CrewStatusManager: CopiumScript
 		isCrewStatusOn = false;
 		CrewStatusBtn.gameObject.SetActive(true);
         resultManager.Enable();
-        alert.enabled = true;
 		StatusScreen.transform.parent = parent.transform;
-		
 	}
 
 	public void UpdateCabinSupply()
@@ -393,13 +387,9 @@ public class CrewStatusManager: CopiumScript
             if (supplyState != 0)
                 ToggleSuppliesSprite(0);
         }
-        else
+        else if (supplyState != -1)
         {
-			if(supplyState != -1)
-			{
-                ToggleSuppliesSprite(-1);
-
-			}
+            ToggleSuppliesSprite(-1);
         }
 
 		if (supplyState == -1)
@@ -417,11 +407,13 @@ public class CrewStatusManager: CopiumScript
 		//ClosePanel(false);
 		ReturnToCockpit(false);
 		CrewStatusBtnWrapper.SetInteractable(false);
+		CabinBtnWrapper.SetInteractable(false);
 	}
 	public void EnableInteractions()
 	{
 		CrewStatusBtnWrapper.SetInteractable(true);
-	}
+        CabinBtnWrapper.SetInteractable(true);
+    }
 
 	public void UpdateDeath()
 	{

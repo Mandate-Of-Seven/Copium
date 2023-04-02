@@ -931,7 +931,7 @@
                     "interacting": false,
                     "preparing": false,
                     "storageComparment": true,
-                    "supplies": 3,
+                    "supplies": 10,
                     "timeElasped": 0.0,
                     "transitionDuration": 2.0,
                     "bronson": 7730477650993650158,
