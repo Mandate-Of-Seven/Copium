@@ -82,7 +82,7 @@ public class ResultManager : CopiumScript
             "ResultChoices",
             resultsChoicesScale,
             Prepare.Instance.prepareOption2.transform,
-            Messages.Tutorial.resultDisplay,
+            Messages.Tutorial.resultChoices,
             resultsChoicesTutTextPos,
             delegate ()
             {

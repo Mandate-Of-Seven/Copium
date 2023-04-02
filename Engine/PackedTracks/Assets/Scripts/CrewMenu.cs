@@ -215,10 +215,10 @@ public class CrewMenu: CopiumScript
         if (CrewStatusManager.Instance.isCrewStatusOn)
         {
             UpdateEffects();
-
         }
         else if(CrewStatusManager.Instance.isCabinOn)
         {
+            UpdateEffects();
             UpdateTexts();
             timeElasped += Time.deltaTime;
         }
@@ -233,7 +233,6 @@ public class CrewMenu: CopiumScript
     /*******************************************************************************/
     void UpdateEffects()
     {
-        Debug.Log("UPDATING EFFECTS");
         harris.UpdateEffects();
         bronson.UpdateEffects();
         chuck.UpdateEffects();

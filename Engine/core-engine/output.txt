@@ -3,8 +3,8 @@ Copyright (C) Microsoft Corporation. All rights reserved.
 
 C:\Users\FLESH\ECS\Copium\Engine\PackedTracks\Assets\Scripts\Prepare.cs(891,17): warning CS0168: The variable 'temp' is declared but never used
 C:\Users\FLESH\ECS\Copium\Engine\PackedTracks\Assets\Scripts\ReportScreenManager.cs(40,10): warning CS0414: The field 'ReportScreenManager.closeHover' is assigned but its value is never used
-C:\Users\FLESH\ECS\Copium\Engine\PackedTracks\Assets\Scripts\Events.cs(281,11): warning CS0414: The field 'Event_Bomb.timerElasped' is assigned but its value is never used
 C:\Users\FLESH\ECS\Copium\Engine\PackedTracks\Assets\Scripts\ResultManager.cs(38,10): warning CS0414: The field 'ResultManager.closeHover' is assigned but its value is never used
-C:\Users\FLESH\ECS\Copium\Engine\PackedTracks\Assets\Scripts\ReportScreenManager.cs(41,7): warning CS0414: The field 'ReportScreenManager.openHover' is assigned but its value is never used
+C:\Users\FLESH\ECS\Copium\Engine\PackedTracks\Assets\Scripts\Events.cs(281,11): warning CS0414: The field 'Event_Bomb.timerElasped' is assigned but its value is never used
 C:\Users\FLESH\ECS\Copium\Engine\PackedTracks\Assets\Scripts\TrainManager.cs(40,7): warning CS0414: The field 'TrainManager.onHover' is assigned but its value is never used
 C:\Users\FLESH\ECS\Copium\Engine\PackedTracks\Assets\Scripts\ResultManager.cs(39,10): warning CS0414: The field 'ResultManager.openHover' is assigned but its value is never used
+C:\Users\FLESH\ECS\Copium\Engine\PackedTracks\Assets\Scripts\ReportScreenManager.cs(41,7): warning CS0414: The field 'ReportScreenManager.openHover' is assigned but its value is never used
