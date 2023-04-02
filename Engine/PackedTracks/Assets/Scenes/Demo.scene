@@ -1730,6 +1730,46 @@
                         "Y": 3.390000104904175,
                         "Z": 0.0
                     },
+                    "crewStatusHealthScale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    },
+                    "crewStatusHealthTutTextPos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "crewStatusHungerScale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    },
+                    "crewStatusHungerTutTextPos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "crewStatusMemberScale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    },
+                    "crewStatusMemberTutTextPos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "crewStatusMentalScale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    },
+                    "crewStatusMentalTutTextPos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
                     "exlowThreshold": 0,
                     "isCabinOn": false,
                     "isCrewStatusOn": false,
@@ -1751,8 +1791,8 @@
                     "trainManagerScript": 5971899813001945745,
                     "CloseStatusScreenBtn": 16031829790091619796,
                     "alert": 18001664217615177344,
-                    "supplySpriteSheet": 7500674397773566376,
-                    "supplyLightDiode": 1635114556995579570
+                    "supplyLightDiode": 1635114556995579570,
+                    "supplySpriteSheet": 7500674397773566376
                 },
                 {
                     "enabled": true,
@@ -16049,7 +16089,7 @@
         {
             "UID": 9801774730266619501,
             "Name": "InteractionBlock",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "PID": 0,
