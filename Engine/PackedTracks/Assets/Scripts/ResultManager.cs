@@ -51,7 +51,8 @@ public class ResultManager : CopiumScript
 
     void Update()
     {
-        UpdateCanvas();
+        if (!PauseMenu.Instance.isPaused)
+            UpdateCanvas();
     }
 
     /**************************************************************************/

@@ -18,6 +18,7 @@ using System;
 
 public class PauseMenu: CopiumScript
 {
+    public static PauseMenu Instance;
     //gameObjects
     public GameObject PauseCanvas;
     public GameObject ManualPopUp;
@@ -59,7 +60,10 @@ public class PauseMenu: CopiumScript
 
     private bool loadQuit = false;
     private bool loadScene = false;
-
+    public void Awake()
+    {
+        Instance = this;
+    }
     void Start()
 	{
 
@@ -107,6 +111,7 @@ public class PauseMenu: CopiumScript
 
         if(isPaused)
         {
+            PauseCanvas.transform.position = CrewStatusManager.Instance.cam.transform.position;
             if (PauseResumeBtn.state == ButtonState.OnClick)
             {
                 isPaused = false;
@@ -126,6 +131,7 @@ public class PauseMenu: CopiumScript
                 PauseMainMenuGameObj.SetActive(false);
                 PauseOptionsGameObj.SetActive(false);
                 PauseQuitGameObj.SetActive(false);
+                PauseHowToPlayGameObj.SetActive(false);
                 PauseTextGameObj.SetActive(true);
                 PauseText.text = "Are you sure?";
                 returnToMenu = true;
@@ -176,6 +182,7 @@ public class PauseMenu: CopiumScript
                 PauseMainMenuGameObj.SetActive(false);
                 PauseQuitGameObj.SetActive(false);
                 PauseOptionsGameObj.SetActive(false);
+                PauseHowToPlayGameObj.SetActive(false);
                 PauseTextGameObj.SetActive(true);
                 PauseText.text = "Are you sure?";
                 quitGame = true;
@@ -189,6 +196,7 @@ public class PauseMenu: CopiumScript
                 PauseMainMenuGameObj.SetActive(true);
                 PauseQuitGameObj.SetActive(true);
                 PauseOptionsGameObj.SetActive(true);
+                PauseHowToPlayGameObj.SetActive(true);
                 PauseTextGameObj.SetActive(false);
                 quitGame = false;
                 returnToMenu = false;

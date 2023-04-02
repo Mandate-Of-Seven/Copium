@@ -54,8 +54,10 @@ public class EventsManager : CopiumScript
 		if (currentEvent == null)
 			return;
 
+		if (PauseMenu.Instance.isPaused)
+			return;
 
-		StatusUpdate.Instance.gameObject.SetActive(false);
+        StatusUpdate.Instance.gameObject.SetActive(false);
 		if (Option_01.Hovered())
         {
 			HoverChoice(Option_01);
@@ -229,10 +231,13 @@ public class EventsManager : CopiumScript
 		state = EventState.ForeShadow;
 		mom.StopMsg();
 
-		Option_01.btnWrapper.SetInteractable(true);
-		Option_02.btnWrapper.SetInteractable(true);
-		Option_03.btnWrapper.SetInteractable(true);
-	}
+		if(Option_01.btnWrapper != null)
+			Option_01.btnWrapper.SetInteractable(true);
+        if (Option_02.btnWrapper != null)
+			Option_02.btnWrapper.SetInteractable(true);
+        if (Option_03.btnWrapper != null)
+			Option_03.btnWrapper.SetInteractable(true);
+    }
 
 	void RegisterEvents()
     {

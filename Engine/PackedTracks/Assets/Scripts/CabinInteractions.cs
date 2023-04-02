@@ -228,7 +228,11 @@ public class CabinInteractions: CopiumScript
 	}
 	void Update()
 	{
-		if(!crewMenu.deploying && !crewMenu.preparing)
+        if (PauseMenu.Instance.isPaused)
+            return;
+
+        dialogueSprite.stop();
+        if (!crewMenu.deploying && !crewMenu.preparing)
 		{
 			if(!crewMenu.interacting)
 			{
@@ -355,8 +359,8 @@ public class CabinInteractions: CopiumScript
 		SetInteractBtnsActive(false);
 		dialogueSprite.setFrame(crewIdx);
 
-		// Display dialogue
-		switch(crewIdx)
+        // Display dialogue
+        switch (crewIdx)
 		{
 			case 0:
 			{

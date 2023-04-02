@@ -244,12 +244,13 @@ public class CrewStatusManager: CopiumScript
 
 	void Update()
 	{
-		UpdateCanvas();
-
+		if (!PauseMenu.Instance.isPaused)
+			UpdateCanvas();
     }
 
 	public void UpdateCanvas()
 	{
+		
 		if (CrewStatusBtnWrapper.GetState() == ButtonState.OnRelease)
         {
 			CrewMenu.Instance.SetPrepare(false);
