@@ -969,7 +969,7 @@
                         {
                             "Name": "Snow_SpriteSheet_155_5x31.png",
                             "Sprite ID": 8966109942037627320,
-                            "Time Delay": 0.029999999329447746,
+                            "Time Delay": 0.029999999329447743,
                             "FrameCount": 155,
                             "Current Frame Index": 0,
                             "Rows": 31,
@@ -14825,7 +14825,7 @@
                     "TypeID": 20,
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Sprite ID": 0,
+                    "Sprite ID": 4682861623453333922,
                     "Sprite Name": "supply_icon.png",
                     "Color": {
                         "X": 1.0,

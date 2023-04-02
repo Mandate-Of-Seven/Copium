@@ -228,6 +228,10 @@ public class EventsManager : CopiumScript
         bodyTypeWriter = new StringTypeWriterEffect(currentEvent.preempt, textInterval);
 		state = EventState.ForeShadow;
 		mom.StopMsg();
+
+		Option_01.btnWrapper.SetInteractable(true);
+		Option_02.btnWrapper.SetInteractable(true);
+		Option_03.btnWrapper.SetInteractable(true);
 	}
 
 	void RegisterEvents()

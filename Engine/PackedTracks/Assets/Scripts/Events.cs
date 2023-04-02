@@ -259,7 +259,7 @@ public class Event_Intruders_ChuckAlive : Event_Intruders
         choices[2].choiceText = Messages.Event_Intruders.ChuckAlive.choice03;
         choices[2].resultText = Messages.Event_Intruders.ChuckAlive.result03;
         choices[2].SetAllStats(MENTAL_STATE.IRRATIONAL);
-        choices[2].ChangeSupply(-10);
+        choices[2].SetSupply(0);
         #endregion
     }
     public override string body
@@ -309,6 +309,12 @@ public class Event_Bomb: Event
 
 public class Event_Bomb_ChuckHealthy : Event_Bomb
 {
+    public override bool ForeShadow()
+    {
+        if (!CrewMenu.Instance.harris.person.alive)
+            EventsManager.Instance.Option_03.btnWrapper.SetInteractable(false);
+        return base.ForeShadow();
+    }
     public Event_Bomb_ChuckHealthy()
     {
         #region Choice1
@@ -376,6 +382,12 @@ public class Event_Bomb_CrewInjured : Event_Bomb
 }
 public class Event_Bomb_Default : Event_Bomb
 {
+    public override bool ForeShadow()
+    {
+        if (CrewMenu.Instance.supplies == 0)
+            EventsManager.Instance.Option_03.btnWrapper.SetInteractable(false);
+        return base.ForeShadow();
+    }
     public override string body
     {
         get { return Messages.Event_Bomb.Default_3C.body; }
