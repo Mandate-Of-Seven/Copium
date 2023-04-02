@@ -9,7 +9,7 @@ public class InteractionMask: CopiumScript
 	public GameObject leftPivot;
 	public GameObject topPivot;
 	public GameObject bottomPivot;
-
+	public GameObject transparentBlock;
 
 	public Vector2 scale = new Vector2(1,1);
 

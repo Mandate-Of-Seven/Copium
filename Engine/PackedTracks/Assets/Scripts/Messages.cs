@@ -14,11 +14,25 @@ public static class Messages
 		public const string reportEnd = "Looks like you're done here, click on the red cross to close any screens";
 		public const string crewStatusButton = "Lets take a look at our crew members vitals";
 		public const string crewStatusDisplay = "All of them seem to be healthy";
+		public const string crewStatusMember = "This is Harris, just like every other member, he has 3 vitals, health, mental and hunger";
 		public const string crewStatusHealth = "This is the health of your crew member, if they die, they are gone forever...";
 		public const string crewStatusMental = "This is the mental state of your crew member, you'll never what they're gonna do if they become crazy...";
 		public const string crewStatusHunger = "This is the hunger of your crew member, it is automatically replenished when you have supplies to feed the crew." +
 												" If you can't afford to feed them once they're famished, they'll start dying of hunger"; 
 		public const string crewStatusSupplies = "This is how much supplies you have, can't feed anyone nor fix anything without these";
+		public const string crewStatusEnd = "Now that you're done here, lets see if you remember how to close a screen(Hint: Big red button on the top right)";
+		public const string cabinButton = "Let's go meet the crew members at the back, click on the arrow";
+		public const string cabinDisplay = "Welcome to the cabin, here you can speak to crew members and deploy them to collect supplies";
+		public const string cabinHarris = "Harris is the engineer of the group, you can count on him to maintain and repair the train";
+		public const string cabinBronson = "Bronson is just... muscular, don't sweat on assigning him to do physical demanding tasks";
+		public const string cabinChuck = "Chuck is just... Chuck, don't expect much out of him";
+		public const string cabinDanton = "Danton was a medical professional, would be wise keeping him alive";
+		public const string cabinSpeak = "Let's speak to Harris to see whats up";
+		public const string cabinSpeaking = "You can more about the current situation when speaking to the crew members";
+		public const string cabinCloseSpeak = "Good to know Harris... You can come to speak to the rest of them later, let's stop speaking to him for now";
+		public const string cabinPrepare = "Let deploy Harris out to get some supplies, click on prepare to select members for deployment";
+		public const string cabinPrepareSelect = "Now click on Harris to include him in the deployment, it will take one state of hunger to send them out";
+		public const string cabinDeploy = "Now that Harris is selected, let's deploy him by clicking on the deploy button";
 	}
 
 	public static class Event_Intro

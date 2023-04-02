@@ -9,8 +9,6 @@ public class TutorialManager: CopiumScript
     [NonSerialized]
 	public Dictionary<string,TutorialComponent> tutorials = new Dictionary<string,TutorialComponent>();
 
-	public InteractionMask mask;
-
 	public float transitionTime = 1f;
 	Vector3 originalPos;
 	Vector3 originalScale;
@@ -19,13 +17,29 @@ public class TutorialManager: CopiumScript
 	public string[] sequence =
 	new string[]
 	{
-		"ReportButton",
+/*		"ReportButton",
 		"ReportDisplay",
-		"ReportClose",
-        /*"CrewStatusButton",
-        "CrewStatusDisplay",
-        "CrewStatusClose",*/
-    };
+		"ReportClose",*/
+/*		"CrewStatusButton",
+		"CrewStatusDisplay",
+		"CrewStatusMember",
+		"CrewStatusHealth",
+		"CrewStatusMental",
+		"CrewStatusHunger",
+		"CrewStatusClose",*/
+		"CabinButton",
+		"CabinDisplay",
+/*		"CabinHarris",
+		"CabinBronson",
+		"CabinChuck",
+		"CabinDanton",*/
+		"CabinSpeak",
+		"CabinSpeaking",
+		"CabinCloseSpeak",
+		"CabinPrepare",
+		"CabinPrepareSelect",
+		"CabinDeploy",
+	};
 
 	int sequenceIndex = 0;
 
@@ -49,18 +63,20 @@ public class TutorialManager: CopiumScript
 			originalScale = tutorial.scale;
 			transitionTimer = 0f;
 			++sequenceIndex;
-			TutorialText.Instance.SetContent(tutorials[sequence[sequenceIndex]].text);
+			TutorialComponent nextTut = tutorials[sequence[sequenceIndex]];
+			TutorialText.Instance.SetContent(nextTut.text);
+			InteractionMask.Instance.transparentBlock.SetActive(nextTut.transparentBlock);
 		}
 		else if (transitionTimer < transitionTime)
         {
 			transitionTimer += Time.deltaTime;
-			mask.scale = Vector3.Lerp(originalScale,tutorial.scale,transitionTimer/transitionTime);
-			mask.transform.position = Vector3.Lerp(originalPos, tutorial.posTrans.worldPosition, transitionTimer / transitionTime);
+			InteractionMask.Instance.scale = Vector3.Lerp(originalScale,tutorial.scale,transitionTimer/transitionTime);
+			InteractionMask.Instance.transform.position = Vector3.Lerp(originalPos, tutorial.posTrans.worldPosition, transitionTimer / transitionTime);
 		}
 		else
 		{
-			mask.scale = tutorial.scale;
-			mask.transform.position = tutorial.posTrans.worldPosition;
+			InteractionMask.Instance.scale = tutorial.scale;
+			InteractionMask.Instance.transform.position = tutorial.posTrans.worldPosition;
 		}
 	}
 }

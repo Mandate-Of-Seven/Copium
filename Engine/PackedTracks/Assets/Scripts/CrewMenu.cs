@@ -63,6 +63,12 @@ public class CrewMenu: CopiumScript
     public float timeElasped = 0;
     public float transitionDuration = 2;
 
+    public Vector3 cabinPrepareScale = Vector3.one;
+    public Vector3 cabinDeployScale = Vector3.one;
+
+    public Vector3 cabinPrepareTutTextPos = Vector3.zero;
+    public Vector3 cabinPrepareSelectTutTextPos = Vector3.zero;
+    public Vector3 cabinDeployTutTextPos = Vector3.zero;
 
     public enum STAT_TYPES
     {
@@ -110,6 +116,58 @@ public class CrewMenu: CopiumScript
         deployBtnWrapper.failureText = "You need to be preparing your crew members first!";
         deployBtnWrapper.SetInteractable(false);
         titleString = titleText.text;
+
+        new TutorialComponent
+        (
+            "CabinPrepare",
+            cabinPrepareScale,
+            prepareButton.transform,
+            Messages.Tutorial.cabinPrepare,
+            cabinPrepareTutTextPos,
+            delegate ()
+            {
+                if (prepareBtnWrapper.GetState() == ButtonState.OnClick)
+                {
+                    return true;
+                }
+                return false;
+            }
+        );
+
+        new TutorialComponent
+        (
+            "CabinPrepareSelect",
+            CabinInteractions.Instance.cabinHarrisScale,
+            CabinInteractions.Instance.harrisBtn.transform,
+            Messages.Tutorial.cabinPrepareSelect,
+            cabinPrepareSelectTutTextPos,
+            delegate ()
+            {
+                Debug.Log(CabinInteractions.Instance.harrisInteractBtnWrapper.GetState().ToString());
+                if (CabinInteractions.Instance.harrisInteractBtnWrapper.GetState() == ButtonState.OnRelease)
+                {
+                    return true;
+                }
+                return false;
+            }
+        );
+
+        new TutorialComponent
+        (
+            "CabinDeploy",
+            cabinDeployScale,
+            deployButton.transform,
+            Messages.Tutorial.cabinDeploy,
+            cabinDeployTutTextPos,
+            delegate ()
+            {
+                if (deployBtnWrapper.GetState() == ButtonState.OnClick)
+                {
+                    return true;
+                }
+                return false;
+            }
+        );
     }
 
 	void Update()
