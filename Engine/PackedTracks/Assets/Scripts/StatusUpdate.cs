@@ -17,12 +17,25 @@ public class StatusUpdate: CopiumScript
 	public Animator bHealth, bMental, cHunger;
 	public Animator cHealth, cMental, bHunger;
 	public Animator dHealth, dMental, dHunger;
-	public Animator supplies;
+    public Animator hIcon, bIcon, cIcon, dIcon;
+    public Animator supplies;
     Color black = new Color(0.0f, 0.0f, 0.0f, 1.0f);
 
     public void Awake()
     {
         Instance = this;
+    }
+
+    void Update()
+    {
+        hIcon.stop();
+        hIcon.setFrame(0);
+        bIcon.stop(); 
+        bIcon.setFrame(1);
+        cIcon.stop(); 
+        cIcon.setFrame(2);
+        dIcon.stop();
+        dIcon.setFrame(3);
     }
 
     public void ResetAll()

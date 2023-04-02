@@ -77,7 +77,7 @@ public class Subtitles: CopiumScript
         }
         else if (changeScene && fade.FadeEnded()) // Load next scene
         {
-            SceneManager.LoadScene("MainMenu");
+            SceneManager.LoadScene("HowToPlayNew");
         }
 
         if (fade.shouldFade || !fade.postFaded)
