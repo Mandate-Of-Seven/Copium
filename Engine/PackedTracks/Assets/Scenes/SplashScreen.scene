@@ -160,7 +160,7 @@
                     "Type": "SortingGroup",
                     "TypeID": 26,
                     "SortingLayer": 0,
-                    "OrderInLayer": 0
+                    "OrderInLayer": 1
                 },
                 {
                     "enabled": false,
@@ -229,7 +229,7 @@
                     "Type": "SortingGroup",
                     "TypeID": 26,
                     "SortingLayer": 0,
-                    "OrderInLayer": 0
+                    "OrderInLayer": 1
                 },
                 {
                     "enabled": true,
@@ -345,6 +345,122 @@
                     "shouldFade": false,
                     "start": 0.0,
                     "sr": 18013327903678151813
+                }
+            ]
+        },
+        {
+            "UID": 5233343567141530047,
+            "Name": "snoweffect",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 0,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 120.0,
+                        "Y": 120.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 14371435957704164088,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 0,
+                    "OrderInLayer": 0
+                },
+                {
+                    "enabled": true,
+                    "UID": 259393581084405286,
+                    "Type": "Animator",
+                    "TypeID": 15,
+                    "Loop": true,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "Snow_SpriteSheet_155_5x31.png",
+                            "Sprite ID": 8966109942037627320,
+                            "Time Delay": 0.0,
+                            "FrameCount": 155,
+                            "Current Frame Index": 0,
+                            "Rows": 31,
+                            "Columns": 5,
+                            "Flip": {
+                                "X": false,
+                                "Y": false
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 11445400589691185116,
+            "Name": "FogEffect",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 0,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": -0.2808098793029785,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 60.0,
+                        "Y": 60.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 7002182679008481960,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 0,
+                    "OrderInLayer": 0
+                },
+                {
+                    "enabled": true,
+                    "UID": 2394320205299029106,
+                    "Type": "Animator",
+                    "TypeID": 15,
+                    "Loop": true,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "Fog_126_6x21.png",
+                            "Sprite ID": 3954815557235219517,
+                            "Time Delay": 0.10000000149011612,
+                            "FrameCount": 126,
+                            "Current Frame Index": 0,
+                            "Rows": 21,
+                            "Columns": 6,
+                            "Flip": {
+                                "X": false,
+                                "Y": false
+                            }
+                        }
+                    ]
                 }
             ]
         }
