@@ -1,5 +1,6 @@
 using CopiumEngine;
 using System;
+using static StatusUpdate;
 
 public class Event_Intro : Event
 {
@@ -224,7 +225,6 @@ public class Event_Intruders_ChuckDead : Event_Intruders
         choices[0].AddOtherEffects(delegate()
         {
             GameManager.Instance.eventSequence = -2;
-            EventsManager.Instance.UpdateCurrentEvent();
         });
         
         #endregion
@@ -259,7 +259,7 @@ public class Event_Intruders_ChuckAlive : Event_Intruders
         choices[2].choiceText = Messages.Event_Intruders.ChuckAlive.choice03;
         choices[2].resultText = Messages.Event_Intruders.ChuckAlive.result03;
         choices[2].SetAllStats(MENTAL_STATE.IRRATIONAL);
-        choices[2].ChangeSupply(-10);
+        choices[2].SetSupply(0);
         #endregion
     }
     public override string body
@@ -278,37 +278,61 @@ public class Event_Intruders_ChuckAlive : Event_Intruders
 #region EVENT03
 public class Event_Bomb: Event
 {
+    float timerElasped = 0f;
+    int state = 0;
+    public float waitTime = 3f;
 
     public override string preempt
     {
         get { return Messages.Event_Bomb.preempt; }
     }
+
     public override bool isRemovable()
     {
         return GameManager.Instance.eventSequence >= 3;
+    }
+
+    public override bool ForeShadow()
+    {
+        switch (state)
+        {
+            case 0:
+            {
+                AudioManager.Instance.explosionForEvent3SFX.Play();
+                ++state;
+                return false;
+            }
+        }
+        return true;
     }
 }
 
 public class Event_Bomb_ChuckHealthy : Event_Bomb
 {
+    public override bool ForeShadow()
+    {
+        if (!CrewMenu.Instance.harris.person.alive)
+            EventsManager.Instance.Option_03.btnWrapper.SetInteractable(false);
+        return base.ForeShadow();
+    }
     public Event_Bomb_ChuckHealthy()
     {
         #region Choice1
-        choices[0].choiceText = Messages.Event_Bomb.ChuckHealthy.choice01;
-        choices[0].resultText = Messages.Event_Bomb.ChuckHealthy.result01;
+        choices[0].choiceText = Messages.Event_Bomb.ChuckHealthy_3A.choice01;
+        choices[0].resultText = Messages.Event_Bomb.ChuckHealthy_3A.result01;
         choices[0].SetMemberStats("Harris", HEALTH_STATE.CRITICAL);
         choices[0].SetMemberStats("Danton", HEALTH_STATE.CRITICAL);
         #endregion
 
         #region Choice2
-        choices[1].choiceText = Messages.Event_Bomb.ChuckHealthy.choice02;
-        choices[1].resultText = Messages.Event_Bomb.ChuckHealthy.result02;
+        choices[1].choiceText = Messages.Event_Bomb.ChuckHealthy_3A.choice02;
+        choices[1].resultText = Messages.Event_Bomb.ChuckHealthy_3A.result02;
         choices[1].SetMemberStats("Chuck", HEALTH_STATE.DEAD);
         #endregion
 
         #region Choice3
-        choices[2].choiceText = Messages.Event_Bomb.ChuckHealthy.choice03;
-        choices[2].resultText = Messages.Event_Bomb.ChuckHealthy.result03;
+        choices[2].choiceText = Messages.Event_Bomb.ChuckHealthy_3A.choice03;
+        choices[2].resultText = Messages.Event_Bomb.ChuckHealthy_3A.result03;
         choices[2].SetSupply(0);
         choices[2].AddOtherEffects(CrewMenu.Instance.DetachStorageCompartment);
         choices[2].AddOtherEffects(delegate(){ GameManager.Instance.distanceInterval *= 2;});
@@ -317,7 +341,7 @@ public class Event_Bomb_ChuckHealthy : Event_Bomb
     }
     public override string body
     {
-        get { return Messages.Event_Bomb.ChuckHealthy.body; }
+        get { return Messages.Event_Bomb.ChuckHealthy_3A.body; }
     }
 
     public override bool isTriggered()
@@ -332,19 +356,18 @@ public class Event_Bomb_CrewInjured : Event_Bomb
     public Event_Bomb_CrewInjured()
     {
         #region Choice1
-        choices[0].choiceText = Messages.Event_Bomb.ChuckHealthy.choice01;
-        choices[0].resultText = Messages.Event_Bomb.CrewInjured.result01;
+        choices[0].choiceText = Messages.Event_Bomb.CrewInjured_3B.choice01;
+        choices[0].resultText = Messages.Event_Bomb.CrewInjured_3B.result01;
         choices[0].AddOtherEffects(delegate () 
         { 
             GameManager.Instance.eventSequence = -1;
-            EventsManager.Instance.UpdateCurrentEvent();
         });
         #endregion
 
     }
     public override string body
     {
-        get { return Messages.Event_Bomb.CrewInjured.body; }
+        get { return Messages.Event_Bomb.CrewInjured_3B.body; }
     }
 
     public override bool isTriggered()
@@ -359,9 +382,15 @@ public class Event_Bomb_CrewInjured : Event_Bomb
 }
 public class Event_Bomb_Default : Event_Bomb
 {
+    public override bool ForeShadow()
+    {
+        if (CrewMenu.Instance.supplies == 0)
+            EventsManager.Instance.Option_03.btnWrapper.SetInteractable(false);
+        return base.ForeShadow();
+    }
     public override string body
     {
-        get { return Messages.Event_Bomb.Default.body; }
+        get { return Messages.Event_Bomb.Default_3C.body; }
     }
 
     public override bool isTriggered()
@@ -372,21 +401,21 @@ public class Event_Bomb_Default : Event_Bomb
     public Event_Bomb_Default()
     {
         #region Choice1
-        choices[0].choiceText = Messages.Event_Bomb.Default.choice01;
-        choices[0].resultText = Messages.Event_Bomb.Default.result01;
+        choices[0].choiceText = Messages.Event_Bomb.Default_3C.choice01;
+        choices[0].resultText = Messages.Event_Bomb.Default_3C.result01;
         choices[0].AddOtherEffects(delegate ()
         {
-            GameManager.Instance.eventSequence = -4;
+            GameManager.Instance.eventSequence = -5;
         });
         #endregion
         #region Choice2
-        choices[1].choiceText = Messages.Event_Bomb.Default.choice02;
-        choices[1].resultText = Messages.Event_Bomb.Default.result02;
+        choices[1].choiceText = Messages.Event_Bomb.Default_3C.choice02;
+        choices[1].resultText = Messages.Event_Bomb.Default_3C.result02;
         choices[1].ChangeAllStat(-1);
         #endregion
         #region Choice3
-        choices[2].choiceText = Messages.Event_Bomb.Default.choice03;
-        choices[2].resultText = Messages.Event_Bomb.Default.result03;
+        choices[2].choiceText = Messages.Event_Bomb.Default_3C.choice03;
+        choices[2].resultText = Messages.Event_Bomb.Default_3C.result03;
         choices[2].SetSupply(0);
         choices[2].AddOtherEffects(delegate ()
         {
@@ -403,7 +432,6 @@ public class Event_Bomb_Default : Event_Bomb
 public class Event_Endings : Event
 {
     protected float duration = 4.0f;
-
     public override bool isRemovable()
     {
         return false;
@@ -424,7 +452,6 @@ public class Ending_3B : Event_Endings
         SceneManager.LoadScene("Ending");
         return true;
     }
-
     public override bool isTriggered()
     {
         return GameManager.Instance.eventSequence == -1;
@@ -433,9 +460,17 @@ public class Ending_3B : Event_Endings
 
 public class Ending_3C : Event_Endings
 {
-    public override string body
+    public override bool ForeShadow()
     {
-        get { return Messages.Event_Ending.Ending_3C.body; }
+        Fade.Instance.duration = duration;
+        if (!Fade.Instance.shouldFade)
+            Fade.Instance.Start();
+
+        if (!Fade.Instance.FadeEnded())
+            return false;
+
+        SceneManager.LoadScene("Ending");
+        return true;
     }
 
     public override bool isTriggered()
@@ -466,6 +501,11 @@ public class Ending_2A : Event_Endings
 
 public class Ending_Generic : Event_Endings
 {
+    public override bool ForeShadow()
+    {
+        AudioManager.Instance.endingGenericVO.Play();
+        return true;
+    }
     public Ending_Generic()
     {
         EndingChoices();
@@ -485,6 +525,11 @@ public class Ending_Generic : Event_Endings
 
 public class Ending_Harris : Event_Endings
 {
+    public override bool ForeShadow()
+    {
+        AudioManager.Instance.endingHarrisVO.Play();
+        return true;
+    }
     public Ending_Harris()
     {
         EndingChoices();
@@ -504,6 +549,11 @@ public class Ending_Harris : Event_Endings
 
 public class Ending_Bronson : Event_Endings
 {
+    public override bool ForeShadow()
+    {
+        AudioManager.Instance.endingBronsonVO.Play();
+        return true;
+    }
     public Ending_Bronson()
     {
         EndingChoices();
@@ -523,6 +573,11 @@ public class Ending_Bronson : Event_Endings
 
 public class Ending_Chuck : Event_Endings
 {
+    public override bool ForeShadow()
+    {
+        AudioManager.Instance.endingChuckVO.Play();
+        return true;
+    }
     public Ending_Chuck()
     {
         EndingChoices();
@@ -542,6 +597,11 @@ public class Ending_Chuck : Event_Endings
 
 public class Ending_Danton : Event_Endings
 {
+    public override bool ForeShadow()
+    {
+        AudioManager.Instance.endingDantonVO.Play();
+        return true;
+    }
     public Ending_Danton()
     {
         EndingChoices();
@@ -561,6 +621,11 @@ public class Ending_Danton : Event_Endings
 
 public class Ending_AllAlive : Event_Endings
 {
+    public override bool ForeShadow()
+    {
+        AudioManager.Instance.endingAllAliveVO.Play();
+        return true;
+    }
     public Ending_AllAlive()
     {
         EndingChoices();
@@ -578,11 +643,17 @@ public class Ending_AllAlive : Event_Endings
 
 public class Ending_AllDead : Event_Endings
 {
+    public override string preempt
+    {
+        get
+        {
+            return "All crew members have died...";
+        }
+    }
     public override bool ForeShadow()
     {
-        GameManager.Instance.eventSequence = -3;
         Fade.Instance.duration = duration;
-        if(!Fade.Instance.shouldFade)
+        if (!Fade.Instance.shouldFade)
             Fade.Instance.Start();
 
         if (!Fade.Instance.FadeEnded())

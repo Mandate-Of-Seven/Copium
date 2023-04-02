@@ -44,6 +44,8 @@ public class PauseMenu: CopiumScript
     public Button VolumeBtn;
     public Button PauseReturnBtn;
     public Button PauseHowToPlayBtn;
+    public Button PauseFSOnBtn;
+    public Button PauseFSOffBtn;
 
     //text
 
@@ -211,6 +213,15 @@ public class PauseMenu: CopiumScript
                 {
                     InternalCalls.AudioMute(false);
                 }
+            }
+
+            if (PauseFSOnBtn.state == ButtonState.OnClick)
+            {
+                InternalCalls.SetFullscreenMode(true);
+            }
+            if (PauseFSOffBtn.state == ButtonState.OnClick)
+            {
+                InternalCalls.SetFullscreenMode(false);
             }
         }
     }

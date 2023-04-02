@@ -1,0 +1,352 @@
+{
+    "Name": "SplashScreen",
+    "Layers": [
+        {
+            "Name": "Default",
+            "ID": 0
+        },
+        {
+            "Name": "Effects",
+            "ID": 1
+        },
+        {
+            "Name": "Train",
+            "ID": 2
+        },
+        {
+            "Name": "UI",
+            "ID": 4
+        },
+        {
+            "Name": "Crew Panel",
+            "ID": 5
+        },
+        {
+            "Name": "Resutls Panel",
+            "ID": 7
+        },
+        {
+            "Name": "PauseMenu",
+            "ID": 13
+        },
+        {
+            "Name": "HowtoPlay",
+            "ID": 8
+        },
+        {
+            "Name": "Transition",
+            "ID": 10
+        },
+        {
+            "Name": "Tutorial",
+            "ID": 9
+        }
+    ],
+    "GameObjects": [
+        {
+            "UID": 2487090380218454905,
+            "Name": "Main Camera",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 0,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 2056650739449469919,
+                    "Type": "Camera",
+                    "TypeID": 19,
+                    "Color": {
+                        "X": 0.27799999713897705,
+                        "Y": 0.27799999713897705,
+                        "Z": 0.27799999713897705,
+                        "W": 1.0
+                    },
+                    "Projection": true,
+                    "Clipping Planes": {
+                        "Near": 0.029999999329447746,
+                        "Far": 500.0
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 16436876946108310886,
+            "Name": "Background",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 0,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 18.0,
+                        "Y": 11.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 6613376156173819653,
+                    "Type": "SpriteRenderer",
+                    "TypeID": 22,
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
+                    "Color": {
+                        "X": 0.00009999999747378752,
+                        "Y": 0.00009998999303206801,
+                        "Z": 0.00009998999303206801,
+                        "W": 1.0
+                    },
+                    "Flip": {
+                        "X": false,
+                        "Y": false
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 10053454423849918943,
+            "Name": "Digipen Logo",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 0,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 6.0,
+                        "Y": 6.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 6508082354953814224,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 0,
+                    "OrderInLayer": 0
+                },
+                {
+                    "enabled": false,
+                    "UID": 15285532878839298356,
+                    "Type": "SpriteRenderer",
+                    "TypeID": 22,
+                    "Sprite ID": 10265798439750997651,
+                    "Sprite Name": "download.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    },
+                    "Flip": {
+                        "X": false,
+                        "Y": false
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 2271181480416786235,
+                    "Type": "Script",
+                    "TypeID": 23,
+                    "Name": "Fade",
+                    "duration": 0.5,
+                    "end": 1.0,
+                    "fadeIn": true,
+                    "fadeInAndOut": false,
+                    "fadeVal": 0.0,
+                    "postFade": 0.75,
+                    "preFade": 0.5,
+                    "shouldFade": false,
+                    "start": 0.0,
+                    "sr": 15285532878839298356
+                }
+            ]
+        },
+        {
+            "UID": 8044815803874756395,
+            "Name": "Engine Logo",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 0,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 10.0,
+                        "Y": 10.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 14982282927716450340,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 0,
+                    "OrderInLayer": 0
+                },
+                {
+                    "enabled": false,
+                    "UID": 1009557917956949803,
+                    "Type": "SpriteRenderer",
+                    "TypeID": 22,
+                    "Sprite ID": 18401080860215253332,
+                    "Sprite Name": "texturepackerlogo.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    },
+                    "Flip": {
+                        "X": false,
+                        "Y": false
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 13060296642965510506,
+                    "Type": "Script",
+                    "TypeID": 23,
+                    "Name": "Fade",
+                    "duration": 0.5,
+                    "end": 1.0,
+                    "fadeIn": true,
+                    "fadeInAndOut": false,
+                    "fadeVal": 0.0,
+                    "postFade": 0.75,
+                    "preFade": 0.0,
+                    "shouldFade": false,
+                    "start": 0.0,
+                    "sr": 1009557917956949803
+                }
+            ]
+        },
+        {
+            "UID": 13132362721688207373,
+            "Name": "Timer",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 0,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 18.0,
+                        "Y": 11.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 2708071570817882891,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 0,
+                    "OrderInLayer": 5
+                },
+                {
+                    "enabled": true,
+                    "UID": 18013327903678151813,
+                    "Type": "SpriteRenderer",
+                    "TypeID": 22,
+                    "Sprite ID": 0,
+                    "Sprite Name": "empty",
+                    "Color": {
+                        "X": 0.00009999999747378752,
+                        "Y": 0.00009998999303206801,
+                        "Z": 0.00009998999303206801,
+                        "W": 1.0
+                    },
+                    "Flip": {
+                        "X": false,
+                        "Y": false
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 2080284479855036826,
+                    "Type": "Script",
+                    "TypeID": 23,
+                    "Name": "SplashScreen",
+                    "wait": 0.5,
+                    "digipenLogo": 2271181480416786235,
+                    "engineLogo": 13060296642965510506,
+                    "skipper": 8582350694606701325
+                },
+                {
+                    "enabled": true,
+                    "UID": 8582350694606701325,
+                    "Type": "Script",
+                    "TypeID": 23,
+                    "Name": "Fade",
+                    "duration": 0.25,
+                    "end": 1.0,
+                    "fadeIn": true,
+                    "fadeInAndOut": false,
+                    "fadeVal": 0.0,
+                    "postFade": 0.5,
+                    "preFade": 0.0,
+                    "shouldFade": false,
+                    "start": 0.0,
+                    "sr": 18013327903678151813
+                }
+            ]
+        }
+    ]
+}

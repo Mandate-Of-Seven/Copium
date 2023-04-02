@@ -59,14 +59,14 @@ public class Prepare : CopiumScript
     public GameObject prepareFinal;
     public GameObject prepareCanvas;
 
-    public GameObject HHarrow;
-    public GameObject HMarrow;
-    public GameObject BHarrow;
-    public GameObject BMarrow;
-    public GameObject CHarrow;
-    public GameObject CMarrow;
-    public GameObject DHarrow;
-    public GameObject DMarrow;
+    public Animator HHarrowA;
+    public Animator HMarrowA;
+    public Animator BHarrowA;
+    public Animator BMarrowA;
+    public Animator CHarrowA;
+    public Animator CMarrowA;
+    public Animator DHarrowA;
+    public Animator DMarrowA;
 
 
     public Person[] currentCrewmate;
@@ -395,17 +395,21 @@ public class Prepare : CopiumScript
     /*******************************************************************************/
     public void GenerateResults()
     {
-        HHarrow.SetActive(false);
-        HMarrow.SetActive(false);
-        BHarrow.SetActive(false);
-        BMarrow.SetActive(false);
-        CHarrow.SetActive(false);
-        CMarrow.SetActive(false);
-        DHarrow.SetActive(false);
-        DMarrow.SetActive(false);
         suppliesChangedAmount = 0;
 
+        HHarrowA.enabled = HMarrowA.enabled = false;
+        BHarrowA.enabled = BMarrowA.enabled = false;
+        CHarrowA.enabled = CMarrowA.enabled = false;
+        DHarrowA.enabled = DMarrowA.enabled = false;
 
+        HHarrowA.stop();
+        HMarrowA.stop();
+        BHarrowA.stop();
+        BMarrowA.stop();
+        CHarrowA.stop();
+        CMarrowA.stop();
+        DHarrowA.stop();
+        DMarrowA.stop();
 
 
         //roll chance for event choice successs / for choices check if choiceNum<=difficulty
@@ -892,34 +896,30 @@ public class Prepare : CopiumScript
 
             if (health)
             {
-                HHarrow.SetActive(true);
+                HHarrowA.enabled = true;
                 if (increased)
                 {
-                    temp = HHarrow.transform.localRotation;
-                    temp.z = 90;
-                    HHarrow.transform.localRotation = temp;
+                    HHarrowA.setFrame(1);
+                    HHarrowA.color = Color.green;
                 }
                 else
                 {
-                    temp = HHarrow.transform.localRotation;
-                    temp.z = -90;
-                    HHarrow.transform.localRotation = temp;
+                    HHarrowA.setFrame(2);
+                    HHarrowA.color = Color.red;
                 }
             }
             else
             {
-                HMarrow.SetActive(true);
+                HMarrowA.enabled = true;
                 if (increased)
                 {
-                    temp = HMarrow.transform.localRotation;
-                    temp.z = 90;
-                    HMarrow.transform.localRotation = temp;
+                    HMarrowA.setFrame(1);
+                    HMarrowA.color = Color.green;
                 }
                 else
                 {
-                    temp = HMarrow.transform.localRotation;
-                    temp.z = -90;
-                    HMarrow.transform.localRotation = temp;
+                    HMarrowA.setFrame(2);
+                    HMarrowA.color = Color.red;
                 }
             }
         }
@@ -927,34 +927,30 @@ public class Prepare : CopiumScript
         {
             if (health)
             {
-                BHarrow.SetActive(true);
+                BHarrowA.enabled = true;
                 if (increased)
                 {
-                    temp = BHarrow.transform.localRotation;
-                    temp.z = 90;
-                    BHarrow.transform.localRotation = temp;
+                    BHarrowA.setFrame(1);
+                    BHarrowA.color = Color.green;
                 }
                 else
                 {
-                    temp = BHarrow.transform.localRotation;
-                    temp.z = -90;
-                    BHarrow.transform.localRotation = temp;
+                    BHarrowA.setFrame(2);
+                    BHarrowA.color = Color.red;
                 }
             }
             else
             {
-                BMarrow.SetActive(true);
+                BMarrowA.enabled = true;
                 if (increased)
                 {
-                    temp = BMarrow.transform.localRotation;
-                    temp.z = 90;
-                    BMarrow.transform.localRotation = temp;
+                    BMarrowA.setFrame(1);
+                    BMarrowA.color = Color.green;
                 }
                 else
                 {
-                    temp = BMarrow.transform.localRotation;
-                    temp.z = -90;
-                    BMarrow.transform.localRotation = temp;
+                    BMarrowA.setFrame(2);
+                    BMarrowA.color = Color.red;
                 }
             }
         }
@@ -962,34 +958,30 @@ public class Prepare : CopiumScript
         {
             if (health)
             {
-                CHarrow.SetActive(true);
+                CHarrowA.enabled = true;
                 if (increased)
                 {
-                    temp = CHarrow.transform.localRotation;
-                    temp.z = 90;
-                    CHarrow.transform.localRotation = temp;
+                    CHarrowA.setFrame(1);
+                    CHarrowA.color = Color.green;
                 }
                 else
                 {
-                    temp = CHarrow.transform.localRotation;
-                    temp.z = -90;
-                    CHarrow.transform.localRotation = temp;
+                    CHarrowA.setFrame(2);
+                    CHarrowA.color = Color.red;
                 }
             }
             else
             {
-                CMarrow.SetActive(true);
+                CMarrowA.enabled = true;
                 if (increased)
                 {
-                    temp = CMarrow.transform.localRotation;
-                    temp.z = 90;
-                    CMarrow.transform.localRotation = temp;
+                    CMarrowA.setFrame(1);
+                    CMarrowA.color = Color.green;
                 }
                 else
                 {
-                    temp = CMarrow.transform.localRotation;
-                    temp.z = -90;
-                    CMarrow.transform.localRotation = temp;
+                    CMarrowA.setFrame(2);
+                    CMarrowA.color = Color.red;
                 }
             }
         }
@@ -997,34 +989,30 @@ public class Prepare : CopiumScript
         {
             if (health)
             {
-                DHarrow.SetActive(true);
+                DHarrowA.enabled = true;
                 if (increased)
                 {
-                    temp = DHarrow.transform.localRotation;
-                    temp.z = 90;
-                    DHarrow.transform.localRotation = temp;
+                    DHarrowA.setFrame(1);
+                    DHarrowA.color = Color.green;
                 }
                 else
                 {
-                    temp = DHarrow.transform.localRotation;
-                    temp.z = -90;
-                    DHarrow.transform.localRotation = temp;
+                    DHarrowA.setFrame(2);
+                    DHarrowA.color = Color.red;
                 }
             }
             else
             {
-                DMarrow.SetActive(true);
+                DMarrowA.enabled = true;
                 if (increased)
                 {
-                    temp = DMarrow.transform.localRotation;
-                    temp.z = 90;
-                    DMarrow.transform.localRotation = temp;
+                    DMarrowA.setFrame(1);
+                    DMarrowA.color = Color.green;
                 }
                 else
                 {
-                    temp = DMarrow.transform.localRotation;
-                    temp.z = -90;
-                    DMarrow.transform.localRotation = temp;
+                    DMarrowA.setFrame(2);
+                    DMarrowA.color = Color.red;
                 }
             }
         }

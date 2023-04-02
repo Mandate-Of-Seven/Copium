@@ -28,6 +28,8 @@ public class CreditsScript: CopiumScript
 
 	public Fade fade;
 
+	public AudioSource creditsBGM;
+
 	private bool playNextText = true;
 
 	private bool mandateOfSevenReachSpot = false;
@@ -51,8 +53,9 @@ public class CreditsScript: CopiumScript
 
 	void Start()
 	{
-
+		creditsBGM.Play();
 	}
+
 	void Update()
 	{
 		Vector3 posMOS = mandateOfSeven.transform.position;

@@ -84,7 +84,7 @@ public class StatusUpdate: CopiumScript
         switch (state)
         {
             case STATE.NEUTRAL:
-                anim.color = Color.white;
+                anim.color = black;
                 break;
             case STATE.INCREASE:
                 anim.color = Color.green;
@@ -93,7 +93,7 @@ public class StatusUpdate: CopiumScript
                 anim.color = Color.red;
                 break;
             case STATE.UNKNOWN:
-                anim.color = black;
+                anim.color = Color.white;
                 break;
         }
 

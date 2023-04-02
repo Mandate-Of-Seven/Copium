@@ -38,6 +38,7 @@ public class AudioManager: CopiumScript
 	public AudioSource hoverSFX;
 	public AudioSource gunfireSFX;
 	public AudioSource explosionSFX;
+	public AudioSource explosionForEvent3SFX;
 	public AudioSource failedSFX;
 	public AudioSource ending3bVO;
     public AudioSource ending2aVO;
@@ -47,6 +48,7 @@ public class AudioManager: CopiumScript
     public AudioSource endingDantonVO;
     public AudioSource endingGenericVO;
     public AudioSource endingAllDiedVO;
+    public AudioSource endingAllAliveVO;
 
 	void Awake()
 	{
