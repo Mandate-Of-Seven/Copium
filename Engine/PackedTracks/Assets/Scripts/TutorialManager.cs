@@ -17,28 +17,30 @@ public class TutorialManager: CopiumScript
 	public string[] sequence =
 	new string[]
 	{
-/*		"ReportButton",
-		"ReportDisplay",
-		"ReportClose",*/
-/*		"CrewStatusButton",
-		"CrewStatusDisplay",
-		"CrewStatusMember",
-		"CrewStatusHealth",
-		"CrewStatusMental",
-		"CrewStatusHunger",
-		"CrewStatusClose",*/
-		"CabinButton",
-		"CabinDisplay",
-/*		"CabinHarris",
-		"CabinBronson",
-		"CabinChuck",
-		"CabinDanton",*/
-		"CabinSpeak",
-		"CabinSpeaking",
-		"CabinCloseSpeak",
-		"CabinPrepare",
-		"CabinPrepareSelect",
-		"CabinDeploy",
+/*        "ReportButton",
+        "ReportDisplay",
+        "ReportClose",
+        "CrewStatusButton",
+        "CrewStatusDisplay",
+        "CrewStatusMember",
+        "CrewStatusHealth",
+        "CrewStatusMental",
+        "CrewStatusHunger",
+        "CrewStatusClose",*/
+        "CabinButton",
+/*		"CabinDisplay",
+        "CabinHarris",
+        "CabinBronson",
+        "CabinChuck",
+        "CabinDanton",
+        "CabinSpeak",
+        "CabinSpeaking",
+        "CabinCloseSpeak",*/
+        "CabinPrepare",
+        "CabinPrepareSelect",
+        "CabinDeploy",
+		"ResultDisplay",
+		"ResultChoices",
 	};
 
 	int sequenceIndex = 0;

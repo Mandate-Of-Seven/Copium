@@ -19,6 +19,8 @@ using System.Runtime.InteropServices;
 
 public class Prepare : CopiumScript
 {
+    public static Prepare Instance;
+
     public CrewMenu crewManager;
     public Button closeButton;
 
@@ -80,7 +82,14 @@ public class Prepare : CopiumScript
 
     //which random crewmate gets affected
     int randomCrewmate = 0;
-    void Start()
+
+
+    void Awake()
+    {
+        Instance = this;
+    }
+
+        void Start()
     {
         harrisBtnWrapper = new ButtonWrapper(harrisButton);
         harrisBtnWrapper.SetImage(harrisButton.GetComponent<Image>());

@@ -26,12 +26,12 @@
             "ID": 7
         },
         {
-            "Name": "HowtoPlay",
-            "ID": 8
-        },
-        {
             "Name": "PauseMenu",
             "ID": 13
+        },
+        {
+            "Name": "HowtoPlay",
+            "ID": 8
         },
         {
             "Name": "Transition",
@@ -901,28 +901,28 @@
                     "bDeploy": false,
                     "cDeploy": false,
                     "cabinDeployScale": {
-                        "X": 1.0,
-                        "Y": 1.0,
+                        "X": 2.4000000953674316,
+                        "Y": 0.9300000071525574,
                         "Z": 1.0
                     },
                     "cabinDeployTutTextPos": {
-                        "X": 1.0,
-                        "Y": 1.0,
+                        "X": 19.0,
+                        "Y": -3.0,
                         "Z": 1.0
                     },
                     "cabinPrepareScale": {
-                        "X": 1.0,
-                        "Y": 1.0,
+                        "X": 2.4000000953674316,
+                        "Y": 0.9300000071525574,
                         "Z": 1.0
                     },
                     "cabinPrepareSelectTutTextPos": {
-                        "X": 0.0,
-                        "Y": 0.0,
+                        "X": 14.0,
+                        "Y": -3.0,
                         "Z": 0.0
                     },
                     "cabinPrepareTutTextPos": {
-                        "X": 0.0,
-                        "Y": 0.0,
+                        "X": 14.0,
+                        "Y": -3.0,
                         "Z": 0.0
                     },
                     "dDeploy": false,
@@ -1290,7 +1290,7 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "TutorialManager",
-                    "transitionTime": 0.25
+                    "transitionTime": 0.10000000149011612
                 }
             ]
         },
@@ -1669,8 +1669,8 @@
                     "PID": 0,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 0.0,
-                        "Y": 0.0,
+                        "X": -4.302479267120361,
+                        "Y": -1.3559672832489014,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -1731,8 +1731,8 @@
                         "Z": 0.0
                     },
                     "crewStatusHealthScale": {
-                        "X": 1.0,
-                        "Y": 1.0,
+                        "X": 2.0,
+                        "Y": 0.6000000238418579,
                         "Z": 1.0
                     },
                     "crewStatusHealthTutTextPos": {
@@ -1741,8 +1741,8 @@
                         "Z": 0.0
                     },
                     "crewStatusHungerScale": {
-                        "X": 1.0,
-                        "Y": 1.0,
+                        "X": 2.0,
+                        "Y": 0.6000000238418579,
                         "Z": 1.0
                     },
                     "crewStatusHungerTutTextPos": {
@@ -1751,18 +1751,18 @@
                         "Z": 0.0
                     },
                     "crewStatusMemberScale": {
-                        "X": 1.0,
-                        "Y": 1.0,
+                        "X": 2.0,
+                        "Y": 3.5,
                         "Z": 1.0
                     },
                     "crewStatusMemberTutTextPos": {
-                        "X": 0.0,
-                        "Y": 0.0,
+                        "X": 2.0,
+                        "Y": 0.6000000238418579,
                         "Z": 0.0
                     },
                     "crewStatusMentalScale": {
-                        "X": 1.0,
-                        "Y": 1.0,
+                        "X": 2.0,
+                        "Y": 0.6000000238418579,
                         "Z": 1.0
                     },
                     "crewStatusMentalTutTextPos": {
@@ -1848,9 +1848,30 @@
                     "TypeID": 23,
                     "Name": "ResultManager",
                     "isResultOn": false,
+                    "resultsChoicesScale": {
+                        "X": 7.0,
+                        "Y": 2.0,
+                        "Z": 1.0
+                    },
+                    "resultsChoicesTutTextPos": {
+                        "X": 4.0,
+                        "Y": -3.0,
+                        "Z": 1.0
+                    },
+                    "resultsDisplayScale": {
+                        "X": 9.5,
+                        "Y": 4.0,
+                        "Z": 1.0
+                    },
+                    "resultsDisplayTutTextPos": {
+                        "X": 4.5,
+                        "Y": 2.5,
+                        "Z": 0.0
+                    },
                     "transitionSpeed": 20.0,
                     "ResultTab": 12238112469176194745,
                     "parent": 6642123175702952797,
+                    "ResultBG": 2405627661693302870,
                     "reportScreenManager": 6180648032434220981,
                     "CloseResultBtn": 826755621581371733,
                     "ResultBtn": 3790437057486001291,
@@ -16089,7 +16110,7 @@
         {
             "UID": 9801774730266619501,
             "Name": "InteractionBlock",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "PID": 0,
@@ -20062,6 +20083,32 @@
                     "Flip": {
                         "X": false,
                         "Y": false
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1883230764238764541,
+            "Name": "New GameObject(1)",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 0,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -3.4140610694885254,
+                        "Y": -0.649428129196167,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
                     }
                 }
             ]

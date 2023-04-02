@@ -143,8 +143,7 @@ public class CrewMenu: CopiumScript
             cabinPrepareSelectTutTextPos,
             delegate ()
             {
-                Debug.Log(CabinInteractions.Instance.harrisInteractBtnWrapper.GetState().ToString());
-                if (CabinInteractions.Instance.harrisInteractBtnWrapper.GetState() == ButtonState.OnRelease)
+                if (harris.selectBtnWrapper.GetState() == ButtonState.OnClick)
                 {
                     return true;
                 }
@@ -161,7 +160,8 @@ public class CrewMenu: CopiumScript
             cabinDeployTutTextPos,
             delegate ()
             {
-                if (deployBtnWrapper.GetState() == ButtonState.OnClick)
+                Debug.Log(deployBtnWrapper.GetState().ToString());
+                if (ResultManager.Instance.isResultOn)
                 {
                     return true;
                 }

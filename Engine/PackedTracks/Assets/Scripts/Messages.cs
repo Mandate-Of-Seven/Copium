@@ -33,6 +33,8 @@ public static class Messages
 		public const string cabinPrepare = "Let deploy Harris out to get some supplies, click on prepare to select members for deployment";
 		public const string cabinPrepareSelect = "Now click on Harris to include him in the deployment, it will take one state of hunger to send them out";
 		public const string cabinDeploy = "Now that Harris is selected, let's deploy him by clicking on the deploy button";
+		public const string resultDisplay = "After deploying, the deployed party will face an event";
+		public const string resultChoices = "Now in response to the scenario, you, the conductor can instruct them on what to do";
 	}
 
 	public static class Event_Intro

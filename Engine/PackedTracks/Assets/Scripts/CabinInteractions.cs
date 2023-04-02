@@ -297,7 +297,7 @@ public class CabinInteractions: CopiumScript
 			hover[3] = false;
 
 		}
-		
+
 		// else if(crewMenu.bronson.selectBtnWrapper.GetState() == ButtonState.OnHover && hovering == false)
 		// {
 		// 	interactText.SetActive(true);
@@ -310,8 +310,7 @@ public class CabinInteractions: CopiumScript
 
 
 
-
-		if(harrisInteractBtnWrapper.GetState() == ButtonState.OnClick){
+		if (harrisInteractBtnWrapper.GetState() == ButtonState.OnClick){
 			harrisIText.SetActive(false);
 			hover[0] = false;
 
