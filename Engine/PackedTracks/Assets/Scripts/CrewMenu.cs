@@ -160,7 +160,6 @@ public class CrewMenu: CopiumScript
             cabinDeployTutTextPos,
             delegate ()
             {
-                Debug.Log(deployBtnWrapper.GetState().ToString());
                 if (ResultManager.Instance.isResultOn)
                 {
                     return true;
@@ -180,15 +179,6 @@ public class CrewMenu: CopiumScript
             //have condition for when certain values hit 0??
         if (prepareBtnWrapper.GetState() == ButtonState.OnClick)
         {
-
-            
-
-
-            if(preparing == true)
-                Console.WriteLine("true");
-            else
-                Console.WriteLine("false");
-
             interactionManager.SetInteractBtnsActive(!preparing);
             SetPrepare(!preparing);
             hDeploy = harris.isDeployed;

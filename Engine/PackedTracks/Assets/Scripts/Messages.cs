@@ -36,6 +36,7 @@ public static class Messages
 		public const string resultDisplay = "After deploying, the deployed party will face an event";
 		public const string resultChoices = "Now in response to the scenario, you, the conductor can instruct them on what to do";
 		public const string resultOutcome = "After selecting a choice, there will be an overview of the outcomes";
+		public const string resultEnd = "Let's see if you still remember how to close a screen (Hint: Still top right)";
 	}
 
 	public static class Event_Intro
