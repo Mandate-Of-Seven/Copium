@@ -18958,11 +18958,11 @@
                     "UID": 13147104160255255935,
                     "Type": "AudioSource",
                     "TypeID": 16,
-                    "Alias": "SFX_Event2WithoutVO",
+                    "Alias": "Event2WithoutVOLouder",
                     "Loop": false,
                     "Overlap": true,
-                    "Volume": 1.0,
-                    "Channel": ""
+                    "Volume": 0.25,
+                    "Channel": "SFX"
                 }
             ]
         },
