@@ -46,6 +46,14 @@ public class BackstoryMenu: CopiumScript
 
     void Update()
     {
+        if(!PauseMenu.Instance.isPaused)
+        {
+            bronson.stop();
+            chuck.stop();
+            danton.stop();
+            harris.stop();
+        }
+
         if (PrevButton.state == ButtonState.OnClick)
         {
             sfx_pageflip.Play();

@@ -80,9 +80,11 @@ public class TrainManager: CopiumScript
 
 	void Update()
 	{
+        if (PauseMenu.Instance.isPaused)
+            return;
         //ToggleManual();
 
-		ToggleLever();
+        ToggleLever();
 		
 		// Speed of train
 		if (accelerate && currentSpeed < maxSpeed)

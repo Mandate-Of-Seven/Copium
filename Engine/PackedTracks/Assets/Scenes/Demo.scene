@@ -26,12 +26,12 @@
             "ID": 7
         },
         {
-            "Name": "PauseMenu",
-            "ID": 13
-        },
-        {
             "Name": "HowtoPlay",
             "ID": 8
+        },
+        {
+            "Name": "PauseMenu",
+            "ID": 13
         },
         {
             "Name": "Transition",
@@ -5500,7 +5500,7 @@
                     "UID": 143377132739568309,
                     "Type": "SpriteRenderer",
                     "TypeID": 22,
-                    "Sprite ID": 0,
+                    "Sprite ID": 4682861623453333922,
                     "Sprite Name": "supply_icon.png",
                     "Color": {
                         "X": 1.0,
@@ -9610,12 +9610,12 @@
                     "TypeID": 20,
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Sprite ID": 0,
+                    "Sprite ID": 4682861623453333922,
                     "Sprite Name": "supply_icon.png",
                     "Color": {
                         "X": 1.0,
-                        "Y": 0.5270940661430359,
-                        "Z": 0.010550439357757568,
+                        "Y": 0.9999521970748901,
+                        "Z": 0.9998999834060669,
                         "W": 1.0
                     },
                     "Flip": {
@@ -16688,7 +16688,7 @@
                     "UID": 6182178789917696231,
                     "Type": "Animator",
                     "TypeID": 15,
-                    "Loop": true,
+                    "Loop": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -17068,7 +17068,7 @@
                     "UID": 17471923854421505654,
                     "Type": "Animator",
                     "TypeID": 15,
-                    "Loop": true,
+                    "Loop": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -18039,7 +18039,7 @@
                     "UID": 9280806063901533652,
                     "Type": "Animator",
                     "TypeID": 15,
-                    "Loop": true,
+                    "Loop": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -18097,7 +18097,7 @@
                     "UID": 15164841393826463532,
                     "Type": "Animator",
                     "TypeID": 15,
-                    "Loop": true,
+                    "Loop": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [

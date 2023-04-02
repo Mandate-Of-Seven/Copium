@@ -116,7 +116,8 @@ public class ReportScreenManager: CopiumScript
     }
     void Update()
     {
-        UpdateCanvas();
+        if(!PauseMenu.Instance.isPaused)
+            UpdateCanvas();
     }
 
     /**************************************************************************/

@@ -114,10 +114,12 @@ public class CrewMenu: CopiumScript
 
 	void Update()
 	{
-        //if prepare button is pressed
-        //show what event happened
-        //update values based on event that happened
-        //have condition for when certain values hit 0??
+        if (PauseMenu.Instance.isPaused)
+            return;
+            //if prepare button is pressed
+            //show what event happened
+            //update values based on event that happened
+            //have condition for when certain values hit 0??
         if (prepareBtnWrapper.GetState() == ButtonState.OnClick)
         {
 

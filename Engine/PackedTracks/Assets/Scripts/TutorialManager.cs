@@ -41,7 +41,10 @@ public class TutorialManager: CopiumScript
 
 	void Update()
 	{
-		TutorialComponent tutorial = tutorials[sequence[sequenceIndex]];
+        if (PauseMenu.Instance.isPaused)
+            return;
+
+        TutorialComponent tutorial = tutorials[sequence[sequenceIndex]];
 		TutorialText.Instance.transform.position = tutorial.textPos;
 		if (tutorial.isFinished())
         {
