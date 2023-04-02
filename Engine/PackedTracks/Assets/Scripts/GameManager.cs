@@ -263,9 +263,8 @@ public class GameManager: CopiumScript
     {
         if (trainManager.accelerate && distanceLeft > 1.0f)
         {
-            if (foodTimer >= 5.0f && CrewMenu.Instance.supplies != 0)
+            if (foodTimer >= 3.0f && CrewMenu.Instance.supplies != 0)
             {
-                Console.WriteLine("decrement supplies");
                 foreach (Person person in CrewMenu.Instance.crewMembers.Values)
                 {
                     if (!person.alive)
