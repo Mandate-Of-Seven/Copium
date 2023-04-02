@@ -5090,21 +5090,27 @@
                 },
                 {
                     "enabled": true,
-                    "UID": 3104167528135625016,
-                    "Type": "SpriteRenderer",
-                    "TypeID": 22,
-                    "Sprite ID": 2449633664824440552,
-                    "Sprite Name": "harris_icon.png",
-                    "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
-                        "W": 1.0
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
+                    "UID": 9870245641058983793,
+                    "Type": "Animator",
+                    "TypeID": 15,
+                    "Loop": false,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "Char icon SS.png",
+                            "Sprite ID": 12167231815673940346,
+                            "Time Delay": 0.0,
+                            "FrameCount": 4,
+                            "Current Frame Index": 0,
+                            "Rows": 1,
+                            "Columns": 4,
+                            "Flip": {
+                                "X": false,
+                                "Y": false
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -5142,21 +5148,27 @@
                 },
                 {
                     "enabled": true,
-                    "UID": 13682624138375786202,
-                    "Type": "SpriteRenderer",
-                    "TypeID": 22,
-                    "Sprite ID": 10235916359812139535,
-                    "Sprite Name": "bronson_icon.png",
-                    "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
-                        "W": 1.0
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
+                    "UID": 7934036241181463372,
+                    "Type": "Animator",
+                    "TypeID": 15,
+                    "Loop": false,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "Char icon SS.png",
+                            "Sprite ID": 12167231815673940346,
+                            "Time Delay": 0.0,
+                            "FrameCount": 4,
+                            "Current Frame Index": 1,
+                            "Rows": 1,
+                            "Columns": 4,
+                            "Flip": {
+                                "X": false,
+                                "Y": false
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -5194,21 +5206,27 @@
                 },
                 {
                     "enabled": true,
-                    "UID": 6473670626074837255,
-                    "Type": "SpriteRenderer",
-                    "TypeID": 22,
-                    "Sprite ID": 136179649567712096,
-                    "Sprite Name": "chuck_icon.png",
-                    "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
-                        "W": 1.0
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
+                    "UID": 5860118573017363651,
+                    "Type": "Animator",
+                    "TypeID": 15,
+                    "Loop": false,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "Char icon SS.png",
+                            "Sprite ID": 12167231815673940346,
+                            "Time Delay": 0.0,
+                            "FrameCount": 4,
+                            "Current Frame Index": 2,
+                            "Rows": 1,
+                            "Columns": 4,
+                            "Flip": {
+                                "X": false,
+                                "Y": false
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -5246,21 +5264,27 @@
                 },
                 {
                     "enabled": true,
-                    "UID": 5961001717757687225,
-                    "Type": "SpriteRenderer",
-                    "TypeID": 22,
-                    "Sprite ID": 16849667610627808972,
-                    "Sprite Name": "danton_icon.png",
-                    "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
-                        "W": 1.0
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
+                    "UID": 15478938264467258768,
+                    "Type": "Animator",
+                    "TypeID": 15,
+                    "Loop": false,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "Char icon SS.png",
+                            "Sprite ID": 12167231815673940346,
+                            "Time Delay": 0.0,
+                            "FrameCount": 4,
+                            "Current Frame Index": 3,
+                            "Rows": 1,
+                            "Columns": 4,
+                            "Flip": {
+                                "X": false,
+                                "Y": false
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -5676,7 +5700,7 @@
                     "OrderInLayer": 7
                 },
                 {
-                    "enabled": false,
+                    "enabled": true,
                     "UID": 15126002314009712302,
                     "Type": "Animator",
                     "TypeID": 15,
@@ -5734,7 +5758,7 @@
                     "OrderInLayer": 7
                 },
                 {
-                    "enabled": false,
+                    "enabled": true,
                     "UID": 16202023703586266331,
                     "Type": "Animator",
                     "TypeID": 15,
@@ -5796,13 +5820,13 @@
                     "UID": 18405257415296420626,
                     "Type": "Animator",
                     "TypeID": 15,
-                    "Loop": true,
+                    "Loop": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
                         {
                             "Name": "Char icon SS.png",
-                            "Sprite ID": 3136299889472370115,
+                            "Sprite ID": 12167231815673940346,
                             "Time Delay": 0.0,
                             "FrameCount": 4,
                             "Current Frame Index": 0,
@@ -5817,30 +5841,10 @@
                 },
                 {
                     "enabled": true,
-                    "UID": 7489369897555084843,
-                    "Type": "Image",
-                    "TypeID": 20,
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Sprite ID": 2449633664824440552,
-                    "Sprite Name": "harris_icon.png",
-                    "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
-                        "W": 1.0
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
-                },
-                {
-                    "enabled": true,
                     "UID": 3066674797223769185,
                     "Type": "Button",
                     "TypeID": 18,
-                    "Graphic ID": 7489369897555084843,
+                    "Graphic ID": 0,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.30000001192092896,
@@ -5901,7 +5905,7 @@
                     "OrderInLayer": 0
                 },
                 {
-                    "enabled": false,
+                    "enabled": true,
                     "UID": 12165519364442222231,
                     "Type": "Animator",
                     "TypeID": 15,
@@ -5959,7 +5963,7 @@
                     "OrderInLayer": 7
                 },
                 {
-                    "enabled": false,
+                    "enabled": true,
                     "UID": 1183274616169451387,
                     "Type": "Animator",
                     "TypeID": 15,
@@ -6021,13 +6025,13 @@
                     "UID": 7948610423492870277,
                     "Type": "Animator",
                     "TypeID": 15,
-                    "Loop": true,
+                    "Loop": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
                         {
                             "Name": "Char icon SS.png",
-                            "Sprite ID": 3136299889472370115,
+                            "Sprite ID": 12167231815673940346,
                             "Time Delay": 0.0,
                             "FrameCount": 4,
                             "Current Frame Index": 1,
@@ -6042,30 +6046,10 @@
                 },
                 {
                     "enabled": true,
-                    "UID": 9152646143077961414,
-                    "Type": "Image",
-                    "TypeID": 20,
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Sprite ID": 10235916359812139535,
-                    "Sprite Name": "bronson_icon.png",
-                    "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
-                        "W": 1.0
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
-                },
-                {
-                    "enabled": true,
                     "UID": 16493472610224367862,
                     "Type": "Button",
                     "TypeID": 18,
-                    "Graphic ID": 9152646143077961414,
+                    "Graphic ID": 0,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.3199999928474426,
@@ -6126,7 +6110,7 @@
                     "OrderInLayer": 7
                 },
                 {
-                    "enabled": false,
+                    "enabled": true,
                     "UID": 15734927719708088218,
                     "Type": "Animator",
                     "TypeID": 15,
@@ -6184,7 +6168,7 @@
                     "OrderInLayer": 7
                 },
                 {
-                    "enabled": false,
+                    "enabled": true,
                     "UID": 13911941345104610456,
                     "Type": "Animator",
                     "TypeID": 15,
@@ -6246,13 +6230,13 @@
                     "UID": 1239113531741309758,
                     "Type": "Animator",
                     "TypeID": 15,
-                    "Loop": true,
+                    "Loop": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
                         {
                             "Name": "Char icon SS.png",
-                            "Sprite ID": 3136299889472370115,
+                            "Sprite ID": 12167231815673940346,
                             "Time Delay": 0.0,
                             "FrameCount": 4,
                             "Current Frame Index": 2,
@@ -6267,30 +6251,10 @@
                 },
                 {
                     "enabled": true,
-                    "UID": 4794996804101794300,
-                    "Type": "Image",
-                    "TypeID": 20,
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Sprite ID": 136179649567712096,
-                    "Sprite Name": "chuck_icon.png",
-                    "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
-                        "W": 1.0
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
-                },
-                {
-                    "enabled": true,
                     "UID": 3082481809780813473,
                     "Type": "Button",
                     "TypeID": 18,
-                    "Graphic ID": 4794996804101794300,
+                    "Graphic ID": 0,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.30000001192092896,
@@ -6351,7 +6315,7 @@
                     "OrderInLayer": 7
                 },
                 {
-                    "enabled": false,
+                    "enabled": true,
                     "UID": 9802699497042476998,
                     "Type": "Animator",
                     "TypeID": 15,
@@ -6409,7 +6373,7 @@
                     "OrderInLayer": 7
                 },
                 {
-                    "enabled": false,
+                    "enabled": true,
                     "UID": 18012941287013770238,
                     "Type": "Animator",
                     "TypeID": 15,
@@ -11114,13 +11078,9 @@
                     "makeChoice": false,
                     "numOfCrew": 0,
                     "suppliesChangedAmount": 0,
-                    "bronsonPotrait": 9529917245712715985,
-                    "chuckPotrait": 16363103110117735610,
+                    "prepareCanvas": 9980760545839184114,
                     "prepareFinal": 6285211887336012985,
                     "prepareChoices": 7499023362184100357,
-                    "dantonPotrait": 3519945488849256633,
-                    "harrisPotrait": 8000574305043189081,
-                    "prepareCanvas": 9980760545839184114,
                     "BHarrowA": 12165519364442222231,
                     "BMarrowA": 1183274616169451387,
                     "HMarrowA": 16202023703586266331,
@@ -11130,22 +11090,26 @@
                     "CMarrowA": 13911941345104610456,
                     "DHarrowA": 9802699497042476998,
                     "suppliesChanged": 6516584515277809790,
-                    "harrisButton": 3066674797223769185,
                     "DMarrowA": 18012941287013770238,
                     "bronson": 7730477650993650158,
-                    "bronsonButton": 16493472610224367862,
+                    "bronsonPotrait": 7934036241181463372,
+                    "bronsonIconFinal": 7948610423492870277,
                     "chuck": 10697450015327120615,
-                    "crewManager": 13939291633639314673,
-                    "chuckButton": 3082481809780813473,
+                    "chuckIconFinal": 1239113531741309758,
+                    "chuckPotrait": 5860118573017363651,
                     "prepareButton1": 5012012842181654260,
                     "closeButton": 826755621581371733,
-                    "dantonButton": 8613015735679678507,
+                    "crewManager": 13939291633639314673,
+                    "dantonIconFinal": 12956238224812044937,
+                    "prepareOption1": 4758287676352754314,
+                    "dantonPotrait": 15478938264467258768,
                     "harris": 15351396382966484407,
+                    "harrisIconFinal": 18405257415296420626,
+                    "harrisPotrait": 9870245641058983793,
                     "health": 12517063968004599415,
                     "prepareBody": 1002480817798706432,
                     "mental": 4116896464841813217,
                     "prepareButton2": 2974923908502949488,
-                    "prepareOption1": 4758287676352754314,
                     "prepareOption2": 11418936534089393001,
                     "resultText": 7144968500427476956
                 }
@@ -13555,16 +13519,20 @@
                     "TypeID": 23,
                     "Name": "StatusUpdate",
                     "cMental": 17243310197946437208,
+                    "cIcon": 6964579270565361010,
                     "bHealth": 4733176186311359390,
                     "bHunger": 14200492031540441030,
-                    "dHunger": 8041293675217350538,
                     "cHealth": 10646827259654905705,
                     "bMental": 2096999201378656454,
+                    "bIcon": 16994694024376737912,
                     "cHunger": 8518447015020493809,
                     "dHealth": 11379496491972266232,
+                    "dHunger": 8041293675217350538,
+                    "dIcon": 15486007985479536033,
                     "dMental": 2300982811612854507,
                     "hHealth": 9754937109228292587,
                     "hHunger": 5649216351233992738,
+                    "hIcon": 14465097592928289417,
                     "hMental": 1548099115480364306,
                     "supplies": 13182911405481717495
                 }
@@ -13708,23 +13676,27 @@
                 },
                 {
                     "enabled": true,
-                    "UID": 13098957439146781859,
-                    "Type": "Image",
-                    "TypeID": 20,
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Sprite ID": 2449633664824440552,
-                    "Sprite Name": "harris_icon.png",
-                    "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
-                        "W": 1.0
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
+                    "UID": 14465097592928289417,
+                    "Type": "Animator",
+                    "TypeID": 15,
+                    "Loop": false,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "Char icon SS.png",
+                            "Sprite ID": 12167231815673940346,
+                            "Time Delay": 0.0,
+                            "FrameCount": 4,
+                            "Current Frame Index": 0,
+                            "Rows": 1,
+                            "Columns": 4,
+                            "Flip": {
+                                "X": false,
+                                "Y": false
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -13962,23 +13934,27 @@
                 },
                 {
                     "enabled": true,
-                    "UID": 6775426470887361206,
-                    "Type": "Image",
-                    "TypeID": 20,
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Sprite ID": 136179649567712096,
-                    "Sprite Name": "chuck_icon.png",
-                    "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
-                        "W": 1.0
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
+                    "UID": 6964579270565361010,
+                    "Type": "Animator",
+                    "TypeID": 15,
+                    "Loop": false,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "Char icon SS.png",
+                            "Sprite ID": 12167231815673940346,
+                            "Time Delay": 0.0,
+                            "FrameCount": 4,
+                            "Current Frame Index": 2,
+                            "Rows": 1,
+                            "Columns": 4,
+                            "Flip": {
+                                "X": false,
+                                "Y": false
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -14190,23 +14166,27 @@
                 },
                 {
                     "enabled": true,
-                    "UID": 11806213253937202318,
-                    "Type": "Image",
-                    "TypeID": 20,
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Sprite ID": 10235916359812139535,
-                    "Sprite Name": "bronson_icon.png",
-                    "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
-                        "W": 1.0
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
+                    "UID": 16994694024376737912,
+                    "Type": "Animator",
+                    "TypeID": 15,
+                    "Loop": false,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "Char icon SS.png",
+                            "Sprite ID": 12167231815673940346,
+                            "Time Delay": 0.0,
+                            "FrameCount": 4,
+                            "Current Frame Index": 1,
+                            "Rows": 1,
+                            "Columns": 4,
+                            "Flip": {
+                                "X": false,
+                                "Y": false
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -14418,23 +14398,27 @@
                 },
                 {
                     "enabled": true,
-                    "UID": 7357959179060166883,
-                    "Type": "Image",
-                    "TypeID": 20,
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Sprite ID": 16849667610627808972,
-                    "Sprite Name": "danton_icon.png",
-                    "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
-                        "W": 1.0
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
+                    "UID": 15486007985479536033,
+                    "Type": "Animator",
+                    "TypeID": 15,
+                    "Loop": false,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "Char icon SS.png",
+                            "Sprite ID": 12167231815673940346,
+                            "Time Delay": 0.0,
+                            "FrameCount": 4,
+                            "Current Frame Index": 3,
+                            "Rows": 1,
+                            "Columns": 4,
+                            "Flip": {
+                                "X": false,
+                                "Y": false
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -15936,8 +15920,8 @@
                     "Count": 1,
                     "Animations": [
                         {
-                            "Name": "DialogueSpriteSheet.png",
-                            "Sprite ID": 5581901781755912870,
+                            "Name": "Char color half SS.png",
+                            "Sprite ID": 15683354211118135525,
                             "Time Delay": 0.0,
                             "FrameCount": 4,
                             "Current Frame Index": 0,
@@ -19834,13 +19818,13 @@
                     "UID": 12956238224812044937,
                     "Type": "Animator",
                     "TypeID": 15,
-                    "Loop": true,
+                    "Loop": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
                         {
                             "Name": "Char icon SS.png",
-                            "Sprite ID": 3136299889472370115,
+                            "Sprite ID": 12167231815673940346,
                             "Time Delay": 0.0,
                             "FrameCount": 4,
                             "Current Frame Index": 3,
@@ -19855,30 +19839,10 @@
                 },
                 {
                     "enabled": true,
-                    "UID": 14336691154277035636,
-                    "Type": "Image",
-                    "TypeID": 20,
-                    "H_Align": 1,
-                    "V_Align": 1,
-                    "Sprite ID": 16849667610627808972,
-                    "Sprite Name": "danton_icon.png",
-                    "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
-                        "W": 1.0
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
-                },
-                {
-                    "enabled": true,
                     "UID": 8613015735679678507,
                     "Type": "Button",
                     "TypeID": 18,
-                    "Graphic ID": 14336691154277035636,
+                    "Graphic ID": 0,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.3400000035762787,

@@ -36,24 +36,19 @@ public class Prepare : CopiumScript
     public Crew chuck;
     public Crew danton;
 
-    public GameObject harrisPotrait;
-    public GameObject bronsonPotrait;
-    public GameObject chuckPotrait;
-    public GameObject dantonPotrait;
+    public Animator harrisPotrait;
+    public Animator bronsonPotrait;
+    public Animator chuckPotrait;
+    public Animator dantonPotrait;
 
     public Animator health;
     public Animator mental;
 
-    public Button harrisButton;
-    public Button bronsonButton;
-    public Button chuckButton;
-    public Button dantonButton;
-    ButtonWrapper harrisBtnWrapper;
-    ButtonWrapper bronsonBtnWrapper;
-    ButtonWrapper chuckBtnWrapper;
-    ButtonWrapper dantonBtnWrapper;
+    public Animator harrisIconFinal;
+    public Animator bronsonIconFinal;
+    public Animator chuckIconFinal;
+    public Animator dantonIconFinal;
     public Text resultText;
-
 
     public GameObject prepareChoices;
     public GameObject prepareFinal;
@@ -82,20 +77,66 @@ public class Prepare : CopiumScript
     int randomCrewmate = 0;
     void Start()
     {
-        harrisBtnWrapper = new ButtonWrapper(harrisButton);
-        harrisBtnWrapper.SetImage(harrisButton.GetComponent<Image>());
-        bronsonBtnWrapper = new ButtonWrapper(bronsonButton);
-        bronsonBtnWrapper.SetImage(bronsonButton.GetComponent<Image>());
-        chuckBtnWrapper = new ButtonWrapper(chuckButton);
-        chuckBtnWrapper.SetImage(chuckButton.GetComponent<Image>());
-        dantonBtnWrapper = new ButtonWrapper(dantonButton);
-        dantonBtnWrapper.SetImage(dantonButton.GetComponent<Image>());
-
         health.stop();
         mental.stop();
+
+        HHarrowA.stop();
+        HMarrowA.stop();
+        BHarrowA.stop();
+        BMarrowA.stop();
+        CHarrowA.stop();
+        CMarrowA.stop();
+        DHarrowA.stop();
+        DMarrowA.stop();
+
+        prepareFinal.SetActive(false);
+        //HHarrowA.enabled = false;
+        //HMarrowA.enabled = false;
+        //BHarrowA.enabled = false;
+        //BMarrowA.enabled = false;
+        //CHarrowA.enabled = false;
+        //CMarrowA.enabled = false;
+        //DHarrowA.enabled = false;
+        //DMarrowA.enabled = false;
+
+        //HHarrowA.play = true;
+        //HMarrowA.play = true;
+        //BHarrowA.play = true;
+        //BMarrowA.play = true;
+        //CHarrowA.play = true;
+        //CMarrowA.play = true;
+        //DHarrowA.play = true;
+        //DMarrowA.play = true;
     }
     void Update()
     {
+        harrisIconFinal.stop();
+        harrisIconFinal.setFrame(0);
+        bronsonIconFinal.stop();
+        bronsonIconFinal.setFrame(1);
+        chuckIconFinal.stop();
+        chuckIconFinal.setFrame(2);
+        dantonIconFinal.stop();
+        dantonIconFinal.setFrame(3);
+
+        harrisPotrait.stop();
+        harrisPotrait.setFrame(0);
+        bronsonPotrait.stop();
+        bronsonPotrait.setFrame(1);
+        chuckPotrait.stop();
+        chuckPotrait.setFrame(2);
+        dantonPotrait.stop();
+        dantonPotrait.setFrame(3);
+
+        HHarrowA.stop();
+        HMarrowA.stop();
+        BHarrowA.stop();
+        BMarrowA.stop();
+        CHarrowA.stop();
+        CMarrowA.stop();
+        DHarrowA.stop();
+        DMarrowA.stop();
+
         if (makeChoice)
         {
             if (prepareButton1.state == ButtonState.OnClick)
@@ -129,25 +170,6 @@ public class Prepare : CopiumScript
                 option2Hover = false;
             }
         }
-
-        /*
-        if (harrisBtnWrapper.GetState() == ButtonState.OnClick)
-        {
-            resultText.text = crewManager.crew[0].resultText;
-        }
-        else if (bronsonBtnWrapper.GetState() == ButtonState.OnClick)
-        {
-            resultText.text = crewManager.crew[1].resultText;
-        }
-        else if (chuckBtnWrapper.GetState() == ButtonState.OnClick)
-        {
-            resultText.text = crewManager.crew[2].resultText;
-        }
-        else if (dantonBtnWrapper.GetState() == ButtonState.OnClick)
-        {
-            resultText.text = crewManager.crew[3].resultText;
-        }
-        */
     }
 
 
@@ -174,10 +196,7 @@ public class Prepare : CopiumScript
         prepareOption2.gameObject.SetActive(false);
         makeChoice = true;
 
-        harrisPotrait.SetActive(false);
-        bronsonPotrait.SetActive(false);
-        chuckPotrait.SetActive(false);
-        dantonPotrait.SetActive(false);
+        harrisPotrait.enabled = bronsonPotrait.enabled = chuckPotrait.enabled = dantonPotrait.enabled = false;
 
         for (int i = 0; i < crewmate.Length; i++)
         {
@@ -187,19 +206,19 @@ public class Prepare : CopiumScript
             }
             if (crewmate[i].name == "Harris")
             {
-                harrisPotrait.SetActive(true);
+                harrisPotrait.enabled = true;
             }
             else if (crewmate[i].name == "Bronson")
             {
-                bronsonPotrait.SetActive(true);
+                bronsonPotrait.enabled = true;
             }
             else if (crewmate[i].name == "Chuck")
             {
-                chuckPotrait.SetActive(true);
+                chuckPotrait.enabled = true;
             }
             else if (crewmate[i].name == "Danton")
             {
-                dantonPotrait.SetActive(true);
+                dantonPotrait.enabled = true;
             }
         }
 
@@ -410,7 +429,6 @@ public class Prepare : CopiumScript
         CMarrowA.stop();
         DHarrowA.stop();
         DMarrowA.stop();
-
 
         //roll chance for event choice successs / for choices check if choiceNum<=difficulty
         int choiceNum = RNG.Range(1, 10);
@@ -807,54 +825,25 @@ public class Prepare : CopiumScript
         prepareFinal.SetActive(true);
 
         changeSuppliesText(suppliesChangedAmount);
-        harrisButton.gameObject.SetActive(false);
-        bronsonButton.gameObject.SetActive(false);
-        chuckButton.gameObject.SetActive(false);
-        dantonButton.gameObject.SetActive(false);
+        harrisIconFinal.enabled = bronsonIconFinal.enabled = chuckIconFinal.enabled = dantonIconFinal.enabled = false;
 
         resultText.text = currentCrewmate[0].resultText;
-        /*
-        if (!crewManager.hDeploy)
-        {
-            if(crewManager.harris.person.alive)
-                crewManager.harris.person.resultText = "Harris is just chilling in the back";
-            
-            //harrisButton.gameObject.SetActive(true);
-        }
-        if (!crewManager.bDeploy)
-        {
-            if(crewManager.bronson.person.alive)
-                crewManager.bronson.person.resultText = "Bronson is just chilling in the back";
-            //bronsonButton.gameObject.SetActive(true);
-        }
-        if (!crewManager.cDeploy)
-        {
-            if(crewManager.chuck.person.alive)
-                crewManager.chuck.person.resultText = "Chuck is just chilling in the back";
-            //chuckButton.gameObject.SetActive(true);
-        }
-        if (!crewManager.dDeploy)
-        {
-            if(crewManager.danton.person.alive)
-                crewManager.danton.person.resultText = "Danton is just chilling in the back";
-            //dantonButton.gameObject.SetActive(true);
-        }
-        */
+
         if (crewManager.hDeploy)
         {
-            harrisButton.gameObject.SetActive(true);
+            harrisIconFinal.enabled = true;
         }
         if (crewManager.bDeploy)
         {
-            bronsonButton.gameObject.SetActive(true);
+            bronsonIconFinal.enabled = true;
         }
         if (crewManager.cDeploy)
         {
-            chuckButton.gameObject.SetActive(true);
+            chuckIconFinal.enabled = true;
         }
         if (crewManager.dDeploy)
         {
-            dantonButton.gameObject.SetActive(true);
+            dantonIconFinal.enabled = true;
         }
     }
 
