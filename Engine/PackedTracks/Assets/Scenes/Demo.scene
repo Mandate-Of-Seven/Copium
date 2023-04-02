@@ -3953,17 +3953,17 @@
                     "dialoguePartnerIndex": -1,
                     "hovering": false,
                     "writerInterval": 0.02500000037252903,
-                    "dialogueBox": 405483104493658266,
+                    "dialogueBG": 8274524278383254377,
                     "bronsonBtn": 14612441191994297243,
                     "bronsonIText": 13215108533996190401,
+                    "cabinBackground": 14643779309512447336,
                     "chuckBtn": 1978830827391857268,
                     "chuckIText": 2020400801501492891,
                     "dantonBtn": 6924029604164514029,
                     "dantonIText": 11275595082562422510,
+                    "dialogueBox": 405483104493658266,
                     "harrisBtn": 14126295969543421635,
                     "harrisIText": 644993251012770052,
-                    "cabinBackground": 14643779309512447336,
-                    "dialogueBG": 8274524278383254377,
                     "CloseDialogueBtn": 15388941154379337824,
                     "bronsonInteractBtn": 1425927336021377124,
                     "crewMenu": 13939291633639314673,
@@ -19806,32 +19806,6 @@
                     "Overlap": true,
                     "Volume": 1.0,
                     "Channel": "Voice"
-                }
-            ]
-        },
-        {
-            "UID": 17778270950875198068,
-            "Name": "New GameObject(1)",
-            "Active": true,
-            "Components": [
-                {
-                    "PID": 0,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 18.450336456298828,
-                        "Y": -0.24817121028900146,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 0.0
-                    },
-                    "Scale": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0
-                    }
                 }
             ]
         },
