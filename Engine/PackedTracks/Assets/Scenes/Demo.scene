@@ -1716,8 +1716,8 @@
                     "trainManagerScript": 5971899813001945745,
                     "CloseStatusScreenBtn": 16031829790091619796,
                     "alert": 18001664217615177344,
-                    "supplySpriteSheet": 7500674397773566376,
-                    "supplyLightDiode": 1635114556995579570
+                    "supplyLightDiode": 1635114556995579570,
+                    "supplySpriteSheet": 7500674397773566376
                 },
                 {
                     "enabled": true,
@@ -15229,7 +15229,7 @@
         {
             "UID": 405483104493658266,
             "Name": "DialogueBox",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "PID": 15240074584306495293,
@@ -15809,8 +15809,8 @@
                     "Count": 1,
                     "Animations": [
                         {
-                            "Name": "DialogueSpriteSheet.png",
-                            "Sprite ID": 5581901781755912870,
+                            "Name": "Char color half SS.png",
+                            "Sprite ID": 15683354211118135525,
                             "Time Delay": 0.0,
                             "FrameCount": 4,
                             "Current Frame Index": 0,
