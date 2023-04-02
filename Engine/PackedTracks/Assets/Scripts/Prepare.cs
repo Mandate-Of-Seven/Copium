@@ -414,6 +414,7 @@ public class Prepare : CopiumScript
     /*******************************************************************************/
     public void GenerateResults()
     {
+        CrewStatusManager.Instance.alert.enabled = true;
         suppliesChangedAmount = 0;
 
         HHarrowA.enabled = HMarrowA.enabled = false;

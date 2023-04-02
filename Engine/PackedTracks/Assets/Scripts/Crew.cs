@@ -62,6 +62,11 @@ public class Crew : CopiumScript
             }
         }
 
+        if(person.alive && !CrewMenu.Instance.preparing)
+            selectBtnWrapper.failureText = "You need to be preparing your crew members first!";
+        else if(!person.alive)
+            selectBtnWrapper.failureText = person.name + " is dead...";
+
         healthA.setFrame(3 - (int)person.health);
         mentalA.setFrame(3 - (int)person.mental);
         hungerA.setFrame(2 - (int)person.hunger);

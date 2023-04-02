@@ -180,15 +180,6 @@ public class CrewMenu: CopiumScript
             //have condition for when certain values hit 0??
         if (prepareBtnWrapper.GetState() == ButtonState.OnClick)
         {
-
-            
-
-
-            if(preparing == true)
-                Console.WriteLine("true");
-            else
-                Console.WriteLine("false");
-
             interactionManager.SetInteractBtnsActive(!preparing);
             SetPrepare(!preparing);
             hDeploy = harris.isDeployed;
@@ -233,7 +224,6 @@ public class CrewMenu: CopiumScript
     /*******************************************************************************/
     void UpdateEffects()
     {
-        Debug.Log("UPDATING EFFECTS");
         harris.UpdateEffects();
         bronson.UpdateEffects();
         chuck.UpdateEffects();
@@ -405,6 +395,9 @@ public class CrewMenu: CopiumScript
     /*******************************************************************************/
     public void StartPrepare()
     {
+        CrewStatusManager.Instance.CloseStatusPanel();
+        ReportScreenManager.Instance.ClosePanel();
+
         if (!resultManager.isResultOn)
         {
             CrewStatusManager.Instance.ReturnToCockpit(true);
