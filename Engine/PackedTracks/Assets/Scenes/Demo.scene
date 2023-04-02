@@ -906,7 +906,7 @@
                     "interacting": false,
                     "preparing": false,
                     "storageComparment": true,
-                    "supplies": 10,
+                    "supplies": 3,
                     "timeElasped": 0.0,
                     "transitionDuration": 2.0,
                     "bronson": 7730477650993650158,
@@ -969,7 +969,7 @@
                         {
                             "Name": "Snow_SpriteSheet_155_5x31.png",
                             "Sprite ID": 8966109942037627320,
-                            "Time Delay": 0.029999999329447746,
+                            "Time Delay": 0.029999999329447743,
                             "FrameCount": 155,
                             "Current Frame Index": 0,
                             "Rows": 31,
@@ -1716,7 +1716,8 @@
                     "trainManagerScript": 5971899813001945745,
                     "CloseStatusScreenBtn": 16031829790091619796,
                     "alert": 18001664217615177344,
-                    "supplySpriteSheet": 7500674397773566376
+                    "supplySpriteSheet": 7500674397773566376,
+                    "supplyLightDiode": 1635114556995579570
                 },
                 {
                     "enabled": true,
@@ -19772,6 +19773,112 @@
                     "normalG": 1.0,
                     "normalB": 1.0,
                     "normalA": 0.5
+                }
+            ]
+        },
+        {
+            "UID": 9269032641614915274,
+            "Name": "SupplyIndicator",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 6642123175702952797,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 4.896907806396484,
+                        "Y": -3.487973213195801,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 3.0,
+                        "Y": 3.0,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 13061444306107847558,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 2,
+                    "OrderInLayer": 100
+                },
+                {
+                    "enabled": true,
+                    "UID": 1635114556995579570,
+                    "Type": "Image",
+                    "TypeID": 20,
+                    "H_Align": 1,
+                    "V_Align": 1,
+                    "Sprite ID": 8749553217530362876,
+                    "Sprite Name": "LightDiode.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 0.9999470710754395,
+                        "Z": 0.9998999834060669,
+                        "W": 1.0
+                    },
+                    "Flip": {
+                        "X": false,
+                        "Y": false
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 10610342938737751203,
+            "Name": "SupplyIndicatorTxt",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 9269032641614915274,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 0.12600219249725342,
+                        "Y": -0.0973656177520752,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 0.5500000715255737,
+                        "Y": 0.40000003576278687,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 10543557661342271981,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 2,
+                    "OrderInLayer": 100
+                },
+                {
+                    "enabled": true,
+                    "UID": 12412553314054779210,
+                    "Type": "SpriteRenderer",
+                    "TypeID": 22,
+                    "Sprite ID": 6607723405821301401,
+                    "Sprite Name": "SuppliesText.png",
+                    "Color": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0,
+                        "W": 1.0
+                    },
+                    "Flip": {
+                        "X": false,
+                        "Y": false
+                    }
                 }
             ]
         }

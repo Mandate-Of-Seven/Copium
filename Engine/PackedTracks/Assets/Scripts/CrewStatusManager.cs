@@ -50,7 +50,8 @@ public class CrewStatusManager: CopiumScript
 	public int medThreshold; // med - lot
 	public int lotThreshold; // lot - inf
 	int supplyState;
-
+	public Image supplyLightDiode;
+	bool supplyLow = false;
 	//Button Wrappers
 	public Button CloseStatusScreenBtn;
 	ButtonWrapper CloseStatusScreenBtnWrapper;
@@ -194,6 +195,28 @@ public class CrewStatusManager: CopiumScript
 			CrewMenu.Instance.deploying = false;
 			ReturnToCockpit(false);
 		}
+
+
+
+
+
+
+		if(CrewMenu.Instance.supplies >= exlowThreshold && CrewMenu.Instance.supplies < lowThreshold)
+		{
+			if(!supplyLow)
+			{
+				supplyLow = true;
+				supplyLightDiode.color = new Color(1.0f, 0.75f, 0.20f, 1.0f);
+			}
+		}
+		if(CrewMenu.Instance.supplies > lowThreshold)
+		{
+			if(supplyLow)
+			{
+				supplyLow = false;
+				supplyLightDiode.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+			}
+		}
 	}
 
 	public void GoToCabin()
@@ -276,7 +299,10 @@ public class CrewStatusManager: CopiumScript
         else
         {
 			if(supplyState != -1)
+			{
                 ToggleSuppliesSprite(-1);
+
+			}
         }
 
 		if (supplyState == -1)

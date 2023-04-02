@@ -1,5 +1,5 @@
-[2023-03-31 21:07:02.937] [Error] [critical] 
-Caused By:	!mScript
-Info:		MONO OBJECT OF TutorialManager NOT LOADED
-Source:		C:\Users\FLESH\ECS\Copium\Engine\core-engine\src\Scripting\scripting-system.cpp (Line: 940)
+[2023-04-02 16:40:16.064] [Error] [critical] 
+Caused By:	!(internalFormat & dataFormat)
+Info:		Format of texture not supported!!
+Source:		C:\Users\matth\Documents\GitHub\GAM-200\Engine\core-engine\src\Graphics\textures.cpp (Line: 52)
 
