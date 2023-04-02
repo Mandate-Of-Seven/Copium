@@ -82,6 +82,9 @@ public class PauseMenu: CopiumScript
             else
             {
                 OptionsGameObj.SetActive(false);
+                PauseYesGameObj.SetActive(false);
+                PauseNoGameObj.SetActive(false);
+                PauseTextGameObj.SetActive(false);
                 PauseResumeGameObj.SetActive(true);
                 PauseMainMenuGameObj.SetActive(true);
                 PauseQuitGameObj.SetActive(true);
@@ -105,6 +108,10 @@ public class PauseMenu: CopiumScript
             else if(loadScene)
             {
                 loadScene = false;
+                if (!isMuted)
+                {
+                    InternalCalls.AudioMute(false);
+                }
                 SceneManager.LoadScene("MainMenu");
             }
         }
@@ -135,6 +142,7 @@ public class PauseMenu: CopiumScript
                 PauseTextGameObj.SetActive(true);
                 PauseText.text = "Are you sure?";
                 returnToMenu = true;
+
             }
              if (PauseOptionsBtn.state == ButtonState.OnClick)
             {
@@ -205,9 +213,14 @@ public class PauseMenu: CopiumScript
             {
                 fade.Start();
                 if (quitGame)
+                {
                     loadQuit = true;
+                }
                 else if (returnToMenu)
+                {
                     loadScene = true;
+
+                }
             }
 
             if (PauseHowToPlayBtn.state == ButtonState.OnClick)
