@@ -36,10 +36,6 @@
         {
             "Name": "Transition",
             "ID": 10
-        },
-        {
-            "Name": "Tutorial",
-            "ID": 9
         }
     ],
     "GameObjects": [
@@ -140,15 +136,15 @@
                     "endingDantonVO": 7891194026526516512,
                     "endingGenericVO": 12110915872301913157,
                     "endingHarrisVO": 9569732444608153641,
+                    "explosionForEvent3SFX": 12229284277379369868,
                     "explosionSFX": 12229284277379369868,
                     "failedSFX": 17176667212650767161,
                     "gunfireSFX": 13147104160255255935,
                     "fileCloseSFX": 5484840067536943399,
                     "hoverSFX": 17747488176716717098,
-                    "leverSFX": 10219544415510482568,
-                    "paperSFX": 16863530532877669399,
                     "leverEngagedSFX": 13165669678142242702,
-                    "explosionForEvent3SFX": 12229284277379369868
+                    "leverSFX": 10219544415510482568,
+                    "paperSFX": 16863530532877669399
                 }
             ]
         },
@@ -1235,7 +1231,7 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "GameManager",
-                    "distanceInterval": 0.10000000149011612,
+                    "distanceInterval": 0.25,
                     "distanceLeft": 400.0,
                     "eventSequence": 0,
                     "gameEnd": false,
@@ -1716,8 +1712,7 @@
                     "trainManagerScript": 5971899813001945745,
                     "CloseStatusScreenBtn": 16031829790091619796,
                     "alert": 18001664217615177344,
-                    "supplySpriteSheet": 7500674397773566376,
-                    "cabinInteractions": 15405105423273306832
+                    "supplySpriteSheet": 7500674397773566376
                 },
                 {
                     "enabled": true,
@@ -6757,7 +6752,9 @@
                     "PauseReturnBtn": 2653580874094747035,
                     "PauseYesBtn": 5751452946916325514,
                     "VolumeBtn": 12903529283778841537,
-                    "fade": 11311745147968865628
+                    "fade": 11311745147968865628,
+                    "PauseFSOffBtn": 6032973662470951523,
+                    "PauseFSOnBtn": 17868908892949103381
                 }
             ]
         },
@@ -18856,10 +18853,10 @@
         {
             "UID": 15245480561845407348,
             "Name": "P Fullscreen On",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
-                    "PID": 1722160444903115838,
+                    "PID": 7633468330355486046,
                     "Type": "Transform",
                     "Pos": {
                         "X": -1.149999976158142,
@@ -18920,6 +18917,37 @@
                     "g": 1.0,
                     "b": 1.0,
                     "a": 1.0
+                },
+                {
+                    "enabled": true,
+                    "UID": 17868908892949103381,
+                    "Type": "Button",
+                    "TypeID": 18,
+                    "Graphic ID": 0,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -1.8600000143051147,
+                            "Y": -1.100000023841858
+                        },
+                        "Max": {
+                            "X": 1.8600000143051147,
+                            "Y": 1.100000023841858
+                        }
+                    },
+                    "Callback": "",
+                    "FadeDuration": 0.10000000149011612,
+                    "clickedR": 0.5,
+                    "clickedG": 0.5,
+                    "clickedB": 0.5,
+                    "clickedA": 0.5,
+                    "hoveredR": 0.5,
+                    "hoveredG": 1.0,
+                    "hoveredB": 1.0,
+                    "hoveredA": 0.5,
+                    "normalR": 1.0,
+                    "normalG": 1.0,
+                    "normalB": 1.0,
+                    "normalA": 0.5
                 }
             ]
         },
@@ -18984,10 +19012,10 @@
         {
             "UID": 4251652053532537902,
             "Name": "P Fullscreen Off",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
-                    "PID": 1722160444903115838,
+                    "PID": 7633468330355486046,
                     "Type": "Transform",
                     "Pos": {
                         "X": 1.100000023841858,
@@ -19048,6 +19076,37 @@
                     "g": 1.0,
                     "b": 1.0,
                     "a": 1.0
+                },
+                {
+                    "enabled": true,
+                    "UID": 6032973662470951523,
+                    "Type": "Button",
+                    "TypeID": 18,
+                    "Graphic ID": 13988566325234601470,
+                    "BoundingBox": {
+                        "Min": {
+                            "X": -1.8600000143051147,
+                            "Y": -1.100000023841858
+                        },
+                        "Max": {
+                            "X": 1.8600000143051147,
+                            "Y": 1.100000023841858
+                        }
+                    },
+                    "Callback": "",
+                    "FadeDuration": 0.10000000149011612,
+                    "clickedR": 0.5,
+                    "clickedG": 0.5,
+                    "clickedB": 0.5,
+                    "clickedA": 0.5,
+                    "hoveredR": 0.5,
+                    "hoveredG": 1.0,
+                    "hoveredB": 1.0,
+                    "hoveredA": 0.5,
+                    "normalR": 1.0,
+                    "normalG": 1.0,
+                    "normalB": 1.0,
+                    "normalA": 0.5
                 }
             ]
         },
