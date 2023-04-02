@@ -969,7 +969,7 @@
                         {
                             "Name": "Snow_SpriteSheet_155_5x31.png",
                             "Sprite ID": 8966109942037627320,
-                            "Time Delay": 0.029999999329447743,
+                            "Time Delay": 0.029999999329447746,
                             "FrameCount": 155,
                             "Current Frame Index": 0,
                             "Rows": 31,
@@ -2450,8 +2450,8 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 2.950000047683716,
-                        "Y": 2.5,
+                        "X": 3.0999999046325684,
+                        "Y": 3.0999999046325684,
                         "Z": 1.0
                     }
                 },
@@ -2674,8 +2674,8 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 2.950000047683716,
-                        "Y": 2.5,
+                        "X": 3.0999999046325684,
+                        "Y": 3.0999999046325684,
                         "Z": 1.0
                     }
                 },
@@ -3264,7 +3264,7 @@
                     "TypeID": 20,
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Sprite ID": 6985570555934067165,
+                    "Sprite ID": 15297633390844943036,
                     "Sprite Name": "Engi.png",
                     "Color": {
                         "X": 1.0,
@@ -3349,7 +3349,7 @@
                     "TypeID": 20,
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Sprite ID": 13421732615435831700,
+                    "Sprite ID": 17802436034453963228,
                     "Sprite Name": "Muscles.png",
                     "Color": {
                         "X": 1.0,
@@ -3434,7 +3434,7 @@
                     "TypeID": 20,
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Sprite ID": 8384843210591303328,
+                    "Sprite ID": 11528359155530082998,
                     "Sprite Name": "Smarts.png",
                     "Color": {
                         "X": 1.0,
@@ -3489,14 +3489,14 @@
                     "PID": 16767202022546330953,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 0.699999988079071,
-                        "Y": 0.699999988079071,
+                        "X": 1.2516298294067383,
+                        "Y": 0.822583794593811,
                         "Z": 0.0
                     },
                     "Rot": {
                         "X": 0.0,
                         "Y": 0.0,
-                        "Z": -15.149999618530273
+                        "Z": -15.14999771118164
                     },
                     "Scale": {
                         "X": 4.5,
@@ -3519,8 +3519,8 @@
                     "TypeID": 20,
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Sprite ID": 16500982092612512462,
-                    "Sprite Name": "Medic_2.png",
+                    "Sprite ID": 360317386644837690,
+                    "Sprite Name": "Medic.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
@@ -5500,7 +5500,7 @@
                     "UID": 143377132739568309,
                     "Type": "SpriteRenderer",
                     "TypeID": 22,
-                    "Sprite ID": 4682861623453333922,
+                    "Sprite ID": 0,
                     "Sprite Name": "supply_icon.png",
                     "Color": {
                         "X": 1.0,
@@ -9610,7 +9610,7 @@
                     "TypeID": 20,
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Sprite ID": 4682861623453333922,
+                    "Sprite ID": 0,
                     "Sprite Name": "supply_icon.png",
                     "Color": {
                         "X": 1.0,
@@ -10300,8 +10300,8 @@
                     "PID": 13627107543471401800,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 5.699999809265137,
-                        "Y": 4.199999809265137,
+                        "X": 5.9541120529174805,
+                        "Y": 4.393609523773193,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -10310,8 +10310,8 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 7.5,
-                        "Y": 7.5,
+                        "X": 3.0,
+                        "Y": 3.0,
                         "Z": 1.0
                     }
                 },
@@ -10330,12 +10330,12 @@
                     "TypeID": 20,
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Sprite ID": 9429289951921731917,
-                    "Sprite Name": "X_button.png",
+                    "Sprite ID": 3769724111006938471,
+                    "Sprite Name": "CrossForFile.png",
                     "Color": {
                         "X": 1.0,
-                        "Y": 0.12941177189350128,
-                        "Z": 0.12941177189350128,
+                        "Y": 0.9998999834060669,
+                        "Z": 0.9998999834060669,
                         "W": 1.0
                     },
                     "Flip": {
@@ -11299,7 +11299,7 @@
                     "TypeID": 20,
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Sprite ID": 6985570555934067165,
+                    "Sprite ID": 15297633390844943036,
                     "Sprite Name": "Engi.png",
                     "Color": {
                         "X": 1.0,
@@ -12077,7 +12077,7 @@
                     "TypeID": 20,
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Sprite ID": 13421732615435831700,
+                    "Sprite ID": 17802436034453963228,
                     "Sprite Name": "Muscles.png",
                     "Color": {
                         "X": 1.0,
@@ -12238,7 +12238,7 @@
                     "TypeID": 20,
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Sprite ID": 8384843210591303328,
+                    "Sprite ID": 11528359155530082998,
                     "Sprite Name": "Smarts.png",
                     "Color": {
                         "X": 1.0,
@@ -12662,14 +12662,14 @@
                     "PID": 2478232305255957134,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 0.0,
-                        "Y": 1.0,
+                        "X": -0.0000057220458984375,
+                        "Y": 1.0000019073486328,
                         "Z": 0.0
                     },
                     "Rot": {
                         "X": 0.0,
                         "Y": 0.0,
-                        "Z": -16.5
+                        "Z": -16.499998092651367
                     },
                     "Scale": {
                         "X": 4.0,
@@ -12692,8 +12692,8 @@
                     "TypeID": 20,
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Sprite ID": 16500982092612512462,
-                    "Sprite Name": "Medic_2.png",
+                    "Sprite ID": 360317386644837690,
+                    "Sprite Name": "Medic.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
@@ -14825,7 +14825,7 @@
                     "TypeID": 20,
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Sprite ID": 4682861623453333922,
+                    "Sprite ID": 0,
                     "Sprite Name": "supply_icon.png",
                     "Color": {
                         "X": 1.0,
@@ -16693,8 +16693,8 @@
                     "Count": 1,
                     "Animations": [
                         {
-                            "Name": "CharacterHalfSS.png",
-                            "Sprite ID": 10773975946313926225,
+                            "Name": "Char color half SS.png",
+                            "Sprite ID": 15683354211118135525,
                             "Time Delay": 0.0,
                             "FrameCount": 4,
                             "Current Frame Index": 1,
@@ -17073,8 +17073,8 @@
                     "Count": 1,
                     "Animations": [
                         {
-                            "Name": "CharacterHalfSS.png",
-                            "Sprite ID": 10773975946313926225,
+                            "Name": "Char color half SS.png",
+                            "Sprite ID": 15683354211118135525,
                             "Time Delay": 0.0,
                             "FrameCount": 4,
                             "Current Frame Index": 2,
@@ -17756,8 +17756,8 @@
                     "PID": 15952155975634487811,
                     "Type": "Transform",
                     "Pos": {
-                        "X": -7.38588285446167,
-                        "Y": -3.75600004196167,
+                        "X": -3.852508306503296,
+                        "Y": -3.9496092796325684,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -17786,8 +17786,8 @@
                     "TypeID": 20,
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Sprite ID": 9588604566561187799,
-                    "Sprite Name": "Arrow.png",
+                    "Sprite ID": 18208637694012464273,
+                    "Sprite Name": "ArrowPreviousPage.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
@@ -17795,7 +17795,7 @@
                         "W": 0.501960813999176
                     },
                     "Flip": {
-                        "X": true,
+                        "X": false,
                         "Y": false
                     }
                 },
@@ -17804,7 +17804,7 @@
                     "UID": 11296636408598356073,
                     "Type": "Button",
                     "TypeID": 18,
-                    "Graphic ID": 0,
+                    "Graphic ID": 1028799011484414598,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.17000000178813934,
@@ -17841,8 +17841,8 @@
                     "PID": 15952155975634487811,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 6.4605584144592285,
-                        "Y": -3.75600004196167,
+                        "X": 2.6609723567962646,
+                        "Y": -3.9859118461608887,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -17871,8 +17871,8 @@
                     "TypeID": 20,
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Sprite ID": 9588604566561187799,
-                    "Sprite Name": "Arrow.png",
+                    "Sprite ID": 6980906286303941413,
+                    "Sprite Name": "ArrowNextPage.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
@@ -17889,7 +17889,7 @@
                     "UID": 10444853072535840516,
                     "Type": "Button",
                     "TypeID": 18,
-                    "Graphic ID": 0,
+                    "Graphic ID": 13144111317404521588,
                     "BoundingBox": {
                         "Min": {
                             "X": -0.17000000178813934,
@@ -17926,8 +17926,8 @@
                     "PID": 15952155975634487811,
                     "Type": "Transform",
                     "Pos": {
-                        "X": 5.699999809265137,
-                        "Y": 4.5,
+                        "X": 5.5789947509765625,
+                        "Y": 4.439496994018555,
                         "Z": 0.0
                     },
                     "Rot": {
@@ -17936,8 +17936,8 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 7.5,
-                        "Y": 7.5,
+                        "X": 3.0,
+                        "Y": 3.0,
                         "Z": 1.0
                     }
                 },
@@ -17956,12 +17956,12 @@
                     "TypeID": 20,
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Sprite ID": 9429289951921731917,
-                    "Sprite Name": "X_button.png",
+                    "Sprite ID": 3769724111006938471,
+                    "Sprite Name": "CrossForFile.png",
                     "Color": {
                         "X": 1.0,
-                        "Y": 0.0,
-                        "Z": 0.0,
+                        "Y": 0.9998999834060669,
+                        "Z": 0.9998999834060669,
                         "W": 1.0
                     },
                     "Flip": {
@@ -17991,9 +17991,9 @@
                     "clickedG": 0.5,
                     "clickedB": 0.5,
                     "clickedA": 0.5,
-                    "hoveredR": 0.5,
-                    "hoveredG": 1.0,
-                    "hoveredB": 1.0,
+                    "hoveredR": 1.0,
+                    "hoveredG": 0.5502582788467407,
+                    "hoveredB": 0.5,
                     "hoveredA": 0.5,
                     "normalR": 1.0,
                     "normalG": 1.0,
@@ -18044,8 +18044,8 @@
                     "Count": 1,
                     "Animations": [
                         {
-                            "Name": "CharacterHalfSS.png",
-                            "Sprite ID": 10773975946313926225,
+                            "Name": "Char color half SS.png",
+                            "Sprite ID": 15683354211118135525,
                             "Time Delay": 0.0,
                             "FrameCount": 4,
                             "Current Frame Index": 3,
@@ -18102,8 +18102,8 @@
                     "Count": 1,
                     "Animations": [
                         {
-                            "Name": "CharacterHalfSS.png",
-                            "Sprite ID": 10773975946313926225,
+                            "Name": "Char color half SS.png",
+                            "Sprite ID": 15683354211118135525,
                             "Time Delay": 0.0,
                             "FrameCount": 4,
                             "Current Frame Index": 0,
@@ -19476,7 +19476,7 @@
                     "Alias": "Mom_Message_1",
                     "Loop": false,
                     "Overlap": true,
-                    "Volume": 1.0,
+                    "Volume": 0.20000000298023224,
                     "Channel": "Voice"
                 }
             ]
@@ -19513,7 +19513,7 @@
                     "Alias": "Mom_Message_2",
                     "Loop": false,
                     "Overlap": true,
-                    "Volume": 1.0,
+                    "Volume": 0.20000000298023224,
                     "Channel": "Voice"
                 }
             ]
@@ -19550,7 +19550,7 @@
                     "Alias": "Mom_Message_3",
                     "Loop": false,
                     "Overlap": true,
-                    "Volume": 1.0,
+                    "Volume": 0.20000000298023224,
                     "Channel": "Voice"
                 }
             ]
@@ -19587,7 +19587,7 @@
                     "Alias": "Mom_Message_4",
                     "Loop": false,
                     "Overlap": true,
-                    "Volume": 1.0,
+                    "Volume": 0.20000000298023224,
                     "Channel": "Voice"
                 }
             ]
@@ -19661,7 +19661,7 @@
                     "Alias": "SFX_AutoDoorSliding",
                     "Loop": false,
                     "Overlap": true,
-                    "Volume": 0.8999999761581421,
+                    "Volume": 0.6000000238418579,
                     "Channel": ""
                 }
             ]
