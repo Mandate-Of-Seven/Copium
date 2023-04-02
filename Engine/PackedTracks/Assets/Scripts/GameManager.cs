@@ -92,7 +92,7 @@ public class GameManager: CopiumScript
             CrewMenu.Instance.SetStat("Danton", HEALTH_STATE.DEAD);
 
         if (Input.GetKeyDown(KeyCode.S))
-            SceneManager.LoadScene("Ending");
+            distanceInterval = 0.01f;
 
         if (Input.GetKeyDown(KeyCode.F))
         {

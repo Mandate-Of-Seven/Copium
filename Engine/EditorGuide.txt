@@ -47,6 +47,11 @@ Shifting Gameobjects Up or Down
 * Select Menu -> Shift Up
 Or
 * Select Menu -> Shift Down
+Searching
+*There is a search bar at the top of the hierarchy list
+*To search for a game object, just type in the search bar what object you want to find
+*It will create a dropdown with all the game objects in the current scene that matches the search
+
 [Inspector]
 * To view a game object in the inspector, select it from the Hierarchy Window
 * To view a file or folder properties, select it from the Content Browser Window

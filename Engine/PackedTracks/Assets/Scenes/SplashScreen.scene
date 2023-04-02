@@ -218,8 +218,8 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 10.0,
-                        "Y": 10.0,
+                        "X": 4.0,
+                        "Y": 4.0,
                         "Z": 1.0
                     }
                 },
@@ -232,12 +232,12 @@
                     "OrderInLayer": 0
                 },
                 {
-                    "enabled": false,
+                    "enabled": true,
                     "UID": 1009557917956949803,
                     "Type": "SpriteRenderer",
                     "TypeID": 22,
-                    "Sprite ID": 18401080860215253332,
-                    "Sprite Name": "texturepackerlogo.png",
+                    "Sprite ID": 11893418506888606430,
+                    "Sprite Name": "image.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
