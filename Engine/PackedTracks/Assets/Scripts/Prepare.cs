@@ -486,7 +486,7 @@ public class Prepare : CopiumScript
                         }
                         else
                         {
-                            currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + "barely manages to escape, only suffering minor injuries.";
+                            currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " barely manages to escape, only suffering minor injuries.";
                         }
                     }
                     else
@@ -498,7 +498,7 @@ public class Prepare : CopiumScript
                         }
                         else
                         {
-                            currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + "barely manages to escape, only suffering minor injuries.";
+                            currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " barely manages to escape, only suffering minor injuries.";
                         }
                     }
 
@@ -520,7 +520,7 @@ public class Prepare : CopiumScript
                         {
                             crewManager.ChangeHealth(currentCrewmate[randomCrewmate].name, -1);
                             changeSummaryArrow(false, true, currentCrewmate[randomCrewmate]);
-                            currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + "attempts to fight off the polar bear but is unsuccesful and runs away.";
+                            currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " attempts to fight off the polar bear but is unsuccesful and runs away.";
                         }
                     }
                     else
@@ -537,7 +537,7 @@ public class Prepare : CopiumScript
                         {
                             crewManager.ChangeHealth(currentCrewmate[randomCrewmate].name, -1);
                             changeSummaryArrow(false, true, currentCrewmate[randomCrewmate]);
-                            currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + "attempts to fight off the polar bear but is unsuccesful and runs away.";
+                            currentCrewmate[0].resultText = currentCrewmate[randomCrewmate].name + " attempts to fight off the polar bear but is unsuccesful and runs away.";
                         }
                     }
                 }
@@ -758,9 +758,9 @@ public class Prepare : CopiumScript
             case 17:
                 if (choice == 1)
                 {
-                    crewManager.ChangeAllMental(-1);
-                    changeAllSummaryArrow(false, false);
-                    currentCrewmate[0].resultText = "The entire crew was disturbed by the grotesque sight of that infected corpse.";
+                    crewManager.ChangeAllMental(1);
+                    changeAllSummaryArrow(true, false);
+                    currentCrewmate[0].resultText = "The entire crew held a little party with the newly found bottles of wine.";
                 }
                 break;
             default:
