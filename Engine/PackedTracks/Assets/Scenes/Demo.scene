@@ -1868,10 +1868,20 @@
                         "Y": 2.5,
                         "Z": 0.0
                     },
+                    "resultsOutcomeScale": {
+                        "X": 10.0,
+                        "Y": 8.0,
+                        "Z": 1.0
+                    },
+                    "resultsOutcomeTutTextPos": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
                     "transitionSpeed": 20.0,
+                    "ResultBG": 2405627661693302870,
                     "ResultTab": 12238112469176194745,
                     "parent": 6642123175702952797,
-                    "ResultBG": 2405627661693302870,
                     "reportScreenManager": 6180648032434220981,
                     "CloseResultBtn": 826755621581371733,
                     "ResultBtn": 3790437057486001291,
@@ -8559,7 +8569,7 @@
                     "TypeID": 20,
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Sprite ID": 10235916359812139535,
+                    "Sprite ID": 0,
                     "Sprite Name": "Buff headshot.png",
                     "Color": {
                         "X": 1.0,
@@ -8613,7 +8623,7 @@
                     "TypeID": 20,
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Sprite ID": 2449633664824440552,
+                    "Sprite ID": 0,
                     "Sprite Name": "Sus headshot.png",
                     "Color": {
                         "X": 1.0,
@@ -8667,7 +8677,7 @@
                     "TypeID": 20,
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Sprite ID": 16849667610627808972,
+                    "Sprite ID": 0,
                     "Sprite Name": "Sad headshot.png",
                     "Color": {
                         "X": 1.0,
@@ -8721,7 +8731,7 @@
                     "TypeID": 20,
                     "H_Align": 1,
                     "V_Align": 1,
-                    "Sprite ID": 136179649567712096,
+                    "Sprite ID": 0,
                     "Sprite Name": "Smart dude head.png",
                     "Color": {
                         "X": 1.0,

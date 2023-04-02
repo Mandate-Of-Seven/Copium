@@ -41,6 +41,7 @@ public class TutorialManager: CopiumScript
         "CabinDeploy",
 		"ResultDisplay",
 		"ResultChoices",
+		"ResultOutcome",
 	};
 
 	int sequenceIndex = 0;
