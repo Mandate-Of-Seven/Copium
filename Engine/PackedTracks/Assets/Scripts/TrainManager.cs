@@ -214,7 +214,7 @@ public class TrainManager: CopiumScript
         if (accelerate)
         {
 			StartTrain();
-			targetAmbienceVolume = 1.0f;
+			targetAmbienceVolume = 0.7f;
         }
         else
         {
@@ -247,8 +247,8 @@ public class TrainManager: CopiumScript
         if (accelerate)
         {
             StartTrain();
-            targetAmbienceVolume = 1.0f;
-        }
+			targetAmbienceVolume = 0.7f;
+		}
         else
         {
             StopTrain();
