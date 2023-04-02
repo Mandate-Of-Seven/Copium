@@ -4219,7 +4219,7 @@
                     "Alias": "BGM_Train",
                     "Loop": true,
                     "Overlap": true,
-                    "Volume": 0.699999988079071,
+                    "Volume": 0.5,
                     "Channel": "BGM"
                 }
             ]
@@ -4330,7 +4330,7 @@
                     "Alias": "SFX_TrainSpeedUp",
                     "Loop": false,
                     "Overlap": true,
-                    "Volume": 1.0,
+                    "Volume": 0.800000011920929,
                     "Channel": "SFX"
                 }
             ]
@@ -4367,7 +4367,7 @@
                     "Alias": "SFX_TrainBraking",
                     "Loop": false,
                     "Overlap": true,
-                    "Volume": 1.0,
+                    "Volume": 0.800000011920929,
                     "Channel": "SFX"
                 }
             ]
@@ -18844,7 +18844,7 @@
                     "Alias": "Mom_Message_1",
                     "Loop": false,
                     "Overlap": true,
-                    "Volume": 0.20000000298023224,
+                    "Volume": 0.6000000238418579,
                     "Channel": "Voice"
                 }
             ]
@@ -18881,7 +18881,7 @@
                     "Alias": "Mom_Message_2",
                     "Loop": false,
                     "Overlap": true,
-                    "Volume": 0.20000000298023224,
+                    "Volume": 0.6000000238418579,
                     "Channel": "Voice"
                 }
             ]
@@ -18918,7 +18918,7 @@
                     "Alias": "Mom_Message_3",
                     "Loop": false,
                     "Overlap": true,
-                    "Volume": 0.20000000298023224,
+                    "Volume": 0.6000000238418579,
                     "Channel": "Voice"
                 }
             ]
@@ -18955,7 +18955,7 @@
                     "Alias": "Mom_Message_4",
                     "Loop": false,
                     "Overlap": true,
-                    "Volume": 0.20000000298023224,
+                    "Volume": 0.6000000238418579,
                     "Channel": "Voice"
                 }
             ]
@@ -18989,11 +18989,11 @@
                     "UID": 13147104160255255935,
                     "Type": "AudioSource",
                     "TypeID": 16,
-                    "Alias": "SFX_Event2WithoutVO",
+                    "Alias": "Event2WithoutVOLouder",
                     "Loop": false,
                     "Overlap": true,
-                    "Volume": 1.0,
-                    "Channel": ""
+                    "Volume": 0.25,
+                    "Channel": "SFX"
                 }
             ]
         },
