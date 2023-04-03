@@ -18,6 +18,7 @@ using System;
 
 public class ResultManager : CopiumScript
 {
+    public static ResultManager Instance;
     public bool isResultOn = false;
 
     public Button CloseResultBtn;
@@ -27,6 +28,7 @@ public class ResultManager : CopiumScript
 
     
     public GameObject ResultTab;
+    public GameObject ResultBG;
 
     public CrewStatusManager crewStatusManager;
     public ReportScreenManager reportScreenManager;
@@ -40,6 +42,18 @@ public class ResultManager : CopiumScript
 
     public float transitionSpeed = 5.0f;
 
+    public Vector3 resultsDisplayScale = Vector3.one;
+    public Vector3 resultsCloseScale = Vector3.one;
+    public Vector3 resultsChoicesScale = Vector3.one;
+    public Vector3 resultsOutcomeScale = Vector3.one;
+    public Vector3 resultsDisplayTutTextPos = Vector3.zero;
+    public Vector3 resultsChoicesTutTextPos = Vector3.zero;
+    public Vector3 resultsOutcomeTutTextPos = Vector3.zero;
+    public Vector3 resultsEndTutTextPos = Vector3.zero;
+    void Awake()
+    {
+        Instance = this;
+    }
     void Start()
     {
         closeBtnWrapper = new ButtonWrapper(CloseResultBtn);
@@ -47,11 +61,80 @@ public class ResultManager : CopiumScript
         resultBtnWrapper = new ButtonWrapper(ResultBtn);
         resultBtnWrapper.SetImage(ResultBtn.GetComponent<Image>());
 		resultBtnWrapper.failureText = Messages.ErrorMainEvent;
+
+        new TutorialComponent
+        (
+            "ResultDisplay",
+            resultsDisplayScale,
+            Prepare.Instance.resultText.transform,
+            Messages.Tutorial.resultDisplay,
+            resultsDisplayTutTextPos,
+            delegate ()
+            {
+                if (TutorialText.Instance.Done())
+                {
+                    return true;
+                }
+                return false;
+            }
+        );
+
+        new TutorialComponent
+        (
+            "ResultChoices",
+            resultsChoicesScale,
+            Prepare.Instance.prepareOption2.transform,
+            Messages.Tutorial.resultChoices,
+            resultsChoicesTutTextPos,
+            delegate ()
+            {
+                if (Prepare.Instance.resultText.text.Length != 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+        );
+
+        new TutorialComponent
+        (
+            "ResultOutcome",
+            resultsOutcomeScale,
+            ResultBG.transform,
+            Messages.Tutorial.resultOutcome,
+            resultsOutcomeTutTextPos,
+            delegate ()
+            {
+                if (TutorialText.Instance.Done())
+                {
+                    return true;
+                }
+                return false;
+            }
+        );
+
+        new TutorialComponent
+        (
+            "ResultEnd",
+            resultsCloseScale,
+            ResultBG.transform,
+            Messages.Tutorial.resultEnd,
+            resultsEndTutTextPos,
+            delegate ()
+            {
+                if (isResultOn == false)
+                {
+                    return true;
+                }
+                return false;
+            }
+        );
     }
 
     void Update()
     {
-        UpdateCanvas();
+        if (!PauseMenu.Instance.isPaused)
+            UpdateCanvas();
     }
 
     /**************************************************************************/

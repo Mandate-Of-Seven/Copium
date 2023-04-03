@@ -7,7 +7,7 @@ public class TutorialComponent
     public Vector3 scale;
     public Vector3 textPos;
     public Transform posTrans;
-
+    public bool transparentBlock;
     public delegate bool TriggerCondition();
 
     [NonSerialized]
@@ -19,15 +19,16 @@ public class TutorialComponent
         Transform _posTrans,
         string _text,
         Vector3 _textPos,
-        TriggerCondition _triggerCondition
+        TriggerCondition _triggerCondition,
+        bool _transparentBlock = false
         )
     {
         text = _text;
-        Console.WriteLine("RAN");
         TutorialManager.Instance.tutorials.Add(name, this);
         scale = _scale; posTrans = _posTrans;
         textPos = _textPos;
         triggerCondition = _triggerCondition;
+        transparentBlock = _transparentBlock;
     }
 
     public bool isFinished()

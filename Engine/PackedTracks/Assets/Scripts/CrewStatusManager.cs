@@ -63,13 +63,29 @@ public class CrewStatusManager: CopiumScript
 	//-----
 
 	public GameObject crewStatusBackground;
+	public GameObject crewStatusMember;
 
 	public Vector3 crewStatusButtonScale = Vector3.one;
 	public Vector3 crewStatusBackgroundScale = Vector3.one;
-	public Vector3 crewStatusCloseButtonScale = Vector3.one;
+	public Vector3 crewStatusCloseScale = Vector3.one;
 	public Vector3 crewStatusButtonTutTextPos = Vector3.zero;
 	public Vector3 crewStatusBackgroundTutTextPos = Vector3.zero;
-	public Vector3 crewStatusCloseButtonTutTextPos = Vector3.zero;
+	public Vector3 crewStatusCloseTutTextPos = Vector3.zero;
+
+	public Vector3 crewStatusMemberScale = Vector3.one;
+	public Vector3 crewStatusHealthScale = Vector3.one;
+	public Vector3 crewStatusMentalScale = Vector3.one;
+	public Vector3 crewStatusHungerScale = Vector3.one;
+	public Vector3 cabinButtonScale = Vector3.one;
+
+	public Vector3 crewStatusMemberTutTextPos = Vector3.zero;
+	public Vector3 crewStatusHealthTutTextPos = Vector3.zero;
+	public Vector3 crewStatusMentalTutTextPos = Vector3.zero;
+	public Vector3 crewStatusHungerTutTextPos = Vector3.zero;
+	public Vector3 cabinButtonTutTextPos = Vector3.zero;
+	
+	public Vector3 suppliesLowScale = Vector3.one;
+	public Vector3 suppliesTutTextPos = Vector3.zero;
 
 
 	void Awake()
@@ -87,7 +103,8 @@ public class CrewStatusManager: CopiumScript
 		CrewStatusBtnWrapper.failureText = Messages.ErrorMainEvent;
 		CabinBtnWrapper = new ButtonWrapper(CabinBtn);
 		CabinBtnWrapper.SetImage(CabinBtn.GetComponent<Image>());
-		CabinBtnWrapper.clickedSFX = AudioManager.Instance.autoDoorSFX;
+		CabinBtnWrapper.failureText = Messages.ErrorMainEvent;
+        CabinBtnWrapper.clickedSFX = AudioManager.Instance.autoDoorSFX;
 		CloseStatusScreenBtnWrapper = new ButtonWrapper(CloseStatusScreenBtn);
 		CloseStatusScreenBtnWrapper.SetImage(CloseStatusScreenBtn.GetComponent<Image>());
 		// Cabin set false
@@ -96,64 +113,166 @@ public class CrewStatusManager: CopiumScript
 		supplySpriteSheet.stop();
 		supplySpriteSheet.setFrame(1);
 
-/*		new TutorialComponent
+        new TutorialComponent
+        (
+            "CrewStatusButton",
+            crewStatusButtonScale,
+            CrewStatusBtn.transform,
+            Messages.Tutorial.crewStatusButton,
+            crewStatusButtonTutTextPos,
+            delegate ()
+            {
+                if (CrewStatusBtnWrapper.GetState() == ButtonState.OnRelease)
+                {
+                    return true;
+                }
+                return false;
+            }
+        );
+
+        new TutorialComponent
+        (
+			"CrewStatusDisplay",
+            crewStatusBackgroundScale,
+            crewStatusBackground.transform,
+            Messages.Tutorial.crewStatusDisplay,
+            crewStatusBackgroundTutTextPos,
+            delegate ()
+            {
+                if (TutorialText.Instance.Done())
+                    return true;
+                return false;
+            }
+        );
+
+		new TutorialComponent
+		(
+			"CrewStatusMember",
+			crewStatusMemberScale,
+			crewStatusMember.transform,
+			Messages.Tutorial.crewStatusMember,
+			crewStatusMemberTutTextPos,
+			delegate ()
+			{
+				if (TutorialText.Instance.Done())
+					return true;
+				return false;
+			}
+		);
+
+        new TutorialComponent
+        (
+			"CrewStatusHealth",
+            crewStatusHealthScale,
+			CrewMenu.Instance.harris.healthT.transform,
+            Messages.Tutorial.crewStatusHealth,
+            crewStatusHealthTutTextPos,
+            delegate ()
+            {
+                if (TutorialText.Instance.Done())
+                {
+                    return true;
+                }
+                return false;
+            }
+        );
+
+		new TutorialComponent
+		(
+			"CrewStatusMental",
+			crewStatusMentalScale,
+			CrewMenu.Instance.harris.mentalT.transform,
+			Messages.Tutorial.crewStatusMental,
+			crewStatusMentalTutTextPos,
+			delegate ()
+			{
+				if (TutorialText.Instance.Done())
+				{
+					return true;
+				}
+				return false;
+			}
+		);
+
+		new TutorialComponent
+		(
+			"CrewStatusHunger",
+			crewStatusHungerScale,
+			CrewMenu.Instance.harris.hungerT.transform,
+			Messages.Tutorial.crewStatusHunger,
+			crewStatusHungerTutTextPos,
+			delegate ()
+			{
+				if (TutorialText.Instance.Done())
+				{
+					return true;
+				}
+				return false;
+			}
+		); 
+
+		new TutorialComponent
 		(
 			"CrewStatusClose",
-			crewStatusCloseButtonScale,
-			CloseCrewStatusBtn.transform,
-			Messages.Tutorial.reportEnd,
-			crewStatusCloseButtonTutTextPos,
-			delegate ()
-			{
-				if (CloseCrewStatusBtnWrapper.GetState() == ButtonState.OnClick)
-				{
-					return true;
-				}
-				return false;
-			}
-		);
-
-		new TutorialComponent
-		(
-			"ReportDisplay",
-			reportBackgroundScale,
+			crewStatusCloseScale,
 			crewStatusBackground.transform,
-			Messages.Tutorial.reportDisplay,
-			reportBackgroundTutTextPos,
+			Messages.Tutorial.crewStatusEnd,
+			crewStatusCloseTutTextPos,
 			delegate ()
 			{
-				if (TutorialText.Instance.Done() && EventsManager.Instance.Done())
+				if (!isCrewStatusOn)
+				{
 					return true;
+				}
 				return false;
 			}
 		);
 
 		new TutorialComponent
 		(
-			"ReportButton",
-			reportButtonScale,
-			ReportScreenBtn.transform,
-			Messages.Tutorial.reportStart,
-			reportButtonTutTextPos,
+			"CabinButton",
+			cabinButtonScale,
+			CabinBtn.transform,
+			Messages.Tutorial.cabinButton,
+			cabinButtonTutTextPos,
 			delegate ()
 			{
-				if (reportBtnWrapper.GetState() == ButtonState.OnClick)
+				if (CabinBtnWrapper.GetState() == ButtonState.OnRelease)
 				{
 					return true;
 				}
 				return false;
 			}
-		);*/
+		);
+
+
+		new TutorialComponent
+		(
+			"SuppliesLow",
+			suppliesLowScale,
+			supplyLightDiode.transform,
+            Messages.Tutorial.suppliesLow,
+			suppliesTutTextPos,
+			delegate ()
+			{
+				if (TutorialText.Instance.Done())
+				{
+					return true;
+				}
+				return false;
+			}
+		);
 	}
 
 	void Update()
 	{
-		UpdateCanvas();
-
+		if (!PauseMenu.Instance.isPaused)
+			UpdateCanvas();
     }
 
 	public void UpdateCanvas()
 	{
+		
 		if (CrewStatusBtnWrapper.GetState() == ButtonState.OnRelease)
         {
 			CrewMenu.Instance.SetPrepare(false);
@@ -195,11 +314,6 @@ public class CrewStatusManager: CopiumScript
 			CrewMenu.Instance.deploying = false;
 			ReturnToCockpit(false);
 		}
-
-
-
-
-
 
 		if(CrewMenu.Instance.supplies >= exlowThreshold && CrewMenu.Instance.supplies < lowThreshold)
 		{
@@ -268,9 +382,7 @@ public class CrewStatusManager: CopiumScript
 		isCrewStatusOn = false;
 		CrewStatusBtn.gameObject.SetActive(true);
         resultManager.Enable();
-        alert.enabled = true;
 		StatusScreen.transform.parent = parent.transform;
-		
 	}
 
 	public void UpdateCabinSupply()
@@ -296,13 +408,9 @@ public class CrewStatusManager: CopiumScript
             if (supplyState != 0)
                 ToggleSuppliesSprite(0);
         }
-        else
+        else if (supplyState != -1)
         {
-			if(supplyState != -1)
-			{
-                ToggleSuppliesSprite(-1);
-
-			}
+            ToggleSuppliesSprite(-1);
         }
 
 		if (supplyState == -1)
@@ -320,19 +428,19 @@ public class CrewStatusManager: CopiumScript
 		//ClosePanel(false);
 		ReturnToCockpit(false);
 		CrewStatusBtnWrapper.SetInteractable(false);
+		CabinBtnWrapper.SetInteractable(false);
 	}
 	public void EnableInteractions()
 	{
 		CrewStatusBtnWrapper.SetInteractable(true);
-	}
+        CabinBtnWrapper.SetInteractable(true);
+    }
 
 	public void UpdateDeath()
 	{
 		if(!CrewMenu.Instance.harris.person.alive)
 		{
 			cabinInteractions.harrisBtn.SetActive(false);
-			//Console.WriteLine("harris is dead");
-
 		}
 
 		if(!CrewMenu.Instance.bronson.person.alive)

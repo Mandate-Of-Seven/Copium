@@ -78,13 +78,13 @@ public class CreditsScript: CopiumScript
 			loadScene = true;
 		}
 
-		if (loadScene)
+		if (loadScene && fade.FadeEnded())
 		{
 			loadScene = false;
-			SceneManager.LoadScene("MainMenu");
-		}
+            SceneManager.LoadScene("MainMenu");
+        }
 
-		if (playCount == 0)
+        if (playCount == 0)
         {
 			if (posMOS.y < endPoint)
 			{

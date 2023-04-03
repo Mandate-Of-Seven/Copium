@@ -35,7 +35,10 @@ public class Choice
     {
 		if (statType == CrewMenu.STAT_TYPES.HEALTH)
         {
-			if (crewChanges[name].setHealth)
+            if (!CrewMenu.Instance.crewMembers[name].alive)
+                return StatusUpdate.STATE.NEUTRAL;
+
+            if (crewChanges[name].setHealth)
 			{
 				if (crewChanges[name].health == HEALTH_STATE.DEAD)
 					return StatusUpdate.STATE.UNKNOWN;
@@ -56,7 +59,10 @@ public class Choice
 		}
 		else if (statType == CrewMenu.STAT_TYPES.MENTAL)
         {
-			if (crewChanges[name].setMental)
+            if (!CrewMenu.Instance.crewMembers[name].alive)
+                return StatusUpdate.STATE.NEUTRAL;
+
+            if (crewChanges[name].setMental)
 			{
                 if (crewChanges[name].mental == MENTAL_STATE.SUICIDAL)
                     return StatusUpdate.STATE.UNKNOWN;
@@ -77,7 +83,10 @@ public class Choice
 		}
 		else if (statType == CrewMenu.STAT_TYPES.HUNGER)
 		{
-			if (crewChanges[name].setHunger)
+            if (!CrewMenu.Instance.crewMembers[name].alive)
+                return StatusUpdate.STATE.NEUTRAL;
+
+            if (crewChanges[name].setHunger)
 			{
 				int change = crewChanges[name].hunger - CrewMenu.Instance.crewMembers[name].hunger;
 				if (change > 0)
@@ -100,7 +109,7 @@ public class Choice
 	{
 		if(setSupply)
 		{
-			if (supply == 0)
+			if (supply == 0 && CrewMenu.Instance.supplies != 0)
 				return StatusUpdate.STATE.UNKNOWN;
 
             int change = supply - CrewMenu.Instance.supplies;

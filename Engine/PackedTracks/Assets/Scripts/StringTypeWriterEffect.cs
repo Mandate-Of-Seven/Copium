@@ -13,12 +13,15 @@ public class StringTypeWriterEffect
 	bool wait = false;
 	bool done = false;
 	float waitTime = 20f;
+	float doneTime = 0f;
+	float doneDuration = 0f;
 
 	public StringTypeWriterEffect(string _target, float _interval)
 	{
 		target.Append(_target);
 		interval = _interval;
 		charIndex = 0;
+		doneDuration = 50f * interval;
 	}
 	public void Skip()
 	{
@@ -26,13 +29,26 @@ public class StringTypeWriterEffect
 	}
 	public bool Done()
 	{
-		return done || target == null || (target.ToString() == initial.ToString());
+		return done;
 	}
 
 	public string Write()
 	{
 		if (Done())
 			return target.ToString();
+
+		if (charIndex == target.Length)
+		{
+			if (doneTime < doneDuration)
+            {
+				doneTime += Time.deltaTime;
+			}
+			else
+			{
+				done = true;
+			}
+			return target.ToString();
+		}
 		float dt = Time.deltaTime;
 		char ch = target[charIndex];
 		if (charIndex > 0 && target[charIndex-1] == '.' && !wait)
@@ -59,10 +75,6 @@ public class StringTypeWriterEffect
 			intervalTimeElasped -= interval;
 		}
 		intervalTimeElasped += dt;
-		if (charIndex == target.Length)
-        {
-			done = true;
-        }
 		return initial.ToString();
 	}
 

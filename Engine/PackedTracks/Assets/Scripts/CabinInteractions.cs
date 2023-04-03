@@ -2,6 +2,7 @@ using CopiumEngine;
 using System;
 public class CabinInteractions: CopiumScript
 {
+	public static CabinInteractions Instance;
 	public CrewMenu crewMenu;
 	public GameObject harrisIText;
 	public GameObject bronsonIText;
@@ -11,7 +12,8 @@ public class CabinInteractions: CopiumScript
 
 	public GameObject harrisBtn;
 	public Button harrisInteractBtn;
-	ButtonWrapper harrisInteractBtnWrapper;
+    [NonSerialized]
+	public ButtonWrapper harrisInteractBtnWrapper;
 
 	public GameObject bronsonBtn;
 	public Button bronsonInteractBtn;
@@ -44,6 +46,27 @@ public class CabinInteractions: CopiumScript
 	ChuckDialogue cd = new ChuckDialogue();
 	DantonDialogue dd = new DantonDialogue();
 
+	public GameObject cabinBackground;
+	public GameObject dialogueBG;
+
+	public Vector3 cabinDisplayScale = Vector3.one;
+	public Vector3 cabinHarrisScale = Vector3.one;
+	public Vector3 cabinBronsonScale = Vector3.one;
+	public Vector3 cabinChuckScale = Vector3.one;
+	public Vector3 cabinDantonScale = Vector3.one;
+	public Vector3 cabinSpeakingScale = Vector3.one;
+	public Vector3 cabinCloseSpeakScale = Vector3.one;
+
+	public Vector3 cabinDisplayTutTextPos =	Vector3.zero;
+	public Vector3 cabinSpeakingTutTextPos = Vector3.one;
+	public Vector3 cabinCloseSpeakTutTextPos = Vector3.zero;
+
+    public void Awake()
+    {
+		Instance = this;
+
+	}
+
 	void Start()
 	{		
 		harrisInteractBtnWrapper = new ButtonWrapper(harrisInteractBtn);
@@ -61,10 +84,156 @@ public class CabinInteractions: CopiumScript
 		CloseDialogueBtnWrapper = new ButtonWrapper(CloseDialogueBtn);
 
 		dialogueSprite.stop();
+
+		new TutorialComponent
+		(
+			"CabinDisplay",
+			cabinDisplayScale,
+			cabinBackground.transform,
+			Messages.Tutorial.cabinDisplay,
+			cabinDisplayTutTextPos,
+			delegate ()
+			{
+				if (TutorialText.Instance.Done())
+				{
+					return true;
+				}
+				return false;
+			},
+			true
+		);
+
+		new TutorialComponent
+		(
+			"CabinHarris",
+			cabinHarrisScale,
+			harrisBtn.transform,
+			Messages.Tutorial.cabinHarris,
+			cabinDisplayTutTextPos,
+			delegate ()
+			{
+				if (TutorialText.Instance.Done())
+				{
+					return true;
+				}
+				return false;
+			},
+			true
+		);
+
+		new TutorialComponent
+		(
+			"CabinBronson",
+			cabinBronsonScale,
+			bronsonBtn.transform,
+			Messages.Tutorial.cabinBronson,
+			cabinDisplayTutTextPos,
+			delegate ()
+			{
+				if (TutorialText.Instance.Done())
+				{
+					return true;
+				}
+				return false;
+			},
+			true
+		);
+
+		new TutorialComponent
+		(
+			"CabinChuck",
+			cabinChuckScale,
+			chuckBtn.transform,
+			Messages.Tutorial.cabinChuck,
+			cabinDisplayTutTextPos,
+			delegate ()
+			{
+				if (TutorialText.Instance.Done())
+				{
+					return true;
+				}
+				return false;
+			},
+			true
+		);
+
+		new TutorialComponent
+		(
+			"CabinDanton",
+			cabinDantonScale,
+			dantonBtn.transform,
+			Messages.Tutorial.cabinDanton,
+			cabinDisplayTutTextPos,
+			delegate ()
+			{
+				if (TutorialText.Instance.Done())
+				{
+					return true;
+				}
+				return false;
+			},
+			true
+		);
+
+		new TutorialComponent
+		(
+			"CabinSpeak",
+			cabinHarrisScale,
+			harrisBtn.transform,
+			Messages.Tutorial.cabinSpeak,
+			cabinDisplayTutTextPos,
+			delegate ()
+			{
+				if (harrisInteractBtnWrapper.GetState() == ButtonState.OnClick)
+				{
+					return true;
+				}
+				return false;
+			}
+		);
+
+		new TutorialComponent
+		(
+			"CabinSpeaking",
+			cabinSpeakingScale,
+			dialogueBG.transform,
+			Messages.Tutorial.cabinSpeaking,
+			cabinSpeakingTutTextPos,
+			delegate ()
+			{
+				if (TutorialText.Instance.Done() && writer.Done())
+				{
+					return true;
+				}
+				return false;
+			},
+			true
+		) ;
+
+		new TutorialComponent
+		(
+			"CabinCloseSpeak",
+			cabinCloseSpeakScale,
+			CloseDialogueBtn.transform,
+			Messages.Tutorial.cabinCloseSpeak,
+			cabinCloseSpeakTutTextPos,
+			delegate ()
+			{
+				if (CloseDialogueBtnWrapper.GetState() == ButtonState.OnClick)
+				{
+					return true;
+				}
+				return false;
+			}
+		);
 	}
 	void Update()
 	{
-		if(!crewMenu.deploying && !crewMenu.preparing)
+        if (PauseMenu.Instance.isPaused)
+            return;
+
+        dialogueSprite.stop();
+        if (!crewMenu.deploying && !crewMenu.preparing)
 		{
 			if(!crewMenu.interacting)
 			{
@@ -129,7 +298,7 @@ public class CabinInteractions: CopiumScript
 			hover[3] = false;
 
 		}
-		
+
 		// else if(crewMenu.bronson.selectBtnWrapper.GetState() == ButtonState.OnHover && hovering == false)
 		// {
 		// 	interactText.SetActive(true);
@@ -142,8 +311,7 @@ public class CabinInteractions: CopiumScript
 
 
 
-
-		if(harrisInteractBtnWrapper.GetState() == ButtonState.OnClick){
+		if (harrisInteractBtnWrapper.GetState() == ButtonState.OnClick){
 			harrisIText.SetActive(false);
 			hover[0] = false;
 
@@ -191,8 +359,8 @@ public class CabinInteractions: CopiumScript
 		SetInteractBtnsActive(false);
 		dialogueSprite.setFrame(crewIdx);
 
-		// Display dialogue
-		switch(crewIdx)
+        // Display dialogue
+        switch (crewIdx)
 		{
 			case 0:
 			{

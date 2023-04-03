@@ -92,7 +92,7 @@ public class GameManager: CopiumScript
             CrewMenu.Instance.SetStat("Danton", HEALTH_STATE.DEAD);
 
         if (Input.GetKeyDown(KeyCode.S))
-            SceneManager.LoadScene("Ending");
+            distanceInterval = 0.01f;
 
         if (Input.GetKeyDown(KeyCode.F))
         {
@@ -237,7 +237,7 @@ public class GameManager: CopiumScript
                     //EventManager.SelectDefaultChoice();
 
                 // Reduce hunger every few km
-                float remainder = distanceLeft % (distancePerEvent / 2.0f);
+                float remainder = distanceLeft % (distancePerEvent / 2.1f);
                 if (remainder < 1.0f && !updateHunger)
                 {
                     updateHunger = true;
@@ -263,9 +263,8 @@ public class GameManager: CopiumScript
     {
         if (trainManager.accelerate && distanceLeft > 1.0f)
         {
-            if (foodTimer >= 5.0f && CrewMenu.Instance.supplies != 0)
+            if (foodTimer >= 3.0f && CrewMenu.Instance.supplies != 0)
             {
-                Console.WriteLine("decrement supplies");
                 foreach (Person person in CrewMenu.Instance.crewMembers.Values)
                 {
                     if (!person.alive)

@@ -14,11 +14,34 @@ public static class Messages
 		public const string reportEnd = "Looks like you're done here, click on the red cross to close any screens";
 		public const string crewStatusButton = "Lets take a look at our crew members vitals";
 		public const string crewStatusDisplay = "All of them seem to be healthy";
+		public const string crewStatusMember = "This is Harris, just like every other member, he has 3 vitals, health, mental and hunger";
 		public const string crewStatusHealth = "This is the health of your crew member, if they die, they are gone forever...";
 		public const string crewStatusMental = "This is the mental state of your crew member, you'll never what they're gonna do if they become crazy...";
 		public const string crewStatusHunger = "This is the hunger of your crew member, it is automatically replenished when you have supplies to feed the crew." +
 												" If you can't afford to feed them once they're famished, they'll start dying of hunger"; 
 		public const string crewStatusSupplies = "This is how much supplies you have, can't feed anyone nor fix anything without these";
+		public const string crewStatusEnd = "Now that you're done here, lets see if you remember how to close a screen(Hint: Big red button on the top right)";
+		public const string cabinButton = "Let's go meet the crew members at the back, click on the arrow";
+		public const string cabinDisplay = "Welcome to the cabin, here you can speak to crew members and deploy them to collect supplies";
+		public const string cabinHarris = "Harris is the engineer of the group, you can count on him to maintain and repair the train";
+		public const string cabinBronson = "Bronson is just... muscular, don't sweat on assigning him to do physical demanding tasks";
+		public const string cabinChuck = "Chuck is just... Chuck, don't expect much out of him";
+		public const string cabinDanton = "Danton was a medical professional, would be wise keeping him alive";
+		public const string cabinSpeak = "Let's speak to Harris to see whats up";
+		public const string cabinSpeaking = "You can more about the current situation when speaking to the crew members";
+		public const string cabinCloseSpeak = "Good to know Harris... You can come to speak to the rest of them later, let's stop speaking to him for now";
+		public const string cabinPrepare = "Let's deploy Harris out to get some supplies, click on prepare to select members for deployment";
+		public const string cabinPrepareSelect = "Now click on Harris to include him in the deployment, it will take one state of hunger to send them out";
+		public const string cabinDeploy = "Now that Harris is selected, let's deploy him by clicking on the deploy button";
+		public const string resultDisplay = "After deploying, the deployed party will face an event";
+		public const string resultChoices = "Now in response to the scenario, you, the conductor can instruct them on what to do";
+		public const string resultOutcome = "After selecting a choice, there will be an overview of the outcomes";
+		public const string resultEnd = "Let's see if you still remember how to close a screen (Hint: Still top right)";
+		public const string suppliesLow = "When you are low on supplies this light will flash orange";
+		public const string distance = "When this counter reaches zero, you would have reached the city";
+		public const string mom = "From time to time, you'll receive messages from your mother, click on the radio to hear her voice";
+		public const string startGame = "From here on out, you'll be on your own. You can start and stop the train using the lever. While your train is moving, they will get hungry maintaining the train so remember to have enough supplies to feed them";
+		public const string manual = "If you ever forget all the information given to you, you can always reference the instruction manual";
 	}
 
 	public static class Event_Intro
@@ -133,10 +156,6 @@ public static class Messages
 		public static class ChuckHealthy_3A
 		{
 			public const string body =
-				"While on routine patrol, Chuck heard a faint, steady bleeping emanating from engine room 2. " +
-                "Chuck discovered a bomb concealed under the backup engine's reactor after looking for it there. " +
-                "It seems that removing it will be challenging, since doing so might trigger the explosion. " +
-                "Chuck called a meeting of the remaining crew members to discuss next steps.\n\n" +
                 "As Chuck made his way through the train on his routine patrol, he heard a faint, steady bleeping sound emanating from the engine room. " +
                 "His heart raced as he realized what it could mean. He rushed to the engine room and quickly located the source of the sound - a bomb, hidden expertly beneath the backup engine's reactor.\n\n" +
                 "The shock of the discovery was overwhelming.The crew members knew that if the bomb detonated, it could mean the end of everything they held dear. " +
@@ -144,12 +163,12 @@ public static class Messages
                 "As Chuck called an emergency meeting of the remaining crew members to discuss next steps, the tension in the room was palpable. They knew that they had to act fast, but they also knew that the slightest mistake could have catastrophic consequences.";
 			public const string choice01 = "Cover the bomb with sandbags to reduce damage";
 			public const string choice02 = "Attempt to defuse the bomb, let Chuck do it";
-			public const string choice03 = "Salvage parts from the back up engine to build a makeshift reactor and cut off engine room 2 from the train [requires Harris to be alive]";
+			public const string choice03 = "Salvage parts from the back up engine to build a makeshift reactor and cut off engine room 2 from the train";
 			public const string result01 =
 				"To minimise the damage the bomb will cause, the crew use anything they " +
 				"can find to cover it. As they worked, the beeping on the bomb stopped and it exploded. " +
 				"As the dust settled, Chuck and Danton can be seen on the ground, it is evident that both are in critical condition." +
-				"Fortunately, the engine only suffered minor damage.";
+				" Fortunately, the engine only suffered minor damage.";
 			public const string result02 =
 				"Chuck attempted to defuse the bomb, but upon cutting a red wire, the timer started ticking down faster. " +
 				"Seeing no other alternative, Chuck ripped the bomb out and quickly tossed it out " +

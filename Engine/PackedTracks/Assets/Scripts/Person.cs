@@ -94,7 +94,9 @@ public class Person
         set 
         {
             if (value < 0)
+            {
                 value = 0;
+            }
             if (_health != value)
             {
 				Color tmp = Color.white;
@@ -109,6 +111,11 @@ public class Person
                 else
                     healthScrambler = CreateScrambler("", value.ToString());
                 _health = value;
+                if (_health == 0)
+                {
+                    mental = MENTAL_STATE.NONE;
+                    hunger = HUNGER_STATE.NONE;
+                }
             }
         }
     }

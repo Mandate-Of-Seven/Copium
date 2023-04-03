@@ -24,6 +24,11 @@ public class BackstoryMenu: CopiumScript
     public GameObject Page2;
     public GameObject Page3;
 
+    public Animator bBSIcon;
+    public Animator cBSIcon;
+    public Animator dBSIcon;
+    public Animator hBSIcon;
+
     public Button NextButton;
     public Button PrevButton;
     public Button ExitButton;
@@ -41,11 +46,24 @@ public class BackstoryMenu: CopiumScript
         chuck.stop();
         danton.stop();
         harris.stop();
+
+        bBSIcon.stop();
+        cBSIcon.stop();
+        dBSIcon.stop();
+        hBSIcon.stop();
 	}
 
 
     void Update()
     {
+        if(!PauseMenu.Instance.isPaused)
+        {
+            bronson.stop();
+            chuck.stop();
+            danton.stop();
+            harris.stop();
+        }
+
         if (PrevButton.state == ButtonState.OnClick)
         {
             sfx_pageflip.Play();

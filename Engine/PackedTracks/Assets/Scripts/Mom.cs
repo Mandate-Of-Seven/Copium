@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 public class Mom : CopiumScript
 {
+    public static Mom Instance;
+
     public AudioSource MomMsg1;
     public AudioSource MomMsg2;
     public AudioSource MomMsg3;
@@ -19,6 +21,11 @@ public class Mom : CopiumScript
 
     public bool MsgAvail = true;
     public int MsgCounter = 1;
+
+    void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
