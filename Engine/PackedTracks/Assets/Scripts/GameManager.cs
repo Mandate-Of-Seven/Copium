@@ -107,6 +107,9 @@ public class GameManager: CopiumScript
         if (Input.GetKeyDown(KeyCode.S))
             distanceInterval = 0.01f;
 
+        if (Input.GetKeyDown(KeyCode.C))
+            CrewMenu.Instance.ChangeSupplies(+5);
+
         if (Input.GetKeyDown(KeyCode.F))
         {
             distanceLeft = 50.0f;

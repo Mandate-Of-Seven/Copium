@@ -26,10 +26,6 @@
             "ID": 7
         },
         {
-            "Name": "PauseMenu",
-            "ID": 13
-        },
-        {
             "Name": "HowtoPlay",
             "ID": 8
         },
@@ -40,6 +36,10 @@
         {
             "Name": "Tutorial",
             "ID": 9
+        },
+        {
+            "Name": "PauseMenu",
+            "ID": 13
         }
     ],
     "GameObjects": [
