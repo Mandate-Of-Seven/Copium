@@ -1,2 +1,4 @@
 C:\Users\prawn\Documents\GitHub\GAM-200\Engine\PackedTracks\obj\Release\PackedTracks.csproj.AssemblyReference.cache
 C:\Users\prawn\Documents\GitHub\GAM-200\Engine\PackedTracks\obj\Release\PackedTracks.csproj.CoreCompileInputs.cache
+C:\Users\FLESH\ECS\Copium\Engine\PackedTracks\obj\Release\PackedTracks.csproj.AssemblyReference.cache
+C:\Users\FLESH\ECS\Copium\Engine\PackedTracks\obj\Release\PackedTracks.csproj.CoreCompileInputs.cache
