@@ -1,3 +1,19 @@
+
+/*!***************************************************************************************
+\file			EventsManager.cs
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			03/04/2023
+
+\brief
+	Determines which event to run next by searching through a list of Events
+
+All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 using CopiumEngine;
 using System;
 using System.Collections.Generic;

@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			TutorialComponent.cs
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			03/04/2023
+
+\brief
+	Tutorial object that is used by tutorial manager for the interactive tutorial
+
+All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 using CopiumEngine;
 using System;
 
@@ -13,6 +28,8 @@ public class TutorialComponent
     [NonSerialized]
     public TriggerCondition triggerCondition;
 
+    //Constructor to initialize where and how big the interaction box should be
+    //Also assigns a callback and text to run for the tutorial
     public TutorialComponent(
         string name,
         Vector3 _scale,
@@ -31,6 +48,7 @@ public class TutorialComponent
         transparentBlock = _transparentBlock;
     }
 
+    //Checks whether the tutorial is finished, determined by the assigned callback
     public bool isFinished()
     {
        

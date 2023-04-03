@@ -2,9 +2,9 @@ Microsoft (R) Visual C# Compiler version 3.9.0-6.21160.10 (59eedc33)
 Copyright (C) Microsoft Corporation. All rights reserved.
 
 C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\Prepare.cs(892,17): warning CS0168: The variable 'temp' is declared but never used
-C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\ReportScreenManager.cs(40,10): warning CS0414: The field 'ReportScreenManager.closeHover' is assigned but its value is never used
-C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\TrainManager.cs(42,7): warning CS0414: The field 'TrainManager.onHover' is assigned but its value is never used
 C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\ResultManager.cs(38,10): warning CS0414: The field 'ResultManager.closeHover' is assigned but its value is never used
+C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\TrainManager.cs(42,7): warning CS0414: The field 'TrainManager.onHover' is assigned but its value is never used
 C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\ResultManager.cs(39,10): warning CS0414: The field 'ResultManager.openHover' is assigned but its value is never used
-C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\ReportScreenManager.cs(41,7): warning CS0414: The field 'ReportScreenManager.openHover' is assigned but its value is never used
 C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\SplashScreen.cs(8,16): warning CS0414: The field 'SplashScreen.timer' is assigned but its value is never used
+C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\ReportScreenManager.cs(41,7): warning CS0414: The field 'ReportScreenManager.openHover' is assigned but its value is never used
+C:\Users\FLESH\Desktop\Copium\Engine\PackedTracks\Assets\Scripts\ReportScreenManager.cs(40,10): warning CS0414: The field 'ReportScreenManager.closeHover' is assigned but its value is never used
