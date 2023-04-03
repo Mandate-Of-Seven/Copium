@@ -121,7 +121,6 @@ namespace Copium
 		// go to that game object and close popup
 		if (pScene)
 		{
-			int count = 0;
 			int check = 0;
 			check = strcmp(buffer,"");
 			if (check == 0)
@@ -131,7 +130,7 @@ namespace Copium
 			else
 			{
 				ImGui::SetItemAllowOverlap();
-				if (ImGui::BeginListBox("##Objects", ImVec2(-FLT_MIN, 3.25 * ImGui::GetTextLineHeightWithSpacing())))
+				if (ImGui::BeginListBox("##Objects", ImVec2(-FLT_MIN, 3.25f * ImGui::GetTextLineHeightWithSpacing())))
 				{
 					GameObjectsPtrArray foundItems{};
 					for (GameObject& gameObject : pScene->gameObjects)
@@ -139,17 +138,17 @@ namespace Copium
 							
 						static char temp[256];
 						strcpy(temp, gameObject.name.c_str());
-						char* check;
+						char* check2;
 						for (auto& lowerBuffer : buffer)
 						{
-							lowerBuffer = tolower(lowerBuffer);
+							lowerBuffer = (char)tolower(lowerBuffer);
 						}
 						for (auto& lowerTemp : temp)
 						{
-							lowerTemp = tolower(lowerTemp);
+							lowerTemp = (char)tolower(lowerTemp);
 						}
-						check = strstr(temp, buffer);
-						if (check)
+						check2 = strstr(temp, buffer);
+						if (check2)
 						{
 							foundItems.push_back(&gameObject);
 								
