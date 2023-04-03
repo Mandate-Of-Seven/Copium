@@ -38,18 +38,19 @@ public class StatusUpdate: CopiumScript
     public void Awake()
     {
         Instance = this;
+        //hIcon.stop();
+        hIcon.setFrame(0);
+        //bIcon.stop(); 
+        bIcon.setFrame(1);
+        //cIcon.stop(); 
+        cIcon.setFrame(2);
+        //dIcon.stop();
+        dIcon.setFrame(3);
     }
 
     void Update()
     {
-        hIcon.stop();
-        hIcon.setFrame(0);
-        bIcon.stop(); 
-        bIcon.setFrame(1);
-        cIcon.stop(); 
-        cIcon.setFrame(2);
-        dIcon.stop();
-        dIcon.setFrame(3);
+
     }
 
     public void ResetAll()

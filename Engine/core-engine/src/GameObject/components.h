@@ -287,7 +287,7 @@ namespace Copium
 			Component(_gameObj, _uuid), animations{ rhs.animations },
 			currentAnimationIndex{rhs.currentAnimationIndex},
 			startingAnimationIndex{rhs.startingAnimationIndex},
-			loop{ rhs.loop }, reverse{ rhs.reverse }, status{ rhs.status }{}
+			loop{ rhs.loop }, reverse{ rhs.reverse }, freeze{rhs.freeze}, status{rhs.status}{}
 		/***************************************************************************/
 		/*!
 		\brief
@@ -382,7 +382,7 @@ namespace Copium
 		std::vector<Animation> animations;    // The indices of the animations inside the assets-system
 		int currentAnimationIndex{0};      // Current playing animation
 		int startingAnimationIndex{0};     // The first animation that is playing
-		bool loop{ true }, reverse{ false };
+		bool loop{ true }, reverse{ false }, freeze{false};
 		AnimatorStatus status{ AnimatorStatus::idle };
 	};
 

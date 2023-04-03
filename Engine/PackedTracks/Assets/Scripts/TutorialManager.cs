@@ -1,3 +1,20 @@
+/*!***************************************************************************************
+\file			TutorialManager.cs
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			03/04/2023
+
+\brief
+	Runs through a list of subscribed TutorialComponents and implements the interactive
+	tutorial
+
+All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
+
 using CopiumEngine;
 using System;
 using System.Collections.Generic;
@@ -65,6 +82,8 @@ public class TutorialManager: CopiumScript
 
 	}
 
+	//Updates the current tutorial by highlighting the area and updating
+	//the texts and trigger condition
 	void Update()
 	{
 		if (PauseMenu.Instance.isPaused)

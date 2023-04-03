@@ -1,5 +1,5 @@
 /*!***************************************************************************************
-\file			TrainManager.cs
+\file			TooltipBehaviour.cs
 \project
 \author			Zacharie Hong
 
@@ -8,8 +8,7 @@
 \date			10/03/2023
 
 \brief
-	Manages a text component and can print a set amount of messages to it through 
-	appending a new line
+	Tooltip to display errors messages
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/

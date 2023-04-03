@@ -1,4 +1,20 @@
-﻿using System;
+﻿
+/*!***************************************************************************************
+\file			Event.cs
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			03/04/2023
+
+\brief
+	Base class event that is used by EventManager to play an event
+
+All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
+using System;
 using CopiumEngine;
 using System.Collections.Generic;
 

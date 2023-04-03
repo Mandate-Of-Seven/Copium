@@ -86,17 +86,17 @@ public class Prepare : CopiumScript
 
         void Start()
     {
-        health.stop();
-        mental.stop();
+        // health.stop();
+        // mental.stop();
 
-        HHarrowA.stop();
-        HMarrowA.stop();
-        BHarrowA.stop();
-        BMarrowA.stop();
-        CHarrowA.stop();
-        CMarrowA.stop();
-        DHarrowA.stop();
-        DMarrowA.stop();
+        // HHarrowA.stop();
+        // HMarrowA.stop();
+        // BHarrowA.stop();
+        // BMarrowA.stop();
+        // CHarrowA.stop();
+        // CMarrowA.stop();
+        // DHarrowA.stop();
+        // DMarrowA.stop();
 
         prepareFinal.SetActive(false);
         //HHarrowA.enabled = false;
@@ -116,35 +116,39 @@ public class Prepare : CopiumScript
         //CMarrowA.play = true;
         //DHarrowA.play = true;
         //DMarrowA.play = true;
+        //harrisIconFinal.stop();
+        harrisIconFinal.setFrame(0);
+        //bronsonIconFinal.stop();
+        bronsonIconFinal.setFrame(1);
+        //chuckIconFinal.stop();
+        chuckIconFinal.setFrame(2);
+        //dantonIconFinal.stop();
+        dantonIconFinal.setFrame(3);
+
+
+        //harrisPotrait.stop();
+        harrisPotrait.setFrame(0);
+        //bronsonPotrait.stop();
+        bronsonPotrait.setFrame(1);
+        //chuckPotrait.stop();
+        chuckPotrait.setFrame(2);
+        //dantonPotrait.stop();
+        dantonPotrait.setFrame(3);
+
     }
     void Update()
     {
-        harrisIconFinal.stop();
-        harrisIconFinal.setFrame(0);
-        bronsonIconFinal.stop();
-        bronsonIconFinal.setFrame(1);
-        chuckIconFinal.stop();
-        chuckIconFinal.setFrame(2);
-        dantonIconFinal.stop();
-        dantonIconFinal.setFrame(3);
 
-        harrisPotrait.stop();
-        harrisPotrait.setFrame(0);
-        bronsonPotrait.stop();
-        bronsonPotrait.setFrame(1);
-        chuckPotrait.stop();
-        chuckPotrait.setFrame(2);
-        dantonPotrait.stop();
-        dantonPotrait.setFrame(3);
 
-        HHarrowA.stop();
-        HMarrowA.stop();
-        BHarrowA.stop();
-        BMarrowA.stop();
-        CHarrowA.stop();
-        CMarrowA.stop();
-        DHarrowA.stop();
-        DMarrowA.stop();
+
+        // HHarrowA.stop();
+        // HMarrowA.stop();
+        // BHarrowA.stop();
+        // BMarrowA.stop();
+        // CHarrowA.stop();
+        // CMarrowA.stop();
+        // DHarrowA.stop();
+        // DMarrowA.stop();
 
         if (makeChoice)
         {
@@ -431,14 +435,14 @@ public class Prepare : CopiumScript
         CHarrowA.enabled = CMarrowA.enabled = false;
         DHarrowA.enabled = DMarrowA.enabled = false;
 
-        HHarrowA.stop();
-        HMarrowA.stop();
-        BHarrowA.stop();
-        BMarrowA.stop();
-        CHarrowA.stop();
-        CMarrowA.stop();
-        DHarrowA.stop();
-        DMarrowA.stop();
+        // HHarrowA.stop();
+        // HMarrowA.stop();
+        // BHarrowA.stop();
+        // BMarrowA.stop();
+        // CHarrowA.stop();
+        // CMarrowA.stop();
+        // DHarrowA.stop();
+        // DMarrowA.stop();
 
         //roll chance for event choice successs / for choices check if choiceNum<=difficulty
         int choiceNum = RNG.Range(1, 10);

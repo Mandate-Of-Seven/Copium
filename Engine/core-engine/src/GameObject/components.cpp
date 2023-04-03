@@ -117,6 +117,14 @@ namespace Copium
 			return;
 		if (status != AnimatorStatus::playing)
 			return;
+
+		if (freeze)
+		{
+			PRINT("freeze");
+			return;
+
+		}
+
 		if (!loop && animations[currentAnimationIndex].status == Animation::AnimationStatus::completed)
 		{
 			PRINT("anim completed");

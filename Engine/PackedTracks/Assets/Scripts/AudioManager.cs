@@ -58,7 +58,8 @@ public class AudioManager: CopiumScript
 
     void Start()
 	{
-        bgmTrain.Play();
+		if (bgmTrain != null)
+			bgmTrain.Play();
 	}
 
 	void Update()

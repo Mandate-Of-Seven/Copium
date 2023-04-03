@@ -83,7 +83,7 @@ public class CabinInteractions: CopiumScript
 
 		CloseDialogueBtnWrapper = new ButtonWrapper(CloseDialogueBtn);
 
-		dialogueSprite.stop();
+		//dialogueSprite.stop();
 
 		new TutorialComponent
 		(
@@ -316,7 +316,7 @@ public class CabinInteractions: CopiumScript
 			hover[0] = false;
 
 			OpenDialogueBox(0);
-
+			Console.WriteLine("open harris dialogue");
 		}
 		if(bronsonInteractBtnWrapper.GetState() == ButtonState.OnClick){
 			bronsonIText.SetActive(false);
@@ -593,6 +593,20 @@ public class CabinInteractions: CopiumScript
 
 			idx = 0;
 		}
+
+		public override string GetFirst()
+		{
+
+
+			if(CrewMenu.Instance.bronson.person.alive && CrewMenu.Instance.chuck.person.alive)
+				return first.RNGLine();
+
+			int e = RNG.Range(0,1);
+			if(e == 0)
+				return first.Lines[0];
+			else	
+				return first.Lines[2];
+		}
 	}
 
 	public class BronsonDialogue : Dialogue
@@ -604,7 +618,7 @@ public class CabinInteractions: CopiumScript
 
 
 			#region First
-			first.Lines[0] = "Harris, he... I couldn't. He was begging for help. I think I need some time to myself.";
+			first.Lines[0] = "Nice to meet you Cap, I'm all set and ready to go, just let me know when you need me.";
 			first.Lines[1] = "I don't trust Chuck. He said that if it comes down to it, he would ensure his safety first instead of helping those in need.";
 			first.Lines[2] = "I hope we all get to the other city safely.";
 			first.count = 3;
@@ -638,6 +652,35 @@ public class CabinInteractions: CopiumScript
 
 
 			idx = 1;
+		}
+
+		public override string GetFirst()
+		{
+			if(CrewMenu.Instance.chuck.person.alive)
+				return first.RNGLine();
+
+			int e = RNG.Range(0,1);
+			if(e == 0)
+				return first.Lines[0];
+			else	
+				return first.Lines[2];
+		}
+
+		public override string GetSecond()
+		{
+			if(CrewMenu.Instance.danton.person.alive)
+				return second.RNGLine();
+
+			int e = RNG.Range(1,2);
+			return first.Lines[e];
+
+		}
+		public override string GetThird()
+		{
+			if(CrewMenu.Instance.chuck.person.alive)
+				return third.RNGLine();
+
+			return first.Lines[0];
 		}
 	}
 
@@ -687,6 +730,18 @@ public class CabinInteractions: CopiumScript
 
 			idx = 2;
 		}
+
+		public override string GetFirst()
+		{
+			if(CrewMenu.Instance.bronson.person.alive)
+				return first.RNGLine();
+
+			int e = RNG.Range(0,1);
+			if(e == 0)
+				return first.Lines[0];
+			else	
+				return first.Lines[2];
+		}
 	}
 
 	public class DantonDialogue : Dialogue
@@ -721,7 +776,7 @@ public class CabinInteractions: CopiumScript
 			ending.count = 2;
 			#endregion
 			#region Low
-			low.Lines[0] = "I'm...doing fine, Sir... the priority is the rest of the crew...";
+			low.Lines[0] = "I'm...doing fine, Sir...";
 			low.Lines[1] = "Sir, we're running dangerously low on supplies. We're going to need more if we want to survive.";
 			low.Lines[2] = "No, its not me, its not me, its not me....";
 			low.count = 3;

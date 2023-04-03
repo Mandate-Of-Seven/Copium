@@ -106,6 +106,20 @@ namespace Copium
 		/**************************************************************************/
 		void ResetFrame();
 
+		/***************************************************************************/
+		/*!
+		\brief
+			Set the current animation's frame to the specified frame
+			Note: if the index specified is negative or higher than the total no. of frames, nothing happens
+
+		\param _frames
+			the frame index to set the current frame to
+
+
+		\return
+			void
+		*/
+		/**************************************************************************/
 		void SetFrame(int _frame);
 
 	};
