@@ -331,7 +331,7 @@ public class CrewStatusManager: CopiumScript
 		if(!CrewMenu.Instance.harris.person.alive)
 		{
 			cabinInteractions.harrisBtn.SetActive(false);
-			Console.WriteLine("harris is dead");
+			//Console.WriteLine("harris is dead");
 
 		}
 
