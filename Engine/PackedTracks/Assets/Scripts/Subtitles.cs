@@ -54,18 +54,8 @@ public class Subtitles: CopiumScript
     }
 	void Update()
 	{
-        if (Input.GetKeyDown(KeyCode.Space))
-		{
-			StartFade();
-		}
-		else if (Input.GetKeyDown(KeyCode.F))
-        {
-            StartFade(false);
-        }
-        else if (Input.GetKeyDown(KeyCode.D))
-        {
-            FadeInAndOut();
-        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+            messageEnded = true;
 
         BlizzardLogic();
 

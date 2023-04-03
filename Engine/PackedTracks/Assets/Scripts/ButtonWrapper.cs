@@ -17,6 +17,7 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 using CopiumEngine;
 using System;
+using System.Security.Cryptography;
 
 public class ButtonWrapper
 {
@@ -134,7 +135,11 @@ public class ButtonWrapper
 				}
 				else
 				{
-					AudioManager.Instance.hoverSFX.Play();
+                    int random = RNG.Range(0, 1);
+                    if (random == 0)
+                        AudioManager.Instance.hoverSFX.Play();
+                    else if (random == 1)
+                        AudioManager.Instance.hoverSFX2.Play();
 				}
 			}
         }
@@ -159,7 +164,7 @@ public class ButtonWrapper
 			else
 			{
 				AudioManager.Instance.clickSFX.Play();
-			}
+            }
         }
 		else if (button.state == ButtonState.OnRelease)
 		{

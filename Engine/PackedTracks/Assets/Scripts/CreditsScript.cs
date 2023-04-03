@@ -58,7 +58,10 @@ public class CreditsScript: CopiumScript
 
 	void Update()
 	{
-		Vector3 posMOS = mandateOfSeven.transform.position;
+		if(Input.GetKeyDown(KeyCode.Escape))
+            sceneChange = true;
+
+        Vector3 posMOS = mandateOfSeven.transform.position;
 
 		Vector3 posDS = digipenStaff.transform.position;
 

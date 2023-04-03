@@ -37,9 +37,12 @@ public class GameManager: CopiumScript
     public HowtoPlayMenu htpmScript;
 
     public Button ManualBtn;
+    private ButtonWrapper manualBtnWrapper;
     public Button ManualPopUpBtn;
+    private ButtonWrapper manualPopUpBtnWrapper;
 
     public Button BackstoryBtn;
+    private ButtonWrapper backstoryBtnWrapper;
     public GameObject BackstoryPopUp;
 
     public TrainManager trainManager;
@@ -70,6 +73,16 @@ public class GameManager: CopiumScript
     void Start()
 	{
         eventSequence = 0;
+
+        manualBtnWrapper = new ButtonWrapper(ManualBtn);
+        manualBtnWrapper.SetImage(ManualBtn.GetComponent<Image>());
+        manualBtnWrapper.clickedSFX = AudioManager.Instance.fileOpenSFX;
+        manualPopUpBtnWrapper = new ButtonWrapper(ManualPopUpBtn);
+        manualPopUpBtnWrapper.SetImage(ManualPopUpBtn.GetComponent<Image>());
+        manualPopUpBtnWrapper.clickedSFX = AudioManager.Instance.fileCloseSFX;
+        backstoryBtnWrapper = new ButtonWrapper(BackstoryBtn);
+        backstoryBtnWrapper.SetImage(BackstoryBtn.GetComponent<Image>());
+        backstoryBtnWrapper.clickedSFX = AudioManager.Instance.fileOpenSFX;
         //UpdateCanvases();
     }
 
@@ -289,19 +302,19 @@ public class GameManager: CopiumScript
 	/**************************************************************************/
     void ButtonInputs()
     {
-        if (ManualBtn.state == ButtonState.OnRelease)
+        if (manualBtnWrapper.GetState() == ButtonState.OnRelease)
         {
             //audioManager.paperSFX.Play();
             ManualPopUp.SetActive(true);   
             //audioManager.fileOpenSFX.Play();
 
         }
-        if (ManualPopUpBtn.state == ButtonState.OnRelease && ManualPopUp.activeSelf)
+        if (manualPopUpBtnWrapper.GetState() == ButtonState.OnRelease && ManualPopUp.activeSelf)
         {
             CloseManual();
         }
 
-        if (BackstoryBtn.state == ButtonState.OnRelease)
+        if (backstoryBtnWrapper.GetState() == ButtonState.OnRelease)
         {
             BackstoryPopUp.SetActive(true);
         }
@@ -315,8 +328,6 @@ public class GameManager: CopiumScript
 	/**************************************************************************/
     public void CloseManual()
     {
-        //audioManager.fileCloseSFX.Play();
-
         ManualPopUp.SetActive(false);
         MainPage.SetActive(true);
         Page2.SetActive(false);

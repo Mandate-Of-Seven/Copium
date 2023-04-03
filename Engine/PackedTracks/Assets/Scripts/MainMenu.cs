@@ -19,13 +19,16 @@ using System;
 public class MainMenu: CopiumScript
 {
     public AudioSource bgm_MainMenu;
-    public AudioSource sfx_ButtonHover;
-    public AudioSource sfx_ButtonClick;
     public Button StartGameButton;
+    private ButtonWrapper StartGameButtonWrapper;
     public Button QuitGameButton;
-    public Button HowtoPlayButton;
+    private ButtonWrapper QuitGameButtonWrapper;
+    public Button CreditsButton;
+    private ButtonWrapper CreditsButtonWrapper;
     public Button YesButton;
+    private ButtonWrapper YesButtonWrapper;
     public Button NoButton;
+    private ButtonWrapper NoButtonWrapper;
 
     public GameObject QuitMenu;
     public GameObject arrowLocStart;
@@ -40,26 +43,32 @@ public class MainMenu: CopiumScript
     private bool canPlayHoverSound = true;
 
     private bool loadGame = false;
-    private bool loadHTP = false;
+    private bool loadCredits = false;
 
     void Start()
     {
         bgm_MainMenu.Play();
         arrow.SetActive(false);
+
+        StartGameButtonWrapper = new ButtonWrapper(StartGameButton);
+        CreditsButtonWrapper = new ButtonWrapper(CreditsButton);
+        QuitGameButtonWrapper = new ButtonWrapper(QuitGameButton);
+        YesButtonWrapper = new ButtonWrapper(YesButton);
+        NoButtonWrapper = new ButtonWrapper(NoButton);
     }
 
     void Update()
     {
-        if(StartGameButton.state == ButtonState.OnClick)
+        if(StartGameButtonWrapper.GetState() == ButtonState.OnClick)
         {
             fade.Start();
             loadGame = true;
         }
 
-        if(HowtoPlayButton.state == ButtonState.OnClick)
+        if(CreditsButtonWrapper.GetState() == ButtonState.OnClick)
         {
             fade.Start();
-            loadHTP = true;
+            loadCredits = true;
         }
 
         if(loadGame && fade.FadeEnded())
@@ -68,57 +77,36 @@ public class MainMenu: CopiumScript
             SceneManager.LoadScene("Demo");
         }
 
-        if(loadHTP && fade.FadeEnded())
+        if(loadCredits && fade.FadeEnded())
         {
-            loadHTP = false;
+            loadCredits = false;
             SceneManager.LoadScene("HowToPlayNew");
         }
 
-        if (QuitGameButton.state == ButtonState.OnClick)
+        if (QuitGameButtonWrapper.GetState() == ButtonState.OnClick)
         {
             QuitMenu.SetActive(true);
-
-           
         } 
-        if (YesButton.state == ButtonState.OnClick)
+        if (YesButtonWrapper.GetState() == ButtonState.OnClick)
         {
             Application.Quit();
-        }
-            
-        if (NoButton.state == ButtonState.OnClick)
+        }  
+        if (NoButtonWrapper.GetState() == ButtonState.OnClick)
         {
             QuitMenu.SetActive(false);
         }
 
-
-        if (StartGameButton.state == ButtonState.OnHover || HowtoPlayButton.state == ButtonState.OnHover || QuitGameButton.state == ButtonState.OnHover)
-        {
-            hovering = true;
-        }
-        else
-        {
-            arrow.SetActive(false);
-            hovering = false;
-            canPlayHoverSound = true;
-        }
-
-        if (hovering && canPlayHoverSound)
-        {
-            sfx_ButtonHover.Play();
-            canPlayHoverSound = false;
-        }
-
-        if (StartGameButton.state == ButtonState.OnHover)
+        if (StartGameButtonWrapper.GetState() == ButtonState.OnHover)
         {
             arrow.SetActive(true);
             arrow.transform.position = arrowLocStart.transform.position;
         }
-        if(HowtoPlayButton.state == ButtonState.OnHover)
+        if(CreditsButtonWrapper.GetState() == ButtonState.OnHover)
         {
             arrow.SetActive(true);
             arrow.transform.position = arrowLocHTP.transform.position;
         }
-        if(QuitGameButton.state == ButtonState.OnHover)
+        if(QuitGameButtonWrapper.GetState() == ButtonState.OnHover)
         {
             arrow.SetActive(true);
             arrow.transform.position = arrowLocQuit.transform.position;

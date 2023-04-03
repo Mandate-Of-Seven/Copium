@@ -90,11 +90,13 @@ namespace Copium
 		if (tempMode != enableEditor && loadOnce)
 		{
 			enableEditor = tempMode;
-			playMode(enableEditor);
 			if (MySceneManager.startPreview())
 			{
+				playMode(enableEditor);
 				MyMessageSystem.dispatch(MESSAGE_TYPE::MT_START_PREVIEW);
 			}
+			else if(MySceneManager.inPlayMode)
+				playMode(false);
 		}
 
 		if (!sceneChangeName.empty())

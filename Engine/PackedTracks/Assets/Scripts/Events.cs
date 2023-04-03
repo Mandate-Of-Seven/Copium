@@ -221,7 +221,7 @@ public class Event_Intruders_ChuckDead : Event_Intruders
     {
         #region Choice1
         choices[0].choiceText = Messages.Event_Intruders.ChuckDead.choice01;
-        choices[0].resultText = Messages.Event_Intruders.ChuckDead.result01;
+        //choices[0].resultText = Messages.Event_Intruders.ChuckDead.result01;
         choices[0].AddOtherEffects(delegate()
         {
             GameManager.Instance.eventSequence = -2;
@@ -372,7 +372,7 @@ public class Event_Bomb_CrewInjured : Event_Bomb
     {
         #region Choice1
         choices[0].choiceText = Messages.Event_Bomb.CrewInjured_3B.choice01;
-        choices[0].resultText = Messages.Event_Bomb.CrewInjured_3B.result01;
+        //choices[0].resultText = Messages.Event_Bomb.CrewInjured_3B.result01;
         choices[0].AddOtherEffects(delegate () 
         { 
             GameManager.Instance.eventSequence = -1;
@@ -417,7 +417,7 @@ public class Event_Bomb_Default : Event_Bomb
     {
         #region Choice1
         choices[0].choiceText = Messages.Event_Bomb.Default_3C.choice01;
-        choices[0].resultText = Messages.Event_Bomb.Default_3C.result01;
+        //choices[0].resultText = Messages.Event_Bomb.Default_3C.result01;
         choices[0].AddOtherEffects(delegate ()
         {
             GameManager.Instance.eventSequence = -5;
@@ -455,6 +455,13 @@ public class Event_Endings : Event
 
 public class Ending_3B : Event_Endings
 {
+    public override string preempt
+    {
+        get
+        {
+            return Messages.Event_Bomb.CrewInjured_3B.result01;
+        }
+    }
     public override bool ForeShadow()
     {
         Fade.Instance.duration = duration;
@@ -475,6 +482,13 @@ public class Ending_3B : Event_Endings
 
 public class Ending_3C : Event_Endings
 {
+    public override string preempt
+    {
+        get
+        {
+            return Messages.Event_Bomb.Default_3C.result01;
+        }
+    }
     public override bool ForeShadow()
     {
         Fade.Instance.duration = duration;
@@ -496,6 +510,14 @@ public class Ending_3C : Event_Endings
 
 public class Ending_2A : Event_Endings
 {
+    public override string preempt
+    {
+        get
+        {
+            return Messages.Event_Intruders.ChuckDead.result01;
+        }
+    }
+    
     public override bool ForeShadow()
     {
         Fade.Instance.duration = duration;

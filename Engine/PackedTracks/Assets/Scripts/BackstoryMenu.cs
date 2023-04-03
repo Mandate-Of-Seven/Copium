@@ -32,6 +32,7 @@ public class BackstoryMenu: CopiumScript
     public Button NextButton;
     public Button PrevButton;
     public Button ExitButton;
+    private ButtonWrapper ExitBtnWrapper;
 
     public Animator bronson;
     public Animator chuck;
@@ -46,6 +47,10 @@ public class BackstoryMenu: CopiumScript
         chuck.stop();
         danton.stop();
         harris.stop();
+
+        ExitBtnWrapper = new ButtonWrapper(ExitButton);
+        ExitBtnWrapper.SetImage(ExitButton.GetComponent<Image>());
+        ExitBtnWrapper.clickedSFX = AudioManager.Instance.fileCloseSFX;
 
         bBSIcon.stop();
         cBSIcon.stop();
@@ -76,7 +81,7 @@ public class BackstoryMenu: CopiumScript
             page++;
             ShowPage(page);
         }
-        if (ExitButton.state == ButtonState.OnClick)
+        if (ExitBtnWrapper.GetState() == ButtonState.OnClick)
         {
             gameObject.SetActive(false);
 

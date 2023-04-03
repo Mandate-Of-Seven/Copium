@@ -305,8 +305,8 @@
                     "UID": 5469569472946047673,
                     "Type": "SpriteRenderer",
                     "TypeID": 22,
-                    "Sprite ID": 11893418506888606430,
-                    "Sprite Name": "image.png",
+                    "Sprite ID": 16828571483249594000,
+                    "Sprite Name": "LogoTest1.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
@@ -396,8 +396,9 @@
                     "wait": 0.0,
                     "digipenLogo": 2271181480416786235,
                     "engineLogo": 16025891978930393222,
+                    "fmodLogo": 13060296642965510506,
                     "skipper": 8582350694606701325,
-                    "fmodLogo": 13060296642965510506
+                    "snow": 7686311268146843902
                 },
                 {
                     "enabled": true,
@@ -473,6 +474,17 @@
                             }
                         }
                     ]
+                },
+                {
+                    "enabled": true,
+                    "UID": 7686311268146843902,
+                    "Type": "AudioSource",
+                    "TypeID": 16,
+                    "Alias": "BlizzardWind",
+                    "Loop": false,
+                    "Overlap": true,
+                    "Volume": 0.8001812100410461,
+                    "Channel": ""
                 }
             ]
         },

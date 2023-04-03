@@ -37,7 +37,6 @@ public class TrainManager: CopiumScript
 
 	public GameObject trackerBG;
     public Text tracker;
-    public Button ManualBtn;
     public bool accelerate = false;
 	bool onHover = false;
 	
@@ -62,7 +61,6 @@ public class TrainManager: CopiumScript
 	public float zoomInScale;
 
 	float targetAmbienceVolume = 0.0f;
-	public GameObject cabinBtn;
 
 	public Vector3 startGameScale = Vector3.one;
 	public Vector3 startGameTutTextPos = Vector3.zero;
@@ -350,7 +348,6 @@ public class TrainManager: CopiumScript
 		targetTracksDelay = tracksMinDelay;
 		targetScale = new Vector3(zoomOutScale,zoomOutScale,1);
 
-		//cabinBtn.SetActive(false);
 		CrewMenu.Instance.SetClickable(false);
 	}
 
@@ -368,7 +365,6 @@ public class TrainManager: CopiumScript
 		targetTracksDelay = tracksMaxDelay;
 		targetScale = new Vector3(zoomInScale,zoomInScale,1);
 
-		//cabinBtn.SetActive(true);
 		CrewMenu.Instance.SetClickable(true);
 	}
 
@@ -396,50 +392,4 @@ public class TrainManager: CopiumScript
 	{
 		leverBtnWrapper.SetInteractable(true);
 	}
-	// Toggle the manual to open or close
-    // void ToggleManual()
-    // {
-    //     if (!ManualPopUpBtn.gameObject.activeSelf) // When manual is not open
-    //     {
-    //         if (ManualBtn.state == ButtonState.OnHover)
-    //         {
-    //             if (!manualHover)
-    //             {
-    //                 manualHover = true;
-    //                 AudioManager.Instance.hoverSFX.Play();
-    //             }
-    //         }
-    //         else if (ManualBtn.state == ButtonState.OnRelease)
-    //         {
-    //             AudioManager.Instance.paperSFX.Play();
-    //             ManualPopUpBtn.gameObject.SetActive(true);
-    //             manualHover = true;
-    //         }
-    //         else if (ManualBtn.state == ButtonState.None)
-    //         {
-    //             manualHover = false;
-    //         }
-    //     }
-    //     else
-    //     {
-    //         if (ManualPopUpBtn.state == ButtonState.OnHover)
-    //         {
-    //             if (!manualHover)
-    //             {
-    //                 manualHover = true;
-    //                 AudioManager.Instance.hoverSFX.Play();
-    //             }
-    //         }
-    //         else if (ManualPopUpBtn.state == ButtonState.OnRelease)
-    //         {
-    //             AudioManager.Instance.paperSFX.Play();
-    //             ManualPopUpBtn.gameObject.SetActive(false);
-    //             manualHover = true;
-    //         }
-    //         else if (ManualPopUpBtn.state == ButtonState.None)
-    //         {
-    //             manualHover = false;
-    //         }
-    //     }
-    // }
 }
