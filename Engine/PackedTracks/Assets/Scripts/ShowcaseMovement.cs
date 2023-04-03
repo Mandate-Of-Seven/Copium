@@ -27,7 +27,7 @@ public class ShowcaseMovement: CopiumScript
 			Vector3 partnerPos = partner.transform.position;
 			partnerPos.x += direction.x;
 			partnerPos.y += direction.y;
-			partner.transform.position = pos;
+			partner.transform.position = partnerPos;
 		}
 		Vector3 pos = transform.position;
 		pos.x += direction.x;

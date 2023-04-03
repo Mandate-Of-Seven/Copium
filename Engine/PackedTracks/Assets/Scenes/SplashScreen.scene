@@ -201,7 +201,7 @@
         },
         {
             "UID": 8044815803874756395,
-            "Name": "Engine Logo",
+            "Name": "FMOD Logo",
             "Active": true,
             "Components": [
                 {
@@ -218,8 +218,8 @@
                         "Z": 0.0
                     },
                     "Scale": {
-                        "X": 4.0,
-                        "Y": 4.0,
+                        "X": 6.0,
+                        "Y": 6.0,
                         "Z": 1.0
                     }
                 },
@@ -236,8 +236,8 @@
                     "UID": 1009557917956949803,
                     "Type": "SpriteRenderer",
                     "TypeID": 22,
-                    "Sprite ID": 11893418506888606430,
-                    "Sprite Name": "image.png",
+                    "Sprite ID": 8071832148963281879,
+                    "Sprite Name": "FMOD Logo White - Black Background.png",
                     "Color": {
                         "X": 1.0,
                         "Y": 1.0,
@@ -324,7 +324,7 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "SplashScreen",
-                    "wait": 0.5,
+                    "wait": 0.0,
                     "digipenLogo": 2271181480416786235,
                     "engineLogo": 13060296642965510506,
                     "skipper": 8582350694606701325
@@ -335,14 +335,14 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "Fade",
-                    "duration": 0.25,
+                    "duration": 0.5,
                     "end": 1.0,
-                    "fadeIn": true,
+                    "fadeIn": false,
                     "fadeInAndOut": false,
                     "fadeVal": 0.0,
                     "postFade": 0.5,
                     "preFade": 0.0,
-                    "shouldFade": false,
+                    "shouldFade": true,
                     "start": 0.0,
                     "sr": 18013327903678151813
                 }
