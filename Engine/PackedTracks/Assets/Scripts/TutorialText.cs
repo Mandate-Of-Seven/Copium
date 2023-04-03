@@ -31,6 +31,9 @@ public class TutorialText: CopiumScript
 
 	void Update()
 	{
+		if (PauseMenu.Instance.isPaused)
+			return;
+
 		if (!Done())
 		{
 			if (Input.GetKeyDown(KeyCode.Space))

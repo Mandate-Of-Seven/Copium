@@ -83,6 +83,9 @@ public class CrewStatusManager: CopiumScript
 	public Vector3 crewStatusMentalTutTextPos = Vector3.zero;
 	public Vector3 crewStatusHungerTutTextPos = Vector3.zero;
 	public Vector3 cabinButtonTutTextPos = Vector3.zero;
+	
+	public Vector3 suppliesLowScale = Vector3.one;
+	public Vector3 suppliesTutTextPos = Vector3.zero;
 
 
 	void Awake()
@@ -235,6 +238,24 @@ public class CrewStatusManager: CopiumScript
 			delegate ()
 			{
 				if (CabinBtnWrapper.GetState() == ButtonState.OnRelease)
+				{
+					return true;
+				}
+				return false;
+			}
+		);
+
+
+		new TutorialComponent
+		(
+			"SuppliesLow",
+			suppliesLowScale,
+			supplyLightDiode.transform,
+            Messages.Tutorial.suppliesLow,
+			suppliesTutTextPos,
+			delegate ()
+			{
+				if (TutorialText.Instance.Done())
 				{
 					return true;
 				}

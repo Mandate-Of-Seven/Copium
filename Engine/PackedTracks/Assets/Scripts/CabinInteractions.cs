@@ -206,7 +206,8 @@ public class CabinInteractions: CopiumScript
 					return true;
 				}
 				return false;
-			}
+			},
+			true
 		) ;
 
 		new TutorialComponent

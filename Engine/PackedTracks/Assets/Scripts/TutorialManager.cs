@@ -6,6 +6,8 @@ public class TutorialManager: CopiumScript
 {
 	public static TutorialManager Instance;
 
+	public GameObject tutorialTexts;
+
     [NonSerialized]
 	public Dictionary<string,TutorialComponent> tutorials = new Dictionary<string,TutorialComponent>();
 
@@ -17,7 +19,7 @@ public class TutorialManager: CopiumScript
 	public string[] sequence =
 	new string[]
 	{
-/*        "ReportButton",
+        "ReportButton",
         "ReportDisplay",
         "ReportClose",
         "CrewStatusButton",
@@ -26,16 +28,16 @@ public class TutorialManager: CopiumScript
         "CrewStatusHealth",
         "CrewStatusMental",
         "CrewStatusHunger",
-        "CrewStatusClose",*/
+        "CrewStatusClose",
         "CabinButton",
-/*		"CabinDisplay",
+        "CabinDisplay",
         "CabinHarris",
         "CabinBronson",
         "CabinChuck",
         "CabinDanton",
         "CabinSpeak",
         "CabinSpeaking",
-        "CabinCloseSpeak",*/
+        "CabinCloseSpeak",
         "CabinPrepare",
         "CabinPrepareSelect",
         "CabinDeploy",
@@ -47,6 +49,7 @@ public class TutorialManager: CopiumScript
 		"MomMessage",
 		"DistanceIndicator",
 		"StartGame",
+		"Manual",
 	};
 
 	int sequenceIndex = 0;
@@ -59,15 +62,26 @@ public class TutorialManager: CopiumScript
 	void Start()
 	{
 		TutorialText.Instance.SetContent(Messages.Tutorial.reportStart);
+
 	}
 
 	void Update()
 	{
-        if (PauseMenu.Instance.isPaused)
-            return;
+		if (PauseMenu.Instance.isPaused)
+			return;
 
 		if (sequenceIndex >= sequence.Length)
 			return;
+
+		if (Input.GetKey(KeyCode.L))
+		{
+			TutorialText.Instance.gameObject.SetActive(false);
+			InteractionMask.Instance.gameObject.SetActive(false);
+			sequenceIndex = sequence.Length;
+			tutorialTexts.SetActive(false);
+			return;
+        }
+
         TutorialComponent tutorial = tutorials[sequence[sequenceIndex]];
 		TutorialText.Instance.transform.position = tutorial.textPos;
 		if (tutorial.isFinished())
@@ -76,6 +90,13 @@ public class TutorialManager: CopiumScript
 			originalScale = tutorial.scale;
 			transitionTimer = 0f;
 			++sequenceIndex;
+			if (sequenceIndex >= sequence.Length)
+            {
+				TutorialText.Instance.gameObject.SetActive(false);
+				InteractionMask.Instance.gameObject.SetActive(false);
+				tutorialTexts.SetActive(false);
+				return;
+			}
 			TutorialComponent nextTut = tutorials[sequence[sequenceIndex]];
 			TutorialText.Instance.SetContent(nextTut.text);
 			InteractionMask.Instance.transparentBlock.SetActive(nextTut.transparentBlock);

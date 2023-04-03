@@ -34,6 +34,8 @@ public class TrainManager: CopiumScript
     public float levelTransSpeed = 2.0f;
 	Color leverHoverColor = new Color(0.6f,0.6f,0.6f,1f);
 
+
+	public GameObject trackerBG;
     public Text tracker;
     public Button ManualBtn;
     public bool accelerate = false;
@@ -62,11 +64,19 @@ public class TrainManager: CopiumScript
 	float targetAmbienceVolume = 0.0f;
 	public GameObject cabinBtn;
 
+	public Vector3 startGameScale = Vector3.one;
+	public Vector3 startGameTutTextPos = Vector3.zero;
+	public Vector3 distanceScale = Vector3.one;
+	public Vector3 distanceTutTextPos = Vector3.zero;
+	public Vector3 momScale = Vector3.one;
+	public Vector3 momTutTextPos = Vector3.zero;
+	public Vector3 manualScale = Vector3.one;
+	public Vector3 manualTutTextPos = Vector3.zero;
+
 	void Awake()
     {
 		Instance = this;
     }
-
 
 	void Start()
 	{
@@ -76,6 +86,74 @@ public class TrainManager: CopiumScript
 		leverBtnWrapper = new ButtonWrapper(trainLeverBtn);
 		leverBtnWrapper.SetImage(trainLeverDeactivated);
 		leverBtnWrapper.failureText = Messages.ErrorMainEvent;
+
+		new TutorialComponent
+		(
+			"MomMessage",
+			momScale,
+			Mom.Instance.transform,
+			Messages.Tutorial.mom,
+			momTutTextPos,
+			delegate ()
+			{
+				if (Mom.Instance.RadioBtn.state == ButtonState.OnClick)
+				{
+					return true;
+				}
+				return false;
+			}
+		);
+
+		new TutorialComponent
+		(
+			"DistanceIndicator",
+			distanceScale,
+			trackerBG.transform,
+			Messages.Tutorial.distance,
+			distanceTutTextPos,
+			delegate ()
+			{
+				if (TutorialText.Instance.Done())
+				{
+					return true;
+				}
+				return false;
+			}
+		);
+
+		new TutorialComponent
+		(
+			"StartGame",
+			startGameScale,
+			trainLeverBtn.transform,
+			Messages.Tutorial.startGame,
+			startGameTutTextPos,
+			delegate ()
+			{
+				if (leverBtnWrapper.GetState() == ButtonState.OnRelease || TutorialText.Instance.Done())
+				{
+					return true;
+				}
+				return false;
+			}
+		);
+
+		new TutorialComponent
+		(
+			"Manual",
+			manualScale,
+			GameManager.Instance.ManualBtn.transform,
+			Messages.Tutorial.manual,
+			manualTutTextPos,
+			delegate ()
+			{
+				if (GameManager.Instance.ManualBtn.state == ButtonState.OnClick || TutorialText.Instance.Done())
+				{
+					return true;
+				}
+				return false;
+			}
+		);
 	}
 
 	void Update()

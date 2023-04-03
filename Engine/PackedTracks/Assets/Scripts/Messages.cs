@@ -30,13 +30,18 @@ public static class Messages
 		public const string cabinSpeak = "Let's speak to Harris to see whats up";
 		public const string cabinSpeaking = "You can more about the current situation when speaking to the crew members";
 		public const string cabinCloseSpeak = "Good to know Harris... You can come to speak to the rest of them later, let's stop speaking to him for now";
-		public const string cabinPrepare = "Let deploy Harris out to get some supplies, click on prepare to select members for deployment";
+		public const string cabinPrepare = "Let's deploy Harris out to get some supplies, click on prepare to select members for deployment";
 		public const string cabinPrepareSelect = "Now click on Harris to include him in the deployment, it will take one state of hunger to send them out";
 		public const string cabinDeploy = "Now that Harris is selected, let's deploy him by clicking on the deploy button";
 		public const string resultDisplay = "After deploying, the deployed party will face an event";
 		public const string resultChoices = "Now in response to the scenario, you, the conductor can instruct them on what to do";
 		public const string resultOutcome = "After selecting a choice, there will be an overview of the outcomes";
 		public const string resultEnd = "Let's see if you still remember how to close a screen (Hint: Still top right)";
+		public const string suppliesLow = "When you are low on supplies this light will flash orange";
+		public const string distance = "When this counter reaches zero, you would have reached the city";
+		public const string mom = "From time to time, you'll receive messages from your mother, click on the radio to hear her voice";
+		public const string startGame = "From here on out, you'll be on your own. You can start and stop the train using the lever. While your train is moving, they will get hungry maintaining the train so remember to have enough supplies to feed them";
+		public const string manual = "If you ever forget all the information given to you, you can always reference the instruction manual";
 	}
 
 	public static class Event_Intro

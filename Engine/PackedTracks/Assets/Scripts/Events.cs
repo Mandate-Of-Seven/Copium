@@ -157,7 +157,7 @@ public class Event_Intruders : Event
 {
     float timerElasped = 0f;
     int state = 0;
-    public float waitTime = 3f;
+    public float waitTime = 9f;
 
     // Event to display onto the game
 
@@ -280,7 +280,6 @@ public class Event_Bomb: Event
 {
     float timerElasped = 0f;
     int state = 0;
-    public float waitTime = 3f;
 
     public override string preempt
     {
@@ -297,11 +296,27 @@ public class Event_Bomb: Event
         switch (state)
         {
             case 0:
-            {
-                AudioManager.Instance.explosionForEvent3SFX.Play();
-                ++state;
-                return false;
-            }
+                {
+                    AudioManager.Instance.explosionForEvent3SFX.Play();
+                    ++state;
+                    return false;
+                }
+            case 1:
+                {
+                    if (timerElasped < 1f)
+                    {
+                        timerElasped += Time.deltaTime;
+                    }
+                    else
+                    {
+                        timerElasped = 0;
+                        CameraShakeEffect.Instance.intensity = 0.5f;
+                        CameraShakeEffect.Instance.totalDuration = 4f;
+                        CameraShakeEffect.Instance.Trigger();
+                        ++state;
+                    }
+                    return false;
+                }
         }
         return true;
     }

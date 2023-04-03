@@ -82,15 +82,11 @@ namespace Copium
 
 	void EditorSystem::update()
 	{
-		if (game.is_window_focused())
+		if (MyInputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && MyInputSystem.is_key_pressed(GLFW_KEY_F7))
 		{
-			if (MyInputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && MyInputSystem.is_key_pressed(GLFW_KEY_E))
-			{
-				tempMode = !tempMode;
-			}
+			tempMode = !tempMode;
 		}
-
-		static bool loadOnce = false;
+		static bool loadOnce = true;
 		if (tempMode != enableEditor && loadOnce)
 		{
 			enableEditor = tempMode;
