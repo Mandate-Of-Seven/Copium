@@ -8,21 +8,33 @@ FTL: Faster than light (Combat and crew mechanics)
 Darkest Dungeon(unit stress mechanic)
 
 Game Input:
-- Mouse Input (Left click): clicking on buttons and screens
-- Keyboard (Escape): Closing report screen and tutorial manual
+- Mouse Input (Left click)	: Clicking on buttons and screens
+- Mouse Input (Right click)	: Fast forward text
+- Keyboard (Escape)		: Bring up the pause menu and skip credits or ending scenes
+- Keyboard (L)			: Skip tutorial entirely
+- Keyboard (Space)		: Fast forward tutorial text
+
 
 How to play:
-- Clickable areas will be highlighted.
-- Instructional Manual will be also clickable and it will show you some basic instructions if necessary.
-- Click on the middle screen to access the main story.
-- Click on the right screen to access combat simulation when available.
-- Left screen does not do anything.
+- Once you click start game a tutorial will play
+- The interactive tutorial will guide you through our game
+- Instructional Manual will be also clickable and it will show you some basic instructions if necessary
+- Click on the middle screen to access the main events
+- Click on the right screen to access deployment report
+- Left screen shows the crew status
+- Cabin area allows you to chat with the crew or deploy them outside
 
 Existing Bugs In Game:
-- To replay they game, you will need to close and relaunch the game. 
-- Combat screen is not clickable before any combat begins.
-- Some text disappears after combat due to linkage issue
+- No known bugs
 
-Additional Notes:
-- Do not click on the right screen before getting the engaging text from the middle screen.
-- Report button, crew button and message button all have no function at the moment, it will only toggle on and off the report tab.
+Cheat Codes:
+- Keyboard (Num 1): Kill Harris
+- Keyboard (Num 2): Kill Bronson
+- Keyboard (Num 3): Kill Chuck
+- Keyboard (Num 4): Kill Danton
+- Keyboard (S)	: Speed up train
+- Keyboard (F)	: Skip to 50km left
+- Keyboard (C)	: Add 5 supplies
+
+
+
