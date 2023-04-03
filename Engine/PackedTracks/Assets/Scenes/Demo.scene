@@ -1028,6 +1028,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": true,
+                    "Freeze": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -1613,6 +1614,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": true,
+                    "Freeze": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -2145,6 +2147,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": true,
+                    "Freeze": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -4107,6 +4110,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": true,
+                    "Freeze": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -5245,6 +5249,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -5303,6 +5308,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -5361,6 +5367,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -5419,6 +5426,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -5638,6 +5646,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -5696,6 +5705,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -5856,6 +5866,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -5914,6 +5925,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -5972,6 +5984,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -6061,6 +6074,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -6119,6 +6133,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -6177,6 +6192,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -6266,6 +6282,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -6324,6 +6341,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -6382,6 +6400,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -6471,6 +6490,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -6529,6 +6549,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -8817,6 +8838,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -8875,6 +8897,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -8933,6 +8956,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -10734,6 +10758,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -10842,6 +10867,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -10950,6 +10976,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -11134,6 +11161,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -11242,6 +11270,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -11350,6 +11379,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -11673,6 +11703,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -11781,6 +11812,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -11889,6 +11921,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -12127,6 +12160,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -12261,6 +12295,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -12369,6 +12404,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -12992,6 +13028,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -13050,6 +13087,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -13108,6 +13146,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -13166,6 +13205,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -13250,6 +13290,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -13308,6 +13349,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -13366,6 +13408,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -13424,6 +13467,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -13482,6 +13526,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -13540,6 +13585,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -13598,6 +13644,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -13656,6 +13703,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -13714,6 +13762,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -13772,6 +13821,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -13830,6 +13880,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -13888,6 +13939,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -13946,6 +13998,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -14004,6 +14057,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -14062,6 +14116,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": false,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -14302,6 +14357,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -14514,6 +14570,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -15228,6 +15285,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -16087,6 +16145,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -16469,6 +16528,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -17442,6 +17502,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -17500,6 +17561,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -19106,6 +19168,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": false,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -20979,6 +21042,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": true,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -21037,6 +21101,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": true,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -21095,6 +21160,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": true,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [
@@ -21153,6 +21219,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": true,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [

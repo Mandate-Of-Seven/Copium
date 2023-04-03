@@ -92,6 +92,7 @@ namespace Copium
 	void Serializer::Serialize<Animator>(Animator& _data, const std::string& _key, rapidjson::Value& _value, rapidjson::Document& _doc)
 	{
 		Copium::SerializeBasic(_data.loop, _value, _doc, "Loop");
+		Copium::SerializeBasic(_data.freeze, _value, _doc, "Freeze");
 		Copium::SerializeBasic(_data.reverse, _value, _doc, "Rev");
 		Copium::SerializeBasic(_data.animations.size(), _value, _doc, "Count");
 
@@ -695,6 +696,7 @@ namespace Copium
 	{
 		Copium::Deserialize(_data.uuid.GetUUID(), _value, "UID");
 		Copium::Deserialize(_data.loop, _value, "Loop");
+		Copium::Deserialize(_data.freeze, _value, "Freeze");
 		Copium::Deserialize(_data.enabled, _value, "enabled");
 		//if (_data.loop)
 		//	PRINT("looping");

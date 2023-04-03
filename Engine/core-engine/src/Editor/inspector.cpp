@@ -998,6 +998,8 @@ namespace Copium
             //DisplayDragDrop();
             //spriteRenderer.sprite.set_name()
             Display("Loop", animator.loop);
+            Display("Freeze", animator.freeze);
+
             ImGui::TableNextColumn();
             ImGui::Text("Play Animation");
             std::string toggleAnimation = "Play";
