@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			CabinInteractions.cs
+\project
+\author			Matthew Lau
+\co-author		Zacharie Hong
+
+\par			Course: GAM250
+\par			Section:
+\date			26/03/2023
+
+\brief
+	Handles the cabin interactions/dialogue that players can perform with the crew members.
+
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 using CopiumEngine;
 using System;
 public class CabinInteractions: CopiumScript
