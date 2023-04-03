@@ -27,7 +27,7 @@ namespace Copium
 {
     namespace
     {
-        bool fullscreen = false;
+        bool fullscreen = true;
     }
 
     int WindowsSystem::windowWidth;
