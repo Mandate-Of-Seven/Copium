@@ -83,7 +83,7 @@ public class CabinInteractions: CopiumScript
 
 		CloseDialogueBtnWrapper = new ButtonWrapper(CloseDialogueBtn);
 
-		dialogueSprite.stop();
+		//dialogueSprite.stop();
 
 		new TutorialComponent
 		(
@@ -316,7 +316,7 @@ public class CabinInteractions: CopiumScript
 			hover[0] = false;
 
 			OpenDialogueBox(0);
-
+			Console.WriteLine("open harris dialogue");
 		}
 		if(bronsonInteractBtnWrapper.GetState() == ButtonState.OnClick){
 			bronsonIText.SetActive(false);

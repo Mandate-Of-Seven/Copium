@@ -110,7 +110,6 @@ public class CrewStatusManager: CopiumScript
 		// Cabin set false
 		//CrewStatusTab.SetActive(false);
 		supplyState = 1;
-		supplySpriteSheet.stop();
 		supplySpriteSheet.setFrame(1);
 
         new TutorialComponent

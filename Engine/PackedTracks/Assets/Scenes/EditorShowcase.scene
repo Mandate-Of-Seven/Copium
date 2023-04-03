@@ -116,6 +116,7 @@
                     "Type": "Animator",
                     "TypeID": 15,
                     "Loop": true,
+                    "Freeze": true,
                     "Rev": false,
                     "Count": 1,
                     "Animations": [

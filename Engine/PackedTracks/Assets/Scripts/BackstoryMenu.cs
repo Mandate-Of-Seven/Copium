@@ -42,15 +42,15 @@ public class BackstoryMenu: CopiumScript
 
     void Start()
 	{
-        bronson.stop();
-        chuck.stop();
-        danton.stop();
-        harris.stop();
+        // bronson.stop();
+        // chuck.stop();
+        // danton.stop();
+        // harris.stop();
 
-        bBSIcon.stop();
-        cBSIcon.stop();
-        dBSIcon.stop();
-        hBSIcon.stop();
+        // bBSIcon.stop();
+        // cBSIcon.stop();
+        // dBSIcon.stop();
+        // hBSIcon.stop();
 	}
 
 
@@ -58,10 +58,10 @@ public class BackstoryMenu: CopiumScript
     {
         if(!PauseMenu.Instance.isPaused)
         {
-            bronson.stop();
-            chuck.stop();
-            danton.stop();
-            harris.stop();
+            // bronson.stop();
+            // chuck.stop();
+            // danton.stop();
+            // harris.stop();
         }
 
         if (PrevButton.state == ButtonState.OnClick)
