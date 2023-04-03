@@ -15730,13 +15730,17 @@
                     "Page2": 4824331968412434959,
                     "Page3": 6742758525039533529,
                     "sfx_pageflip": 16863530532877669399,
+                    "dBSIcon": 2946737756683759288,
                     "ExitButton": 13866426859041989898,
+                    "cBSIcon": 14143196961066471712,
                     "bronson": 6182178789917696231,
                     "PrevButton": 11296636408598356073,
                     "NextButton": 10444853072535840516,
                     "chuck": 17471923854421505654,
                     "danton": 9280806063901533652,
-                    "harris": 15164841393826463532
+                    "harris": 15164841393826463532,
+                    "bBSIcon": 17604895782388241907,
+                    "hBSIcon": 10762413158573401112
                 }
             ]
         },
@@ -20764,6 +20768,238 @@
                         "Y": 1.0,
                         "Z": 1.0
                     }
+                }
+            ]
+        },
+        {
+            "UID": 10249123651591559788,
+            "Name": "b BS icon",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 7150034817238632200,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 2.0,
+                        "Y": -1.7000000476837158,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 0.75,
+                        "Y": 0.75,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 2583289762473527897,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 8,
+                    "OrderInLayer": 4
+                },
+                {
+                    "enabled": true,
+                    "UID": 17604895782388241907,
+                    "Type": "Animator",
+                    "TypeID": 15,
+                    "Loop": true,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "Char icon SS.png",
+                            "Sprite ID": 12167231815673940346,
+                            "Time Delay": 0.0,
+                            "FrameCount": 4,
+                            "Current Frame Index": 1,
+                            "Rows": 1,
+                            "Columns": 4,
+                            "Flip": {
+                                "X": false,
+                                "Y": false
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 10581044045557648041,
+            "Name": "c BS icon",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 5687911433499589338,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -0.15000000596046448,
+                        "Y": -1.75,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 0.75,
+                        "Y": 0.75,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 10552581244928995798,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 8,
+                    "OrderInLayer": 4
+                },
+                {
+                    "enabled": true,
+                    "UID": 14143196961066471712,
+                    "Type": "Animator",
+                    "TypeID": 15,
+                    "Loop": true,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "Char icon SS.png",
+                            "Sprite ID": 12167231815673940346,
+                            "Time Delay": 0.0,
+                            "FrameCount": 4,
+                            "Current Frame Index": 2,
+                            "Rows": 1,
+                            "Columns": 4,
+                            "Flip": {
+                                "X": false,
+                                "Y": false
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2251376562744470144,
+            "Name": "d BS icon",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 13503630109028362520,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": 1.9111958742141724,
+                        "Y": -1.75,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 0.75,
+                        "Y": 0.75,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 18191877365847812009,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 8,
+                    "OrderInLayer": 3
+                },
+                {
+                    "enabled": true,
+                    "UID": 2946737756683759288,
+                    "Type": "Animator",
+                    "TypeID": 15,
+                    "Loop": true,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "Char icon SS.png",
+                            "Sprite ID": 12167231815673940346,
+                            "Time Delay": 0.0,
+                            "FrameCount": 4,
+                            "Current Frame Index": 3,
+                            "Rows": 1,
+                            "Columns": 4,
+                            "Flip": {
+                                "X": false,
+                                "Y": false
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 10890168676122925487,
+            "Name": "h BS icon",
+            "Active": true,
+            "Components": [
+                {
+                    "PID": 6742758525039533529,
+                    "Type": "Transform",
+                    "Pos": {
+                        "X": -0.15000003576278687,
+                        "Y": -1.8684065341949463,
+                        "Z": 0.0
+                    },
+                    "Rot": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 0.75,
+                        "Y": 0.75,
+                        "Z": 1.0
+                    }
+                },
+                {
+                    "enabled": true,
+                    "UID": 8942149483152647047,
+                    "Type": "SortingGroup",
+                    "TypeID": 26,
+                    "SortingLayer": 8,
+                    "OrderInLayer": 3
+                },
+                {
+                    "enabled": true,
+                    "UID": 10762413158573401112,
+                    "Type": "Animator",
+                    "TypeID": 15,
+                    "Loop": true,
+                    "Rev": false,
+                    "Count": 1,
+                    "Animations": [
+                        {
+                            "Name": "Char icon SS.png",
+                            "Sprite ID": 12167231815673940346,
+                            "Time Delay": 0.0,
+                            "FrameCount": 4,
+                            "Current Frame Index": 0,
+                            "Rows": 1,
+                            "Columns": 4,
+                            "Flip": {
+                                "X": false,
+                                "Y": false
+                            }
+                        }
+                    ]
                 }
             ]
         }

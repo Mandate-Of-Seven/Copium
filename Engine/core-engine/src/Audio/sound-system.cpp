@@ -61,6 +61,23 @@ void SoundSystem::update()
 		
 		SetAllVolume(0.1f);
 	}
+
+	if (altTabbed && MyWindowSystem.get_window_focused())
+	{
+		channelGroup->setVolume(altTabbedVolume);
+		altTabbed = false;
+	}
+	else if (!altTabbed && !MyWindowSystem.get_window_focused())
+	{
+
+		float temp;
+		channelGroup->getVolume(&temp);
+		altTabbedVolume = temp;
+		channelGroup->setVolume(0.0f);
+		altTabbed = true;
+	}
+
+
 }
 
 void SoundSystem::exit()
