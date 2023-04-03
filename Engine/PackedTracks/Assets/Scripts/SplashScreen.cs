@@ -8,6 +8,7 @@ public class SplashScreen: CopiumScript
 	private float timer = 0.0f;
 
 	public Fade digipenLogo;
+	public Fade fmodLogo;
 	public Fade engineLogo;
 	public Fade skipper;
 
@@ -50,11 +51,16 @@ public class SplashScreen: CopiumScript
 		if ((skipper.FadeEnded() && endLogo) || (skipper.FadeEnded() && skip))
 			SceneManager.LoadScene("MainMenu");
 
-
-
 		if (digipenLogo.hasFaded)
 		{
 			digipenLogo.hasFaded = false;
+            fmodLogo.fadeInAndOut = true;
+            fmodLogo.Start(true);
+        }
+
+		if(fmodLogo.hasFaded)
+		{
+            fmodLogo.hasFaded = false;
             engineLogo.fadeInAndOut = true;
             engineLogo.Start(true);
         }
