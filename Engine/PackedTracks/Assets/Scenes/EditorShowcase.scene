@@ -135,50 +135,6 @@
                     ]
                 }
             ]
-        },
-        {
-            "UID": 15805552164589276500,
-            "Name": "New GameObject",
-            "Active": true,
-            "Components": [
-                {
-                    "PID": 0,
-                    "Type": "Transform",
-                    "Pos": {
-                        "X": 6.171043395996094,
-                        "Y": 3.0808188915252686,
-                        "Z": 0.0
-                    },
-                    "Rot": {
-                        "X": 0.0,
-                        "Y": 0.0,
-                        "Z": 171.5999755859375
-                    },
-                    "Scale": {
-                        "X": 0.20000000298023224,
-                        "Y": 0.6091241240501404,
-                        "Z": 1.0
-                    }
-                },
-                {
-                    "enabled": true,
-                    "UID": 17816873852293886012,
-                    "Type": "SpriteRenderer",
-                    "TypeID": 22,
-                    "Sprite ID": 0,
-                    "Sprite Name": "empty",
-                    "Color": {
-                        "X": 1.0,
-                        "Y": 1.0,
-                        "Z": 1.0,
-                        "W": 1.0
-                    },
-                    "Flip": {
-                        "X": false,
-                        "Y": false
-                    }
-                }
-            ]
         }
     ]
 }

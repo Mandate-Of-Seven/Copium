@@ -43,6 +43,10 @@ public class TutorialManager: CopiumScript
 		"ResultChoices",
 		"ResultOutcome",
 		"ResultEnd",
+		"SuppliesLow",
+		"MomMessage",
+		"DistanceIndicator",
+		"StartGame",
 	};
 
 	int sequenceIndex = 0;
@@ -62,6 +66,8 @@ public class TutorialManager: CopiumScript
         if (PauseMenu.Instance.isPaused)
             return;
 
+		if (sequenceIndex >= sequence.Length)
+			return;
         TutorialComponent tutorial = tutorials[sequence[sequenceIndex]];
 		TutorialText.Instance.transform.position = tutorial.textPos;
 		if (tutorial.isFinished())
