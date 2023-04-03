@@ -56,7 +56,7 @@ namespace Copium
 		MyEventSystem->subscribe(this, &CopiumCore::CallbackPerformanceView);
 		MyEventSystem->subscribe(this, &CopiumCore::CallbackOffPerformanceView);
 		//while (MyScriptingSystem.compilingState == CompilingState::Compiling);
-		MySceneManager.load_scene(Paths::assetPath+"\\Scenes\\Demo.scene");
+		//MySceneManager.load_scene(Paths::assetPath+"\\Scenes\\MainMenu.scene");
 
 	}
 

@@ -32,7 +32,7 @@ namespace Copium
 		// Our state
 		bool show_demo_window = false;
 		ThreadSystem& threadSystem{ *ThreadSystem::Instance() };
-		bool tempMode = false;
+		bool tempMode = true;
 	}
 
 	void EditorSystem::init()
@@ -82,12 +82,15 @@ namespace Copium
 
 	void EditorSystem::update()
 	{
-		if (MyInputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && MyInputSystem.is_key_pressed(GLFW_KEY_F7))
+		if (game.is_window_focused())
 		{
-			tempMode = !tempMode;
+			if (MyInputSystem.is_key_held(GLFW_KEY_LEFT_SHIFT) && MyInputSystem.is_key_pressed(GLFW_KEY_E))
+			{
+				tempMode = !tempMode;
+			}
 		}
 
-		static bool loadOnce = true;
+		static bool loadOnce = false;
 		if (tempMode != enableEditor && loadOnce)
 		{
 			enableEditor = tempMode;
