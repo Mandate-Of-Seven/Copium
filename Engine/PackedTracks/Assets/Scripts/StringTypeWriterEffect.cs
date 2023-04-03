@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			StringTypeWriterEffect.cs
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM250
+\par			Section:
+\date			03/04/2023
+
+\brief
+	Typewriter effect for strings to display strings one character at a time interval
+
+All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 using CopiumEngine;
 using System;
 using System.Reflection;
@@ -23,15 +38,20 @@ public class StringTypeWriterEffect
 		charIndex = 0;
 		doneDuration = 50f * interval;
 	}
+
+	//Speeds up the speed of the text
 	public void Skip()
 	{
 		interval /= 5f;
 	}
+
+	//Checks if the text is done displaying
 	public bool Done()
 	{
 		return done;
 	}
 
+	//Adds a character to the string
 	public string Write()
 	{
 		if (Done())

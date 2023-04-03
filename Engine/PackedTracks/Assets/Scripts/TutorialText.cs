@@ -1,3 +1,19 @@
+/*!***************************************************************************************
+\file			TutorialText.cs
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			03/04/2023
+
+\brief
+	Text for tutorial
+
+All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
+
 using CopiumEngine;
 using System;
 
@@ -19,11 +35,13 @@ public class TutorialText: CopiumScript
 
 	}
 
+	//Starts a typewriter effect for new content
 	public void SetContent(string content)
     {
 		writer = new StringTypeWriterEffect(content, interval);
     }
 
+	//Checks if the typewriter is done writing
 	public bool Done()
     {
 		return writer == null || writer.Done();

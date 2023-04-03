@@ -1331,7 +1331,7 @@
                     "Type": "Script",
                     "TypeID": 23,
                     "Name": "TutorialManager",
-                    "transitionTime": 0.10000000149011612,
+                    "transitionTime": 0.05000000074505806,
                     "tutorialTexts": 1883230764238764541
                 }
             ]

@@ -1,6 +1,20 @@
+/*!***************************************************************************************
+\file			Events.cs
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM200
+\par			Section:
+\date			03/04/2023
+
+\brief
+	All events inherited off Event
+All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
+
 using CopiumEngine;
 using System;
-using static StatusUpdate;
 
 public class Event_Intro : Event
 {
