@@ -114,12 +114,36 @@ namespace Copium
 			/**************************************************************************/
 		void Mute(bool status);
 
+		/*******************************************************************************
+		/*!
+			\brief
+				Sets all volume
+
+			\param volume
+				Target Volume
+		*/
+		/*******************************************************************************/
 		void SetAllVolume(float volume);
 
+		/*******************************************************************************
+		/*!
+			\brief
+				Gets the length of a sound
+
+			\param volume
+				Target Volume
+
+			\return
+				Length of a sound
+		*/
+		/*******************************************************************************/
 		unsigned GetSoundLength(std::string alias);
 
 		//a map of all sounds created using CreateSound()
 		std::map<std::string, std::pair<FMOD::SoundGroup*, FMOD::Sound*>> soundList;
+		
+		bool altTabbed;
+		float altTabbedVolume;
 
 		//the sound system playing all the audio
 		FMOD::System* soundSystem;
