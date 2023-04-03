@@ -2,12 +2,12 @@
 \file			BackstoryMenu.cs
 \project
 \author			Wu Ze Zheng
-\co-author		Abdul Hadi
+\co-author		Shawn Tanary
                 Matthew Lau
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
-\date			09/03/2023
+\date			03/04/2023
 
 \brief
 	Functionality for the HowtoPlay Menu

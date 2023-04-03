@@ -1,4 +1,17 @@
-﻿
+﻿/*!***************************************************************************************
+\file			mom.cs
+\project
+\author			Shawn Tanary
+
+\par			Course: GAM250
+\par			Section:
+\date			03/04/2022
+
+\brief
+	This file implements the audio messages from mom
+
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 using CopiumEngine;
 using System;
 using System.Collections.Generic;
