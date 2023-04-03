@@ -160,7 +160,6 @@ public class CrewMenu: CopiumScript
             cabinDeployTutTextPos,
             delegate ()
             {
-                Debug.Log(deployBtnWrapper.GetState().ToString());
                 if (ResultManager.Instance.isResultOn)
                 {
                     return true;

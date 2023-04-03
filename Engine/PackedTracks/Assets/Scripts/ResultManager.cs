@@ -43,11 +43,13 @@ public class ResultManager : CopiumScript
     public float transitionSpeed = 5.0f;
 
     public Vector3 resultsDisplayScale = Vector3.one;
+    public Vector3 resultsCloseScale = Vector3.one;
     public Vector3 resultsChoicesScale = Vector3.one;
     public Vector3 resultsOutcomeScale = Vector3.one;
     public Vector3 resultsDisplayTutTextPos = Vector3.zero;
     public Vector3 resultsChoicesTutTextPos = Vector3.zero;
     public Vector3 resultsOutcomeTutTextPos = Vector3.zero;
+    public Vector3 resultsEndTutTextPos = Vector3.zero;
     void Awake()
     {
         Instance = this;
@@ -103,7 +105,24 @@ public class ResultManager : CopiumScript
             resultsOutcomeTutTextPos,
             delegate ()
             {
-                if (resultBtnWrapper.GetState() == ButtonState.OnClick)
+                if (TutorialText.Instance.Done())
+                {
+                    return true;
+                }
+                return false;
+            }
+        );
+
+        new TutorialComponent
+        (
+            "ResultEnd",
+            resultsCloseScale,
+            ResultBG.transform,
+            Messages.Tutorial.resultEnd,
+            resultsEndTutTextPos,
+            delegate ()
+            {
+                if (isResultOn == false)
                 {
                     return true;
                 }

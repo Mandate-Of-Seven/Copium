@@ -1858,6 +1858,11 @@
                         "Y": -2.0,
                         "Z": 1.0
                     },
+                    "resultsCloseScale": {
+                        "X": 16.0,
+                        "Y": 9.5,
+                        "Z": 1.0
+                    },
                     "resultsDisplayScale": {
                         "X": 9.5,
                         "Y": 4.0,
@@ -1868,13 +1873,18 @@
                         "Y": 2.5,
                         "Z": 0.0
                     },
+                    "resultsEndTutTextPos": {
+                        "X": -2.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
                     "resultsOutcomeScale": {
-                        "X": 10.0,
+                        "X": 9.600000381469727,
                         "Y": 8.0,
                         "Z": 1.0
                     },
                     "resultsOutcomeTutTextPos": {
-                        "X": 4.0,
+                        "X": 4.599999904632568,
                         "Y": 0.0,
                         "Z": 0.0
                     },

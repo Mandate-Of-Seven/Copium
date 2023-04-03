@@ -42,6 +42,7 @@ public class TutorialManager: CopiumScript
 		"ResultDisplay",
 		"ResultChoices",
 		"ResultOutcome",
+		"ResultEnd",
 	};
 
 	int sequenceIndex = 0;
