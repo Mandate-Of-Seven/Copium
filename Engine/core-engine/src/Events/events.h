@@ -4,14 +4,14 @@
 \author			Zacharie Hong
 				Sean Ngo
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			15/02/2023
 
 \brief
 	This file contains the declarations of all event structures in the engine.
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #ifndef EVENTS_H
 #define EVENTS_H

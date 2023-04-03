@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			Vector4.h
+\project
+\author			Matthew Lau
+
+\par			Course: GAM250
+\par			Section:
+\date			02/09/2022
+
+\brief
+	Contains declarations for Vector4
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #ifndef VECTOR4_H
 #define VECTOR4_H
 

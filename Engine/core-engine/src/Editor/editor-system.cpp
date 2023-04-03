@@ -5,14 +5,14 @@
 \co-author		Shawn Tanary
 				Matthew Lau
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			16/09/2022
 
 \brief
 	This file holds the definition of functions for the editor system.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 #include "Windows/windows-system.h"

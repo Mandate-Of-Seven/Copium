@@ -10,7 +10,7 @@
 \brief
     Contains the functions to display random events when sending crew out
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 using CopiumEngine;
 using System;

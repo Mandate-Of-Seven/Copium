@@ -3,7 +3,7 @@
 \project
 \author			Zacharie Hong
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			10/03/2023
 
@@ -11,7 +11,7 @@
     Defines Window::Inspector namespace with ImGui functions for displaying and
     interacting with the window.
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 #include "pch.h"

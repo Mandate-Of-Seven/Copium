@@ -3,14 +3,14 @@
 \project
 \author			Zacharie Hong
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			28/11/2022
 
 \brief
     This file holds the define of functions to interpolate float and struct of floats
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 #ifndef EASING_H

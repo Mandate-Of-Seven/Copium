@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			SplashScreen.cs
+\project
+\author			Sean Ngo
+
+\par			Course: GAM250
+\par			Section:
+\date			27/04/2023
+
+\brief
+	Manages the splash screen in the game
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 using CopiumEngine;
 using System;
 using System.Runtime.CompilerServices;

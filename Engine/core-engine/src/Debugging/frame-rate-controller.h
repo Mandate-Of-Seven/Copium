@@ -4,14 +4,14 @@
 \author			Matthew Lau
 \co-authors
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			05/09/2022
 
 \brief
 	Contains declarations for FrameRateController class, its constructor and member functions.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #define MyFrameRateController (*Copium::FrameRateController::Instance())

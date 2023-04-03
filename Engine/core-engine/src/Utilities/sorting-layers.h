@@ -3,7 +3,7 @@
 \project
 \author			Sean Ngo
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			12/01/2023
 

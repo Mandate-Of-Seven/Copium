@@ -4,7 +4,7 @@
 \author			Sean Ngo
 				Shawn Tanary
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			20/10/2022
 
@@ -12,7 +12,7 @@
 	This file contains functions for the Assets system where the user can load and unload
 	assets that are retrieved from the File system into the engine.
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "pch.h"
 

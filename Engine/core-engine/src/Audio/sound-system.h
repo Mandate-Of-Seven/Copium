@@ -3,7 +3,7 @@
 \project
 \author			Shawn Tanary
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			24/09/2022
 

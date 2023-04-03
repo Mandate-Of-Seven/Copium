@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			copium-core.cpp
+\project
+\author			Zacharie Hong
+\co-author		Matthew Lau
+
+\par			Course: GAM250
+\par			Section:
+\date			27/01/2023
+
+\brief
+	This file holds the definitions of functions.
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 #include <pch.h>
 #include <CopiumCore/copium-core.h>
 #include "Windows/windows-system.h"

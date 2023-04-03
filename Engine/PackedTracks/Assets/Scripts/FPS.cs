@@ -3,14 +3,14 @@
 \project
 \author			Zacharie Hong
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			10/3/2023
 
 \brief
 	Displays fps to a text component, toggle with grave key
 
-All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 using CopiumEngine;

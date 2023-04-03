@@ -3,7 +3,7 @@
 \project
 \author			Matthew Lau
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			28/07/2022
 
@@ -17,7 +17,7 @@
 	Contains definitions for NormalScene class which is a derived class from Scene class.
 	Note: this is the latest version of our scene class, use this
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "pch.h"
 #include "SceneManager/scene.h"

@@ -5,14 +5,14 @@
 \author			Zacharie Hong
 \co-authors
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			18/09/2022
 
 \brief
     Contains precompiled include to reduce build times
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #pragma warning( disable : 4390 )

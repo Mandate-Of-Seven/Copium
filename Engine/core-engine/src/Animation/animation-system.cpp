@@ -5,7 +5,7 @@
 \co-authors		Matthew Lau
 				Shawn Tanary
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			05/01/2023
 
@@ -16,7 +16,7 @@
 
 	The definitions of functions from the Animator Component are here as well.
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 #include "Animation/animation-system.h"

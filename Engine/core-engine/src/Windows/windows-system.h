@@ -3,7 +3,7 @@
 \project
 \author			Sean Ngo
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			16/09/2022
 
@@ -13,7 +13,7 @@
 	and finally initialize the OpenGL application by calling initalization functions 
 	associated with objects participating in the application.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 #ifndef WINDOW_SYSTEMS_H

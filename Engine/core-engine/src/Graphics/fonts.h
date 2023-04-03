@@ -3,14 +3,14 @@
 \project
 \author			Sean Ngo
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			26/10/2022
 
 \brief
 	This file holds the declaration of the fonts.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #ifndef FONTS_H
 #define FONTS_H

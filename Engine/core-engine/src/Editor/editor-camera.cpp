@@ -3,7 +3,7 @@
 \project
 \author			Sean Ngo
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			15/10/2022
 
@@ -11,7 +11,7 @@
 	Contains function definitions for the editor camera which draws the view in the
 	scene view.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 

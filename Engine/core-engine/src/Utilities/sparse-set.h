@@ -3,7 +3,7 @@
 \project
 \author			Zacharie Hong
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			10/03/2023
 
@@ -11,7 +11,7 @@
     This file contains an ADT for object pooling, with support of for range loops, iterators
     , reverse iterators, emplacement, swapping, subscript operator.
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 #ifndef SPARSE_SET_H

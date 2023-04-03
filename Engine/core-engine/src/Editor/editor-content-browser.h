@@ -3,7 +3,7 @@
 \project
 \author			Sean Ngo
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			01/11/2022
 
@@ -12,7 +12,7 @@
 	and interact with the items in the assets folder.
 
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #ifndef EDITOR_CONTENT_BROWSER_H

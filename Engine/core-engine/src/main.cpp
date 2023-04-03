@@ -3,7 +3,7 @@
 \project
 \author			Everyone
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			16/09/2022
 

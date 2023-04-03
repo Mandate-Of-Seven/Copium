@@ -3,14 +3,14 @@
 \project
 \author			Zacharie Hong
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			1/11/2022
 
 \brief
 	This file contains the KeyCodes for Input
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 namespace CopiumEngine

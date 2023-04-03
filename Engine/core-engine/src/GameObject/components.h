@@ -7,14 +7,14 @@
 				Matthew Lau (20%)
 				Abdul Hadi (10%)
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			10/03/2023
 
 \brief
 	This file declares all types of components
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 #ifndef COMPONENTS_H

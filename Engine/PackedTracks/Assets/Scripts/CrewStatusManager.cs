@@ -10,7 +10,7 @@
 \brief
 	Handles feedback and opening of crew status panel
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 using CopiumEngine;

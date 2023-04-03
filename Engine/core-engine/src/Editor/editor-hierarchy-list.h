@@ -4,14 +4,14 @@
 \project
 \author			Matthew Lau
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			27/10/2022
 
 \brief
 	Declaration of functions that handle initialization and update of Hierarchy List
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #ifndef SCENE_HIERARCHY_LIST_H
 #define SCENE_HIERARCHY_LIST_H

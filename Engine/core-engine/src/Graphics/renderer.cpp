@@ -3,7 +3,7 @@
 \project
 \author			Sean Ngo
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			21/09/2022
 
@@ -13,7 +13,7 @@
 	sprite or particle system (if any). Renderers can be disabled to make objects
 	invisble (see enabled).
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 #include <GL/glew.h> // for access to OpenGL API declarations 

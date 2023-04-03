@@ -3,7 +3,7 @@
 \project
 \author			Sean Ngo
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			07/09/2022
 
@@ -12,7 +12,7 @@
 	various sub-systems which includes asset loading, matrice calculations and rendering.
 	Components and objects which require rendering would refer to this class.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 #include <GL/glew.h>

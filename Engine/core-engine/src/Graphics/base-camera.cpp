@@ -3,7 +3,7 @@
 \project
 \author			Sean Ngo
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			16/11/2022
 
@@ -11,7 +11,7 @@
 	This file contains the definitions of the functions of the base camera class which
 	draws the objects within the camera using orthographic or perspective projection
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "pch.h"
 

@@ -5,14 +5,14 @@
 \author			Zacharie Hong
 \co-authors
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			10/03/2022
 
 \brief
 	This file contains the function definitions for the scripting system.
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #pragma warning( disable : 26110 )
 #pragma warning( disable : 26111 )

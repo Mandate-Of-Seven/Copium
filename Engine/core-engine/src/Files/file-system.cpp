@@ -4,7 +4,7 @@
 \author			Zacharie Hong
 \co-authors		Sean Ngo
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			26/09/2022
 
@@ -12,7 +12,7 @@
 	Contains function definitions for the File system which loads files and folders into 
 	the engine. This system checks for file modifications within a specific assets folder.
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "pch.h"
 

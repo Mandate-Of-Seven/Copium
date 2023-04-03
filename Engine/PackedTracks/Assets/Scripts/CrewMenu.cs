@@ -12,7 +12,7 @@
 \brief
 	Contains functions needed for the crew menu of the left screen
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 using CopiumEngine;
 using System.Collections.Generic;

@@ -3,14 +3,14 @@
 \project
 \author			Sean Ngo
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			21/11/2022
 
 \brief
 	This file holds the type definitions of the enumerations for graphics systems
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #ifndef GRAPHICS_TYPEDEF_H
 #define GRAPHICS_TYPEDEF_H

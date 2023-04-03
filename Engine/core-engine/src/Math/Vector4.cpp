@@ -1,4 +1,17 @@
+/*!***************************************************************************************
+\file			Vector4.cpp
+\project
+\author			Matthew Lau
 
+\par			Course: GAM250
+\par			Section:
+\date			02/09/2022
+
+\brief
+	Contains definitions for Vector4
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #include "pch.h"
 #include "Math/Vector4.h"
 

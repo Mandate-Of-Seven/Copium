@@ -5,14 +5,14 @@
 \co-author		Abdul Hadi
                 Matthew Lau
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			09/03/2023
 
 \brief
 	Functionality for the HowtoPlay Menu
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 using CopiumEngine;
 using System;

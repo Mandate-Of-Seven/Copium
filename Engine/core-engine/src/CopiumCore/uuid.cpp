@@ -3,7 +3,7 @@
 \project
 \author			Matthew Lau
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			06/01/2023
 

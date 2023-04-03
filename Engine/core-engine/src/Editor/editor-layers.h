@@ -4,7 +4,7 @@
 \author			Sean Ngo
 \co-author		Matthew Lau
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			13/01/2023
 

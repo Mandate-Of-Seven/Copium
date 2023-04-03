@@ -4,14 +4,14 @@
 \author			Zacharie Hong (50%)
 \co-authors     Matthew Lau (50%)
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			17/07/2022
 
 \brief
     Declares GameObject Class and member functions
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #ifndef GAME_OBJECT_H
 #define GAME_OBJECT_H

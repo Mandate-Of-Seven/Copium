@@ -3,7 +3,7 @@
 \project
 \author			Matthew Lau
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			18/09/2022
 
@@ -12,7 +12,7 @@
 	The GameObjectFactory is responsible for the creation, management and destruction of game objects.
 	Note: The GameObjectFactory will also place the created gameobjects inside the current scene.
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #ifndef GAME_OBJECT_FACTORY_H

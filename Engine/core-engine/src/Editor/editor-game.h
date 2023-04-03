@@ -3,14 +3,14 @@
 \project
 \author			Sean Ngo
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			21/11/2022
 
 \brief
 	This file holds the declarations of the functions in the editor game gui
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #ifndef EDITOR_GAME_H
 #define EDITOR_GAME_H

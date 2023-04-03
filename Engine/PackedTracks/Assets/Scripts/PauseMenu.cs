@@ -4,7 +4,7 @@
 \author			Abdul Hadi
 \co-authors     Shawn Tanary
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			10/03/2022
 

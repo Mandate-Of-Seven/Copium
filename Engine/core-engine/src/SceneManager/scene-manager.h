@@ -5,7 +5,7 @@
 \author			Matthew Lau
 \co-authors
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			21/09/2022
 
@@ -18,7 +18,7 @@
 	3. de-allocation of resources used by current scene (cleanup before engine close)
 	4. Calling scene's update functions
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************
 ****/
 #ifndef SM_H

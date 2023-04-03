@@ -3,8 +3,8 @@
 \project		GAM200
 \author			Zacharie Hong
 
-\par			Course: GAM200
-\par			Section: A
+\par			Course: GAM250
+\par			Section: 
 \date
 
 \brief

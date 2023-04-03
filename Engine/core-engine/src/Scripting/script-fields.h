@@ -3,7 +3,7 @@
 \project
 \author			Zacharie Hong
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			10/03/2023
 
@@ -11,7 +11,7 @@
 	This file holds the definition of script fields, mainly allocated memory for
 	storing any type of field
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 #ifndef  SCRIPT_FIELDS_H

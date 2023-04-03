@@ -4,7 +4,7 @@
 \project
 \author			Matthew Lau
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			30/10/2022
 
@@ -12,7 +12,7 @@
 	Useful windows utilities are declared here.
 	1. Open and save file dialogs
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 #include <string>

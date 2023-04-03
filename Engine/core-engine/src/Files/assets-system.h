@@ -4,7 +4,7 @@
 \author			Sean Ngo
 				Shawn Tanary
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			20/10/2022
 

@@ -3,14 +3,14 @@
 \project
 \author			Shawn Tanary
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			16/09/2022
 
 \brief
     This file contins functions that logger messages to either console or to a file.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 #include "pch.h"

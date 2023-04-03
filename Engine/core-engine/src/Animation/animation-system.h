@@ -5,7 +5,7 @@
 \co-authors     Matthew Lau
                 Shawn Tanary
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			05/01/2023
 
@@ -22,7 +22,7 @@
     3. Keeping track of the current animator status
     4. Playing, pausing and stoppage of the current animation
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #ifndef ANIMATION_SYSTEM_H
 #define ANIMATION_SYSTEM_H

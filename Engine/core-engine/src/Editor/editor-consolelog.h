@@ -3,14 +3,14 @@
 \project
 \author			Shawn Tanary
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			20/09/2022
 
 \brief
 	This file contins functions that create the logger using IMGUI for the editor.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #pragma once
 

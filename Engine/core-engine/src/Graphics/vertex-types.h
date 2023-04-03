@@ -3,14 +3,14 @@
 \project
 \author			Sean Ngo
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			07/09/2022
 
 \brief
 	This file holds the vertex types used in the Graphics system.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #ifndef VERTEX_TYPES_H
 #define VERTEX_TYPES_H

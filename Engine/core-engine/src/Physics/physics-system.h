@@ -3,7 +3,7 @@
 \project
 \author			Abdul Hadi
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			23/09/2022
 
@@ -11,7 +11,7 @@
 	This file contains the function definitions for a physics system. It will perform
 	physics and collision on a collider component of an object.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #include "CopiumCore/system-interface.h"
 #include "Math/math-library.h"

@@ -3,7 +3,7 @@
 \project
 \author			Shawn Tanary
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			25/11/2022
 
@@ -11,7 +11,7 @@
 	This file holds functions to undo and redo changes made in gameobjects as well as
 	transform components.
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 #include "pch.h"

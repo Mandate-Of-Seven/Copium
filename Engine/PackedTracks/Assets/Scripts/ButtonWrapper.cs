@@ -3,7 +3,7 @@
 \project
 \author			Zacharie Hong
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			10/3/2023
 
@@ -12,7 +12,7 @@
 	be overwritten. Also helps display to the tooltip and handles disabled effects and
 	behaviour
 
-All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 using CopiumEngine;

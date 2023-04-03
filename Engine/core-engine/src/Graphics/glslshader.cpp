@@ -4,14 +4,14 @@
 \author         Prasanna Ghali
 \co-author		Abdul Hadi
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			28/09/2022
 
 \brief
     This file contains definitions of member functions of class GLShader.
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #include "pch.h"

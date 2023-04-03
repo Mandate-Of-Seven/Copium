@@ -3,7 +3,7 @@
 \project
 \author			Matthew Lau
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			02/09/2022
 
@@ -18,7 +18,7 @@
 	Declarations of functions which perform common mathematical operations for the respective classes
 	are also contained here.
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #ifndef MATHLIBRARY_H
 #define MATHLIBRARY_H

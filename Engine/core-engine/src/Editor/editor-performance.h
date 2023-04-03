@@ -3,14 +3,14 @@
 \project
 \author			Matthew Lau
 
-\par			Course: GAM200
+\par			Course: GAM250
 \par			Section:
 \date			9/03/2023
 
 \brief
 	Contains declarations of the EditorPerformance class. It is responsible for the performance viewer window
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #ifndef EDITOR_PERFORMANCE_H
 #define EDITOR_PERFORMANCE_H
