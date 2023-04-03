@@ -10,7 +10,7 @@
 \brief
 	Tutorial object that is used by tutorial manager for the interactive tutorial
 
-All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 using CopiumEngine;

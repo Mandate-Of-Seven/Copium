@@ -11,7 +11,7 @@
 	Runs through a list of subscribed TutorialComponents and implements the interactive
 	tutorial
 
-All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 

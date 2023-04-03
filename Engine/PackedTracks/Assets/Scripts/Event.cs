@@ -11,7 +11,7 @@
 \brief
 	Base class event that is used by EventManager to play an event
 
-All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 using System;

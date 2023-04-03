@@ -10,7 +10,7 @@
 \brief
 	Typewriter effect for strings to display strings one character at a time interval
 
-All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 using CopiumEngine;
